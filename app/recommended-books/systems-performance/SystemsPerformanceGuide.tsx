@@ -1,653 +1,36 @@
-<!doctype html>
-<html lang="ja">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Systems Performance: Enterprise and the Cloud 実践ガイド</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
-            rel="stylesheet"
-        />
-        <style>
-            :root {
-                --bg: #07111e;
-                --bg-card: #0d1a2b;
-                --bg-card-2: #101f33;
-                --border: #1d3350;
-                --border-soft: #16283f;
-                --text: #dbe4f3;
-                --text-dim: #8fa2c0;
-                --text-faint: #6a7d9c;
-                --accent: #7c9eff;
-                --accent-soft: #3a4f80;
-                --accent-bg: #15233d;
-                --danger: #ff8fa3;
-                --danger-bg: #3a1420;
-                --warn: #ffbd6e;
-                --warn-bg: #3a2810;
-                --success: #7fe0a8;
-                --success-bg: #0f2c1e;
-                --sidebar-w: 300px;
-                --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
-            }
-            * {
-                box-sizing: border-box;
-            }
-            html,
-            body {
-                overflow-x: hidden;
-            }
-            body {
-                margin: 0;
-                background: var(--bg);
-                color: var(--text);
-                font-family: var(--font-jp);
-                font-size: 16px;
-                line-height: 1.85;
-                -webkit-font-smoothing: antialiased;
-            }
-            a {
-                color: var(--accent);
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
+'use client';
 
-            /* ---------- layout ---------- */
-            .layout {
-                display: block;
-            }
+import { memo } from 'react';
+import { MermaidDiagram } from '@/components/MermaidDiagram';
+import { NavBar } from './NavBar';
+import { DIAGRAM_LABELS, DIAGRAMS, type DiagramId } from './constants';
 
-            /* Sidebar */
-            .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                width: var(--sidebar-w);
-                background: #060d17;
-                border-right: 1px solid var(--border-soft);
-                overflow-y: auto;
-                padding: 28px 0 40px;
-                z-index: 50;
-            }
-            .sidebar-header {
-                padding: 0 24px 20px;
-                border-bottom: 1px solid var(--border-soft);
-                margin-bottom: 16px;
-            }
-            .sidebar-header .kicker {
-                font-size: 12px;
-                letter-spacing: 0.08em;
-                color: var(--accent);
-                font-weight: 700;
-                text-transform: uppercase;
-            }
-            .sidebar-header h2 {
-                font-size: 16px;
-                margin: 6px 0 0;
-                color: var(--text);
-                line-height: 1.5;
-                font-weight: 700;
-            }
-            .sidebar nav {
-                padding: 0 12px;
-            }
-            .sidebar nav a {
-                display: block;
-                padding: 9px 12px;
-                border-radius: 8px;
-                font-size: 13.5px;
-                color: var(--text-dim);
-                line-height: 1.5;
-                margin-bottom: 2px;
-                transition:
-                    background 0.15s,
-                    color 0.15s;
-            }
-            .sidebar nav a:hover {
-                background: var(--accent-bg);
-                color: var(--text);
-                text-decoration: none;
-            }
-            .sidebar nav a.active {
-                background: var(--accent-bg);
-                color: var(--accent);
-                font-weight: 700;
-            }
-            .sidebar nav a.lvl3 {
-                padding-left: 28px;
-                font-size: 12.5px;
-            }
-            .sidebar-toggle {
-                display: none;
-                position: fixed;
-                top: 14px;
-                left: 14px;
-                z-index: 60;
-                width: 42px;
-                height: 42px;
-                border-radius: 10px;
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                color: var(--text);
-                font-size: 18px;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-            }
+const Diagram = memo(function Diagram({ id }: { id: DiagramId }) {
+    const chart = DIAGRAMS[id];
+    if (!chart) return null;
+    return (
+        <div className="mermaid-wrap">
+            <MermaidDiagram chart={chart} ariaLabel={DIAGRAM_LABELS[id]} preserveNaturalScale />
+        </div>
+    );
+});
 
-            /* Main content */
-            .main {
-                margin-left: var(--sidebar-w);
-                padding: 56px 64px 120px;
-            }
-            .hero {
-                margin-bottom: 8px;
-            }
-            .hero .kicker {
-                font-size: 13px;
-                font-weight: 700;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--accent);
-                margin-bottom: 14px;
-            }
-            .hero h1 {
-                font-size: clamp(28px, 3.6vw, 42px);
-                line-height: 1.35;
-                margin: 0 0 18px;
-                background: linear-gradient(135deg, #dbe4f3 0%, #7c9eff 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                font-weight: 800;
-            }
-            .hero .meta-row {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-bottom: 32px;
-            }
-            .pill {
-                display: inline-flex;
-                align-items: center;
-                gap: 6px;
-                padding: 6px 14px;
-                border-radius: 999px;
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                font-size: 12.5px;
-                color: var(--text-dim);
-            }
-            .pill strong {
-                color: var(--text);
-            }
-
-            .main h2 {
-                font-size: 26px;
-                margin: 56px 0 20px;
-                padding-top: 8px;
-                border-top: 1px solid var(--border-soft);
-                color: var(--text);
-                font-weight: 800;
-                letter-spacing: -0.01em;
-                scroll-margin-top: 24px;
-            }
-            .main > h2:first-of-type {
-                border-top: none;
-                padding-top: 0;
-                margin-top: 8px;
-            }
-            .main h3 {
-                font-size: 20px;
-                margin: 38px 0 16px;
-                color: var(--text);
-                font-weight: 700;
-                scroll-margin-top: 24px;
-            }
-            .main h3::before {
-                content: '';
-                display: inline-block;
-                width: 5px;
-                height: 18px;
-                background: var(--accent);
-                border-radius: 3px;
-                margin-right: 10px;
-                vertical-align: -2px;
-            }
-            .main p {
-                margin: 0 0 18px;
-                color: var(--text);
-            }
-            .main ul,
-            .main ol {
-                margin: 0 0 18px;
-                padding-left: 1.4em;
-                color: var(--text);
-            }
-            .main li {
-                margin-bottom: 8px;
-            }
-            .main hr {
-                border: none;
-                border-top: 1px solid var(--border-soft);
-                margin: 44px 0;
-            }
-            .main strong {
-                color: #f0f4fc;
-                font-weight: 700;
-            }
-            .footnote-ref {
-                margin-left: 2px;
-            }
-            .footnote-ref sup {
-                font-size: 11px;
-                color: var(--accent);
-                font-weight: 700;
-            }
-            .main code:not(pre code) {
-                background: var(--bg-card-2);
-                border: 1px solid var(--border);
-                border-radius: 5px;
-                padding: 1px 6px;
-                font-size: 0.9em;
-                color: #ffd08a;
-                overflow-wrap: break-word;
-                word-break: break-word;
-            }
-
-            /* Tables */
-            .table-scroll {
-                overflow-x: auto;
-                margin: 0 0 26px;
-                border: 1px solid var(--border);
-                border-radius: 12px;
-                background: var(--bg-card);
-            }
-            table {
-                border-collapse: collapse;
-                width: 100%;
-                font-size: 14.5px;
-            }
-            thead th {
-                background: var(--accent-bg);
-                color: var(--text);
-                text-align: left;
-                padding: 12px 16px;
-                font-weight: 700;
-                border-bottom: 1px solid var(--border);
-                white-space: nowrap;
-            }
-            tbody td {
-                padding: 12px 16px;
-                border-bottom: 1px solid var(--border-soft);
-                color: var(--text-dim);
-                vertical-align: top;
-            }
-            tbody tr:last-child td {
-                border-bottom: none;
-            }
-            tbody tr:hover td {
-                background: rgba(124, 158, 255, 0.04);
-            }
-
-            /* Mermaid */
-            pre.mermaid {
-                width: 100%;
-                display: flex;
-                justify-content: safe center;
-                overflow-x: auto;
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 14px;
-                padding: 28px 20px;
-                margin: 0 0 30px;
-            }
-            pre.mermaid svg {
-                flex-shrink: 0;
-            }
-            pre.mermaid p {
-                color: inherit;
-                margin: 0;
-            }
-
-            /* Callouts */
-            .callout-practice {
-                display: flex;
-                gap: 14px;
-                background: var(--success-bg);
-                border: 1px solid #1d5a3a;
-                border-left: 4px solid var(--success);
-                border-radius: 12px;
-                padding: 20px 22px;
-                margin: 0 0 26px;
-            }
-            .callout-practice .icon {
-                flex-shrink: 0;
-                width: 26px;
-                height: 26px;
-                border-radius: 7px;
-                background: var(--success);
-                color: #08150e;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-                font-weight: 900;
-            }
-            .callout-practice .body {
-                color: var(--text);
-            }
-            .callout-practice .label {
-                font-size: 11.5px;
-                font-weight: 800;
-                letter-spacing: 0.06em;
-                color: var(--success);
-                text-transform: uppercase;
-                margin-bottom: 6px;
-            }
-            .callout-practice p {
-                margin: 0;
-                color: var(--text);
-            }
-
-            .practice-label {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 12px;
-                font-weight: 800;
-                letter-spacing: 0.06em;
-                color: var(--success);
-                text-transform: uppercase;
-                margin: 0 0 10px;
-            }
-            .practice-label::before {
-                content: '✓';
-                font-size: 13px;
-            }
-
-            /* Reference grid */
-            .ref-grid {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 12px;
-                margin: 0 0 30px;
-            }
-            .ref-card {
-                display: flex;
-                gap: 12px;
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                padding: 14px 16px;
-                min-width: 0;
-            }
-            .ref-card .num {
-                flex-shrink: 0;
-                width: 26px;
-                height: 26px;
-                border-radius: 7px;
-                background: var(--accent-bg);
-                color: var(--accent);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 12px;
-                font-weight: 800;
-            }
-            .ref-card .txt {
-                font-size: 13px;
-                color: var(--text-dim);
-                min-width: 0;
-                overflow-wrap: break-word;
-                word-break: break-word;
-            }
-            .ref-card .txt a {
-                color: var(--accent);
-                font-weight: 600;
-            }
-
-            /* Checklist */
-            .checklist-card {
-                background: var(--bg-card);
-                border: 1px solid var(--border);
-                border-radius: 14px;
-                padding: 8px 22px 12px;
-                margin: 0 0 30px;
-            }
-            .checklist-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 14px 0;
-                border-bottom: 1px solid var(--border-soft);
-                margin-bottom: 6px;
-            }
-            .checklist-header .title {
-                font-weight: 700;
-                color: var(--text);
-                font-size: 14.5px;
-            }
-            .checklist-header .count {
-                font-size: 13px;
-                color: var(--accent);
-                font-weight: 700;
-            }
-            .checklist-card ul {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
-            .checklist-card li {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 11px 4px;
-                border-radius: 8px;
-                margin: 0;
-                transition: background 0.15s;
-            }
-            .checklist-card li:hover {
-                background: rgba(124, 158, 255, 0.05);
-            }
-            .checklist-card input[type='checkbox'] {
-                appearance: none;
-                -webkit-appearance: none;
-                width: 19px;
-                height: 19px;
-                flex-shrink: 0;
-                margin-top: 2px;
-                border: 1.5px solid var(--border);
-                border-radius: 5px;
-                background: var(--bg-card-2);
-                cursor: pointer;
-                position: relative;
-            }
-            .checklist-card input[type='checkbox']:checked {
-                background: var(--accent);
-                border-color: var(--accent);
-            }
-            .checklist-card input[type='checkbox']:checked::after {
-                content: '';
-                position: absolute;
-                left: 5px;
-                top: 1px;
-                width: 5px;
-                height: 10px;
-                border: solid #08101f;
-                border-width: 0 2px 2px 0;
-                transform: rotate(40deg);
-            }
-            .checklist-card label {
-                color: var(--text);
-                font-size: 14.5px;
-                cursor: pointer;
-                line-height: 1.6;
-            }
-            .checklist-card li:has(input:checked) label {
-                text-decoration: line-through;
-                color: var(--text-faint);
-            }
-
-            /* Footnotes (pandoc) */
-            aside.footnotes {
-                display: none;
-            } /* replaced entirely by ref-grid */
-
-            /* Responsive */
-            @media (max-width: 980px) {
-                .sidebar {
-                    transform: translateX(-100%);
-                    transition: transform 0.25s ease;
-                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-                }
-                .sidebar.open {
-                    transform: translateX(0);
-                }
-                .main {
-                    margin-left: 0;
-                    padding: 80px 20px 100px;
-                }
-                .sidebar-toggle {
-                    display: flex;
-                }
-                .ref-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="layout">
-            <button
-                class="sidebar-toggle"
-                id="sidebarToggle"
-                type="button"
-                aria-label="メニュー"
-                aria-controls="sidebar"
-                aria-expanded="false"
-            >
-                ☰
-            </button>
-            <aside class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <div class="kicker">Systems Performance</div>
-                    <h2>Enterprise and the Cloud 実践ガイド</h2>
-                </div>
-                <nav id="sidebarNav">
-                    <a href="#この本はどんな本か" class="">この本はどんな本か</a>
-                    <a href="#1-なぜシステムパフォーマンスを学ぶのか" class=""
-                        >1. なぜシステムパフォーマンスを学ぶのか</a
-                    >
-                    <a href="#2-基礎概念レイテンシ可観測性実験" class=""
-                        >2. 基礎概念：レイテンシ・可観測性・実験</a
-                    >
-                    <a href="#21-レイテンシlatency" class="lvl3">2.1 レイテンシ（Latency）</a>
-                    <a href="#22-可観測性observability" class="lvl3"
-                        >2.2 可観測性（Observability）</a
-                    >
-                    <a href="#23-実験experimentation" class="lvl3">2.3 実験（Experimentation）</a>
-                    <a href="#3-コアメソドロジuse法red法診断サイクル" class=""
-                        >3. コアメソドロジ：USE法・RED法・診断サイクル</a
-                    >
-                    <a href="#31-アンチメソッドやってはいけない調査の仕方" class="lvl3"
-                        >3.1 アンチメソッド：やってはいけない調査の仕方</a
-                    >
-                    <a href="#32-useメソッドutilization-saturation-errors" class="lvl3"
-                        >3.2 USEメソッド（Utilization, Saturation, Errors）</a
-                    >
-                    <a href="#33-red法サービス視点の相棒" class="lvl3"
-                        >3.3 RED法：サービス視点の相棒</a
-                    >
-                    <a href="#34-科学的メソッドと診断サイクル" class="lvl3"
-                        >3.4 科学的メソッドと診断サイクル</a
-                    >
-                    <a href="#4-osの基礎知識カーネルとユーザーランド" class=""
-                        >4. OSの基礎知識：カーネルとユーザーランド</a
-                    >
-                    <a href="#5-可観測性ツールのデータソース" class=""
-                        >5. 可観測性ツールのデータソース</a
-                    >
-                    <a href="#6-cpuパフォーマンス分析" class="">6. CPUパフォーマンス分析</a>
-                    <a href="#61-基本用語" class="lvl3">6.1 基本用語</a>
-                    <a href="#62-cpu分析の観測ツールチェーン" class="lvl3"
-                        >6.2 CPU分析の観測ツールチェーン</a
-                    >
-                    <a href="#63-フレームグラフcpu分析の代表的な可視化" class="lvl3"
-                        >6.3 フレームグラフ：CPU分析の代表的な可視化</a
-                    >
-                    <a href="#64-cpuチューニングの主な選択肢" class="lvl3"
-                        >6.4 CPUチューニングの主な選択肢</a
-                    >
-                    <a href="#7-メモリパフォーマンス分析" class="">7. メモリパフォーマンス分析</a>
-                    <a href="#71-仮想メモリとページング" class="lvl3">7.1 仮想メモリとページング</a>
-                    <a href="#72-メモリのuseメソッド" class="lvl3">7.2 メモリのUSEメソッド</a>
-                    <a href="#73-メモリリーク検出の考え方" class="lvl3"
-                        >7.3 メモリリーク検出の考え方</a
-                    >
-                    <a href="#8-ファイルシステムとディスクio" class=""
-                        >8. ファイルシステムとディスクI/O</a
-                    >
-                    <a href="#81-レイヤー構造の理解" class="lvl3">8.1 レイヤー構造の理解</a>
-                    <a href="#82-ディスクioへのuseメソッド適用" class="lvl3"
-                        >8.2 ディスクI/OへのUSEメソッド適用</a
-                    >
-                    <a href="#83-レイテンシの可視化ヒートマップ" class="lvl3"
-                        >8.3 レイテンシの可視化：ヒートマップ</a
-                    >
-                    <a href="#9-ネットワークパフォーマンス分析" class=""
-                        >9. ネットワークパフォーマンス分析</a
-                    >
-                    <a href="#91-tcp接続のライフサイクルとレイテンシ" class="lvl3"
-                        >9.1 TCP接続のライフサイクルとレイテンシ</a
-                    >
-                    <a href="#92-主要な観測コマンド" class="lvl3">9.2 主要な観測コマンド</a>
-                    <a href="#10-クラウドコンピューティング特有の考慮点" class=""
-                        >10. クラウドコンピューティング特有の考慮点</a
-                    >
-                    <a href="#101-仮想化方式の3分類" class="lvl3">10.1 仮想化方式の3分類</a>
-                    <a href="#102-マルチテナンシーとノイジーネイバー問題" class="lvl3"
-                        >10.2 マルチテナンシーと「ノイジーネイバー」問題</a
-                    >
-                    <a href="#103-クラウド環境での可観測性の制約" class="lvl3"
-                        >10.3 クラウド環境での可観測性の制約</a
-                    >
-                    <a href="#11-ベンチマーキングのベストプラクティスと落とし穴" class=""
-                        >11. ベンチマーキングのベストプラクティスと落とし穴</a
-                    >
-                    <a href="#12-ツールチェーンの選び方perfftraceebpf" class=""
-                        >12. ツールチェーンの選び方：perf・Ftrace・eBPF</a
-                    >
-                    <a href="#実践bpftraceの1行プログラム例" class="lvl3"
-                        >実践：bpftraceの1行プログラム例</a
-                    >
-                    <a href="#13-実践60秒linuxパフォーマンス分析チェックリスト" class=""
-                        >13. 実践：60秒Linuxパフォーマンス分析チェックリスト</a
-                    >
-                    <a href="#14-ケーススタディの読み方" class="">14. ケーススタディの読み方</a>
-                    <a href="#15-学習ロードマップ初学者向け" class=""
-                        >15. 学習ロードマップ（初学者向け）</a
-                    >
-                    <a href="#まとめ" class="">まとめ</a>
-                    <a href="#参考文献" class="">参考文献</a>
-                </nav>
-            </aside>
-            <main class="main">
-                <div class="hero">
-                    <div class="kicker">
-                        Brendan Gregg &middot; 詳解 システム・パフォーマンス 第2版
+export function SystemsPerformanceGuide() {
+    return (
+        <div className="systems-performance-page">
+            <div className="layout">
+                <NavBar />
+                <main className="main">
+                <div className="hero">
+                    <div className="kicker">
+                        Brendan Gregg · 詳解 システム・パフォーマンス 第2版
                     </div>
                     <h1>Systems Performance: Enterprise and the Cloud 実践ガイド</h1>
-                    <div class="meta-row">
-                        <span class="pill">原著 <strong>940頁</strong></span>
-                        <span class="pill">対象 <strong>初学者〜中級者</strong></span>
-                        <span class="pill">図解 <strong>Mermaid 18点</strong></span>
-                        <span class="pill">参考文献 <strong>22件</strong></span>
+                    <div className="meta-row">
+                        <span className="pill">原著 <strong>940頁</strong></span>
+                        <span className="pill">対象 <strong>初学者〜中級者</strong></span>
+                        <span className="pill">図解 <strong>Mermaid 18点</strong></span>
+                        <span className="pill">参考文献 <strong>22件</strong></span>
                     </div>
                 </div>
 
@@ -658,7 +41,7 @@
                     Labsなど国際的に著名な開発者・組織の一次情報を裏付けとして参照しています（参考文献参照）。
                 </p>
                 <hr />
-                <h2 id="この本はどんな本か">この本はどんな本か</h2>
+                <h2 id="この本はどんな本か" tabIndex={-1}>この本はどんな本か</h2>
                 <p>
                     「詳解 システム・パフォーマンス
                     第2版」は、<strong>エンタープライズとクラウド環境を対象としたOS・アプリケーションのパフォーマンス分析と改善</strong>を扱う940ページの大著です。原著者のBrendan
@@ -668,92 +51,89 @@
                     Awardを受賞しています。
                 </p>
                 <p>
-                    第2版では初版（2014年）から大きく加筆され、特に
-                    <strong>perf・Ftrace・拡張BPF（eBPF）の解説</strong> と
-                    <strong>クラウドコンピューティングの章</strong>
-                    が充実しました。本書（日本語版）の目次は次の16章＋付録という構成です（英語版は付録A〜E＋用語集）。
+                    第2版では初版（2014年）から大きく加筆され、特に{' '}<strong>perf・Ftrace・拡張BPF（eBPF）の解説</strong> と{' '}<strong>クラウドコンピューティングの章</strong>{' '}が充実しました。本書（日本語版）の目次は次の16章＋付録という構成です（英語版は付録A〜E＋用語集）。
                 </p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>パート</th>
-                                <th>章</th>
-                                <th>主な内容</th>
+                            <tr className="header">
+                                <th scope="col">パート</th>
+                                <th scope="col">章</th>
+                                <th scope="col">主な内容</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>基礎</td>
                                 <td>1章 イントロダクション</td>
                                 <td>パフォーマンスエンジニアリングとは何か、可観測性の基本用語</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>基礎</td>
                                 <td>2章 メソドロジ</td>
                                 <td>USE法・RED法・ワークロード特性把握など分析手法全般</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>基礎</td>
                                 <td>3章 オペレーティングシステム</td>
                                 <td>カーネル、システムコール、割り込みの基礎知識</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>基礎</td>
                                 <td>4章 可観測性ツール</td>
                                 <td>ツールの4分類とデータソース（/proc、tracepoint等）</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>基礎</td>
                                 <td>5章 アプリケーション</td>
                                 <td>プログラミング言語別の性能特性、CPU/off-CPU分析</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>リソース別</td>
                                 <td>6章 CPU</td>
                                 <td>USEメソッド適用、プロファイリング、フレームグラフ</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>リソース別</td>
                                 <td>7章 メモリ</td>
                                 <td>仮想メモリ、ページング、リーク検出</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>リソース別</td>
                                 <td>8章 ファイルシステム</td>
                                 <td>キャッシング、レイテンシ分析</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>リソース別</td>
                                 <td>9章 ディスク</td>
                                 <td>IOPS、レイテンシ、ヒートマップ</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>リソース別</td>
                                 <td>10章 ネットワーク</td>
                                 <td>TCP分析、パケットスニッフィング</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>クラウド</td>
                                 <td>11章 クラウドコンピューティング</td>
                                 <td>ハードウェア仮想化・OS仮想化・軽量仮想化の比較</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>実践</td>
                                 <td>12章 ベンチマーキング</td>
                                 <td>正しい・誤ったベンチマーキングの手法</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>ツール詳解</td>
                                 <td>13章 perf／14章 Ftrace／15章 BPF</td>
                                 <td>各ツールチェーンの実践的な使い方</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>総合</td>
                                 <td>16章 ケーススタディ</td>
                                 <td>実際の障害調査の思考プロセス</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>付録</td>
                                 <td>A〜F</td>
                                 <td>USEメソッド早見表、sar早見表、bpftrace 1行プログラム集など</td>
@@ -765,7 +145,7 @@
                     本ガイドでは、この構成をベースにしながら、初学者が最初に押さえるべき「考え方（メソドロジ）」→「土台となる知識（OS）」→「観測手段（ツール）」→「リソース別の実践」→「クラウド特有の論点」→「ベンチマーキングと総合演習」という順に再構成して解説します。
                 </p>
                 <hr />
-                <h2 id="1-なぜシステムパフォーマンスを学ぶのか">
+                <h2 id="1-なぜシステムパフォーマンスを学ぶのか" tabIndex={-1}>
                     1. なぜシステムパフォーマンスを学ぶのか
                 </h2>
                 <p>
@@ -774,14 +154,7 @@
                 <p>
                     クラウド時代においてこの分野が特に重要になった理由は、コスト構造の変化にあります。オンプレミス時代は「性能が悪くても、我慢すればハードウェアは既に買ってある」という状況が多かったのに対し、クラウドでは使用したリソース（インスタンス時間・CPU・メモリ・ネットワーク帯域）に応じて課金されるため、<strong>非効率なコードやチューニング不足のシステムがそのままコスト増に直結</strong>します。同時に、マルチテナント環境ではリソースの奪い合い（ノイジーネイバー問題）という、オンプレミスにはなかった新しい課題も生まれます。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    A["ビジネス目標&lt;br/&gt;速い・安い・止まらない"] --&gt; B["パフォーマンス指標&lt;br/&gt;レイテンシ / スループット&lt;br/&gt;使用率 / キャパシティ"]
-    B --&gt; C["分析メソドロジ&lt;br/&gt;USE法 / RED法など"]
-    C --&gt; D["可観測性ツール&lt;br/&gt;perf / eBPF / sar など"]
-    D --&gt; E["具体的なアクション&lt;br/&gt;チューニング / スケーリング&lt;br/&gt;コード修正"]
-    E -.フィードバック.-&gt; B</pre
-                >
+                <Diagram id="diag-1" />
                 <p>
                     パフォーマンスエンジニアリングが難しいとされる理由は、原著1章でも述べられている通り、(1)
                     評価が主観的になりがちであること、(2)
@@ -790,34 +163,19 @@ flowchart LR
                     複数の性能問題が同時に発生しうることにあります。だからこそ、勘や経験則だけに頼らない<strong>体系的なメソドロジ</strong>が必要になります。
                 </p>
                 <hr />
-                <h2 id="2-基礎概念レイテンシ可観測性実験">
+                <h2 id="2-基礎概念レイテンシ可観測性実験" tabIndex={-1}>
                     2. 基礎概念：レイテンシ・可観測性・実験
                 </h2>
                 <p>具体的な手法に入る前に、共通言語となる基礎概念を押さえます。</p>
-                <h3 id="21-レイテンシlatency">2.1 レイテンシ（Latency）</h3>
+                <h3 id="21-レイテンシlatency" tabIndex={-1}>2.1 レイテンシ（Latency）</h3>
                 <p>
                     レイテンシとは「処理にかかった時間」を指す言葉ですが、システムパフォーマンスの文脈では<strong>測定対象を明確にすること</strong>が重要です。同じ「Webページの表示が遅い」という現象でも、それがネットワークのレイテンシなのか、アプリケーション処理のレイテンシなのか、ディスクI/Oのレイテンシなのかによって、対処法はまったく異なります。レイテンシは原因に最も近い場所（低レイヤー）で測定するほど、真因の特定に役立ちます。
                 </p>
-                <h3 id="22-可観測性observability">2.2 可観測性（Observability）</h3>
+                <h3 id="22-可観測性observability" tabIndex={-1}>2.2 可観測性（Observability）</h3>
                 <p>
                     可観測性とは、外部からシステムの内部状態を推測できる度合いのことです。原著4章では、可観測性ツールを大きく4種類に分類しています。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    OBS["可観測性ツールの4分類"]
-    OBS --&gt; FC["固定カウンタ&lt;br/&gt;Fixed Counters"]
-    OBS --&gt; PR["プロファイリング&lt;br/&gt;Profiling"]
-    OBS --&gt; TR["トレーシング&lt;br/&gt;Tracing"]
-    OBS --&gt; MN["モニタリング&lt;br/&gt;Monitoring"]
-
-    FC --&gt; FC1["例: uptime, vmstat&lt;br/&gt;軽量。vmstatは指定間隔で&lt;br/&gt;カウンタをサンプリング"]
-    PR --&gt; PR1["例: perf record&lt;br/&gt;一定間隔でサンプリング"]
-    TR --&gt; TR1["例: bpftrace, strace&lt;br/&gt;イベント単位で記録"]
-    MN --&gt; MN1["例: sar, Prometheus&lt;br/&gt;時系列で長期保存"]
-
-    classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff;
-    class OBS,FC,PR,TR,MN,FC1,PR1,TR1,MN1 highlightFill</pre
-                >
+                <Diagram id="diag-2" />
                 <ul>
                     <li>
                         <strong>固定カウンタ</strong
@@ -836,43 +194,43 @@ flowchart TB
                         >：<code>sar</code>やPrometheus/Grafanaのように、指標を時系列で継続的に記録し、後から傾向分析やアラートに使う手法です。
                     </li>
                 </ul>
-                <h3 id="23-実験experimentation">2.3 実験（Experimentation）</h3>
+                <h3 id="23-実験experimentation" tabIndex={-1}>2.3 実験（Experimentation）</h3>
                 <p>
                     観測だけでなく、負荷生成ツール（<code>fio</code>、<code>iperf</code>、<code>sysbench</code>など）を使ってシステムに意図的に負荷をかけ、挙動を確かめる「アクティブベンチマーキング」も重要な手法です。ただし、本番環境での実験はリスクを伴うため、原著12章では実験・ベンチマーキング特有の注意点が1章分割かれています（後述）。
                 </p>
                 <hr />
-                <h2 id="3-コアメソドロジuse法red法診断サイクル">
+                <h2 id="3-コアメソドロジuse法red法診断サイクル" tabIndex={-1}>
                     3. コアメソドロジ：USE法・RED法・診断サイクル
                 </h2>
                 <p>
                     Systems
                     Performanceという書籍の核心は、個別ツールの使い方以上に「<strong>どういう順序・考え方で問題を切り分けるか</strong>」というメソドロジにあります。
                 </p>
-                <h3 id="31-アンチメソッドやってはいけない調査の仕方">
+                <h3 id="31-アンチメソッドやってはいけない調査の仕方" tabIndex={-1}>
                     3.1 アンチメソッド：やってはいけない調査の仕方
                 </h3>
                 <p>原著2章では、まず「良くない調査方法」を3つ挙げています。</p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>アンチメソッド</th>
-                                <th>内容</th>
-                                <th>問題点</th>
+                            <tr className="header">
+                                <th scope="col">アンチメソッド</th>
+                                <th scope="col">内容</th>
+                                <th scope="col">問題点</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>街灯のアンチメソッド</td>
                                 <td>慣れたツールだけを見て回る</td>
                                 <td>本当の原因が見えている場所と限らない</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>ランダム変更アンチメソッド</td>
                                 <td>とりあえず設定を変えて様子を見る</td>
                                 <td>原因不明のまま「治った気がする」で終わる</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>誰か他人のせいにするアンチメソッド</td>
                                 <td>「ネットワークが悪い」等、担当外のせいにする</td>
                                 <td>検証なしに責任転嫁し、真因調査が止まる</td>
@@ -880,7 +238,7 @@ flowchart TB
                         </tbody>
                     </table>
                 </div>
-                <h3 id="32-useメソッドutilization-saturation-errors">
+                <h3 id="32-useメソッドutilization-saturation-errors" tabIndex={-1}>
                     3.2 USEメソッド（Utilization, Saturation, Errors）
                 </h3>
                 <p>
@@ -907,39 +265,22 @@ flowchart TB
                         >：エラーイベントの発生数。エラーは性能を劣化させる一方、リトライなどで見えにくく見落とされがちなため、他の2つより先にチェックすると効率的です。
                     </li>
                 </ul>
-                <pre class="mermaid">
-flowchart TD
-    START(["対象システムの&lt;br/&gt;機能構成図を描く"]) --&gt; R["リソースを1つ選ぶ&lt;br/&gt;(CPU / メモリ / ディスク / NIC...)"]
-    R --&gt; E{"エラーは&lt;br/&gt;発生しているか?"}
-    E -- "Yes" --&gt; ISSUE["ボトルネック候補として記録"]
-    E -- "No" --&gt; U{"使用率は&lt;br/&gt;高いか?"}
-    U -- "Yes" --&gt; ISSUE
-    U -- "No" --&gt; S{"飽和度は&lt;br/&gt;高いか(キュー滞留)?"}
-    S -- "Yes" --&gt; ISSUE
-    S -- "No" --&gt; NEXT["問題なし:次のリソースへ"]
-    ISSUE --&gt; NEXT
-    NEXT --&gt; MORE{"未確認の&lt;br/&gt;リソースが残っているか?"}
-    MORE -- "Yes" --&gt; R
-    MORE -- "No" --&gt; DONE(["候補リストを基に&lt;br/&gt;さらに深掘り分析"])
-
-    classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff;
-    class ISSUE dangerFill</pre
-                >
+                <Diagram id="diag-3" />
                 <p>
                     USEメソッドをLinuxの主要リソースに具体的に当てはめると、以下のようになります（原著付録Aの考え方を要約）。
                 </p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>リソース</th>
-                                <th>使用率の指標例</th>
-                                <th>飽和度の指標例</th>
-                                <th>エラーの指標例</th>
+                            <tr className="header">
+                                <th scope="col">リソース</th>
+                                <th scope="col">使用率の指標例</th>
+                                <th scope="col">飽和度の指標例</th>
+                                <th scope="col">エラーの指標例</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>CPU</td>
                                 <td>
                                     <code>mpstat</code
@@ -948,7 +289,7 @@ flowchart TD
                                 <td><code>vmstat</code>の<code>r</code>列（実行待ちスレッド数）</td>
                                 <td><code>dmesg</code>のCPU関連エラー</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>メモリ（容量）</td>
                                 <td><code>free -h</code>の<code>available</code>を基準にした実質使用量（<code>total - available</code>）</td>
                                 <td>
@@ -959,13 +300,13 @@ flowchart TD
                                     Killerによるプロセス強制終了
                                 </td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>ディスクI/O</td>
                                 <td><code>iostat</code>の<code>%util</code></td>
                                 <td><code>iostat</code>の<code>avgqu-sz</code>（キュー長）</td>
                                 <td><code>smartctl</code>のディスクエラー</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>ネットワーク</td>
                                 <td><code>nicstat</code>の帯域使用率</td>
                                 <td>送受信バッファのドロップ数</td>
@@ -978,7 +319,7 @@ flowchart TD
                     USEメソッドの詳細は、Gregg本人による論文的な整理がCommunications of the
                     ACM誌にも掲載されており、業界標準のメソドロジとして広く引用されています。
                 </p>
-                <h3 id="33-red法サービス視点の相棒">3.3 RED法：サービス視点の相棒</h3>
+                <h3 id="33-red法サービス視点の相棒" tabIndex={-1}>3.3 RED法：サービス視点の相棒</h3>
                 <p>
                     USEメソッドはインフラリソース中心の手法である一方、<strong>マイクロサービス環境ではリクエスト単位の指標も同時に見る必要</strong>があります。ここで登場するのが、Grafana
                     Labs（旧Weaveworks/Kausal）のTom
@@ -992,57 +333,24 @@ flowchart TD
                 <p>
                     Wilkie自身、USEメソッドはハードウェアやディスクのようなインフラ向けに強い一方、サービス視点の健全性把握には向かないとして、両者を<strong>併用</strong>することを推奨しています。実務では「RED法でユーザー影響のあるサービスの異常を検知し、USEメソッドでその背後にあるボトルネックリソースを特定する」という組み合わせ方が定石です。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    subgraph SVC["サービス層の健全性: RED法"]
-        direction LR
-        Rt["Rate&lt;br/&gt;秒間リクエスト数"] --&gt; Er["Errors&lt;br/&gt;失敗リクエスト数"] --&gt; Du["Duration&lt;br/&gt;処理時間分布"]
-    end
-    SVC --&gt; Q{"異常を検知したら"}
-    Q --&gt; RES["インフラ層の深掘り: USE法"]
-    RES --&gt; CPU2["CPU: 使用率/飽和度/エラー"]
-    RES --&gt; MEM2["メモリ: 使用率/飽和度/エラー"]
-    RES --&gt; DISK2["ディスク: 使用率/飽和度/エラー"]
-    RES --&gt; NET2["ネットワーク: 使用率/飽和度/エラー"]</pre
-                >
-                <h3 id="34-科学的メソッドと診断サイクル">3.4 科学的メソッドと診断サイクル</h3>
+                <Diagram id="diag-4" />
+                <h3 id="34-科学的メソッドと診断サイクル" tabIndex={-1}>3.4 科学的メソッドと診断サイクル</h3>
                 <p>
                     アンチメソッドを避け、USE/RED法で当たりをつけた後は、<strong>仮説検証型の診断サイクル</strong>で深掘りしていきます。原著が推奨する「診断サイクル（Diagnosis
                     Cycle）」は、以下のようなループとして整理できます。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    A(["問題の記述&lt;br/&gt;Problem Statement"]) --&gt; B["仮説を立てる"]
-    B --&gt; C["データを収集&lt;br/&gt;(ツールで計測)"]
-    C --&gt; D["データを分析"]
-    D --&gt; E{"仮説は&lt;br/&gt;支持されたか?"}
-    E -- "No: 仮説を棄却" --&gt; B
-    E -- "Yes" --&gt; F["仮説を検証&lt;br/&gt;(再現テスト等)"]
-    F --&gt; G(["結論・対処"])</pre
-                >
+                <Diagram id="diag-5" />
                 <p>
                     「問題の記述」では、いつから・何が・どの程度悪化したか、直前に何を変更したかを明確にする「問題記述メソッド」を使います。これにより、街灯のアンチメソッドのように無目的にツールを眺め回すことを防げます。
                 </p>
                 <hr />
-                <h2 id="4-osの基礎知識カーネルとユーザーランド">
+                <h2 id="4-osの基礎知識カーネルとユーザーランド" tabIndex={-1}>
                     4. OSの基礎知識：カーネルとユーザーランド
                 </h2>
                 <p>
                     ツールの出力を正しく解釈するには、最低限のOS内部構造の理解が欠かせません。原著3章の要点を、システムコールの流れを軸に整理します。
                 </p>
-                <pre class="mermaid">
-sequenceDiagram
-    participant App as アプリケーション&lt;br/&gt;(ユーザーモード)
-    participant Kernel as カーネル&lt;br/&gt;(カーネルモード)
-    participant HW as ハードウェア
-
-    App-&gt;&gt;Kernel: システムコール発行 (例: read())
-    Note over App,Kernel: ユーザーモード/カーネルモードの&lt;br/&gt;モード切り替えコストが発生
-    Kernel-&gt;&gt;Kernel: スケジューラ / ファイルシステム / VFS処理
-    Kernel-&gt;&gt;HW: デバイスドライバ経由でI/O発行
-    HW--&gt;&gt;Kernel: 割り込み (Interrupt) で完了通知
-    Kernel--&gt;&gt;App: システムコールの戻り値</pre
-                >
+                <Diagram id="diag-6" />
                 <ul>
                     <li>
                         <strong>カーネルモードとユーザーモード</strong
@@ -1062,51 +370,27 @@ sequenceDiagram
                     </li>
                 </ul>
                 <hr />
-                <h2 id="5-可観測性ツールのデータソース">5. 可観測性ツールのデータソース</h2>
+                <h2 id="5-可観測性ツールのデータソース" tabIndex={-1}>5. 可観測性ツールのデータソース</h2>
                 <p>
                     <code>perf</code
                     >や<code>bpftrace</code>が「魔法のように」あらゆる情報を取得できるように見えるのは、カーネルが多様な計測点（データソース）を公開しているためです。原著4章で紹介される主要なデータソースを整理すると、以下のようになります。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    K["Linuxカーネル"] --&gt; P1["/proc&lt;br/&gt;プロセス/システム統計"]
-    K --&gt; P2["/sys&lt;br/&gt;デバイス/カーネル設定"]
-    K --&gt; TP["トレースポイント&lt;br/&gt;(Tracepoints)&lt;br/&gt;比較的安定した静的計測点"]
-    K --&gt; KP["kprobe&lt;br/&gt;カーネル関数への動的プローブ"]
-    K --&gt; UP["uprobe&lt;br/&gt;ユーザー空間関数への動的プローブ"]
-    APP["アプリケーション/ランタイム&lt;br/&gt;(ユーザー空間)"] --&gt; USDT["USDT&lt;br/&gt;アプリ埋め込み静的トレースポイント"]
-    K -.uprobe等の仕組みで接続.-&gt; USDT
-    K --&gt; PMC["PMC&lt;br/&gt;ハードウェアパフォーマンスカウンタ"]
-
-    P1 --&gt; T1["vmstat, ps, top等が利用"]
-    P2 --&gt; T2["ethtool, cgroup設定等が利用"]
-    TP --&gt; T3["perf, bpftrace が利用&lt;br/&gt;(カーネルバージョン間で比較的安定)"]
-    KP --&gt; T4["bpftrace, BCC が利用&lt;br/&gt;(カーネル内部関数、非互換リスクあり)"]
-    UP --&gt; T5["bpftrace, BCC が利用&lt;br/&gt;(libc関数等)"]
-    USDT --&gt; T6["言語ランタイム提供&lt;br/&gt;(例: Node.js, PostgreSQL)"]
-    PMC --&gt; T7["perf stat が利用&lt;br/&gt;(IPC, キャッシュミス等)"]
-
-    classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff;
-    class K,APP,P1,P2,TP,KP,UP,USDT,PMC highlightFill</pre
-                >
+                <Diagram id="diag-7" />
                 <p>
                     初学者がまず押さえるべきは、<strong>「安定した抽象化レイヤーほど壊れにくいが、粒度は粗い」</strong>という原則です。<code>/proc</code>やトレースポイントは比較的安定したインターフェースで、カーネルバージョンが変わっても使い続けやすい一方、kprobe（カーネル関数への動的プローブ）はカーネル内部実装に依存するため、カーネルアップデートで動かなくなるリスクがあります。運用ツールを自作する際は、この安定性のトレードオフを意識する必要があります。
                 </p>
                 <p>
                     <strong>注記</strong>：トレースポイントは kprobe
-                    と比べれば安定していますが、<strong>保証されたABIではありません</strong>。イベント名・引数フィールドの構成・そもそもの提供有無は、カーネルのアップデートに伴って変更・削除されることがあります。利用可能なイベントとフィールドは、実行環境ごとに
-                    <code>bpftrace -l 'tracepoint:*'</code> や
-                    <code
+                    と比べれば安定していますが、<strong>保証されたABIではありません</strong>。イベント名・引数フィールドの構成・そもそもの提供有無は、カーネルのアップデートに伴って変更・削除されることがあります。利用可能なイベントとフィールドは、実行環境ごとに{' '}<code>bpftrace -l &apos;tracepoint:*&apos;</code> や{' '}<code
                         >/sys/kernel/debug/tracing/events/&lt;subsystem&gt;/&lt;event&gt;/format</code
-                    >
-                    で確認する運用にしてください。
+                    >{' '}で確認する運用にしてください。
                 </p>
                 <hr />
-                <h2 id="6-cpuパフォーマンス分析">6. CPUパフォーマンス分析</h2>
+                <h2 id="6-cpuパフォーマンス分析" tabIndex={-1}>6. CPUパフォーマンス分析</h2>
                 <p>
                     CPUは最もよく分析されるリソースです。原著6章の流れに沿って、USEメソッドをCPUに適用する具体的な手順を示します。
                 </p>
-                <h3 id="61-基本用語">6.1 基本用語</h3>
+                <h3 id="61-基本用語" tabIndex={-1}>6.1 基本用語</h3>
                 <ul>
                     <li>
                         <strong>使用率</strong
@@ -1123,22 +407,8 @@ flowchart TB
                         Instruction）。単純な使用率だけでなく、CPUがどれだけ効率的に働いているか（キャッシュミスで待たされていないか等）を示す重要な指標です。
                     </li>
                 </ul>
-                <h3 id="62-cpu分析の観測ツールチェーン">6.2 CPU分析の観測ツールチェーン</h3>
-                <pre class="mermaid">
-flowchart TB
-    S["Step1: 固定カウンタで概況把握"] --&gt; S1["uptime (ロードアベレージ)"]
-    S1 --&gt; S2["vmstat 1 (r列, us/sy/id)"]
-    S2 --&gt; S3["mpstat -P ALL 1 (CPUごとの偏り)"]
-    S3 --&gt; S4["pidstat 1 (プロセスごとのCPU使用率)"]
-    S4 --&gt; T["Step2: プロファイリングで内訳を特定"]
-    T --&gt; T1["perf record -F 99 -a -g -- sleep 30"]
-    T1 --&gt; T2["perf script → フレームグラフ生成"]
-    T2 --&gt; U["Step3: 必要なら動的トレーシングで深掘り"]
-    U --&gt; U1["bpftrace でカスタムイベント計測"]
-
-    classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff;
-    class S,S1,S2,S3,S4,T,T1,T2,U,U1 highlightFill</pre
-                >
+                <h3 id="62-cpu分析の観測ツールチェーン" tabIndex={-1}>6.2 CPU分析の観測ツールチェーン</h3>
+                <Diagram id="diag-8" />
                 <p>代表的なコマンド例（Linux環境）：</p>
                 <ul>
                     <li>Step1: 全体像の把握（負荷平均・r列・使用率）<br /><code>uptime</code></li>
@@ -1153,11 +423,11 @@ flowchart TB
                     <li><code>perf script &gt; out.perf-script</code></li>
                     <li>
                         Step3: bpftraceでオンCPUサンプルの出現回数をカーネルスタック別に集計<br /><code
-                            >bpftrace -e 'profile:hz:99 { @[kstack] = count(); }'</code
+                            >bpftrace -e &apos;profile:hz:99 &#123; @[kstack] = count(); &#125;&apos;</code
                         >
                     </li>
                 </ul>
-                <h3 id="63-フレームグラフcpu分析の代表的な可視化">
+                <h3 id="63-フレームグラフcpu分析の代表的な可視化" tabIndex={-1}>
                     6.3 フレームグラフ：CPU分析の代表的な可視化
                 </h3>
                 <p>
@@ -1167,15 +437,8 @@ flowchart TB
                     >です。Brendan
                     Greggが2011年に考案したこの可視化手法は、Netflixをはじめ多くの企業・言語で採用され、CPUプロファイリングの事実上の標準となっています。仕組みはシンプルで、収集した多数のスタックトレースをマージし、横幅を出現頻度、縦方向をスタックの深さとして描画します。横に広い山ほど「そのコードパスがCPU時間を多く消費している」ことを意味し、視覚的にホットスポットを一目で把握できます。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    F["フレームグラフの読み方"]
-    F --&gt; W["横幅 = そのスタックが&lt;br/&gt;サンプルされた頻度&lt;br/&gt;(アルファベット順にソート、時系列ではない)"]
-    F --&gt; H["高さ = スタックの深さ&lt;br/&gt;(下が呼び出し元、上が呼び出し先)"]
-    F --&gt; C["色 = ランダム、または&lt;br/&gt;言語/モジュール等で色分け"]
-    W --&gt; R["幅の広い山を優先的に調査する"]</pre
-                >
-                <h3 id="64-cpuチューニングの主な選択肢">6.4 CPUチューニングの主な選択肢</h3>
+                <Diagram id="diag-9" />
+                <h3 id="64-cpuチューニングの主な選択肢" tabIndex={-1}>6.4 CPUチューニングの主な選択肢</h3>
                 <ul>
                     <li>コンパイラ最適化オプション（<code>-O2</code>等）の見直し</li>
                     <li>
@@ -1188,22 +451,22 @@ flowchart TB
                         >点に注意が必要です
                     </li>
                 </ul>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>項目</th>
-                                <th>cgroup v1</th>
-                                <th>cgroup v2</th>
+                            <tr className="header">
+                                <th scope="col">項目</th>
+                                <th scope="col">cgroup v1</th>
+                                <th scope="col">cgroup v2</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>相対的な配分（重み）</td>
                                 <td><code>cpu.shares</code>（既定1024）</td>
                                 <td><code>cpu.weight</code>（既定100）</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>絶対的な上限（帯域制限）</td>
                                 <td>
                                     <code>cpu.cfs_quota_us</code> と
@@ -1211,12 +474,12 @@ flowchart TB
                                 </td>
                                 <td>
                                     <code>cpu.max</code>（<code
-                                        >"&lt;quota&gt; &lt;period&gt;"</code
+                                        >&quot;&lt;quota&gt; &lt;period&gt;&quot;</code
                                     >
                                     を1ファイルで指定。無制限は <code>max</code>）
                                 </td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>スロットリング統計</td>
                                 <td>
                                     <code>cpu.stat</code>（<code>nr_throttled</code>,
@@ -1239,37 +502,25 @@ flowchart TB
                     </li>
                 </ul>
                 <hr />
-                <h2 id="7-メモリパフォーマンス分析">7. メモリパフォーマンス分析</h2>
-                <h3 id="71-仮想メモリとページング">7.1 仮想メモリとページング</h3>
+                <h2 id="7-メモリパフォーマンス分析" tabIndex={-1}>7. メモリパフォーマンス分析</h2>
+                <h3 id="71-仮想メモリとページング" tabIndex={-1}>7.1 仮想メモリとページング</h3>
                 <p>
                     各プロセスは自分専用の仮想アドレス空間を持ち、実際の物理メモリとはページテーブルを介して対応付けられます。ページが必要になった時点で初めて物理メモリを割り当てる「デマンドページング」により、プロセスは実メモリを超えるアドレス空間を扱えます。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    subgraph VAS["プロセスの仮想アドレス空間"]
-        direction TB
-        Text["Text (コード)"]
-        Heap["Heap"]
-        Stack["Stack"]
-        Shared["共有ライブラリ"]
-    end
-    VAS --&gt; PT["ページテーブル&lt;br/&gt;(仮想→物理の対応管理)"]
-    PT --&gt; RAM["物理メモリ (RAM)"]
-    PT -.ページアウト時.-&gt; SWAP["スワップ領域&lt;br/&gt;(ディスク上)"]</pre
-                >
-                <h3 id="72-メモリのuseメソッド">7.2 メモリのUSEメソッド</h3>
+                <Diagram id="diag-10" />
+                <h3 id="72-メモリのuseメソッド" tabIndex={-1}>7.2 メモリのUSEメソッド</h3>
                 <p>メモリは「容量ベースのリソース」であるため、使用率の解釈がCPUとは異なります。</p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>観点</th>
-                                <th>確認方法</th>
-                                <th>意味</th>
+                            <tr className="header">
+                                <th scope="col">観点</th>
+                                <th scope="col">確認方法</th>
+                                <th scope="col">意味</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>使用率</td>
                                 <td><code>free -h</code>の<code>available</code>列</td>
                                 <td>
@@ -1281,7 +532,7 @@ flowchart LR
                                     >でもない）
                                 </td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>飽和</td>
                                 <td>
                                     <code>vmstat</code
@@ -1290,7 +541,7 @@ flowchart LR
                                 </td>
                                 <td>スワップが発生している＝物理メモリが不足し始めているサイン</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>エラー</td>
                                 <td>OOM Killerのログ（<code>dmesg</code>）</td>
                                 <td>メモリ確保に失敗しプロセスが強制終了された記録</td>
@@ -1302,62 +553,50 @@ flowchart LR
                     初学者が特に誤解しやすいのは、「<code>free</code>コマンドの<code>free</code>列が少ない＝メモリ不足」という早合点です。Linuxは積極的に空きメモリをファイルシステムキャッシュとして活用するため、<code>free</code>列が小さいこと自体は正常です。ただし<code>buff/cache</code>の全量が即座に空きになるわけではなく、ダーティページや再利用できないページも含まれます。そのためカーネルが回収可能性を加味して算出する<code>available</code>を判断基準とし、<code>available</code>が継続的に減少していないかを見るのが正しい解釈です。あわせて注視すべきはスワップ活動（<code>vmstat</code>の<code>si</code>/<code>so</code>）とOOM
                     Killerの発生有無です。
                 </p>
-                <h3 id="73-メモリリーク検出の考え方">7.3 メモリリーク検出の考え方</h3>
+                <h3 id="73-メモリリーク検出の考え方" tabIndex={-1}>7.3 メモリリーク検出の考え方</h3>
                 <p>
                     原著7章では、メモリリーク検出のメソドロジとして、プロセスのワーキングセットサイズ（WSS：実際にアクセスされているメモリ量）の時系列推移を追い、単調増加していないかを確認する手法が紹介されています。<code>bpftrace</code>を使ってメモリリークを特定する場合は、<code>malloc</code>/<code>free</code>の呼び出しを単純に記録するだけでは不十分です。アロケーション状態を追跡する必要があります——各<code>malloc</code>の戻り値ポインタをキーに、確保サイズと確保時の呼び出しスタック（ustack）を値としてマップに保存し、対応する<code>free</code>呼び出し時にそのエントリを削除することで、未解放のアロケーションとそのコールスタックを特定できます。より手軽に活用する場合は、BCCの<code>memleak</code>ツールが同様のロジックを実装しており、リークしているアロケーションとそのコールスタックを表示できます。
                 </p>
                 <hr />
-                <h2 id="8-ファイルシステムとディスクio">8. ファイルシステムとディスクI/O</h2>
-                <h3 id="81-レイヤー構造の理解">8.1 レイヤー構造の理解</h3>
+                <h2 id="8-ファイルシステムとディスクio" tabIndex={-1}>8. ファイルシステムとディスクI/O</h2>
+                <h3 id="81-レイヤー構造の理解" tabIndex={-1}>8.1 レイヤー構造の理解</h3>
                 <p>
                     アプリケーションから見えるファイルI/Oのレイテンシは、複数レイヤーを経由した合計時間です。ボトルネックがどのレイヤーにあるかを切り分けることが重要です。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    App["アプリケーション&lt;br/&gt;read()/write()"] --&gt; VFS["VFS&lt;br/&gt;(仮想ファイルシステム層)"]
-    VFS --&gt; FSCache["ファイルシステムキャッシュ&lt;br/&gt;(ページキャッシュ)"]
-    FSCache --&gt;|"キャッシュヒット"| App
-    FSCache --&gt;|"キャッシュミス"| FS["ファイルシステム&lt;br/&gt;(ext4/xfs/zfs等)"]
-    FS --&gt; BLK["ブロック層&lt;br/&gt;(I/Oスケジューラ)"]
-    BLK --&gt; DRV["デバイスドライバ"]
-    DRV --&gt; DISK["物理ディスク&lt;br/&gt;(SSD/HDD)"]
-
-    classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff;
-    class App,VFS,FSCache,FS,BLK,DRV,DISK highlightFill</pre
-                >
+                <Diagram id="diag-11" />
                 <p>
                     <strong>論理I/Oと物理I/Oの違い</strong
                     >も重要な概念です。アプリケーションが発行した読み書き（論理I/O）は、キャッシュヒットすればディスクまで到達せず（物理I/Oゼロ）、逆に先読み（readahead）機構によって1回の論理I/Oが複数の物理I/Oを発生させることもあります。<code>iostat</code>が示すのは物理ディスクそのものではなく、<strong>カーネルのブロックデバイス層で観測されたI/O統計</strong>である点に注意が必要です。対象はカーネルから見えるデバイスまたはパーティションであり、仮想化環境やクラウドでは仮想ブロックデバイス（EBSボリューム等）の統計になります。ゲストのカーネルからはバックエンドのストレージインフラの挙動は見えないため、クラウド環境ではプロバイダ側のボリューム／サービスメトリクス（例：CloudWatchのEBSメトリクス）を併せて確認します。これらは物理ディスクを直接計測した値ではなく、プロバイダがボリューム単位で公開する指標ですが、IOPS／スループットの上限への到達、レイテンシ、バーストクレジットの消費といったバックエンド側の振る舞いを評価する手掛かりになります。
                 </p>
-                <h3 id="82-ディスクioへのuseメソッド適用">8.2 ディスクI/OへのUSEメソッド適用</h3>
+                <h3 id="82-ディスクioへのuseメソッド適用" tabIndex={-1}>8.2 ディスクI/OへのUSEメソッド適用</h3>
                 <ul>
                     <li>
                         ディスクI/Oの使用率・飽和度をリアルタイム監視<br /><code>iostat -xz 1</code>
                     </li>
                 </ul>
                 <p>出力の読み方（代表的な列）：</p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>列名</th>
-                                <th>意味</th>
+                            <tr className="header">
+                                <th scope="col">列名</th>
+                                <th scope="col">意味</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td><code>%util</code></td>
                                 <td>使用率（デバイスがビジー状態だった時間の割合）</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td><code>avgqu-sz</code></td>
                                 <td>飽和度の目安（I/Oキューの平均長）</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td><code>await</code></td>
                                 <td>I/O完了までの平均レイテンシ(ms)</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td><code>r/s</code>, <code>w/s</code></td>
                                 <td>秒間の読み書きIOPS</td>
                             </tr>
@@ -1367,40 +606,25 @@ flowchart TB
                 <p>
                     原著9章では、IOPS（1秒あたりのI/O操作数）だけを見て判断することの危険性が強調されています。同じIOPS値でも、I/Oサイズ（4KBか1MBか）やランダムI/Oかシーケンシャルか、読み込みか書き込みかによって実際の負荷やレイテンシは大きく異なるため、<strong>「IOPSは平等ではない」</strong>という原則を意識する必要があります。
                 </p>
-                <h3 id="83-レイテンシの可視化ヒートマップ">8.3 レイテンシの可視化：ヒートマップ</h3>
+                <h3 id="83-レイテンシの可視化ヒートマップ" tabIndex={-1}>8.3 レイテンシの可視化：ヒートマップ</h3>
                 <p>
                     ディスクI/Oのレイテンシは平均値だけでは実態を見誤りがちです。多くのI/Oは高速に完了する一方、一部が極端に遅い「レイテンシの外れ値（Long
                     Tail
                     Latency）」を引き起こすことがあり、平均値ではこれが埋もれてしまいます。原著ではレイテンシヒートマップ（横軸を時間、縦軸をレイテンシ、色を頻度とする可視化）を使い、外れ値の分布パターンを視覚的に把握する手法が紹介されています。
                 </p>
                 <hr />
-                <h2 id="9-ネットワークパフォーマンス分析">9. ネットワークパフォーマンス分析</h2>
-                <h3 id="91-tcp接続のライフサイクルとレイテンシ">
+                <h2 id="9-ネットワークパフォーマンス分析" tabIndex={-1}>9. ネットワークパフォーマンス分析</h2>
+                <h3 id="91-tcp接続のライフサイクルとレイテンシ" tabIndex={-1}>
                     9.1 TCP接続のライフサイクルとレイテンシ
                 </h3>
-                <pre class="mermaid">
-sequenceDiagram
-    participant C as クライアント
-    participant S as サーバー
-
-    C-&gt;&gt;S: SYN
-    S--&gt;&gt;C: SYN-ACK
-    C-&gt;&gt;S: ACK
-    Note over C,S: TCPコネクション確立&lt;br/&gt;(この往復がレイテンシに直結)
-    C-&gt;&gt;S: データ送信
-    S--&gt;&gt;C: ACK
-    Note over C,S: パケットロス発生時は重複ACKを3回受信した&lt;br/&gt;時点でFast Retransmitにより早期再送。&lt;br/&gt;重複ACKが得られない場合はRTO満了後に再送
-    C-&gt;&gt;S: FIN (切断開始)
-    S--&gt;&gt;C: ACK / FIN
-    C-&gt;&gt;S: ACK</pre
-                >
+                <Diagram id="diag-12" />
                 <p>
                     ネットワークレイテンシの分析では、接続確立にかかる時間（RTT: Round Trip
                     Time）とデータ転送自体のスループットを分けて考えることが重要です。再送（retransmit）が多発している場合、ネットワーク経路上でパケットロスが起きている可能性が高く、<code
                         >netstat -s</code
                     >や<code>ss</code>コマンドで再送カウンタを確認します。
                 </p>
-                <h3 id="92-主要な観測コマンド">9.2 主要な観測コマンド</h3>
+                <h3 id="92-主要な観測コマンド" tabIndex={-1}>9.2 主要な観測コマンド</h3>
                 <ul>
                     <li>
                         TCPソケットの詳細情報（RTT、輻輳ウィンドウ等）<br /><code>ss -tino</code>
@@ -1409,12 +633,12 @@ sequenceDiagram
                     <li>NIC使用率（帯域に対する割合）<br /><code>nicstat 1</code></li>
                     <li>
                         パケットキャプチャ（フィルタ＋件数上限で保存量を抑える）<br /><code
-                            >tcpdump -i eth0 &#39;tcp port 443&#39; -c 10000 -w out.pcap</code
+                            >tcpdump -i eth0 &apos;tcp port 443&apos; -c 10000 -w out.pcap</code
                         >
                     </li>
                     <li>
                         長時間採取時はローテーション（100MB × 5ファイルで上限）<br /><code
-                            >tcpdump -i eth0 &#39;tcp port 443&#39; -C 100 -W 5 -w out.pcap</code
+                            >tcpdump -i eth0 &apos;tcp port 443&apos; -C 100 -W 5 -w out.pcap</code
                         >
                     </li>
                     <li>
@@ -1428,55 +652,42 @@ sequenceDiagram
                     >を用いれば、TCPコネクションの生成から切断までのライフタイム（<code>tcplife</code>相当のツール）や、再送イベントの発生箇所（<code>tcpretrans</code>相当）を低オーバーヘッドでトレースできます。
                 </p>
                 <hr />
-                <h2 id="10-クラウドコンピューティング特有の考慮点">
+                <h2 id="10-クラウドコンピューティング特有の考慮点" tabIndex={-1}>
                     10. クラウドコンピューティング特有の考慮点
                 </h2>
                 <p>
                     ここが本書のタイトルにも含まれる「Enterprise and the
                     Cloud」の核心部分です。原著11章では、クラウドの仮想化方式を3つに分類し、それぞれのオーバーヘッドと可観測性の違いを整理しています。
                 </p>
-                <h3 id="101-仮想化方式の3分類">10.1 仮想化方式の3分類</h3>
-                <pre class="mermaid">
-flowchart TB
-    V["クラウドの仮想化方式"]
-    V --&gt; HV["ハードウェア仮想化&lt;br/&gt;(Hardware Virtualization)"]
-    V --&gt; OV["OS仮想化&lt;br/&gt;(OS Virtualization)"]
-    V --&gt; LV["軽量仮想化&lt;br/&gt;(Lightweight Virtualization)"]
-
-    HV --&gt; HV1["各VMが独自カーネルを持つ&lt;br/&gt;例: Xen, KVM"]
-    OV --&gt; OV1["ホストカーネルを共有&lt;br/&gt;例: Dockerコンテナ, LXC"]
-    LV --&gt; LV1["最小限のVMで&lt;br/&gt;コンテナ的な俊敏性を実現&lt;br/&gt;例: AWS Firecracker microVM"]
-
-    classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff;
-    class V,HV,OV,LV,HV1,OV1,LV1 highlightFill</pre
-                >
-                <div class="table-scroll">
+                <h3 id="101-仮想化方式の3分類" tabIndex={-1}>10.1 仮想化方式の3分類</h3>
+                <Diagram id="diag-13" />
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>方式</th>
-                                <th>分離レベル</th>
-                                <th>起動時間の目安</th>
-                                <th>オーバーヘッド</th>
-                                <th>代表技術</th>
+                            <tr className="header">
+                                <th scope="col">方式</th>
+                                <th scope="col">分離レベル</th>
+                                <th scope="col">起動時間の目安</th>
+                                <th scope="col">オーバーヘッド</th>
+                                <th scope="col">代表技術</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>ハードウェア仮想化</td>
                                 <td>ゲストごとに独立カーネル。分離レベルは最も高い</td>
                                 <td>数十秒〜</td>
                                 <td>ハイパーバイザー経由のI/O・ネットワークで発生しやすい</td>
                                 <td>KVM, Xen</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>OS仮想化（コンテナ）</td>
                                 <td>ホストカーネルをcgroup/namespaceで分離</td>
                                 <td>ミリ秒〜数秒</td>
                                 <td>分離の甘さがトレードオフ（カーネルは共有）</td>
                                 <td>Docker, containerd</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>軽量仮想化（microVM）</td>
                                 <td>独自カーネルを持ちつつ最小構成で高速起動</td>
                                 <td>100ms前後</td>
@@ -1493,7 +704,7 @@ flowchart TB
                     Nitroは<strong>別の層の技術</strong>であり、同一の設計として扱わないよう注意が必要です。Nitroは、仮想化処理を専用ハードウェア（Nitroカード・Nitroセキュリティチップ）と軽量なNitro
                     Hypervisorへオフロードする<strong>EC2の基盤コンポーネント</strong>です。一方Firecrackerは、LambdaやFargateといったサーバーレス基盤において、そのNitroベースのインスタンス上でテナントごとのmicroVMを起動するために追加で用いられる<strong>VMM層</strong>です。
                 </p>
-                <h3 id="102-マルチテナンシーとノイジーネイバー問題">
+                <h3 id="102-マルチテナンシーとノイジーネイバー問題" tabIndex={-1}>
                     10.2 マルチテナンシーと「ノイジーネイバー」問題
                 </h3>
                 <p>
@@ -1503,25 +714,11 @@ flowchart TB
                 <p>
                     Netflixの計算基盤チームは、自社のマルチテナントコンピュートプラットフォーム「Titus」において、このノイジーネイバー検知にeBPFを活用した事例を公開しています。従来の<code>perf</code>のようなツールは本番環境に常時仕掛けるにはオーバーヘッドが大きすぎる一方、eBPFでスケジューラのランキューレイテンシ（コンテナがCPUに割り当てられるまでの待ち時間）を継続的に計測することで、低オーバーヘッドかつ常時稼働可能な監視を実現したと報告されています。同チームはこの過程で開発したeBPFプログラムの性能を可視化するツール「bpftop」もオープンソースとして公開しました。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    H["物理ホスト"] --&gt; T1["テナントA&lt;br/&gt;(コンテナ)"]
-    H --&gt; T2["テナントB&lt;br/&gt;(コンテナ)&lt;br/&gt;過剰なCPU/メモリ使用"]
-    H --&gt; T3["テナントC&lt;br/&gt;(コンテナ)"]
-    T2 -.リソース枯渇.-&gt; T1
-    T2 -.リソース枯渇.-&gt; T3
-    T1 --&gt; SYM["症状: レイテンシ増加&lt;br/&gt;スループット低下"]
-    T3 --&gt; SYM
-    SYM --&gt; DETECT["eBPFでランキュー&lt;br/&gt;レイテンシを継続計測"]
-    DETECT --&gt; ACT["リソースコントロール&lt;br/&gt;(cgroup制限/再配置)で対処"]
-
-    classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff;
-    class T2 dangerFill</pre
-                >
+                <Diagram id="diag-14" />
                 <p>
                     さらに近年では、コンテナ数を極端にスケールさせた際に、Linuxカーネル内部のロック競合（例：VFSのグローバルマウントロック）がボトルネックになるという、より深いレイヤーの知見もNetflixから報告されています。これは「オーケストレーション層は正常でも、その下のカーネル・CPUアーキテクチャに真因がある」という、まさにUSEメソッドが重視する<strong>リソースを網羅的に調べる姿勢</strong>の重要性を裏付ける事例といえます。
                 </p>
-                <h3 id="103-クラウド環境での可観測性の制約">10.3 クラウド環境での可観測性の制約</h3>
+                <h3 id="103-クラウド環境での可観測性の制約" tabIndex={-1}>10.3 クラウド環境での可観測性の制約</h3>
                 <p>
                     クラウドインスタンス、特にコンテナ環境では、以下のような制約に注意が必要です。
                 </p>
@@ -1537,23 +734,13 @@ flowchart LR
                     </li>
                 </ul>
                 <hr />
-                <h2 id="11-ベンチマーキングのベストプラクティスと落とし穴">
+                <h2 id="11-ベンチマーキングのベストプラクティスと落とし穴" tabIndex={-1}>
                     11. ベンチマーキングのベストプラクティスと落とし穴
                 </h2>
                 <p>
                     パフォーマンス改善の効果を検証するにはベンチマークが必要ですが、原著12章では「ベンチマーキングは驚くほど間違えやすい」と警告されています。よくある落とし穴と、押さえるべきポイントを整理します。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    B["効果的なベンチマーキングのための&lt;br/&gt;チェックリスト"]
-    B --&gt; B1["何を測定したいか&lt;br/&gt;目的を明確にする"]
-    B1 --&gt; B2["本番に近いワークロード&lt;br/&gt;特性を再現する"]
-    B2 --&gt; B3["ウォームアップ期間を&lt;br/&gt;結果から除外する"]
-    B3 --&gt; B4["ランプ負荷で&lt;br/&gt;段階的に負荷を上げる"]
-    B4 --&gt; B5["ベンチマーク中の&lt;br/&gt;リソース使用状況も観測する&lt;br/&gt;(USEメソッド併用)"]
-    B5 --&gt; B6["統計的分析&lt;br/&gt;(平均だけでなくばらつきも見る)"]
-    B6 --&gt; B7["結果に対する&lt;br/&gt;サニティチェックを行う"]</pre
-                >
+                <Diagram id="diag-15" />
                 <ul>
                     <li>
                         <strong>産業標準ベンチマークの罠</strong
@@ -1569,47 +756,36 @@ flowchart TB
                     </li>
                 </ul>
                 <hr />
-                <h2 id="12-ツールチェーンの選び方perfftraceebpf">
+                <h2 id="12-ツールチェーンの選び方perfftraceebpf" tabIndex={-1}>
                     12. ツールチェーンの選び方：perf・Ftrace・eBPF
                 </h2>
                 <p>
                     原著13〜15章は、それぞれ<code>perf</code>・<code>Ftrace</code>・BPF（eBPF）という3つの主要ツールチェーンに1章ずつを割いています。それぞれの立ち位置を整理します。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    subgraph EBPF["eBPFエコシステムの構成"]
-        direction TB
-        USER["ユーザー空間&lt;br/&gt;bpftrace / BCCで記述したプログラム"]
-        USER --&gt; VERIFY["カーネルの検証器 (Verifier)&lt;br/&gt;安全性を静的に検査"]
-        VERIFY --&gt; JIT["JITコンパイル&lt;br/&gt;ネイティブコードへ変換"]
-        JIT --&gt; HOOK["カーネルのフックポイントで実行&lt;br/&gt;(kprobe/uprobe/tracepoint等)"]
-        HOOK --&gt; MAP["BPF Maps&lt;br/&gt;集計データをユーザー空間へ受け渡し"]
-        MAP --&gt; OUT["結果を出力&lt;br/&gt;(ヒストグラム/カウント/スタック等)"]
-    end</pre
-                >
-                <div class="table-scroll">
+                <Diagram id="diag-16" />
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>ツール</th>
-                                <th>得意分野</th>
-                                <th>特徴</th>
+                            <tr className="header">
+                                <th scope="col">ツール</th>
+                                <th scope="col">得意分野</th>
+                                <th scope="col">特徴</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>perf</td>
                                 <td>CPUプロファイリング、ハードウェアカウンタ活用</td>
                                 <td>
                                     Linuxカーネルに標準搭載。フレームグラフ生成の起点としても定番
                                 </td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>Ftrace</td>
                                 <td>カーネル内部の関数呼び出し追跡、ヒストグラムトリガー</td>
                                 <td>追加インストール不要でカーネルに組み込み済み</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>BPF (bpftrace/BCC)</td>
                                 <td>カスタムイベントの低オーバーヘッド動的トレーシング</td>
                                 <td>
@@ -1624,21 +800,21 @@ flowchart TB
                     Foundation（Linux
                     Foundation傘下、Meta・Google・Microsoft・Netflix・Isovalent等が参画）を中心に、観測性だけでなくネットワーキング・セキュリティ領域でも標準的な基盤技術として採用が進んでいます。この生態系の中核をなす2つのフロントエンドが、単発の複雑なツールを書くのに向く<strong>BCC</strong>と、1行プログラムから手軽に始められる<strong>bpftrace</strong>です。
                 </p>
-                <h3 id="実践bpftraceの1行プログラム例">実践：bpftraceの1行プログラム例</h3>
+                <h3 id="実践bpftraceの1行プログラム例" tabIndex={-1}>実践：bpftraceの1行プログラム例</h3>
                 <p>
                     原著付録Cで多数紹介されている1行プログラムのうち、初学者が最初に試すのに適したものを抜粋します。
                 </p>
                 <ul>
                     <li>
                         execveによるプログラム実行をリアルタイムに表示（実行されるファイル名を表示）<br /><code
-                            >bpftrace -e 'tracepoint:syscalls:sys_enter_execve { printf("%s\n",
-                            str(args.filename)); }'</code
+                            >bpftrace -e &apos;tracepoint:syscalls:sys_enter_execve &#123; printf(&quot;%s\n&quot;,
+                            str(args.filename)); &#125;&apos;</code
                         >
                     </li>
                     <li>
                         システムコールの発行回数をプロセス名ごとに集計<br /><code
-                            >bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @[comm] = count();
-                            }'</code
+                            >bpftrace -e &apos;tracepoint:raw_syscalls:sys_enter &#123; @[comm] = count();
+                            &#125;&apos;</code
                         >
                     </li>
                     <li>
@@ -1661,75 +837,57 @@ flowchart TB
                 </p>
                 <p>
                     なお<code>kprobe:blk_account_io_start</code>のようなカーネル内部関数へのkprobeは、インライン化や関数名の変更でカーネルバージョンごとに使えなくなることがあります。自作する場合は比較的安定した<code>tracepoint:block:*</code>を優先し、利用可能なプローブは<code
-                        >bpftrace -l 'tracepoint:block:*'</code
+                        >bpftrace -l &apos;tracepoint:block:*&apos;</code
                     >で事前に確認してください。
                 </p>
                 <hr />
-                <h2 id="13-実践60秒linuxパフォーマンス分析チェックリスト">
+                <h2 id="13-実践60秒linuxパフォーマンス分析チェックリスト" tabIndex={-1}>
                     13. 実践：60秒Linuxパフォーマンス分析チェックリスト
                 </h2>
                 <p>
                     原著1章で紹介される「60秒でできるLinuxパフォーマンス分析」は、障害発生時に<strong>まず何から手をつけるべきか</strong>を示す実践的なチェックリストです。<code>uptime</code>・<code>vmstat</code>・<code>mpstat</code>・<code>pidstat</code>・<code>iostat</code>・<code>sar</code>・<code>top</code>といった、多くのLinuxディストリビューションで標準的に利用できる低オーバーヘッドの基本観測ツールを中心に構成されている点が利点です。ただしオーバーヘッドはゼロではありません。プロセス数やCPUコア数といった対象システムの規模と、サンプリング間隔（<code>1</code>秒指定など）に応じてコストは変動し、特にプロセス単位で集計する<code>pidstat</code>や<code>top</code>は大規模ホストで相応の負荷になり得ます。
                 </p>
-                <pre class="mermaid">
-flowchart TB
-    Q1["1. uptime&lt;br/&gt;ロードアベレージを確認"] --&gt; Q2["2. dmesg | tail&lt;br/&gt;直近のカーネルエラー/OOMを確認"]
-    Q2 --&gt; Q3["3. vmstat 1&lt;br/&gt;r列(CPU飽和)、si/so(スワップ)"]
-    Q3 --&gt; Q4["4. mpstat -P ALL 1&lt;br/&gt;CPUコア間の偏りを確認"]
-    Q4 --&gt; Q5["5. pidstat -u -r -d 1&lt;br/&gt;プロセス単位のCPU/メモリ/IO"]
-    Q5 --&gt; Q6["6. iostat -xz 1&lt;br/&gt;ディスクの%util/await"]
-    Q6 --&gt; Q7["7. free -m&lt;br/&gt;実メモリ使用量とキャッシュ"]
-    Q7 --&gt; Q8["8. sar -n DEV 1&lt;br/&gt;ネットワークスループット"]
-    Q8 --&gt; Q9["9. sar -n TCP,ETCP 1&lt;br/&gt;TCP接続確立/再送状況"]
-    Q9 --&gt; Q10["10. top&lt;br/&gt;プロセス全体を俯瞰し当たりを絞る"]
-    Q10 --&gt; DONE(["候補が絞れたら&lt;br/&gt;USEメソッドで深掘り"])</pre
-                >
+                <Diagram id="diag-17" />
                 <p>
                     このチェックリストの狙いは、10個のコマンドを機械的に実行することそのものではなく、<strong>「エラー・使用率・飽和度という3つの視点を、主要リソースすべてに対して漏れなく短時間で当てる」</strong>という、USEメソッドの思想を実務に落とし込む型を身につけることにあります。
                 </p>
                 <hr />
-                <h2 id="14-ケーススタディの読み方">14. ケーススタディの読み方</h2>
+                <h2 id="14-ケーススタディの読み方" tabIndex={-1}>14. ケーススタディの読み方</h2>
                 <p>
                     原著16章では、実際の性能調査の思考プロセスがケーススタディとして紹介されています。初学者がこの種のケーススタディを読む際は、単に「どのコマンドを打ったか」を追うのではなく、以下の観点で読み解くと学習効果が高まります。
                 </p>
-                <pre class="mermaid">
-flowchart LR
-    P["問題の記述"] --&gt; S["分析戦略の選択&lt;br/&gt;(なぜそのメソドロジを選んだか)"]
-    S --&gt; D["データ収集&lt;br/&gt;(統計量→構成→PMC→トレーシングの順)"]
-    D --&gt; A["分析&lt;br/&gt;(仮説の棄却・支持)"]
-    A --&gt; C["結論&lt;br/&gt;(何が真因で、何が誤った仮説だったか)"]</pre
-                >
+                <Diagram id="diag-18" />
                 <p>
                     特に重要なのは、「最初に立てた仮説が外れることは珍しくない」という点です。原著のケーススタディでも、最初はネットワークを疑ったが実際の真因はメモリとディスクにあった、という展開が紹介されており、これはまさにアンチメソッド（誰かのせいにする／街灯の下だけ探す）を避け、USEメソッドで全リソースを機械的に確認することの価値を示す好例です。
                 </p>
                 <hr />
-                <h2 id="15-学習ロードマップ初学者向け">15. 学習ロードマップ（初学者向け）</h2>
+                <h2 id="15-学習ロードマップ初学者向け" tabIndex={-1}>15. 学習ロードマップ（初学者向け）</h2>
                 <p>これから本書および関連ツールを学ぶ際の、実践的な順序の一例です。</p>
-                <div class="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
-                            <tr class="header">
-                                <th>ステップ</th>
-                                <th>やること</th>
-                                <th>目安</th>
+                            <tr className="header">
+                                <th scope="col">ステップ</th>
+                                <th scope="col">やること</th>
+                                <th scope="col">目安</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>1</td>
                                 <td>
                                     USE法・RED法・診断サイクルの考え方を理解する（本ガイドの3章）
                                 </td>
                                 <td>まず概念を先に押さえる</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>2</td>
                                 <td>
                                     手元のLinux環境（VMでも可）で「60秒チェックリスト」の10コマンドを実際に打ってみる
                                 </td>
                                 <td>出力の意味を1つずつ確認</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>3</td>
                                 <td>
                                     <code>perf record</code
@@ -1737,7 +895,7 @@ flowchart LR
                                 </td>
                                 <td>可視化の効果を体感する</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>4</td>
                                 <td>
                                     <code>bpftrace</code
@@ -1745,14 +903,14 @@ flowchart LR
                                 </td>
                                 <td>付録Cの一覧を活用</td>
                             </tr>
-                            <tr class="odd">
+                            <tr className="odd">
                                 <td>5</td>
                                 <td>
                                     コンテナ環境（Docker等）でcgroupのリソース制限を体験し、ノイジーネイバーの挙動を再現してみる
                                 </td>
                                 <td>クラウド特有の論点の理解</td>
                             </tr>
-                            <tr class="even">
+                            <tr className="even">
                                 <td>6</td>
                                 <td>
                                     自分のワークロードでベンチマークを設計し、11章のチェックリストに沿って検証する
@@ -1763,7 +921,7 @@ flowchart LR
                     </table>
                 </div>
                 <hr />
-                <h2 id="まとめ">まとめ</h2>
+                <h2 id="まとめ" tabIndex={-1}>まとめ</h2>
                 <ul>
                     <li>
                         システムパフォーマンス分析の核心は、個別ツールの暗記ではなく
@@ -1787,39 +945,39 @@ flowchart LR
                     </li>
                 </ul>
                 <hr />
-                <h2 id="参考文献">参考文献</h2>
-                <div class="ref-grid" id="referenceGrid">
-                    <div class="ref-card" id="ref1">
-                        <div class="num">1</div>
-                        <div class="txt">
+                <h2 id="参考文献" tabIndex={-1}>参考文献</h2>
+                <div className="ref-grid" id="referenceGrid">
+                    <div className="ref-card" id="ref1">
+                        <div className="num">1</div>
+                        <div className="txt">
                             詳解 システム・パフォーマンス 第2版（オライリー・ジャパン）.
                             <a href="https://www.oreilly.co.jp/books/9784814400072/"
                                 >https://www.oreilly.co.jp/books/9784814400072/</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref2">
-                        <div class="num">2</div>
-                        <div class="txt">
-                            Brendan Gregg, "The USE Method".
+                    <div className="ref-card" id="ref2">
+                        <div className="num">2</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;The USE Method&quot;.
                             <a href="https://www.brendangregg.com/usemethod.html"
                                 >https://www.brendangregg.com/usemethod.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref3">
-                        <div class="num">3</div>
-                        <div class="txt">
-                            Brendan Gregg, "USE Method: Linux Performance Checklist".
+                    <div className="ref-card" id="ref3">
+                        <div className="num">3</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;USE Method: Linux Performance Checklist&quot;.
                             <a href="https://www.brendangregg.com/USEmethod/use-linux.html"
                                 >https://www.brendangregg.com/USEmethod/use-linux.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref4">
-                        <div class="num">4</div>
-                        <div class="txt">
-                            Brendan Gregg, "Thinking Methodically About Performance", Communications
+                    <div className="ref-card" id="ref4">
+                        <div className="num">4</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;Thinking Methodically About Performance&quot;, Communications
                             of the ACM.
                             <a
                                 href="https://cacm.acm.org/practice/thinking-methodically-about-performance/"
@@ -1827,74 +985,74 @@ flowchart LR
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref5">
-                        <div class="num">5</div>
-                        <div class="txt">
-                            Wikipedia, "Brendan Gregg".
+                    <div className="ref-card" id="ref5">
+                        <div className="num">5</div>
+                        <div className="txt">
+                            Wikipedia, &quot;Brendan Gregg&quot;.
                             <a href="https://en.wikipedia.org/wiki/Brendan_Gregg"
                                 >https://en.wikipedia.org/wiki/Brendan_Gregg</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref6">
-                        <div class="num">6</div>
-                        <div class="txt">
-                            Brendan Gregg, "BPF Performance Tools" 書籍公式ページ.
+                    <div className="ref-card" id="ref6">
+                        <div className="num">6</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;BPF Performance Tools&quot; 書籍公式ページ.
                             <a href="https://www.brendangregg.com/bpf-performance-tools-book.html"
                                 >https://www.brendangregg.com/bpf-performance-tools-book.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref7">
-                        <div class="num">7</div>
-                        <div class="txt">
-                            GitHub, "brendangregg/bpf-perf-tools-book" 公式リポジトリ.
+                    <div className="ref-card" id="ref7">
+                        <div className="num">7</div>
+                        <div className="txt">
+                            GitHub, &quot;brendangregg/bpf-perf-tools-book&quot; 公式リポジトリ.
                             <a href="https://github.com/brendangregg/bpf-perf-tools-book"
                                 >https://github.com/brendangregg/bpf-perf-tools-book</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref8">
-                        <div class="num">8</div>
-                        <div class="txt">
-                            Brendan Gregg, "CPU Flame Graphs".
+                    <div className="ref-card" id="ref8">
+                        <div className="num">8</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;CPU Flame Graphs&quot;.
                             <a href="https://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html"
                                 >https://www.brendangregg.com/FlameGraphs/cpuflamegraphs.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref9">
-                        <div class="num">9</div>
-                        <div class="txt">
-                            Wikipedia, "Flame graph".
+                    <div className="ref-card" id="ref9">
+                        <div className="num">9</div>
+                        <div className="txt">
+                            Wikipedia, &quot;Flame graph&quot;.
                             <a href="https://en.wikipedia.org/wiki/Flame_graph"
                                 >https://en.wikipedia.org/wiki/Flame_graph</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref10">
-                        <div class="num">10</div>
-                        <div class="txt">
-                            USENIX ATC'17, "Visualizing Performance with Flame Graphs".
+                    <div className="ref-card" id="ref10">
+                        <div className="num">10</div>
+                        <div className="txt">
+                            USENIX ATC&apos;17, &quot;Visualizing Performance with Flame Graphs&quot;.
                             <a
                                 href="https://www.usenix.org/conference/atc17/program/presentation/gregg-flame"
                                 >https://www.usenix.org/conference/atc17/program/presentation/gregg-flame</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref11">
-                        <div class="num">11</div>
-                        <div class="txt">
-                            Brendan Gregg, "Linux Performance" ツールマップ.
+                    <div className="ref-card" id="ref11">
+                        <div className="num">11</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;Linux Performance&quot; ツールマップ.
                             <a href="https://www.brendangregg.com/linuxperf.html"
                                 >https://www.brendangregg.com/linuxperf.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref12">
-                        <div class="num">12</div>
-                        <div class="txt">
-                            Brendan Gregg, "Cloud Performance Root Cause Analysis at Netflix"
+                    <div className="ref-card" id="ref12">
+                        <div className="num">12</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;Cloud Performance Root Cause Analysis at Netflix&quot;
                             (YOW2018スライド).
                             <a
                                 href="https://www.brendangregg.com/Slides/YOW2018_CloudPerfRCANetflix/"
@@ -1902,53 +1060,53 @@ flowchart LR
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref13">
-                        <div class="num">13</div>
-                        <div class="txt">
-                            Netflix Technology Blog, "Noisy Neighbor Detection with eBPF".
+                    <div className="ref-card" id="ref13">
+                        <div className="num">13</div>
+                        <div className="txt">
+                            Netflix Technology Blog, &quot;Noisy Neighbor Detection with eBPF&quot;.
                             <a
                                 href="https://netflixtechblog.com/noisy-neighbor-detection-with-ebpf-64b1f4b3bbdd"
                                 >https://netflixtechblog.com/noisy-neighbor-detection-with-ebpf-64b1f4b3bbdd</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref14">
-                        <div class="num">14</div>
-                        <div class="txt">
-                            Netflix Technology Blog, "Announcing bpftop: Streamlining eBPF
-                            performance optimization".
+                    <div className="ref-card" id="ref14">
+                        <div className="num">14</div>
+                        <div className="txt">
+                            Netflix Technology Blog, &quot;Announcing bpftop: Streamlining eBPF
+                            performance optimization&quot;.
                             <a
                                 href="https://netflixtechblog.com/announcing-bpftop-streamlining-ebpf-performance-optimization-6a727c1ae2e5"
                                 >https://netflixtechblog.com/announcing-bpftop-streamlining-ebpf-performance-optimization-6a727c1ae2e5</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref15">
-                        <div class="num">15</div>
-                        <div class="txt">
-                            Netflix Technology Blog, "How Netflix uses eBPF flow logs at scale for
-                            network insight".
+                    <div className="ref-card" id="ref15">
+                        <div className="num">15</div>
+                        <div className="txt">
+                            Netflix Technology Blog, &quot;How Netflix uses eBPF flow logs at scale for
+                            network insight&quot;.
                             <a
                                 href="https://netflixtechblog.com/how-netflix-uses-ebpf-flow-logs-at-scale-for-network-insight-e3ea997dca96"
                                 >https://netflixtechblog.com/how-netflix-uses-ebpf-flow-logs-at-scale-for-network-insight-e3ea997dca96</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref16">
-                        <div class="num">16</div>
-                        <div class="txt">
-                            InfoQ, "Netflix Uncovers Kernel-Level Bottlenecks While Scaling
-                            Containers on Modern CPUs" (2026).
+                    <div className="ref-card" id="ref16">
+                        <div className="num">16</div>
+                        <div className="txt">
+                            InfoQ, &quot;Netflix Uncovers Kernel-Level Bottlenecks While Scaling
+                            Containers on Modern CPUs&quot; (2026).
                             <a
                                 href="https://infoq.com/news/2026/03/netflix-kernel-scaling-container/"
                                 >https://infoq.com/news/2026/03/netflix-kernel-scaling-container/</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref17">
-                        <div class="num">17</div>
-                        <div class="txt">
-                            Grafana Labs, "The RED Method: How to Instrument Your Services" (Tom
+                    <div className="ref-card" id="ref17">
+                        <div className="num">17</div>
+                        <div className="txt">
+                            Grafana Labs, &quot;The RED Method: How to Instrument Your Services&quot; (Tom
                             Wilkie).
                             <a
                                 href="https://grafana.com/blog/the-red-method-how-to-instrument-your-services/"
@@ -1956,50 +1114,50 @@ flowchart LR
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref18">
-                        <div class="num">18</div>
-                        <div class="txt">
-                            The New Stack, "The RED Method: A New Approach to Monitoring
-                            Microservices".
+                    <div className="ref-card" id="ref18">
+                        <div className="num">18</div>
+                        <div className="txt">
+                            The New Stack, &quot;The RED Method: A New Approach to Monitoring
+                            Microservices&quot;.
                             <a href="https://thenewstack.io/monitoring-microservices-red-method/"
                                 >https://thenewstack.io/monitoring-microservices-red-method/</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref19">
-                        <div class="num">19</div>
-                        <div class="txt">
+                    <div className="ref-card" id="ref19">
+                        <div className="num">19</div>
+                        <div className="txt">
                             Firecracker microVM 公式サイト.
                             <a href="https://firecracker-microvm.github.io/"
                                 >https://firecracker-microvm.github.io/</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref20">
-                        <div class="num">20</div>
-                        <div class="txt">
-                            AWS, "The Security Design of the AWS Nitro System" ホワイトペーパー.
+                    <div className="ref-card" id="ref20">
+                        <div className="num">20</div>
+                        <div className="txt">
+                            AWS, &quot;The Security Design of the AWS Nitro System&quot; ホワイトペーパー.
                             <a
                                 href="https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/the-ec2-approach-to-preventing-side-channels.html"
                                 >https://docs.aws.amazon.com/whitepapers/latest/security-design-of-aws-nitro-system/the-ec2-approach-to-preventing-side-channels.html</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref21">
-                        <div class="num">21</div>
-                        <div class="txt">
-                            AWS Open Source Blog, "Announcing the Firecracker Open Source
-                            Technology".
+                    <div className="ref-card" id="ref21">
+                        <div className="num">21</div>
+                        <div className="txt">
+                            AWS Open Source Blog, &quot;Announcing the Firecracker Open Source
+                            Technology&quot;.
                             <a
                                 href="https://aws.amazon.com/blogs/opensource/firecracker-open-source-secure-fast-microvm-serverless/"
                                 >https://aws.amazon.com/blogs/opensource/firecracker-open-source-secure-fast-microvm-serverless/</a
                             >
                         </div>
                     </div>
-                    <div class="ref-card" id="ref22">
-                        <div class="num">22</div>
-                        <div class="txt">
-                            Brendan Gregg, "Systems Performance 2nd Edition"
+                    <div className="ref-card" id="ref22">
+                        <div className="num">22</div>
+                        <div className="txt">
+                            Brendan Gregg, &quot;Systems Performance 2nd Edition&quot;
                             書籍公式ページ（近況含む）.
                             <a
                                 href="https://www.brendangregg.com/systems-performance-2nd-edition-book.html"
@@ -2014,208 +1172,7 @@ flowchart LR
                     >
                 </p>
             </main>
+            </div>
         </div>
-        <script
-            src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js"
-            integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j"
-            crossorigin="anonymous"
-        ></script>
-        <script>
-            (function () {
-                'use strict';
-
-                // ---------- Mermaid init + render ----------
-                function initMermaid() {
-                    if (typeof mermaid === 'undefined') {
-                        console.warn('mermaid not loaded');
-                        return;
-                    }
-                    var fontFamily = getComputedStyle(document.body).fontFamily;
-                    mermaid.initialize({
-                        startOnLoad: false,
-                        theme: 'base',
-                        securityLevel: 'loose',
-                        fontFamily: fontFamily,
-                        themeVariables: {
-                            fontSize: '16px',
-                            background: '#0d1a2b',
-                            primaryColor: '#12233b',
-                            primaryTextColor: '#dbe4f3',
-                            primaryBorderColor: '#2c4770',
-                            lineColor: '#4a6390',
-                            secondaryColor: '#101f33',
-                            tertiaryColor: '#101f33',
-                            edgeLabelBackground: '#0d1a2b',
-                            clusterBkg: '#0d1a2b',
-                            clusterBorder: '#2c4770',
-                            nodeTextColor: '#dbe4f3',
-                        },
-                        flowchart: {
-                            useMaxWidth: false,
-                            htmlLabels: true,
-                            subGraphTitleMargin: { top: 12, bottom: 18 },
-                            nodeSpacing: 70,
-                            rankSpacing: 60,
-                            curve: 'basis',
-                        },
-                    });
-
-                    var fontSpecs = [
-                        ['700', '"Noto Sans JP"'],
-                        ['400', '"Noto Sans JP"'],
-                    ];
-                    var sample = '設計とアーキテクチャ0123ABC';
-                    var loadPromises = fontSpecs.map(function (spec) {
-                        try {
-                            return document.fonts.load(spec[0] + ' 16px ' + spec[1], sample);
-                        } catch (e) {
-                            return Promise.resolve();
-                        }
-                    });
-
-                    Promise.all(loadPromises)
-                        .then(function () {
-                            return document.fonts ? document.fonts.ready : Promise.resolve();
-                        })
-                        .catch(function () {})
-                        .then(function () {
-                            try {
-                                mermaid
-                                    .run({ querySelector: 'pre.mermaid' })
-                                    .then(function () {
-                                        healOverflowingLabels();
-                                        setTimeout(healOverflowingLabels, 600);
-                                    })
-                                    .catch(function (err) {
-                                        console.error('mermaid render error', err);
-                                    });
-                            } catch (e) {
-                                console.error('mermaid run failed', e);
-                            }
-                        });
-                }
-
-                function healOverflowingLabels() {
-                    document.querySelectorAll('pre.mermaid svg').forEach(function (svg) {
-                        svg.querySelectorAll('.node').forEach(function (node) {
-                            var rect = node.querySelector('rect.basic, rect');
-                            var fo = node.querySelector('foreignObject');
-                            if (!rect || !fo) return;
-                            var div = fo.querySelector('div');
-                            if (!div) return;
-                            var neededW = div.scrollWidth;
-                            var neededH = div.scrollHeight;
-                            var curW = parseFloat(fo.getAttribute('width')) || 0;
-                            var curH = parseFloat(fo.getAttribute('height')) || 0;
-                            if (neededW > curW - 2 || neededH > curH - 2) {
-                                var buffer = 6;
-                                var newW = Math.max(curW, neededW + buffer);
-                                var newH = Math.max(curH, neededH + buffer);
-                                var x = parseFloat(fo.getAttribute('x')) || 0;
-                                var y = parseFloat(fo.getAttribute('y')) || 0;
-                                var dx = (newW - curW) / 2;
-                                var dy = (newH - curH) / 2;
-                                fo.setAttribute('width', newW);
-                                fo.setAttribute('height', newH);
-                                fo.setAttribute('x', x - dx);
-                                fo.setAttribute('y', y - dy);
-                                var rx = parseFloat(rect.getAttribute('x'));
-                                var ry = parseFloat(rect.getAttribute('y'));
-                                var rw = parseFloat(rect.getAttribute('width'));
-                                var rh = parseFloat(rect.getAttribute('height'));
-                                if (!isNaN(rx) && !isNaN(rw)) {
-                                    rect.setAttribute('x', rx - dx);
-                                    rect.setAttribute('width', rw + newW - curW);
-                                }
-                                if (!isNaN(ry) && !isNaN(rh)) {
-                                    rect.setAttribute('y', ry - dy);
-                                    rect.setAttribute('height', rh + newH - curH);
-                                }
-                            }
-                        });
-                    });
-                }
-
-                try {
-                    initMermaid();
-                } catch (e) {
-                    console.error('mermaid init failed', e);
-                }
-
-                // ---------- Sidebar toggle (mobile) ----------
-                var sidebar = document.getElementById('sidebar');
-                var toggle = document.getElementById('sidebarToggle');
-                function syncToggleState() {
-                    if (!toggle || !sidebar) return;
-                    toggle.setAttribute(
-                        'aria-expanded',
-                        sidebar.classList.contains('open') ? 'true' : 'false',
-                    );
-                }
-                if (toggle) {
-                    toggle.addEventListener('click', function () {
-                        sidebar.classList.toggle('open');
-                        syncToggleState();
-                    });
-                }
-                document.querySelectorAll('#sidebarNav a').forEach(function (a) {
-                    a.addEventListener('click', function () {
-                        sidebar.classList.remove('open');
-                        syncToggleState();
-                    });
-                });
-                syncToggleState();
-
-                // ---------- Scroll-spy ----------
-                var navLinks = Array.from(document.querySelectorAll('#sidebarNav a'));
-                var linkMap = new Map();
-                navLinks.forEach(function (a) {
-                    var id = decodeURIComponent(a.getAttribute('href').slice(1));
-                    linkMap.set(id, a);
-                });
-
-                var headings = Array.from(linkMap.keys())
-                    .map(function (id) {
-                        return document.getElementById(id);
-                    })
-                    .filter(Boolean);
-
-                var spyObserver = new IntersectionObserver(
-                    function (entries) {
-                        entries.forEach(function (entry) {
-                            var link = linkMap.get(entry.target.id);
-                            if (!link) return;
-                            if (entry.isIntersecting) {
-                                navLinks.forEach(function (a) {
-                                    a.classList.remove('active');
-                                });
-                                link.classList.add('active');
-                            }
-                        });
-                    },
-                    { rootMargin: '-15% 0px -75% 0px', threshold: 0 },
-                );
-
-                headings.forEach(function (h) {
-                    spyObserver.observe(h);
-                });
-
-                // ---------- Checklist progress ----------
-                document.querySelectorAll('.checklist-card').forEach(function (card) {
-                    var boxes = card.querySelectorAll('input[type="checkbox"]');
-                    var counter = card.querySelector('.count');
-                    function update() {
-                        var checked = card.querySelectorAll(
-                            'input[type="checkbox"]:checked',
-                        ).length;
-                        if (counter) counter.textContent = checked + ' / ' + boxes.length + ' 完了';
-                    }
-                    boxes.forEach(function (b) {
-                        b.addEventListener('change', update);
-                    });
-                    update();
-                });
-            })();
-        </script>
-    </body>
-</html>
+    );
+}
