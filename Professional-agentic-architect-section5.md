@@ -293,7 +293,7 @@ Cloud KMSで管理する顧客管理暗号鍵（CMEK）は、Google管理鍵を�
 
 - **RAG Engine**：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただし**CMEKに対応するのは Spanner モードの `RagManagedDb` のみ**であり、`RagManagedVertexVectorSearch`（Serverless モードの既定のベクトルDB）と `VertexVectorSearch`（自前の Vector Search インデックスを持ち込む構成）は **CMEK 非対応**。CMEK が要件なら Spanner モード + `RagManagedDb` を選ぶ
 - **Agent Retrieval（旧 Vector Search 2.0）**：Collection/Data Objectの保管をCMEKで暗号化
-- **Vector Search 1.0**：インデックスデータの暗号化に対応
+- **Vector Search 1.0**：インデックスデータの暗号化は**Google管理暗号化のみ対応（CMEK非対応）**
 
 これにより、「エージェントが参照するグラウンディングデータ（社内ナレッジベース）を、組織のセキュリティポリシー上、Google管理鍵ではなく自社管理の鍵で暗号化したい」という金融・医療業界などのエンタープライズ要件に応えられます。
 
@@ -524,7 +524,7 @@ Google Cloud の技術的統制（Agent Identity、CMEK、VPC-SC、監査ログ�
 
 | 規制・基準 | 主な要求事項 | 対応する技術的統制 |
 |---|---|---|
-| **EU AI Act** | 高リスクAIシステムに対するログ保持、人間の監督（human oversight）、透明性の確保 | Cloud Audit Logs によるプロンプト/レスポンスの保管、Human-in-the-Loop 承認ゲート、Agent Observability |
+| **EU AI Act** | 高リスクAIシステムに対するログ保持、人間の監督（human oversight）、透明性の確保 | **Request-Response Logging（Agent Observability）** によるプロンプト/レスポンス本文の保管（Cloud Storage への出力、保存期間・アクセス制御はバケットポリシーで設定）。**Cloud Audit Logs** は管理操作（エージェント作成・設定変更等）を記録するものでありプロンプト/レスポンス本文は含まない（Data Access Audit Logs は必要に応じて別途有効化）。Human-in-the-Loop 承認ゲート |
 | **HIPAA**（米国医療） | PHI（保護対象保健情報）の暗号化、アクセス制御、監査証跡 | CMEK による暗号化、Sensitive Data Protection による PHI 検出・マスキング、Cloud Audit Logs |
 | **PCI-DSS**（決済カード業界） | カード会員データの保護、アクセス制御の最小化、定期的な監査 | Model Armor の Sensitive Data Protection 連携（カード番号検出）、PAB による権限の外枠制限、Cloud Audit Logs |
 
