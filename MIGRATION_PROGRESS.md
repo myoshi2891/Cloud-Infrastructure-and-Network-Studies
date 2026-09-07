@@ -1,6 +1,34 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-05)
+(最終更新日: 2026-09-07)
+
+## 2026-09-07: CompTIA Network+ (N10-009) ドメイン5.0「ネットワークトラブルシューティング」完全ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Comptia-network-plus-troubleshooting-guide.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ComptiaNetworkTroubleshootingGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/comptia/network-plus/network-troubleshooting-guide` ルートへ移行。グローバルナビゲーションの「CompTIA Network+」に追加。見出し(h1:2, h2:8, h3:25, h4:0)、全18個のテーブル、2個のMermaid図解、全リスト(16件)、全外部リンク(4件)・全本文・コールアウト注記(3件)・参考文献一覧(4件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for comptia-network-plus-network-troubleshooting-guide` (`b98a3c76`)
+- [x] **Step 1 (Red)**: `test(comptia): add failing tests for comptia-network-plus-network-troubleshooting-guide` (`a793788b`)
+- [x] **Step 2 (Green)**: `feat(comptia): implement constants, navbar, and styles for network-troubleshooting-guide` (`45a1e117`), `feat(comptia): implement ComptiaNetworkTroubleshootingGuide content to pass tests` (`9bcf7dc6`)
+- [x] **Step 3 (Refactor)**: `refactor(comptia): integrate network-troubleshooting-guide into routing and update docs` (`01ca3587`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md — migrate comptia-network-plus-network-troubleshooting-guide`
+
+### 関連ファイル
+
+- [app/comptia/network-plus/network-troubleshooting-guide/page.tsx](app/comptia/network-plus/network-troubleshooting-guide/page.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/ComptiaNetworkTroubleshootingGuide.tsx](app/comptia/network-plus/network-troubleshooting-guide/ComptiaNetworkTroubleshootingGuide.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/NavBar.tsx](app/comptia/network-plus/network-troubleshooting-guide/NavBar.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/constants.ts](app/comptia/network-plus/network-troubleshooting-guide/constants.ts)
+- [app/comptia/network-plus/network-troubleshooting-guide/page.css](app/comptia/network-plus/network-troubleshooting-guide/page.css)
+- [`__tests__/comptia/network-plus/network-troubleshooting-guide/page.test.tsx`](__tests__/comptia/network-plus/network-troubleshooting-guide/page.test.tsx)
+- [`__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx`](__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx)
+- [docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json](docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json)
+- [archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html](archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html)
+
+---
 
 ## 2026-09-05: 推薦図書『Operating Systems: Three Easy Pieces（OSTEP）』完全学習ガイド 100%全量移行 (完了)
 
