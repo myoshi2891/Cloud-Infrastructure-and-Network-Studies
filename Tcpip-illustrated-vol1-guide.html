@@ -1,0 +1,3806 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TCP/IP Illustrated, Volume 1: The Protocols（第2版）解説ガイド</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #f7f9fc;
+                --bg-card: #ffffff;
+                --bg-card-2: #eef2f8;
+                --border: #d8e0ec;
+                --border-soft: #e6ecf5;
+                --text: #1c2733;
+                --text-dim: #56637a;
+                --text-faint: #8494ac;
+                --accent: #2f6feb;
+                --accent-soft: #b9cdfa;
+                --accent-bg: #eaf1ff;
+                --danger: #c8384f;
+                --danger-bg: #fdeef1;
+                --warn: #a8650a;
+                --warn-bg: #fdf3e1;
+                --success: #1a8a4f;
+                --success-bg: #e8f8ee;
+                --sidebar-w: 300px;
+                --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                overflow-x: hidden;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-jp);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+            }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* ---------- layout ---------- */
+            .layout {
+                display: block;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: #ffffff;
+                border-right: 1px solid var(--border-soft);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 50;
+            }
+            .sidebar-header {
+                padding: 0 24px 20px;
+                border-bottom: 1px solid var(--border-soft);
+                margin-bottom: 16px;
+            }
+            .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--accent);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .sidebar-header h2 {
+                font-size: 16px;
+                margin: 6px 0 0;
+                color: var(--text);
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .sidebar nav {
+                padding: 0 12px;
+            }
+            .sidebar nav a {
+                display: block;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--text-dim);
+                line-height: 1.5;
+                margin-bottom: 2px;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .sidebar nav a:hover {
+                background: var(--accent-bg);
+                color: var(--text);
+                text-decoration: none;
+            }
+            .sidebar nav a.active {
+                background: var(--accent-bg);
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .sidebar nav a.lvl3 {
+                padding-left: 28px;
+                font-size: 12.5px;
+            }
+            .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                z-index: 60;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                color: var(--text);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 1px 3px rgba(28, 39, 51, 0.12);
+            }
+
+            /* Main content */
+            .main {
+                margin-left: var(--sidebar-w);
+                padding: 56px 64px 120px;
+            }
+            .hero {
+                margin-bottom: 8px;
+            }
+            .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 14px;
+            }
+            .hero h1 {
+                font-size: clamp(28px, 3.6vw, 42px);
+                line-height: 1.35;
+                margin: 0 0 18px;
+                background: linear-gradient(135deg, #1c2733 0%, #2f6feb 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 800;
+            }
+            .hero .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                font-size: 12.5px;
+                color: var(--text-dim);
+            }
+            .pill strong {
+                color: var(--text);
+            }
+
+            .main h2 {
+                font-size: 26px;
+                margin: 56px 0 20px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border-soft);
+                color: var(--text);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                scroll-margin-top: 24px;
+            }
+            .main > h2:first-of-type {
+                border-top: none;
+                padding-top: 0;
+                margin-top: 8px;
+            }
+            .main h3 {
+                font-size: 20px;
+                margin: 38px 0 16px;
+                color: var(--text);
+                font-weight: 700;
+                scroll-margin-top: 24px;
+            }
+            .main h3::before {
+                content: '';
+                display: inline-block;
+                width: 5px;
+                height: 18px;
+                background: var(--accent);
+                border-radius: 3px;
+                margin-right: 10px;
+                vertical-align: -2px;
+            }
+            .main p {
+                margin: 0 0 18px;
+                color: var(--text);
+            }
+            .main ul,
+            .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.4em;
+                color: var(--text);
+            }
+            .main li {
+                margin-bottom: 8px;
+            }
+            .main hr {
+                border: none;
+                border-top: 1px solid var(--border-soft);
+                margin: 44px 0;
+            }
+            .main strong {
+                color: #0f1720;
+                font-weight: 700;
+            }
+            .footnote-ref {
+                margin-left: 2px;
+            }
+            .footnote-ref sup {
+                font-size: 11px;
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .main code:not(pre code) {
+                background: var(--bg-card-2);
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+                color: #a8560a;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+
+            /* Tables */
+            .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--bg-card);
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            thead th {
+                background: var(--accent-bg);
+                color: var(--text);
+                text-align: left;
+                padding: 12px 16px;
+                font-weight: 700;
+                border-bottom: 1px solid var(--border);
+                white-space: nowrap;
+            }
+            tbody td {
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--border-soft);
+                color: var(--text-dim);
+                vertical-align: top;
+            }
+            tbody tr:last-child td {
+                border-bottom: none;
+            }
+            tbody tr:hover td {
+                background: rgba(47, 111, 235, 0.045);
+            }
+
+            /* Mermaid */
+            pre.mermaid {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 28px 20px;
+                margin: 0 0 30px;
+            }
+            pre.mermaid svg {
+                flex-shrink: 0;
+            }
+            pre.mermaid p {
+                color: inherit;
+                margin: 0;
+            }
+
+            /* Callouts */
+            .callout-practice {
+                display: flex;
+                gap: 14px;
+                background: var(--success-bg);
+                border: 1px solid #b7e6c8;
+                border-left: 4px solid var(--success);
+                border-radius: 12px;
+                padding: 20px 22px;
+                margin: 0 0 26px;
+            }
+            .callout-practice .icon {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--success);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 900;
+            }
+            .callout-practice .body {
+                color: var(--text);
+            }
+            .callout-practice .label {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--success);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .callout-practice p {
+                margin: 0;
+                color: var(--text);
+            }
+            .callout-practice ul {
+                margin: 0;
+                padding-left: 1.2em;
+                color: var(--text);
+            }
+            .callout-practice li {
+                margin-bottom: 6px;
+            }
+            .callout-practice li:last-child {
+                margin-bottom: 0;
+            }
+
+            .practice-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--success);
+                text-transform: uppercase;
+                margin: 0 0 10px;
+            }
+            .practice-label::before {
+                content: '✓';
+                font-size: 13px;
+            }
+
+            /* Reference grid */
+            .ref-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                margin: 0 0 30px;
+            }
+            .ref-card {
+                display: flex;
+                gap: 12px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                min-width: 0;
+            }
+            .ref-card .num {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--accent-bg);
+                color: var(--accent);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 800;
+            }
+            .ref-card .txt {
+                font-size: 13px;
+                color: var(--text-dim);
+                min-width: 0;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+            .ref-card .txt a {
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+            /* Checklist */
+            .checklist-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 8px 22px 12px;
+                margin: 0 0 30px;
+            }
+            .checklist-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 0;
+                border-bottom: 1px solid var(--border-soft);
+                margin-bottom: 6px;
+            }
+            .checklist-header .title {
+                font-weight: 700;
+                color: var(--text);
+                font-size: 14.5px;
+            }
+            .checklist-header .count {
+                font-size: 13px;
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .checklist-card ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .checklist-card li {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 11px 4px;
+                border-radius: 8px;
+                margin: 0;
+                transition: background 0.15s;
+            }
+            .checklist-card li:hover {
+                background: rgba(47, 111, 235, 0.05);
+            }
+            .checklist-card input[type='checkbox'] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 19px;
+                height: 19px;
+                flex-shrink: 0;
+                margin-top: 2px;
+                border: 1.5px solid var(--border);
+                border-radius: 5px;
+                background: var(--bg-card-2);
+                cursor: pointer;
+                position: relative;
+            }
+            .checklist-card input[type='checkbox']:checked {
+                background: var(--accent);
+                border-color: var(--accent);
+            }
+            .checklist-card input[type='checkbox']:checked::after {
+                content: '';
+                position: absolute;
+                left: 5px;
+                top: 1px;
+                width: 5px;
+                height: 10px;
+                border: solid #ffffff;
+                border-width: 0 2px 2px 0;
+                transform: rotate(40deg);
+            }
+            .checklist-card label {
+                color: var(--text);
+                font-size: 14.5px;
+                cursor: pointer;
+                line-height: 1.6;
+            }
+            .checklist-card li:has(input:checked) label {
+                text-decoration: line-through;
+                color: var(--text-faint);
+            }
+
+            /* Footnotes (pandoc) */
+            aside.footnotes {
+                display: none;
+            } /* replaced entirely by ref-grid */
+
+            /* Responsive */
+            @media (max-width: 980px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px rgba(28, 39, 51, 0.18);
+                }
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 80px 20px 100px;
+                }
+                .sidebar-toggle {
+                    display: flex;
+                }
+                .ref-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layout">
+            <button
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                type="button"
+                aria-label="メニュー"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="kicker">TCP/IP Illustrated</div>
+                    <h2>Volume 1: The Protocols（第2版）</h2>
+                </div>
+                <nav id="sidebarNav">
+                    <a href="#part0" class="">第0部：なぜ今この本を読むのか</a>
+                    <a href="#part1" class="">第1部：序論とアーキテクチャ原則（原著第1章）</a>
+                    <a href="#part2" class=""
+                        >第2部：インターネットアドレスアーキテクチャ（原著第2章）</a
+                    >
+                    <a href="#part3" class="">第3部：リンク層（原著第3章）</a>
+                    <a href="#part4" class="">第4部：ARP アドレス解決プロトコル（原著第4章）</a>
+                    <a href="#part5" class="">第5部：インターネットプロトコル IP（原著第5章）</a>
+                    <a href="#part6" class="">第6部：システム構成 DHCPと自動設定（原著第6章）</a>
+                    <a href="#part7" class="">第7部：ファイアウォールとNAT（原著第7章）</a>
+                    <a href="#part8" class="">第8部：ICMPv4/ICMPv6（原著第8章）</a>
+                    <a href="#part9" class=""
+                        >第9部：ブロードキャストとマルチキャスト IGMP/MLD（原著第9章）</a
+                    >
+                    <a href="#part10" class="">第10部：UDPとIPフラグメンテーション（原著第10章）</a>
+                    <a href="#part11" class="">第11部：名前解決とDNS（原著第11章）</a>
+                    <a href="#part12" class="">第12部：TCPの基礎（原著第12章）</a>
+                    <a href="#part13" class="">第13部：TCP接続管理（原著第13章）</a>
+                    <a href="#part14" class="">第14部：TCPタイムアウトと再送（原著第14章）</a>
+                    <a href="#part15" class=""
+                        >第15部：TCPデータフローとウィンドウ管理（原著第15章）</a
+                    >
+                    <a href="#part16" class="">第16部：TCP輻輳制御（原著第16章）</a>
+                    <a href="#part17" class="">第17部：TCPキープアライブ（原著第17章）</a>
+                    <a href="#part18" class=""
+                        >第18部：セキュリティ EAP・IPsec・TLS・DNSSEC・DKIM（原著第18章）</a
+                    >
+                    <a href="#part19" class="">第19部：2026年8月時点の最新動向</a>
+                    <a href="#roadmap" class="">学習ロードマップ</a>
+                    <a href="#checklist" class="">章末チェックリスト</a>
+                    <a href="#glossary" class="">用語集</a>
+                    <a href="#references" class="">参考文献</a>
+                </nav>
+            </aside>
+            <main class="main">
+                <div class="hero">
+                    <div class="kicker">初学者のためのステップバイステップ学習ロードマップ</div>
+                    <h1>TCP/IP Illustrated, Volume 1: The Protocols（第2版）解説ガイド</h1>
+                    <div class="meta-row">
+                        <span class="pill">全18章 <strong>+ 最新動向</strong></span>
+                        <span class="pill">対象 <strong>初学者</strong></span>
+                        <span class="pill">図解 <strong>Mermaid 35点</strong></span>
+                        <span class="pill">参考文献 <strong>39件</strong></span>
+                    </div>
+                </div>
+
+                <p>
+                    原著: <em>TCP/IP Illustrated, Volume 1: The Protocols, 2nd Edition</em>（Kevin
+                    R. Fall, W. Richard Stevens 著、Addison-Wesley
+                    Professional／O'Reilly、2011年11月刊、1,056ページ） 参照:
+                    <a
+                        href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/"
+                        >O'Reilly公式書籍ページ</a
+                    >
+                </p>
+                <p>
+                    本ガイドは原著の目次構成（全18章＋付録）に沿って、TCP/IPプロトコルスイートの内部動作を初学者向けに独自の説明・図解で再構成したものです。原文の複製・転載は一切行っていません。2026年8月30日時点の最新動向についてはWeb検索で調査し、末尾の参考文献に一次情報源のURLを明記しています。
+                </p>
+                <hr />
+                <h2 id="part0">第0部：なぜ今この本を読むのか</h2>
+                <h3 id="s0-1">0.1 この本の立ち位置</h3>
+                <p>
+                    <code>TCP/IP Illustrated, Volume 1</code> は、1994年に故W. Richard
+                    Stevens氏が著した初版を、Kevin R. Fall氏（元Intel
+                    Research／PARC研究者、DTN＝Delay Tolerant
+                    Networkingの提唱者の一人）が2011年に全面刷新した第2版です。初版の特徴だった「<code>tcpdump</code>で実際のパケットをキャプチャしながらプロトコルの動きを"見る"」というスタイルを継承しつつ、Linux・Windows・Mac
+                    OSの最新実装、IPv6、NAT、DNSSECなど2010年代前半までの技術を反映しています。
+                </p>
+                <p>
+                    Vint
+                    Cerf氏（TCP/IPの共同発明者）は本書について「インターネット運用の洗練・保護、あるいは根強い問題への代替解決策を模索するエンジニアにとって、この本の知見はかけがえのないものになるだろう」と評しています。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    A["Volume 1&lt;br/&gt;プロトコル本体&lt;br/&gt;(この本)"] --- B["Volume 2&lt;br/&gt;4.4BSD実装&lt;br/&gt;(1995年, 未改訂)"]
+    A --- C["Volume 3&lt;br/&gt;トランザクション型&lt;br/&gt;TCP/HTTP/NNTP&lt;br/&gt;(1996年, 未改訂)"]
+
+    classDef vol fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class A,B,C vol</pre
+                >
+                <h3 id="s0-2">0.2 なぜ2026年に読む価値があるか</h3>
+                <ul>
+                    <li>
+                        <strong>RFCは変わっても"考え方"は変わらない</strong
+                        >：TCP/IPのアーキテクチャ原則（レイヤ分離、end-to-endの原則、ベストエフォート配送）は1970年代から本質的に不変です。BBRv3やQUICのような新技術も、この本が説明する基礎モデルの上に構築されています。
+                    </li>
+                    <li>
+                        <strong>障害調査・パケット解析の実務直結スキル</strong
+                        >：<code>tcpdump</code>／Wiresharkでパケットを読む力は、クラウドネイティブ時代でもロードバランサやサービスメッシュのトラブルシューティングに直結します。
+                    </li>
+                    <li>
+                        <strong>本ガイドの補完方針</strong
+                        >：原著は2011年刊行のため、TCP輻輳制御（BBR）、DNSSEC/DoH/DoQの普及率、post-quantum
+                        TLS、IPv6の主要ネットワークでの普及率など、2012年以降の進展は第19部で個別にアップデートします。
+                    </li>
+                </ul>
+                <h3 id="s0-3">0.3 前提知識</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>前提</th>
+                                <th>目安</th>
+                                <th>なぜ必要か</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>2進数・16進数の基礎</td>
+                                <td>IPアドレスやポート番号の表記を理解できる</td>
+                                <td>ヘッダフィールドはビット単位で定義されるため</td>
+                            </tr>
+                            <tr class="even">
+                                <td>OSI参照モデルの概要</td>
+                                <td>7層モデルの名称を知っている</td>
+                                <td>TCP/IPの4〜5層モデルとの対応付けに使う</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>コマンドライン操作</td>
+                                <td><code>ping</code>／<code>curl</code>／シェルの基本</td>
+                                <td>本書の実験は端末操作が前提</td>
+                            </tr>
+                            <tr class="even">
+                                <td>
+                                    （推奨）<code>tcpdump</code>か<code>Wireshark</code>のインストール環境
+                                </td>
+                                <td>実際にパケットを観察したい場合</td>
+                                <td>本書の学習効果は「読む」より「見る」ことで最大化される</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+                <h2 id="part1">第1部：序論とアーキテクチャ原則（原著第1章 Introduction）</h2>
+                <h3 id="s1-1">1.1 パケット、コネクション、データグラムという3つの視点</h3>
+                <p>ネットワークプロトコルの設計には大きく2つの流儀があります。</p>
+                <ol>
+                    <li>
+                        <strong>コネクション指向（回線交換に近い発想）</strong
+                        >：通信前に経路・状態を確立し、以降はその状態に沿ってデータを送る（電話網、TCP）。
+                    </li>
+                    <li>
+                        <strong>コネクションレス（データグラム型）</strong
+                        >：各パケットが宛先情報を自己完結的に持ち、都度独立にルーティングされる（郵便、IP、UDP）。
+                    </li>
+                </ol>
+                <p>
+                    TCP/IPは非常に特徴的な設計を取っています。<strong>ネットワーク層（IP）はコネクションレスなデータグラム型</strong>にし、<strong>その上に乗るトランスポート層でコネクション指向（TCP）とコネクションレス（UDP）の両方を選べるようにする</strong>という二段構えです。
+                </p>
+                <h3 id="s1-2">1.2 end-to-endの原則とfate sharing</h3>
+                <p>
+                    「end-to-endの原則」とは、通信の信頼性確保などの複雑な仕事は、ネットワークの中間ノード（ルータ）ではなく、通信の両端（ホスト）に置くべきだという設計思想です。ルータは「できるだけ速く、できるだけシンプルに転送する」ことに専念し、再送や順序保証といった責務はTCPのようなエンドポイント側のプロトコルが担います。
+                </p>
+                <p>
+                    この思想から導かれるのが
+                    <strong>fate sharing（運命共有）</strong>
+                    という考え方です。あるコネクションの状態情報は、そのコネクションの両端のホストだけが保持すべきであり、ネットワーク内部の特定のルータに保持させてはいけません。ルータが1台落ちても、迂回路が生きていれば通信の"状態"自体は失われない、という耐障害性がここから生まれます。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    subgraph EndToEnd["end-to-endの原則"]
+        direction LR
+        H1["ホストA&lt;br/&gt;（複雑な処理：再送・順序制御）"] --&gt;|"シンプルな転送のみ"| R1[ルータ] --&gt; R2[ルータ] --&gt; H2["ホストB&lt;br/&gt;（複雑な処理：再送・順序制御）"]
+    end
+
+    classDef host fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    classDef router fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class H1,H2 host
+    class R1,R2 router</pre
+                >
+                <h3 id="s1-3">1.3 レイヤリングと多重化・多重分離</h3>
+                <p>
+                    プロトコルスタックは階層（レイヤ）ごとに責務を分離します。原著は古典的なARPANET参照モデルに基づき4層（リンク層／ネットワーク層／トランスポート層／アプリケーション層）で説明しますが、実務ではOSI
+                    7層モデルとの対応でも語られます。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>OSI 7層モデル</th>
+                                <th>TCP/IP（ARPANET）モデル</th>
+                                <th>代表プロトコル</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>7. アプリケーション層</td>
+                                <td>アプリケーション層</td>
+                                <td>HTTP, DNS, SMTP</td>
+                            </tr>
+                            <tr class="even">
+                                <td>6. プレゼンテーション層</td>
+                                <td>（アプリケーション層に統合）</td>
+                                <td>TLS（実務上はここに位置づけられることが多い）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>5. セッション層</td>
+                                <td>（アプリケーション層に統合）</td>
+                                <td>—</td>
+                            </tr>
+                            <tr class="even">
+                                <td>4. トランスポート層</td>
+                                <td>トランスポート層</td>
+                                <td>TCP, UDP, QUIC(UDP上)</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>3. ネットワーク層</td>
+                                <td>ネットワーク（インターネット）層</td>
+                                <td>IP, ICMP, IGMP</td>
+                            </tr>
+                            <tr class="even">
+                                <td>2. データリンク層</td>
+                                <td>リンク層</td>
+                                <td>Ethernet, Wi-Fi, ARP</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>1. 物理層</td>
+                                <td>リンク層</td>
+                                <td>ケーブル、電波</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    各層はデータを送るとき、上位層から受け取ったデータに自分のヘッダを付加して下位層に渡します。これを<strong>カプセル化（encapsulation）</strong>と呼びます。受信側では逆に、下位層から上位層へヘッダを剥がしながら渡していきます。1つの下位層プロトコルの上に複数の上位層プロトコルが乗ることを<strong>多重化（multiplexing）</strong>、受信時にどの上位プロトコルに渡すか判別することを<strong>多重分離（demultiplexing）</strong>と呼びます。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    subgraph App["アプリケーション層"]
+        Data["アプリケーションデータ"]
+    end
+    subgraph Trans["トランスポート層"]
+        TCPSeg["TCPヘッダ + アプリケーションデータ"]
+    end
+    subgraph Net["ネットワーク層"]
+        IPPkt["IPヘッダ + TCPヘッダ + アプリケーションデータ"]
+    end
+    subgraph Link["リンク層"]
+        Frame["Etherヘッダ + IPヘッダ + TCPヘッダ + アプリケーションデータ + FCS"]
+    end
+
+    Data --&gt; TCPSeg --&gt; IPPkt --&gt; Frame
+
+    classDef layer fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Data,TCPSeg,IPPkt,Frame layer</pre
+                >
+                <p>多重分離は「どの識別子を見るか」で層ごとに異なります。</p>
+                <pre class="mermaid">
+flowchart LR
+    A["Etherフレームの&lt;br/&gt;EtherTypeフィールド"] --&gt;|"0x0800 なら"| B["IPで処理"]
+    A --&gt;|"0x0806 なら"| C["ARPで処理"]
+    A --&gt;|"0x86DD なら"| D["IPv6で処理"]
+    B --&gt; E["IPヘッダの&lt;br/&gt;Protocolフィールド"]
+    E --&gt;|"6 なら"| F["TCPで処理"]
+    E --&gt;|"17 なら"| G["UDPで処理"]
+    E --&gt;|"1 なら"| H["ICMPで処理"]
+    F --&gt; I["TCPヘッダの&lt;br/&gt;宛先ポート番号"]
+    I --&gt;|"443 なら"| J["HTTPSサーバプロセスへ"]
+
+    classDef step fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class A,B,C,D,E,F,G,H,I,J step</pre
+                >
+                <h3 id="s1-4">1.4 ポート番号・名前・アドレスの役割分担</h3>
+                <p>
+                    TCP/IPには「もの（ホスト）を指す」「サービスを指す」「場所を指す」という3つの識別子があり、これらは独立して管理されます。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>識別子</th>
+                                <th>指すもの</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>名前（Name）</td>
+                                <td>何であるか</td>
+                                <td><code>www.example.com</code></td>
+                            </tr>
+                            <tr class="even">
+                                <td>アドレス（Address）</td>
+                                <td>どこにあるか</td>
+                                <td><code>93.184.216.34</code></td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ポート番号（Port）</td>
+                                <td>同一ホスト上のどのプロセスか</td>
+                                <td><code>443</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    DNSは名前からアドレスへの変換を担い、ルーティングはアドレスに基づいてパケットを転送し、ポート番号は最終的にホスト内のプロセスへ配送する多重分離に使われます。この分離のおかげで、あるホストのIPアドレスが変わっても名前解決の設定さえ更新すればアプリケーションは影響を受けません（モビリティやDNSベースの負荷分散の基盤にもなっています）。
+                </p>
+                <h3 id="s1-5">1.5 クライアント/サーバとピアツーピア、APIとしてのソケット</h3>
+                <p>
+                    アプリケーション設計のパターンとして、常時待ち受けるサーバに複数のクライアントが接続する<strong>クライアント/サーバモデル</strong>と、各ノードが対等にサーバにもクライアントにもなる<strong>ピアツーピア（P2P）モデル</strong>があります。いずれの場合も、アプリケーションプログラムがトランスポート層にアクセスする標準的な手段が<strong>ソケットAPI</strong>（Berkeley
+                    Sockets由来）であり、これは1980年代のBSD
+                    UNIXから現在のLinux／Windows／macOSまで基本設計が受け継がれています。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                レイヤの責務を混同しない：アプリケーションコードでIPアドレスをハードコードせず、名前解決を経由させることでネットワーク変更への耐性を確保する。
+                            </li>
+                            <li>
+                                end-to-endの原則を意識する：中間のプロキシ／ロードバランサに状態を過度に依存させると、そのノードが単一障害点になる。
+                            </li>
+                            <li>
+                                多重分離のフィールド（EtherType、IP
+                                Protocol番号、ポート番号）を意識しておくと、<code>tcpdump</code>のフィルタ式（例：<code
+                                    >tcp port 443</code
+                                >）の意味が直感的に理解できる。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part2">
+                    第2部：インターネットアドレスアーキテクチャ（原著第2章 The Internet Address
+                    Architecture）
+                </h2>
+                <h3 id="s2-1">2.1 IPv4アドレスの表記とクラスフルからCIDRへの移行</h3>
+                <p>
+                    IPv4アドレスは32ビットで、慣習的に8ビットずつ4つに区切ってドット区切り10進表記（例：<code>192.0.2.1</code>）で表します。1980年代には「クラスA/B/C」という固定長のアドレス区分（クラスフルアドレッシング）が使われていましたが、アドレス空間の無駄遣いが深刻化したため、1993年にCIDR（Classless
+                    Inter-Domain Routing、RFC
+                    4632）へ移行しました。CIDRでは<code>/24</code>のようなプレフィックス長でネットワーク部とホスト部の境界を柔軟に指定します。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>表記</th>
+                                <th>意味</th>
+                                <th>ホスト数（理論値）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td><code>192.0.2.0/24</code></td>
+                                <td>上位24ビットがネットワーク部</td>
+                                <td>256（うちホスト割当可能254）</td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>192.0.2.0/26</code></td>
+                                <td>上位26ビットがネットワーク部</td>
+                                <td>64（うちホスト割当可能62）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>0.0.0.0/0</code></td>
+                                <td>デフォルトルート（すべてを表す）</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s2-2">2.2 サブネッティングとVLSM</h3>
+                <p>
+                    CIDRの考え方をネットワーク内部の設計に適用したものがサブネッティングです。1つの大きなアドレスブロックを、用途に応じて異なる長さのプレフィックス（VLSM:
+                    Variable Length Subnet Mask）に分割します。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    A["192.0.2.0/24&lt;br/&gt;256アドレス"] --&gt; B["192.0.2.0/26&lt;br/&gt;オフィスLAN 64アドレス"]
+    A --&gt; C["192.0.2.64/27&lt;br/&gt;サーバセグメント 32アドレス"]
+    A --&gt; D["192.0.2.96/30&lt;br/&gt;ルータ間リンク 4アドレス"]
+    A --&gt; E["192.0.2.100/32&lt;br/&gt;ループバック 1アドレス"]
+
+    classDef net fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class A,B,C,D,E net</pre
+                >
+                <h3 id="s2-3">2.3 特殊アドレスとプライベートアドレス空間</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>アドレス範囲</th>
+                                <th>用途</th>
+                                <th>定義RFC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td><code>10.0.0.0/8</code></td>
+                                <td>プライベートアドレス</td>
+                                <td>RFC 1918</td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>172.16.0.0/12</code></td>
+                                <td>プライベートアドレス</td>
+                                <td>RFC 1918</td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>192.168.0.0/16</code></td>
+                                <td>プライベートアドレス</td>
+                                <td>RFC 1918</td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>100.64.0.0/10</code></td>
+                                <td>キャリアグレードNAT（CGNAT）共有アドレス空間</td>
+                                <td>RFC 6598</td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>127.0.0.0/8</code></td>
+                                <td>ループバック</td>
+                                <td>RFC 1122</td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>169.254.0.0/16</code></td>
+                                <td>リンクローカル（APIPA/Zeroconf）</td>
+                                <td>RFC 3927</td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>224.0.0.0/4</code></td>
+                                <td>マルチキャスト</td>
+                                <td>RFC 5771</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <code>100.64.0.0/10</code
+                    >はISPがCGNATを展開する際、ホームルータとISP側NATの間で使う専用の共有アドレス空間として2012年に予約されました。IPv4アドレス枯渇が進む中で現在も広く使われています。
+                </p>
+                <h3 id="s2-4">2.4 IPv6アドレスアーキテクチャ</h3>
+                <p>
+                    IPv6アドレスは128ビットで、16ビットごとにコロン区切りの16進数で表記します（例：<code>2001:0db8:0000:0000:0000:ff00:0042:8329</code>）。連続するゼロは<code>::</code>で1回だけ省略できます（<code>2001:db8::ff00:42:8329</code>）。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    subgraph GUA["グローバルユニキャストアドレス 2001:db8::/32 の構造"]
+        direction LR
+        A["グローバルルーティング&lt;br/&gt;プレフィックス (48bit)"] --&gt; B["サブネットID&lt;br/&gt;(16bit)"] --&gt; C["インターフェースID&lt;br/&gt;(64bit)"]
+    end
+
+    classDef seg fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class A,B,C seg</pre
+                >
+                <p>
+                    IPv4と異なりIPv6には明確な「クラス」区分はなく、代わりにアドレスの<strong>スコープ（有効範囲）</strong>によって種別を分けます。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>アドレス種別</th>
+                                <th>プレフィックス</th>
+                                <th>スコープ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>グローバルユニキャスト</td>
+                                <td><code>2000::/3</code></td>
+                                <td>インターネット全体</td>
+                            </tr>
+                            <tr class="even">
+                                <td>リンクローカル</td>
+                                <td><code>fe80::/10</code></td>
+                                <td>同一リンク内のみ</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ユニークローカル（ULA）</td>
+                                <td><code>fc00::/7</code></td>
+                                <td>組織内（プライベート相当）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>マルチキャスト</td>
+                                <td><code>ff00::/8</code></td>
+                                <td>グループ配送</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ループバック</td>
+                                <td><code>::1/128</code></td>
+                                <td>自ホスト内</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    IPv6ではブロードキャストが廃止され、代わりにマルチキャストと<strong>エニーキャスト</strong>（同じアドレスを持つ複数ノードのうち最も近い1つに届く）が使われます。エニーキャストはDNSルートサーバやパブリックDNSリゾルバ（例：<code>1.1.1.1</code>,
+                    <code>8.8.8.8</code>）の実運用で広く使われています。
+                </p>
+                <h3 id="s2-5">2.5 IPv4アドレス枯渇とその後：本書刊行後の状況</h3>
+                <p>
+                    原著執筆時点（2011年）はまだIANAの中央在庫からIPv4アドレスを配布できていましたが、2011年2月にIANAの中央在庫が枯渇し、その後地域レジストリ（RIR）も順次枯渇しました。これが本書第2版でIPv4アドレス枯渇とCGNAT・IPv6移行の議論が増補された背景です。この状況は2026年現在も基本的に継続しており、詳細は第19部で扱います。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                サブネット設計は将来の成長を見込んでVLSMで余白を残す。境界ぎりぎりの設計は後々の再設計コストが高い。
+                            </li>
+                            <li>
+                                プライベートアドレス空間とCGNAT共有アドレス空間（<code>100.64.0.0/10</code>）を混同しない。後者はISP側の内部利用を想定した特別な範囲。
+                            </li>
+                            <li>
+                                IPv6設計では「ホストあたり複数アドレス（一時アドレス＋安定アドレス）」が標準的挙動であることを前提に、ログ・監視設計を行う。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part3">第3部：リンク層（原著第3章 Link Layer）</h2>
+                <h3 id="s3-1">3.1 リンク層の責務</h3>
+                <p>
+                    リンク層は「同一物理／論理セグメント上の隣接ノード間でフレームを届ける」ことに責任を持ちます。IPが担う「異なるネットワークをまたいだ経路選択」とは異なり、リンク層はMACアドレスのようなローカルな識別子だけを扱います。
+                </p>
+                <h3 id="s3-2">3.2 イーサネットフレームの構造</h3>
+                <p>
+                    現代のLANの大半はイーサネット（IEEE
+                    802.3）です。フレームには送信元・宛先MACアドレス、EtherTypeフィールド（上位プロトコルの識別）、ペイロード、そしてFCS（フレームチェックサム、誤り検出用のCRC）が含まれます。MTU（Maximum
+                    Transmission
+                    Unit）はイーサネットの標準で1500バイトです（ジャンボフレームでは9000バイト前後まで拡張可能）。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    A["宛先MAC&lt;br/&gt;6byte"] --- B["送信元MAC&lt;br/&gt;6byte"] --- C["EtherType&lt;br/&gt;2byte"] --- D["ペイロード&lt;br/&gt;46-1500byte"] --- E["FCS&lt;br/&gt;4byte"]
+
+    classDef field fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class A,B,C,D,E field</pre
+                >
+                <h3 id="s3-3">3.3 Wi-Fi（無線LAN）とその他のリンク層技術</h3>
+                <p>
+                    Wi-Fi（IEEE
+                    802.11系）はイーサネットと同じMACアドレス体系を使いつつ、無線特有の課題（隠れ端末問題、電波干渉、ローミング）に対処する追加機構を持ちます。2011年の原著刊行時点の主流は802.11n（Wi-Fi
+                    4）でしたが、現在はWi-Fi 6/6E/7へと進化しています（詳細は第19部）。
+                </p>
+                <h3 id="s3-4">3.4 VLANとトランキング</h3>
+                <p>
+                    IEEE
+                    802.1Qにより、1本の物理リンク上に複数の論理LAN（VLAN）を多重化できます。フレームに4バイトのVLANタグを挿入し、12ビットのVLAN
+                    IDでセグメントを識別します（最大4094個のVLAN）。データセンターやオフィスLANのセグメンテーション（部門ごと、用途ごとの分離）に広く使われます。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    A["物理スイッチポート&lt;br/&gt;（トランクポート）"] --&gt; B["VLAN 10&lt;br/&gt;（管理部門）"]
+    A --&gt; C["VLAN 20&lt;br/&gt;（開発部門）"]
+    A --&gt; D["VLAN 99&lt;br/&gt;（ゲストWi-Fi）"]
+
+    classDef vlan fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class A,B,C,D vlan</pre
+                >
+                <h3 id="s3-5">3.5 ブリッジとスイッチの学習動作</h3>
+                <p>
+                    イーサネットスイッチは受信フレームの送信元MACアドレスを見て「どのポートの先にどのMACアドレスがあるか」を学習し、以降その宛先へのフレームは該当ポートにのみ転送します（フラッディングを避ける）。宛先が未学習の場合は全ポートへフラッディングします。複数スイッチ間でループが発生しないよう、STP（Spanning
+                    Tree Protocol）またはその高速版RSTP/MSTPでループ防止トポロジーを維持します。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                MTUの不一致はパケロス・パフォーマンス劣化の典型的な原因。トンネル（VXLAN,
+                                GRE,
+                                IPsecなど）を挟む構成では実効MTUが1500バイトを下回ることを忘れずに設計する。
+                            </li>
+                            <li>
+                                VLAN設計はブロードキャストドメインの分離が主目的。1つのVLANに過度なホスト数を詰め込むとARPブロードキャストの負荷が問題になる。
+                            </li>
+                            <li>
+                                無線LANのトラブルシューティングでは、有線と異なり「電波干渉」「隠れ端末」というリンク層固有の要因を考慮する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part4">第4部：ARP アドレス解決プロトコル（原著第4章）</h2>
+                <h3 id="s4-1">4.1 ARPが解決する問題</h3>
+                <p>
+                    IP層は宛先IPアドレスを知っていますが、同一リンク上でフレームを送るにはMACアドレスが必要です。ARP（Address
+                    Resolution Protocol, RFC
+                    826）はこの「IPアドレス→MACアドレス」の変換を、ブロードキャストによる問い合わせ・応答で解決します。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant A as ホストA (192.0.2.10)
+    participant All as ブロードキャストドメイン全体
+    participant B as ホストB (192.0.2.20)
+
+    A-&gt;&gt;All: ARP Request（ブロードキャスト）&lt;br/&gt;"192.0.2.20 は誰のMACですか？"
+    Note over All: 192.0.2.20以外のホストは無視
+    B-&gt;&gt;A: ARP Reply（ユニキャスト）&lt;br/&gt;"192.0.2.20 は AA:BB:CC:DD:EE:FF です"
+    Note over A: ARPキャッシュに&lt;br/&gt;(192.0.2.20, AA:BB:CC:DD:EE:FF)を登録</pre
+                >
+                <h3 id="s4-2">4.2 ARPキャッシュとその挙動</h3>
+                <p>
+                    解決済みのIP→MACの対応は<strong>ARPキャッシュ</strong>（近隣キャッシュ）に一定時間（実装によるが数分〜数十分）保持され、毎回のブロードキャストを避けます。エントリには通常タイムアウトがあり、期限切れ前に再確認（gratuitous
+                    ARPやユニキャストでの再確認）が行われることもあります。
+                </p>
+                <h3 id="s4-3">4.3 Gratuitous ARP（無償ARP）</h3>
+                <p>
+                    自分自身のIPアドレスに対してARP Requestを送る特殊な使い方を<strong
+                        >Gratuitous ARP</strong
+                    >と呼びます。主な用途は以下の通りです。
+                </p>
+                <ul>
+                    <li>起動時にIPアドレスの重複を検出する（同じ応答が返ってきたら重複）。</li>
+                    <li>
+                        他のホストのARPキャッシュを能動的に更新する（フェイルオーバー時にVIPを新しい実体へ切り替える、ロードバランサやHA構成の要）。
+                    </li>
+                </ul>
+                <h3 id="s4-4">4.4 ARPの脆弱性とその緩和策</h3>
+                <p>
+                    ARPには送信元を検証する仕組みがなく、誰でも任意のIP-MAC対応を主張する応答を送れます。これを悪用した<strong>ARPスプーフィング（ARPポイズニング）</strong>は、中間者攻撃（MITM）の古典的な手法です。攻撃者はデフォルトゲートウェイのIPアドレスに対して自分のMACアドレスを主張する偽のARP応答を送り、被害者の通信を自分経由に誘導します。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    Attacker["攻撃者"] --&gt;|"偽のARP応答:&lt;br/&gt;'ゲートウェイのIPは&lt;br/&gt;私のMACです'"| Victim["被害ホスト"]
+    Victim -.-&gt;|"本来ゲートウェイ宛の&lt;br/&gt;トラフィックが&lt;br/&gt;攻撃者経由になる"| Attacker
+    Attacker --&gt; Gateway["本物の&lt;br/&gt;デフォルトゲートウェイ"]
+
+    classDef bad fill:#fdeef1,stroke:#d1445b,color:#7a1f30
+    classDef normal fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Attacker bad
+    class Victim,Gateway normal</pre
+                >
+                <p>現代のスイッチにおける主な緩和策は次の通りです。</p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>対策</th>
+                                <th>仕組み</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>DHCPスヌーピング</td>
+                                <td>
+                                    スイッチがDHCPのやり取りを監視し、正規のIP-MAC-ポート対応の「信頼テーブル」を構築する
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>ダイナミックARP検査（DAI）</td>
+                                <td>
+                                    受信したARPパケットをDHCPスヌーピングの信頼テーブルと照合し、不一致なら破棄する
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>IPソースガード</td>
+                                <td>
+                                    送信元IPアドレスとMACアドレスの組み合わせを信頼テーブルと照合し、不正なパケットを破棄する
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s4-5">4.5 IPv6における対応：近隣探索プロトコル（NDP）</h3>
+                <p>
+                    IPv6ではARPは存在せず、ICMPv6メッセージを使う<strong
+                        >近隣探索プロトコル（Neighbor Discovery Protocol, NDP）</strong
+                    >が同等の役割を果たします。ARP Requestに相当するのがNeighbor Solicitation、ARP
+                    Replyに相当するのがNeighbor
+                    Advertisementです。NDPも認証機構を持たないため、ARPスプーフィングに相当する<strong
+                        >ND spoofing</strong
+                    >や、悪意あるルータ広告（Rogue RA）による攻撃が起こり得ます。対策としてRA
+                    Guard（正当なルータ広告のみを通す機能、RFC
+                    6105/7113で標準化）がスイッチに実装されています。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                本番スイッチではDHCPスヌーピング＋ダイナミックARP検査を有効化し、未知の送信元からのARP応答を無条件に信頼しない構成にする。
+                            </li>
+                            <li>
+                                IPv6を導入する際はARPだけでなくNDPのセキュリティ（RA
+                                Guard）も合わせて設計する。「IPv4だけ守ってIPv6は素通し」という抜け漏れが起きやすい。
+                            </li>
+                            <li>
+                                Gratuitous ARPはHA構成（keepalived,
+                                VRRPなど）で正規に使われる仕組みでもあるため、監視ツールが誤検知しないよう正規のフェイルオーバー挙動を把握しておく。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part5">
+                    第5部：インターネットプロトコル IP（原著第5章 The Internet Protocol）
+                </h2>
+                <h3 id="s5-1">5.1 IPの基本的な性質</h3>
+                <p>
+                    IPは「ベストエフォート・コネクションレス・非信頼」なデータグラム配送サービスです。
+                </p>
+                <ul>
+                    <li>
+                        <strong>ベストエフォート</strong
+                        >：配送を最善努力するが保証しない（届かない可能性がある）。
+                    </li>
+                    <li>
+                        <strong>コネクションレス</strong
+                        >：各パケットは独立して扱われ、事前のコネクション確立を必要としない。
+                    </li>
+                    <li>
+                        <strong>非信頼</strong
+                        >：パケットの損失・重複・順序入れ替えを検出・訂正する責務を持たない（上位層に委ねる）。
+                    </li>
+                </ul>
+                <p>
+                    この「シンプルさに徹する」設計が、IPが多種多様な下位リンク層技術（イーサネット、Wi-Fi、衛星回線、モバイル網）の上で動作できる汎用性の源泉です。
+                </p>
+                <h3 id="s5-2">5.2 IPv4ヘッダの構造</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>フィールド</th>
+                                <th>ビット幅</th>
+                                <th>役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>Version</td>
+                                <td>4</td>
+                                <td>IPバージョン（IPv4なら4）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>IHL</td>
+                                <td>4</td>
+                                <td>ヘッダ長（32bitワード単位）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>DSCP/ECN</td>
+                                <td>8</td>
+                                <td>優先度制御・輻輳通知</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Total Length</td>
+                                <td>16</td>
+                                <td>パケット全体の長さ</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Identification</td>
+                                <td>16</td>
+                                <td>フラグメンテーション時の識別子</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Flags</td>
+                                <td>3</td>
+                                <td>フラグメント制御（DFビット等）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Fragment Offset</td>
+                                <td>13</td>
+                                <td>フラグメントの位置</td>
+                            </tr>
+                            <tr class="even">
+                                <td>TTL</td>
+                                <td>8</td>
+                                <td>生存時間（ホップごとに1減算、0でパケット破棄）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Protocol</td>
+                                <td>8</td>
+                                <td>上位プロトコル種別（TCP=6, UDP=17, ICMP=1）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Header Checksum</td>
+                                <td>16</td>
+                                <td>ヘッダのみの誤り検出</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Source Address</td>
+                                <td>32</td>
+                                <td>送信元IPv4アドレス</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Destination Address</td>
+                                <td>32</td>
+                                <td>宛先IPv4アドレス</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Options</td>
+                                <td>可変</td>
+                                <td>オプション（実運用では稀）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s5-3">5.3 TTLとルーティングループ対策</h3>
+                <p>
+                    TTL（Time To
+                    Live）はルータを1つ経由するごとに1ずつ減算され、0になったパケットは破棄されます。これはルーティングループでパケットが無限に転送され続けることを防ぐ安全弁です。<code>traceroute</code>はTTLを1から順に増やしながらパケットを送り、各ホップで発生する「TTL超過」のICMPエラーを利用して経路上のルータを可視化するツールです。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant Src as 送信元
+    participant R1 as ルータ1
+    participant R2 as ルータ2
+    participant Dst as 宛先
+
+    Src-&gt;&gt;R1: パケット (TTL=1)
+    R1--&gt;&gt;Src: ICMP Time Exceeded&lt;br/&gt;（R1のアドレスから）
+    Src-&gt;&gt;R1: パケット (TTL=2)
+    R1-&gt;&gt;R2: 転送 (TTL=1)
+    R2--&gt;&gt;Src: ICMP Time Exceeded&lt;br/&gt;（R2のアドレスから）
+    Src-&gt;&gt;R1: パケット (TTL=3)
+    R1-&gt;&gt;R2: 転送 (TTL=2)
+    R2-&gt;&gt;Dst: 転送 (TTL=1)
+    Dst--&gt;&gt;Src: 応答（到達成功）</pre
+                >
+                <h3 id="s5-4">5.4 IPフラグメンテーションの基礎（詳細は第10部）</h3>
+                <p>
+                    送信するパケットが経路上のいずれかのリンクのMTUを超える場合、IPはパケットを複数のフラグメントに分割します。ただしフラグメンテーションはパフォーマンス上のデメリット（1つのフラグメント喪失で全体が再送になる、処理負荷が増す）が大きいため、現代の実装では<strong
+                        >Path MTU Discovery（PMTUD）</strong
+                    >によって経路上の最小MTUを事前に把握し、そもそもフラグメントが発生しないサイズでパケットを送出するのが基本方針です。
+                </p>
+                <h3 id="s5-5">5.5 IPv6ヘッダとIPv4からの主な変更点</h3>
+                <p>
+                    IPv6ヘッダは40バイト固定長で、IPv4より単純化されています。主な変更点は次の通りです。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>変更点</th>
+                                <th>IPv4</th>
+                                <th>IPv6</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>ヘッダチェックサム</td>
+                                <td>あり</td>
+                                <td>廃止（上位層・リンク層に委任）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>フラグメンテーション</td>
+                                <td>ルータも実施可能</td>
+                                <td>送信ホストのみが実施（ルータは行わない）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ヘッダ長</td>
+                                <td>可変（オプションあり）</td>
+                                <td>固定40バイト＋拡張ヘッダのチェーン</td>
+                            </tr>
+                            <tr class="even">
+                                <td>ブロードキャスト</td>
+                                <td>あり</td>
+                                <td>廃止（マルチキャストに統合）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>アドレス長</td>
+                                <td>32bit</td>
+                                <td>128bit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    IPv6ではオプション機能が「拡張ヘッダ」としてメインヘッダの後ろにチェーン状に連結される設計になっており、必要な拡張ヘッダだけを付加できる柔軟性があります（Hop-by-Hop
+                    Options, Routing, Fragment, Destination Optionsなど）。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                <code>traceroute</code
+                                >／<code>mtr</code>はTTL超過ICMPを利用した診断ツールであることを理解しておくと、途中経路のファイアウォールがICMPをブロックしている場合の"見えない区間"の解釈を誤らずに済む。
+                            </li>
+                            <li>
+                                IPv6移行時は「フラグメンテーションはホストのみが行う」という設計変更を踏まえ、PMTUDが正しく機能する経路設計（ICMPv6
+                                Packet Too Bigの到達性確保）が必須になる。
+                            </li>
+                            <li>
+                                IPv4ヘッダのDSCP/ECNフィールドは輻輳制御・QoSと直結する。クラウド環境ではロードバランサやNATがこれらのフィールドを書き換える／落とす場合があるため、エンドツーエンドでの挙動を検証する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part6">第6部：システム構成 DHCPと自動設定（原著第6章）</h2>
+                <h3 id="s6-1">6.1 なぜ自動設定が必要か</h3>
+                <p>
+                    ホストがネットワークに参加するには、IPアドレス・サブネットマスク・デフォルトゲートウェイ・DNSサーバといった複数の情報が必要です。これらを手作業で設定するのは大規模ネットワークでは非現実的なため、DHCP（Dynamic
+                    Host Configuration Protocol, IPv4版はRFC 2131、IPv6版DHCPv6は現行RFC
+                    8415）による自動配布が標準になっています。
+                </p>
+                <h3 id="s6-2">6.2 DHCPのDORAプロセス</h3>
+                <p>DHCPv4のアドレス取得は4段階のやり取り（通称DORA）で行われます。</p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant C as クライアント
+    participant S1 as DHCPサーバ1
+    participant S2 as DHCPサーバ2
+
+    C-&gt;&gt;S1: DHCPDISCOVER（ブロードキャスト）
+    C-&gt;&gt;S2: DHCPDISCOVER（同一ブロードキャスト）
+    S1--&gt;&gt;C: DHCPOFFER（IPアドレス候補を提示）
+    S2--&gt;&gt;C: DHCPOFFER（別のIPアドレス候補）
+    Note over C: いずれか1つのOFFERを選択
+    C-&gt;&gt;S1: DHCPREQUEST（ブロードキャストで選択を通知）
+    Note over S2: 選ばれなかったサーバは&lt;br/&gt;提示したアドレスを再利用可能に戻す
+    S1--&gt;&gt;C: DHCPACK（リース確定）</pre
+                >
+                <p>
+                    DHCPREQUESTがブロードキャストされる理由は、選ばれなかった他のDHCPサーバにも「このオファーは使われなかった」ことを知らせ、提示したアドレスを再利用可能にするためです。
+                </p>
+                <h3 id="s6-3">6.3 リースとリニューアル</h3>
+                <p>
+                    割り当てられたアドレスには<strong>リース期間</strong>があります。クライアントはリース期間の50%が経過した時点（T1タイマー）で元のサーバにユニキャストで更新（DHCPREQUEST）を試み、87.5%経過（T2タイマー）してもなお更新できなければブロードキャストで任意のサーバに再取得を試みます。
+                </p>
+                <h3 id="s6-4">6.4 DHCPリレーエージェント</h3>
+                <p>
+                    DHCPサーバがクライアントと同一のブロードキャストドメインにいない場合、ルータが<strong>DHCPリレーエージェント</strong>として動作し、クライアントのブロードキャストをユニキャストでDHCPサーバへ中継します（<code>giaddr</code>フィールドにリレーエージェント自身のアドレスを設定）。
+                </p>
+                <h3 id="s6-5">6.5 IPv6の自動設定：SLAACとDHCPv6</h3>
+                <p>IPv6には2つの自動設定方式があり、併用も可能です。</p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>方式</th>
+                                <th>概要</th>
+                                <th>主な用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>SLAAC（Stateless Address Autoconfiguration, RFC 4862）</td>
+                                <td>
+                                    ルータ広告（RA）のプレフィックス情報とホスト側で生成するインターフェースIDを組み合わせて自ら住所を決める
+                                </td>
+                                <td>シンプルな環境、IoT機器</td>
+                            </tr>
+                            <tr class="even">
+                                <td>DHCPv6（stateful, RFC 8415）</td>
+                                <td>DHCPv4同様、サーバが集中管理してアドレスを払い出す</td>
+                                <td>アドレス追跡やコンプライアンス要件のある企業ネットワーク</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    実務では「SLAACでアドレス割当、DHCPv6でDNSサーバ情報などのオプションのみ配布」というハイブリッド運用（RA
+                    の M/O
+                    フラグで制御）も広く行われています。DHCPv6のサーバ二重化には、DHCPv4の伝統的なDORAとは異なる<strong
+                        >DHCPv6フェイルオーバー（RFC 8156, 2017年）</strong
+                    >という仕組みが後から追加されました。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    RA["ルータ広告（RA）"] --&gt; M{"M/Oフラグ"}
+    M --&gt;|"M=1 Managed"| Stateful["DHCPv6でアドレス取得&lt;br/&gt;（フルステートフル）"]
+    M --&gt;|"M=0, O=1 Other"| Hybrid["SLAACでアドレス取得&lt;br/&gt;+ DHCPv6でDNS等の&lt;br/&gt;オプションのみ取得"]
+    M --&gt;|"M=0, O=0"| Pure["純粋SLAAC&lt;br/&gt;（RA内RDNSSでDNS取得も可）"]
+
+    classDef opt fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class RA,Stateful,Hybrid,Pure opt</pre
+                >
+                <h3 id="s6-6">6.6 DHCPのセキュリティ課題</h3>
+                <p>
+                    DHCPには送信元認証の仕組みがなく、不正なDHCPサーバ（Rogue
+                    DHCP）が偽の設定情報（悪意あるデフォルトゲートウェイなど）を配布できてしまいます。緩和策として、スイッチ側で正規のDHCPサーバが接続されたポートのみを信頼する<strong>DHCPスヌーピング</strong>（第4部のARP対策とも連携）が標準的に使われます。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                リース期間はネットワークの流動性（ゲスト無線か固定オフィス機器か）に応じて調整する。短すぎるとDHCPサーバ負荷が増し、長すぎるとアドレス枯渇時の回収が遅れる。
+                            </li>
+                            <li>
+                                IPv6ネットワークでは、SLAACのみ・DHCPv6のみ・ハイブリッドのどれを採用するか、DNS配布方法（RA
+                                RDNSS vs DHCPv6）まで含めて設計時に明確化する。
+                            </li>
+                            <li>
+                                Rogue
+                                DHCP対策としてDHCPスヌーピングを有効化し、想定外のポートからのDHCPOFFER/ACKを遮断する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part7">第7部：ファイアウォールとNAT（原著第7章）</h2>
+                <h3 id="s7-1">7.1 ファイアウォールの基本分類</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>種別</th>
+                                <th>判断基準</th>
+                                <th>特徴</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>パケットフィルタ型</td>
+                                <td>IPアドレス・ポート・プロトコル番号</td>
+                                <td>高速だがコネクションの文脈を見ない</td>
+                            </tr>
+                            <tr class="even">
+                                <td>ステートフルインスペクション型</td>
+                                <td>上記＋コネクションの状態（SYN送出済みか等）</td>
+                                <td>現代の主流。応答パケットのみを自動許可できる</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>アプリケーション層（プロキシ）型</td>
+                                <td>アプリケーションプロトコルの中身まで検査</td>
+                                <td>詳細な制御が可能だが処理負荷が高い</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s7-2">7.2 NAT（ネットワークアドレス変換）の基本動作</h3>
+                <p>
+                    NATはプライベートアドレス空間とパブリックアドレス空間の間でIPアドレス（とポート番号）を書き換える仕組みです。最も一般的なのは<strong
+                        >NAPT（Network Address Port Translation、俗にPAT）</strong
+                    >で、複数の内部ホストが1つのパブリックIPを共有し、送信元ポート番号で内部ホストを区別します。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    subgraph LAN["プライベートネットワーク 192.168.1.0/24"]
+        H1["192.168.1.10:5000"]
+        H2["192.168.1.11:5000"]
+    end
+    NAT["NATデバイス&lt;br/&gt;（変換テーブルを保持）"]
+    subgraph WAN["インターネット"]
+        Server["203.0.113.5:443"]
+    end
+
+    H1 --&gt;|"送信元 192.168.1.10:5000"| NAT
+    H2 --&gt;|"送信元 192.168.1.11:5000"| NAT
+    NAT --&gt;|"送信元 198.51.100.1:40001"| Server
+    NAT --&gt;|"送信元 198.51.100.1:40002"| Server
+
+    classDef host fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    classDef nat fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class H1,H2,Server host
+    class NAT nat</pre
+                >
+                <h3 id="s7-3">7.3 キャリアグレードNAT（CGNAT）とNAT444</h3>
+                <p>
+                    IPv4アドレス枯渇に対応するため、ISPは自社網内でもNATを行い、家庭用ルータのNAT（NAT44）に加えてISP側でもう一段NATを行う<strong>NAT444</strong>構成（CGNAT）を広く採用しています。CGNATでは<code>100.64.0.0/10</code>（第2部参照）がホームルータとISP
+                    CGN機器の間で使われます。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    Home["家庭内端末&lt;br/&gt;192.168.x.x"] --&gt;|"NAT44"| Router["家庭用ルータ&lt;br/&gt;WAN側: 100.64.x.x"]
+    Router --&gt;|"NAT・2段目"| CGN["ISPのCGNAT機器"]
+    CGN --&gt;|"NAT"| Internet["公開インターネット&lt;br/&gt;グローバルIP"]
+
+    classDef seg fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Home,Router,CGN,Internet seg</pre
+                >
+                <p>
+                    CGNATはIPv4枯渇への延命策として有効な一方、以下のような構造的な副作用があります。
+                </p>
+                <ul>
+                    <li>
+                        <strong>end-to-endの原則が崩れる</strong
+                        >：中間にNATという「状態を持つ装置」が入るため、外部から内部への直接接続（サーバ運用、P2P、ポートフォワーディング）が困難になる。
+                    </li>
+                    <li>
+                        <strong>ポート枯渇</strong
+                        >：1つのパブリックIPを多数のユーザで共有するため、同時接続数の上限に達しやすい。
+                    </li>
+                    <li>
+                        <strong>法執行・監査の複雑化</strong
+                        >：同一の公開IPアドレスの背後に多数のユーザが存在するため、IPアドレスだけでは個人を特定できない。
+                    </li>
+                </ul>
+                <h3 id="s7-4">7.4 NAT64／DNS64：IPv6専用網からIPv4へのアクセス</h3>
+                <p>
+                    IPv6専用（IPv6-only）ネットワークからIPv4しか対応していないサービスにアクセスするための移行技術がNAT64／DNS64です。DNS64がAAAAレコードを持たないドメインに対して疑似的なIPv6アドレス（<code>64:ff9b::/96</code>にIPv4アドレスを埋め込んだもの）を合成して返し、NAT64ゲートウェイがそのアドレス宛のIPv6トラフィックをIPv4に変換して転送します。
+                </p>
+                <h3 id="s7-5">7.5 NATがトランスポート層プロトコルに与える影響</h3>
+                <p>
+                    NATはIPヘッダだけでなく、TCP/UDPのポート番号やチェックサムも書き換える必要があります。またFTPのようにペイロード内にIPアドレスやポート番号を埋め込むプロトコル（アクティブFTPのPORTコマンドなど）は、NAT側で<strong
+                        >ALG（Application Level Gateway）</strong
+                    >によるペイロード書き換えを必要とします。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                サーバを外部公開する構成では、CGNAT環境下のクライアントからの着信接続を前提にしない（IPv6デュアルスタックや明示的なポートフォワーディングで代替する）。
+                            </li>
+                            <li>
+                                NATの「フルコーンNAT」「制限コーンNAT」「対称NAT」といった振る舞いの違いはP2P・VoIPの接続性に直結する。STUN/TURN/ICEといったNATトラバーサル技術の選定前に、実際のNATタイプを確認する。
+                            </li>
+                            <li>
+                                ステートフルファイアウォール／NATのセッションテーブルにはタイムアウトがある（第17部のTCPキープアライブとも関連）。アイドル接続を維持したいアプリケーションは、この既定タイムアウトより短い間隔でキープアライブを送る設計にする。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part8">第8部：ICMPv4/ICMPv6（原著第8章）</h2>
+                <h3 id="s8-1">8.1 ICMPの役割：IPの「アシスタントプロトコル」</h3>
+                <p>
+                    ICMP（Internet Control Message
+                    Protocol）はIP自身にはないエラー通知・診断機能を補完するプロトコルです。IPは「ベストエフォートで配送を試み、失敗しても黙って捨てる」のが基本ですが、それでは運用上不便なため、パケットが破棄された理由をICMPメッセージとして送信元に通知します。ICMPはIPペイロードとして運ばれる（IP
+                    Protocol番号1）ため、レイヤとしてはネットワーク層に位置づけられます。
+                </p>
+                <h3 id="s8-2">8.2 主要なICMPv4メッセージ</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>Type</th>
+                                <th>名称</th>
+                                <th>主な用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>0</td>
+                                <td>Echo Reply</td>
+                                <td><code>ping</code>の応答</td>
+                            </tr>
+                            <tr class="even">
+                                <td>3</td>
+                                <td>Destination Unreachable</td>
+                                <td>宛先到達不可（Code別に細分化）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>3 / Code 4</td>
+                                <td>Fragmentation Needed and DF Set</td>
+                                <td>Path MTU Discoveryで使用</td>
+                            </tr>
+                            <tr class="even">
+                                <td>5</td>
+                                <td>Redirect</td>
+                                <td>より良い経路の通知（現代では悪用リスクからほぼ無効化）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>8</td>
+                                <td>Echo Request</td>
+                                <td><code>ping</code>の要求</td>
+                            </tr>
+                            <tr class="even">
+                                <td>11</td>
+                                <td>Time Exceeded</td>
+                                <td>TTL超過（<code>traceroute</code>が利用）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s8-3">8.3 Path MTU Discovery（PMTUD）の仕組み</h3>
+                <p>
+                    送信ホストはまずDFビット（Don't
+                    Fragment）を立てた最大サイズのパケットを送出します。経路上のどこかのリンクでMTUを超えた場合、そのルータはパケットを破棄し「Fragmentation
+                    Needed and DF Set（Type 3, Code
+                    4）」ICMPメッセージを、超過できなかったリンクの実際のMTU値を添えて送信元に返します。送信ホストはこれを受けてパケットサイズを縮小し再送します。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant Src as 送信ホスト
+    participant R as 途中ルータ&lt;br/&gt;次リンクMTU=1400
+    participant Dst as 宛先ホスト
+
+    Src-&gt;&gt;R: 1500byteパケット (DFビット=1)
+    R--xR: MTU1400を超過、転送不可
+    R--&gt;&gt;Src: ICMP Type3/Code4&lt;br/&gt;「Fragmentation Needed」&lt;br/&gt;next-hop MTU=1400を通知
+    Note over Src: 送信サイズを1400以下に調整
+    Src-&gt;&gt;R: 1400byteパケット (DFビット=1)
+    R-&gt;&gt;Dst: 転送成功</pre
+                >
+                <p>
+                    <strong>PMTUDブラックホール問題</strong
+                    >：経路上のファイアウォールがICMPを一律ブロックしていると、このType3/Code4メッセージが送信元に届かず、送信ホストは永久に最適なサイズを学習できません。結果として、大きなパケットだけが送達されず接続が謎のハングを起こす「PMTUDブラックホール」という典型的な障害パターンが発生します。
+                </p>
+                <h3 id="s8-4">8.4 ICMPv6：単なるエラー通知を超えた基盤プロトコル</h3>
+                <p>
+                    ICMPv6はICMPv4よりも役割が大きく拡張されています。IPv4では別プロトコルだったARP（第4部）とIGMP（第9部）に相当する機能が、ICMPv6のメッセージタイプとしてすべて統合されています。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>分類</th>
+                                <th>ICMPv6 Type</th>
+                                <th>相当するIPv4の仕組み</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>エラー通知</td>
+                                <td>1〜4</td>
+                                <td>ICMPv4のエラーメッセージ群</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Echo Request/Reply</td>
+                                <td>128/129</td>
+                                <td>ICMPv4 Type 8/0（<code>ping</code>）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Router Solicitation/Advertisement</td>
+                                <td>133/134</td>
+                                <td>なし（IPv4はDHCP依存）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Neighbor Solicitation/Advertisement</td>
+                                <td>135/136</td>
+                                <td>ARP Request/Reply</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Multicast Listener系</td>
+                                <td>130〜132, 143</td>
+                                <td>IGMP</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s8-5">8.5 セキュリティ上の注意点</h3>
+                <p>
+                    ICMPはネットワークスキャン（<code>ping</code>スイープ）や、増幅型DDoS攻撃（Smurf攻撃など）に悪用された歴史があるため、多くの環境でICMPを一律遮断する運用が見られます。しかしICMPv6のNeighbor
+                    Discovery関連メッセージは、IPv6の基本的な通信そのものに必須（ARPに相当）であるため、ICMPv4と同じ感覚で「とりあえず全部ブロック」するとIPv6通信そのものが機能しなくなります。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                ファイアウォール設計では「ICMP＝不要な雑音」として一律遮断せず、Type3/Code4（PMTUD）とICMPv6のNeighbor
+                                Discovery関連メッセージは必ず許可する。
+                            </li>
+                            <li>
+                                <code>ping</code
+                                >が通らないことと実サービスが疎通しないことは別問題。ICMPだけを見て「ネットワークがダウンしている」と即断しない（多くの本番環境でICMP
+                                Echoは意図的にフィルタされている）。
+                            </li>
+                            <li>
+                                IPv6環境の構築・トラブルシューティングでは、ARP相当の機能がICMPv6に統合されていることを踏まえ、<code>tcpdump</code>のフィルタも<code>icmp6</code>側を確認する習慣をつける。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part9">第9部：ブロードキャストとマルチキャスト IGMP/MLD（原著第9章）</h2>
+                <h3 id="s9-1">9.1 ブロードキャストの限界とマルチキャストの利点</h3>
+                <p>
+                    ブロードキャストは「同一セグメント上の全ホストへ届ける」単純な仕組みですが、興味のないホストにも強制的に処理負荷をかけてしまいます。IPマルチキャストは「関心のあるホストだけが加入するグループ」にのみ配送する仕組みで、映像配信やルーティングプロトコル（OSPFなど）の制御メッセージ配布に使われます。IPv6にはそもそもブロードキャストが存在せず、この用途はすべてマルチキャストに一本化されています。
+                </p>
+                <h3 id="s9-2">9.2 IGMP（IPv4）とMLD（IPv6）</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>プロジェクト</th>
+                                <th>IPv4</th>
+                                <th>IPv6</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>プロトコル名</td>
+                                <td>IGMP（Internet Group Management Protocol）</td>
+                                <td>MLD（Multicast Listener Discovery）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>実装レイヤ</td>
+                                <td>IPの直上（Protocol番号2）</td>
+                                <td>ICMPv6のメッセージタイプとして統合</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>現行バージョン</td>
+                                <td>IGMPv3</td>
+                                <td>MLDv2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    ホストはIGMP/MLDを使ってローカルルータに「このマルチキャストグループに加入したい」と通知し、ルータはこの情報を基にマルチキャストトラフィックをそのセグメントへ転送するかどうかを判断します。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant H as ホスト（映像視聴クライアント）
+    participant R as ローカルルータ
+    participant Src as マルチキャスト配信元
+
+    H-&gt;&gt;R: IGMP Membership Report&lt;br/&gt;「グループ 239.1.1.1 に加入したい」
+    Note over R: マルチキャストルーティングツリーに&lt;br/&gt;このセグメントを追加
+    Src-&gt;&gt;R: マルチキャストトラフィック (239.1.1.1)
+    R-&gt;&gt;H: 該当セグメントへ転送
+    R-&gt;&gt;R: 定期的にMembership Queryで&lt;br/&gt;加入者の生存確認</pre
+                >
+                <h3 id="s9-3">9.3 マルチキャストルーティングの概要</h3>
+                <p>
+                    IGMP/MLDはホストとローカルルータ間の「加入表明」を扱うのに対し、ルータ間でマルチキャストツリーを構築するのはPIM（Protocol
+                    Independent Multicast）などの別プロトコルの役割です。PIM-SM（Sparse
+                    Mode）が広く使われ、Rendezvous
+                    Point（RP）を経由してソースツリーまたは共有ツリーを構築します。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                マルチキャストはL2スイッチでもIGMPスヌーピングを有効化しないと、結局全ポートにフラッディングされ本来の効率化メリットが失われる。
+                            </li>
+                            <li>
+                                パブリッククラウドの多くはネイティブなL2マルチキャストをサポートしないため、マルチキャスト前提の設計（金融系のマーケットデータ配信など）はオンプレミス／専用線接続を要することが多い。
+                            </li>
+                            <li>
+                                IPv6環境ではブロードキャストが存在しないため、旧IPv4前提の設計（DHCPのブロードキャストなど）をそのまま持ち込めない点に注意する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part10">第10部：UDPとIPフラグメンテーション（原著第10章）</h2>
+                <h3 id="s10-1">10.1 UDPの設計思想：シンプルさの追求</h3>
+                <p>
+                    UDP（User Datagram Protocol, RFC
+                    768）はTCPと対照的に、コネクション確立・順序保証・再送制御・輻輳制御のいずれも持たない、極めて薄いトランスポート層プロトコルです。ヘッダはわずか8バイト（送信元ポート・宛先ポート・長さ・チェックサムの4フィールドのみ）です。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    A["送信元ポート&lt;br/&gt;2byte"] --- B["宛先ポート&lt;br/&gt;2byte"] --- C["長さ&lt;br/&gt;2byte"] --- D["チェックサム&lt;br/&gt;2byte"] --- E["データ"]
+
+    classDef field fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class A,B,C,D,E field</pre
+                >
+                <h3 id="s10-2">10.2 UDPが適する場面</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>特性</th>
+                                <th>説明</th>
+                                <th>典型的な用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>低遅延</td>
+                                <td>ハンドシェイクや再送待ちがない</td>
+                                <td>DNSクエリ、リアルタイム音声・映像</td>
+                            </tr>
+                            <tr class="even">
+                                <td>ブロードキャスト/マルチキャスト対応</td>
+                                <td>TCPは1対1のコネクションのみ</td>
+                                <td>DHCP、ストリーミング配信</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>独自の信頼性実装が可能</td>
+                                <td>アプリケーション側で必要な分だけ再送等を実装できる</td>
+                                <td>QUIC（HTTP/3の基盤、UDP上に構築）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s10-3">10.3 IPフラグメンテーションの詳細動作</h3>
+                <p>
+                    送信するデータグラムがリンクのMTUを超える場合、IPは元のデータグラムを複数のフラグメントに分割します。各フラグメントは同じ<strong>Identificationフィールド</strong>を持ち、<strong
+                        >Fragment Offset</strong
+                    >フィールドで元データ内の位置を、<strong>More Fragmentsフラグ</strong
+                    >で「まだ後続フラグメントがあるか」を示します。受信側はこれらの情報を使って元のデータグラムを再構築します。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    Orig["元のIPデータグラム&lt;br/&gt;合計4000byte"] --&gt; F1["フラグメント1&lt;br/&gt;Offset=0, MF=1&lt;br/&gt;1480byte"]
+    Orig --&gt; F2["フラグメント2&lt;br/&gt;Offset=1480, MF=1&lt;br/&gt;1480byte"]
+    Orig --&gt; F3["フラグメント3&lt;br/&gt;Offset=2960, MF=0&lt;br/&gt;1040byte"]
+
+    classDef frag fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Orig,F1,F2,F3 frag</pre
+                >
+                <h3 id="s10-4">10.4 フラグメンテーションはなぜ「避けるべき」設計とされるのか</h3>
+                <ul>
+                    <li>
+                        <strong>1つのフラグメント喪失＝全体喪失</strong
+                        >：フラグメントの一部でもパケロスすると、元データグラム全体が再構築不能になり破棄される。UDPには再送機構がないため、上位アプリケーションが再送するまでデータは失われたままになる。
+                    </li>
+                    <li>
+                        <strong>中間経路での処理コストとステート</strong
+                        >：一部のファイアウォール／ロードバランサはフラグメントの再構築が必要になり負荷が増す。
+                    </li>
+                    <li>
+                        <strong>フラグメンテーション攻撃</strong
+                        >：意図的に細工したフラグメントでファイアウォールの検査を回避する攻撃（Tiny
+                        Fragment Attack、Overlapping Fragment
+                        Attackなど）の歴史があり、多くのセキュリティ機器がフラグメントを異常視・破棄する。
+                    </li>
+                </ul>
+                <p>
+                    このため現代の実運用では、UDPアプリケーション自身がペイロードサイズをMTUに収まるよう制御する（例：DNSはEDNS0でUDPペイロードサイズを明示的にネゴシエートする）のが定石です。IPv6ではさらに踏み込み、ルータによるフラグメンテーションが廃止され、送信ホストのみがフラグメント化を行える設計になっています（第5部参照）。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                UDPベースのアプリケーションを設計する際は、最初からMTU超過を前提とせず、ペイロードサイズをPMTUDの結果や既知の安全マージン（IPv4なら576byte、IPv6なら1280byte程度）に収める設計を検討する。
+                            </li>
+                            <li>
+                                DNS（第11部）のようにUDPでの応答サイズが大きくなり得るプロトコルでは、EDNS0によるサイズネゴシエーションとTCPへのフォールバックの両方を実装しておく。
+                            </li>
+                            <li>
+                                フラグメント化されたパケットに依存する設計は、経路上のミドルボックスによって予期せず破棄されるリスクがあることを念頭に置く。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part11">第11部：名前解決とDNS（原著第11章）</h2>
+                <h3 id="s11-1">11.1 階層型データベースとしてのDNS</h3>
+                <p>
+                    DNS（Domain Name System, RFC
+                    1035）は、人間が読める名前（<code>www.example.com</code>）とIPアドレスを対応づける、世界規模の分散階層型データベースです。ドメイン名はルート（<code>.</code>）を頂点に、TLD（<code>.com</code>など）、セカンドレベルドメイン（<code>example</code>）、サブドメイン（<code>www</code>）という木構造で管理され、それぞれの階層を別々の組織が権威サーバとして管理します。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    Root["ルート .&lt;br/&gt;（ルートサーバ群）"] --&gt; COM["TLD: .com&lt;br/&gt;（Verisign等が運用）"]
+    Root --&gt; JP["TLD: .jp&lt;br/&gt;（JPRSが運用）"]
+    COM --&gt; Example["example.com&lt;br/&gt;（権威サーバ）"]
+    Example --&gt; WWW["www.example.com"]
+
+    classDef dns fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Root,COM,JP,Example,WWW dns</pre
+                >
+                <h3 id="s11-2">11.2 再帰的問い合わせと反復的問い合わせ</h3>
+                <p>
+                    一般的なクライアント（スタブリゾルバ）は、フルサービスリゾルバ（キャッシュDNSサーバ）に<strong>再帰的（recursive）問い合わせ</strong>を送ります。フルサービスリゾルバは、ルート→TLD→権威サーバへと自ら<strong>反復的（iterative）問い合わせ</strong>を繰り返して最終的な答えを見つけ、クライアントに1回の応答として返します。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant C as クライアント&lt;br/&gt;(スタブリゾルバ)
+    participant R as フルサービスリゾルバ&lt;br/&gt;(キャッシュDNSサーバ)
+    participant Root as ルートサーバ
+    participant TLD as .com TLDサーバ
+    participant Auth as example.com&lt;br/&gt;権威サーバ
+
+    C-&gt;&gt;R: 再帰的問い合わせ&lt;br/&gt;www.example.comのAは？
+    R-&gt;&gt;Root: 反復的問い合わせ
+    Root--&gt;&gt;R: .comサーバの場所を回答
+    R-&gt;&gt;TLD: 反復的問い合わせ
+    TLD--&gt;&gt;R: example.comサーバの場所を回答
+    R-&gt;&gt;Auth: 反復的問い合わせ
+    Auth--&gt;&gt;R: 93.184.216.34
+    R--&gt;&gt;C: 93.184.216.34（結果をキャッシュ）</pre
+                >
+                <h3 id="s11-3">11.3 主要なリソースレコード種別</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>レコード種別</th>
+                                <th>役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>A</td>
+                                <td>ホスト名 → IPv4アドレス</td>
+                            </tr>
+                            <tr class="even">
+                                <td>AAAA</td>
+                                <td>ホスト名 → IPv6アドレス</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>CNAME</td>
+                                <td>別名（正規名へのエイリアス）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>MX</td>
+                                <td>メール配送先サーバの優先度付きリスト</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>NS</td>
+                                <td>あるゾーンを管理する権威サーバの指定</td>
+                            </tr>
+                            <tr class="even">
+                                <td>TXT</td>
+                                <td>任意テキスト（SPFやドメイン検証などに広く使われる）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>PTR</td>
+                                <td>IPアドレス → ホスト名（逆引き）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s11-4">11.4 トランスポート層の選択：UDPとTCP</h3>
+                <p>
+                    DNSクエリの大半は低遅延なUDPで送られますが、応答サイズが大きい場合（多数のレコード、DNSSEC署名付きなど）はTCPにフォールバックします。またゾーン転送（AXFR/IXFR、プライマリ/セカンダリDNSサーバ間の同期）は常にTCPが使われます。EDNS0（RFC
+                    6891）拡張により、UDPでもより大きなペイロードサイズをネゴシエート可能になっています。
+                </p>
+                <h3 id="s11-5">11.5 DNSキャッシュとTTL</h3>
+                <p>
+                    各リソースレコードにはTTL（Time To
+                    Live、秒単位）が設定されており、フルサービスリゾルバはこの期間だけ結果をキャッシュします。TTLが短いほど変更の反映は速いが問い合わせ負荷が増え、長いほど負荷は減るが変更反映が遅れるというトレードオフがあります（DNSベースのフェイルオーバーやロードバランシングでは意図的に短いTTLが使われます）。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                サービスの切り替え（DR切替、マイグレーション）を計画する際は、事前に対象レコードのTTLを短く設定しておき、切替直前に十分な時間（旧TTL分）を空けておく。
+                            </li>
+                            <li>
+                                DNSはUDPだけの技術ではない。応答サイズやゾーン転送でTCPが使われることを前提に、ファイアウォールでは<code>53/udp</code>だけでなく<code>53/tcp</code>も許可する。
+                            </li>
+                            <li>
+                                キャッシュの階層構造（スタブリゾルバ→フルサービスリゾルバ→権威サーバ）を理解しておくと、「なぜこの端末だけ古いレコードが見えるのか」といった障害調査が格段にしやすくなる。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part12">
+                    第12部：TCPの基礎（原著第12章 TCP: The Transmission Control Protocol,
+                    Preliminaries）
+                </h2>
+                <h3 id="s12-1">12.1 TCPが提供するサービス</h3>
+                <p>
+                    TCP（Transmission Control Protocol）は現行仕様がRFC 9293（2022年、RFC
+                    793を含む複数のRFCを統合・置換）で定義されており、次の性質を持つコネクション指向のトランスポート層プロトコルです。
+                </p>
+                <ul>
+                    <li>
+                        <strong>信頼性のあるバイトストリーム配送</strong
+                        >：送ったデータが順序通り、欠損・重複なく届くことを保証する。
+                    </li>
+                    <li><strong>全二重通信</strong>：双方向で独立してデータを送受信できる。</li>
+                    <li>
+                        <strong>フロー制御</strong
+                        >：受信側のバッファ容量に応じて送信ペースを調整する（第15部）。
+                    </li>
+                    <li>
+                        <strong>輻輳制御</strong
+                        >：ネットワークの混雑状況に応じて送信ペースを調整する（第16部）。
+                    </li>
+                </ul>
+                <h3 id="s12-2">12.2 TCPヘッダの構造</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>フィールド</th>
+                                <th>ビット幅</th>
+                                <th>役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>Source Port / Destination Port</td>
+                                <td>各16</td>
+                                <td>ポート番号</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Sequence Number</td>
+                                <td>32</td>
+                                <td>このセグメントの先頭バイトのシーケンス番号</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Acknowledgment Number</td>
+                                <td>32</td>
+                                <td>次に期待するバイトのシーケンス番号（ACK時）</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Data Offset</td>
+                                <td>4</td>
+                                <td>ヘッダ長</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Flags（Control Bits）</td>
+                                <td>8前後</td>
+                                <td>SYN, ACK, FIN, RST, PSH, URGなど</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Window Size</td>
+                                <td>16</td>
+                                <td>受信可能なウィンドウサイズ</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Checksum</td>
+                                <td>16</td>
+                                <td>誤り検出</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Urgent Pointer</td>
+                                <td>16</td>
+                                <td>緊急データの位置（現代ではほぼ未使用）</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Options</td>
+                                <td>可変</td>
+                                <td>MSS、ウィンドウスケール、SACK許可、タイムスタンプなど</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 id="s12-3">12.3 シーケンス番号とバイトストリームという抽象化</h3>
+                <p>
+                    TCPは「パケット」ではなく「連続したバイトストリーム」を運ぶという抽象化を提供します。各バイトには論理的な通し番号（シーケンス番号）が振られており、初期値はランダムな<strong
+                        >ISN（Initial Sequence Number）</strong
+                    >から始まります（第三者による通信の予測・乗っ取りを防ぐため、ISNの予測可能性は歴史的に重要なセキュリティ課題でした）。
+                </p>
+                <h3 id="s12-4">12.4 主要なTCPオプション</h3>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>オプション</th>
+                                <th>役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>MSS（Maximum Segment Size）</td>
+                                <td>受信可能な最大セグメントサイズをコネクション確立時に通知</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Window Scale</td>
+                                <td>
+                                    16bitのWindow
+                                    Sizeフィールドの制約を超え、大容量ウィンドウを実現（高帯域遅延積回線で必須）
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>SACK（Selective Acknowledgment）</td>
+                                <td>欠損した特定範囲のみを選択的に再送要求できるようにする</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Timestamps</td>
+                                <td>RTT測定の精度向上とシーケンス番号の折り返し対策（PAWS）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                Window
+                                ScaleオプションはWi-Fi・衛星回線・大陸間通信のような高帯域遅延積（BDP）環境でスループットを左右する。オプションが経路上のミドルボックスで剥がされていないか<code>tcpdump</code>で確認する習慣をつける。
+                            </li>
+                            <li>
+                                MSSはリンクのMTUから逆算される値であり、トンネル（VPN、VXLANなど）を挟む構成ではMSS
+                                clamping（MSSを意図的に小さく書き換える）が必要になる場合がある。
+                            </li>
+                            <li>
+                                SACKが無効化されている環境では、1つのパケロスで大量の再送が発生しやすい。現代のOSでは既定で有効だが、意図せず無効化されていないか確認する価値がある。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part13">第13部：TCP接続管理（原著第13章）</h2>
+                <h3 id="s13-1">13.1 3ウェイハンドシェイクによるコネクション確立</h3>
+                <p>
+                    TCPコネクションはSYN、SYN-ACK、ACKという3つのセグメントの交換で確立されます。これにより両者は互いの初期シーケンス番号（ISN）を交換し、以降のバイトストリームの起点を合意します。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant C as クライアント
+    participant S as サーバ
+
+    C-&gt;&gt;S: SYN (seq=x)
+    Note over S: SYNキューにエントリ作成&lt;br/&gt;（SYN RECEIVED状態）
+    S--&gt;&gt;C: SYN-ACK (seq=y, ack=x+1)
+    C-&gt;&gt;S: ACK (seq=x+1, ack=y+1)
+    Note over C,S: 両者ESTABLISHED状態&lt;br/&gt;データ転送開始可能</pre
+                >
+                <h3 id="s13-2">13.2 TCP状態遷移図</h3>
+                <p>
+                    TCPコネクションの状態はRFC
+                    9293で定義される有限状態機械（FSM）としてモデル化されます。
+                </p>
+                <pre class="mermaid">
+stateDiagram-v2
+    [*] --&gt; CLOSED
+    CLOSED --&gt; LISTEN: サーバがpassive open
+    CLOSED --&gt; SYN_SENT: クライアントがactive open&lt;br/&gt;SYN送信
+    LISTEN --&gt; SYN_RECEIVED: SYN受信、SYN-ACK送信
+    SYN_SENT --&gt; ESTABLISHED: SYN-ACK受信、ACK送信
+    SYN_RECEIVED --&gt; ESTABLISHED: ACK受信
+    ESTABLISHED --&gt; FIN_WAIT_1: アプリがclose、FIN送信
+    ESTABLISHED --&gt; CLOSE_WAIT: 相手からFIN受信
+    FIN_WAIT_1 --&gt; FIN_WAIT_2: ACK受信
+    FIN_WAIT_1 --&gt; CLOSING: 同時に相手からもFIN受信
+    FIN_WAIT_2 --&gt; TIME_WAIT: 相手からFIN受信、ACK送信
+    CLOSING --&gt; TIME_WAIT: ACK受信
+    CLOSE_WAIT --&gt; LAST_ACK: アプリがclose、FIN送信
+    LAST_ACK --&gt; CLOSED: ACK受信
+    TIME_WAIT --&gt; CLOSED: タイムアウト経過（2MSL）</pre
+                >
+                <h3 id="s13-3">13.3 コネクション終了：4ウェイクローズとTIME_WAIT</h3>
+                <p>
+                    TCPは全二重であるため、終了処理も両方向で独立して行われます（一般に「4ウェイクローズ」と呼ばれます）。片方がFINを送っても、もう片方はまだ送るデータが残っていればすぐには終了しません（<strong>半クローズ</strong>状態）。
+                </p>
+                <p>
+                    最後にACKを送った側は<strong>TIME_WAIT</strong>状態に一定時間（一般的な実装では<strong
+                        >2MSL＝Maximum Segment Lifetimeの2倍</strong
+                    >）留まります。これは、遅延して届いた古いセグメントが新しい別のコネクションと誤って混同されるのを防ぐための安全策です。
+                </p>
+                <h3 id="s13-4">13.4 SYNフラッド攻撃とSYN Cookies</h3>
+                <p>
+                    サーバはSYNを受け取るとSYN-ACKを返し、クライアントからのACKを待つ間、接続情報を保持するためのメモリ（SYNキュー）を消費します。攻撃者が大量の偽装SYNを送りつけ、ACKを返さないままにすると、SYNキューが枯渇し正規のクライアントが接続できなくなる<strong>SYNフラッド攻撃</strong>が成立します。
+                </p>
+                <p>
+                    対策として広く実装されているのが<strong>SYN Cookies</strong
+                    >です。サーバはSYN受信時に接続状態をすぐには保存せず、必要な情報を暗号学的に符号化してSYN-ACKのシーケンス番号自体に埋め込みます。正規のACKが返ってきたときにその値を検証・復元することで、SYNキューへのメモリ割り当てを実質的に不要にし、攻撃への耐性を高めます。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    Attacker["攻撃者&lt;br/&gt;（大量の偽装SYN）"] --&gt;|"SYN×大量"| Server["サーバ"]
+    Server --&gt;|"SYN-ACK&lt;br/&gt;（状態は保存せず&lt;br/&gt;Cookieに符号化）"| Nowhere["応答は返らない&lt;br/&gt;（送信元は偽装）"]
+    Legit["正規クライアント"] --&gt;|"SYN"| Server
+    Server --&gt;|"SYN-ACK"| Legit
+    Legit --&gt;|"ACK&lt;br/&gt;（Cookie検証で復元）"| Server
+
+    classDef bad fill:#fdeef1,stroke:#d1445b,color:#7a1f30
+    classDef normal fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Attacker,Nowhere bad
+    class Legit,Server normal</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                多数の短命接続を扱うサーバ（Webサーバ、ロードバランサ）ではTIME_WAIT状態のソケットが大量に滞留しポート枯渇を招くことがある。<code>SO_REUSEADDR</code>や適切なコネクションプーリング設計で緩和する。
+                            </li>
+                            <li>
+                                SYN
+                                Cookiesはほとんどの現代OSでデフォルト有効だが、有効化状態と閾値（SYNキューが何%埋まったら発動するか）を運用環境で確認しておく。
+                            </li>
+                            <li>
+                                <code>netstat</code
+                                >／<code>ss</code>コマンドでTCP状態別のソケット数を可視化すると、CLOSE_WAITが溜まり続けるといったアプリケーション側のバグ（closeし忘れ）を早期に発見できる。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part14">第14部：TCPタイムアウトと再送（原著第14章）</h2>
+                <h3 id="s14-1">14.1 再送の基本原理：ACKが届かなければ再送する</h3>
+                <p>
+                    TCPは送信したセグメントごとにタイマーを設定し、一定時間内にACKが返ってこなければそのセグメントをロスと見なして再送します。この待機時間を<strong
+                        >RTO（Retransmission Timeout）</strong
+                    >と呼びます。
+                </p>
+                <h3 id="s14-2">14.2 RTOの動的計算（Jacobsonのアルゴリズム）</h3>
+                <p>
+                    RTOは固定値ではなく、実測したRTT（往復遅延時間）の平滑化平均（SRTT）とその変動（RTTVAR）から動的に計算されます（Van
+                    Jacobsonが1988年に提案し、現在もRFC 6298として標準化されている手法）。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    A["RTTサンプルを測定"] --&gt; B["SRTT（平滑化RTT）を&lt;br/&gt;指数移動平均で更新"]
+    A --&gt; C["RTTVAR（RTT変動）を更新"]
+    B --&gt; D["RTO = SRTT + 4×RTTVAR"]
+    C --&gt; D
+    D --&gt; E["次のセグメントの&lt;br/&gt;再送タイマーに適用"]
+
+    classDef step fill:#eef2f8,stroke:#7488a8,color:#33455e
+    class A,B,C,D,E step</pre
+                >
+                <p>
+                    RTTの変動が大きいネットワーク（モバイル網など）ではRTTVARが大きくなり、RTOは自動的に長めに設定されます。逆に安定した低遅延ネットワークではRTOは短く保たれ、ロス検出が速くなります。
+                </p>
+                <h3 id="s14-3">14.3 高速再送（Fast Retransmit）と重複ACK</h3>
+                <p>
+                    RTOによる再送は「一定時間待つ」ため反応が遅くなりがちです。より速い検出手法として、受信側が順序の乱れたセグメントを受け取ると同じACK番号を繰り返し送る（<strong>重複ACK</strong>）ことを利用します。送信側は同じACK番号を3回連続で受け取ると（＝3つの重複ACK）、RTOを待たずに即座に該当セグメントを再送します。これを<strong>高速再送</strong>と呼びます。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant S as 送信側
+    participant R as 受信側
+
+    S-&gt;&gt;R: セグメント1 (seq=1000)
+    S-&gt;&gt;R: セグメント2 (seq=2000)&lt;br/&gt;【ネットワーク上で喪失】
+    S-&gt;&gt;R: セグメント3 (seq=3000)
+    R--&gt;&gt;S: ACK 2000（セグメント1受信、次を期待）
+    R--&gt;&gt;S: 重複ACK 2000（セグメント3は順序外）
+    S-&gt;&gt;R: セグメント4 (seq=4000)
+    R--&gt;&gt;S: 重複ACK 2000（2回目）
+    Note over S: 3回目の重複ACKで&lt;br/&gt;高速再送を判断
+    S-&gt;&gt;R: セグメント2を再送 (seq=2000)
+    R--&gt;&gt;S: ACK 4000（全て受信確認、まとめてACK）</pre
+                >
+                <h3 id="s14-4">14.4 SACK（選択的確認応答）による効率化</h3>
+                <p>
+                    重複ACKだけでは「どこまで届いたか」しか分からず、複数のセグメントが同時にロスした場合に非効率な再送が発生します。SACKオプション（第12部）を使うと、受信側は「どの範囲を受信済みか」を明示的にACKに含められるため、送信側は本当に欠けている範囲だけをピンポイントで再送できます。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                高遅延・高パケロス環境（衛星回線、混雑した無線網）では高速再送とSACKの効果が特に大きい。これらが有効になっているか（多くのOSで既定有効）を確認する。
+                            </li>
+                            <li>
+                                RTOの動的計算は「安定したネットワークでは速く、不安定なネットワークでは慎重に」というトレードオフを自動調整する仕組みであることを理解しておくと、モバイル回線特有の遅延挙動を誤解しにくくなる。
+                            </li>
+                            <li>
+                                アプリケーション層でも独自の再送・タイムアウトを実装する場合、TCP自体の再送と二重に働いて無駄な負荷を生まないよう設計する（例：HTTPクライアントのリトライとTCP再送の相互作用）。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part15">第15部：TCPデータフローとウィンドウ管理（原著第15章）</h2>
+                <h3 id="s15-1">15.1 フロー制御：受信側のバッファ保護</h3>
+                <p>
+                    フロー制御は「受信側が処理しきれる速度を超えて送信側がデータを送らないようにする」仕組みです。TCPヘッダのWindow
+                    Sizeフィールドで、受信側は「今すぐ受け入れられるバイト数（受信バッファの空き容量）」を送信側に通知します。送信側はこの値を超えてデータを送ってはいけません。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    Sender["送信側"] --&gt;|"未確認送信データ&lt;br/&gt;（送信ウィンドウ内）"| Network["ネットワーク"]
+    Network --&gt; Receiver["受信側&lt;br/&gt;受信バッファ"]
+    Receiver --&gt;|"ACK + Window Size&lt;br/&gt;（残りバッファ容量を通知）"| Sender
+
+    classDef node fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class Sender,Network,Receiver node</pre
+                >
+                <h3 id="s15-2">15.2 スライディングウィンドウの動作</h3>
+                <p>
+                    TCPは「送ったが未確認のデータ量」が受信ウィンドウを超えない範囲で連続的にデータを送り出せる、<strong>スライディングウィンドウ</strong>方式を採用しています。ACKが届くたびにウィンドウが"スライド"し、新たに送信可能なバイト数が増えていきます。
+                </p>
+                <pre class="mermaid">
+flowchart TB
+    subgraph Stream["送信バイトストリーム（左から右へ）"]
+        direction LR
+        A["送信・ACK済み"] --- B["送信済み・未ACK&lt;br/&gt;（送信ウィンドウ内）"] --- C["未送信だが&lt;br/&gt;送信可能"] --- D["未送信・&lt;br/&gt;ウィンドウ外"]
+    end
+
+    classDef acked fill:#eef2f8,stroke:#a8b7cc,color:#8695ab
+    classDef inflight fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    classDef sendable fill:#dcebff,stroke:#5b8ae0,color:#2a4d85
+    classDef future fill:#f8fafc,stroke:#c7d3e6,color:#a8b5c9
+    class A acked
+    class B inflight
+    class C sendable
+    class D future</pre
+                >
+                <h3 id="s15-3">15.3 ウィンドウスケーリングと帯域遅延積（BDP）</h3>
+                <p>
+                    TCPヘッダのWindow
+                    Sizeフィールドは16ビットのため、素の状態では最大65,535バイトまでしか表現できません。しかし高速・長距離回線では、必要なウィンドウサイズが<strong
+                        >帯域遅延積（BDP = 帯域幅 × RTT）</strong
+                    >に比例して大きくなります。
+                </p>
+                <p>
+                    例：帯域1Gbps、RTT100msの回線では、BDP ≈ 1,000,000,000 bit/s × 0.1s ÷ 8 ≈
+                    12.5MB。この場合65,535バイトの固定ウィンドウでは帯域を全く使い切れません。
+                </p>
+                <p>
+                    これを解決するのが第12部で触れた<strong>Window Scaleオプション</strong
+                    >で、実際のウィンドウサイズをヘッダの値に2の乗数倍したものとして解釈することで、理論上最大約1GBまでウィンドウを拡張できます。
+                </p>
+                <h3 id="s15-4">15.4 Nagleのアルゴリズムと遅延ACK、そしてその相互作用問題</h3>
+                <ul>
+                    <li>
+                        <strong>Nagleのアルゴリズム</strong
+                        >：小さなデータを都度送信すると小さなパケットが大量発生し非効率なため、未確認のデータがある間は新しい小さなデータをバッファし、まとめて送る仕組み。
+                    </li>
+                    <li>
+                        <strong>遅延ACK（Delayed ACK）</strong
+                        >：受信側が即座にACKを返さず、一定時間（または次の送信データに相乗り）待ってからACKをまとめて返す仕組み。
+                    </li>
+                </ul>
+                <p>
+                    この2つを同時に有効にすると、双方が互いの送信を待ち合ってしまい、数百ミリ秒単位の不要な遅延が発生する<strong>Nagle/遅延ACK問題</strong>が古くから知られています。対話的・低遅延が求められるアプリケーション（SSHのキー入力、リアルタイムAPIなど）では、送信側で<code>TCP_NODELAY</code>ソケットオプションを設定してNagleのアルゴリズムを無効化するのが定石です。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                高帯域・高遅延（BDPが大きい）回線を使うアプリケーションでは、Window
+                                Scaleが有効か、OSの送受信バッファサイズ上限（<code>net.core.rmem_max</code>等）がBDPに対して十分かを確認する。
+                            </li>
+                            <li>
+                                低遅延が要求される小メッセージ通信（RPC、対話型シェル）では<code>TCP_NODELAY</code>の設定を検討する。ただし大量の小パケットがネットワーク効率を悪化させるリスクとのトレードオフを理解した上で使う。
+                            </li>
+                            <li>
+                                フロー制御（受信側の都合）と輻輳制御（ネットワークの都合）は別物であり、実際の送信ウィンドウは両者の小さい方（min）で制限されることを押さえておく（詳細は第16部）。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part16">第16部：TCP輻輳制御（原著第16章）</h2>
+                <h3 id="s16-1">16.1 輻輳制御が解決する問題</h3>
+                <p>
+                    フロー制御が「受信側の処理能力」を守るのに対し、輻輳制御は「ネットワーク経路全体の処理能力（ボトルネック帯域）」を守るための仕組みです。送信側は<code>cwnd</code>（輻輳ウィンドウ）という内部変数を管理し、実際の送信量は<code
+                        >min(cwnd, 受信ウィンドウ)</code
+                    >で決まります。
+                </p>
+                <h3 id="s16-2">16.2 古典的な輻輳制御：スロースタートと輻輳回避</h3>
+                <pre class="mermaid">
+flowchart TB
+    Start["接続開始&lt;br/&gt;cwnd = 初期値(通常10MSS前後)"] --&gt; SS["スロースタート&lt;br/&gt;ACK受信ごとにcwndを倍増&lt;br/&gt;（指数関数的増加）"]
+    SS --&gt;|"cwndがssthreshに到達"| CA["輻輳回避&lt;br/&gt;ACK受信ごとにcwndを線形増加&lt;br/&gt;（1RTTあたり+1MSS）"]
+    CA --&gt;|"パケロス検知&lt;br/&gt;（3重複ACKなど）"| Reduce["cwndを半減させ&lt;br/&gt;ssthreshを更新&lt;br/&gt;輻輳回避を継続"]
+    CA --&gt;|"RTOタイムアウト"| Reset["cwndを初期値に戻し&lt;br/&gt;スロースタートから再開"]
+    Reduce --&gt; CA
+    Reset --&gt; SS
+
+    classDef phase fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    classDef event fill:#fdeef1,stroke:#d1445b,color:#7a1f30
+    class Start,SS,CA phase
+    class Reduce,Reset event</pre
+                >
+                <h3 id="s16-3">16.3 損失ベース方式と遅延ベース方式：CUBICとBBR</h3>
+                <p>現代主要なTCP輻輳制御アルゴリズムは大きく2系統に分けられます。</p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>方式</th>
+                                <th>判断基準</th>
+                                <th>代表アルゴリズム</th>
+                                <th>採用状況</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>損失ベース</td>
+                                <td>パケットロスの発生を輻輳のシグナルとする</td>
+                                <td>Reno, CUBIC</td>
+                                <td>LinuxやWindows、Appleの各OSで長年デフォルト</td>
+                            </tr>
+                            <tr class="even">
+                                <td>モデルベース（遅延・帯域推定）</td>
+                                <td>実測RTTと帯域から経路の状態を推定する</td>
+                                <td>BBR（Bottleneck Bandwidth and RTT）</td>
+                                <td>Googleが開発、YouTubeなど大規模サービスで採用が進む</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>CUBIC</strong>（RFC
+                    9438、2023年に標準化トラックへ格上げ）は、ウィンドウサイズを3次関数（cubic
+                    function）に従って増加させることで、高速・長距離回線でも安定してスループットを稼げるよう設計されています。原著刊行後の2010年前後からLinuxの既定アルゴリズムとして採用され、現在も広く使われています。
+                </p>
+                <p>
+                    <strong>BBR</strong
+                    >はロスではなく、ボトルネック帯域幅とRTTの推定モデルに基づいて送信ペースを決定する、根本的に異なるアプローチです。詳細な最新動向は第19部で扱います。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    subgraph LossBased["損失ベース方式（CUBIC等）"]
+        L1["ウィンドウを増やし続ける"] --&gt; L2["パケロスが起きる&lt;br/&gt;＝輻輳のシグナル"] --&gt; L3["ウィンドウを減らす"]
+    end
+    subgraph ModelBased["モデルベース方式（BBR）"]
+        M1["RTTと配送レートを継続観測"] --&gt; M2["ボトルネック帯域を推定"] --&gt; M3["推定帯域に合わせて&lt;br/&gt;ペーシング送信"]
+    end
+
+    classDef loss fill:#fdeef1,stroke:#d1445b,color:#7a1f30
+    classDef model fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class L1,L2,L3 loss
+    class M1,M2,M3 model</pre
+                >
+                <h3 id="s16-4">16.4 輻輳制御はエンドツーエンドで完結する設計</h3>
+                <p>
+                    輻輳制御アルゴリズムはTCPの送信側実装だけで完結し、受信側やネットワーク機器の協力を必須としません（これも第1部のend-to-endの原則の具体例です）。ただし、ECN（Explicit
+                    Congestion Notification, RFC
+                    3168）のように、ルータが輻輳を検知した際にパケットを破棄する代わりにIPヘッダにマークを付け、それを見た受信側がACK経由で送信側に通知するという、ネットワーク機器が協調するオプション機構も存在します。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                アプリケーションの体感速度がボトルネック帯域より低い場合、輻輳制御アルゴリズムの選択（<code
+                                    >sysctl net.ipv4.tcp_congestion_control</code
+                                >）を確認する価値がある。ただし多くの場合ボトルネックは他要因（DNS解決、TLSハンドシェイク、アプリケーション処理）にある点に注意。
+                            </li>
+                            <li>
+                                高遅延回線でのスループットテストでは、スロースタートの立ち上がりに一定のRTT数がかかることを踏まえ、短時間の計測で結論を出さない。
+                            </li>
+                            <li>
+                                ECNは有効化することで無駄なパケロス（＝再送コスト）を減らせる可能性があるが、経路上のミドルボックスがECNビットを不正に扱うケースが歴史的にあったため、有効化後は実測で確認する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part17">第17部：TCPキープアライブ（原著第17章）</h2>
+                <h3 id="s17-1">17.1 キープアライブが解決する問題</h3>
+                <p>
+                    TCPコネクションはデータのやり取りがなければ「アイドル」状態のままいつまでも維持されます。しかし実際には、相手ホストがクラッシュした、経路上のNAT/ファイアウォールがセッションテーブルからエントリを削除した、といった理由で相手にはもう届かないのに、こちら側だけがコネクションが生きていると誤認している状態（<strong>半開（half-open）コネクション</strong>）が起こり得ます。TCPキープアライブは、アイドル状態が続いた際に定期的にプローブパケットを送り、相手がまだ生きているかを確認する仕組みです（RFC
+                    9293のAppendixで規定、SHOULDレベルのオプション機能）。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant A as ホストA
+    participant B as ホストB（クラッシュ済み）
+
+    Note over A,B: 長時間データのやり取りなし（アイドル状態）
+    A-&gt;&gt;B: キープアライブプローブ
+    Note over B: 応答なし（ホストダウン）
+    A-&gt;&gt;B: キープアライブプローブ（再送、既定は複数回）
+    Note over A: 既定回数分応答がなければ&lt;br/&gt;コネクションをエラーで切断</pre
+                >
+                <h3 id="s17-2">
+                    17.2 OSレベルの既定値とアプリケーションレベルのキープアライブの違い
+                </h3>
+                <p>
+                    OSカーネルのTCPキープアライブは一般に「数時間」というかなり長いアイドル時間の後に発動するよう既定設定されており（例：Linuxの<code>tcp_keepalive_time</code>は既定7200秒＝2時間）、素早い異常検知には向きません。そのため、多くのアプリケーション・プロトコル（HTTP/2のPINGフレーム、gRPCのキープアライブ、データベース接続プールなど）は、OSのTCPキープアライブとは別に、アプリケーション層で独自の短い間隔のハートビートを実装します。
+                </p>
+                <h3 id="s17-3">17.3 クラウド環境のアイドルタイムアウトとの整合</h3>
+                <p>
+                    クラウドのロードバランサやNATゲートウェイは、TCPの仕様とは無関係に<strong>独自のアイドルタイムアウト</strong>でコネクションを強制切断することがあります。例えばAWSのNetwork
+                    Load
+                    Balancer（NLB）は既定でTCPアイドルタイムアウトが350秒に設定されており（2024年9月以降は60〜6000秒の範囲で調整可能）、Azure
+                    Load
+                    Balancerは既定4分（4〜100分の範囲で設定可能）です。アプリケーション側のキープアライブ間隔がこれより長いと、ロードバランサに気づかれないまま接続が切断され、次回送信時に予期しないリセットエラーが発生します。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    App["アプリケーションの&lt;br/&gt;キープアライブ間隔"] --&gt; Compare{"ロードバランサ／NATの&lt;br/&gt;アイドルタイムアウトより短いか？"}
+    Compare --&gt;|"Yes"| OK["接続は維持される"]
+    Compare --&gt;|"No"| Fail["ロードバランサ側で&lt;br/&gt;先に切断される&lt;br/&gt;（予期しないRSTエラー）"]
+
+    classDef ok fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    classDef bad fill:#fdeef1,stroke:#d1445b,color:#7a1f30
+    class App,Compare,OK ok
+    class Fail bad</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                長時間接続を維持するアプリケーション（DBコネクションプール、WebSocket、gRPCストリーム）では、経路上の各ミドルボックス（ロードバランサ、NATゲートウェイ、プロキシ）のアイドルタイムアウトのうち<strong>最も短いもの</strong>より確実に短い間隔でキープアライブを送るよう設計する。
+                            </li>
+                            <li>
+                                OSの既定TCPキープアライブ（数時間単位）に依存せず、アプリケーション層で明示的にキープアライブ・ハートビートを実装する。
+                            </li>
+                            <li>
+                                クラウド環境ではインスタンスタイプやNIC世代によってもコネクション追跡のアイドルタイムアウトの既定値が変わることがある（例：AWSはNitro第6世代で既定値を大幅に短縮した実績がある）。既定値を過信せず、必要に応じて明示的に設定する。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part18">
+                    第18部：セキュリティ EAP・IPsec・TLS・DNSSEC・DKIM（原著第18章）
+                </h2>
+                <p>
+                    原著最終章は、TCP/IPスイートの各層に後付けで導入されてきたセキュリティ機構を横断的に扱います。TCP/IPの原設計（1970年代）にはセキュリティが組み込まれておらず、各層で独立に暗号化・認証の仕組みが追加されてきた歴史的経緯を理解することが本章の核心です。
+                </p>
+                <h3 id="s18-1">18.1 層ごとのセキュリティ機構マップ</h3>
+                <pre class="mermaid">
+flowchart TB
+    subgraph L7["アプリケーション層"]
+        DKIM["DKIM&lt;br/&gt;（メール送信ドメイン認証）"]
+        DNSSEC["DNSSEC&lt;br/&gt;（DNS応答の署名検証）"]
+    end
+    subgraph L5["セッション/プレゼンテーション相当"]
+        TLS["TLS&lt;br/&gt;（トランスポートの上で暗号化）"]
+    end
+    subgraph L3["ネットワーク層"]
+        IPsec["IPsec&lt;br/&gt;（IPパケット自体を暗号化）"]
+    end
+    subgraph L2["リンク層"]
+        EAP["EAP&lt;br/&gt;（ネットワーク接続時の認証）"]
+    end
+
+    classDef sec fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class DKIM,DNSSEC,TLS,IPsec,EAP sec</pre
+                >
+                <h3 id="s18-2">18.2 EAP：接続の入り口での認証</h3>
+                <p>
+                    EAP（Extensible Authentication Protocol, RFC
+                    3748）は、Wi-Fi（WPA2/WPA3-Enterprise）や有線802.1X認証で、端末がネットワークへの接続を許可される前に本人確認を行う認証フレームワークです。EAPそのものは特定の認証方式を規定せず、証明書ベース（EAP-TLS）、パスワードベースなど複数の方式を「拡張可能」に収容する枠組みです。
+                </p>
+                <h3 id="s18-3">18.3 IPsec：ネットワーク層での暗号化</h3>
+                <p>
+                    IPsecはIPパケット自体を暗号化・認証するプロトコル群で、主に2つのモードがあります。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>モード</th>
+                                <th>保護範囲</th>
+                                <th>主な用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>トランスポートモード</td>
+                                <td>IPペイロードのみ暗号化、IPヘッダは平文</td>
+                                <td>ホスト間の直接通信保護</td>
+                            </tr>
+                            <tr class="even">
+                                <td>トンネルモード</td>
+                                <td>元のIPパケット全体を新しいIPパケットでカプセル化・暗号化</td>
+                                <td>サイト間VPN、リモートアクセスVPN</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    鍵交換にはIKEv2（Internet Key Exchange version
+                    2）が使われ、実際の暗号化・認証はESP（Encapsulating Security
+                    Payload）が担います。
+                </p>
+                <h3 id="s18-4">18.4 TLS：トランスポート層の上でアプリケーションを保護</h3>
+                <p>
+                    TLS（Transport Layer
+                    Security）はTCPの上で動作し、アプリケーション層プロトコル（HTTP、SMTP等）を透過的に暗号化します。TLS
+                    1.3（RFC 8446,
+                    2018年）では、ハンドシェイクが1RTT（0-RTT再開も可能）に短縮され、鍵交換方式も前方秘匿性（Forward
+                    Secrecy）を持つ方式に限定されるなど、大幅な高速化・簡素化がなされました。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant C as クライアント
+    participant S as サーバ
+
+    C-&gt;&gt;S: ClientHello&lt;br/&gt;（対応する鍵共有方式・暗号スイートを提示）
+    S--&gt;&gt;C: ServerHello + 鍵共有&lt;br/&gt;+ EncryptedExtensions&lt;br/&gt;+ Certificate + CertificateVerify + Finished
+    Note over C: サーバ証明書を検証
+    C-&gt;&gt;S: Finished
+    Note over C,S: 以降アプリケーションデータを&lt;br/&gt;暗号化して送受信（1RTTで完了）</pre
+                >
+                <h3 id="s18-5">18.5 DNSSECとDKIM：改ざん・なりすまし対策</h3>
+                <ul>
+                    <li>
+                        <strong>DNSSEC</strong
+                        >：DNS応答に電子署名（RRSIGレコード）を付与し、キャッシュポイズニングのような応答改ざん攻撃からリゾルバを守ります。ルートゾーンから権威ゾーンまで、署名の連鎖（Chain
+                        of Trust）を検証します。
+                    </li>
+                    <li>
+                        <strong>DKIM</strong
+                        >：送信メールにドメイン所有者の秘密鍵で電子署名を付け、受信側がDNS上の公開鍵（TXTレコード）で検証することで、送信ドメインのなりすましを検出します。SPF・DMARCと組み合わせて使われるのが一般的です。
+                    </li>
+                </ul>
+                <h3 id="s18-6">18.6 なぜセキュリティが「後付け」なのか</h3>
+                <p>
+                    TCP/IPの原設計は学術・研究ネットワークという信頼された参加者間の通信を想定しており、暗号化や認証は当初のスコープ外でした。インターネットが商用化・大衆化するにつれ、各層で個別にセキュリティ機構が追加されていった結果、現在のような「層ごとに異なるセキュリティ機構が併存する」構造になっています。この歴史的経緯を理解すると、なぜ「HTTPSを使っているから安全」だけでは不十分で、DNS・ルーティング（BGP）・メール配送など複数の層でそれぞれ対策が必要なのかが見えてきます。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">&#10003;</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                「暗号化されているから安全」と短絡せず、対象としている層（通信内容の秘匿か、経路の真正性か、送信者の真正性か）を明確に区別して対策を積み重ねる。
+                            </li>
+                            <li>
+                                DNSSECを導入する場合は、権威サーバ側の署名だけでなく、クライアント側（リゾルバ）が実際に検証（バリデーション）を行っているかも別問題であることに注意する（普及率の詳細は第19部）。
+                            </li>
+                            <li>
+                                IPsecとTLSはどちらもVPN用途で使われるが、保護する層が異なる（ネットワーク層
+                                vs
+                                トランスポート層以上）ため、要件（透過性、パフォーマンス、対応クライアントの幅）に応じて使い分ける。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+                <h2 id="part19">第19部：2026年8月時点の最新動向</h2>
+                <p>
+                    原著第2版の刊行（2011年）から10年以上が経過し、TCP/IPスイートの各要素は大きく進化しています。本章では2026年8月30日時点の情報をWeb検索で調査し、原著の各章に対応させる形でアップデートを整理します。
+                </p>
+                <h3 id="s19-1">19.1 TCP仕様そのものの統合（第12〜17部関連）</h3>
+                <p>
+                    2022年8月、IETFはTCPの散逸した仕様群（RFC
+                    793本体および複数の更新RFC）を統合した<strong>RFC 9293</strong
+                    >を発行し、正式にInternet Standard（STD
+                    7）に格上げしました。原著が参照していたRFC 793は現在は廃止（Obsolete）扱いです。
+                </p>
+                <h3 id="s19-2">19.2 輻輳制御の進化：CUBIC標準化とBBRv3（第16部関連）</h3>
+                <ul>
+                    <li>
+                        <strong>CUBIC</strong>は2023年8月に<strong>RFC 9438</strong
+                        >として標準化トラックに格上げされ、RFC
+                        8312を置き換えました。Linux・Windows・Appleの各スタックで既定アルゴリズムとして採用され続けています。
+                    </li>
+                    <li>
+                        <strong>BBR</strong
+                        >はGoogleが開発した独自アルゴリズムとして広く実運用されており、2026年時点でBBRv3がLinuxカーネル6.x系に組み込まれています。IETF
+                        CCWG（Congestion Control Working
+                        Group）でdraft-ietf-ccwg-bbr仕様の標準化が進行中です。CloudflareのquicheやMetaのmvfst（QUICスタック）でも第一級の選択肢として提供されています。
+                    </li>
+                </ul>
+                <h3 id="s19-3">19.3 IPv4アドレス枯渇後の世界：CGNATとIPv6の共存（第2・7部関連）</h3>
+                <p>
+                    Googleの計測によれば、IPv6ネイティブアクセス率は2026年3月28日に世界平均で初めて50%を突破しました（50.10%）。ただし国別の差は依然大きく、フランス・インド・サウジアラビアが70%前後である一方、イタリア17%、スペイン10%、エジプト4%程度にとどまるなど、地域差が顕著です。CGNAT（NAT444）は引き続きIPv4アドレス共有の主要手段として広く使われており、家庭内のNAT44とISP側のCGNATが直列するアーキテクチャは今後も当面併存すると見られます。
+                </p>
+                <h3 id="s19-4">19.4 DNSのセキュリティ・プライバシー強化の進展（第11・18部関連）</h3>
+                <ul>
+                    <li>
+                        <strong>DNSSEC</strong
+                        >：検証（バリデーション）率は2025年時点でグローバル平均35〜36%程度、EU圏では約49%と地域差があります。エンドツーエンド（キャッシュDNSからスタブリゾルバまで）でのDNSSEC保護率は2026年に入り緩やかな上昇傾向にありますが、依然として全クエリの1%未満にとどまっています。
+                    </li>
+                    <li>
+                        <strong>暗号化DNS</strong>：DoT（DNS over TLS）とDoH（DNS over
+                        HTTPS）を合わせた暗号化DNSのシェアは、2026年5月時点でクエリ全体の約12%前後で推移しています。DoQ（DNS
+                        over
+                        QUIC）は仕様上の性能優位性が確認されつつも、主要ブラウザでの採用はまだ限定的です。
+                    </li>
+                    <li>
+                        <strong>Encrypted Client Hello（ECH）</strong
+                        >：TLSハンドシェイクのSNI（宛先ホスト名）が平文で漏れる問題に対応するRFC
+                        9849が2026年3月に標準化されました。
+                    </li>
+                </ul>
+                <h3 id="s19-5">19.5 ポスト量子暗号への移行（第18部関連）</h3>
+                <p>
+                    「Harvest now, decrypt later（今収集し将来復号する）」攻撃への備えとして、TLS
+                    1.3の鍵交換にML-KEM（旧称Kyber）を組み合わせるハイブリッド方式の展開が急速に進んでいます。Cloudflareの計測では、2026年にハイブリッドポスト量子鍵交換がTLS
+                    1.3ハンドシェイクの過半数（Q2時点で約54%）に到達したと報告されています。ブラウザ側ではChrome・Firefox・Edge・Safariが2026年時点でデフォルト有効化しており、IPsec（RFC
+                    9370）やCloudflare
+                    One（2026年2月）でも同様のハイブリッド方式が展開されています。証明書自体のポスト量子署名への移行はより緩やかなペースで進行中です。
+                </p>
+                <h3 id="s19-6">19.6 BGPルーティングセキュリティの進展（第5・7部の周辺領域）</h3>
+                <p>
+                    RPKI（Resource Public Key Infrastructure）によるROV（Route Origin
+                    Validation）のカバー率は、2026年6月29日時点でHurricane
+                    Electricの計測によればグローバルの経路announce（アナウンス）の67.43%に達しました（2024年5月に初めて過半数を突破して以降の継続的な進展）。一方でRIPE
+                    Labsの分析（2026年7月）は、ROVが対応できるのは「経路のオリジン（発信元AS）検証」のみであり、経路操作・整合性・ポリシー違反・セッションベースの攻撃といった他の攻撃分類には別の対策（ASPA、BGPsecなど）が必要だと指摘しています。ASPAはまだ採用が限定的で、BGPsecはルータの処理負荷の高さから次世代ハードウェア世代まで本格普及を待つ状況です。
+                </p>
+                <h3 id="s19-7">
+                    19.7 HTTP/3・QUICによるトランスポート層の再設計（第10・12部の周辺領域）
+                </h3>
+                <p>
+                    QUIC（UDP上に構築されたトランスポート、RFC
+                    9000）を基盤とするHTTP/3は、2026年時点でCloudflare
+                    Radarの計測により人間由来のWebトラフィックの約30〜35%程度を占めるまでに普及しています（測定方法によって21〜39%と幅がある）。QUICはTCPのヘッドオブライン（HOL）ブロッキング問題（1つのストリームのパケロスが他の独立したストリームまで停止させてしまう問題）を、ストリームごとに独立した再送制御を行うことで解消しています。QUICの輻輳制御にはCUBIC相当のアルゴリズムに加え、BBRも実運用で採用されています。
+                </p>
+                <h3 id="s19-8">19.8 VPN技術の勢力図：WireGuardの台頭とIPsecの併存（第18部関連）</h3>
+                <p>
+                    軽量な実装（コードベースが小さく監査しやすい）を特徴とする<strong>WireGuard</strong>は、2020年にLinuxカーネル5.6へ統合されて以降、個人利用・モバイル・クラウドネイティブ環境で急速にシェアを伸ばしています。ただしIETF
+                    Standards Track化はされておらず（RFC
+                    9518はInformational扱い）、企業のサイト間VPNやレガシー機器との相互運用性が求められる領域では、引き続きIPsec（IKEv2）が主流です。2026年時点では「WireGuardとIPsecの併存」が現実的な結論として広く共有されています。
+                </p>
+                <h3 id="s19-9">19.9 リンク層の進化：Wi-Fi 7と800GbEイーサネット（第3部関連）</h3>
+                <ul>
+                    <li>
+                        <strong>Wi-Fi 7（IEEE 802.11be）</strong
+                        >：2025年6月に最終標準として正式発行され、Multi-Link
+                        Operation（複数周波数帯の同時接続）、320MHz幅チャネル、4096-QAM変調などにより理論最大速度は46Gbpsに達します。2026年にはエンタープライズ向けアクセスポイントが主要ベンダーから広く出荷されています。
+                    </li>
+                    <li>
+                        <strong>イーサネット</strong>：IEEE
+                        802.3df（800GbE）が2024年末に標準化され、2026年時点でキャンパスコア／データセンター向けに400GbEが標準、800GbEが高密度環境向けの選択肢として普及が進んでいます。
+                    </li>
+                </ul>
+                <h3 id="s19-10">19.10 TCPキープアライブとクラウドインフラの整合（第17部関連）</h3>
+                <p>
+                    AWSは2024年9月にNetwork/Gateway Load
+                    BalancerのTCPアイドルタイムアウトを60〜6000秒の範囲で調整可能にし、2025年6月にはEC2第6世代Nitroインスタンスの既定アイドルタイムアウト値を432,000秒（5日間）から350秒へと大幅に短縮しました。これはNLB・NAT
+                    Gatewayなど他のAWSネットワーキングサービスの既定値（350秒）とホストレベルの挙動を揃える変更であり、長時間アイドル接続を前提とするアプリケーション（DBコネクションプール、IoTテレメトリなど）に影響し得るため、明示的なキープアライブ設計の重要性が改めて高まっています。
+                </p>
+                <h3 id="s19-11">
+                    19.11 インターネットのその先へ：Vint Cerfとインタープラネタリー・インターネット
+                </h3>
+                <p>
+                    TCP/IPの共同発明者であるVint
+                    Cerf氏は、2026年のインタビューでも継続してNASAジェット推進研究所（JPL）と共同開発中の<strong>インタープラネタリー・インターネット</strong>（惑星間ネットワーク、Bundle
+                    Protocol
+                    Suiteを基盤とする）への関与を語っています。これはTCP/IPそのものではなく、深宇宙特有の長遅延・頻繁な断絶に対応する別のプロトコル群（DTN:
+                    Delay/Disruption Tolerant
+                    Networking）ですが、TCP/IPが前提とする「妥当な遅延で双方向にやり取りできる」という仮定が惑星間通信では成立しないことを踏まえた設計であり、TCP/IPのアーキテクチャ原則（第1部）を相対化して理解する上で示唆に富む取り組みです。
+                </p>
+                <hr />
+                <h2 id="roadmap">学習ロードマップ</h2>
+                <p>初学者が本書の内容を段階的に消化するための、4段階の学習パスを提案します。</p>
+                <pre class="mermaid">
+flowchart TB
+    S1["ステージ1：基礎固め&lt;br/&gt;第0〜2部&lt;br/&gt;アーキテクチャ原則とアドレッシング"] --&gt; S2["ステージ2：ローカルネットワーク&lt;br/&gt;第3〜9部&lt;br/&gt;リンク層・ARP・IP・DHCP・NAT・ICMP・マルチキャスト"]
+    S2 --&gt; S3["ステージ3：トランスポートとアプリ&lt;br/&gt;第10〜13部&lt;br/&gt;UDP・DNS・TCP基礎・接続管理"]
+    S3 --&gt; S4["ステージ4：性能とセキュリティ&lt;br/&gt;第14〜18部&lt;br/&gt;再送・輻輳制御・キープアライブ・暗号化"]
+    S4 --&gt; S5["ステージ5：最新動向へのブリッジ&lt;br/&gt;第19部&lt;br/&gt;2026年時点の実運用知識"]
+
+    classDef stage fill:#eaf1ff,stroke:#2f6feb,color:#173d7a
+    class S1,S2,S3,S4,S5 stage</pre
+                >
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>ステージ</th>
+                                <th>目安期間</th>
+                                <th>ゴール</th>
+                                <th>実践課題例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>1. 基礎固め</td>
+                                <td>1週間</td>
+                                <td>レイヤモデルとIPv4/IPv6アドレッシングを図なしで説明できる</td>
+                                <td>サブネッティング計算を手計算で複数パターン解く</td>
+                            </tr>
+                            <tr class="even">
+                                <td>2. ローカルネットワーク</td>
+                                <td>2週間</td>
+                                <td>
+                                    自宅LANの通信を<code>tcpdump</code>でARP→DHCP→通信の順に追える
+                                </td>
+                                <td>自宅ルータの配下でARPキャッシュ・DHCPリースを実際に観察する</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>3. トランスポートとアプリ</td>
+                                <td>2週間</td>
+                                <td>3ウェイハンドシェイクとDNS名前解決の流れを図示できる</td>
+                                <td>
+                                    <code>dig +trace</code>で反復的問い合わせの過程を実際にたどる
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>4. 性能とセキュリティ</td>
+                                <td>2〜3週間</td>
+                                <td>輻輳制御の基本挙動とTLSハンドシェイクの流れを説明できる</td>
+                                <td><code>openssl s_client</code>でTLSハンドシェイクを観察する</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>5. 最新動向</td>
+                                <td>継続的</td>
+                                <td>各RFCやベンダーブログを定期的に追える状態を作る</td>
+                                <td>
+                                    IETF Datatracker・Cloudflare Radar・APNIC
+                                    Blogを定期チェックする習慣化
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+                <h2 id="checklist">章末チェックリスト</h2>
+                <div class="checklist-card">
+                    <div class="checklist-header">
+                        <span class="title">章末チェックリスト</span
+                        ><span class="count">0 / 26 完了</span>
+                    </div>
+                    <ul>
+                        <li>
+                            <input id="chk1" type="checkbox" /><label for="chk1"
+                                >end-to-endの原則とfate sharingの違いを自分の言葉で説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk2" type="checkbox" /><label for="chk2"
+                                >カプセル化・多重化・多重分離の3つの用語を区別して使える</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk3" type="checkbox" /><label for="chk3"
+                                >CIDR表記からネットワーク部・ホスト部・利用可能アドレス数を計算できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk4" type="checkbox" /><label for="chk4"
+                                >IPv4プライベートアドレスとCGNAT共有アドレス（100.64.0.0/10）の違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk5" type="checkbox" /><label for="chk5"
+                                >IPv6アドレスのスコープ（グローバル・リンクローカル・ULA）を区別できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk6" type="checkbox" /><label for="chk6"
+                                >イーサネットフレームの構造とMTUの意味を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk7" type="checkbox" /><label for="chk7"
+                                >ARPの動作とARPスプーフィングへの対策（DAI等）を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk8" type="checkbox" /><label for="chk8"
+                                >IPv6ではARPの代わりに何が使われるか説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk9" type="checkbox" /><label for="chk9"
+                                >IPv4ヘッダの主要フィールド（TTL, Protocol,
+                                Flags等）の役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk10" type="checkbox" /><label for="chk10"
+                                >Path MTU
+                                Discoveryの仕組みとPMTUDブラックホール問題を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk11" type="checkbox" /><label for="chk11"
+                                >DHCPのDORAプロセスを図示できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk12" type="checkbox" /><label for="chk12"
+                                >SLAACとDHCPv6の使い分けを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk13" type="checkbox" /><label for="chk13"
+                                >NATとCGNAT（NAT444）の違い、NAT64/DNS64の役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk14" type="checkbox" /><label for="chk14"
+                                >ICMPの主要メッセージタイプと<code>traceroute</code>の仕組みを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk15" type="checkbox" /><label for="chk15"
+                                >IGMP/MLDがマルチキャスト配送で果たす役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk16" type="checkbox" /><label for="chk16"
+                                >UDPヘッダの構造とIPフラグメンテーションのリスクを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk17" type="checkbox" /><label for="chk17"
+                                >DNSの再帰的問い合わせと反復的問い合わせの違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk18" type="checkbox" /><label for="chk18"
+                                >TCPヘッダの主要フィールドとMSS/Window
+                                Scale/SACKオプションの役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk19" type="checkbox" /><label for="chk19"
+                                >TCPの3ウェイハンドシェイクと状態遷移図（少なくとも主要状態）を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk20" type="checkbox" /><label for="chk20"
+                                >SYNフラッド攻撃とSYN Cookiesの仕組みを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk21" type="checkbox" /><label for="chk21"
+                                >RTOの動的計算と高速再送・SACKの違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk22" type="checkbox" /><label for="chk22"
+                                >フロー制御と輻輳制御の違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk23" type="checkbox" /><label for="chk23"
+                                >スロースタート・輻輳回避・CUBIC・BBRの違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk24" type="checkbox" /><label for="chk24"
+                                >TCPキープアライブとクラウドのアイドルタイムアウトの関係を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk25" type="checkbox" /><label for="chk25"
+                                >EAP・IPsec・TLS・DNSSEC・DKIMがそれぞれどの層を保護するか説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk26" type="checkbox" /><label for="chk26"
+                                >2026年時点のIPv6普及率・BGP
+                                RPKI普及率・ポスト量子TLS普及率のおおまかな水準を説明できる</label
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <hr />
+                <h2 id="glossary">用語集</h2>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>用語</th>
+                                <th>説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>ARP</td>
+                                <td>
+                                    Address Resolution
+                                    Protocol。IPアドレスからMACアドレスを解決するプロトコル（IPv4のみ）
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>BBR</td>
+                                <td>
+                                    Bottleneck Bandwidth and
+                                    RTT。帯域・RTTのモデル推定に基づく輻輳制御アルゴリズム
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>BDP</td>
+                                <td>
+                                    Bandwidth-Delay
+                                    Product（帯域遅延積）。帯域幅×RTTで求まる、経路上に存在しうるデータ量の目安
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>CGNAT</td>
+                                <td>
+                                    Carrier-Grade
+                                    NAT。ISPが自社網内で行うNAT。NAT444構成の一部を成す
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>CIDR</td>
+                                <td>
+                                    Classless Inter-Domain
+                                    Routing。可変長プレフィックスによるアドレッシング方式
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>cwnd</td>
+                                <td>
+                                    congestion
+                                    window（輻輳ウィンドウ）。輻輳制御が管理する送信可能量の内部変数
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>DHCP</td>
+                                <td>
+                                    Dynamic Host Configuration
+                                    Protocol。IPアドレス等の自動配布プロトコル
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>DNSSEC</td>
+                                <td>
+                                    DNS Security
+                                    Extensions。DNS応答に電子署名を付与し改ざんを検知する拡張
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ECN</td>
+                                <td>
+                                    Explicit Congestion
+                                    Notification。パケット破棄せず輻輳をマークで通知する仕組み
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>end-to-endの原則</td>
+                                <td>
+                                    複雑な処理は通信の両端に置き、中間ノードはシンプルに保つという設計思想
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>ICMP</td>
+                                <td>
+                                    Internet Control Message
+                                    Protocol。IPのエラー通知・診断用プロトコル
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>IGMP/MLD</td>
+                                <td>
+                                    マルチキャストグループへの加入をホストがルータに伝えるプロトコル（IPv4/IPv6）
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>IPsec</td>
+                                <td>
+                                    IPパケット自体を暗号化・認証するネットワーク層セキュリティプロトコル群
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>MSS</td>
+                                <td>Maximum Segment Size。TCPが1セグメントで運べる最大データ量</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>MTU</td>
+                                <td>
+                                    Maximum Transmission
+                                    Unit。リンク層が一度に運べる最大フレームサイズ
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>NAT</td>
+                                <td>
+                                    Network Address
+                                    Translation。IPアドレス（とポート）を変換する仕組み
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>NDP</td>
+                                <td>
+                                    Neighbor Discovery
+                                    Protocol。IPv6でARP相当の役割を果たすICMPv6ベースの仕組み
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>PMTUD</td>
+                                <td>Path MTU Discovery。経路上の最小MTUを事前に検出する仕組み</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>RPKI</td>
+                                <td>
+                                    Resource Public Key
+                                    Infrastructure。BGP経路の正当性を暗号学的に検証する基盤
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>RTO</td>
+                                <td>Retransmission Timeout。TCPが再送を判断するまでの待機時間</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>SACK</td>
+                                <td>
+                                    Selective
+                                    Acknowledgment。受信済み範囲を選択的に通知するTCPオプション
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>SLAAC</td>
+                                <td>
+                                    Stateless Address
+                                    Autoconfiguration。IPv6のステートレスなアドレス自動設定
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>SYN Cookies</td>
+                                <td>
+                                    SYNフラッド攻撃対策として、接続状態をシーケンス番号に符号化する手法
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>TIME_WAIT</td>
+                                <td>
+                                    TCPコネクション終了後、古いセグメントの混同を防ぐため一定時間待機する状態
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>TLS</td>
+                                <td>
+                                    Transport Layer
+                                    Security。TCPの上でアプリケーション通信を暗号化するプロトコル
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>VLSM</td>
+                                <td>
+                                    Variable Length Subnet
+                                    Mask。用途ごとに異なる長さでサブネット化する手法
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>WireGuard</td>
+                                <td>
+                                    軽量な実装を特徴とする比較的新しいVPNプロトコル。Linuxカーネルに統合済み
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+                <h2 id="references">参考文献</h2>
+                <p>
+                    原著情報および、原著刊行後の進展について調査した一次情報源（2026年8月30日時点でWeb検索により確認）を掲載します。
+                </p>
+                <div class="ref-grid" id="referenceGrid">
+                    <div class="ref-card" id="ref1">
+                        <div class="num">1</div>
+                        <div class="txt">
+                            O'Reilly Media. "TCP/IP Illustrated, Volume 1: The Protocols, 2nd
+                            Edition" 書籍ページ.
+                            <a
+                                href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/"
+                                >https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref2">
+                        <div class="num">2</div>
+                        <div class="txt">
+                            O'Reilly Media. 同書 目次（Contents）ページ.
+                            <a
+                                href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/toc.xhtml"
+                                >https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/toc.xhtml</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref3">
+                        <div class="num">3</div>
+                        <div class="txt">
+                            IETF RFC Editor. "RFC 9293: Transmission Control Protocol (TCP)"
+                            (2022年8月, STD 7).
+                            <a href="https://www.rfc-editor.org/info/rfc9293/"
+                                >https://www.rfc-editor.org/info/rfc9293/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref4">
+                        <div class="num">4</div>
+                        <div class="txt">
+                            IETF Datatracker. "RFC 9293" 文書詳細ページ.
+                            <a href="https://datatracker.ietf.org/doc/rfc9293/"
+                                >https://datatracker.ietf.org/doc/rfc9293/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref5">
+                        <div class="num">5</div>
+                        <div class="txt">
+                            IETF RFC Editor. "RFC 9438: CUBIC for Fast and Long-Distance Networks"
+                            (2023年8月).
+                            <a href="https://www.rfc-editor.org/info/rfc9438/"
+                                >https://www.rfc-editor.org/info/rfc9438/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref6">
+                        <div class="num">6</div>
+                        <div class="txt">
+                            Forasoft. "Congestion Control in Plain English: BBR, CUBIC, Copa, and
+                            Why It Matters".
+                            <a
+                                href="https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa"
+                                >https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref7">
+                        <div class="num">7</div>
+                        <div class="txt">
+                            arXiv. "TCP ROCCET" 論文内
+                            BBRv3参照（Google公式GitHubリリースnoteを引用）.
+                            <a href="https://arxiv.org/pdf/2510.25281"
+                                >https://arxiv.org/pdf/2510.25281</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref8">
+                        <div class="num">8</div>
+                        <div class="txt">
+                            A10 Networks. "What is CGNAT? Carrier-Grade NAT Explained".
+                            <a
+                                href="https://www.a10networks.com/glossary/what-is-carrier-grade-nat-cgn-cgnat/"
+                                >https://www.a10networks.com/glossary/what-is-carrier-grade-nat-cgn-cgnat/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref9">
+                        <div class="num">9</div>
+                        <div class="txt">
+                            Wikipedia. "NAT64".
+                            <a href="https://en.wikipedia.org/wiki/NAT64"
+                                >https://en.wikipedia.org/wiki/NAT64</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref10">
+                        <div class="num">10</div>
+                        <div class="txt">
+                            APNIC Blog. "Towards an industry best practice for DNSSEC automation"
+                            (2026年2月).
+                            <a
+                                href="https://blog.apnic.net/2026/02/25/towards-an-industry-best-practice-for-dnssec-automation/"
+                                >https://blog.apnic.net/2026/02/25/towards-an-industry-best-practice-for-dnssec-automation/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref11">
+                        <div class="num">11</div>
+                        <div class="txt">
+                            TechnologyChecker.io. "DNSSEC Adoption in 2026" (2026年4月).
+                            <a href="https://technologychecker.io/blog/dnssec-adoption"
+                                >https://technologychecker.io/blog/dnssec-adoption</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref12">
+                        <div class="num">12</div>
+                        <div class="txt">
+                            欧州委員会共同研究センター(JRC). "Internet Standards: DNSSEC standards -
+                            an analysis of uptake in the EU".
+                            <a href="https://ec.europa.eu/internet-standards/publications.html"
+                                >https://ec.europa.eu/internet-standards/publications.html</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref13">
+                        <div class="num">13</div>
+                        <div class="txt">
+                            Sujeet Jaiswal (Principal Software Engineer). "DNS Security and Privacy:
+                            DNSSEC, DoH, and DoT" (2026年4月、Encrypted Client Hello / RFC
+                            9849に言及).
+                            <a href="https://sujeet.pro/articles/dns-security-doh-dot-dnssec"
+                                >https://sujeet.pro/articles/dns-security-doh-dot-dnssec</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref14">
+                        <div class="num">14</div>
+                        <div class="txt">
+                            IETF Datatracker. "draft-ietf-tls-ecdhe-mlkem"
+                            ポスト量子ハイブリッド鍵交換ドラフト.
+                            <a href="https://datatracker.ietf.org/doc/draft-ietf-tls-ecdhe-mlkem/"
+                                >https://datatracker.ietf.org/doc/draft-ietf-tls-ecdhe-mlkem/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref15">
+                        <div class="num">15</div>
+                        <div class="txt">
+                            EverTrust. "Hybrid Post-Quantum Certificates" (2026年6月、Cloudflare
+                            Radarデータ引用).
+                            <a href="https://evertrust.io/blog/hybrid-post-quantum-certificates/"
+                                >https://evertrust.io/blog/hybrid-post-quantum-certificates/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref16">
+                        <div class="num">16</div>
+                        <div class="txt">
+                            Steven P.G. "The Ultimate Guide to Post-Quantum Cryptography and TLS
+                            1.3" (2026年7月).
+                            <a
+                                href="https://stevenpg.com/posts/ultimate-guide-post-quantum-cryptography-tls/"
+                                >https://stevenpg.com/posts/ultimate-guide-post-quantum-cryptography-tls/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref17">
+                        <div class="num">17</div>
+                        <div class="txt">
+                            Cloudflare Blog. "Cloudflare One is the first SASE offering modern
+                            post-quantum encryption across the full platform" (2026年2月).
+                            <a href="https://blog.cloudflare.com/post-quantum-sase/"
+                                >https://blog.cloudflare.com/post-quantum-sase/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref18">
+                        <div class="num">18</div>
+                        <div class="txt">
+                            InfoQ. "Standardizing Post-Quantum IPsec: Cloudflare Adopts Hybrid
+                            ML-KEM" (2026年3月).
+                            <a
+                                href="https://www.infoq.com/news/2026/03/cloudflare-post-quantum-ipsec"
+                                >https://www.infoq.com/news/2026/03/cloudflare-post-quantum-ipsec</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref19">
+                        <div class="num">19</div>
+                        <div class="txt">
+                            Kentik Blog（Doug Madory氏）／MANRS. "RPKI ROV Deployment Reaches Major
+                            Milestone" (2024年5月).
+                            <a
+                                href="https://manrs.org/2024/05/rpki-rov-deployment-reaches-major-milestone/"
+                                >https://manrs.org/2024/05/rpki-rov-deployment-reaches-major-milestone/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref20">
+                        <div class="num">20</div>
+                        <div class="txt">
+                            ipregistry.co. "RPKI Covers 67% of Routes, But Four Attack Classes Slip
+                            Right Past It"（Hurricane Electric・RIPE Labs Antonio
+                            Prado氏の分析を引用、2026年7月）.
+                            <a href="https://ipregistry.co/blog/rpki-blind-spots/"
+                                >https://ipregistry.co/blog/rpki-blind-spots/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref21">
+                        <div class="num">21</div>
+                        <div class="txt">
+                            SIDN. "Adoption of RPKI/ROV security protocol progressing very
+                            quickly"（Job Snijders氏の年次調査を引用）.
+                            <a
+                                href="https://www.sidn.nl/en/news-and-blogs/adoption-of-rpki-rov-security-protocol-progressing-very-quickly"
+                                >https://www.sidn.nl/en/news-and-blogs/adoption-of-rpki-rov-security-protocol-progressing-very-quickly</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref22">
+                        <div class="num">22</div>
+                        <div class="txt">
+                            APNIC Blog. "Google hits 50% IPv6" (2026年4月).
+                            <a href="https://blog.apnic.net/2026/04/28/google-hits-50-ipv6/"
+                                >https://blog.apnic.net/2026/04/28/google-hits-50-ipv6/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref23">
+                        <div class="num">23</div>
+                        <div class="txt">
+                            Internet Society (ISOC) Pulse. "18 Years Later, IPv6 Reaches Majority"
+                            (2026年4月).
+                            <a
+                                href="https://pulse.internetsociety.org/en/blog/2026/04/18-years-later-ipv6-reaches-majority/"
+                                >https://pulse.internetsociety.org/en/blog/2026/04/18-years-later-ipv6-reaches-majority/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref24">
+                        <div class="num">24</div>
+                        <div class="txt">
+                            oneuptime.com. "How to Set Up IPv6 SLAAC vs DHCPv6 for Address
+                            Assignment" (2026年1月).
+                            <a
+                                href="https://oneuptime.com/blog/post/2026-01-08-ipv6-slaac-dhcpv6/view"
+                                >https://oneuptime.com/blog/post/2026-01-08-ipv6-slaac-dhcpv6/view</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref25">
+                        <div class="num">25</div>
+                        <div class="txt">
+                            rule11.tech. "SLAAC and DHCPv6"（RFC 8156
+                            DHCPv6フェイルオーバーに言及）.
+                            <a href="https://rule11.tech/slaac-and-dhcpv6/"
+                                >https://rule11.tech/slaac-and-dhcpv6/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref26">
+                        <div class="num">26</div>
+                        <div class="txt">
+                            RunCloud. "HTTP/2 vs HTTP/3: What Every Web Server Owner Needs to Know
+                            2026"（Cloudflare Radarデータ引用）.
+                            <a href="https://runcloud.io/blog/http2-vs-http3"
+                                >https://runcloud.io/blog/http2-vs-http3</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref27">
+                        <div class="num">27</div>
+                        <div class="txt">
+                            technologychecker.io. "We analyzed HTTP protocol adoption in
+                            2026"（Cloudflare Radarデータの独自分析、2026年8月取得時点）.
+                            <a href="https://technologychecker.io/blog/http-protocol-adoption"
+                                >https://technologychecker.io/blog/http-protocol-adoption</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref28">
+                        <div class="num">28</div>
+                        <div class="txt">
+                            WundertechNet. "WireGuard vs. IPsec: Side-by-Side Comparison (2026)".
+                            <a href="https://www.wundertech.net/wireguard-vs-ipsec/"
+                                >https://www.wundertech.net/wireguard-vs-ipsec/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref29">
+                        <div class="num">29</div>
+                        <div class="txt">
+                            QuickZTNA Blog. "WireGuard vs OpenVPN vs IPsec: A 2026 Engineering
+                            Comparison"（RFC 9518に言及）.
+                            <a href="https://www.quickztna.com/blog/wireguard-vs-openvpn-vs-ipsec/"
+                                >https://www.quickztna.com/blog/wireguard-vs-openvpn-vs-ipsec/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref30">
+                        <div class="num">30</div>
+                        <div class="txt">
+                            oneuptime.com. "How to Prevent ARP Poisoning with Dynamic ARP
+                            Inspection" (2026年3月).
+                            <a
+                                href="https://oneuptime.com/blog/post/2026-03-20-prevent-arp-poisoning-dai/view"
+                                >https://oneuptime.com/blog/post/2026-03-20-prevent-arp-poisoning-dai/view</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref31">
+                        <div class="num">31</div>
+                        <div class="txt">
+                            network-switch.com. "How Address Resolution Works 2026, Security Risks,
+                            and Best Practices".
+                            <a
+                                href="https://network-switch.com/blogs/networking/what-is-arp-in-2026"
+                                >https://network-switch.com/blogs/networking/what-is-arp-in-2026</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref32">
+                        <div class="num">32</div>
+                        <div class="txt">
+                            AWS Networking &amp; Content Delivery Blog. "Best Practices for TCP
+                            Connection Management on EC2" (2026年6月、Nitro
+                            V6アイドルタイムアウト変更に言及).
+                            <a
+                                href="https://aws.amazon.com/blogs/networking-and-content-delivery/best-practices-for-tcp-connection-management-on-ec2/"
+                                >https://aws.amazon.com/blogs/networking-and-content-delivery/best-practices-for-tcp-connection-management-on-ec2/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref33">
+                        <div class="num">33</div>
+                        <div class="txt">
+                            AWS What's New. "AWS Network Load Balancer now supports configurable TCP
+                            idle timeout" (2024年9月).
+                            <a
+                                href="https://aws.amazon.com/about-aws/whats-new/2024/09/aws-network-load-balancer-tcp-idle-timeout/"
+                                >https://aws.amazon.com/about-aws/whats-new/2024/09/aws-network-load-balancer-tcp-idle-timeout/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref34">
+                        <div class="num">34</div>
+                        <div class="txt">
+                            Microsoft Learn. "Configure TCP reset and idle timeout for Azure Load
+                            Balancer".
+                            <a
+                                href="https://learn.microsoft.com/sr-latn-rs/azure/load-balancer/load-balancer-tcp-idle-timeout"
+                                >https://learn.microsoft.com/sr-latn-rs/azure/load-balancer/load-balancer-tcp-idle-timeout</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref35">
+                        <div class="num">35</div>
+                        <div class="txt">
+                            IronWiFi Blog. "Wi-Fi 7 for Enterprise Networks: 802.11be Guide"
+                            (2026年3月).
+                            <a href="https://www.ironwifi.com/blogs/wifi-7-enterprise-guide/"
+                                >https://www.ironwifi.com/blogs/wifi-7-enterprise-guide/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref36">
+                        <div class="num">36</div>
+                        <div class="txt">
+                            vcom.hk. "Wi-Fi 7 Final Standard Released — What It Means for
+                            Connectivity in 2026" (2026年1月、IEEE/Wi-Fi
+                            Alliance最終標準発行に言及).
+                            <a
+                                href="https://www.vcom.hk/blogs/news/wi-fi-7-ieee-802-11be-final-standard-released-what-it-means-for-connectivity-in-2026-and-beyond"
+                                >https://www.vcom.hk/blogs/news/wi-fi-7-ieee-802-11be-final-standard-released-what-it-means-for-connectivity-in-2026-and-beyond</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref37">
+                        <div class="num">37</div>
+                        <div class="txt">
+                            opelink.com. "Enterprise LAN Fiber Network Guide 2026"（IEEE 802.3df
+                            800GbE標準化に言及）.
+                            <a
+                                href="https://www.opelink.com/article/enterprise-lan-fiber-network-planning-implementation-guide-i01465i1.html"
+                                >https://www.opelink.com/article/enterprise-lan-fiber-network-planning-implementation-guide-i01465i1.html</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref38">
+                        <div class="num">38</div>
+                        <div class="txt">
+                            btw.media. "The 'father of the internet': Interview with Vint Cerf"
+                            (2026年6月).
+                            <a
+                                href="https://btw.media/en/the-father-of-the-internet-interview-with-vint-cerf"
+                                >https://btw.media/en/the-father-of-the-internet-interview-with-vint-cerf</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref39">
+                        <div class="num">39</div>
+                        <div class="txt">
+                            Data Center Dynamics. "Vint Cerf's Interplanetary ambitions"
+                            (2026年7月).
+                            <a
+                                href="https://www.datacenterdynamics.com/en/analysis/vint-cerfs-interplanetary-ambitions/"
+                                >https://www.datacenterdynamics.com/en/analysis/vint-cerfs-interplanetary-ambitions/</a
+                            >
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <p>
+                    <em
+                        >本ガイドは学習補助を目的として独自に作成したものであり、原著の文章・図版を複製したものではありません。正確な内容は必ず原著（および記載の一次情報源）をご確認ください。</em
+                    >
+                </p>
+            </main>
+        </div>
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js"
+            integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            (function () {
+                'use strict';
+
+                // ---------- Mermaid init + render ----------
+                // NOTE: uses a fixed system CJK font stack (not document.fonts.load() +
+                // a post-render DOM-patch "heal" pass). That pattern was confirmed in
+                // earlier builds in this series to detach edges from nodes, because
+                // mermaid's edge <path> geometry is computed once at layout time and
+                // never re-synced to later DOM changes. A system font stack sidesteps
+                // the underlying font-metrics-mismatch problem entirely (measurement
+                // and paint always share the same locally available font).
+                var MERMAID_FONT_STACK =
+                    '"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif';
+
+                function initMermaid() {
+                    if (typeof mermaid === 'undefined') {
+                        console.warn('mermaid not loaded');
+                        return;
+                    }
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'base',
+                        securityLevel: 'loose',
+                        fontFamily: MERMAID_FONT_STACK,
+                        themeVariables: {
+                            fontSize: '16px',
+                            background: '#ffffff',
+                            primaryColor: '#eaf1ff',
+                            primaryTextColor: '#1c2733',
+                            primaryBorderColor: '#2f6feb',
+                            lineColor: '#7488a8',
+                            secondaryColor: '#eef2f8',
+                            tertiaryColor: '#eef2f8',
+                            edgeLabelBackground: '#ffffff',
+                            clusterBkg: '#f7f9fc',
+                            clusterBorder: '#c7d3e6',
+                            nodeTextColor: '#1c2733',
+                        },
+                        flowchart: {
+                            useMaxWidth: false,
+                            htmlLabels: true,
+                            subGraphTitleMargin: { top: 12, bottom: 18 },
+                            nodeSpacing: 70,
+                            rankSpacing: 60,
+                            curve: 'basis',
+                        },
+                    });
+
+                    try {
+                        mermaid.run({ querySelector: 'pre.mermaid' }).catch(function (err) {
+                            console.error('mermaid render error', err);
+                        });
+                    } catch (e) {
+                        console.error('mermaid run failed', e);
+                    }
+                }
+
+                try {
+                    initMermaid();
+                } catch (e) {
+                    console.error('mermaid init failed', e);
+                }
+
+                // ---------- Sidebar toggle (mobile) ----------
+                var sidebar = document.getElementById('sidebar');
+                var toggle = document.getElementById('sidebarToggle');
+                function syncToggleState() {
+                    if (!toggle || !sidebar) return;
+                    toggle.setAttribute(
+                        'aria-expanded',
+                        sidebar.classList.contains('open') ? 'true' : 'false',
+                    );
+                }
+                if (toggle) {
+                    toggle.addEventListener('click', function () {
+                        sidebar.classList.toggle('open');
+                        syncToggleState();
+                    });
+                }
+                document.querySelectorAll('#sidebarNav a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        sidebar.classList.remove('open');
+                        syncToggleState();
+                    });
+                });
+                syncToggleState();
+
+                // ---------- Scroll-spy ----------
+                var navLinks = Array.from(document.querySelectorAll('#sidebarNav a'));
+                var linkMap = new Map();
+                navLinks.forEach(function (a) {
+                    var id = decodeURIComponent(a.getAttribute('href').slice(1));
+                    linkMap.set(id, a);
+                });
+
+                var headings = Array.from(linkMap.keys())
+                    .map(function (id) {
+                        return document.getElementById(id);
+                    })
+                    .filter(Boolean);
+
+                var spyObserver = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            var link = linkMap.get(entry.target.id);
+                            if (!link) return;
+                            if (entry.isIntersecting) {
+                                navLinks.forEach(function (a) {
+                                    a.classList.remove('active');
+                                });
+                                link.classList.add('active');
+                            }
+                        });
+                    },
+                    { rootMargin: '-15% 0px -75% 0px', threshold: 0 },
+                );
+
+                headings.forEach(function (h) {
+                    spyObserver.observe(h);
+                });
+
+                // ---------- Checklist progress ----------
+                document.querySelectorAll('.checklist-card').forEach(function (card) {
+                    var boxes = card.querySelectorAll('input[type="checkbox"]');
+                    var counter = card.querySelector('.count');
+                    function update() {
+                        var checked = card.querySelectorAll(
+                            'input[type="checkbox"]:checked',
+                        ).length;
+                        if (counter) counter.textContent = checked + ' / ' + boxes.length + ' 完了';
+                    }
+                    boxes.forEach(function (b) {
+                        b.addEventListener('change', update);
+                    });
+                    update();
+                });
+            })();
+        </script>
+    </body>
+</html>
