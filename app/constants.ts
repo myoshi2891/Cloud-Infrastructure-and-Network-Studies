@@ -29,7 +29,9 @@ export type ColorKey =
     | 'card-understanding-the-linux-kernel'
     | 'card-unix-linux-sysadmin-handbook'
     | 'card-systems-performance'
-    | 'card-operating-systems-three-easy-pieces';
+    | 'card-operating-systems-three-easy-pieces'
+    | 'card-computer-networking-topdown'
+    | 'card-high-performance-browser-networking';
 
 export interface Exam {
     id: string;
@@ -70,6 +72,8 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-unix-linux-sysadmin-handbook': 'card-unix-linux-sysadmin-handbook',
     'card-systems-performance': 'card-systems-performance',
     'card-operating-systems-three-easy-pieces': 'card-operating-systems-three-easy-pieces',
+    'card-computer-networking-topdown': 'card-computer-networking-topdown',
+    'card-high-performance-browser-networking': 'card-high-performance-browser-networking',
 };
 
 export const providerMeta: Record<
