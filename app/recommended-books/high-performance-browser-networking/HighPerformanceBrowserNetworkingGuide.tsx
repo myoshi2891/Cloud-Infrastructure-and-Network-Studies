@@ -669,6 +669,691 @@ export function HighPerformanceBrowserNetworkingGuide() {
                     </ul>
                 </div>
 <hr />
+<h2 id="第3部http">第3部：HTTP</h2>
+<h3 id="第9章-httpの歴史">第9章 HTTPの歴史</h3>
+<h4 id="91-httpバージョンの進化">9.1 HTTPバージョンの進化</h4>
+<Diagram id="diag-16" label="HTTPプロトコル（0.9〜3）の歴史的変遷図" />
+<h4 id="92-各バージョンの要点">9.2 各バージョンの要点</h4>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">バージョン</th>
+                                <th scope="col">主な特徴</th>
+                                <th scope="col">主な課題</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>HTTP/0.9</td>
+                                <td>1行のリクエスト（GET /index.html）、レスポンスはHTMLのみ</td>
+                                <td>ヘッダなし、ステータスコードなし、拡張性ゼロ</td>
+                            </tr>
+                            <tr className="even">
+                                <td>HTTP/1.0</td>
+                                <td>
+                                    リクエスト・レスポンスヘッダ、Content-Type、ステータスコード導入
+                                </td>
+                                <td>リクエストごとに新規TCP接続（Keep-Aliveなし）が一般的</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>HTTP/1.1</td>
+                                <td>
+                                    Keep-Alive標準化、パイプライニング仕様化（実際にはほぼ使われず）、Hostヘッダ必須化によるバーチャルホスト対応
+                                </td>
+                                <td>
+                                    仕様上はリクエストをパイプライン化できるが、レスポンスは要求順に返す必要があるためHTTPレベルのHOLブロッキングが残る。加えて実装面ではブラウザがパイプラインを使わず1接続あたりのリクエストを直列化するため、同一オリジンへの接続数（6本程度）が実質的な並列度の上限になる
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>HTTP/2</td>
+                                <td>
+                                    バイナリフレーミング、1接続内でのストリーム多重化、ヘッダ圧縮（HPACK）、サーバープッシュ（後に非推奨化）
+                                </td>
+                                <td>
+                                    TCP自体のHOLブロッキングは解決できない（トランスポート層の限界）
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>HTTP/3</td>
+                                <td>
+                                    QUIC（UDPベース）上に構築、ストリームごとに独立した信頼性制御でTCPレベルのHOLブロッキングを解消、コネクションマイグレーション対応
+                                </td>
+                                <td>
+                                    ミドルボックス互換性、UDPブロック環境での接続失敗、デバッグの複雑さ
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            新規プロジェクトでは、対応可能な環境（CDN・ブラウザ）である限りHTTP/2以上を既定とし、HTTP/1.1向けの最適化（ドメインシャーディング等）は行わない
+                        </li>
+                        <li>
+                            HTTP/3対応状況は2026年時点でもHTTP/2ほど普遍的ではないため、フォールバック設計（Alt-Svcヘッダ等）を必ず組み込む
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第10章-webパフォーマンス入門">第10章 Webパフォーマンス入門</h3>
+<h4 id="101-モダンwebアプリケーションの解剖">
+                    10.1 モダンWebアプリケーションの解剖
+                </h4>
+<p>
+                    現代のWebページは、単一のHTMLファイルではなく、HTML・CSS・JavaScript・画像・フォント・XHR/Fetchによる非同期リクエストなど、数十から数百のリソースの組み合わせで構成されます。これら全体の読み込み過程を可視化したものが「リソースウォーターフォール」です。
+                </p>
+<Diagram id="diag-17" label="Webアプリケーションのリソース構成解剖図" />
+<h4 id="102-パフォーマンスの3本柱">10.2 パフォーマンスの3本柱</h4>
+<p>原著は、Webパフォーマンスを次の3つの柱に分解しています。</p>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">柱</th>
+                                <th scope="col">内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>コンピューティング（Computing）</td>
+                                <td>
+                                    JavaScript実行、レイアウト計算、ペイントなど、CPU/GPUで行われる処理
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>レンダリング（Rendering）</td>
+                                <td>
+                                    DOM構築、CSSOM構築、レンダーツリー構築、レイアウト、ペイントというブラウザの描画パイプライン
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>ネットワーキング（Networking）</td>
+                                <td>
+                                    本書全体のテーマであるDNS解決・TCP/TLS確立・HTTPリクエストの往復
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<p>
+                    「帯域幅を増やしてもあまり速くならない」という原著の指摘は今も本質的に正しく、多くのケースでボトルネックはレイテンシ（往復回数）とレンダリングブロッキングリソースの解決順序にあります。
+                </p>
+<h4 id="103-合成モニタリングsyntheticとrumreal-user-monitoring">
+                    10.3 合成モニタリング（Synthetic）とRUM（Real User Monitoring）
+                </h4>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">手法</th>
+                                <th scope="col">特徴</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>合成モニタリング（Synthetic）</td>
+                                <td>
+                                    決められたネットワーク条件・デバイスで定期的に計測（Lighthouse、WebPageTest等）。再現性は高いが実際のユーザー環境を反映しない
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>RUM（Real User Monitoring）</td>
+                                <td>
+                                    実際のユーザーのブラウザから収集した実測データ（Core Web
+                                    Vitalsのフィールドデータなど）。実態を反映するがノイズが多い
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            合成モニタリングとRUMの両方を併用し、開発時のリグレッション検知には合成、実態把握と優先順位付けにはRUMを使う
+                        </li>
+                        <li>
+                            レンダリングをブロックするリソース（同期CSS/JS）を可能な限り減らし、クリティカルレンダリングパス（初期表示に必要な最小限のリソース群）を短くする
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第11章-http1x">第11章 HTTP/1.X</h3>
+<h4 id="111-keep-aliveの効果とその限界">11.1 Keep-Aliveの効果とその限界</h4>
+<p>
+                    HTTP/1.1のKeep-Aliveにより、1つのTCP接続を複数のHTTPリクエストで使い回せるようになり、リクエストごとのTCPハンドシェイクコストを削減できます。しかし、1つの接続内では次のリクエストを送る前に前のレスポンスを完全に受信し終える必要がある（リクエストのシリアライズ）という制約は残ります。
+                </p>
+<h4 id="112-複数tcp接続とドメインシャーディング">
+                    11.2 複数TCP接続とドメインシャーディング
+                </h4>
+<p>
+                    ブラウザは1オリジンあたり通常6本程度のTCP接続を並行して開くことで、この制約を部分的に回避しています。さらに、意図的に複数のサブドメインにリソースを分散させ、実質的な並列接続数を増やす「ドメインシャーディング」というテクニックが2010年代前半に広く使われました。
+                </p>
+<Diagram id="diag-18" label="HTTP/1.1の複数接続とドメインシャーディング構成図" />
+<p>
+                    このテクニックはHTTP/1.1環境では有効でしたが、接続ごとにTCPスロースタート・TLSハンドシェイクのコストが重複して発生するというデメリットがあり、後述のHTTP/2以降ではむしろ有害（アンチパターン）とされています。
+                </p>
+<h4 id="113-その他のhttp11最適化テクニック歴史的経緯">
+                    11.3 その他のHTTP/1.1最適化テクニック（歴史的経緯）
+                </h4>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">テクニック</th>
+                                <th scope="col">内容</th>
+                                <th scope="col">HTTP/2以降の扱い</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>連結（Concatenation）</td>
+                                <td>複数のCSS/JSファイルを1つに結合し、リクエスト数を削減</td>
+                                <td>
+                                    多重化によりリクエスト数削減の必要性が薄れ、キャッシュ効率悪化のデメリットが相対的に大きくなる
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>スプライティング（Spriting）</td>
+                                <td>
+                                    複数の画像を1枚の画像にまとめ、CSSのbackground-positionで切り出す
+                                </td>
+                                <td>
+                                    同上、CSS/HTTPリクエストの管理コストとのトレードオフで見直しが進む
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>インライン化（Resource Inlining）</td>
+                                <td>
+                                    小さなCSS/JS/画像をHTML内に直接埋め込み、リクエスト自体をなくす
+                                </td>
+                                <td>
+                                    キャッシュの粒度が粗くなるデメリットがあり、HTTP/2のServer
+                                    Push構想（後に非推奨）と競合していた
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            HTTP/1.1のみをサポートする古い環境向けには、上記の連結・スプライティング・インライン化・ドメインシャーディングを状況に応じて使う
+                        </li>
+                        <li>
+                            ただしHTTP/2以降が使える環境では、これらのテクニックは接続の多重化と衝突し逆効果になりうるため、原則として使用しない
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第12章-http2">第12章 HTTP/2</h3>
+<h4 id="121-spdyからhttp2への系譜">12.1 SPDYからHTTP/2への系譜</h4>
+<p>
+                    HTTP/2はGoogleが開発した実験的プロトコル「SPDY」を起源としています。SPDYが実運用で効果を実証したことで、IETFによる標準化が進み、2015年にHTTP/2としてRFC
+                    7540が発行されました（後にRFC 9113で更新）。
+                </p>
+<h4 id="122-バイナリフレーミング層">12.2 バイナリフレーミング層</h4>
+<p>
+                    HTTP/1.xはテキストベースのプロトコルでしたが、HTTP/2はバイナリフレーミング層を導入し、すべてのやり取りを「フレーム」という小さな単位に分割します。これにより、パーサーの実装が単純化され、複数のリクエスト・レスポンスを1つの接続上で安全に混在させる（多重化する）ことが可能になりました。
+                </p>
+<Diagram id="diag-19" label="HTTP/2バイナリフレーミング層とストリーム多重化図" />
+<h4 id="123-リクエストレスポンスの多重化とストリーム優先度">
+                    12.3 リクエスト・レスポンスの多重化とストリーム優先度
+                </h4>
+<p>
+                    HTTP/1.1では、仕様上パイプライン化できてもレスポンスが要求順に固定されるうえ、ブラウザ実装は事実上「1接続で1リクエストずつ直列」に処理していました。これに対しHTTP/2では「1接続=多数のストリーム」を順序制約なしに並行して処理できます。これにより、ドメインシャーディングのような回避策が不要になり、1オリジンにつき1本のTCPコネクションを使うことが推奨されるようになりました（TCPスロースタートやTLSハンドシェイクのコストを1回に集約できるため）。また、ストリームには優先度（Priority）を設定でき、重要なリソース（CSSなど）を先に配信するよう調整できます。
+                </p>
+<h4 id="124-ヘッダ圧縮hpack">12.4 ヘッダ圧縮（HPACK）</h4>
+<p>
+                    HTTPリクエストにはUser-Agent、Cookie、Accept系など類似したヘッダが毎回繰り返し送られます。HTTP/2はHPACKという専用の圧縮方式を使い、送信済みのヘッダをテーブルにキャッシュして差分のみを送ることで、ヘッダ部分のオーバーヘッドを大幅に削減します。
+                </p>
+<h4 id="125-サーバープッシュとその後の非推奨化">
+                    12.5 サーバープッシュとその後の非推奨化
+                </h4>
+<p>
+                    HTTP/2が導入した「サーバープッシュ」（クライアントが要求する前にサーバーが関連リソースを能動的に送信する仕組み）は、理論上はラウンドトリップを削減できるはずでしたが、実運用ではキャッシュとの相性の悪さ（ブラウザが既にキャッシュ済みのリソースを無駄にプッシュしてしまう）や実装の複雑さから効果が限定的であることが判明し、Chromeなど主要ブラウザは2020年前後にサーバープッシュのサポートを打ち切りました。代替として、後述の103
+                    Early Hintsステータスコードが使われるようになっています。
+                </p>
+<h4 id="126-http2最適化フロー制御と1オリジン1接続">
+                    12.6 HTTP/2最適化：フロー制御と1オリジン1接続
+                </h4>
+<p>
+                    HTTP/2はストリームごと・コネクションごとに独立したフロー制御ウィンドウを持ちます。デフォルトのウィンドウサイズが小さいまま運用すると、多重化のメリットを活かせずスループットが頭打ちになるため、サーバー・クライアント双方の実装がウィンドウサイズを適切にチューニングしているか確認する必要があります。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            1オリジンにつき1本のHTTP/2コネクションを使うことを前提に設計し、ドメインシャーディングを廃止する
+                        </li>
+                        <li>
+                            サーバープッシュには依存せず、Link: rel=preloadヘッダや103 Early
+                            Hintsなど、キャッシュと親和性の高い代替手法を検討する
+                        </li>
+                        <li>
+                            HPACKの恩恵を最大化するため、ヘッダの値（特にCookie等）を不必要に肥大化させない
+                        </li>
+                        <li>
+                            導入後は必ずHTTP/2対応のツールでサーバーの多重化耐性・フロー制御の挙動を実測する
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第13章-アプリケーション配信の最適化">
+                    第13章 アプリケーション配信の最適化
+                </h3>
+<h4 id="131-不朽のベストプラクティスevergreen-performance-best-practices">
+                    13.1 「不朽の」ベストプラクティス（Evergreen Performance Best Practices）
+                </h4>
+<p>
+                    原著は、HTTP/1.xでもHTTP/2でも変わらず有効な最適化を「Evergreen（常緑）」なベストプラクティスと呼んでいます。
+                </p>
+<Diagram id="diag-20" label="不朽のWebパフォーマンス最適化ベストプラクティス分類図" />
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">施策</th>
+                                <th scope="col">具体例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>クライアントキャッシュ</td>
+                                <td>
+                                    適切なCache-Control・ETagヘッダの設定、Service
+                                    Workerによる高度なキャッシュ戦略
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>データ圧縮</td>
+                                <td>Gzip・Brotliによるテキストリソースの圧縮、画像のWebP/AVIF化</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>不要バイトの削減</td>
+                                <td>
+                                    Cookieの肥大化防止、不要なヘッダ・クエリパラメータの削除、Minify（コード圧縮）
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>並列処理</td>
+                                <td>
+                                    サーバー側での並列I/O、クライアント側での非同期リソース読み込み
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<h4 id="132-http1x向け最適化とhttp2向け最適化の違い">
+                    13.2 HTTP/1.x向け最適化とHTTP/2向け最適化の違い
+                </h4>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">施策</th>
+                                <th scope="col">HTTP/1.x</th>
+                                <th scope="col">HTTP/2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>ドメインシャーディング</td>
+                                <td>有効（並列接続数を増やせる）</td>
+                                <td>有害（TLS/TCPコスト重複、優先度制御の妨げ）</td>
+                            </tr>
+                            <tr className="even">
+                                <td>連結・スプライティング</td>
+                                <td>有効（リクエスト数削減）</td>
+                                <td>効果薄〜有害（キャッシュ粒度が粗くなる、多重化と競合）</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>リソースインライン化</td>
+                                <td>有効</td>
+                                <td>慎重に。キャッシュできない代償が大きい場合が多い</td>
+                            </tr>
+                            <tr className="even">
+                                <td>サーバープッシュ</td>
+                                <td>非対応</td>
+                                <td>非推奨（多くのブラウザが撤廃済み。Early Hints等で代替）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<h4 id="133-http2サーバーの品質テスト">13.3 HTTP/2サーバーの品質テスト</h4>
+<p>
+                    HTTP/2はプロトコルとしては多重化・優先度制御を規定していますが、実装（サーバーソフトウェアやCDN）によって優先度制御の実装品質に大きな差があることが知られています。原著は、実際にストリーム優先度を尊重しているか、フロー制御が適切かをテストで検証することを推奨しています。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            「Evergreenな」最適化（キャッシュ・圧縮・バイト削減・並列化）はプロトコルバージョンに関わらず常に実施する
+                        </li>
+                        <li>
+                            HTTP/1.x向けの回避策（シャーディング等）をHTTP/2/3環境に残さない。プロトコル移行時は最適化戦略ごと見直す
+                        </li>
+                        <li>
+                            導入したCDN・サーバーが実際にHTTP/2の優先度制御を正しく実装しているか、実測ツールで検証する
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h2 id="第4部ブラウザapiとプロトコル">第4部：ブラウザAPIとプロトコル</h2>
+<h3 id="第14章-ブラウザネットワーキング入門">
+                    第14章 ブラウザネットワーキング入門
+                </h3>
+<h4 id="141-ブラウザが持つ独自の接続管理層">14.1 ブラウザが持つ独自の接続管理層</h4>
+<p>
+                    ブラウザは、OSのTCPスタックをそのまま使うのではなく、その上に独自の「接続管理層」を持っています。これには、オリジンごとの接続数上限、DNSプリフェッチ、TCPプリコネクト、リソースの優先度付けキューなどが含まれます。
+                </p>
+<Diagram id="diag-21" label="ブラウザ内部のネットワーク接続管理レイヤー図" />
+<h4 id="142-ネットワークセキュリティとサンドボックス">
+                    14.2 ネットワークセキュリティとサンドボックス
+                </h4>
+<p>
+                    ブラウザは、悪意あるスクリプトが他サイトの機密情報を勝手に読み取れないよう、同一オリジンポリシー（Same-Origin
+                    Policy）を基本としたサンドボックスモデルで動作します。
+                </p>
+<p>
+                    ここで初学者が最も誤解しやすいのが CORS（Cross-Origin Resource
+                    Sharing）の役割です。CORSが制御するのは主に「<strong>クロスオリジンのレスポンスをスクリプトに読み取らせるかどうか</strong>」であって、「リクエストを送信させるかどうか」ではありません。GETや<code>application/x-www-form-urlencoded</code>のPOSTなど<strong>シンプルリクエスト</strong>の条件を満たす場合、リクエストはプリフライトなしでそのまま相手サーバーへ届きます。サーバーが<code>Access-Control-Allow-Origin</code>を返さなければ、ブラウザは「すでに送信され処理されたレスポンスをスクリプトに渡さない」という形で保護するにすぎません。
+                </p>
+<p>
+                    一方、カスタムヘッダや<code>application/json</code>を伴う<strong>非シンプルリクエスト</strong>では、実リクエストの前に<strong>プリフライト（OPTIONSリクエスト</strong>）でサーバーの許可を検証し、許可が得られなければ実リクエストは送信されません。つまりCORSには「レスポンス共有の制御」と「プリフライトによる事前検証」という2つの側面があります。
+                </p>
+<p>
+                    そして、副作用を伴うリクエストが他サイトから勝手に送られること自体を防ぐのはCORSの責務ではなく、CSRF対策（SameSite
+                    Cookie・CSRFトークン等）の責務です（第15章で詳述）。
+                </p>
+<h4 id="143-リソースクライアント状態キャッシング">
+                    14.3 リソース・クライアント状態キャッシング
+                </h4>
+<p>
+                    ブラウザは、HTTPキャッシュ（<code>Cache-Control</code>/<code>ETag</code>ベース）だけでなく、Cookie・LocalStorage・IndexedDB・Service
+                    Workerキャッシュなど複数のクライアント側状態管理の仕組みを提供しています。これらを適切に使い分けることが、リクエスト数削減・オフライン対応の鍵になります。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            ブラウザが提供する接続管理（優先度付け、プリコネクト等）を妨げないよう、リソースの読み込み順序・優先度ヒント（<code>fetchpriority</code>属性等）を適切に指定する
+                        </li>
+                        <li>
+                            CORSの設定は必要最小限のオリジン・メソッド・ヘッダに絞り、プリフライトリクエスト（後述）の発生条件を理解した上で設計する
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第15章-xmlhttprequest">第15章 XMLHttpRequest</h3>
+<h4 id="151-xhrの歴史と役割">15.1 XHRの歴史と役割</h4>
+<p>
+                    XMLHttpRequest（XHR）は、ページ全体をリロードせずにサーバーと非同期通信を行うための最初期のブラウザAPIで、いわゆる「Ajax」という開発スタイルの基盤となりました。現在は<code>fetch()</code>APIがより現代的な代替として広く使われていますが、XHRが確立した「非同期HTTP通信」というモデル自体はfetchにも引き継がれています。
+                </p>
+<h4 id="152-corscross-origin-resource-sharingとプリフライトリクエスト">
+                    15.2 CORS（Cross-Origin Resource Sharing）とプリフライトリクエスト
+                </h4>
+<p>
+                    異なるオリジンへのXHR/fetchリクエストのうち、「シンプルリクエスト」の条件（GET/POST/HEADかつ特定のヘッダのみ等）を満たさないものは、実際のリクエストを送る前にブラウザが自動的に<code>OPTIONS</code>メソッドで<strong>プリフライトリクエスト</strong>を送信し、サーバーがそのオリジン・メソッド・ヘッダを許可しているかを事前確認します。
+                </p>
+<Diagram id="diag-22" label="CORSプリフライトリクエストのシーケンス図" />
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            プリフライトが発生する条件（カスタムヘッダ、application/json等の非シンプルContent-Type）を理解し、頻繁に呼ばれるAPIでは可能な範囲でシンプルリクエストの条件に収める
+                        </li>
+                        <li>
+                            サーバー側で<code>Access-Control-Max-Age</code>を適切に設定し、プリフライト結果をブラウザにキャッシュさせ、繰り返しの往復を削減する
+                        </li>
+                    </ul>
+                </div>
+<h4 id="153-ダウンロードアップロードの進捗監視とストリーミング">
+                    15.3 ダウンロード・アップロードの進捗監視とストリーミング
+                </h4>
+<p>
+                    XHRは<code>progress</code>イベントによってダウンロード・アップロードの進捗を監視できます。
+                </p>
+<p>
+                    なお<code>responseType</code>（<code>''</code>/<code>text</code>・<code>json</code>・<code>blob</code>・<code>arraybuffer</code>・<code>document</code>）は、あくまで<strong>レスポンスを最終的にどの形式で受け取るか</strong>を選択するものであり、それ自体がストリーミング処理を有効にするわけではありません。XHRでレスポンスを逐次処理できるのは<code>responseType</code>が<code>''</code>（空文字）または<code>text</code>の場合に限られ、<code>readyState</code>が<code>LOADING</code>（3）の間に<code>responseText</code>を繰り返し読み進める形になります。バイナリを含む本格的なストリーミング受信が必要な場合は、XHRではなくFetch
+                    APIのストリーム（<code>Response.body</code>が返す<code>ReadableStream</code>）を用います。
+                </p>
+<h4 id="154-ポーリングとロングポーリング">15.4 ポーリングとロングポーリング</h4>
+<p>
+                    サーバーからのリアルタイム通知を実現する古典的な手法として、原著は次の2つを紹介しています。
+                </p>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">手法</th>
+                                <th scope="col">動作</th>
+                                <th scope="col">課題</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>ポーリング（Polling）</td>
+                                <td>
+                                    一定間隔でクライアントがサーバーに新着データの有無を問い合わせる
+                                </td>
+                                <td>
+                                    更新がなくてもリクエストが発生し、無駄なオーバーヘッドとレイテンシが生じる
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ロングポーリング（Long-Polling）</td>
+                                <td>
+                                    サーバーは新着データが発生するまでレスポンスを保留し、発生した時点で応答する。クライアントは応答を受けたら即座に再リクエスト
+                                </td>
+                                <td>
+                                    ポーリングよりリアルタイム性は高いが、サーバー側で大量の保留中コネクションを維持するコストが発生する
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<p>
+                    これらの制約が、後述するSSE（第16章）やWebSocket（第17章）という、真の意味でサーバー起点のプッシュ通信を可能にするプロトコルが生まれた背景にあります。
+                </p>
+<hr />
+<h3 id="第16章-server-sent-eventssse">第16章 Server-Sent Events（SSE）</h3>
+<h4 id="161-eventsource-apiとイベントストリームプロトコル">
+                    16.1 EventSource APIとイベントストリームプロトコル
+                </h4>
+<p>
+                    SSEは、サーバーからクライアントへの<strong>一方向</strong>のリアルタイムストリーミングに特化したシンプルな仕組みです。ブラウザの<code>EventSource</code>
+                    APIを使い、サーバーは通常のHTTPレスポンスを<code>Content-Type: text/event-stream</code>として返し、接続を切らずにテキスト形式のイベントを継続的に送り続けます。
+                </p>
+<Diagram id="diag-23" label="Server-Sent Events（SSE）の単方向通信シーケンス図" />
+<h4 id="162-sseの利点と適したユースケース">16.2 SSEの利点と適したユースケース</h4>
+<p>
+                    SSEはHTTP上に構築されているため、既存のHTTPインフラ（プロキシ、ロードバランサー、認証機構）とそのまま親和性が高く、実装もシンプルです。自動再接続や「どこから再開するか」を示す<code>Last-Event-ID</code>の仕組みも標準で組み込まれています。ただし、通信は<strong>サーバーからクライアントへの一方向のみ</strong>であり、双方向通信が必要な場合は後述のWebSocketが適しています。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            サーバー起点の通知（株価更新、進捗通知、ライブフィード等）で、クライアントからの応答が不要な用途にはSSEを第一候補とする
+                        </li>
+                        <li>
+                            HTTP/1.1環境ではブラウザの同時接続数上限（1オリジンあたり6本程度）にSSE接続も含まれるため、多数のSSE接続を同時に開くページ設計は避ける（HTTP/2以降は多重化によりこの制約が緩和される）
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第17章-websocket">第17章 WebSocket</h3>
+<h4 id="171-websocketプロトコルの概要">17.1 WebSocketプロトコルの概要</h4>
+<p>
+                    WebSocketは、HTTP接続を<strong>全二重（双方向・同時送受信可能</strong>）な独自プロトコルへ切り替える仕組みです。切り替えの手順はHTTPのバージョンによって異なり、HTTP/1.1では<code>Upgrade</code>ヘッダによるハンドシェイク（101
+                    Switching Protocols）を使いますが、HTTP/2では拡張CONNECT（RFC
+                    8441）、HTTP/3では同じ拡張CONNECTをQUIC上で用いる方式（RFC
+                    9220）で、1本のストリーム上に確立します（第19章の比較表も参照）。一度アップグレードが完了すると、HTTPのリクエスト/レスポンスという構造から離れ、両者が自由なタイミングでフレームを送り合える低オーバーヘッドな通信路になります。
+                </p>
+<Diagram id="diag-24" label="WebSocket接続確立と双方向メッセージングのシーケンス図" />
+<h4 id="172-websocketのバイナリフレーミングとサブプロトコルネゴシエーション">
+                    17.2 WebSocketのバイナリフレーミングとサブプロトコルネゴシエーション
+                </h4>
+<p>
+                    WebSocketもHTTP/2と同様に独自のバイナリフレーミング層を持ちます。また、<code>Sec-WebSocket-Protocol</code>ヘッダにより、アプリケーション固有のサブプロトコル（例:
+                    <code>chat.v2</code>）をネゴシエーションできます。拡張機能（<code>permessage-deflate</code>など、フレームごとの圧縮）もヘッダベースでネゴシエーション可能です。
+                </p>
+<h4 id="173-メッセージオーバーヘッドとデータ効率">
+                    17.3 メッセージオーバーヘッドとデータ効率
+                </h4>
+<p>
+                    WebSocketフレームのヘッダは最小2バイトから（ペイロード長に応じて最大14バイト程度）と非常に軽量です。しかし、小さなメッセージを高頻度で送信する用途では、このヘッダオーバーヘッドや、TCPベースであることによるHOLブロッキング（第2章参照）が無視できなくなる場合があります。
+                </p>
+<h4 id="174-websocketインフラのデプロイ上の注意点">
+                    17.4 WebSocketインフラのデプロイ上の注意点
+                </h4>
+<p>
+                    WebSocketはHTTPとは異なる接続の持続特性（長時間接続を維持し続ける）を持つため、ロードバランサーやリバースプロキシの設定（タイムアウト値、Upgradeヘッダの転送設定）を専用に調整する必要があります。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            双方向・低レイテンシ・高頻度の通信（チャット、マルチプレイヤーゲーム、コラボレーション編集）にはWebSocketを使う
+                        </li>
+                        <li>
+                            カスタムアプリケーションプロトコルは、メッセージの意味論を明確に定義し、必要以上に頻繁な細切れメッセージを避ける（オーバーヘッド削減）
+                        </li>
+                        <li>
+                            ロードバランサー・プロキシのWebSocket対応（Upgradeヘッダの透過、タイムアウト設定）を事前に検証する
+                        </li>
+                        <li>
+                            <code>permessage-deflate</code>拡張の使用可否は、圧縮によるCPUコストとペイロード削減効果を天秤にかけて判断する
+                        </li>
+                    </ul>
+                </div>
+<hr />
+<h3 id="第18章-webrtc">第18章 WebRTC</h3>
+<h4 id="181-webrtcとは何かなぜp2pが必要なのか">
+                    18.1 WebRTCとは何か、なぜP2Pが必要なのか
+                </h4>
+<p>
+                    WebRTC（Web Real-Time
+                    Communication）は、ブラウザ間で<strong>サーバーを介さない直接（P2P</strong>）の音声・映像・任意データ通信を可能にするAPI群です。サーバーを介した中継はレイテンシ増加とサーバーコスト増大を招くため、ビデオ会議やリアルタイムゲームなど低遅延が求められる用途ではP2Pが本質的に有利です。
+                </p>
+<h4 id="182-全体像シグナリングとpeerconnectionの確立">
+                    18.2 全体像：シグナリングとPeerConnectionの確立
+                </h4>
+<p>
+                    WebRTCの接続確立は大きく2段階に分かれます。まず「シグナリング」（互いのメディア能力・ネットワーク経路情報を交換する、WebRTC自体は規定しない任意のチャネル）、次に「P2P接続の確立」（ICEフレームワークによる経路探索）です。
+                </p>
+<Diagram id="diag-25" label="WebRTCシグナリングとPeerConnection確立のシーケンス図" />
+<h4 id="183-sdpsession-description-protocolとiceinteractive-connectivity-establishment">
+                    18.3 SDP（Session Description Protocol）とICE（Interactive Connectivity
+                    Establishment）
+                </h4>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">要素</th>
+                                <th scope="col">役割</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>SDP（セッション記述プロトコル）</td>
+                                <td>
+                                    対応コーデック、メディアの種類（音声/映像/データ）、暗号化パラメータなどを記述するテキストフォーマット
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ICE Candidate</td>
+                                <td>
+                                    自分が到達可能な可能性のあるアドレス（ローカルIP、STUNで判明したパブリックIP、TURN中継アドレス）の候補
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>Trickle ICE</td>
+                                <td>
+                                    すべてのCandidateを集め終えるのを待たず、見つかり次第逐次交換することで接続確立を高速化する仕組み
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<h4 id="184-メディアデータの伝送dtlssrtpsctp">
+                    18.4 メディア・データの伝送：DTLS・SRTP・SCTP
+                </h4>
+<p>
+                    WebRTCの接続が確立すると、実際のデータは複数のサブプロトコルで保護・伝送されます。
+                </p>
+<Diagram id="diag-26" label="WebRTCプロトコルスタック（DTLS/SRTP/SCTP）構造図" />
+<ul>
+                    <li>
+                        <strong>SRTP/SRTCP</strong>:
+                        音声・映像メディアストリームを暗号化して伝送する、RTPプロトコルのセキュア版
+                    </li>
+                    <li>
+                        <strong>SCTP over DTLS（DataChannel）</strong>:
+                        メディア以外の任意データをやり取りするための仕組みで、TCPのように順序保証・信頼性のある配送も、UDPのように順序を問わない非信頼配送も選択できる（部分的信頼配送、Partially
+                        Reliable Delivery）
+                    </li>
+                </ul>
+<h4 id="185-datachannelの設定順序性と信頼性のトレードオフ">
+                    18.5 DataChannelの設定：順序性と信頼性のトレードオフ
+                </h4>
+<p>WebRTCのDataChannelは、用途に応じて配送特性を細かく設定できる点が特徴です。</p>
+<div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">設定</th>
+                                <th scope="col">用途例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>順序保証あり・信頼性あり（TCPライク）</td>
+                                <td>ファイル転送、チャットメッセージなど欠落が許されないデータ</td>
+                            </tr>
+                            <tr className="even">
+                                <td>順序保証なし・信頼性あり</td>
+                                <td>順序が重要でない通知データ</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>部分的信頼配送（再送回数・タイムアウトを制限）</td>
+                                <td>
+                                    ゲームの位置情報更新など、古いデータより新しいデータの到達を優先したい用途
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+<h4 id="186-マルチパーティアーキテクチャとインフラ計画">
+                    18.6 マルチパーティアーキテクチャとインフラ計画
+                </h4>
+<p>
+                    3人以上が参加するビデオ会議では、全員がP2Pでフルメッシュ接続すると参加者数の2乗に比例して帯域幅・CPU負荷が増大するため、実運用では<strong>SFU（Selective Forwarding Unit</strong>）と呼ばれる中継サーバーを介したアーキテクチャが一般的です。SFUは各参加者のストリームを受信し、必要な相手にのみ転送することで、送信側の負荷を一定に保ちます。
+                </p>
+<div className="callout-practice">
+                    <div className="practice-label">ベストプラクティス</div>
+                    <ul>
+                        <li>
+                            1対1通信ならP2Pメッシュ、3人以上ならSFUベースのアーキテクチャを検討し、参加者数に応じたインフラ計画を立てる
+                        </li>
+                        <li>
+                            STUN単独で接続できない環境（対称型NAT、企業ファイアウォール）に備え、TURNサーバーを必ず用意する
+                        </li>
+                        <li>
+                            DataChannelは用途に応じて順序性・信頼性の設定を最適化し、不要な信頼性保証によるレイテンシ増加を避ける
+                        </li>
+                        <li>
+                            Trickle
+                            ICEを活用し、Candidate収集完了を待たずに接続確立プロセスを開始することで接続確立時間を短縮する
+                        </li>
+                    </ul>
+                </div>
+<hr />
             </main>
         </div>
     );
