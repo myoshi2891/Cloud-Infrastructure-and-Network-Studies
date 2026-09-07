@@ -322,6 +322,42 @@
     --color-network-amber: #fde68a;
     --color-network-amber-soft: #fef3c7;
 
+    /* CompTIA Network+ Network Implementation guide */
+    --color-comptia-impl-accent: #82bced;
+    --color-comptia-impl-surface: #1c1c20;
+    --color-comptia-impl-border: #212126;
+    --color-comptia-impl-border-soft: #1a1a1e;
+    --color-comptia-impl-foreground-faint: #707076;
+    --color-comptia-impl-shadow: rgba(0, 0, 0, 0.4);
+    --color-comptia-impl-sidebar-shadow: rgba(0, 0, 0, 0.6);
+    --color-comptia-impl-info-background: #11202f;
+    --color-comptia-impl-warning: #e8c17c;
+    --color-comptia-impl-warning-background: #2a2110;
+    --color-comptia-impl-purple: #c4b5fd;
+    --color-comptia-impl-purple-border: rgba(139, 92, 246, 0.45);
+    --color-comptia-impl-purple-border-soft: rgba(139, 92, 246, 0.42);
+    --color-comptia-impl-purple-border-faint: rgba(139, 92, 246, 0.35);
+    --color-comptia-impl-purple-background: rgba(139, 92, 246, 0.16);
+    --color-comptia-impl-purple-background-soft: rgba(139, 92, 246, 0.07);
+    --color-comptia-impl-teal: #5eead4;
+    --color-comptia-impl-teal-border: rgba(20, 184, 166, 0.45);
+    --color-comptia-impl-teal-border-soft: rgba(20, 184, 166, 0.42);
+    --color-comptia-impl-teal-border-faint: rgba(20, 184, 166, 0.35);
+    --color-comptia-impl-teal-background: rgba(20, 184, 166, 0.16);
+    --color-comptia-impl-teal-background-soft: rgba(20, 184, 166, 0.07);
+    --color-comptia-impl-coral: #fdba74;
+    --color-comptia-impl-coral-border: rgba(246, 95, 63, 0.45);
+    --color-comptia-impl-coral-border-soft: rgba(246, 95, 63, 0.42);
+    --color-comptia-impl-coral-border-faint: rgba(246, 95, 63, 0.35);
+    --color-comptia-impl-coral-background: rgba(246, 95, 63, 0.16);
+    --color-comptia-impl-coral-background-soft: rgba(246, 95, 63, 0.07);
+    --color-comptia-impl-pink: #f9a8d4;
+    --color-comptia-impl-pink-border: rgba(236, 72, 153, 0.45);
+    --color-comptia-impl-pink-border-soft: rgba(236, 72, 153, 0.42);
+    --color-comptia-impl-pink-border-faint: rgba(236, 72, 153, 0.35);
+    --color-comptia-impl-pink-background: rgba(236, 72, 153, 0.16);
+    --color-comptia-impl-pink-background-soft: rgba(236, 72, 153, 0.07);
+
     /* PCNE Section 1 VPC design guide */
     --color-pcne-design-background: #07111e;
     --color-pcne-design-elevated: #0d1a2e;
