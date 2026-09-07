@@ -118,7 +118,7 @@ export function NavBar() {
 
             const hash = `#${encodeURIComponent(id)}`;
             if (window.location.hash !== hash) {
-                window.history.pushState(null, '', `${window.location.pathname}${hash}`);
+                window.history.pushState(null, '', `${window.location.pathname}${window.location.search}${hash}`);
             }
         },
         [],
