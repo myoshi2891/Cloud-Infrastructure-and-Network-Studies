@@ -243,7 +243,7 @@
     "通信経路上に割り込んでトラフィックをキャプチャする機器",
     "Wi-Fiアナライザ（Wi-Fi analyzer）",
     "無線チャネルの利用状況や電波強度を可視化する",
-    "光損失試験器（Visual fault locator）",
+    "可視光障害位置測定器（Visual fault locator）",
     "光ファイバケーブルの断線・損傷箇所を特定する",
     "show mac-address-table",
     "スイッチが学習したMACアドレステーブルを表示する",

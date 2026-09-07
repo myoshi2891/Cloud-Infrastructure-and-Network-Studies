@@ -39,7 +39,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </p>
                     </header>
 
-                    <section id="overview" className="section">
+                    <section id="overview" tabIndex={-1} className="section">
                         <h2>
                             <i className="ti ti-layout-grid"></i>1. Network Troubleshootingドメインの全体像
                         </h2>
@@ -174,7 +174,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="methodology" className="section">
+                    <section id="methodology" tabIndex={-1} className="section">
                         <h2><i className="ti ti-route"></i>2. 5.1 トラブルシューティングの方法論</h2>
                         <p>
                             CompTIA Network+
@@ -443,7 +443,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="cabling" className="section">
+                    <section id="cabling" tabIndex={-1} className="section">
                         <h2>
                             <i className="ti ti-plug-connected"></i>3. 5.2
                             ケーブル配線と物理インターフェースの問題
@@ -541,7 +541,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="services" className="section">
+                    <section id="services" tabIndex={-1} className="section">
                         <h2><i className="ti ti-server-2"></i>4. 5.3 ネットワークサービスの問題</h2>
                         <p>
                             スイッチング・ルーティング・IPアドレッシングなど、レイヤー2〜3寄りの論理的な問題を扱う項目です。
@@ -642,7 +642,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="performance" className="section">
+                    <section id="performance" tabIndex={-1} className="section">
                         <h2><i className="ti ti-gauge"></i>5. 5.4 パフォーマンスの問題</h2>
                         <p>「つながってはいるが遅い・不安定」といった性能面の問題を扱う項目です。</p>
 
@@ -725,7 +725,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="tools" className="section">
+                    <section id="tools" tabIndex={-1} className="section">
                         <h2><i className="ti ti-tools"></i>6. 5.5 適切なツールやプロトコルの選択</h2>
                         <p>問題を切り分け・診断するための具体的なツール群です。</p>
 
@@ -827,7 +827,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                                         <td>無線チャネルの利用状況や電波強度を可視化する</td>
                                     </tr>
                                     <tr>
-                                        <td>光損失試験器（Visual fault locator）</td>
+                                        <td>可視光障害位置測定器（Visual fault locator）</td>
                                         <td>光ファイバケーブルの断線・損傷箇所を特定する</td>
                                     </tr>
                                 </tbody>
@@ -877,7 +877,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </div>
                     </section>
 
-                    <section id="tips" className="section">
+                    <section id="tips" tabIndex={-1} className="section">
                         <h2><i className="ti ti-bulb"></i>7. 初学者向け 学習のポイント</h2>
                         <ul>
                             <li>
@@ -899,7 +899,7 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         </ul>
                     </section>
 
-                    <section id="references" className="section">
+                    <section id="references" tabIndex={-1} className="section">
                         <h2><i className="ti ti-books"></i>出典・参考資料</h2>
                         <p>
                             本記事は以下の情報源をもとに作成しています。試験内容は改訂される可能性があるため、学習の際は必ず公式サイトの最新情報を確認してください。
