@@ -557,6 +557,8 @@
 
     --color-theme-operating-systems-three-easy-pieces-bg: hsl(220 55% 40% / 0.25);
     --color-theme-operating-systems-three-easy-pieces-fg: hsl(220 90% 74%);
+    --color-theme-computer-networking-topdown-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-computer-networking-topdown-fg: hsl(220 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -727,6 +729,7 @@ body {
 .card-unix-linux-sysadmin-handbook { --card-accent: var(--color-theme-unix-linux-sysadmin-handbook-fg); }
 .card-systems-performance { --card-accent: var(--color-theme-systems-performance-fg); }
 .card-operating-systems-three-easy-pieces { --card-accent: var(--color-theme-operating-systems-three-easy-pieces-fg); }
+.card-computer-networking-topdown { --card-accent: var(--color-theme-computer-networking-topdown-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -848,6 +851,11 @@ body {
 @utility icon-theme-operating-systems-three-easy-pieces {
     background: var(--color-theme-operating-systems-three-easy-pieces-bg);
     color: var(--color-theme-operating-systems-three-easy-pieces-fg);
+}
+
+@utility icon-theme-computer-networking-topdown {
+    background: var(--color-theme-computer-networking-topdown-bg);
+    color: var(--color-theme-computer-networking-topdown-fg);
 }
 
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */

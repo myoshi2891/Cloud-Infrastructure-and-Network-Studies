@@ -52,6 +52,7 @@ const guideLayouts = [
     ['app/recommended-books/unix-linux-sysadmin-handbook/page.css', '.unix-linux-sysadmin-handbook-page .sidebar', '.unix-linux-sysadmin-handbook-page .main'],
     ['app/recommended-books/systems-performance/page.css', '.systems-performance-page .sidebar', '.systems-performance-page .main'],
     ['app/recommended-books/operating-systems-three-easy-pieces/page.css', '.ostep-page .sidebar', '.ostep-page .main'],
+    ['app/recommended-books/computer-networking-topdown/page.css', '.cntd-page .sidebar', '.cntd-page .main'],
 ] as const;
 
 describe('all sidebar guide layouts', () => {

@@ -561,6 +561,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（56図）
       page.css                      # ページ固有スタイル
+    computer-networking-topdown/
+      page.tsx                      # 『Computer Networking: A Top-Down Approach』完全学習ガイド (Server)
+      ComputerNetworkingTopdownGuide.tsx # 本文＋インタラクション (Client。全10部、Mermaid 41図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # Mermaid 図定義（41図）
+      page.css                      # ページ固有スタイル
 
 
 components/

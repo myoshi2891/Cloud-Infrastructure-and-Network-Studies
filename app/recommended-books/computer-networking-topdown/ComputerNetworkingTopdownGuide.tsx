@@ -1796,7 +1796,7 @@ export function ComputerNetworkingTopdownGuide() {
                     <div className="ref-card" id="ref8">
                         <div className="num">8</div>
                         <div className="txt">
-                            Phoronix「Google's BBRv3 TCP Congestion Control Showing Great Results,
+                            Phoronix「Google&apos;s BBRv3 TCP Congestion Control Showing Great Results,
                             Will Be Upstreamed To Linux」—{' '}<a href="https://www.phoronix.com/news/Google-BBRv3-Linux"
                                 >https://www.phoronix.com/news/Google-BBRv3-Linux</a>
                         </div>
@@ -1933,7 +1933,7 @@ export function ComputerNetworkingTopdownGuide() {
                     <div className="ref-card" id="ref23">
                         <div className="num">23</div>
                         <div className="txt">
-                            Qualcomm公式ブログ「Building the 6G standard: What 3GPP's June 2026
+                            Qualcomm公式ブログ「Building the 6G standard: What 3GPP&apos;s June 2026
                             plenary decisions mean for device makers」—{' '}<a
                                 href="https://www.qualcomm.com/news/onq/2026/06/6g-standardization-release-21-milestones"
                                 >https://www.qualcomm.com/news/onq/2026/06/6g-standardization-release-21-milestones</a>
@@ -1982,7 +1982,7 @@ export function ComputerNetworkingTopdownGuide() {
                     <div className="ref-card" id="ref28">
                         <div className="num">28</div>
                         <div className="txt">
-                            Cloudflare Blog「Cloudflare's 2025 Q3 DDoS threat report — including
+                            Cloudflare Blog「Cloudflare&apos;s 2025 Q3 DDoS threat report — including
                             Aisuru, the apex of botnets」(29.7 Tbps・14.1 Bpps記録) —{' '}<a href="https://blog.cloudflare.com/ddos-threat-report-2025-q3/"
                                 >https://blog.cloudflare.com/ddos-threat-report-2025-q3/</a>
                         </div>

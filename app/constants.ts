@@ -874,6 +874,27 @@ const ALL_EXAMS: Exam[] = [
         icon: '📚',
         provider: 'Books',
     },
+    {
+        id: 'computer-networking-topdown',
+        label: 'Computer Networking: A Top-Down Approach',
+        abbr: 'CNTD',
+        level: 'Computer Networking',
+        score: '全10部 / 41図解',
+        color: 'card-computer-networking-topdown',
+        href: '/recommended-books/computer-networking-topdown',
+        description:
+            'James F. Kurose, Keith W. Ross 著『Computer Networking: A Top-Down Approach』（コンピュータネットワーク: トップダウンアプローチ）を軸に、インターネットの仕組みと2026年最新動向を体系的に解説した完全学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/computer-networking-topdown',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
 ];
 
 export const EXAMS: Exam[] = HANDS_ON_ENABLED
