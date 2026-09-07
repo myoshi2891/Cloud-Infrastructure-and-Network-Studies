@@ -157,6 +157,9 @@
     --color-pca-s4-checkmark: #08101f;
     --color-pca-s4-mermaid-label: #eaf2ff;
     --color-pca-s4-heading-strong: #e0e8f6;
+    --color-pca-s4-heading-gradient-start: #eaf0ff;
+    --color-pca-s4-surface-veil: rgba(255, 255, 255, 0.03);
+    --color-pca-s4-surface-veil-faint: rgba(255, 255, 255, 0.01);
 
     /* PCA Section 5 guide */
     --color-pca-s5-background: #07111e;

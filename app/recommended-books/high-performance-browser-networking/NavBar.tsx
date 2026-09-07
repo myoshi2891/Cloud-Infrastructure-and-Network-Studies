@@ -116,8 +116,10 @@ export function NavBar() {
                 target.focus({ preventScroll: true });
             }
 
-            const newUrl = `${window.location.pathname}#${encodeURIComponent(id)}`;
-            window.history.pushState(null, '', newUrl);
+            const hash = `#${encodeURIComponent(id)}`;
+            if (window.location.hash !== hash) {
+                window.history.pushState(null, '', `${window.location.pathname}${hash}`);
+            }
         },
         [],
     );

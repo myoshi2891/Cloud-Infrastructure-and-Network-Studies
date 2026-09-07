@@ -131,7 +131,11 @@
     font-size: 2.1rem;
     line-height: 1.4;
     margin: 0 0 14px;
-    background: linear-gradient(90deg, #eaf0ff, #7c9eff);
+    background: linear-gradient(
+        90deg,
+        var(--color-pca-s4-heading-gradient-start),
+        var(--color-pca-s4-accent)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -290,11 +294,11 @@
 }
 
 .hpbn-page tr.odd {
-    background: rgba(255, 255, 255, 0.01);
+    background: var(--color-pca-s4-surface-veil-faint);
 }
 
 .hpbn-page tr.even {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-pca-s4-surface-veil);
 }
 
 .hpbn-page tr:last-child td {
@@ -381,7 +385,7 @@
 }
 
 .hpbn-page ul.checklist-list li:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-pca-s4-surface-veil);
 }
 
 .hpbn-page ul.checklist-list input[type='checkbox'] {
@@ -481,13 +485,17 @@
 @media (max-width: 900px) {
     .hpbn-page .sidebar {
         transform: translateX(-100%);
-        transition: transform 0.25s ease;
+        visibility: hidden;
+        transition:
+            transform 0.25s ease,
+            visibility 0.25s ease;
         width: 82vw;
         max-width: 320px;
     }
     .hpbn-page .sidebar.open {
         transform: translateX(0);
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        visibility: visible;
+        box-shadow: 0 0 40px var(--color-pca-s4-sidebar-shadow);
     }
     .hpbn-page .sidebar-toggle {
         display: flex;
