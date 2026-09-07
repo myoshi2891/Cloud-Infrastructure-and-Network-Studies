@@ -661,6 +661,11 @@ const ALL_EXAMS: Exam[] = [
                 pct: '23%',
             },
             {
+                label: 'Domain 2.0 Network Implementation 徹底解説ガイド',
+                href: '/comptia/network-plus/network-implementation-guide',
+                pct: '20%',
+            },
+            {
                 label: 'Domain 3.0 Network Operations 徹底解説ガイド',
                 href: '/comptia/network-plus/network-operations-guide',
                 pct: '19%',
