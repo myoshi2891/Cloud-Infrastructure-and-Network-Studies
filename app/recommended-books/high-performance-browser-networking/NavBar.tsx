@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { type NavItem, NAV_ITEMS } from './constants';
 
 const sanitizeHash = (hash: string): string | null => {
@@ -139,23 +139,21 @@ export function NavBar() {
                 className={`sidebar ${isOpen ? 'open' : ''}`}
                 aria-label="学習ガイド目次"
             >
-                <p className="sidebar-title">目次</p>
+                <p className="sidebar-title">目次</p>{' '}
                 <nav aria-label="ページ内ナビゲーション">
-                    <ul>
-                        {NAV_ITEMS.map((item: NavItem) => (
-                            <li key={item.id}>
-                                <a
-                                    href={`#${item.id}`}
-                                    className={`nav-link ${item.level === 2 ? 'level-h2' : 'level-h3'} ${
-                                        activeId === item.id ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => handleLinkClick(e, item.id)}
-                                >
-                                    {item.title}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    {NAV_ITEMS.map((item: NavItem) => (
+                        <Fragment key={item.id}>
+                            <a
+                                href={`#${item.id}`}
+                                className={`nav-link ${item.level === 2 ? 'level-h2' : 'level-h3'} ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                onClick={(e) => handleLinkClick(e, item.id)}
+                            >
+                                {item.title}
+                            </a>{' '}
+                        </Fragment>
+                    ))}
                 </nav>
             </aside>
         </>

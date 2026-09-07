@@ -1,8 +1,8 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { MermaidDiagram } from '@/components/MermaidDiagram';
-import { DIAGRAMS, type DiagramId } from './constants';
+import { CHECKLIST_ITEMS, DIAGRAMS, type DiagramId } from './constants';
 import { NavBar } from './NavBar';
 
 const Diagram = memo(function Diagram({
@@ -25,12 +25,46 @@ const Diagram = memo(function Diagram({
     );
 });
 
+function ChecklistSection() {
+    const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+    const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+
+    const handleToggle = (id: string) => {
+        setCheckedItems((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
+    return (
+        <div className="checklist-card" data-total={CHECKLIST_ITEMS.length}>
+            <div className="checklist-header">
+                チェックリスト（{checkedCount} / {CHECKLIST_ITEMS.length} 完了）
+            </div>
+            <ul className="checklist-list">
+                {CHECKLIST_ITEMS.map((item) => (
+                    <li key={item.id}>
+                        <input
+                            type="checkbox"
+                            id={item.id}
+                            checked={Boolean(checkedItems[item.id])}
+                            onChange={() => handleToggle(item.id)}
+                        />
+                        <label htmlFor={item.id}>{item.text}</label>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
 export function HighPerformanceBrowserNetworkingGuide() {
     return (
         <div className="hpbn-page">
             <NavBar />
             <main className="main">
-<div className="hero">
+
+                <div className="hero">
                     <h1>High Performance Browser Networking<br />初学者向け完全ガイド</h1>
                     <p className="hero-sub">
                         Ilya Grigorik著『High Performance Browser Networking』（O'Reilly Media,
@@ -46,14 +80,15 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         <span className="pill">参考文献 15件</span>
                     </div>
                 </div>
-<p>
+
+                <p>
                     <strong>原著</strong>: <em>High Performance Browser Networking</em>（Ilya
-                    Grigorik著、O'Reilly Media、2013年9月刊、398ページ）
+                    Grigorik著、O'Reilly Media、2013年9月刊、398ページ）{' '}
                     <strong>原著者について</strong>: Ilya
                     Grigorik氏はGoogleでWebパフォーマンスエンジニアを務めた人物で、本書は「ブラウザとネットワークの間で実際に何が起きているか」をTCP/UDP/TLSという低レイヤーから、HTTP、そしてXHR・SSE・WebSocket・WebRTCといったブラウザAPIまで一気通貫で解説した、Web
                     パフォーマンス分野の定番書です。
                 </p>
-<blockquote>
+                <blockquote>
                     <p>
                         本ガイドは原著の目次構成（全4部・全18章）に忠実に沿いながら、初学者向けに独自の解説・図解・表で再構成したものです。原文の複製・転載は一切行っていません。また、原著刊行（2013年）以降に登場したHTTP/3・QUIC・TLS
                         1.3・BBRv3・WebTransport・Core Web
@@ -64,35 +99,35 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         ASCIIアート（罫線・箱文字）は一切使用せず、フローチャート・シーケンス図はすべてMermaidで、比較表はすべてMarkdownテーブルで表現しています。
                     </p>
                 </blockquote>
-<h2 id="0-はじめになぜネットワークを知ることがweb開発者に必要なのか">
+                <h2 id="0-はじめになぜネットワークを知ることがweb開発者に必要なのか">
                     0. はじめになぜ「ネットワークを知る」ことがWeb開発者に必要なのか
                 </h2>
-<p>
+                <p>
                     「フロントエンドを書く」「バックエンドAPIを実装する」だけなら、TCPの輻輳制御アルゴリズムやTLSハンドシェイクのRTT数を知らなくても仕事はできます。しかし、<strong>なぜこのページは遅いのか</strong>、<strong>なぜモバイル回線だとタイムアウトが多発するのか</strong>、<strong>なぜHTTP/2に移行したのに思ったほど速くならないのか</strong>——こうした問いに答えるには、ブラウザとサーバーの間にある「配線の中身」を理解している必要があります。
                 </p>
-<p>原著が一貫して伝えているメッセージは次の1文に要約できます。</p>
-<blockquote>
+                <p>原著が一貫して伝えているメッセージは次の1文に要約できます。</p>
+                <blockquote>
                     <p>
-                        <strong>速度は機能である（Speed is a feature）。</strong>
+                        <strong>速度は機能である（Speed is a feature）。</strong>{' '}
                         ユーザーが体感する遅延の大部分は、コードの実行時間ではなく、ネットワーク層（伝搬遅延・輻輳制御・ハンドシェイク往復）で発生している。
                     </p>
                 </blockquote>
-<Diagram id="diag-1" label="ボトルネック特定フローチャート" />
-<p>
+                <Diagram id="diag-1" label="ボトルネック特定フローチャート" />
+                <p>
                     <strong>本ガイドの読み方</strong>：第1部でTCP/UDP/TLSという「土台」を固め、第2部でワイヤレス・モバイル回線特有の制約を学び、第3部でHTTPプロトコルそのものの進化（1.1→2→3）を追い、第4部でブラウザJavaScriptから実際に叩くAPI（XHR/SSE/WebSocket/WebRTC）を扱います。最後に第5部として、原著刊行後に登場したHTTP/3・QUIC・TLS
                     1.3・BBRv3などの2026年時点の実務知識を補います。
                 </p>
-<hr />
-<h2 id="第1部ネットワーキング101">第1部：ネットワーキング101</h2>
-<h3 id="第1章-レイテンシと帯域幅の基礎">第1章 レイテンシと帯域幅の基礎</h3>
-<h4 id="11-なぜ帯域幅よりレイテンシが重要なのか">
+                <hr />
+                <h2 id="第1部ネットワーキング101">第1部：ネットワーキング101</h2>
+                <h3 id="第1章-レイテンシと帯域幅の基礎">第1章 レイテンシと帯域幅の基礎</h3>
+                <h4 id="11-なぜ帯域幅よりレイテンシが重要なのか">
                     1.1 なぜ「帯域幅」より「レイテンシ」が重要なのか
                 </h4>
-<p>
+                <p>
                     多くの人は「回線が遅い＝帯域幅（bandwidth）が足りない」と考えがちですが、Webページの体感速度を決めているのは主に<strong>レイテンシ（latency）</strong>、つまりデータが送信元から宛先へ届くまでに要する時間（エンドツーエンドのネットワーク遅延）です。より厳密には、送信元から宛先までの一方向の遅延を<strong>片道遅延（one-way delay）</strong>、そこから応答が返ってくるまでを<strong>RTT（Round-Trip Time、往復遅延</strong>）と呼び分けます。また、パケット全体を回線に送り出すのに要する<strong>伝送遅延（transmission delay</strong>）はレイテンシを構成する一要素であって、レイテンシそのものではありません（次節参照）。特に小さなリクエストが何度も往復するWebの通信パターンでは、帯域幅を2倍にしても体感速度はほとんど変わらない一方、RTTを半分にすると劇的に速く感じられます。
                 </p>
-<h4 id="12-レイテンシを構成する4つの要素">1.2 レイテンシを構成する4つの要素</h4>
-<div className="table-scroll">
+                <h4 id="12-レイテンシを構成する4つの要素">1.2 レイテンシを構成する4つの要素</h4>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -127,50 +162,37 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<Diagram id="diag-2" label="レイテンシを構成する4要素のネットワーク伝送図" />
-<h4 id="13-光速とラストマイルの現実">1.3 光速と「ラストマイル」の現実</h4>
-<p>
+                <Diagram id="diag-2" label="レイテンシを構成する4要素のネットワーク伝送図" />
+                <h4 id="13-光速とラストマイルの現実">1.3 光速と「ラストマイル」の現実</h4>
+                <p>
                     光ファイバー中の光の伝搬速度は真空中光速の約2/3（約20万km/秒）です。理論上、地球を半周する約20,000kmの距離であれば片道で約100ms、往復（RTT）では約200msという計算になりますが、現実のインターネットはルーターを何十ホップも経由し、さらに家庭やスマートフォンから最寄りのISP設備までの「ラストマイル」区間で追加の遅延が発生します。ラストマイルは技術（DSL・ケーブル・光・モバイル）によって遅延特性が大きく異なり、多くの場合ここが体感速度のボトルネックになります。
                 </p>
-<h4 id="14-コアネットワークとエッジの帯域幅格差">
+                <h4 id="14-コアネットワークとエッジの帯域幅格差">
                     1.4 コアネットワークとエッジの帯域幅格差
                 </h4>
-<p>
+                <p>
                     インターネットのバックボーン（コアネットワーク）は年々高速化していますが、末端ユーザーが実際に使える帯域幅（エッジの帯域幅）は地域・回線種別によって大きな差があります。CDN（コンテンツデリバリーネットワーク）は、コンテンツをユーザーに地理的に近い場所へキャッシュすることで伝搬遅延そのものを短縮する、レイテンシ対策の代表的な手法です。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            レイテンシは物理法則（光速）に縛られるため、根本対策は「距離を縮める」（CDN・エッジロケーション活用）か「往復回数を減らす」（HTTP/2多重化・接続の再利用・0-RTT）のいずれかである
-                        </li>
-                        <li>
-                            帯域幅の増強だけに投資せず、まずRTT（往復時間）を計測し、リクエスト往復回数を減らす設計を優先する
-                        </li>
-                        <li>
-                            Webサイトの体感速度改善では、まず「何往復（RTT）しているか」を可視化する（DevToolsのNetworkパネルのWaterfall表示など）
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第2章-tcpの構成要素">第2章 TCPの構成要素</h3>
-<h4 id="21-なぜtcpを理解する必要があるのか">2.1 なぜTCPを理解する必要があるのか</h4>
-<p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>レイテンシは物理法則（光速）に縛られるため、根本対策は「距離を縮める」（CDN・エッジロケーション活用）か「往復回数を減らす」（HTTP/2多重化・接続の再利用・0-RTT）のいずれかである</li>{" "}<li>帯域幅の増強だけに投資せず、まずRTT（往復時間）を計測し、リクエスト往復回数を減らす設計を優先する</li>{" "}<li>Webサイトの体感速度改善では、まず「何往復（RTT）しているか」を可視化する（DevToolsのNetworkパネルのWaterfall表示など）</li></ul></div>
+                <hr />
+                <h3 id="第2章-tcpの構成要素">第2章 TCPの構成要素</h3>
+                <h4 id="21-なぜtcpを理解する必要があるのか">2.1 なぜTCPを理解する必要があるのか</h4>
+                <p>
                     HTTPはアプリケーション層のプロトコルですが、その下では（HTTP/3を除き）ほぼ例外なくTCP（Transmission
                     Control
                     Protocol）が使われています。TCPは「信頼性のある順序保証付きバイトストリーム」を提供しますが、その信頼性を実現する仕組み自体が、Webのパフォーマンスに直接影響を与えます。
                 </p>
-<h4 id="22-スリーウェイハンドシェイク">2.2 スリーウェイハンドシェイク</h4>
-<p>
+                <h4 id="22-スリーウェイハンドシェイク">2.2 スリーウェイハンドシェイク</h4>
+                <p>
                     TCP接続の確立には、データ送信前に3回のパケット交換（SYN → SYN-ACK →
                     ACK）が必要です。これは新規TCP接続ごとに<strong>最低1RTT分の遅延</strong>が発生することを意味します。
                 </p>
-<Diagram id="diag-3" label="TCPスリーウェイハンドシェイクのシーケンス図" />
-<h4 id="23-輻輳制御congestion-controlとフロー制御flow-control">
+                <Diagram id="diag-3" label="TCPスリーウェイハンドシェイクのシーケンス図" />
+                <h4 id="23-輻輳制御congestion-controlとフロー制御flow-control">
                     2.3 輻輳制御（Congestion Control）とフロー制御（Flow Control）
                 </h4>
-<p>TCPには2つの「速度調整」の仕組みがあります。</p>
-<div className="table-scroll">
+                <p>TCPには2つの「速度調整」の仕組みがあります。</p>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -193,64 +215,45 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="24-スロースタートslow-start">2.4 スロースタート（Slow Start）</h4>
-<p>
+                <h4 id="24-スロースタートslow-start">2.4 スロースタート（Slow Start）</h4>
+                <p>
                     新しいTCP接続は、いきなり最大速度で送信を始めるわけではありません。輻輳ウィンドウ（cwnd）を小さい値から始め、ACKを受け取るたびに指数的に増やしていく「スロースタート」というアルゴリズムを使います。これは、接続確立直後の数RTTの間はスループットが本来の帯域幅より低く抑えられることを意味し、<strong>小さなファイルを多数やり取りするWeb通信では、スロースタートが完了する前に転送が終わってしまい、帯域幅を使い切れないケースが多発します</strong>。
                 </p>
-<Diagram id="diag-4" label="TCPスロースタートと輻輳回避の遷移図" />
-<h4 id="25-帯域遅延積bandwidth-delay-product-bdp">
+                <Diagram id="diag-4" label="TCPスロースタートと輻輳回避の遷移図" />
+                <h4 id="25-帯域遅延積bandwidth-delay-product-bdp">
                     2.5 帯域遅延積（Bandwidth-Delay Product, BDP）
                 </h4>
-<p>
+                <p>
                     BDP = 帯域幅 × RTT で計算され、「経路上に存在しうる未確認データ量（in-flight
                     data）の理論上限」を表します。TCPのウィンドウサイズがBDPより小さいと、帯域幅を使い切れずに回線が遊んでしまいます。高帯域幅・高遅延（衛星回線や大陸間通信など）の経路では、この問題が顕著になり、TCPウィンドウスケーリング（RFC
                     1323）などの拡張が必要になります。
                 </p>
-<h4 id="26-holhead-of-lineブロッキング">2.6 HOL（Head-of-Line）ブロッキング</h4>
-<p>
+                <h4 id="26-holhead-of-lineブロッキング">2.6 HOL（Head-of-Line）ブロッキング</h4>
+                <p>
                     TCPは「順序保証されたバイトストリーム」であるため、パケットが1つでも失われると、それより後に届いたパケットもアプリケーションに渡されず、再送されたパケットが届くまで<strong>すべてがブロックされます</strong>。これがTCPレベルのHOLブロッキングであり、後述するHTTP/2の「1接続に複数ストリームを多重化する」という設計の弱点（TCPレベルでのHOLブロッキングが全ストリームに波及する）の根本原因になります。
                 </p>
-<Diagram id="diag-5" label="TCPヘッドオブラインブロッキングのパケット損失シーケンス図" />
-<h4 id="27-tcp最適化のベストプラクティス">2.7 TCP最適化のベストプラクティス</h4>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            サーバーの初期輻輳ウィンドウ（initcwnd）を、Linuxの最新デフォルト値に合わせて適切に設定する（小さすぎると初期スループットが出ない）
-                        </li>
-                        <li>
-                            不要になったTCP接続を保持し続けない一方、同一オリジンへの新規接続を頻発させない（TCPスロースタートのペナルティを毎回払うことになる）
-                        </li>
-                        <li>
-                            サーバーのTCP輻輳制御アルゴリズムをCUBICやBBRなど最新のものに更新する（詳細は第5部参照）
-                        </li>
-                        <li>
-                            小さいファイルを多数配信するサイトでは、TCP接続の再利用（Keep-Alive）とHTTP/2の多重化を活用し、新規ハンドシェイクの回数自体を減らす
-                        </li>
-                        <li>
-                            ラストマイルの帯域幅が細い環境を想定し、初期表示に必要なリソースをできるだけ小さく保つ（スロースタート中の帯域幅制約を考慮する）
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第3章-udpの構成要素">第3章 UDPの構成要素</h3>
-<h4 id="31-udpとtcpの根本的な違い">3.1 UDPとTCPの根本的な違い</h4>
-<p>
+                <Diagram id="diag-5" label="TCPヘッドオブラインブロッキングのパケット損失シーケンス図" />
+                <h4 id="27-tcp最適化のベストプラクティス">2.7 TCP最適化のベストプラクティス</h4>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>サーバーの初期輻輳ウィンドウ（initcwnd）を、Linuxの最新デフォルト値に合わせて適切に設定する（小さすぎると初期スループットが出ない）</li>{" "}<li>不要になったTCP接続を保持し続けない一方、同一オリジンへの新規接続を頻発させない（TCPスロースタートのペナルティを毎回払うことになる）</li>{" "}<li>サーバーのTCP輻輳制御アルゴリズムをCUBICやBBRなど最新のものに更新する（詳細は第5部参照）</li>{" "}<li>小さいファイルを多数配信するサイトでは、TCP接続の再利用（Keep-Alive）とHTTP/2の多重化を活用し、新規ハンドシェイクの回数自体を減らす</li>{" "}<li>ラストマイルの帯域幅が細い環境を想定し、初期表示に必要なリソースをできるだけ小さく保つ（スロースタート中の帯域幅制約を考慮する）</li></ul></div>
+                <hr />
+                <h3 id="第3章-udpの構成要素">第3章 UDPの構成要素</h3>
+                <h4 id="31-udpとtcpの根本的な違い">3.1 UDPとTCPの根本的な違い</h4>
+                <p>
                     UDP（User Datagram
                     Protocol）は「コネクションレス」「順序保証なし」「再送保証なし」というTCPとは対照的な特性を持つトランスポート層プロトコルです。原著はこれを「<strong>Null Protocol Services</strong>」（何も提供しないプロトコル）と表現しています。信頼性・順序保証・輻輳制御のいずれも提供しないため、アプリケーション側がそれらを自前で実装する必要がありますが、その分オーバーヘッドが小さく、リアルタイム性が求められる用途（音声・映像・ゲーム、そして後述するQUIC/HTTP3）に適しています。
                 </p>
-<Diagram id="diag-6" label="UDPとTCPのプロトコル特性比較図" />
-<h4 id="32-natネットワークアドレス変換とudp">
+                <Diagram id="diag-6" label="UDPとTCPのプロトコル特性比較図" />
+                <h4 id="32-natネットワークアドレス変換とudp">
                     3.2 NAT（ネットワークアドレス変換）とUDP
                 </h4>
-<p>
+                <p>
                     家庭用ルーターや企業ネットワークの多くはNATを使い、プライベートIPアドレスをパブリックIPアドレスに変換します。TCPはコネクション確立時のハンドシェイクがあるため、NATデバイスは「このコネクションは有効」と判断しやすいのですが、UDPにはそうした明示的なシグナルがなく、<strong>NATのUDPマッピングは一定時間（多くはわずか30秒程度）通信がないとタイムアウトで破棄されます</strong>。これがUDPを使ったP2P通信（WebRTCなど）で「接続が切れる」問題の主要因の一つです。
                 </p>
-<h4 id="33-natトラバーサルstunturnice">3.3 NATトラバーサル：STUN・TURN・ICE</h4>
-<p>
+                <h4 id="33-natトラバーサルstunturnice">3.3 NATトラバーサル：STUN・TURN・ICE</h4>
+                <p>
                     2台の端末がそれぞれ別のNATの背後にいる場合、直接P2P接続を確立するには工夫が必要です。
                 </p>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -280,36 +283,20 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<Diagram id="diag-7" label="STUNおよびTURNを用いたNATトラバーサルのシーケンス図" />
-<h4 id="34-udp最適化のベストプラクティス">3.4 UDP最適化のベストプラクティス</h4>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            UDPベースのアプリケーションでは、アプリケーション層で独自の輻輳制御を実装しない限り、他のTCPフローを飢餓状態にする「フェアネス違反」のリスクがあることを理解する
-                        </li>
-                        <li>
-                            NATタイムアウトに備え、定期的なキープアライブパケットを送るか、接続断からの再接続ロジックを実装する
-                        </li>
-                        <li>
-                            P2P接続確立にはICEフレームワークを使い、STUNで解決できない場合のフォールバックとしてTURNサーバーを必ず用意する
-                        </li>
-                        <li>
-                            ペイロードサイズを「パスMTU（経路上の最大転送単位、通常1500バイト前後）−
+                <Diagram id="diag-7" label="STUNおよびTURNを用いたNATトラバーサルのシーケンス図" />
+                <h4 id="34-udp最適化のベストプラクティス">3.4 UDP最適化のベストプラクティス</h4>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>UDPベースのアプリケーションでは、アプリケーション層で独自の輻輳制御を実装しない限り、他のTCPフローを飢餓状態にする「フェアネス違反」のリスクがあることを理解する</li>{" "}<li>NATタイムアウトに備え、定期的なキープアライブパケットを送るか、接続断からの再接続ロジックを実装する</li>{" "}<li>P2P接続確立にはICEフレームワークを使い、STUNで解決できない場合のフォールバックとしてTURNサーバーを必ず用意する</li>{" "}<li>ペイロードサイズを「パスMTU（経路上の最大転送単位、通常1500バイト前後）−
                             IPヘッダ長（IPv4で20バイト以上、IPv6で40バイト）−
-                            UDPヘッダ8バイト」以下に収め、IPフラグメンテーションを避ける（IPv4/1500バイト経路なら概ね1472バイト以下、IPv6なら1452バイト以下が目安）
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第4章-tlstransport-layer-security">
+                            UDPヘッダ8バイト」以下に収め、IPフラグメンテーションを避ける（IPv4/1500バイト経路なら概ね1472バイト以下、IPv6なら1452バイト以下が目安）</li></ul></div>
+                <hr />
+                <h3 id="第4章-tlstransport-layer-security">
                     第4章 TLS（Transport Layer Security）
                 </h3>
-<h4 id="41-tlsが提供する3つの保証">4.1 TLSが提供する3つの保証</h4>
-<p>
+                <h4 id="41-tlsが提供する3つの保証">4.1 TLSが提供する3つの保証</h4>
+                <p>
                     TLSはトランスポート層の上でセキュリティを提供するプロトコルで、次の3つを保証します。
                 </p>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -333,23 +320,23 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="42-tlsハンドシェイクtls-12までの2-rttモデル">
+                <h4 id="42-tlsハンドシェイクtls-12までの2-rttモデル">
                     4.2 TLSハンドシェイク（TLS 1.2までの2-RTTモデル）
                 </h4>
-<p>
+                <p>
                     原著執筆当時（TLS
                     1.2ベース）のフルハンドシェイクは、TCPの1RTTに加えてさらに2RTTを要していました。
                 </p>
-<Diagram id="diag-8" label="TLS 1.2ハンドシェイクの2-RTTフロー図" />
-<h4 id="43-鍵交換方式rsaとdiffie-hellman前方秘匿性forward-secrecy">
+                <Diagram id="diag-8" label="TLS 1.2ハンドシェイクの2-RTTフロー図" />
+                <h4 id="43-鍵交換方式rsaとdiffie-hellman前方秘匿性forward-secrecy">
                     4.3 鍵交換方式：RSAとDiffie-Hellman、前方秘匿性（Forward Secrecy）
                 </h4>
-<p>
+                <p>
                     古典的なRSA鍵交換は、サーバーの秘密鍵が万一将来漏洩すると、<strong>過去に記録された暗号化通信もすべて復号できてしまう</strong>という弱点があります。Diffie-Hellman鍵交換（特に楕円曲線を使うECDHE）は、セッションごとに一時的な鍵を生成するため、サーバーの秘密鍵が漏洩しても過去のセッションは保護されます。これを前方秘匿性（Forward
                     Secrecy）と呼び、現代のTLS実装では標準的に使われています。
                 </p>
-<h4 id="44-alpnsniセッション再開">4.4 ALPN・SNI・セッション再開</h4>
-<div className="table-scroll">
+                <h4 id="44-alpnsniセッション再開">4.4 ALPN・SNI・セッション再開</h4>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -379,60 +366,34 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="45-証明書チェーンと失効確認">4.5 証明書チェーンと失効確認</h4>
-<p>
+                <h4 id="45-証明書チェーンと失効確認">4.5 証明書チェーンと失効確認</h4>
+                <p>
                     ブラウザは証明書を検証する際、ルート証明書からサーバー証明書までの「信頼の連鎖（Chain
                     of
                     Trust）」をたどります。また、証明書が失効していないかを確認する方法として、CRL（証明書失効リスト）とOCSP（オンライン証明書ステータスプロトコル）があります。OCSPは証明書ごとに認証局へ問い合わせが必要でレイテンシが増えるため、<strong>OCSPステープリング</strong>（サーバー自身が事前にOCSPレスポンスを取得しておき、TLSハンドシェイク中にクライアントへ提示する方式）が推奨されます。
                 </p>
-<Diagram id="diag-9" label="PKI証明書チェーンとOCSP失効確認フロー図" />
-<h4 id="46-tls最適化のベストプラクティス原著の推奨事項">
+                <Diagram id="diag-9" label="PKI証明書チェーンとOCSP失効確認フロー図" />
+                <h4 id="46-tls最適化のベストプラクティス原著の推奨事項">
                     4.6 TLS最適化のベストプラクティス（原著の推奨事項）
                 </h4>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            計算コストの高い鍵長・アルゴリズムを見直し、CPU負荷とセキュリティのバランスを取る
-                        </li>
-                        <li>
-                            セッションキャッシュ・セッションチケットを有効にし、再接続時のフルハンドシェイクを回避する
-                        </li>
-                        <li>
-                            TLS False
-                            Start（サーバーの最終Finishedメッセージを待たずにアプリケーションデータを送り始める最適化）を活用する
-                        </li>
-                        <li>
-                            TLSレコードサイズをネットワークのMTUに合わせて最適化し、不要な断片化を避ける
-                        </li>
-                        <li>
-                            証明書チェーンを最小限に保ち、余分な中間証明書送信によるバイト数増加を避ける
-                        </li>
-                        <li>
-                            OCSPステープリングを設定し、クライアント側の追加ラウンドトリップを削減する
-                        </li>
-                        <li>
-                            HSTS（HTTP Strict Transport
-                            Security）を有効化し、平文HTTPへのダウングレード攻撃を防ぐと同時に、リダイレクトによる往復を省略する
-                        </li>
-                        <li>サイト全体をHTTPS化し、混在コンテンツ（Mixed Content）を排除する</li>
-                    </ul>
-                </div>
-<blockquote>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>計算コストの高い鍵長・アルゴリズムを見直し、CPU負荷とセキュリティのバランスを取る</li>{" "}<li>セッションキャッシュ・セッションチケットを有効にし、再接続時のフルハンドシェイクを回避する</li>{" "}<li>TLS False
+                            Start（サーバーの最終Finishedメッセージを待たずにアプリケーションデータを送り始める最適化）を活用する</li>{" "}<li>TLSレコードサイズをネットワークのMTUに合わせて最適化し、不要な断片化を避ける</li>{" "}<li>証明書チェーンを最小限に保ち、余分な中間証明書送信によるバイト数増加を避ける</li>{" "}<li>OCSPステープリングを設定し、クライアント側の追加ラウンドトリップを削減する</li>{" "}<li>HSTS（HTTP Strict Transport
+                            Security）を有効化し、平文HTTPへのダウングレード攻撃を防ぐと同時に、リダイレクトによる往復を省略する</li>{" "}<li>サイト全体をHTTPS化し、混在コンテンツ（Mixed Content）を排除する</li></ul></div>
+                <blockquote>
                     <p>
                         <strong>2026年時点の補足</strong>: 本章はTLS
                         1.2時代（2-RTTハンドシェイク）を前提に書かれていますが、現在主流のTLS
                         1.3では<strong>1-RTTハンドシェイク</strong>が標準となり、条件が揃えば<strong>0-RTT再接続</strong>も可能です。詳細は第5部で解説します。
                     </p>
                 </blockquote>
-<hr />
-<h2 id="第2部ワイヤレスネットワークのパフォーマンス">
+                <hr />
+                <h2 id="第2部ワイヤレスネットワークのパフォーマンス">
                     第2部：ワイヤレスネットワークのパフォーマンス
                 </h2>
-<h3 id="第5章-ワイヤレスネットワーク入門">第5章 ワイヤレスネットワーク入門</h3>
-<h4 id="51-ワイヤレスネットワークの分類">5.1 ワイヤレスネットワークの分類</h4>
-<p>無線ネットワークは、通信距離とユースケースによって複数の階層に分類されます。</p>
-<div className="table-scroll">
+                <h3 id="第5章-ワイヤレスネットワーク入門">第5章 ワイヤレスネットワーク入門</h3>
+                <h4 id="51-ワイヤレスネットワークの分類">5.1 ワイヤレスネットワークの分類</h4>
+                <p>無線ネットワークは、通信距離とユースケースによって複数の階層に分類されます。</p>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -465,42 +426,32 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="52-ワイヤレス通信の性能を決める3要素">
+                <h4 id="52-ワイヤレス通信の性能を決める3要素">
                     5.2 ワイヤレス通信の性能を決める3要素
                 </h4>
-<Diagram id="diag-10" label="ワイヤレス通信性能を決める3要素のフロー図" />
-<p>
+                <Diagram id="diag-10" label="ワイヤレス通信性能を決める3要素のフロー図" />
+                <p>
                     無線通信では、信号強度（電波強度）と雑音の比率（SNR: Signal-to-Noise
                     Ratio）が高いほど、より複雑な変調方式（1回の伝送でより多くのビットを表現できる方式）を使うことができ、結果として高いスループットが得られます。逆に、電波状況が悪化するとより単純な（低速な）変調方式へ自動的にフォールバックします。これが「WiFiの表示上の速度（例:
                     866Mbps）」と「実際のスループット」が大きく乖離する理由の一つです。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            無線環境の性能は固定的なものではなく、電波状況・干渉・距離によって秒単位で変動することを前提にアプリケーションを設計する
-                        </li>
-                        <li>
-                            ネットワーク種別（WiFi/セルラー）や信号強度をJavaScriptから取得できるAPI（Network
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>無線環境の性能は固定的なものではなく、電波状況・干渉・距離によって秒単位で変動することを前提にアプリケーションを設計する</li>{" "}<li>ネットワーク種別（WiFi/セルラー）や信号強度をJavaScriptから取得できるAPI（Network
                             Information
-                            APIなど）がある場合は活用し、低速時には画質やペイロードを動的に下げる
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第6章-wifi">第6章 WiFi</h3>
-<h4 id="61-イーサネットとwifiの根本的な違いcsmacdとcsmaca">
+                            APIなど）がある場合は活用し、低速時には画質やペイロードを動的に下げる</li></ul></div>
+                <hr />
+                <h3 id="第6章-wifi">第6章 WiFi</h3>
+                <h4 id="61-イーサネットとwifiの根本的な違いcsmacdとcsmaca">
                     6.1 イーサネットとWiFiの根本的な違い：CSMA/CDとCSMA/CA
                 </h4>
-<p>
+                <p>
                     有線イーサネットは衝突検出（CSMA/CD:
                     送信しながら衝突を検知し即座に中断）が可能ですが、無線LANでは自分の送信中に他局の電波を同時受信できない（送信と受信を同時にできないハーフデュプレックス特性）ため、衝突を<strong>事前に回避する</strong>方式（CSMA/CA:
                     Carrier Sense Multiple Access with Collision
                     Avoidance）を採用しています。送信前にランダムなバックオフ時間だけ待機し、チャネルが空いていることを確認してから送信します。
                 </p>
-<Diagram id="diag-11" label="CSMA/CDとCSMA/CAの衝突制御フロー比較図" />
-<h4 id="62-wifi規格の進化">6.2 WiFi規格の進化</h4>
-<div className="table-scroll">
+                <Diagram id="diag-11" label="CSMA/CDとCSMA/CAの衝突制御フロー比較図" />
+                <h4 id="62-wifi規格の進化">6.2 WiFi規格の進化</h4>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -550,77 +501,57 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<blockquote>
+                <blockquote>
                     <p>
                         2026年時点、WiFi
                         7（802.11be）は主流機種に標準搭載されつつあり、マルチリンクオペレーション（MLO）により複数の周波数帯を同時に束ねることで、混雑環境下でも低レイテンシを維持しやすくなっています。
                     </p>
                 </blockquote>
-<h4 id="63-wifiにおけるパケットロスの原因">6.3 WiFiにおけるパケットロスの原因</h4>
-<p>
+                <h4 id="63-wifiにおけるパケットロスの原因">6.3 WiFiにおけるパケットロスの原因</h4>
+                <p>
                     WiFi環境でのパケットロスは、有線環境と異なり必ずしも「輻輳（混雑）」だけが原因ではありません。電波干渉、信号減衰（距離・障害物）、隠れ端末問題（Hidden
                     Node
                     Problem）など物理層由来の要因が複雑に絡みます。しかしTCPの輻輳制御アルゴリズムの多くは「パケットロス＝輻輳」と解釈するため、<strong>WiFi特有の物理層ロスをTCPが誤って輻輳と判断し、不必要に送信速度を落としてしまう</strong>という問題が古くから指摘されています（これは後述するBBR系アルゴリズムが解決を試みている課題の一つです）。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            WiFi環境では帯域幅を「無制限」として扱わない。混雑時間帯・多端末接続時のスループット低下を考慮する
-                        </li>
-                        <li>
-                            可変レイテンシ・可変帯域幅に適応できるよう、アプリケーションはネットワーク状態を継続的に監視し、品質を動的に調整する（アダプティブビットレートなど）
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第7章-モバイルネットワーク">第7章 モバイルネットワーク</h3>
-<h4 id="71-世代gの歴史">7.1 世代（G）の歴史</h4>
-<Diagram id="diag-12" label="モバイルネットワーク世代（1G〜5G）の進化図" />
-<h4 id="72-rrcradio-resource-control状態遷移とパフォーマンスへの影響">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>WiFi環境では帯域幅を「無制限」として扱わない。混雑時間帯・多端末接続時のスループット低下を考慮する</li>{" "}<li>可変レイテンシ・可変帯域幅に適応できるよう、アプリケーションはネットワーク状態を継続的に監視し、品質を動的に調整する（アダプティブビットレートなど）</li></ul></div>
+                <hr />
+                <h3 id="第7章-モバイルネットワーク">第7章 モバイルネットワーク</h3>
+                <h4 id="71-世代gの歴史">7.1 世代（G）の歴史</h4>
+                <Diagram id="diag-12" label="モバイルネットワーク世代（1G〜5G）の進化図" />
+                <h4 id="72-rrcradio-resource-control状態遷移とパフォーマンスへの影響">
                     7.2 RRC（Radio Resource Control）状態遷移とパフォーマンスへの影響
                 </h4>
-<p>
+                <p>
                     モバイル端末の無線チップは、常に電波を送受信し続けているわけではありません。バッテリー消費を抑えるため、通信の有無に応じてRRC（無線リソース制御）状態を遷移させます。この状態遷移こそが、モバイルネットワーク特有の「見えない遅延」の正体です。
                 </p>
-<Diagram id="diag-13" label="RRC状態遷移とタイマーによる電力制御図" />
-<p>
+                <Diagram id="diag-13" label="RRC状態遷移とタイマーによる電力制御図" />
+                <p>
                     5G
                     NRでは、RRC_IDLE・RRC_CONNECTEDに加えて<strong>RRC_INACTIVE</strong>が独立した第3の状態として定義されています。RRC_INACTIVEは端末とネットワークの双方がRRCコンテキスト（セキュリティ設定やベアラ情報）を保持したまま無線を休止する状態で、再開時は完全な接続確立手順ではなく<strong>RRCResume</strong>手順で済むため、RRC_IDLEからの昇格（数百ms〜数秒）に比べて<strong>数十ms程度</strong>と大幅に低遅延です。周期的に小さなデータを送るアプリケーションの遅延・電力特性は、端末がRRC_IDLEとRRC_INACTIVEのどちらに落ちているかで大きく変わります。
                 </p>
-<p>
+                <p>
                     この「RRC_IDLE→RRC_CONNECTED」への遷移にかかる時間（State Promotion
                     Delay）は数百ミリ秒から数秒に及ぶことがあり（RRC_INACTIVEからのRRCResumeであれば数十ms程度に短縮されます）、特にアプリが数秒おきに小さなデータを送受信するような「周期的な通信」を行うと、<strong>その都度この昇格遅延を支払うことになり、体感速度の悪化とバッテリー消費の増大を同時に招きます</strong>。
                 </p>
-<h4 id="73-モバイル網のエンドツーエンド構造">
+                <h4 id="73-モバイル網のエンドツーエンド構造">
                     7.3 モバイル網のエンドツーエンド構造
                 </h4>
-<Diagram id="diag-14" label="モバイル通信網のエンドツーエンド構造図" />
-<p>
+                <Diagram id="diag-14" label="モバイル通信網のエンドツーエンド構造図" />
+                <p>
                     無線区間だけでなく、基地局からコアネットワークまでの「バックホール」区間の容量・遅延も、モバイル通信全体のレイテンシに大きく影響します。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            モバイル網の実効レイテンシはWiFiや有線の数倍〜数十倍になりうることを前提に、リクエスト往復回数を最小化する設計を優先する
-                        </li>
-                        <li>
-                            RRC状態遷移のコストを理解し、後述の第8章の最適化手法（キープアライブ削減・バッチ送信）を実践する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第8章-モバイルネットワークの最適化">第8章 モバイルネットワークの最適化</h3>
-<h4 id="81-バッテリーとネットワークのトレードオフ">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>モバイル網の実効レイテンシはWiFiや有線の数倍〜数十倍になりうることを前提に、リクエスト往復回数を最小化する設計を優先する</li>{" "}<li>RRC状態遷移のコストを理解し、後述の第8章の最適化手法（キープアライブ削減・バッチ送信）を実践する</li></ul></div>
+                <hr />
+                <h3 id="第8章-モバイルネットワークの最適化">第8章 モバイルネットワークの最適化</h3>
+                <h4 id="81-バッテリーとネットワークのトレードオフ">
                     8.1 バッテリーとネットワークのトレードオフ
                 </h4>
-<p>
+                <p>
                     モバイル最適化の目標は、単純な速度向上だけでなく「<strong>バッテリー消費を抑えながら</strong>」ネットワークを効率よく使うことです。原著は次の実践的な指針を提示しています。
                 </p>
-<Diagram id="diag-15" label="無線チップの電力状態とパケットバースト最適化図" />
-<h4 id="82-具体的な最適化パターン">8.2 具体的な最適化パターン</h4>
-<div className="table-scroll">
+                <Diagram id="diag-15" label="無線チップの電力状態とパケットバースト最適化図" />
+                <h4 id="82-具体的な最適化パターン">8.2 具体的な最適化パターン</h4>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -656,25 +587,14 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            ポーリング間隔を可能な限り長く取るか、サーバープッシュ（第16・17章のSSE/WebSocket）に置き換え、周期通信によるRRC昇格を最小化する
-                        </li>
-                        <li>アプリがバックグラウンドにあるときの通信頻度を積極的に抑制する</li>
-                        <li>
-                            可能な場合はWiFi接続時にのみ大きなダウンロード（アップデート等）を行うよう設計する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h2 id="第3部http">第3部：HTTP</h2>
-<h3 id="第9章-httpの歴史">第9章 HTTPの歴史</h3>
-<h4 id="91-httpバージョンの進化">9.1 HTTPバージョンの進化</h4>
-<Diagram id="diag-16" label="HTTPプロトコル（0.9〜3）の歴史的変遷図" />
-<h4 id="92-各バージョンの要点">9.2 各バージョンの要点</h4>
-<div className="table-scroll">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>ポーリング間隔を可能な限り長く取るか、サーバープッシュ（第16・17章のSSE/WebSocket）に置き換え、周期通信によるRRC昇格を最小化する</li>{" "}<li>アプリがバックグラウンドにあるときの通信頻度を積極的に抑制する</li>{" "}<li>可能な場合はWiFi接続時にのみ大きなダウンロード（アップデート等）を行うよう設計する</li></ul></div>
+                <hr />
+                <h2 id="第3部http">第3部：HTTP</h2>
+                <h3 id="第9章-httpの歴史">第9章 HTTPの歴史</h3>
+                <h4 id="91-httpバージョンの進化">9.1 HTTPバージョンの進化</h4>
+                <Diagram id="diag-16" label="HTTPプロトコル（0.9〜3）の歴史的変遷図" />
+                <h4 id="92-各バージョンの要点">9.2 各バージョンの要点</h4>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -726,29 +646,19 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            新規プロジェクトでは、対応可能な環境（CDN・ブラウザ）である限りHTTP/2以上を既定とし、HTTP/1.1向けの最適化（ドメインシャーディング等）は行わない
-                        </li>
-                        <li>
-                            HTTP/3対応状況は2026年時点でもHTTP/2ほど普遍的ではないため、フォールバック設計（Alt-Svcヘッダ等）を必ず組み込む
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第10章-webパフォーマンス入門">第10章 Webパフォーマンス入門</h3>
-<h4 id="101-モダンwebアプリケーションの解剖">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>新規プロジェクトでは、対応可能な環境（CDN・ブラウザ）である限りHTTP/2以上を既定とし、HTTP/1.1向けの最適化（ドメインシャーディング等）は行わない</li>{" "}<li>HTTP/3対応状況は2026年時点でもHTTP/2ほど普遍的ではないため、フォールバック設計（Alt-Svcヘッダ等）を必ず組み込む</li></ul></div>
+                <hr />
+                <h3 id="第10章-webパフォーマンス入門">第10章 Webパフォーマンス入門</h3>
+                <h4 id="101-モダンwebアプリケーションの解剖">
                     10.1 モダンWebアプリケーションの解剖
                 </h4>
-<p>
+                <p>
                     現代のWebページは、単一のHTMLファイルではなく、HTML・CSS・JavaScript・画像・フォント・XHR/Fetchによる非同期リクエストなど、数十から数百のリソースの組み合わせで構成されます。これら全体の読み込み過程を可視化したものが「リソースウォーターフォール」です。
                 </p>
-<Diagram id="diag-17" label="Webアプリケーションのリソース構成解剖図" />
-<h4 id="102-パフォーマンスの3本柱">10.2 パフォーマンスの3本柱</h4>
-<p>原著は、Webパフォーマンスを次の3つの柱に分解しています。</p>
-<div className="table-scroll">
+                <Diagram id="diag-17" label="Webアプリケーションのリソース構成解剖図" />
+                <h4 id="102-パフォーマンスの3本柱">10.2 パフォーマンスの3本柱</h4>
+                <p>原著は、Webパフォーマンスを次の3つの柱に分解しています。</p>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -778,13 +688,13 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<p>
+                <p>
                     「帯域幅を増やしてもあまり速くならない」という原著の指摘は今も本質的に正しく、多くのケースでボトルネックはレイテンシ（往復回数）とレンダリングブロッキングリソースの解決順序にあります。
                 </p>
-<h4 id="103-合成モニタリングsyntheticとrumreal-user-monitoring">
+                <h4 id="103-合成モニタリングsyntheticとrumreal-user-monitoring">
                     10.3 合成モニタリング（Synthetic）とRUM（Real User Monitoring）
                 </h4>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -809,37 +719,27 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            合成モニタリングとRUMの両方を併用し、開発時のリグレッション検知には合成、実態把握と優先順位付けにはRUMを使う
-                        </li>
-                        <li>
-                            レンダリングをブロックするリソース（同期CSS/JS）を可能な限り減らし、クリティカルレンダリングパス（初期表示に必要な最小限のリソース群）を短くする
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第11章-http1x">第11章 HTTP/1.X</h3>
-<h4 id="111-keep-aliveの効果とその限界">11.1 Keep-Aliveの効果とその限界</h4>
-<p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>合成モニタリングとRUMの両方を併用し、開発時のリグレッション検知には合成、実態把握と優先順位付けにはRUMを使う</li>{" "}<li>レンダリングをブロックするリソース（同期CSS/JS）を可能な限り減らし、クリティカルレンダリングパス（初期表示に必要な最小限のリソース群）を短くする</li></ul></div>
+                <hr />
+                <h3 id="第11章-http1x">第11章 HTTP/1.X</h3>
+                <h4 id="111-keep-aliveの効果とその限界">11.1 Keep-Aliveの効果とその限界</h4>
+                <p>
                     HTTP/1.1のKeep-Aliveにより、1つのTCP接続を複数のHTTPリクエストで使い回せるようになり、リクエストごとのTCPハンドシェイクコストを削減できます。しかし、1つの接続内では次のリクエストを送る前に前のレスポンスを完全に受信し終える必要がある（リクエストのシリアライズ）という制約は残ります。
                 </p>
-<h4 id="112-複数tcp接続とドメインシャーディング">
+                <h4 id="112-複数tcp接続とドメインシャーディング">
                     11.2 複数TCP接続とドメインシャーディング
                 </h4>
-<p>
+                <p>
                     ブラウザは1オリジンあたり通常6本程度のTCP接続を並行して開くことで、この制約を部分的に回避しています。さらに、意図的に複数のサブドメインにリソースを分散させ、実質的な並列接続数を増やす「ドメインシャーディング」というテクニックが2010年代前半に広く使われました。
                 </p>
-<Diagram id="diag-18" label="HTTP/1.1の複数接続とドメインシャーディング構成図" />
-<p>
+                <Diagram id="diag-18" label="HTTP/1.1の複数接続とドメインシャーディング構成図" />
+                <p>
                     このテクニックはHTTP/1.1環境では有効でしたが、接続ごとにTCPスロースタート・TLSハンドシェイクのコストが重複して発生するというデメリットがあり、後述のHTTP/2以降ではむしろ有害（アンチパターン）とされています。
                 </p>
-<h4 id="113-その他のhttp11最適化テクニック歴史的経緯">
+                <h4 id="113-その他のhttp11最適化テクニック歴史的経緯">
                     11.3 その他のHTTP/1.1最適化テクニック（歴史的経緯）
                 </h4>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -878,82 +778,56 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            HTTP/1.1のみをサポートする古い環境向けには、上記の連結・スプライティング・インライン化・ドメインシャーディングを状況に応じて使う
-                        </li>
-                        <li>
-                            ただしHTTP/2以降が使える環境では、これらのテクニックは接続の多重化と衝突し逆効果になりうるため、原則として使用しない
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第12章-http2">第12章 HTTP/2</h3>
-<h4 id="121-spdyからhttp2への系譜">12.1 SPDYからHTTP/2への系譜</h4>
-<p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>HTTP/1.1のみをサポートする古い環境向けには、上記の連結・スプライティング・インライン化・ドメインシャーディングを状況に応じて使う</li>{" "}<li>ただしHTTP/2以降が使える環境では、これらのテクニックは接続の多重化と衝突し逆効果になりうるため、原則として使用しない</li></ul></div>
+                <hr />
+                <h3 id="第12章-http2">第12章 HTTP/2</h3>
+                <h4 id="121-spdyからhttp2への系譜">12.1 SPDYからHTTP/2への系譜</h4>
+                <p>
                     HTTP/2はGoogleが開発した実験的プロトコル「SPDY」を起源としています。SPDYが実運用で効果を実証したことで、IETFによる標準化が進み、2015年にHTTP/2としてRFC
                     7540が発行されました（後にRFC 9113で更新）。
                 </p>
-<h4 id="122-バイナリフレーミング層">12.2 バイナリフレーミング層</h4>
-<p>
+                <h4 id="122-バイナリフレーミング層">12.2 バイナリフレーミング層</h4>
+                <p>
                     HTTP/1.xはテキストベースのプロトコルでしたが、HTTP/2はバイナリフレーミング層を導入し、すべてのやり取りを「フレーム」という小さな単位に分割します。これにより、パーサーの実装が単純化され、複数のリクエスト・レスポンスを1つの接続上で安全に混在させる（多重化する）ことが可能になりました。
                 </p>
-<Diagram id="diag-19" label="HTTP/2バイナリフレーミング層とストリーム多重化図" />
-<h4 id="123-リクエストレスポンスの多重化とストリーム優先度">
+                <Diagram id="diag-19" label="HTTP/2バイナリフレーミング層とストリーム多重化図" />
+                <h4 id="123-リクエストレスポンスの多重化とストリーム優先度">
                     12.3 リクエスト・レスポンスの多重化とストリーム優先度
                 </h4>
-<p>
+                <p>
                     HTTP/1.1では、仕様上パイプライン化できてもレスポンスが要求順に固定されるうえ、ブラウザ実装は事実上「1接続で1リクエストずつ直列」に処理していました。これに対しHTTP/2では「1接続=多数のストリーム」を順序制約なしに並行して処理できます。これにより、ドメインシャーディングのような回避策が不要になり、1オリジンにつき1本のTCPコネクションを使うことが推奨されるようになりました（TCPスロースタートやTLSハンドシェイクのコストを1回に集約できるため）。また、ストリームには優先度（Priority）を設定でき、重要なリソース（CSSなど）を先に配信するよう調整できます。
                 </p>
-<h4 id="124-ヘッダ圧縮hpack">12.4 ヘッダ圧縮（HPACK）</h4>
-<p>
+                <h4 id="124-ヘッダ圧縮hpack">12.4 ヘッダ圧縮（HPACK）</h4>
+                <p>
                     HTTPリクエストにはUser-Agent、Cookie、Accept系など類似したヘッダが毎回繰り返し送られます。HTTP/2はHPACKという専用の圧縮方式を使い、送信済みのヘッダをテーブルにキャッシュして差分のみを送ることで、ヘッダ部分のオーバーヘッドを大幅に削減します。
                 </p>
-<h4 id="125-サーバープッシュとその後の非推奨化">
+                <h4 id="125-サーバープッシュとその後の非推奨化">
                     12.5 サーバープッシュとその後の非推奨化
                 </h4>
-<p>
+                <p>
                     HTTP/2が導入した「サーバープッシュ」（クライアントが要求する前にサーバーが関連リソースを能動的に送信する仕組み）は、理論上はラウンドトリップを削減できるはずでしたが、実運用ではキャッシュとの相性の悪さ（ブラウザが既にキャッシュ済みのリソースを無駄にプッシュしてしまう）や実装の複雑さから効果が限定的であることが判明し、Chromeなど主要ブラウザは2020年前後にサーバープッシュのサポートを打ち切りました。代替として、後述の103
                     Early Hintsステータスコードが使われるようになっています。
                 </p>
-<h4 id="126-http2最適化フロー制御と1オリジン1接続">
+                <h4 id="126-http2最適化フロー制御と1オリジン1接続">
                     12.6 HTTP/2最適化：フロー制御と1オリジン1接続
                 </h4>
-<p>
+                <p>
                     HTTP/2はストリームごと・コネクションごとに独立したフロー制御ウィンドウを持ちます。デフォルトのウィンドウサイズが小さいまま運用すると、多重化のメリットを活かせずスループットが頭打ちになるため、サーバー・クライアント双方の実装がウィンドウサイズを適切にチューニングしているか確認する必要があります。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            1オリジンにつき1本のHTTP/2コネクションを使うことを前提に設計し、ドメインシャーディングを廃止する
-                        </li>
-                        <li>
-                            サーバープッシュには依存せず、Link: rel=preloadヘッダや103 Early
-                            Hintsなど、キャッシュと親和性の高い代替手法を検討する
-                        </li>
-                        <li>
-                            HPACKの恩恵を最大化するため、ヘッダの値（特にCookie等）を不必要に肥大化させない
-                        </li>
-                        <li>
-                            導入後は必ずHTTP/2対応のツールでサーバーの多重化耐性・フロー制御の挙動を実測する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第13章-アプリケーション配信の最適化">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>1オリジンにつき1本のHTTP/2コネクションを使うことを前提に設計し、ドメインシャーディングを廃止する</li>{" "}<li>サーバープッシュには依存せず、Link: rel=preloadヘッダや103 Early
+                            Hintsなど、キャッシュと親和性の高い代替手法を検討する</li>{" "}<li>HPACKの恩恵を最大化するため、ヘッダの値（特にCookie等）を不必要に肥大化させない</li>{" "}<li>導入後は必ずHTTP/2対応のツールでサーバーの多重化耐性・フロー制御の挙動を実測する</li></ul></div>
+                <hr />
+                <h3 id="第13章-アプリケーション配信の最適化">
                     第13章 アプリケーション配信の最適化
                 </h3>
-<h4 id="131-不朽のベストプラクティスevergreen-performance-best-practices">
+                <h4 id="131-不朽のベストプラクティスevergreen-performance-best-practices">
                     13.1 「不朽の」ベストプラクティス（Evergreen Performance Best Practices）
                 </h4>
-<p>
+                <p>
                     原著は、HTTP/1.xでもHTTP/2でも変わらず有効な最適化を「Evergreen（常緑）」なベストプラクティスと呼んでいます。
                 </p>
-<Diagram id="diag-20" label="不朽のWebパフォーマンス最適化ベストプラクティス分類図" />
-<div className="table-scroll">
+                <Diagram id="diag-20" label="不朽のWebパフォーマンス最適化ベストプラクティス分類図" />
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -988,10 +862,10 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="132-http1x向け最適化とhttp2向け最適化の違い">
+                <h4 id="132-http1x向け最適化とhttp2向け最適化の違い">
                     13.2 HTTP/1.x向け最適化とHTTP/2向け最適化の違い
                 </h4>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -1024,109 +898,76 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="133-http2サーバーの品質テスト">13.3 HTTP/2サーバーの品質テスト</h4>
-<p>
+                <h4 id="133-http2サーバーの品質テスト">13.3 HTTP/2サーバーの品質テスト</h4>
+                <p>
                     HTTP/2はプロトコルとしては多重化・優先度制御を規定していますが、実装（サーバーソフトウェアやCDN）によって優先度制御の実装品質に大きな差があることが知られています。原著は、実際にストリーム優先度を尊重しているか、フロー制御が適切かをテストで検証することを推奨しています。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            「Evergreenな」最適化（キャッシュ・圧縮・バイト削減・並列化）はプロトコルバージョンに関わらず常に実施する
-                        </li>
-                        <li>
-                            HTTP/1.x向けの回避策（シャーディング等）をHTTP/2/3環境に残さない。プロトコル移行時は最適化戦略ごと見直す
-                        </li>
-                        <li>
-                            導入したCDN・サーバーが実際にHTTP/2の優先度制御を正しく実装しているか、実測ツールで検証する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h2 id="第4部ブラウザapiとプロトコル">第4部：ブラウザAPIとプロトコル</h2>
-<h3 id="第14章-ブラウザネットワーキング入門">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>「Evergreenな」最適化（キャッシュ・圧縮・バイト削減・並列化）はプロトコルバージョンに関わらず常に実施する</li>{" "}<li>HTTP/1.x向けの回避策（シャーディング等）をHTTP/2/3環境に残さない。プロトコル移行時は最適化戦略ごと見直す</li>{" "}<li>導入したCDN・サーバーが実際にHTTP/2の優先度制御を正しく実装しているか、実測ツールで検証する</li></ul></div>
+                <hr />
+                <h2 id="第4部ブラウザapiとプロトコル">第4部：ブラウザAPIとプロトコル</h2>
+                <h3 id="第14章-ブラウザネットワーキング入門">
                     第14章 ブラウザネットワーキング入門
                 </h3>
-<h4 id="141-ブラウザが持つ独自の接続管理層">14.1 ブラウザが持つ独自の接続管理層</h4>
-<p>
+                <h4 id="141-ブラウザが持つ独自の接続管理層">14.1 ブラウザが持つ独自の接続管理層</h4>
+                <p>
                     ブラウザは、OSのTCPスタックをそのまま使うのではなく、その上に独自の「接続管理層」を持っています。これには、オリジンごとの接続数上限、DNSプリフェッチ、TCPプリコネクト、リソースの優先度付けキューなどが含まれます。
                 </p>
-<Diagram id="diag-21" label="ブラウザ内部のネットワーク接続管理レイヤー図" />
-<h4 id="142-ネットワークセキュリティとサンドボックス">
+                <Diagram id="diag-21" label="ブラウザ内部のネットワーク接続管理レイヤー図" />
+                <h4 id="142-ネットワークセキュリティとサンドボックス">
                     14.2 ネットワークセキュリティとサンドボックス
                 </h4>
-<p>
+                <p>
                     ブラウザは、悪意あるスクリプトが他サイトの機密情報を勝手に読み取れないよう、同一オリジンポリシー（Same-Origin
                     Policy）を基本としたサンドボックスモデルで動作します。
                 </p>
-<p>
+                <p>
                     ここで初学者が最も誤解しやすいのが CORS（Cross-Origin Resource
                     Sharing）の役割です。CORSが制御するのは主に「<strong>クロスオリジンのレスポンスをスクリプトに読み取らせるかどうか</strong>」であって、「リクエストを送信させるかどうか」ではありません。GETや<code>application/x-www-form-urlencoded</code>のPOSTなど<strong>シンプルリクエスト</strong>の条件を満たす場合、リクエストはプリフライトなしでそのまま相手サーバーへ届きます。サーバーが<code>Access-Control-Allow-Origin</code>を返さなければ、ブラウザは「すでに送信され処理されたレスポンスをスクリプトに渡さない」という形で保護するにすぎません。
                 </p>
-<p>
+                <p>
                     一方、カスタムヘッダや<code>application/json</code>を伴う<strong>非シンプルリクエスト</strong>では、実リクエストの前に<strong>プリフライト（OPTIONSリクエスト</strong>）でサーバーの許可を検証し、許可が得られなければ実リクエストは送信されません。つまりCORSには「レスポンス共有の制御」と「プリフライトによる事前検証」という2つの側面があります。
                 </p>
-<p>
+                <p>
                     そして、副作用を伴うリクエストが他サイトから勝手に送られること自体を防ぐのはCORSの責務ではなく、CSRF対策（SameSite
                     Cookie・CSRFトークン等）の責務です（第15章で詳述）。
                 </p>
-<h4 id="143-リソースクライアント状態キャッシング">
+                <h4 id="143-リソースクライアント状態キャッシング">
                     14.3 リソース・クライアント状態キャッシング
                 </h4>
-<p>
+                <p>
                     ブラウザは、HTTPキャッシュ（<code>Cache-Control</code>/<code>ETag</code>ベース）だけでなく、Cookie・LocalStorage・IndexedDB・Service
                     Workerキャッシュなど複数のクライアント側状態管理の仕組みを提供しています。これらを適切に使い分けることが、リクエスト数削減・オフライン対応の鍵になります。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            ブラウザが提供する接続管理（優先度付け、プリコネクト等）を妨げないよう、リソースの読み込み順序・優先度ヒント（<code>fetchpriority</code>属性等）を適切に指定する
-                        </li>
-                        <li>
-                            CORSの設定は必要最小限のオリジン・メソッド・ヘッダに絞り、プリフライトリクエスト（後述）の発生条件を理解した上で設計する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第15章-xmlhttprequest">第15章 XMLHttpRequest</h3>
-<h4 id="151-xhrの歴史と役割">15.1 XHRの歴史と役割</h4>
-<p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>ブラウザが提供する接続管理（優先度付け、プリコネクト等）を妨げないよう、リソースの読み込み順序・優先度ヒント（fetchpriority属性等）を適切に指定する</li>{" "}<li>CORSの設定は必要最小限のオリジン・メソッド・ヘッダに絞り、プリフライトリクエスト（後述）の発生条件を理解した上で設計する</li></ul></div>
+                <hr />
+                <h3 id="第15章-xmlhttprequest">第15章 XMLHttpRequest</h3>
+                <h4 id="151-xhrの歴史と役割">15.1 XHRの歴史と役割</h4>
+                <p>
                     XMLHttpRequest（XHR）は、ページ全体をリロードせずにサーバーと非同期通信を行うための最初期のブラウザAPIで、いわゆる「Ajax」という開発スタイルの基盤となりました。現在は<code>fetch()</code>APIがより現代的な代替として広く使われていますが、XHRが確立した「非同期HTTP通信」というモデル自体はfetchにも引き継がれています。
                 </p>
-<h4 id="152-corscross-origin-resource-sharingとプリフライトリクエスト">
+                <h4 id="152-corscross-origin-resource-sharingとプリフライトリクエスト">
                     15.2 CORS（Cross-Origin Resource Sharing）とプリフライトリクエスト
                 </h4>
-<p>
+                <p>
                     異なるオリジンへのXHR/fetchリクエストのうち、「シンプルリクエスト」の条件（GET/POST/HEADかつ特定のヘッダのみ等）を満たさないものは、実際のリクエストを送る前にブラウザが自動的に<code>OPTIONS</code>メソッドで<strong>プリフライトリクエスト</strong>を送信し、サーバーがそのオリジン・メソッド・ヘッダを許可しているかを事前確認します。
                 </p>
-<Diagram id="diag-22" label="CORSプリフライトリクエストのシーケンス図" />
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            プリフライトが発生する条件（カスタムヘッダ、application/json等の非シンプルContent-Type）を理解し、頻繁に呼ばれるAPIでは可能な範囲でシンプルリクエストの条件に収める
-                        </li>
-                        <li>
-                            サーバー側で<code>Access-Control-Max-Age</code>を適切に設定し、プリフライト結果をブラウザにキャッシュさせ、繰り返しの往復を削減する
-                        </li>
-                    </ul>
-                </div>
-<h4 id="153-ダウンロードアップロードの進捗監視とストリーミング">
+                <Diagram id="diag-22" label="CORSプリフライトリクエストのシーケンス図" />
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>プリフライトが発生する条件（カスタムヘッダ、application/json等の非シンプルContent-Type）を理解し、頻繁に呼ばれるAPIでは可能な範囲でシンプルリクエストの条件に収める</li>{" "}<li>サーバー側でAccess-Control-Max-Ageを適切に設定し、プリフライト結果をブラウザにキャッシュさせ、繰り返しの往復を削減する</li></ul></div>
+                <h4 id="153-ダウンロードアップロードの進捗監視とストリーミング">
                     15.3 ダウンロード・アップロードの進捗監視とストリーミング
                 </h4>
-<p>
+                <p>
                     XHRは<code>progress</code>イベントによってダウンロード・アップロードの進捗を監視できます。
                 </p>
-<p>
+                <p>
                     なお<code>responseType</code>（<code>''</code>/<code>text</code>・<code>json</code>・<code>blob</code>・<code>arraybuffer</code>・<code>document</code>）は、あくまで<strong>レスポンスを最終的にどの形式で受け取るか</strong>を選択するものであり、それ自体がストリーミング処理を有効にするわけではありません。XHRでレスポンスを逐次処理できるのは<code>responseType</code>が<code>''</code>（空文字）または<code>text</code>の場合に限られ、<code>readyState</code>が<code>LOADING</code>（3）の間に<code>responseText</code>を繰り返し読み進める形になります。バイナリを含む本格的なストリーミング受信が必要な場合は、XHRではなくFetch
                     APIのストリーム（<code>Response.body</code>が返す<code>ReadableStream</code>）を用います。
                 </p>
-<h4 id="154-ポーリングとロングポーリング">15.4 ポーリングとロングポーリング</h4>
-<p>
+                <h4 id="154-ポーリングとロングポーリング">15.4 ポーリングとロングポーリング</h4>
+                <p>
                     サーバーからのリアルタイム通知を実現する古典的な手法として、原著は次の2つを紹介しています。
                 </p>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -1157,101 +998,75 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<p>
+                <p>
                     これらの制約が、後述するSSE（第16章）やWebSocket（第17章）という、真の意味でサーバー起点のプッシュ通信を可能にするプロトコルが生まれた背景にあります。
                 </p>
-<hr />
-<h3 id="第16章-server-sent-eventssse">第16章 Server-Sent Events（SSE）</h3>
-<h4 id="161-eventsource-apiとイベントストリームプロトコル">
+                <hr />
+                <h3 id="第16章-server-sent-eventssse">第16章 Server-Sent Events（SSE）</h3>
+                <h4 id="161-eventsource-apiとイベントストリームプロトコル">
                     16.1 EventSource APIとイベントストリームプロトコル
                 </h4>
-<p>
-                    SSEは、サーバーからクライアントへの<strong>一方向</strong>のリアルタイムストリーミングに特化したシンプルな仕組みです。ブラウザの<code>EventSource</code>
+                <p>
+                    SSEは、サーバーからクライアントへの<strong>一方向</strong>のリアルタイムストリーミングに特化したシンプルな仕組みです。ブラウザの<code>EventSource</code>{' '}
                     APIを使い、サーバーは通常のHTTPレスポンスを<code>Content-Type: text/event-stream</code>として返し、接続を切らずにテキスト形式のイベントを継続的に送り続けます。
                 </p>
-<Diagram id="diag-23" label="Server-Sent Events（SSE）の単方向通信シーケンス図" />
-<h4 id="162-sseの利点と適したユースケース">16.2 SSEの利点と適したユースケース</h4>
-<p>
+                <Diagram id="diag-23" label="Server-Sent Events（SSE）の単方向通信シーケンス図" />
+                <h4 id="162-sseの利点と適したユースケース">16.2 SSEの利点と適したユースケース</h4>
+                <p>
                     SSEはHTTP上に構築されているため、既存のHTTPインフラ（プロキシ、ロードバランサー、認証機構）とそのまま親和性が高く、実装もシンプルです。自動再接続や「どこから再開するか」を示す<code>Last-Event-ID</code>の仕組みも標準で組み込まれています。ただし、通信は<strong>サーバーからクライアントへの一方向のみ</strong>であり、双方向通信が必要な場合は後述のWebSocketが適しています。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            サーバー起点の通知（株価更新、進捗通知、ライブフィード等）で、クライアントからの応答が不要な用途にはSSEを第一候補とする
-                        </li>
-                        <li>
-                            HTTP/1.1環境ではブラウザの同時接続数上限（1オリジンあたり6本程度）にSSE接続も含まれるため、多数のSSE接続を同時に開くページ設計は避ける（HTTP/2以降は多重化によりこの制約が緩和される）
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第17章-websocket">第17章 WebSocket</h3>
-<h4 id="171-websocketプロトコルの概要">17.1 WebSocketプロトコルの概要</h4>
-<p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>サーバー起点の通知（株価更新、進捗通知、ライブフィード等）で、クライアントからの応答が不要な用途にはSSEを第一候補とする</li>{" "}<li>HTTP/1.1環境ではブラウザの同時接続数上限（1オリジンあたり6本程度）にSSE接続も含まれるため、多数のSSE接続を同時に開くページ設計は避ける（HTTP/2以降は多重化によりこの制約が緩和される）</li></ul></div>
+                <hr />
+                <h3 id="第17章-websocket">第17章 WebSocket</h3>
+                <h4 id="171-websocketプロトコルの概要">17.1 WebSocketプロトコルの概要</h4>
+                <p>
                     WebSocketは、HTTP接続を<strong>全二重（双方向・同時送受信可能</strong>）な独自プロトコルへ切り替える仕組みです。切り替えの手順はHTTPのバージョンによって異なり、HTTP/1.1では<code>Upgrade</code>ヘッダによるハンドシェイク（101
                     Switching Protocols）を使いますが、HTTP/2では拡張CONNECT（RFC
                     8441）、HTTP/3では同じ拡張CONNECTをQUIC上で用いる方式（RFC
                     9220）で、1本のストリーム上に確立します（第19章の比較表も参照）。一度アップグレードが完了すると、HTTPのリクエスト/レスポンスという構造から離れ、両者が自由なタイミングでフレームを送り合える低オーバーヘッドな通信路になります。
                 </p>
-<Diagram id="diag-24" label="WebSocket接続確立と双方向メッセージングのシーケンス図" />
-<h4 id="172-websocketのバイナリフレーミングとサブプロトコルネゴシエーション">
+                <Diagram id="diag-24" label="WebSocket接続確立と双方向メッセージングのシーケンス図" />
+                <h4 id="172-websocketのバイナリフレーミングとサブプロトコルネゴシエーション">
                     17.2 WebSocketのバイナリフレーミングとサブプロトコルネゴシエーション
                 </h4>
-<p>
-                    WebSocketもHTTP/2と同様に独自のバイナリフレーミング層を持ちます。また、<code>Sec-WebSocket-Protocol</code>ヘッダにより、アプリケーション固有のサブプロトコル（例:
+                <p>
+                    WebSocketもHTTP/2と同様に独自のバイナリフレーミング層を持ちます。また、<code>Sec-WebSocket-Protocol</code>ヘッダにより、アプリケーション固有のサブプロトコル（例:{' '}
                     <code>chat.v2</code>）をネゴシエーションできます。拡張機能（<code>permessage-deflate</code>など、フレームごとの圧縮）もヘッダベースでネゴシエーション可能です。
                 </p>
-<h4 id="173-メッセージオーバーヘッドとデータ効率">
+                <h4 id="173-メッセージオーバーヘッドとデータ効率">
                     17.3 メッセージオーバーヘッドとデータ効率
                 </h4>
-<p>
+                <p>
                     WebSocketフレームのヘッダは最小2バイトから（ペイロード長に応じて最大14バイト程度）と非常に軽量です。しかし、小さなメッセージを高頻度で送信する用途では、このヘッダオーバーヘッドや、TCPベースであることによるHOLブロッキング（第2章参照）が無視できなくなる場合があります。
                 </p>
-<h4 id="174-websocketインフラのデプロイ上の注意点">
+                <h4 id="174-websocketインフラのデプロイ上の注意点">
                     17.4 WebSocketインフラのデプロイ上の注意点
                 </h4>
-<p>
+                <p>
                     WebSocketはHTTPとは異なる接続の持続特性（長時間接続を維持し続ける）を持つため、ロードバランサーやリバースプロキシの設定（タイムアウト値、Upgradeヘッダの転送設定）を専用に調整する必要があります。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            双方向・低レイテンシ・高頻度の通信（チャット、マルチプレイヤーゲーム、コラボレーション編集）にはWebSocketを使う
-                        </li>
-                        <li>
-                            カスタムアプリケーションプロトコルは、メッセージの意味論を明確に定義し、必要以上に頻繁な細切れメッセージを避ける（オーバーヘッド削減）
-                        </li>
-                        <li>
-                            ロードバランサー・プロキシのWebSocket対応（Upgradeヘッダの透過、タイムアウト設定）を事前に検証する
-                        </li>
-                        <li>
-                            <code>permessage-deflate</code>拡張の使用可否は、圧縮によるCPUコストとペイロード削減効果を天秤にかけて判断する
-                        </li>
-                    </ul>
-                </div>
-<hr />
-<h3 id="第18章-webrtc">第18章 WebRTC</h3>
-<h4 id="181-webrtcとは何かなぜp2pが必要なのか">
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>双方向・低レイテンシ・高頻度の通信（チャット、マルチプレイヤーゲーム、コラボレーション編集）にはWebSocketを使う</li>{" "}<li>カスタムアプリケーションプロトコルは、メッセージの意味論を明確に定義し、必要以上に頻繁な細切れメッセージを避ける（オーバーヘッド削減）</li>{" "}<li>ロードバランサー・プロキシのWebSocket対応（Upgradeヘッダの透過、タイムアウト設定）を事前に検証する</li>{" "}<li>permessage-deflate拡張の使用可否は、圧縮によるCPUコストとペイロード削減効果を天秤にかけて判断する</li></ul></div>
+                <hr />
+                <h3 id="第18章-webrtc">第18章 WebRTC</h3>
+                <h4 id="181-webrtcとは何かなぜp2pが必要なのか">
                     18.1 WebRTCとは何か、なぜP2Pが必要なのか
                 </h4>
-<p>
+                <p>
                     WebRTC（Web Real-Time
                     Communication）は、ブラウザ間で<strong>サーバーを介さない直接（P2P</strong>）の音声・映像・任意データ通信を可能にするAPI群です。サーバーを介した中継はレイテンシ増加とサーバーコスト増大を招くため、ビデオ会議やリアルタイムゲームなど低遅延が求められる用途ではP2Pが本質的に有利です。
                 </p>
-<h4 id="182-全体像シグナリングとpeerconnectionの確立">
+                <h4 id="182-全体像シグナリングとpeerconnectionの確立">
                     18.2 全体像：シグナリングとPeerConnectionの確立
                 </h4>
-<p>
+                <p>
                     WebRTCの接続確立は大きく2段階に分かれます。まず「シグナリング」（互いのメディア能力・ネットワーク経路情報を交換する、WebRTC自体は規定しない任意のチャネル）、次に「P2P接続の確立」（ICEフレームワークによる経路探索）です。
                 </p>
-<Diagram id="diag-25" label="WebRTCシグナリングとPeerConnection確立のシーケンス図" />
-<h4 id="183-sdpsession-description-protocolとiceinteractive-connectivity-establishment">
+                <Diagram id="diag-25" label="WebRTCシグナリングとPeerConnection確立のシーケンス図" />
+                <h4 id="183-sdpsession-description-protocolとiceinteractive-connectivity-establishment">
                     18.3 SDP（Session Description Protocol）とICE（Interactive Connectivity
                     Establishment）
                 </h4>
-<div className="table-scroll">
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -1281,14 +1096,14 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="184-メディアデータの伝送dtlssrtpsctp">
+                <h4 id="184-メディアデータの伝送dtlssrtpsctp">
                     18.4 メディア・データの伝送：DTLS・SRTP・SCTP
                 </h4>
-<p>
+                <p>
                     WebRTCの接続が確立すると、実際のデータは複数のサブプロトコルで保護・伝送されます。
                 </p>
-<Diagram id="diag-26" label="WebRTCプロトコルスタック（DTLS/SRTP/SCTP）構造図" />
-<ul>
+                <Diagram id="diag-26" label="WebRTCプロトコルスタック（DTLS/SRTP/SCTP）構造図" />
+                <ul>
                     <li>
                         <strong>SRTP/SRTCP</strong>:
                         音声・映像メディアストリームを暗号化して伝送する、RTPプロトコルのセキュア版
@@ -1299,11 +1114,11 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         Reliable Delivery）
                     </li>
                 </ul>
-<h4 id="185-datachannelの設定順序性と信頼性のトレードオフ">
+                <h4 id="185-datachannelの設定順序性と信頼性のトレードオフ">
                     18.5 DataChannelの設定：順序性と信頼性のトレードオフ
                 </h4>
-<p>WebRTCのDataChannelは、用途に応じて配送特性を細かく設定できる点が特徴です。</p>
-<div className="table-scroll">
+                <p>WebRTCのDataChannelは、用途に応じて配送特性を細かく設定できる点が特徴です。</p>
+                <div className="table-scroll">
                     <table>
                         <thead>
                             <tr className="header">
@@ -1329,31 +1144,553 @@ export function HighPerformanceBrowserNetworkingGuide() {
                         </tbody>
                     </table>
                 </div>
-<h4 id="186-マルチパーティアーキテクチャとインフラ計画">
+                <h4 id="186-マルチパーティアーキテクチャとインフラ計画">
                     18.6 マルチパーティアーキテクチャとインフラ計画
                 </h4>
-<p>
+                <p>
                     3人以上が参加するビデオ会議では、全員がP2Pでフルメッシュ接続すると参加者数の2乗に比例して帯域幅・CPU負荷が増大するため、実運用では<strong>SFU（Selective Forwarding Unit</strong>）と呼ばれる中継サーバーを介したアーキテクチャが一般的です。SFUは各参加者のストリームを受信し、必要な相手にのみ転送することで、送信側の負荷を一定に保ちます。
                 </p>
-<div className="callout-practice">
-                    <div className="practice-label">ベストプラクティス</div>
-                    <ul>
-                        <li>
-                            1対1通信ならP2Pメッシュ、3人以上ならSFUベースのアーキテクチャを検討し、参加者数に応じたインフラ計画を立てる
-                        </li>
-                        <li>
-                            STUN単独で接続できない環境（対称型NAT、企業ファイアウォール）に備え、TURNサーバーを必ず用意する
-                        </li>
-                        <li>
-                            DataChannelは用途に応じて順序性・信頼性の設定を最適化し、不要な信頼性保証によるレイテンシ増加を避ける
-                        </li>
-                        <li>
-                            Trickle
-                            ICEを活用し、Candidate収集完了を待たずに接続確立プロセスを開始することで接続確立時間を短縮する
-                        </li>
-                    </ul>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>1対1通信ならP2Pメッシュ、3人以上ならSFUベースのアーキテクチャを検討し、参加者数に応じたインフラ計画を立てる</li>{" "}<li>STUN単独で接続できない環境（対称型NAT、企業ファイアウォール）に備え、TURNサーバーを必ず用意する</li>{" "}<li>DataChannelは用途に応じて順序性・信頼性の設定を最適化し、不要な信頼性保証によるレイテンシ増加を避ける</li>{" "}<li>Trickle
+                            ICEを活用し、Candidate収集完了を待たずに接続確立プロセスを開始することで接続確立時間を短縮する</li></ul></div>
+                <hr />
+                <h2 id="第5部独自追加2026年時点の最新動向">
+                    第5部（独自追加）：2026年時点の最新動向
+                </h2>
+                <blockquote>
+                    <p>
+                        原著は2013年刊行のため、HTTP/3・QUIC・TLS
+                        1.3・BBR系輻輳制御・WebTransport・Core Web
+                        Vitals・耐量子暗号などは扱われていません。本部では2026年9月時点の最新情報をWeb検索で調査し、著名な国際的発信元（Cloudflare、Mozilla、Google、IETF等）を優先的に参照してまとめています。
+                    </p>
+                </blockquote>
+                <h3 id="191-http3とquictcpを置き換えるという発想">
+                    19.1 HTTP/3とQUIC：TCPを置き換えるという発想
+                </h3>
+                <h4 id="quicの設計思想">QUICの設計思想</h4>
+                <p>
+                    QUIC（RFC
+                    9000）はUDP上に構築された新しいトランスポートプロトコルで、TCP+TLSが別々に行っていたハンドシェイクを統合し、さらに<strong>ストリームごとに独立した信頼性制御</strong>を行うことで、第2章で説明したTCPレベルのHOLブロッキング問題を解消します。1つのストリームでパケットロスが起きても、他のストリームは影響を受けずに配送を継続できます。
+                </p>
+                <Diagram id="diag-27" label="QUICプロトコルスタックの階層構造図" />
+                <p>
+                    QUICは接続確立時に暗号化（TLS
+                    1.3ベース）を統合しているため、初回接続でも実質1-RTT、条件が揃えば0-RTTでの再接続が可能です。さらに、コネクションを接続ID（Connection
+                    ID）で識別するため、<strong>端末がWiFiからモバイル回線に切り替わってIPアドレスが変わっても、接続を継続できる（コネクションマイグレーション</strong>）という、TCPにはない特性を持ちます。
+                </p>
+                <h4 id="2026年時点のhttp3普及状況">2026年時点のHTTP/3普及状況</h4>
+                <p>
+                    Cloudflare
+                    Radarの計測によれば、2026年7月時点でHTTP/3のグローバルなリクエストシェアは約19.8%で、前年同月（21.64%）からやや減少しHTTP/2（52.27%）が依然として主流という状況が続いています（出典1）。一方、観測手法（likely-human
+                    requestベースかFirefoxのトップレベルナビゲーションベースかなど）によって10〜40%台まで幅があり、「シェア」の定義自体が議論の対象になっています（出典2）。QUICv2（RFC
+                    9369、アンチオシフィケーション目的の追加バージョン）は実装はされつつあるものの実運用でのデプロイはごく僅かにとどまっています（出典2）。
+                </p>
+                <Diagram id="diag-28" label="HTTP/3とQUICの機能的メリット概要図" />
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>HTTP/3を有効化する場合も、UDPをブロックする企業ネットワーク等が一定数存在するため、必ずHTTP/2へのフォールバックを維持する（Alt-Svcヘッダで告知する方式が標準）</li>{" "}<li>HTTP/3はNginx
+                            1.25以降、Caddyなど主要サーバーで比較的低コストに有効化できるが、有効化後は実際にAlt-Svcヘッダが正しく送信されているか、0-RTT設定やDDoS対策（quic_retry等）が有効かを個別に確認する</li></ul></div>
+                <hr />
+                <h3 id="192-tls-131-rtt0-rttハンドシェイクとech">
+                    19.2 TLS 1.3：1-RTT・0-RTTハンドシェイクとECH
+                </h3>
+                <h4 id="tls-13によるハンドシェイクの短縮">TLS 1.3によるハンドシェイクの短縮</h4>
+                <p>
+                    第4章で見たTLS 1.2の2-RTTモデルに対し、TLS
+                    1.3は鍵交換方式を単純化し、<strong>1-RTTでフルハンドシェイクを完了</strong>できるようになりました。さらに、以前に接続したことのあるサーバーとの再接続では、事前共有鍵（PSK）を使うことで<strong>0-RTT</strong>（最初のフライトでアプリケーションデータを送信開始）も可能です（ただしリプレイ攻撃のリスクがあるため、冪等なリクエストにのみ使うなどの注意が必要）。
+                </p>
+                <Diagram id="diag-29" label="TLS 1.3の1-RTTおよび0-RTTハンドシェイクシーケンス図" />
+                <h4 id="encrypted-client-helloech">Encrypted Client Hello（ECH）</h4>
+                <p>
+                    TLS
+                    1.3以降でもClientHelloに含まれるSNI（第4章参照）は平文で観測可能でした。ECH（RFC
+                    9849として2026年に標準化）は、SNIなどの機微なフィールドを含む<strong>ClientHelloInner</strong>を暗号化して外側の<strong>ClientHelloOuter</strong>に封入する方式です。秘匿されるのはClientHelloInnerの内容であり、ClientHelloOuter自体と、そこに載るクライアント向け提供者名（<code>public_name</code>）は経路上から引き続き観測可能です。したがって「ClientHello全体」や「ハンドシェイクのメタデータすべて」が暗号化されるわけではなく、観測者に見えるのは実際の宛先ドメインではなくECH提供者（CDN等）になります。2025年時点でCloudflare・Firefoxが本番投入済みで、Chromeは段階的ロールアウトを進めています（出典3）。
+                </p>
+                <h4 id="耐量子post-quantum鍵交換の実運用化">
+                    耐量子（Post-Quantum）鍵交換の実運用化
+                </h4>
+                <p>
+                    「今収集しておいて将来の量子コンピュータで復号する」というハーベスト・ナウ・デクリプト・レイター攻撃に備え、X25519とML-KEM-768を組み合わせたハイブリッド鍵交換（X25519MLKEM768）が急速に普及しています。Cloudflare
+                    Radarの計測では、クライアント〜エッジ間の耐量子鍵交換の利用率は2026年7月時点で55.77%に達し、前年同月の29.64%からほぼ倍増しました（出典4）。Chromeのデスクトップ版では、まず標準化前のドラフト方式である<strong>X25519Kyber768</strong>（<code>X25519Kyber768Draft00</code>）がバージョン124（2024年4月）でデフォルト有効化され、その後NISTによるML-KEM標準化を受けて、標準方式である<strong>X25519MLKEM768</strong>がバージョン130で導入され、バージョン131（2024年11月）からデフォルトの鍵共有方式となりました（ドラフト方式のX25519Kyber768はその後廃止されています）。OpenSSL
+                    3.5（2025年4月リリース）はプロバイダプラグインなしでML-KEM/ML-DSAをネイティブサポートしています（出典5）。
+                </p>
+                <div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">項目</th>
+                                <th scope="col">状況（2026年時点）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>ハイブリッド鍵交換（X25519Kyber768、ドラフト方式）</td>
+                                <td>
+                                    標準化前の暫定方式。Chrome
+                                    124（2024年4月）で既定有効化されたが、標準方式への移行に伴い現在は廃止済み
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ハイブリッド鍵交換（X25519MLKEM768、標準方式）</td>
+                                <td>
+                                    Chrome
+                                    130で導入・131（2024年11月）から既定有効。Firefox/Cloudflareでも既定有効で、TLS
+                                    1.3ハンドシェイクの過半数に到達
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>耐量子証明書（ML-DSA）</td>
+                                <td>
+                                    プライベートPKIでは利用可能（AWS Private
+                                    CA等）、パブリックPKIはCA/Browser
+                                    Forumのベースライン要件改定待ち
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ECH</td>
+                                <td>Cloudflare/Firefoxで本番運用済み、Chromeはロールアウト中</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-<hr />
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>サーバー・ロードバランサーのTLSライブラリ（OpenSSL
+                            3.5+、BoringSSL、AWS-LC等）を、ハイブリッド鍵交換に対応したバージョンへ更新する</li>{" "}<li>ECHを有効化する場合は、DNS側のHTTPSリソースレコード配信（第19.5節参照）とセットで設計する</li>{" "}<li>公開PKI証明書の耐量子移行はまだ標準化途上であるため、内部通信・高セキュリティ要件のシステムから優先的にプライベートPKIでの耐量子化を検討する</li></ul></div>
+                <hr />
+                <h3 id="193-輻輳制御の進化cubicからbbrv3へ">
+                    19.3 輻輳制御の進化：CUBICからBBRv3へ
+                </h3>
+                <p>
+                    第2章で解説した「パケットロス＝輻輳」という前提に基づく損失ベース制御（Reno、CUBIC）に対し、Googleが開発したBBR（Bottleneck
+                    Bandwidth and Round-trip propagation
+                    time）は、実測の帯域幅とRTTから経路のモデルを構築し、損失を待たずに最適な送信レートを推定するモデルベースの輻輳制御アルゴリズムです。
+                </p>
+                <Diagram id="diag-30" label="TCP輻輳制御アルゴリズム（Lossベース vs BBRモデルベース）の動作比較図" />
+                <p>
+                    最新のBBRv3は、無線区間など非輻輳性のパケットロス（第6章のWiFi特有ロス問題）が発生する環境でも不必要な送信レート低下を避けられる点が評価されています。ただし注意が必要なのは、<strong>Linuxカーネルのmainlineに含まれる<code>tcp_bbr</code>モジュールは現在もBBRv1の実装である</strong>という点です。輻輳制御に<code>bbr</code>を指定できても、それが自動的にBBRv3になるわけではありません。BBRv3を利用するには、Googleが公開するBBRv3パッチ（<code>google/bbr</code>）を適用したカーネル、またはそれを取り込んだベンダーカーネル（クラウド事業者が提供するカスタムカーネル等）が必要です。QUIC実装（Googleのquiche等）でもBBR系アルゴリズムが標準的な選択肢の一つとして採用されています（出典6）。
+                </p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>自社管理下のLinuxサーバー・CDNオリジンでは、sysctlの既定値ではなく実際の接続を確認する。TCPはss -tinの出力に含まれるcong_algフィールドで、既存ソケットに適用中の輻輳制御アルゴリズムを個別に確認する（ソケット単位でsetsockopt(TCP_CONGESTION)により既定と異なるアルゴリズムが設定されている場合があるため）。bbrと表示されても、mainlineカーネルであればその実体はBBRv1である点に注意する</li>{" "}<li>QUICはカーネルの設定項目ではなくユーザー空間の実装が輻輳制御を持つため、sysctlでは確認できない。利用しているQUIC実装（quiche・nginx・Envoy等）が公開するメトリクスや接続ごとの診断情報（qlogのcongestion
+                            controller関連イベントなど）で、実際に使用中のアルゴリズムを確認する</li>{" "}<li>BBRv3を採用したい場合は、google/bbrのBBRv3パッチを適用したカーネルか、それを取り込んだベンダーカーネルが必要になるため、導入可否と運用コストを輻輳制御に詳しいインフラ担当者と検討する</li>{" "}<li>WiFi・モバイル回線などパケットロスが輻輳以外の理由（電波干渉等）でも発生しやすい経路をターゲットにするサービスでは、BBR系アルゴリズムの導入効果を測定する</li></ul></div>
+                <hr />
+                <h3 id="194-webtransportとmedia-over-quicmoqwebsocketの次の選択肢">
+                    19.4 WebTransportとMedia over QUIC（MOQ）：WebSocketの次の選択肢
+                </h3>
+                <p>
+                    WebTransportは、第17章のWebSocketが持つ「単一の順序保証付きストリーム」という制約を超え、<strong>HTTP/3・QUICの上に複数の双方向/単方向ストリームと、順序保証のないデータグラムの両方</strong>を提供するAPIです。
+                </p>
+                <div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">項目</th>
+                                <th scope="col">WebSocket</th>
+                                <th scope="col">WebTransport</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>下位トランスポート</td>
+                                <td>
+                                    TCP。HTTP/1.1のUpgradeに加え、HTTP/2の拡張CONNECT（RFC
+                                    8441）・HTTP/3（RFC 9220）上でも確立可能
+                                </td>
+                                <td>
+                                    既定はHTTP/3・QUIC。仕様上はHTTP/2（TCP）上へのフォールバックも定義されている
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ストリーム数</td>
+                                <td>1本の順序付きストリームのみ</td>
+                                <td>複数の独立したストリームを多重化可能</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>非信頼配送（データグラム）</td>
+                                <td>非対応</td>
+                                <td>
+                                    QUICデータグラムとして対応。ただしHTTP/2（TCP）へフォールバックした場合はデータグラムを利用できない
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>コネクションマイグレーション</td>
+                                <td>非対応（TCPベースのため）</td>
+                                <td>対応（QUICの特性を継承）</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    2026年3月にSafari
+                    26.4がWebTransportを実装したことで、主要ブラウザ全てが対応する「Baseline」status
+                    に到達しました（出典7）。W3C仕様自体も2026年7月30日に<strong>Candidate Recommendation Snapshot</strong>として公開され、実装経験を収集する段階に入りました（2026年9月2日確認）。ただし勧告（Recommendation）到達には複数実装による相互運用性の確認が残っているため、細部の変更可能性には引き続き注意が必要です（出典8）。WebTransportの上に構築される高レベルなメディア配信プロトコルとして、Media
+                    over QUIC（MOQ）の標準化も進行中です。
+                </p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>低遅延な一方向ライブ配信や、パケットロスを許容できるリアルタイムデータ（ゲームの状態同期等）にはWebTransportのデータグラムモードを検討する</li>{" "}<li>2026年時点ではAPI仕様が引き続き変化しうるため、プロダクション導入時はブラウザ間の実装差異と将来の仕様変更リスクを許容できるユースケースから始める</li></ul></div>
+                <hr />
+                <h3 id="195-core-web-vitalsinplcpclsの現在地">
+                    19.5 Core Web Vitals：INP・LCP・CLSの現在地
+                </h3>
+                <p>
+                    Googleは2024年3月、応答性指標をFID（First Input
+                    Delay、最初の入力のみを計測）からINP（Interaction to Next
+                    Paint、セッション全体の応答性を計測）へ置き換えました。INPはページ上で発生した各インタラクションについて「操作から次の描画が完了するまで」を計測し、その中で代表的に遅い値を採用することで、FIDでは捉えられなかった操作全体の応答性を評価します（出典9）。
+                </p>
+                <div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">指標</th>
+                                <th scope="col">意味</th>
+                                <th scope="col">Good閾値</th>
+                                <th scope="col">2026年の動き</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>LCP（Largest Contentful Paint）</td>
+                                <td>最大コンテンツの表示完了までの時間</td>
+                                <td>2.5秒以下</td>
+                                <td>閾値自体は変更なし</td>
+                            </tr>
+                            <tr className="even">
+                                <td>INP（Interaction to Next Paint）</td>
+                                <td>操作から次の描画までの応答性</td>
+                                <td>200ms以下</td>
+                                <td>Good閾値は200ms以下のまま変更なし</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>CLS（Cumulative Layout Shift）</td>
+                                <td>累積レイアウトシフト量</td>
+                                <td>0.1以下</td>
+                                <td>Chrome以外のブラウザへの対応拡大が検討中</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    CrUX（Chrome UX
+                    Report）の2026年5月データセット（2026年6月9日公開）では、計測対象オリジンのうち3指標すべてで合格したのは55.9%にとどまり、個別にはLCP約68.6%、CLS約81.3%、INP約86.6%が合格しています（出典10）。
+                </p>
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>Core Web
+                            Vitalsは実ユーザー計測（フィールドデータ）に基づくため、ラボ計測の結果だけで判断せず、定期的にPageSpeed
+                            InsightsやSearch ConsoleのCore Web Vitalsレポートを再確認する</li>{" "}<li>scheduler.yield()や長時間実行イベントハンドラの分割など、メインスレッドを長時間占有しない実装パターンでINPを改善する</li>{" "}<li>LCPはTTFB（Time To First
+                            Byte）が下限になるため、サーバー応答速度自体の改善（本ガイドのTCP/TLS/HTTP最適化）がLCP改善に直結することを理解する</li></ul></div>
+                <hr />
+                <h3 id="196-モバイルネットワークの現在地5g-advancedと6g研究">
+                    19.6 モバイルネットワークの現在地：5G-Advancedと6G研究
+                </h3>
+                <p>
+                    3GPPは2025年にRelease 19（5G-Advancedの主要機能）を完了し、2026年はRelease
+                    20として5G-Advancedの継続的な機能拡張と、<strong>初の6G関連スタディ（要求条件・システムアーキテクチャ・セキュリティ・無線技術</strong>）を並行して進める段階にあります（出典11）。Release
+                    20は「Rel-20_5GA」（5G-Advanced規定）と「Rel-20_6G」（6Gスタディのみ）の2トラックに分かれており、6Gの最初の正式仕様はRelease
+                    21（2028〜2029年頃見込み）、商用網の登場は2030年前後が現実的な見通しとされています（出典12）。
+                </p>
+                <Diagram id="diag-31" label="モバイル通信の最新動向（5G-Advanced〜6G）ロードマップ図" />
+                <div className="callout-practice"><div className="practice-label">ベストプラクティス</div>{" "}<ul><li>2026年時点でモバイル最適化を行う場合、対象ユーザーの実際の接続環境は依然として4G
+                            LTE・5G（非Advanced含む）が主流であることを前提に、第7・8章のRRC状態遷移対策を継続的に適用する</li>{" "}<li>6Gは2026年時点ではまだ研究・標準化段階であり、実務上のモバイル最適化の優先順位を左右するものではない</li></ul></div>
+                <hr />
+                <h3 id="197-2026年の全体像プロトコルスタックのまとめ">
+                    19.7 2026年の全体像：プロトコルスタックのまとめ
+                </h3>
+                <Diagram id="diag-32" label="2026年時点のモダンWebプロトコルスタック全体像" />
+                <hr />
+                <h2 id="学習ロードマップ">学習ロードマップ</h2>
+                <Diagram id="diag-33" label="Webネットワーク技術の学習ロードマップフロー図" />
+                <div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">段階</th>
+                                <th scope="col">到達目標</th>
+                                <th scope="col">実践課題の例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>初級</td>
+                                <td>
+                                    レイテンシ・帯域幅・TCP/TLSハンドシェイクの基本語彙を理解する
+                                </td>
+                                <td>
+                                    ブラウザDevToolsのNetworkパネルで、自分がよく使うサイトのWaterfallを開き、DNS/接続/TLS/待機時間の内訳を確認する
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>中級</td>
+                                <td>
+                                    HTTP/1.1とHTTP/2の違いを説明でき、ドメインシャーディングが今は不要な理由を説明できる
+                                </td>
+                                <td>
+                                    自社サイトが何本のTCPコネクションを使っているか、HTTP/2が有効かをDevToolsのProtocol列で確認する
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>上級</td>
+                                <td>XHR/SSE/WebSocket/WebRTCを要件に応じて使い分けられる</td>
+                                <td>
+                                    小規模なリアルタイムチャット機能をWebSocketで実装し、SSEで実装した場合との違いを比較する
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>実務</td>
+                                <td>
+                                    HTTP/3・TLS1.3・Core Web
+                                    Vitalsなど2026年時点の指標を用いて実サイトを計測・改善できる
+                                </td>
+                                <td>
+                                    PageSpeed
+                                    InsightsでLCP/INP/CLSを計測し、ボトルネックがネットワークかレンダリングかを切り分ける
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+                <h2 id="チェックリスト">チェックリスト</h2>
+                <ChecklistSection />
+                <hr />
+                <h2 id="用語集">用語集</h2>
+                <div className="table-scroll">
+                    <table>
+                        <thead>
+                            <tr className="header">
+                                <th scope="col">用語</th>
+                                <th scope="col">説明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="odd">
+                                <td>RTT（Round-Trip Time）</td>
+                                <td>パケットが送信されてから応答が返るまでの往復時間</td>
+                            </tr>
+                            <tr className="even">
+                                <td>輻輳制御（Congestion Control）</td>
+                                <td>
+                                    ネットワーク経路の混雑を避けるため送信レートを調整する仕組み
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>フロー制御（Flow Control）</td>
+                                <td>受信側の処理能力に応じて送信レートを調整する仕組み</td>
+                            </tr>
+                            <tr className="even">
+                                <td>HOLブロッキング（Head-of-Line Blocking）</td>
+                                <td>
+                                    先頭のデータが詰まることで、後続のデータ全体が処理を待たされる現象
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>BDP（Bandwidth-Delay Product）</td>
+                                <td>
+                                    帯域幅×RTTで算出される、経路上に存在しうる未確認データ量の理論値
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>前方秘匿性（Forward Secrecy）</td>
+                                <td>セッション鍵が漏洩しても過去の通信内容が復号されない性質</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>SNI（Server Name Indication）</td>
+                                <td>TLSハンドシェイクで接続先ドメイン名を伝えるTLS拡張</td>
+                            </tr>
+                            <tr className="even">
+                                <td>ALPN（Application-Layer Protocol Negotiation）</td>
+                                <td>
+                                    TLSハンドシェイク中にアプリケーション層プロトコルを事前合意する仕組み
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>RRC（Radio Resource Control）</td>
+                                <td>
+                                    モバイル端末の無線リソースの状態を制御する仕組み。5G
+                                    NRではRRC_IDLE / RRC_INACTIVE / RRC_CONNECTEDの3状態を持つ
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>RRC_INACTIVE</td>
+                                <td>
+                                    5G
+                                    NRの状態の1つ。RRCコンテキストを保持したまま無線を休止し、RRCResume手順で数十ms程度でRRC_CONNECTEDへ復帰できる。接続確立手順が必要なRRC_IDLEからの昇格（数百ms〜数秒）より大幅に低遅延
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>HPACK</td>
+                                <td>HTTP/2のヘッダ圧縮方式</td>
+                            </tr>
+                            <tr className="even">
+                                <td>CORS（Cross-Origin Resource Sharing）</td>
+                                <td>
+                                    異なるオリジン間の通信をブラウザが安全に許可するための仕組み
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>ICE（Interactive Connectivity Establishment）</td>
+                                <td>STUN/TURNを組み合わせてP2P接続経路を確立するフレームワーク</td>
+                            </tr>
+                            <tr className="even">
+                                <td>SFU（Selective Forwarding Unit）</td>
+                                <td>
+                                    多人数会議で各参加者のストリームを選択的に転送する中継サーバー
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>QUIC</td>
+                                <td>
+                                    UDP上に構築された、TLS統合・ストリーム多重化・コネクションマイグレーションを備えるトランスポートプロトコル（RFC
+                                    9000）
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>BBR</td>
+                                <td>
+                                    実測帯域幅とRTTからネットワークをモデル化するGoogle発の輻輳制御アルゴリズム
+                                </td>
+                            </tr>
+                            <tr className="odd">
+                                <td>ECH（Encrypted Client Hello）</td>
+                                <td>
+                                    TLSのClientHello自体を暗号化しSNI等の秘匿性を高める拡張（RFC
+                                    9849）
+                                </td>
+                            </tr>
+                            <tr className="even">
+                                <td>ML-KEM</td>
+                                <td>NISTが標準化した耐量子鍵カプセル化メカニズム（FIPS 203）</td>
+                            </tr>
+                            <tr className="odd">
+                                <td>INP（Interaction to Next Paint）</td>
+                                <td>
+                                    ユーザー操作から次の画面描画までの応答性を測るCore Web
+                                    Vitals指標
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr />
+                <h2 id="参考文献">参考文献</h2>
+                <p>
+                    本ガイドの2026年最新動向（第5部）の記述にあたり、以下の情報源を参照しました（著名な国際的組織・開発者の一次情報を優先）。
+                </p>
+                <div className="ref-grid">
+                    <div className="ref-card">
+                        <span className="ref-badge">1</span>
+                        <div className="ref-body">
+                            Cloudflare Radar / technologychecker.io「Web Traffic Statistics
+                            2026」（HTTP/3シェア19.84%、2026年7月時点） —
+                            <a href="https://technologychecker.io/blog/web-traffic-statistics">https://technologychecker.io/blog/web-traffic-statistics</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">2</span>
+                        <div className="ref-body">
+                            Max Inden（Mozilla）「Evolving HTTP/3 & QUIC beyond 30%?」HTTP
+                            Workshop 2026 —
+                            <a href="https://mxinden-bot.github.io/slides/04-quic-discussion/">https://mxinden-bot.github.io/slides/04-quic-discussion/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">3</span>
+                        <div className="ref-body">
+                            Cloudflare Developers Docs「HTTP/3 (with QUIC)」 —
+                            <a href="https://developers.cloudflare.com/speed/optimization/protocol/http3/">https://developers.cloudflare.com/speed/optimization/protocol/http3/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">4</span>
+                        <div className="ref-body">
+                            technologychecker.io「HTTP Protocol Adoption
+                            2026」（耐量子鍵交換55.77%、Cloudflare Radar集計） —
+                            <a href="https://technologychecker.io/blog/http-protocol-adoption">https://technologychecker.io/blog/http-protocol-adoption</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">5</span>
+                        <div className="ref-body">
+                            EverTrust「Hybrid Post-Quantum
+                            Certificates」（Chrome/Firefoxのハイブリッド鍵交換対応状況） —
+                            <a href="https://evertrust.io/blog/hybrid-post-quantum-certificates/">https://evertrust.io/blog/hybrid-post-quantum-certificates/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">6</span>
+                        <div className="ref-body">
+                            Google / GitHub「google/bbr」BBRv3リリースノートおよびIETF CCWG発表資料
+                            —
+                            <a href="https://github.com/google/bbr">https://github.com/google/bbr</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">7</span>
+                        <div className="ref-body">
+                            WebRTC.ventures「WebTransport Is Now Baseline」（Safari
+                            26.4対応、2026年3月） —
+                            <a href="https://webrtc.ventures/2026/04/webtransport-is-now-baseline-what-it-means-for-real-time-media/">https://webrtc.ventures/2026/04/webtransport-is-now-baseline-what-it-means-for-real-time-media/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">8</span>
+                        <div className="ref-body">
+                            Fora Soft「WebTransport and WHIP-over-WebTransport」（W3C仕様の状況） —
+                            <a href="https://www.forasoft.com/learn/video-streaming/articles-streaming/webtransport-whip">https://www.forasoft.com/learn/video-streaming/articles-streaming/webtransport-whip</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">9</span>
+                        <div className="ref-body">
+                            web.dev「Interaction to Next Paint
+                            (INP)」（INP指標の定義・計測方法・閾値） —
+                            <a href="https://web.dev/articles/inp">https://web.dev/articles/inp</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">10</span>
+                        <div className="ref-body">
+                            Launchcodex「Core Web Vitals guide: LCP, INP, and CLS explained
+                            (2026)」（Addy Osmani氏のコメント、Interop 2025） —
+                            <a href="https://launchcodex.com/blog/web-digital-infrastructure/core-web-vitals-guide/">https://launchcodex.com/blog/web-digital-infrastructure/core-web-vitals-guide/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">11</span>
+                        <div className="ref-body">
+                            ATIS / 3GPP「3GPP Release 20 Webinar」（Puneet Jain氏、3GPP SA
+                            Chair、2026年4月） —
+                            <a href="https://cdn.atis.org/atis.org/2026/04/16110914/Combined-Slides_3GPP-Webinar-R20_2026.pdf">https://cdn.atis.org/atis.org/2026/04/16110914/Combined-Slides_3GPP-Webinar-R20_2026.pdf</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">12</span>
+                        <div className="ref-body">
+                            CafeTele「What Is 6G? The 3GPP Release 20 Study and the Road to 2030」 —
+                            <a href="https://www.cafetele.com/articles/article-what-is-6g-3gpp-release-20.html">https://www.cafetele.com/articles/article-what-is-6g-3gpp-release-20.html</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">13</span>
+                        <div className="ref-body">
+                            O'Reilly Media「High Performance Browser
+                            Networking」書籍公式ページ（目次確認元） —
+                            <a href="https://www.oreilly.com/library/view/high-performance-browser/9781449344757/">https://www.oreilly.com/library/view/high-performance-browser/9781449344757/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">14</span>
+                        <div className="ref-body">
+                            IETF Datatracker「RFC 9849 - TLS Encrypted Client Hello」 —
+                            <a href="https://datatracker.ietf.org/doc/rfc9849/">https://datatracker.ietf.org/doc/rfc9849/</a>
+                        </div>
+                    </div>
+                    <div className="ref-card">
+                        <span className="ref-badge">15</span>
+                        <div className="ref-body">
+                            IETF Datatracker「draft-ietf-uta-pqc-app - Post-Quantum Cryptography
+                            Recommendations for TLS-based Applications」 —
+                            <a href="https://datatracker.ietf.org/doc/draft-ietf-uta-pqc-app/">https://datatracker.ietf.org/doc/draft-ietf-uta-pqc-app/</a>
+                        </div>
+                    </div>
+                </div>
+                <p className="footer-note">
+                    本ガイドはIlya Grigorik著『High Performance Browser Networking』（O'Reilly
+                    Media,
+                    2013）の目次構成を参照しつつ、初学者向けに独自の解説・図解・表として再構成したものです。原文の複製・転載は行っていません。より詳細で正確な内容は、ぜひ原著（O'Reilly、または著者が公開する電子版）を直接ご参照ください。
+                </p>
+            
             </main>
         </div>
     );

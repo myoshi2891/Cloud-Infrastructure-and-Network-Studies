@@ -189,63 +189,63 @@ export interface ChecklistItem {
 
 export const CHECKLIST_ITEMS: ChecklistItem[] = [
     {
-        "id": "",
+        "id": "chk-1",
         "text": "レイテンシの4要素（伝搬・伝送・処理・キューイング）を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-2",
         "text": "TCPスリーウェイハンドシェイクとスロースタートがなぜWebの体感速度に影響するか説明できる"
     },
     {
-        "id": "",
+        "id": "chk-3",
         "text": "TCPのHOLブロッキングと、それがQUICでどう解消されるかを説明できる"
     },
     {
-        "id": "",
+        "id": "chk-4",
         "text": "UDPがNAT環境で抱える課題と、STUN/TURN/ICEの役割を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-5",
         "text": "TLSの3つの保証（暗号化・認証・完全性）と、TLS 1.2の2-RTTからTLS\n                                1.3の1-RTT/0-RTTへの進化を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-6",
         "text": "WiFiのCSMA/CAとモバイル網のRRC状態遷移が、なぜそれぞれ独自の遅延要因になるかを説明できる"
     },
     {
-        "id": "",
+        "id": "chk-7",
         "text": "HTTPの歴史（0.9→1.0→1.1→2→3）と各バージョンの主要な変更点を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-8",
         "text": "ドメインシャーディングがHTTP/1.1では有効でHTTP/2以降では有害になる理由を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-9",
         "text": "HTTP/2のバイナリフレーミング・多重化・HPACK・（非推奨化された）サーバープッシュを説明できる"
     },
     {
-        "id": "",
+        "id": "chk-10",
         "text": "XHR/fetchのCORSプリフライトが発生する条件を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-11",
         "text": "SSE・WebSocket・WebRTCをユースケースに応じて使い分けられる"
     },
     {
-        "id": "",
+        "id": "chk-12",
         "text": "WebRTCのシグナリング・ICE・SDP・SFUアーキテクチャの役割分担を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-13",
         "text": "2026年時点のHTTP/3普及状況と、フォールバック設計の必要性を説明できる"
     },
     {
-        "id": "",
+        "id": "chk-14",
         "text": "BBRv3のようなモデルベース輻輳制御が、損失ベース制御と何が違うかを説明できる"
     },
     {
-        "id": "",
+        "id": "chk-15",
         "text": "Core Web\n                                Vitals（LCP・INP・CLS）を実際に自分のサイトで計測したことがある"
     }
 ];
