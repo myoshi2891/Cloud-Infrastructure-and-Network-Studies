@@ -260,7 +260,11 @@ flowchart LR
 
 ### 2.6 IAM Conditions によるきめ細やかな制御
 
-Sessions（対話セッション）や Memory Bank（エージェントの長期記憶）へのアクセスは、IAM Conditions を使って属性ベースで制御できます。たとえば「特定のセッションIDプレフィックスを持つリソースにのみアクセスを許可する」「特定の時間帯のみ許可する」といった条件式（CEL: Common Expression Language）をIAMバインディングに付与できます。これは、Vertex AI Search/Agent Search 時代から続くGoogle CloudのIAM Conditions機構をAgent Platformのリソースにもそのまま適用したものです。
+Sessions（対話セッション）や Memory Bank（エージェントの長期記憶）へのアクセスは、IAM Conditions を使って属性ベースで制御できます。条件式（CEL: Common Expression Language）で評価する属性はリソースごとに決まっており、**セッションIDのプレフィックスを評価するのではない**点に注意が必要です。
+
+- **Sessions**：セッション作成時に指定した `userId` を `aiplatform.googleapis.com/sessionUserId` で評価する。例：`api.getAttribute('aiplatform.googleapis.com/sessionUserId', '').startsWith('team-a-')`
+- **Memory Bank**：メモリ作成時に指定したスコープ（`{'user_id': '123'}` のような任意の辞書）を `aiplatform.googleapis.com/memoryScope` で評価する。スコープ単位で「どのプリンシパルがどのグループのメモリを読み書きできるか」を制御できる（条件付き IAM ポリシーはプロジェクトレベルで作成し、プロジェクト内の全メモリに適用される）
+これは、Vertex AI Search/Agent Search 時代から続くGoogle CloudのIAM Conditions機構をAgent Platformのリソースにもそのまま適用したものです。
 
 > **出典：** [Agent Identity overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview)、[Agent Gateway overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview)、[IAM overview](https://docs.cloud.google.com/iam/docs/overview)、[IAM policy types（PAB）](https://docs.cloud.google.com/iam/docs/policy-types)、[Control access to sessions with IAM Conditions](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions/iam-conditions)
 
@@ -287,7 +291,7 @@ VPC-SCは、Google Cloud APIレベルでのデータ流出（exfiltration）を�
 
 Cloud KMSで管理する顧客管理暗号鍵（CMEK）は、Google管理鍵をユーザー管理の鍵に置き換えることで、鍵のローテーション・失効・監査をユーザー側が完全にコントロールできるようにする仕組みです。エージェント基盤では次の対象がCMEKに対応します。
 
-- **RAG Engine**：コーパス（グラウンディングデータ）の保管をCMEKで暗号化
+- **RAG Engine**：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただし**CMEKに対応するのは Spanner モードの `RagManagedDb` のみ**であり、`RagManagedVertexVectorSearch`（Serverless モードの既定のベクトルDB）と `VertexVectorSearch`（自前の Vector Search インデックスを持ち込む構成）は **CMEK 非対応**。CMEK が要件なら Spanner モード + `RagManagedDb` を選ぶ
 - **Agent Retrieval（旧 Vector Search 2.0）**：Collection/Data Objectの保管をCMEKで暗号化
 - **Vector Search 1.0**：インデックスデータの暗号化に対応
 
@@ -351,7 +355,7 @@ Model Armor は、プロンプトとレスポンスの両方をリアルタイ�
 
 | 検出カテゴリ | 内容 |
 |---|---|
-| **プロンプトインジェクション/ジェイルブレイク検知** | 直接的・間接的なインジェクション、ジェイルブレイク試行を検知。検知フィルタは最大10,000トークンまでのプロンプト/レスポンスに対応 |
+| **プロンプトインジェクション/ジェイルブレイク検知** | 直接的・間接的なインジェクション、ジェイルブレイク試行を検知。検知フィルタはバッファ（非ストリーミング）モードで最大65,536トークン（262,144文字）までのプロンプト/レスポンスに対応（リアルタイムのストリーミングモードはトークン数の上限なし） |
 | **悪意のあるURL検知** | プロンプト・レスポンスに埋め込まれたフィッシングリンクやマルウェア配布URLを検知 |
 | **Responsible AI（RAI）コンテンツフィルタ** | ヘイトスピーチ、ハラスメント、性的表現、危険なコンテンツなどを閾値ベースで検出 |
 | **Sensitive Data Protection連携** | Basic/Advanced SDPと統合し、PII・金融情報・認証情報などの漏洩を防止 |
@@ -379,6 +383,13 @@ flowchart TB
 ```
 
 Agent Gateway との統合では、Model Armor は「AI security guardrails」として、MCPプロンプトインジェクション攻撃などの新しいリスクからエージェント間通信を保護する役割を担います。Client-to-Agent（受信するクライアントからの有害コンテンツ対策）とAgent-to-Anywhere（送信先への機密データ漏洩・インジェクション対策）の両方向で設定可能です。
+
+ただし、**Model Armor が両方向のすべてのペイロードを検査するわけではありません**。検査対象は次のとおりで、対象外の経路は Model Armor では防御できないため、別の統制（IAM / PAB、Semantic Governance Policy、監査ログ）で補う必要があります。
+
+| 方向・プロトコル | 検査対象 | 検査対象外 |
+|---|---|---|
+| Client-to-Agent（ADK） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
+| Agent-to-Anywhere（MCP） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
 
 ### 4.2 Semantic Governance Policy：意図レベルの防御（プレビュー機能）
 
@@ -430,11 +441,11 @@ Semantic Governance Policyは他の統制を「置き換える」のではなく
 
 ### 4.4 Human-in-the-Loop（HITL）：高リスク操作の人間承認ゲート
 
-SAIFの「Agent User Control」の実装として、データ削除・送金・外部送信のような不可逆または高コストな操作には、エージェントが自律的に実行する前に人間の承認を挟む設計が推奨されます。実装パターンとしては次の3種類が代表的です。
+SAIFの「Agent User Control」の実装として、データ削除・送金・外部送信のような不可逆または高コストな操作には、エージェントが自律的に実行する前に人間の承認を挟む設計が推奨されます。実装パターンとしては次の2種類が代表的です。
 
 1. **ハードストップ型承認**：エージェントが提案を生成した時点で処理を一時停止し、人間が明示的に承認するまでツール呼び出しを実行しない（例：ADKのHITL拡張やカスタムのapproval queueパターン）。
 2. **閾値ベースの自動判定＋エスカレーション**：Semantic Governance PolicyのNLCで金額やリスクレベルの閾値を定義し、閾値以下は自動実行、閾値超過は人間承認へエスカレーションする。
-3. **事後監査型（Dry Run）**：IAP をドライランモードで運用し、まずはすべてのブロック判定をログにのみ記録して実際の業務影響を検証してから、本番のブロックモードに移行する。
+> **注意：** IAP の `DRY_RUN` モードは HITL の実装パターンではありません。`DRY_RUN` は拒否対象となるリクエストを**ログに記録したうえで通信自体は許可する**モードであり、ポリシーを本番適用する前に業務影響を評価するための**監査・段階導入の仕組み**です。人間の承認を待たずに処理は進むため、高リスク操作のゲートには使えません。高リスク操作には承認キューなどの**明示的な人間承認ゲート**（上記1・2）を使ってください。
 
 ```mermaid
 flowchart TB
