@@ -2,6 +2,34 @@
 
 (最終更新日: 2026-09-07)
 
+## 2026-09-07: 推薦図書『Computer Networking: A Top-Down Approach』完全学習ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Computer-networking-topdown-guide.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ComputerNetworkingTopdownGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/computer-networking-topdown` ルートへ移行。グローバルナビゲーションの「Books」配下に追加。見出し(h1:1, h2:16, h3:49, h4:0)、全24個のテーブル、全41個のMermaid図解、全リスト(29件)、全外部リンク(31件)・全本文(74件)・学習チェックリスト(19件)・参考文献カード(29件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for computer-networking-topdown` (`0ce862e6`)
+- [x] **Step 1 (Red)**: `test(books): add failing tests for computer-networking-topdown` (`8e98580d`)
+- [x] **Step 2 (Green)**: `feat(books): implement computer-networking-topdown guide to pass tests` (`7ecf3d97`)
+- [x] **Step 3 (Refactor)**: `refactor(books): integrate computer-networking-topdown into routing and update docs` (`1cf23396`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive computer-networking-topdown sources`
+
+### 関連ファイル
+
+- [app/recommended-books/computer-networking-topdown/page.tsx](app/recommended-books/computer-networking-topdown/page.tsx)
+- [app/recommended-books/computer-networking-topdown/ComputerNetworkingTopdownGuide.tsx](app/recommended-books/computer-networking-topdown/ComputerNetworkingTopdownGuide.tsx)
+- [app/recommended-books/computer-networking-topdown/NavBar.tsx](app/recommended-books/computer-networking-topdown/NavBar.tsx)
+- [app/recommended-books/computer-networking-topdown/constants.ts](app/recommended-books/computer-networking-topdown/constants.ts)
+- [app/recommended-books/computer-networking-topdown/page.css](app/recommended-books/computer-networking-topdown/page.css)
+- [`__tests__/recommended-books/computer-networking-topdown/page.test.tsx`](__tests__/recommended-books/computer-networking-topdown/page.test.tsx)
+- [docs/migration-inventory/computer-networking-topdown.json](docs/migration-inventory/computer-networking-topdown.json)
+- [archive/Books/html/Computer-networking-topdown-guide.html](archive/Books/html/Computer-networking-topdown-guide.html)
+- [archive/Books/md/Computer-networking-topdown-guide.md](archive/Books/md/Computer-networking-topdown-guide.md)
+
+---
+
 ## 2026-09-07: CompTIA Network+ (N10-009) ドメイン2.0「ネットワーク実装 (Network Implementation)」完全ガイド 100%全量移行 (完了)
 
 ### 目的
