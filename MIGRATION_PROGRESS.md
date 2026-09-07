@@ -2,6 +2,38 @@
 
 (最終更新日: 2026-09-07)
 
+## 2026-09-07: 推薦図書『High Performance Browser Networking』完全解説ガイド 100%全量移行 (完了)
+
+### 目的
+
+`High-performance-browser-networking.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `HighPerformanceBrowserNetworkingGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/high-performance-browser-networking` ルートへ移行。グローバルナビゲーションの「Books」配下に追加。見出し(h1:1, h2:10, h3:25, h4:72)、全22個のテーブル、全33個のMermaid図解、全リスト(89件)、全外部リンク(15件)・全本文(113件)・学習チェックリスト(15件)・参考文献カード(15件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for high-performance-browser-networking` (`1f5829df`)
+- [x] **Step 1 (Red)**: `test(books): add failing tests for high-performance-browser-networking` (`4747a522`)
+- [x] **Step 2 (Green)**:
+  - `feat(books): implement constants, navbar, and styles for high-performance-browser-networking` (`1cad4c12`)
+  - `feat(books): implement part 1 and part 2 for high-performance-browser-networking` (`808c1ff7`)
+  - `feat(books): implement part 3 and part 4 for high-performance-browser-networking` (`34f90aa6`)
+  - `feat(books): implement part 5 and appendices to pass migration tests` (`c78d35ff`)
+- [x] **Step 3 (Refactor)**: `refactor(books): integrate high-performance-browser-networking into routing and update docs` (`92df612e`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive high-performance-browser-networking sources`
+
+### 関連ファイル
+
+- [app/recommended-books/high-performance-browser-networking/page.tsx](app/recommended-books/high-performance-browser-networking/page.tsx)
+- [app/recommended-books/high-performance-browser-networking/HighPerformanceBrowserNetworkingGuide.tsx](app/recommended-books/high-performance-browser-networking/HighPerformanceBrowserNetworkingGuide.tsx)
+- [app/recommended-books/high-performance-browser-networking/NavBar.tsx](app/recommended-books/high-performance-browser-networking/NavBar.tsx)
+- [app/recommended-books/high-performance-browser-networking/constants.ts](app/recommended-books/high-performance-browser-networking/constants.ts)
+- [app/recommended-books/high-performance-browser-networking/page.css](app/recommended-books/high-performance-browser-networking/page.css)
+- [`__tests__/recommended-books/high-performance-browser-networking/page.test.tsx`](__tests__/recommended-books/high-performance-browser-networking/page.test.tsx)
+- [docs/migration-inventory/high-performance-browser-networking.json](docs/migration-inventory/high-performance-browser-networking.json)
+- [archive/Books/html/High-performance-browser-networking.html](archive/Books/html/High-performance-browser-networking.html)
+- [archive/Books/md/High-performance-browser-networking.md](archive/Books/md/High-performance-browser-networking.md)
+
+---
+
 ## 2026-09-07: 推薦図書『Computer Networking: A Top-Down Approach』完全学習ガイド 100%全量移行 (完了)
 
 ### 目的
