@@ -567,6 +567,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（41図）
       page.css                      # ページ固有スタイル
+    high-performance-browser-networking/
+      page.tsx                      # 『High Performance Browser Networking』完全解説ガイド (Server)
+      HighPerformanceBrowserNetworkingGuide.tsx # 本文＋インタラクション (Client。全5部18章、Mermaid 33図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # Mermaid 図定義（33図）
+      page.css                      # ページ固有スタイル
 
 
 components/

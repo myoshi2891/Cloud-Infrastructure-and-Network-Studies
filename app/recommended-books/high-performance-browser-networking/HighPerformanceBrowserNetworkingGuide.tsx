@@ -67,7 +67,7 @@ export function HighPerformanceBrowserNetworkingGuide() {
                 <div className="hero">
                     <h1>High Performance Browser Networking<br />初学者向け完全ガイド</h1>
                     <p className="hero-sub">
-                        Ilya Grigorik著『High Performance Browser Networking』（O'Reilly Media,
+                        Ilya Grigorik著『High Performance Browser Networking』（O&apos;Reilly Media,
                         2013）の目次構成に沿って初学者向けに再構成し、2026年9月時点のHTTP/3・QUIC・TLS
                         1.3・BBRv3・WebTransport・Core Web
                         Vitals等の最新動向を独自に追加した完全ガイドです。
@@ -83,7 +83,7 @@ export function HighPerformanceBrowserNetworkingGuide() {
 
                 <p>
                     <strong>原著</strong>: <em>High Performance Browser Networking</em>（Ilya
-                    Grigorik著、O'Reilly Media、2013年9月刊、398ページ）{' '}
+                    Grigorik著、O&apos;Reilly Media、2013年9月刊、398ページ）{' '}
                     <strong>原著者について</strong>: Ilya
                     Grigorik氏はGoogleでWebパフォーマンスエンジニアを務めた人物で、本書は「ブラウザとネットワークの間で実際に何が起きているか」をTCP/UDP/TLSという低レイヤーから、HTTP、そしてXHR・SSE・WebSocket・WebRTCといったブラウザAPIまで一気通貫で解説した、Web
                     パフォーマンス分野の定番書です。
@@ -960,7 +960,7 @@ export function HighPerformanceBrowserNetworkingGuide() {
                     XHRは<code>progress</code>イベントによってダウンロード・アップロードの進捗を監視できます。
                 </p>
                 <p>
-                    なお<code>responseType</code>（<code>''</code>/<code>text</code>・<code>json</code>・<code>blob</code>・<code>arraybuffer</code>・<code>document</code>）は、あくまで<strong>レスポンスを最終的にどの形式で受け取るか</strong>を選択するものであり、それ自体がストリーミング処理を有効にするわけではありません。XHRでレスポンスを逐次処理できるのは<code>responseType</code>が<code>''</code>（空文字）または<code>text</code>の場合に限られ、<code>readyState</code>が<code>LOADING</code>（3）の間に<code>responseText</code>を繰り返し読み進める形になります。バイナリを含む本格的なストリーミング受信が必要な場合は、XHRではなくFetch
+                    なお<code>responseType</code>（<code>&apos;&apos;</code>/<code>text</code>・<code>json</code>・<code>blob</code>・<code>arraybuffer</code>・<code>document</code>）は、あくまで<strong>レスポンスを最終的にどの形式で受け取るか</strong>を選択するものであり、それ自体がストリーミング処理を有効にするわけではありません。XHRでレスポンスを逐次処理できるのは<code>responseType</code>が<code>&apos;&apos;</code>（空文字）または<code>text</code>の場合に限られ、<code>readyState</code>が<code>LOADING</code>（3）の間に<code>responseText</code>を繰り返し読み進める形になります。バイナリを含む本格的なストリーミング受信が必要な場合は、XHRではなくFetch
                     APIのストリーム（<code>Response.body</code>が返す<code>ReadableStream</code>）を用います。
                 </p>
                 <h4 id="154-ポーリングとロングポーリング">15.4 ポーリングとロングポーリング</h4>
@@ -1664,7 +1664,7 @@ export function HighPerformanceBrowserNetworkingGuide() {
                     <div className="ref-card">
                         <span className="ref-badge">13</span>
                         <div className="ref-body">
-                            O'Reilly Media「High Performance Browser
+                            O&apos;Reilly Media「High Performance Browser
                             Networking」書籍公式ページ（目次確認元） —
                             <a href="https://www.oreilly.com/library/view/high-performance-browser/9781449344757/">https://www.oreilly.com/library/view/high-performance-browser/9781449344757/</a>
                         </div>
@@ -1686,9 +1686,9 @@ export function HighPerformanceBrowserNetworkingGuide() {
                     </div>
                 </div>
                 <p className="footer-note">
-                    本ガイドはIlya Grigorik著『High Performance Browser Networking』（O'Reilly
+                    本ガイドはIlya Grigorik著『High Performance Browser Networking』（O&apos;Reilly
                     Media,
-                    2013）の目次構成を参照しつつ、初学者向けに独自の解説・図解・表として再構成したものです。原文の複製・転載は行っていません。より詳細で正確な内容は、ぜひ原著（O'Reilly、または著者が公開する電子版）を直接ご参照ください。
+                    2013）の目次構成を参照しつつ、初学者向けに独自の解説・図解・表として再構成したものです。原文の複製・転載は行っていません。より詳細で正確な内容は、ぜひ原著（O&apos;Reilly、または著者が公開する電子版）を直接ご参照ください。
                 </p>
             
             </main>

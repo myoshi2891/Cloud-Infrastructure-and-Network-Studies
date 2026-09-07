@@ -559,6 +559,8 @@
     --color-theme-operating-systems-three-easy-pieces-fg: hsl(220 90% 74%);
     --color-theme-computer-networking-topdown-bg: hsl(220 55% 40% / 0.25);
     --color-theme-computer-networking-topdown-fg: hsl(220 90% 74%);
+    --color-theme-high-performance-browser-networking-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-high-performance-browser-networking-fg: hsl(220 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -730,6 +732,7 @@ body {
 .card-systems-performance { --card-accent: var(--color-theme-systems-performance-fg); }
 .card-operating-systems-three-easy-pieces { --card-accent: var(--color-theme-operating-systems-three-easy-pieces-fg); }
 .card-computer-networking-topdown { --card-accent: var(--color-theme-computer-networking-topdown-fg); }
+.card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -856,6 +859,11 @@ body {
 @utility icon-theme-computer-networking-topdown {
     background: var(--color-theme-computer-networking-topdown-bg);
     color: var(--color-theme-computer-networking-topdown-fg);
+}
+
+@utility icon-theme-high-performance-browser-networking {
+    background: var(--color-theme-high-performance-browser-networking-bg);
+    color: var(--color-theme-high-performance-browser-networking-fg);
 }
 
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */

@@ -895,6 +895,27 @@ const ALL_EXAMS: Exam[] = [
         icon: '📚',
         provider: 'Books',
     },
+    {
+        id: 'high-performance-browser-networking',
+        label: 'High Performance Browser Networking',
+        abbr: 'HPBN',
+        level: 'Web Performance & Networking',
+        score: '全5部18章+2026年動向 / 33図解',
+        color: 'card-high-performance-browser-networking',
+        href: '/recommended-books/high-performance-browser-networking',
+        description:
+            'Ilya Grigorik 著『High Performance Browser Networking』を軸に、TCP/UDP/TLS/ワイヤレス/HTTP/ブラウザAPIと2026年最新動向（HTTP/3・QUIC・TLS 1.3・BBRv3等）を体系的に解説した完全学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/high-performance-browser-networking',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
 ];
 
 export const EXAMS: Exam[] = HANDS_ON_ENABLED

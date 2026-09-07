@@ -51,7 +51,7 @@ describe('Header ドロワー: アクティブリンク判定', () => {
     it('現在 pathname と異なる子リンクには aria-current が付かないこと', async () => {
         pathnameMock.mockReturnValue('/gcl/associate-cloud-engineer/domain1');
         const { dialog } = await openDrawer();
-        const other = within(dialog).getByRole('link', { name: /Domain 2/ });
+        const other = within(dialog).getByRole('link', { name: /Domain 2: 計画と実装/ });
         expect(other).not.toHaveAttribute('aria-current');
     });
 
