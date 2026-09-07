@@ -146,30 +146,31 @@ export function NavBar() {
                 aria-label="Domain 2.0 目次"
             >
                 <div className="sidebar-brand">
-                    <i className="ti ti-certificate"></i>
-                    <span>Network+ Guide</span>
-                </div>
-                <div className="sidebar-title">目次｜Domain 2.0</div>
+                    <i className="ti ti-certificate"></i>Network+ Guide
+                </div>{' '}
+                <div className="sidebar-title">目次｜Domain 2.0</div>{' '}
                 <nav className="nav-group" aria-label="セクション目次">
-                    {NAV_ITEMS.map((item: NavItem) => {
+                    {NAV_ITEMS.map((item: NavItem, idx: number) => {
                         const isActive = activeId === item.id;
                         return (
-                            <a
-                                key={item.id}
-                                href={`#${item.id}`}
-                                className={`nav-item ${isActive ? 'active' : ''}`}
-                                onClick={(e) => handleClick(e, item.id)}
-                                aria-current={isActive ? 'location' : undefined}
-                            >
-                                {item.num !== '' && (
-                                    <span className={`nav-num ${item.numClass ?? ''}`}>
-                                        {item.num}
-                                    </span>
-                                )}
-                                {item.icon && <i className={`ti ${item.icon}`}></i>}
-                                <span>{item.title}</span>
-                                {item.badge && <span className="nav-badge">{item.badge}</span>}
-                            </a>
+                            <React.Fragment key={item.id}>
+                                <a
+                                    href={`#${item.id}`}
+                                    className={`nav-item ${isActive ? 'active' : ''}`}
+                                    onClick={(e) => handleClick(e, item.id)}
+                                    aria-current={isActive ? 'location' : undefined}
+                                >
+                                    {item.num !== '' && (
+                                        <span className={`nav-num ${item.numClass ?? ''}`}>
+                                            {item.num}
+                                        </span>
+                                    )}
+                                    {item.icon && <i className={`ti ${item.icon}`}></i>}
+                                    {item.title}
+                                    {item.badge && <span className="nav-badge">{item.badge}</span>}
+                                </a>
+                                {idx < NAV_ITEMS.length - 1 ? ' ' : ''}
+                            </React.Fragment>
                         );
                     })}
                 </nav>

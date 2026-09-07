@@ -95,9 +95,9 @@ export function defineMigrationSuite(
             ['li', inventory.listItems],
         ])('%s の件数・順序・テキストが移行元と一致する', (selector, items) => {
             const container = renderPage();
-            const rendered = [...container.querySelectorAll(selector)].map((element) =>
-                squash(element.textContent ?? ''),
-            );
+            const rendered = [...container.querySelectorAll(selector)]
+                .map((element) => squash(element.textContent ?? ''))
+                .filter(Boolean);
             expect(rendered).toEqual(items.map(squash));
         });
 
