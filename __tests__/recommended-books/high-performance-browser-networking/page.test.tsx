@@ -1,8 +1,9 @@
 // __tests__/recommended-books/high-performance-browser-networking/page.test.tsx
 // @vitest-environment jsdom
 import { render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, test, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/high-performance-browser-networking.json';
+import { DIAGRAMS } from '@/app/recommended-books/high-performance-browser-networking/constants';
 import Page from '@/app/recommended-books/high-performance-browser-networking/page';
 import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
 
@@ -87,5 +88,14 @@ describe('High Performance Browser Networking 初学者向け完全ガイド —
         expect(pageCss).toMatch(/list-style-type:\s*disc\s*!important/);
         expect(pageCss).toMatch(/list-style-type:\s*decimal\s*!important/);
         expect(pageCss).toMatch(/list-style-position:\s*outside\s*!important/);
+    });
+
+    test.each(
+        Object.entries(DIAGRAMS),
+    )('Mermaid 図 %s が構文エラーなく parse できること', async (id, chart) => {
+        const mermaidModule = await import('mermaid');
+        const mermaid = mermaidModule.default;
+        const result = await mermaid.parse(chart);
+        expect(result, `Diagram ${id} failed syntax validation`).toBeTruthy();
     });
 });
