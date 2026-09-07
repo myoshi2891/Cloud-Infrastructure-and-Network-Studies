@@ -724,7 +724,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "本文中の図解はすべてMermaid記法で記述し、ASCIIアートによる図解は一切使用していません。すべての技術的主張には、Google Cloud公式ドキュメントを中心とした出典を明記しています。"
+      "text": "すべての技術的主張には、Google Cloud公式ドキュメントを中心とした出典を明記しています。"
     },
     {
       "kind": "paragraph",

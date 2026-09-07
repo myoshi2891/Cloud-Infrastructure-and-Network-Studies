@@ -5,22 +5,12 @@ import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { NavBar } from './NavBar';
 import { DIAGRAMS, type DiagramId } from './constants';
 
-const Diagram = memo(function Diagram({
-    id,
-    label,
-}: {
-    id: DiagramId;
-    label: string;
-}) {
+const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: string }) {
     const chart = DIAGRAMS[id];
     if (!chart) return null;
     return (
         <div className="mermaid-wrap">
-            <MermaidDiagram
-                chart={chart}
-                ariaLabel={label}
-                preserveNaturalScale
-            />
+            <MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale />
         </div>
     );
 });
@@ -111,9 +101,7 @@ const CHECKLIST_ITEMS = [
 ];
 
 function ChecklistCard() {
-    const [checkedState, setCheckedState] = useState<Record<string, boolean>>(
-        {},
-    );
+    const [checkedState, setCheckedState] = useState<Record<string, boolean>>({});
 
     const toggleCheck = (id: string) => {
         setCheckedState((prev) => ({
@@ -194,12 +182,9 @@ export function Section3Guide() {
                 <NavBar />
                 <main className="main">
                     <div className="hero">
-                        <div className="kicker">
-                            Professional Cloud Developer · Section 3
-                        </div>
+                        <div className="kicker">Professional Cloud Developer · Section 3</div>
                         <h1>
-                            Google Cloud Professional Cloud Developer 試験ガイド
-                            Section 3:
+                            Google Cloud Professional Cloud Developer 試験ガイド Section 3:
                             デプロイのためのクラウドネイティブアプリケーション構成
                         </h1>
                         <div className="meta-row">
@@ -229,18 +214,16 @@ export function Section3Guide() {
                         </a>
                         の
                         <strong>
-                            Section 3: Configuring cloud-native applications for
-                            deployment
+                            Section 3: Configuring cloud-native applications for deployment
                         </strong>
-                        （試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。図解はすべてMermaidフローチャート、比較情報はすべてMarkdown表を使用し、ASCIIアートによる図解は一切使用していません。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。
+                        （試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。
                     </p>
 
                     <h2 id="section-3-の全体像" tabIndex={-1}>
                         Section 3 の全体像
                     </h2>
                     <p>
-                        Professional Cloud
-                        Developer試験のSection
+                        Professional Cloud Developer試験のSection
                         3は、「設計されたクラウドネイティブアプリケーションを、実際にどうデプロイし、稼働させるか」を問う分野です。大きく{' '}
                         <strong>3.1 Cloud Run</strong> と{' '}
                         <strong>3.2 GKE（Google Kubernetes Engine）</strong>{' '}
@@ -276,15 +259,12 @@ export function Section3Guide() {
                         Runへアプリケーションをデプロイする方法は複数ありますが、初学者がまず押さえるべきなのは「ソースコードから直接デプロイする」方法です。これは
                         <code>gcloud run deploy --source</code>
                         という1つのコマンドで、コンテナイメージのビルドからデプロイまでを一気に行う機能です。裏側では
-                        <strong>Cloud Build</strong>と
-                        <strong>Buildpacks</strong>（またはソースディレクトリ内の
+                        <strong>Cloud Build</strong>と<strong>Buildpacks</strong>
+                        （またはソースディレクトリ内の
                         <code>Dockerfile</code>
                         ）が使われ、あなたはDockerのインストールや設定を一切行う必要がありません。
                     </p>
-                    <Diagram
-                        id="diag-2"
-                        label="ソースコードからのアプリケーションデプロイの流れ"
-                    />
+                    <Diagram id="diag-2" label="ソースコードからのアプリケーションデプロイの流れ" />
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
@@ -318,8 +298,7 @@ export function Section3Guide() {
                     <h4>知っておくべき制約</h4>
                     <p>
                         ソースからのデプロイは「利便性重視の機能」であり、ビルドを完全にカスタマイズすることはできません。より細かい制御が必要な場合（マルチステージビルドの最適化、独自のビルドパイプラインへの組み込みなど）は、
-                        <code>gcloud builds submit</code>でCloud
-                        Buildを直接呼び出し、
+                        <code>gcloud builds submit</code>でCloud Buildを直接呼び出し、
                         <code>gcloud run deploy --image</code>
                         でイメージを指定してデプロイする方式に切り替える必要があります。
                     </p>
@@ -346,35 +325,23 @@ export function Section3Guide() {
                                     <td>
                                         <code>gcloud run deploy --source .</code>
                                     </td>
-                                    <td>
-                                        素早いプロトタイピング、シンプルなCI不要のデプロイ
-                                    </td>
+                                    <td>素早いプロトタイピング、シンプルなCI不要のデプロイ</td>
                                     <td>低い（Buildpacks/Dockerfileに依存）</td>
                                 </tr>
                                 <tr className="even">
                                     <td>イメージ指定デプロイ</td>
                                     <td>
-                                        <code>
-                                            gcloud run deploy --image IMAGE_URL
-                                        </code>
+                                        <code>gcloud run deploy --image IMAGE_URL</code>
                                     </td>
-                                    <td>
-                                        既存のCI/CDパイプラインでビルド済みイメージをデプロイ
-                                    </td>
+                                    <td>既存のCI/CDパイプラインでビルド済みイメージをデプロイ</td>
                                     <td>高い（ビルド工程を完全に制御）</td>
                                 </tr>
                                 <tr className="odd">
                                     <td>YAML宣言的デプロイ</td>
                                     <td>
-                                        <code>
-                                            gcloud run services replace
-                                            service.yaml
-                                        </code>
+                                        <code>gcloud run services replace service.yaml</code>
                                     </td>
-                                    <td>
-                                        GitOps、Infrastructure as
-                                        Code、構成のバージョン管理
-                                    </td>
+                                    <td>GitOps、Infrastructure as Code、構成のバージョン管理</td>
                                     <td>高い（設定をコードとして管理）</td>
                                 </tr>
                                 <tr className="even">
@@ -385,16 +352,9 @@ export function Section3Guide() {
                                 </tr>
                                 <tr className="odd">
                                     <td>CI/CD連携（継続的デプロイ）</td>
-                                    <td>
-                                        GitHub/GitLab/BitbucketとCloud
-                                        Buildトリガーを連携
-                                    </td>
-                                    <td>
-                                        mainブランチへのpushで自動ビルド・自動デプロイ
-                                    </td>
-                                    <td>
-                                        高い（ビルド設定をトリガー側で管理）
-                                    </td>
+                                    <td>GitHub/GitLab/BitbucketとCloud Buildトリガーを連携</td>
+                                    <td>mainブランチへのpushで自動ビルド・自動デプロイ</td>
+                                    <td>高い（ビルド設定をトリガー側で管理）</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -411,26 +371,22 @@ export function Section3Guide() {
                             <code>--build-service-account</code>
                             フラグで専用のサービスアカウントを明示的に指定することが推奨されています。このとき、指定するビルド専用サービスアカウントにはプロジェクトレベルで
                             <code>roles/run.builder</code>
-                            ロールが必要で、さらにデプロイを実行するプリンシパル（ユーザーまたはCI/CDのサービスアカウント）には、Cloud Runサービスのランタイムサービスアカウント（サービスID）に対する
+                            ロールが必要で、さらにデプロイを実行するプリンシパル（ユーザーまたはCI/CDのサービスアカウント）には、Cloud
+                            Runサービスのランタイムサービスアカウント（サービスID）に対する
                             <code>roles/iam.serviceAccountUser</code>
                             が必要です。いずれかの権限が欠けているとソースデプロイは失敗します。
                         </li>
                         <li>
-                            <strong>
-                                本番運用ではソースデプロイをCI/CDの入口として使う
-                            </strong>
+                            <strong>本番運用ではソースデプロイをCI/CDの入口として使う</strong>
                             ：Cloud
                             RunコンソールUIの「継続的デプロイの設定」機能や、手動で作成するCloud
                             Buildトリガーを使えば、mainブランチへのpushをトリガーに自動でビルド・デプロイされる仕組みを構築できます。裏側の仕組みは
                             <code>--source</code>デプロイと同じBuildpacksパイプラインです。
                         </li>
                         <li>
-                            <strong>
-                                細かい制御が必要ならCloud Buildを直接使う
-                            </strong>
+                            <strong>細かい制御が必要ならCloud Buildを直接使う</strong>
                             ：ソースデプロイは便利機能であり、ビルドの完全なカスタマイズはできません。マルチステージビルドや独自のビルドステップが必要な場合は
-                            <code>gcloud builds submit</code>→
-                            <code>gcloud run deploy --image</code>
+                            <code>gcloud builds submit</code>→<code>gcloud run deploy --image</code>
                             の2段階に切り替えます。
                         </li>
                         <li>
@@ -452,14 +408,11 @@ export function Section3Guide() {
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/run/docs/configuring/services/build-service-account">
-                                Set build service account (source deploy) |
-                                Cloud Run
+                                Set build service account (source deploy) | Cloud Run
                             </a>
                         </li>
                         <li>
-                            <a href="https://cloud.google.com/run">
-                                Cloud Run 製品ページ
-                            </a>
+                            <a href="https://cloud.google.com/run">Cloud Run 製品ページ</a>
                         </li>
                     </ul>
                     <hr />
@@ -468,13 +421,11 @@ export function Section3Guide() {
                         id="312-トリガーを使ったcloud-runサービスの呼び出しeventarcpubsub"
                         tabIndex={-1}
                     >
-                        3.1.2
-                        トリガーを使ったCloud Runサービスの呼び出し（Eventarc、Pub/Sub）
+                        3.1.2 トリガーを使ったCloud Runサービスの呼び出し（Eventarc、Pub/Sub）
                     </h3>
                     <h4>概要</h4>
                     <p>
-                        Cloud
-                        Runサービスは、HTTPリクエストで直接呼び出すだけでなく、
+                        Cloud Runサービスは、HTTPリクエストで直接呼び出すだけでなく、
                         <strong>Eventarc</strong>を経由してGoogle
                         Cloud上のさまざまなイベント（Pub/Subメッセージの発行、Cloud
                         Storageへのファイルアップロードなど）をトリガーとして自動的に呼び出すことができます。これはイベント駆動型アーキテクチャの中核をなす仕組みで、Pub/Subはその中でも最も代表的なイベントソースです。
@@ -493,9 +444,7 @@ export function Section3Guide() {
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
-                            <strong>
-                                トリガーに使うサービスアカウントを用意する
-                            </strong>
+                            <strong>トリガーに使うサービスアカウントを用意する</strong>
                             ：Eventarcトリガーは、Cloud
                             Runサービスを呼び出すためのアイデンティティとしてサービスアカウントに紐づけられます。デフォルトではCompute
                             Engineのデフォルトサービスアカウントが使われますが、独自のサービスアカウントを作成し、
@@ -519,13 +468,10 @@ export function Section3Guide() {
                             のように、どの種類のイベントに反応するかを指定します。
                         </li>
                         <li>
-                            <strong>
-                                配信先のパスを必要に応じて指定する
-                            </strong>
+                            <strong>配信先のパスを必要に応じて指定する</strong>
                             ：Cloud Runサービス内の特定のルート（例:
                             <code>/route</code>
-                            ）にイベントを送りたい場合、「Service
-                            URLパス」を指定できます。
+                            ）にイベントを送りたい場合、「Service URLパス」を指定できます。
                         </li>
                         <li>
                             <strong>リトライの既定値を確認する</strong>
@@ -538,8 +484,7 @@ export function Section3Guide() {
                             にできます。このフラグを省略した場合は標準のリトライ動作が適用され、gcloud
                             CLIおよびコンソールのEventarcページで作成したトリガーは
                             <strong>リトライが有効</strong>
-                            な状態になります。一方、Cloud
-                            Runページから作成したトリガーは
+                            な状態になります。一方、Cloud Runページから作成したトリガーは
                             <strong>1回だけ配信する</strong>
                             （リトライしない）のが既定です。リトライ挙動を変更したい場合は、トリガーに紐づくPub/Subサブスクリプションの再試行ポリシーを更新します。
                         </li>
@@ -590,14 +535,13 @@ export function Section3Guide() {
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/eventarc/standard/docs/run/route-trigger-cloud-pubsub">
-                                Route Cloud Pub/Sub events to Cloud Run |
-                                Eventarc Standard
+                                Route Cloud Pub/Sub events to Cloud Run | Eventarc Standard
                             </a>
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/eventarc/standard/docs/run/pubsub-authenticated">
-                                Receive Pub/Sub events using an authenticated
-                                Cloud Run service | Eventarc Standard
+                                Receive Pub/Sub events using an authenticated Cloud Run service |
+                                Eventarc Standard
                             </a>
                         </li>
                     </ul>
@@ -614,10 +558,7 @@ export function Section3Guide() {
                         <strong>受信するCloud Runサービス側</strong>
                         をどう構成するかに焦点を当てます。具体的には、Eventarcトリガー経由で受け取るのか、Pub/Subのプッシュサブスクリプションで直接受け取るのかという選択、および認証方式・リトライ・デッドレター（配信不能メッセージの退避先）の設計が中心になります。
                     </p>
-                    <Diagram
-                        id="diag-4"
-                        label="イベントレシーバー構成の選択フロー"
-                    />
+                    <Diagram id="diag-4" label="イベントレシーバー構成の選択フロー" />
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
@@ -628,8 +569,7 @@ export function Section3Guide() {
                         <li>
                             <strong>エンドポイントのパスを設計する</strong>
                             ：Eventarcトリガーでは「Service URLパス」（例:
-                            <code>/</code>、<code>/route</code>、
-                            <code>route/subroute</code>
+                            <code>/</code>、<code>/route</code>、<code>route/subroute</code>
                             ）を指定して、イベントの種類ごとに異なるハンドラーへ振り分けることができます。
                         </li>
                         <li>
@@ -647,17 +587,13 @@ export function Section3Guide() {
                                     <code>roles/run.invoker</code>を付与する。
                                 </li>
                                 <li>
-                                    <strong>
-                                        2021年4月8日以前に作成したプロジェクト
-                                    </strong>
+                                    <strong>2021年4月8日以前に作成したプロジェクト</strong>
                                     では、Pub/Subサービスエージェント（
                                     <code>
                                         service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
                                     </code>
                                     ）に対して
-                                    <code>
-                                        roles/iam.serviceAccountTokenCreator
-                                    </code>
+                                    <code>roles/iam.serviceAccountTokenCreator</code>
                                     を付与する。この日付以降に作成したプロジェクトでは自動的に付与されます。
                                 </li>
                             </ul>
@@ -667,35 +603,27 @@ export function Section3Guide() {
                             ：一時的な障害でイベント処理が失敗した場合に備え、Eventarcの「失敗時に再試行」オプションを有効にします。Pub/Sub側では、一定回数の配信失敗後にメッセージを退避させる「デッドレタートピック」を設定しておくと、メッセージの喪失を防ぎながら障害調査を効率化できます。
                         </li>
                         <li>
-                            <strong>
-                                受信処理を冪等（べきとう）に実装する
-                            </strong>
+                            <strong>受信処理を冪等（べきとう）に実装する</strong>
                             ：Pub/Subは「少なくとも1回配信（at-least-once
                             delivery）」を保証する設計であるため、同じイベントが重複して届く可能性があります。受信側のハンドラーは、同じイベントを複数回処理しても結果が変わらないように（冪等に）実装することが重要です。
                         </li>
                     </ol>
 
-                    <h4>
-                        Eventarcトリガー vs
-                        Pub/Subプッシュサブスクリプション直接構成の比較
-                    </h4>
+                    <h4>Eventarcトリガー vs Pub/Subプッシュサブスクリプション直接構成の比較</h4>
                     <div className="table-scroll">
                         <table>
                             <thead>
                                 <tr className="header">
                                     <th scope="col">観点</th>
                                     <th scope="col">Eventarcトリガー</th>
-                                    <th scope="col">
-                                        Pub/Subプッシュサブスクリプション直接構成
-                                    </th>
+                                    <th scope="col">Pub/Subプッシュサブスクリプション直接構成</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr className="odd">
                                     <td>対応イベントソース</td>
                                     <td>
-                                        Pub/Sub、Cloud
-                                        Storage、Firestoreなど多数のGoogle
+                                        Pub/Sub、Cloud Storage、Firestoreなど多数のGoogle
                                         Cloudプロバイダ
                                     </td>
                                     <td>Pub/Subのみ</td>
@@ -711,21 +639,13 @@ export function Section3Guide() {
                                 </tr>
                                 <tr className="odd">
                                     <td>複数トピックの一元管理</td>
-                                    <td>
-                                        トピックごとに個別のトリガーを作成するのが基本
-                                    </td>
-                                    <td>
-                                        1つのHTTPエンドポイントで複数トピックを柔軟に購読可能
-                                    </td>
+                                    <td>トピックごとに個別のトリガーを作成するのが基本</td>
+                                    <td>1つのHTTPエンドポイントで複数トピックを柔軟に購読可能</td>
                                 </tr>
                                 <tr className="even">
                                     <td>典型的な用途</td>
-                                    <td>
-                                        マルチソースのイベント駆動アーキテクチャ
-                                    </td>
-                                    <td>
-                                        Pub/Sub中心でシンプルに完結させたい構成
-                                    </td>
+                                    <td>マルチソースのイベント駆動アーキテクチャ</td>
+                                    <td>Pub/Sub中心でシンプルに完結させたい構成</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -738,15 +658,11 @@ export function Section3Guide() {
                             ：at-least-once配信の特性上、重複イベントの受信は「起こりうる正常な動作」として設計に織り込みます。
                         </li>
                         <li>
-                            <strong>
-                                デッドレタートピックで障害調査を容易にする
-                            </strong>
+                            <strong>デッドレタートピックで障害調査を容易にする</strong>
                             ：一定回数再試行しても処理できないメッセージを別トピックに退避させることで、本流の処理を止めずに後から原因調査ができます。
                         </li>
                         <li>
-                            <strong>
-                                エンドポイントのパスでイベント種別を分離する
-                            </strong>
+                            <strong>エンドポイントのパスでイベント種別を分離する</strong>
                             ：Eventarcの「Service
                             URLパス」機能を活用し、イベントソースやイベント種別ごとに異なるルートへ振り分けることで、Cloud
                             Runサービス内のルーティングロジックをシンプルに保てます。
@@ -776,14 +692,13 @@ export function Section3Guide() {
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/run/docs/tutorials/pubsub-eventdriven">
-                                Trigger functions from Pub/Sub using Eventarc |
-                                Cloud Run
+                                Trigger functions from Pub/Sub using Eventarc | Cloud Run
                             </a>
                         </li>
                         <li>
                             <a href="https://cloud.google.com/eventarc/docs/run/create-trigger-pub-sub-gcloud">
-                                Quickstart: Receive events using Pub/Sub
-                                messages (Google Cloud CLI) | Eventarc Standard
+                                Quickstart: Receive events using Pub/Sub messages (Google Cloud CLI)
+                                | Eventarc Standard
                             </a>
                         </li>
                     </ul>
@@ -805,16 +720,11 @@ export function Section3Guide() {
                         をプロキシ（ファサード）層として前段に配置するのが一般的なベストプラクティスです。Apigeeは、認証・認可・レート制限・バージョニング・分析といったAPI管理機能を一元的に提供し、バックエンドのCloud
                         Runサービスを直接の攻撃対象から隠すことができます。
                     </p>
-                    <Diagram
-                        id="diag-5"
-                        label="ApigeeによるCloud Run API保護アーキテクチャ"
-                    />
+                    <Diagram id="diag-5" label="ApigeeによるCloud Run API保護アーキテクチャ" />
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
-                            <strong>
-                                Cloud Runサービスを非公開（認証必須）でデプロイする
-                            </strong>
+                            <strong>Cloud Runサービスを非公開（認証必須）でデプロイする</strong>
                             ：Cloud
                             Runサービス自体は未認証呼び出しを許可せず、Apigeeが使うサービスアカウントにのみ
                             <code>roles/run.invoker</code>を付与します。これは
@@ -838,9 +748,7 @@ export function Section3Guide() {
                             </strong>
                             ：ここでは
                             <strong>「どこへ接続するか（ターゲット）」</strong>と
-                            <strong>
-                                「どのトークンを添えるか（Audience）」
-                            </strong>
+                            <strong>「どのトークンを添えるか（Audience）」</strong>
                             が別々の設定である点が重要です。両者を混同すると、接続はできるのに401が返る（あるいはその逆）といった切り分けの難しい問題になります。
                             <ul>
                                 <li>
@@ -900,18 +808,14 @@ export function Section3Guide() {
                         <li>
                             <strong>プライベート接続の経路を構成する</strong>
                             ：インターネットを経由させたくない場合、VPCネットワークピアリングやCloud
-                            Interconnectだけではマネージドサービスである Cloud
-                            Run へ直接到達できません。Apigeeランタイムから Cloud
-                            Run へのプライベート経路は、次の要素を
-                            <strong>
-                                すべて順番につないだ1本の経路（PSCパス）
-                            </strong>
+                            Interconnectだけではマネージドサービスである Cloud Run
+                            へ直接到達できません。Apigeeランタイムから Cloud Run
+                            へのプライベート経路は、次の要素を
+                            <strong>すべて順番につないだ1本の経路（PSCパス）</strong>
                             として構成します。いずれか1つを選ぶ択一の選択肢ではありません。
                             <ol>
                                 <li>
-                                    <strong>
-                                        Apigeeのエンドポイントアタッチメント
-                                    </strong>
+                                    <strong>Apigeeのエンドポイントアタッチメント</strong>
                                     ：Apigeeランタイムから、対向のPSCサービスアタッチメントへ接続するための出口。
                                 </li>
                                 <li>
@@ -920,15 +824,12 @@ export function Section3Guide() {
                                     Balancerを、Apigee側へPSCサービスとして公開する。
                                 </li>
                                 <li>
-                                    <strong>
-                                        内部Application Load Balancer
-                                    </strong>
+                                    <strong>内部Application Load Balancer</strong>
                                     ：PSC経由で受けたリクエストをバックエンドへ振り分ける。
                                 </li>
                                 <li>
                                     <strong>サーバーレスNEG</strong>
-                                    ：内部ALBのバックエンドとして、Cloud
-                                    Runサービスを指す。
+                                    ：内部ALBのバックエンドとして、Cloud Runサービスを指す。
                                 </li>
                                 <li>
                                     <strong>Cloud Runサービス</strong>
@@ -936,8 +837,7 @@ export function Section3Guide() {
                                 </li>
                             </ol>
                             <p>
-                                VPCピアリングやCloud
-                                Interconnectは、これとは別の
+                                VPCピアリングやCloud Interconnectは、これとは別の
                                 <strong>接続方式</strong>
                                 であり、オンプレミスや他のVPCとの接続を成立させるための土台です。それ単体が
                                 Cloud Run への直接経路になるわけではありません。
@@ -978,8 +878,7 @@ export function Section3Guide() {
                                     <td>API</td>
                                     <td>APIリクエスト自体の保護</td>
                                     <td>
-                                        OAuth 2.0、OpenID
-                                        Connect、Quota、Spike Arrest、脅威保護
+                                        OAuth 2.0、OpenID Connect、Quota、Spike Arrest、脅威保護
                                     </td>
                                 </tr>
                                 <tr className="odd">
@@ -990,9 +889,7 @@ export function Section3Guide() {
                                 <tr className="even">
                                     <td>バックエンド</td>
                                     <td>Cloud Runなど実処理層の保護</td>
-                                    <td>
-                                        プライベートネットワーキング、相互TLS、IPアドレス制御
-                                    </td>
+                                    <td>プライベートネットワーキング、相互TLS、IPアドレス制御</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1001,35 +898,31 @@ export function Section3Guide() {
                     <div className="practice-label">ベストプラクティス</div>
                     <ul>
                         <li>
-                            <strong>
-                                バックエンドのCloud
-                                Runサービスは常に認証必須にする
-                            </strong>
+                            <strong>バックエンドのCloud Runサービスは常に認証必須にする</strong>
                             ：Apigeeを前段に置く意味は「バックエンドへの直接アクセスを防ぐ」ことにあるため、Cloud
                             Run側でも未認証アクセスを許可しないことが前提になります。
                         </li>
                         <li>
-                            <strong>
-                                サービスアカウントは最小権限で運用する
-                            </strong>
-                            ：Apigeeが使うサービスアカウントには、呼び出し先のCloud
-                            Run<strong>サービス単位</strong>で
-                            <code>roles/run.invoker</code>
+                            <strong>サービスアカウントは最小権限で運用する</strong>
+                            ：Apigeeが使うサービスアカウントには、呼び出し先のCloud Run
+                            <strong>サービス単位</strong>で<code>roles/run.invoker</code>
                             のような最小限のロールのみを付与します。Cloud
                             RunのIAMはサービス単位で評価されるため、HTTPパス（ルート）単位の認可をIAMで表現することはできません。パスごとのアクセス制御は、Apigeeのフローやポリシー側で実装・管理します。
                         </li>
                         <li>
-                            <strong>
-                                シークレットは定期的にローテーションする
-                            </strong>
+                            <strong>シークレットは定期的にローテーションする</strong>
                             ：Secret Managerや
                             CI/CDパイプラインを通じて、認証情報を四半期ごとなど定期的にローテーションする運用を組み込みます。
                         </li>
                         <li>
-                            <strong>
-                                機微なデータはインターネットを経由させない
-                            </strong>
-                            ：ApigeeランタイムからCloud Runへの通信をプライベートに閉じるには、エンドポイントアタッチメント→PSCサービスアタッチメント→内部Application Load Balancer→サーバーレスNEG→Cloud Runサービスという1本のPSC経路を構成し、あわせてCloud Run側の受信制御を--ingress=internalなどで内部に限定します。VPCピアリングやCloud Interconnectは他のネットワークとの接続の土台であり、それ単体ではCloud Runへの直接経路になりません。
+                            <strong>機微なデータはインターネットを経由させない</strong>
+                            ：ApigeeランタイムからCloud
+                            Runへの通信をプライベートに閉じるには、エンドポイントアタッチメント→PSCサービスアタッチメント→内部Application
+                            Load Balancer→サーバーレスNEG→Cloud
+                            Runサービスという1本のPSC経路を構成し、あわせてCloud
+                            Run側の受信制御を--ingress=internalなどで内部に限定します。VPCピアリングやCloud
+                            Interconnectは他のネットワークとの接続の土台であり、それ単体ではCloud
+                            Runへの直接経路になりません。
                         </li>
                         <li>
                             <strong>APIプロキシの変更もバージョン管理する</strong>
@@ -1043,9 +936,8 @@ export function Section3Guide() {
                     <ul>
                         <li>
                             <a href="https://cloud.google.com/architecture/best-practices-securing-applications-and-apis-using-apigee">
-                                Best practices for securing your applications
-                                and APIs using Apigee | Cloud Architecture
-                                Center
+                                Best practices for securing your applications and APIs using Apigee
+                                | Cloud Architecture Center
                             </a>
                         </li>
                         <li>
@@ -1074,26 +966,20 @@ export function Section3Guide() {
                         でクラスタに適用するという流れになります。DeploymentはPodの望ましい状態（レプリカ数、コンテナイメージ、更新戦略など）を宣言的に記述するリソースで、実際のPodの生成と維持はDeploymentが内部で作成する
                         <strong>ReplicaSet</strong>が担います。
                     </p>
-                    <Diagram
-                        id="diag-6"
-                        label="GKEへのコンテナデプロイメントの流れ"
-                    />
+                    <Diagram id="diag-6" label="GKEへのコンテナデプロイメントの流れ" />
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
                             <strong>クラスタの認証情報を取得する</strong>：
                             <code>
-                                gcloud container clusters get-credentials
-                                CLUSTER_NAME --location LOCATION
+                                gcloud container clusters get-credentials CLUSTER_NAME --location
+                                LOCATION
                             </code>
                             を実行し、<code>kubectl</code>
                             が対象のGKEクラスタを操作できるように設定します。
                         </li>
                         <li>
-                            <strong>
-                                コンテナイメージをビルドし、Artifact
-                                Registryへpushする
-                            </strong>
+                            <strong>コンテナイメージをビルドし、Artifact Registryへpushする</strong>
                             ：Dockerfileからイメージをビルドし、レジストリへ保存します。
                         </li>
                         <li>
@@ -1108,15 +994,12 @@ export function Section3Guide() {
                             を実行すると、GKEがPodのスケジューリング、指定レプリカ数の維持、ローリングアップデートを自動的に行います。
                         </li>
                         <li>
-                            <strong>
-                                Serviceを作成してアプリケーションを公開する
-                            </strong>
+                            <strong>Serviceを作成してアプリケーションを公開する</strong>
                             ：ClusterIP（クラスタ内部限定）、NodePort、LoadBalancer（外部公開、Google
                             Cloudのロードバランサを自動プロビジョニング）のいずれかのタイプでServiceを作成し、Podへのアクセス経路を確立します。
                         </li>
                         <li>
-                            <strong>デプロイ状況を確認する</strong>：
-                            <code>kubectl get pods</code>、
+                            <strong>デプロイ状況を確認する</strong>：<code>kubectl get pods</code>、
                             <code>kubectl get service</code>、
                             <code>kubectl rollout status deployment/NAME</code>
                             などでロールアウトの進行状況とPodの稼働状態を確認します。
@@ -1135,9 +1018,7 @@ export function Section3Guide() {
                         <table>
                             <thead>
                                 <tr className="header">
-                                    <th scope="col">
-                                        gke-deployが自動的に行うこと
-                                    </th>
+                                    <th scope="col">gke-deployが自動的に行うこと</th>
                                     <th scope="col">効果</th>
                                 </tr>
                             </thead>
@@ -1152,23 +1033,15 @@ export function Section3Guide() {
                                 </tr>
                                 <tr className="even">
                                     <td>推奨ラベルをリソースファイルに追加</td>
-                                    <td>
-                                        リソースの管理・検索・監査がしやすくなる
-                                    </td>
+                                    <td>リソースの管理・検索・監査がしやすくなる</td>
                                 </tr>
                                 <tr className="odd">
-                                    <td>
-                                        デプロイ先GKEクラスタの認証情報を自動取得
-                                    </td>
+                                    <td>デプロイ先GKEクラスタの認証情報を自動取得</td>
                                     <td>手動でのクラスタ認証設定が不要になる</td>
                                 </tr>
                                 <tr className="even">
-                                    <td>
-                                        適用したリソースがReady状態になるまで待機
-                                    </td>
-                                    <td>
-                                        デプロイの成否をCI/CDパイプライン内で確実に検知できる
-                                    </td>
+                                    <td>適用したリソースがReady状態になるまで待機</td>
+                                    <td>デプロイの成否をCI/CDパイプライン内で確実に検知できる</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1182,47 +1055,36 @@ export function Section3Guide() {
                     <div className="practice-label">ベストプラクティス</div>
                     <ul>
                         <li>
-                            <strong>
-                                コンテナイメージはタグではなくダイジェストで参照する
-                            </strong>
-                            ：<code>:latest</code>
+                            <strong>コンテナイメージはタグではなくダイジェストで参照する</strong>：
+                            <code>:latest</code>
                             のようなタグは指し示す中身が変わりうるため、本番デプロイでは
                             <code>sha256:...</code>
                             形式のダイジェストで固定し、意図しないイメージの入れ替わりを防ぎます。
                         </li>
                         <li>
-                            <strong>
-                                リソースリクエストとリミットを必ず設定する
-                            </strong>
+                            <strong>リソースリクエストとリミットを必ず設定する</strong>
                             ：CPU・メモリのリクエスト（最低保証）とリミット（上限）を設定することで、ノードのリソースを公平に配分し、他のワークロードへの影響を抑えます。
                         </li>
                         <li>
-                            <strong>
-                                名前空間（Namespace）でリソースを分離する
-                            </strong>
+                            <strong>名前空間（Namespace）でリソースを分離する</strong>
                             ：環境（開発・ステージング・本番）やチームごとにNamespaceを分けることで、リソースクォータの適用やアクセス制御がしやすくなります。
                         </li>
                         <li>
-                            <strong>
-                                ローリングアップデート戦略を明示的に調整する
-                            </strong>
-                            ：<code>maxSurge</code>（同時に追加できるPod数）と
+                            <strong>ローリングアップデート戦略を明示的に調整する</strong>：
+                            <code>maxSurge</code>（同時に追加できるPod数）と
                             <code>maxUnavailable</code>
                             （同時に停止してよいPod数）を、アプリケーションの特性（起動時間、瞬断への耐性）に応じてチューニングします。
                         </li>
                         <li>
                             <strong>
-                                Workload
-                                Identityを使ってGoogle Cloud APIへ安全にアクセスする
+                                Workload Identityを使ってGoogle Cloud APIへ安全にアクセスする
                             </strong>
                             ：Podに直接サービスアカウントキーを配置するのではなく、Workload
                             Identityを使ってKubernetesのサービスアカウントとGoogle
                             CloudのIAMサービスアカウントを紐付け、鍵の管理負担とリークリスクを減らします。
                         </li>
                         <li>
-                            <strong>
-                                ConfigMapとSecretで設定と機密情報をイメージから分離する
-                            </strong>
+                            <strong>ConfigMapとSecretで設定と機密情報をイメージから分離する</strong>
                             ：設定値や認証情報をコンテナイメージに埋め込まず、ConfigMap／Secretとして外部から注入することで、環境ごとの差し替えが容易になり、イメージの再利用性も高まります。
                         </li>
                     </ul>
@@ -1233,8 +1095,8 @@ export function Section3Guide() {
                     <ul>
                         <li>
                             <a href="https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster">
-                                Quickstart: Deploy an app to a GKE cluster |
-                                Google Kubernetes Engine (GKE)
+                                Quickstart: Deploy an app to a GKE cluster | Google Kubernetes
+                                Engine (GKE)
                             </a>
                         </li>
                         <li>
@@ -1249,8 +1111,7 @@ export function Section3Guide() {
                         id="322-アプリケーションの可用性を高めるkubernetesヘルスチェックの実装"
                         tabIndex={-1}
                     >
-                        3.2.2
-                        アプリケーションの可用性を高めるKubernetesヘルスチェックの実装
+                        3.2.2 アプリケーションの可用性を高めるKubernetesヘルスチェックの実装
                     </h3>
                     <h4>概要</h4>
                     <p>
@@ -1278,12 +1139,8 @@ export function Section3Guide() {
                             <tbody>
                                 <tr className="odd">
                                     <td>Startupプローブ</td>
-                                    <td>
-                                        「アプリケーションの起動処理は完了したか？」
-                                    </td>
-                                    <td>
-                                        コンテナがkillされ、再起動ポリシーに従って再起動される
-                                    </td>
+                                    <td>「アプリケーションの起動処理は完了したか？」</td>
+                                    <td>コンテナがkillされ、再起動ポリシーに従って再起動される</td>
                                     <td>
                                         起動に時間がかかるアプリ（大きな設定ファイルの読み込み、キャッシュのウォームアップなど）
                                     </td>
@@ -1317,8 +1174,8 @@ export function Section3Guide() {
                     <h4>ステップバイステップの流れ</h4>
                     <ol>
                         <li>
-                            <strong>各プローブ専用のエンドポイントを用意する</strong>
-                            ：<code>/healthz</code>
+                            <strong>各プローブ専用のエンドポイントを用意する</strong>：
+                            <code>/healthz</code>
                             （Liveness用、プロセスが生きているかだけを軽量にチェック）と
                             <code>/ready</code>
                             （Readiness用、データベースやキャッシュなど依存サービスへの接続も含めてチェック）のように、目的別に異なるエンドポイントを実装することが推奨されます。同じエンドポイントを使い回す場合でも、Livenessの方は
@@ -1326,9 +1183,8 @@ export function Section3Guide() {
                             を高めに設定し、「先にトラフィックから外し、それでもダメなら再起動する」という段階的な挙動にするのが一般的です。
                         </li>
                         <li>
-                            <strong>チェック方式（メカニズム）を選ぶ</strong>：
-                            <code>httpGet</code>（HTTP
-                            GETリクエストを送り、ステータスコード200〜399なら成功）、
+                            <strong>チェック方式（メカニズム）を選ぶ</strong>：<code>httpGet</code>
+                            （HTTP GETリクエストを送り、ステータスコード200〜399なら成功）、
                             <code>tcpSocket</code>
                             （指定ポートへのTCP接続が確立できれば成功）、
                             <code>exec</code>
@@ -1337,21 +1193,16 @@ export function Section3Guide() {
                             （gRPCヘルスチェックプロトコルに準拠したサーバーへの呼び出し）の4種類から、アプリケーションの実装に合ったものを選びます。
                         </li>
                         <li>
-                            <strong>
-                                起動に時間がかかる場合はStartupプローブを追加する
-                            </strong>
+                            <strong>起動に時間がかかる場合はStartupプローブを追加する</strong>
                             ：もしコンテナの起動が「
-                            <code>
-                                initialDelaySeconds + failureThreshold ×
-                                periodSeconds
-                            </code>
+                            <code>initialDelaySeconds + failureThreshold × periodSeconds</code>
                             」よりも長くかかる可能性がある場合は、Livenessプローブと同じエンドポイントをチェックするStartupプローブを追加し、
                             <code>failureThreshold</code>
                             を大きめに設定します。Startupプローブが成功するまでは、LivenessとReadinessのプローブは実行されません。
                         </li>
                         <li>
-                            <strong>タイミングパラメータをチューニングする</strong>
-                            ：<code>initialDelaySeconds</code>
+                            <strong>タイミングパラメータをチューニングする</strong>：
+                            <code>initialDelaySeconds</code>
                             （プローブ開始までの待機秒数）、
                             <code>periodSeconds</code>（チェック間隔）、
                             <code>timeoutSeconds</code>（タイムアウト秒数）、
@@ -1361,9 +1212,7 @@ export function Section3Guide() {
                             （連続何回失敗したら異常とみなすか）を、アプリケーションの特性に合わせて設定します。
                         </li>
                         <li>
-                            <strong>
-                                依存関係のチェックにはタイムアウトを必ず設定する
-                            </strong>
+                            <strong>依存関係のチェックにはタイムアウトを必ず設定する</strong>
                             ：Readinessプローブ内でデータベース接続などをチェックする場合、そのチェック自体がハングするとプローブ全体がタイムアウトするまで応答が返らず、意図しない挙動につながります。依存先の呼び出しには必ず個別のタイムアウトを設定します。
                         </li>
                     </ol>
@@ -1384,9 +1233,7 @@ export function Section3Guide() {
                                     <td>
                                         <code>initialDelaySeconds</code>
                                     </td>
-                                    <td>
-                                        コンテナ起動後、プローブを開始するまでの待機秒数
-                                    </td>
+                                    <td>コンテナ起動後、プローブを開始するまでの待機秒数</td>
                                     <td>0秒</td>
                                     <td>0</td>
                                 </tr>
@@ -1410,9 +1257,7 @@ export function Section3Guide() {
                                     <td>
                                         <code>successThreshold</code>
                                     </td>
-                                    <td>
-                                        失敗状態から健全と判定するまでに必要な連続成功回数
-                                    </td>
+                                    <td>失敗状態から健全と判定するまでに必要な連続成功回数</td>
                                     <td>1（Liveness/Startupは1固定）</td>
                                     <td>1</td>
                                 </tr>
@@ -1420,9 +1265,7 @@ export function Section3Guide() {
                                     <td>
                                         <code>failureThreshold</code>
                                     </td>
-                                    <td>
-                                        異常と判定するまでに必要な連続失敗回数
-                                    </td>
+                                    <td>異常と判定するまでに必要な連続失敗回数</td>
                                     <td>3</td>
                                     <td>1</td>
                                 </tr>
@@ -1444,9 +1287,7 @@ export function Section3Guide() {
                     <div className="practice-label">ベストプラクティス</div>
                     <ul>
                         <li>
-                            <strong>
-                                LivenessプローブとReadinessプローブの役割を混同しない
-                            </strong>
+                            <strong>LivenessプローブとReadinessプローブの役割を混同しない</strong>
                             ：同じエンドポイントを使い回すこと自体は問題ありませんが、「プロセスが生きているか」と「トラフィックを処理できる状態か」は別の問いであることを常に意識します。Readinessプローブの中でLivenessと同じ重いチェック（外部依存の確認など）を行うのは適切ですが、Livenessプローブの中で外部依存をチェックすると、依存サービスの一時的な障害がコンテナの無限再起動（CrashLoopBackOff）を引き起こす危険があります。
                         </li>
                         <li>
@@ -1480,21 +1321,20 @@ export function Section3Guide() {
                     <ul>
                         <li>
                             <a href="https://kubernetes.io/docs/concepts/workloads/pods/probes/">
-                                Liveness, Readiness, and Startup Probes |
-                                Kubernetes 公式ドキュメント
+                                Liveness, Readiness, and Startup Probes | Kubernetes
+                                公式ドキュメント
                             </a>
                         </li>
                         <li>
                             <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">
-                                Configure Liveness, Readiness and Startup
-                                Probes | Kubernetes 公式ドキュメント
+                                Configure Liveness, Readiness and Startup Probes | Kubernetes
+                                公式ドキュメント
                             </a>
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/kubernetes-engine/docs/deprecations/exec-probe-timeouts">
-                                Configure exec probe timeouts before upgrading
-                                to GKE version 1.35 | Google Kubernetes Engine
-                                (GKE)
+                                Configure exec probe timeouts before upgrading to GKE version 1.35 |
+                                Google Kubernetes Engine (GKE)
                             </a>
                         </li>
                     </ul>
@@ -1504,8 +1344,7 @@ export function Section3Guide() {
                         id="323-horizontal-pod-autoscaler属性スケーリングメトリクスの組み込み"
                         tabIndex={-1}
                     >
-                        3.2.3 Horizontal Pod
-                        Autoscaler属性（スケーリング、メトリクス）の組み込み
+                        3.2.3 Horizontal Pod Autoscaler属性（スケーリング、メトリクス）の組み込み
                     </h3>
                     <h4>概要</h4>
                     <p>
@@ -1531,16 +1370,13 @@ export function Section3Guide() {
                             <code>maxReplicas</code>
                             はスケーリングの上限（レプリカ数がこれを超えないという上限値）です。
                             <code>autoscaling/v2</code>では
-                            <code>spec.maxReplicas</code>は
-                            <strong>必須フィールド</strong>
+                            <code>spec.maxReplicas</code>は<strong>必須フィールド</strong>
                             であり、省略するとAPIのバリデーションで拒否されるため、「上限を設定しなければ無制限にスケールする」という状態は存在しません。
                             <code>maxReplicas</code>には<code>minReplicas</code>
                             以上の値を指定する必要があり、実運用では想定ピークを賄える値でありながら、予期しない急激なトラフィック増加時にコストが際限なく膨らまない値を選ぶことが重要です。
                         </li>
                         <li>
-                            <strong>
-                                スケーリングの基準となるメトリクスを選ぶ
-                            </strong>
+                            <strong>スケーリングの基準となるメトリクスを選ぶ</strong>
                             ：CPU・メモリ使用率だけでなく、Kubernetesオブジェクトから得られるカスタムメトリクス（Podsメトリクス、Objectメトリクス）や、Cloud
                             Monitoringなどクラスタ外部のメトリクス（Externalメトリクス）も利用できます。
                         </li>
@@ -1549,17 +1385,13 @@ export function Section3Guide() {
                             ：CPU使用率であれば「70%」のように、パーセンテージまたは絶対値で目標を指定します。
                         </li>
                         <li>
-                            <strong>
-                                スケーリングの挙動（behavior）を必要に応じて調整する
-                            </strong>
-                            ：<code>autoscaling/v2</code>
+                            <strong>スケーリングの挙動（behavior）を必要に応じて調整する</strong>：
+                            <code>autoscaling/v2</code>
                             APIでは、<code>behavior</code>
                             フィールドを使ってscaleUp（増加）とscaleDown（減少）それぞれの速度や安定化ウィンドウを細かく制御できます。
                         </li>
                         <li>
-                            <strong>
-                                Vertical Pod Autoscalerとの併用ルールを確認する
-                            </strong>
+                            <strong>Vertical Pod Autoscalerとの併用ルールを確認する</strong>
                             ：CPUまたはメモリに関しては、HPAとVertical Pod
                             Autoscaler（VPA）を同時に使わないことが推奨されています。両者が同じメトリクスに基づいて競合する調整を行おうとするためです。CPU・メモリ以外のメトリクスであれば、HPAとVPAを併用することも可能です。
                         </li>
@@ -1581,9 +1413,7 @@ export function Section3Guide() {
                                     <td>
                                         Podが要求するリソース（CPU/メモリ）の実際の使用量。パーセンテージまたは絶対値で指定可能
                                     </td>
-                                    <td>
-                                        CPU使用率が70%を超えたらスケールアウト
-                                    </td>
+                                    <td>CPU使用率が70%を超えたらスケールアウト</td>
                                 </tr>
                                 <tr className="even">
                                     <td>Pods</td>
@@ -1594,22 +1424,15 @@ export function Section3Guide() {
                                 </tr>
                                 <tr className="odd">
                                     <td>Object</td>
-                                    <td>
-                                        特定の単一Kubernetesオブジェクトに紐づくメトリクス
-                                    </td>
-                                    <td>
-                                        Ingressオブジェクトのリクエストレート
-                                    </td>
+                                    <td>特定の単一Kubernetesオブジェクトに紐づくメトリクス</td>
+                                    <td>Ingressオブジェクトのリクエストレート</td>
                                 </tr>
                                 <tr className="even">
                                     <td>External</td>
                                     <td>
                                         クラスタ外部のアプリケーションやサービス由来のメトリクス
                                     </td>
-                                    <td>
-                                        Cloud
-                                        Monitoring上のPub/Subキューのバックログ長
-                                    </td>
+                                    <td>Cloud Monitoring上のPub/Subキューのバックログ長</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1642,13 +1465,9 @@ export function Section3Guide() {
                             <tbody>
                                 <tr className="odd">
                                     <td>
-                                        <code>
-                                            scaleUp.stabilizationWindowSeconds
-                                        </code>
+                                        <code>scaleUp.stabilizationWindowSeconds</code>
                                     </td>
-                                    <td>
-                                        スケールアップ判断を安定させるための遡及期間
-                                    </td>
+                                    <td>スケールアップ判断を安定させるための遡及期間</td>
                                     <td>
                                         0秒（安定化なし、即座にスケールアップ）。設定した場合はウィンドウ内の
                                         <strong>最小</strong>推奨値を採用
@@ -1656,13 +1475,9 @@ export function Section3Guide() {
                                 </tr>
                                 <tr className="even">
                                     <td>
-                                        <code>
-                                            scaleDown.stabilizationWindowSeconds
-                                        </code>
+                                        <code>scaleDown.stabilizationWindowSeconds</code>
                                     </td>
-                                    <td>
-                                        スケールダウン判断を安定させるための遡及期間
-                                    </td>
+                                    <td>スケールダウン判断を安定させるための遡及期間</td>
                                     <td>
                                         300秒（過去5分間の
                                         <strong>最大</strong>推奨値を採用）
@@ -1672,18 +1487,14 @@ export function Section3Guide() {
                                     <td>
                                         <code>policies[].type: Pods</code>
                                     </td>
-                                    <td>
-                                        一定期間あたりに増減できるPod数の絶対値を制限
-                                    </td>
+                                    <td>一定期間あたりに増減できるPod数の絶対値を制限</td>
                                     <td>—</td>
                                 </tr>
                                 <tr className="even">
                                     <td>
                                         <code>policies[].type: Percent</code>
                                     </td>
-                                    <td>
-                                        一定期間あたりに増減できる割合（%）を制限
-                                    </td>
+                                    <td>一定期間あたりに増減できる割合（%）を制限</td>
                                     <td>—</td>
                                 </tr>
                                 <tr className="odd">
@@ -1692,8 +1503,7 @@ export function Section3Guide() {
                                     </td>
                                     <td>
                                         複数のポリシーが該当する場合にどちらを採用するか（
-                                        <code>Max</code>/<code>Min</code>/
-                                        <code>Disabled</code>）
+                                        <code>Max</code>/<code>Min</code>/<code>Disabled</code>）
                                     </td>
                                     <td>
                                         <code>Max</code>
@@ -1706,21 +1516,15 @@ export function Section3Guide() {
                     <div className="practice-label">ベストプラクティス</div>
                     <ul>
                         <li>
-                            <strong>
-                                CPU使用率の目標値は70%前後を基準に検討する
-                            </strong>
+                            <strong>CPU使用率の目標値は70%前後を基準に検討する</strong>
                             ：50%のような低い目標値を設定すると、常に大きな余剰キャパシティを確保することになりコストが増大する一方、パフォーマンスへの影響は限定的であるという知見があります。ワークロードの特性に応じて、コストとレイテンシのバランスが取れる目標値を検証しながら決定します。
                         </li>
                         <li>
-                            <strong>
-                                HPAとVPAをCPU/メモリで同時に使わない
-                            </strong>
+                            <strong>HPAとVPAをCPU/メモリで同時に使わない</strong>
                             ：両者が競合するため、CPU/メモリのスケーリングはHPAに任せ、VPAはCPU/メモリ以外のリソース調整、またはHPAと組み合わせない単独運用にとどめます。
                         </li>
                         <li>
-                            <strong>
-                                スケールアップは素早く、スケールダウンは慎重に設定する
-                            </strong>
+                            <strong>スケールアップは素早く、スケールダウンは慎重に設定する</strong>
                             ：トラフィックの急増には迅速に追従しつつ、一時的な低下ですぐにスケールダウンしてしまうと、直後の再スパイクで再度スケールアップが必要になり非効率です。
                             <code>scaleUp</code>
                             は短い安定化ウィンドウ（またはウィンドウなし）、
@@ -1728,10 +1532,8 @@ export function Section3Guide() {
                             は数分単位の安定化ウィンドウを設定するのが典型的なパターンです。
                         </li>
                         <li>
-                            <strong>
-                                最大レプリカ数を必ず設定し、コストの上限を意識する
-                            </strong>
-                            ：<code>maxReplicas</code>
+                            <strong>最大レプリカ数を必ず設定し、コストの上限を意識する</strong>：
+                            <code>maxReplicas</code>
                             を適切に設定しないと、異常なトラフィック増加やバグによって際限なくPodが増加し、クラスタ全体のコストとノードリソースを圧迫するリスクがあります。
                         </li>
                         <li>
@@ -1748,33 +1550,28 @@ export function Section3Guide() {
                     <ul>
                         <li>
                             <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler">
-                                Horizontal Pod autoscaling | Google Kubernetes
-                                Engine (GKE)
+                                Horizontal Pod autoscaling | Google Kubernetes Engine (GKE)
                             </a>
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke">
-                                Best practices for running cost-optimized
-                                Kubernetes applications on GKE | Cloud
-                                Architecture Center
+                                Best practices for running cost-optimized Kubernetes applications on
+                                GKE | Cloud Architecture Center
                             </a>
                         </li>
                         <li>
                             <a href="https://cloud.google.com/blog/products/containers-kubernetes/tuning-the-kubernetes-hpa-in-gke">
-                                Tuning the Kubernetes HPA in GKE | Google Cloud
-                                Blog
+                                Tuning the Kubernetes HPA in GKE | Google Cloud Blog
                             </a>
                         </li>
                         <li>
                             <a href="https://v1-32.docs.kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">
-                                Horizontal Pod Autoscaling | Kubernetes
-                                公式ドキュメント
+                                Horizontal Pod Autoscaling | Kubernetes 公式ドキュメント
                             </a>
                         </li>
                         <li>
                             <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler">
-                                Vertical Pod autoscaling | Google Kubernetes
-                                Engine (GKE)
+                                Vertical Pod autoscaling | Google Kubernetes Engine (GKE)
                             </a>
                         </li>
                     </ul>
@@ -1793,9 +1590,7 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref1">
                             <div className="num">1</div>
                             <div className="txt">
-                                <strong>
-                                    Cloud Run — デプロイとイベント統合
-                                </strong>
+                                <strong>Cloud Run — デプロイとイベント統合</strong>
                                 <br />
                                 <a href="https://docs.cloud.google.com/run/docs/deploying-source-code">
                                     Deploy services from source code | Cloud Run
@@ -1803,25 +1598,20 @@ export function Section3Guide() {
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/run/docs/configuring/services/build-service-account">
-                                    Set build service account (source deploy) |
-                                    Cloud Run
+                                    Set build service account (source deploy) | Cloud Run
                                 </a>
                                 — Google Cloud
                                 <br />
-                                <a href="https://cloud.google.com/run">
-                                    Cloud Run 製品ページ
-                                </a>{' '}
-                                — Google Cloud
+                                <a href="https://cloud.google.com/run">Cloud Run 製品ページ</a> —
+                                Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration">
-                                    Rollbacks, gradual rollouts, and traffic
-                                    migration | Cloud Run
+                                    Rollbacks, gradual rollouts, and traffic migration | Cloud Run
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/run/docs/triggering/pubsub-triggers">
-                                    Create triggers from Pub/Sub events | Cloud
-                                    Run
+                                    Create triggers from Pub/Sub events | Cloud Run
                                 </a>
                                 — Google Cloud
                                 <br />
@@ -1831,8 +1621,7 @@ export function Section3Guide() {
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/run/docs/tutorials/pubsub-eventdriven">
-                                    Trigger functions from Pub/Sub using
-                                    Eventarc | Cloud Run
+                                    Trigger functions from Pub/Sub using Eventarc | Cloud Run
                                 </a>
                                 — Google Cloud
                             </div>
@@ -1840,27 +1629,22 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref2">
                             <div className="num">2</div>
                             <div className="txt">
-                                <strong>
-                                    Eventarc — イベント駆動アーキテクチャ
-                                </strong>
+                                <strong>Eventarc — イベント駆動アーキテクチャ</strong>
                                 <br />
                                 <a href="https://docs.cloud.google.com/eventarc/standard/docs/run/route-trigger-cloud-pubsub">
-                                    Route Cloud Pub/Sub events to Cloud Run |
-                                    Eventarc Standard
+                                    Route Cloud Pub/Sub events to Cloud Run | Eventarc Standard
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/eventarc/standard/docs/run/pubsub-authenticated">
-                                    Receive Pub/Sub events using an
-                                    authenticated Cloud Run service | Eventarc
-                                    Standard
+                                    Receive Pub/Sub events using an authenticated Cloud Run service
+                                    | Eventarc Standard
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://cloud.google.com/eventarc/docs/run/create-trigger-pub-sub-gcloud">
-                                    Quickstart: Receive events using Pub/Sub
-                                    messages (Google Cloud CLI) | Eventarc
-                                    Standard
+                                    Quickstart: Receive events using Pub/Sub messages (Google Cloud
+                                    CLI) | Eventarc Standard
                                 </a>
                                 — Google Cloud
                             </div>
@@ -1868,20 +1652,16 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref3">
                             <div className="num">3</div>
                             <div className="txt">
-                                <strong>
-                                    Apigee — API管理とセキュリティ
-                                </strong>
+                                <strong>Apigee — API管理とセキュリティ</strong>
                                 <br />
                                 <a href="https://cloud.google.com/architecture/best-practices-securing-applications-and-apis-using-apigee">
-                                    Best practices for securing your
-                                    applications and APIs using Apigee | Cloud
-                                    Architecture Center
+                                    Best practices for securing your applications and APIs using
+                                    Apigee | Cloud Architecture Center
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/apigee/docs/api-security/best-practices">
-                                    Advanced API Security best practices |
-                                    Apigee
+                                    Advanced API Security best practices | Apigee
                                 </a>
                                 — Google Cloud
                             </div>
@@ -1889,13 +1669,11 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref4">
                             <div className="num">4</div>
                             <div className="txt">
-                                <strong>
-                                    GKE — デプロイとワークロード管理
-                                </strong>
+                                <strong>GKE — デプロイとワークロード管理</strong>
                                 <br />
                                 <a href="https://cloud.google.com/kubernetes-engine/docs/deploy-app-cluster">
-                                    Quickstart: Deploy an app to a GKE cluster |
-                                    Google Kubernetes Engine (GKE)
+                                    Quickstart: Deploy an app to a GKE cluster | Google Kubernetes
+                                    Engine (GKE)
                                 </a>
                                 — Google Cloud
                                 <br />
@@ -1908,26 +1686,23 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref5">
                             <div className="num">5</div>
                             <div className="txt">
-                                <strong>
-                                    Kubernetesヘルスチェック（プローブ）
-                                </strong>
+                                <strong>Kubernetesヘルスチェック（プローブ）</strong>
                                 <br />
                                 <a href="https://kubernetes.io/docs/concepts/workloads/pods/probes/">
-                                    Liveness, Readiness, and Startup Probes |
-                                    Kubernetes 公式ドキュメント
+                                    Liveness, Readiness, and Startup Probes | Kubernetes
+                                    公式ドキュメント
                                 </a>
                                 — The Kubernetes Authors
                                 <br />
                                 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">
-                                    Configure Liveness, Readiness and Startup
-                                    Probes | Kubernetes 公式ドキュメント
+                                    Configure Liveness, Readiness and Startup Probes | Kubernetes
+                                    公式ドキュメント
                                 </a>
                                 — The Kubernetes Authors
                                 <br />
                                 <a href="https://docs.cloud.google.com/kubernetes-engine/docs/deprecations/exec-probe-timeouts">
-                                    Configure exec probe timeouts before
-                                    upgrading to GKE version 1.35 | Google
-                                    Kubernetes Engine (GKE)
+                                    Configure exec probe timeouts before upgrading to GKE version
+                                    1.35 | Google Kubernetes Engine (GKE)
                                 </a>
                                 — Google Cloud
                             </div>
@@ -1935,38 +1710,31 @@ export function Section3Guide() {
                         <div className="ref-card" id="ref6">
                             <div className="num">6</div>
                             <div className="txt">
-                                <strong>
-                                    Horizontal Pod Autoscaler（HPA）
-                                </strong>
+                                <strong>Horizontal Pod Autoscaler（HPA）</strong>
                                 <br />
                                 <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler">
-                                    Horizontal Pod autoscaling | Google
-                                    Kubernetes Engine (GKE)
+                                    Horizontal Pod autoscaling | Google Kubernetes Engine (GKE)
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler">
-                                    Vertical Pod autoscaling | Google Kubernetes
-                                    Engine (GKE)
+                                    Vertical Pod autoscaling | Google Kubernetes Engine (GKE)
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://docs.cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke">
-                                    Best practices for running cost-optimized
-                                    Kubernetes applications on GKE | Cloud
-                                    Architecture Center
+                                    Best practices for running cost-optimized Kubernetes
+                                    applications on GKE | Cloud Architecture Center
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://cloud.google.com/blog/products/containers-kubernetes/tuning-the-kubernetes-hpa-in-gke">
-                                    Tuning the Kubernetes HPA in GKE | Google
-                                    Cloud Blog
+                                    Tuning the Kubernetes HPA in GKE | Google Cloud Blog
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://v1-32.docs.kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">
-                                    Horizontal Pod Autoscaling | Kubernetes
-                                    公式ドキュメント
+                                    Horizontal Pod Autoscaling | Kubernetes 公式ドキュメント
                                 </a>
                                 — The Kubernetes Authors
                             </div>
@@ -1977,14 +1745,12 @@ export function Section3Guide() {
                                 <strong>認定試験情報</strong>
                                 <br />
                                 <a href="https://cloud.google.com/learn/certification/cloud-developer">
-                                    Professional Cloud Developer Certification
-                                    | Google Cloud
+                                    Professional Cloud Developer Certification | Google Cloud
                                 </a>
                                 — Google Cloud
                                 <br />
                                 <a href="https://services.google.com/fh/files/misc/professional_cloud_developer_exam_guide_english.pdf">
-                                    Professional Cloud Developer Exam
-                                    Guide（公式PDF）
+                                    Professional Cloud Developer Exam Guide（公式PDF）
                                 </a>
                                 — Google Cloud
                             </div>

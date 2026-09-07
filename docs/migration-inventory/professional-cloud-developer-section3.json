@@ -519,7 +519,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "本ガイドは、Google Cloud公式のProfessional Cloud Developer認定ページおよび公式Exam Guide PDFのSection 3: Configuring cloud-native applications for deployment（試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。図解はすべてMermaidフローチャート、比較情報はすべてMarkdown表を使用し、ASCIIアートによる図解は一切使用していません。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。"
+      "text": "本ガイドは、Google Cloud公式のProfessional Cloud Developer認定ページおよび公式Exam Guide PDFのSection 3: Configuring cloud-native applications for deployment（試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。"
     },
     {
       "kind": "paragraph",
