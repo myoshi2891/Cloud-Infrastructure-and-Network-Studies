@@ -111,8 +111,9 @@ export function NavBar() {
                 target.scrollIntoView({ behavior: 'smooth' });
                 target.focus({ preventScroll: true });
             }
-            if (window.location.hash !== `#${id}`) {
-                window.history.pushState(null, '', `#${encodeURIComponent(id)}`);
+            const hash = `#${encodeURIComponent(id)}`;
+            if (window.location.hash !== hash) {
+                window.history.pushState(null, '', hash);
             }
             setActiveId(id);
             setIsOpen(false);

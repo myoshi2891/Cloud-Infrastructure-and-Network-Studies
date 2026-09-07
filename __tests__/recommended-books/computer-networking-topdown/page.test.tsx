@@ -34,17 +34,17 @@ describe('Computer Networking: A Top-Down Approach 完全学習ガイド — 詳
         const checklist = container.querySelector('.checklist-card');
         expect(checklist).not.toBeNull();
         const checkboxes = checklist?.querySelectorAll('input[type="checkbox"]');
-        expect(checkboxes && checkboxes.length).toBeGreaterThan(0);
+        expect(checkboxes?.length).toBe(19);
         const labels = checklist?.querySelectorAll('label');
-        expect(labels && labels.length).toBe(checkboxes?.length);
+        expect(labels?.length).toBe(19);
     });
 
     it('参考文献グリッド(ref-grid)内に参考文献カード(ref-card)が存在し、リンクが正しく設定されている', () => {
         const container = renderPage();
         const refGrids = container.querySelectorAll('.ref-grid');
-        expect(refGrids.length).toBeGreaterThanOrEqual(1);
+        expect(refGrids).toHaveLength(9);
         const cards = container.querySelectorAll('.ref-card');
-        expect(cards.length).toBeGreaterThan(0);
+        expect(cards).toHaveLength(31);
         cards.forEach((card, index) => {
             const num = card.querySelector('.num');
             expect(num?.textContent?.trim()).toBe(String(index + 1));
