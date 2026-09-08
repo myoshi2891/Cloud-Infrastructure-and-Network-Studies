@@ -744,7 +744,7 @@ export const DIAGRAMS: Record<DiagramId, string> = {
 
     Owner->>Victim: 正規のプレフィックス広告(203.0.113.0/24, origin AS100)
     Attacker->>Victim: 偽装した広告(203.0.113.0/24, origin AS666)
-    Note over Victim: RPKI検証なしの場合、<br/>より詳細なプレフィックスは<br/>Longest Prefix Match により転送で優先される。<br/>同一プレフィックス同士では AS_PATH の短さが<br/>BGP経路選択の一要素として働く<br/>(常に最優先の基準ではない)ため<br/>通信がハイジャックされる恐れ`,
+    Note over Victim: RPKI検証なしの場合、<br/>同一プレフィックス(203.0.113.0/24)同士では<br/>AS_PATHの短さ・Local Preference・MEDなど<br/>BGP経路選択ルールが適用され、<br/>攻撃者がより短いAS_PATHを広告すると<br/>通信がハイジャックされる恐れがある`,
     'diag-25': `flowchart LR
     HOLDER["プレフィックス保有者"] -->|ROA・経路原点認可を発行| REPO["RPKIリポジトリ"]
     REPO -->|同期| VALIDATOR["ルータ側の検証キャッシュ<br/>(RPKI Validator)"]
