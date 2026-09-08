@@ -389,9 +389,11 @@ Agent Gateway との統合では、Model Armor は「AI security guardrails」�
 | 方向・プロトコル | 適用プロトコル | 検査対象 | 検査対象外 |
 |---|---|---|---|
 | Client-to-Agent（ADK のみ） | ADK（Vertex AI Agent Runtime） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
-| Agent-to-Anywhere（MCP のみ） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
+| Agent-to-Anywhere（MCP） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
+| Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | `/v1/chat/completions` のリクエスト/レスポンス（プロンプト・補完テキストのスキャン） | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・Embedding・その他の非チャットエンドポイント |
+| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | タスク送信リクエスト（`tasks/send`）のメッセージペイロード（テキストパーツのみ） | ストリーミング通知（`tasks/sendSubscribe`）、`tasks/get` / `tasks/cancel`、バイナリ Artifact パーツ、A2Aプロトコルエラーレスポンス |
 
-> **適用範囲の注意：** 上表は **ADK（Vertex AI Agent Runtime）および MCP（Model Context Protocol）を経由する通信のみを対象**とします。OpenAI API互換エンドポイント・A2A（Agent-to-Agent）プロトコル・その他のフレームワーク（LangChain、LlamaIndex 等）は、現時点では Model Armor の検査対象外です。これらのプロトコルを利用している場合は、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
+> **適用範囲の注意：** 上表は **ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、リソース操作、Artifact バイナリ等）については上表の「検査対象外」列を参照してください。その他のフレームワーク（LangChain、LlamaIndex 等）は引き続き Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
 
 ### 4.2 Semantic Governance Policy：意図レベルの防御（プレビュー機能）
 
