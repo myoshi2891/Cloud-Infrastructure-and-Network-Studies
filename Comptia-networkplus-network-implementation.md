@@ -15,8 +15,6 @@ CompTIA Network+ は、ルーティング・スイッチング・ワイヤレス
 3. Step 3: ワイヤレス機器とテクノロジー（Wireless Devices）
 4. Step 4: 物理インストレーション（Physical Installations）
 
-すべての図解はMermaid記法のフローチャート・状態遷移図・円グラフで表現し、比較情報は表（Markdownテーブル）にまとめています。ASCIIアートによる図解は使用していません。
-
 ---
 
 ## Step 0: 全体像を掴む — Network+試験におけるこのドメインの位置づけ
