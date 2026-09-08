@@ -84,10 +84,7 @@ export function Section4Guide() {
                         1（設計）・Section
                         3（デプロイ）の内容と密接に関連するため、あわせて参照することをおすすめします。
                     </p>
-                    <p>
-                        すべての技術的主張には、Google
-                        Cloud公式ドキュメントを中心とした出典を明記しています。
-                    </p>
+
 
                     <h2 id="section-4-全体像" tabIndex={-1}>
                         Section 4 全体像
