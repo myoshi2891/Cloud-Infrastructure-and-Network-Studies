@@ -213,7 +213,7 @@ sequenceDiagram
     Client-->>User: 表示
 ```
 
-このフローの重要なポイントは、**IAP（Identity-Aware Proxy）が既定でAgent Gatewayの実行時強制レイヤーとして常時有効**であることです（ドライラン監査モードへの切り替えも可能）。また、宛先（他のエージェント、MCPサーバー、エンドポイント）は必ず Agent Registry に登録し、`iap.resources.egressViaIAP` 権限をエージェントIDに付与する必要があります。未登録の宛先へのアクセスは、Agent Registry に登録しない代わりに「未登録エンドポイント向けポリシー」を個別設定しない限り拒否されます。
+このフローの重要なポイントは、**IAP（Identity-Aware Proxy）の適用範囲がトラフィック方向によって異なる**ことです。**Agent-to-Anywhere（egress）では IAP が既定の実行時強制レイヤーとして常時有効**であり、ドライラン監査モードへの切り替えも可能です。一方、**Client-to-Agent（ingress）には IAP は適用されず**、クライアントからエージェントへの受信リクエストの認証・認可制御は、IAP とは別途構成するメカニズム（例：API Gateway の認証設定、Cloud IAM の呼び出し元検証）で実施します。また、宛先（他のエージェント、MCPサーバー、エンドポイント）は必ず Agent Registry に登録し、`iap.resources.egressViaIAP` 権限をエージェントIDに付与する必要があります。未登録の宛先へのアクセスは、Agent Registry に登録しない代わりに「未登録エンドポイント向けポリシー」を個別設定しない限り拒否されます。
 
 ### 2.5 Principal Access Boundary（PAB）ポリシー
 
@@ -386,10 +386,12 @@ Agent Gateway との統合では、Model Armor は「AI security guardrails」�
 
 ただし、**Model Armor が両方向のすべてのペイロードを検査するわけではありません**。検査対象は次のとおりで、対象外の経路は Model Armor では防御できないため、別の統制（IAM / PAB、Semantic Governance Policy、監査ログ）で補う必要があります。
 
-| 方向・プロトコル | 検査対象 | 検査対象外 |
-|---|---|---|
-| Client-to-Agent（ADK） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
-| Agent-to-Anywhere（MCP） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
+| 方向・プロトコル | 適用プロトコル | 検査対象 | 検査対象外 |
+|---|---|---|---|
+| Client-to-Agent（ADK のみ） | ADK（Vertex AI Agent Runtime） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
+| Agent-to-Anywhere（MCP のみ） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
+
+> **適用範囲の注意：** 上表は **ADK（Vertex AI Agent Runtime）および MCP（Model Context Protocol）を経由する通信のみを対象**とします。OpenAI API互換エンドポイント・A2A（Agent-to-Agent）プロトコル・その他のフレームワーク（LangChain、LlamaIndex 等）は、現時点では Model Armor の検査対象外です。これらのプロトコルを利用している場合は、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
 
 ### 4.2 Semantic Governance Policy：意図レベルの防御（プレビュー機能）
 
@@ -444,7 +446,7 @@ Semantic Governance Policyは他の統制を「置き換える」のではなく
 SAIFの「Agent User Control」の実装として、データ削除・送金・外部送信のような不可逆または高コストな操作には、エージェントが自律的に実行する前に人間の承認を挟む設計が推奨されます。実装パターンとしては次の2種類が代表的です。
 
 1. **ハードストップ型承認**：エージェントが提案を生成した時点で処理を一時停止し、人間が明示的に承認するまでツール呼び出しを実行しない（例：ADKのHITL拡張やカスタムのapproval queueパターン）。
-2. **閾値ベースの自動判定＋エスカレーション**：Semantic Governance PolicyのNLCで金額やリスクレベルの閾値を定義し、閾値以下は自動実行、閾値超過は人間承認へエスカレーションする。
+2. **閾値ベースの自動判定＋エスカレーション**：Semantic Governance PolicyのNLCで金額やリスクレベルの閾値を定義する。NLCの責務は**閾値に基づくポリシー判定結果（allow/block）を返すことのみ**に限定され、Policy自体は承認キューを作成しない。閾値超過が判定された場合、**アプリケーション側がその判定結果を受け取り、人間承認キュー（例：Pub/Sub + 承認UI）へ送信する**。人間が承認した後にのみツール呼び出しを実行する流れとなる。
 > **注意：** IAP の `DRY_RUN` モードは HITL の実装パターンではありません。`DRY_RUN` は拒否対象となるリクエストを**ログに記録したうえで通信自体は許可する**モードであり、ポリシーを本番適用する前に業務影響を評価するための**監査・段階導入の仕組み**です。人間の承認を待たずに処理は進むため、高リスク操作のゲートには使えません。高リスク操作には承認キューなどの**明示的な人間承認ゲート**（上記1・2）を使ってください。
 
 ```mermaid
