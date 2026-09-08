@@ -110,15 +110,17 @@ Google Cloud の実装を理解する前に、業界共通言語である OWASP 
 | ASI09 | Human Agent Trust Exploitation | 人間がエージェントの提案を過信し、ソーシャルエンジニアリングに利用される |
 | ASI10 | Rogue Agents | 侵害・誤動作したエージェントが正規に見えるまま有害な行動を取る |
 
-OWASP LLM Top 10（2025年版）とは、以下のように対応関係があります。
+OWASP GenAI LLM Top 10（2026年版、2026-08-04リリース）とは、以下のように対応関係があります。
 
-| エージェント側リスク | 対応するLLM Top 10 |
+| エージェント側リスク | 対応するLLM Top 10（2026年版） |
 |---|---|
 | ASI01: Agent Goal Hijack | LLM01: Prompt Injection |
-| ASI02 / ASI03: Tool Misuse / Identity Abuse | LLM06: Excessive Agency |
-| ASI05: Unexpected Code Execution | LLM01, LLM05: Improper Output Handling |
-| ASI06: Memory and Context Poisoning | LLM04: Data and Model Poisoning |
-| ASI08: Cascading Failures | LLM09: Misinformation |
+| ASI02 / ASI03: Tool Misuse / Identity Abuse | LLM03: Excessive Agency |
+| ASI05: Unexpected Code Execution | LLM01, LLM10: Improper Output Handling |
+| ASI06: Memory and Context Poisoning | LLM05: Data and Model Poisoning |
+| ASI08: Cascading Failures | LLM07: Misinformation |
+
+> **参考（歴史的な対応表）：** 旧 OWASP LLM Top 10 2025年版では、Excessive Agency は LLM06、Improper Output Handling は LLM05、Misinformation は LLM09 に分類されていました。2026年版ではリスクの再評価に伴い番号が変更されています（Excessive Agency が LLM06 → LLM03 に昇格など）。
 
 ### 1.4 試験ガイド原文における「セクション5」の範囲
 
