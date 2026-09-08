@@ -1,5 +1,5 @@
 {
-  "source": "Comptia-networkplus-network-implementation.html",
+  "source": "archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.html",
   "h1": [
     "Network Implementation ドメイン 徹底解説ガイド"
   ],
@@ -122,8 +122,10 @@
     "内部経路",
     "OSPF",
     "110",
+    "",
     "BGP（外部）",
     "20",
+    "",
     "BGP（内部）",
     "200",
     "最も信頼度が低い部類",

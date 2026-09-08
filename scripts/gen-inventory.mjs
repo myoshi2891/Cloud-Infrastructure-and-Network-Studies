@@ -36,6 +36,9 @@ const texts = (sel) =>
     [...doc.querySelectorAll(sel)]
         .map((el) => normalize(el.textContent ?? ''))
         .filter(Boolean);
+const cells = (sel) =>
+    [...doc.querySelectorAll(sel)]
+        .map((el) => normalize(el.textContent ?? ''));
 const diagrams = [...doc.querySelectorAll(diagramSelector)].filter(
     (element) => !element.querySelector(diagramSelector),
 );
@@ -52,8 +55,8 @@ console.log(
             h2: texts('h2'),
             h3: texts('h3'),
             h4: texts('h4'),
-            th: texts('th'),
-            td: texts('td'),
+            th: cells('th'),
+            td: cells('td'),
             listItems: texts('li'),
             links: [...doc.querySelectorAll('a[href^="http"]')].map((a) => ({
                 text: normalize(a.textContent ?? ''),
