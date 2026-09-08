@@ -145,7 +145,7 @@ export function defineMigrationSuite(
             expect(inventory.structures.tableColumnHeaders).toHaveLength(inventory.counts.table);
             tables.forEach((table, index) => {
                 const expectedColHeaders = inventory.structures.tableColumnHeaders[index];
-                if (expectedColHeaders > 0) {
+                if (expectedColHeaders !== undefined && expectedColHeaders > 0) {
                     // 列見出しが存在するテーブルは thead と th[scope=col] を必須とする。
                     expect(table.querySelector('thead')).not.toBeNull();
                     expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(
