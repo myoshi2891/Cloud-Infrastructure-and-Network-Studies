@@ -809,8 +809,10 @@
                         </li>
                     </ol>
 
-                    <pre><code class="language-bash">curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json; charset=utf-8" \
+                    <pre><code class="language-bash">curl "https://language.googleapis.com/v1/documents:analyzeSyntax" \
+  -s -X POST \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -H "x-goog-api-key: ${API_KEY}" \
   --data-binary @analyze-request.json > analyze-response.txt</code></pre>
 
                     <p>gcloud コマンドを使う場合は次のように書けます。</p>
@@ -990,7 +992,8 @@
   "document": {
     "type": "PLAIN_TEXT",
     "content": "Le bureau japonais de Google est situé à Roppongi Hills, Tokyo."
-  }
+  },
+  "encodingType": "UTF8"
 }</code></pre>
 
                     <ol class="step-list" start="3">
@@ -1000,8 +1003,10 @@
                         </li>
                     </ol>
 
-                    <pre><code class="language-bash">curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json; charset=utf-8" \
+                    <pre><code class="language-bash">curl "https://language.googleapis.com/v1/documents:analyzeSyntax" \
+  -s -X POST \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -H "x-goog-api-key: ${API_KEY}" \
   --data-binary @multi-nl-request.json > multi-response.txt</code></pre>
 
                     <ol class="step-list" start="4">
@@ -1090,12 +1095,15 @@
                         <span class="callout-label">ベストプラクティス</span>
                         <p>
                             複数バイト文字(日本語・フランス語のアクセント記号付き文字など)を扱う場合、encodingType
-                            を明示的に UTF8 に設定しておくと、レスポンス中の
-                            beginOffset(文字位置)がずれるトラブルを避けやすくなります。今回のフランス語サンプルのように
-                            encodingType
-                            を省略した場合は既定値が使われるため、オフセット精度が必要な処理では明示指定が無難です。
+                            を明示的に <code>UTF8</code> に設定しておくと、レスポンス中の
+                            beginOffset(文字位置)がずれるトラブルを避けやすくなります。<strong>encodingType
+                            を省略した場合のデフォルト値は <code>NONE</code> であり、この場合
+                            beginOffset など encoding に依存するフィールドは <code>-1</code>
+                            が返ります。</strong>今回のフランス語サンプルでは
+                            <code>encodingType: "UTF8"</code> を明示しているため、正確なオフセット値が得られます。
                         </p>
                     </div>
+
 
                     <div class="callout practice">
                         <span class="callout-label">ベストプラクティス</span>

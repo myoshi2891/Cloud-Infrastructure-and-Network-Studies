@@ -223,8 +223,10 @@ export API_KEY="Task1で発行したAPIキー"
 4. curl で `analyzeSyntax` エンドポイントを呼び出し、結果をファイルに保存します。
 
 ```bash
-curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json; charset=utf-8" \
+curl "https://language.googleapis.com/v1/documents:analyzeSyntax" \
+  -s -X POST \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -H "x-goog-api-key: ${API_KEY}" \
   --data-binary @analyze-request.json > analyze-response.txt
 ```
 
@@ -289,15 +291,18 @@ Task 3 と同じ VM インスタンス上で、今度はフランス語のテキ
   "document": {
     "type": "PLAIN_TEXT",
     "content": "Le bureau japonais de Google est situé à Roppongi Hills, Tokyo."
-  }
+  },
+  "encodingType": "UTF8"
 }
 ```
 
 3. Task 1・3 で使った API キー(環境変数 `API_KEY`)を再利用して、curl で構文解析または感情分析の任意のエンドポイントを呼び出します。
 
 ```bash
-curl "https://language.googleapis.com/v1/documents:analyzeSyntax?key=${API_KEY}" \
-  -s -X POST -H "Content-Type: application/json; charset=utf-8" \
+curl "https://language.googleapis.com/v1/documents:analyzeSyntax" \
+  -s -X POST \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -H "x-goog-api-key: ${API_KEY}" \
   --data-binary @multi-nl-request.json > multi-response.txt
 ```
 
@@ -327,7 +332,7 @@ Natural Language API がサポートする言語は機能ごとに異なりま�
 
 ### ベストプラクティス
 
-> **ベストプラクティス**: 複数バイト文字(日本語・フランス語のアクセント記号付き文字など)を扱う場合、`encodingType` を明示的に `UTF8` に設定しておくと、レスポンス中の `beginOffset`(文字位置)がずれるトラブルを避けやすくなります。今回のフランス語サンプルのように `encodingType` を省略した場合は既定値が使われるため、オフセット精度が必要な処理では明示指定が無難です。
+> **ベストプラクティス**: 複数バイト文字(日本語・フランス語のアクセント記号付き文字など)を扱う場合、`encodingType` を明示的に `UTF8` に設定しておくと、レスポンス中の `beginOffset`(文字位置)がずれるトラブルを避けやすくなります。**`encodingType` を省略した場合のデフォルト値は `NONE` であり、この場合 `beginOffset` など encoding に依存するフィールドは `-1` が返ります。** 今回のフランス語サンプルでは `encodingType: "UTF8"` を明示しているため、正確なオフセット値が得られます。
 
 > **ベストプラクティス**: 自動言語検出に頼らず、呼び出し元でユーザーの入力言語が分かっている場合は `language` フィールドを明示することで、解析精度と処理の再現性が安定します。
 
