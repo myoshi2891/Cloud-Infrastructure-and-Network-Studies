@@ -357,6 +357,14 @@
     --color-comptia-impl-pink-border-faint: rgba(236, 72, 153, 0.35);
     --color-comptia-impl-pink-background: rgba(236, 72, 153, 0.16);
     --color-comptia-impl-pink-background-soft: rgba(236, 72, 153, 0.07);
+    --color-comptia-impl-code-keyword: #c678dd;
+    --color-comptia-impl-code-function: #61afef;
+    --color-comptia-impl-code-string: #98c379;
+    --color-comptia-impl-code-number: #d19a66;
+    --color-comptia-impl-code-builtin: #e5c07b;
+    --color-comptia-impl-code-comment: #7f848e;
+    --color-comptia-impl-code-operator: #56b6c2;
+    --color-comptia-impl-code-variable: #e06c75;
 
     /* PCNE Section 1 VPC design guide */
     --color-pcne-design-background: #07111e;

@@ -484,39 +484,39 @@
 }
 
 .comptia-network-implementation-page .code-keyword {
-    color: #c678dd;
+    color: var(--color-comptia-impl-code-keyword);
     font-weight: 500;
 }
 
 .comptia-network-implementation-page .code-function,
 .comptia-network-implementation-page .code-title {
-    color: #61afef;
+    color: var(--color-comptia-impl-code-function);
 }
 
 .comptia-network-implementation-page .code-string {
-    color: #98c379;
+    color: var(--color-comptia-impl-code-string);
 }
 
 .comptia-network-implementation-page .code-number {
-    color: #d19a66;
+    color: var(--color-comptia-impl-code-number);
 }
 
 .comptia-network-implementation-page .code-builtin {
-    color: #e5c07b;
+    color: var(--color-comptia-impl-code-builtin);
 }
 
 .comptia-network-implementation-page .code-comment {
-    color: #7f848e;
+    color: var(--color-comptia-impl-code-comment);
     font-style: italic;
 }
 
 .comptia-network-implementation-page .code-operator {
-    color: #56b6c2;
+    color: var(--color-comptia-impl-code-operator);
 }
 
 .comptia-network-implementation-page .code-variable,
 .comptia-network-implementation-page .code-param {
-    color: #e06c75;
+    color: var(--color-comptia-impl-code-variable);
 }
 
 /* 4本柱カード */
@@ -639,11 +639,15 @@
 
     .comptia-network-implementation-page .sidebar {
         transform: translateX(-100%);
+        visibility: hidden;
+        pointer-events: none;
         box-shadow: 4px 0 24px var(--color-comptia-impl-sidebar-shadow);
     }
 
     .comptia-network-implementation-page .sidebar.open {
         transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
     }
 
     .comptia-network-implementation-page .content,
