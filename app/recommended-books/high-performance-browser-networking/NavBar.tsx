@@ -150,6 +150,7 @@ export function NavBar() {
                                 className={`nav-link ${item.level === 2 ? 'level-h2' : 'level-h3'} ${
                                     activeId === item.id ? 'active' : ''
                                 }`}
+                                aria-current={activeId === item.id ? 'location' : undefined}
                                 onClick={(e) => handleLinkClick(e, item.id)}
                             >
                                 {item.title}

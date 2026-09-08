@@ -145,6 +145,7 @@ export function NavBar() {
                             <a
                                 href={`#${item.id}`}
                                 className={`${item.lvl3 ? 'lvl3' : ''} ${activeId === item.id ? 'active' : ''}`}
+                                aria-current={activeId === item.id ? 'location' : undefined}
                                 onClick={(e) => handleLinkClick(e, item.id)}
                             >
                                 {item.label}
