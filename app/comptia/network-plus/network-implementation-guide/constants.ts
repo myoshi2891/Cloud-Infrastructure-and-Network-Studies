@@ -90,10 +90,12 @@ end`,
     'diag-wireless-auth': `flowchart TD
 A["クライアントがSSIDを検出"] --> B{"認証方式は"}
 B --> |"Open (認証なし)"| C["すぐに関連付け (Association)"]
-B --> |"OWE/WPA3 Enhanced Open"| C2["SAEハンドシェイク (認証なし個別暗号化)"]
-B --> |"PSK (WPA2/WPA3 Personal)"| D["事前共有鍵による4ウェイハンドシェイク"]
+B --> |"OWE (Enhanced Open)"| C2["非認証Diffie-Hellman鍵交換 (OWE)"]
+B --> |"WPA2-Personal (PSK)"| D["事前共有鍵 (PSK) による4ウェイハンドシェイク"]
+B --> |"WPA3-Personal (SAE)"| D2["SAE (Dragonfly) ハンドシェイク"]
 B --> |"Enterprise (802.1X)"| E["RADIUSサーバーへ認証情報を転送"]
 D --> F["暗号鍵を生成し通信開始"]
+D2 --> F
 E --> F
 C2 --> F
 C --> G["暗号化なしで通信開始"]`,
