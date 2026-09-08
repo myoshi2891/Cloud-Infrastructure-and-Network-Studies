@@ -839,36 +839,49 @@ export function ComptiaNetworkTroubleshootingGuide() {
                                 <thead>
                                     <tr>
                                         <th scope="col">コマンド</th>
+                                        <th scope="col">プラットフォーム</th>
                                         <th scope="col">用途</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><code>show mac-address-table</code></td>
+                                        <td><code>show mac address-table</code></td>
+                                        <td>Cisco IOS</td>
                                         <td>スイッチが学習したMACアドレステーブルを表示する</td>
                                     </tr>
                                     <tr>
+                                        <td><code>show ip route</code></td>
+                                        <td>Cisco IOS</td>
+                                        <td>ルーティングテーブルを表示する</td>
+                                    </tr>
+                                    <tr>
                                         <td><code>show route</code></td>
+                                        <td>Junos OS</td>
                                         <td>ルーティングテーブルを表示する</td>
                                     </tr>
                                     <tr>
                                         <td><code>show interface</code></td>
+                                        <td>Cisco IOS / Junos OS</td>
                                         <td>インターフェースの状態・統計情報を表示する</td>
                                     </tr>
                                     <tr>
                                         <td><code>show config</code></td>
+                                        <td>Junos OS</td>
                                         <td>現在の設定情報を表示する</td>
                                     </tr>
                                     <tr>
                                         <td><code>show arp</code></td>
+                                        <td>Cisco IOS / Junos OS</td>
                                         <td>ARPテーブルを表示する</td>
                                     </tr>
                                     <tr>
                                         <td><code>show vlan</code></td>
+                                        <td>Cisco IOS</td>
                                         <td>VLANの設定状況を表示する</td>
                                     </tr>
                                     <tr>
                                         <td><code>show power</code></td>
+                                        <td>Cisco IOS</td>
                                         <td>電源（PoE含む）の状態を表示する</td>
                                     </tr>
                                 </tbody>
