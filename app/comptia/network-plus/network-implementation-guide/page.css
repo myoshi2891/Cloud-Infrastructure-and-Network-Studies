@@ -209,7 +209,7 @@
 
 .comptia-network-implementation-page .hero-main {
     flex: 1;
-    min-width: 320px;
+    min-width: 0;
 }
 
 .comptia-network-implementation-page .chip {
