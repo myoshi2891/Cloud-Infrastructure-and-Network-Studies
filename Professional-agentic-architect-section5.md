@@ -172,7 +172,7 @@ Agent Identity は「エージェント自身の権限で動くのか」「エ�
 | **エージェント自身の権限** | Cloud-based identity（Agent Identity） | Google Cloud サービス | Google Cloud上でホストされるエージェントが自身のIDで他のGoogle Cloudサービスにアクセスする場合。 |
 | **エージェント自身の権限** | OAuth 2.0（2-legged / 2LO） | 外部ツール・サービス | OAuth対応の外部サービスとのマシン間認証で推奨。 |
 | **エージェント自身の権限** | API キー | 外部ツール・サービス | 暗号鍵やパスワードによる認証が必要な外部サービス向け。auth manager が安全に保管・管理する。 |
-| **エージェント自身の権限** | HTTP Basic認証 | 外部ツール・サービス | 平文パスワードを使用するため**非推奨**。 |
+| **エージェント自身の権限** | HTTP Basic認証 | 外部ツール・サービス | **HTTPS/TLS なしでの使用は禁止**。TLS で保護された通信路上でのみ使用可。平文通信での利用は資格情報が漏洩するリスクがあるため厳禁。 |
 
 Agent Identity が Agent Gateway や Gemini Enterprise とともに使われる場合、Gemini Enterprise コネクタなどから提供されるエンドユーザーの認証情報は auth manager によって暗号化され、Agent Gateway 側で復号されます。つまり、**エージェント自身は生の認証情報に触れることができません**。これは間接的プロンプトインジェクションでエージェントが乗っ取られた場合でも、認証情報そのものの流出を防ぐ重要な防御層です。
 
@@ -390,10 +390,10 @@ Agent Gateway との統合では、Model Armor は「AI security guardrails」�
 |---|---|---|---|
 | Client-to-Agent（ADK のみ） | ADK（Vertex AI Agent Runtime） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
 | Agent-to-Anywhere（MCP） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
-| Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | `/v1/chat/completions` のリクエスト/レスポンス（プロンプト・補完テキストのスキャン） | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・Embedding・その他の非チャットエンドポイント |
-| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | タスク送信リクエスト（`tasks/send`）のメッセージペイロード（テキストパーツのみ） | ストリーミング通知（`tasks/sendSubscribe`）、`tasks/get` / `tasks/cancel`、バイナリ Artifact パーツ、A2Aプロトコルエラーレスポンス |
+| Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | 非ストリーミングの Chat Completions・Responses API・Legacy Completions・Embeddings リクエスト/レスポンス、API エラーレスポンス | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・画像生成・モデレーション・その他の非テキスト生成エンドポイント、旧バージョン API |
+| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | `tasks/send` のメッセージペイロード（テキストパーツのみ） | `tasks/sendSubscribe`（ストリーミング）、`GetTask`・`ListTasks`・`CancelTask`・`SubscribeToTask`・`TaskPushNotificationConfig` の CRUD 操作、旧バージョン A2A、gRPC トランスポート、バイナリ Artifact パーツ、A2Aプロトコルエラーレスポンス |
 
-> **適用範囲の注意：** 上表は **ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、リソース操作、Artifact バイナリ等）については上表の「検査対象外」列を参照してください。その他のフレームワーク（LangChain、LlamaIndex 等）は引き続き Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
+> **適用範囲の注意：** 上表は **Agent Gateway 統合における ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、CRUD 操作、旧バージョン、gRPC、Artifact バイナリ等）については上表の「検査対象外」列を参照してください。LangChain・LlamaIndex 等のその他のフレームワークは Agent Gateway 統合の対象プロトコル（ADK・MCP・OpenAI互換・A2A）を経由しない限り Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
 
 ### 4.2 Semantic Governance Policy：意図レベルの防御（プレビュー機能）
 
