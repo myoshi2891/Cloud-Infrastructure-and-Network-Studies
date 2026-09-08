@@ -89,12 +89,14 @@ M1 --- M3
 end`,
     'diag-wireless-auth': `flowchart TD
 A["クライアントがSSIDを検出"] --> B{"認証方式は"}
-B -->|"Open (認証なし)"| C["すぐに関連付け (Association)"]
-B -->|"PSK (WPA2/WPA3 Personal)"| D["事前共有鍵による4ウェイハンドシェイク"]
-B -->|"Enterprise (802.1X)"| E["RADIUSサーバーへ認証情報を転送"]
+B --> |"Open (認証なし)"| C["すぐに関連付け (Association)"]
+B --> |"OWE/WPA3 Enhanced Open"| C2["SAEハンドシェイク (認証なし個別暗号化)"]
+B --> |"PSK (WPA2/WPA3 Personal)"| D["事前共有鍵による4ウェイハンドシェイク"]
+B --> |"Enterprise (802.1X)"| E["RADIUSサーバーへ認証情報を転送"]
 D --> F["暗号鍵を生成し通信開始"]
 E --> F
-C --> F`,
+C2 --> F
+C --> G["暗号化なしで通信開始"]`,
     'diag-physical-install': `flowchart TD
 A["現地調査 (Site Survey)"] --> B["ラック配置・スペース計画"]
 B --> C["配線計画 (ケーブルマネジメント)"]
