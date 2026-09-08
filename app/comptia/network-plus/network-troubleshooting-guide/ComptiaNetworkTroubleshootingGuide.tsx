@@ -100,29 +100,28 @@ export function ComptiaNetworkTroubleshootingGuide() {
                         <h3>1.2 試験の基本情報</h3>
                         <div className="table-wrap">
                             <table>
-                                <thead></thead>
                                 <tbody>
                                     <tr>
-                                        <td>試験番号</td>
+                                        <th scope="row">試験番号</th>
                                         <td>N10-009</td>
                                     </tr>
                                     <tr>
-                                        <td>出題数</td>
+                                        <th scope="row">出題数</th>
                                         <td>最大90問</td>
                                     </tr>
                                     <tr>
-                                        <td>出題形式</td>
+                                        <th scope="row">出題形式</th>
                                         <td>
                                             選択問題（Multiple-choice）＋
                                             パフォーマンスベース問題（PBQ）
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>試験時間</td>
+                                        <th scope="row">試験時間</th>
                                         <td>90分</td>
                                     </tr>
                                     <tr>
-                                        <td>推奨実務経験</td>
+                                        <th scope="row">推奨実務経験</th>
                                         <td>IT ネットワーク分野で9〜12ヶ月以上</td>
                                     </tr>
                                 </tbody>

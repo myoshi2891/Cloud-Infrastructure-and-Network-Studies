@@ -32,7 +32,7 @@
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px var(--color-shadow);
     align-items: center;
     gap: 8px;
 }
@@ -379,7 +379,7 @@
 
     .comptia-network-troubleshooting-page .sidebar.open {
         transform: translateX(0);
-        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.6);
+        box-shadow: 4px 0 24px rgba(var(--color-shadow-rgb), 0.6);
         visibility: visible;
         pointer-events: auto;
     }
