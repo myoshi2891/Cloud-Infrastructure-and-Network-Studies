@@ -110,7 +110,7 @@ Google Cloud の実装を理解する前に、業界共通言語である OWASP 
 | ASI09 | Human Agent Trust Exploitation | 人間がエージェントの提案を過信し、ソーシャルエンジニアリングに利用される |
 | ASI10 | Rogue Agents | 侵害・誤動作したエージェントが正規に見えるまま有害な行動を取る |
 
-OWASP GenAI LLM Top 10（2026年版、2026-08-04リリース）とは、以下のように対応関係があります。
+OWASP GenAI LLM Top 10（2026年版、2026-08-03リリース）とは、以下のように対応関係があります。
 
 | エージェント側リスク | 対応するLLM Top 10（2026年版） |
 |---|---|
@@ -361,7 +361,7 @@ Model Armor は、プロンプトとレスポンスの両方をリアルタイ�
 | **悪意のあるURL検知** | プロンプト・レスポンスに埋め込まれたフィッシングリンクやマルウェア配布URLを検知 |
 | **Responsible AI（RAI）コンテンツフィルタ** | ヘイトスピーチ、ハラスメント、性的表現、危険なコンテンツなどを閾値ベースで検出 |
 | **Sensitive Data Protection連携** | Basic/Advanced SDPと統合し、PII・金融情報・認証情報などの漏洩を防止 |
-| **マルウェア/文書スキャン** | PDFやOfficeファイルなど、リッチドキュメント経由の悪意あるコンテンツも検査対象にできる |
+| **マルウェア/文書スキャン** | PDFやOfficeファイルなどのドキュメント検査に対応するが、**Agent Gateway 統合の検査対象には含まれない**。ドキュメントを検査する場合は Model Armor の REST API（`sanitizeUserPrompt` / `sanitizeModelResponse`）をアプリケーションから直接呼び出す必要がある |
 
 **Floor Settings（フロア設定）と Template（テンプレート）** という2つの構成単位を理解することが重要です。
 
@@ -530,7 +530,7 @@ Google Cloud の技術的統制（Agent Identity、CMEK、VPC-SC、監査ログ�
 
 | 規制・基準 | 主な要求事項 | 対応する技術的統制 |
 |---|---|---|
-| **EU AI Act** | 高リスクAIシステムに対するログ保持、人間の監督（human oversight）、透明性の確保 | **Request-Response Logging（Agent Observability）** によるプロンプト/レスポンス本文の保管（Cloud Storage への出力、保存期間・アクセス制御はバケットポリシーで設定）。**Cloud Audit Logs** は管理操作（エージェント作成・設定変更等）を記録するものでありプロンプト/レスポンス本文は含まない（Data Access Audit Logs は必要に応じて別途有効化）。Human-in-the-Loop 承認ゲート |
+| **EU AI Act** | 高リスクAIシステムに対するログ保持、人間の監督（human oversight）、透明性の確保 | **Request-Response Logging** はリクエスト/レスポンスを**サンプリングして BigQuery** のテーブルへ書き出す（サンプリング率を指定するため全件保存ではない。保存期間はテーブルの有効期限、アクセス制御は BigQuery の IAM で設定）。**Agent Observability** はプロンプト/レスポンス本文を、構成に応じて **Cloud Storage または Cloud Logging** へ出力する（保存期間・アクセス制御はそれぞれバケットのライフサイクル/IAM、ログバケットの保持期間/IAM で設定）。**Cloud Audit Logs** は管理操作（エージェント作成・設定変更等）を記録するものでありプロンプト/レスポンス本文は含まない（Data Access Audit Logs は必要に応じて別途有効化）。Human-in-the-Loop 承認ゲート |
 | **HIPAA**（米国医療） | PHI（保護対象保健情報）の暗号化、アクセス制御、監査証跡 | CMEK による暗号化、Sensitive Data Protection による PHI 検出・マスキング、Cloud Audit Logs |
 | **PCI-DSS**（決済カード業界） | カード会員データの保護、アクセス制御の最小化、定期的な監査 | Model Armor の Sensitive Data Protection 連携（カード番号検出）、PAB による権限の外枠制限、Cloud Audit Logs |
 
