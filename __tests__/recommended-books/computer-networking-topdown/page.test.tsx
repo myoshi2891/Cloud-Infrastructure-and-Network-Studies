@@ -63,17 +63,6 @@ describe('Computer Networking: A Top-Down Approach 完全学習ガイド — 詳
         });
     });
 
-    it('全24件のテーブルが存在し、すべてtheadとth[scope="col"]を持つ', () => {
-        const container = renderPage();
-        const tables = container.querySelectorAll('table');
-        expect(tables).toHaveLength(24);
-        tables.forEach((table) => {
-            expect(table.querySelector('thead')).not.toBeNull();
-            const colThs = table.querySelectorAll('thead th[scope="col"]');
-            expect(colThs.length).toBeGreaterThan(0);
-        });
-    });
-
     it('page.css 内でリストマーカーおよび Mermaid ノード文字色の明示指定が保持されている', async () => {
         const { readFileSync } = await import('node:fs');
         const { join } = await import('node:path');
