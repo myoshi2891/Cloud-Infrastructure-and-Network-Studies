@@ -371,7 +371,10 @@
 
     .comptia-network-troubleshooting-page .sidebar {
         transform: translateX(-100%);
-        transition: transform 0.25s ease-in-out;
+        /* visibility の切替を transform の完了まで遅延させ、閉じるアニメーションを見せる */
+        transition:
+            transform 0.25s ease-in-out,
+            visibility 0s linear 0.25s;
         box-shadow: none;
         visibility: hidden;
         pointer-events: none;
@@ -379,6 +382,10 @@
 
     .comptia-network-troubleshooting-page .sidebar.open {
         transform: translateX(0);
+        /* 開くときは遅延なしで即座に可視化する */
+        transition:
+            transform 0.25s ease-in-out,
+            visibility 0s;
         box-shadow: 4px 0 24px rgba(var(--color-shadow-rgb), 0.6);
         visibility: visible;
         pointer-events: auto;
