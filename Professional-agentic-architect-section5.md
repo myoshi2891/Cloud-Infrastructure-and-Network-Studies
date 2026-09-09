@@ -393,7 +393,7 @@ Agent Gateway との統合では、Model Armor は「AI security guardrails」�
 | Client-to-Agent（ADK のみ） | ADK（Vertex AI Agent Runtime） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
 | Agent-to-Anywhere（MCP） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
 | Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | Chat Completions の Create・Delete・Get・List・Update（非ストリーミングのみ）、Get chat messages、Responses の Create・Get・Delete（非ストリーミングのみ）、Legacy Completions、Legacy Assistants の Create・Delete・List・Modify・Retrieve、Legacy Messages の Create・Delete・List・Modify・Retrieve、Legacy Threads の Create・Delete・Modify・Retrieve、Embeddings の Create、OpenAI API エラー | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・画像生成・モデレーション・その他の非テキスト生成エンドポイント。**上記に列挙されていないペイロードはサニタイズされずに通過します** |
-| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | Send Message 操作、Agent Card、Get Extended Agent Card 操作、および JSON-RPC・HTTP+JSON/REST プロトコルバインディング | ストリーミングメッセージ（`SendStreamingMessage`）、`GetTask` などのタスク管理操作、通知設定メソッド（`TaskPushNotificationConfig` 系）、旧バージョン A2A、gRPC プロトコルバインディング、エラーペイロード |
+| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | Send Message 操作、Agent Card、Get Extended Agent Card 操作、および JSON-RPC・HTTP+JSON/REST プロトコルバインディング | ストリーミングメッセージ（`SendStreamingMessage`）、タスク管理操作（`ListTasks`・`GetTask`・`CancelTask`・`SubscribeToTask`）、通知設定メソッド（`TaskPushNotificationConfig` の作成・取得・一覧・削除）、旧バージョンの A2A、gRPC プロトコルバインディング、エラーペイロード。**これらはいずれもサニタイズされずに通過します** |
 
 > **適用範囲の注意：** 上表は **Agent Gateway 統合における ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、タスク管理・通知設定操作、旧バージョン、gRPC、エラーペイロード等）については上表の「検査対象外」列を参照してください。LangChain・LlamaIndex 等のその他のフレームワークは Agent Gateway 統合の対象プロトコル（ADK・MCP・OpenAI互換・A2A）を経由しない限り Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
 
@@ -435,7 +435,8 @@ Semantic Governance Policyは他の統制を「置き換える」のではなく
 
 | 統制レイヤー | 実現メカニズム |
 |---|---|
-| 認証 | Identity-Aware Proxy、Apigee などのID対応ゲートウェイ |
+| Egress側の認証・認可 | Identity-Aware Proxy（Agent-to-Anywhere の既定の実行時強制レイヤー。ingress では未サポート） |
+| Ingress側の認証 | Apigee などのID対応ゲートウェイ、API Gateway の認証設定、Cloud IAM の呼び出し元検証 |
 | Ingress側のRBAC | ロールベースアクセス制御（例：調達部門のみアクセス可） |
 | Ingress側のABAC | 属性ベースアクセス制御（例：役職に応じた承認上限） |
 | レート制限 | API Gateway、Apigee |
@@ -491,7 +492,9 @@ Agent Gateway は、すべてのエージェント間・エージェント〜ツ
 - Model Armorのサニタイズ処理ログ（テンプレートの作成・更新などの管理アクティビティ、および実際のプロンプト/レスポンスへのサニタイズ実行ログ）
 - Semantic Governance Policyの判定ログ（ALLOW/DENYの判定とその根拠）
 
-これはSAIFの「Agent Observability」制御をGoogle Cloudの実装に落とし込んだものであり、「エージェントの行動が透明で監査可能である」ことを、事後対応（インシデント調査）と事前防止（異常検知）の両方に活用します。
+なお、ここで Agent Gateway が自動的に生成するのは**通信経路のネットワークテレメトリ**（どのエージェントがどの宛先を呼び出し、認可判定がどうなったか）であり、**エージェント内部の推論ステップやツール呼び出しを追跡する Agent Observability の agent traces とは別物**です。agent traces は自動では得られず、Cloud Logging API・Cloud Trace API・Telemetry API を有効化したうえで、エージェント側でトレーシングを有効化する設定（ADK/Agent Engine のトレース設定など）が必要です。
+
+したがって、これはSAIFの「Agent Observability」制御をGoogle Cloudの実装に落とし込んだものであり、上記の API 有効化とエージェント側のトレーシング設定という前提を満たした場合に、「エージェントの行動が透明で監査可能である」ことを、事後対応（インシデント調査）と事前防止（異常検知）の両方に活用できます。前提が未設定の状態では、取得できるのはネットワーク層のテレメトリに限られ、完全な監査証跡にはなりません。
 
 ### 5.2 Agent Anomaly Detection：異常行動の継続的検知
 
