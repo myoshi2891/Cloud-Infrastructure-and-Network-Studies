@@ -83,6 +83,7 @@
     "ツール",
     "用途",
     "コマンド",
+    "プラットフォーム",
     "用途"
   ],
   "td": [
@@ -245,19 +246,29 @@
     "無線チャネルの利用状況や電波強度を可視化する",
     "可視光障害位置測定器（Visual fault locator）",
     "光ファイバケーブルの断線・損傷箇所を特定する",
-    "show mac-address-table",
+    "show mac address-table",
+    "Cisco IOS",
     "スイッチが学習したMACアドレステーブルを表示する",
+    "show ip route",
+    "Cisco IOS",
+    "ルーティングテーブルを表示する",
     "show route",
+    "Junos OS",
     "ルーティングテーブルを表示する",
     "show interface",
+    "Cisco IOS / Junos OS",
     "インターフェースの状態・統計情報を表示する",
     "show config",
+    "Junos OS",
     "現在の設定情報を表示する",
     "show arp",
+    "Cisco IOS / Junos OS",
     "ARPテーブルを表示する",
     "show vlan",
+    "Cisco IOS",
     "VLANの設定状況を表示する",
     "show power",
+    "Cisco IOS",
     "電源（PoE含む）の状態を表示する"
   ],
   "listItems": [
@@ -425,7 +436,7 @@
       2,
       2,
       2,
-      2
+      3
     ],
     "codeLines": []
   }
