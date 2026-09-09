@@ -1402,7 +1402,9 @@ export function ComputerNetworkingTopdownGuide() {
                                 <td>アプリケーション層</td>
                                 <td>HTTP/3グローバルトラフィック比率</td>
                                 <td>約35%</td>
-                                <td>Cloudflare Radar</td>
+                                <td>
+                                    Cloudflare Radar(Cloudflare網のHTTP(S)リクエストが分母・2026年8月時点)
+                                </td>
                             </tr>
                             <tr className="even">
                                 <td>アプリケーション層</td>
@@ -1677,7 +1679,7 @@ export function ComputerNetworkingTopdownGuide() {
                                 <td>送信元から宛先までの経路上で最も帯域幅が狭いリンク</td>
                             </tr>
                             <tr className="even">
-                                <td>最長経路 / RTT</td>
+                                <td>ラウンドトリップタイム(RTT)</td>
                                 <td>パケットが往復するのにかかる時間(Round-Trip Time)</td>
                             </tr>
                             <tr className="odd">

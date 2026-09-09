@@ -910,7 +910,7 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     class TARGET,DOWN tgtFill`,
     'diag-40': `flowchart TD
     subgraph L_APP["アプリケーション層"]
-        T1["HTTP/3が世界トラフィックの約35%に到達<br/>(Cloudflare計測)"]
+        T1["HTTP/3がCloudflare網のHTTP(S)リクエストの約35%<br/>(Cloudflare Radar・2026年8月時点)"]
         T2["DoH/DoQ/ECHなど暗号化DNSの普及進行"]
     end
     subgraph L_TRANS["トランスポート層"]
