@@ -44,30 +44,49 @@ export function NavBar() {
     useEffect(() => {
         if (typeof IntersectionObserver === 'undefined') return;
 
-        const visibleMap = new Map<string, number>();
+        // 交差中の id のみを保持する。top はコールバック時点の値が
+        // スクロールにより陳腐化するため保存せず、判定時に再計測する。
+        const visibleIds = new Set<string>();
 
         const observer = new IntersectionObserver(
             (entries) => {
                 for (const entry of entries) {
                     const id = entry.target.id;
                     if (entry.isIntersecting) {
-                        visibleMap.set(id, entry.boundingClientRect.top);
+                        visibleIds.add(id);
                     } else {
-                        visibleMap.delete(id);
+                        visibleIds.delete(id);
                     }
                 }
 
-                if (visibleMap.size === 0) return;
+                if (visibleIds.size === 0) return;
 
+                // ビューポート上端以下にある交差要素のうち最も上のものを優先する。
+                // 上端を越えて上へ抜けた要素（top < 0）は、他に候補がない場合のみ
+                // 上端に最も近いものを採用する。
                 let topId = '';
                 let minTop = Infinity;
+                let fallbackId = '';
+                let maxNegativeTop = -Infinity;
 
                 for (const item of NAV_ITEMS) {
-                    const top = visibleMap.get(item.id);
-                    if (top !== undefined && top < minTop) {
-                        minTop = top;
-                        topId = item.id;
+                    if (!visibleIds.has(item.id)) continue;
+                    const el = document.getElementById(item.id);
+                    if (!el) continue;
+                    const top = el.getBoundingClientRect().top;
+                    if (top >= 0) {
+                        if (top < minTop) {
+                            minTop = top;
+                            topId = item.id;
+                        }
+                    } else if (top > maxNegativeTop) {
+                        maxNegativeTop = top;
+                        fallbackId = item.id;
                     }
+                }
+
+                if (!topId) {
+                    topId = fallbackId;
                 }
 
                 if (topId) {
