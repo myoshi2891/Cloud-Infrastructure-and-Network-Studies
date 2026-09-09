@@ -83,7 +83,7 @@ export function ComptiaNetworkImplementationGuide() {
                         </h2>
                         <p>
                             CompTIA Network+ (N10-009)
-                            は2024年6月に発表された最新バージョン（V9）です。試験は最大90問（多肢選択式とパフォーマンスベース問題の混在）、制限時間90分、合格ラインは900点満点中720点です。試験は5つのドメインで構成されています。
+                            は2024年6月に発表された最新バージョン（V9）です。試験は最大90問（多肢選択式とパフォーマンスベース問題の混在）、制限時間90分、合格ラインは100〜900のスケールドスコアで720点以上です。試験は5つのドメインで構成されています。
                         </p>
 
                         <table>
@@ -562,9 +562,18 @@ export function ComptiaNetworkImplementationGuide() {
                                     <td>長らく標準として広く利用</td>
                                 </tr>
                                 <tr>
-                                    <td>WPA3</td>
-                                    <td>AES-GCMP、SAEによる強固な鍵交換</td>
-                                    <td>現行の推奨規格</td>
+                                    <td>WPA3-Personal</td>
+                                    <td>AES-CCMP-128（SAEによる鍵交換）</td>
+                                    <td>
+                                        現行の推奨規格。事前共有鍵をSAEに置き換え、オフライン辞書攻撃に耐性を持つ
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>WPA3-Enterprise</td>
+                                    <td>AES-CCMP-128（192ビットモードではAES-GCMP-256）</td>
+                                    <td>
+                                        802.1X/EAPによる認証。高強度が求められる環境では192ビットモードを選択する
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

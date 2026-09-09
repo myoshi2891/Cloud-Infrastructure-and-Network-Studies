@@ -65,7 +65,7 @@ R1 -.->|"障害検知時に自動切替"| R2["ルーターB (Standby)"]`,
     'diag-vlan': `flowchart TB
 SW["L2スイッチ"] --> V10["VLAN 10<br/>営業部門"]
 SW --> V20["VLAN 20<br/>開発部門"]
-SW --> V99["VLAN 99<br/>管理用 (Native VLAN)"]
+SW --> V99["VLAN 99<br/>管理用VLAN"]
 V10 --> PC1["PC・IP電話"]
 V20 --> PC2["開発者端末"]`,
     'diag-stp': `stateDiagram-v2
