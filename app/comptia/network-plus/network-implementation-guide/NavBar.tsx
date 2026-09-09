@@ -65,8 +65,10 @@ export function NavBar() {
 
         const observer = new IntersectionObserver(
             (entries) => {
+                const notifiedIds = new Set<string>();
                 for (const entry of entries) {
                     const id = entry.target.id;
+                    notifiedIds.add(id);
                     if (entry.isIntersecting) {
                         intersectingTopMap.set(id, entry.boundingClientRect.top);
                     } else {
@@ -75,6 +77,18 @@ export function NavBar() {
                 }
 
                 if (intersectingTopMap.size === 0) return;
+
+                // 交差状態が変わらないセクションは再通知されないため、保持している
+                // top が古くなる。比較前に現在位置へ更新する。
+                for (const id of intersectingTopMap.keys()) {
+                    if (notifiedIds.has(id)) continue;
+                    const el = document.getElementById(id);
+                    if (el === null) {
+                        intersectingTopMap.delete(id);
+                        continue;
+                    }
+                    intersectingTopMap.set(id, el.getBoundingClientRect().top);
+                }
 
                 let topMostId: string | null = null;
                 let minTop = Number.POSITIVE_INFINITY;
