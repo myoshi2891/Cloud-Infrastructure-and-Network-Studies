@@ -265,7 +265,7 @@ flowchart LR
 Sessions（対話セッション）や Memory Bank（エージェントの長期記憶）へのアクセスは、IAM Conditions を使って属性ベースで制御できます。条件式（CEL: Common Expression Language）で評価する属性はリソースごとに決まっており、**セッションIDのプレフィックスを評価するのではない**点に注意が必要です。
 
 - **Sessions**：セッション作成時に指定した `userId` を `aiplatform.googleapis.com/sessionUserId` で評価する。例：`api.getAttribute('aiplatform.googleapis.com/sessionUserId', '').startsWith('team-a-')`
-- **Memory Bank**：メモリ作成時に指定したスコープ（`{'user_id': '123'}` のような任意の辞書）を `aiplatform.googleapis.com/memoryScope` で評価する。スコープ単位で「どのプリンシパルがどのグループのメモリを読み書きできるか」を制御できる（条件付き IAM ポリシーはプロジェクトレベルで作成し、プロジェクト内の全メモリに適用される）
+- **Memory Bank**：メモリ作成時に指定したスコープ（`{'user_id': '123'}` のような任意の辞書）を `aiplatform.googleapis.com/memoryScope` で評価する。スコープ単位で「どのプリンシパルがどのグループのメモリを読み書きできるか」を制御できる（条件付き IAM ポリシーはプロジェクトレベルで作成し、プロジェクト内の全メモリに適用される）。ただし **複数スコープにまたがって動作する `ListMemories` と `PurgeMemories` は `memoryScope` 条件に対応しない** ため、スコープ単位で制限できない。これらを許可するには無条件ロールの付与が必要で、無条件ロールを持つプリンシパルは意図したスコープ外のメモリまで一覧取得・削除できてしまう。この2権限は別途、付与先を絞った最小権限として設計する
 これは、Vertex AI Search/Agent Search 時代から続くGoogle CloudのIAM Conditions機構をAgent Platformのリソースにもそのまま適用したものです。
 
 > **出典：** [Agent Identity overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview)、[Agent Gateway overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview)、[IAM overview](https://docs.cloud.google.com/iam/docs/overview)、[IAM policy types（PAB）](https://docs.cloud.google.com/iam/docs/policy-types)、[Control access to sessions with IAM Conditions](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions/iam-conditions)
@@ -386,16 +386,16 @@ flowchart TB
 
 Agent Gateway との統合では、Model Armor は「AI security guardrails」として、MCPプロンプトインジェクション攻撃などの新しいリスクからエージェント間通信を保護する役割を担います。Client-to-Agent（受信するクライアントからの有害コンテンツ対策）とAgent-to-Anywhere（送信先への機密データ漏洩・インジェクション対策）の両方向で設定可能です。
 
-ただし、**Model Armor が両方向のすべてのペイロードを検査するわけではありません**。検査対象は次のとおりで、対象外の経路は Model Armor では防御できないため、別の統制（IAM / PAB、Semantic Governance Policy、監査ログ）で補う必要があります。
+ただし、**Model Armor が両方向のすべてのペイロードを検査するわけではありません**。検査対象は次のとおりで、対象外の経路は Model Armor では防御できないため、別の統制（IAM / PAB、Semantic Governance Policy、監査ログ）で補う必要があります。ただし **IAM / PAB・Semantic Governance Policy・監査ログはいずれもコンテンツサニタイズの代替にはなりません**（それぞれ到達可能な相手の制限、意図レベルの判定、事後追跡であり、ペイロード内の有害コンテンツや機密データそのものを検査するものではありません）。対象外の経路については、アプリケーション側での内容検査、または対応する検査統合（Model Armor の Sanitize API 直接呼び出しなど）を別途組み込む必要があります。
 
 | 方向・プロトコル | 適用プロトコル | 検査対象 | 検査対象外 |
 |---|---|---|---|
 | Client-to-Agent（ADK のみ） | ADK（Vertex AI Agent Runtime） | `reasoningEngines.streamQuery` のリクエスト/レスポンス（ADK製・Agent Runtime 上のエージェントのみ） | それ以外の ReasoningEngine ペイロード、ReasoningEngine のエラーレスポンス、非ADK（LangChain 等）のペイロード |
 | Agent-to-Anywhere（MCP） | MCP（Model Context Protocol） | `tools/call` と `prompts/get` のリクエスト/レスポンス、MCPツール実行エラー | `tools/list`、`resources/*`、`notifications/*`、MCP の Streamable HTTP/SSE、（ツール実行エラー以外の）MCPプロトコルエラー |
-| Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | 非ストリーミングの Chat Completions・Responses API・Legacy Completions・Embeddings リクエスト/レスポンス、API エラーレスポンス | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・画像生成・モデレーション・その他の非テキスト生成エンドポイント、旧バージョン API |
-| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | `tasks/send` のメッセージペイロード（テキストパーツのみ） | `tasks/sendSubscribe`（ストリーミング）、`GetTask`・`ListTasks`・`CancelTask`・`SubscribeToTask`・`TaskPushNotificationConfig` の CRUD 操作、旧バージョン A2A、gRPC トランスポート、バイナリ Artifact パーツ、A2Aプロトコルエラーレスポンス |
+| Agent-to-Anywhere（OpenAI互換） | OpenAI API互換エンドポイント（例：Vertex AI OpenAI互換 API） | Chat Completions の Create・Delete・Get・List・Update（非ストリーミングのみ）、Get chat messages、Responses の Create・Get・Delete（非ストリーミングのみ）、Legacy Completions、Legacy Assistants の Create・Delete・List・Modify・Retrieve、Legacy Messages の Create・Delete・List・Modify・Retrieve、Legacy Threads の Create・Delete・Modify・Retrieve、Embeddings の Create、OpenAI API エラー | ストリーミングレスポンス（`stream: true`）、ファイルアップロード・画像生成・モデレーション・その他の非テキスト生成エンドポイント。**上記に列挙されていないペイロードはサニタイズされずに通過します** |
+| Agent-to-Anywhere（A2A） | A2A（Agent-to-Agent）プロトコル | Send Message 操作、Agent Card、Get Extended Agent Card 操作、および JSON-RPC・HTTP+JSON/REST プロトコルバインディング | ストリーミングメッセージ（`SendStreamingMessage`）、`GetTask` などのタスク管理操作、通知設定メソッド（`TaskPushNotificationConfig` 系）、旧バージョン A2A、gRPC プロトコルバインディング、エラーペイロード |
 
-> **適用範囲の注意：** 上表は **Agent Gateway 統合における ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、CRUD 操作、旧バージョン、gRPC、Artifact バイナリ等）については上表の「検査対象外」列を参照してください。LangChain・LlamaIndex 等のその他のフレームワークは Agent Gateway 統合の対象プロトコル（ADK・MCP・OpenAI互換・A2A）を経由しない限り Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
+> **適用範囲の注意：** 上表は **Agent Gateway 統合における ADK（Vertex AI Agent Runtime）・MCP（Model Context Protocol）・OpenAI API互換エンドポイント・A2A（Agent-to-Agent）を経由する通信**を対象とします。各プロトコルで検査対象外となるペイロード（ストリーミング、タスク管理・通知設定操作、旧バージョン、gRPC、エラーペイロード等）については上表の「検査対象外」列を参照してください。LangChain・LlamaIndex 等のその他のフレームワークは Agent Gateway 統合の対象プロトコル（ADK・MCP・OpenAI互換・A2A）を経由しない限り Model Armor の検査対象外であり、IAM/PAB・Semantic Governance Policy・VPC Service Controls などの別の統制で補う必要があります。
 
 ### 4.2 Semantic Governance Policy：意図レベルの防御（プレビュー機能）
 
@@ -553,7 +553,7 @@ Google Cloud の技術的統制（Agent Identity、CMEK、VPC-SC、監査ログ�
 | 5 | 「返金は担当者の裁量で」といった業務ルールを、システムプロンプトの自然文だけに書いて安全だと考える | システムプロンプトは間接的プロンプトインジェクションで上書き・無視され得る | 金額閾値などのビジネスルールは Semantic Governance Policy の NLC として、モデル呼び出しの外側（Agent Gateway層）で強制する |
 | 6 | Model Armor のテンプレートだけをプロジェクトごとに個別設定し、組織共通のフロア設定を省略する | プロジェクトごとに検出基準がバラバラになり、最低限のガードレールが担保されない部門が生まれる | 組織/フォルダレベルで Floor Settings を設定し、プロジェクトのテンプレートがそれを下回れないようにする |
 | 7 | 高リスク操作（送金・削除・外部送信）も含め、エージェントに完全な自律実行を許可する | Rogue Actions のリスクが実世界の損害に直結する | SAIFの Agent User Control に従い、高リスク操作には Human-in-the-Loop の承認ゲートを設ける |
-| 8 | RAGのグラウンディングデータをGoogle管理鍵のまま本番運用し、規制業種の鍵管理要件を満たしていると誤認する | Google管理鍵はユーザー側でのローテーション・失効制御ができない | RAG Engine / Agent Retrieval で CMEK を有効化し、Cloud KMS の鍵ポリシーで管理する |
+| 8 | RAGのグラウンディングデータをGoogle管理鍵のまま本番運用し、規制業種の鍵管理要件を満たしていると誤認する | Google管理鍵はユーザー側でのローテーション・失効制御ができない | RAG Engine / Agent Retrieval で CMEK を有効化し、Cloud KMS の鍵ポリシーで管理する。ただし **RAG Engine で CMEK を適用できるのは Spanner モードの `RagManagedDb` のみ** であり、Serverless モード・`RagManagedVertexVectorSearch`・`VertexVectorSearch` には CMEK を適用できない（CMEK が要件なら Spanner モードを選択する） |
 
 ### 6.2 シナリオ問題の解き方：意思決定フローチャート
 
