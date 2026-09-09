@@ -87,6 +87,7 @@
 - [`__tests__/comptia/network-plus/network-implementation-guide/NavBar.test.tsx`](__tests__/comptia/network-plus/network-implementation-guide/NavBar.test.tsx)
 - [docs/migration-inventory/comptia-network-plus-network-implementation-guide.json](docs/migration-inventory/comptia-network-plus-network-implementation-guide.json)
 - [archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.html](archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.html)
+- [archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.md](archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.md)
 
 ---
 
@@ -115,6 +116,7 @@
 - [`__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx`](__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx)
 - [docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json](docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json)
 - [archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html](archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html)
+- [archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.md](archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.md)
 
 ---
 
