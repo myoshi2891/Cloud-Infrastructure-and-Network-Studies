@@ -78,18 +78,26 @@ describe('network-implementation-guide NavBar', () => {
         expect(linkFor('step3')).not.toHaveAttribute('aria-current');
     });
 
-    it('上方のセクションが交差したままなら、下方のセクションだけの通知で active を奪われない', () => {
+    it('交差したまま上方へ移動したセクションは、通知されなくても最新位置で比較される', () => {
         render(<NavBar />);
 
         act(() => {
-            observerCallback?.([entry('overview', 10), entry('step1', 400)]);
+            observerCallback?.([entry('overview', 10), entry('step1', 600)]);
         });
         expect(linkFor('overview')).toHaveAttribute('aria-current', 'location');
 
+        // overview はスクロールで上へ移動したが交差したままのため通知されない。
+        // 通知時点の古い top(10) ではなく現在位置(-200)で比較する必要がある。
+        vi.spyOn(
+            document.getElementById('overview') as HTMLElement,
+            'getBoundingClientRect',
+        ).mockReturnValue({ top: -200 } as DOMRect);
+
         act(() => {
-            observerCallback?.([entry('step1', 350)]);
+            observerCallback?.([entry('step1', 5)]);
         });
         expect(linkFor('overview')).toHaveAttribute('aria-current', 'location');
+        expect(linkFor('step1')).not.toHaveAttribute('aria-current');
     });
 
     it('モバイルトグルボタンの開閉と aria-expanded 属性の同期', () => {
