@@ -594,7 +594,7 @@ export function Section3Guide() {
                                     </code>
                                     ）に対して
                                     <code>roles/iam.serviceAccountTokenCreator</code>
-                                    を付与する。この日付以降に作成したプロジェクトでは自動的に付与されます。
+                                    を付与する。この日付より後に作成したプロジェクトでは自動的に付与されます。
                                 </li>
                             </ul>
                         </li>
