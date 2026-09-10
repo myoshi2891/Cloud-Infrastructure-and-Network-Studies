@@ -144,10 +144,18 @@ export function defineMigrationSuite(
             // 件数不一致はここで明示的に落とす。
             expect(inventory.structures.tableColumnHeaders).toHaveLength(inventory.counts.table);
             tables.forEach((table, index) => {
-                expect(table.querySelector('thead')).not.toBeNull();
-                expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(
-                    inventory.structures.tableColumnHeaders[index],
-                );
+                const expectedColHeaders = inventory.structures.tableColumnHeaders[index];
+                if (expectedColHeaders !== undefined && expectedColHeaders > 0) {
+                    // 列見出しが存在するテーブルは thead と th[scope=col] を必須とする。
+                    expect(table.querySelector('thead')).not.toBeNull();
+                    expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(
+                        expectedColHeaders,
+                    );
+                } else {
+                    // 列見出しがないテーブル（行見出しのみ）は thead なしを許容する。
+                    // th[scope=col] の件数が 0 であることだけを検証する。
+                    expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(0);
+                }
             });
         });
 

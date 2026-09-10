@@ -1,0 +1,2590 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            Professional Agentic Architect 認定試験 セクション2:
+            コーディングエージェントを使用したアプリケーション開発（配点 約17%）
+        </title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #f8fafc;
+                --bg-card: #ffffff;
+                --bg-card-2: #f1f5f9;
+                --border: #e2e8f0;
+                --border-soft: #eef2f7;
+                --text: #0f172a;
+                --text-dim: #475569;
+                --text-faint: #94a3b8;
+                --accent: #2563eb;
+                --accent-soft: #93b4f5;
+                --accent-bg: #eaf2ff;
+                --danger: #dc2626;
+                --danger-bg: #fef2f2;
+                --warn: #b45309;
+                --warn-bg: #fffbeb;
+                --success: #15803d;
+                --success-bg: #ecfdf3;
+                --sidebar-w: 300px;
+                --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                overflow-x: hidden;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--font-jp);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+            }
+            a {
+                color: var(--accent);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* ---------- layout ---------- */
+            .layout {
+                display: block;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: #f1f5f9;
+                border-right: 1px solid var(--border-soft);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 50;
+            }
+            .sidebar-header {
+                padding: 0 24px 20px;
+                border-bottom: 1px solid var(--border-soft);
+                margin-bottom: 16px;
+            }
+            .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--accent);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .sidebar-header h2 {
+                font-size: 16px;
+                margin: 6px 0 0;
+                color: var(--text);
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .sidebar nav {
+                padding: 0 12px;
+            }
+            .sidebar nav a {
+                display: block;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--text-dim);
+                line-height: 1.5;
+                margin-bottom: 2px;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .sidebar nav a:hover {
+                background: var(--accent-bg);
+                color: var(--text);
+                text-decoration: none;
+            }
+            .sidebar nav a.active {
+                background: var(--accent-bg);
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .sidebar nav a.lvl3 {
+                padding-left: 28px;
+                font-size: 12.5px;
+            }
+            .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                z-index: 60;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                color: var(--text);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            /* Main content */
+            .main {
+                margin-left: var(--sidebar-w);
+                padding: 56px 64px 120px;
+            }
+            .hero {
+                margin-bottom: 8px;
+            }
+            .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 14px;
+            }
+            .hero h1 {
+                font-size: clamp(28px, 3.6vw, 42px);
+                line-height: 1.35;
+                margin: 0 0 18px;
+                background: linear-gradient(135deg, #0f172a 0%, #2563eb 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 800;
+            }
+            .hero .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                font-size: 12.5px;
+                color: var(--text-dim);
+            }
+            .pill strong {
+                color: var(--text);
+            }
+
+            .main h2 {
+                font-size: 26px;
+                margin: 56px 0 20px;
+                padding-top: 8px;
+                border-top: 1px solid var(--border-soft);
+                color: var(--text);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                scroll-margin-top: 24px;
+            }
+            .main > h2:first-of-type {
+                border-top: none;
+                padding-top: 0;
+                margin-top: 8px;
+            }
+            .main h3 {
+                font-size: 20px;
+                margin: 38px 0 16px;
+                color: var(--text);
+                font-weight: 700;
+                scroll-margin-top: 24px;
+            }
+            .main h3::before {
+                content: '';
+                display: inline-block;
+                width: 5px;
+                height: 18px;
+                background: var(--accent);
+                border-radius: 3px;
+                margin-right: 10px;
+                vertical-align: -2px;
+            }
+            .main p {
+                margin: 0 0 18px;
+                color: var(--text);
+            }
+            .main ul,
+            .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.4em;
+                color: var(--text);
+            }
+            .main li {
+                margin-bottom: 8px;
+            }
+            .main hr {
+                border: none;
+                border-top: 1px solid var(--border-soft);
+                margin: 44px 0;
+            }
+            .main strong {
+                color: #0b1220;
+                font-weight: 700;
+            }
+            .footnote-ref {
+                margin-left: 2px;
+            }
+            .footnote-ref sup {
+                font-size: 11px;
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .main code:not(pre code) {
+                background: var(--bg-card-2);
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+                color: #b45309;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+
+            /* Tables */
+            .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--bg-card);
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            thead th {
+                background: var(--accent-bg);
+                color: var(--text);
+                text-align: left;
+                padding: 12px 16px;
+                font-weight: 700;
+                border-bottom: 1px solid var(--border);
+                white-space: nowrap;
+            }
+            tbody td {
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--border-soft);
+                color: var(--text-dim);
+                vertical-align: top;
+            }
+            tbody tr:last-child td {
+                border-bottom: none;
+            }
+            tbody tr:hover td {
+                background: rgba(37, 99, 235, 0.04);
+            }
+
+            /* Mermaid */
+            pre.mermaid {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 28px 20px;
+                margin: 0 0 30px;
+            }
+            pre.mermaid svg {
+                flex-shrink: 0;
+            }
+            pre.mermaid p {
+                color: inherit;
+                margin: 0;
+            }
+
+            /* Callouts */
+            .callout-practice {
+                display: flex;
+                gap: 14px;
+                background: var(--success-bg);
+                border: 1px solid #b7ecc8;
+                border-left: 4px solid var(--success);
+                border-radius: 12px;
+                padding: 20px 22px;
+                margin: 0 0 26px;
+            }
+            .callout-practice .icon {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--success);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 900;
+            }
+            .callout-practice .body {
+                color: var(--text);
+            }
+            .callout-practice .label {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--success);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .callout-practice p {
+                margin: 0;
+                color: var(--text);
+            }
+            .callout-practice ul {
+                margin: 0;
+                padding-left: 1.2em;
+                color: var(--text);
+            }
+            .callout-practice li {
+                margin-bottom: 6px;
+            }
+            .callout-practice li:last-child {
+                margin-bottom: 0;
+            }
+
+            .practice-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--success);
+                text-transform: uppercase;
+                margin: 0 0 10px;
+            }
+            .practice-label::before {
+                content: '✓';
+                font-size: 13px;
+            }
+
+            /* Reference grid */
+            .ref-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                margin: 0 0 30px;
+            }
+            .ref-card {
+                display: flex;
+                gap: 12px;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                min-width: 0;
+            }
+            .ref-card .num {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--accent-bg);
+                color: var(--accent);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 800;
+            }
+            .ref-card .txt {
+                font-size: 13px;
+                color: var(--text-dim);
+                min-width: 0;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+            .ref-card .txt a {
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+            /* Checklist */
+            .checklist-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 8px 22px 12px;
+                margin: 0 0 30px;
+            }
+            .checklist-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 0;
+                border-bottom: 1px solid var(--border-soft);
+                margin-bottom: 6px;
+            }
+            .checklist-header .title {
+                font-weight: 700;
+                color: var(--text);
+                font-size: 14.5px;
+            }
+            .checklist-header .count {
+                font-size: 13px;
+                color: var(--accent);
+                font-weight: 700;
+            }
+            .checklist-card ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .checklist-card li {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 11px 4px;
+                border-radius: 8px;
+                margin: 0;
+                transition: background 0.15s;
+            }
+            .checklist-card li:hover {
+                background: rgba(37, 99, 235, 0.05);
+            }
+            .checklist-card input[type='checkbox'] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 19px;
+                height: 19px;
+                flex-shrink: 0;
+                margin-top: 2px;
+                border: 1.5px solid var(--border);
+                border-radius: 5px;
+                background: var(--bg-card-2);
+                cursor: pointer;
+                position: relative;
+            }
+            .checklist-card input[type='checkbox']:checked {
+                background: var(--accent);
+                border-color: var(--accent);
+            }
+            .checklist-card input[type='checkbox']:checked::after {
+                content: '';
+                position: absolute;
+                left: 5px;
+                top: 1px;
+                width: 5px;
+                height: 10px;
+                border: solid #ffffff;
+                border-width: 0 2px 2px 0;
+                transform: rotate(40deg);
+            }
+            .checklist-card label {
+                color: var(--text);
+                font-size: 14.5px;
+                cursor: pointer;
+                line-height: 1.6;
+            }
+            .checklist-card li:has(input:checked) label {
+                text-decoration: line-through;
+                color: var(--text-faint);
+            }
+
+            /* Footnotes (pandoc) */
+            aside.footnotes {
+                display: none;
+            } /* replaced entirely by ref-grid */
+
+            /* Responsive */
+            @media (max-width: 980px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.12);
+                }
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 80px 20px 100px;
+                }
+                .sidebar-toggle {
+                    display: flex;
+                }
+                .ref-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layout">
+            <button
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                type="button"
+                aria-label="メニュー"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="kicker">Google Cloud Agentic Architect</div>
+                    <h2>Section 2: コーディングエージェントの活用</h2>
+                </div>
+                <nav id="sidebarNav">
+                    <a href="#はじめに" class="">はじめに</a>
+                    <a href="#セクション2に関連する主な対象ツール" class=""
+                        >セクション2に関連する主な対象ツール</a
+                    >
+                    <a href="#21-コーディングエージェントの効果的な活用" class=""
+                        >2.1 コーディングエージェントの効果的な活用</a
+                    >
+                    <a href="#211-mcpサーバーカスタムスキルツールアクセスの設定" class="lvl3"
+                        >2.1.1 MCPサーバー・カスタムスキル・ツールアクセスの設定</a
+                    >
+                    <a
+                        href="#212-セキュアなサンドボックスでのコーディングエージェントの利用"
+                        class="lvl3"
+                        >2.1.2 セキュアなサンドボックスでのコーディングエージェントの利用</a
+                    >
+                    <a href="#213-リファクタリング実行ランタイム最適化脆弱性パッチ適用" class="lvl3"
+                        >2.1.3 リファクタリング・実行ランタイム最適化・脆弱性パッチ適用</a
+                    >
+                    <a
+                        href="#22-エンタープライズワークフロー向けのコーディングエージェントのカスタマイズ"
+                        class=""
+                        >2.2
+                        エンタープライズワークフロー向けのコーディングエージェントのカスタマイズ</a
+                    >
+                    <a
+                        href="#221-antigravityにおけるスキルプラグイン拡張フックルールサブエージェントの作成"
+                        class="lvl3"
+                        >2.2.1
+                        Antigravityにおけるスキル・プラグイン・拡張フック・ルール・サブエージェントの作成</a
+                    >
+                    <a
+                        href="#222-agents-cliによるantigravityの拡張構築スケールガバナンス最適化"
+                        class="lvl3"
+                        >2.2.2 Agents
+                        CLIによるAntigravityの拡張（構築・スケール・ガバナンス・最適化）</a
+                    >
+                    <a href="#学習チェックリスト" class="">学習チェックリスト</a>
+                    <a href="#参考文献" class="">参考文献</a>
+                </nav>
+            </aside>
+            <main class="main">
+                <div class="hero">
+                    <div class="kicker">Professional Agentic Architect &middot; Section 2</div>
+                    <h1>
+                        Professional Agentic Architect 認定試験 セクション2:
+                        コーディングエージェントを使用したアプリケーション開発（配点 約17%）
+                    </h1>
+                    <div class="meta-row">
+                        <span class="pill">配点 <strong>約17%</strong></span>
+                        <span class="pill">対象 <strong>初学者〜中級者</strong></span>
+                        <span class="pill">図解 <strong>Mermaid 7点</strong></span>
+                        <span class="pill">参考文献 <strong>29件</strong></span>
+                    </div>
+                </div>
+
+                <h2 id="はじめに">はじめに</h2>
+                <p>
+                    本ガイドは、Google Cloud「Professional Agentic
+                    Architect」（ベータ試験、2026年9月30日まで受験可能）<a
+                        class="footnote-ref"
+                        href="#ref1"
+                        id="fnref1"
+                        role="doc-noteref"
+                        ><sup>1</sup></a
+                    >の出題範囲のうち、<strong
+                        >セクション2: コーディングエージェントを使用したアプリケーション開発</strong
+                    >（Using coding agents for application
+                    development、配点約17%）を初学者向けに徹底解説するものです。内容の根拠は公式試験ガイドPDF<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref2"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >および公式認定ページ<a
+                        class="footnote-ref"
+                        href="#ref1"
+                        id="fnref3"
+                        role="doc-noteref"
+                        ><sup>1</sup></a
+                    >です。
+                </p>
+                <p>
+                    試験全体は次の5セクションで構成されており、セクション2はセクション3（33%）・セクション4（22%）に次いで3番目に配点が高い領域です<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref4"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。
+                </p>
+                <pre class="mermaid">
+pie showData
+    title 試験の配点構成（全5セクション）
+    "1. ローコードツールでのエージェント構築 (13%)" : 13
+    "2. コーディングエージェントの活用 (17%)" : 17
+    "3. カスタムエージェントの開発 (33%)" : 33
+    "4. 評価とデプロイ (22%)" : 22
+    "5. セキュリティとガバナンス (15%)" : 15</pre
+                >
+                <p>
+                    セクション2は、公式試験ガイドによれば以下の2つの小項目（considerations）で構成されています<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref5"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。
+                </p>
+                <ul>
+                    <li>
+                        <strong>2.1 コーディングエージェントの効果的な活用</strong> —
+                        MCPサーバー・カスタムスキル・ツールアクセスの設定、セキュアなサンドボックスでの利用、リファクタリング・実行ランタイム最適化・脆弱性パッチ適用
+                    </li>
+                    <li>
+                        <strong
+                            >2.2
+                            エンタープライズワークフロー向けのコーディングエージェントのカスタマイズ</strong
+                        >
+                        —
+                        Antigravityでのスキル・プラグイン・拡張フック・ルール・サブエージェント作成、Agents
+                        CLIによる拡張
+                    </li>
+                </ul>
+                <p>
+                    <strong>注記</strong>:
+                    公式試験ガイドの「対象ツール一覧」には含まれていませんが、2.1の本文中では「Cloud
+                    Workstations」がセキュアサンドボックスの具体例として明記されています<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref6"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。本ガイドでもこの記載に従い解説します。
+                </p>
+                <h2 id="セクション2に関連する主な対象ツール">
+                    セクション2に関連する主な対象ツール
+                </h2>
+                <p>
+                    公式試験ガイドの「対象ツール一覧（in scope for this exam）」<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref7"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >のうち、セクション2に特に関連するものを以下にまとめます。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>ツール名</th>
+                                <th>概要</th>
+                                <th>本ガイドでの主な登場箇所</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>Antigravity (CLI, SDK, App)</td>
+                                <td>
+                                    Googleのエージェントファースト開発プラットフォーム。IDE・CLI（<code>agy</code>）・SDKの3形態で提供される<a
+                                        class="footnote-ref"
+                                        href="#ref4"
+                                        id="fnref8"
+                                        role="doc-noteref"
+                                        ><sup>4</sup></a
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref5"
+                                        id="fnref9"
+                                        role="doc-noteref"
+                                        ><sup>5</sup></a
+                                    >
+                                </td>
+                                <td>2.1.1, 2.1.2, 2.2.1, 2.2.2</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Claude Code on Google Cloud</td>
+                                <td>
+                                    Google CloudのAgent Platform（旧Vertex
+                                    AI）経由で課金・IAM・監査ログを統合して使うAnthropic Claude
+                                    Codeのコーディングエージェント<a
+                                        class="footnote-ref"
+                                        href="#ref7"
+                                        id="fnref10"
+                                        role="doc-noteref"
+                                        ><sup>7</sup></a
+                                    >
+                                </td>
+                                <td>2.1.1</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Model Context Protocol (MCP) servers</td>
+                                <td>
+                                    エージェントに外部ツール・データへの標準化されたアクセスを提供するプロトコルとサーバー実装<a
+                                        class="footnote-ref"
+                                        href="#ref11"
+                                        id="fnref11"
+                                        role="doc-noteref"
+                                        ><sup>11</sup></a
+                                    >
+                                </td>
+                                <td>2.1.1, 2.2.1</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Google Kubernetes Engine (GKE)</td>
+                                <td>
+                                    Agent
+                                    Sandbox機能によりgVisorベースのカーネルレベル隔離実行環境を提供<a
+                                        class="footnote-ref"
+                                        href="#ref12"
+                                        id="fnref12"
+                                        role="doc-noteref"
+                                        ><sup>12</sup></a
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref14"
+                                        id="fnref13"
+                                        role="doc-noteref"
+                                        ><sup>14</sup></a
+                                    >
+                                </td>
+                                <td>2.1.2</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Agents CLI in Agent Platform</td>
+                                <td>
+                                    コーディングエージェントにADKでのエージェント構築・評価・デプロイのスキルを付与するCLIとスキル群<a
+                                        class="footnote-ref"
+                                        href="#ref24"
+                                        id="fnref14"
+                                        role="doc-noteref"
+                                        ><sup>24</sup></a
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref25"
+                                        id="fnref15"
+                                        role="doc-noteref"
+                                        ><sup>25</sup></a
+                                    >
+                                </td>
+                                <td>2.2.2</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Skill Registry</td>
+                                <td>
+                                    スキルを一元管理・検証・配布するセキュアなリポジトリ<a
+                                        class="footnote-ref"
+                                        href="#ref30"
+                                        id="fnref16"
+                                        role="doc-noteref"
+                                        ><sup>30</sup></a
+                                    >
+                                </td>
+                                <td>2.2.1, 2.2.2</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Agent Registry</td>
+                                <td>
+                                    エージェント・MCPサーバー・スキル・エンドポイントを登録・発見・ガバナンスする統合カタログ<a
+                                        class="footnote-ref"
+                                        href="#ref28"
+                                        id="fnref17"
+                                        role="doc-noteref"
+                                        ><sup>28</sup></a
+                                    >
+                                </td>
+                                <td>2.2.2</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Cloud Run</td>
+                                <td>
+                                    Agents CLIのデフォルトのデプロイターゲットの1つ<a
+                                        class="footnote-ref"
+                                        href="#ref24"
+                                        id="fnref18"
+                                        role="doc-noteref"
+                                        ><sup>24</sup></a
+                                    >
+                                </td>
+                                <td>2.2.2</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>Google Cloud Observability (Cloud Logging / Cloud Trace)</td>
+                                <td>
+                                    3系統を区別する。①<strong>Cloud Trace のスパン</strong
+                                    >（レイテンシ・呼び出し階層）はデプロイしたエージェントに対して既定で有効。②<strong>メッセージ本文（プロンプト／レスポンス）の記録</strong>は
+                                    <code>OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</code>
+                                    が既定
+                                    <code>NO_CONTENT</code> のため記録されず、この1つの環境変数が
+                                    Trace のスパン属性と Cloud Logging
+                                    のイベントログの<strong>双方</strong>の本文出力を制御する。③<strong
+                                        >Cloud Storage／BigQuery へのログ出力</strong
+                                    >はさらに別条件で、素の
+                                    <code>agents-cli deploy</code>
+                                    は保存先バケット／データセットを作成しないため、Terraform
+                                    等でプロビジョニングしたうえでアップロード先の設定を行って初めて利用可能になる<a
+                                        class="footnote-ref"
+                                        href="#ref24"
+                                        id="fnref19"
+                                        role="doc-noteref"
+                                        ><sup>24</sup></a
+                                    >
+                                </td>
+                                <td>2.2.2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <hr />
+                <h2 id="21-コーディングエージェントの効果的な活用">
+                    2.1 コーディングエージェントの効果的な活用
+                </h2>
+                <h3 id="211-mcpサーバーカスタムスキルツールアクセスの設定">
+                    2.1.1 MCPサーバー・カスタムスキル・ツールアクセスの設定
+                </h3>
+                <p>
+                    コーディングエージェント（Antigravity、Claude Code on Google
+                    Cloudなど）は、単体では自分のコード生成能力しか持ちません。実際の開発ワークフローで役立てるには、(a)
+                    外部システムに接続する<strong>MCPサーバー</strong>、(b)
+                    特定タスクの専門知識をまとめた<strong>カスタムスキル</strong>、(c)
+                    それらへの<strong>ツールアクセス権限</strong>を適切に設定する必要があります<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref20"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。
+                </p>
+                <p>
+                    <strong>MCP</strong>（Model Context
+                    Protocol）は、エージェントと外部ツール・データソースの間の通信を標準化するプロトコルです。stdio（ローカルサブプロセス起動）などのトランスポートに対応しており、npm/PyPIパッケージやバイナリとして配布されたMCPサーバーをそのまま利用できます<a
+                        class="footnote-ref"
+                        href="#ref11"
+                        id="fnref21"
+                        role="doc-noteref"
+                        ><sup>11</sup></a
+                    >。
+                </p>
+                <p>
+                    Antigravityでは、設定の置き場所が「プロジェクトスコープ」と「グローバルスコープ」の2階層に整理されています<a
+                        class="footnote-ref"
+                        href="#ref9"
+                        id="fnref22"
+                        role="doc-noteref"
+                        ><sup>9</sup></a
+                    ><a class="footnote-ref" href="#ref23" id="fnref23" role="doc-noteref"
+                        ><sup>23</sup></a
+                    >。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>設定対象</th>
+                                <th>プロジェクトスコープ（リポジトリ単位・チーム共有）</th>
+                                <th>グローバルスコープ（ユーザー単位）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>MCPサーバー設定</td>
+                                <td>プロジェクト内の設定（存在する場合）</td>
+                                <td>
+                                    <code>&lt;user-home&gt;/.gemini/config/mcp_config.json</code
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref9"
+                                        id="fnref24"
+                                        role="doc-noteref"
+                                        ><sup>9</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>ルール（Rules）</td>
+                                <td>
+                                    <code>.agents/rules/*.md</code
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref23"
+                                        id="fnref25"
+                                        role="doc-noteref"
+                                        ><sup>23</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    <code>&lt;user-home&gt;/.gemini/GEMINI.md</code>
+                                    内の共通スニペット<a
+                                        class="footnote-ref"
+                                        href="#ref23"
+                                        id="fnref26"
+                                        role="doc-noteref"
+                                        ><sup>23</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>スキル（Skills）</td>
+                                <td>
+                                    <code>.agent/skills/&lt;name&gt;/SKILL.md</code
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref10"
+                                        id="fnref27"
+                                        role="doc-noteref"
+                                        ><sup>10</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    <code
+                                        >&lt;user-home&gt;/.gemini/antigravity/skills/&lt;name&gt;</code
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref10"
+                                        id="fnref28"
+                                        role="doc-noteref"
+                                        ><sup>10</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>用途</td>
+                                <td>リポジトリ固有の規約・接続先を明文化</td>
+                                <td>全プロジェクトに共通する個人設定</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    Antigravity
+                    2.0以降、旧来の「拡張機能（extensions）」は「プラグイン」という呼び方に整理され、MCPサーバー・スキル設定を一元管理できるようになりました<a
+                        class="footnote-ref"
+                        href="#ref9"
+                        id="fnref29"
+                        role="doc-noteref"
+                        ><sup>9</sup></a
+                    >。これはAntigravity CLI（<code>agy</code>）が旧Gemini
+                    CLIの設定ツリー（<code>&lt;user-home&gt;/.gemini/</code>）をそのまま引き継いだ結果であり、Google自身もAntigravity
+                    CLIをGemini
+                    CLIの中核機能（エージェントスキル・拡張フック・サブエージェント・拡張機能）を引き継ぐ後継ツールと位置づけています<a
+                        class="footnote-ref"
+                        href="#ref22"
+                        id="fnref30"
+                        role="doc-noteref"
+                        ><sup>22</sup></a
+                    >。
+                </p>
+                <p>
+                    一方、<strong>Claude Code on Google Cloud</strong>は、Google CloudのAgent
+                    Platform（旧Vertex AI）経由でClaude
+                    Codeを利用する構成です。個人のPro/Maxプラン経由のOAuthログインとは別の経路であり、<code>CLAUDE_CODE_USE_VERTEX=1</code>などの環境変数を設定することで有効化します<a
+                        class="footnote-ref"
+                        href="#ref7"
+                        id="fnref31"
+                        role="doc-noteref"
+                        ><sup>7</sup></a
+                    >。この構成のメリットは、GCPの請求・IAM（<code>roles/aiplatform.user</code>など）・VPC
+                    Service Controls・Cloud Loggingにそのまま統合できる点です<a
+                        class="footnote-ref"
+                        href="#ref8"
+                        id="fnref32"
+                        role="doc-noteref"
+                        ><sup>8</sup></a
+                    >。Claude
+                    Code自体もMCPサーバー設定をサポートしているため、Antigravityと同様にプロジェクト固有のツールアクセスを構成できます<a
+                        class="footnote-ref"
+                        href="#ref8"
+                        id="fnref33"
+                        role="doc-noteref"
+                        ><sup>8</sup></a
+                    >。
+                </p>
+                <div class="callout-practice">
+                    <div class="icon">✓</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                <strong>スコープを明確に分ける</strong>: リポジトリ固有の接続情報は
+                                <code>.agents/</code>
+                                配下（プロジェクトスコープ）に、個人の好みや全社共通ツールは
+                                <code>&lt;user-home&gt;/.gemini/config/</code
+                                >（グローバルスコープ）に置き、チームメンバー間で設定の重複や不整合を防ぐ<a
+                                    class="footnote-ref"
+                                    href="#ref9"
+                                    id="fnref34"
+                                    role="doc-noteref"
+                                    ><sup>9</sup></a
+                                ><a
+                                    class="footnote-ref"
+                                    href="#ref23"
+                                    id="fnref35"
+                                    role="doc-noteref"
+                                    ><sup>23</sup></a
+                                >。
+                            </li>
+                            <li>
+                                <strong>最小権限のツールアクセス</strong>:
+                                MCPサーバー定義では、利用可能なツールを <code>enabled_tools</code> /
+                                <code>disabled_tools</code>
+                                で明示的に絞り込み、エージェントに不要な操作権限を与えない<a
+                                    class="footnote-ref"
+                                    href="#ref11"
+                                    id="fnref36"
+                                    role="doc-noteref"
+                                    ><sup>11</sup></a
+                                >。
+                            </li>
+                            <li>
+                                <strong>シークレットを設定ファイルに直書きしない</strong>:
+                                MCPサーバーのグローバル設定に環境変数を安全に渡せない既知の制約が指摘されており（2026年半ば時点）、Secret
+                                ManagerやWorkload
+                                Identity連携など、より安全な認証情報の受け渡し方法を優先する<a
+                                    class="footnote-ref"
+                                    href="#ref9"
+                                    id="fnref37"
+                                    role="doc-noteref"
+                                    ><sup>9</sup></a
+                                >。
+                            </li>
+                            <li>
+                                <strong
+                                    ><code>AGENTS.md</code> /
+                                    <code>GEMINI.md</code>
+                                    でプロジェクトの振る舞いを明文化する</strong
+                                >: これはAntigravityだけでなくClaude
+                                Code・Codexなど複数のコーディングエージェントが共通で参照するファイル規約であり、ツール横断で一貫した挙動を得やすい<a
+                                    class="footnote-ref"
+                                    href="#ref9"
+                                    id="fnref38"
+                                    role="doc-noteref"
+                                    ><sup>9</sup></a
+                                >。
+                            </li>
+                            <li>
+                                <strong>課金・監査要件があるならGoogle Cloud経由に統一する</strong>:
+                                複数のコーディングエージェント（Antigravity、Claude
+                                Code）を混在利用する組織では、Claude Code on Google
+                                Cloudを使うことでGCPの既存のガバナンス機構（IAM、VPC-SC、Cloud
+                                Logging）にコーディングエージェントの利用実績を一元的に記録できる<a
+                                    class="footnote-ref"
+                                    href="#ref8"
+                                    id="fnref39"
+                                    role="doc-noteref"
+                                    ><sup>8</sup></a
+                                >。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <pre class="mermaid">
+flowchart LR
+    Dev["開発者"] --&gt;|自然言語で指示| Agent["コーディングエージェント&lt;br/&gt;(Antigravity / Claude Code on Google Cloud)"]
+    Agent --&gt;|常時読み込み| Rules[".agents/rules&lt;br/&gt;プロジェクトルール"]
+    Agent --&gt;|オンデマンド読み込み| Skills[".agent/skills/*&lt;br/&gt;SKILL.md（進行的開示）"]
+    Agent --&gt;|標準プロトコルで接続| MCP["MCPサーバー群"]
+    MCP --&gt; DB[("社内データベース")]
+    MCP --&gt; ExtAPI["社外SaaS API"]
+    MCP --&gt; GCPTools["Google Cloud MCP Servers"]
+    Agent --&gt;|認証・課金・監査を統合| Platform["Google Cloud Agent Platform&lt;br/&gt;(IAM / 課金 / VPC-SC / Cloud Logging)"]
+    Platform --&gt; Models["Gemini 3 Pro / Claude Sonnet 4.6 等&lt;br/&gt;(Model Garden)"]</pre
+                >
+                <h3 id="212-セキュアなサンドボックスでのコーディングエージェントの利用">
+                    2.1.2 セキュアなサンドボックスでのコーディングエージェントの利用
+                </h3>
+                <p>
+                    コーディングエージェントが生成・実行するコードは、原理的に<strong>「未信頼のコード」として扱うべき</strong>です。プロンプトインジェクションや意図しないバグにより、ホスト環境への予期しないアクセスが発生し得るためです<a
+                        class="footnote-ref"
+                        href="#ref13"
+                        id="fnref40"
+                        role="doc-noteref"
+                        ><sup>13</sup></a
+                    >。公式試験ガイドは、その隔離手段の具体例としてGoogle Kubernetes
+                    Engine（GKE）、Cloud Workstations、Antigravityの3つを挙げています<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref41"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。
+                </p>
+                <p>
+                    <strong>GKE Agent Sandbox</strong>は、Kubernetes SIG
+                    Appsのサブプロジェクトとして開発された、AIエージェントのような未信頼コードを安全に実行するためのKubernetes拡張です<a
+                        class="footnote-ref"
+                        href="#ref12"
+                        id="fnref42"
+                        role="doc-noteref"
+                        ><sup>12</sup></a
+                    ><a class="footnote-ref" href="#ref13" id="fnref43" role="doc-noteref"
+                        ><sup>13</sup></a
+                    >。中核技術は<strong>gVisor</strong>というアプリケーションカーネルで、通常のコンテナがホストカーネルを共有するのに対し、gVisorは以下の2つのコンポーネントでLinux
+                    APIをユーザー空間に再実装し、ホストカーネルへの直接アクセスを遮断します<a
+                        class="footnote-ref"
+                        href="#ref17"
+                        id="fnref44"
+                        role="doc-noteref"
+                        ><sup>17</sup></a
+                    >。
+                </p>
+                <ul>
+                    <li>
+                        <strong>Sentry</strong>:
+                        エージェントが発行するシステムコール（<code>exec</code>、<code>socket</code>など）を横取りし、あたかも本物のカーネルであるかのように振る舞う実行エンジン
+                    </li>
+                    <li>
+                        <strong>Gofer</strong>:
+                        ファイルシステム操作を仲介する専用プロセス。Sentryはファイルに直接アクセスできず、必ずGoferを経由する
+                    </li>
+                </ul>
+                <p>
+                    GKE Agent Sandboxは、この上に3つのKubernetesプリミティブを提供します<a
+                        class="footnote-ref"
+                        href="#ref13"
+                        id="fnref45"
+                        role="doc-noteref"
+                        ><sup>13</sup></a
+                    >。
+                </p>
+                <ul>
+                    <li>
+                        <strong>Sandbox</strong>: 実際のワークロードリソース（隔離実行環境の本体）
+                    </li>
+                    <li>
+                        <strong>SandboxTemplate</strong>:
+                        セキュリティ設計図（どのランタイム・ネットワークポリシーを使うか）
+                    </li>
+                    <li>
+                        <strong>SandboxClaim</strong>:
+                        ADKやLangChainなど上位フレームワークから実行環境をトランザクショナルに要求するためのリソース
+                    </li>
+                </ul>
+                <p>
+                    ウォームプール（事前起動済みPodのプール）により、コールドスタート遅延を1秒未満に抑えられます<a
+                        class="footnote-ref"
+                        href="#ref13"
+                        id="fnref46"
+                        role="doc-noteref"
+                        ><sup>13</sup></a
+                    >。またAgent SandboxはgVisorに加えKata
+                    Containersのようなオープンソースのサンドボックスもプラガブルなインターフェースとしてサポートしています。ネットワーク面では、マネージドな既定ポスチャとして
+                    <strong
+                        >Sandbox Router
+                        以外からのingressを拒否し、RFC1918のプライベートIP空間・CoreDNS・メタデータサーバーへのegressを拒否</strong
+                    >するKubernetesネットワークポリシーが組み込まれています<a
+                        class="footnote-ref"
+                        href="#ref15"
+                        id="fnref47"
+                        role="doc-noteref"
+                        ><sup>15</sup></a
+                    >。ただしこれは「すべてを拒否する」設定ではなく、<strong
+                        >public Internetへのegressは既定で許可</strong
+                    >される点に注意が必要です。外部への通信も遮断したい場合は、カスタムポリシーやair-gapped構成を別途適用します。またADKには<code>GkeCodeExecutor</code>という統合機能があり、コード実行リクエストのたびにConfigMap作成→gVisor有効なハードニング済みPodとしてのKubernetes
+                    Job作成→実行、という流れを自動化します<a
+                        class="footnote-ref"
+                        href="#ref16"
+                        id="fnref48"
+                        role="doc-noteref"
+                        ><sup>16</sup></a
+                    >。
+                </p>
+                <p>
+                    <strong>Cloud Workstations</strong
+                    >は、Googleが提供するマネージド型のセキュアなリモート開発環境です。コミュニティの実践例では、Cloud
+                    Workstationsのコンテナイメージ上にAntigravity本体をインストールし、Chrome Remote
+                    DesktopやVNC経由でブラウザからリモート操作することで、ローカルマシンに何もインストールせずに高い隔離性を持つAntigravity環境を実現する手法が紹介されています<a
+                        class="footnote-ref"
+                        href="#ref18"
+                        id="fnref49"
+                        role="doc-noteref"
+                        ><sup>18</sup></a
+                    ><a class="footnote-ref" href="#ref19" id="fnref50" role="doc-noteref"
+                        ><sup>19</sup></a
+                    >。また、Data Agent Kit拡張機能（VS Code向け）はCloud
+                    Workstationsにデフォルトでインストールされており、Google
+                    Cloudのデータ資産に対する統一されたビューを標準の開発環境として提供します<a
+                        class="footnote-ref"
+                        href="#ref20"
+                        id="fnref51"
+                        role="doc-noteref"
+                        ><sup>20</sup></a
+                    >。
+                </p>
+                <p>
+                    <strong>Antigravity自体のローカル実行</strong
+                    >にも、シェルコマンド実行の可否を制御する「Terminal
+                    Policy」という設定があり、<code>Auto</code>（標準コマンドを確認なしで自動実行）や<code
+                        >Agent Decides</code
+                    >（確認が必要かどうかをエージェント自身に判断させる）といったモードを選択できます<a
+                        class="footnote-ref"
+                        href="#ref5"
+                        id="fnref52"
+                        role="doc-noteref"
+                        ><sup>5</sup></a
+                    >。ただしこれはOSプロセスレベルの制御であり、gVisorのようなカーネルレベル分離は提供しません。
+                </p>
+                <h4>環境ごとの比較</h4>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>環境</th>
+                                <th>分離レベル</th>
+                                <th>主な用途</th>
+                                <th>セットアップの手間</th>
+                                <th>適したシナリオ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>Antigravityローカル実行</td>
+                                <td>OSプロセスレベル（Terminal Policyによる実行制御のみ）</td>
+                                <td>個人開発・プロトタイピング</td>
+                                <td>低</td>
+                                <td>信頼できるコード・小規模な検証</td>
+                            </tr>
+                            <tr class="even">
+                                <td>Cloud Workstations</td>
+                                <td>VMベースの永続的な隔離環境（ユーザー間分離）</td>
+                                <td>チーム開発環境の標準化、リモートでのAntigravity実行</td>
+                                <td>中</td>
+                                <td>複数人開発、BYOD対応、監査要件がある組織</td>
+                            </tr>
+                            <tr class="odd">
+                                <td>GKE Agent Sandbox（gVisor）</td>
+                                <td>
+                                    カーネルレベル分離（Sentry/Goferによるシステムコール傍受）＋マネージドなネットワークポスチャ（Sandbox
+                                    Router以外からのingressを拒否し、RFC1918レンジ・CoreDNS・メタデータサーバへのegressを拒否。ただしパブリックインターネットへのegressは既定で許可）
+                                </td>
+                                <td>本番環境でのLLM生成コード実行、マルチテナントSaaS</td>
+                                <td>高（Kubernetesクラスタ運用が前提）</td>
+                                <td>大規模・マルチテナント・未信頼コードの実行が常態化する環境</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <pre class="mermaid">
+flowchart TD
+    Start["エージェントに実行させる&lt;br/&gt;コードの性質は？"] --&gt; Q1{"本番環境で不特定多数の&lt;br/&gt;未信頼コードを実行するか？"}
+    Q1 --&gt;|はい| GKE["GKE Agent Sandbox&lt;br/&gt;(gVisor + SandboxTemplate)"]
+    Q1 --&gt;|いいえ| Q2{"複数人・複数デバイスから&lt;br/&gt;統一された開発環境が必要か？"}
+    Q2 --&gt;|はい| CW["Cloud Workstations&lt;br/&gt;(標準化されたリモート開発環境)"]
+    Q2 --&gt;|いいえ| Q3{"個人のプロトタイピングで&lt;br/&gt;信頼できるコードのみか？"}
+    Q3 --&gt;|はい| Local["Antigravityローカル実行&lt;br/&gt;(Terminal Policy: Auto / Agent Decides)"]
+    Q3 --&gt;|いいえ| GKE</pre
+                >
+                <pre class="mermaid">
+flowchart LR
+    subgraph Sandbox["GKE Agent Sandbox Pod"]
+        AgentCode["エージェントが生成した&lt;br/&gt;コード（未信頼）"] --&gt; Sentry["Sentry&lt;br/&gt;（ユーザー空間の疑似カーネル）"]
+        Sentry --&gt;|ファイルI/Oのみ委譲| Gofer["Gofer&lt;br/&gt;（I/Oプロキシ）"]
+    end
+    Gofer --&gt;|許可された範囲のみ| HostFS["ホストファイルシステム"]
+    Sentry -.-&gt;|システムコールの&lt;br/&gt;直接到達を遮断| HostKernel["ホストOSカーネル"]</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">✓</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                「LLMが生成したコードは常に未信頼」という前提に立ち、既定のネットワークポスチャ（Sandbox
+                                Router以外からのingress拒否／RFC1918・CoreDNS・メタデータサーバーへのegress拒否）に加え、<strong
+                                    >既定では許可されるpublic Internetへのegress</strong
+                                >をカスタムポリシーやair-gapped構成で絞り込み、最小権限のWorkload
+                                Identityと組み合わせる<a
+                                    class="footnote-ref"
+                                    href="#ref13"
+                                    id="fnref53"
+                                    role="doc-noteref"
+                                    ><sup>13</sup></a
+                                ><a
+                                    class="footnote-ref"
+                                    href="#ref17"
+                                    id="fnref54"
+                                    role="doc-noteref"
+                                    ><sup>17</sup></a
+                                >。
+                            </li>
+                            <li>
+                                独自にPodを組むのではなく、ADKの<code>GkeCodeExecutor</code>のようなマネージド統合を利用し、ハードニング済み設定をゼロから実装しない<a
+                                    class="footnote-ref"
+                                    href="#ref16"
+                                    id="fnref55"
+                                    role="doc-noteref"
+                                    ><sup>16</sup></a
+                                >。
+                            </li>
+                            <li>
+                                ウォームプールでコールドスタートを抑えつつ、アイドル状態のサンドボックスは積極的にサスペンド・削除してコストを最適化する<a
+                                    class="footnote-ref"
+                                    href="#ref13"
+                                    id="fnref56"
+                                    role="doc-noteref"
+                                    ><sup>13</sup></a
+                                >。
+                            </li>
+                            <li>
+                                監査要件がある組織では、個人のローカル実行に頼らずCloud
+                                Workstations上にAntigravityを集約し、セッションを一元的に管理する<a
+                                    class="footnote-ref"
+                                    href="#ref18"
+                                    id="fnref57"
+                                    role="doc-noteref"
+                                    ><sup>18</sup></a
+                                ><a
+                                    class="footnote-ref"
+                                    href="#ref20"
+                                    id="fnref58"
+                                    role="doc-noteref"
+                                    ><sup>20</sup></a
+                                >。
+                            </li>
+                            <li>
+                                ローカルでAntigravityを使う場合でも、Terminal
+                                Policyを安易に<code>Auto</code>にせず、重要な操作は<code
+                                    >Agent Decides</code
+                                >や手動承認を組み合わせる<a
+                                    class="footnote-ref"
+                                    href="#ref5"
+                                    id="fnref59"
+                                    role="doc-noteref"
+                                    ><sup>5</sup></a
+                                >。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 id="213-リファクタリング実行ランタイム最適化脆弱性パッチ適用">
+                    2.1.3 リファクタリング・実行ランタイム最適化・脆弱性パッチ適用
+                </h3>
+                <p>
+                    コーディングエージェントの実運用における代表的なユースケースが、既存コードの<strong>リファクタリング</strong>、<strong>実行ランタイムの最適化</strong>、<strong>アプリケーション層の脆弱性パッチ適用</strong>です<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref60"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。これらはいずれも「動いているコードを変更する」タスクであり、新規コード生成以上に振る舞いの回帰（デグレード）に注意が必要です。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>ユースケース</th>
+                                <th>目的</th>
+                                <th>推奨アプローチ</th>
+                                <th>主なリスクと対策</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>リファクタリング</td>
+                                <td>可読性・保守性の向上、技術的負債の解消</td>
+                                <td>
+                                    タスクを小さく分割し、既存のテスト（またはgolden test
+                                    set）で現状の振る舞いを固定してから変更させる
+                                </td>
+                                <td>
+                                    大規模な一括変更はレビューが困難になりデグレードを見逃しやすい →
+                                    差分を小さく保ち人間レビューを必須化する
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>実行ランタイム最適化</td>
+                                <td>レイテンシ・コスト削減</td>
+                                <td>
+                                    プロファイリング結果など計測データをツール経由でエージェントに与え、推測ではなく実測に基づいて最適化させる
+                                </td>
+                                <td>
+                                    過度な最適化により可読性が低下する →
+                                    ベンチマーク比較（Before/After）を完了条件に含める
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>アプリケーション層の脆弱性パッチ</td>
+                                <td>セキュアコーディング基準への準拠</td>
+                                <td>
+                                    SAST/SCAツールの検出結果を構造化データとしてエージェントに渡し、修正後は再スキャンで検証する
+                                </td>
+                                <td>
+                                    誤検知への過剰対応や新たな脆弱性の混入 →
+                                    人間によるセキュリティレビューをマージ前に必須化する
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    いずれのユースケースでも、2.1.2で解説したセキュアなサンドボックス内でエージェントに変更を実行・検証させ、その後に人間のレビューを経てマージするという一連の流れが基本パターンとなります。
+                </p>
+                <pre class="mermaid">
+flowchart LR
+    Task["タスク定義&lt;br/&gt;（リファクタ／最適化／パッチ）"] --&gt; Plan["エージェントによる&lt;br/&gt;実行計画（Plan Artifact）"]
+    Plan --&gt; Sandbox["サンドボックス内で実行&lt;br/&gt;（2.1.2のGKE/Cloud Workstations等）"]
+    Sandbox --&gt; Test["既存テスト／Evalsetで検証"]
+    Test --&gt;|失敗| Plan
+    Test --&gt;|成功| Scan["SAST／SCAスキャンを再実行"]
+    Scan --&gt;|新たな指摘あり| Plan
+    Scan --&gt;|問題なし| Review["人間によるコードレビュー&lt;br/&gt;（PR・差分の確認）"]
+    Review --&gt;|却下| Plan
+    Review --&gt;|承認| Merge["マージ・デプロイ"]</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">✓</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                変更前に既存テストまたはgolden test
+                                setを整備し、エージェントの変更が「意図した差分以外は振る舞いを変えていない」ことを機械的に検証できるようにする（評価手法の詳細はセクション4で扱う）。
+                            </li>
+                            <li>
+                                リファクタリングタスクは1回のセッションで単一ファイル・単一モジュールに範囲を絞り、差分をレビュー可能なサイズに保つ。
+                            </li>
+                            <li>
+                                静的解析・脆弱性スキャンの結果はMCPツールや拡張フック経由でエージェントに構造化データとして渡し、フリーテキストの説明だけに頼らない。
+                            </li>
+                            <li>
+                                実行ランタイム最適化では、変更前後のベンチマーク結果を成果物として残し、体感ではなく数値で効果を確認する。
+                            </li>
+                            <li>
+                                いかに自動テスト・自動スキャンを通過しても、脆弱性パッチとセキュリティに関わる変更は人間によるレビューをマージ前の必須ゲートとする。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr />
+                <h2
+                    id="22-エンタープライズワークフロー向けのコーディングエージェントのカスタマイズ"
+                >
+                    2.2 エンタープライズワークフロー向けのコーディングエージェントのカスタマイズ
+                </h2>
+                <h3
+                    id="221-antigravityにおけるスキルプラグイン拡張フックルールサブエージェントの作成"
+                >
+                    2.2.1
+                    Antigravityにおけるスキル・プラグイン・拡張フック・ルール・サブエージェントの作成
+                </h3>
+                <p>
+                    公式試験ガイドは、Antigravityを使って作成できるカスタマイズ要素として「スキル、プラグイン、拡張フック、ルール、サブエージェント」の5つを明示しています<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref61"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。それぞれの役割は次の表の通りです。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>要素</th>
+                                <th>目的</th>
+                                <th>読み込みタイミング</th>
+                                <th>主な保存場所</th>
+                                <th>具体例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td>ルール（Rules）</td>
+                                <td>常時適用すべき方針・規約を明文化する</td>
+                                <td>セッション開始時に常に読み込まれる</td>
+                                <td>
+                                    <code>.agents/rules/*.md</code
+                                    >（プロジェクト）／<code>&lt;user-home&gt;/.gemini/GEMINI.md</code>（グローバル）<a
+                                        class="footnote-ref"
+                                        href="#ref23"
+                                        id="fnref62"
+                                        role="doc-noteref"
+                                        ><sup>23</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    セキュリティ方針、Gitワークフロー規約<a
+                                        class="footnote-ref"
+                                        href="#ref21"
+                                        id="fnref63"
+                                        role="doc-noteref"
+                                        ><sup>21</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>スキル（Skills）</td>
+                                <td>タスクに関連する専門知識をオンデマンドで提供する</td>
+                                <td>関連タスクを検出した時点で段階的に開示（進行的開示）</td>
+                                <td>
+                                    <code>.agent/skills/&lt;name&gt;/SKILL.md</code
+                                    >（プロジェクト）／<code>&lt;user-home&gt;/.gemini/antigravity/skills/&lt;name&gt;</code>（グローバル）<a
+                                        class="footnote-ref"
+                                        href="#ref10"
+                                        id="fnref64"
+                                        role="doc-noteref"
+                                        ><sup>10</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    外部API連携手順、コーディング規約集<a
+                                        class="footnote-ref"
+                                        href="#ref21"
+                                        id="fnref65"
+                                        role="doc-noteref"
+                                        ><sup>21</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>プラグイン（Plugins）</td>
+                                <td>スキル・コマンド・MCP設定・ルールをひとまとめにして配布する</td>
+                                <td>
+                                    インストール時に展開され、以後は内部のスキル等と同様にオンデマンドで参照される
+                                </td>
+                                <td>
+                                    共有設定フォルダ（旧称: extensions）<a
+                                        class="footnote-ref"
+                                        href="#ref9"
+                                        id="fnref66"
+                                        role="doc-noteref"
+                                        ><sup>9</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    <code>google/agents-cli</code>、Data Agent Kit plugin<a
+                                        class="footnote-ref"
+                                        href="#ref24"
+                                        id="fnref67"
+                                        role="doc-noteref"
+                                        ><sup>24</sup></a
+                                    ><a
+                                        class="footnote-ref"
+                                        href="#ref20"
+                                        id="fnref68"
+                                        role="doc-noteref"
+                                        ><sup>20</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td>拡張フック（Extension Hooks）</td>
+                                <td>
+                                    決定論的な処理をライフサイクルイベントに合わせて強制実行する
+                                </td>
+                                <td>
+                                    <code>PreToolUse</code
+                                    >／<code>PostToolUse</code>などのイベント発火時
+                                </td>
+                                <td>
+                                    フック設定ファイル（プロジェクト／グローバル）<a
+                                        class="footnote-ref"
+                                        href="#ref23"
+                                        id="fnref69"
+                                        role="doc-noteref"
+                                        ><sup>23</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    ファイル閲覧前のシークレット検出フック<a
+                                        class="footnote-ref"
+                                        href="#ref23"
+                                        id="fnref70"
+                                        role="doc-noteref"
+                                        ><sup>23</sup></a
+                                    >
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td>サブエージェント（Subagents）</td>
+                                <td>専門タスクを独立したコンテキストに委譲する</td>
+                                <td>メインエージェントが必要と判断した時点で動的に生成</td>
+                                <td>
+                                    エージェント定義ファイル<a
+                                        class="footnote-ref"
+                                        href="#ref21"
+                                        id="fnref71"
+                                        role="doc-noteref"
+                                        ><sup>21</sup></a
+                                    >
+                                </td>
+                                <td>
+                                    プランナー、コードレビュアー、セキュリティレビュアー、E2Eランナー<a
+                                        class="footnote-ref"
+                                        href="#ref21"
+                                        id="fnref72"
+                                        role="doc-noteref"
+                                        ><sup>21</sup></a
+                                    >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    これらの要素の中でも特に重要な設計思想が<strong>「進行的開示」</strong>（progressive
+                    disclosure）です。Antigravityの基盤モデルは強力な汎用知識を持ちますが、プロジェクト固有のルールやツールをすべて常時コンテキストに読み込むと、ツール肥大化・コスト増加・レイテンシ増加・混乱を招きます。スキルは「使われるまで休眠している専門知識パッケージ」として設計されており、必要なタスクが来たときにだけ読み込まれます<a
+                        class="footnote-ref"
+                        href="#ref6"
+                        id="fnref73"
+                        role="doc-noteref"
+                        ><sup>6</sup></a
+                    >。
+                </p>
+                <p>
+                    Antigravity 2.0では「Dynamic
+                    Subagents」が導入され、プランナー・コードレビュアー・セキュリティレビュアー・ビルドエラー解決・E2Eランナー・リファクタークリーナー・ドキュメント更新担当など、役割ごとに独立したサブエージェントを構成する実践例が広く共有されています<a
+                        class="footnote-ref"
+                        href="#ref21"
+                        id="fnref74"
+                        role="doc-noteref"
+                        ><sup>21</sup></a
+                    >。サブエージェントは独立したコンテキストウィンドウを持つため、メインの会話コンテキストを専門タスクの詳細で汚染せずに済みます。
+                </p>
+                <pre class="mermaid">
+flowchart TD
+    SessionStart["セッション開始"] --&gt; Rules["ルールを読み込み&lt;br/&gt;（常時・全セッション共通）"]
+    Rules --&gt; TaskAnalysis["タスク内容を解析"]
+    TaskAnalysis --&gt;|関連スキルを検出| SkillLoad["該当スキルのみ&lt;br/&gt;段階的に読み込み（進行的開示）"]
+    TaskAnalysis --&gt;|専門領域に分割可能| Delegate["サブエージェントへ委譲&lt;br/&gt;（独立したコンテキスト）"]
+    SkillLoad --&gt; ToolUse["ツールを呼び出し"]
+    Delegate --&gt; ToolUse
+    ToolUse --&gt;|イベント発火| Hooks["拡張フックを実行&lt;br/&gt;（PreToolUse／PostToolUse等）"]
+    Hooks --&gt;|許可| Execute["処理を継続"]
+    Hooks --&gt;|ブロック| Abort["処理を中止し警告"]</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">✓</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                ルールは常時読み込まれてコンテキストを消費するため、本当に全セッション共通で必要な方針のみに絞り込む<a
+                                    class="footnote-ref"
+                                    href="#ref6"
+                                    id="fnref75"
+                                    role="doc-noteref"
+                                    ><sup>6</sup></a
+                                >。
+                            </li>
+                            <li>
+                                汎用的だが頻繁には使わない知識はスキル化し、進行的開示に委ねることでツール肥大化とコスト増を防ぐ<a
+                                    class="footnote-ref"
+                                    href="#ref6"
+                                    id="fnref76"
+                                    role="doc-noteref"
+                                    ><sup>6</sup></a
+                                >。
+                            </li>
+                            <li>
+                                チームやOSSコミュニティで再利用する場合は、スキル・コマンド・MCP設定・ルールをプラグインとしてまとめ、バージョン管理する<a
+                                    class="footnote-ref"
+                                    href="#ref9"
+                                    id="fnref77"
+                                    role="doc-noteref"
+                                    ><sup>9</sup></a
+                                ><a
+                                    class="footnote-ref"
+                                    href="#ref24"
+                                    id="fnref78"
+                                    role="doc-noteref"
+                                    ><sup>24</sup></a
+                                >。
+                            </li>
+                            <li>
+                                シークレット検出のようなセキュリティ上絶対に守るべきチェックは、LLMの判断に委ねずに拡張フックで機械的に強制する<a
+                                    class="footnote-ref"
+                                    href="#ref23"
+                                    id="fnref79"
+                                    role="doc-noteref"
+                                    ><sup>23</sup></a
+                                >。
+                            </li>
+                            <li>
+                                プランニングやコードレビュー、セキュリティレビューのように専門性が高く並列化が有効なタスクは、メインエージェントから切り離してサブエージェントに委譲する<a
+                                    class="footnote-ref"
+                                    href="#ref21"
+                                    id="fnref80"
+                                    role="doc-noteref"
+                                    ><sup>21</sup></a
+                                >。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 id="222-agents-cliによるantigravityの拡張構築スケールガバナンス最適化">
+                    2.2.2 Agents CLIによるAntigravityの拡張（構築・スケール・ガバナンス・最適化）
+                </h3>
+                <p>
+                    <strong>Agents CLI in Agent Platform</strong
+                    >（<code>agents-cli</code>）は、Googleが提供するCLIとスキル群のセットで、Antigravity・Gemini
+                    CLI・Claude Code・Codexなど任意のコーディングエージェントに、Google CloudのAgent
+                    Development
+                    Kit（ADK）を使ったエージェント構築・評価・デプロイ・運用の専門知識を与えます<a
+                        class="footnote-ref"
+                        href="#ref24"
+                        id="fnref81"
+                        role="doc-noteref"
+                        ><sup>24</sup></a
+                    ><a class="footnote-ref" href="#ref25" id="fnref82" role="doc-noteref"
+                        ><sup>25</sup></a
+                    >。公式試験ガイドはこれを「Antigravityを拡張し、デプロイ済みエージェントを構築・スケール・ガバナンス・最適化する」ための手段として位置づけています<a
+                        class="footnote-ref"
+                        href="#ref2"
+                        id="fnref83"
+                        role="doc-noteref"
+                        ><sup>2</sup></a
+                    >。Googleは2026年5月のI/O
+                    '26で、Antigravityをコーディング・エージェントオーケストレーション戦略の中核として据え、Agents
+                    CLIをその上でADK・評価・デプロイ・観測性・公開に関する専門知識を付与する存在として発表しました<a
+                        class="footnote-ref"
+                        href="#ref27"
+                        id="fnref84"
+                        role="doc-noteref"
+                        ><sup>27</sup></a
+                    >。
+                </p>
+                <p>
+                    セットアップは非常にシンプルで、人間が直接実行するコマンドは基本的に1つだけです<a
+                        class="footnote-ref"
+                        href="#ref24"
+                        id="fnref85"
+                        role="doc-noteref"
+                        ><sup>24</sup></a
+                    >。
+                </p>
+                <p><code>uvx google-agents-cli setup</code></p>
+                <p>
+                    これによりCLI本体と、コーディングエージェント向けのスキル一式がインストールされます。スキルのみを追加したい場合は次のコマンドも利用できます<a
+                        class="footnote-ref"
+                        href="#ref24"
+                        id="fnref86"
+                        role="doc-noteref"
+                        ><sup>24</sup></a
+                    >。
+                </p>
+                <p><code>npx skills add google/agents-cli</code></p>
+                <p>
+                    セットアップ後は、開発者はCLIの個別コマンドを覚える必要がなく、コーディングエージェントに自然言語で指示するだけで済みます（例:「agents-cliを使って、冗長な文章を要約するエージェントを作って」）<a
+                        class="footnote-ref"
+                        href="#ref24"
+                        id="fnref87"
+                        role="doc-noteref"
+                        ><sup>24</sup></a
+                    ><a class="footnote-ref" href="#ref26" id="fnref88" role="doc-noteref"
+                        ><sup>26</sup></a
+                    >。
+                </p>
+                <p>
+                    agents-cliは、ADKのライフサイクル全体にわたって次の7種類のスキルを提供します<a
+                        class="footnote-ref"
+                        href="#ref24"
+                        id="fnref89"
+                        role="doc-noteref"
+                        ><sup>24</sup></a
+                    >。
+                </p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr class="header">
+                                <th>スキル名</th>
+                                <th>コーディングエージェントが習得する内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd">
+                                <td><code>google-agents-cli-workflow</code></td>
+                                <td>
+                                    開発ライフサイクル全体、コード保持ルール、モデル選定の考え方
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>google-agents-cli-adk-code</code></td>
+                                <td>
+                                    ADK Python
+                                    APIの詳細（エージェント、ツール、オーケストレーション、コールバック、状態管理）
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>google-agents-cli-scaffold</code></td>
+                                <td>
+                                    プロジェクトの雛形生成（新規作成／機能追加／アップグレード）
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>google-agents-cli-eval</code></td>
+                                <td>
+                                    評価手法（メトリクス、evalset、LLM-as-judge、トラジェクトリスコアリング）
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>google-agents-cli-deploy</code></td>
+                                <td>
+                                    デプロイ（Agent Runtime、Cloud
+                                    Run、GKE、CI/CD、シークレット管理）
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td><code>google-agents-cli-publish</code></td>
+                                <td>Gemini Enterpriseへのエージェント公開</td>
+                            </tr>
+                            <tr class="odd">
+                                <td><code>google-agents-cli-observability</code></td>
+                                <td>デプロイ後の可観測性設定</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>
+                    典型的な開発フローは、(1) スキャフォールディングでプロジェクトを生成し、(2)
+                    <code>agents-cli eval run</code> による評価を反復して品質を高め、(3)
+                    デプロイ設定を追加してCloud Run等にデプロイし、(4) デプロイ後は自動的にCloud
+                    Traceが有効化される、という流れです<a
+                        class="footnote-ref"
+                        href="#ref26"
+                        id="fnref90"
+                        role="doc-noteref"
+                        ><sup>26</sup></a
+                    >。さらに開発者が「監視基盤をセットアップして」と指示すれば、コーディングエージェントがサービスアカウント・Cloud
+                    Storageバケット・BigQueryデータセットを自動的にプロビジョニングし、より詳細な観測性を実現します<a
+                        class="footnote-ref"
+                        href="#ref26"
+                        id="fnref91"
+                        role="doc-noteref"
+                        ><sup>26</sup></a
+                    >。
+                </p>
+                <p>
+                    「ガバナンス」の側面では、Agent
+                    Registry（エージェント・MCPサーバー・エンドポイントの統合カタログ）<a
+                        class="footnote-ref"
+                        href="#ref28"
+                        id="fnref92"
+                        role="doc-noteref"
+                        ><sup>28</sup></a
+                    >とSkill
+                    Registry（スキル専用の一元管理リポジトリ、ZIPペイロードの自動検証・バージョン管理・アクセスポリシーによる認可を提供）<a
+                        class="footnote-ref"
+                        href="#ref30"
+                        id="fnref93"
+                        role="doc-noteref"
+                        ><sup>30</sup></a
+                    >が対応します。Agent
+                    Registryは2026年6月18日にGA（一般提供）となり、続いて2026年7月23日にはSkill
+                    Registryのガバナンス機能（スキルのライフサイクル管理、バージョン履歴、検証済みパブリッシャーの確認など）がプレビューとして追加されました<a
+                        class="footnote-ref"
+                        href="#ref29"
+                        id="fnref94"
+                        role="doc-noteref"
+                        ><sup>29</sup></a
+                    >。
+                </p>
+                <pre class="mermaid">
+sequenceDiagram
+    participant Dev as 開発者
+    participant Agent as コーディングエージェント&lt;br/&gt;(Antigravity等)
+    participant CLI as agents-cli
+    participant Cloud as Cloud Run／GKE／Agent Runtime
+    participant Obs as Cloud Trace／Cloud Logging
+    participant AReg as Agent Registry
+    participant SReg as Skill Registry
+
+    Dev-&gt;&gt;Agent: 自然言語でエージェント構築を指示
+    Agent-&gt;&gt;CLI: agents-cli scaffold
+    CLI--&gt;&gt;Agent: プロジェクト雛形を生成
+    Agent-&gt;&gt;CLI: agents-cli eval run
+    CLI--&gt;&gt;Agent: golden dataに基づく評価結果
+    Agent-&gt;&gt;Agent: 指示・コードを反復改善
+    Dev-&gt;&gt;Agent: デプロイを指示
+    Agent-&gt;&gt;CLI: agents-cli scaffold enhance --deployment-target
+    CLI-&gt;&gt;Cloud: デプロイ設定を追加してデプロイ
+    Cloud--&gt;&gt;Obs: トレースを自動送信
+    Dev-&gt;&gt;Agent: 監視基盤のセットアップを指示
+    Agent-&gt;&gt;Cloud: サービスアカウント／バケット／BQデータセットを作成
+    Agent-&gt;&gt;CLI: エージェントの公開を指示
+    CLI-&gt;&gt;AReg: エージェントを公開・登録し発見とガバナンスの対象にする
+    Agent-&gt;&gt;SReg: スキルの作成／更新／検索／削除を実行</pre
+                >
+                <div class="callout-practice">
+                    <div class="icon">✓</div>
+                    <div class="body">
+                        <div class="label">ベストプラクティス</div>
+                        <ul>
+                            <li>
+                                人間が直接実行するのは<code>uvx google-agents-cli setup</code
+                                >によるセットアップのみとし、以降はコーディングエージェントへの自然言語指示に統一する運用を徹底する<a
+                                    class="footnote-ref"
+                                    href="#ref24"
+                                    id="fnref95"
+                                    role="doc-noteref"
+                                    ><sup>24</sup></a
+                                >。
+                            </li>
+                            <li>
+                                <code>agents-cli eval run</code
+                                >による反復評価を開発サイクルの中心に据え、golden
+                                dataに基づく評価が通るまでデプロイに進まない<a
+                                    class="footnote-ref"
+                                    href="#ref26"
+                                    id="fnref96"
+                                    role="doc-noteref"
+                                    ><sup>26</sup></a
+                                >。
+                            </li>
+                            <li>
+                                デプロイ先（Agent Runtime／Cloud
+                                Run／GKE）はユースケース・コスト・運用要件で選定し、<code
+                                    >agents-cli scaffold enhance --deployment-target</code
+                                >で後からインフラ設定を追加できる柔軟性を活用する（選定基準の詳細はセクション4.2で扱う）<a
+                                    class="footnote-ref"
+                                    href="#ref26"
+                                    id="fnref97"
+                                    role="doc-noteref"
+                                    ><sup>26</sup></a
+                                >。
+                            </li>
+                            <li>
+                                デプロイ後にデフォルトで有効化されるCloud
+                                Traceに加え、専用のサービスアカウント・ストレージ・BigQueryデータセットを設定し、観測性を本番運用レベルまで引き上げる<a
+                                    class="footnote-ref"
+                                    href="#ref26"
+                                    id="fnref98"
+                                    role="doc-noteref"
+                                    ><sup>26</sup></a
+                                >。
+                            </li>
+                            <li>
+                                チームやエンタープライズでの展開時は、個々のスキル・エージェントを野放しにせず、Agent
+                                RegistryとSkill
+                                Registryでバージョンとアクセスポリシーを一元管理する<a
+                                    class="footnote-ref"
+                                    href="#ref28"
+                                    id="fnref99"
+                                    role="doc-noteref"
+                                    ><sup>28</sup></a
+                                ><a
+                                    class="footnote-ref"
+                                    href="#ref30"
+                                    id="fnref100"
+                                    role="doc-noteref"
+                                    ><sup>30</sup></a
+                                >。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <hr />
+                <h2 id="学習チェックリスト">学習チェックリスト</h2>
+                <div class="checklist-card">
+                    <div class="checklist-header">
+                        <span class="title">学習チェックリスト</span
+                        ><span class="count">0 / 12 完了</span>
+                    </div>
+                    <ul>
+                        <li>
+                            <input id="chk1" type="checkbox" /><label for="chk1"
+                                >MCPサーバーの設定ファイルの配置場所（プロジェクトスコープ vs
+                                グローバルスコープ）を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk2" type="checkbox" /><label for="chk2"
+                                >Antigravityにおける「進行的開示（progressive
+                                disclosure）」の意味と、それがスキルの設計にどう反映されているかを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk3" type="checkbox" /><label for="chk3"
+                                >Claude Code on Google
+                                Cloudを使う際の前提条件（API有効化、IAMロール、モデルアクセス、環境変数）を列挙できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk4" type="checkbox" /><label for="chk4"
+                                >GKE Agent Sandboxがgvisorの
+                                Sentry／Goferでどのようにカーネルレベル分離を実現するかを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk5" type="checkbox" /><label for="chk5"
+                                >GKE Agent
+                                Sandboxの3つのKubernetesプリミティブ（Sandbox／SandboxTemplate／SandboxClaim）の役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk6" type="checkbox" /><label for="chk6"
+                                >Cloud Workstations・GKE Agent
+                                Sandbox・Antigravityローカル実行の使い分け基準を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk7" type="checkbox" /><label for="chk7"
+                                >エージェントによるリファクタリング・最適化・脆弱性パッチにおいて、自動テスト／スキャンと人間レビューの両方が必要な理由を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk8" type="checkbox" /><label for="chk8"
+                                >ルール・スキル・プラグイン・拡張フック・サブエージェントそれぞれの目的と読み込みタイミングの違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk9" type="checkbox" /><label for="chk9"
+                                >Agents
+                                CLIが提供する主要スキル（scaffold／eval／deploy等）の役割を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk10" type="checkbox" /><label for="chk10"
+                                >Agents
+                                CLIでデプロイした際にデフォルトで有効化される観測性機能を説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk11" type="checkbox" /><label for="chk11"
+                                >Agent RegistryとSkill Registryの役割の違いを説明できる</label
+                            >
+                        </li>
+                        <li>
+                            <input id="chk12" type="checkbox" /><label for="chk12"
+                                >コーディングエージェントの生成コードを「常に未信頼」として扱うべき理由を説明できる</label
+                            >
+                        </li>
+                    </ul>
+                </div>
+
+                <hr />
+                <h2 id="参考文献">参考文献</h2>
+                <div class="ref-grid" id="referenceGrid">
+                    <div class="ref-card" id="ref1">
+                        <div class="num">1</div>
+                        <div class="txt">
+                            Professional Agentic Architect Certification（公式認定ページ）.
+                            <a href="https://cloud.google.com/learn/certification/agentic-architect"
+                                >https://cloud.google.com/learn/certification/agentic-architect</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref2">
+                        <div class="num">2</div>
+                        <div class="txt">
+                            Professional Agentic Architect Certification exam
+                            guide（公式試験ガイドPDF）.
+                            <a
+                                href="https://services.google.com/fh/files/misc/professional_agentic_architect_exam_guide_english.pdf"
+                                >https://services.google.com/fh/files/misc/professional_agentic_architect_exam_guide_english.pdf</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref4">
+                        <div class="num">4</div>
+                        <div class="txt">
+                            Build with Google Antigravity, our new agentic development
+                            platform（Google Developers Blog）.
+                            <a
+                                href="https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/"
+                                >https://developers.googleblog.com/build-with-google-antigravity-our-new-agentic-development-platform/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref5">
+                        <div class="num">5</div>
+                        <div class="txt">
+                            Google Antigravity（製品ページ）.
+                            <a href="https://antigravity.google/product/antigravity-ide/"
+                                >https://antigravity.google/product/antigravity-ide/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref6">
+                        <div class="num">6</div>
+                        <div class="txt">
+                            Getting Started with Google Antigravity（Google Codelabs）.
+                            <a
+                                href="https://codelabs.developers.google.com/getting-started-google-antigravity"
+                                >https://codelabs.developers.google.com/getting-started-google-antigravity</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref7">
+                        <div class="num">7</div>
+                        <div class="txt">
+                            Claude Code on Google Cloud's Agent Platform（Claude Code Docs）.
+                            <a href="https://code.claude.com/docs/en/google-vertex-ai"
+                                >https://code.claude.com/docs/en/google-vertex-ai</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref8">
+                        <div class="num">8</div>
+                        <div class="txt">
+                            Run Claude Code on Google Cloud: Use Your GCP Credits for AI Coding,
+                            Desktop Control, and More（DEV Community）.
+                            <a
+                                href="https://dev.to/timtech4u/run-claude-code-on-google-cloud-use-your-gcp-credits-for-ai-coding-desktop-control-and-more-2151"
+                                >https://dev.to/timtech4u/run-claude-code-on-google-cloud-use-your-gcp-credits-for-ai-coding-desktop-control-and-more-2151</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref9">
+                        <div class="num">9</div>
+                        <div class="txt">
+                            Configuring MCP Servers and Skills for Antigravity CLI and IDE（Medium,
+                            Google Cloud Community）.
+                            <a
+                                href="https://medium.com/google-cloud/configuring-mcp-servers-and-skills-for-antigravity-cli-and-ide-a938c7eebb78"
+                                >https://medium.com/google-cloud/configuring-mcp-servers-and-skills-for-antigravity-cli-and-ide-a938c7eebb78</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref10">
+                        <div class="num">10</div>
+                        <div class="txt">
+                            Google Antigravity integration guide（CoinGecko Docs）.
+                            <a href="https://docs.coingecko.com/docs/ai-agent-hub/antigravity.md"
+                                >https://docs.coingecko.com/docs/ai-agent-hub/antigravity.md</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref11">
+                        <div class="num">11</div>
+                        <div class="txt">
+                            antigravity-sdk-rust MCP documentation.
+                            <a
+                                href="https://docs.rs/crate/antigravity-sdk-rust/latest/source/docs/mcp.md"
+                                >https://docs.rs/crate/antigravity-sdk-rust/latest/source/docs/mcp.md</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref12">
+                        <div class="num">12</div>
+                        <div class="txt">
+                            Google Cloud: A Deep Dive into GKE Sandbox for Agents（The New Stack）.
+                            <a
+                                href="https://thenewstack.io/google-cloud-a-deep-dive-into-gke-sandbox-for-agents/"
+                                >https://thenewstack.io/google-cloud-a-deep-dive-into-gke-sandbox-for-agents/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref13">
+                        <div class="num">13</div>
+                        <div class="txt">
+                            Google Announces GKE Agent Sandbox and Hypercluster at Next
+                            '26（InfoQ）.
+                            <a
+                                href="https://www.infoq.com/news/2026/05/gke-agent-sandbox-hypercluster/"
+                                >https://www.infoq.com/news/2026/05/gke-agent-sandbox-hypercluster/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref14">
+                        <div class="num">14</div>
+                        <div class="txt">
+                            Isolate AI code execution with Agent Sandbox（Google Cloud Docs）.
+                            <a
+                                href="https://docs.cloud.google.com/kubernetes-engine/docs/how-to/agent-sandbox"
+                                >https://docs.cloud.google.com/kubernetes-engine/docs/how-to/agent-sandbox</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref15">
+                        <div class="num">15</div>
+                        <div class="txt">
+                            Bringing you Agent Sandbox on GKE and Agent Substrate（Google Cloud
+                            Blog）.
+                            <a
+                                href="https://cloud.google.com/blog/products/containers-kubernetes/bringing-you-agent-sandbox-on-gke-and-agent-substrate"
+                                >https://cloud.google.com/blog/products/containers-kubernetes/bringing-you-agent-sandbox-on-gke-and-agent-substrate</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref16">
+                        <div class="num">16</div>
+                        <div class="txt">
+                            Google Cloud GKE Code Executor tool for ADK（ADK Docs）.
+                            <a
+                                href="https://google.github.io/adk-docs/integrations/gke-code-executor"
+                                >https://google.github.io/adk-docs/integrations/gke-code-executor</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref17">
+                        <div class="num">17</div>
+                        <div class="txt">
+                            GKE Agent Sandbox and GKE Pod Snapshots: Zero trust security for AI
+                            Agents at scale（Medium, Google Cloud Community）.
+                            <a
+                                href="https://medium.com/google-cloud/gke-agent-sandbox-and-gke-pod-snapshots-zero-trust-security-for-ai-agents-at-scale-559261ee20b5"
+                                >https://medium.com/google-cloud/gke-agent-sandbox-and-gke-pod-snapshots-zero-trust-security-for-ai-agents-at-scale-559261ee20b5</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref18">
+                        <div class="num">18</div>
+                        <div class="txt">
+                            Using Chrome Remote Desktop to run Antigravity on a Cloud
+                            Workstation（Medium, Google Cloud Community）.
+                            <a
+                                href="https://medium.com/google-cloud/using-chrome-remote-desktop-to-run-antigravity-on-a-cloud-workstation-or-just-in-a-container-d00296425a0f"
+                                >https://medium.com/google-cloud/using-chrome-remote-desktop-to-run-antigravity-on-a-cloud-workstation-or-just-in-a-container-d00296425a0f</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref19">
+                        <div class="num">19</div>
+                        <div class="txt">
+                            Running Antigravity on a browser tab（Medium, Google Cloud Community）.
+                            <a
+                                href="https://medium.com/google-cloud/running-antigravity-on-a-browser-tab-6298bb7e47c4"
+                                >https://medium.com/google-cloud/running-antigravity-on-a-browser-tab-6298bb7e47c4</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref20">
+                        <div class="num">20</div>
+                        <div class="txt">
+                            Data Agent Kit overview（Google Cloud Docs）.
+                            <a href="https://docs.cloud.google.com/data-agent-kit/overview"
+                                >https://docs.cloud.google.com/data-agent-kit/overview</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref21">
+                        <div class="num">21</div>
+                        <div class="txt">
+                            iamaanahmad/everything-antigravity releases（GitHub）.
+                            <a href="https://github.com/iamaanahmad/everything-antigravity/releases"
+                                >https://github.com/iamaanahmad/everything-antigravity/releases</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref22">
+                        <div class="num">22</div>
+                        <div class="txt">
+                            Antigravity CLI Setup（claude-mem Docs）.
+                            <a href="https://docs.claude-mem.ai/antigravity-cli/setup.md"
+                                >https://docs.claude-mem.ai/antigravity-cli/setup.md</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref23">
+                        <div class="num">23</div>
+                        <div class="txt">
+                            Google Antigravity integration（SonarSource Docs）.
+                            <a
+                                href="https://docs.sonarsource.com/sonarqube-cli/integrations/antigravity"
+                                >https://docs.sonarsource.com/sonarqube-cli/integrations/antigravity</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref24">
+                        <div class="num">24</div>
+                        <div class="txt">
+                            Shubhamsaboo/agents-cli（GitHub）.
+                            <a href="https://github.com/Shubhamsaboo/agents-cli"
+                                >https://github.com/Shubhamsaboo/agents-cli</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref25">
+                        <div class="num">25</div>
+                        <div class="txt">
+                            Getting Started — agents-cli（公式ドキュメント）.
+                            <a href="https://google.github.io/agents-cli/guide/getting-started/"
+                                >https://google.github.io/agents-cli/guide/getting-started/</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref26">
+                        <div class="num">26</div>
+                        <div class="txt">
+                            Build an agent with ADK and Agents CLI in Agent Platform（Google Cloud
+                            Docs）.
+                            <a
+                                href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/agents/quickstart-adk"
+                                >https://docs.cloud.google.com/gemini-enterprise-agent-platform/agents/quickstart-adk</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref27">
+                        <div class="num">27</div>
+                        <div class="txt">
+                            I/O '26 news for agent developers on Google Cloud（Google Cloud Blog）.
+                            <a
+                                href="https://cloud.google.com/blog/topics/developers-practitioners/io26-news-for-agent-developers-on-google-cloud"
+                                >https://cloud.google.com/blog/topics/developers-practitioners/io26-news-for-agent-developers-on-google-cloud</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref28">
+                        <div class="num">28</div>
+                        <div class="txt">
+                            Agent Registry overview（Google Cloud Docs）.
+                            <a href="https://docs.cloud.google.com/agent-registry/overview"
+                                >https://docs.cloud.google.com/agent-registry/overview</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref29">
+                        <div class="num">29</div>
+                        <div class="txt">
+                            Agent Registry release notes（Google Cloud Docs）.
+                            <a href="https://docs.cloud.google.com/agent-registry/release-notes"
+                                >https://docs.cloud.google.com/agent-registry/release-notes</a
+                            >
+                        </div>
+                    </div>
+                    <div class="ref-card" id="ref30">
+                        <div class="num">30</div>
+                        <div class="txt">
+                            Skill Registry overview（Google Cloud Docs）.
+                            <a
+                                href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry"
+                                >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/skill-registry</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js"
+            integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            (function () {
+                'use strict';
+
+                // ---------- Mermaid init + render ----------
+                function initMermaid() {
+                    if (typeof mermaid === 'undefined') {
+                        console.warn('mermaid not loaded');
+                        return;
+                    }
+                    var fontFamily = getComputedStyle(document.body).fontFamily;
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'base',
+                        securityLevel: 'loose',
+                        fontFamily: fontFamily,
+                        themeVariables: {
+                            fontSize: '16px',
+                            background: '#ffffff',
+                            primaryColor: '#eaf2ff',
+                            primaryTextColor: '#0f172a',
+                            primaryBorderColor: '#2563eb',
+                            lineColor: '#475569',
+                            secondaryColor: '#f1f5f9',
+                            tertiaryColor: '#f1f5f9',
+                            edgeLabelBackground: '#ffffff',
+                            clusterBkg: '#f1f5f9',
+                            clusterBorder: '#2563eb',
+                            nodeTextColor: '#0f172a',
+                        },
+                        flowchart: {
+                            useMaxWidth: false,
+                            htmlLabels: true,
+                            subGraphTitleMargin: { top: 12, bottom: 18 },
+                            nodeSpacing: 70,
+                            rankSpacing: 60,
+                            curve: 'basis',
+                        },
+                    });
+
+                    var fontSpecs = [
+                        ['700', '"Noto Sans JP"'],
+                        ['400', '"Noto Sans JP"'],
+                    ];
+                    var sample = '設計とアーキテクチャ0123ABC';
+                    var loadPromises = fontSpecs.map(function (spec) {
+                        try {
+                            return document.fonts.load(spec[0] + ' 16px ' + spec[1], sample);
+                        } catch (e) {
+                            return Promise.resolve();
+                        }
+                    });
+
+                    Promise.all(loadPromises)
+                        .then(function () {
+                            return document.fonts ? document.fonts.ready : Promise.resolve();
+                        })
+                        .catch(function () {})
+                        .then(function () {
+                            try {
+                                mermaid
+                                    .run({ querySelector: 'pre.mermaid' })
+                                    .then(function () {
+                                        healOverflowingLabels();
+                                        setTimeout(healOverflowingLabels, 600);
+                                    })
+                                    .catch(function (err) {
+                                        console.error('mermaid render error', err);
+                                    });
+                            } catch (e) {
+                                console.error('mermaid run failed', e);
+                            }
+                        });
+                }
+
+                function healOverflowingLabels() {
+                    document.querySelectorAll('pre.mermaid svg').forEach(function (svg) {
+                        svg.querySelectorAll('.node').forEach(function (node) {
+                            var rect = node.querySelector('rect.basic, rect');
+                            var fo = node.querySelector('foreignObject');
+                            if (!rect || !fo) return;
+                            var div = fo.querySelector('div');
+                            if (!div) return;
+                            var neededW = div.scrollWidth;
+                            var neededH = div.scrollHeight;
+                            var curW = parseFloat(fo.getAttribute('width')) || 0;
+                            var curH = parseFloat(fo.getAttribute('height')) || 0;
+                            if (neededW > curW - 2 || neededH > curH - 2) {
+                                var buffer = 6;
+                                var newW = Math.max(curW, neededW + buffer);
+                                var newH = Math.max(curH, neededH + buffer);
+                                var x = parseFloat(fo.getAttribute('x')) || 0;
+                                var y = parseFloat(fo.getAttribute('y')) || 0;
+                                var dx = (newW - curW) / 2;
+                                var dy = (newH - curH) / 2;
+                                fo.setAttribute('width', newW);
+                                fo.setAttribute('height', newH);
+                                fo.setAttribute('x', x - dx);
+                                fo.setAttribute('y', y - dy);
+                                var rx = parseFloat(rect.getAttribute('x'));
+                                var ry = parseFloat(rect.getAttribute('y'));
+                                var rw = parseFloat(rect.getAttribute('width'));
+                                var rh = parseFloat(rect.getAttribute('height'));
+                                if (!isNaN(rx) && !isNaN(rw)) {
+                                    rect.setAttribute('x', rx - dx);
+                                    rect.setAttribute('width', rw + newW - curW);
+                                }
+                                if (!isNaN(ry) && !isNaN(rh)) {
+                                    rect.setAttribute('y', ry - dy);
+                                    rect.setAttribute('height', rh + newH - curH);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                try {
+                    initMermaid();
+                } catch (e) {
+                    console.error('mermaid init failed', e);
+                }
+
+                // ---------- Sidebar toggle (mobile) ----------
+                var sidebar = document.getElementById('sidebar');
+                var toggle = document.getElementById('sidebarToggle');
+                function syncToggleState() {
+                    if (!toggle || !sidebar) return;
+                    toggle.setAttribute(
+                        'aria-expanded',
+                        sidebar.classList.contains('open') ? 'true' : 'false',
+                    );
+                }
+                if (toggle) {
+                    toggle.addEventListener('click', function () {
+                        sidebar.classList.toggle('open');
+                        syncToggleState();
+                    });
+                }
+                document.querySelectorAll('#sidebarNav a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        sidebar.classList.remove('open');
+                        syncToggleState();
+                    });
+                });
+                syncToggleState();
+
+                // ---------- Scroll-spy ----------
+                var navLinks = Array.from(document.querySelectorAll('#sidebarNav a'));
+                var linkMap = new Map();
+                navLinks.forEach(function (a) {
+                    var id = decodeURIComponent(a.getAttribute('href').slice(1));
+                    linkMap.set(id, a);
+                });
+
+                var headings = Array.from(linkMap.keys())
+                    .map(function (id) {
+                        return document.getElementById(id);
+                    })
+                    .filter(Boolean);
+
+                var spyObserver = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            var link = linkMap.get(entry.target.id);
+                            if (!link) return;
+                            if (entry.isIntersecting) {
+                                navLinks.forEach(function (a) {
+                                    a.classList.remove('active');
+                                });
+                                link.classList.add('active');
+                            }
+                        });
+                    },
+                    { rootMargin: '-15% 0px -75% 0px', threshold: 0 },
+                );
+
+                headings.forEach(function (h) {
+                    spyObserver.observe(h);
+                });
+
+                // ---------- Checklist progress ----------
+                document.querySelectorAll('.checklist-card').forEach(function (card) {
+                    var boxes = card.querySelectorAll('input[type="checkbox"]');
+                    var counter = card.querySelector('.count');
+                    function update() {
+                        var checked = card.querySelectorAll(
+                            'input[type="checkbox"]:checked',
+                        ).length;
+                        if (counter) counter.textContent = checked + ' / ' + boxes.length + ' 完了';
+                    }
+                    boxes.forEach(function (b) {
+                        b.addEventListener('change', update);
+                    });
+                    update();
+                });
+            })();
+        </script>
+    </body>
+</html>

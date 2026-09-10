@@ -14,8 +14,6 @@
 
 本記事は公式試験ガイドPDF(2026年9月時点の最新版)と、Google Cloud公式ドキュメント・公式ブログを直接調査したうえで作成しています。出題文言はできる限り原文の意図を保ったまま日本語で解説し、各項目の末尾には根拠となる一次情報源をURL付きの脚注として明記しています。
 
-ASCIIアートによる図解は使用せず、すべての図はMermaid記法で作成し、表形式の情報はMarkdownテーブルで整理しています。
-
 > **前提知識**: 本記事は[セクション1(ローコードツールでのエージェント構築)](https://cloud.google.com/learn/certification/agentic-architect)および[セクション2(コーディングエージェントを使用したアプリケーション開発)](https://cloud.google.com/learn/certification/agentic-architect)の内容を前提としています。特にAgents CLI、Antigravity、Skill Registryの基本概念は本記事でも再度登場するため、未読の場合は先にセクション1・2のガイドに目を通すことをお勧めします。
 
 ---

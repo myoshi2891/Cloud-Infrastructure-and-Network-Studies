@@ -4,7 +4,7 @@
 > 原著: *TCP/IP Illustrated, Volume 1: The Protocols, 2nd Edition*（Kevin R. Fall, W. Richard Stevens 著、Addison-Wesley Professional／O'Reilly、2011年11月刊、1,056ページ）
 > 参照: [O'Reilly公式書籍ページ](https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/)
 >
-> 本ガイドは原著の目次構成（全18章＋付録）に沿って、TCP/IPプロトコルスイートの内部動作を初学者向けに独自の説明・図解で再構成したものです。原文の複製・転載は一切行っていません。図解はすべてMermaidまたはMarkdown表で作成し、ASCIIアート（罫線・ボックス描画文字）は使用していません。2026年8月30日時点の最新動向についてはWeb検索で調査し、末尾の参考文献に一次情報源のURLを明記しています。
+> 本ガイドは原著の目次構成（全18章＋付録）に沿って、TCP/IPプロトコルスイートの内部動作を初学者向けに独自の説明・図解で再構成したものです。原文の複製・転載は一切行っていません。2026年8月30日時点の最新動向についてはWeb検索で調査し、末尾の参考文献に一次情報源のURLを明記しています。
 
 ---
 

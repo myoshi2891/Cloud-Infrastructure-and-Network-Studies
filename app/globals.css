@@ -157,6 +157,9 @@
     --color-pca-s4-checkmark: #08101f;
     --color-pca-s4-mermaid-label: #eaf2ff;
     --color-pca-s4-heading-strong: #e0e8f6;
+    --color-pca-s4-heading-gradient-start: #eaf0ff;
+    --color-pca-s4-surface-veil: rgba(255, 255, 255, 0.03);
+    --color-pca-s4-surface-veil-faint: rgba(255, 255, 255, 0.01);
 
     /* PCA Section 5 guide */
     --color-pca-s5-background: #07111e;
@@ -318,6 +321,50 @@
     --color-network-amber-deep: #92400e;
     --color-network-amber: #fde68a;
     --color-network-amber-soft: #fef3c7;
+
+    /* CompTIA Network+ Network Implementation guide */
+    --color-comptia-impl-accent: #82bced;
+    --color-comptia-impl-surface: #1c1c20;
+    --color-comptia-impl-border: #212126;
+    --color-comptia-impl-border-soft: #1a1a1e;
+    --color-comptia-impl-foreground-faint: #9ca3af;
+    --color-comptia-impl-shadow: rgba(0, 0, 0, 0.4);
+    --color-comptia-impl-sidebar-shadow: rgba(0, 0, 0, 0.6);
+    --color-comptia-impl-info-background: #11202f;
+    --color-comptia-impl-warning: #e8c17c;
+    --color-comptia-impl-warning-background: #2a2110;
+    --color-comptia-impl-purple: #c4b5fd;
+    --color-comptia-impl-purple-border: rgba(139, 92, 246, 0.45);
+    --color-comptia-impl-purple-border-soft: rgba(139, 92, 246, 0.42);
+    --color-comptia-impl-purple-border-faint: rgba(139, 92, 246, 0.35);
+    --color-comptia-impl-purple-background: rgba(139, 92, 246, 0.16);
+    --color-comptia-impl-purple-background-soft: rgba(139, 92, 246, 0.07);
+    --color-comptia-impl-teal: #5eead4;
+    --color-comptia-impl-teal-border: rgba(20, 184, 166, 0.45);
+    --color-comptia-impl-teal-border-soft: rgba(20, 184, 166, 0.42);
+    --color-comptia-impl-teal-border-faint: rgba(20, 184, 166, 0.35);
+    --color-comptia-impl-teal-background: rgba(20, 184, 166, 0.16);
+    --color-comptia-impl-teal-background-soft: rgba(20, 184, 166, 0.07);
+    --color-comptia-impl-coral: #fdba74;
+    --color-comptia-impl-coral-border: rgba(246, 95, 63, 0.45);
+    --color-comptia-impl-coral-border-soft: rgba(246, 95, 63, 0.42);
+    --color-comptia-impl-coral-border-faint: rgba(246, 95, 63, 0.35);
+    --color-comptia-impl-coral-background: rgba(246, 95, 63, 0.16);
+    --color-comptia-impl-coral-background-soft: rgba(246, 95, 63, 0.07);
+    --color-comptia-impl-pink: #f9a8d4;
+    --color-comptia-impl-pink-border: rgba(236, 72, 153, 0.45);
+    --color-comptia-impl-pink-border-soft: rgba(236, 72, 153, 0.42);
+    --color-comptia-impl-pink-border-faint: rgba(236, 72, 153, 0.35);
+    --color-comptia-impl-pink-background: rgba(236, 72, 153, 0.16);
+    --color-comptia-impl-pink-background-soft: rgba(236, 72, 153, 0.07);
+    --color-comptia-impl-code-keyword: #c678dd;
+    --color-comptia-impl-code-function: #61afef;
+    --color-comptia-impl-code-string: #98c379;
+    --color-comptia-impl-code-number: #d19a66;
+    --color-comptia-impl-code-builtin: #e5c07b;
+    --color-comptia-impl-code-comment: #7f848e;
+    --color-comptia-impl-code-operator: #56b6c2;
+    --color-comptia-impl-code-variable: #e06c75;
 
     /* PCNE Section 1 VPC design guide */
     --color-pcne-design-background: #07111e;
@@ -557,6 +604,10 @@
 
     --color-theme-operating-systems-three-easy-pieces-bg: hsl(220 55% 40% / 0.25);
     --color-theme-operating-systems-three-easy-pieces-fg: hsl(220 90% 74%);
+    --color-theme-computer-networking-topdown-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-computer-networking-topdown-fg: hsl(220 90% 74%);
+    --color-theme-high-performance-browser-networking-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-high-performance-browser-networking-fg: hsl(220 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -727,6 +778,8 @@ body {
 .card-unix-linux-sysadmin-handbook { --card-accent: var(--color-theme-unix-linux-sysadmin-handbook-fg); }
 .card-systems-performance { --card-accent: var(--color-theme-systems-performance-fg); }
 .card-operating-systems-three-easy-pieces { --card-accent: var(--color-theme-operating-systems-three-easy-pieces-fg); }
+.card-computer-networking-topdown { --card-accent: var(--color-theme-computer-networking-topdown-fg); }
+.card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -848,6 +901,16 @@ body {
 @utility icon-theme-operating-systems-three-easy-pieces {
     background: var(--color-theme-operating-systems-three-easy-pieces-bg);
     color: var(--color-theme-operating-systems-three-easy-pieces-fg);
+}
+
+@utility icon-theme-computer-networking-topdown {
+    background: var(--color-theme-computer-networking-topdown-bg);
+    color: var(--color-theme-computer-networking-topdown-fg);
+}
+
+@utility icon-theme-high-performance-browser-networking {
+    background: var(--color-theme-high-performance-browser-networking-bg);
+    color: var(--color-theme-high-performance-browser-networking-fg);
 }
 
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */

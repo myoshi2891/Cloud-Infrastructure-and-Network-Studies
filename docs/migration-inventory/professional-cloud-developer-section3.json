@@ -220,9 +220,9 @@
     "Receive Pub/Sub events using an authenticated Cloud Run service | Eventarc Standard",
     "受信方式を選ぶ：Cloud Storageの変更通知やFirestoreの更新など、複数の種類のイベントソースを一元的に扱いたい場合はEventarcトリガーを使うのが定石です。Pub/Subだけで完結し、なおかつ1つのHTTPエンドポイントで複数のトピックを柔軟に購読したい場合は、HTTPトリガー型の関数（またはCloud Runサービス）に対してPub/Subのプッシュサブスクリプションを直接構成する方法も選択肢になります。",
     "エンドポイントのパスを設計する：Eventarcトリガーでは「Service URLパス」（例: /、/route、route/subroute）を指定して、イベントの種類ごとに異なるハンドラーへ振り分けることができます。",
-    "認証方式を決める：認証済み呼び出しを受け付ける場合、Eventarcトリガー側のサービスアカウントにroles/run.invokerを付与する必要があります。これを怠ると、トリガーは正常に見えても呼び出しがすべて失敗します。 Pub/Subのプッシュサブスクリプションを直接構成する場合は、サブスクリプションの認証設定でOIDCトークンを使うよう指定したうえで、次のIAM権限を前提として揃えます。 プッシュ認証に使うサービスアカウントに、呼び出し先Cloud Runサービスに対するroles/run.invokerを付与する。 2021年4月8日以前に作成したプロジェクトでは、Pub/Subサービスエージェント（service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com）に対してroles/iam.serviceAccountTokenCreatorを付与する。この日付以降に作成したプロジェクトでは自動的に付与されます。",
+    "認証方式を決める：認証済み呼び出しを受け付ける場合、Eventarcトリガー側のサービスアカウントにroles/run.invokerを付与する必要があります。これを怠ると、トリガーは正常に見えても呼び出しがすべて失敗します。 Pub/Subのプッシュサブスクリプションを直接構成する場合は、サブスクリプションの認証設定でOIDCトークンを使うよう指定したうえで、次のIAM権限を前提として揃えます。 プッシュ認証に使うサービスアカウントに、呼び出し先Cloud Runサービスに対するroles/run.invokerを付与する。 2021年4月8日以前に作成したプロジェクトでは、Pub/Subサービスエージェント（service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com）に対してroles/iam.serviceAccountTokenCreatorを付与する。この日付より後に作成したプロジェクトでは自動的に付与されます。",
     "プッシュ認証に使うサービスアカウントに、呼び出し先Cloud Runサービスに対するroles/run.invokerを付与する。",
-    "2021年4月8日以前に作成したプロジェクトでは、Pub/Subサービスエージェント（service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com）に対してroles/iam.serviceAccountTokenCreatorを付与する。この日付以降に作成したプロジェクトでは自動的に付与されます。",
+    "2021年4月8日以前に作成したプロジェクトでは、Pub/Subサービスエージェント（service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com）に対してroles/iam.serviceAccountTokenCreatorを付与する。この日付より後に作成したプロジェクトでは自動的に付与されます。",
     "リトライとデッドレターを設計する：一時的な障害でイベント処理が失敗した場合に備え、Eventarcの「失敗時に再試行」オプションを有効にします。Pub/Sub側では、一定回数の配信失敗後にメッセージを退避させる「デッドレタートピック」を設定しておくと、メッセージの喪失を防ぎながら障害調査を効率化できます。",
     "受信処理を冪等（べきとう）に実装する：Pub/Subは「少なくとも1回配信（at-least-once delivery）」を保証する設計であるため、同じイベントが重複して届く可能性があります。受信側のハンドラーは、同じイベントを複数回処理しても結果が変わらないように（冪等に）実装することが重要です。",
     "受信処理は必ず冪等に実装する：at-least-once配信の特性上、重複イベントの受信は「起こりうる正常な動作」として設計に織り込みます。",
@@ -289,7 +289,7 @@
     "CPU使用率の目標値は70%前後を基準に検討する：50%のような低い目標値を設定すると、常に大きな余剰キャパシティを確保することになりコストが増大する一方、パフォーマンスへの影響は限定的であるという知見があります。ワークロードの特性に応じて、コストとレイテンシのバランスが取れる目標値を検証しながら決定します。",
     "HPAとVPAをCPU/メモリで同時に使わない：両者が競合するため、CPU/メモリのスケーリングはHPAに任せ、VPAはCPU/メモリ以外のリソース調整、またはHPAと組み合わせない単独運用にとどめます。",
     "スケールアップは素早く、スケールダウンは慎重に設定する：トラフィックの急増には迅速に追従しつつ、一時的な低下ですぐにスケールダウンしてしまうと、直後の再スパイクで再度スケールアップが必要になり非効率です。scaleUpは短い安定化ウィンドウ（またはウィンドウなし）、scaleDownは数分単位の安定化ウィンドウを設定するのが典型的なパターンです。",
-    "最大レプリカ数を必ず設定し、コストの上限を意識する：maxReplicasを適切に設定しないと、異常なトラフィック増加やバグによって際限なくPodが増加し、クラスタ全体のコストとノードリソースを圧迫するリスクがあります。",
+    "最大レプリカ数を適切に見積もり、コストの上限を意識する：maxReplicasはautoscaling/v2のHorizontalPodAutoscalerでは必須フィールドであり、省略できません。値が小さすぎるとピーク時にスケールが頭打ちになり、大きすぎると異常なトラフィック増加やバグによってPodが増え続け、クラスタ全体のコストとノードリソースを圧迫します。想定されるピーク負荷を賄える範囲で、コストとリソース消費の上限として機能する値を設定します。",
     "CPU以外の指標が適切なワークロードにはカスタムメトリクスを検討する：ネットワークI/Oやキューの深さがボトルネックになるワークロードでは、CPU使用率よりもPodsメトリクスやExternalメトリクスの方がスケーリングの精度が高くなる場合があります。",
     "Horizontal Pod autoscaling | Google Kubernetes Engine (GKE)",
     "Best practices for running cost-optimized Kubernetes applications on GKE | Cloud Architecture Center",
@@ -519,7 +519,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "本ガイドは、Google Cloud公式のProfessional Cloud Developer認定ページおよび公式Exam Guide PDFのSection 3: Configuring cloud-native applications for deployment（試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。図解はすべてMermaidフローチャート、比較情報はすべてMarkdown表を使用し、ASCIIアートによる図解は一切使用していません。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。"
+      "text": "本ガイドは、Google Cloud公式のProfessional Cloud Developer認定ページおよび公式Exam Guide PDFのSection 3: Configuring cloud-native applications for deployment（試験全体の約24%を占める）に完全準拠し、初学者にもわかりやすいよう、各出題項目を1つずつステップバイステップで解説します。各節の末尾には根拠となる公式ドキュメントのURLを明記しています。"
     },
     {
       "kind": "paragraph",

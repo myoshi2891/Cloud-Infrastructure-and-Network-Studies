@@ -1,6 +1,124 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-05)
+(最終更新日: 2026-09-07)
+
+## 2026-09-07: 推薦図書『High Performance Browser Networking』完全解説ガイド 100%全量移行 (完了)
+
+### 目的
+
+`High-performance-browser-networking.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `HighPerformanceBrowserNetworkingGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/high-performance-browser-networking` ルートへ移行。グローバルナビゲーションの「Books」配下に追加。見出し(h1:1, h2:10, h3:25, h4:72)、全22個のテーブル、全33個のMermaid図解、全リスト(89件)、全外部リンク(15件)・全本文(113件)・学習チェックリスト(15件)・参考文献カード(15件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for high-performance-browser-networking` (`1f5829df`)
+- [x] **Step 1 (Red)**: `test(books): add failing tests for high-performance-browser-networking` (`4747a522`)
+- [x] **Step 2 (Green)**:
+  - `feat(books): implement constants, navbar, and styles for high-performance-browser-networking` (`1cad4c12`)
+  - `feat(books): implement part 1 and part 2 for high-performance-browser-networking` (`808c1ff7`)
+  - `feat(books): implement part 3 and part 4 for high-performance-browser-networking` (`34f90aa6`)
+  - `feat(books): implement part 5 and appendices to pass migration tests` (`c78d35ff`)
+- [x] **Step 3 (Refactor)**: `refactor(books): integrate high-performance-browser-networking into routing and update docs` (`92df612e`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive high-performance-browser-networking sources`
+
+### 関連ファイル
+
+- [app/recommended-books/high-performance-browser-networking/page.tsx](app/recommended-books/high-performance-browser-networking/page.tsx)
+- [app/recommended-books/high-performance-browser-networking/HighPerformanceBrowserNetworkingGuide.tsx](app/recommended-books/high-performance-browser-networking/HighPerformanceBrowserNetworkingGuide.tsx)
+- [app/recommended-books/high-performance-browser-networking/NavBar.tsx](app/recommended-books/high-performance-browser-networking/NavBar.tsx)
+- [app/recommended-books/high-performance-browser-networking/constants.ts](app/recommended-books/high-performance-browser-networking/constants.ts)
+- [app/recommended-books/high-performance-browser-networking/page.css](app/recommended-books/high-performance-browser-networking/page.css)
+- [`__tests__/recommended-books/high-performance-browser-networking/page.test.tsx`](__tests__/recommended-books/high-performance-browser-networking/page.test.tsx)
+- [docs/migration-inventory/high-performance-browser-networking.json](docs/migration-inventory/high-performance-browser-networking.json)
+- [archive/Books/html/High-performance-browser-networking.html](archive/Books/html/High-performance-browser-networking.html)
+- [archive/Books/md/High-performance-browser-networking.md](archive/Books/md/High-performance-browser-networking.md)
+
+---
+
+## 2026-09-07: 推薦図書『Computer Networking: A Top-Down Approach』完全学習ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Computer-networking-topdown-guide.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ComputerNetworkingTopdownGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/computer-networking-topdown` ルートへ移行。グローバルナビゲーションの「Books」配下に追加。見出し(h1:1, h2:16, h3:49, h4:0)、全24個のテーブル、全41個のMermaid図解、全リスト(29件)、全外部リンク(31件)・全本文(74件)・学習チェックリスト(19件)・参考文献カード(29件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for computer-networking-topdown` (`0ce862e6`)
+- [x] **Step 1 (Red)**: `test(books): add failing tests for computer-networking-topdown` (`8e98580d`)
+- [x] **Step 2 (Green)**: `feat(books): implement computer-networking-topdown guide to pass tests` (`7ecf3d97`)
+- [x] **Step 3 (Refactor)**: `refactor(books): integrate computer-networking-topdown into routing and update docs` (`1cf23396`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive computer-networking-topdown sources`
+
+### 関連ファイル
+
+- [app/recommended-books/computer-networking-topdown/page.tsx](app/recommended-books/computer-networking-topdown/page.tsx)
+- [app/recommended-books/computer-networking-topdown/ComputerNetworkingTopdownGuide.tsx](app/recommended-books/computer-networking-topdown/ComputerNetworkingTopdownGuide.tsx)
+- [app/recommended-books/computer-networking-topdown/NavBar.tsx](app/recommended-books/computer-networking-topdown/NavBar.tsx)
+- [app/recommended-books/computer-networking-topdown/constants.ts](app/recommended-books/computer-networking-topdown/constants.ts)
+- [app/recommended-books/computer-networking-topdown/page.css](app/recommended-books/computer-networking-topdown/page.css)
+- [`__tests__/recommended-books/computer-networking-topdown/page.test.tsx`](__tests__/recommended-books/computer-networking-topdown/page.test.tsx)
+- [docs/migration-inventory/computer-networking-topdown.json](docs/migration-inventory/computer-networking-topdown.json)
+- [archive/Books/html/Computer-networking-topdown-guide.html](archive/Books/html/Computer-networking-topdown-guide.html)
+- [archive/Books/md/Computer-networking-topdown-guide.md](archive/Books/md/Computer-networking-topdown-guide.md)
+
+---
+
+## 2026-09-07: CompTIA Network+ (N10-009) ドメイン2.0「ネットワーク実装 (Network Implementation)」完全ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Comptia-networkplus-network-implementation.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ComptiaNetworkImplementationGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/comptia/network-plus/network-implementation-guide` ルートへ移行。グローバルナビゲーションの「CompTIA Network+」に追加。見出し(h1:1, h2:7, h3:17, h4:0)、全13個のテーブル、10個のMermaid図解、4本柱カード、全5件のコールアウト注記、全4件の参考文献(5URL)・全本文・出題比率統計(20%)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for comptia-network-plus-network-implementation-guide` (`295e9a2f`)
+- [x] **Step 1 (Red)**: `test(comptia): add failing tests for comptia-network-plus-network-implementation-guide` (`84677eff`)
+- [x] **Step 2 (Green)**: `feat(comptia): implement constants, navbar, and styles for network-implementation-guide` (`327fcf0d`), `feat(comptia): implement ComptiaNetworkImplementationGuide content to pass tests` (`abf924ba`)
+- [x] **Step 3 (Refactor)**: `refactor(comptia): integrate network-implementation-guide into routing and update docs` (`d9bfd681`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md — migrate comptia-networkplus-network-implementation`
+
+### 関連ファイル
+
+- [app/comptia/network-plus/network-implementation-guide/page.tsx](app/comptia/network-plus/network-implementation-guide/page.tsx)
+- [app/comptia/network-plus/network-implementation-guide/ComptiaNetworkImplementationGuide.tsx](app/comptia/network-plus/network-implementation-guide/ComptiaNetworkImplementationGuide.tsx)
+- [app/comptia/network-plus/network-implementation-guide/NavBar.tsx](app/comptia/network-plus/network-implementation-guide/NavBar.tsx)
+- [app/comptia/network-plus/network-implementation-guide/constants.ts](app/comptia/network-plus/network-implementation-guide/constants.ts)
+- [app/comptia/network-plus/network-implementation-guide/page.css](app/comptia/network-plus/network-implementation-guide/page.css)
+- [`__tests__/comptia/network-plus/network-implementation-guide/page.test.tsx`](__tests__/comptia/network-plus/network-implementation-guide/page.test.tsx)
+- [`__tests__/comptia/network-plus/network-implementation-guide/NavBar.test.tsx`](__tests__/comptia/network-plus/network-implementation-guide/NavBar.test.tsx)
+- [docs/migration-inventory/comptia-network-plus-network-implementation-guide.json](docs/migration-inventory/comptia-network-plus-network-implementation-guide.json)
+- [archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.html](archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.html)
+- [archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.md](archive/Comptia/Network-Plus/Comptia-networkplus-network-implementation.md)
+
+---
+
+## 2026-09-07: CompTIA Network+ (N10-009) ドメイン5.0「ネットワークトラブルシューティング」完全ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Comptia-network-plus-troubleshooting-guide.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ComptiaNetworkTroubleshootingGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/comptia/network-plus/network-troubleshooting-guide` ルートへ移行。グローバルナビゲーションの「CompTIA Network+」に追加。見出し(h1:2, h2:8, h3:25, h4:0)、全18個のテーブル、2個のMermaid図解、全リスト(16件)、全外部リンク(4件)・全本文・コールアウト注記(3件)・参考文献一覧(4件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for comptia-network-plus-network-troubleshooting-guide` (`b98a3c76`)
+- [x] **Step 1 (Red)**: `test(comptia): add failing tests for comptia-network-plus-network-troubleshooting-guide` (`a793788b`)
+- [x] **Step 2 (Green)**: `feat(comptia): implement constants, navbar, and styles for network-troubleshooting-guide` (`45a1e117`), `feat(comptia): implement ComptiaNetworkTroubleshootingGuide content to pass tests` (`9bcf7dc6`)
+- [x] **Step 3 (Refactor)**: `refactor(comptia): integrate network-troubleshooting-guide into routing and update docs` (`01ca3587`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md — migrate comptia-network-plus-network-troubleshooting-guide`
+
+### 関連ファイル
+
+- [app/comptia/network-plus/network-troubleshooting-guide/page.tsx](app/comptia/network-plus/network-troubleshooting-guide/page.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/ComptiaNetworkTroubleshootingGuide.tsx](app/comptia/network-plus/network-troubleshooting-guide/ComptiaNetworkTroubleshootingGuide.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/NavBar.tsx](app/comptia/network-plus/network-troubleshooting-guide/NavBar.tsx)
+- [app/comptia/network-plus/network-troubleshooting-guide/constants.ts](app/comptia/network-plus/network-troubleshooting-guide/constants.ts)
+- [app/comptia/network-plus/network-troubleshooting-guide/page.css](app/comptia/network-plus/network-troubleshooting-guide/page.css)
+- [`__tests__/comptia/network-plus/network-troubleshooting-guide/page.test.tsx`](__tests__/comptia/network-plus/network-troubleshooting-guide/page.test.tsx)
+- [`__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx`](__tests__/comptia/network-plus/network-troubleshooting-guide/NavBar.test.tsx)
+- [docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json](docs/migration-inventory/comptia-network-plus-network-troubleshooting-guide.json)
+- [archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html](archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.html)
+- [archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.md](archive/Comptia/Network-Plus/Comptia-network-plus-troubleshooting-guide.md)
+
+---
 
 ## 2026-09-05: 推薦図書『Operating Systems: Three Easy Pieces（OSTEP）』完全学習ガイド 100%全量移行 (完了)
 

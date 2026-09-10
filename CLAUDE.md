@@ -134,6 +134,12 @@ app/
         NavBar.tsx                  # サイドバーナビ (ScrollSpy)
         constants.ts                # Mermaid 図定義（19図）、ナビ項目
         page.css                    # ページ固有スタイル（サイドバー幅280px契約準拠）
+      network-implementation-guide/
+        page.tsx                    # Domain 2.0: Network Implementation ガイド (Server)
+        ComptiaNetworkImplementationGuide.tsx # 本文＋インタラクション (Client。Step 0〜5、Mermaid 10図)
+        NavBar.tsx                  # サイドバーナビ (ScrollSpy)
+        constants.ts                # Mermaid 図定義（10図）、ナビ項目
+        page.css                    # ページ固有スタイル（サイドバー幅280px契約準拠）
       network-operations-guide/
         page.tsx                    # Domain 3.0: Network Operations ガイド (Server)
         ComptiaNetworkOperationsGuide.tsx # 本文＋インタラクション (Client。8トピック、Mermaid 10図)
@@ -145,6 +151,12 @@ app/
         ComptiaNetworkSecurityGuide.tsx # 本文＋インタラクション (Client。3ステップ、Mermaid 7図)
         NavBar.tsx                  # サイドバーナビ (ScrollSpy)
         constants.ts                # Mermaid 図定義（7図）、ナビ項目
+        page.css                    # ページ固有スタイル（サイドバー幅280px契約準拠）
+      network-troubleshooting-guide/
+        page.tsx                    # Domain 5.0: Network Troubleshooting ガイド (Server)
+        ComptiaNetworkTroubleshootingGuide.tsx # 本文＋インタラクション (Client。8セクション、Mermaid 2図)
+        NavBar.tsx                  # サイドバーナビ (ScrollSpy)
+        constants.ts                # Mermaid 図定義（2図）、ナビ項目
         page.css                    # ページ固有スタイル（サイドバー幅280px契約準拠）
     hands-on/
       cloud-load-balancing-guide/
@@ -548,6 +560,18 @@ app/
       OperatingSystemsThreeEasyPiecesGuide.tsx # 本文＋インタラクション (Client。57章+付録、Mermaid 56図、チェックリスト等)
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（56図）
+      page.css                      # ページ固有スタイル
+    computer-networking-topdown/
+      page.tsx                      # 『Computer Networking: A Top-Down Approach』完全学習ガイド (Server)
+      ComputerNetworkingTopdownGuide.tsx # 本文＋インタラクション (Client。全10部、Mermaid 41図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # Mermaid 図定義（41図）
+      page.css                      # ページ固有スタイル
+    high-performance-browser-networking/
+      page.tsx                      # 『High Performance Browser Networking』完全解説ガイド (Server)
+      HighPerformanceBrowserNetworkingGuide.tsx # 本文＋インタラクション (Client。全5部18章、Mermaid 33図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # Mermaid 図定義（33図）
       page.css                      # ページ固有スタイル
 
 

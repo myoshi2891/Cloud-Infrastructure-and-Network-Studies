@@ -1,6 +1,6 @@
 # Google Cloud Professional Agentic Architect 認定試験 技術ガイド
 
-> 初学者向けに、Professional Agentic Architectベータ試験の出題範囲を項目ごとに解説し、各サービス・機能のベストプラクティスをまとめた技術文書です。図解はすべてMermaidで記述し、ASCIIアートは使用していません。
+> 初学者向けに、Professional Agentic Architectベータ試験の出題範囲を項目ごとに解説し、各サービス・機能のベストプラクティスをまとめた技術文書です。
 
 ## この試験について
 

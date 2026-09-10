@@ -29,7 +29,9 @@ export type ColorKey =
     | 'card-understanding-the-linux-kernel'
     | 'card-unix-linux-sysadmin-handbook'
     | 'card-systems-performance'
-    | 'card-operating-systems-three-easy-pieces';
+    | 'card-operating-systems-three-easy-pieces'
+    | 'card-computer-networking-topdown'
+    | 'card-high-performance-browser-networking';
 
 export interface Exam {
     id: string;
@@ -70,6 +72,8 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-unix-linux-sysadmin-handbook': 'card-unix-linux-sysadmin-handbook',
     'card-systems-performance': 'card-systems-performance',
     'card-operating-systems-three-easy-pieces': 'card-operating-systems-three-easy-pieces',
+    'card-computer-networking-topdown': 'card-computer-networking-topdown',
+    'card-high-performance-browser-networking': 'card-high-performance-browser-networking',
 };
 
 export const providerMeta: Record<
@@ -661,6 +665,11 @@ const ALL_EXAMS: Exam[] = [
                 pct: '23%',
             },
             {
+                label: 'Domain 2.0 Network Implementation 徹底解説ガイド',
+                href: '/comptia/network-plus/network-implementation-guide',
+                pct: '20%',
+            },
+            {
                 label: 'Domain 3.0 Network Operations 徹底解説ガイド',
                 href: '/comptia/network-plus/network-operations-guide',
                 pct: '19%',
@@ -669,6 +678,11 @@ const ALL_EXAMS: Exam[] = [
                 label: 'Domain 4.0 Network Security 完全ガイド',
                 href: '/comptia/network-plus/network-security-guide',
                 pct: '14%',
+            },
+            {
+                label: 'Domain 5.0 Network Troubleshooting 完全ガイド',
+                href: '/comptia/network-plus/network-troubleshooting-guide',
+                pct: '24%',
             },
         ],
         badge: 'ネットワーク基礎',
@@ -857,6 +871,48 @@ const ALL_EXAMS: Exam[] = [
             {
                 label: '初学者向け学習ガイド',
                 href: '/recommended-books/operating-systems-three-easy-pieces',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'computer-networking-topdown',
+        label: 'Computer Networking: A Top-Down Approach',
+        abbr: 'CNTD',
+        level: 'Computer Networking',
+        score: '全10部 / 41図解',
+        color: 'card-computer-networking-topdown',
+        href: '/recommended-books/computer-networking-topdown',
+        description:
+            'James F. Kurose, Keith W. Ross 著『Computer Networking: A Top-Down Approach』（コンピュータネットワーク: トップダウンアプローチ）を軸に、インターネットの仕組みと2026年最新動向を体系的に解説した完全学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/computer-networking-topdown',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'high-performance-browser-networking',
+        label: 'High Performance Browser Networking',
+        abbr: 'HPBN',
+        level: 'Web Performance & Networking',
+        score: '全5部18章+2026年動向 / 33図解',
+        color: 'card-high-performance-browser-networking',
+        href: '/recommended-books/high-performance-browser-networking',
+        description:
+            'Ilya Grigorik 著『High Performance Browser Networking』を軸に、TCP/UDP/TLS/ワイヤレス/HTTP/ブラウザAPIと2026年最新動向（HTTP/3・QUIC・TLS 1.3・BBRv3等）を体系的に解説した完全学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/high-performance-browser-networking',
                 pct: '完全解説',
             },
         ],

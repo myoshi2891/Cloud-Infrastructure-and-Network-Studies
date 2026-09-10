@@ -1,0 +1,399 @@
+@import '@tabler/icons-webfont/tabler-icons.min.css';
+
+/* CompTIA Network+ Network Troubleshooting ガイドスタイル */
+
+.comptia-network-troubleshooting-page {
+    background-color: var(--color-network-background);
+    color: var(--color-network-foreground);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: 400;
+    min-height: 100vh;
+}
+
+.comptia-network-troubleshooting-page .layout {
+    display: block;
+    min-height: 100vh;
+}
+
+/* モバイル目次トグルボタン */
+.comptia-network-troubleshooting-page .mobile-nav-toggle {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 45;
+    background: var(--color-network-surface-elevated);
+    color: var(--color-network-info);
+    border: 1px solid var(--color-network-border);
+    border-radius: var(--radius-xl, 16px);
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--color-shadow);
+    align-items: center;
+    gap: 8px;
+}
+
+/* サイドバー契約: 280px固定 */
+.comptia-network-troubleshooting-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 40;
+    overflow-y: auto;
+    padding: 24px 16px 40px 16px;
+    background: var(--color-network-surface);
+    border-right: 1px solid var(--color-network-border);
+}
+
+.comptia-network-troubleshooting-page .sidebar-header {
+    padding: 0 12px 20px 12px;
+    border-bottom: 1px solid var(--color-network-border-soft);
+    margin-bottom: 16px;
+}
+
+.comptia-network-troubleshooting-page .sidebar-header .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-network-info);
+    background: var(--color-network-info-background);
+    border-radius: var(--radius-md, 8px);
+    padding: 3px 8px;
+    margin-bottom: 10px;
+}
+
+.comptia-network-troubleshooting-page .sidebar-header h1 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-network-foreground);
+    margin: 0 0 4px 0;
+    line-height: 1.5;
+}
+
+.comptia-network-troubleshooting-page .sidebar-header p {
+    font-size: 12px;
+    color: var(--color-network-foreground-faint);
+    margin: 0;
+}
+
+.comptia-network-troubleshooting-page .sidebar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-network-foreground-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0 12px 12px;
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav,
+.comptia-network-troubleshooting-page .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav a,
+.comptia-network-troubleshooting-page .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-md, 8px);
+    color: var(--color-network-foreground-muted);
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    border: 1px solid transparent;
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav a i,
+.comptia-network-troubleshooting-page .sidebar nav a i {
+    font-size: 16px;
+    color: var(--color-network-foreground-faint);
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav a:hover,
+.comptia-network-troubleshooting-page .sidebar nav a:hover {
+    background: var(--color-network-surface-elevated);
+    color: var(--color-network-foreground);
+    text-decoration: none;
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav a.active,
+.comptia-network-troubleshooting-page .sidebar nav a.active {
+    background: var(--color-network-surface-elevated);
+    color: var(--color-network-info);
+    border-color: var(--color-network-border);
+}
+
+.comptia-network-troubleshooting-page .sidebar .sidebar-nav a.active i,
+.comptia-network-troubleshooting-page .sidebar nav a.active i {
+    color: var(--color-network-info);
+}
+
+/* メイン領域契約: margin-left: 280px, width: calc(100% - 280px), max-width: none */
+.comptia-network-troubleshooting-page .main-content {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+    padding: 56px 64px 96px 64px;
+    box-sizing: border-box;
+}
+
+.comptia-network-troubleshooting-page .hero {
+    border-bottom: 1px solid var(--color-network-border);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+}
+
+.comptia-network-troubleshooting-page .hero .badge-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.comptia-network-troubleshooting-page .hero .badge {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-network-foreground-muted);
+    background: var(--color-network-surface-elevated);
+    border: 1px solid var(--color-network-border);
+    border-radius: var(--radius-md, 8px);
+    padding: 4px 10px;
+}
+
+.comptia-network-troubleshooting-page .hero h1 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+    color: var(--color-network-foreground);
+}
+
+.comptia-network-troubleshooting-page .hero .lead {
+    font-size: 16px;
+    color: var(--color-network-foreground-muted);
+    max-width: 760px;
+    margin: 0;
+}
+
+.comptia-network-troubleshooting-page section.section {
+    margin-bottom: 56px;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 32px);
+}
+
+.comptia-network-troubleshooting-page h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--color-network-foreground);
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comptia-network-troubleshooting-page h2 i {
+    color: var(--color-network-info);
+    font-size: 18px;
+}
+
+.comptia-network-troubleshooting-page h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-network-foreground);
+    margin: 28px 0 12px 0;
+}
+
+.comptia-network-troubleshooting-page p {
+    color: var(--color-network-foreground-muted);
+    margin: 0 0 14px 0;
+}
+
+.comptia-network-troubleshooting-page strong {
+    color: var(--color-network-foreground);
+    font-weight: 500;
+}
+
+.comptia-network-troubleshooting-page code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--color-network-surface-elevated);
+    border: 1px solid var(--color-network-border);
+    border-radius: var(--radius-sm, 4px);
+    padding: 2px 6px;
+    color: var(--color-network-info);
+}
+
+.comptia-network-troubleshooting-page .callout {
+    background: var(--color-network-surface);
+    border: 1px solid var(--color-network-border);
+    border-left: 3px solid var(--color-network-info);
+    border-radius: var(--radius-md, 8px);
+    padding: 16px 18px;
+    margin: 16px 0 20px 0;
+    font-size: 14px;
+    color: var(--color-network-foreground-muted);
+}
+
+.comptia-network-troubleshooting-page .callout strong {
+    color: var(--color-network-foreground);
+}
+
+.comptia-network-troubleshooting-page .table-wrap {
+    overflow-x: auto;
+    margin: 8px 0 24px 0;
+}
+
+.comptia-network-troubleshooting-page table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border: 1px solid var(--color-network-border);
+    border-radius: var(--radius-md, 8px);
+    overflow: hidden;
+}
+
+.comptia-network-troubleshooting-page th,
+.comptia-network-troubleshooting-page td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-network-border-soft);
+    vertical-align: top;
+}
+
+.comptia-network-troubleshooting-page th {
+    background: var(--color-network-surface-elevated);
+    color: var(--color-network-foreground);
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.comptia-network-troubleshooting-page td {
+    color: var(--color-network-foreground-muted);
+}
+
+.comptia-network-troubleshooting-page tr:last-child td {
+    border-bottom: none;
+}
+
+.comptia-network-troubleshooting-page ul,
+.comptia-network-troubleshooting-page ol {
+    color: var(--color-network-foreground-muted);
+    padding-left: 22px;
+    margin: 0 0 16px 0;
+}
+
+.comptia-network-troubleshooting-page li {
+    margin-bottom: 6px;
+}
+
+/* Mermaid ダイアグラム共通レイアウト契約 */
+.comptia-network-troubleshooting-page .mermaid-container,
+.comptia-network-troubleshooting-page .mermaid-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem auto 2rem;
+    overflow-x: auto;
+}
+
+.comptia-network-troubleshooting-page .diagram-caption {
+    text-align: center;
+    font-size: 12px;
+    color: var(--color-network-foreground-faint);
+    margin: -16px 0 28px 0;
+}
+
+.comptia-network-troubleshooting-page .footer {
+    border-top: 1px solid var(--color-network-border);
+    padding-top: 24px;
+    margin-top: 48px;
+    font-size: 13px;
+    color: var(--color-network-foreground-faint);
+}
+
+.comptia-network-troubleshooting-page .ref-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comptia-network-troubleshooting-page .ref-list li {
+    border: 1px solid var(--color-network-border);
+    border-radius: var(--radius-md, 8px);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    background: var(--color-network-surface);
+}
+
+.comptia-network-troubleshooting-page .ref-list .ref-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-network-foreground);
+    margin-bottom: 4px;
+}
+
+.comptia-network-troubleshooting-page .ref-list .ref-desc {
+    display: block;
+    font-size: 13px;
+    color: var(--color-network-foreground-faint);
+    margin-bottom: 6px;
+}
+
+.comptia-network-troubleshooting-page .ref-list a {
+    font-size: 13px;
+    color: var(--color-network-info);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.comptia-network-troubleshooting-page .ref-list a:hover {
+    text-decoration: underline;
+}
+
+/* レスポンシブ規則 (860px以下) */
+@media (max-width: 860px) {
+    .comptia-network-troubleshooting-page .mobile-nav-toggle {
+        display: flex;
+    }
+
+    .comptia-network-troubleshooting-page .sidebar {
+        transform: translateX(-100%);
+        /* visibility の切替を transform の完了まで遅延させ、閉じるアニメーションを見せる */
+        transition:
+            transform 0.25s ease-in-out,
+            visibility 0s linear 0.25s;
+        box-shadow: none;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .comptia-network-troubleshooting-page .sidebar.open {
+        transform: translateX(0);
+        /* 開くときは遅延なしで即座に可視化する */
+        transition:
+            transform 0.25s ease-in-out,
+            visibility 0s;
+        box-shadow: 4px 0 24px rgba(var(--color-shadow-rgb), 0.6);
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .comptia-network-troubleshooting-page .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 32px 24px 64px 24px;
+    }
+}
