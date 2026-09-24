@@ -31,7 +31,8 @@ export type ColorKey =
     | 'card-systems-performance'
     | 'card-operating-systems-three-easy-pieces'
     | 'card-computer-networking-topdown'
-    | 'card-high-performance-browser-networking';
+    | 'card-high-performance-browser-networking'
+    | 'card-professional-agentic-architect';
 
 export interface Exam {
     id: string;
@@ -74,6 +75,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-operating-systems-three-easy-pieces': 'card-operating-systems-three-easy-pieces',
     'card-computer-networking-topdown': 'card-computer-networking-topdown',
     'card-high-performance-browser-networking': 'card-high-performance-browser-networking',
+    'card-professional-agentic-architect': 'card-professional-agentic-architect',
 };
 
 export const providerMeta: Record<
@@ -377,6 +379,47 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: '開発者向け',
         icon: '💻',
+        provider: 'GCP',
+    },
+    {
+        id: 'professional-agentic-architect',
+        label: 'Professional Agentic Architect',
+        abbr: 'Agentic',
+        level: 'Professional',
+        score: '約80問 / 180分',
+        color: 'card-professional-agentic-architect',
+        href: '/gcl/professional-agentic-architect',
+        description:
+            'Google Cloud での自律型 AI エージェントの設計・構築・評価・デプロイ・セキュリティとガバナンスを包括的に認定する技術ガイド。',
+        domains: [
+            {
+                label: 'Section 1: ローコードツールでの構築',
+                href: '/gcl/professional-agentic-architect#セクション1-ローコードツールを使用したエージェントの構築配点-約13',
+                pct: '約13%',
+            },
+            {
+                label: 'Section 2: コーディングエージェント開発',
+                href: '/gcl/professional-agentic-architect#セクション2-コーディングエージェントを使用したアプリケーション開発配点-約17',
+                pct: '約17%',
+            },
+            {
+                label: 'Section 3: カスタムエージェントの開発',
+                href: '/gcl/professional-agentic-architect#セクション3-カスタムエージェントの開発配点-約33',
+                pct: '約33%',
+            },
+            {
+                label: 'Section 4: 評価とデプロイ',
+                href: '/gcl/professional-agentic-architect#セクション4-エージェントワークフローの評価とデプロイ配点-約22',
+                pct: '約22%',
+            },
+            {
+                label: 'Section 5: セキュリティとガバナンス',
+                href: '/gcl/professional-agentic-architect#セクション5-エージェントワークフローのセキュリティとガバナンス配点-約15',
+                pct: '約15%',
+            },
+        ],
+        badge: 'エージェント特化',
+        icon: '🤖',
         provider: 'GCP',
     },
     {

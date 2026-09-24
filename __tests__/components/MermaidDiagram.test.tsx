@@ -227,4 +227,66 @@ describe('MermaidDiagram', () => {
             vi.restoreAllMocks();
         }
     });
+
+    describe('ライトテーマ (theme="light") サポート契約', () => {
+        it('theme="light" 指定時に data-theme="light" が設定され、フォールバック時もライトテーマ属性を保持すること', () => {
+            const { container } = render(
+                <MermaidDiagram
+                    chart={sampleChart}
+                    ariaLabel="ライトテーマ図"
+                    theme="light"
+                />
+            );
+            const wrapper = container.firstChild as HTMLElement;
+            expect(wrapper.getAttribute('data-theme')).toBe('light');
+        });
+
+        it('theme="light" 指定時、mermaid.render に渡されるチャートに原本HTML準拠のライトテーマ設定ディレクティブが注入されること', async () => {
+            const svgProto = window.SVGElement.prototype as any;
+            const originalGetBBox = svgProto.getBBox;
+            svgProto.getBBox = vi.fn();
+
+            try {
+                const mermaid = await import('mermaid');
+                const renderSpy = vi.spyOn(mermaid.default, 'render').mockResolvedValue({
+                    svg: '<svg>Mocked SVG</svg>',
+                    diagramType: 'flowchart',
+                    bindFunctions: () => {},
+                } as any);
+
+                render(
+                    <MermaidDiagram
+                        chart={sampleChart}
+                        ariaLabel="ライトテーマ図"
+                        theme="light"
+                    />
+                );
+
+                await waitFor(() => {
+                    expect(renderSpy).toHaveBeenCalled();
+                });
+
+                const calledChart = renderSpy.mock.calls[0]?.[1] ?? '';
+                expect(calledChart).toContain("%%{init:");
+                expect(calledChart).toContain("'theme': 'base'");
+                expect(calledChart).toContain("'primaryColor': '#eaf1ff'");
+                expect(calledChart).toContain("'primaryTextColor': '#16233a'");
+                expect(calledChart).toContain("'primaryBorderColor': '#1a56db'");
+                expect(calledChart).toContain("'clusterBkg': '#f5f8fc'");
+                expect(calledChart).toContain("'pie1': '#1a56db'");
+            } finally {
+                svgProto.getBBox = originalGetBBox;
+                vi.restoreAllMocks();
+            }
+        });
+
+        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストが定義されていること', () => {
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*background:\s*#ffffff;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border:\s*1px solid #d7e0ee;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border-radius:\s*14px;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.node\s+\.nodeLabel\)[^{]*\{[^}]*color:\s*#16233a\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.cluster-label\s+text\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
+        });
+    });
 });
+

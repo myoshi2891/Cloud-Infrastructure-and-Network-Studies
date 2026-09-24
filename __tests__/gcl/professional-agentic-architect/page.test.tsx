@@ -52,12 +52,13 @@ describe('Google Cloud Professional Agentic Architect 認定試験 技術ガイ�
         });
     });
 
-    it('全21点のMermaid図解がpreserveNaturalScale属性を保持し、非空のaria-labelが設定されている', () => {
+    it('全21点のMermaid図解がpreserveNaturalScale属性およびtheme="light"を保持し、非空のaria-labelが設定されている', () => {
         const container = renderPage();
         const diagrams = container.querySelectorAll('[data-testid="mermaid-diagram"]');
         expect(diagrams).toHaveLength(21);
         diagrams.forEach((diag) => {
             expect(diag.getAttribute('data-preserve-natural-scale')).toBe('true');
+            expect(diag.getAttribute('data-theme')).toBe('light');
             expect(diag.getAttribute('aria-label')).toBeTruthy();
         });
     });

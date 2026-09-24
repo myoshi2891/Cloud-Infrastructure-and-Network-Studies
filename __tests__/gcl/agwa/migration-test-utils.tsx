@@ -12,6 +12,7 @@ type MermaidDiagramMockProps = {
     ariaLabel?: string;
     decorative?: boolean;
     preserveNaturalScale?: boolean;
+    theme?: string;
 };
 
 /**
@@ -24,6 +25,7 @@ export const MermaidDiagramMock = ({
     ariaLabel,
     decorative,
     preserveNaturalScale = false,
+    theme,
 }: MermaidDiagramMockProps) => (
     <div
         role="img"
@@ -32,6 +34,7 @@ export const MermaidDiagramMock = ({
         data-chart={chart}
         data-decorative={String(decorative === true)}
         data-preserve-natural-scale={String(preserveNaturalScale)}
+        data-theme={theme}
         aria-label={ariaLabel}
         aria-hidden={decorative || undefined}
     />

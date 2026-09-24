@@ -210,3 +210,45 @@
     color: #000000 !important;
     fill: #000000 !important;
 }
+
+/* ── ライトテーマ (theme="light") 対応 ──────────────────────────────────────────
+   原本HTMLの pre.mermaid デザイン（白背景、境界線、角丸、淡いシャドウ）を再現。
+   暗色モードのノード白文字強制（#ffffff !important）を解除し、原本通りの濃紺（#16233a）を適用する。 */
+.lightWrapper {
+    background: #ffffff;
+    border: 1px solid #d7e0ee;
+    border-radius: 14px;
+    padding: 28px 20px;
+    margin: 0 0 30px;
+    box-shadow: 0 1px 2px rgba(20, 40, 80, 0.04);
+}
+
+.lightWrapper .mermaidTarget :global(.node .nodeLabel),
+.lightWrapper .mermaidTarget :global(.node .nodeLabel *),
+.lightWrapper .mermaidTarget :global(.stateLabel text),
+.lightWrapper .mermaidTarget :global(.stateLabel span),
+.lightWrapper .mermaidTarget :global(.statediagram-state text),
+.lightWrapper .mermaidTarget :global(text.state-title),
+.lightWrapper .mermaidTarget :global(.cluster-label text),
+.lightWrapper .mermaidTarget :global(.cluster-label span) {
+    color: #16233a !important;
+    fill: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(.node rect),
+.lightWrapper .mermaidTarget :global(.node polygon),
+.lightWrapper .mermaidTarget :global(.statediagram-state rect) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(.edgeLabel) {
+    background-color: #ffffff !important;
+    color: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(.edgeLabel text),
+.lightWrapper .mermaidTarget :global(.edgeLabel span) {
+    color: #16233a !important;
+    fill: #16233a !important;
+}

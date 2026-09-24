@@ -547,7 +547,13 @@ export const REF_CARDS: RefCardItem[] = [
     }
 ];
 
-export const DIAGRAMS: Record<string, string> = {
+export const DIAGRAMS: Record<string, string> & {
+    diag1: string; diag2: string; diag3: string; diag4: string; diag5: string;
+    diag6: string; diag7: string; diag8: string; diag9: string; diag10: string;
+    diag11: string; diag12: string; diag13: string; diag14: string; diag15: string;
+    diag16: string; diag17: string; diag18: string; diag19: string; diag20: string;
+    diag21: string;
+} = {
     "diag1": "pie\n    \"セクション1: ローコードツールでのエージェント構築 (13%)\" : 13\n    \"セクション2: コーディングエージェントの活用 (17%)\" : 17\n    \"セクション3: カスタムエージェントの開発 (33%)\" : 33\n    \"セクション4: 評価とデプロイ (22%)\" : 22\n    \"セクション5: セキュリティとガバナンス (15%)\" : 15",
     "diag2": "flowchart TB\n    subgraph Build[\"Build: 構築\"]\n        ADK[\"Agent Development Kit（ADK）\"]\n        AgentStudio[\"Workflow Builder（旧 Agent Designer）<br/>CX Agent Studio\"]\n        ModelGarden[\"Model Garden\"]\n        RAGEngine[\"RAG Engine\"]\n    end\n    subgraph Scale[\"Scale: 拡張\"]\n        Runtime[\"Agent Runtime<br/>（旧Agent Engine）\"]\n        Sessions[\"Agent Platform Sessions\"]\n        MemoryBank[\"Agent Platform Memory Bank\"]\n        VectorSearch[\"Vector Search 1.0 /<br/>Agent Retrieval\"]\n    end\n    subgraph Govern[\"Govern: ガバナンス\"]\n        AgentIdentity[\"Agent Identity（PAB）\"]\n        AgentGateway[\"Agent Gateway\"]\n        ModelArmor[\"Model Armor\"]\n        AgentRegistry[\"Agent Registry\"]\n    end\n    subgraph Optimize[\"Optimize: 最適化\"]\n        Eval[\"Agent Evaluation\"]\n        Observability[\"Agent Observability<br/>（Cloud Logging / Cloud Trace）\"]\n    end\n\n    Build --> Scale --> Govern --> Optimize",
     "diag3": "stateDiagram-v2\n    direction LR\n    [*] --> 挨拶ページ\n    挨拶ページ --> 意図分類ページ: ユーザー発話イベント\n    意図分類ページ --> 注文照会ページ: transition route（意図=注文照会）\n    意図分類ページ --> 返品受付ページ: transition route（意図=返品）\n    意図分類ページ --> 有人対応ページ: event handler（no-match / no-input）\n    注文照会ページ --> [*]: タスク完了\n    返品受付ページ --> [*]: タスク完了\n    有人対応ページ --> [*]: エスカレーション",

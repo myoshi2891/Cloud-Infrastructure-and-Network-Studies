@@ -133,7 +133,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag1} ariaLabel="出題範囲の配点構成パイチャート" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag1} ariaLabel="出題範囲の配点構成パイチャート" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -148,7 +148,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag2} ariaLabel="Google Cloud エージェントプラットフォームの全体像（Build・Run・Govern）" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag2} ariaLabel="Google Cloud エージェントプラットフォームの全体像（Build・Run・Govern）" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -189,7 +189,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag3} ariaLabel="CX Agent Studio 状態遷移モデル" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag3} ariaLabel="CX Agent Studio 状態遷移モデル" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -243,7 +243,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </ol>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag4} ariaLabel="Gemini Enterprise データ接続アーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag4} ariaLabel="Gemini Enterprise データ接続アーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 
@@ -298,7 +298,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag5} ariaLabel="コーディングエージェントのツール接続とサンドボックス実行" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag5} ariaLabel="コーディングエージェントのツール接続とサンドボックス実行" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>セキュアサンドボックスでの使用</h4>
@@ -392,7 +392,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </ul>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag6} ariaLabel="Antigravity エコシステム（プラグイン・スキル・ルール・拡張フック）" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag6} ariaLabel="Antigravity エコシステム（プラグイン・スキル・ルール・拡張フック）" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>Agents CLIによるAntigravityの拡張</h4>
@@ -573,7 +573,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </div>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag7} ariaLabel="言語モデル選定デシジョンフロー" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag7} ariaLabel="言語モデル選定デシジョンフロー" theme="light" preserveNaturalScale={true} />
                     </div>
 
 
@@ -609,7 +609,7 @@ export default function ProfessionalAgenticArchitectGuide() {
 <p>ADKによる開発は、次のような段階的な拡張パスをたどるのが一般的です。</p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag8} ariaLabel="ADKエージェント開発の段階的拡張パス" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag8} ariaLabel="ADKエージェント開発の段階的拡張パス" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -636,7 +636,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </ul>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag9} ariaLabel="セッションと長期記憶（SessionsとMemory Bank）のアーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag9} ariaLabel="セッションと長期記憶（SessionsとMemory Bank）のアーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 
@@ -681,7 +681,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag10} ariaLabel="RAGパイプラインとAgent Retrievalアーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag10} ariaLabel="RAGパイプラインとAgent Retrievalアーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -815,7 +815,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </ul>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag11} ariaLabel="事前構築機能とAgent Runtimeアーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag11} ariaLabel="事前構築機能とAgent Runtimeアーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -865,7 +865,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag12} ariaLabel="MCPとA2Aプロトコルの連携アーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag12} ariaLabel="MCPとA2Aプロトコルの連携アーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -937,7 +937,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                         </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag13} ariaLabel="マルチエージェントオーケストレーションパターン" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag13} ariaLabel="マルチエージェントオーケストレーションパターン" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -1039,7 +1039,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                         </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag14} ariaLabel="エージェント評価パイプラインフロー" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag14} ariaLabel="エージェント評価パイプラインフロー" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>継続的評価パイプラインの構築</h4>
@@ -1138,7 +1138,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </div>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag15} ariaLabel="デプロイランタイム選定デシジョンツリー" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag15} ariaLabel="デプロイランタイム選定デシジョンツリー" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -1169,7 +1169,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag16} ariaLabel="可観測性とテレメトリアーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag16} ariaLabel="可観測性とテレメトリアーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>パフォーマンス・信頼性・コストの監視と最適化</h4>
@@ -1242,7 +1242,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                     </ul>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag17} ariaLabel="OAuth 2.0 と Auth Manager の認証シーケンス" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag17} ariaLabel="OAuth 2.0 と Auth Manager の認証シーケンス" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>PAB（Principal Access Boundary）ポリシーの設定</h4>
@@ -1252,7 +1252,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag18} ariaLabel="Agent Identity と PAB ポリシー境界アーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag18} ariaLabel="Agent Identity と PAB ポリシー境界アーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -1288,7 +1288,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag19} ariaLabel="Agent Gateway によるトラフィック制御と可視化" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag19} ariaLabel="Agent Gateway によるトラフィック制御と可視化" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <h4>エージェントガバナンスとポリシー適用</h4>
@@ -1306,7 +1306,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag20} ariaLabel="Model Armor による入出力スクリーニングフロー" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag20} ariaLabel="Model Armor による入出力スクリーニングフロー" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -1324,7 +1324,7 @@ export default function ProfessionalAgenticArchitectGuide() {
                 </p>
 
                     <div className="mermaid-wrapper">
-                        <MermaidDiagram chart={DIAGRAMS.diag21} ariaLabel="多層防御（Defense in Depth）セキュリティアーキテクチャ" preserveNaturalScale={true} />
+                        <MermaidDiagram chart={DIAGRAMS.diag21} ariaLabel="多層防御（Defense in Depth）セキュリティアーキテクチャ" theme="light" preserveNaturalScale={true} />
                     </div>
 
 <p>
@@ -1752,7 +1752,7 @@ export default function ProfessionalAgenticArchitectGuide() {
 
                             <div className="num">23</div>
                             <div className="txt">
-                            What's new in IAM security, governance, and runtime defense（Google
+                            What&apos;s new in IAM security, governance, and runtime defense（Google
                             Cloud Blog）
                             <a href="https://cloud.google.com/blog/products/identity-security/whats-new-in-iam-security-governance-and-runtime-defense">https://cloud.google.com/blog/products/identity-security/whats-new-in-iam-security-governance-and-runtime-defense</a>
                                 </div>
@@ -1906,7 +1906,7 @@ export default function ProfessionalAgenticArchitectGuide() {
 
                             <div className="num">42</div>
                             <div className="txt">
-                            A developer's guide to multi-agent patterns in ADK（Google Developers
+                            A developer&apos;s guide to multi-agent patterns in ADK（Google Developers
                             Blog）
                             <a href="https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/">https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/</a>
                                 </div>
