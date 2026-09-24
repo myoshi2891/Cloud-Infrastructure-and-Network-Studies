@@ -277,13 +277,16 @@ describe('MermaidDiagram', () => {
                 expect(calledChart).toContain("'actorBkg': '#eaf1ff'");
                 expect(calledChart).toContain("'actorBorder': '#1a56db'");
                 expect(calledChart).toContain("'actorTextColor': '#16233a'");
+                expect(calledChart).toContain("'labelBoxBkgColor': '#ffffff'");
+                expect(calledChart).toContain("'labelBoxBorderColor': '#1a56db'");
+                expect(calledChart).toContain("'labelTextColor': '#1a56db'");
             } finally {
                 svgProto.getBBox = originalGetBBox;
                 vi.restoreAllMocks();
             }
         });
 
-        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストおよびシーケンス図アクター装飾が定義されていること', () => {
+        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストおよびシーケンス図アクター・altタブラベル装飾が定義されていること', () => {
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*background:\s*#ffffff;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border:\s*1px solid #d7e0ee;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border-radius:\s*14px;/s);
@@ -291,6 +294,9 @@ describe('MermaidDiagram', () => {
             expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.cluster-label\s+text\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:rect\.actor|\.actor\s+rect)\)[^{]*\{[^}]*fill:\s*#eaf1ff\s*!important;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:text\.actor|\.actor\s+text)\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
+            // シーケンス図 alt/loop タブの polygon.labelBox / .labelBox と .labelText
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\([^)]*polygon\.labelBox[^)]*\)[^{]*\{[^}]*fill:\s*#ffffff\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\([^)]*\.labelText[^)]*\)[^{]*\{[^}]*fill:\s*#1a56db\s*!important;/s);
         });
     });
 });
