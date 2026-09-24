@@ -53,6 +53,7 @@ const guideLayouts = [
     ['app/recommended-books/systems-performance/page.css', '.systems-performance-page .sidebar', '.systems-performance-page .main'],
     ['app/recommended-books/operating-systems-three-easy-pieces/page.css', '.ostep-page .sidebar', '.ostep-page .main'],
     ['app/recommended-books/computer-networking-topdown/page.css', '.cntd-page .sidebar', '.cntd-page .main'],
+    ['app/gcl/professional-agentic-architect/page.css', '.agentic-guide-page .sidebar', '.agentic-guide-page .main'],
 ] as const;
 
 describe('all sidebar guide layouts', () => {

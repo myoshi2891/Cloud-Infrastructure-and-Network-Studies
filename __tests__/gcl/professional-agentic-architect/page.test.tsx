@@ -30,20 +30,20 @@ describe('Google Cloud Professional Agentic Architect 認定試験 技術ガイ�
         expect(lis).toHaveLength(inventory.listItems.length);
     });
 
-    it('チェックリストカード内に15件のチェックボックス項目が存在し、動的カウントアップの基盤がある', () => {
+    it('チェックリストカード内に22件のチェックボックス項目が存在し、動的カウントアップの基盤がある', () => {
         const container = renderPage();
         const checklist = container.querySelector('.checklist-card');
         expect(checklist).not.toBeNull();
         const checkboxes = checklist?.querySelectorAll('input[type="checkbox"]');
-        expect(checkboxes && checkboxes.length).toBe(15);
+        expect(checkboxes && checkboxes.length).toBe(22);
         const labels = checklist?.querySelectorAll('label');
-        expect(labels && labels.length).toBe(15);
+        expect(labels && labels.length).toBe(22);
     });
 
-    it('参考文献カード(ref-card)が36件存在し、外部リンクが正しく設定されている', () => {
+    it('参考文献カード(ref-card)が63件存在し、外部リンクが正しく設定されている', () => {
         const container = renderPage();
         const cards = container.querySelectorAll('.ref-card');
-        expect(cards).toHaveLength(36);
+        expect(cards).toHaveLength(63);
         cards.forEach((card) => {
             const num = card.querySelector('.num');
             expect(num?.textContent?.trim()).toMatch(/^[0-9]+$/);
