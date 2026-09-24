@@ -260,14 +260,31 @@
     stroke: #1a56db !important;
 }
 
-.lightWrapper .mermaidTarget :global(rect.labelBox) {
-    fill: #eaf1ff !important;
+.lightWrapper .mermaidTarget :global(polygon.labelBox),
+.lightWrapper .mermaidTarget :global(rect.labelBox),
+.lightWrapper .mermaidTarget :global(.labelBox) {
+    fill: #ffffff !important;
     stroke: #1a56db !important;
 }
 
 .lightWrapper .mermaidTarget :global(text.labelText),
+.lightWrapper .mermaidTarget :global(text.labelText tspan),
+.lightWrapper .mermaidTarget :global(.labelText),
+.lightWrapper .mermaidTarget :global(.labelText tspan) {
+    fill: #1a56db !important;
+    color: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(.loopLine) {
+    stroke: #1a56db !important;
+}
+
 .lightWrapper .mermaidTarget :global(text.loopText),
-.lightWrapper .mermaidTarget :global(text.messageText) {
+.lightWrapper .mermaidTarget :global(text.loopText tspan),
+.lightWrapper .mermaidTarget :global(.loopText),
+.lightWrapper .mermaidTarget :global(.loopText tspan),
+.lightWrapper .mermaidTarget :global(text.messageText),
+.lightWrapper .mermaidTarget :global(text.messageText tspan) {
     fill: #16233a !important;
     color: #16233a !important;
 }
