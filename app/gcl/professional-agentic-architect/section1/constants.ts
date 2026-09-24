@@ -354,14 +354,6 @@ export const REFERENCES: ReferenceItem[] = [
         href: 'https://docs.cloud.google.com/dialogflow/cx/docs/concept/page',
         category: 'Dialogflow CX 状態ベースワークフロー（基礎概念）',
     },
-    {
-        id: 'ref26',
-        num: 26,
-        title: 'Professional Agentic Architect | Google Cloud Learn',
-        author: 'Google Cloud Learn',
-        href: 'https://cloud.google.com/learn/certification/agentic-architect',
-        category: '試験ガイド・認定情報',
-    },
 ];
 
 export const CHECKLIST_ITEMS = [

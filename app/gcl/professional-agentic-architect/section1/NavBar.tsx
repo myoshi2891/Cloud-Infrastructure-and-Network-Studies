@@ -134,23 +134,21 @@ export function NavBar() {
                 aria-label="セクションナビゲーション"
             >
                 <div className="sidebar-header">
-                    <div className="kicker">Google Cloud · Agentic Architect</div>
+                    <div className="kicker">Google Cloud · Agentic Architect</div>{' '}
                     <h2>Section 1: ローコードツールでのエージェント構築</h2>
-                </div>
+                </div>{' '}
                 <nav id="sidebarNav" aria-label="ページ内目次">
-                    <ul>
-                        {NAV_ITEMS.map((item) => (
-                            <li key={item.id}>
-                                <a
-                                    href={`#${item.id}`}
-                                    className={`${activeId === item.id ? 'active' : ''} ${item.lvl3 ? 'lvl3' : ''}`}
-                                    onClick={() => handleLinkClick(item.id)}
-                                >
-                                    {item.label}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    {NAV_ITEMS.map((item) => (
+                        <span key={item.id}>
+                            <a
+                                href={`#${item.id}`}
+                                className={`${activeId === item.id ? 'active' : ''} ${item.lvl3 ? 'lvl3' : ''}`}
+                                onClick={() => handleLinkClick(item.id)}
+                            >
+                                {item.label}
+                            </a>{' '}
+                        </span>
+                    ))}
                 </nav>
             </aside>
         </>

@@ -39,10 +39,10 @@ describe('Professional Agentic Architect Section 1 — 詳細仕様検証', () =
         expect(labels && labels.length).toBe(19);
     });
 
-    it('参考文献カード(ref-card)が26件存在し、外部リンクが正しく設定されている', () => {
+    it('参考文献カード(ref-card)が25件存在し、外部リンクが正しく設定されている', () => {
         const container = renderPage();
         const cards = container.querySelectorAll('.ref-card');
-        expect(cards).toHaveLength(26);
+        expect(cards).toHaveLength(25);
         cards.forEach((card) => {
             const num = card.querySelector('.num');
             expect(num?.textContent?.trim()).toMatch(/^[0-9]+$/);
