@@ -972,7 +972,7 @@ export default function Section1Guide() {
                         <div className="ref-card" id="ref3">
                             <div className="num">3</div>
                             <div className="txt">
-                                <a href="https://cloud.google.com/blog/products/ai-machine-learning/whats-new-in-gemini-enterprise">What's new in Gemini Enterprise | Google Cloud Blog</a>
+                                <a href="https://cloud.google.com/blog/products/ai-machine-learning/whats-new-in-gemini-enterprise">What&apos;s new in Gemini Enterprise | Google Cloud Blog</a>
                             </div>
                         </div>
                         <div className="ref-card" id="ref4">

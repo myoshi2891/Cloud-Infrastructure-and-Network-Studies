@@ -386,7 +386,7 @@ const ALL_EXAMS: Exam[] = [
         label: 'Professional Agentic Architect',
         abbr: 'Agentic',
         level: 'Professional',
-        score: '約80問 / 180分',
+        score: '約80問 / 180分 + ハンズオンラボ',
         color: 'card-professional-agentic-architect',
         href: '/gcl/professional-agentic-architect',
         description:
@@ -394,7 +394,7 @@ const ALL_EXAMS: Exam[] = [
         domains: [
             {
                 label: 'Section 1: ローコードツールでの構築',
-                href: '/gcl/professional-agentic-architect#セクション1-ローコードツールを使用したエージェントの構築配点-約13',
+                href: '/gcl/professional-agentic-architect/section1',
                 pct: '約13%',
             },
             {
