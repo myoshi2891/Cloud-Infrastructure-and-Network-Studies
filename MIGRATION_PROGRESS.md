@@ -1,8 +1,39 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-07)
+(最終更新日: 2026-09-24)
 
-## 2026-09-07: 推薦図書『High Performance Browser Networking』完全解説ガイド 100%全量移行 (完了)
+## 2026-09-24: Google Cloud Professional Agentic Architect 認定試験 技術ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-guide.html` を、Next.js App Router 5ファイル構成 (`page.tsx`, `ProfessionalAgenticArchitectGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect` ルートへ移行。グローバルナビゲーションの「GCP」配下に追加。見出し(h1:1, h2:10, h3:13, h4:26)、全8個のテーブル、全21個のMermaid図解（ライトテーマデザイン完全移転）、全リスト(86件)、全外部リンク(63件)・全本文(76件)・学習チェックリスト(22件)・参考文献カード(63件)を一切の省略・要約なしで100%全量移植。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect` (`ed62c0b4`)
+- [x] **Step 1 (Red)**: `test(gcl): add failing contract specs for professional-agentic-architect` (`26c0f4d5`)
+- [x] **Step 2 (Green)**: `feat(gcl): implement professional-agentic-architect guide with 100% source parity` (`5e897c8c`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(diagrams): add light theme support to MermaidDiagram and integrate professional-agentic-architect` (`4ee4b816`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive professional-agentic-architect sources`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/page.tsx](app/gcl/professional-agentic-architect/page.tsx)
+- [app/gcl/professional-agentic-architect/ProfessionalAgenticArchitectGuide.tsx](app/gcl/professional-agentic-architect/ProfessionalAgenticArchitectGuide.tsx)
+- [app/gcl/professional-agentic-architect/NavBar.tsx](app/gcl/professional-agentic-architect/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/constants.ts](app/gcl/professional-agentic-architect/constants.ts)
+- [app/gcl/professional-agentic-architect/page.css](app/gcl/professional-agentic-architect/page.css)
+- [components/MermaidDiagram.tsx](components/MermaidDiagram.tsx)
+- [components/MermaidDiagram.module.css](components/MermaidDiagram.module.css)
+- [`__tests__/components/MermaidDiagram.test.tsx`](__tests__/components/MermaidDiagram.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/page.test.tsx`](__tests__/gcl/professional-agentic-architect/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect.json](docs/migration-inventory/professional-agentic-architect.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-guide.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-guide.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-guide.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-guide.md)
+
+---
+
 
 ### 目的
 
