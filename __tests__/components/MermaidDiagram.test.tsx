@@ -274,18 +274,23 @@ describe('MermaidDiagram', () => {
                 expect(calledChart).toContain("'primaryBorderColor': '#1a56db'");
                 expect(calledChart).toContain("'clusterBkg': '#f5f8fc'");
                 expect(calledChart).toContain("'pie1': '#1a56db'");
+                expect(calledChart).toContain("'actorBkg': '#eaf1ff'");
+                expect(calledChart).toContain("'actorBorder': '#1a56db'");
+                expect(calledChart).toContain("'actorTextColor': '#16233a'");
             } finally {
                 svgProto.getBBox = originalGetBBox;
                 vi.restoreAllMocks();
             }
         });
 
-        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストが定義されていること', () => {
+        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストおよびシーケンス図アクター装飾が定義されていること', () => {
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*background:\s*#ffffff;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border:\s*1px solid #d7e0ee;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border-radius:\s*14px;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.node\s+\.nodeLabel\)[^{]*\{[^}]*color:\s*#16233a\s*!important;/s);
             expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.cluster-label\s+text\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:rect\.actor|\.actor\s+rect)\)[^{]*\{[^}]*fill:\s*#eaf1ff\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:text\.actor|\.actor\s+text)\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
         });
     });
 });

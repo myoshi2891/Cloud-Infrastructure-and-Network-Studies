@@ -242,6 +242,36 @@
     stroke: #1a56db !important;
 }
 
+.lightWrapper .mermaidTarget :global(rect.actor),
+.lightWrapper .mermaidTarget :global(.actor rect) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(text.actor),
+.lightWrapper .mermaidTarget :global(.actor text),
+.lightWrapper .mermaidTarget :global(.actor tspan) {
+    fill: #16233a !important;
+    color: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(rect[class*="activation"]) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(rect.labelBox) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(text.labelText),
+.lightWrapper .mermaidTarget :global(text.loopText),
+.lightWrapper .mermaidTarget :global(text.messageText) {
+    fill: #16233a !important;
+    color: #16233a !important;
+}
+
 .lightWrapper .mermaidTarget :global(.edgeLabel) {
     background-color: #ffffff !important;
     color: #16233a !important;
