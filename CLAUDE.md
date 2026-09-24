@@ -394,6 +394,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義 (21図)
       page.css                      # ページ固有スタイル
+      section1/
+        page.tsx                    # Section 1: ローコードツールでのエージェント構築 (Server)
+        Section1Guide.tsx           # 本文＋インタラクション (Client。全7 Mermaid図、11テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (7図)
+        page.css                    # ページ固有スタイル
   cisco/
     devnet-professional/
       page.tsx                      # Cisco Certified DevNet Professional 認定 徹底解説ガイド（Server）

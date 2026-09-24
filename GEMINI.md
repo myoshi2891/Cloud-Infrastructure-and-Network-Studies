@@ -40,7 +40,7 @@ Updated 2026-09-07
   - `/app/gcl/professional-cloud-network-engineer-step-by-step`: PCNE ステップバイステップ実践ガイド。
   - `/app/gcl/professional-cloud-architect`: Professional Cloud Architect（PCA）試験 完全対策ガイド（`section1-design-planning`、`section2-managing-provisioning`、`section3-security-compliance`、`section4-process-optimization`、`section5-managing-implementation`、`section6-operational-excellence` 完全ガイド含む）。
   - `/app/gcl/professional-cloud-developer`: Professional Cloud Developer（PCD）認定試験 完全対策学習ガイド（`section1`、`section2`、`section3`、`section4` 完全ガイド含む）。
-  - `/app/gcl/professional-agentic-architect`: Professional Agentic Architect 認定試験 技術ガイド（ライトテーマデザイン、Mermaid 21図、全8テーブル、全量完全移植済み）。
+  - `/app/gcl/professional-agentic-architect`: Professional Agentic Architect 認定試験 技術ガイド（概要・技術ガイド本体、および `section1` 完全ガイド含む。ライトテーマデザイン、全量完全移植済み）。
   - `/app/cisco/ccde/complete-guide`: Cisco CCDE 認定 完全ガイド。
   - `/app/cisco/devnet-professional`: Cisco Certified DevNet Professional 認定 徹底解説ガイド（CSS Modules）。
   - `/app/cisco/devnet-associate`: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（CSS Modules／グローバルテーマトークン参照）。
