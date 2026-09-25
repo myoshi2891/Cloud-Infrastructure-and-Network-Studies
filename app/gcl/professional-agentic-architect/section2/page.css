@@ -141,6 +141,7 @@
     margin-left: 280px;
     width: calc(100% - 280px);
     max-width: none;
+    box-sizing: border-box;
     padding: 56px 64px 120px;
 }
 
@@ -555,6 +556,7 @@
     .agentic-section2-page .main {
         margin-left: 0;
         width: 100%;
+        max-width: none;
         padding: 80px 20px 100px;
     }
 
