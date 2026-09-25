@@ -1062,7 +1062,7 @@ export default function Section2Guide() {
                             id="fnref83"
                             role="doc-noteref"
                         ><sup>2</sup></a>。Googleは2026年5月のI/O
-                        '26で、Antigravityをコーディング・エージェントオーケストレーション戦略の中核として据え、Agents
+                        &apos;26で、Antigravityをコーディング・エージェントオーケストレーション戦略の中核として据え、Agents
                         CLIをその上でADK・評価・デプロイ・観測性・公開に関する専門知識を付与する存在として発表しました<a
                             className="footnote-ref"
                             href="#ref27"

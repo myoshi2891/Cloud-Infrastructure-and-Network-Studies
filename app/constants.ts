@@ -399,7 +399,7 @@ const ALL_EXAMS: Exam[] = [
             },
             {
                 label: 'Section 2: コーディングエージェント開発',
-                href: '/gcl/professional-agentic-architect#セクション2-コーディングエージェントを使用したアプリケーション開発配点-約17',
+                href: '/gcl/professional-agentic-architect/section2',
                 pct: '約17%',
             },
             {
