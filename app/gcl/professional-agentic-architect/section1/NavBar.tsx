@@ -111,6 +111,9 @@ export function NavBar() {
         setIsOpen(false);
         const target = document.getElementById(id);
         if (target) {
+            if (!target.hasAttribute('tabindex')) {
+                target.setAttribute('tabindex', '-1');
+            }
             target.focus();
         }
     };
