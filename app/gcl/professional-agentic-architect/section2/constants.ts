@@ -57,7 +57,7 @@ export type DiagramId =
     | 'diag-7';
 
 export const DIAGRAMS: Record<DiagramId, string> = {
-    'diag-1': `pie showData
+    'diag-1': `pie
     title 試験の配点構成（全5セクション）
     "1. ローコードツールでのエージェント構築 (13%)" : 13
     "2. コーディングエージェントの活用 (17%)" : 17

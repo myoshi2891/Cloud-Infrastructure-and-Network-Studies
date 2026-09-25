@@ -335,17 +335,14 @@
     background: rgba(26, 86, 219, 0.04);
 }
 
-/* Mermaid Wrapper */
+/* Mermaid Wrapper (外枠2重化を防ぐため、カード装飾は MermaidDiagram 内の .lightWrapper に集約) */
 .agentic-section2-page .mermaid-wrap {
     width: 100%;
-    display: flex;
-    justify-content: safe center;
-    overflow-x: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px 20px;
-    margin: 1.5rem auto 2rem;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 /* Callouts */

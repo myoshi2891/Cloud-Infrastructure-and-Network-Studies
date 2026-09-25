@@ -67,7 +67,9 @@ export const LIGHT_THEME_DIRECTIVE = `%%{init: {
     'pieStrokeColor': '#ffffff',
     'pieOuterStrokeColor': '#ffffff',
     'pieSectionTextColor': '#ffffff',
-    'pieLegendTextColor': '#16233a'
+    'pieLegendTextColor': '#16233a',
+    'pieTitleTextColor': '#16233a',
+    'pieTitleTextSize': '18px'
   },
   'flowchart': {
     'useMaxWidth': false,

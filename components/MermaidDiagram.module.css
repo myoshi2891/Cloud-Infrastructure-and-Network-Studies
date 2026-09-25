@@ -299,3 +299,13 @@
     color: #16233a !important;
     fill: #16233a !important;
 }
+
+/* 円グラフのタイトル（ライトテーマ用: 視認性を確保する濃紺太字） */
+.lightWrapper .mermaidTarget :global(text.pieTitleText),
+.lightWrapper .mermaidTarget :global(.pieTitleText) {
+    color: #16233a !important;
+    fill: #16233a !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
