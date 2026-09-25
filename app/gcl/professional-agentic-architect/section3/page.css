@@ -1,23 +1,25 @@
 /* app/gcl/professional-agentic-architect/section2/page.css */
 
 .agentic-section3-page {
-    --bg: #f5f8fc;
+    --bg: #f8fafc;
     --bg-card: #ffffff;
-    --bg-card-2: #eef2f9;
-    --border: #d7e0ee;
-    --border-soft: #e7edf6;
-    --text: #16233a;
-    --text-dim: #52627c;
-    --text-faint: #8493ac;
-    --accent: #1a56db;
-    --accent-soft: #a9c2f5;
-    --accent-bg: #eaf1ff;
-    --danger: #b91c3c;
-    --danger-bg: #fdecef;
-    --warn: #92400e;
-    --warn-bg: #fff3e0;
-    --success: #157a43;
-    --success-bg: #e8f7ee;
+    --bg-card-2: #f1f5f9;
+    --border: #e2e8f0;
+    --border-soft: #eef2f6;
+    --text: #0f172a;
+    --text-dim: #475569;
+    --text-faint: #94a3b8;
+    --accent: #2563eb;
+    --accent-soft: #93c5fd;
+    --accent-bg: #eff6ff;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+    --warn: #b45309;
+    --warn-bg: #fffbeb;
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --code-key: #7c3aed;
+    --code-func: #0e7490;
     --sidebar-w: 280px;
 
     background: var(--bg);
@@ -291,8 +293,58 @@
     border-radius: 5px;
     padding: 1px 6px;
     font-size: 0.9em;
-    color: #a15c00;
+    color: var(--warn);
     overflow-wrap: anywhere;
+}
+
+/* Code Blocks */
+.agentic-section3-page .main pre,
+.agentic-section3-page .main pre.code-block {
+    background: var(--bg-card-2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    padding: 18px 20px !important;
+    margin: 0 0 26px !important;
+    overflow-x: auto !important;
+}
+
+.agentic-section3-page .main pre code,
+.agentic-section3-page .main pre .code-line {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace !important;
+    font-size: 13.5px !important;
+    line-height: 1.7 !important;
+    color: var(--text) !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    white-space: pre !important;
+}
+
+.agentic-section3-page .main pre .tok-comment {
+    color: var(--text-faint) !important;
+    font-style: italic !important;
+}
+
+.agentic-section3-page .main pre .tok-string {
+    color: var(--success) !important;
+}
+
+.agentic-section3-page .main pre .tok-number {
+    color: var(--warn) !important;
+}
+
+.agentic-section3-page .main pre .tok-keyword {
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+}
+
+.agentic-section3-page .main pre .tok-key {
+    color: var(--code-key) !important;
+}
+
+.agentic-section3-page .main pre .tok-func {
+    color: var(--code-func) !important;
+    font-weight: 700 !important;
 }
 
 /* Tables */
@@ -477,67 +529,85 @@
     font-weight: 700;
 }
 
-.agentic-section3-page .checklist-card ul.checklist-items {
+.agentic-section3-page .checklist-card ul,
+.agentic-section3-page .checklist-card ul.checklist-items,
+.agentic-section3-page .main .checklist-card ul,
+.agentic-section3-page .main .checklist-card ul.checklist-items {
     list-style: none !important;
+    list-style-type: none !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
-.agentic-section3-page .checklist-card li {
+.agentic-section3-page .checklist-card li,
+.agentic-section3-page .main .checklist-card li {
+    list-style: none !important;
+    list-style-type: none !important;
     display: flex !important;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 4px;
-    border-radius: 8px;
-    margin: 0;
-    transition: background 0.15s;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 11px 4px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    transition: background 0.15s !important;
+}
+
+.agentic-section3-page .checklist-card li::marker,
+.agentic-section3-page .main .checklist-card li::marker {
+    display: none !important;
+    content: '' !important;
 }
 
 .agentic-section3-page .checklist-card li:hover {
-    background: rgba(26, 86, 219, 0.05);
+    background: rgba(26, 86, 219, 0.05) !important;
 }
 
 .agentic-section3-page .checklist-card input[type='checkbox'] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 19px;
-    height: 19px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    border: 1.5px solid var(--border);
-    border-radius: 5px;
-    background: var(--bg-card-2);
-    cursor: pointer;
-    position: relative;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    flex-shrink: 0 !important;
+    margin-top: 2px !important;
+    margin-right: 4px !important;
+    border: 1.5px solid var(--border) !important;
+    border-radius: 5px !important;
+    background: var(--bg-card-2) !important;
+    cursor: pointer !important;
+    position: relative !important;
+    outline: none !important;
 }
 
 .agentic-section3-page .checklist-card input[type='checkbox']:checked {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
 }
 
 .agentic-section3-page .checklist-card input[type='checkbox']:checked::after {
-    content: '';
-    position: absolute;
-    left: 5px;
-    top: 1px;
-    width: 5px;
-    height: 10px;
-    border: solid #ffffff;
-    border-width: 0 2px 2px 0;
-    transform: rotate(40deg);
+    content: '' !important;
+    position: absolute !important;
+    left: 6px !important;
+    top: 2px !important;
+    width: 5px !important;
+    height: 10px !important;
+    border: solid #ffffff !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(40deg) !important;
+    display: block !important;
 }
 
 .agentic-section3-page .checklist-card label {
-    color: var(--text);
-    font-size: 14.5px;
-    cursor: pointer;
-    line-height: 1.6;
+    color: var(--text) !important;
+    font-size: 14.5px !important;
+    cursor: pointer !important;
+    line-height: 1.6 !important;
+    flex: 1 !important;
 }
 
 .agentic-section3-page .checklist-card li:has(input:checked) label {
-    text-decoration: line-through;
-    color: var(--text-faint);
+    text-decoration: line-through !important;
+    color: var(--text-faint) !important;
 }
 
 /* Responsive */

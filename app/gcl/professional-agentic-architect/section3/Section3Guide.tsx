@@ -1499,17 +1499,17 @@ export default function Section3Guide() {
                 </ul>
 
                 <pre className="code-block">
-                        <div className="code-line"><span className="tok-comment">// PABポリシー例: エージェントが特定フォルダ内のリソースにのみアクセス可能にする</span></div>
+                        <div className="code-line"><span className="tok-comment">{'// PABポリシー例: エージェントが特定フォルダ内のリソースにのみアクセス可能にする'}</span></div>
                         <div className="code-line">&#123;</div>
-                        <div className="code-line">  <span className="tok-key">"name"</span>: <span className="tok-string">"organizations/ORGANIZATION_ID/locations/global/principalAccessBoundaryPolicies/example-policy"</span>,</div>
-                        <div className="code-line">  <span className="tok-key">"details"</span>: &#123;</div>
-                        <div className="code-line">    <span className="tok-key">"rules"</span>: [</div>
+                        <div className="code-line">  <span className="tok-key">&quot;name&quot;</span>: <span className="tok-string">&quot;organizations/ORGANIZATION_ID/locations/global/principalAccessBoundaryPolicies/example-policy&quot;</span>,</div>
+                        <div className="code-line">  <span className="tok-key">&quot;details&quot;</span>: &#123;</div>
+                        <div className="code-line">    <span className="tok-key">&quot;rules&quot;</span>: [</div>
                         <div className="code-line">      &#123;</div>
-                        <div className="code-line">        <span className="tok-key">"description"</span>: <span className="tok-string">"Restrict agent identity inside a folder"</span>,</div>
-                        <div className="code-line">        <span className="tok-key">"resources"</span>: [</div>
-                        <div className="code-line">          <span className="tok-string">"//cloudresourcemanager.googleapis.com/folder/0123456789012"</span></div>
+                        <div className="code-line">        <span className="tok-key">&quot;description&quot;</span>: <span className="tok-string">&quot;Restrict agent identity inside a folder&quot;</span>,</div>
+                        <div className="code-line">        <span className="tok-key">&quot;resources&quot;</span>: [</div>
+                        <div className="code-line">          <span className="tok-string">&quot;//cloudresourcemanager.googleapis.com/folder/0123456789012&quot;</span></div>
                         <div className="code-line">        ],</div>
-                        <div className="code-line">        <span className="tok-key">"effect"</span>: <span className="tok-string">"ALLOW"</span></div>
+                        <div className="code-line">        <span className="tok-key">&quot;effect&quot;</span>: <span className="tok-string">&quot;ALLOW&quot;</span></div>
                         <div className="code-line">      &#125;</div>
                         <div className="code-line">    ]</div>
                         <div className="code-line">  &#125;</div>
@@ -1734,7 +1734,7 @@ export default function Section3Guide() {
                             role="doc-noteref"
                             ><sup>32</sup></a
                         >。GKE上のカスタムMCPサーバーも、Deploymentマニフェストに<code
-                            >registry.gke.io/functional-type: "MCP_SERVER"</code
+                            >registry.gke.io/functional-type: &quot;MCP_SERVER&quot;</code
                         >ラベルとエンドポイント/機能を宣言するアノテーションを付与することで、自動的にイントロスペクションされ登録されます<a
                             className="footnote-ref"
                             href="#ref32"
@@ -1844,8 +1844,8 @@ export default function Section3Guide() {
                         <div className="code-line">Content-Type: application/json</div>
                         <div className="code-line"></div>
                         <div className="code-line">&#123;</div>
-                        <div className="code-line">  <span className="tok-key">"jsonrpc"</span>: <span className="tok-string">"2.0"</span>,</div>
-                        <div className="code-line">  <span className="tok-key">"method"</span>: <span className="tok-string">"tools/list"</span></div>
+                        <div className="code-line">  <span className="tok-key">&quot;jsonrpc&quot;</span>: <span className="tok-string">&quot;2.0&quot;</span>,</div>
+                        <div className="code-line">  <span className="tok-key">&quot;method&quot;</span>: <span className="tok-string">&quot;tools/list&quot;</span></div>
                         <div className="code-line">&#125;</div>
                     </pre>
 
@@ -2621,7 +2621,7 @@ export default function Section3Guide() {
                         <span className="title">学習チェックリスト</span
                         ><span className="count">{checkedCount} / {totalChecklist} 完了</span>
                     </div>
-                    <ul>
+                    <ul className="checklist-items">
                         <li>
                             <input id="chk1" type="checkbox" checked={!!checkedItems['chk1']} onChange={() => handleCheckChange('chk1')} /><label htmlFor="chk1"
                                 >LLM/SLM、self-hosted/SaaS、OSS/proprietaryという3つの軸でモデル選定の判断ができる</label
@@ -2726,7 +2726,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref1">
                         <div className="num">1</div>
                         <div className="txt">
-                            Google Cloud, "Professional Agentic Architect Certification exam guide"
+                            Google Cloud, &quot;Professional Agentic Architect Certification exam guide&quot;
                             (PDF).
                             <a
                                 href="https://services.google.com/fh/files/misc/professional_agentic_architect_exam_guide_english.pdf"
@@ -2737,7 +2737,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref2">
                         <div className="num">2</div>
                         <div className="txt">
-                            Futureagi, "SLM vs LLM in 2026: Cost, Latency, and Quality Compared".
+                            Futureagi, &quot;SLM vs LLM in 2026: Cost, Latency, and Quality Compared&quot;.
                             <a href="https://futureagi.com/blog/comparison-slm-llm-language-models/"
                                 >https://futureagi.com/blog/comparison-slm-llm-language-models/</a
                             >
@@ -2746,8 +2746,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref3">
                         <div className="num">3</div>
                         <div className="txt">
-                            Futureagi, "Small Language Models for Agentic AI in 2026: SLM Lineup +
-                            Build Guide".
+                            Futureagi, &quot;Small Language Models for Agentic AI in 2026: SLM Lineup +
+                            Build Guide&quot;.
                             <a
                                 href="https://futureagi.com/blog/small-language-models-agentic-ai-2025/"
                                 >https://futureagi.com/blog/small-language-models-agentic-ai-2025/</a
@@ -2757,7 +2757,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref4">
                         <div className="num">4</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Overview of self-deployed models".
+                            Google Cloud Documentation, &quot;Overview of self-deployed models&quot;.
                             <a
                                 href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-garden/self-deployed-models"
                                 >https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-garden/self-deployed-models</a
@@ -2767,7 +2767,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref5">
                         <div className="num">5</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Overview of Model Garden".
+                            Google Cloud Documentation, &quot;Overview of Model Garden&quot;.
                             <a
                                 href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models"
                                 >https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models</a
@@ -2777,8 +2777,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref6">
                         <div className="num">6</div>
                         <div className="txt">
-                            Google Developers Blog, "Agent Development Kit: Making it easy to build
-                            multi-agent applications".
+                            Google Developers Blog, &quot;Agent Development Kit: Making it easy to build
+                            multi-agent applications&quot;.
                             <a
                                 href="https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/"
                                 >https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/</a
@@ -2788,7 +2788,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref7">
                         <div className="num">7</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Overview of Agent Development Kit".
+                            Google Cloud Documentation, &quot;Overview of Agent Development Kit&quot;.
                             <a
                                 href="https://cloud.google.com/agent-builder/agent-development-kit/overview"
                                 >https://cloud.google.com/agent-builder/agent-development-kit/overview</a
@@ -2798,8 +2798,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref8">
                         <div className="num">8</div>
                         <div className="txt">
-                            Google Developers Blog, "Agent Development Kit: Making it easy to build
-                            multi-agent applications"(モデルエコシステムに関する記述).
+                            Google Developers Blog, &quot;Agent Development Kit: Making it easy to build
+                            multi-agent applications&quot;(モデルエコシステムに関する記述).
                             <a
                                 href="https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/"
                                 >https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/</a
@@ -2809,8 +2809,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref9">
                         <div className="num">9</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Development Kit | Gemini Enterprise
-                            Agent Platform".
+                            Google Cloud Documentation, &quot;Agent Development Kit | Gemini Enterprise
+                            Agent Platform&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk</a
@@ -2820,8 +2820,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref10">
                         <div className="num">10</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Overview of Agent Development
-                            Kit"(クイックスタートに関する記述).
+                            Google Cloud Documentation, &quot;Overview of Agent Development
+                            Kit&quot;(クイックスタートに関する記述).
                             <a
                                 href="https://cloud.google.com/agent-builder/agent-development-kit/overview"
                                 >https://cloud.google.com/agent-builder/agent-development-kit/overview</a
@@ -2831,7 +2831,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref11">
                         <div className="num">11</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Platform Sessions overview".
+                            Google Cloud Documentation, &quot;Agent Platform Sessions overview&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/sessions</a
@@ -2841,7 +2841,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref12">
                         <div className="num">12</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Platform Memory Bank".
+                            Google Cloud Documentation, &quot;Agent Platform Memory Bank&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank</a
@@ -2851,8 +2851,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref13">
                         <div className="num">13</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Gemini Enterprise Agent Platform release
-                            notes".
+                            Google Cloud Documentation, &quot;Gemini Enterprise Agent Platform release
+                            notes&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes</a
@@ -2862,8 +2862,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref14">
                         <div className="num">14</div>
                         <div className="txt">
-                            Google Developers Blog, "Agents CLI in Agent Platform: create to
-                            production in one CLI".
+                            Google Developers Blog, &quot;Agents CLI in Agent Platform: create to
+                            production in one CLI&quot;.
                             <a
                                 href="https://developers.googleblog.com/agents-cli-in-agent-platform-create-to-production-in-one-cli/"
                                 >https://developers.googleblog.com/agents-cli-in-agent-platform-create-to-production-in-one-cli/</a
@@ -2873,7 +2873,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref15">
                         <div className="num">15</div>
                         <div className="txt">
-                            Google, "Agents CLI Skills Reference".
+                            Google, &quot;Agents CLI Skills Reference&quot;.
                             <a href="https://google.github.io/agents-cli/reference/skills/"
                                 >https://google.github.io/agents-cli/reference/skills/</a
                             >
@@ -2882,7 +2882,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref16">
                         <div className="num">16</div>
                         <div className="txt">
-                            Google, "Agents CLI Getting Started".
+                            Google, &quot;Agents CLI Getting Started&quot;.
                             <a href="https://google.github.io/agents-cli/guide/getting-started/"
                                 >https://google.github.io/agents-cli/guide/getting-started/</a
                             >
@@ -2891,8 +2891,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref17">
                         <div className="num">17</div>
                         <div className="txt">
-                            Bala's Blog, "Google Cloud Agents CLI: From Prototype to Production in
-                            One Command".
+                            Bala&apos;s Blog, &quot;Google Cloud Agents CLI: From Prototype to Production in
+                            One Command&quot;.
                             <a
                                 href="https://blog.balakumar.dev/2026/05/31/google-cloud-agents-cli-from-prototype-to-production-in-one-command/"
                                 >https://blog.balakumar.dev/2026/05/31/google-cloud-agents-cli-from-prototype-to-production-in-one-command/</a
@@ -2902,8 +2902,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref18">
                         <div className="num">18</div>
                         <div className="txt">
-                            Google Cloud Documentation, "RAG Engine on Gemini Enterprise Agent
-                            Platform overview".
+                            Google Cloud Documentation, &quot;RAG Engine on Gemini Enterprise Agent
+                            Platform overview&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview</a
@@ -2913,7 +2913,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref19">
                         <div className="num">19</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Development Kit"(RAG
+                            Google Cloud Documentation, &quot;Agent Development Kit&quot;(RAG
                             Engineナビゲーション中のVector database choices構成).
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk"
@@ -2924,8 +2924,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref20">
                         <div className="num">20</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Retrieval (formerly Vector Search
-                            2.0) overview".
+                            Google Cloud Documentation, &quot;Agent Retrieval (formerly Vector Search
+                            2.0) overview&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/overview"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/overview</a
@@ -2935,7 +2935,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref21">
                         <div className="num">21</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Migrate from Vector Search 1.0".
+                            Google Cloud Documentation, &quot;Migrate from Vector Search 1.0&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/migration-from-vs-1_0"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search-2/migration-from-vs-1_0</a
@@ -2945,8 +2945,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref22">
                         <div className="num">22</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Reranking for RAG Engine on Gemini
-                            Enterprise Agent Platform".
+                            Google Cloud Documentation, &quot;Reranking for RAG Engine on Gemini
+                            Enterprise Agent Platform&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/retrieval-and-ranking"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/retrieval-and-ranking</a
@@ -2956,8 +2956,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref23">
                         <div className="num">23</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Identity overview | Identity and
-                            Access Management (IAM)".
+                            Google Cloud Documentation, &quot;Agent Identity overview | Identity and
+                            Access Management (IAM)&quot;.
                             <a href="https://docs.cloud.google.com/iam/docs/agent-identity-overview"
                                 >https://docs.cloud.google.com/iam/docs/agent-identity-overview</a
                             >
@@ -2966,8 +2966,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref24">
                         <div className="num">24</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Identity overview | Gemini Enterprise
-                            Agent Platform".
+                            Google Cloud Documentation, &quot;Agent Identity overview | Gemini Enterprise
+                            Agent Platform&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview</a
@@ -2977,8 +2977,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref25">
                         <div className="num">25</div>
                         <div className="txt">
-                            Medium (Google Cloud Community), Arnaud Redon, "GCP Principal access
-                            boundaries in Depth".
+                            Medium (Google Cloud Community), Arnaud Redon, &quot;GCP Principal access
+                            boundaries in Depth&quot;.
                             <a
                                 href="https://medium.com/google-cloud/gcp-principal-access-boundaries-in-deepth-0c2c7579badb"
                                 >https://medium.com/google-cloud/gcp-principal-access-boundaries-in-deepth-0c2c7579badb</a
@@ -2988,8 +2988,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref26">
                         <div className="num">26</div>
                         <div className="txt">
-                            Google Cloud Blog, "What's new in IAM: Security, governance, and runtime
-                            defense".
+                            Google Cloud Blog, &quot;What&apos;s new in IAM: Security, governance, and runtime
+                            defense&quot;.
                             <a
                                 href="https://cloud.google.com/blog/products/identity-security/whats-new-in-iam-security-governance-and-runtime-defense"
                                 >https://cloud.google.com/blog/products/identity-security/whats-new-in-iam-security-governance-and-runtime-defense</a
@@ -2999,8 +2999,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref27">
                         <div className="num">27</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Create and apply principal access boundary
-                            policies".
+                            Google Cloud Documentation, &quot;Create and apply principal access boundary
+                            policies&quot;.
                             <a
                                 href="https://cloud.google.com/iam/docs/principal-access-boundary-policies-create"
                                 >https://cloud.google.com/iam/docs/principal-access-boundary-policies-create</a
@@ -3010,8 +3010,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref28">
                         <div className="num">28</div>
                         <div className="txt">
-                            Google Cloud Documentation, "IAM Access policies overview | Gemini
-                            Enterprise Agent Platform".
+                            Google Cloud Documentation, &quot;IAM Access policies overview | Gemini
+                            Enterprise Agent Platform&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/iam-overview-uap"
                                 >https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/iam-overview-uap</a
@@ -3021,8 +3021,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref29">
                         <div className="num">29</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Use agent identity with Vertex AI Agent
-                            Engine".
+                            Google Cloud Documentation, &quot;Use agent identity with Vertex AI Agent
+                            Engine&quot;.
                             <a
                                 href="https://cloud.google.com/agent-builder/agent-engine/agent-identity"
                                 >https://cloud.google.com/agent-builder/agent-engine/agent-identity</a
@@ -3032,7 +3032,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref30">
                         <div className="num">30</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Agent Registry overview".
+                            Google Cloud Documentation, &quot;Agent Registry overview&quot;.
                             <a href="https://docs.cloud.google.com/agent-registry/overview"
                                 >https://docs.cloud.google.com/agent-registry/overview</a
                             >
@@ -3041,7 +3041,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref31">
                         <div className="num">31</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Key concepts | Agent Registry".
+                            Google Cloud Documentation, &quot;Key concepts | Agent Registry&quot;.
                             <a href="https://docs.cloud.google.com/agent-registry/concepts"
                                 >https://docs.cloud.google.com/agent-registry/concepts</a
                             >
@@ -3050,7 +3050,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref32">
                         <div className="num">32</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Register MCP servers | Agent Registry".
+                            Google Cloud Documentation, &quot;Register MCP servers | Agent Registry&quot;.
                             <a
                                 href="https://docs.cloud.google.com/agent-registry/register-mcp-servers"
                                 >https://docs.cloud.google.com/agent-registry/register-mcp-servers</a
@@ -3060,8 +3060,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref33">
                         <div className="num">33</div>
                         <div className="txt">
-                            GitHub, google/mcp, "Google's official Model Context Protocol (MCP)
-                            servers".
+                            GitHub, google/mcp, &quot;Google&apos;s official Model Context Protocol (MCP)
+                            servers&quot;.
                             <a href="https://github.com/google/mcp"
                                 >https://github.com/google/mcp</a
                             >
@@ -3070,8 +3070,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref34">
                         <div className="num">34</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Manage MCP servers | Google Cloud MCP
-                            servers".
+                            Google Cloud Documentation, &quot;Manage MCP servers | Google Cloud MCP
+                            servers&quot;.
                             <a href="https://docs.cloud.google.com/mcp/manage-mcp-servers"
                                 >https://docs.cloud.google.com/mcp/manage-mcp-servers</a
                             >
@@ -3080,8 +3080,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref35">
                         <div className="num">35</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Manage MCP servers and tools | Agent
-                            Registry".
+                            Google Cloud Documentation, &quot;Manage MCP servers and tools | Agent
+                            Registry&quot;.
                             <a href="https://docs.cloud.google.com/agent-registry/manage-mcp-tools"
                                 >https://docs.cloud.google.com/agent-registry/manage-mcp-tools</a
                             >
@@ -3090,7 +3090,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref36">
                         <div className="num">36</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Use the BigQuery MCP server".
+                            Google Cloud Documentation, &quot;Use the BigQuery MCP server&quot;.
                             <a href="https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp"
                                 >https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp</a
                             >
@@ -3099,8 +3099,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref37">
                         <div className="num">37</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Register and manage A2A agents | Gemini
-                            Enterprise".
+                            Google Cloud Documentation, &quot;Register and manage A2A agents | Gemini
+                            Enterprise&quot;.
                             <a
                                 href="https://docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-a2a-agent"
                                 >https://docs.cloud.google.com/gemini/enterprise/docs/register-and-manage-an-a2a-agent</a
@@ -3110,7 +3110,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref38">
                         <div className="num">38</div>
                         <div className="txt">
-                            Apono, "What is Agent2Agent (A2A) Protocol and How to Adopt it?".
+                            Apono, &quot;What is Agent2Agent (A2A) Protocol and How to Adopt it?&quot;.
                             <a
                                 href="https://www.apono.io/blog/what-is-agent2agent-a2a-protocol-and-how-to-adopt-it/"
                                 >https://www.apono.io/blog/what-is-agent2agent-a2a-protocol-and-how-to-adopt-it/</a
@@ -3120,7 +3120,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref39">
                         <div className="num">39</div>
                         <div className="txt">
-                            Google Cloud Blog, "Agent2Agent protocol (A2A) is getting an upgrade".
+                            Google Cloud Blog, &quot;Agent2Agent protocol (A2A) is getting an upgrade&quot;.
                             <a
                                 href="https://cloud.google.com/blog/products/ai-machine-learning/agent2agent-protocol-is-getting-an-upgrade"
                                 >https://cloud.google.com/blog/products/ai-machine-learning/agent2agent-protocol-is-getting-an-upgrade</a
@@ -3130,7 +3130,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref40">
                         <div className="num">40</div>
                         <div className="txt">
-                            Atlan, "Google A2A Protocol: How Agent-to-Agent Coordination Works".
+                            Atlan, &quot;Google A2A Protocol: How Agent-to-Agent Coordination Works&quot;.
                             <a href="https://atlan.com/know/google-a2a-protocol/"
                                 >https://atlan.com/know/google-a2a-protocol/</a
                             >
@@ -3139,8 +3139,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref41">
                         <div className="num">41</div>
                         <div className="txt">
-                            Medium (Google Cloud Community), "Understanding Agent2Agent (A2A) — The
-                            Protocol for Agent Collaboration".
+                            Medium (Google Cloud Community), &quot;Understanding Agent2Agent (A2A) — The
+                            Protocol for Agent Collaboration&quot;.
                             <a
                                 href="https://medium.com/google-cloud/understanding-a2a-the-protocol-for-agent-collaboration-2eade88246ca"
                                 >https://medium.com/google-cloud/understanding-a2a-the-protocol-for-agent-collaboration-2eade88246ca</a
@@ -3150,7 +3150,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref42">
                         <div className="num">42</div>
                         <div className="txt">
-                            Google Cloud Documentation, "Overview of A2A agents on Cloud Run".
+                            Google Cloud Documentation, &quot;Overview of A2A agents on Cloud Run&quot;.
                             <a href="https://docs.cloud.google.com/run/docs/ai/a2a-agents"
                                 >https://docs.cloud.google.com/run/docs/ai/a2a-agents</a
                             >
@@ -3168,8 +3168,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref44">
                         <div className="num">44</div>
                         <div className="txt">
-                            Google Cloud Blog, "Agent2Agent protocol (A2A) is getting an
-                            upgrade"(ADKエージェントのA2A公開に関する記述).
+                            Google Cloud Blog, &quot;Agent2Agent protocol (A2A) is getting an
+                            upgrade&quot;(ADKエージェントのA2A公開に関する記述).
                             <a
                                 href="https://cloud.google.com/blog/products/ai-machine-learning/agent2agent-protocol-is-getting-an-upgrade"
                                 >https://cloud.google.com/blog/products/ai-machine-learning/agent2agent-protocol-is-getting-an-upgrade</a
@@ -3179,8 +3179,8 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref45">
                         <div className="num">45</div>
                         <div className="txt">
-                            Medium, Forusone, "Mastering ADK Workflows: A Developer's Guide to
-                            Sequential, Parallel, Loop and Custom Agents".
+                            Medium, Forusone, &quot;Mastering ADK Workflows: A Developer&apos;s Guide to
+                            Sequential, Parallel, Loop and Custom Agents&quot;.
                             <a
                                 href="https://medium.com/@shins777/adk-workflow-the-core-logic-of-ai-agent-8ce4be5c1c40"
                                 >https://medium.com/@shins777/adk-workflow-the-core-logic-of-ai-agent-8ce4be5c1c40</a
@@ -3190,7 +3190,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref46">
                         <div className="num">46</div>
                         <div className="txt">
-                            Medium, Forusone, "Mastering ADK Workflows"(LoopAgentのコード例).
+                            Medium, Forusone, &quot;Mastering ADK Workflows&quot;(LoopAgentのコード例).
                             <a
                                 href="https://medium.com/@shins777/adk-workflow-the-core-logic-of-ai-agent-8ce4be5c1c40"
                                 >https://medium.com/@shins777/adk-workflow-the-core-logic-of-ai-agent-8ce4be5c1c40</a
@@ -3200,7 +3200,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref47">
                         <div className="num">47</div>
                         <div className="txt">
-                            Google ADK Training Hub, "Workflows &amp; Orchestration".
+                            Google ADK Training Hub, &quot;Workflows &amp; Orchestration&quot;.
                             <a
                                 href="https://raphaelmansuy.github.io/adk_training/docs/workflows-orchestration/"
                                 >https://raphaelmansuy.github.io/adk_training/docs/workflows-orchestration/</a
@@ -3210,14 +3210,14 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref48">
                         <div className="num">48</div>
                         <div className="txt">
-                            adk.dev, "Graph-based agent workflows - Agent Development Kit (ADK)".
+                            adk.dev, &quot;Graph-based agent workflows - Agent Development Kit (ADK)&quot;.
                             <a href="https://adk.dev/graphs/">https://adk.dev/graphs/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref49">
                         <div className="num">49</div>
                         <div className="txt">
-                            Google Codelabs, "Build Multi-Agent Systems with ADK".
+                            Google Codelabs, &quot;Build Multi-Agent Systems with ADK&quot;.
                             <a
                                 href="https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk"
                                 >https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk</a
@@ -3227,7 +3227,7 @@ export default function Section3Guide() {
                     <div className="ref-card" id="ref50">
                         <div className="num">50</div>
                         <div className="txt">
-                            adk.dev, "Graph-based agent workflows"(動的ワークフローに関する記述).
+                            adk.dev, &quot;Graph-based agent workflows&quot;(動的ワークフローに関する記述).
                             <a href="https://adk.dev/graphs/">https://adk.dev/graphs/</a>
                         </div>
                     </div>
