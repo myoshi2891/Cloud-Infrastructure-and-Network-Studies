@@ -67,10 +67,10 @@ describe('Google Cloud Professional Agentic Architect 認定試験 技術ガイ�
         const container = renderPage();
         const tables = container.querySelectorAll('table');
         expect(tables).toHaveLength(8);
-        tables.forEach((table) => {
+        tables.forEach((table, index) => {
             expect(table.querySelector('thead')).not.toBeNull();
             const colThs = table.querySelectorAll('thead th[scope="col"]');
-            expect(colThs.length).toBeGreaterThan(0);
+            expect(colThs.length).toBe(inventory.structures.tableColumnHeaders[index]);
         });
     });
 
