@@ -1,6 +1,6 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-08-15
+最終更新日: 2026-09-25
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
