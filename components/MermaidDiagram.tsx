@@ -81,6 +81,21 @@ export const LIGHT_THEME_DIRECTIVE = `%%{init: {
   }
 }}%%`;
 
+/** Mermaid の extractFrontMatter と同じ判定（frontmatter はチャート先頭でのみ有効） */
+const FRONTMATTER_PATTERN = /^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s;
+
+/**
+ * ライトテーマ用ディレクティブをチャートへ注入する。
+ * - YAML frontmatter は先頭に残し、その直後へ挿入する（前に置くと frontmatter として解釈されない）
+ * - 既存の %%{init:} は残したまま前置する。Mermaid は複数 init を出現順にマージするため、作者指定が後勝ちで優先される
+ */
+export function applyLightThemeDirective(chart: string): string {
+    const body = chart.trimStart();
+    const frontmatter = body.match(FRONTMATTER_PATTERN)?.[0];
+    if (!frontmatter) return `${LIGHT_THEME_DIRECTIVE}\n${chart}`;
+    return `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body.slice(frontmatter.length)}`;
+}
+
 if (typeof window !== 'undefined') {
     // 設定値は正本である Gcp-ace-complete-advanced-guide.html の表示を再現するもの。
     // DIAGRAMS は静的・作者管理の定数のみ（外部入力なし）のため securityLevel: 'loose' で問題ない。
@@ -255,10 +270,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
                 }
                 if (cancelled) return;
                 const id = `mermaid-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`;
-                const chartToRender =
-                    theme === 'light' && !chart.trim().startsWith('%%{init:')
-                        ? `${LIGHT_THEME_DIRECTIVE}\n${chart}`
-                        : chart;
+                const chartToRender = theme === 'light' ? applyLightThemeDirective(chart) : chart;
                 const { svg } = await mermaid.render(id, chartToRender);
                 if (cancelled) return;
                 setSvgStr(svg);

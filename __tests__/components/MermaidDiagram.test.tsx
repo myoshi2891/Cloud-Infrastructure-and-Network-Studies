@@ -2,7 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { MermaidDiagram, applySvgFixups } from '@/components/MermaidDiagram';
+import {
+    LIGHT_THEME_DIRECTIVE,
+    MermaidDiagram,
+    applyLightThemeDirective,
+    applySvgFixups,
+} from '@/components/MermaidDiagram';
 
 const mermaidStyles = readFileSync(
     join(process.cwd(), 'components/MermaidDiagram.module.css'),
@@ -284,6 +289,39 @@ describe('MermaidDiagram', () => {
                 svgProto.getBBox = originalGetBBox;
                 vi.restoreAllMocks();
             }
+        });
+
+        describe('applyLightThemeDirective — 前置きの扱い', () => {
+            it('前置きのないチャートにはライトテーマディレクティブを先頭に付与すること', () => {
+                const chart = 'flowchart LR\n  A --> B';
+                expect(applyLightThemeDirective(chart)).toBe(`${LIGHT_THEME_DIRECTIVE}\n${chart}`);
+            });
+
+            it('YAML frontmatter はチャート先頭に残し、その直後にディレクティブを挿入すること', () => {
+                const frontmatter = '---\ntitle: サンプル\n---\n';
+                const body = 'flowchart LR\n  A --> B';
+                const result = applyLightThemeDirective(`${frontmatter}${body}`);
+
+                expect(result.startsWith(frontmatter)).toBe(true);
+                expect(result).toBe(`${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body}`);
+            });
+
+            it('既存の %%{init:} がある場合もライト設定を前置し、作者の init が後勝ちで上書きできること', () => {
+                const chart = "%%{init: {'flowchart': {'curve': 'linear'}}}%%\nflowchart LR\n  A --> B";
+                const result = applyLightThemeDirective(chart);
+
+                // Mermaid は複数 init を出現順にマージするため、作者側を後ろに置く
+                expect(result).toBe(`${LIGHT_THEME_DIRECTIVE}\n${chart}`);
+                expect(result.indexOf("'theme': 'base'")).toBeLessThan(result.indexOf("'curve': 'linear'"));
+            });
+
+            it('frontmatter と既存 init が併存する場合も frontmatter を先頭に保つこと', () => {
+                const frontmatter = '---\ntitle: x\n---\n';
+                const body = "%%{init: {'theme': 'dark'}}%%\nflowchart LR\n  A --> B";
+                expect(applyLightThemeDirective(`${frontmatter}${body}`)).toBe(
+                    `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body}`,
+                );
+            });
         });
 
         it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストおよびシーケンス図アクター・altタブラベル装飾が定義されていること', () => {
