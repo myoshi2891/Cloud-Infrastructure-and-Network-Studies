@@ -577,7 +577,11 @@
     background: var(--bg-card-2) !important;
     cursor: pointer !important;
     position: relative !important;
-    outline: none !important;
+}
+
+.agentic-section3-page .checklist-card input[type='checkbox']:focus-visible {
+    outline: 2px solid var(--accent) !important;
+    outline-offset: 2px !important;
 }
 
 .agentic-section3-page .checklist-card input[type='checkbox']:checked {

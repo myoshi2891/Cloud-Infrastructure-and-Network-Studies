@@ -93,6 +93,29 @@ describe('Professional Agentic Architect Section 3 — 詳細仕様検証', () =
         expect(pageCss).toMatch(/list-style-type:\s*decimal\s*!important/);
     });
 
+    it('チェックリストのチェックボックスはキーボードフォーカスが可視であること', async () => {
+        const { readFileSync } = await import('node:fs');
+        const { join } = await import('node:path');
+        const pageCss = readFileSync(
+            join(
+                process.cwd(),
+                'app/gcl/professional-agentic-architect/section3/page.css',
+            ),
+            'utf8',
+        );
+        const baseRule = pageCss.match(
+            /\.checklist-card input\[type='checkbox'\]\s*\{[^}]*\}/,
+        )?.[0] ?? '';
+
+        // 基底ルールで outline を無条件に消さない
+        expect(baseRule).not.toBe('');
+        expect(baseRule).not.toMatch(/outline:\s*none/);
+        // :focus-visible で可視のフォーカスリングを描く
+        expect(pageCss).toMatch(
+            /\.checklist-card input\[type='checkbox'\]:focus-visible\s*\{[^}]*outline:\s*2px solid var\(--accent\)/,
+        );
+    });
+
     it('DIAGRAMS 内の全15図が構文エラーなく parse できること', async () => {
         const { DIAGRAMS } = await import(
             '@/app/gcl/professional-agentic-architect/section3/constants'
