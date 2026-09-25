@@ -404,7 +404,7 @@ const ALL_EXAMS: Exam[] = [
             },
             {
                 label: 'Section 3: カスタムエージェントの開発',
-                href: '/gcl/professional-agentic-architect#セクション3-カスタムエージェントの開発配点-約33',
+                href: '/gcl/professional-agentic-architect/section3',
                 pct: '約33%',
             },
             {
