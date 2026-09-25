@@ -103,8 +103,7 @@ describe('Professional Agentic Architect Section 1 — 詳細仕様検証', () =
 
         expect(Object.keys(DIAGRAMS)).toHaveLength(7);
         for (const [id, chart] of Object.entries(DIAGRAMS)) {
-            const cleanChart = chart.replace(/<br\s*\/?>/gi, '\n');
-            const result = await mermaid.parse(cleanChart, {
+            const result = await mermaid.parse(chart, {
                 suppressErrors: true,
             });
             expect(
