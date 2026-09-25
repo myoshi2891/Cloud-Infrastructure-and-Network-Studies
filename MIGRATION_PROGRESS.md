@@ -2,6 +2,38 @@
 
 (最終更新日: 2026-09-25)
 
+## 2026-09-25: Google Cloud Professional Agentic Architect Section 3: プログラミングフレームワークを使用したエージェントの作成 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-section3.html`（および `Professional-agentic-architect-section3.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section3Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section3` ルートへ移行。見出し(h1:1, h2:8, h3:10, h4:2)、全16個のテーブル、全15個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(105件)、全コードブロック(6件・構文ハイライト付き)、全外部リンク(50件)・全本文(108件)・学習チェックリスト(16件)・参考文献カード(50件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect-section3` (`12f055e5`)
+- [x] **Step 1 (Red)**: `test: add failing tests for professional-agentic-architect-section3` (`d781dfc9`)
+- [x] **Step 2 (Green)**:
+  - `feat(gcl): add Section 3 guide constants, navbar, and styles` (`154c213a`)
+  - `feat(gcl): implement section3 guide page to pass migration tests` (`1cb0d542`)
+  - `style(gcl): polish checklist and code block styles in section3` (`55687d7f`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(gcl): integrate professional-agentic-architect-section3 into routing and update docs` (`08e0e5e6`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive professional-agentic-architect-section3 sources`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/section3/page.tsx](app/gcl/professional-agentic-architect/section3/page.tsx)
+- [app/gcl/professional-agentic-architect/section3/Section3Guide.tsx](app/gcl/professional-agentic-architect/section3/Section3Guide.tsx)
+- [app/gcl/professional-agentic-architect/section3/NavBar.tsx](app/gcl/professional-agentic-architect/section3/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/section3/constants.ts](app/gcl/professional-agentic-architect/section3/constants.ts)
+- [app/gcl/professional-agentic-architect/section3/page.css](app/gcl/professional-agentic-architect/section3/page.css)
+- [`__tests__/gcl/professional-agentic-architect/section3/page.test.tsx`](__tests__/gcl/professional-agentic-architect/section3/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/section3/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/section3/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect-section3.json](docs/migration-inventory/professional-agentic-architect-section3.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section3.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section3.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section3.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section3.md)
+
+---
+
 ## 2026-09-25: Google Cloud Professional Agentic Architect Section 2: コーディングエージェントを使用したアプリケーション開発 100%全量移行 (完了)
 
 ### 目的
