@@ -166,15 +166,17 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     subgraph AgentMode["Agent Mode"]
         Coding["コーディングエージェント<br/>(Gemini CLI / Claude Code / Codex / Antigravity)"]
         Skills["バンドルされたスキル<br/>(workflow / adk-code / scaffold / eval / deploy / publish / observability)"]
-        Coding --> Skills --> CLI
+        Coding --> Skills
     end
 
     subgraph HumanMode["Human Mode"]
         Dev["開発者"]
         Terminal["ターミナル / スクリプト"]
-        Dev --> Terminal --> CLI
+        Dev --> Terminal
     end
 
+    Skills --> CLI
+    Terminal --> CLI
     CLI --> Runtime["Agent Runtime / Cloud Run / GKE へデプロイ"]
 
     style AgentMode fill:#dbeafe,stroke:#2563eb,color:#0f172a
