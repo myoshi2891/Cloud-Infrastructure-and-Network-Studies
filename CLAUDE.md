@@ -388,6 +388,30 @@ app/
         NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
         constants.ts                # Mermaid 図定義 (15図)
         page.css                    # ページ固有スタイル
+    professional-agentic-architect/
+      page.tsx                      # Professional Agentic Architect 認定試験 技術ガイド (Server)
+      ProfessionalAgenticArchitectGuide.tsx # 本文＋インタラクション (Client。全10セクション、21 Mermaid図、8テーブル等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # Mermaid 図定義 (21図)
+      page.css                      # ページ固有スタイル
+      section1/
+        page.tsx                    # Section 1: ローコードツールでのエージェント構築 (Server)
+        Section1Guide.tsx           # 本文＋インタラクション (Client。全7 Mermaid図、11テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (7図)
+        page.css                    # ページ固有スタイル
+      section2/
+        page.tsx                    # Section 2: コーディングエージェント開発 (Server)
+        Section2Guide.tsx           # 本文＋インタラクション (Client。全7 Mermaid図、6テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (7図)
+        page.css                    # ページ固有スタイル
+      section3/
+        page.tsx                    # Section 3: カスタムエージェントの開発 (Server)
+        Section3Guide.tsx           # 本文＋インタラクション (Client。全15 Mermaid図、16テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (15図)
+        page.css                    # ページ固有スタイル
   cisco/
     devnet-professional/
       page.tsx                      # Cisco Certified DevNet Professional 認定 徹底解説ガイド（Server）

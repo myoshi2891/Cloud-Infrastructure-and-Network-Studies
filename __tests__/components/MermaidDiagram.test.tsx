@@ -2,7 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { MermaidDiagram, applySvgFixups } from '@/components/MermaidDiagram';
+import {
+    LIGHT_THEME_DIRECTIVE,
+    MermaidDiagram,
+    applyLightThemeDirective,
+    applySvgFixups,
+} from '@/components/MermaidDiagram';
 
 const mermaidStyles = readFileSync(
     join(process.cwd(), 'components/MermaidDiagram.module.css'),
@@ -227,4 +232,110 @@ describe('MermaidDiagram', () => {
             vi.restoreAllMocks();
         }
     });
+
+    describe('ライトテーマ (theme="light") サポート契約', () => {
+        it('theme="light" 指定時に data-theme="light" が設定され、フォールバック時もライトテーマ属性を保持すること', () => {
+            const { container } = render(
+                <MermaidDiagram
+                    chart={sampleChart}
+                    ariaLabel="ライトテーマ図"
+                    theme="light"
+                />
+            );
+            const wrapper = container.firstChild as HTMLElement;
+            expect(wrapper.getAttribute('data-theme')).toBe('light');
+        });
+
+        it('theme="light" 指定時、mermaid.render に渡されるチャートに原本HTML準拠のライトテーマ設定ディレクティブが注入されること', async () => {
+            const svgProto = window.SVGElement.prototype as any;
+            const originalGetBBox = svgProto.getBBox;
+            svgProto.getBBox = vi.fn();
+
+            try {
+                const mermaid = await import('mermaid');
+                const renderSpy = vi.spyOn(mermaid.default, 'render').mockResolvedValue({
+                    svg: '<svg>Mocked SVG</svg>',
+                    diagramType: 'flowchart',
+                    bindFunctions: () => {},
+                } as any);
+
+                render(
+                    <MermaidDiagram
+                        chart={sampleChart}
+                        ariaLabel="ライトテーマ図"
+                        theme="light"
+                    />
+                );
+
+                await waitFor(() => {
+                    expect(renderSpy).toHaveBeenCalled();
+                });
+
+                const calledChart = renderSpy.mock.calls[0]?.[1] ?? '';
+                expect(calledChart).toContain("%%{init:");
+                expect(calledChart).toContain("'theme': 'base'");
+                expect(calledChart).toContain("'primaryColor': '#eaf1ff'");
+                expect(calledChart).toContain("'primaryTextColor': '#16233a'");
+                expect(calledChart).toContain("'primaryBorderColor': '#1a56db'");
+                expect(calledChart).toContain("'clusterBkg': '#f5f8fc'");
+                expect(calledChart).toContain("'pie1': '#1a56db'");
+                expect(calledChart).toContain("'actorBkg': '#eaf1ff'");
+                expect(calledChart).toContain("'actorBorder': '#1a56db'");
+                expect(calledChart).toContain("'actorTextColor': '#16233a'");
+                expect(calledChart).toContain("'labelBoxBkgColor': '#ffffff'");
+                expect(calledChart).toContain("'labelBoxBorderColor': '#1a56db'");
+                expect(calledChart).toContain("'labelTextColor': '#1a56db'");
+            } finally {
+                svgProto.getBBox = originalGetBBox;
+                vi.restoreAllMocks();
+            }
+        });
+
+        describe('applyLightThemeDirective — 前置きの扱い', () => {
+            it('前置きのないチャートにはライトテーマディレクティブを先頭に付与すること', () => {
+                const chart = 'flowchart LR\n  A --> B';
+                expect(applyLightThemeDirective(chart)).toBe(`${LIGHT_THEME_DIRECTIVE}\n${chart}`);
+            });
+
+            it('YAML frontmatter はチャート先頭に残し、その直後にディレクティブを挿入すること', () => {
+                const frontmatter = '---\ntitle: サンプル\n---\n';
+                const body = 'flowchart LR\n  A --> B';
+                const result = applyLightThemeDirective(`${frontmatter}${body}`);
+
+                expect(result.startsWith(frontmatter)).toBe(true);
+                expect(result).toBe(`${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body}`);
+            });
+
+            it('既存の %%{init:} がある場合もライト設定を前置し、作者の init が後勝ちで上書きできること', () => {
+                const chart = "%%{init: {'flowchart': {'curve': 'linear'}}}%%\nflowchart LR\n  A --> B";
+                const result = applyLightThemeDirective(chart);
+
+                // Mermaid は複数 init を出現順にマージするため、作者側を後ろに置く
+                expect(result).toBe(`${LIGHT_THEME_DIRECTIVE}\n${chart}`);
+                expect(result.indexOf("'theme': 'base'")).toBeLessThan(result.indexOf("'curve': 'linear'"));
+            });
+
+            it('frontmatter と既存 init が併存する場合も frontmatter を先頭に保つこと', () => {
+                const frontmatter = '---\ntitle: x\n---\n';
+                const body = "%%{init: {'theme': 'dark'}}%%\nflowchart LR\n  A --> B";
+                expect(applyLightThemeDirective(`${frontmatter}${body}`)).toBe(
+                    `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body}`,
+                );
+            });
+        });
+
+        it('MermaidDiagram.module.css に .lightWrapper の白背景・カード枠線・シャドウ・濃紺テキストおよびシーケンス図アクター・altタブラベル装飾が定義されていること', () => {
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*background:\s*#ffffff;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border:\s*1px solid #d7e0ee;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper[^{]*\{[^}]*border-radius:\s*14px;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.node\s+\.nodeLabel\)[^{]*\{[^}]*color:\s*#16233a\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\(\.cluster-label\s+text\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:rect\.actor|\.actor\s+rect)\)[^{]*\{[^}]*fill:\s*#eaf1ff\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\((?:text\.actor|\.actor\s+text)\)[^{]*\{[^}]*fill:\s*#16233a\s*!important;/s);
+            // シーケンス図 alt/loop タブの polygon.labelBox / .labelBox と .labelText
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\([^)]*polygon\.labelBox[^)]*\)[^{]*\{[^}]*fill:\s*#ffffff\s*!important;/s);
+            expect(mermaidStyles).toMatch(/\.lightWrapper\s+\.mermaidTarget\s+:global\([^)]*\.labelText[^)]*\)[^{]*\{[^}]*fill:\s*#1a56db\s*!important;/s);
+        });
+    });
 });
+

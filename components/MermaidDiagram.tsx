@@ -14,6 +14,86 @@ export interface MermaidDiagramProps {
     className?: string;
     /** SVGをviewBoxの自然倍率で表示し、文字の描画サイズを維持する */
     preserveNaturalScale?: boolean;
+    /** テーマ（'dark' | 'light'、デフォルト: 'dark'） */
+    theme?: 'dark' | 'light';
+}
+
+/**
+ * 原本HTML (Professional-agentic-architect-guide.html) に完全準拠したライトテーマ設定。
+ * Mermaid 11 の %%{init: ...}%% ディレクティブとして DSL 先頭に注入される。
+ */
+export const LIGHT_THEME_DIRECTIVE = `%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontSize': '16px',
+    'background': '#ffffff',
+    'mainBkg': '#eaf1ff',
+    'nodeBkg': '#eaf1ff',
+    'nodeBorder': '#1a56db',
+    'primaryColor': '#eaf1ff',
+    'primaryTextColor': '#16233a',
+    'primaryBorderColor': '#1a56db',
+    'lineColor': '#5b6b85',
+    'secondaryColor': '#eef2f9',
+    'tertiaryColor': '#eef2f9',
+    'edgeLabelBackground': '#ffffff',
+    'clusterBkg': '#f5f8fc',
+    'clusterBorder': '#c7d3e8',
+    'nodeTextColor': '#16233a',
+    'titleColor': '#16233a',
+    'stateBkg': '#eaf1ff',
+    'stateLabelColor': '#16233a',
+    'altBackground': '#eaf1ff',
+    'actorBkg': '#eaf1ff',
+    'actorBorder': '#1a56db',
+    'actorTextColor': '#16233a',
+    'actorLineColor': '#5b6b85',
+    'signalColor': '#16233a',
+    'signalTextColor': '#16233a',
+    'labelBoxBkgColor': '#ffffff',
+    'labelBoxBorderColor': '#1a56db',
+    'labelTextColor': '#1a56db',
+    'loopTextColor': '#16233a',
+    'activationBorderColor': '#1a56db',
+    'activationBkgColor': '#eaf1ff',
+    'sequenceNumberColor': '#16233a',
+    'pie1': '#1a56db',
+    'pie2': '#157a43',
+    'pie3': '#92400e',
+    'pie4': '#b91c3c',
+    'pie5': '#6b46c1',
+    'pie6': '#0f766e',
+    'pieOpacity': 1,
+    'pieStrokeColor': '#ffffff',
+    'pieOuterStrokeColor': '#ffffff',
+    'pieSectionTextColor': '#ffffff',
+    'pieLegendTextColor': '#16233a',
+    'pieTitleTextColor': '#16233a',
+    'pieTitleTextSize': '18px'
+  },
+  'flowchart': {
+    'useMaxWidth': false,
+    'htmlLabels': true,
+    'subGraphTitleMargin': { 'top': 12, 'bottom': 18 },
+    'nodeSpacing': 70,
+    'rankSpacing': 60,
+    'curve': 'basis'
+  }
+}}%%`;
+
+/** Mermaid の extractFrontMatter と同じ判定（frontmatter はチャート先頭でのみ有効） */
+const FRONTMATTER_PATTERN = /^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s;
+
+/**
+ * ライトテーマ用ディレクティブをチャートへ注入する。
+ * - YAML frontmatter は先頭に残し、その直後へ挿入する（前に置くと frontmatter として解釈されない）
+ * - 既存の %%{init:} は残したまま前置する。Mermaid は複数 init を出現順にマージするため、作者指定が後勝ちで優先される
+ */
+export function applyLightThemeDirective(chart: string): string {
+    const body = chart.trimStart();
+    const frontmatter = body.match(FRONTMATTER_PATTERN)?.[0];
+    if (!frontmatter) return `${LIGHT_THEME_DIRECTIVE}\n${chart}`;
+    return `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body.slice(frontmatter.length)}`;
 }
 
 if (typeof window !== 'undefined') {
@@ -96,6 +176,7 @@ const toCodeLines = (text: string): { line: string; key: string }[] => {
  *
  * @param svgEl 注入済みの SVG 要素
  * @param chart 元の DSL（図種別の判定に使用）
+ * @param preserveNaturalScale 自然倍率維持フラグ
  */
 export const applySvgFixups = (
     svgEl: SVGSVGElement,
@@ -156,6 +237,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     ariaLabel,
     className,
     preserveNaturalScale = false,
+    theme = 'dark',
 }) => {
     const reactId = useId();
     const [isMounted, setIsMounted] = useState(false);
@@ -188,7 +270,8 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
                 }
                 if (cancelled) return;
                 const id = `mermaid-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`;
-                const { svg } = await mermaid.render(id, chart);
+                const chartToRender = theme === 'light' ? applyLightThemeDirective(chart) : chart;
+                const { svg } = await mermaid.render(id, chartToRender);
                 if (cancelled) return;
                 setSvgStr(svg);
                 setRendered(true);
@@ -203,7 +286,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
         return () => {
             cancelled = true;
         };
-    }, [chart, reactId, isMounted]);
+    }, [chart, reactId, isMounted, theme]);
 
     // SVG 注入後（svgStr 反映後）に、実 DOM の SVG へ下部見切れ対策を適用する
     useEffect(() => {
@@ -219,10 +302,15 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
 
     return (
         <div
-            className={cn(styles.mermaidWrapper, className)}
+            className={cn(
+                styles.mermaidWrapper,
+                theme === 'light' && styles.lightWrapper,
+                className
+            )}
             role="img"
             aria-label={ariaLabel}
             aria-roledescription="diagram"
+            data-theme={theme}
         >
             {isMounted && rendered && !error && (
                 <div
@@ -254,3 +342,4 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
 });
 
 MermaidDiagram.displayName = 'MermaidDiagram';
+

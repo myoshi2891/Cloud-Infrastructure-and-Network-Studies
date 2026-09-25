@@ -210,3 +210,102 @@
     color: #000000 !important;
     fill: #000000 !important;
 }
+
+/* ── ライトテーマ (theme="light") 対応 ──────────────────────────────────────────
+   原本HTMLの pre.mermaid デザイン（白背景、境界線、角丸、淡いシャドウ）を再現。
+   暗色モードのノード白文字強制（#ffffff !important）を解除し、原本通りの濃紺（#16233a）を適用する。 */
+.lightWrapper {
+    background: #ffffff;
+    border: 1px solid #d7e0ee;
+    border-radius: 14px;
+    padding: 28px 20px;
+    margin: 0 0 30px;
+    box-shadow: 0 1px 2px rgba(20, 40, 80, 0.04);
+}
+
+.lightWrapper .mermaidTarget :global(.node .nodeLabel),
+.lightWrapper .mermaidTarget :global(.node .nodeLabel *),
+.lightWrapper .mermaidTarget :global(.stateLabel text),
+.lightWrapper .mermaidTarget :global(.stateLabel span),
+.lightWrapper .mermaidTarget :global(.statediagram-state text),
+.lightWrapper .mermaidTarget :global(text.state-title),
+.lightWrapper .mermaidTarget :global(.cluster-label text),
+.lightWrapper .mermaidTarget :global(.cluster-label span) {
+    color: #16233a !important;
+    fill: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(.node rect),
+.lightWrapper .mermaidTarget :global(.node polygon),
+.lightWrapper .mermaidTarget :global(.statediagram-state rect) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(rect.actor),
+.lightWrapper .mermaidTarget :global(.actor rect) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(text.actor),
+.lightWrapper .mermaidTarget :global(.actor text),
+.lightWrapper .mermaidTarget :global(.actor tspan) {
+    fill: #16233a !important;
+    color: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(rect[class*="activation"]) {
+    fill: #eaf1ff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(polygon.labelBox),
+.lightWrapper .mermaidTarget :global(rect.labelBox),
+.lightWrapper .mermaidTarget :global(.labelBox) {
+    fill: #ffffff !important;
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(text.labelText),
+.lightWrapper .mermaidTarget :global(text.labelText tspan),
+.lightWrapper .mermaidTarget :global(.labelText),
+.lightWrapper .mermaidTarget :global(.labelText tspan) {
+    fill: #1a56db !important;
+    color: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(.loopLine) {
+    stroke: #1a56db !important;
+}
+
+.lightWrapper .mermaidTarget :global(text.loopText),
+.lightWrapper .mermaidTarget :global(text.loopText tspan),
+.lightWrapper .mermaidTarget :global(.loopText),
+.lightWrapper .mermaidTarget :global(.loopText tspan),
+.lightWrapper .mermaidTarget :global(text.messageText),
+.lightWrapper .mermaidTarget :global(text.messageText tspan) {
+    fill: #16233a !important;
+    color: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(.edgeLabel) {
+    background-color: #ffffff !important;
+    color: #16233a !important;
+}
+
+.lightWrapper .mermaidTarget :global(.edgeLabel text),
+.lightWrapper .mermaidTarget :global(.edgeLabel span) {
+    color: #16233a !important;
+    fill: #16233a !important;
+}
+
+/* 円グラフのタイトル（ライトテーマ用: 視認性を確保する濃紺太字） */
+.lightWrapper .mermaidTarget :global(text.pieTitleText),
+.lightWrapper .mermaidTarget :global(.pieTitleText) {
+    color: #16233a !important;
+    fill: #16233a !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+}
+
