@@ -61,7 +61,16 @@ bun run test __tests__/gcl/foo/bar.test.tsx  # 特定ファイル
 
 ```bash
 # ✅ 正しい書き方 — 通常終了・Ctrl-C・TERM で子プロセスを停止する
-cleanup() { kill $(jobs -p) 2>/dev/null; wait; }
+# jobs -p はジョブリーダー PID のみを返しパイプラインメンバーを見落とす。
+# 各ジョブのプロセスグループ (pgid) ごと kill することで全メンバーを確実に終了する。
+cleanup() {
+  local pid pgid
+  for pid in $(jobs -p); do
+    pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ')
+    [ -n "$pgid" ] && kill -- "-$pgid" 2>/dev/null
+  done
+  wait
+}
 trap cleanup EXIT
 trap 'cleanup; exit 130' INT   # ハンドラ後に必ず exit（しないとスクリプトが続行する）
 trap 'cleanup; exit 143' TERM
