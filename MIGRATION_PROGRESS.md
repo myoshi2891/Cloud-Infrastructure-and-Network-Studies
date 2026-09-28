@@ -1,6 +1,37 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-25)
+(最終更新日: 2026-09-28)
+
+## 2026-09-28: Google Cloud Professional Agentic Architect Section 4: 評価とデプロイ 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-section4.html`（および `Professional-agentic-architect-section4.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section4Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section4` ルートへ移行。見出し(h1:1, h2:8, h3:10, h4:3)、全12個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(64件)、全コードブロック(4件・構文ハイライト付き)、全外部リンク(22件)・全本文(60件)・学習チェックリスト(17件)・参考文献カード(22件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect-section4` (`77c89f7b`)
+- [x] **Step 1 (Red)**: `test(gcl): add failing tests for professional-agentic-architect-section4` (`396afc59`)
+- [x] **Step 2 (Green)**:
+  - `feat(gcl): add Section 4 guide constants, navbar, and styles` (`2d2794d8`)
+  - `feat(gcl): implement section4 guide page to pass migration tests` (`1436a6be`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(gcl): integrate professional-agentic-architect-section4 into routing and update docs` (`a2a9fa1d`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive professional-agentic-architect-section4 sources`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/section4/page.tsx](app/gcl/professional-agentic-architect/section4/page.tsx)
+- [app/gcl/professional-agentic-architect/section4/Section4Guide.tsx](app/gcl/professional-agentic-architect/section4/Section4Guide.tsx)
+- [app/gcl/professional-agentic-architect/section4/NavBar.tsx](app/gcl/professional-agentic-architect/section4/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/section4/constants.ts](app/gcl/professional-agentic-architect/section4/constants.ts)
+- [app/gcl/professional-agentic-architect/section4/page.css](app/gcl/professional-agentic-architect/section4/page.css)
+- [`__tests__/gcl/professional-agentic-architect/section4/page.test.tsx`](__tests__/gcl/professional-agentic-architect/section4/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/section4/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/section4/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect-section4.json](docs/migration-inventory/professional-agentic-architect-section4.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.md)
+
+---
 
 ## 2026-09-25: Google Cloud Professional Agentic Architect Section 3: プログラミングフレームワークを使用したエージェントの作成 100%全量移行 (完了)
 
