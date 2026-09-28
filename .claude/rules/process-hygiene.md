@@ -61,13 +61,19 @@ bun run test __tests__/gcl/foo/bar.test.tsx  # 特定ファイル
 
 ```bash
 # ✅ 正しい書き方 — 通常終了・Ctrl-C・TERM で子プロセスを停止する
-# jobs -p はジョブリーダー PID のみを返しパイプラインメンバーを見落とす。
-# 各ジョブのプロセスグループ (pgid) ごと kill することで全メンバーを確実に終了する。
+# jobs -p はジョブリーダー PID のみを返しパイプラインメンバーを見落とす場合がある。
+# スクリプト自身や呼び出し元のプロセスグループへの誤爆を防ぐため、自 pgid と一致しない
+# （独立グループに分離された）場合のみグループ宛てに kill し、同一の場合は追跡 PID のみを終了する。
 cleanup() {
-  local pid pgid
+  local pid pgid self_pgid
+  self_pgid=$(ps -o pgid= -p $$ 2>/dev/null | tr -d ' ')
   for pid in $(jobs -p); do
     pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ')
-    [ -n "$pgid" ] && kill -- "-$pgid" 2>/dev/null
+    if [ -n "$pgid" ] && [ "$pgid" != "$self_pgid" ]; then
+      kill -- "-$pgid" 2>/dev/null
+    else
+      kill "$pid" 2>/dev/null
+    fi
   done
   wait
 }
