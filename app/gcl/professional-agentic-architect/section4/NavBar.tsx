@@ -137,9 +137,9 @@ export function NavBar() {
                 aria-label="セクションナビゲーション"
             >
                 <div className="sidebar-header">
-                    <div className="kicker">Google Cloud Agentic Architect</div>
+                    <div className="kicker">Google Cloud Agentic Architect</div>{' '}
                     <h2>Section 4: 評価とデプロイ</h2>
-                </div>
+                </div>{' '}
                 <nav id="sidebarNav" aria-label="ページ内目次">
                     {NAV_ITEMS.map((item) => (
                         <span key={item.id}>
@@ -149,7 +149,7 @@ export function NavBar() {
                                 onClick={() => handleLinkClick(item.id)}
                             >
                                 {item.label}
-                            </a>
+                            </a>{' '}
                         </span>
                     ))}
                 </nav>
