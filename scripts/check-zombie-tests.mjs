@@ -5,9 +5,9 @@
  * ゾンビ（孤立・暴走）プロセスを検出し、警告する診断スクリプト。
  *
  * 検出対象:
- *   1. `bun test __tests__/` パターンのプロセス（Vitest 未経由の誤実行）
+ *   1. `bun test` を直接実行したプロセス（Vitest 未経由の誤実行。`bun run test:md-to-html` 配下は除外）
  *   2. CPU 時間が 60 分超の `bun` / `node` プロセス（長時間ハング候補）
- *   3. `while true` を含む zsh/bash プロセス（ストレステスト残骸候補）
+ *   3. `while true` を含む zsh/bash プロセスのうち、親から切り離されたもの（ストレステスト残骸候補）
  *
  * 使用方法:
  *   bun run test:check-zombies
@@ -23,19 +23,20 @@ const RESET = '\x1b[0m';
 
 /**
  * ps コマンドで全プロセス情報を取得する。
- * @returns {{ pid: string, pcpu: string, cputimeSeconds: number, args: string }[]}
+ * @returns {{ pid: string, ppid: string, pcpu: string, cputimeSeconds: number, args: string }[]}
  */
 function getAllProcesses() {
   try {
-    const raw = execSync('ps -eo pid,pcpu,cputime,args', { encoding: 'utf8' });
+    const raw = execSync('ps -eo pid,ppid,pcpu,cputime,args', { encoding: 'utf8' });
     const lines = raw.trim().split('\n').slice(1); // ヘッダ除去
     return lines.map((line) => {
       const cols = line.trim().split(/\s+/);
       const pid = cols[0] ?? '';
-      const pcpu = cols[1] ?? '0';
-      const cputime = cols[2] ?? '00:00:00';
-      const args = cols.slice(3).join(' ');
-      return { pid, pcpu, cputimeSeconds: parseCputime(cputime), args };
+      const ppid = cols[1] ?? '';
+      const pcpu = cols[2] ?? '0';
+      const cputime = cols[3] ?? '00:00:00';
+      const args = cols.slice(4).join(' ');
+      return { pid, ppid, pcpu, cputimeSeconds: parseCputime(cputime), args };
     });
   } catch {
     console.error(`${RED}ERROR: ps コマンドが実行できませんでした。macOS 環境で実行してください。${RESET}`);
@@ -75,21 +76,62 @@ function formatSeconds(seconds) {
   return `${s}秒`;
 }
 
+/**
+ * コマンドラインを「実行ファイルの basename + 残りの引数」に分解する。
+ * @param {string} args
+ * @returns {{ executable: string, rest: string[] }}
+ */
+function parseCommand(args) {
+  const [first = '', ...rest] = args.trim().split(/\s+/);
+  return { executable: first.split('/').pop() ?? '', rest };
+}
+
 const processes = getAllProcesses();
+const processByPid = new Map(processes.map((p) => [p.pid, p]));
 const issues = [];
 
+/**
+ * 祖先プロセスを親から順に列挙する（循環・欠落で停止）。
+ * @param {{ ppid: string }} p
+ * @returns {{ pid: string, ppid: string, args: string }[]}
+ */
+function getAncestors(p) {
+  const ancestors = [];
+  const visited = new Set();
+  let current = processByPid.get(p.ppid);
+  while (current && !visited.has(current.pid)) {
+    visited.add(current.pid);
+    ancestors.push(current);
+    current = processByPid.get(current.ppid);
+  }
+  return ancestors;
+}
+
+/**
+ * 正規ラッパー `bun run test:md-to-html` そのものか（完全一致）。
+ * @param {string} args
+ * @returns {boolean}
+ */
+function isMdToHtmlWrapper(args) {
+  const { executable, rest } = parseCommand(args);
+  return executable === 'bun' && rest.length === 2 && rest[0] === 'run' && rest[1] === 'test:md-to-html';
+}
+
 // ─────────────────────────────────────────────
-// 検出 1: `bun test __tests__/` パターン
+// 検出 1: `bun test` の直接実行（引数・パスを問わない）
 // ─────────────────────────────────────────────
-const bunTestMisuse = processes.filter(
-  (p) => /\bbun\b/.test(p.args) && /test\s+[^\s]*__tests__/.test(p.args) && !/run\s+test/.test(p.args),
-);
+const bunTestMisuse = processes.filter((p) => {
+  const { executable, rest } = parseCommand(p.args);
+  if (executable !== 'bun' || rest[0] !== 'test') return false;
+  // `bun run test:md-to-html` 配下で起動されたものだけを許可
+  return !getAncestors(p).some((a) => isMdToHtmlWrapper(a.args));
+});
 for (const p of bunTestMisuse) {
   issues.push({
     severity: 'ERROR',
     pid: p.pid,
     cputimeSeconds: p.cputimeSeconds,
-    reason: '`bun test __tests__/...` (Vitest 未経由の誤実行) — CPU ハングの危険',
+    reason: '`bun test` の直接実行（Vitest 未経由の誤実行）— CPU ハングの危険',
     args: p.args,
   });
 }
@@ -115,20 +157,31 @@ for (const p of longRunning) {
 }
 
 // ─────────────────────────────────────────────
-// 検出 3: `while true` を含む zsh/bash プロセス
+// 検出 3: `while true` を含む zsh/bash プロセス（親から切り離されたもののみ）
 // ─────────────────────────────────────────────
 const SHELL_EXECUTABLES = new Set(['bash', 'zsh']);
+
+/**
+ * 親が生存しており監視下にあるか。孤立プロセスは PID 1（launchd/init）へ付け替えられる。
+ * @param {{ ppid: string }} p
+ * @returns {boolean}
+ */
+function isSupervised(p) {
+  return p.ppid !== '1' && p.ppid !== '0' && processByPid.has(p.ppid);
+}
+
 const whileTrue = processes.filter((p) => {
   // 実行ファイル名は先頭トークンの basename で判定（`/bin/bash` も許可）
-  const executable = (p.args.split(/\s+/)[0] ?? '').split('/').pop() ?? '';
-  return SHELL_EXECUTABLES.has(executable) && /while\s+true/.test(p.args);
+  const { executable } = parseCommand(p.args);
+  return SHELL_EXECUTABLES.has(executable) && /while\s+true/.test(p.args) && !isSupervised(p);
 });
 for (const p of whileTrue) {
+  // 孤立の断定はできないため候補（WARN）として報告し、単独では非ゼロ終了させない
   issues.push({
-    severity: 'ERROR',
+    severity: 'WARN',
     pid: p.pid,
     cputimeSeconds: p.cputimeSeconds,
-    reason: `ストレステスト残骸の疑い（while true ループ — CPU 時間: ${formatSeconds(p.cputimeSeconds)}）`,
+    reason: `ストレステスト残骸の候補（親から切り離された while true ループ — CPU 時間: ${formatSeconds(p.cputimeSeconds)}）`,
     args: p.args.slice(0, 120) + (p.args.length > 120 ? '...' : ''),
   });
 }
@@ -150,13 +203,18 @@ for (const issue of issues) {
   console.log(`${color}${BOLD}[${issue.severity}]${RESET} ${color}${icon} PID ${issue.pid}${RESET}`);
   console.log(`  理由   : ${issue.reason}`);
   console.log(`  コマンド: ${issue.args.slice(0, 160)}${issue.args.length > 160 ? '...' : ''}`);
-  console.log(`  対処   : kill -9 ${issue.pid}`);
+  if (issue.severity === 'ERROR') {
+    console.log(`  対処   : kill ${issue.pid}（終了しない場合のみ kill -9 ${issue.pid}）`);
+  } else {
+    console.log(`  対処   : 用途を確認し、不要な場合のみ kill ${issue.pid} で停止`);
+  }
   console.log('');
   if (issue.severity === 'ERROR') hasError = true;
 }
 
 console.log(`${BOLD}合計 ${issues.length} 件の問題が検出されました。${RESET}`);
-console.log('上記の PID を `kill -9 <pid>` で終了させてください。\n');
+console.log('[ERROR] の PID はまず `kill <pid>` で停止し、終了しない場合のみ `kill -9 <pid>` を使ってください。');
+console.log('[WARN] の PID は用途を確認し、不要と判断した場合のみ停止してください。\n');
 
 // ERROR がある場合は非ゼロ終了（CI での検出に対応）
 process.exit(hasError ? 1 : 0);
