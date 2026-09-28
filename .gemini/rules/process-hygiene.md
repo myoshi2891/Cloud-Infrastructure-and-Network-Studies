@@ -60,8 +60,11 @@ bun run test __tests__/gcl/foo/bar.test.tsx  # 特定ファイル
 バックグラウンドプロセス（`&`）を起動するシェルスクリプトには、必ず以下のパターンで `trap` を設定すること：
 
 ```bash
-# ✅ 正しい書き方 — どんな終了原因でも確実に子プロセスを停止する
-trap 'kill $(jobs -p) 2>/dev/null; wait' EXIT INT TERM
+# ✅ 正しい書き方 — 通常終了・Ctrl-C・TERM で子プロセスを停止する
+cleanup() { kill $(jobs -p) 2>/dev/null; wait; }
+trap cleanup EXIT
+trap 'cleanup; exit 130' INT   # ハンドラ後に必ず exit（しないとスクリプトが続行する）
+trap 'cleanup; exit 143' TERM
 
 # ...バックグラウンドプロセスを起動...
 for i in $(seq 1 9); do
@@ -72,7 +75,7 @@ STRESS_PIDS=$(jobs -p)
 # ...処理本体...
 ```
 
-`EXIT` シグナルは `kill` / Ctrl-C / セッション切断 / タイムアウト終了のいずれにおいても発火するため、これ単体でほとんどのケースをカバーする。
+`INT` / `TERM` の trap はハンドラ実行後にスクリプトを継続させるため、必ず `exit` で終了させる。`EXIT` の trap は通常終了時の後始末として残す。ただし **`SIGKILL`（`kill -9`）は trap できず後始末は一切実行されない**ため、その場合は § 3 の検出スクリプト等による外部からのクリーンアップが必要になる。
 
 ### 2-2. ストレステストを行う場合の追加ルール
 

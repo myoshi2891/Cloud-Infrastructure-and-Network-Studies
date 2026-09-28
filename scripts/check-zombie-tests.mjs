@@ -44,25 +44,21 @@ function getAllProcesses() {
 }
 
 /**
- * cputime 文字列（HH:MM:SS または DDD:HH:MM:SS 形式）を秒数に変換する。
+ * cputime 文字列を秒数（整数）に変換する。
+ * 対応形式:
+ *   - macOS:  MM:SS.ss（分は 60 を超えうる。例 `993:17.76`）
+ *   - procps: [DD-]HH:MM:SS（例 `1-02:03:04`）
+ * 解釈できない形式は 0 を返す。
  * @param {string} cputime
  * @returns {number}
  */
 function parseCputime(cputime) {
-  const parts = cputime.split(':').map(Number);
-  if (parts.length === 3) {
-    // HH:MM:SS
-    return (parts[0] ?? 0) * 3600 + (parts[1] ?? 0) * 60 + (parts[2] ?? 0);
-  } else if (parts.length === 4) {
-    // DDD:HH:MM:SS
-    return (
-      (parts[0] ?? 0) * 86400 +
-      (parts[1] ?? 0) * 3600 +
-      (parts[2] ?? 0) * 60 +
-      (parts[3] ?? 0)
-    );
-  }
-  return 0;
+  const match = /^(?:(\d+)-)?(?:(\d+):)?(\d+):(\d+(?:\.\d+)?)$/.exec(cputime.trim());
+  if (!match) return 0;
+  const [, days = '0', hours = '0', minutes = '0', seconds = '0'] = match;
+  return Math.floor(
+    Number(days) * 86400 + Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds),
+  );
 }
 
 /**
@@ -121,9 +117,12 @@ for (const p of longRunning) {
 // ─────────────────────────────────────────────
 // 検出 3: `while true` を含む zsh/bash プロセス
 // ─────────────────────────────────────────────
-const whileTrue = processes.filter(
-  (p) => /while\s+true/.test(p.args) && /(zsh|bash)/.test(p.args),
-);
+const SHELL_EXECUTABLES = new Set(['bash', 'zsh']);
+const whileTrue = processes.filter((p) => {
+  // 実行ファイル名は先頭トークンの basename で判定（`/bin/bash` も許可）
+  const executable = (p.args.split(/\s+/)[0] ?? '').split('/').pop() ?? '';
+  return SHELL_EXECUTABLES.has(executable) && /while\s+true/.test(p.args);
+});
 for (const p of whileTrue) {
   issues.push({
     severity: 'ERROR',
