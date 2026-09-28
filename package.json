@@ -16,7 +16,8 @@
     "test:security": "node scripts/security-audit.mjs",
     "test:md-to-html": "bun test ./.agents/skills/md-to-html/scripts/audit_content_parity.test.mjs ./.agents/skills/md-to-html/scripts/audit_design_parity.test.mjs",
     "perf:report": "lhci autorun",
-    "dashboard": "node scripts/generate-coverage-dashboard.mjs"
+    "dashboard": "node scripts/generate-coverage-dashboard.mjs",
+    "test:check-zombies": "node scripts/check-zombie-tests.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",

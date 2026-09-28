@@ -19,7 +19,7 @@ Updated 2026-09-07
 
 - **開発サーバー起動:** `bun run dev`
 - **ビルド:** `bun run build`
-- **単体テスト実行:** `bun run test` (Vitest)
+- **単体テスト実行:** `bun run test` (Vitest) ⚠️ **必ず `bun run test` を使うこと。`bun test`（`run` なし）は絶対に使用禁止。** `bun test` は Bun 組み込みランナーを起動し、Vitest 専用の JSDOM / vi.mock が機能せずプロセスが CPU 99% を占有したまま終了しなくなる（2026-09-26 障害事例: 累計 1,600 時間以上の CPU を無駄に消費）。
 - **E2E テスト実行:** `bunx playwright install`（初回のみ）、その後 `bun run test:e2e` (Playwright `chromium` project)
 - **Performance テスト実行:** `bun run test:perf` (Playwright `perf` project: LCP / CLS / TBT を [e2e/perf-budgets.json](e2e/perf-budgets.json) と比較)
 - **md-to-html 監査の自己テスト:** `bun run test:md-to-html`（実体は `bun test` に 2 本のテストファイルのパスを明示指定。`bun test` は `./` で始まらない引数をファイル名フィルタとして解釈するため、パスは必ず `./` から書く）
@@ -28,6 +28,7 @@ Updated 2026-09-07
 - **Lint 実行:** `bun run lint`
 - **Markdown lint 実行:** `bun run markdownlint -- path/to/file.md`
 - **Docker 一括リビルド:** `bun run docker:rebuild`（コンテナ停止 → 本番イメージ作成 → 開発コンテナ再構築・起動）
+- **ゾンビプロセス診断:** `bun run test:check-zombies`（`bun test` 誤用・長時間ハングプロセス・`while true` 残骸ループを自動検出。異常を感じたら最初に実行する）
 
 ## プロジェクト構造
 
