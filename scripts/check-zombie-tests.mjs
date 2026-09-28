@@ -7,7 +7,9 @@
  * 検出対象:
  *   1. `bun test` を直接実行したプロセス（Vitest 未経由の誤実行。`bun run test:md-to-html` 配下は除外）
  *   2. CPU 時間が 60 分超の `bun` / `node` プロセス（長時間ハング候補）
- *   3. `while true` を含む zsh/bash プロセスのうち、親から切り離されたもの（ストレステスト残骸候補）
+ *   3. `bash -c` / `zsh -c` のインラインコマンドで `while true` を実行し、親から切り離されたもの（ストレステスト残骸候補）
+ *      ※ スクリプト内の `(while true; ...) &` サブシェルは親の argv を継承し args にループ本文が現れないため、
+ *        記録した PID と親プロセス状態で確認する（.agents/rules/process-hygiene.md §2-2）
  *
  * 使用方法:
  *   bun run test:check-zombies
@@ -27,7 +29,11 @@ const RESET = '\x1b[0m';
  */
 function getAllProcesses() {
   try {
-    const raw = execSync('ps -eo pid,ppid,pcpu,cputime,args', { encoding: 'utf8' });
+    // 既定の maxBuffer（1 MiB）ではプロセス数が多い環境で ENOBUFS になるため拡張する
+    const raw = execSync('ps -eo pid,ppid,pcpu,cputime,args', {
+      encoding: 'utf8',
+      maxBuffer: 64 * 1024 * 1024,
+    });
     const lines = raw.trim().split('\n').slice(1); // ヘッダ除去
     return lines.map((line) => {
       const cols = line.trim().split(/\s+/);
@@ -157,7 +163,7 @@ for (const p of longRunning) {
 }
 
 // ─────────────────────────────────────────────
-// 検出 3: `while true` を含む zsh/bash プロセス（親から切り離されたもののみ）
+// 検出 3: インラインコマンドの `while true` を実行する zsh/bash プロセス（親から切り離されたもののみ）
 // ─────────────────────────────────────────────
 const SHELL_EXECUTABLES = new Set(['bash', 'zsh']);
 
@@ -170,10 +176,27 @@ function isSupervised(p) {
   return p.ppid !== '1' && p.ppid !== '0' && processByPid.has(p.ppid);
 }
 
+/** コマンド位置（先頭・区切り記号・do/then/else の直後）にある `while true` */
+const LOOP_AT_COMMAND_POSITION = /(?:^|[;&|({]\s*|\b(?:do|then|else)\s+)while\s+true\b/;
+
+/**
+ * `-c`（`-lc` 等の結合形を含む）で渡されたインラインコマンド文字列を返す。無ければ null。
+ * ps の args は引用符が失われるため、`-c` 以降のトークンを連結して扱う。
+ * @param {string[]} rest
+ * @returns {string | null}
+ */
+function getInlineCommand(rest) {
+  const index = rest.findIndex((token) => /^-[a-zA-Z]*c[a-zA-Z]*$/.test(token));
+  return index === -1 ? null : rest.slice(index + 1).join(' ');
+}
+
 const whileTrue = processes.filter((p) => {
   // 実行ファイル名は先頭トークンの basename で判定（`/bin/bash` も許可）
-  const { executable } = parseCommand(p.args);
-  return SHELL_EXECUTABLES.has(executable) && /while\s+true/.test(p.args) && !isSupervised(p);
+  const { executable, rest } = parseCommand(p.args);
+  if (!SHELL_EXECUTABLES.has(executable)) return false;
+  // 引数の文字列（例: `bash foo.sh "while true"`）には反応させず、インラインコマンドのみ対象
+  const inline = getInlineCommand(rest);
+  return inline !== null && LOOP_AT_COMMAND_POSITION.test(inline) && !isSupervised(p);
 });
 for (const p of whileTrue) {
   // 孤立の断定はできないため候補（WARN）として報告し、単独では非ゼロ終了させない
