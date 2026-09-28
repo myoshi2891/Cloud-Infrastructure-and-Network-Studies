@@ -409,7 +409,7 @@ const ALL_EXAMS: Exam[] = [
             },
             {
                 label: 'Section 4: 評価とデプロイ',
-                href: '/gcl/professional-agentic-architect#セクション4-エージェントワークフローの評価とデプロイ配点-約22',
+                href: '/gcl/professional-agentic-architect/section4',
                 pct: '約22%',
             },
             {

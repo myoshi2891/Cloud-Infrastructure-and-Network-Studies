@@ -49,7 +49,14 @@ mainContent = mainContent.replace(/<pre[\s\S]*?class="code-block"[^>]*><code>([\
         if (!line.trim()) {
             return `                        <div className="code-line">{''}</div>`;
         }
-        return `                        <div className="code-line">${line}</div>`;
+        const tokens = line.split(/(<[^>]+>)/);
+        const escaped = tokens.map(token => {
+            if (token.startsWith('<') && token.endsWith('>')) {
+                return token;
+            }
+            return token.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
+        }).join('');
+        return `                        <div className="code-line">${escaped}</div>`;
     }).join('\n');
 
     return `<pre className="code-block" role="region" aria-label="${label}">\n${wrappedLines}\n                    </pre>`;
@@ -136,6 +143,8 @@ mainContent = mainContent.replace(/<code[^>]*>\s*NO_CONTENT\s*<\/code[^>]*>\s*�
 mainContent = mainContent.replace(/agentスパンと\s*<code[^>]*>\s*gen_ai\.client\.inference\.operation\.details\s*<\/code[^>]*>\s*イベント/g, "agentスパンと{' '}<code>gen_ai.client.inference.operation.details</code>{' '}イベント");
 mainContent = mainContent.replace(/<code[^>]*>\s*EVENT_ONLY\s*<\/code[^>]*>\s*を設定しただけで/g, "<code>EVENT_ONLY</code>{' '}を設定しただけで");
 mainContent = mainContent.replace(/<code[^>]*>\s*roles\/storage\.objectViewer\s*<\/code[^>]*>\s*などを/g, "<code>roles/storage.objectViewer</code>{' '}などを");
+mainContent = mainContent.replace(/agent's/g, 'agent&apos;s');
+mainContent = mainContent.replace(/I\/O '26/g, 'I/O &apos;26');
 
 // 7. Fix standalone braces or entity encoding in text where appropriate
 // In code blocks or paragraphs, &quot; is fine. Convert naked { or } if inside text

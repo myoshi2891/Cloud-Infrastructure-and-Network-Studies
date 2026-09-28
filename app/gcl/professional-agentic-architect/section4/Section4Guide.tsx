@@ -131,7 +131,7 @@ export default function Section4Guide() {
                         evaluation（ゴールデンデータ、プロンプト、エッジケースを含むテストセットの作成）
                     </li>{' '}
                             <li>
-                        Creating continuous evaluation pipelines to assess an agent's tool execution
+                        Creating continuous evaluation pipelines to assess an agent&apos;s tool execution
                         based on established success
                         criteria（確立された成功基準に基づきツール実行を評価する継続的評価パイプラインの構築）
                     </li>{' '}
@@ -411,8 +411,8 @@ export default function Section4Guide() {
                     >。
                 </p>
                 <pre className="code-block" role="region" aria-label="テレメトリ設定環境変数">
-                        <div className="code-line"><span className="tok-key">OTEL_SEMCONV_STABILITY_OPT_IN</span>=<span className="tok-string">'gen_ai_latest_experimental'</span></div>
-                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</span>=<span className="tok-string">'EVENT_ONLY'</span></div>
+                        <div className="code-line"><span className="tok-key">OTEL_SEMCONV_STABILITY_OPT_IN</span>=<span className="tok-string">&apos;gen_ai_latest_experimental&apos;</span></div>
+                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT</span>=<span className="tok-string">&apos;EVENT_ONLY&apos;</span></div>
                     </pre>
                 <p>
                     画像や大きなドキュメントなどマルチモーダルなデータを扱う場合は、トレースのスパンに直接埋め込むのではなく、環境変数でCloud
@@ -431,9 +431,9 @@ export default function Section4Guide() {
                     >。
                 </p>
                 <pre className="code-block" role="region" aria-label="Cloud Storage書き出し設定環境変数">
-                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_COMPLETION_HOOK</span>=<span className="tok-string">'upload'</span></div>
-                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH</span>=<span className="tok-string">'gs://&lt;バケット名&gt;/&lt;プレフィックス&gt;'</span></div>
-                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_UPLOAD_FORMAT</span>=<span className="tok-string">'jsonl'</span></div>
+                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_COMPLETION_HOOK</span>=<span className="tok-string">&apos;upload&apos;</span></div>
+                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH</span>=<span className="tok-string">&apos;gs://&lt;バケット名&gt;/&lt;プレフィックス&gt;&apos;</span></div>
+                        <div className="code-line"><span className="tok-key">OTEL_INSTRUMENTATION_GENAI_UPLOAD_FORMAT</span>=<span className="tok-string">&apos;jsonl&apos;</span></div>
                     </pre>
                 <div className="callout-warning">
                     <div className="icon">!</div>{' '}
@@ -818,10 +818,10 @@ export default function Section4Guide() {
                         <div className="code-line">{''}</div>
                         <div className="code-line"><span className="tok-key">@pytest.mark.asyncio</span></div>
                         <div className="code-line"><span className="tok-keyword">async</span> <span className="tok-keyword">def</span> <span className="tok-func">test_with_single_test_file</span>():</div>
-                        <div className="code-line">    <span className="tok-string">"""ホームオートメーションエージェントの基本的な能力をテスト"""</span></div>
+                        <div className="code-line">    <span className="tok-string">&quot;&quot;&quot;ホームオートメーションエージェントの基本的な能力をテスト&quot;&quot;&quot;</span></div>
                         <div className="code-line">    <span className="tok-keyword">await</span> AgentEvaluator.<span className="tok-func">evaluate</span>(</div>
-                        <div className="code-line">        <span className="tok-key">agent_module</span>=<span className="tok-string">"home_automation_agent"</span>,</div>
-                        <div className="code-line">        <span className="tok-key">eval_dataset_file_path_or_dir</span>=<span className="tok-string">"tests/integration/fixture/home_automation_agent/simple_test.test.json"</span>,</div>
+                        <div className="code-line">        <span className="tok-key">agent_module</span>=<span className="tok-string">&quot;home_automation_agent&quot;</span>,</div>
+                        <div className="code-line">        <span className="tok-key">eval_dataset_file_path_or_dir</span>=<span className="tok-string">&quot;tests/integration/fixture/home_automation_agent/simple_test.test.json&quot;</span>,</div>
                         <div className="code-line">    )</div>
                     </pre>
                 <p>
@@ -2223,7 +2223,7 @@ export default function Section4Guide() {
                     <div className="ref-card" id="ref8">
                         <div className="num">8</div>
                         <div className="txt">
-                            Google Cloud Blog, &quot;I/O '26 news for agent developers on Google
+                            Google Cloud Blog, &quot;I/O &apos;26 news for agent developers on Google
                             Cloud,&quot;
                             <a
                                 href="https://cloud.google.com/blog/topics/developers-practitioners/io26-news-for-agent-developers-on-google-cloud"
