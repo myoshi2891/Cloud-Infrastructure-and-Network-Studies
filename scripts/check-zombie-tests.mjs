@@ -5,7 +5,8 @@
  * ゾンビ（孤立・暴走）プロセスを検出し、警告する診断スクリプト。
  *
  * 検出対象:
- *   1. `bun test` を直接実行したプロセス（Vitest 未経由の誤実行。`bun run test:md-to-html` 配下は除外）
+ *   1. このリポジトリで `bun test` を直接実行したプロセス（Vitest 未経由の誤実行。`bun run test:md-to-html` 配下と
+ *      他リポジトリのプロセスは除外、cwd を取得できず所属不明のものは WARN 候補）
  *   2. CPU 時間が 60 分超の `bun` / `node` プロセス（長時間ハング候補）
  *   3. `bash -c` / `zsh -c` のインラインコマンドで `while true` を実行し、親から切り離されたもの（ストレステスト残骸候補）
  *      ※ スクリプト内の `(while true; ...) &` サブシェルは親の argv を継承し args にループ本文が現れないため、
@@ -15,7 +16,10 @@
  *   bun run test:check-zombies
  */
 
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
+import { realpathSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const RED = '\x1b[31m';
 const YELLOW = '\x1b[33m';
@@ -123,21 +127,72 @@ function isMdToHtmlWrapper(args) {
   return executable === 'bun' && rest.length === 2 && rest[0] === 'run' && rest[1] === 'test:md-to-html';
 }
 
+/** このリポジトリのルート（scripts/ の親）。シンボリックリンク経由でも比較できるよう実パスに解決する */
+const REPO_ROOT = realpathSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
+
+/**
+ * プロセスの作業ディレクトリを lsof で取得する。取得できない場合は null。
+ * @param {string} pid
+ * @returns {string | null}
+ */
+function getProcessCwd(pid) {
+  if (!/^\d+$/.test(pid)) return null;
+  try {
+    const out = execFileSync('lsof', ['-a', '-p', pid, '-d', 'cwd', '-Fn'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    const line = out.split('\n').find((l) => l.startsWith('n'));
+    return line ? line.slice(1) : null;
+  } catch {
+    // 権限不足・プロセス終了済み・lsof 不在はいずれも「所属不明」として扱う
+    return null;
+  }
+}
+
+/**
+ * プロセスがこのリポジトリに属するかを cwd で判定する。
+ * @param {{ pid: string }} p
+ * @returns {'this' | 'other' | 'unknown'}
+ */
+function getRepoOwnership(p) {
+  const cwd = getProcessCwd(p.pid);
+  if (cwd === null) return 'unknown';
+  return cwd === REPO_ROOT || cwd.startsWith(REPO_ROOT + path.sep) ? 'this' : 'other';
+}
+
 // ─────────────────────────────────────────────
 // 検出 1: `bun test` の直接実行（引数・パスを問わない）
 // ─────────────────────────────────────────────
-const bunTestMisuse = processes.filter((p) => {
+const bunTestCandidates = processes.filter((p) => {
   const { executable, rest } = parseCommand(p.args);
   if (executable !== 'bun' || rest[0] !== 'test') return false;
   // `bun run test:md-to-html` 配下で起動されたものだけを許可
   return !getAncestors(p).some((a) => isMdToHtmlWrapper(a.args));
 });
+// 他リポジトリの `bun test` は正当な用途のため除外し、所属不明は候補（WARN）に留める
+const bunTestMisuse = [];
+const bunTestUnknown = [];
+for (const p of bunTestCandidates) {
+  const ownership = getRepoOwnership(p);
+  if (ownership === 'this') bunTestMisuse.push(p);
+  else if (ownership === 'unknown') bunTestUnknown.push(p);
+}
 for (const p of bunTestMisuse) {
   issues.push({
     severity: 'ERROR',
     pid: p.pid,
     cputimeSeconds: p.cputimeSeconds,
     reason: '`bun test` の直接実行（Vitest 未経由の誤実行）— CPU ハングの危険',
+    args: p.args,
+  });
+}
+for (const p of bunTestUnknown) {
+  issues.push({
+    severity: 'WARN',
+    pid: p.pid,
+    cputimeSeconds: p.cputimeSeconds,
+    reason: '`bun test` の直接実行の候補（所属リポジトリを特定できないため要確認）',
     args: p.args,
   });
 }
@@ -150,7 +205,7 @@ const longRunning = processes.filter(
   (p) =>
     p.cputimeSeconds > LONG_RUNNING_THRESHOLD_SEC &&
     (/\/bun\b/.test(p.args) || /\bbun\b/.test(p.args) || /\bnode\b/.test(p.args)) &&
-    !bunTestMisuse.some((b) => b.pid === p.pid), // 重複除去
+    ![...bunTestMisuse, ...bunTestUnknown].some((b) => b.pid === p.pid), // 重複除去
 );
 for (const p of longRunning) {
   issues.push({
