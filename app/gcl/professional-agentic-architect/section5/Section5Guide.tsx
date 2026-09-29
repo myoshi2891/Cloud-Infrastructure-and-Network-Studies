@@ -14,14 +14,12 @@ const Diagram = memo(function Diagram({ id, ariaLabel }: DiagramProps) {
     const chart = DIAGRAMS[id];
     if (!chart) return null;
     return (
-        <div className="mermaid-wrap">
-            <MermaidDiagram
-                chart={chart}
-                ariaLabel={ariaLabel}
-                preserveNaturalScale={true}
-                theme="light"
-            />
-        </div>
+        <MermaidDiagram
+            chart={chart}
+            ariaLabel={ariaLabel}
+            preserveNaturalScale={true}
+            theme="light"
+        />
     );
 });
 

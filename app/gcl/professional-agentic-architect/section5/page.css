@@ -484,23 +484,6 @@
 /* Mermaid Diagrams */
 .agentic-section5-page .mermaid-wrap {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px 20px;
-    margin: 0 0 30px;
-}
-
-.agentic-section5-page .mermaid-wrap svg {
-    flex-shrink: 0;
-}
-
-.agentic-section5-page .mermaid-wrap p {
-    color: inherit;
-    margin: 0;
 }
 
 /* Reference grid */
