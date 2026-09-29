@@ -660,7 +660,7 @@ export default function Section5Guide() {
                         <tbody>
                             <tr className="odd">
                                 <td>
-                                    <strong>Agent Identity API</strong>&lt;br/&gt;（<code>agentidentity.googleapis.com</code>）
+                                    <strong>Agent Identity API</strong><br />（<code>agentidentity.googleapis.com</code>）
                                 </td>
                                 <td>○ 対応</td>
                                 <td>
@@ -671,7 +671,7 @@ export default function Section5Guide() {
                             </tr>
                             <tr className="even">
                                 <td>
-                                    <strong>Agent Identity Credentials API</strong>&lt;br/&gt;（<code>agentidentitycredentials.googleapis.com</code>）
+                                    <strong>Agent Identity Credentials API</strong><br />（<code>agentidentitycredentials.googleapis.com</code>）
                                 </td>
                                 <td>○ 対応</td>
                                 <td>同上</td>
