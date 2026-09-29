@@ -1,6 +1,37 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-28)
+(最終更新日: 2026-09-29)
+
+## 2026-09-29: Google Cloud Professional Agentic Architect Section 5: セキュリティとガバナンス 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-section5.html`（および `Professional-agentic-architect-section5.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section5Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section5` ルートへ移行。見出し(h1:1, h2:8, h3:31)、全13個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(47件)、全外部リンク(48件)・全本文(64件)・学習チェックリスト(17件)・参考文献カード(24件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect-section5` (`ba24a994`)
+- [x] **Step 1 (Red)**: `test(gcl): add failing tests for professional-agentic-architect-section5` (`59b23b2e`)
+- [x] **Step 2 (Green)**:
+  - `feat(gcl): add Section 5 constants, navbar, and css` (`40e8268e`)
+  - `feat(gcl): implement section5 guide component to pass tests` (`35f5141f`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(gcl): integrate section5 into routing and update docs` (`91108530`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive section5 html and md`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/section5/page.tsx](app/gcl/professional-agentic-architect/section5/page.tsx)
+- [app/gcl/professional-agentic-architect/section5/Section5Guide.tsx](app/gcl/professional-agentic-architect/section5/Section5Guide.tsx)
+- [app/gcl/professional-agentic-architect/section5/NavBar.tsx](app/gcl/professional-agentic-architect/section5/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/section5/constants.ts](app/gcl/professional-agentic-architect/section5/constants.ts)
+- [app/gcl/professional-agentic-architect/section5/page.css](app/gcl/professional-agentic-architect/section5/page.css)
+- [`__tests__/gcl/professional-agentic-architect/section5/page.test.tsx`](__tests__/gcl/professional-agentic-architect/section5/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/section5/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/section5/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect-section5.json](docs/migration-inventory/professional-agentic-architect-section5.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.md)
+
+---
 
 ## 2026-09-28: Google Cloud Professional Agentic Architect Section 4: 評価とデプロイ 100%全量移行 (完了)
 
