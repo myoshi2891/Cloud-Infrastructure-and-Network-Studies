@@ -131,19 +131,20 @@ export function NavBar() {
             </button>
             <aside id="sidebar" className={`sidebar ${isOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="kicker">Google Cloud Agentic Architect</div>
+                    <div className="kicker">Google Cloud Agentic Architect</div>{' '}
                     <h2>Section 5: セキュリティとガバナンス</h2>
-                </div>
+                </div>{' '}
                 <nav id="sidebarNav" aria-label="セクション目次">
                     {NAV_ITEMS.map((item) => (
-                        <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            className={`${item.lvl3 ? 'lvl3 ' : ''}${activeId === item.id ? 'active' : ''}`}
-                            onClick={() => handleLinkClick(item.id)}
-                        >
-                            {item.label}
-                        </a>
+                        <span key={item.id}>
+                            <a
+                                href={`#${item.id}`}
+                                className={`${item.lvl3 ? 'lvl3 ' : ''}${activeId === item.id ? 'active' : ''}`}
+                                onClick={() => handleLinkClick(item.id)}
+                            >
+                                {item.label}
+                            </a>{' '}
+                        </span>
                     ))}
                 </nav>
             </aside>
