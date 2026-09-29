@@ -8,7 +8,7 @@
     --border-soft: #eef2f6;
     --text: #0f172a;
     --text-dim: #475569;
-    --text-faint: #94a3b8;
+    --text-faint: #475569;
     --accent: #2563eb;
     --accent-soft: #93c5fd;
     --accent-bg: #eff6ff;
@@ -639,7 +639,7 @@
     flex-shrink: 0 !important;
     margin-top: 2px !important;
     margin-right: 4px !important;
-    border: 1.5px solid var(--border) !important;
+    border: 1.5px solid var(--text-dim) !important;
     border-radius: 5px !important;
     background: var(--bg-card-2) !important;
     cursor: pointer !important;
