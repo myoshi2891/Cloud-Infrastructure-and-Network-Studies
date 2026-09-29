@@ -357,17 +357,16 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     participant PDP as Semantic Governance<br/>Policy Engine(PDP)
 
     Agent->>Model: ユーザープロンプト + 利用可能なツール一覧
-    Model-->>Agent: 提案されたツール呼び出し
-    Agent->>Gateway: ツール呼び出しリクエスト
-    Note over Gateway: Agent Gatewayがレスポンスを<br/>インターセプト
+    Model-->>Gateway: 提案されたツール呼び出し(レスポンス)
+    Note over Gateway: Agent Gatewayがレスポンスを<br/>エージェント到達前にインターセプト
     Gateway->>PDP: ツール提案 + NLC + チャット履歴を送信
     PDP->>PDP: ユーザー意図との整合性を評価<br/>組織の制約(NLC)との適合性を評価
     alt 両方の検証をパス
         PDP-->>Gateway: 判定: ALLOW
-        Gateway->>Agent: ツール呼び出しを実行許可
+        Gateway-->>Agent: 許可されたツール呼び出しをそのまま返却
     else いずれかで不一致・違反
         PDP-->>Gateway: 判定: DENY(理由付き)
-        Gateway->>Agent: ツール呼び出しを除去し、理由を返却
+        Gateway-->>Agent: ツール呼び出しを除去した応答と理由を返却
     end`,
 
     'diag-7': `flowchart TB
