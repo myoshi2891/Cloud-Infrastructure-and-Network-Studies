@@ -391,7 +391,7 @@ export default function Section4Guide() {
                         ><sup>6</sup></a
                     >。
                 </p>
-                <Diagram id="diag-3" ariaLabel="オフライン評価とオンライン監視の2系統パイプライン" />
+                <Diagram id="diag-3" ariaLabel="Online Monitorがトレースをサンプリングして評価し結果を出力する周期ループのシーケンス図" />
                 <p>
                     Online
                     Monitorを機能させるには、エージェント側が特定のOpenTelemetryシグナルをCloud
@@ -677,7 +677,7 @@ export default function Section4Guide() {
                         ><sup>5</sup></a
                     >。
                 </p>
-                <Diagram id="diag-4" ariaLabel="評価ツール（ADK vs Gen AI Evaluation vs Custom Autoraters）の比較ポジショニングマップ" />
+                <Diagram id="diag-4" ariaLabel="評価ケースの定義からエージェントの最適化までの6段階評価ワークフロー" />
                 <p>
                     このサービスの中核機能は次の4点です<a
                         className="footnote-ref"
@@ -1750,7 +1750,7 @@ export default function Section4Guide() {
                         <div className="label">ベストプラクティス</div>{' '}
                         <ul>
                             <li>
-                                コストと信頼性はトレードオフになりやすい。<code>min_instances</code>{' '}を上げるとコールドスタートは減るが常時課金コストが増えるため、実トラフィックのベースラインを計測した上で値を決める<a
+                                コストと信頼性はトレードオフになりやすい。<code>min_instances</code>{' '}を上げるとコールドスタートは減る。なお、これらのリソース制御がプレビュー段階にある間は、最小インスタンス数を高く設定してもアイドル時間に対してエージェントは課金されない。ただし課金ルールは今後変更される可能性があるため、実トラフィックのベースラインを計測した上で値を決める<a
                                     className="footnote-ref"
                                     href="#ref21"
                                     id="fnref127"
