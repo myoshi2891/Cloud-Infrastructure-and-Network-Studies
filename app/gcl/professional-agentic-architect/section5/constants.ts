@@ -344,13 +344,13 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     'diag-5': `flowchart TB
     ORG["組織レベル: Floor Settings<br/>(全社共通の最低ライン)"]
     FOLDER["フォルダレベル: Floor Settings<br/>(部門ごとの上乗せ)"]
-    PROJECT["プロジェクトレベル: Template<br/>(個別アプリの厳格な設定)"]
+    PROJECT["プロジェクトレベル: Floor Settings + Template<br/>(Floor Settingsは競合するフォルダ設定より優先<br/>Templateは個別アプリの厳格な設定)"]
 
     ORG --> FOLDER --> PROJECT
 
     PROJECT --> BLOCK{"執行モード"}
     BLOCK -->|"Inspect and block"| REJECT["違反コンテンツを<br/>ブロック"]
-    BLOCK -->|"Inspect only"| LOG["違反をログ記録のみ<br/>(コンテンツは通過)"]
+    BLOCK -->|"Inspect only"| LOG["違反をログ記録のみ<br/>(Cloud Loggingの有効化が必要)<br/>(コンテンツは通過)"]
 
     classDef blockFill fill:#fef2f2,stroke:#b91c1c,color:#7f1d1d
     class REJECT blockFill`,
