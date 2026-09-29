@@ -107,4 +107,98 @@ describe('Professional Agentic Architect Section 5 — 詳細仕様検証', () =
         expect(pageCss).toMatch(/input\[type="checkbox"]:focus-visible/);
         expect(pageCss).toMatch(/outline:/);
     });
+
+    it('DOM 内にエスケープ漏れの文字列（<br/> や &lt;br 等）が直接テキストとして露出していない', () => {
+        const container = renderPage();
+        const textContent = container.textContent || '';
+        expect(textContent).not.toContain('<br/>');
+        expect(textContent).not.toContain('<br>');
+        expect(textContent).not.toContain('&lt;br');
+    });
+
+    it('コールアウト・引用ブロックが欠落なく適切な構造とクラスで描画されている', () => {
+        const container = renderPage();
+        
+        // ベストプラクティスコールアウト (8件)
+        const practiceCallouts = container.querySelectorAll('.callout-practice');
+        expect(practiceCallouts).toHaveLength(8);
+        practiceCallouts.forEach((el) => {
+            expect(el.querySelector('.icon')).not.toBeNull();
+            expect(el.querySelector('.body')).not.toBeNull();
+            expect(el.querySelector('.label')).not.toBeNull();
+        });
+
+        // 出典ノート (6件)
+        const sourceNotes = container.querySelectorAll('blockquote.source-note');
+        expect(sourceNotes).toHaveLength(6);
+
+        // 注意・情報ノート (3件: warn 2件, info 1件)
+        const noteCallouts = container.querySelectorAll('blockquote.note-callout');
+        expect(noteCallouts).toHaveLength(3);
+        const warnNotes = container.querySelectorAll('blockquote.note-callout.warn');
+        expect(warnNotes).toHaveLength(2);
+        const infoNotes = container.querySelectorAll('blockquote.note-callout.info');
+        expect(infoNotes).toHaveLength(1);
+
+        // リード引用文 (1件)
+        const ledeQuotes = container.querySelectorAll('blockquote.lede-quote');
+        expect(ledeQuotes).toHaveLength(1);
+
+        // テーブルスクロールコンテナ (13件)
+        const tableScrolls = container.querySelectorAll('.table-scroll');
+        expect(tableScrolls).toHaveLength(13);
+    });
+
+    it('page.css 内で元HTML由来の必須スタイリングセレクタおよびプロパティが完全定義されている', async () => {
+        const { readFileSync } = await import('node:fs');
+        const { join } = await import('node:path');
+        const pageCss = readFileSync(
+            join(
+                process.cwd(),
+                'app/gcl/professional-agentic-architect/section5/page.css',
+            ),
+            'utf8',
+        );
+
+        // ベストプラクティス
+        expect(pageCss).toMatch(/\.callout-practice/);
+        expect(pageCss).toMatch(/\.callout-practice\s+\.icon/);
+        expect(pageCss).toMatch(/\.callout-practice\s+\.body/);
+        expect(pageCss).toMatch(/\.callout-practice\s+\.label/);
+
+        // 出典・引用ノート
+        expect(pageCss).toMatch(/blockquote\.source-note/);
+        expect(pageCss).toMatch(/blockquote\.note-callout/);
+        expect(pageCss).toMatch(/blockquote\.note-callout\.warn/);
+        expect(pageCss).toMatch(/blockquote\.note-callout\.info/);
+        expect(pageCss).toMatch(/blockquote\.lede-quote/);
+
+        // テーブルスクロール・ゼブラスタイル
+        expect(pageCss).toMatch(/\.table-scroll/);
+        expect(pageCss).toMatch(/tbody\s+tr\.even\s+td/);
+
+        // 見出し装飾
+        expect(pageCss).toMatch(/h3::before/);
+        expect(pageCss).toMatch(/background-clip:\s*text/);
+        expect(pageCss).toMatch(/border-top:\s*1px\s+solid/);
+
+        // チェックリストヘッダー & 参考カード
+        expect(pageCss).toMatch(/\.checklist-header/);
+        expect(pageCss).toMatch(/\.ref-card\s+\.txt/);
+    });
+
+    it('Mermaid 図は preserveNaturalScale のため svg に対する強制縮小 max-width: 100% !important が設定されていない', async () => {
+        const { readFileSync } = await import('node:fs');
+        const { join } = await import('node:path');
+        const pageCss = readFileSync(
+            join(
+                process.cwd(),
+                'app/gcl/professional-agentic-architect/section5/page.css',
+            ),
+            'utf8',
+        );
+
+        // .mermaid-wrap svg { max-width: 100% !important; } の禁止（AGENTS.md 例外規約）
+        expect(pageCss).not.toMatch(/\.mermaid-wrap\s+svg\s*\{[^}]*max-width:\s*100%\s*!important/);
+    });
 });
