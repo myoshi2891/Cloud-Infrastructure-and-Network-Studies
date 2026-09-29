@@ -1,0 +1,526 @@
+/* app/gcl/professional-agentic-architect/section5/page.css */
+
+.agentic-section5-page {
+    --bg: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-2: #f1f5f9;
+    --border: #e2e8f0;
+    --border-soft: #eef2f7;
+    --text: #0f172a;
+    --text-dim: #475569;
+    --text-faint: #94a3b8;
+    --accent: #2563eb;
+    --accent-soft: #bfdbfe;
+    --accent-bg: #eff6ff;
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+    --warn: #b45309;
+    --warn-bg: #fffbeb;
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --sidebar-w: 280px;
+
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+}
+
+.agentic-section5-page * {
+    box-sizing: border-box;
+}
+
+.agentic-section5-page a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.agentic-section5-page a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- layout ---------- */
+.agentic-section5-page .layout {
+    display: block;
+    position: relative;
+}
+
+/* Sidebar */
+.agentic-section5-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: #eef2f9;
+    border-right: 1px solid var(--border);
+    padding: 24px 18px 48px;
+    overflow-y: auto;
+    font-size: 13px;
+    z-index: 40;
+    transition: transform 0.2s ease;
+}
+
+.agentic-section5-page .sidebar-header {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.agentic-section5-page .sidebar-header .kicker {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.agentic-section5-page .sidebar-header h2 {
+    font-size: 14px;
+    margin: 4px 0 0;
+    color: var(--text);
+    font-weight: 700;
+    border: none;
+    padding: 0;
+}
+
+.agentic-section5-page .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.agentic-section5-page .sidebar nav a {
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: block;
+    line-height: 1.45;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.agentic-section5-page .sidebar nav a:hover {
+    background: var(--bg-card);
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.agentic-section5-page .sidebar nav a.lvl3 {
+    padding-left: 22px;
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.agentic-section5-page .sidebar nav a.active {
+    color: var(--accent);
+    background: var(--bg-card);
+    border-left-color: var(--accent);
+    font-weight: 700;
+}
+
+/* Sidebar toggle */
+.agentic-section5-page .sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    cursor: pointer;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main */
+.agentic-section5-page .main {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+    padding: 40px 48px 96px;
+}
+
+/* Hero */
+.agentic-section5-page .hero {
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.agentic-section5-page .hero .kicker {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.agentic-section5-page .hero h1 {
+    font-size: 30px;
+    line-height: 1.35;
+    margin: 0 0 16px;
+    color: var(--text);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.agentic-section5-page .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.agentic-section5-page .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
+.agentic-section5-page .pill strong {
+    color: var(--text);
+}
+
+/* Headings */
+.agentic-section5-page h2 {
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 48px 0 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+    color: var(--text);
+    font-weight: 700;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+.agentic-section5-page h3 {
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 32px 0 14px;
+    color: var(--text);
+    font-weight: 700;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+.agentic-section5-page h4 {
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 24px 0 10px;
+    color: var(--text);
+    font-weight: 700;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+/* Paragraphs & Text */
+.agentic-section5-page p {
+    margin: 0 0 16px;
+    color: var(--text);
+}
+
+/* List styling preservation */
+.agentic-section5-page .main ul:not(.checklist-items) {
+    list-style-type: disc !important;
+    margin: 0 0 18px !important;
+    padding-left: 1.5em !important;
+    color: var(--text);
+}
+
+.agentic-section5-page .main ol {
+    list-style-type: decimal !important;
+    margin: 0 0 18px !important;
+    padding-left: 1.5em !important;
+    color: var(--text);
+}
+
+.agentic-section5-page .main li {
+    margin-bottom: 6px;
+    line-height: 1.75;
+}
+
+/* Tables */
+.agentic-section5-page .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0 28px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+}
+
+.agentic-section5-page table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.agentic-section5-page th,
+.agentic-section5-page td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+.agentic-section5-page th {
+    background: var(--bg-card-2);
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.agentic-section5-page tr:last-child td {
+    border-bottom: none;
+}
+
+.agentic-section5-page tr:hover td {
+    background: rgba(241, 245, 249, 0.6);
+}
+
+/* Callouts & Annotations */
+.agentic-section5-page .callout {
+    background: var(--bg-card);
+    border-left: 4px solid var(--accent);
+    padding: 14px 18px;
+    margin: 20px 0 24px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.agentic-section5-page .callout.warn {
+    border-left-color: var(--warn);
+    background: var(--warn-bg);
+}
+
+.agentic-section5-page .callout.danger {
+    border-left-color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.agentic-section5-page .callout.success {
+    border-left-color: var(--success);
+    background: var(--success-bg);
+}
+
+.agentic-section5-page .callout .title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Mermaid Diagrams */
+.agentic-section5-page .mermaid-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0 32px;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.agentic-section5-page .mermaid-wrap svg {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Checklist Card */
+.agentic-section5-page .checklist-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 32px 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.agentic-section5-page .checklist-card h3 {
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.agentic-section5-page .checklist-card ul,
+.agentic-section5-page .checklist-card ul.checklist-items,
+.agentic-section5-page .main .checklist-card ul,
+.agentic-section5-page .main .checklist-card ul.checklist-items {
+    list-style: none !important;
+    list-style-type: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.agentic-section5-page .checklist-card li,
+.agentic-section5-page .main .checklist-card li {
+    list-style: none !important;
+    list-style-type: none !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 11px 4px !important;
+    border-radius: 8px !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+    cursor: pointer !important;
+}
+
+.agentic-section5-page .checklist-card li:last-child {
+    border-bottom: none !important;
+}
+
+.agentic-section5-page .checklist-card input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-dim);
+    border-radius: 4px;
+    background: var(--bg-card);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 3px;
+    display: inline-grid;
+    place-content: center;
+    transition: all 0.15s ease;
+}
+
+.agentic-section5-page .checklist-card input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.agentic-section5-page .checklist-card input[type="checkbox"]:checked::before {
+    content: "✓";
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.agentic-section5-page .checklist-card input[type="checkbox"]:focus-visible,
+.agentic-section5-page input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.agentic-section5-page .checklist-card label {
+    cursor: pointer;
+    line-height: 1.55;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.agentic-section5-page .checklist-card .count {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+}
+
+/* Reference Cards */
+.agentic-section5-page .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.agentic-section5-page .ref-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.agentic-section5-page .ref-card .num {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+}
+
+.agentic-section5-page .ref-card .title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.agentic-section5-page .ref-card .desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.agentic-section5-page .ref-card a {
+    font-size: 12px;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+}
+
+/* Inline code & badges */
+.agentic-section5-page code {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 13px;
+    font-family: var(--font-mono, monospace);
+    color: #0f172a;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .agentic-section5-page .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .agentic-section5-page .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .agentic-section5-page .sidebar-toggle {
+        display: flex;
+    }
+
+    .agentic-section5-page .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 24px 20px 80px;
+    }
+
+    .agentic-section5-page .hero h1 {
+        font-size: 24px;
+    }
+
+    .agentic-section5-page .ref-grid {
+        grid-template-columns: 1fr;
+    }
+}
