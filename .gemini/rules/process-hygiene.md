@@ -68,7 +68,9 @@ cleanup() {
   local pid pgid self_pgid
   self_pgid=$(ps -o pgid= -p $$ 2>/dev/null | tr -d ' ')
   for pid in $(jobs -p); do
-    pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ')
+    # ps 実行前にジョブが終了していても（pipefail 下でも）後続ジョブの後始末を続行する
+    pgid=$(ps -o pgid= -p "$pid" 2>/dev/null | tr -d ' ') || pgid=''
+    [ -n "$pgid" ] || continue
     if [ -n "$pgid" ] && [ "$pgid" != "$self_pgid" ]; then
       kill -- "-$pgid" 2>/dev/null
     else
