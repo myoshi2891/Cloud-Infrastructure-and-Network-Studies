@@ -1,6 +1,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const html = readFileSync('Professional-agentic-architect-section4.html', 'utf8');
+const html = readFileSync(
+    'archive/Gcl/Professional-agentic-architect/Professional-agentic-architect-section4.html',
+    'utf8',
+);
 
 // Extract content inside <main class="main"> ... </main>
 const mainMatch = html.match(/<main class="main">([\s\S]*?)<\/main>/);
