@@ -271,12 +271,17 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     Gateway->>Gateway: Agent Registryでメタデータ照会
     Gateway->>IAP: 認可判定を委譲
     IAP->>IAP: IAM許可/拒否ポリシーを評価<br/>(principal://...でSPIFFE IDを照合)
-    alt 認可された場合
+    alt 登録済みの宛先 かつ 権限あり
         IAP-->>Gateway: 許可
         Gateway->>Tool: リクエスト転送
         Tool-->>Gateway: レスポンス
         Gateway-->>Agent: レスポンス転送
-    else 未登録の宛先 または 権限不足
+    else 未登録の宛先 かつ URLを対象とする明示的なIAMアクセスポリシーあり
+        IAP-->>Gateway: 許可(URL対象のポリシーに基づく)
+        Gateway->>Tool: リクエスト転送
+        Tool-->>Gateway: レスポンス
+        Gateway-->>Agent: レスポンス転送
+    else 未登録の宛先(既定で拒否) または 権限不足
         IAP-->>Gateway: 拒否
         Gateway-->>Agent: エラー(iap.resources.egressViaIAP 不足等)
     end
@@ -330,8 +335,8 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     AR -->|"Collection/Data Objectを暗号化"| KMS
     MA -->|"PII/機密情報を検出・マスキング"| SDP
 
-    ORGPOL["組織ポリシーのカスタム制約<br/>(承認済みGatewayのみ許可)"]
-    AGW -.->|"VPC-SCの代替統制"| ORGPOL
+    ORGPOL["組織ポリシーのカスタム制約<br/>(承認済みGatewayとのバインドのみ許可)"]
+    AGW -.->|"バインディング制御"| ORGPOL
 
     classDef outFill fill:#fef2f2,stroke:#b91c1c,color:#7f1d1d
     class AGW,SGP outFill`,

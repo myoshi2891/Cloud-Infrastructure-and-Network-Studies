@@ -1307,12 +1307,17 @@ sequenceDiagram
     Gateway-&gt;&gt;Gateway: Agent Registryでメタデータ照会
     Gateway-&gt;&gt;IAP: 認可判定を委譲
     IAP-&gt;&gt;IAP: IAM許可/拒否ポリシーを評価&lt;br/&gt;（principal://...でSPIFFE IDを照合）
-    alt 認可された場合
+    alt 登録済みの宛先 かつ 権限あり
         IAP--&gt;&gt;Gateway: 許可
         Gateway-&gt;&gt;Tool: リクエスト転送
         Tool--&gt;&gt;Gateway: レスポンス
         Gateway--&gt;&gt;Agent: レスポンス転送
-    else 未登録の宛先 または 権限不足
+    else 未登録の宛先 かつ URLを対象とする明示的なIAMアクセスポリシーあり
+        IAP--&gt;&gt;Gateway: 許可（URL対象のポリシーに基づく）
+        Gateway-&gt;&gt;Tool: リクエスト転送
+        Tool--&gt;&gt;Gateway: レスポンス
+        Gateway--&gt;&gt;Agent: レスポンス転送
+    else 未登録の宛先（既定で拒否） または 権限不足
         IAP--&gt;&gt;Gateway: 拒否
         Gateway--&gt;&gt;Agent: エラー（iap.resources.egressViaIAP 不足等）
     end
@@ -1550,10 +1555,9 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td><strong>Agent Gateway</strong></td>
-                                <td><strong>× 非対応</strong></td>
+                                <td><strong>△ 一部対応</strong>（API自体は対象外）</td>
                                 <td>
-                                    公式ドキュメントで明記された既知の制限。VPC-SCで宛先を絞り込むことはできないため、代わりに<strong>カスタム組織ポリシー制約</strong>でエージェントとゲートウェイのバインディングを制限する（承認済みのAgent
-                                    Gatewayのみに制限する）運用が推奨される
+                                    VPC-SCはAgent Gateway API自体へのアクセスを制限しない（公式ドキュメントで明記された既知の制限）。一方、エージェント接続テンプレート（agent connectivity template）経由でルーティングされるAgent Gatewayのトラフィックは、境界ルールで保護できる。利用できるゲートウェイを承認済みのものに限定するには、<strong>カスタム組織ポリシー制約</strong>でエージェントとゲートウェイのバインディングを制限する運用を組み合わせる
                                 </td>
                             </tr>
                             <tr class="even">
@@ -1567,20 +1571,14 @@ flowchart LR
                     </table>
                 </div>
                 <p>
-                    この「Agent
-                    GatewayはVPC-SCに対応しない」という制限は、試験でも狙われやすいポイントです。正しい代替策は、<strong
-                        >組織ポリシーのカスタム制約で「承認済みのAgent
-                        Gatewayとしかバインドできない」ように制限する</strong
-                    >ことであり、VPC-SCの境界にAgent Gatewayを組み込もうとする設計は誤りです。
+                    この「Agent Gateway API自体はVPC-SCで制限できない」という制限は、試験でも狙われやすいポイントです。エージェント接続テンプレート経由のトラフィックは境界ルールで保護できる一方、利用できるゲートウェイそのものを絞り込むには、<strong>組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する</strong>方法があります。両者は対象が異なるため、区別して設計することが重要です。
                 </p>
                 <div class="callout-practice">
                     <div class="icon">✓</div>
                     <div class="body">
                         <div class="label">ベストプラクティス</div>
                         <p>
-                            Agent GatewayをVPC Service
-                            Controlsの境界に含めようとしないでください。宛先を絞り込みたい場合は、組織ポリシーのカスタム制約で「承認済みのAgent
-                            Gatewayとしかバインドできない」ように制限するのが、現時点で唯一の正しい代替策です。
+                            Agent Gateway API自体はVPC Service Controlsで制限できない点を前提に設計してください。エージェント接続テンプレート経由のトラフィックは境界ルールで保護し、利用できるゲートウェイを絞り込みたい場合は、組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する、というように統制を組み合わせます。
                         </p>
                     </div>
                 </div>
@@ -1684,8 +1682,8 @@ flowchart TB
     AR --&gt;|&quot;Collection/Data Objectを暗号化&quot;| KMS
     MA --&gt;|&quot;PII/機密情報を検出・マスキング&quot;| SDP
 
-    ORGPOL[&quot;組織ポリシーのカスタム制約&lt;br/&gt;（承認済みGatewayのみ許可）&quot;]
-    AGW -.-&gt;|&quot;VPC-SCの代替統制&quot;| ORGPOL
+    ORGPOL[&quot;組織ポリシーのカスタム制約&lt;br/&gt;（承認済みGatewayとのバインドのみ許可）&quot;]
+    AGW -.-&gt;|&quot;バインディング制御&quot;| ORGPOL
 
     classDef outFill fill:#fef2f2,stroke:#b91c1c,color:#7f1d1d
     class AGW,SGP outFill</pre
