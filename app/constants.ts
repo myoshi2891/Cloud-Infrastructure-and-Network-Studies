@@ -414,7 +414,7 @@ const ALL_EXAMS: Exam[] = [
             },
             {
                 label: 'Section 5: セキュリティとガバナンス',
-                href: '/gcl/professional-agentic-architect#セクション5-エージェントワークフローのセキュリティとガバナンス配点-約15',
+                href: '/gcl/professional-agentic-architect/section5',
                 pct: '約15%',
             },
         ],

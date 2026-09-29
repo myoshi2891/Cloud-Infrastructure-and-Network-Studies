@@ -612,8 +612,7 @@ export default function Section5Guide() {
                 <ul>
                     <li>
                         <strong>Sessions</strong>：セッション作成時に指定した <code>userId</code> を
-                        <code>aiplatform.googleapis.com/sessionUserId</code> で評価する。例：<code>api.getAttribute('aiplatform.googleapis.com/sessionUserId',
-                            '').startsWith('team-a-')</code>
+                        <code>aiplatform.googleapis.com/sessionUserId</code> で評価する。例：<code>{"api.getAttribute('aiplatform.googleapis.com/sessionUserId', '').startsWith('team-a-')"}</code>
                     </li>
                     <li>
                         <strong>Memory Bank</strong>：メモリ作成時に指定したスコープ（<code>{"{'user_id': '123'}"}</code>
@@ -1498,7 +1497,7 @@ export default function Section5Guide() {
                     <div className="ref-card" id="ref3">
                         <div className="num">3</div>
                         <div className="txt">
-                            SAIF: Google's Guide to Secure AI（トップページ）<br /><a href="https://saif.google/" target="_blank" rel="noopener">https://saif.google/</a>
+                            SAIF: Google&apos;s Guide to Secure AI（トップページ）<br /><a href="https://saif.google/" target="_blank" rel="noopener">https://saif.google/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref4">
