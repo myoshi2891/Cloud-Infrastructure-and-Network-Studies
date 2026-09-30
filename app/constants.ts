@@ -33,6 +33,7 @@ export type ColorKey =
     | 'card-computer-networking-topdown'
     | 'card-high-performance-browser-networking'
     | 'card-professional-agentic-architect'
+    | 'card-kubernetes-in-action'
     | 'card-cli';
 
 export interface Exam {
@@ -77,6 +78,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-computer-networking-topdown': 'card-computer-networking-topdown',
     'card-high-performance-browser-networking': 'card-high-performance-browser-networking',
     'card-professional-agentic-architect': 'card-professional-agentic-architect',
+    'card-kubernetes-in-action': 'card-kubernetes-in-action',
     'card-cli': 'card-cli',
 };
 

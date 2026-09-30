@@ -261,20 +261,25 @@ Failed --> [*]`,
     'diag-12': `flowchart TD
 START([コンテナ起動]) --> SP{Startup Probe<br/>設定あり?}
 SP -->|あり、未成功| WAIT["Liveness/Readinessを<br/>一時停止して待機"]
-WAIT --> SP
-SP -->|成功 or 未設定| LP["Liveness Probe実行"]
-LP -->|失敗| RESTART["コンテナ再起動"]
+WAIT --> FT{failureThreshold<br/>到達?}
+FT -->|未到達| SP
+FT -->|到達| KILL["コンテナを終了し<br/>restartPolicyに従う"]
+SP -->|成功 or 未設定| PAR[["以降は2つのProbeが<br/>独立して並行実行"]]
+PAR --> LP["Liveness Probe実行"]
+PAR --> RP["Readiness Probe実行"]
+LP -->|失敗| RESTART["コンテナ再起動<br/>(restartPolicyに従う)"]
+LP -->|成功| LP
+KILL --> START
 RESTART --> START
-LP -->|成功| RP["Readiness Probe実行"]
 RP -->|失敗| NOTREADY["Serviceの<br/>エンドポイントから除外"]
-NOTREADY --> LP
+NOTREADY --> RP
 RP -->|成功| READY["Serviceの<br/>エンドポイントに含める"]
-READY --> LP
+READY --> RP
 
 classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
 classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
 class READY highlightFill
-class RESTART,NOTREADY dangerFill`,
+class RESTART,KILL,NOTREADY dangerFill`,
 
     'diag-13': `flowchart LR
 A["Pod削除要求<br/>(kubectl delete)"] --> B["preStopフック実行"]
