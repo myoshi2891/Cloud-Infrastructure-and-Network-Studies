@@ -253,7 +253,7 @@ export default function Section4Guide() {
                         ><sup>5</sup></a
                     >。
                 </p>
-                <Diagram id="diag-2" ariaLabel="ユーザーシミュレーションによるテスト生成と評価のフロー" />
+                <Diagram id="diag-2" ariaLabel="Test File・Evalset・User Simulationからテストデータ作成方法を選択するフロー" />
                 <div className="callout-practice">
                     <div className="icon">&#10003;</div>{' '}
                     <div className="body">

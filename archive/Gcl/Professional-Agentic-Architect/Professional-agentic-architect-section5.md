@@ -300,7 +300,7 @@ Cloud KMSで管理する顧客管理暗号鍵（CMEK）は、Google管理鍵を�
 
 - **RAG Engine**：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただし**CMEKに対応するのは Spanner モードの `RagManagedDb` のみ**であり、`RagManagedVertexVectorSearch`（Serverless モードの既定のベクトルDB）と `VertexVectorSearch`（自前の Vector Search インデックスを持ち込む構成）は **CMEK 非対応**。CMEK が要件なら Spanner モード + `RagManagedDb` を選ぶ
 - **Agent Retrieval（旧 Vector Search 2.0）**：Collection/Data Objectの保管をCMEKで暗号化
-- **Vector Search 1.0**：インデックスデータの暗号化は**Google管理暗号化のみ対応（CMEK非対応）**
+- **Vector Search 1.0**：単体利用ではIndexとIndexEndpointをCMEKで暗号化可能（両リソースに同じ鍵を使う必要がある）。**CMEK非対応となるのは、RAG EngineのVertexVectorSearchバックエンドとして使う場合のみ**
 
 これにより、「エージェントが参照するグラウンディングデータ（社内ナレッジベース）を、組織のセキュリティポリシー上、Google管理鍵ではなく自社管理の鍵で暗号化したい」という金融・医療業界などのエンタープライズ要件に応えられます。
 

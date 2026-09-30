@@ -740,7 +740,7 @@ export default function Section5Guide() {
                         Objectの保管をCMEKで暗号化
                     </li>
                     <li>
-                        <strong>Vector Search 1.0</strong>：インデックスデータの暗号化は<strong>Google管理暗号化のみ対応（CMEK非対応）</strong>
+                        <strong>Vector Search 1.0</strong>：単体利用ではIndexとIndexEndpointをCMEKで暗号化可能（両リソースに同じ鍵を使う必要がある）。<strong>CMEK非対応となるのは、RAG EngineのVertexVectorSearchバックエンドとして使う場合のみ</strong>
                     </li>
                 </ul>
                 <p>

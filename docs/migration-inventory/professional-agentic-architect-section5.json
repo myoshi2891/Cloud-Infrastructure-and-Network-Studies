@@ -314,7 +314,7 @@
     "Memory Bank：メモリ作成時に指定したスコープ（{'user_id': '123'} のような任意の辞書）を aiplatform.googleapis.com/memoryScope で評価する。スコープ単位で「どのプリンシパルがどのグループのメモリを読み書きできるか」を制御できる（条件付き IAM ポリシーはプロジェクトレベルで作成し、プロジェクト内の全メモリに適用される）。ただし 複数スコープにまたがって動作する ListMemories と PurgeMemories は memoryScope 条件に対応しない ため、スコープ単位で制限できない。これらを許可するには無条件ロールの付与が必要で、無条件ロールを持つプリンシパルは意図したスコープ外のメモリまで一覧取得・削除できてしまう。この2権限は別途、付与先を絞った最小権限として設計する",
     "RAG Engine：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただしCMEKに対応するのは Spanner モードの RagManagedDb のみであり、RagManagedVertexVectorSearch（Serverless モードの既定のベクトルDB）と VertexVectorSearch（自前の Vector Search インデックスを持ち込む構成）は CMEK 非対応。CMEK が要件なら Spanner モード + RagManagedDb を選ぶ",
     "Agent Retrieval（旧 Vector Search 2.0）：Collection/Data Objectの保管をCMEKで暗号化",
-    "Vector Search 1.0：インデックスデータの暗号化はGoogle管理暗号化のみ対応（CMEK非対応）",
+    "Vector Search 1.0：単体利用ではIndexとIndexEndpointをCMEKで暗号化可能（両リソースに同じ鍵を使う必要がある）。CMEK非対応となるのは、RAG EngineのVertexVectorSearchバックエンドとして使う場合のみ",
     "Floor Settings：組織・フォルダ・プロジェクトレベルで設定する「譲れない最低ライン」のベースライン設定。配下のすべてのテンプレートはこのフロア設定を満たす必要がある。Google管理MCPサーバーとVertex AI（Gemini呼び出し）向けのフロア設定は現在プレビュー機能として提供されている。",
     "Template：個々のアプリケーション（エージェント）向けに作成する、より厳格な検出設定。「Inspect and block」（違反をブロック）と「Inspect only」（違反をログのみ記録）の2つの執行モードを選択できる。",
     "ハードストップ型承認：エージェントが提案を生成した時点で処理を一時停止し、人間が明示的に承認するまでツール呼び出しを実行しない（例：ADKのHITL拡張やカスタムのapproval queueパターン）。",

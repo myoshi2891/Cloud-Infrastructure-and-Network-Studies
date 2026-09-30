@@ -17,7 +17,7 @@ let mainContent = mainMatch[1];
 // 1. Convert Mermaid pre blocks into <Diagram id="diag-N" ariaLabel="..." />
 const diagramLabels = [
     '開発・CI/CD・本番フェーズのライフサイクル循環図',
-    'ユーザーシミュレーションによるテスト生成と評価のフロー',
+    'Test File・Evalset・User Simulationからテストデータ作成方法を選択するフロー',
     'Online Monitorがトレースをサンプリングして評価し結果を出力する周期ループのシーケンス図',
     '評価ケースの定義からエージェントの最適化までの6段階評価ワークフロー',
     'ADK Conformance Testingのベースライン記録と回帰テストフロー',
