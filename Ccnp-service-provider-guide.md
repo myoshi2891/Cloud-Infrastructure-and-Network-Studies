@@ -709,7 +709,7 @@ interface TenGigE0/0/0/1
  ipv4 verify unicast source reachable-via rx
 ```
 
-**ベストプラクティス**: 顧客向け接続は Strict（可能な限り）、ピアリング/トランジットは Loose。**デフォルト経路があると Loose は無効化されやすい**点に注意（`allow-default` の扱いを確認）。
+**ベストプラクティス**: 顧客向け接続は Strict（可能な限り）、ピアリング/トランジットは Loose。**IOS XR では、デフォルト経路が存在しても Loose uRPF はデフォルト経路をソース検証に使用しない（`allow-default` を設定した場合のみ使用する）**。`allow-default` なし：デフォルト経路は無視されソース IP が他の経路で到達可能でなければドロップ。`allow-default` あり：デフォルト経路もソース検証の根拠として使用（実質的に大多数のソース IP が通過するため緩い検証になる）。
 
 **出典**
 - RFC 3704 Ingress Filtering for Multihomed Networks（BCP 84）: https://www.rfc-editor.org/rfc/rfc3704
