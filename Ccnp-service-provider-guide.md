@@ -2,7 +2,7 @@
 
 > **対象読者**: サービスプロバイダー（SP）ネットワークをこれから学ぶ方、CCNP Enterprise 相当の知識から SP 領域へ進む方
 > **作成日**: 2026-09-30
-> **根拠となる公式情報**: Cisco Japan「CCNP Service Provider 認定とトレーニングプログラム」および各試験の出題範囲 PDF（v1.1、2024 年版）
+> **根拠となる公式情報**: Cisco Japan「CCNP Service Provider 認定とトレーニングプログラム」および各試験の出題範囲 PDF（300-540 SPCNI: v1.0 / 350-501 SPCOR: v1.1、2024 年版）
 > **書式ルール**: ASCII アートによる図解は使用せず、フローチャートは Mermaid、図解・表は Markdown で表現します
 
 ---
