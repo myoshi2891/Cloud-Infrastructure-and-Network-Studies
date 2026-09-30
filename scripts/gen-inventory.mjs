@@ -32,6 +32,23 @@ if (
     throw new Error('source.html must resolve inside the repository');
 }
 const doc = new JSDOM(fs.readFileSync(htmlRealPath, 'utf8')).window.document;
+// HTML内で <script class="mermaid-source"> や <script class="code-source"> として
+// 格納され、ブラウザJSで <pre class="mermaid"> や <pre><code> に置換される動的コンテンツを事前展開
+doc.querySelectorAll('script.mermaid-source').forEach((el) => {
+    const pre = doc.createElement('pre');
+    pre.className = 'mermaid';
+    pre.textContent = el.textContent ?? '';
+    el.replaceWith(pre);
+});
+doc.querySelectorAll('script.code-source').forEach((el) => {
+    const pre = doc.createElement('pre');
+    const code = doc.createElement('code');
+    const lang = el.getAttribute('data-lang') || 'bash';
+    code.className = 'language-' + lang;
+    code.textContent = el.textContent ?? '';
+    pre.appendChild(code);
+    el.replaceWith(pre);
+});
 const texts = (sel) =>
     [...doc.querySelectorAll(sel)]
         .map((el) => normalize(el.textContent ?? ''))
