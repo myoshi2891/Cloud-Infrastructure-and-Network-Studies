@@ -571,6 +571,512 @@ export default function CliGuide() {
                                 </li>
                             </ul>
                         </section>
+
+                        {/* ============ 6. ps / top / kill / lsof ============ */}
+                        <section id="sec-ps" tabIndex={-1}>
+                            <h2><span className="num">6.</span> プロセス管理：ps / top / kill / lsof</h2>
+                            <p>
+                                サーバーの動作が重い、特定プロセスが応答しないといった状況でまず頼るのがこの章のコマンド群です。
+                            </p>
+
+                            <h3>6.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CPU使用率トップ10のプロセスを表示</td>
+                                            <td><code>ps aux --sort=-%cpu | head -n 11</code></td>
+                                            <td>ヘッダー行込みで11行取得（実質トップ10）</td>
+                                        </tr>
+                                        <tr>
+                                            <td>メモリ使用率トップ10のプロセスを表示</td>
+                                            <td><code>ps aux --sort=-%mem | head -n 11</code></td>
+                                            <td>メモリ逼迫時の原因調査に使う</td>
+                                        </tr>
+                                        <tr>
+                                            <td>プロセス名からPIDを特定する</td>
+                                            <td><code>pgrep -fl node</code></td>
+                                            <td>
+                                                <code>-f</code> はコマンドライン全体を対象、
+                                                <code>-l</code>
+                                                でプロセス名も表示
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>プロセスを正常終了させる</td>
+                                            <td><code>kill -TERM $(pgrep -f my_app)</code></td>
+                                            <td>
+                                                まずは正常終了シグナル（<code>SIGTERM</code>）を送るのが基本
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>応答しないプロセスを強制終了する</td>
+                                            <td><code>kill -KILL $(pgrep -f my_app)</code></td>
+                                            <td>
+                                                <code>SIGTERM</code> で終了しない場合の最終手段（
+                                                <code>kill -9</code>
+                                                と同義）
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>特定ポートを使用中のプロセスを特定する</td>
+                                            <td><code>lsof -i :8080</code></td>
+                                            <td>「Address already in use」エラーの原因調査に必須</td>
+                                        </tr>
+                                        <tr>
+                                            <td>特定ファイルを開いているプロセスを特定する</td>
+                                            <td><code>lsof /var/log/syslog</code></td>
+                                            <td>
+                                                ファイルが削除できない・ロックされている際の調査に使う
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ゾンビプロセスを検出する</td>
+                                            <td><code>ps aux | awk &apos;$8==&quot;Z&quot;&apos;</code></td>
+                                            <td>ステータス列が <code>Z</code> のプロセスを抽出</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>6.2 トラブルシューティングの意思決定フロー</h3>
+                            <Diagram id="diag-process" label="プロセストラブルシューティングの意思決定フローチャート" />
+
+                            <h3>6.3 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>kill -KILL</code>（<code>kill -9</code>
+                                    ）はプロセスに終了処理（後片付け）をさせずに強制終了するため、データ破損のリスクがある。まず
+                                    <code>-TERM</code> を試す
+                                </li>
+                                <li>
+                                    本番環境で他人のプロセスを
+                                    <code>kill</code> する前に、そのプロセスが何であるか（
+                                    <code>ps -p PID -o cmd=</code>
+                                    などで）必ず確認する
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* ============ 7. curl / ss / dig / ping ============ */}
+                        <section id="sec-net" tabIndex={-1}>
+                            <h2>
+                                <span className="num">7.</span> ネットワーク診断：curl / ss / dig / ping
+                            </h2>
+                            <p>
+                                「サービスに繋がらない」というトラブルは、疎通→名前解決→アプリ応答→ローカルのポート状態、の順に切り分けると原因を絞り込みやすくなります。
+                            </p>
+
+                            <h3>7.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>HTTPステータスコードだけ確認する</td>
+                                            <td>
+                                                <code>
+                                                    curl -o /dev/null -s -w &quot;%&#123;http_code&#125;\n&quot;
+                                                    https://example.com
+                                                </code>
+                                            </td>
+                                            <td>
+                                                ボディを捨て、ステータスコードのみ出力（出典：curl man
+                                                page）
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>レスポンスヘッダのみ取得する</td>
+                                            <td><code>curl -I https://example.com</code></td>
+                                            <td>HEADリクエストでヘッダのみ取得</td>
+                                        </tr>
+                                        <tr>
+                                            <td>応答時間を計測する</td>
+                                            <td>
+                                                <code>
+                                                    curl -o /dev/null -s -w &quot;%&#123;time_total&#125;\n&quot;
+                                                    https://example.com
+                                                </code>
+                                            </td>
+                                            <td>サーバーの応答遅延の切り分けに使う</td>
+                                        </tr>
+                                        <tr>
+                                            <td>待ち受け中のTCPポート一覧を表示する</td>
+                                            <td><code>ss -tlnp</code></td>
+                                            <td>
+                                                <code>-t</code> TCP, <code>-l</code> 待受のみ,
+                                                <code>-n</code> 名前解決なし,
+                                                <code>-p</code> プロセス情報付き（出典：ss man page）
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>確立済みのTCP接続一覧を表示する</td>
+                                            <td><code>ss -tan state established</code></td>
+                                            <td>現在アクティブな通信を確認</td>
+                                        </tr>
+                                        <tr>
+                                            <td>DNSのAレコードを確認する</td>
+                                            <td><code>dig example.com +short</code></td>
+                                            <td>名前解決の結果だけを簡潔に表示</td>
+                                        </tr>
+                                        <tr>
+                                            <td>疎通確認を4回だけ行う</td>
+                                            <td><code>ping -c 4 example.com</code></td>
+                                            <td>
+                                                <code>-c</code>
+                                                で回数を指定し、無限に実行され続けるのを防ぐ
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>7.2 ネットワーク疎通確認の切り分けフロー</h3>
+                            <Diagram id="diag-network" label="ネットワーク疎通確認の切り分けフローチャート" />
+
+                            <h3>7.3 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>ping</code>
+                                    がブロックされているネットワーク（ICMP無効化）もあるため、応答が無い＝必ずしもサービス停止とは限らない
+                                </li>
+                                <li>
+                                    本番環境の <code>curl</code> 調査では
+                                    <code>-sS</code>（エラー表示付きサイレント）と
+                                    <code>-o /dev/null</code>
+                                    （ボディ破棄）を組み合わせ、ログを汚さないようにする
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* ============ 8. df / du / free ============ */}
+                        <section id="sec-disk" tabIndex={-1}>
+                            <h2><span className="num">8.</span> ディスク・システム情報：df / du / free</h2>
+                            <p>
+                                「ディスクが逼迫している」「メモリが足りない」といった調査の起点になるコマンド群です。
+                            </p>
+
+                            <h3>8.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>パーティションごとの使用率を確認する</td>
+                                            <td><code>df -h</code></td>
+                                            <td>
+                                                <code>-h</code>
+                                                で人間が読みやすい単位（GB/MBなど）表示（出典：GNU
+                                                Coreutils マニュアル）
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>inode使用率を確認する</td>
+                                            <td><code>df -i</code></td>
+                                            <td>「容量はあるのにファイルが作れない」場合の原因調査</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                カレントディレクトリ内で容量の大きいディレクトリTOP10
+                                            </td>
+                                            <td><code>du -sh */ | sort -rh | head -10</code></td>
+                                            <td>
+                                                <code>du -sh</code>
+                                                で各ディレクトリの合計サイズを表示し降順ソート
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>100MBを超えるファイルを検出する</td>
+                                            <td>
+                                                <code>
+                                                    find . -type f -size +100M -exec ls -lh &#123;&#125; \;
+                                                </code>
+                                            </td>
+                                            <td>容量を圧迫している個別ファイルの特定に使う</td>
+                                        </tr>
+                                        <tr>
+                                            <td>メモリの空き容量を確認する</td>
+                                            <td><code>free -h</code></td>
+                                            <td><code>-h</code> で人間が読みやすい単位表示</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>8.2 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>du</code>
+                                    は集計に時間がかかることがあるため、対象を絞り込んでから実行する（例：
+                                    <code>du -sh /var/log/*</code>
+                                    ）
+                                </li>
+                                <li>
+                                    ディスク逼迫は「容量」だけでなく「inode枯渇」でも発生するため、
+                                    <code>df -h</code>
+                                    で容量に余裕があっても <code>df -i</code> を確認する習慣をつける
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* ============ 9. git ============ */}
+                        <section id="sec-git" tabIndex={-1}>
+                            <h2><span className="num">9.</span> Git実践ワンライナー</h2>
+                            <p>
+                                Gitはバージョン管理システムの事実上の標準です（出典：Git公式ドキュメント
+                                / git-scm.com）。
+                            </p>
+
+                            <h3>9.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>コミット履歴を1行・グラフ付きで見やすく表示</td>
+                                            <td>
+                                                <code>git log --oneline --graph --decorate --all</code>
+                                            </td>
+                                            <td>ブランチの分岐・マージが視覚的に把握できる</td>
+                                        </tr>
+                                        <tr>
+                                            <td>変更されたファイル名だけを表示する</td>
+                                            <td><code>git diff --name-only</code></td>
+                                            <td>レビュー前の変更範囲確認に便利</td>
+                                        </tr>
+                                        <tr>
+                                            <td>マージ済みのローカルブランチを一括削除する</td>
+                                            <td>
+                                                <code>
+                                                    git branch --merged | grep -v &quot;\*\|main\|master&quot; |
+                                                    xargs -n 1 git branch -d
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <code>main</code>
+                                                /<code>master</code>・現在ブランチを除外して安全に削除
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>特定ファイルの変更履歴を追う</td>
+                                            <td><code>git log -p -- path/to/file</code></td>
+                                            <td>ファイル単位で過去の差分をすべて追跡できる</td>
+                                        </tr>
+                                        <tr>
+                                            <td>直前のコミットメッセージだけを修正する</td>
+                                            <td><code>git commit --amend -m &quot;new message&quot;</code></td>
+                                            <td>まだ push していないコミットの言い直しに使う</td>
+                                        </tr>
+                                        <tr>
+                                            <td>期間内のコミット数を著者別に集計する</td>
+                                            <td>
+                                                <code>
+                                                    git log --since=&quot;1 week ago&quot; --pretty=format:&quot;%an&quot;
+                                                    | sort | uniq -c | sort -rn
+                                                </code>
+                                            </td>
+                                            <td>チームの活動量の可視化に使える</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ステージ済みの差分だけを確認する</td>
+                                            <td><code>git diff --cached</code></td>
+                                            <td>
+                                                <code>git add</code>
+                                                した内容がコミット前に意図通りか確認
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>9.2 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>git branch -D</code>
+                                    （大文字）は未マージの変更も強制削除するため、通常は
+                                    <code>-d</code>（小文字、マージ済みのみ削除可）を使う
+                                </li>
+                                <li>
+                                    共有リポジトリで <code>git commit --amend</code> や
+                                    <code>git rebase</code> を行った後の <code>push</code> には
+                                    <code>--force-with-lease</code>
+                                    を検討し、他者の変更を上書きしないよう注意する
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* ============ 10. docker ============ */}
+                        <section id="sec-docker" tabIndex={-1}>
+                            <h2><span className="num">10.</span> Docker実践ワンライナー</h2>
+                            <p>
+                                コンテナ環境の運用でも「一括整理」「状況確認」のワンライナーは頻出です（出典：Docker公式ドキュメント）。
+                            </p>
+
+                            <h3>10.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>停止中のコンテナを一括削除する</td>
+                                            <td><code>docker container prune -f</code></td>
+                                            <td>
+                                                <code>-f</code>
+                                                で確認プロンプトを省略（内容を理解した上で使う）
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>未使用のイメージを一括削除する</td>
+                                            <td><code>docker image prune -a -f</code></td>
+                                            <td>
+                                                <code>-a</code> はタグ付きでも未使用なら削除対象にする
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>実行中コンテナのログをリアルタイム表示する</td>
+                                            <td><code>docker logs -f コンテナ名</code></td>
+                                            <td><code>-f</code> でログを追従表示</td>
+                                        </tr>
+                                        <tr>
+                                            <td>稼働中コンテナの中にシェルで入る</td>
+                                            <td><code>docker exec -it コンテナ名 /bin/bash</code></td>
+                                            <td><code>-it</code> で対話的なシェルセッションを開始</td>
+                                        </tr>
+                                        <tr>
+                                            <td>全コンテナのリソース使用状況をリアルタイム表示する</td>
+                                            <td><code>docker stats</code></td>
+                                            <td>CPU・メモリ・ネットワークI/Oを一覧でモニタリング</td>
+                                        </tr>
+                                        <tr>
+                                            <td>イメージをサイズ順に一覧表示する</td>
+                                            <td>
+                                                <code>
+                                                    docker images --format
+                                                    &quot;&#123;&#123;.Repository&#125;&#125;:&#123;&#123;.Tag&#125;&#125;\t&#123;&#123;.Size&#125;&#125;&quot; | sort -k2
+                                                    -h
+                                                </code>
+                                            </td>
+                                            <td>ディスクを圧迫している大きいイメージの特定に使う</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>10.2 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>prune</code>
+                                    系コマンドは対象を完全に削除するため、必要なデータ（ボリューム含む）が残っているか事前に
+                                    <code>docker ps -a</code> や
+                                    <code>docker volume ls</code> で確認する
+                                </li>
+                                <li>
+                                    <code>-f</code>
+                                    （force）オプションは確認プロンプトを飛ばすため、内容を理解してから使う
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* ============ 11. journalctl / tail ============ */}
+                        <section id="sec-log" tabIndex={-1}>
+                            <h2><span className="num">11.</span> ログ調査：journalctl / tail</h2>
+                            <p>
+                                systemd環境のログ管理は
+                                <code>journalctl</code> が標準です（出典：journalctl man page）。
+                            </p>
+
+                            <h3>11.1 実践ワンライナー表</h3>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">目的</th>
+                                            <th scope="col">ワンライナー</th>
+                                            <th scope="col">解説</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>システムログをリアルタイム表示する</td>
+                                            <td><code>journalctl -f</code></td>
+                                            <td><code>tail -f</code> のsystemd版</td>
+                                        </tr>
+                                        <tr>
+                                            <td>特定サービスのログを直近1時間分だけ表示する</td>
+                                            <td>
+                                                <code>
+                                                    journalctl -u nginx.service --since &quot;1 hour
+                                                    ago&quot;
+                                                </code>
+                                            </td>
+                                            <td><code>-u</code> でユニット（サービス）名を指定</td>
+                                        </tr>
+                                        <tr>
+                                            <td>エラー以上の優先度のログだけを表示する</td>
+                                            <td><code>journalctl -p err -b</code></td>
+                                            <td>
+                                                <code>-p err</code> で優先度フィルタ、<code>-b</code>
+                                                は今回起動分のみ
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ログファイルの末尾をリアルタイム監視する</td>
+                                            <td><code>tail -f /var/log/syslog</code></td>
+                                            <td>古典的だが今でも現役の定番コマンド</td>
+                                        </tr>
+                                        <tr>
+                                            <td>複数ログファイルを同時に監視する</td>
+                                            <td><code>tail -f app1.log app2.log</code></td>
+                                            <td>複数プロセスのログを並行して追う場合に便利</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>11.2 注意点</h3>
+                            <ul>
+                                <li>
+                                    <code>journalctl</code>
+                                    はデフォルトで大量のログを保持するため、対象期間・優先度・ユニットで必ず絞り込んでから読む
+                                </li>
+                                <li>
+                                    ログにアクセスできない場合は、権限（<code>sudo</code>
+                                    が必要か、<code>systemd-journal</code>
+                                    グループに所属しているか）を確認する
+                                </li>
+                            </ul>
+                        </section>
                     </div>
                 </main>
             </div>
