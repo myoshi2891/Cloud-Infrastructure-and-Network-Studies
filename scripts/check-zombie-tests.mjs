@@ -141,6 +141,8 @@ function getProcessCwd(pid) {
     const out = execFileSync('lsof', ['-a', '-p', pid, '-d', 'cwd', '-Fn'], {
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],
+      timeout: 5000,
+      killSignal: 'SIGKILL',
     });
     const line = out.split('\n').find((l) => l.startsWith('n'));
     return line ? line.slice(1) : null;
