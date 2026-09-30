@@ -263,11 +263,14 @@
                 overflow-x: auto;
                 text-align: center;
             }
+            /* Do NOT force width:100% here: mermaid-cli already bakes in the correct natural
+   pixel size per diagram via an inline style="max-width:Npx". Overriding that with
+   width:100% stretches small diagrams (small viewBox) to fill the whole card,
+   scaling the text up along with it. Only cap oversized diagrams from overflowing. */
             figure.diagram svg {
-                max-width: 100% !important;
-                width: 100%;
-                height: auto;
                 display: inline-block;
+                height: auto;
+                max-width: 100%;
             }
 
             /* ---- quiz cards ---- */
@@ -346,17 +349,76 @@
                 font-weight: 700;
                 color: var(--indigo);
             }
+
+            /* ---- mobile hamburger drawer (replaces the old always-stacked mobile nav) ---- */
+            .menu-btn {
+                display: none;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                z-index: 60;
+                width: 44px;
+                height: 44px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: var(--card);
+                box-shadow: 0 2px 10px rgba(20, 20, 30, 0.12);
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                cursor: pointer;
+            }
+            .menu-btn .bars {
+                position: relative;
+                width: 18px;
+                height: 2px;
+                background: var(--ink);
+                flex: none;
+            }
+            .menu-btn .bars::before,
+            .menu-btn .bars::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                width: 18px;
+                height: 2px;
+                background: var(--ink);
+            }
+            .menu-btn .bars::before {
+                top: -6px;
+            }
+            .menu-btn .bars::after {
+                top: 6px;
+            }
+            .backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(20, 20, 30, 0.42);
+                z-index: 55;
+            }
+            body.menu-open .backdrop {
+                display: block;
+            }
             @media (max-width: 900px) {
+                .menu-btn {
+                    display: flex;
+                }
                 aside {
-                    position: static;
-                    width: auto;
-                    border: 0;
-                    border-bottom: 1px solid var(--border);
-                    max-height: 220px;
+                    position: fixed;
+                    width: min(84vw, 320px);
+                    max-height: none;
+                    transform: translateX(-102%);
+                    transition: transform 0.25s ease;
+                    z-index: 58;
+                    box-shadow: 2px 0 24px rgba(20, 20, 30, 0.18);
+                }
+                body.menu-open aside {
+                    transform: translateX(0);
                 }
                 main {
                     margin-left: 0;
-                    padding: 0 18px 60px;
+                    padding: 76px 18px 60px;
                 }
                 .hero {
                     margin: 0 -18px 8px;
@@ -366,6 +428,10 @@
         </style>
     </head>
     <body>
+        <button class="menu-btn" type="button" aria-label="メニューを開く" aria-expanded="false">
+            <span class="bars"></span>
+        </button>
+        <div class="backdrop"></div>
         <aside>
             <p class="brand">AIB-C01 完全ガイド</p>
             <a href="#s2">目次</a><a href="#s3">このガイドの読み方</a
@@ -1505,7 +1571,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1519,7 +1587,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1533,7 +1603,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1547,7 +1619,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1561,7 +1635,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1575,7 +1651,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_G_H_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -1589,7 +1667,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -2622,7 +2702,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -2636,7 +2718,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -2650,7 +2734,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -3802,7 +3888,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(138, 425.5)">
                                     <g
                                         class="label"
@@ -3970,7 +4058,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -5052,7 +5142,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -5066,7 +5158,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(664, 99.75)">
                                     <g
                                         class="label"
@@ -5150,7 +5244,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_A_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -5164,7 +5260,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -6325,7 +6423,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6339,7 +6439,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6353,7 +6455,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6367,7 +6471,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6381,7 +6487,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6395,7 +6503,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_G_H_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -6409,7 +6519,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -7394,7 +7506,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -7408,7 +7522,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g
                                     class="edgeLabel"
                                     transform="translate(106.5625, 411.04999923706055)"
@@ -7528,7 +7644,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -7542,7 +7660,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -8541,7 +8661,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -8555,7 +8677,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -8569,7 +8693,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -8583,7 +8709,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -9568,7 +9696,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(500.56640625, 395.375)">
                                     <g
                                         class="label"
@@ -9722,7 +9852,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -9736,7 +9868,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -9750,7 +9884,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -10776,7 +10912,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(127.125, 450)">
                                     <g
                                         class="label"
@@ -11899,7 +12037,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -11913,7 +12053,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -11927,7 +12069,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -11941,7 +12085,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -11955,7 +12101,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -11969,7 +12117,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -13479,7 +13629,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -13493,7 +13645,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -13507,7 +13661,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -13521,7 +13677,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_B_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -13535,7 +13693,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -14469,7 +14629,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -14483,7 +14645,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g
                                     class="edgeLabel"
                                     transform="translate(86.1875, 477.0999984741211)"
@@ -14617,7 +14781,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -15901,7 +16067,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -15915,7 +16083,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(138, 459)">
                                     <g
                                         class="label"
@@ -16034,7 +16204,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -16048,7 +16220,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_G_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -16062,7 +16236,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -17428,7 +17604,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -17442,7 +17620,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -17456,7 +17636,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -17470,7 +17652,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -17484,7 +17668,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_B_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -17498,7 +17684,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -18769,7 +18957,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_B_C_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -18783,7 +18973,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_C_D_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -18797,7 +18989,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_B_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -18811,7 +19005,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -19837,7 +20033,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel" transform="translate(138, 363.375)">
                                     <g
                                         class="label"
@@ -19921,7 +20119,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_E_F_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -19935,7 +20135,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_F_E_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -19949,7 +20151,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                                 <g class="edgeLabel">
                                     <g class="label" data-id="L_D_A_0" transform="translate(0, 0)">
                                         <text y="-10.1" text-anchor="middle">
@@ -19963,7 +20167,9 @@
                                         </text>
                                     </g>
                                 </g>
-                                <g><rect class="background" style="stroke: none" /></g>
+                                <g>
+                                    <rect class="background" style="stroke: none" />
+                                </g>
                             </g>
                             <g class="nodes">
                                 <g
@@ -21894,6 +22100,28 @@
             map.forEach((a, id) => {
                 const t = document.getElementById(id);
                 if (t) io.observe(t);
+            });
+
+            const menuBtn = document.querySelector('.menu-btn');
+            const backdrop = document.querySelector('.backdrop');
+            function closeMenu() {
+                document.body.classList.remove('menu-open');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            }
+            function openMenu() {
+                document.body.classList.add('menu-open');
+                menuBtn.setAttribute('aria-expanded', 'true');
+            }
+            menuBtn.addEventListener('click', () => {
+                document.body.classList.contains('menu-open') ? closeMenu() : openMenu();
+            });
+            backdrop.addEventListener('click', closeMenu);
+            links.forEach((a) => a.addEventListener('click', closeMenu));
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 900) closeMenu();
             });
         </script>
     </body>
