@@ -765,4 +765,3 @@ interface TenGigE0/0/0/2
 
 **出典**
 - IEEE 802.1AE: https://1.ieee802.org/security/802-1ae/
-- RFC 8247? （※使用しません）この項は IEEE 規格を主出典とする
