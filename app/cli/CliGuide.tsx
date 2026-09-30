@@ -476,13 +476,13 @@ export default function CliGuide() {
                                             <td>CSVの特定列だけを抽出する</td>
                                             <td><code>awk -F&apos;,&apos; &apos;&#123;print $2&#125;&apos; data.csv</code></td>
                                             <td>
-                                                <code>-F&apos;,&apos;</code> でカンマ区切りを指定し、2列目を出力
+                                                <code>-F&apos;,&apos;</code> でカンマ区切りを指定し、2列目を出力（引用符付きフィールドを含まない単純なCSV専用）
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>条件に合う行だけ抽出する</td>
                                             <td><code>awk -F&apos;,&apos; &apos;$3&gt;100 &#123;print&#125;&apos; data.csv</code></td>
-                                            <td>3列目の値が100より大きい行だけ出力</td>
+                                            <td>3列目の値が100より大きい行だけ出力（引用符付きフィールドを含まない単純なCSV専用）</td>
                                         </tr>
                                         <tr>
                                             <td>ある列の合計を計算する</td>
@@ -492,7 +492,7 @@ export default function CliGuide() {
                                                     data.csv
                                                 </code>
                                             </td>
-                                            <td><code>END</code> ブロックで全行処理後の合計を出力</td>
+                                            <td><code>END</code> ブロックで全行処理後の合計を出力（引用符付きフィールドを含まない単純なCSV専用）</td>
                                         </tr>
                                         <tr>
                                             <td>重複行を除去して出現回数を集計する</td>
@@ -617,8 +617,8 @@ export default function CliGuide() {
                                         </tr>
                                         <tr>
                                             <td>ゾンビプロセスを検出する</td>
-                                            <td><code>ps aux | awk &apos;$8==&quot;Z&quot;&apos;</code></td>
-                                            <td>ステータス列が <code>Z</code> のプロセスを抽出</td>
+                                            <td><code>ps aux | awk &apos;$8 ~ /^Z/&apos;</code></td>
+                                            <td>ステータス列が <code>Z</code> で始まる（<code>Z+</code> や <code>Zs</code> を含む）プロセスを抽出</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1074,12 +1074,12 @@ export default function CliGuide() {
 
                             <div className="card note">
                                 <h4>シナリオC：アクセスログから異常を検知する</h4>
-                                <p>直近のログから404エラーが多いパスをトップ10で確認する：</p>
+                                <p>直近のログ（combined 形式を想定）から、ステータスコードが404のリクエストが多いパスをトップ10で確認する：</p>
                                 <div className="code-block" role="region" aria-label="アクセスログ異常検知ワンライナー">
-                                    <div className="code-line">grep &quot; 404 &quot; access.log | awk &apos;&#123;print $7&#125;&apos; | sort | uniq -c | sort -rn | head -10</div>
+                                    <div className="code-line">awk &apos;$9 == 404 &#123;print $7&#125;&apos; access.log | sort | uniq -c | sort -rn | head -10</div>
                                 </div>
                                 <p>
-                                    この1行は「grep（絞り込み）→ awk（列抽出）→ sort（整列）→ uniq
+                                    この1行は「awk（ステータス列 $9 が404の行に絞り込み、リクエストパス $7 を抽出）→ sort（整列）→ uniq
                                     -c（集計）→ sort -rn（降順）→
                                     head（上位表示）」という、これまでに学んだパイプラインの組み合わせそのものです。仕組みを理解していれば、初見のワンライナーでも読み解けるようになります。
                                 </p>

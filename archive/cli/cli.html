@@ -877,13 +877,13 @@
                                         <td>CSVの特定列だけを抽出する</td>
                                         <td><code>awk -F',' '{print $2}' data.csv</code></td>
                                         <td>
-                                            <code>-F','</code> でカンマ区切りを指定し、2列目を出力
+                                            <code>-F','</code> でカンマ区切りを指定し、2列目を出力（引用符付きフィールドを含まない単純なCSV専用）
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>条件に合う行だけ抽出する</td>
                                         <td><code>awk -F',' '$3&gt;100 {print}' data.csv</code></td>
-                                        <td>3列目の値が100より大きい行だけ出力</td>
+                                        <td>3列目の値が100より大きい行だけ出力（引用符付きフィールドを含まない単純なCSV専用）</td>
                                     </tr>
                                     <tr>
                                         <td>ある列の合計を計算する</td>
@@ -893,7 +893,7 @@
                                                 data.csv</code
                                             >
                                         </td>
-                                        <td><code>END</code> ブロックで全行処理後の合計を出力</td>
+                                        <td><code>END</code> ブロックで全行処理後の合計を出力（引用符付きフィールドを含まない単純なCSV専用）</td>
                                     </tr>
                                     <tr>
                                         <td>重複行を除去して出現回数を集計する</td>
@@ -1029,8 +1029,8 @@
                                     </tr>
                                     <tr>
                                         <td>ゾンビプロセスを検出する</td>
-                                        <td><code>ps aux | awk '$8=="Z"'</code></td>
-                                        <td>ステータス列が <code>Z</code> のプロセスを抽出</td>
+                                        <td><code>ps aux | awk '$8 ~ /^Z/'</code></td>
+                                        <td>ステータス列が <code>Z</code> で始まる（<code>Z+</code> や <code>Zs</code> を含む）プロセスを抽出</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1530,12 +1530,12 @@
 
                         <div class="card note">
                             <h4>シナリオC：アクセスログから異常を検知する</h4>
-                            <p>直近のログから404エラーが多いパスをトップ10で確認する：</p>
+                            <p>直近のログ（combined 形式を想定）から、ステータスコードが404のリクエストが多いパスをトップ10で確認する：</p>
                             <script type="text/plain" class="code-source" data-lang="bash">
-                                grep " 404 " access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -10
+                                awk '$9 == 404 {print $7}' access.log | sort | uniq -c | sort -rn | head -10
                             </script>
                             <p>
-                                この1行は「grep（絞り込み）→ awk（列抽出）→ sort（整列）→ uniq
+                                この1行は「awk（ステータス列 $9 が404の行に絞り込み、リクエストパス $7 を抽出）→ sort（整列）→ uniq
                                 -c（集計）→ sort -rn（降順）→
                                 head（上位表示）」という、これまでに学んだパイプラインの組み合わせそのものです。仕組みを理解していれば、初見のワンライナーでも読み解けるようになります。
                             </p>
