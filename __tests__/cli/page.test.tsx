@@ -54,9 +54,9 @@ describe('CLIコマンド実践ワンライナー集 — 詳細仕様・スタ�
         const container = renderPage();
         const codeBlocks = container.querySelectorAll('.code-block');
         expect(codeBlocks).toHaveLength(6);
-        codeBlocks.forEach((block) => {
+        codeBlocks.forEach((block, index) => {
             const lines = block.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+            expect(lines.length).toBe(inventory.structures.codeLines[index]);
         });
     });
 
