@@ -315,7 +315,7 @@
     "RAG Engine：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただしCMEKに対応するのは Spanner モードの RagManagedDb のみであり、RagManagedVertexVectorSearch（Serverless モードの既定のベクトルDB）と VertexVectorSearch（自前の Vector Search インデックスを持ち込む構成）は CMEK 非対応。CMEK が要件なら Spanner モード + RagManagedDb を選ぶ",
     "Agent Retrieval（旧 Vector Search 2.0）：Collection/Data Objectの保管をCMEKで暗号化",
     "Vector Search 1.0：単体利用ではIndexとIndexEndpointをCMEKで暗号化可能（両リソースに同じ鍵を使う必要がある）。CMEK非対応となるのは、RAG EngineのVertexVectorSearchバックエンドとして使う場合のみ",
-    "Floor Settings：組織・フォルダ・プロジェクトレベルで設定する「譲れない最低ライン」のベースライン設定。配下のすべてのテンプレートはこのフロア設定を満たす必要がある。Google管理MCPサーバーとVertex AI（Gemini呼び出し）向けのフロア設定は現在プレビュー機能として提供されている。",
+    "Floor Settings：組織・フォルダ・プロジェクトレベルで設定する「譲れない最低ライン」のベースライン設定。配下のテンプレートは有効な継承済み設定（effective inherited settings）に適合する必要があるが、プロジェクトレベルの Custom 設定が継承設定を上書きでき、Disable を選択すると継承された検出ルールを除去できる。そのため組織全体で共通のベースラインを維持するには、配下テンプレートによる上書きを制御する仕組みが必要となる。Google管理MCPサーバーとVertex AI（Gemini呼び出し）向けのフロア設定は現在プレビュー機能として提供されている。",
     "Template：個々のアプリケーション（エージェント）向けに作成する、より厳格な検出設定。「Inspect and block」（違反をブロック）と「Inspect only」（違反をログのみ記録）の2つの執行モードを選択できる。",
     "ハードストップ型承認：エージェントが提案を生成した時点で処理を一時停止し、人間が明示的に承認するまでツール呼び出しを実行しない（例：ADKのHITL拡張やカスタムのapproval queueパターン）。",
     "閾値ベースの自動判定＋エスカレーション：Semantic Governance PolicyのNLCで金額やリスクレベルの閾値を定義する。NLCの責務は閾値に基づくポリシー判定結果（allow/block）を返すことのみに限定され、Policy自体は承認キューを作成しない。閾値超過が判定された場合、アプリケーション側がその判定結果を受け取り、人間承認キュー（例：Pub/Sub + 承認UI）へ送信する。人間が承認した後にのみツール呼び出しを実行する流れとなる。",

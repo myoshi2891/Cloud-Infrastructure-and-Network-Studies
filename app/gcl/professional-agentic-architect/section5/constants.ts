@@ -394,7 +394,7 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     class EXEC okFill`,
 
     'diag-8': `flowchart TB
-    LOGS["Cloud Logging / Cloud Trace<br/>(Agent Gateway・Model Armor由来)"]
+    LOGS["Cloud Logging / Cloud Trace<br/>(ADK OpenTelemetry ログ・実行トレース<br/>プロンプト入力・レスポンス出力のキャプチャを含む)"]
     L1["Layer 1: 軽量ML<br/>統計的な外れ値のスクリーニング"]
     L2["Layer 2: 異常分析<br/>誤検知の除去"]
     L3["Layer 3: 呼び出しレベル分析<br/>根本原因の特定"]
