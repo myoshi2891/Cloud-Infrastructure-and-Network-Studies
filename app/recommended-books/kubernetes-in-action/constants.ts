@@ -615,7 +615,7 @@ class P2 highlightFill
 class B2,B3 dangerFill`,
 
     'diag-38': `flowchart TB
-T1["2025年11月11日<br/>SIG Network + Security<br/>Response Committeeが<br/>終了を発表"] --> T2["2026年3月31日<br/>ベストエフォート<br/>メンテナンス終了"]
+T1["2025年11月11日<br/>SIG Network + Security<br/>Response Committeeが<br/>終了を発表"] --> T2["2026年3月24日<br/>ベストエフォート<br/>メンテナンス終了"]
 T2 --> T3["以降: セキュリティパッチ・<br/>バグ修正・新機能提供なし"]
 T3 --> T4["既存デプロイは動作継続するが<br/>新規CVEに対して脆弱"]
 
