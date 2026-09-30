@@ -44,64 +44,78 @@ export function NavBar() {
     useEffect(() => {
         if (typeof IntersectionObserver === 'undefined') return;
 
-        const visibleIds = new Set<string>();
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    const id = entry.target.id;
-                    if (entry.isIntersecting) {
-                        visibleIds.add(id);
-                    } else {
-                        visibleIds.delete(id);
-                    }
-                }
-
-                if (visibleIds.size === 0) return;
-
-                let topId = '';
-                let minTop = Infinity;
-                let fallbackId = '';
-                let maxNegativeTop = -Infinity;
-
-                for (const item of NAV_ITEMS) {
-                    if (!visibleIds.has(item.id)) continue;
-                    const el = document.getElementById(item.id);
-                    if (!el) continue;
-                    const top = el.getBoundingClientRect().top;
-                    if (top >= 0) {
-                        if (top < minTop) {
-                            minTop = top;
-                            topId = item.id;
+        const buildObserver = () => {
+            const visibleIds = new Set<string>();
+            const bottomPx = Math.max(0, window.innerHeight - 160);
+            const obs = new IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        const id = entry.target.id;
+                        if (entry.isIntersecting) {
+                            visibleIds.add(id);
+                        } else {
+                            visibleIds.delete(id);
                         }
-                    } else if (top > maxNegativeTop) {
-                        maxNegativeTop = top;
-                        fallbackId = item.id;
                     }
-                }
 
-                if (!topId) {
-                    topId = fallbackId;
-                }
+                    if (visibleIds.size === 0) return;
 
-                if (topId) {
-                    setActiveId(topId);
-                }
-            },
-            {
-                rootMargin: '-80px 0px -60% 0px',
-                threshold: [0, 0.25, 0.5, 0.75, 1],
-            },
-        );
+                    let topId = '';
+                    let minTop = Infinity;
+                    let fallbackId = '';
+                    let maxNegativeTop = -Infinity;
 
-        for (const item of NAV_ITEMS) {
-            const el = document.getElementById(item.id);
-            if (el) {
-                observer.observe(el);
+                    for (const item of NAV_ITEMS) {
+                        if (!visibleIds.has(item.id)) continue;
+                        const el = document.getElementById(item.id);
+                        if (!el) continue;
+                        const top = el.getBoundingClientRect().top;
+                        if (top >= 0) {
+                            if (top < minTop) {
+                                minTop = top;
+                                topId = item.id;
+                            }
+                        } else if (top > maxNegativeTop) {
+                            maxNegativeTop = top;
+                            fallbackId = item.id;
+                        }
+                    }
+
+                    if (!topId) {
+                        topId = fallbackId;
+                    }
+
+                    if (topId) {
+                        setActiveId(topId);
+                    }
+                },
+                {
+                    rootMargin: `-80px 0px -${bottomPx}px 0px`,
+                    threshold: [0, 0.25, 0.5, 0.75, 1],
+                },
+            );
+
+            for (const item of NAV_ITEMS) {
+                const el = document.getElementById(item.id);
+                if (el) {
+                    obs.observe(el);
+                }
             }
-        }
+
+            return obs;
+        };
+
+        let observer = buildObserver();
+
+        const handleResize = () => {
+            observer.disconnect();
+            observer = buildObserver();
+        };
+
+        window.addEventListener('resize', handleResize);
 
         return () => {
+            window.removeEventListener('resize', handleResize);
             observer.disconnect();
         };
     }, []);
