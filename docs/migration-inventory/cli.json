@@ -531,7 +531,7 @@
     },
     {
       "kind": "code",
-      "text": "                            # コマンド置換：結果を1つの文字列として埋め込む\n                            kill $(pgrep -f my_app)\n\n                            # xargs：一覧（複数行）を引数化して繰り返し実行\n                            find . -name \"*.log\" | xargs rm\n                        "
+      "text": "# コマンド置換：結果を1つの文字列として埋め込む\nkill $(pgrep -f my_app)\n\n# xargs：一覧（複数行）を引数化して繰り返し実行\nfind . -name \"*.log\" | xargs rm"
     },
     {
       "kind": "paragraph",
@@ -547,7 +547,7 @@
     },
     {
       "kind": "code",
-      "text": "                            grep [オプション] \"検索パターン\" [対象ファイル]\n                        "
+      "text": "grep [オプション] \"検索パターン\" [対象ファイル]"
     },
     {
       "kind": "paragraph",
@@ -555,7 +555,7 @@
     },
     {
       "kind": "code",
-      "text": "                            sed 's/検索文字列/置換文字列/フラグ' ファイル\n                        "
+      "text": "sed 's/検索文字列/置換文字列/フラグ' ファイル"
     },
     {
       "kind": "paragraph",
@@ -563,7 +563,7 @@
     },
     {
       "kind": "code",
-      "text": "                            awk -F'区切り文字' '条件 {処理}' ファイル\n                        "
+      "text": "awk -F'区切り文字' '条件 {処理}' ファイル"
     },
     {
       "kind": "paragraph",
@@ -599,7 +599,7 @@
     },
     {
       "kind": "code",
-      "text": "                                grep \" 404 \" access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -10\n                            "
+      "text": "grep \" 404 \" access.log | awk '{print $7}' | sort | uniq -c | sort -rn | head -10"
     },
     {
       "kind": "paragraph",
@@ -635,12 +635,12 @@
       3
     ],
     "codeLines": [
-      6,
+      5,
       1,
-      2,
-      2,
-      2,
-      2
+      1,
+      1,
+      1,
+      1
     ]
   }
 }

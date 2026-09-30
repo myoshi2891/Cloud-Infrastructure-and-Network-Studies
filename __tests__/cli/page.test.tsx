@@ -25,7 +25,7 @@ describe('CLIコマンド実践ワンライナー集 — 詳細仕様・スタ�
 
     it('リスト項目(li)が移行元の39件と完全に一致する', () => {
         const container = renderPage();
-        const lis = container.querySelectorAll('.content ul > li, .content ol > li');
+        const lis = container.querySelectorAll('li');
         expect(lis).toHaveLength(39);
     });
 

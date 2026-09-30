@@ -129,13 +129,10 @@ export function NavBar() {
             >
                 ☰
             </button>
-            <aside id="sidebar" className={`sidebar ${isOpen ? 'open' : ''}`}>
-                <div className="sidebar-header">
-                    <div className="kicker">DevOps & Linux Studies</div>
-                    <div className="sidebar-title">CLI実践ワンライナー集</div>
-                </div>
-                <nav id="sidebarNav" aria-label="セクション目次">
-                    <ul>
+            <nav id="sidebar" className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="サイドバーナビゲーション">
+                <div className="brand">CLIワンライナー実践ガイド</div>
+                <div className="brand-sub">日常の開発・トラブルシューティングで使う実践コマンド集</div>
+                <ul className="toc">
                         {NAV_ITEMS.map((item) => (
                             <li key={item.id}>
                                 <a
@@ -148,8 +145,7 @@ export function NavBar() {
                             </li>
                         ))}
                     </ul>
-                </nav>
-            </aside>
+            </nav>
         </>
     );
 }

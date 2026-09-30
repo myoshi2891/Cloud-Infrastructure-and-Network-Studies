@@ -132,12 +132,7 @@ export default function CliGuide() {
 
                             <h3>1.2 コマンド置換とxargsの連携</h3>
                             <p>
-                                <code>$(コマンド)</code>
-                                は「コマンドの実行結果を文字列として埋め込む」構文です。一方
-                                <code>xargs</code>
-                                は「パイプで受け取った一覧を、後続コマンドの<strong>引数</strong>として渡す」ためのブリッジ役です。この違いを理解すると、
-                                <code>find</code>
-                                や <code>grep</code> の結果を他のコマンドに渡す際に迷わなくなります。
+                                <code>$(コマンド)</code> は「コマンドの実行結果を文字列として埋め込む」構文です。一方 <code>xargs</code> は「パイプで受け取った一覧を、後続コマンドの<strong>引数</strong>として渡す」ためのブリッジ役です。この違いを理解すると、<code>find</code> や <code>grep</code> の結果を他のコマンドに渡す際に迷わなくなります。
                             </p>
 
                             <div className="code-block" role="region" aria-label="コマンド置換とxargsの例">
@@ -146,7 +141,6 @@ export default function CliGuide() {
                                 <div className="code-line"></div>
                                 <div className="code-line"><span className="code-comment"># xargs：一覧（複数行）を引数化して繰り返し実行</span></div>
                                 <div className="code-line">find . -name &quot;*.log&quot; | xargs rm</div>
-                                <div className="code-line"></div>
                             </div>
 
                             <h3>1.3 安全に試すための心得</h3>
@@ -175,10 +169,7 @@ export default function CliGuide() {
                         <section id="sec-find" tabIndex={-1}>
                             <h2><span className="num">2.</span> ファイル探索：find / xargs</h2>
                             <p>
-                                <code>find</code>
-                                はディレクトリツリーを条件付きで探索するコマンド、<code>xargs</code>
-                                はその結果を後続コマンドに渡すコマンドです（出典：GNU Findutils
-                                マニュアル）。
+                                <code>find</code> はディレクトリツリーを条件付きで探索するコマンド、<code>xargs</code> はその結果を後続コマンドに渡すコマンドです（出典：GNU Findutils マニュアル）。
                             </p>
 
                             <h3>2.1 基本構文</h3>
@@ -286,15 +277,12 @@ export default function CliGuide() {
                         <section id="sec-grep" tabIndex={-1}>
                             <h2><span className="num">3.</span> テキスト検索：grep</h2>
                             <p>
-                                <code>grep</code>
-                                はパターンマッチによりテキストの中から一致する行を検索するコマンドです（出典：GNU
-                                Grep マニュアル）。
+                                <code>grep</code> はパターンマッチによりテキストの中から一致する行を検索するコマンドです（出典：GNU Grep マニュアル）。
                             </p>
 
                             <h3>3.1 基本構文</h3>
                             <div className="code-block" role="region" aria-label="grepの基本構文">
                                 <div className="code-line">grep [オプション] &quot;検索パターン&quot; [対象ファイル]</div>
-                                <div className="code-line"></div>
                             </div>
 
                             <h3>3.2 実践ワンライナー表</h3>
@@ -377,15 +365,12 @@ export default function CliGuide() {
                         <section id="sec-sed" tabIndex={-1}>
                             <h2><span className="num">4.</span> テキスト変換：sed</h2>
                             <p>
-                                <code>sed</code>（stream
-                                editor）はテキストをストリームとして1行ずつ処理し、置換・削除・抽出を行うコマンドです（出典：GNU
-                                sed マニュアル）。
+                                <code>sed</code>（stream editor）はテキストをストリームとして1行ずつ処理し、置換・削除・抽出を行うコマンドです（出典：GNU sed マニュアル）。
                             </p>
 
                             <h3>4.1 基本構文</h3>
                             <div className="code-block" role="region" aria-label="sedの基本構文">
                                 <div className="code-line">sed &apos;s/検索文字列/置換文字列/フラグ&apos; ファイル</div>
-                                <div className="code-line"></div>
                             </div>
 
                             <h3>4.2 実践ワンライナー表</h3>
@@ -468,19 +453,12 @@ export default function CliGuide() {
                                 <span className="num">5.</span> テキスト集計：awk / sort / uniq / cut / wc
                             </h2>
                             <p>
-                                <code>awk</code>
-                                はフィールド（列）ベースでテキストを処理するプログラミング言語であり、集計・レポート作成に強みがあります（出典：GNU
-                                Awk User&apos;s
-                                Guide）。<code>sort</code>・<code>uniq</code>・<code>cut</code>・
-                                <code>wc</code>
-                                は GNU Coreutils に含まれる定番の集計系コマンドです（出典：GNU Coreutils
-                                マニュアル）。
+                                <code>awk</code> はフィールド（列）ベースでテキストを処理するプログラミング言語であり、集計・レポート作成に強みがあります（出典：GNU Awk User&apos;s Guide）。sort・uniq・cut・wc は GNU Coreutils に含まれる定番の集計系コマンドです（出典：GNU Coreutils マニュアル）。
                             </p>
 
                             <h3>5.1 基本構文</h3>
                             <div className="code-block" role="region" aria-label="awkの基本構文">
                                 <div className="code-line">awk -F&apos;区切り文字&apos; &apos;条件 &#123;処理&#125;&apos; ファイル</div>
-                                <div className="code-line"></div>
                             </div>
 
                             <h3>5.2 実践ワンライナー表</h3>
@@ -1012,8 +990,7 @@ export default function CliGuide() {
                         <section id="sec-log" tabIndex={-1}>
                             <h2><span className="num">11.</span> ログ調査：journalctl / tail</h2>
                             <p>
-                                systemd環境のログ管理は
-                                <code>journalctl</code> が標準です（出典：journalctl man page）。
+                                systemd環境のログ管理は <code>journalctl</code> が標準です（出典：journalctl man page）。
                             </p>
 
                             <h3>11.1 実践ワンライナー表</h3>
@@ -1077,6 +1054,371 @@ export default function CliGuide() {
                                 </li>
                             </ul>
                         </section>
+
+                        {/* ============ 12. 実践シナリオ ============ */}
+                        <section id="sec-scenario" tabIndex={-1}>
+                            <h2><span className="num">12.</span> 組み合わせ実践シナリオ</h2>
+                            <p>
+                                ここまでのコマンドを実際のトラブルシューティングの流れとして組み合わせます。
+                            </p>
+
+                            <div className="card note">
+                                <h4>シナリオA：ディスク容量が逼迫している</h4>
+                                <Diagram id="diag-scenario-a" label="ディスク容量逼迫トラブルシューティング手順" />
+                            </div>
+
+                            <div className="card note">
+                                <h4>シナリオB：ポート競合でサーバーが起動できない</h4>
+                                <Diagram id="diag-scenario-b" label="ポート競合トラブルシューティング手順" />
+                            </div>
+
+                            <div className="card note">
+                                <h4>シナリオC：アクセスログから異常を検知する</h4>
+                                <p>直近のログから404エラーが多いパスをトップ10で確認する：</p>
+                                <div className="code-block" role="region" aria-label="アクセスログ異常検知ワンライナー">
+                                    <div className="code-line">grep &quot; 404 &quot; access.log | awk &apos;&#123;print $7&#125;&apos; | sort | uniq -c | sort -rn | head -10</div>
+                                </div>
+                                <p>
+                                    この1行は「grep（絞り込み）→ awk（列抽出）→ sort（整列）→ uniq
+                                    -c（集計）→ sort -rn（降順）→
+                                    head（上位表示）」という、これまでに学んだパイプラインの組み合わせそのものです。仕組みを理解していれば、初見のワンライナーでも読み解けるようになります。
+                                </p>
+                            </div>
+                        </section>
+
+                        {/* ============ 13. ベストプラクティス ============ */}
+                        <section id="sec-safety" tabIndex={-1}>
+                            <h2><span className="num">13.</span> 安全に使うためのベストプラクティス</h2>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">危険なパターン</th>
+                                            <th scope="col">リスク</th>
+                                            <th scope="col">安全な代替・対策</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>rm -rf *</code></td>
+                                            <td>想定外のディレクトリで実行すると全削除</td>
+                                            <td>
+                                                先に <code>find ... -print</code> や
+                                                <code>ls</code> で対象を目視確認してから実行する
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>dd if=... of=/dev/sdX</code></td>
+                                            <td>対象デバイスを誤るとデータ完全消失</td>
+                                            <td>
+                                                <code>lsblk</code> や
+                                                <code>fdisk -l</code> で対象デバイスを必ず二重確認する
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>curl URL | sh</code>（未検証スクリプトの直接実行）
+                                            </td>
+                                            <td>任意コードが無検証で実行される</td>
+                                            <td>一度ファイルに保存し、中身を確認してから実行する</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>kill -9</code> を常用する</td>
+                                            <td>プロセスの後始末が行われずデータ破損のリスク</td>
+                                            <td>
+                                                まず <code>kill -TERM</code> を試し、反応がなければ
+                                                <code>-9</code> を使う
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>chmod -R 777</code></td>
+                                            <td>権限が過剰になりセキュリティリスクが増す</td>
+                                            <td>
+                                                必要最小限の権限（<code>755</code>/<code>644</code>
+                                                など）を個別に付与する
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>xargs</code> に確認なしで削除系コマンドを渡す</td>
+                                            <td>想定外の件数を一括削除してしまう</td>
+                                            <td>
+                                                学習中・初回実行時は
+                                                <code>xargs -p</code> で確認プロンプトを使う
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <blockquote>
+                                <strong>共通の心得：</strong>
+                                破壊的な操作（削除・上書き・強制終了）を行うワンライナーは、必ず「確認だけ行うバージョン」を先に実行してから、本番の操作に進む習慣をつけましょう。
+                            </blockquote>
+                        </section>
+
+                        {/* ============ 14. クイックリファレンス ============ */}
+                        <section id="sec-quickref" tabIndex={-1}>
+                            <h2><span className="num">14.</span> クイックリファレンス表</h2>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">カテゴリ</th>
+                                            <th scope="col">主なコマンド</th>
+                                            <th scope="col">代表的な用途</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>ファイル探索</td>
+                                            <td><code>find</code>, <code>xargs</code></td>
+                                            <td>条件検索、一括処理</td>
+                                        </tr>
+                                        <tr>
+                                            <td>テキスト検索</td>
+                                            <td><code>grep</code></td>
+                                            <td>パターン検索、ログ調査</td>
+                                        </tr>
+                                        <tr>
+                                            <td>テキスト変換</td>
+                                            <td><code>sed</code></td>
+                                            <td>置換、抽出、一括編集</td>
+                                        </tr>
+                                        <tr>
+                                            <td>テキスト集計</td>
+                                            <td>
+                                                <code>awk</code>, <code>sort</code>, <code>uniq</code>,
+                                                <code>cut</code>, <code>wc</code>
+                                            </td>
+                                            <td>集計、レポート作成</td>
+                                        </tr>
+                                        <tr>
+                                            <td>プロセス管理</td>
+                                            <td>
+                                                <code>ps</code>, <code>top</code>, <code>kill</code>,
+                                                <code>lsof</code>, <code>pgrep</code>
+                                            </td>
+                                            <td>負荷調査、プロセス制御</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ネットワーク診断</td>
+                                            <td>
+                                                <code>curl</code>, <code>ss</code>, <code>dig</code>,
+                                                <code>ping</code>
+                                            </td>
+                                            <td>疎通確認、API検証</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ディスク・システム</td>
+                                            <td><code>df</code>, <code>du</code>, <code>free</code></td>
+                                            <td>容量調査、リソース監視</td>
+                                        </tr>
+                                        <tr>
+                                            <td>バージョン管理</td>
+                                            <td><code>git</code></td>
+                                            <td>履歴管理、ブランチ運用</td>
+                                        </tr>
+                                        <tr>
+                                            <td>コンテナ管理</td>
+                                            <td><code>docker</code></td>
+                                            <td>コンテナ・イメージ運用</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ログ調査</td>
+                                            <td><code>journalctl</code>, <code>tail</code></td>
+                                            <td>リアルタイム監視、障害調査</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        {/* ============ 15. 参考文献 ============ */}
+                        <section id="sec-sources" tabIndex={-1}>
+                            <h2><span className="num">15.</span> 参考文献・信頼できる情報源</h2>
+                            <p>
+                                本ガイドの解説・構文は、以下の一次情報源（公式マニュアル・man
+                                page）を根拠としています。
+                            </p>
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">コマンド</th>
+                                            <th scope="col">出典</th>
+                                            <th scope="col">URL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>grep</td>
+                                            <td>GNU Grep Manual（Free Software Foundation）</td>
+                                            <td>
+                                                <a
+                                                    href="https://www.gnu.org/software/grep/manual/grep.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    gnu.org/software/grep/manual/grep.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>sed</td>
+                                            <td>GNU sed Manual（Free Software Foundation）</td>
+                                            <td>
+                                                <a
+                                                    href="https://www.gnu.org/software/sed/manual/sed.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    gnu.org/software/sed/manual/sed.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>awk (gawk)</td>
+                                            <td>
+                                                GAWK: Effective AWK Programming（Free Software
+                                                Foundation）
+                                            </td>
+                                            <td>
+                                                <a
+                                                    href="https://www.gnu.org/software/gawk/manual/"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    gnu.org/software/gawk/manual
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>find, xargs</td>
+                                            <td>GNU Findutils Manual（Free Software Foundation）</td>
+                                            <td>
+                                                <a
+                                                    href="https://www.gnu.org/software/findutils/manual/html_mono/find.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    gnu.org/software/findutils/manual
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>sort, uniq, cut, wc, df, du, free</td>
+                                            <td>GNU Coreutils Manual（Free Software Foundation）</td>
+                                            <td>
+                                                <a
+                                                    href="https://www.gnu.org/software/coreutils/manual/coreutils.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    gnu.org/software/coreutils/manual
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>xargs (man)</td>
+                                            <td>Linux man-pages project</td>
+                                            <td>
+                                                <a
+                                                    href="https://man7.org/linux/man-pages/man1/xargs.1.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    man7.org/.../xargs.1.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>lsof</td>
+                                            <td>Linux man-pages project</td>
+                                            <td>
+                                                <a
+                                                    href="https://man7.org/linux/man-pages/man8/lsof.8.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    man7.org/.../lsof.8.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>ss</td>
+                                            <td>Linux man-pages project（iproute2）</td>
+                                            <td>
+                                                <a
+                                                    href="https://man7.org/linux/man-pages/man8/ss.8.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    man7.org/.../ss.8.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>curl</td>
+                                            <td>Linux man-pages project</td>
+                                            <td>
+                                                <a
+                                                    href="https://man7.org/linux/man-pages/man1/curl.1.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    man7.org/.../curl.1.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>journalctl</td>
+                                            <td>Linux man-pages project（systemd）</td>
+                                            <td>
+                                                <a
+                                                    href="https://man7.org/linux/man-pages/man1/journalctl.1.html"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    man7.org/.../journalctl.1.html
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>git</td>
+                                            <td>Git公式ドキュメント</td>
+                                            <td>
+                                                <a
+                                                    href="https://git-scm.com/docs"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    git-scm.com/docs
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>docker</td>
+                                            <td>Docker公式ドキュメント</td>
+                                            <td>
+                                                <a
+                                                    href="https://docs.docker.com/reference/cli/docker/"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    docs.docker.com/reference/cli/docker
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <blockquote>
+                                これらのURLは執筆時点（2026年7月）で確認済みですが、各プロジェクトのバージョンアップに伴いドキュメント構成が変わることがあります。最新情報は必ず公式サイトでご確認ください。
+                            </blockquote>
+                        </section>
+
+                        <footer className="page-footer">
+                            CLIコマンド実践ワンライナー集 — 初学者のためのステップバイステップガイド
+                        </footer>
                     </div>
                 </main>
             </div>

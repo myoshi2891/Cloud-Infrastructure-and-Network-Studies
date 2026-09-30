@@ -32,12 +32,27 @@ if (
     throw new Error('source.html must resolve inside the repository');
 }
 const doc = new JSDOM(fs.readFileSync(htmlRealPath, 'utf8')).window.document;
+function dedent(text) {
+    if (!text) return '';
+    const lines = text.split('\n');
+    while (lines.length && lines[0].trim() === '') lines.shift();
+    while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+    const indents = lines
+        .filter((l) => l.trim() !== '')
+        .map((l) => {
+            const m = l.match(/^[ \t]*/);
+            return m ? m[0].length : 0;
+        });
+    const min = indents.length ? Math.min(...indents) : 0;
+    return lines.map((l) => l.slice(min)).join('\n');
+}
+
 // HTML内で <script class="mermaid-source"> や <script class="code-source"> として
 // 格納され、ブラウザJSで <pre class="mermaid"> や <pre><code> に置換される動的コンテンツを事前展開
 doc.querySelectorAll('script.mermaid-source').forEach((el) => {
     const pre = doc.createElement('pre');
     pre.className = 'mermaid';
-    pre.textContent = el.textContent ?? '';
+    pre.textContent = dedent(el.textContent ?? '');
     el.replaceWith(pre);
 });
 doc.querySelectorAll('script.code-source').forEach((el) => {
@@ -45,7 +60,7 @@ doc.querySelectorAll('script.code-source').forEach((el) => {
     const code = doc.createElement('code');
     const lang = el.getAttribute('data-lang') || 'bash';
     code.className = 'language-' + lang;
-    code.textContent = el.textContent ?? '';
+    code.textContent = dedent(el.textContent ?? '');
     pre.appendChild(code);
     el.replaceWith(pre);
 });
