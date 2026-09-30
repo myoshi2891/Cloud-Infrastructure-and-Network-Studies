@@ -973,6 +973,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Books',
     },
     {
+        id: 'kubernetes-in-action',
+        label: 'Kubernetes in Action, 第2版',
+        abbr: 'KIA',
+        level: 'コンテナオーケストレーション・クラウドネイティブ',
+        score: '全6部18章+2026年動向 / 41図解',
+        color: 'card-kubernetes-in-action',
+        href: '/recommended-books/kubernetes-in-action',
+        description:
+            'Marko Lukša 著『Kubernetes in Action, Second Edition』を軸に、コンテナの基礎からKubernetesのアーキテクチャ、Pod・ストレージ・ネットワーキング・高度なワークロード、そして2026年最新動向（v1.37・DRA・Gateway API等）までを体系的に解説した完全解説ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/kubernetes-in-action',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
         id: 'cli',
         label: 'CLIコマンド実践ワンライナー集',
         abbr: 'CLI',

@@ -609,6 +609,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（33図）
       page.css                      # ページ固有スタイル
+    kubernetes-in-action/
+      page.tsx                      # 『Kubernetes in Action, 第2版』完全解説ガイド (Server)
+      KubernetesInActionGuide.tsx   # 本文＋インタラクション (Client。全6部18章+2026年動向、Mermaid 41図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # ナビ・Mermaid・参考文献定義（41図）
+      page.css                      # ページ固有スタイル
   cli/
     page.tsx                        # CLIコマンド実践ワンライナー集 (Server)
     CliGuide.tsx                    # 本文＋インタラクション (全15セクション、Mermaid 7図等)

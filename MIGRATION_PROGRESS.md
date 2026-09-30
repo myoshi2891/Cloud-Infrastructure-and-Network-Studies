@@ -2,6 +2,44 @@
 
 (最終更新日: 2026-09-30)
 
+## 2026-09-30: Kubernetes in Action, 第2版 完全解説ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Kubernetes-in-Action.html`（および `Kubernetes-in-Action.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `KubernetesInActionGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/kubernetes-in-action` ルートへ移行。見出し(h1:1, h2:8, h3:24, h4:0)、全15個のテーブル、全41個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(84件)、全チェックリスト(19件・動的カウントアップ)、全参考文献(27件)、全外部リンク(33件)、全本文・注釈を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Kubernetes-in-Action.html` および `Kubernetes-in-Action.md`）を `archive/recommended-books/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for kubernetes-in-action` (`ce3d311b`)
+- [x] **Step 1 (Red & Green NavBar)**: `test(k8s-action): add failing tests for NavBar` (`e8455e4e`), `feat(k8s-action): implement NavBar and layout styles` (`1dda3a73`)
+- [x] **Step 2 (Red Full Page)**: `test(k8s-action): add failing tests for full page content migration` (`5a4e47c7`)
+- [x] **Step 3 (Green Part 0 & 1)**: `feat(k8s-action): implement Part 0 and Part 1 with diagrams 1-8` (`4ba670e4`)
+- [x] **Step 4 (Green Part 2 & 3)**: `feat(k8s-action): implement Part 2 and Part 3 with diagrams 9-20` (`9db9dbd2`)
+- [x] **Step 5 (Green Part 4 & 5)**: `feat(k8s-action): implement Part 4 and Part 5 with diagrams 21-34` (`447b02b8`)
+- [x] **Step 6 (Green Part 6 & Full Pass)**: `feat(k8s-action): complete full page implementation passing migration tests` (`1dde9bc4`)
+- [x] **Step 7 (Refine & Integration)**: `refactor(k8s-action): integrate into routing and update docs`
+- [x] **Step 8 (Archive & Sync)**: `chore(archive): move Kubernetes-in-Action source files to archive`
+
+### 関連ファイル
+
+- [app/recommended-books/kubernetes-in-action/page.tsx](app/recommended-books/kubernetes-in-action/page.tsx)
+- [app/recommended-books/kubernetes-in-action/KubernetesInActionGuide.tsx](app/recommended-books/kubernetes-in-action/KubernetesInActionGuide.tsx)
+- [app/recommended-books/kubernetes-in-action/NavBar.tsx](app/recommended-books/kubernetes-in-action/NavBar.tsx)
+- [app/recommended-books/kubernetes-in-action/constants.ts](app/recommended-books/kubernetes-in-action/constants.ts)
+- [app/recommended-books/kubernetes-in-action/page.css](app/recommended-books/kubernetes-in-action/page.css)
+- [__tests__/recommended-books/kubernetes-in-action/page.test.tsx](__tests__/recommended-books/kubernetes-in-action/page.test.tsx)
+- [__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx](__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx)
+- [docs/migration-inventory/kubernetes-in-action.json](docs/migration-inventory/kubernetes-in-action.json)
+- [archive/recommended-books/Kubernetes-in-Action.html](archive/recommended-books/Kubernetes-in-Action.html)
+- [archive/recommended-books/Kubernetes-in-Action.md](archive/recommended-books/Kubernetes-in-Action.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
 ## 2026-09-30: CLIコマンド実践ワンライナー集 100%全量移行 (完了)
 
 ### 目的

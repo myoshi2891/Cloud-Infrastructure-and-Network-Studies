@@ -613,6 +613,8 @@
     --color-theme-computer-networking-topdown-fg: hsl(220 90% 74%);
     --color-theme-high-performance-browser-networking-bg: hsl(220 55% 40% / 0.25);
     --color-theme-high-performance-browser-networking-fg: hsl(220 90% 74%);
+    --color-theme-kubernetes-in-action-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-kubernetes-in-action-fg: hsl(220 90% 74%);
 
     --color-theme-cli-bg: hsl(215 55% 40% / 0.25);
     --color-theme-cli-fg: hsl(215 90% 74%);
@@ -789,6 +791,7 @@ body {
 .card-operating-systems-three-easy-pieces { --card-accent: var(--color-theme-operating-systems-three-easy-pieces-fg); }
 .card-computer-networking-topdown { --card-accent: var(--color-theme-computer-networking-topdown-fg); }
 .card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
+.card-kubernetes-in-action { --card-accent: var(--color-theme-kubernetes-in-action-fg); }
 .card-cli { --card-accent: var(--color-theme-cli-fg); }
 
 @utility text-gradient-aurora {
@@ -926,6 +929,11 @@ body {
 @utility icon-theme-high-performance-browser-networking {
     background: var(--color-theme-high-performance-browser-networking-bg);
     color: var(--color-theme-high-performance-browser-networking-fg);
+}
+
+@utility icon-theme-kubernetes-in-action {
+    background: var(--color-theme-kubernetes-in-action-bg);
+    color: var(--color-theme-kubernetes-in-action-fg);
 }
 
 @utility icon-theme-cli {
