@@ -8,21 +8,21 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: readonly NavItem[] = [
-    { id: 'sec-1', label: '1. 基礎知識：ワンライナーを支える仕組み' },
-    { id: 'sec-2', label: '2. ファイル探索：find / xargs' },
-    { id: 'sec-3', label: '3. テキスト検索：grep' },
-    { id: 'sec-4', label: '4. テキスト変換：sed' },
-    { id: 'sec-5', label: '5. テキスト集計：awk / sort / uniq / cut / wc' },
-    { id: 'sec-6', label: '6. プロセス管理：ps / top / kill / lsof' },
-    { id: 'sec-7', label: '7. ネットワーク診断：curl / ss / dig / ping' },
-    { id: 'sec-8', label: '8. ディスク・システム情報：df / du / free' },
-    { id: 'sec-9', label: '9. Git実践ワンライナー' },
-    { id: 'sec-10', label: '10. Docker実践ワンライナー' },
-    { id: 'sec-11', label: '11. ログ調査：journalctl / tail' },
-    { id: 'sec-12', label: '12. 組み合わせ実践シナリオ' },
-    { id: 'sec-13', label: '13. 安全に使うためのベストプラクティス' },
-    { id: 'sec-14', label: '14. クイックリファレンス表' },
-    { id: 'sec-15', label: '15. 参考文献・信頼できる情報源' },
+    { id: 'sec-basics', label: '1. 基礎知識：仕組みを理解する' },
+    { id: 'sec-find', label: '2. ファイル探索：find / xargs' },
+    { id: 'sec-grep', label: '3. テキスト検索：grep' },
+    { id: 'sec-sed', label: '4. テキスト変換：sed' },
+    { id: 'sec-awk', label: '5. テキスト集計：awk / sort / uniq' },
+    { id: 'sec-ps', label: '6. プロセス管理：ps / top / kill / lsof' },
+    { id: 'sec-net', label: '7. ネットワーク診断：curl / ss / dig' },
+    { id: 'sec-disk', label: '8. ディスク・システム情報' },
+    { id: 'sec-git', label: '9. Git実践ワンライナー' },
+    { id: 'sec-docker', label: '10. Docker実践ワンライナー' },
+    { id: 'sec-log', label: '11. ログ調査：journalctl / tail' },
+    { id: 'sec-scenario', label: '12. 組み合わせ実践シナリオ' },
+    { id: 'sec-safety', label: '13. 安全に使うためのベストプラクティス' },
+    { id: 'sec-quickref', label: '14. クイックリファレンス表' },
+    { id: 'sec-sources', label: '15. 参考文献・情報源' },
 ] as const;
 
 export type DiagramId =
