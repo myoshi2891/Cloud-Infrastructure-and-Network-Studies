@@ -801,6 +801,342 @@ export function KubernetesInActionGuide() {
                         </div>
                     </div>
                     <hr />
+                    <h2 id="part4">第4部: アプリケーションの接続と公開（原著Part 4: 第11〜13章）</h2>
+                    <h3 id="4-1">4.1 Service（原著第11章）</h3>
+                    <p>
+                        Podは再作成されるたびにIPアドレスが変わるため、Podに直接依存した通信は成立しません。<strong>Service</strong>は、ラベルセレクタにマッチするPod群への安定したアクセス経路（仮想IP
+                        + DNS名）を提供します。
+                    </p>
+                    <Diagram id="diag-21" label="Service・EndpointSlice・Pod群の接続関係図" />
+                    <p><strong>Serviceの種類（原著11.1〜11.2節）</strong></p>
+                    <Diagram id="diag-22" label="Service種別（ClusterIP・LoadBalancer・NodePort）の選定フローチャート" />
+                    <p>
+                        原著11.4.2節の<strong>ヘッドレスサービス</strong>（<code>clusterIP: None</code>）は、仮想IPを持たずDNSがPod個々のIPを直接返す特殊なServiceで、StatefulSet（5.3節）と組み合わせて各Podに個別のDNS名を割り当てる際に使われます。
+                    </p>
+                    <p>
+                        原著11.5節「Configuring services to route traffic to nearby
+                        endpoints」は、大規模クラスタでのレイテンシとコスト最適化に関わる実践的なトピックです。<code>internalTrafficPolicy: Local</code>やTopology Aware
+                        Hintsを使うと、可能な限り同一ノード・同一ゾーン内のPodへトラフィックを優先的にルーティングし、ノード間・ゾーン間の通信コストを削減できます。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    Readiness
+                                    Probe（2.2節）を必ず設定し、起動途中や過負荷のPodがServiceのエンドポイントに含まれないようにする。
+                                </li>
+                                <li>
+                                    マルチAZ構成のクラスタでは、Topology Aware Routing（旧称Topology
+                                    Aware
+                                    Hints）を有効化し、ゾーンをまたぐ不要なトラフィックとコストを削減する。
+                                </li>
+                                <li>
+                                    <code>externalTrafficPolicy: Local</code>を使うとクライアントIPを保持できる反面、ノードによって負荷が偏る可能性があるため、ヘルスチェックの設計とセットで検討する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="4-2">4.2 Ingress（原著第12章）</h3>
+                    <p>
+                        <strong>Ingress</strong>は、複数のServiceへのHTTP/HTTPSルーティングを1つのエントリーポイントに集約するAPIです。LoadBalancer
+                        Serviceを個々のマイクロサービスごとに用意するとクラウドの課金・IP管理コストが増大するため、Ingressで一元化するのが一般的です。
+                    </p>
+                    <Diagram id="diag-23" label="クライアント・LB・Ingressコントローラ・Service間のトラフィック経路図" />
+                    <p>
+                        重要なのは、原著12.1.2節が明記する通り、<strong>Ingressオブジェクトそのものはルーティングを実行しません</strong>。実際にトラフィックを処理するのは別途デプロイする<strong>Ingressコントローラ</strong>（NGINX
+                        Ingress
+                        Controller、Traefik、HAProxy等）です。Ingressオブジェクトはコントローラに対する「設定の宣言」に過ぎません。
+                    </p>
+                    <p>
+                        2026年時点で特に重要なのは、コミュニティ版<strong>Ingress-NGINX Controller</strong>が終了に向かっているという点です。詳細は<a href="#6-4">6.4節</a>で扱いますが、原著12章の内容自体は今も有効な一方、これから新規にIngressコントローラを選定する場合はGateway
+                        API（4.3節）への移行を前提に計画することが強く推奨されています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス（原著12.4節）</div>
+                            <ul>
+                                <li>
+                                    Ingressアノテーションはコントローラ実装ごとに非互換であるため（例:
+                                    NGINX用のアノテーションはTraefikでは動かない）、複数コントローラの並行運用や移行を想定する場合は特に注意する。
+                                </li>
+                                <li>
+                                    TLS証明書の自動更新にはcert-managerを併用し、証明書の手動更新運用を排除する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="4-3">4.3 Gateway API（原著第13章）</h3>
+                    <p>
+                        <strong>Gateway API</strong>は、Ingressの後継として設計された、より表現力の高いL4/L7トラフィックルーティングAPI群です。原著第2版で新規に追加された第13章がまるまる1章を割いて解説しているのは、Gateway
+                        APIが2026年時点のKubernetesネットワーキングにおける事実上の標準になりつつあることの裏返しです。
+                    </p>
+                    <Diagram id="diag-24" label="GatewayClass・Gateway・HTTPRouteのロール別リソース分離図" />
+                    <p>
+                        Ingressとの決定的な違いは、この<strong>ロールベースの権限分離</strong>です。Ingressでは1つのオブジェクトに全ての設定が混在するため、アプリチームがインフラ設定まで触れてしまう、あるいは逆にインフラチームがボトルネックになるという課題がありました。Gateway
+                        APIはGatewayClass（インフラ提供者）・Gateway（クラスタ運用者）・Route（HTTPRouteなど、アプリチーム）の3層に権限を分割します。
+                    </p>
+                    <p><strong>IngressとGateway APIの比較</strong></p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">観点</th>
+                                    <th scope="col">Ingress</th>
+                                    <th scope="col">Gateway API</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>設定の分離</td>
+                                    <td>1オブジェクトに集約</td>
+                                    <td>GatewayClass/Gateway/Routeに分離</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>プロトコル対応</td>
+                                    <td>実質HTTP/HTTPSのみ</td>
+                                    <td>HTTP, gRPC, TCP, UDP, TLS(pass-through)に対応</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>ベンダー拡張の方法</td>
+                                    <td>非互換なアノテーション</td>
+                                    <td>標準化されたフィルタ・ポリシーアタッチメント</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>トラフィック分割</td>
+                                    <td>コントローラ依存の独自拡張</td>
+                                    <td><code>HTTPRoute</code>のweight指定で標準的にサポート</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>2026年時点の位置づけ</td>
+                                    <td>機能凍結（feature-frozen）</td>
+                                    <td>積極的に開発が続く標準API</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <Diagram id="diag-25" label="HTTPRouteによる重みづけトラフィック分割例" />
+                    <p>
+                        原著13.7節「From ingress gateways to service mesh」は、Gateway
+                        APIが単なるIngress後継にとどまらず、サービスメッシュ（東西トラフィック）まで統一的にモデル化しようとする方向性（GAMMA
+                        Initiative）に触れています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    新規にKubernetesクラスタでHTTPルーティングを構築する場合は、原著13.1.3節が例示するIstioに限らず、Envoy
+                                    Gateway・Cilium・クラウドマネージドのGateway API実装（GKE
+                                    Gateway、AWS Gateway API
+                                    Controllerなど）の中から要件に合うものを選び、最初からGateway
+                                    APIで構築する。
+                                </li>
+                                <li>
+                                    既存のIngressからの移行は、<code>ingress2gateway</code>のような変換ツールで叩き台を生成した上で、アノテーションに依存していた挙動を手動で<code>HTTPRoute</code>のフィルタ機能に置き換える。
+                                </li>
+                                <li>
+                                    GatewayとHTTPRouteをNamespaceで分離する運用（原著13.6節）を活用し、インフラチームがGatewayのTLS設定を管理しつつ、アプリチームは自Namespace内のHTTPRouteだけを変更できるようにする。Namespace分離は書き込み権限の分離とセットで設計する。すなわち、<code>gateways</code>リソースへの<code>create</code>/<code>update</code>/<code>patch</code>/<code>delete</code>はインフラチーム向けのClusterRole（またはGateway用Namespaceに限定したRole）にのみ与え、アプリチームには自Namespaceの<code>httproutes</code>に対する権限だけを与えるRole/RoleBindingを各アプリNamespaceに作成する。さらにGateway側の<code>listeners[].allowedRoutes</code>（<code>namespaces.from: Selector</code>＋ラベルセレクタなど）で接続を許可するNamespaceを明示的に絞り込み、クロスNamespace参照（別NamespaceのSecretやBackendを指すケース）は、対象のKind・Name・送信元Namespaceを限定した<code>ReferenceGrant</code>を参照先Namespaceに置いた場合にのみ許可する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> Kubernetes SIG Network公式アナウンス「Ingress-NGINX
+                        Controller」終了に関するGoogle Open Source Blog (<a
+                            href="https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html"
+                            >https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html</a
+                        >)、Gateway API公式リポジトリ (<a
+                            href="https://github.com/kubernetes-sigs/gateway-api"
+                            >https://github.com/kubernetes-sigs/gateway-api</a
+                        >)
+                    </p>
+                    <hr />
+                    <h2 id="part5">
+                        第5部: 大規模運用のためのアプリケーション管理（原著Part 5: 第14〜18章）
+                    </h2>
+                    <h3 id="5-1">5.1 ReplicaSet（原著第14章）</h3>
+                    <p>
+                        <strong>ReplicaSet</strong>は、指定した数のPodレプリカが常に稼働し続けることを保証するコントローラです。原著14.3.1節が説明する<strong>reconciliation control loop（調整ループ）</strong>は、Kubernetes全体を貫く最重要概念の1つです。
+                    </p>
+                    <Diagram id="diag-26" label="ReplicaSetのreconciliation control loop（調整ループ）フロー図" />
+                    <p>
+                        このループは常時（イベント駆動 +
+                        定期的な再同期）動き続けており、誰かが手動でPodを削除しても、ReplicaSetが即座に代わりのPodを作成します。原著14.1.3節「Understanding
+                        pod
+                        ownership」では、<code>ownerReferences</code>フィールドによってPodがどのReplicaSetに所属するかが管理されている点を解説しています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    通常、ReplicaSetを直接作成することは稀で、後述のDeploymentが内部的にReplicaSetを管理する。ReplicaSetを直接操作するのは、ローリングアップデートの仕組みを理解する学習目的か、非常に特殊な運用ニーズに限られる。
+                                </li>
+                                <li>
+                                    <code>kubectl delete replicaset --cascade=orphan</code>を使えば、ReplicaSetだけを削除してPodを残すことができる（原著14.4.2節）。緊急時の切り離し手段として覚えておく。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="5-2">5.2 Deployment（原著第15章）</h3>
+                    <p>
+                        <strong>Deployment</strong>はReplicaSetをさらにラップし、宣言的なローリングアップデート・ロールバックを可能にするコントローラです。実務でステートレスアプリケーションをデプロイする際、最も頻繁に使うオブジェクトです。
+                    </p>
+                    <Diagram id="diag-27" label="Deploymentによる新旧ReplicaSetおよびPodの管理構造図" />
+                    <p><strong>更新戦略（原著15.2節）</strong></p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">戦略</th>
+                                    <th scope="col">挙動</th>
+                                    <th scope="col">ダウンタイム</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Recreate</td>
+                                    <td>旧Podを全て削除してから新Podを作成</td>
+                                    <td>あり</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>RollingUpdate（既定）</td>
+                                    <td>新旧Podを段階的に入れ替える</td>
+                                    <td>なし（正しく設定すれば）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <Diagram id="diag-28" label="Deploymentローリングアップデートのシーケンス図（maxUnavailable: 0の場合）" />
+                    <p>
+                        上図は<code>maxUnavailable: 0</code>（可用性最優先）の場合の順序です。<code>maxUnavailable</code>が0より大きい場合は、新Podのreadyを待たずに先に旧ReplicaSetを縮小できます。つまり「増やしてから減らす」か「減らしてから増やす」かは<code>maxSurge</code>と<code>maxUnavailable</code>の設定で変わります（<code>maxSurge: 0</code>の場合は縮小が先行します）。
+                    </p>
+                    <p><strong>その他のデプロイ戦略（原著15.3節）</strong></p>
+                    <p>
+                        原著15.3節は、Deploymentのビルトイン機能を超えた高度なデプロイパターンを紹介しています。これらはDeployment単体では実現できず、Service重みづけやサービスメッシュ、あるいはArgo
+                        RolloutsのようなCRDベースのツールと組み合わせて実現します。
+                    </p>
+                    <Diagram id="diag-29" label="カナリア・A/Bテスト・Blue/Green・シャドウイング等デプロイ戦略の比較図" />
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    <code>maxUnavailable</code>と<code>maxSurge</code>は、可用性重視なら<code>maxUnavailable: 0</code>、リソース制約が厳しいなら<code>maxSurge: 0</code>のように、クラスタのリソース余裕とSLAに応じて調整する。
+                                </li>
+                                <li>
+                                    Readiness
+                                    Probeが正しく設定されていないと、ローリングアップデート中に「まだ準備できていない新Pod」にトラフィックが流れ、実質的なダウンタイムを引き起こす。Deploymentの安全なローリングアップデートはReadiness
+                                    Probeとセットで初めて成立する。
+                                </li>
+                                <li>
+                                    <code>kubectl rollout undo</code>で即座にロールバックできるよう、<code>revisionHistoryLimit</code>で保持するReplicaSet履歴数を意図的に設定しておく。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="5-3">5.3 StatefulSet（原著第16章）</h3>
+                    <p>
+                        Deploymentが管理するPodは互換性があり順不同（interchangeable）であるのに対し、<strong>StatefulSet</strong>はデータベースのようにPodごとに固有のアイデンティティ（安定したネットワーク識別子・専用の永続ストレージ）が必要なワークロード向けのコントローラです。
+                    </p>
+                    <Diagram id="diag-30" label="StatefulSetとヘッドレスService、順序付きPod・PVCの構成図" />
+                    <p><strong>StatefulSetの3つの特性（原著16.1.1節）</strong></p>
+                    <ol>
+                        <li>
+                            <strong>安定したネットワークID</strong>:
+                            各Podは<code>&lt;statefulset名&gt;-&lt;序数&gt;</code>という固定名を持ち、ヘッドレスServiceを通じて<code>&lt;pod名&gt;.&lt;service名&gt;</code>という固定DNS名でアクセスできる。
+                        </li>
+                        <li>
+                            <strong>安定した永続ストレージ</strong>:
+                            各Podは専用のPVCを持ち、Podが再作成されても同じPVC（＝同じデータ）に再アタッチされる。
+                        </li>
+                        <li>
+                            <strong>順序保証</strong>:
+                            既定では<code>OrderedReady</code>ポリシーにより、Pod-0が起動・Readyになってから
+                            Pod-1が起動する（スケールアップ・ダウンとも順序を守る）。
+                        </li>
+                    </ol>
+                    <Diagram id="diag-31" label="StatefulSetにおけるPodの順序付き起動（OrderedReady）フロー図" />
+                    <p>
+                        原著16.4節では、MongoDB Community Operatorを例に<strong>Kubernetes Operator</strong>パターンを紹介しています。OperatorはStatefulSetをさらに一段抽象化し、「レプリカセットの初期化」「フェイルオーバー」「バックアップ」のようなアプリケーション固有の運用知識をコントローラとしてコード化したものです。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    本番のステートフルワークロード（データベース等）は、可能な限り実績のあるOperator（PostgreSQLのCloudNativePG、MongoDBのCommunity/Enterprise
+                                    Operatorなど）を使い、StatefulSetを手で運用する範囲を最小化する。
+                                </li>
+                                <li>
+                                    PVC保持ポリシー（原著16.2.4節、<code>persistentVolumeClaimRetentionPolicy</code>）を明示的に設定し、StatefulSet削除時にPVCを残すか削除するかを意図した挙動にする。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="5-4">5.4 DaemonSet（原著第17章）</h3>
+                    <p>
+                        <strong>DaemonSet</strong>は、クラスタ内の（条件に合う）全ノードにちょうど1つのPodを配置するコントローラです。ログ収集エージェント、ノードモニタリングエージェント、CNIプラグインなど、ノード単位で常駐すべきインフラコンポーネントに使われます。
+                    </p>
+                    <Diagram id="diag-32" label="DaemonSetによる各ノードへのPod自動配置構造図" />
+                    <p>
+                        原著17.2節では、DaemonSetのPodがしばしば必要とする特別な権限（ホストネットワークの利用、ノードファイルシステムへのアクセス、OSカーネルへのアクセス）を扱っています。これらは通常のアプリケーションPodには不要かつ危険な権限であるため、DaemonSet専用の設計判断として明確に区別することが重要です。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    DaemonSetは<code>nodeSelector</code>や<code>tolerations</code>と組み合わせ、コントロールプレーンノードを含む全ノードに配置すべきか、特定ラベルを持つノードに限定すべきかを明示的に設計する。
+                                </li>
+                                <li>
+                                    ノードエージェントに<code>hostNetwork: true</code>や特権コンテナ（<code>privileged: true</code>）が必要な場合は、その理由をコメントで明記し、Pod Security
+                                    Admissionのポリシーで許可範囲を最小化する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="5-5">5.5 JobとCronJob（原著第18章）</h3>
+                    <p>
+                        <strong>Job</strong>は「完了」という概念を持つワークロード（バッチ処理、データマイグレーションなど）向けのコントローラです。Deployment/ReplicaSetが「常に一定数のPodを稼働させ続ける」のに対し、Jobは「指定回数の正常終了」を目標にします。
+                    </p>
+                    <Diagram id="diag-33" label="Jobコントローラによる並行実行と正常終了カウントの管理図" />
+                    <p>
+                        <strong>CronJob</strong>はJobをスケジュール実行するためのラッパーで、Unix
+                        cron形式のスケジュール文字列（例:
+                        <code>0 2 * * *</code>＝毎日2時）でJobを定期生成します。
+                    </p>
+                    <Diagram id="diag-34" label="CronJobによるJobおよびPodの定期スケジュール生成フロー図" />
+                    <p>
+                        原著18.2.5〜18.2.6節では、<code>startingDeadlineSeconds</code>（コントロールプレーンの一時停止などでスケジュールを逃した場合の許容遅延）と<code>concurrencyPolicy</code>（前回のJobが終わっていない場合の挙動:
+                        <code>Allow</code>/<code>Forbid</code>/<code>Replace</code>）という、実運用で必ず遭遇する設定を扱っています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    冪等でないバッチ処理（重複実行が許されない処理）には<code>concurrencyPolicy: Forbid</code>を設定し、前回のJobが完了する前に新しいJobが起動しないようにする。ただし<code>Forbid</code>はスケジュール時点の同時実行を抑止するだけで、重複実行を根本的に防ぐものではない（Jobコントローラの再試行やPodの再スケジュールにより、同じ処理が複数回走ることはある）。また実行中のJobがあるとその回のスケジュールはスキップされるため、実行の欠落も起こりうる。重複が許容できない処理は、処理自体を冪等に設計するか、外部ストア上の重複排除キー（実行IDによる排他ロックや一意制約）で二重実行を弾く仕組みを実装する。
+                                </li>
+                                <li>
+                                    <code>activeDeadlineSeconds</code>でJobの最大実行時間を設定し、ハングしたバッチ処理がリソースを専有し続けるのを防ぐ。
+                                </li>
+                                <li>
+                                    <code>ttlSecondsAfterFinished</code>（原著18.2.4節）を設定し、完了済みJob/Podがクラスタに溜まり続けてAPIサーバーやetcdの負荷にならないようにする。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
                 </main>
             </div>
         </div>

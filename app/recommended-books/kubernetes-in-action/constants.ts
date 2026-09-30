@@ -384,4 +384,181 @@ end
 
 classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
 class DYN highlightFill`,
+
+    'diag-21': `flowchart TB
+SVC["Service<br/>clusterIP: 10.96.0.42<br/>selector: app=kiada"]
+subgraph PODS["ラベル app=kiada のPod群"]
+    P1["Pod A<br/>10.244.1.5"]
+    P2["Pod B<br/>10.244.2.7"]
+    P3["Pod C<br/>10.244.3.9"]
+end
+EP["EndpointSlice<br/>(自動更新される<br/>IPアドレス一覧)"]
+
+SVC --> EP
+EP --> P1
+EP --> P2
+EP --> P3
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class SVC,EP highlightFill`,
+
+    'diag-22': `flowchart TD
+START([外部公開の要件は?]) --> Q1{クラスタ内部のみで<br/>十分か?}
+Q1 -->|Yes| CIP["ClusterIP<br/>(既定。クラスタ内DNS経由)"]
+Q1 -->|No、外部公開が必要| Q2{クラウドロード<br/>バランサーを使えるか?}
+Q2 -->|Yes| LB["LoadBalancer<br/>(クラウドLBを自動プロビジョニング)"]
+Q2 -->|No、学習・オンプレミス| NP["NodePort<br/>(全ノードの固定ポートで公開)"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class CIP,LB highlightFill`,
+
+    'diag-23': `flowchart TB
+CLIENT["クライアント"] --> LB["クラウドロードバランサー"]
+LB --> ING_CTRL["Ingressコントローラ<br/>(リバースプロキシ)"]
+ING_CTRL -->|"/api/*"| SVC_A["Service: api"]
+ING_CTRL -->|"/web/*"| SVC_B["Service: web"]
+ING_CTRL -->|"api.example.com"| SVC_A
+ING_CTRL -->|"www.example.com"| SVC_B
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class ING_CTRL highlightFill`,
+
+    'diag-24': `flowchart TB
+subgraph ROLES["ロール別のリソース分離 - 原著13.1節"]
+    direction TB
+    GC["GatewayClass<br/>(インフラ提供者が定義<br/>実装の種類を指定)"]
+    GW["Gateway<br/>(クラスタ運用者が作成<br/>リスナー・証明書を設定)"]
+    HR["HTTPRoute / GRPCRoute /<br/>TCPRoute / UDPRoute<br/>(アプリチームが作成<br/>ルーティングルールを定義)"]
+    GC --> GW
+    GW --> HR
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class GC,GW,HR highlightFill`,
+
+    'diag-25': `flowchart LR
+subgraph CANARY["トラフィック分割の例 - 原著13.3.2節"]
+    direction LR
+    ROUTE["HTTPRoute"]
+    V1["Service: app-v1<br/>weight: 90"]
+    V2["Service: app-v2<br/>weight: 10"]
+    ROUTE -->|90%| V1
+    ROUTE -->|10%| V2
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class ROUTE highlightFill`,
+
+    'diag-26': `flowchart LR
+OBSERVE["観測<br/>(現在のPod数を確認)"] --> DIFF{"望ましい状態(replicas)と<br/>差分があるか?"}
+DIFF -->|"実際 < 望ましい"| CREATE["不足分のPodを作成"]
+DIFF -->|"実際 > 望ましい"| DELETE["超過分のPodを削除"]
+DIFF -->|一致| WAIT["待機"]
+CREATE --> OBSERVE
+DELETE --> OBSERVE
+WAIT --> OBSERVE
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class OBSERVE highlightFill`,
+
+    'diag-27': `flowchart TB
+DEPLOY["Deployment"] --> RS_OLD["ReplicaSet(旧バージョン)<br/>replicas: 0"]
+DEPLOY --> RS_NEW["ReplicaSet(新バージョン)<br/>replicas: 3"]
+RS_NEW --> P1["Pod v2"]
+RS_NEW --> P2["Pod v2"]
+RS_NEW --> P3["Pod v2"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class DEPLOY,RS_NEW highlightFill`,
+
+    'diag-28': `sequenceDiagram
+participant D as Deployment
+participant RSOLD as ReplicaSet(v1)
+participant RSNEW as ReplicaSet(v2)
+
+Note over D: RollingUpdate開始<br/>maxSurge/maxUnavailableに従う<br/>(以下は maxUnavailable: 0 の場合)
+D->>RSNEW: replicas +1
+RSNEW-->>D: 新Podがreadyになるまで待機<br/>(maxUnavailable: 0 のため<br/>先に旧を縮小できない)
+D->>RSOLD: replicas -1
+D->>RSNEW: replicas +1
+RSNEW-->>D: readyを確認
+D->>RSOLD: replicas -1
+Note over D: 全Podの入れ替えが完了するまで繰り返す`,
+
+    'diag-29': `flowchart TB
+subgraph STRATS["デプロイ戦略の比較"]
+    direction TB
+    CANARY["カナリアリリース<br/>一部のトラフィックだけ<br/>新バージョンへ流す"]
+    AB["A/Bテスト<br/>ユーザー属性に基づいて<br/>バージョンを振り分ける"]
+    BG["Blue/Green<br/>新旧環境を並行稼働させ<br/>一斉に切り替える"]
+    SHADOW["トラフィックシャドウイング<br/>本番トラフィックを複製して<br/>新バージョンへも送るが<br/>応答は使わない"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class CANARY highlightFill`,
+
+    'diag-30': `flowchart TB
+SS["StatefulSet: mongodb"]
+HS["ヘッドレスService"]
+subgraph PODS["順序付きPod"]
+    direction LR
+    P0["mongodb-0<br/>PVC: data-mongodb-0"]
+    P1["mongodb-1<br/>PVC: data-mongodb-1"]
+    P2["mongodb-2<br/>PVC: data-mongodb-2"]
+end
+SS --> HS
+HS --> P0
+HS --> P1
+HS --> P2
+P0 -.->|"mongodb-0.mongodb<br/>固定DNS名"| P1
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class SS,HS highlightFill`,
+
+    'diag-31': `flowchart LR
+A["mongodb-0起動"] -->|Ready後| B["mongodb-1起動"]
+B -->|Ready後| C["mongodb-2起動"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class A highlightFill`,
+
+    'diag-32': `flowchart TB
+DS["DaemonSet: fluentd"]
+subgraph N1["ノード1"]
+    DP1["fluentd Pod"]
+end
+subgraph N2["ノード2"]
+    DP2["fluentd Pod"]
+end
+subgraph N3["ノード3(新規追加)"]
+    DP3["fluentd Pod<br/>(自動的に配置される)"]
+end
+DS --> DP1
+DS --> DP2
+DS -.->|"ノード追加時に自動配置"| DP3
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class DS highlightFill`,
+
+    'diag-33': `flowchart TB
+JOB["Job: data-migration<br/>completions: 5<br/>parallelism: 2"]
+subgraph RUN["実行中"]
+    direction LR
+    P1["Pod 1<br/>実行中"]
+    P2["Pod 2<br/>実行中"]
+end
+JOB --> RUN
+RUN -->|"正常終了(Succeeded)<br/>×5回に達するまで"| DONE["Job完了"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class DONE highlightFill`,
+
+    'diag-34': `flowchart LR
+CJ["CronJob<br/>schedule: '0 2 * * *'"] -->|毎日2:00に生成| J1["Job (2026-08-27実行分)"]
+CJ -->|翌日2:00に生成| J2["Job (2026-08-28実行分)"]
+J1 --> P1["Pod"]
+J2 --> P2["Pod"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class CJ highlightFill`,
 };
