@@ -6,7 +6,7 @@
 
 ### 目的
 
-`Kubernetes-in-Action.html`（および `Kubernetes-in-Action.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `KubernetesInActionGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/kubernetes-in-action` ルートへ移行。見出し(h1:1, h2:8, h3:24, h4:0)、全15個のテーブル、全41個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(84件)、全チェックリスト(19件・動的カウントアップ)、全参考文献(27件)、全外部リンク(33件)、全本文・注釈を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Kubernetes-in-Action.html` および `Kubernetes-in-Action.md`）を `archive/recommended-books/` へ退避。
+`Kubernetes-in-Action.html`（および `Kubernetes-in-Action.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `KubernetesInActionGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/kubernetes-in-action` ルートへ移行。見出し(h1:1, h2:8, h3:24, h4:0)、全15個のテーブル、全41個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(84件)、全チェックリスト(19件・動的カウントアップ)、全参考文献(27件)、全外部リンク(33件)、全本文・注釈を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Kubernetes-in-Action.html` および `Kubernetes-in-Action.md`）を `archive/Books/html/` および `archive/Books/md/` へ退避。
 
 ### 完了済みステップ
 
@@ -17,7 +17,7 @@
 - [x] **Step 4 (Green Part 2 & 3)**: `feat(k8s-action): implement Part 2 and Part 3 with diagrams 9-20` (`9db9dbd2`)
 - [x] **Step 5 (Green Part 4 & 5)**: `feat(k8s-action): implement Part 4 and Part 5 with diagrams 21-34` (`447b02b8`)
 - [x] **Step 6 (Green Part 6 & Full Pass)**: `feat(k8s-action): complete full page implementation passing migration tests` (`1dde9bc4`)
-- [x] **Step 7 (Refine & Integration)**: `refactor(k8s-action): integrate into routing and update docs`
+- [x] **Step 7 (Refine & Integration)**: `refactor(k8s-action): integrate into routing and update docs` (`be624329`)
 - [x] **Step 8 (Archive & Sync)**: `chore(archive): move Kubernetes-in-Action source files to archive`
 
 ### 関連ファイル
@@ -30,8 +30,8 @@
 - [__tests__/recommended-books/kubernetes-in-action/page.test.tsx](__tests__/recommended-books/kubernetes-in-action/page.test.tsx)
 - [__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx](__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx)
 - [docs/migration-inventory/kubernetes-in-action.json](docs/migration-inventory/kubernetes-in-action.json)
-- [archive/recommended-books/Kubernetes-in-Action.html](archive/recommended-books/Kubernetes-in-Action.html)
-- [archive/recommended-books/Kubernetes-in-Action.md](archive/recommended-books/Kubernetes-in-Action.md)
+- [archive/Books/html/Kubernetes-in-Action.html](archive/Books/html/Kubernetes-in-Action.html)
+- [archive/Books/md/Kubernetes-in-Action.md](archive/Books/md/Kubernetes-in-Action.md)
 - [app/constants.ts](app/constants.ts)
 - [app/globals.css](app/globals.css)
 - [GEMINI.md](GEMINI.md)
