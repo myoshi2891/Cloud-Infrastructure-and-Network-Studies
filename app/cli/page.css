@@ -1,0 +1,397 @@
+/* ==========================================================================
+   CLI Guide Page Styles
+   Scoped under .cli-page
+   ========================================================================== */
+
+.cli-page {
+    min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+/* ---------- サイドバー契約 (280px) ---------- */
+.cli-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    bottom: 0;
+    left: 0;
+    width: 280px;
+    background: var(--color-card);
+    border-right: 1px solid var(--color-border);
+    padding: 24px 18px 60px;
+    overflow-y: auto;
+    z-index: 40;
+    transition: transform 0.25s ease-in-out;
+}
+
+.cli-page .sidebar-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cli-page .sidebar-header .kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+}
+
+.cli-page .sidebar-header .sidebar-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-foreground);
+    line-height: 1.35;
+}
+
+.cli-page .sidebar nav ul {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+.cli-page .sidebar nav li {
+    margin: 0 0 2px;
+    list-style-type: none !important;
+}
+
+.cli-page .sidebar nav a {
+    display: block;
+    color: var(--color-muted-foreground);
+    font-size: 0.84rem;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm, 6px);
+    border-left: 2px solid transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    overflow-wrap: anywhere;
+}
+
+.cli-page .sidebar nav a:hover {
+    background: rgba(124, 158, 255, 0.12);
+    color: var(--color-foreground);
+    text-decoration: none;
+}
+
+.cli-page .sidebar nav a.active {
+    background: rgba(124, 158, 255, 0.12);
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* トグルボタン（モバイル用） */
+.cli-page .sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    background: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- メインコンテンツ契約 ---------- */
+.cli-page .content {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+    padding: 48px 56px 140px;
+    box-sizing: border-box;
+}
+
+.cli-page section {
+    margin-bottom: 64px;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+/* ---------- ヒーロー領域 ---------- */
+.cli-page header.hero {
+    margin-bottom: 48px;
+}
+
+.cli-page header.hero h1 {
+    font-size: 2.15rem;
+    line-height: 1.35;
+    margin: 0 0 18px;
+    background: linear-gradient(90deg, var(--color-foreground) 0%, #a6c1ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--color-foreground);
+    font-weight: 800;
+}
+
+.cli-page .lede {
+    font-size: 1.05rem;
+    color: var(--color-muted-foreground);
+    border-left: 3px solid var(--color-primary);
+    padding-left: 18px;
+    margin: 0 0 24px;
+}
+
+.cli-page .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.cli-page .pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--color-muted-foreground);
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+/* ---------- 見出し・タイポグラフィ ---------- */
+.cli-page h2 {
+    font-size: 1.45rem;
+    color: var(--color-foreground);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+    margin: 0 0 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-weight: 700;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.cli-page h2 .num {
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.cli-page h3 {
+    font-size: 1.15rem;
+    color: #a6c1ff;
+    margin: 32px 0 14px;
+    font-weight: 600;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.cli-page h4 {
+    font-size: 1rem;
+    color: var(--color-foreground);
+    margin: 22px 0 10px;
+    font-weight: 600;
+}
+
+.cli-page p {
+    color: var(--color-muted-foreground);
+    margin: 0 0 16px;
+    max-width: none;
+}
+
+.cli-page strong {
+    color: var(--color-foreground);
+}
+
+.cli-page a {
+    color: #a6c1ff;
+    text-decoration: none;
+}
+
+.cli-page a:hover {
+    text-decoration: underline;
+}
+
+/* リストスタイリングの強制保護 */
+.cli-page .content ul {
+    list-style-type: disc !important;
+    padding-left: 1.5em;
+    margin: 0 0 18px;
+    color: var(--color-muted-foreground);
+}
+
+.cli-page .content ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5em;
+    margin: 0 0 18px;
+    color: var(--color-muted-foreground);
+}
+
+.cli-page .content li {
+    margin-bottom: 6px;
+}
+
+/* インラインコード */
+.cli-page code {
+    background: rgba(124, 158, 255, 0.12);
+    color: #a6c1ff;
+    padding: 0.15em 0.45em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    border: 1px solid rgba(124, 158, 255, 0.2);
+    font-family: var(--font-mono, monospace);
+}
+
+/* ---------- テーブル ---------- */
+.cli-page .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 10px);
+    background: var(--color-card);
+}
+
+.cli-page table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.cli-page thead th {
+    background: rgba(12, 25, 48, 0.85);
+    color: #a6c1ff;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.cli-page tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-muted-foreground);
+    vertical-align: top;
+}
+
+.cli-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.cli-page tbody tr:hover td {
+    background: rgba(124, 158, 255, 0.05);
+}
+
+.cli-page tbody td code {
+    white-space: nowrap;
+}
+
+/* ---------- コードブロック (.code-block / .code-line) ---------- */
+.cli-page .code-block {
+    background: #0a1628;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 10px);
+    padding: 16px 20px;
+    margin: 20px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: #e7edf7;
+}
+
+.cli-page .code-line {
+    white-space: pre;
+    font-family: inherit;
+}
+
+.cli-page .code-comment {
+    color: #71829c;
+}
+
+/* ---------- カード・コールアウト ---------- */
+.cli-page .card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 10px);
+    padding: 22px 24px;
+    margin: 20px 0;
+}
+
+.cli-page .card h4 {
+    margin-top: 0;
+    color: #a6c1ff;
+}
+
+.cli-page .note {
+    border-left: 3px solid var(--color-primary);
+}
+
+.cli-page .warn-box {
+    border-left: 3px solid #ffd479;
+}
+
+.cli-page .danger-box {
+    border-left: 3px solid #ff9494;
+}
+
+.cli-page blockquote {
+    margin: 22px 0;
+    padding: 14px 20px;
+    background: var(--color-card);
+    border-left: 3px solid #ffd479;
+    border-radius: 0 8px 8px 0;
+    color: var(--color-muted-foreground);
+    font-size: 0.94rem;
+}
+
+/* ---------- Mermaid ダイアグラム ---------- */
+.cli-page .mermaid-wrap {
+    width: 100%;
+    margin: 1.5rem auto 2rem;
+    display: flex;
+    justify-content: safe center;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 10px);
+    padding: 24px;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+/* ---------- フッター ---------- */
+.cli-page footer.page-footer {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-muted-foreground);
+    font-size: 0.85rem;
+}
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 900px) {
+    .cli-page .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .cli-page .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .cli-page .sidebar-toggle {
+        display: flex;
+    }
+
+    .cli-page .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 32px 20px 100px;
+    }
+
+    .cli-page header.hero h1 {
+        font-size: 1.6rem;
+    }
+}
