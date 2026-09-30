@@ -88,6 +88,7 @@ for i in $(seq 1 9); do
   (while true; do :; done) &
 done
 STRESS_PIDS=$(jobs -p)
+echo "BGPIDs: $STRESS_PIDS"
 
 # ...処理本体...
 ```
