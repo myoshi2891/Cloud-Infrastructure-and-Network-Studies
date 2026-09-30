@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const html = readFileSync(
-    'archive/Gcl/Professional-agentic-architect/Professional-agentic-architect-section4.html',
+    'archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.html',
     'utf8',
 );
 

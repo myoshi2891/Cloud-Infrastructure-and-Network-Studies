@@ -37,7 +37,7 @@
 
 ### 目的
 
-`Professional-agentic-architect-section4.html`（および `Professional-agentic-architect-section4.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section4Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section4` ルートへ移行。見出し(h1:1, h2:8, h3:10, h4:3)、全12個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(64件)、全コードブロック(4件・構文ハイライト付き)、全外部リンク(22件)・全本文(60件)・学習チェックリスト(17件)・参考文献カード(22件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+`Professional-agentic-architect-section4.html`（および `Professional-agentic-architect-section4.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section4Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section4` ルートへ移行。見出し(h1:1, h2:8, h3:7, h4:0)、全12個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(64件)、全コードブロック(4件・構文ハイライト付き)、全外部リンク(22件)・全本文(60件)・学習チェックリスト(17件)・参考文献カード(22件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
 
 ### 完了済みステップ
 
