@@ -111,7 +111,7 @@ flowchart TB
 
 #### Step 1：AWS が示す「責任ある AI」の次元を知る
 
-AWS は責任ある AI を複数の「次元」で整理しています。AWS の Generative AI Lens では次の 6 つを中心の定義として示し、他の AWS 資料では Governance（ガバナンス）と Transparency（透明性）を加えた 8 つで説明されます。Responsible AI Lens（2025 年 11 月公開）では 8 つの次元が Security／Safety／Veracity／Robustness／Fairness／Explainability／Transparency／Governance と整理されています。
+AWS は責任ある AI を複数の「次元」で整理しています。AWS の Generative AI Lens は、下表の 8 つ（Governance（ガバナンス）と Transparency（透明性）を含む）を責任ある AI の次元として示しています。一方、Responsible AI Lens（2025 年 11 月公開）の「8」は次元ではなく、ユースケース定義から運用までの**ライフサイクルに沿った 8 つの重点領域（focus areas）**です。同じ「8」でも数えている対象が異なる点に注意してください。
 
 | 次元 | 意味（やさしく） | 問いかけの例 |
 |---|---|---|
@@ -135,7 +135,7 @@ AWS は責任ある AI を複数の「次元」で整理しています。AWS �
 | Privacy and Security | 個人情報のマスキング、最小権限、暗号化 | Bedrock Guardrails の機密情報フィルター、IAM、暗号化 |
 | Safety | 有害コンテンツ・禁止トピックの遮断 | Bedrock Guardrails のコンテンツフィルター、拒否トピック |
 | Controllability | 監視、人間の介入、停止手段 | 監視ダッシュボード、人間レビューの導線 |
-| Veracity and Robustness | 根拠づけ、幻覚検知、評価 | コンテキスト根拠チェック、Automated Reasoning チェック |
+| Veracity and Robustness | 根拠づけ、幻覚検知、評価 | コンテキスト根拠チェック、Automated Reasoning チェック（英語（米国）のみ対応。日本語の入出力には直接適用できない） |
 | Governance | 記録・監査・責任の明確化 | Model Cards、ログ（CloudTrail 等） |
 | Transparency | 用途・限界・提供元情報の開示 | AWS AI Service Cards、UI での AI 利用表示 |
 
@@ -253,7 +253,7 @@ flowchart LR
 | セーフガード | 役割 | 例 |
 |---|---|---|
 | ガードレール | 有害・範囲外の入出力を自動で検知・遮断 | Amazon Bedrock Guardrails |
-| 幻覚検知 | 出力が根拠情報に基づくかを確認 | コンテキスト根拠チェック、Automated Reasoning チェック |
+| 幻覚検知 | 出力が根拠情報に基づくかを確認 | コンテキスト根拠チェック、Automated Reasoning チェック（英語（米国）のみ対応） |
 | エスカレーション基準 | どんなときに人に引き継ぐかを事前に定義 | 確信度が低い、機微トピック、高額、苦情 |
 | 人間レビュー／承認 | 高リスク出力の最終確認 | 承認キュー、二重確認 |
 | 停止・ロールバック手段 | 問題時に止められる | 機能フラグ、緊急停止手順 |
@@ -365,7 +365,8 @@ flowchart TB
 **適用時期の最新状況（2026-09-30 時点で確認できた情報）**
 
 - 禁止される行為と AI リテラシー義務は 2025 年 2 月 2 日に適用開始、GPAI 義務は 2025 年 8 月 2 日に適用開始。
-- 2026 年 7 月に成立した「Digital Omnibus on AI」（規則 2026/1744）により、高リスクの義務は、Annex III の単独システムが 2027 年 12 月 2 日、Annex I の製品組込み型が 2028 年 8 月 2 日に延期。一方、透明性義務（第 50 条）等は予定どおり 2026 年 8 月 2 日に適用。
+- 2026 年 7 月に成立した「Digital Omnibus on AI」（規則 2026/1744）により、高リスクの義務は、Annex III の単独システムが 2027 年 12 月 2 日、Annex I の製品組込み型が 2028 年 8 月 2 日に延期。一方、透明性義務（第 50 条）等は予定どおり 2026 年 8 月 2 日に適用。ただし第 50 条 2 項の AI 生成コンテンツのマーキング・検出義務は、2026 年 8 月 2 日より前に市場投入されたシステムについて 2026 年 12 月 2 日までの移行期間がある。
+- 同規則で新たに追加された禁止行為は、2026 年 12 月 2 日から適用。
 - 「延期＝義務がなくなる」ではない点に注意。日程は今後変わりうるため、実務では最新の公式情報を確認すること。
 
 > 試験に向けた要点：具体的な日付の暗記よりも「**リスクが高い用途ほど重い義務**」「**規制はリスクベースで段階的**」という構造理解が大切です。
@@ -560,7 +561,7 @@ flowchart LR
 | 悪用（プロンプト攻撃） | 制限を回避させる入力 | プロンプト攻撃検知 |
 | 不適切な語句 | 競合名、不適切表現 | ワードフィルター |
 
-Amazon Bedrock Guardrails は、コンテンツフィルター（Hate／Insults／Sexual／Violence／Misconduct／Prompt Attack）、拒否トピック、ワードフィルター、機密情報フィルター、コンテキスト根拠チェック、Automated Reasoning チェックといった保護（ポリシー）を、モデルとは独立して入力・出力に適用できる仕組みです。フィルターの強さはカテゴリーごとに調整できます。
+Amazon Bedrock Guardrails は、コンテンツフィルター（Hate／Insults／Sexual／Violence／Misconduct／Prompt Attack）、拒否トピック、ワードフィルター、機密情報フィルター、コンテキスト根拠チェック、Automated Reasoning チェック（英語（米国）のみ対応）といった保護（ポリシー）を、モデルとは独立して入力・出力に適用できる仕組みです。フィルターの強さはカテゴリーごとに調整できます。
 
 > 注意：強度を上げるほど検知は増えますが、正常な内容の誤遮断も増えます。対象ユーザーとリスクに合わせた調整が必要です（ビジネス判断）。
 
@@ -613,7 +614,7 @@ flowchart TB
 |---|---|---|
 | RAG（検索拡張生成） | 最新・社内の情報を根拠に回答させ、幻覚を減らす | Amazon Bedrock Knowledge Bases |
 | コンテキスト根拠チェック | 応答が参照情報に基づくか、質問に関連するかを検査 | Bedrock Guardrails（根拠づけと関連性のサブフィルター） |
-| Automated Reasoning チェック | 自然言語で定義したポリシー・論理ルールに出力が適合するか検証 | Bedrock Guardrails |
+| Automated Reasoning チェック | 自然言語で定義したポリシー・論理ルールに出力が適合するか検証（現時点で英語（米国）のみ対応。日本語の入出力には直接適用できない） | Bedrock Guardrails |
 | 引用の提示 | 利用者が根拠を確認できる | Knowledge Bases の出典表示 |
 | データ品質管理 | 参照データの鮮度・正確性を継続確認 | データオーナーの明確化、更新プロセス |
 | ドリフト監視 | 入力・出力の変化を検知して再評価 | CloudWatch や OSS 監視基盤（Model Monitor は新規顧客に閉じている） |
@@ -634,7 +635,7 @@ flowchart TB
 
 | 名前 | Domain 3 での位置づけ | 覚えておくこと |
 |---|---|---|
-| Amazon Bedrock Guardrails | 安全性・プライバシー・正確性の統制 | コンテンツフィルター、拒否トピック、ワード、機密情報、コンテキスト根拠、Automated Reasoning。モデルに依存せず入出力に適用 |
+| Amazon Bedrock Guardrails | 安全性・プライバシー・正確性の統制 | コンテンツフィルター、拒否トピック、ワード、機密情報、コンテキスト根拠、Automated Reasoning（英語（米国）のみ）。モデルに依存せず入出力に適用 |
 | Amazon Bedrock Knowledge Bases | 根拠づけ（RAG） | 幻覚の低減と出典提示 |
 | Amazon Bedrock Evaluations | 品質・公平性の評価 | 展開前後の評価。Clarify 後継の構成要素の 1 つ |
 | Amazon SageMaker AI | カスタム ML の基盤 | Clarify／Model Monitor／A2I は 2026-07-30 以降、新規顧客不可（既存は継続利用可）。Model Cards などの記録は継続的に重要 |
