@@ -291,7 +291,7 @@
     "git log -p -- path/to/file",
     "ファイル単位で過去の差分をすべて追跡できる",
     "直前のコミットメッセージだけを修正する",
-    "git commit --amend -m \"new message\"",
+    "git commit --amend --only -m \"new message\"",
     "まだ push していないコミットの言い直しに使う",
     "期間内のコミット数を著者別に集計する",
     "git log --since=\"1 week ago\" --pretty=format:\"%an\" | sort | uniq -c | sort -rn",
@@ -531,7 +531,7 @@
     },
     {
       "kind": "code",
-      "text": "# コマンド置換：結果を1つの文字列として埋め込む\nkill $(pgrep -f my_app)\n\n# xargs：一覧（複数行）を引数化して繰り返し実行\nfind . -name \"*.log\" | xargs rm"
+      "text": "# コマンド置換：結果を1つの文字列として埋め込む\nkill $(pgrep -f my_app)\n\n# xargs：一覧（複数行）を引数化して繰り返し実行\nfind . -name \"*.log\" -print0 | xargs -0 rm"
     },
     {
       "kind": "paragraph",

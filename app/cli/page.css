@@ -3,84 +3,108 @@
    Scoped under .cli-page
    ========================================================================== */
 
+/* ---------- ページ固有カラートークン (元HTML :root から完全移植) ---------- */
+.cli-page {
+    --cli-bg-panel: #0c1930;
+    --cli-bg-code: #0a1628;
+    --cli-bg-card: #0d1c33;
+    --cli-border: rgba(124, 158, 255, 0.16);
+    --cli-border-soft: rgba(124, 158, 255, 0.08);
+    --cli-text: #e7edf7;
+    --cli-text-dim: #a9b8d0;
+    --cli-text-faint: #71829c;
+    --cli-accent: #7c9eff;
+    --cli-accent-strong: #a6c1ff;
+    --cli-accent-soft: rgba(124, 158, 255, 0.12);
+    --cli-sidebar-w: 280px;
+    --cli-radius: 10px;
+}
+
 .cli-page {
     min-height: 100vh;
     background-color: var(--color-background);
-    color: var(--color-foreground);
+    color: var(--cli-text);
     line-height: 1.8;
     font-size: 16px;
 }
 
-/* ---------- サイドバー契約 (280px) ---------- */
+/* ---------- サイドバー契約 (296px ← 元HTML --sidebar-w: 296px) ---------- */
 .cli-page .sidebar {
     position: fixed;
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
     bottom: 0;
     left: 0;
     width: 280px;
-    background: var(--color-card);
-    border-right: 1px solid var(--color-border);
-    padding: 24px 18px 60px;
+    background: var(--cli-bg-panel);
+    border-right: 1px solid var(--cli-border);
+    padding: 28px 22px 60px;
     overflow-y: auto;
     z-index: 40;
     transition: transform 0.25s ease-in-out;
 }
 
-.cli-page .sidebar-header {
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--color-border);
+.cli-page .sidebar::-webkit-scrollbar {
+    width: 8px;
 }
 
-.cli-page .sidebar-header .kicker {
-    font-size: 0.75rem;
+.cli-page .sidebar::-webkit-scrollbar-thumb {
+    background: var(--cli-border);
+    border-radius: 4px;
+}
+
+/* ---------- ブランド（サイドバーヘッダー）---------- */
+.cli-page .brand {
+    font-size: 1.02rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-primary);
+    color: var(--cli-text);
     margin-bottom: 4px;
+    letter-spacing: 0.01em;
 }
 
-.cli-page .sidebar-header .sidebar-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--color-foreground);
-    line-height: 1.35;
+.cli-page .brand-sub {
+    font-size: 0.78rem;
+    color: var(--cli-text-faint);
+    margin-bottom: 26px;
+    line-height: 1.6;
 }
 
-.cli-page .sidebar nav ul {
+/* ---------- 目次 (TOC) ---------- */
+.cli-page .toc {
     list-style: none !important;
     margin: 0;
     padding: 0;
 }
 
-.cli-page .sidebar nav li {
-    margin: 0 0 2px;
+.cli-page .toc li {
+    margin: 0;
     list-style-type: none !important;
 }
 
-.cli-page .sidebar nav a {
+.cli-page .toc a {
     display: block;
-    color: var(--color-muted-foreground);
-    font-size: 0.84rem;
-    padding: 7px 10px;
-    border-radius: var(--radius-sm, 6px);
+    color: var(--cli-text-dim);
+    font-size: 0.855rem;
+    padding: 8px 12px;
+    border-radius: 8px;
     border-left: 2px solid transparent;
+    margin-bottom: 2px;
     text-decoration: none;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    overflow-wrap: anywhere;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
 }
 
-.cli-page .sidebar nav a:hover {
-    background: rgba(124, 158, 255, 0.12);
-    color: var(--color-foreground);
+.cli-page .toc a:hover {
+    background: var(--cli-accent-soft);
+    color: var(--cli-text);
     text-decoration: none;
 }
 
-.cli-page .sidebar nav a.active {
-    background: rgba(124, 158, 255, 0.12);
-    color: var(--color-primary);
-    border-left-color: var(--color-primary);
+.cli-page .toc a.active {
+    background: var(--cli-accent-soft);
+    color: var(--cli-accent-strong);
+    border-left-color: var(--cli-accent);
     font-weight: 600;
 }
 
@@ -91,7 +115,7 @@
     bottom: 20px;
     right: 20px;
     z-index: 50;
-    background: var(--color-primary);
+    background: var(--cli-accent);
     color: #ffffff;
     border: none;
     border-radius: 50%;
@@ -109,7 +133,7 @@
     margin-left: 280px;
     width: calc(100% - 280px);
     max-width: none;
-    padding: 48px 56px 140px;
+    padding: 64px 68px 140px;
     box-sizing: border-box;
 }
 
@@ -163,10 +187,10 @@
 
 /* ---------- 見出し・タイポグラフィ ---------- */
 .cli-page h2 {
-    font-size: 1.45rem;
-    color: var(--color-foreground);
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 12px;
+    font-size: 1.5rem;
+    color: var(--cli-text);
+    border-bottom: 1px solid var(--cli-border);
+    padding-bottom: 14px;
     margin: 0 0 22px;
     display: flex;
     align-items: baseline;
@@ -176,33 +200,33 @@
 }
 
 .cli-page h2 .num {
-    color: var(--color-primary);
+    color: var(--cli-accent);
     font-variant-numeric: tabular-nums;
 }
 
 .cli-page h3 {
     font-size: 1.15rem;
-    color: #a6c1ff;
-    margin: 32px 0 14px;
+    color: var(--cli-accent-strong);
+    margin: 34px 0 14px;
     font-weight: 600;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
 }
 
 .cli-page h4 {
     font-size: 1rem;
-    color: var(--color-foreground);
-    margin: 22px 0 10px;
+    color: var(--cli-text);
+    margin: 24px 0 10px;
     font-weight: 600;
 }
 
 .cli-page p {
-    color: var(--color-muted-foreground);
+    color: var(--cli-text-dim);
     margin: 0 0 16px;
     max-width: none;
 }
 
 .cli-page strong {
-    color: var(--color-foreground);
+    color: var(--cli-text);
 }
 
 .cli-page a {
@@ -217,30 +241,31 @@
 /* リストスタイリングの強制保護 */
 .cli-page .content ul {
     list-style-type: disc !important;
-    padding-left: 1.5em;
+    padding-left: 1.4em;
     margin: 0 0 18px;
-    color: var(--color-muted-foreground);
+    color: var(--cli-text-dim);
 }
 
 .cli-page .content ol {
     list-style-type: decimal !important;
-    padding-left: 1.5em;
+    padding-left: 1.4em;
     margin: 0 0 18px;
-    color: var(--color-muted-foreground);
+    color: var(--cli-text-dim);
 }
 
 .cli-page .content li {
     margin-bottom: 6px;
+    color: var(--cli-text);
 }
 
 /* インラインコード */
 .cli-page code {
-    background: rgba(124, 158, 255, 0.12);
-    color: #a6c1ff;
+    background: var(--cli-bg-code);
+    color: var(--cli-accent-strong);
     padding: 0.15em 0.45em;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.88em;
-    border: 1px solid rgba(124, 158, 255, 0.2);
+    border: 1px solid var(--cli-border-soft);
     font-family: var(--font-mono, monospace);
 }
 
@@ -248,9 +273,8 @@
 .cli-page .table-wrap {
     overflow-x: auto;
     margin: 20px 0 28px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 10px);
-    background: var(--color-card);
+    border: 1px solid var(--cli-border);
+    border-radius: var(--cli-radius);
 }
 
 .cli-page table {
@@ -260,19 +284,19 @@
 }
 
 .cli-page thead th {
-    background: rgba(12, 25, 48, 0.85);
-    color: #a6c1ff;
+    background: var(--cli-bg-card);
+    color: var(--cli-accent-strong);
     text-align: left;
     padding: 12px 16px;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--cli-border);
     white-space: nowrap;
     font-weight: 600;
 }
 
 .cli-page tbody td {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-muted-foreground);
+    border-bottom: 1px solid var(--cli-border-soft);
+    color: var(--cli-text-dim);
     vertical-align: top;
 }
 
@@ -290,16 +314,16 @@
 
 /* ---------- コードブロック (.code-block / .code-line) ---------- */
 .cli-page .code-block {
-    background: #0a1628;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 10px);
-    padding: 16px 20px;
+    background: var(--cli-bg-code);
+    border: 1px solid var(--cli-border);
+    border-radius: var(--cli-radius);
+    padding: 18px 20px;
     margin: 20px 0;
     overflow-x: auto;
     font-family: var(--font-mono, monospace);
     font-size: 0.92rem;
     line-height: 1.65;
-    color: #e7edf7;
+    color: var(--cli-text);
 }
 
 .cli-page .code-line {
@@ -308,42 +332,42 @@
 }
 
 .cli-page .code-comment {
-    color: #71829c;
+    color: var(--cli-text-faint);
 }
 
 /* ---------- カード・コールアウト ---------- */
 .cli-page .card {
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 10px);
+    background: var(--cli-bg-card);
+    border: 1px solid var(--cli-border);
+    border-radius: var(--cli-radius);
     padding: 22px 24px;
     margin: 20px 0;
 }
 
 .cli-page .card h4 {
     margin-top: 0;
-    color: #a6c1ff;
+    color: var(--cli-accent-strong);
 }
 
 .cli-page .note {
-    border-left: 3px solid var(--color-primary);
+    border-left: 3px solid var(--cli-accent);
 }
 
 .cli-page .warn-box {
-    border-left: 3px solid #ffd479;
+    border-left: 3px solid var(--cli-warn, #ffd479);
 }
 
 .cli-page .danger-box {
-    border-left: 3px solid #ff9494;
+    border-left: 3px solid var(--cli-danger, #ff9494);
 }
 
 .cli-page blockquote {
     margin: 22px 0;
     padding: 14px 20px;
-    background: var(--color-card);
+    background: var(--cli-bg-card);
     border-left: 3px solid #ffd479;
     border-radius: 0 8px 8px 0;
-    color: var(--color-muted-foreground);
+    color: var(--cli-text-dim);
     font-size: 0.94rem;
 }
 
@@ -353,9 +377,9 @@
     margin: 1.5rem auto 2rem;
     display: flex;
     justify-content: safe center;
-    background: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 10px);
+    background: var(--cli-bg-card);
+    border: 1px solid var(--cli-border);
+    border-radius: var(--cli-radius);
     padding: 24px;
     box-sizing: border-box;
     overflow-x: auto;
@@ -365,8 +389,8 @@
 .cli-page footer.page-footer {
     margin-top: 80px;
     padding-top: 28px;
-    border-top: 1px solid var(--color-border);
-    color: var(--color-muted-foreground);
+    border-top: 1px solid var(--cli-border);
+    color: var(--cli-text-dim);
     font-size: 0.85rem;
 }
 
@@ -374,10 +398,16 @@
 @media (max-width: 900px) {
     .cli-page .sidebar {
         transform: translateX(-100%);
+        /* 閉じた状態のリンクへキーボードフォーカスが届かないよう visibility も切り替える */
+        visibility: hidden;
+        transition:
+            transform 0.25s ease-in-out,
+            visibility 0.25s;
     }
 
     .cli-page .sidebar.open {
         transform: translateX(0);
+        visibility: visible;
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
     }
 

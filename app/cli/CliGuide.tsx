@@ -140,7 +140,7 @@ export default function CliGuide() {
                                 <div className="code-line">kill $(pgrep -f my_app)</div>
                                 <div className="code-line"></div>
                                 <div className="code-line"><span className="code-comment"># xargs：一覧（複数行）を引数化して繰り返し実行</span></div>
-                                <div className="code-line">find . -name &quot;*.log&quot; | xargs rm</div>
+                                <div className="code-line">find . -name &quot;*.log&quot; -print0 | xargs -0 rm</div>
                             </div>
 
                             <h3>1.3 安全に試すための心得</h3>
@@ -867,7 +867,7 @@ export default function CliGuide() {
                                         </tr>
                                         <tr>
                                             <td>直前のコミットメッセージだけを修正する</td>
-                                            <td><code>git commit --amend -m &quot;new message&quot;</code></td>
+                                            <td><code>git commit --amend --only -m &quot;new message&quot;</code></td>
                                             <td>まだ push していないコミットの言い直しに使う</td>
                                         </tr>
                                         <tr>

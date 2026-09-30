@@ -69,8 +69,11 @@ D --> F[該当PIDを確認]
 E --> F
 F --> G{"そのプロセスは安全に停止できるか?"}
 G -->|Yes| H[kill -TERM PID で正常終了を試みる]
-G -->|判断がつかない,応答なし| I[kill -KILL PID で強制終了]
-H --> J[再度 ps top で状態を確認]
+G -->|判断がつかない| K["ps -p PID -o cmd= でプロセスを特定し、担当者に確認"]
+K --> G
+H --> L{"SIGTERM 後も同じプロセスが動き続けているか?"}
+L -->|No| J[再度 ps top で状態を確認]
+L -->|Yes| I[kill -KILL PID で強制終了]
 I --> J`,
 
     'diag-network': `flowchart TD

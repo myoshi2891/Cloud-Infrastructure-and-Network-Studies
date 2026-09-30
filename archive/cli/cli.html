@@ -518,7 +518,7 @@
                             kill $(pgrep -f my_app)
 
                             # xargs：一覧（複数行）を引数化して繰り返し実行
-                            find . -name "*.log" | xargs rm
+                            find . -name "*.log" -print0 | xargs -0 rm
                         </script>
 
                         <h3>1.3 安全に試すための心得</h3>
@@ -1306,7 +1306,7 @@
                                     </tr>
                                     <tr>
                                         <td>直前のコミットメッセージだけを修正する</td>
-                                        <td><code>git commit --amend -m "new message"</code></td>
+                                        <td><code>git commit --amend --only -m "new message"</code></td>
                                         <td>まだ push していないコミットの言い直しに使う</td>
                                     </tr>
                                     <tr>
