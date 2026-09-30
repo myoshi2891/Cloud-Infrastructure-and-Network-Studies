@@ -561,4 +561,89 @@ J2 --> P2["Pod"]
 
 classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
 class CJ highlightFill`,
+
+    'diag-35': `flowchart LR
+subgraph CYCLE["Kubernetesのリリースサイクル(年3回)"]
+    direction LR
+    A["拡張機能<br/>フリーズ"] --> B["コード/テスト<br/>フリーズ"]
+    B --> C["ドキュメント<br/>フリーズ"]
+    C --> D["GAリリース"]
+    D -->|約4ヶ月後| A
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class D highlightFill`,
+
+    'diag-36': `flowchart LR
+subgraph OLD["従来のデバイス割り当て(Device Plugin)"]
+    direction LR
+    POD_OLD["Pod"] -->|"resources.limits:<br/>nvidia.com/gpu: 1"| DEV_OLD["GPUをそのまま<br/>丸ごと1枚割り当て"]
+end
+subgraph NEW["DRAによる割り当て"]
+    direction LR
+    RC["ResourceClaim<br/>(GPUの種類・共有方法を<br/>柔軟に指定)"]
+    POD_NEW["Pod"] --> RC
+    RC -->|"Just-In-Timeで<br/>最適なデバイスを選択"| DEV_NEW["GPU / FPGA / NIC"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class RC highlightFill`,
+
+    'diag-37': `flowchart TB
+subgraph BEFORE["v1.32以前: リソース変更は原則Pod再作成"]
+    direction LR
+    B1["spec.containers[*].resources<br/>変更"] --> B2["Pod再作成"] --> B3["接続切断・<br/>ステート消失"]
+end
+subgraph AFTER["v1.33以降: コンテナ単位のIn-Place Resize<br/>(ベータで既定有効)・v1.35でGA"]
+    direction LR
+    A1["spec.containers[*].resources<br/>変更"] --> A2["kubeletがcgroup設定を<br/>動的に更新"] --> A3["対応するリソースは<br/>Pod再作成なしで反映<br/>(resizePolicy次第で<br/>コンテナ再起動)"]
+end
+subgraph PODLEVEL["v1.36: Pod-level resources の<br/>インプレース変更 (ベータ・別機能)"]
+    direction LR
+    P1["spec.resources<br/>(Pod単位)変更"] --> P2["Pod全体のcgroup上限を<br/>インプレースで更新"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class A2,A3 highlightFill
+class P2 highlightFill
+class B2,B3 dangerFill`,
+
+    'diag-38': `flowchart TB
+T1["2025年11月11日<br/>SIG Network + Security<br/>Response Committeeが<br/>終了を発表"] --> T2["2026年3月31日<br/>ベストエフォート<br/>メンテナンス終了"]
+T2 --> T3["以降: セキュリティパッチ・<br/>バグ修正・新機能提供なし"]
+T3 --> T4["既存デプロイは動作継続するが<br/>新規CVEに対して脆弱"]
+
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class T3,T4 dangerFill`,
+
+    'diag-39': `flowchart LR
+A["v1.28 (2023/8)<br/>アルファ導入"] --> B["v1.29 (2023/12)<br/>ベータ・既定で有効"] --> C["v1.33 (2025/4)<br/>GA(安定版)"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class C highlightFill`,
+
+    'diag-40': `flowchart TB
+subgraph STATS["CNCF Annual Cloud Native Survey (2026年1月発表)"]
+    direction TB
+    S1["クラウドネイティブ技術の<br/>組織導入率: 98%"]
+    S2["コンテナ利用者のうち<br/>本番環境でKubernetesを<br/>稼働: 82%(2023年は66%)"]
+    S3["生成AIモデルをホストする<br/>組織のうちKubernetes上で<br/>推論ワークロードを稼働: 66%"]
+    S4["AIモデルを毎日<br/>デプロイしている組織:<br/>わずか7%"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class S2 highlightFill`,
+
+    'diag-41': `flowchart TB
+STEP0["Step 0: コンテナの基礎<br/>(第0部)<br/>Docker Desktopで<br/>Hello Worldコンテナを起動"] --> STEP1
+STEP1["Step 1: クラスタの仕組みを知る<br/>(第1部)<br/>kindでローカルクラスタを構築し<br/>kubectlの基本操作に慣れる"] --> STEP2
+STEP2["Step 2: Podを動かす<br/>(第2部)<br/>マルチコンテナPod・<br/>ヘルスチェックを実装する"] --> STEP3
+STEP3["Step 3: 設定を外出しする<br/>(第3部)<br/>ConfigMap/Secret/PVCを使って<br/>ステートフルなアプリを構築"] --> STEP4
+STEP4["Step 4: 外部公開する<br/>(第4部)<br/>ServiceとGateway APIで<br/>アプリを公開する"] --> STEP5
+STEP5["Step 5: 本番運用の型を学ぶ<br/>(第5部)<br/>Deployment/StatefulSetで<br/>ローリングアップデートを体験"] --> STEP6
+STEP6["Step 6: 最新動向を追う<br/>(第6部)<br/>DRA・In-Place Resize等<br/>2026年時点の変化を把握"]
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class STEP1,STEP4 highlightFill`,
 };

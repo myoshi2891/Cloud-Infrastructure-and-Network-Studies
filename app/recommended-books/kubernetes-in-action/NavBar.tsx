@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { type NavItem, NAV_ITEMS } from './constants';
 
 const sanitizeHash = (hash: string): string | null => {
@@ -156,22 +156,23 @@ export function NavBar() {
                 aria-label="学習ガイド目次"
             >
                 <div className="sidebar-header">
-                    <div className="kicker">Book Guide</div>
-                    <h2>Kubernetes in Action</h2>
-                </div>
+                    <div className="kicker">Kubernetes</div>{' '}
+                    <h2>Kubernetes in Action, 第2版 完全解説ガイド</h2>
+                </div>{' '}
                 <nav id="sidebarNav" aria-label="ページ内ナビゲーション">
                     {NAV_ITEMS.map((item: NavItem) => (
-                        <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            className={`${item.level === 'h3' ? 'lvl3' : ''} ${
-                                activeId === item.id ? 'active' : ''
-                            }`}
-                            aria-current={activeId === item.id ? 'location' : undefined}
-                            onClick={(e) => handleLinkClick(e, item.id)}
-                        >
-                            {item.label}
-                        </a>
+                        <Fragment key={item.id}>
+                            <a
+                                href={`#${item.id}`}
+                                className={`${item.level === 'h3' ? 'lvl3' : ''} ${
+                                    activeId === item.id ? 'active' : ''
+                                }`}
+                                aria-current={activeId === item.id ? 'location' : undefined}
+                                onClick={(e) => handleLinkClick(e, item.id)}
+                            >
+                                {item.label}
+                            </a>{' '}
+                        </Fragment>
                     ))}
                 </nav>
             </aside>

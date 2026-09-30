@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { NavBar } from './NavBar';
 import { DIAGRAMS, type DiagramId } from './constants';
@@ -21,6 +21,17 @@ const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
 });
 
 export function KubernetesInActionGuide() {
+    const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+
+    const toggleCheck = (id: string) => {
+        setCheckedItems((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    };
+
+    const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+
     return (
         <div className="kia-page">
             <div className="layout">
@@ -129,8 +140,8 @@ export function KubernetesInActionGuide() {
 
                     <h2 id="part0">第0部: コンテナ技術の基礎（本書の前提知識）</h2>
                     <p>
-                        原著は「読者にDockerやコンテナの経験は不要」と明言していますが（O&apos;Reillyページの
-                        About the Reader:
+                        原著は「読者にDockerやコンテナの経験は不要」と明言していますが（O&apos;Reillyページの About the
+                        Reader:{' '}
                         <em>
                             &quot;Written for intermediate software developers. No prior experience with
                             Kubernetes or containers is required.&quot;
@@ -147,14 +158,14 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-1" label="仮想マシン方式とコンテナ方式のアーキテクチャ比較図" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス（原著2.3節準拠）</div>
+                            <div className="label">ベストプラクティス（原著2.3節準拠）</div>{' '}
                             <ul>
                                 <li>
                                     コンテナはプロセスの隔離であってVMのような完全な隔離ではないため、マルチテナント環境では追加のセキュリティ境界（gVisor、Kata
                                     Containersなど）の採用を検討する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     1コンテナ1プロセス（1責務）を基本原則とし、コンテナ内でinitシステムやSSHデーモンを常駐させない。
                                 </li>
@@ -220,14 +231,14 @@ export function KubernetesInActionGuide() {
                         </table>
                     </div>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     ローカル開発ではDocker Desktop／Podman
                                     Desktopのどちらでも良いが、本番クラスタのノードランタイムはcontainerdかCRI-Oに統一する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     イメージはOCIイメージ仕様に準拠したレジストリ（Docker Hub、GitHub
                                     Container Registry、Amazon ECR、Google Artifact
@@ -301,14 +312,14 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-4" label="Kubernetes導入要否と運用体制を判断するフローチャート" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     小規模なチームや単一のモノリシックアプリケーションでは、まずマネージドKubernetes（GKE
                                     Autopilot、EKS Fargate、AKSなど）から始め、運用負荷を最小化する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     自前でKubernetesクラスタ全体（コントロールプレーンを含む）を運用するのは非常に難易度が高いため、専任のプラットフォームチームなしに選択すべきではない、と原著は繰り返し強調している。
                                 </li>
@@ -382,13 +393,13 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-6" label="kubectl applyからPodが起動するまでのシーケンス図" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     コントロールプレーンは通常、可用性のため奇数（3・5台等）のノードで冗長化し、etcdのリーダー選出クォーラムを確保する。マネージドサービスを使う場合はこの管理をクラウドプロバイダに委任できる。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl get events</code>や<code>kubectl describe</code>
                                     は、宣言と実際の状態のズレをデバッグする際の最初の一手として習慣化する。
@@ -461,13 +472,13 @@ export function KubernetesInActionGuide() {
                         が行うのはServiceの作成であり、それ自体が自動的に外部公開を行うわけではありません（既定では<code>ClusterIP</code>でクラスタ内部からのみ到達可能）。クラスタ外部からアクセスさせたい場合は<code>--type=NodePort</code>または<code>--type=LoadBalancer</code>を明示的に指定します。これは第5部（Deployment、Service）で扱う概念の実践的な入り口になっています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     学習段階ではkindまたはMinikubeでローカルに複数ノードクラスタを再現し、Podのスケジューリングやノード障害時の挙動を安全に試す。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl config use-context</code>
                                     でクラスタを切り替える際は、
@@ -495,22 +506,19 @@ export function KubernetesInActionGuide() {
                         コマンドの出力末尾に表示される「Events」セクションは、このEventオブジェクトを整形して表示したものです。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
-                                    未知のリソース種別に遭遇したら
-                                    <code>kubectl explain &lt;kind&gt;</code>
-                                    （例:
-                                    <code>kubectl explain pod.spec.containers</code>
+                                    未知のリソース種別に遭遇したら<code>kubectl explain &lt;kind&gt;</code>
+                                    （例:{' '}<code>kubectl explain pod.spec.containers</code>
                                     ）でフィールドの説明とAPIバージョンをその場で確認する習慣をつける。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl describe</code>で表示されるstatus
-                                    conditions（<code>Ready</code>,
-                                    <code>PodScheduled</code>
-                                    など）を読み解けるようになると、トラブルシューティングの速度が大きく向上する。
+                                    conditions（<code>Ready</code>,{' '}
+                                    <code>PodScheduled</code>など）を読み解けるようになると、トラブルシューティングの速度が大きく向上する。
                                 </li>
                             </ul>
                         </div>
@@ -536,19 +544,19 @@ export function KubernetesInActionGuide() {
                         1.28でアルファ導入、1.29でデフォルト有効化、1.33で安定版。詳細は<a href="#6-5">6.5節</a>を参照）。これにより、従来のサイドカーパターンで課題だった「Jobのサイドカーがいつまでも終了せず、Jobの完了判定をブロックしてしまう」問題が解消されました。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス（原著5.3〜5.6節）</div>
+                            <div className="label">ベストプラクティス（原著5.3〜5.6節）</div>{' '}
                             <ul>
                                 <li>
                                     Pod内のコンテナとやり取りする際は
                                     <code>kubectl exec -it &lt;pod&gt; -- sh</code>
                                     より先に<code>kubectl logs</code>
                                     で挙動を確認し、本番環境への<code>exec</code>は最小限にとどめる。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     デバッグ専用の<code>ephemeralContainers</code>（原著5.3.6節）を使えば、実行中のPodに影響を与えずにデバッグ用ツールコンテナを一時的に注入できる。distrolessイメージなどシェルを含まない本番イメージのデバッグに有効。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl delete pods --all</code>
                                     のような広範囲削除コマンドは、必ず<code>-n &lt;namespace&gt;</code>でスコープを絞ってから実行する。
@@ -599,23 +607,23 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-13" label="Pod削除時のpreStopフックとSIGTERM、SIGKILL終了シーケンス" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
                             <div className="label">
                                 ベストプラクティス（原著6.2.7節「Creating effective liveness probe handlers」）
-                            </div>
+                            </div>{' '}
                             <ul>
                                 <li>
                                     Liveness
                                     Probeは「アプリが応答するか」だけを軽量にチェックし、データベース接続など外部依存のチェックはReadiness
                                     Probeに任せる。Liveness
                                     Probeが外部依存の障害で失敗すると、無意味な再起動ループを引き起こす。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     Startup Probeを使わずに長いLiveness
                                     Probeの<code>initialDelaySeconds</code>だけに頼ると、起動の遅いアプリと本当にハングしたアプリを区別できない。起動時間が不安定なアプリには必ずStartup
                                     Probeを設定する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>preStop</code>
                                     フックの遅延（数秒のsleep等）は、エンドポイントやロードバランサーからPodが実際に切り離されるまでの猶予を確認するものではない。安全にドレインするには、遅延に加えて（1）遅延とアプリの終了処理を収容できる<code>terminationGracePeriodSeconds</code>、（2）新規接続を止めて処理中のリクエストを完了させるアプリ側のグレースフルシャットダウン、（3）利用中のロードバランサー実装ごとの切り離し所要時間の実測と検証、の3点をそろえる必要がある。
@@ -639,9 +647,9 @@ export function KubernetesInActionGuide() {
                         アノテーション（原著7.5節）はラベルと似ていますが、セレクタの対象にはならず、任意の（非識別用途の）メタデータ（ビルド情報、ツール固有の設定値など）を格納するために使います。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     Kubernetes公式が定める
@@ -649,10 +657,10 @@ export function KubernetesInActionGuide() {
                                         推奨ラベル
                                     </a>
                                     （<code>app.kubernetes.io/name</code>、<code>app.kubernetes.io/version</code>など）に準拠し、ツール間の相互運用性を高める。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     Namespace単位でResourceQuota・LimitRangeを設定し、1チーム／1環境がクラスタ全体のリソースを食い潰さないようにする。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     機密性の高いワークロード同士は同一Namespaceであっても信頼せず、NetworkPolicyでデフォルト拒否（default-deny）を基本方針にする。
                                 </li>
@@ -682,19 +690,19 @@ export function KubernetesInActionGuide() {
                         は、Pod自身のメタデータ（名前、Namespace、ラベル、リソース制限値など）をコンテナ内の環境変数やファイルとして注入する仕組みです。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     SecretはetcdのEncryption at
                                     Restを有効化し、加えて可能であればHashiCorp VaultやAWS Secrets
                                     Manager、External Secrets
                                     Operatorなど外部シークレット管理システムとの連携を検討する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     ConfigMap/Secretを更新しても、既に起動済みのPodへの環境変数注入は自動反映されない（再起動が必要）。ボリュームマウントの場合は多くのケースで自動的にファイル内容が更新されるが、アプリ側がファイル変更を検知して再読み込みする実装になっているか確認する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     Secretの中身をGitリポジトリに平文でコミットしない。Sealed
                                     SecretsやSOPS、External Secrets
@@ -715,14 +723,14 @@ export function KubernetesInActionGuide() {
                         メインコンテナが書いたログをサイドカーが読む）によく使われます。一方<code>hostPath</code>はノードのローカルディスクに直接アクセスするため、Pod再スケジュール時にデータの整合性が保てず、セキュリティリスクも高いため、原著でも「特別な用途（DaemonSetでノード上のログファイルを読むなど）に限定すべき」と位置づけられています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     <code>hostPath</code>はノード固有のリソース（例:
                                     DaemonSetからホストのログファイルを読み取り専用でマウントする）以外では避け、一般的なアプリケーションの永続化にはPersistentVolume（3.3節）を使う。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     複数のConfigMap/Secret/DownwardAPIを1つのマウントポイントに統合したい場合は<code>projected</code>ボリュームを使い、Podのボリューム定義をシンプルに保つ。
                                 </li>
@@ -781,19 +789,19 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-20" label="動的プロビジョニングと静的プロビジョニングの比較図" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     特別な理由がない限り動的プロビジョニング（StorageClass +
                                     PVC）を使い、静的プロビジョニングはノードローカルストレージなど特殊なケースに限定する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     PVCのリサイズ（原著10.4.1節）に対応したStorageClass（
                                     <code>allowVolumeExpansion: true</code>
                                     ）を選ぶ。ただしこのフラグは拡張を許可するだけであり、Podを再作成せずにファイルシステムまで広げるには、CSIドライバとファイルシステムの双方がオンライン拡張に対応している必要がある。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     定期的なスナップショット（原著10.4.2〜10.4.3節）をVolumeSnapshotリソースで自動化し、災害復旧（DR）計画に組み込む。
                                 </li>
@@ -819,19 +827,19 @@ export function KubernetesInActionGuide() {
                         Hintsを使うと、可能な限り同一ノード・同一ゾーン内のPodへトラフィックを優先的にルーティングし、ノード間・ゾーン間の通信コストを削減できます。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     Readiness
                                     Probe（2.2節）を必ず設定し、起動途中や過負荷のPodがServiceのエンドポイントに含まれないようにする。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     マルチAZ構成のクラスタでは、Topology Aware Routing（旧称Topology
                                     Aware
                                     Hints）を有効化し、ゾーンをまたぐ不要なトラフィックとコストを削減する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>externalTrafficPolicy: Local</code>を使うとクライアントIPを保持できる反面、ノードによって負荷が偏る可能性があるため、ヘルスチェックの設計とセットで検討する。
                                 </li>
@@ -854,14 +862,14 @@ export function KubernetesInActionGuide() {
                         API（4.3節）への移行を前提に計画することが強く推奨されています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス（原著12.4節）</div>
+                            <div className="label">ベストプラクティス（原著12.4節）</div>{' '}
                             <ul>
                                 <li>
                                     Ingressアノテーションはコントローラ実装ごとに非互換であるため（例:
                                     NGINX用のアノテーションはTraefikでは動かない）、複数コントローラの並行運用や移行を想定する場合は特に注意する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     TLS証明書の自動更新にはcert-managerを併用し、証明書の手動更新運用を排除する。
                                 </li>
@@ -924,9 +932,9 @@ export function KubernetesInActionGuide() {
                         Initiative）に触れています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     新規にKubernetesクラスタでHTTPルーティングを構築する場合は、原著13.1.3節が例示するIstioに限らず、Envoy
@@ -934,10 +942,10 @@ export function KubernetesInActionGuide() {
                                     Gateway、AWS Gateway API
                                     Controllerなど）の中から要件に合うものを選び、最初からGateway
                                     APIで構築する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     既存のIngressからの移行は、<code>ingress2gateway</code>のような変換ツールで叩き台を生成した上で、アノテーションに依存していた挙動を手動で<code>HTTPRoute</code>のフィルタ機能に置き換える。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     GatewayとHTTPRouteをNamespaceで分離する運用（原著13.6節）を活用し、インフラチームがGatewayのTLS設定を管理しつつ、アプリチームは自Namespace内のHTTPRouteだけを変更できるようにする。Namespace分離は書き込み権限の分離とセットで設計する。すなわち、<code>gateways</code>リソースへの<code>create</code>/<code>update</code>/<code>patch</code>/<code>delete</code>はインフラチーム向けのClusterRole（またはGateway用Namespaceに限定したRole）にのみ与え、アプリチームには自Namespaceの<code>httproutes</code>に対する権限だけを与えるRole/RoleBindingを各アプリNamespaceに作成する。さらにGateway側の<code>listeners[].allowedRoutes</code>（<code>namespaces.from: Selector</code>＋ラベルセレクタなど）で接続を許可するNamespaceを明示的に絞り込み、クロスNamespace参照（別NamespaceのSecretやBackendを指すケース）は、対象のKind・Name・送信元Namespaceを限定した<code>ReferenceGrant</code>を参照先Namespaceに置いた場合にのみ許可する。
                                 </li>
@@ -970,13 +978,13 @@ export function KubernetesInActionGuide() {
                         ownership」では、<code>ownerReferences</code>フィールドによってPodがどのReplicaSetに所属するかが管理されている点を解説しています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     通常、ReplicaSetを直接作成することは稀で、後述のDeploymentが内部的にReplicaSetを管理する。ReplicaSetを直接操作するのは、ローリングアップデートの仕組みを理解する学習目的か、非常に特殊な運用ニーズに限られる。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl delete replicaset --cascade=orphan</code>を使えば、ReplicaSetだけを削除してPodを残すことができる（原著14.4.2節）。緊急時の切り離し手段として覚えておく。
                                 </li>
@@ -1023,18 +1031,18 @@ export function KubernetesInActionGuide() {
                     </p>
                     <Diagram id="diag-29" label="カナリア・A/Bテスト・Blue/Green・シャドウイング等デプロイ戦略の比較図" />
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     <code>maxUnavailable</code>と<code>maxSurge</code>は、可用性重視なら<code>maxUnavailable: 0</code>、リソース制約が厳しいなら<code>maxSurge: 0</code>のように、クラスタのリソース余裕とSLAに応じて調整する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     Readiness
                                     Probeが正しく設定されていないと、ローリングアップデート中に「まだ準備できていない新Pod」にトラフィックが流れ、実質的なダウンタイムを引き起こす。Deploymentの安全なローリングアップデートはReadiness
                                     Probeとセットで初めて成立する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>kubectl rollout undo</code>で即座にロールバックできるよう、<code>revisionHistoryLimit</code>で保持するReplicaSet履歴数を意図的に設定しておく。
                                 </li>
@@ -1051,12 +1059,12 @@ export function KubernetesInActionGuide() {
                         <li>
                             <strong>安定したネットワークID</strong>:
                             各Podは<code>&lt;statefulset名&gt;-&lt;序数&gt;</code>という固定名を持ち、ヘッドレスServiceを通じて<code>&lt;pod名&gt;.&lt;service名&gt;</code>という固定DNS名でアクセスできる。
-                        </li>
-                        <li>
+                        </li>{' '}
+                                <li>
                             <strong>安定した永続ストレージ</strong>:
                             各Podは専用のPVCを持ち、Podが再作成されても同じPVC（＝同じデータ）に再アタッチされる。
-                        </li>
-                        <li>
+                        </li>{' '}
+                                <li>
                             <strong>順序保証</strong>:
                             既定では<code>OrderedReady</code>ポリシーにより、Pod-0が起動・Readyになってから
                             Pod-1が起動する（スケールアップ・ダウンとも順序を守る）。
@@ -1067,14 +1075,14 @@ export function KubernetesInActionGuide() {
                         原著16.4節では、MongoDB Community Operatorを例に<strong>Kubernetes Operator</strong>パターンを紹介しています。OperatorはStatefulSetをさらに一段抽象化し、「レプリカセットの初期化」「フェイルオーバー」「バックアップ」のようなアプリケーション固有の運用知識をコントローラとしてコード化したものです。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     本番のステートフルワークロード（データベース等）は、可能な限り実績のあるOperator（PostgreSQLのCloudNativePG、MongoDBのCommunity/Enterprise
                                     Operatorなど）を使い、StatefulSetを手で運用する範囲を最小化する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     PVC保持ポリシー（原著16.2.4節、<code>persistentVolumeClaimRetentionPolicy</code>）を明示的に設定し、StatefulSet削除時にPVCを残すか削除するかを意図した挙動にする。
                                 </li>
@@ -1090,13 +1098,13 @@ export function KubernetesInActionGuide() {
                         原著17.2節では、DaemonSetのPodがしばしば必要とする特別な権限（ホストネットワークの利用、ノードファイルシステムへのアクセス、OSカーネルへのアクセス）を扱っています。これらは通常のアプリケーションPodには不要かつ危険な権限であるため、DaemonSet専用の設計判断として明確に区別することが重要です。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     DaemonSetは<code>nodeSelector</code>や<code>tolerations</code>と組み合わせ、コントロールプレーンノードを含む全ノードに配置すべきか、特定ラベルを持つノードに限定すべきかを明示的に設計する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     ノードエージェントに<code>hostNetwork: true</code>や特権コンテナ（<code>privileged: true</code>）が必要な場合は、その理由をコメントで明記し、Pod Security
                                     Admissionのポリシーで許可範囲を最小化する。
@@ -1111,25 +1119,25 @@ export function KubernetesInActionGuide() {
                     <Diagram id="diag-33" label="Jobコントローラによる並行実行と正常終了カウントの管理図" />
                     <p>
                         <strong>CronJob</strong>はJobをスケジュール実行するためのラッパーで、Unix
-                        cron形式のスケジュール文字列（例:
+                        cron形式のスケジュール文字列（例:{' '}
                         <code>0 2 * * *</code>＝毎日2時）でJobを定期生成します。
                     </p>
                     <Diagram id="diag-34" label="CronJobによるJobおよびPodの定期スケジュール生成フロー図" />
                     <p>
-                        原著18.2.5〜18.2.6節では、<code>startingDeadlineSeconds</code>（コントロールプレーンの一時停止などでスケジュールを逃した場合の許容遅延）と<code>concurrencyPolicy</code>（前回のJobが終わっていない場合の挙動:
+                        原著18.2.5〜18.2.6節では、<code>startingDeadlineSeconds</code>（コントロールプレーンの一時停止などでスケジュールを逃した場合の許容遅延）と<code>concurrencyPolicy</code>（前回のJobが終わっていない場合の挙動:{' '}
                         <code>Allow</code>/<code>Forbid</code>/<code>Replace</code>）という、実運用で必ず遭遇する設定を扱っています。
                     </p>
                     <div className="callout-practice">
-                        <div className="icon">&#10003;</div>
+                        <div className="icon">&#10003;</div>{' '}
                         <div className="body">
-                            <div className="label">ベストプラクティス</div>
+                            <div className="label">ベストプラクティス</div>{' '}
                             <ul>
                                 <li>
                                     冪等でないバッチ処理（重複実行が許されない処理）には<code>concurrencyPolicy: Forbid</code>を設定し、前回のJobが完了する前に新しいJobが起動しないようにする。ただし<code>Forbid</code>はスケジュール時点の同時実行を抑止するだけで、重複実行を根本的に防ぐものではない（Jobコントローラの再試行やPodの再スケジュールにより、同じ処理が複数回走ることはある）。また実行中のJobがあるとその回のスケジュールはスキップされるため、実行の欠落も起こりうる。重複が許容できない処理は、処理自体を冪等に設計するか、外部ストア上の重複排除キー（実行IDによる排他ロックや一意制約）で二重実行を弾く仕組みを実装する。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>activeDeadlineSeconds</code>でJobの最大実行時間を設定し、ハングしたバッチ処理がリソースを専有し続けるのを防ぐ。
-                                </li>
+                                </li>{' '}
                                 <li>
                                     <code>ttlSecondsAfterFinished</code>（原著18.2.4節）を設定し、完了済みJob/Podがクラスタに溜まり続けてAPIサーバーやetcdの負荷にならないようにする。
                                 </li>
@@ -1137,6 +1145,1148 @@ export function KubernetesInActionGuide() {
                         </div>
                     </div>
                     <hr />
+                    <h2 id="part6">第6部: 2026年8月時点の最新動向（原著範囲外・独自追加）</h2>
+                    <p>
+                        原著『Kubernetes in Action, Second
+                        Edition』は2026年3月刊行ですが、Kubernetes自体のリリースサイクルは3〜4ヶ月に1回と非常に速く、書籍が扱いきれない最新動向が常に存在します。本部では、2026年8月29日時点でWeb検索により確認できた最新のエコシステム動向を、著名な国際的発信元を優先して整理します。
+                    </p>
+                    <h3 id="6-1">6.1 Kubernetes 1.37とリリースサイクル</h3>
+                    <p>
+                        Kubernetesは年3回（おおむね4ヶ月おき）のマイナーバージョンリリースサイクルを採用しています。2026年8月26日、最新版の<strong>Kubernetes v1.37「Garhwal」</strong>が正式リリースされました。これは2026年で2回目のマイナーリリース（1回目はv1.36、4月リリース）にあたります。
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">バージョン</th>
+                                    <th scope="col">状態(2026/8/29時点)</th>
+                                    <th scope="col">リリース日</th>
+                                    <th scope="col">サポート終了予定(EOL)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>v1.37 (Garhwal)</td>
+                                    <td>最新・サポート中</td>
+                                    <td>2026-08-26</td>
+                                    <td>2027-10-28</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>v1.36</td>
+                                    <td>サポート中</td>
+                                    <td>2026年4月</td>
+                                    <td>2027-06-28</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>v1.35</td>
+                                    <td>サポート中</td>
+                                    <td>2025年後半</td>
+                                    <td>2027-02-28</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>v1.34 (Of Wind &amp; Will)</td>
+                                    <td>メンテナンスモード（標準サポート終了）</td>
+                                    <td>2025-08-27</td>
+                                    <td>2026-10-27</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>v1.33</td>
+                                    <td>サポート終了（EOL済み）</td>
+                                    <td>-</td>
+                                    <td>2026-06-28</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> Kubernetes公式リリースページ (<a
+                            href="https://kubernetes.io/releases/"
+                            >https://kubernetes.io/releases/</a
+                        >)、Kubernetes v1.37公式リリース情報 (<a
+                            href="https://kubernetes.io/releases/1.37/"
+                            >https://kubernetes.io/releases/1.37/</a
+                        >)、Network World「Kubernetes 1.37 advances workload-aware scheduling and
+                        cluster networking」(<a
+                            href="https://www.networkworld.com/article/4214824/kubernetes-1-37-advances-workload-aware-scheduling-and-cluster-networking.html"
+                            >https://www.networkworld.com/article/4214824/kubernetes-1-37-advances-workload-aware-scheduling-and-cluster-networking.html</a
+                        >)
+                    </p>
+                    <Diagram id="diag-35" label="Kubernetesリリースサイクル（年3回）のフロー図" />
+                    <p>
+                        Network World誌の報道によれば、v1.37のリリースリードを務めたDipesh
+                        Rawat氏は、開発・テスト期間を確保するため、リリース間の準備期間を短縮する運用変更を行ったと説明しています。v1.37の主な特徴は、kube-proxyの<strong>IPVSモードからnftablesモードへの移行</strong>の継続、そしてワークロードスケジューリングの強化です。この「移行」は2つの独立した時系列に分けて理解する必要があります。<strong>nftablesモードの導入はv1.29</strong>(アルファ機能として登場、v1.31でベータ、v1.33でGA)であり、<strong>IPVSモードの非推奨化(deprecation)の開始はv1.35</strong>です。つまり新モードの提供開始と旧モードの非推奨化は同時ではなく、v1.35以降は「nftablesが推奨される移行先、IPVSは非推奨」という段階に入っています。なお、v1.37時点でもkube-proxyの<strong>既定モードはiptables</strong>のままであり、既定をnftablesへ切り替えることは将来の予定です。nftablesモードを使う場合は<code>--proxy-mode=nftables</code>（またはKubeProxyConfigurationの<code>mode: nftables</code>）を明示的に指定する必要があります。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    公式・大手クラウドベンダーは「最新から1〜2バージョン前（N-1〜N-2）」の追従を推奨している。最新バージョンへの飛びつきよりも、エコシステム（CNI、CSI、サービスメッシュ等）の対応状況を見極めてから段階的にアップグレードする。
+                                </li>{' '}
+                                <li>
+                                    <code>kubectl version</code>と各マネージドサービス（GKE/EKS/AKS）のサポートバージョン表を定期的に照合し、サポート終了（EOL）前にアップグレード計画を立てる。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 id="6-2">6.2 Dynamic Resource Allocation（DRA）とAIワークロード</h3>
+                    <p>
+                        <strong>Dynamic Resource Allocation（DRA）</strong>は、GPU・FPGA・NICなどの特殊なハードウェアデバイスを<code>ResourceClaim</code>という新しいAPIオブジェクトを通じて、柔軟かつ標準化された方法でPodに割り当てる仕組みです。原著18章までのバッチ処理の議論はCPU/メモリを前提としていますが、2026年のKubernetesワークロードの主戦場はAI/MLトレーニング・推論基盤へと大きくシフトしています。
+                    </p>
+                    <Diagram id="diag-36" label="従来のDevice PluginとDRA（Dynamic Resource Allocation）の比較図" />
+                    <p>
+                        DRAの成熟度は、バージョンごとに対象範囲が異なる点に注意が必要です。Kubernetes{' '}
+                        <strong>v1.34の「GA（正式版）」は、DRAのコアAPIである<code>resource.k8s.io/v1</code></strong>（<code>ResourceClaim</code> / <code>ResourceClaimTemplate</code> /{' '}
+                        <code>DeviceClass</code> /{' '}
+                        <code>ResourceSlice</code>）が安定版となり既定で有効化されたことを指します。その上で、<strong>DRAという機能セット全体がStable（安定版）として確定したのはv1.35</strong>であり、ここでDRAのフィーチャーゲートが既定で有効かつ無効化不可（ロック）となりました。The
+                        New
+                        Stack誌は「v1.34の最も目立つ変化の1つがDRAのGA化」であると報じ、GPUスケジューリングの柔軟性向上と引き換えに、新たな運用上の「死角（blind
+                        spots）」が生じる可能性にも注意を促しています。
+                    </p>
+                    <p>
+                        コアAPIの安定化とは別に、DRAの<strong>周辺機能の成熟度は機能ごとに異なります</strong>。v1.37時点では、デバイスレベルのTaint/TolerationはStable（GA）、Derived
+                        AttributesはAlphaという段階にあり、コアが安定版であることをもって周辺機能まで本番利用可能と判断しないでください。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    GPU等の高価なリソースをDRAで共有・分割する場合、<code>ResourceClaimTemplate</code>によるPod単位の要求と、クラスタ全体のクォータ管理を組み合わせ、コスト超過を防ぐガードレールを敷く。
+                                </li>{' '}
+                                <li>
+                                    DRAは比較的新しい機能であるため、本番導入前にステージング環境で十分な負荷試験を行い、ドライバ（vendor提供のDRA
+                                    Driver）の対応バージョンを確認する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> The New Stack「Kubernetes v1.34 Introduces Benefits but
+                        Also New Blind Spots」(<a
+                            href="https://thenewstack.io/kubernetes-v1-34-introduces-benefits-but-also-new-blind-spots/"
+                            >https://thenewstack.io/kubernetes-v1-34-introduces-benefits-but-also-new-blind-spots/</a
+                        >)、Kubernetes v1.34公式リリースブログ (<a
+                            href="https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/"
+                            >https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/</a
+                        >)
+                    </p>
+                    <h3 id="6-3">6.3 In-Place Pod Resize（無停止リサイズ）</h3>
+                    <p>
+                        原著15章までのアプリケーション更新の議論は、基本的に「Podを作り直す」ことを前提としています。しかし2027年に向けて重要なのが、<strong>In-Place Pod Resize</strong>（Pod内リソースの無停止変更）機能です。この機能は2023年（Kubernetes
+                        1.27）にアルファとして初登場し、2025年4月のv1.33でベータに、そして2025年12月のv1.35で<strong>GA（安定版）</strong>に到達しました。
+                    </p>
+                    <Diagram id="diag-37" label="In-Place Pod Resizeによる無停止リサイズと従来の再作成方式の比較図" />
+                    <p>
+                        Kubernetes公式ブログは、この機能が「6年以上の歳月を経てGAに到達した」重要なマイルストーンであると位置づけています。CPU変更は多くの場合コンテナ再起動なしに反映できる一方、メモリ制限の変更は<code>resizePolicy</code>の設定次第でコンテナ再起動を伴う場合がある点に注意が必要です。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    ステートフルなワークロード（データベース、長時間実行バッチジョブ）ほどIn-Place
+                                    Resizeの恩恵が大きい。VerticalPodAutoscaler（VPA）の<code>InPlaceOrRecreate</code>モードと組み合わせて推奨リソース値を適用する運用を検討する。ただし利用条件はVPAのバージョンで異なり、VPA
+                                    1.4では機能ゲートの明示的な有効化とKubernetes 1.33以降が前提、VPA
+                                    1.5では当該機能ゲートが既定で有効、VPA
+                                    1.6でGAとなった。ただし無停止が保証されるわけではない：モード名のとおり、In-Placeでの更新に失敗した場合はPodのEvictionと再作成にフォールバックするため、StatefulSetや長時間実行ジョブでは再起動・既存コネクションの切断が起こりうる。PodDisruptionBudgetの設定と再起動耐性の確認を前提に適用する。
+                                </li>{' '}
+                                <li>
+                                    JVMベースのアプリケーションなど、メモリ上限変更が自動的にヒープサイズへ反映されないランタイムでは、In-Place
+                                    Resizeだけに頼らずアプリケーション側の設定連携も確認する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> Kubernetes公式ブログ「Kubernetes v1.35: In-Place Pod
+                        Resize Graduates to Stable」(<a
+                            href="https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga"
+                            >https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga</a
+                        >)
+                    </p>
+                    <h3 id="6-4">6.4 Ingress-NGINX終了とGateway API移行</h3>
+                    <p>
+                        原著第12章はIngressを、第13章はGateway
+                        APIを解説していますが、2026年の実務においてこの2つの重要性は大きく逆転しつつあります。Kubernetes
+                        SIG NetworkとSecurity Response Committeeは2025年11月11日、コミュニティ版<strong>Ingress-NGINX Controller</strong>（多くのディストリビューションで既定のIngress実装として使われてきたプロジェクト）の<strong>終了（retirement）</strong>を正式にアナウンスしました。ベストエフォートでのメンテナンスは2026年3月31日で終了しています。
+                    </p>
+                    <Diagram id="diag-38" label="Ingress-NGINX終了スケジュールとセキュリティリスクのタイムライン図" />
+                    <p>
+                        なお、Kubernetes本体の<strong>Ingress API自体</strong>（<code>networking.k8s.io/v1</code>）が廃止されたわけではありません。Google
+                        Open Source Blogが明確にしている通り、Ingress
+                        APIは今も利用可能ですが、「feature-frozen（新機能開発の凍結）」状態であり、今後の投資はすべてGateway
+                        APIに向けられています。Amazon EKSの公式ドキュメントも「Gateway
+                        APIまたはサードパーティ製Ingressコントローラへの移行検討」を明示的にユーザーへ呼びかけています。
+                    </p>
+                    <p>
+                        <strong>主要Ingressコントローラの対応状況（2026年8月時点の各社ブログ・ドキュメントより）</strong>
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">実装</th>
+                                    <th scope="col">Gateway API対応</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Istio</td>
+                                    <td>Ambient含め対応済み、GatewayをIstioのIngressとして利用可能</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Envoy Gateway</td>
+                                    <td>Gateway APIネイティブ実装</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Cilium</td>
+                                    <td>Gateway API対応済み</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Traefik / Contour / HAProxy</td>
+                                    <td>各社対応済み（Kong社ブログ等で確認）</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>
+                                        GKE Gateway / AWS Gateway API Controller / Azure Application
+                                        Gateway for Containers
+                                    </td>
+                                    <td>各クラウドのマネージドGateway API実装</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    既存クラスタでは次の順に棚卸しする。①{' '}
+                                    <code>kubectl get ingress -A</code>でIngressリソースの全体像を把握する。②{' '}
+                                    <code>kubectl get pods -A -l app.kubernetes.io/name=ingress-nginx</code>（必要に応じて<code>kubectl get deploy,svc -A -l app.kubernetes.io/name=ingress-nginx</code>）でIngress-NGINXコントローラPodの有無と稼働している名前空間を特定する。③{' '}
+                                    <code>kubectl get ingressclass</code>で<code>nginx</code>のIngressClassが定義・既定化されていないかを確認する。④{' '}
+                                    <code>kubectl describe ingress &lt;name&gt; -n &lt;namespace&gt;</code>で個々のIngressの詳細（ホスト、パス、TLS、アノテーション）を確認する。特にNGINX固有アノテーション（<code>nginx.ingress.kubernetes.io/*</code>）に依存した設定は、Gateway
+                                    APIのフィルタ機能への置き換えが必要になる。
+                                </li>{' '}
+                                <li>
+                                    新規クラスタ構築時はIngressを新たに採用せず、最初からGateway API +
+                                    実装（Envoy Gateway、Cilium、クラウドマネージド実装等）で構築する。
+                                </li>{' '}
+                                <li>
+                                    Kubernetesの資格試験のうちCKAのシラバスには2025年2月18日にGateway
+                                    APIが出題範囲として追加されている点からも、エンジニアとしての学習優先度が上がっていることがわかる。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> Google Open Source Blog「The End of an Era:
+                        Transitioning Away from Ingress NGINX」(<a
+                            href="https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html"
+                            >https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html</a
+                        >)、Amazon EKS公式ドキュメント「Review release notes for Kubernetes
+                        versions」(<a
+                            href="https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions-standard.html"
+                            >https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions-standard.html</a
+                        >)
+                    </p>
+                    <h3 id="6-5">6.5 ネイティブサイドカーコンテナ</h3>
+                    <p>
+                        2.1節で触れた<strong>ネイティブサイドカーコンテナ</strong>（<code>initContainers</code>に<code>restartPolicy: Always</code>を指定するパターン）は、2023年8月のv1.28でアルファ導入されて以降、着実に成熟しています。2025年4月のKubernetes
+                        v1.33で<strong>GA（安定版）</strong>{' '}に到達し、2026年8月時点でサポートされている全てのマイナーバージョン（v1.34〜v1.37）がこの機能を標準搭載しています。
+                    </p>
+                    <Diagram id="diag-39" label="ネイティブサイドカーコンテナの機能成熟タイムライン（v1.28アルファ〜v1.33 GA）" />
+                    <p>
+                        ネイティブサイドカーへの対応状況と推奨デプロイモデルは製品ごとに異なるため、一律に「サービスメッシュはネイティブサイドカー推奨」と捉えないでください。
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">製品</th>
+                                    <th scope="col">ネイティブサイドカー対応</th>
+                                    <th scope="col">公式ドキュメントに基づく推奨デプロイモデル</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Istio</td>
+                                    <td>
+                                        ネイティブサイドカーはIstio
+                                        1.19でプレリリース版として実証。<code>ENABLE_NATIVE_SIDECARS</code>の既定値は<code>auto</code>で、要件を満たすクラスタでは自動的にネイティブサイドカーが有効になる（<code>true</code>／<code>false</code>は明示的なオーバーライド）。いずれの場合もクラスタ側のSidecarContainers機能ゲートが有効であることが前提
+                                    </td>
+                                    <td>
+                                        サイドカーモードに加え、Ambientモード（ztunnel +
+                                        waypointによるサイドカーレス構成、1.24でGA）を提供し、要件に応じた選択を案内している。サイドカー一択ではない。なおAmbientモードのバージョン条件はネイティブサイドカーの対応条件とは別物である
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Linkerd</td>
+                                    <td>
+                                        対応。ただしバージョン条件は3つに分かれる。①
+                                        Linkerdがネイティブサイドカーに対応したのは<strong>2.15</strong>以降。②
+                                        前提となるKubernetes側の<code>SidecarContainers</code>機能は<strong>1.29</strong>からデフォルト有効（1.28でアルファ導入）。③
+                                        Linkerd自身の<strong>デフォルトの注入方式</strong>がネイティブサイドカーになるのは<strong>2.20</strong>以降
+                                    </td>
+                                    <td>
+                                        プロキシを<code>restartPolicy: Always</code>のinitコンテナ（ネイティブサイドカー）として注入する構成。2.20より前のバージョンでは通常コンテナとしての注入がデフォルトのため、明示的に有効化する
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Cilium Service Mesh</td>
+                                    <td>サイドカーを前提としないため該当しない</td>
+                                    <td>eBPFとノード単位のEnvoyによるサイドカーレスモデル</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        各製品の対応バージョンとモードは更新が速いため、導入前に必ず公式ドキュメントで最新の記載を確認してください。なお、Fluent
+                        BitやOpenTelemetry
+                        Collectorのようなログ・可観測性エージェントについては、ネイティブサイドカーとして動かすパターンが一般的になっています。
+                    </p>
+                    <p><strong>従来のサイドカーパターンとの違い</strong></p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">観点</th>
+                                    <th scope="col">従来のサイドカー(通常コンテナとして追加)</th>
+                                    <th scope="col">ネイティブサイドカー(v1.29以降、v1.33でStable)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>起動順序</td>
+                                    <td>メインコンテナと同時に起動（保証なし）</td>
+                                    <td>メインコンテナより先に起動完了</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>終了順序</td>
+                                    <td>メインコンテナと同時にSIGTERM</td>
+                                    <td>全メインコンテナ終了後にSIGTERM</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Jobでの挙動</td>
+                                    <td>サイドカーが残り続けJobの完了をブロックしうる</td>
+                                    <td>メインコンテナ終了で自動的に完了扱い</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>ヘルスチェック</td>
+                                    <td>通常のコンテナと同様</td>
+                                    <td>startup/readiness/livenessすべて対応</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    Kubernetes
+                                    1.29以降のクラスタでは、新規に追加するプロキシ・ログ収集系のサイドカーは原則としてネイティブサイドカー（<code>initContainers</code> + <code>restartPolicy: Always</code>）で実装する。
+                                </li>{' '}
+                                <li>
+                                    v1.29〜v1.32のクラスタ（ベータ扱い・既に公式サポート外）を使っている場合は、機能自体は使えるがサポート切れのバージョンであるため、優先的にアップグレードを検討する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> Kubernetes公式ドキュメント「Sidecar Containers」(<a
+                            href="https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/"
+                            >https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/</a
+                        >)、Kubernetes公式ブログ「Kubernetes v1.28: Introducing native sidecar
+                        containers」(<a
+                            href="https://kubernetes.io/blog/2023/08/25/native-sidecar-containers/"
+                            >https://kubernetes.io/blog/2023/08/25/native-sidecar-containers/</a
+                        >)
+                    </p>
+                    <h3 id="6-6">6.6 CNCF調査に見るKubernetes導入状況</h3>
+                    <p>
+                        CNCF（Cloud Native Computing
+                        Foundation）が2026年1月20日に発表した年次調査（Linux Foundation
+                        Researchが2025年9月に628名のIT専門家を対象に実施）は、Kubernetesの成熟度を裏付ける複数の指標を示しています。
+                    </p>
+                    <Diagram id="diag-40" label="CNCF年次調査に見るKubernetesおよびAIワークロード導入状況の統計図" />
+                    <p>
+                        CNCF発表資料でLinux Foundation Researchのシニアバイスプレジデント、Hilary
+                        Carter氏は「企業がKubernetesに軸足を置いているのは、それが最新の、AIを含む本番グレードのシステムを大規模にデプロイするための最も効果的で信頼性の高いプラットフォームであると証明されているから」とコメントしています。一方で同調査は、AI活用の実態には温度差があることも示しており、「AIモデルを毎日デプロイしている組織はわずか7%」「半数以上がモデルの訓練自体を行っていない」という数字も報告されています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>{' '}
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>{' '}
+                            <ul>
+                                <li>
+                                    Kubernetes導入の意思決定においては、「Kubernetesを使うこと」自体が目的化しないよう、<a
+                                        href="#1-1"
+                                        >1.1節</a
+                                    >のフローチャートに立ち返り、自組織のワークロード特性（マイクロサービス数、スケーリング要件、AI/MLワークロードの有無）に照らして投資対効果を評価する。
+                                </li>{' '}
+                                <li>
+                                    AIワークロードをKubernetes上で稼働させる場合は、DRA（6.2節）やGPUノードプールの専用管理など、CPU/メモリ中心の従来型ワークロードとは異なる運用ノウハウが必要になることを前提に計画する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>
+                        <strong>出典：</strong> CNCF公式アナウンス「Kubernetes Established as the De
+                        Facto 'Operating System' for AI as Production Use Hits 82% in 2025 CNCF Annual
+                        Cloud Native Survey」(<a
+                            href="https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/"
+                            >https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/</a
+                        >)、Linux Foundation公式ブログ (<a
+                            href="https://www.linuxfoundation.org/blog/kubernetes-fuels-ai-growth-organizational-culture-remains-the-decisive-factor"
+                            >https://www.linuxfoundation.org/blog/kubernetes-fuels-ai-growth-organizational-culture-remains-the-decisive-factor</a
+                        >)
+                    </p>
+                    <hr />
+                    <h2 id="roadmap">学習ロードマップと認定資格</h2>
+                    <p>
+                        原著は688ページ・20時間44分（O'Reilly記載）というボリュームがあり、初学者が最初から通読するのは大変です。以下のロードマップは、本ガイドの部構成に沿って無理なく学習を進めるための目安です。
+                    </p>
+                    <Diagram id="diag-41" label="第0部から第6部へ続くKubernetes学習ロードマップ" />
+                    <p><strong>認定資格の活用</strong></p>
+                    <p>
+                        Kubernetes関連の実務スキルを客観的に示す手段として、Linux Foundation /
+                        CNCFが提供する認定資格があります。
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">資格</th>
+                                    <th scope="col">略称</th>
+                                    <th scope="col">対象レベル</th>
+                                    <th scope="col">2026年時点の傾向</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Certified Kubernetes Application Developer</td>
+                                    <td>CKAD</td>
+                                    <td>アプリ開発者</td>
+                                    <td>
+                                        アプリのデプロイ・設定・可観測性・トラブルシューティングが中心
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Certified Kubernetes Administrator</td>
+                                    <td>CKA</td>
+                                    <td>クラスタ管理者</td>
+                                    <td>出題範囲にGateway APIが追加(2025年2月18日)</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Certified Kubernetes Security Specialist</td>
+                                    <td>CKS</td>
+                                    <td>セキュリティ担当</td>
+                                    <td>CKA取得が前提要件</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        本ガイドの第1〜5部は主にCKAD、第1部後半〜第5部の運用寄りの内容はCKAの学習範囲と重なります。
+                    </p>
+                    <hr />
+                    <h2 id="checklist">ベストプラクティスチェックリスト</h2>
+                    <p>
+                        本ガイド全体で紹介したベストプラクティスを、実務で確認しやすいチェックリスト形式にまとめました。
+                    </p>
+                    <div className="checklist-card">
+                        <div className="checklist-header">
+                            <span className="title">ベストプラクティスチェックリスト</span>
+                            <span className="count">{checkedCount} / 19 完了</span>
+                        </div>
+                        <ul>
+                            <li>
+                                <input
+                                    id="chk1"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk1']}
+                                    onChange={() => toggleCheck('chk1')}
+                                />
+                                <label htmlFor="chk1">
+                                    コンテナイメージのタグに<code>latest</code>を使わず、本番環境では<code>image@sha256:&lt;ダイジェスト&gt;</code>形式のダイジェスト参照でイメージを一意に固定している（タグは付け替え可能なため、それ自体はバージョンを固定しない）。必要に応じてCosign等（Sigstore）による署名検証をデプロイ前のゲートに組み込んでいる（第0部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk2"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk2']}
+                                    onChange={() => toggleCheck('chk2')}
+                                />
+                                <label htmlFor="chk2">
+                                    コントロールプレーンを冗長化し、<code>kubectl describe</code>／<code>kubectl get events</code>をトラブルシューティングの第一手として習慣化している（第1部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk3"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk3']}
+                                    onChange={() => toggleCheck('chk3')}
+                                />
+                                <label htmlFor="chk3">
+                                    <code>kubectl explain</code>でリソースの仕様をその場で確認する習慣がある（第1部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk4"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk4']}
+                                    onChange={() => toggleCheck('chk4')}
+                                />
+                                <label htmlFor="chk4">
+                                    Liveness ProbeとReadiness
+                                    Probeの役割を分離し、外部依存の障害でLiveness
+                                    Probeが失敗しないようにしている（第2部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk5"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk5']}
+                                    onChange={() => toggleCheck('chk5')}
+                                />
+                                <label htmlFor="chk5">
+                                    起動が遅いアプリケーションにはStartup
+                                    Probeを設定している（第2部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk6"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk6']}
+                                    onChange={() => toggleCheck('chk6')}
+                                />
+                                <label htmlFor="chk6">
+                                    <code>preStop</code>フックでグレースフルシャットダウンの猶予を設けている（第2部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk7"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk7']}
+                                    onChange={() => toggleCheck('chk7')}
+                                />
+                                <label htmlFor="chk7">
+                                    NamespaceだけでなくNetworkPolicyでデフォルト拒否のネットワーク境界を敷いている（第2部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk8"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk8']}
+                                    onChange={() => toggleCheck('chk8')}
+                                />
+                                <label htmlFor="chk8">
+                                    SecretのEncryption at
+                                    Restを有効化し、Gitに平文のSecretをコミットしていない（第3部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk9"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk9']}
+                                    onChange={() => toggleCheck('chk9')}
+                                />
+                                <label htmlFor="chk9">
+                                    <code>hostPath</code>ボリュームの利用を最小限に限定している（第3部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk10"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk10']}
+                                    onChange={() => toggleCheck('chk10')}
+                                />
+                                <label htmlFor="chk10">
+                                    PersistentVolumeのスナップショットを定期取得し、DR計画に組み込んでいる（第3部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk11"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk11']}
+                                    onChange={() => toggleCheck('chk11')}
+                                />
+                                <label htmlFor="chk11">
+                                    Topology Aware
+                                    Routingでゾーンをまたぐ不要な通信を削減している（第4部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk12"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk12']}
+                                    onChange={() => toggleCheck('chk12')}
+                                />
+                                <label htmlFor="chk12">
+                                    新規構築するクラスタではIngressではなくGateway
+                                    APIを採用している（第4部・第6部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk13"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk13']}
+                                    onChange={() => toggleCheck('chk13')}
+                                />
+                                <label htmlFor="chk13">
+                                    Deploymentの<code>maxUnavailable</code>/<code>maxSurge</code>をSLAとリソース制約に応じて調整している（第5部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk14"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk14']}
+                                    onChange={() => toggleCheck('chk14')}
+                                />
+                                <label htmlFor="chk14">
+                                    ステートフルワークロードは可能な限り実績のあるOperatorに任せている（第5部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk15"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk15']}
+                                    onChange={() => toggleCheck('chk15')}
+                                />
+                                <label htmlFor="chk15">
+                                    DaemonSetの特権設定（<code>hostNetwork</code>、<code>privileged</code>）を必要最小限にし、理由を明記している（第5部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk16"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk16']}
+                                    onChange={() => toggleCheck('chk16')}
+                                />
+                                <label htmlFor="chk16">
+                                    冪等でないバッチJobには<code>concurrencyPolicy: Forbid</code>を設定している（第5部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk17"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk17']}
+                                    onChange={() => toggleCheck('chk17')}
+                                />
+                                <label htmlFor="chk17">
+                                    クラスタのKubernetesバージョンをN-1〜N-2で維持し、EOL前にアップグレードを計画している（第6部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk18"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk18']}
+                                    onChange={() => toggleCheck('chk18')}
+                                />
+                                <label htmlFor="chk18">
+                                    Ingress-NGINX
+                                    Controllerへの依存有無を棚卸しし、移行計画を持っている（第6部）
+                                </label>
+                            </li>{' '}
+                                <li>
+                                <input
+                                    id="chk19"
+                                    type="checkbox"
+                                    checked={!!checkedItems['chk19']}
+                                    onChange={() => toggleCheck('chk19')}
+                                />
+                                <label htmlFor="chk19">
+                                    新規のプロキシ・ログ収集サイドカーはネイティブサイドカー方式で実装している（第6部）
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <hr />
+                    <h2 id="glossary">用語集</h2>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">用語</th>
+                                    <th scope="col">説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Pod</td>
+                                    <td>
+                                        Kubernetesにおけるデプロイの最小単位。1つ以上のコンテナがネットワークとストレージを共有するグループ
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>コントロールプレーン</td>
+                                    <td>
+                                        APIサーバー・etcd・スケジューラ・コントローラマネージャで構成される、クラスタの「頭脳」
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>kubelet</td>
+                                    <td>
+                                        各ワーカーノードで動作し、APIサーバーの指示に基づきコンテナを起動・監視するエージェント
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>ReplicaSet</td>
+                                    <td>
+                                        指定した数のPodレプリカが常に稼働することを保証するコントローラ
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Deployment</td>
+                                    <td>
+                                        ReplicaSetをラップし、宣言的なローリングアップデートとロールバックを提供するコントローラ
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>StatefulSet</td>
+                                    <td>
+                                        安定したネットワークID・永続ストレージ・起動順序が必要なステートフルワークロード向けコントローラ
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>DaemonSet</td>
+                                    <td>
+                                        クラスタ内の全て（または条件に合う）のノードにPodを1つずつ配置するコントローラ
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Job / CronJob</td>
+                                    <td>
+                                        完了を目標とするバッチ処理向けコントローラ。CronJobはこれをスケジュール実行する
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Service</td>
+                                    <td>
+                                        ラベルセレクタにマッチするPod群への安定したアクセス経路（仮想IP
+                                        + DNS名）を提供するオブジェクト
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Ingress</td>
+                                    <td>
+                                        複数のServiceへのHTTP/HTTPSルーティングを集約するAPI（2026年時点でGateway
+                                        APIへ移行推奨）
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Gateway API</td>
+                                    <td>
+                                        Ingressの後継となる、ロールベースで拡張性の高いL4/L7トラフィックルーティングAPI群
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>ConfigMap</td>
+                                    <td>
+                                        機密でない設定値をコンテナイメージから分離して管理するオブジェクト
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Secret</td>
+                                    <td>
+                                        機密データ（認証情報等）を管理するオブジェクト。既定ではBase64エンコードのみで暗号化されない
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>PersistentVolume (PV)</td>
+                                    <td>クラスタ内の実際のストレージリソースを表すオブジェクト</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>PersistentVolumeClaim (PVC)</td>
+                                    <td>
+                                        アプリケーションがストレージを要求するためのオブジェクト。PVにバインドされる
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>StorageClass</td>
+                                    <td>
+                                        動的プロビジョニング時に使用するストレージの種類・パラメータを定義するオブジェクト
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>CSI (Container Storage Interface)</td>
+                                    <td>
+                                        ストレージベンダーの実装をKubernetesから抽象化する標準インターフェース
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Namespace</td>
+                                    <td>
+                                        クラスタ内のリソースを論理的に分割する仕組み（ネットワーク隔離は提供しない）
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>ラベルセレクタ</td>
+                                    <td>ラベルの値に基づいてオブジェクトの集合を絞り込む仕組み</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Reconciliation Loop（調整ループ）</td>
+                                    <td>
+                                        望ましい状態(spec)と実際の状態(status)の差分を継続的に監視し、実際の状態を望ましい状態に近づけるコントローラの基本動作原理
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>ネイティブサイドカーコンテナ</td>
+                                    <td>
+                                        <code>initContainers</code>に<code>restartPolicy: Always</code>を指定して実装する、ライフサイクル管理が組み込まれたサイドカーパターン(v1.33でGA)
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>DRA (Dynamic Resource Allocation)</td>
+                                    <td>
+                                        GPU等の特殊デバイスを<code>ResourceClaim</code>経由で柔軟に割り当てる仕組み。v1.34でGAになったのはコアAPIの<code>resource.k8s.io/v1</code>であり、DRA機能セット全体のStable化はv1.35
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>In-Place Pod Resize</td>
+                                    <td>
+                                        実行中のPodのCPU/メモリ割り当てを、Podを再作成せずに変更できる機能(v1.35でGA)。コンテナごとの<code>resizePolicy</code>が<code>RestartContainer</code>の場合はコンテナ再起動を伴う
+                                    </td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Operator</td>
+                                    <td>
+                                        アプリケーション固有の運用知識をコントローラとしてコード化したKubernetes拡張パターン
+                                    </td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>kubectl</td>
+                                    <td>Kubernetesクラスタを操作するための公式コマンドラインツール</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
+                    <h2 id="references">参考文献</h2>
+                    <p><strong>書籍本体および目次の情報源:</strong></p>
+                    <div className="ref-grid">
+                        <div className="ref-card" id="ref1">
+                            <div className="num">1</div>
+                            <div className="txt">
+                                O'Reilly Online Learning「Kubernetes in Action, Second
+                                Edition」書籍ページ —{' '}
+                                <a
+                                    href="https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/"
+                                    >https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref2">
+                            <div className="num">2</div>
+                            <div className="txt">
+                                O'Reilly Online Learning「Kubernetes in Action, Second
+                                Edition」目次ページ —{' '}
+                                <a
+                                    href="https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/Text/contents.html"
+                                    >https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/Text/contents.html</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref3">
+                            <div className="num">3</div>
+                            <div className="txt">
+                                Manning Publications「Kubernetes in Action, Second
+                                Edition」公式書籍ページ —{' '}
+                                <a
+                                    href="https://www.manning.com/books/kubernetes-in-action-second-edition"
+                                    >https://www.manning.com/books/kubernetes-in-action-second-edition</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref4">
+                            <div className="num">4</div>
+                            <div className="txt">
+                                Manning Publications「Kubernetes in Action, Second
+                                Edition」章プレビュー（全章目次・第1章全文） —{' '}
+                                <a
+                                    href="https://www.manning.com/preview/kubernetes-in-action-second-edition/chapter-1"
+                                    >https://www.manning.com/preview/kubernetes-in-action-second-edition/chapter-1</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref5">
+                            <div className="num">5</div>
+                            <div className="txt">
+                                Marko
+                                Lukša（原著者）公式GitHubリポジトリ「kubernetes-in-action-2nd-edition」（サンプルコード）
+                                —{' '}
+                                <a href="https://github.com/luksa/kubernetes-in-action-2nd-edition"
+                                    >https://github.com/luksa/kubernetes-in-action-2nd-edition</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>Kubernetes公式・CNCF公式の情報源:</strong></p>
+                    <div className="ref-grid">
+                        <div className="ref-card" id="ref6">
+                            <div className="num">6</div>
+                            <div className="txt">
+                                Kubernetes公式サイト「Releases」（バージョン一覧・EOL情報） —{' '}
+                                <a href="https://kubernetes.io/releases/"
+                                    >https://kubernetes.io/releases/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref7">
+                            <div className="num">7</div>
+                            <div className="txt">
+                                Kubernetes公式サイト「Kubernetes 1.37」リリースページ —{' '}
+                                <a href="https://kubernetes.io/releases/1.37/"
+                                    >https://kubernetes.io/releases/1.37/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref8">
+                            <div className="num">8</div>
+                            <div className="txt">
+                                Kubernetes公式サイト「Kubernetes 1.34」リリースページ —{' '}
+                                <a href="https://kubernetes.io/releases/1.34"
+                                    >https://kubernetes.io/releases/1.34</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref9">
+                            <div className="num">9</div>
+                            <div className="txt">
+                                Kubernetes公式ブログ「Kubernetes v1.34: Of Wind &amp; Will (O' WaW)」 —{' '}
+                                <a
+                                    href="https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/"
+                                    >https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref10">
+                            <div className="num">10</div>
+                            <div className="txt">
+                                Kubernetes公式ブログ「Kubernetes v1.35: In-Place Pod Resize Graduates to
+                                Stable」 —{' '}
+                                <a
+                                    href="https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga"
+                                    >https://kubernetes.io/blog/2025/12/19/kubernetes-v1-35-in-place-pod-resize-ga</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref11">
+                            <div className="num">11</div>
+                            <div className="txt">
+                                Kubernetes公式ブログ「Kubernetes v1.33: In-Place Pod Resize Graduated to
+                                Beta」 —{' '}
+                                <a
+                                    href="https://kubernetes.io/blog/2025/05/16/kubernetes-v1-33-in-place-pod-resize-beta/"
+                                    >https://kubernetes.io/blog/2025/05/16/kubernetes-v1-33-in-place-pod-resize-beta/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref12">
+                            <div className="num">12</div>
+                            <div className="txt">
+                                Kubernetes公式ブログ「Kubernetes v1.28: Introducing native sidecar
+                                containers」 —{' '}
+                                <a
+                                    href="https://kubernetes.io/blog/2023/08/25/native-sidecar-containers/"
+                                    >https://kubernetes.io/blog/2023/08/25/native-sidecar-containers/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref13">
+                            <div className="num">13</div>
+                            <div className="txt">
+                                Kubernetes公式ドキュメント「Sidecar Containers」 —{' '}
+                                <a
+                                    href="https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/"
+                                    >https://kubernetes.io/docs/concepts/workloads/pods/sidecar-containers/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref14">
+                            <div className="num">14</div>
+                            <div className="txt">
+                                Kubernetes Contributors公式サイト「Kubernetes v1.37 Release
+                                Information」（リリーススケジュール、リリースリードDipesh
+                                Rawat氏の情報） —{' '}
+                                <a href="https://www.kubernetes.dev/resources/release/"
+                                    >https://www.kubernetes.dev/resources/release/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref15">
+                            <div className="num">15</div>
+                            <div className="txt">
+                                kubernetes/sig-release公式GitHubリポジトリ「release-1.37」 —{' '}
+                                <a
+                                    href="https://github.com/kubernetes/sig-release/tree/master/releases/release-1.37"
+                                    >https://github.com/kubernetes/sig-release/tree/master/releases/release-1.37</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref16">
+                            <div className="num">16</div>
+                            <div className="txt">
+                                kubernetes-sigs/gateway-api公式GitHubリポジトリ（Releases） —{' '}
+                                <a href="https://github.com/kubernetes-sigs/gateway-api/releases"
+                                    >https://github.com/kubernetes-sigs/gateway-api/releases</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref17">
+                            <div className="num">17</div>
+                            <div className="txt">
+                                CNCF公式アナウンス「Kubernetes Established as the De Facto 'Operating
+                                System' for AI as Production Use Hits 82% in 2025 CNCF Annual Cloud
+                                Native Survey」 —{' '}
+                                <a
+                                    href="https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/"
+                                    >https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref18">
+                            <div className="num">18</div>
+                            <div className="txt">
+                                Linux Foundation公式ブログ「Kubernetes Fuels AI Growth; Organizational
+                                Culture Remains the Decisive Factor」 —{' '}
+                                <a
+                                    href="https://www.linuxfoundation.org/blog/kubernetes-fuels-ai-growth-organizational-culture-remains-the-decisive-factor"
+                                    >https://www.linuxfoundation.org/blog/kubernetes-fuels-ai-growth-organizational-culture-remains-the-decisive-factor</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref19">
+                            <div className="num">19</div>
+                            <div className="txt">
+                                Google Open Source Blog「The End of an Era: Transitioning Away from
+                                Ingress NGINX」 —{' '}
+                                <a
+                                    href="https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html"
+                                    >https://opensource.googleblog.com/2026/02/the-end-of-an-era-transitioning-away-from-ingress-nginx.html</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref20">
+                            <div className="num">20</div>
+                            <div className="txt">
+                                Amazon Web Services公式EKSドキュメント「Review release notes for
+                                Kubernetes versions on standard support」 —{' '}
+                                <a
+                                    href="https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions-standard.html"
+                                    >https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions-standard.html</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>業界メディア・専門家による分析記事:</strong></p>
+                    <div className="ref-grid">
+                        <div className="ref-card" id="ref21">
+                            <div className="num">21</div>
+                            <div className="txt">
+                                Network World「Kubernetes 1.37 advances workload-aware scheduling and
+                                cluster networking」（Kubernetes 1.37リリースリードDipesh
+                                Rawat氏へのインタビューを含む） —{' '}
+                                <a
+                                    href="https://www.networkworld.com/article/4214824/kubernetes-1-37-advances-workload-aware-scheduling-and-cluster-networking.html"
+                                    >https://www.networkworld.com/article/4214824/kubernetes-1-37-advances-workload-aware-scheduling-and-cluster-networking.html</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref22">
+                            <div className="num">22</div>
+                            <div className="txt">
+                                The New Stack「Kubernetes v1.34 Introduces Benefits but Also New Blind
+                                Spots」（Darryl K. Taft記者） —{' '}
+                                <a
+                                    href="https://thenewstack.io/kubernetes-v1-34-introduces-benefits-but-also-new-blind-spots/"
+                                    >https://thenewstack.io/kubernetes-v1-34-introduces-benefits-but-also-new-blind-spots/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref23">
+                            <div className="num">23</div>
+                            <div className="txt">
+                                Cloudsmith「Kubernetes 1.37: What You Need to Know」 —{' '}
+                                <a
+                                    href="https://cloudsmith.com/blog/kubernetes-1-37-what-you-need-to-know"
+                                    >https://cloudsmith.com/blog/kubernetes-1-37-what-you-need-to-know</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref24">
+                            <div className="num">24</div>
+                            <div className="txt">
+                                Fairwinds「Kubernetes 1.34 Released: What's New and When to Upgrade」 —{' '}
+                                <a
+                                    href="https://www.fairwinds.com/blog/kubernetes-1.34-released-whats-new-upgrade"
+                                    >https://www.fairwinds.com/blog/kubernetes-1.34-released-whats-new-upgrade</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref25">
+                            <div className="num">25</div>
+                            <div className="txt">
+                                Kong Inc.公式ブログ「Gateway API vs Ingress: The Future of Kubernetes
+                                Networking」 —{' '}
+                                <a href="https://konghq.com/blog/engineering/gateway-api-vs-ingress"
+                                    >https://konghq.com/blog/engineering/gateway-api-vs-ingress</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref26">
+                            <div className="num">26</div>
+                            <div className="txt">
+                                Palark Tech Blog「In-place Pod resizing in Kubernetes: How it works and
+                                how to use it」 —{' '}
+                                <a href="https://palark.com/blog/in-place-pod-resizing-kubernetes/"
+                                    >https://palark.com/blog/in-place-pod-resizing-kubernetes/</a
+                                >
+                            </div>
+                        </div>
+                        <div className="ref-card" id="ref27">
+                            <div className="num">27</div>
+                            <div className="txt">
+                                Palark Tech Blog「Kubernetes 1.37: Deep dive into new alpha features」 —{' '}
+                                <a href="https://palark.com/blog/kubernetes-1-37-release-features/"
+                                    >https://palark.com/blog/kubernetes-1-37-release-features/</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <p>
+                        <em>
+                            本ガイドは2026年8月29日時点のWeb検索結果に基づいて作成されています。Kubernetesはリリースサイクルが速いプロジェクトのため、特に第6部の内容は今後のバージョンアップで更新される可能性があります。最新情報は必ず<a
+                                href="https://kubernetes.io/docs/"
+                                >kubernetes.io公式ドキュメント</a
+                            >を参照してください。
+                        </em>
+                    </p>
                 </main>
             </div>
         </div>
