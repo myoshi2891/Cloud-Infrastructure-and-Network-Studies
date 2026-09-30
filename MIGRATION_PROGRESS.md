@@ -1,6 +1,42 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-29)
+(最終更新日: 2026-09-30)
+
+## 2026-09-30: CLIコマンド実践ワンライナー集 100%全量移行 (完了)
+
+### 目的
+
+`cli.html`（および `cli.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `CliGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/cli` ルートへ移行。見出し(h1:1, h2:15, h3:31, h4:3)、全15個のテーブル、全7個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(39件)、全コードブロック(6件・.code-line構造)、全外部リンク(12件)、全本文・注釈(25件)を一切の省略・要約なしで100%全量移植。「運用ツール資格学習共通ガイド」としてグローバルナビ（`Tools` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`cli.html` および `cli.md`）を `archive/cli/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for cli` (`282f8a52`)
+- [x] **Step 1 (Red)**: `test(cli): add failing tests for cli study guide` (`8b9a750e`)
+- [x] **Step 2 (Foundation)**: `feat(cli): add constants, navbar, and styles for cli guide` (`f522037a`)
+- [x] **Step 3 (Green Part 1)**: `feat(cli): implement sections 1 to 5 of cli guide` (`0f903e70`)
+- [x] **Step 4 (Green Part 2)**: `feat(cli): implement sections 6 to 11 of cli guide` (`3050f374`)
+- [x] **Step 5 (Green Part 3 & Pass All)**: `feat(cli): complete full implementation of cli guide to pass all tests` (`edfd01e3`)
+- [x] **Step 6 (Refactor & Integration)**: `refactor(cli): integrate cli guide into routing and update docs` (`1984930b`)
+- [x] **Step 7 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive cli sources`
+
+### 関連ファイル
+
+- [app/cli/page.tsx](app/cli/page.tsx)
+- [app/cli/CliGuide.tsx](app/cli/CliGuide.tsx)
+- [app/cli/NavBar.tsx](app/cli/NavBar.tsx)
+- [app/cli/constants.ts](app/cli/constants.ts)
+- [app/cli/page.css](app/cli/page.css)
+- [__tests__/cli/page.test.tsx](__tests__/cli/page.test.tsx)
+- [docs/migration-inventory/cli.json](docs/migration-inventory/cli.json)
+- [archive/cli/cli.html](archive/cli/cli.html)
+- [archive/cli/cli.md](archive/cli/cli.md)
+- [app/constants.ts](app/constants.ts)
+- [app/navigation.ts](app/navigation.ts)
+- [app/globals.css](app/globals.css)
+- [components/ProviderMark.tsx](components/ProviderMark.tsx)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
 
 ## 2026-09-29: Google Cloud Professional Agentic Architect Section 5: セキュリティとガバナンス 100%全量移行 (完了)
 
