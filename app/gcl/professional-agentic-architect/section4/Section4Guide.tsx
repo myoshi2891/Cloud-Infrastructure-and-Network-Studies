@@ -882,7 +882,7 @@ export default function Section4Guide() {
                         <div className="label">ベストプラクティス</div>{' '}
                         <ul>
                             <li>
-                                ゴールデンベースラインは手動で作成せず、<code>adk conformance create</code>{' '}による自動記録を使う。LLMリクエストやツール呼び出しは複雑で、手動でのYAML作成はミスの元になる<a
+                                ゴールデンベースラインは手動で作成せず、<code>adk conformance record</code>{' '}による自動記録を使う。LLMリクエストやツール呼び出しは複雑で、手動でのYAML作成はミスの元になる<a
                                     className="footnote-ref"
                                     href="#ref4"
                                     id="fnref52"

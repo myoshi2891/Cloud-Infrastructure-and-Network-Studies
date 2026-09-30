@@ -124,7 +124,7 @@ export const DIAGRAMS: Record<DiagramId, string> = {
 
     'diag-5': `flowchart TD
     A["spec.yaml を作成<br/>(初期条件・プロンプトを定義)"] --> B["adk web --extra_plugins=<br/>RecordingsPlugin でエージェントを起動"]
-    B --> C["adk conformance create<br/>でベースラインを自動記録"]
+    B --> C["adk conformance record<br/>でベースラインを自動記録"]
     C --> D["generated-recordings.yaml /<br/>generated-session.yaml が生成される"]
     D --> E{"コード変更後に<br/>adk conformance test"}
     E -->|"Replay Mode<br/>(既定)"| F["記録済みLLMリクエスト/<br/>レスポンス/ツール呼び出しと<br/>ライブ実行を比較"]
