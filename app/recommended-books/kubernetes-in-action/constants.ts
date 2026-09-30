@@ -219,4 +219,169 @@ RECONCILE -->|"現実を反映"| STATUS
 
 classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
 class RECONCILE highlightFill`,
+
+    'diag-9': `flowchart TB
+subgraph POD["Pod (単一のネットワーク名前空間を共有)"]
+    direction LR
+    C1["メインコンテナ<br/>(アプリ本体)"]
+    C2["サイドカーコンテナ<br/>(例: Envoyプロキシ)"]
+    VOL[("共有ボリューム")]
+    C1 <-->|localhost通信| C2
+    C1 --- VOL
+    C2 --- VOL
+end
+IP["Pod IP: 10.244.1.5"] --- POD
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class POD highlightFill`,
+
+    'diag-10': `flowchart TB
+subgraph LIFECYCLE["Pod起動シーケンス"]
+    direction TB
+    INIT1["initContainers<br/>(通常の初期化コンテナ、<br/>順に実行し完了して終了)"]
+    SIDECAR["initContainers内の<br/>restartPolicy: Always<br/>(ネイティブサイドカー)"]
+    MAIN["containers<br/>(メインアプリコンテナ、<br/>並行起動)"]
+    INIT1 -->|完了後| SIDECAR
+    SIDECAR -->|起動完了後| MAIN
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class SIDECAR highlightFill`,
+
+    'diag-11': `stateDiagram-v2
+direction LR
+[*] --> Pending: Pod作成
+Pending --> Running: ノードにスケジュール済みで<br/>全コンテナが作成され、少なくとも<br/>1つが実行中/起動中/再起動中
+Running --> Succeeded: 全コンテナが正常終了<br/>(Job等)
+Running --> Failed: いずれかのコンテナが<br/>異常終了(再起動しない設定)
+Running --> Running: liveness失敗時に<br/>自動再起動
+Succeeded --> [*]
+Failed --> [*]`,
+
+    'diag-12': `flowchart TD
+START([コンテナ起動]) --> SP{Startup Probe<br/>設定あり?}
+SP -->|あり、未成功| WAIT["Liveness/Readinessを<br/>一時停止して待機"]
+WAIT --> SP
+SP -->|成功 or 未設定| LP["Liveness Probe実行"]
+LP -->|失敗| RESTART["コンテナ再起動"]
+RESTART --> START
+LP -->|成功| RP["Readiness Probe実行"]
+RP -->|失敗| NOTREADY["Serviceの<br/>エンドポイントから除外"]
+NOTREADY --> LP
+RP -->|成功| READY["Serviceの<br/>エンドポイントに含める"]
+READY --> LP
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class READY highlightFill
+class RESTART,NOTREADY dangerFill`,
+
+    'diag-13': `flowchart LR
+A["Pod削除要求<br/>(kubectl delete)"] --> B["preStopフック実行"]
+B --> C["SIGTERM送信"]
+C --> D{"terminationGracePeriod<br/>Seconds以内に終了?"}
+D -->|Yes| E["正常終了"]
+D -->|No| F["SIGKILLで強制終了"]
+
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class F dangerFill`,
+
+    'diag-14': `flowchart TB
+subgraph CLUSTER["クラスタ"]
+    subgraph NS1["namespace: production"]
+        P1[Pod A]
+        P2[Pod B]
+    end
+    subgraph NS2["namespace: staging"]
+        P3[Pod C]
+    end
+    subgraph NS3["namespace: kube-system"]
+        P4[システムPod]
+    end
+end
+P1 -.->|"NetworkPolicy未設定なら<br/>自由に到達可能"| P3
+
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class P1,P3 dangerFill`,
+
+    'diag-15': `flowchart LR
+subgraph PODS["複数のPod"]
+    PA["Pod<br/>app=kiada, env=prod"]
+    PB["Pod<br/>app=kiada, env=staging"]
+    PC["Pod<br/>app=other, env=prod"]
+end
+SEL["ラベルセレクタ<br/>app=kiada,env=prod"] -->|マッチ| PA
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class PA highlightFill`,
+
+    'diag-16': `flowchart TB
+CM[("ConfigMap<br/>(平文設定)")]
+SEC[("Secret<br/>(base64エンコード)")]
+POD["Pod"]
+
+CM -->|環境変数として注入| POD
+CM -->|ボリュームとしてマウント| POD
+SEC -->|環境変数として注入| POD
+SEC -->|ボリュームとしてマウント| POD
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class CM highlightFill
+class SEC dangerFill`,
+
+    'diag-17': `flowchart LR
+A["kubectl apply -f secret.yaml"] --> B["APIサーバーが受理"]
+B --> C{"etcd暗号化<br/>(EncryptionConfiguration)<br/>設定済みか?"}
+C -->|"未設定(デフォルト)"| D["Base64のまま平文でetcdに保存"]
+C -->|設定済み| E["AES-CBC/AES-GCM等で<br/>暗号化してetcdに保存"]
+
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class D dangerFill
+class E highlightFill`,
+
+    'diag-18': `flowchart TB
+subgraph TYPES["主なボリューム種別 - 原著9章"]
+    direction TB
+    ED["emptyDir<br/>Podと同じ寿命、<br/>コンテナ間の一時共有領域"]
+    IMG["image volume<br/>コンテナイメージを<br/>そのままボリューム化(新機能)"]
+    HP["hostPath<br/>ワーカーノードの<br/>ファイルシステムに直接アクセス"]
+    CMV["configMap / secret volume<br/>設定値をファイルとして<br/>マウント"]
+    DAPI["downwardAPI volume<br/>Podメタデータを<br/>ファイルとして公開"]
+    PROJ["projected volume<br/>複数ボリュームを<br/>1つに統合"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+classDef dangerFill fill:#5c1a1a,stroke:#d94a4a,color:#ffffff
+class ED,IMG,CMV,DAPI,PROJ highlightFill
+class HP dangerFill`,
+
+    'diag-19': `sequenceDiagram
+participant DEV as 開発者
+participant PVC as PersistentVolumeClaim
+participant SC as StorageClass
+participant CSI as CSIドライバ
+participant PV as PersistentVolume
+participant POD as Pod
+
+DEV->>PVC: PVCを作成(容量・アクセスモードを指定)
+PVC->>SC: 動的プロビジョニングを要求
+SC->>CSI: 対応するストレージを確保するよう要求
+CSI->>PV: PVを自動生成してPVCにバインド
+DEV->>POD: PodのvolumesでPVCを参照
+POD->>PV: PVにマウントして読み書き`,
+
+    'diag-20': `flowchart TB
+subgraph DYN["動的プロビジョニング(推奨)"]
+    direction LR
+    PVC1["PVC作成"] --> SC1["StorageClassが<br/>自動でPVを生成"]
+end
+subgraph STATIC["静的プロビジョニング"]
+    direction LR
+    ADMIN["管理者が事前に<br/>PVを手動作成"] --> PVC2["PVCがPVに<br/>バインド"]
+end
+
+classDef highlightFill fill:#1a3a5c,stroke:#4a90d9,color:#ffffff
+class DYN highlightFill`,
 };

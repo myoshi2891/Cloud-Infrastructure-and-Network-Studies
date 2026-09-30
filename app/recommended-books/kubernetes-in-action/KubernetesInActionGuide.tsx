@@ -515,6 +515,291 @@ export function KubernetesInActionGuide() {
                             </ul>
                         </div>
                     </div>
+                    <h2 id="part2">第2部: Podでアプリケーションを実行する（原著Part 2: 第5〜7章）</h2>
+                    <h3 id="2-1">2.1 Podの基本（原著第5章）</h3>
+                    <p>
+                        <strong>Pod</strong>
+                        はKubernetesにおけるデプロイの最小単位です。1つ以上のコンテナのグループであり、同じネットワーク名前空間（同一IPアドレス、<code>localhost</code>経由の通信）とストレージボリュームを共有します。
+                    </p>
+                    <Diagram id="diag-9" label="Pod内部でのコンテナ間ネットワーク・ボリューム共有構造" />
+                    <p>
+                        原著5.1.2節が強調するのは、「複数コンテナを1つのPodに詰め込みすぎない」という原則です。基本は1コンテナ1責務ですが、密結合したヘルパー（ログ収集、プロキシなど）は同じPodに配置します。
+                    </p>
+                    <p>
+                        <strong>マルチコンテナPodの構成パターン（原著5.4〜5.5節）</strong>
+                    </p>
+                    <Diagram id="diag-10" label="initContainersとネイティブサイドカー、メインコンテナの起動シーケンス" />
+                    <p>
+                        原著5.5.4節「Kubernetes native sidecar
+                        containers」は、<code>initContainers</code>に<code>restartPolicy: Always</code>
+                        を指定することでサイドカーをネイティブにサポートする仕組みを解説しています（Kubernetes
+                        1.28でアルファ導入、1.29でデフォルト有効化、1.33で安定版。詳細は<a href="#6-5">6.5節</a>を参照）。これにより、従来のサイドカーパターンで課題だった「Jobのサイドカーがいつまでも終了せず、Jobの完了判定をブロックしてしまう」問題が解消されました。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス（原著5.3〜5.6節）</div>
+                            <ul>
+                                <li>
+                                    Pod内のコンテナとやり取りする際は
+                                    <code>kubectl exec -it &lt;pod&gt; -- sh</code>
+                                    より先に<code>kubectl logs</code>
+                                    で挙動を確認し、本番環境への<code>exec</code>は最小限にとどめる。
+                                </li>
+                                <li>
+                                    デバッグ専用の<code>ephemeralContainers</code>（原著5.3.6節）を使えば、実行中のPodに影響を与えずにデバッグ用ツールコンテナを一時的に注入できる。distrolessイメージなどシェルを含まない本番イメージのデバッグに有効。
+                                </li>
+                                <li>
+                                    <code>kubectl delete pods --all</code>
+                                    のような広範囲削除コマンドは、必ず<code>-n &lt;namespace&gt;</code>でスコープを絞ってから実行する。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 id="2-2">2.2 Podのライフサイクルとヘルスチェック（原著第6章）</h3>
+                    <p>
+                        Podには<code>phase</code>（大まかな状態）と、より詳細な<code>conditions</code>（複数のブール値の集合）があります。
+                    </p>
+                    <Diagram id="diag-11" label="Podのライフサイクル状態遷移図（Pending/Running/Succeeded/Failed）" />
+                    <p>
+                        <strong>3種類のプローブ（原著6.2節）</strong>
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">プローブ種別</th>
+                                    <th scope="col">目的</th>
+                                    <th scope="col">失敗時の挙動</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>Liveness Probe</td>
+                                    <td>コンテナが生きているか（デッドロック等の検知）</td>
+                                    <td>コンテナを再起動する</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>Readiness Probe</td>
+                                    <td>リクエストを受け付けられる状態か</td>
+                                    <td>Serviceのエンドポイントから除外する（再起動はしない）</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>Startup Probe</td>
+                                    <td>起動が遅いアプリの初期化完了を待つ</td>
+                                    <td>Liveness/Readinessの評価を遅らせる</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <Diagram id="diag-12" label="Startup Probe、Liveness Probe、Readiness Probeの判定フローチャート" />
+                    <p>
+                        原著6.3節では、<code>postStart</code>フック（コンテナ起動直後に実行）と<code>preStop</code>フック（終了直前に実行）にも触れています。特に<code>preStop</code>はグレースフルシャットダウンの実装に欠かせません。
+                    </p>
+                    <Diagram id="diag-13" label="Pod削除時のpreStopフックとSIGTERM、SIGKILL終了シーケンス" />
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">
+                                ベストプラクティス（原著6.2.7節「Creating effective liveness probe handlers」）
+                            </div>
+                            <ul>
+                                <li>
+                                    Liveness
+                                    Probeは「アプリが応答するか」だけを軽量にチェックし、データベース接続など外部依存のチェックはReadiness
+                                    Probeに任せる。Liveness
+                                    Probeが外部依存の障害で失敗すると、無意味な再起動ループを引き起こす。
+                                </li>
+                                <li>
+                                    Startup Probeを使わずに長いLiveness
+                                    Probeの<code>initialDelaySeconds</code>だけに頼ると、起動の遅いアプリと本当にハングしたアプリを区別できない。起動時間が不安定なアプリには必ずStartup
+                                    Probeを設定する。
+                                </li>
+                                <li>
+                                    <code>preStop</code>
+                                    フックの遅延（数秒のsleep等）は、エンドポイントやロードバランサーからPodが実際に切り離されるまでの猶予を確認するものではない。安全にドレインするには、遅延に加えて（1）遅延とアプリの終了処理を収容できる<code>terminationGracePeriodSeconds</code>、（2）新規接続を止めて処理中のリクエストを完了させるアプリ側のグレースフルシャットダウン、（3）利用中のロードバランサー実装ごとの切り離し所要時間の実測と検証、の3点をそろえる必要がある。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 id="2-3">2.3 名前空間・ラベル・アノテーションによる整理（原著第7章）</h3>
+                    <p>
+                        <strong>Namespace</strong>
+                        はクラスタ内のリソースを論理的に分割する仕組みです。ただし原著7.1.4節が明確に警告する通り、Namespaceは<strong>ネットワーク的な隔離を提供しません</strong>（NetworkPolicyなど別の仕組みと組み合わせない限り、異なるNamespace間のPodは自由に通信できます）。
+                    </p>
+                    <Diagram id="diag-14" label="クラスタ内のNamespace分割とNetworkPolicyによるネットワーク隔離関係" />
+                    <p>
+                        <strong>ラベルとラベルセレクタ（原著7.2〜7.3節）</strong>
+                        は、Kubernetesにおけるオブジェクトのグルーピングの基本メカニズムです。Service、ReplicaSet、Deploymentなど、多くのコントローラがラベルセレクタで「どのPodを対象にするか」を決定します。
+                    </p>
+                    <Diagram id="diag-15" label="ラベルとラベルセレクタによるPodのフィルタリング対応図" />
+                    <p>
+                        アノテーション（原著7.5節）はラベルと似ていますが、セレクタの対象にはならず、任意の（非識別用途の）メタデータ（ビルド情報、ツール固有の設定値など）を格納するために使います。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    Kubernetes公式が定める
+                                    <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/">
+                                        推奨ラベル
+                                    </a>
+                                    （<code>app.kubernetes.io/name</code>、<code>app.kubernetes.io/version</code>など）に準拠し、ツール間の相互運用性を高める。
+                                </li>
+                                <li>
+                                    Namespace単位でResourceQuota・LimitRangeを設定し、1チーム／1環境がクラスタ全体のリソースを食い潰さないようにする。
+                                </li>
+                                <li>
+                                    機密性の高いワークロード同士は同一Namespaceであっても信頼せず、NetworkPolicyでデフォルト拒否（default-deny）を基本方針にする。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <h2 id="part3">
+                        第3部: アプリケーションの設定とストレージ（原著Part 3: 第8〜10章）
+                    </h2>
+                    <h3 id="3-1">3.1 ConfigMapとSecret（原著第8章）</h3>
+                    <p>
+                        コンテナイメージから設定を分離する（Twelve-Factor
+                        Appの原則）ために、KubernetesはConfigMap（機密でない設定値）とSecret（機密データ）という2種類のオブジェクトを提供します。
+                    </p>
+                    <Diagram id="diag-16" label="ConfigMapとSecretを環境変数やボリュームとしてPodへ注入する仕組み" />
+                    <p>
+                        原著8.3.4節「Understanding why Secrets aren&apos;t always
+                        secure」は初学者が誤解しがちな重要ポイントです。SecretはデフォルトではBase64エンコードされているだけで<strong>暗号化されていません</strong>。etcdへの保存時に暗号化する（Encryption
+                        at
+                        Rest）よう明示的に設定しない限り、etcdへのアクセス権限があれば誰でも復号できてしまいます。
+                    </p>
+                    <Diagram id="diag-17" label="Secretのetcd暗号化（Encryption at Rest）有効/無効によるセキュリティ差" />
+                    <p>
+                        <strong>Downward API（原著8.4節）</strong>
+                        は、Pod自身のメタデータ（名前、Namespace、ラベル、リソース制限値など）をコンテナ内の環境変数やファイルとして注入する仕組みです。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    SecretはetcdのEncryption at
+                                    Restを有効化し、加えて可能であればHashiCorp VaultやAWS Secrets
+                                    Manager、External Secrets
+                                    Operatorなど外部シークレット管理システムとの連携を検討する。
+                                </li>
+                                <li>
+                                    ConfigMap/Secretを更新しても、既に起動済みのPodへの環境変数注入は自動反映されない（再起動が必要）。ボリュームマウントの場合は多くのケースで自動的にファイル内容が更新されるが、アプリ側がファイル変更を検知して再読み込みする実装になっているか確認する。
+                                </li>
+                                <li>
+                                    Secretの中身をGitリポジトリに平文でコミットしない。Sealed
+                                    SecretsやSOPS、External Secrets
+                                    Operatorなどでの暗号化管理をGitOpsパイプラインに組み込む。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 id="3-2">3.2 ボリューム（原著第9章）</h3>
+                    <p>
+                        Kubernetesの<strong>ボリューム</strong>は、コンテナのファイルシステムより長生きするストレージ（少なくともPodのライフサイクル分）を提供します。
+                    </p>
+                    <Diagram id="diag-18" label="emptyDirやhostPath、image volume等主要なボリューム種別の一覧図" />
+                    <p>
+                        <code>emptyDir</code>
+                        はPodが削除されると内容も消える一時ボリュームで、コンテナ間のファイル共有（例:
+                        メインコンテナが書いたログをサイドカーが読む）によく使われます。一方<code>hostPath</code>はノードのローカルディスクに直接アクセスするため、Pod再スケジュール時にデータの整合性が保てず、セキュリティリスクも高いため、原著でも「特別な用途（DaemonSetでノード上のログファイルを読むなど）に限定すべき」と位置づけられています。
+                    </p>
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    <code>hostPath</code>はノード固有のリソース（例:
+                                    DaemonSetからホストのログファイルを読み取り専用でマウントする）以外では避け、一般的なアプリケーションの永続化にはPersistentVolume（3.3節）を使う。
+                                </li>
+                                <li>
+                                    複数のConfigMap/Secret/DownwardAPIを1つのマウントポイントに統合したい場合は<code>projected</code>ボリュームを使い、Podのボリューム定義をシンプルに保つ。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 id="3-3">3.3 PersistentVolumeによる永続化（原著第10章）</h3>
+                    <p>
+                        Pod自体は使い捨て（ephemeral）ですが、データベースなどのステートフルなワークロードにはPodのライフサイクルを超えて存続するストレージが必要です。Kubernetesはこれを<strong>PersistentVolume（PV）</strong>と<strong>PersistentVolumeClaim（PVC）</strong>という2つのオブジェクトで抽象化します。
+                    </p>
+                    <Diagram id="diag-19" label="開発者・PVC・StorageClass・CSI・PV・Podによるストレージ動的確保シーケンス" />
+                    <p>
+                        <strong>アクセスモード（原著10.2.4節）</strong>
+                    </p>
+                    <div className="table-scroll">
+                        <table>
+                            <thead>
+                                <tr className="header">
+                                    <th scope="col">アクセスモード</th>
+                                    <th scope="col">略称</th>
+                                    <th scope="col">意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="odd">
+                                    <td>ReadWriteOnce</td>
+                                    <td>RWO</td>
+                                    <td>単一ノードから読み書き可能</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>ReadOnlyMany</td>
+                                    <td>ROX</td>
+                                    <td>複数ノードから読み取り専用でマウント可能</td>
+                                </tr>
+                                <tr className="odd">
+                                    <td>ReadWriteMany</td>
+                                    <td>RWX</td>
+                                    <td>複数ノードから同時に読み書き可能</td>
+                                </tr>
+                                <tr className="even">
+                                    <td>ReadWriteOncePod</td>
+                                    <td>RWOP</td>
+                                    <td>単一Podからのみ読み書き可能（1.29でGA、より厳格な排他制御）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        <strong>StorageClassとCSIドライバ（原著10.2.5〜10.2.6節）</strong>
+                        は、クラウドプロバイダやストレージベンダーごとの実装差異を吸収する仕組みです。StorageClassを指定するだけで、背後のCSI（Container
+                        Storage Interface）ドライバが実際のディスクをプロビジョニングします。
+                    </p>
+                    <p>
+                        <strong>静的プロビジョニング vs 動的プロビジョニング（原著10.1.2節）</strong>
+                    </p>
+                    <Diagram id="diag-20" label="動的プロビジョニングと静的プロビジョニングの比較図" />
+                    <div className="callout-practice">
+                        <div className="icon">&#10003;</div>
+                        <div className="body">
+                            <div className="label">ベストプラクティス</div>
+                            <ul>
+                                <li>
+                                    特別な理由がない限り動的プロビジョニング（StorageClass +
+                                    PVC）を使い、静的プロビジョニングはノードローカルストレージなど特殊なケースに限定する。
+                                </li>
+                                <li>
+                                    PVCのリサイズ（原著10.4.1節）に対応したStorageClass（
+                                    <code>allowVolumeExpansion: true</code>
+                                    ）を選ぶ。ただしこのフラグは拡張を許可するだけであり、Podを再作成せずにファイルシステムまで広げるには、CSIドライバとファイルシステムの双方がオンライン拡張に対応している必要がある。
+                                </li>
+                                <li>
+                                    定期的なスナップショット（原著10.4.2〜10.4.3節）をVolumeSnapshotリソースで自動化し、災害復旧（DR）計画に組み込む。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <hr />
                 </main>
             </div>
