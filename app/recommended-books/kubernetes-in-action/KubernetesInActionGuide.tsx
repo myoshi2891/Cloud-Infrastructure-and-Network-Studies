@@ -1539,7 +1539,7 @@ export function KubernetesInActionGuide() {
                     </div>
                     <p>
                         <strong>出典：</strong> CNCF公式アナウンス「Kubernetes Established as the De
-                        Facto 'Operating System' for AI as Production Use Hits 82% in 2025 CNCF Annual
+                        Facto &apos;Operating System&apos; for AI as Production Use Hits 82% in 2025 CNCF Annual
                         Cloud Native Survey」(<a
                             href="https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/"
                             >https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/</a
@@ -1551,7 +1551,7 @@ export function KubernetesInActionGuide() {
                     <hr />
                     <h2 id="roadmap">学習ロードマップと認定資格</h2>
                     <p>
-                        原著は688ページ・20時間44分（O'Reilly記載）というボリュームがあり、初学者が最初から通読するのは大変です。以下のロードマップは、本ガイドの部構成に沿って無理なく学習を進めるための目安です。
+                        原著は688ページ・20時間44分（O&apos;Reilly記載）というボリュームがあり、初学者が最初から通読するのは大変です。以下のロードマップは、本ガイドの部構成に沿って無理なく学習を進めるための目安です。
                     </p>
                     <Diagram id="diag-41" label="第0部から第6部へ続くKubernetes学習ロードマップ" />
                     <p><strong>認定資格の活用</strong></p>
@@ -1992,7 +1992,7 @@ export function KubernetesInActionGuide() {
                         <div className="ref-card" id="ref1">
                             <div className="num">1</div>
                             <div className="txt">
-                                O'Reilly Online Learning「Kubernetes in Action, Second
+                                O&apos;Reilly Online Learning「Kubernetes in Action, Second
                                 Edition」書籍ページ —{' '}
                                 <a
                                     href="https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/"
@@ -2003,7 +2003,7 @@ export function KubernetesInActionGuide() {
                         <div className="ref-card" id="ref2">
                             <div className="num">2</div>
                             <div className="txt">
-                                O'Reilly Online Learning「Kubernetes in Action, Second
+                                O&apos;Reilly Online Learning「Kubernetes in Action, Second
                                 Edition」目次ページ —{' '}
                                 <a
                                     href="https://www.oreilly.com/library/view/kubernetes-in-action/9781617297618/Text/contents.html"
@@ -2077,7 +2077,7 @@ export function KubernetesInActionGuide() {
                         <div className="ref-card" id="ref9">
                             <div className="num">9</div>
                             <div className="txt">
-                                Kubernetes公式ブログ「Kubernetes v1.34: Of Wind &amp; Will (O' WaW)」 —{' '}
+                                Kubernetes公式ブログ「Kubernetes v1.34: Of Wind &amp; Will (O&apos; WaW)」 —{' '}
                                 <a
                                     href="https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/"
                                     >https://kubernetes.io/blog/2025/08/27/kubernetes-v1-34-release/</a
@@ -2160,8 +2160,8 @@ export function KubernetesInActionGuide() {
                         <div className="ref-card" id="ref17">
                             <div className="num">17</div>
                             <div className="txt">
-                                CNCF公式アナウンス「Kubernetes Established as the De Facto 'Operating
-                                System' for AI as Production Use Hits 82% in 2025 CNCF Annual Cloud
+                                CNCF公式アナウンス「Kubernetes Established as the De Facto &apos;Operating
+                                System&apos; for AI as Production Use Hits 82% in 2025 CNCF Annual Cloud
                                 Native Survey」 —{' '}
                                 <a
                                     href="https://www.cncf.io/announcements/2026/01/20/kubernetes-established-as-the-de-facto-operating-system-for-ai-as-production-use-hits-82-in-2025-cncf-annual-cloud-native-survey/"
@@ -2241,7 +2241,7 @@ export function KubernetesInActionGuide() {
                         <div className="ref-card" id="ref24">
                             <div className="num">24</div>
                             <div className="txt">
-                                Fairwinds「Kubernetes 1.34 Released: What's New and When to Upgrade」 —{' '}
+                                Fairwinds「Kubernetes 1.34 Released: What&apos;s New and When to Upgrade」 —{' '}
                                 <a
                                     href="https://www.fairwinds.com/blog/kubernetes-1.34-released-whats-new-upgrade"
                                     >https://www.fairwinds.com/blog/kubernetes-1.34-released-whats-new-upgrade</a
