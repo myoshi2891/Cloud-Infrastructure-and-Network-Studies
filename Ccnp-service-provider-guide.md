@@ -565,6 +565,8 @@ router bgp 65000
 ##### ③ 1.5.c BGP プレフィックスの抑制
 
 > 出題範囲の文言は幅広く解釈できるため、ここでは **BGP で不要・不正なプレフィックスを受け取らない/出さない仕組み全般** と、関連する **IGP のプレフィックス抑制** をまとめて整理します。
+>
+> **BGP 集約抑制（Cisco IOS XR）**: `aggregate-address <prefix/len> summary-only` を設定すると、集約経路を BGP アップデートに広告する一方で、その集約に含まれるより詳細な経路（more-specific routes）を BGP アップデートから抑制します。これはプレフィックスフィルタ（prefix-set/policy）・`maximum-prefix`・RPKI とは独立したメカニズムであり、ルーティングテーブルの集約と広告制御を目的とします。IGP のプレフィックス抑制（OSPF `prefix-suppression` など、トランジットリンクアドレスを LSA から隠す機能）とも別の概念です。
 
 | 手段 | 効果 |
 |---|---|
@@ -575,12 +577,13 @@ router bgp 65000
 | **IGP のプレフィックス抑制**（OSPF `prefix-suppression`、IS-IS も同様の概念） | リンクのトランジット網アドレスを IGP に載せず、ルーティングテーブル縮小と攻撃面の削減 |
 
 ```text
+! CUST-IN: 顧客への割り当て済みプレフィックスのみを受理するルートポリシー
 router bgp 65000
  neighbor 198.51.100.2
   remote-as 65100
   address-family ipv4 unicast
-   maximum-prefix 1000 85 warning-only
-   route-policy CUST-IN in
+   maximum-prefix 1000 85   ! 上限超過時にセッションを切断（warning-only なし = 強制制限）
+   route-policy CUST-IN in  ! 許可プレフィックスのみ受理
    route-policy CUST-OUT out
 ```
 
