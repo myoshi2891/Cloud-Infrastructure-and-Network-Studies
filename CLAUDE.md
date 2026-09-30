@@ -609,6 +609,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（33図）
       page.css                      # ページ固有スタイル
+  cli/
+    page.tsx                        # CLIコマンド実践ワンライナー集 (Server)
+    CliGuide.tsx                    # 本文＋インタラクション (全15セクション、Mermaid 7図等)
+    NavBar.tsx                      # サイドバーナビ (IntersectionObserver)
+    constants.ts                    # ナビ・Mermaid・参考文献定義
+    page.css                        # ページ固有スタイル
 
 
 components/
