@@ -19,7 +19,7 @@ Updated 2026-09-07
 
 - **開発サーバー起動:** `bun run dev`
 - **ビルド:** `bun run build`
-- **単体テスト実行:** `bun run test` (Vitest)
+- **単体テスト実行:** `bun run test` (Vitest) ⚠️ **必ず `bun run test` を使うこと。`bun test`（`run` なし）は絶対に使用禁止。** `bun test` は Bun 組み込みランナーを起動し、Vitest 専用の JSDOM / vi.mock が機能せずプロセスが CPU 99% を占有したまま終了しなくなる（2026-09-26 障害事例: 累計 1,600 時間以上の CPU を無駄に消費）。
 - **E2E テスト実行:** `bunx playwright install`（初回のみ）、その後 `bun run test:e2e` (Playwright `chromium` project)
 - **Performance テスト実行:** `bun run test:perf` (Playwright `perf` project: LCP / CLS / TBT を [e2e/perf-budgets.json](e2e/perf-budgets.json) と比較)
 - **md-to-html 監査の自己テスト:** `bun run test:md-to-html`（実体は `bun test` に 2 本のテストファイルのパスを明示指定。`bun test` は `./` で始まらない引数をファイル名フィルタとして解釈するため、パスは必ず `./` から書く）
@@ -28,6 +28,7 @@ Updated 2026-09-07
 - **Lint 実行:** `bun run lint`
 - **Markdown lint 実行:** `bun run markdownlint -- path/to/file.md`
 - **Docker 一括リビルド:** `bun run docker:rebuild`（コンテナ停止 → 本番イメージ作成 → 開発コンテナ再構築・起動）
+- **ゾンビプロセス診断:** `bun run test:check-zombies`（`bun test` 誤用・長時間ハングプロセス・`while true` 残骸ループを自動検出。異常を感じたら最初に実行する）
 
 ## プロジェクト構造
 
@@ -40,7 +41,7 @@ Updated 2026-09-07
   - `/app/gcl/professional-cloud-network-engineer-step-by-step`: PCNE ステップバイステップ実践ガイド。
   - `/app/gcl/professional-cloud-architect`: Professional Cloud Architect（PCA）試験 完全対策ガイド（`section1-design-planning`、`section2-managing-provisioning`、`section3-security-compliance`、`section4-process-optimization`、`section5-managing-implementation`、`section6-operational-excellence` 完全ガイド含む）。
   - `/app/gcl/professional-cloud-developer`: Professional Cloud Developer（PCD）認定試験 完全対策学習ガイド（`section1`、`section2`、`section3`、`section4` 完全ガイド含む）。
-  - `/app/gcl/professional-agentic-architect`: Professional Agentic Architect 認定試験 技術ガイド（概要・技術ガイド本体、および `section1`、`section2`、`section3` 完全ガイド含む。ライトテーマデザイン、全量完全移植済み）。
+  - `/app/gcl/professional-agentic-architect`: Professional Agentic Architect 認定試験 技術ガイド（概要・技術ガイド本体、および `section1`、`section2`、`section3`、`section4`、`section5` 完全ガイド含む。ライトテーマデザイン、全量完全移植済み）。
   - `/app/cisco/ccde/complete-guide`: Cisco CCDE 認定 完全ガイド。
   - `/app/cisco/devnet-professional`: Cisco Certified DevNet Professional 認定 徹底解説ガイド（CSS Modules）。
   - `/app/cisco/devnet-associate`: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（CSS Modules／グローバルテーマトークン参照）。
@@ -71,7 +72,9 @@ Updated 2026-09-07
   - `/app/recommended-books/operating-systems-three-easy-pieces`: 『Operating Systems: Three Easy Pieces（OSTEP）』完全学習ガイド（Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau 原著、57章+付録構成、仮想化・並行性・永続性・セキュリティ・xv6、Mermaid 56図）。
   - `/app/recommended-books/computer-networking-topdown`: 『Computer Networking: A Top-Down Approach』完全学習ガイド（James F. Kurose, Keith W. Ross 原著、全10部構成、アプリケーション層〜物理層、2026年最新動向、Mermaid 41図）。
   - `/app/recommended-books/high-performance-browser-networking`: 『High Performance Browser Networking』完全解説ガイド（Ilya Grigorik 原著、全5部18章構成、TCP/UDP/TLS/ワイヤレス/HTTP/ブラウザAPI、2026年最新動向、Mermaid 33図）。
-- `/app/constants.ts`: 試験データ正本（`ALL_EXAMS` / `STATS`）。編集対象は `ALL_EXAMS` で、公開値 `EXAMS` は `HANDS_ON_ENABLED` フラグで `ALL_EXAMS` をフィルタした派生値（直接編集しない）。`provider: 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books'` で分類され、`toNavTree` が自動グルーピング。
+  - `/app/recommended-books/kubernetes-in-action`: 『Kubernetes in Action, Second Edition』完全解説ガイド（Marko Lukša 原著、全6部18章+2026年最新動向、Mermaid 41図、テーブル15点、チェックリスト19点、参考文献27点）。
+  - `/app/cli`: CLIコマンド実践ワンライナー集（基礎知識・パイプライン・主要コマンド・シナリオ・ベストプラクティス・リファレンス全15セクション完全解説ガイド、Mermaid 7図）。
+- `/app/constants.ts`: 試験データ正本（`ALL_EXAMS` / `STATS`）。編集対象は `ALL_EXAMS` で、公開値 `EXAMS` は `HANDS_ON_ENABLED` フラグで `ALL_EXAMS` をフィルタした派生値（直接編集しない）。`provider: 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools'` で分類され、`toNavTree` が自動グルーピング。
 - AWS: `app/aws/` 配下（`solutions-architect-associate/page.tsx` 完全対策ガイド、`solutions-architect-associate/domain1/page.tsx` ドメイン1ガイド、`solutions-architect-associate/domain2/page.tsx` ドメイン2ガイド、`solutions-architect-associate/domain3/page.tsx` ドメイン3ガイド、`solutions-architect-associate/domain4/page.tsx` ドメイン4ガイド）
 - Cisco: `app/cisco/` 配下（`ccna/beginner-guide/page.tsx` 完全ガイド、`ccna/automation-software-development-design/page.tsx`、`ccna/automation-application-deployment-security/page.tsx`、`ccna/automation-cisco-platforms-and-development/page.tsx`、`ccna/automation-infrastructure-and-automation/page.tsx`、`ccna/ip-connectivity-guide/page.tsx`、`ccna/ip-services-guide/page.tsx`、`ccna/automation-programmability/page.tsx` 含む）
 - `/components`: 共通コンポーネント（Header: ハンバーガー Drawer ナビ、Footer、DisclaimerBanner など）。
@@ -116,7 +119,7 @@ Updated 2026-09-07
 - **Mermaid図解の幅・配置契約**: `Diagram` や `.mermaid-wrap` に個別の `maxWidth` インラインスタイル（`maxWidth: 800px` 等）を設定して幅を人工的に制限することは**絶対禁止**です。コンテンツ領域の全幅 (`width: 100%`) を活用し、`margin: 1.5rem auto 2rem` で親コンテナ内中央に配置してください。
 - **ユーザー手動確認ゼロ原則（手動・目視確認依頼の全廃）**:
   - ユーザーに目視チェックやスクリーンショット撮影・確認作業を依頼することを**厳禁**とします。
-  - テキスト全量一致の検証は `bun scripts/verify-html-migration.mjs` および `bun test` による全自動 DOM 照合で 100% 合格を判定してください。
+  - テキスト全量一致の検証は `bun scripts/verify-html-migration.mjs` および `bun run test`（Vitest。`bun test` 直接実行は禁止）による全自動 DOM 照合で 100% 合格を判定してください。
   - レイアウト・スクロール被り・レスポンシブ崩れは `bun run test:e2e` (Playwright) で全自動検出・証明してください。
 - **移行の忠実性とコンテンツ・デザインの網羅性 (絶対遵守・手抜き・独自改変厳禁)**: 移行元の HTML/Markdown に含まれる情報・デザインは、**一切の省略・要約・抜粋・文言短縮・独自の補足列追加・装飾削除を厳禁**とします。
   - **コンテンツの完全性**: 「詳細手順」「CSV フォーマット例」「全テーブルの列構成とセル文言」「注釈」「解説文章」「JSDoc」「補足スキル項目」「全出典リンク」「免責事項」などを100%そのまま全量移転すること。

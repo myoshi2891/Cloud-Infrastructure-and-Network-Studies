@@ -412,6 +412,18 @@ app/
         NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
         constants.ts                # Mermaid 図定義 (15図)
         page.css                    # ページ固有スタイル
+      section4/
+        page.tsx                    # Section 4: 評価とデプロイ (Server)
+        Section4Guide.tsx           # 本文＋インタラクション (Client。全9 Mermaid図、12テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (9図)
+        page.css                    # ページ固有スタイル
+      section5/
+        page.tsx                      # Section 5: セキュリティとガバナンス (Server)
+        Section5Guide.tsx           # 本文＋インタラクション (Client。全9 Mermaid図、13テーブル等)
+        NavBar.tsx                  # サイドバーナビ (IntersectionObserver)
+        constants.ts                # Mermaid 図定義 (9図)
+        page.css                    # ページ固有スタイル
   cisco/
     devnet-professional/
       page.tsx                      # Cisco Certified DevNet Professional 認定 徹底解説ガイド（Server）
@@ -597,6 +609,18 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（33図）
       page.css                      # ページ固有スタイル
+    kubernetes-in-action/
+      page.tsx                      # 『Kubernetes in Action, 第2版』完全解説ガイド (Server)
+      KubernetesInActionGuide.tsx   # 本文＋インタラクション (Client。全6部18章+2026年動向、Mermaid 41図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # ナビ・Mermaid・参考文献定義（41図）
+      page.css                      # ページ固有スタイル
+  cli/
+    page.tsx                        # CLIコマンド実践ワンライナー集 (Server)
+    CliGuide.tsx                    # 本文＋インタラクション (全15セクション、Mermaid 7図等)
+    NavBar.tsx                      # サイドバーナビ (IntersectionObserver)
+    constants.ts                    # ナビ・Mermaid・参考文献定義
+    page.css                        # ページ固有スタイル
 
 
 components/

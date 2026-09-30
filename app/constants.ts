@@ -2,7 +2,7 @@
 
 import { HANDS_ON_ENABLED } from '@/lib/featureFlags';
 
-export type Provider = 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books';
+export type Provider = 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools';
 
 export interface ExamDomain {
     label: string;
@@ -32,7 +32,9 @@ export type ColorKey =
     | 'card-operating-systems-three-easy-pieces'
     | 'card-computer-networking-topdown'
     | 'card-high-performance-browser-networking'
-    | 'card-professional-agentic-architect';
+    | 'card-professional-agentic-architect'
+    | 'card-kubernetes-in-action'
+    | 'card-cli';
 
 export interface Exam {
     id: string;
@@ -76,6 +78,8 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-computer-networking-topdown': 'card-computer-networking-topdown',
     'card-high-performance-browser-networking': 'card-high-performance-browser-networking',
     'card-professional-agentic-architect': 'card-professional-agentic-architect',
+    'card-kubernetes-in-action': 'card-kubernetes-in-action',
+    'card-cli': 'card-cli',
 };
 
 export const providerMeta: Record<
@@ -125,9 +129,16 @@ export const providerMeta: Record<
         countUnit: { en: 'books', ja: '冊' },
         ctaLabel: 'この書籍を読む',
     },
+    Tools: {
+        label: '運用ツール資格学習共通ガイド',
+        kicker: 'Operations & Tooling',
+        description: 'クラウド・インフラ運用と資格学習に共通するCLI・自動化ツールの実践知識',
+        countUnit: { en: 'guides', ja: 'ガイド' },
+        ctaLabel: 'このガイドを読む',
+    },
 };
 
-export const providerOrder: Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books'];
+export const providerOrder: Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools'];
 
 const ALL_EXAMS: Exam[] = [
     {
@@ -409,12 +420,12 @@ const ALL_EXAMS: Exam[] = [
             },
             {
                 label: 'Section 4: 評価とデプロイ',
-                href: '/gcl/professional-agentic-architect#セクション4-エージェントワークフローの評価とデプロイ配点-約22',
+                href: '/gcl/professional-agentic-architect/section4',
                 pct: '約22%',
             },
             {
                 label: 'Section 5: セキュリティとガバナンス',
-                href: '/gcl/professional-agentic-architect#セクション5-エージェントワークフローのセキュリティとガバナンス配点-約15',
+                href: '/gcl/professional-agentic-architect/section5',
                 pct: '約15%',
             },
         ],
@@ -963,6 +974,49 @@ const ALL_EXAMS: Exam[] = [
         icon: '📚',
         provider: 'Books',
     },
+    {
+        id: 'kubernetes-in-action',
+        label: 'Kubernetes in Action, 第2版',
+        abbr: 'KIA',
+        level: 'コンテナオーケストレーション・クラウドネイティブ',
+        score: '全6部18章+2026年動向 / 41図解',
+        color: 'card-kubernetes-in-action',
+        href: '/recommended-books/kubernetes-in-action',
+        description:
+            'Marko Lukša 著『Kubernetes in Action, Second Edition』を軸に、コンテナの基礎からKubernetesのアーキテクチャ、Pod・ストレージ・ネットワーキング・高度なワークロード、そして2026年最新動向（v1.37・DRA・Gateway API等）までを体系的に解説した完全解説ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/kubernetes-in-action',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'cli',
+        label: 'CLIコマンド実践ワンライナー集',
+        abbr: 'CLI',
+        level: '運用ツール・開発実践',
+        score: '全15セクション / 7図解',
+        color: 'card-cli',
+        href: '/cli',
+        description:
+            '日常の開発・運用・トラブルシューティングで「知っていると10倍速くなる」Linux/Unix CLIワンライナーを、仕組みの理解から実践シナリオまで段階的に解説した完全実践ガイド。',
+        domains: [
+            {
+                label: '完全実践ガイド',
+                href: '/cli',
+                pct: '完全解説',
+            },
+        ],
+        badge: '共通ガイド',
+        icon: '💻',
+        provider: 'Tools',
+        overviewLabel: '完全実践ガイド',
+    },
 ];
 
 export const EXAMS: Exam[] = HANDS_ON_ENABLED
@@ -977,8 +1031,12 @@ export interface Stat {
 export const STATS: Stat[] = [
     {
         value: String(
-            EXAMS.filter((exam) => exam.status !== 'coming-soon' && exam.provider !== 'Books')
-                .length,
+            EXAMS.filter(
+                (exam) =>
+                    exam.status !== 'coming-soon'
+                    && exam.provider !== 'Books'
+                    && exam.provider !== 'Tools',
+            ).length,
         ),
         label: '対応試験数',
     },

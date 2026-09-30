@@ -53,7 +53,7 @@ describe('Header (drawer nav)', () => {
         expect(dialog.querySelector('.provider-mark-cisco')).toBeInTheDocument();
     });
 
-    it('CompTIA / Recommended Books は Cisco とは別の専用マークで描画されること', async () => {
+    it('CompTIA / Recommended Books / Tools は Cisco とは別の専用マークで描画されること', async () => {
         // Arrange
         const user = userEvent.setup();
         render(<Header />);
@@ -65,7 +65,8 @@ describe('Header (drawer nav)', () => {
         const dialog = screen.getByRole('dialog', { name: 'サイトナビゲーション' });
         expect(dialog.querySelector('.provider-mark-comptia')).toBeInTheDocument();
         expect(dialog.querySelector('.provider-mark-books')).toBeInTheDocument();
-        // Cisco マークは Cisco グループのみ（CompTIA/Books へ流用されない）
+        expect(dialog.querySelector('.provider-mark-tools')).toBeInTheDocument();
+        // Cisco マークは Cisco グループのみ（CompTIA/Books/Tools へ流用されない）
         expect(dialog.querySelectorAll('.provider-mark-cisco')).toHaveLength(1);
     });
 

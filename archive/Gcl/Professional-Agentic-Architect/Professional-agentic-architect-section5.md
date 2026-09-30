@@ -202,12 +202,17 @@ sequenceDiagram
     Gateway->>Gateway: Agent Registryでメタデータ照会
     Gateway->>IAP: 認可判定を委譲
     IAP->>IAP: IAM許可/拒否ポリシーを評価<br/>（principal://...でSPIFFE IDを照合）
-    alt 認可された場合
+    alt 登録済みの宛先 かつ 権限あり
         IAP-->>Gateway: 許可
         Gateway->>Tool: リクエスト転送
         Tool-->>Gateway: レスポンス
         Gateway-->>Agent: レスポンス転送
-    else 未登録の宛先 または 権限不足
+    else 未登録の宛先 かつ URLを対象とする明示的なIAMアクセスポリシーあり
+        IAP-->>Gateway: 許可（URL対象のポリシーに基づく）
+        Gateway->>Tool: リクエスト転送
+        Tool-->>Gateway: レスポンス
+        Gateway-->>Agent: レスポンス転送
+    else 未登録の宛先（既定で拒否） または 権限不足
         IAP-->>Gateway: 拒否
         Gateway-->>Agent: エラー（iap.resources.egressViaIAP 不足等）
     end
@@ -284,10 +289,10 @@ VPC-SCは、Google Cloud APIレベルでのデータ流出（exfiltration）を�
 | **Agent Identity Credentials API**<br/>（`agentidentitycredentials.googleapis.com`） | ○ 対応 | 同上 |
 | **Agent Identity の Ingress/Egressルール** | ○ 対応 | エージェントIDをプリンシパルとして ingress/egress ルールに指定し、境界で保護されたリソースへのアクセスを許可できる |
 | **RAG Engine / Agent Retrieval（Vector Search 2.0）** | ○ 対応（CMEK経由の暗号化と合わせて利用） | データそのものの保護はCMEKが担い、境界保護はVPC-SCが担うという役割分担 |
-| **Agent Gateway** | **× 非対応** | 公式ドキュメントで明記された既知の制限。VPC-SCで宛先を絞り込むことはできないため、代わりに**カスタム組織ポリシー制約**でエージェントとゲートウェイのバインディングを制限する（承認済みのAgent Gatewayのみに制限する）運用が推奨される |
+| **Agent Gateway** | **△ 一部対応**（API自体は対象外） | VPC-SCはAgent Gateway API自体へのアクセスを制限しない（公式ドキュメントで明記された既知の制限）。一方、エージェント接続テンプレート（agent connectivity template）経由でルーティングされるAgent Gatewayのトラフィックは、境界ルールで保護できる。利用できるゲートウェイを承認済みのものに限定するには、**カスタム組織ポリシー制約**でエージェントとゲートウェイのバインディングを制限する運用を組み合わせる |
 | **Semantic Governance Policy** | **× 非対応**（プレビュー機能） | ポリシーエンジン自体はVPCネットワーク内にプロビジョニングするが、VPC-SCの境界保護機構そのものには対応していない |
 
-この「Agent GatewayはVPC-SCに対応しない」という制限は、試験でも狙われやすいポイントです。正しい代替策は、**組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する**ことであり、VPC-SCの境界にAgent Gatewayを組み込もうとする設計は誤りです。
+この「Agent Gateway API自体はVPC-SCで制限できない」という制限は、試験でも狙われやすいポイントです。エージェント接続テンプレート経由のトラフィックは境界ルールで保護できる一方、利用できるゲートウェイそのものを絞り込むには、**組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する**方法があります。両者は対象が異なるため、区別して設計することが重要です。
 
 ### 3.2 CMEK（顧客管理暗号鍵）：どこで、何を暗号化できるか
 
@@ -295,7 +300,7 @@ Cloud KMSで管理する顧客管理暗号鍵（CMEK）は、Google管理鍵を�
 
 - **RAG Engine**：コーパス（グラウンディングデータ）の保管をCMEKで暗号化。ただし**CMEKに対応するのは Spanner モードの `RagManagedDb` のみ**であり、`RagManagedVertexVectorSearch`（Serverless モードの既定のベクトルDB）と `VertexVectorSearch`（自前の Vector Search インデックスを持ち込む構成）は **CMEK 非対応**。CMEK が要件なら Spanner モード + `RagManagedDb` を選ぶ
 - **Agent Retrieval（旧 Vector Search 2.0）**：Collection/Data Objectの保管をCMEKで暗号化
-- **Vector Search 1.0**：インデックスデータの暗号化は**Google管理暗号化のみ対応（CMEK非対応）**
+- **Vector Search 1.0**：単体利用ではIndexとIndexEndpointをCMEKで暗号化可能（両リソースに同じ鍵を使う必要がある）。**CMEK非対応となるのは、RAG EngineのVertexVectorSearchバックエンドとして使う場合のみ**
 
 これにより、「エージェントが参照するグラウンディングデータ（社内ナレッジベース）を、組織のセキュリティポリシー上、Google管理鍵ではなく自社管理の鍵で暗号化したい」という金融・医療業界などのエンタープライズ要件に応えられます。
 
@@ -332,8 +337,8 @@ flowchart TB
     AR -->|"Collection/Data Objectを暗号化"| KMS
     MA -->|"PII/機密情報を検出・マスキング"| SDP
 
-    ORGPOL["組織ポリシーのカスタム制約<br/>（承認済みGatewayのみ許可）"]
-    AGW -.->|"VPC-SCの代替統制"| ORGPOL
+    ORGPOL["組織ポリシーのカスタム制約<br/>（承認済みGatewayとのバインドのみ許可）"]
+    AGW -.->|"バインディング制御"| ORGPOL
 
     classDef outFill fill:#3a1420,stroke:#c05a6e,color:#f5d8de
     class AGW,SGP outFill
@@ -341,7 +346,7 @@ flowchart TB
 
 ### 3.5 Private Service Connect（PSC）による閉域網連携
 
-Vector Search（1.0系）は、パブリックエンドポイント・Private Service Connect（推奨）・Private Services Access（VPCピアリング）の3方式でデプロイ・クエリが可能です。PSCは、コンシューマ側のVPCとGoogleが管理するプロデューサ側サービスとの間を、パブリックIPを経由せずに接続する仕組みで、金融機関などパブリックエンドポイントを許容できない環境で標準的に使われます。Agent Runtime 側にもPSCインターフェースが用意されており、エージェントの実行環境自体をプライベートネットワークに閉じ込めることができます。
+Vector Search（1.0系）は、パブリックエンドポイント・Private Service Connect（推奨）・Private Services Access（VPCピアリング）の3方式でデプロイ・クエリが可能です。PSCは、コンシューマ側のVPCとGoogleが管理するプロデューサ側サービスとの間を、パブリックIPを経由せずに接続する仕組みで、金融機関などパブリックエンドポイントを許容できない環境で標準的に使われます。Agent Runtime 側にもPSCインターフェースが用意されており、エージェントからVPCやオンプレミスのリソースへプライベートに接続する（egress）経路を確保できます。ただしこれは送信側の接続手段であり、実行環境を隔離したりパブリックAPIへのアクセスを制限したりするものではありません。
 
 > **出典：** [Agent Identity overview（VPC Service Controls節）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview)、[Agent Gateway overview（Limitations節）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview)、[Semantic governance policies overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview)、[Model Armor](https://cloud.google.com/security/products/model-armor)
 

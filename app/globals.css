@@ -580,6 +580,9 @@
     --color-theme-books-bg: hsl(38 80% 50% / 0.20);
     --color-theme-books-fg: hsl(38 90% 68%);
 
+    --color-theme-tools-bg: hsl(160 55% 40% / 0.25);
+    --color-theme-tools-fg: hsl(160 90% 70%);
+
     --color-theme-accelerate-bg: hsl(225 45% 45% / 0.25);
     --color-theme-accelerate-fg: hsl(225 75% 70%);
 
@@ -610,6 +613,11 @@
     --color-theme-computer-networking-topdown-fg: hsl(220 90% 74%);
     --color-theme-high-performance-browser-networking-bg: hsl(220 55% 40% / 0.25);
     --color-theme-high-performance-browser-networking-fg: hsl(220 90% 74%);
+    --color-theme-kubernetes-in-action-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-kubernetes-in-action-fg: hsl(220 90% 74%);
+
+    --color-theme-cli-bg: hsl(215 55% 40% / 0.25);
+    --color-theme-cli-fg: hsl(215 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -783,6 +791,8 @@ body {
 .card-operating-systems-three-easy-pieces { --card-accent: var(--color-theme-operating-systems-three-easy-pieces-fg); }
 .card-computer-networking-topdown { --card-accent: var(--color-theme-computer-networking-topdown-fg); }
 .card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
+.card-kubernetes-in-action { --card-accent: var(--color-theme-kubernetes-in-action-fg); }
+.card-cli { --card-accent: var(--color-theme-cli-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -921,6 +931,16 @@ body {
     color: var(--color-theme-high-performance-browser-networking-fg);
 }
 
+@utility icon-theme-kubernetes-in-action {
+    background: var(--color-theme-kubernetes-in-action-bg);
+    color: var(--color-theme-kubernetes-in-action-fg);
+}
+
+@utility icon-theme-cli {
+    background: var(--color-theme-cli-bg);
+    color: var(--color-theme-cli-fg);
+}
+
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */
 .site-mark {
     display: inline-grid;
@@ -1029,6 +1049,23 @@ body {
 .provider-mark-books svg {
     width: 30px;
     height: 22px;
+}
+
+.provider-mark-tools {
+    width: 46px;
+    height: 34px;
+    flex-direction: column;
+    gap: 1px;
+    color: var(--color-theme-tools-fg);
+    font-family: Arial, sans-serif;
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+}
+
+.provider-mark-tools svg {
+    width: 28px;
+    height: 20px;
 }
 
 .provider-mark[data-compact] {

@@ -47,9 +47,10 @@ const PROVIDER_LABEL: Record<Provider, string> = {
     Cisco: 'Cisco',
     CompTIA: 'CompTIA',
     Books: 'Recommended Books',
+    Tools: '運用ツール資格学習共通ガイド',
 };
 
-const PROVIDER_ORDER: readonly Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books'];
+const PROVIDER_ORDER: readonly Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools'];
 
 /**
  * Converts exam inputs into a navigation tree grouped by provider.

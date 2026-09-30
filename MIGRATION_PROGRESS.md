@@ -1,6 +1,142 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-25)
+(最終更新日: 2026-09-30)
+
+## 2026-09-30: Kubernetes in Action, 第2版 完全解説ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Kubernetes-in-Action.html`（および `Kubernetes-in-Action.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `KubernetesInActionGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/recommended-books/kubernetes-in-action` ルートへ移行。見出し(h1:1, h2:8, h3:24, h4:0)、全15個のテーブル、全41個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(84件)、全チェックリスト(19件・動的カウントアップ)、全参考文献(27件)、全外部リンク(33件)、全本文・注釈を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Kubernetes-in-Action.html` および `Kubernetes-in-Action.md`）を `archive/Books/html/` および `archive/Books/md/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for kubernetes-in-action` (`ce3d311b`)
+- [x] **Step 1 (Red & Green NavBar)**: `test(k8s-action): add failing tests for NavBar` (`e8455e4e`), `feat(k8s-action): implement NavBar and layout styles` (`1dda3a73`)
+- [x] **Step 2 (Red Full Page)**: `test(k8s-action): add failing tests for full page content migration` (`5a4e47c7`)
+- [x] **Step 3 (Green Part 0 & 1)**: `feat(k8s-action): implement Part 0 and Part 1 with diagrams 1-8` (`4ba670e4`)
+- [x] **Step 4 (Green Part 2 & 3)**: `feat(k8s-action): implement Part 2 and Part 3 with diagrams 9-20` (`9db9dbd2`)
+- [x] **Step 5 (Green Part 4 & 5)**: `feat(k8s-action): implement Part 4 and Part 5 with diagrams 21-34` (`447b02b8`)
+- [x] **Step 6 (Green Part 6 & Full Pass)**: `feat(k8s-action): complete full page implementation passing migration tests` (`1dde9bc4`)
+- [x] **Step 7 (Refine & Integration)**: `refactor(k8s-action): integrate into routing and update docs` (`be624329`)
+- [x] **Step 8 (Archive & Sync)**: `chore(archive): move Kubernetes-in-Action source files to archive`
+
+### 関連ファイル
+
+- [app/recommended-books/kubernetes-in-action/page.tsx](app/recommended-books/kubernetes-in-action/page.tsx)
+- [app/recommended-books/kubernetes-in-action/KubernetesInActionGuide.tsx](app/recommended-books/kubernetes-in-action/KubernetesInActionGuide.tsx)
+- [app/recommended-books/kubernetes-in-action/NavBar.tsx](app/recommended-books/kubernetes-in-action/NavBar.tsx)
+- [app/recommended-books/kubernetes-in-action/constants.ts](app/recommended-books/kubernetes-in-action/constants.ts)
+- [app/recommended-books/kubernetes-in-action/page.css](app/recommended-books/kubernetes-in-action/page.css)
+- [__tests__/recommended-books/kubernetes-in-action/page.test.tsx](__tests__/recommended-books/kubernetes-in-action/page.test.tsx)
+- [__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx](__tests__/recommended-books/kubernetes-in-action/NavBar.test.tsx)
+- [docs/migration-inventory/kubernetes-in-action.json](docs/migration-inventory/kubernetes-in-action.json)
+- [archive/Books/html/Kubernetes-in-Action.html](archive/Books/html/Kubernetes-in-Action.html)
+- [archive/Books/md/Kubernetes-in-Action.md](archive/Books/md/Kubernetes-in-Action.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
+## 2026-09-30: CLIコマンド実践ワンライナー集 100%全量移行 (完了)
+
+### 目的
+
+`cli.html`（および `cli.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `CliGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/cli` ルートへ移行。見出し(h1:1, h2:15, h3:31, h4:3)、全15個のテーブル、全7個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(39件)、全コードブロック(6件・.code-line構造)、全外部リンク(12件)、全本文・注釈(25件)を一切の省略・要約なしで100%全量移植。「運用ツール資格学習共通ガイド」としてグローバルナビ（`Tools` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`cli.html` および `cli.md`）を `archive/cli/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for cli` (`282f8a52`)
+- [x] **Step 1 (Red)**: `test(cli): add failing tests for cli study guide` (`8b9a750e`)
+- [x] **Step 2 (Foundation)**: `feat(cli): add constants, navbar, and styles for cli guide` (`f522037a`)
+- [x] **Step 3 (Green Part 1)**: `feat(cli): implement sections 1 to 5 of cli guide` (`0f903e70`)
+- [x] **Step 4 (Green Part 2)**: `feat(cli): implement sections 6 to 11 of cli guide` (`3050f374`)
+- [x] **Step 5 (Green Part 3 & Pass All)**: `feat(cli): complete full implementation of cli guide to pass all tests` (`edfd01e3`)
+- [x] **Step 6 (Refactor & Integration)**: `refactor(cli): integrate cli guide into routing and update docs` (`1984930b`)
+- [x] **Step 7 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive cli sources`
+
+### 関連ファイル
+
+- [app/cli/page.tsx](app/cli/page.tsx)
+- [app/cli/CliGuide.tsx](app/cli/CliGuide.tsx)
+- [app/cli/NavBar.tsx](app/cli/NavBar.tsx)
+- [app/cli/constants.ts](app/cli/constants.ts)
+- [app/cli/page.css](app/cli/page.css)
+- [__tests__/cli/page.test.tsx](__tests__/cli/page.test.tsx)
+- [docs/migration-inventory/cli.json](docs/migration-inventory/cli.json)
+- [archive/cli/cli.html](archive/cli/cli.html)
+- [archive/cli/cli.md](archive/cli/cli.md)
+- [app/constants.ts](app/constants.ts)
+- [app/navigation.ts](app/navigation.ts)
+- [app/globals.css](app/globals.css)
+- [components/ProviderMark.tsx](components/ProviderMark.tsx)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
+## 2026-09-29: Google Cloud Professional Agentic Architect Section 5: セキュリティとガバナンス 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-section5.html`（および `Professional-agentic-architect-section5.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section5Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section5` ルートへ移行。見出し(h1:1, h2:8, h3:31)、全13個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(47件)、全外部リンク(48件)・全本文(64件)・学習チェックリスト(17件)・参考文献カード(24件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect-section5` (`ba24a994`)
+- [x] **Step 1 (Red)**: `test(gcl): add failing tests for professional-agentic-architect-section5` (`59b23b2e`)
+- [x] **Step 2 (Green)**:
+  - `feat(gcl): add Section 5 constants, navbar, and css` (`40e8268e`)
+  - `feat(gcl): implement section5 guide component to pass tests` (`35f5141f`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(gcl): integrate section5 into routing and update docs` (`91108530`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive section5 html and md`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/section5/page.tsx](app/gcl/professional-agentic-architect/section5/page.tsx)
+- [app/gcl/professional-agentic-architect/section5/Section5Guide.tsx](app/gcl/professional-agentic-architect/section5/Section5Guide.tsx)
+- [app/gcl/professional-agentic-architect/section5/NavBar.tsx](app/gcl/professional-agentic-architect/section5/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/section5/constants.ts](app/gcl/professional-agentic-architect/section5/constants.ts)
+- [app/gcl/professional-agentic-architect/section5/page.css](app/gcl/professional-agentic-architect/section5/page.css)
+- [`__tests__/gcl/professional-agentic-architect/section5/page.test.tsx`](__tests__/gcl/professional-agentic-architect/section5/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/section5/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/section5/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect-section5.json](docs/migration-inventory/professional-agentic-architect-section5.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section5.md)
+
+---
+
+## 2026-09-28: Google Cloud Professional Agentic Architect Section 4: 評価とデプロイ 100%全量移行 (完了)
+
+### 目的
+
+`Professional-agentic-architect-section4.html`（および `Professional-agentic-architect-section4.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `Section4Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css`) で `/gcl/professional-agentic-architect/section4` ルートへ移行。見出し(h1:1, h2:8, h3:7, h4:0)、全12個のテーブル、全9個のMermaid図解（ライトテーマ・preserveNaturalScale）、全リスト(64件)、全コードブロック(4件・構文ハイライト付き)、全外部リンク(22件)・全本文(60件)・学習チェックリスト(17件)・参考文献カード(22件)を一切の省略・要約なしで100%全量移植。原本ファイル（HTMLおよびMarkdown）を `archive/Gcl/Professional-Agentic-Architect/` へアーカイブ。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for professional-agentic-architect-section4` (`77c89f7b`)
+- [x] **Step 1 (Red)**: `test(gcl): add failing tests for professional-agentic-architect-section4` (`396afc59`)
+- [x] **Step 2 (Green)**:
+  - `feat(gcl): add Section 4 guide constants, navbar, and styles` (`2d2794d8`)
+  - `feat(gcl): implement section4 guide page to pass migration tests` (`1436a6be`)
+- [x] **Step 3 (Refactor & Integration)**: `refactor(gcl): integrate professional-agentic-architect-section4 into routing and update docs` (`a2a9fa1d`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive professional-agentic-architect-section4 sources`
+
+### 関連ファイル
+
+- [app/gcl/professional-agentic-architect/section4/page.tsx](app/gcl/professional-agentic-architect/section4/page.tsx)
+- [app/gcl/professional-agentic-architect/section4/Section4Guide.tsx](app/gcl/professional-agentic-architect/section4/Section4Guide.tsx)
+- [app/gcl/professional-agentic-architect/section4/NavBar.tsx](app/gcl/professional-agentic-architect/section4/NavBar.tsx)
+- [app/gcl/professional-agentic-architect/section4/constants.ts](app/gcl/professional-agentic-architect/section4/constants.ts)
+- [app/gcl/professional-agentic-architect/section4/page.css](app/gcl/professional-agentic-architect/section4/page.css)
+- [`__tests__/gcl/professional-agentic-architect/section4/page.test.tsx`](__tests__/gcl/professional-agentic-architect/section4/page.test.tsx)
+- [`__tests__/gcl/professional-agentic-architect/section4/NavBar.test.tsx`](__tests__/gcl/professional-agentic-architect/section4/NavBar.test.tsx)
+- [docs/migration-inventory/professional-agentic-architect-section4.json](docs/migration-inventory/professional-agentic-architect-section4.json)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.html](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.html)
+- [archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.md](archive/Gcl/Professional-Agentic-Architect/Professional-agentic-architect-section4.md)
+
+---
 
 ## 2026-09-25: Google Cloud Professional Agentic Architect Section 3: プログラミングフレームワークを使用したエージェントの作成 100%全量移行 (完了)
 

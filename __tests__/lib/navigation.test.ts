@@ -211,14 +211,27 @@ describe('toNavTree', () => {
     });
 
     describe('実 EXAMS との結合', () => {
-        it('現行 EXAMS から全 5 プロバイダーのグループが生成される', () => {
+        it('現行 EXAMS から全 6 プロバイダーのグループが生成される', () => {
             // Arrange & Act
             const result = toNavTree(EXAMS);
 
             // Assert
             const providers = result.map((g: NavGroup) => g.provider);
-            expect(result).toHaveLength(5);
-            expect(providers).toEqual(['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books']);
+            expect(result).toHaveLength(6);
+            expect(providers).toEqual(['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools']);
+        });
+
+        it('Tools グループに cli が含まれラベルが「運用ツール資格学習共通ガイド」である', () => {
+            // Arrange & Act
+            const result = toNavTree(EXAMS);
+            const tools = result.find((g) => g.provider === 'Tools');
+
+            // Assert
+            expect(tools).toBeDefined();
+            if (!tools) return;
+            expect(tools.label).toBe('運用ツール資格学習共通ガイド');
+            const ids = tools.exams.map((e) => e.id);
+            expect(ids).toContain('cli');
         });
 
         it('Books グループに accelerate が含まれる', () => {
