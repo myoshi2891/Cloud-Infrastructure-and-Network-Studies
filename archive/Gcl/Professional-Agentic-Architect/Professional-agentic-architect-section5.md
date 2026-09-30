@@ -346,7 +346,7 @@ flowchart TB
 
 ### 3.5 Private Service Connect（PSC）による閉域網連携
 
-Vector Search（1.0系）は、パブリックエンドポイント・Private Service Connect（推奨）・Private Services Access（VPCピアリング）の3方式でデプロイ・クエリが可能です。PSCは、コンシューマ側のVPCとGoogleが管理するプロデューサ側サービスとの間を、パブリックIPを経由せずに接続する仕組みで、金融機関などパブリックエンドポイントを許容できない環境で標準的に使われます。Agent Runtime 側にもPSCインターフェースが用意されており、エージェントの実行環境自体をプライベートネットワークに閉じ込めることができます。
+Vector Search（1.0系）は、パブリックエンドポイント・Private Service Connect（推奨）・Private Services Access（VPCピアリング）の3方式でデプロイ・クエリが可能です。PSCは、コンシューマ側のVPCとGoogleが管理するプロデューサ側サービスとの間を、パブリックIPを経由せずに接続する仕組みで、金融機関などパブリックエンドポイントを許容できない環境で標準的に使われます。Agent Runtime 側にもPSCインターフェースが用意されており、エージェントからVPCやオンプレミスのリソースへプライベートに接続する（egress）経路を確保できます。ただしこれは送信側の接続手段であり、実行環境を隔離したりパブリックAPIへのアクセスを制限したりするものではありません。
 
 > **出典：** [Agent Identity overview（VPC Service Controls節）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/agent-identity-overview)、[Agent Gateway overview（Limitations節）](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/gateways/agent-gateway-overview)、[Semantic governance policies overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/govern/policies/semantic-governance-overview)、[Model Armor](https://cloud.google.com/security/products/model-armor)
 
