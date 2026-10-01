@@ -166,7 +166,8 @@
             .main {
                 margin-left: var(--sidebar-w);
                 padding: 54px 60px 120px;
-                max-width: 980px;
+                max-width: none;
+                width: calc(100% - var(--sidebar-w));
             }
             .hero {
                 margin-bottom: 8px;
@@ -421,8 +422,10 @@
             .diagram {
                 width: 100%;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-start; /* fallback for browsers without "safe center" */
+                justify-content: safe center; /* centers when it fits; falls back to start so the left edge never clips when overflowing */
                 overflow-x: auto;
+                overscroll-behavior-x: contain;
                 background: var(--bg-card);
                 border: 1px solid var(--border);
                 border-radius: 14px;
@@ -465,6 +468,7 @@
                 }
                 .main {
                     margin-left: 0;
+                    width: 100%;
                     padding: 78px 20px 100px;
                 }
                 .sidebar-toggle {
