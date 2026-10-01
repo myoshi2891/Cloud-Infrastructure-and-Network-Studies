@@ -489,7 +489,7 @@
     height: 19px;
     flex-shrink: 0;
     margin-top: 2px;
-    border: 1.5px solid var(--color-pca-s4-border);
+    border: 1.5px solid var(--color-pca-s4-foreground-dim);
     border-radius: 5px;
     background: var(--color-pca-s4-surface-2);
     cursor: pointer;
