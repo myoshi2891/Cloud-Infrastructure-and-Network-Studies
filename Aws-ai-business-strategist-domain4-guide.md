@@ -38,13 +38,13 @@ AIB-C01 は、AI を「作る人」ではなく **「評価し、推進し、拡
 
 | 項目 | 内容 | 根拠 |
 |---|---|---|
-| 想定受験者 | プロダクトマネージャー、プログラムマネージャー、営業、事業部門の責任者、コンサルタント、マーケター、ビジネスアナリストなど | [S2] |
-| コーディング経験 | 不要(AWS の構築経験も不要) | [S1][S2] |
-| 推奨経験 | AI を導入しているチームと、またはその近くで働いた約 6 か月の経験 | [S2] |
-| 出題形式 | 択一(正解 1 つ)と複数選択(5 択以上から 2 つ以上を選ぶ) | [S2] |
-| 採点 | 100〜1,000 のスケールスコア、合格は 700。補償型採点(ドメインごとの足切りなし) | [S2] |
-| 不正解の扱い | 未回答は不正解。誤答による減点はなし | [S2] |
-| Domain 4 の比率 | 24%(Domain 1: 24%、Domain 2: 28%、Domain 3: 24%) | [S2] |
+| 想定受験者 | プロダクトマネージャー、プログラムマネージャー、営業、事業部門の責任者、コンサルタント、マーケター、ビジネスアナリストなど | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| コーディング経験 | 不要(AWS の構築経験も不要) | [[S1]](https://aws.amazon.com/certification/certified-ai-business-strategist/) [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| 推奨経験 | AI を導入しているチームと、またはその近くで働いた約 6 か月の経験 | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| 出題形式 | 択一(正解 1 つ)と複数選択(5 択以上から 2 つ以上を選ぶ) | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| 採点 | 100〜1,000 のスケールスコア、合格は 700。補償型採点(ドメインごとの足切りなし) | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| 不正解の扱い | 未回答は不正解。誤答による減点はなし | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
+| Domain 4 の比率 | 24%(Domain 1: 24%、Domain 2: 28%、Domain 3: 24%) | [[S2]](https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html) |
 
 > **注意: 試験時間の記載が 2 つのページで異なります。**
 > 試験ガイドには 130 分と書かれていますが、認定ページのベータ試験概要には 170 分・85 問と記載されています。ベータ試験か通常版かで異なる可能性があるため、受験前に必ず最新の公式ページを確認してください。[S1][S2]
@@ -226,7 +226,7 @@ flowchart TD
 |---|---|---|
 | 1 | 成熟度評価で「現在地」と「次の段階で重点を置く領域」を特定する | [S11][S16] |
 | 2 | 組織を 1 つのラベルで決めつけない。部門ごとに段階が違ってよい | [S12] |
-| 3 | 段階を飛ばさない。各段階の活動が次の段階の土台になる | [S12][S13][S14] |
+| 3 | 成熟度レベルは「次の一手」を選ぶための目安として使い、必ず順番に通過すべき関門とはみなさない。導入の各側面(aspect)には複数レベルの特徴が混在しうる | [S12][S13][S14] |
 
 **⑤ ひっかけ注意(重要)**
 
