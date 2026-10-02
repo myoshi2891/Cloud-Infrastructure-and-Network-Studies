@@ -28,7 +28,7 @@ CSS全宣言を原本と照合し、通常リストの点・番号、参考文�
 - 全体Vitest: 203ファイル中202成功、2095件中2093成功・既知の2件失敗。移行前の全体VitestもPAA Section 5の `td` / `li` 照合で同じ2件が失敗している（200ファイル・2076件中2074成功）。
 - TypeScript `bunx --no-install tsc --noEmit`、全体ESLint、対象Markdown lint: 成功。
 - ダッシュボード: ソース720件、カバー237件（33%）、テストファイル206件。静的スキャンによる関連付けであり、実行成功・行カバレッジではない。
-- ユーザー指示によりnpm・本番ビルドは禁止、Playwrightと目視確認はユーザー対応。E2E検証は未実施。初回試行はサンドボックスのEPERMでブラウザ起動前に停止し、その後は起動しない。
+- ユーザー指示によりnpm・本番ビルドは禁止、Playwrightと目視確認は未実施。E2E検証は未実施。初回試行はサンドボックスのEPERMでブラウザ起動前に停止し、その後は起動しない。
 - 原本のバイト一致を `git show` と `cmp` で確認。fixtureはコミット済みで原本アーカイブへ実行時依存しない。
 
 ---
@@ -2810,4 +2810,4 @@ HTML `:root` variables must be mapped to the project's `globals.css` `@theme` to
 
 ページCSSの `.mermaid-target { justify-content: center; }` が、共通Mermaidコンポーネントの `safe center` を詳細度で上書きし、横長SVGの左側が負のスクロール領域へはみ出していた。ページの指定を `safe center` に変更し、収まる図は中央寄せ、収まらない図は左寄せへ退避させる。図のDSL・自然倍率・文字サイズは保持。
 
-Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測はユーザー対応、npm・ビルド・Playwrightは実行しない。
+Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測は未実施、npm・ビルド・Playwrightは実行しない。
