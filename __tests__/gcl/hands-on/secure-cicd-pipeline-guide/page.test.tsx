@@ -59,6 +59,9 @@ describe('Secure CI/CD 原本全量移行', () => {
     it('全本文・補足・参考文献番号・装飾テキスト・配置順', () => {
         const root = mount();
         const config = FIDELITY_PAGES['secure-cicd-pipeline-guide'];
+        if (!config?.textSelector || !config.supplementalSelector || !config.placementSelector) {
+            throw new Error('忠実性検証の抽出設定が不足しています');
+        }
         expect(extractBodyContent(root)).toEqual(inventory.bodyContent);
         expect(snapshotTexts(root, config.textSelector)).toEqual(fidelity.texts);
         expect(snapshotSupplemental(root, config.supplementalSelector)).toEqual(
