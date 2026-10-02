@@ -7,10 +7,10 @@ import {
     NAV_ITEMS,
     REF_CARDS,
 } from '@/app/gcl/professional-cloud-architect/section6-operational-excellence/constants';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

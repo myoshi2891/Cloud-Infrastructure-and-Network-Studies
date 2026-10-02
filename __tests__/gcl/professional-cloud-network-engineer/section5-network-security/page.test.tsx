@@ -3,10 +3,10 @@
 import { vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/pcne-s5-network-security.json';
 import Page from '@/app/gcl/professional-cloud-network-engineer/section5-network-security/page';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

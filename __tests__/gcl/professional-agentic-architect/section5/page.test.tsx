@@ -4,10 +4,10 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/professional-agentic-architect-section5.json';
 import Page from '@/app/gcl/professional-agentic-architect/section5/page';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

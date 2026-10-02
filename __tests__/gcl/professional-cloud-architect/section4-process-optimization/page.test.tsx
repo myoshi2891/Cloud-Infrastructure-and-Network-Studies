@@ -3,10 +3,10 @@ import { describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/pca-section4-process-optimization.json';
 import Page from '@/app/gcl/professional-cloud-architect/section4-process-optimization/page';
 import { NAV_ITEMS } from '@/app/gcl/professional-cloud-architect/section4-process-optimization/constants';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

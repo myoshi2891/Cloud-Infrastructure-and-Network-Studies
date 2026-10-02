@@ -2,10 +2,10 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/pca-section1-design-planning.json';
 import Page from '@/app/gcl/professional-cloud-architect/section1-design-planning/page';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

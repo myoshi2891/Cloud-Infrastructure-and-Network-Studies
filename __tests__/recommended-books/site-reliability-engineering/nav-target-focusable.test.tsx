@@ -5,7 +5,7 @@ import Page from '@/app/recommended-books/site-reliability-engineering/page';
 import { NAV_ITEMS } from '@/app/recommended-books/site-reliability-engineering/constants';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 
