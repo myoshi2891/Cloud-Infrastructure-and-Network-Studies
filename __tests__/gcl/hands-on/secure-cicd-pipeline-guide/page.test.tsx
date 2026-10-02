@@ -193,7 +193,8 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
                     const p = part.trim();
                     if (p === 'html' || p === 'body') return '.secure-cicd-page';
                     if (p === 'pre code.hljs') return '.secure-cicd-page .code-block .code-line';
-                    if (p === 'pre code' || p === 'pre') return '.secure-cicd-page .code-block';
+                        if (p === 'pre code') return '.secure-cicd-page .code-block .code-line';
+                        if (p === 'pre') return '.secure-cicd-page .code-block';
                     return `.secure-cicd-page ${p}`;
                 })
                 .filter((s, i, a) => a.indexOf(s) === i)

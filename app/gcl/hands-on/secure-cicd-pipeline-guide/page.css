@@ -278,7 +278,7 @@
     border-radius: 4px;
 }
 
-.secure-cicd-page .code-block {
+.secure-cicd-page .code-block .code-line {
     background: transparent;
     color: inherit;
     padding: 0;
