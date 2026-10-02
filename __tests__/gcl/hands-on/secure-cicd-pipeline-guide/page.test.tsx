@@ -249,4 +249,15 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
         expect(value('.secure-cicd-page .code-line', 'white-space')).toBe('pre');
         expect(value('.secure-cicd-page .table-scroll', 'overflow-x')).toBe('auto');
     });
+    it('コード内テキストのリセットがコード枠の余白と角丸を上書きしない', () => {
+        const css = postcss.parse(fs.readFileSync(cssPath, 'utf8'));
+        const declarations = new Map<string, string>();
+        css.walkRules(rule => {
+            if (rule.selector === '.secure-cicd-page .code-block') {
+                rule.walkDecls(declaration => { declarations.set(declaration.prop, declaration.value); });
+            }
+        });
+        expect(declarations.get('padding')).toBe('20px 24px');
+        expect(declarations.get('border-radius')).toBe('8px');
+    });
 });
