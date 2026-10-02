@@ -735,6 +735,20 @@
     --radius-ccna-platforms: 14px;
     --radius-pca-s2-card: 14px;
     --spacing-ccna-platforms-sidebar: 300px;
+    --color-secure-cicd-bg-tertiary: #12253d;
+    --color-secure-cicd-bg-info: #10233d;
+    --color-secure-cicd-bg-danger: #2a1418;
+    --color-secure-cicd-bg-success: #0f2419;
+    --color-secure-cicd-text-primary: #e8edf5;
+    --color-secure-cicd-text-secondary: #a8b6cc;
+    --color-secure-cicd-text-tertiary: #6b7a94;
+    --color-secure-cicd-text-info: #8fb4ff;
+    --color-secure-cicd-text-danger: #ff9a9a;
+    --color-secure-cicd-text-success: #7ee0a8;
+    --color-secure-cicd-text-warning: #f0c674;
+    --color-secure-cicd-border-tertiary: #16233a;
+    --color-secure-cicd-border-secondary: #223350;
+    --color-secure-cicd-border-primary: #2f4468;
 
 }
 
