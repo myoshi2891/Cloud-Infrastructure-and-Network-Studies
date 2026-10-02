@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-08-29
+Updated 2026-10-02
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -159,6 +159,12 @@ app/
         constants.ts                # Mermaid 図定義（2図）、ナビ項目
         page.css                    # ページ固有スタイル（サイドバー幅280px契約準拠）
     hands-on/
+      secure-cicd-pipeline-guide/
+        page.tsx                    # セキュアなコンテナCI/CDガイド（Server）
+        SecureCicdPipelineGuide.tsx  # 原本全文・12セクション・6表・9コード
+        NavBar.tsx                  # 目次・scroll spy・フォーカス移動
+        constants.ts                # Mermaid 4図・NAV_ITEMS
+        page.css                    # 原本CSS・リストマーカー保持
       cloud-load-balancing-guide/
         page.tsx                    # Cloud Load Balancing 完全入門（Server。メタデータ定義）
         CloudLoadBalancingGuide.tsx # 本文＋インタラクション
@@ -700,3 +706,7 @@ archive/                            # 移行済み資料の正規アーカイブ
 - ページ固有の共通定数は `constants.ts` に集約する（`app/gcl/genai-leader/constants.ts` 参照）
 - **z-index レイヤリング**: グローバル UI のスタッキング順は `Header (sticky z-50)` → `DisclaimerBanner (sticky z-40, top: var(--header-h))` → ページ内 sticky/fixed (`z-index: 100` を使うページが多い、`top: var(--fixed-offset)`) → `Header ドロワー (z-[200])`。Header と Disclaimer は両方 sticky で flow 内、ドロワーは fixed inset-0 で全画面オーバーレイ。ページ側で 100 を超える z-index を新規に導入する場合は、ドロワーを覆い隠さないか必ず確認すること。
 - **Tailwind v4 動的クラス**: テンプレートリテラルで組み立てた class 名（例: `` `before:bg-[var(--color-theme-${id}-fg)]` ``）は JIT が拾えないため意図したスタイルが当たらない。バリエーション分の class 文字列をソース内に **静的に列挙** すること（`components/Header.tsx` の `ACCENT_CLASS` Record 参照）。
+
+## セキュアCI/CDガイドの移行検証（2026-10-02）
+
+`/gcl/hands-on/secure-cicd-pipeline-guide` をHands-onへ登録済み。40見出し・106表セル・41リスト項目・59外部リンク・9コード・4図を固定インベントリで照合し、原本のCSS宣言、リストマーカー、参考文献01〜23、コード枠の余白・角丸も検証する。共有モック・抽出ヘルパーは `__tests__/helpers/migration-test-utils.tsx`。原本は `archive/Gcl/Hands-on/html/Secure-cicd-pipeline-guide.html` と `archive/Gcl/Hands-on/md/Secure-cicd-pipeline-guide.md` に保持する。ユーザー指示によりnpm・ビルド・Playwright・目視確認は実施しない。全体Vitestには移行前からPAA Section 5の既知の失敗2件がある。

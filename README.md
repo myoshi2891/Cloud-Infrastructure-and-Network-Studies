@@ -1,10 +1,12 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-09-25
+最終更新日: 2026-10-02
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
 ## 🚀 特徴
+
+- **セキュアなコンテナCI/CD実践:** [構築ガイド](app/gcl/hands-on/secure-cicd-pipeline-guide/page.tsx)をHands-onに追加。Artifact Registry・Binary Authorization・Cloud Buildの12セクション、4図、6表、9コード例を掲載。
 
 - **詳細な試験ガイド & 名著解説 & 運用ツール:** Associate Cloud Engineer (ACE)、Generative AI Leader、Cloud Digital Leader (CDL)、Associate Google Workspace Administrator (AGWA)、Professional Cloud Network Engineer (PCNE)、Professional Cloud Architect (PCA)、Professional Agentic Architect、CCNA、CCNA Automation、CompTIA Network+、AWS SAA、名著『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』、CLIコマンド実践ワンライナー集の広範なトピックを網羅。
 - **データ駆動ナビゲーション:** `app/constants.ts` を正本とし、ハンバーガー Drawer が GCP/AWS/Cisco/CompTIA/Books/Tools をプロバイダ別に自動グルーピング。新試験・ガイド追加は ① `app/constants.ts` の `ALL_EXAMS` にエントリ追加 ② `app/globals.css` に `icon-theme-<id>` ユーティリティ追加 ③ ページ作成 の 3 ステップで Header は自動反映（直接編集不要）。

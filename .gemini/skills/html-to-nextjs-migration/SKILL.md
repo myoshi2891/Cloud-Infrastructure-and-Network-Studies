@@ -14,7 +14,7 @@ description: >
 
 # HTML → Next.js Migration Workflow（本リポジトリ専用）
 
-(最終更新日: 2026-08-15)
+(最終更新日: 2026-10-02)
 
 ## Goal
 
@@ -489,7 +489,7 @@ import {
     codeLineCount,
     extractBodyContent,   // 生成側 scripts/inventory-extraction.mjs と同一実装
     squash,
-} from '@/__tests__/gcl/agwa/migration-test-utils';
+} from '@/__tests__/helpers/migration-test-utils';
 
 // ✅ 正しい: components/MermaidDiagram.tsx は export const MermaidDiagram
 vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
