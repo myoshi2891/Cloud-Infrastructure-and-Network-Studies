@@ -491,17 +491,17 @@
     min-height: 1.6em;
 }
 .secure-cicd-page .hl-comment {
-    color: #5c6370;
+    color: var(--color-secure-cicd-hl-comment);
     font-style: italic;
 }
 .secure-cicd-page .hl-string {
-    color: #98c379;
+    color: var(--color-secure-cicd-hl-string);
 }
 .secure-cicd-page .hl-keyword {
-    color: #c678dd;
+    color: var(--color-secure-cicd-hl-keyword);
 }
 .secure-cicd-page .hl-number {
-    color: #d19a66;
+    color: var(--color-secure-cicd-hl-number);
 }
 .secure-cicd-page .table-scroll {
     width: 100%;
