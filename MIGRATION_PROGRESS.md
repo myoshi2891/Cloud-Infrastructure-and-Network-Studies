@@ -1,6 +1,37 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-09-30)
+(最終更新日: 2026-10-02)
+
+## 2026-10-02: セキュアなコンテナ CI/CD パイプライン構築ガイドのNext.js移行
+
+### 実装内容と固定インベントリ
+
+`Secure-cicd-pipeline-guide.html` を `/gcl/hands-on/secure-cicd-pipeline-guide` へ移行し、Hands-onナビに登録。Serverの `page.tsx`、本文 `SecureCicdPipelineGuide.tsx`、`NavBar.tsx`、`constants.ts`、`page.css` の5ファイル構成。h1:1、h2:12、h3:17、h4:10、表6件（th:15・td:91）、リスト41項目、外部リンク59件、コード9ブロック、Mermaid4図、本文・注釈37件を固定fixtureで全量照合する。
+
+CSS全宣言を原本と照合し、通常リストの点・番号、参考文献01〜23の独自番号、出典注記、構文色、コードの空行・インデント・枠の余白と角丸を保持。Mermaidは原本DSL・説明・自然倍率を保持しmemo化。目次は単一NAV_ITEMSからリンクと監視対象を導出し、URLハッシュ・フォーカス・現在地・監視cleanupを検証する。
+
+### 段階別コミット
+
+- [x] 図集計器のRed: `6379b123`、Green: `d7c1ad4e`（空のscript-rendered Mermaid図を集計）。
+- [x] 共有ヘルパーの単独移動: `ad4010c5`（`__tests__/helpers/migration-test-utils.tsx`）。
+- [x] Step 0: `7d97ee45` と `f54683ab`（本文・忠実性・CSS/リスト/図定義のインベントリ3種）。
+- [x] Step 1 Red: `afa78949`、テストハーネス修正: `32e425fe`。
+- [x] Step 2 Green: `1acd5490`（全文・全構造・全CSS移行、16テスト成功）。
+- [x] 統合Red: `c8861525`、Step 3 Refactor: `3a2266e9`（Hands-onナビ登録）。
+- [x] コード枠のカスケード回帰Red: `ce4cb4db`、Green: `6d9e25df`（18テスト成功）。
+- [x] Spec Sync: `3e98c61e`（仕様書4種・ダッシュボード・3系統のルール/スキル参照同期）。
+- [x] Step 4: 原本HTML・Markdownを `archive/Gcl/Hands-on/html/` と `archive/Gcl/Hands-on/md/` に変更せず移動し、本進捗を同期。
+
+### 最終検証と未実施範囲
+
+- 今回の18テスト・共有ルール/スキルミラーの14テスト: 成功。原本を直下から外した状態で検証。
+- 全体Vitest: 203ファイル中202成功、2095件中2093成功・既知の2件失敗。移行前の全体VitestもPAA Section 5の `td` / `li` 照合で同じ2件が失敗している（200ファイル・2076件中2074成功）。
+- TypeScript `bunx --no-install tsc --noEmit`、全体ESLint、対象Markdown lint: 成功。
+- ダッシュボード: ソース720件、カバー237件（33%）、テストファイル206件。静的スキャンによる関連付けであり、実行成功・行カバレッジではない。
+- ユーザー指示によりnpm・本番ビルドは禁止、Playwrightと目視確認はユーザー対応。E2E検証は未実施。初回試行はサンドボックスのEPERMでブラウザ起動前に停止し、その後は起動しない。
+- 原本のバイト一致を `git show` と `cmp` で確認。fixtureはコミット済みで原本アーカイブへ実行時依存しない。
+
+---
 
 ## 2026-09-30: Kubernetes in Action, 第2版 完全解説ガイド 100%全量移行 (完了)
 
@@ -1237,8 +1268,13 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** AGWA Section 2〜6・共通コンポーネント・教材レビュー指摘対応完了
-- **最終更新日時(UTC):** 2026-08-15T01:54:24Z
+- **最新完了タスク:** セキュアCI/CDガイド全量移行・Hands-on統合・原本アーカイブ
+- **最終更新日:** 2026-10-02
+- **最新実装 HEAD:** `6d9e25df`（コード枠の余白・角丸修正）
+- **仕様同期コミット:** `3e98c61e`
+- **前回進捗同期コミット:** `04f06323`
+- **検証状態:** 今回18テスト・型チェック・Lint成功。全体2093成功/2既知失敗。ビルド・Playwright・目視確認はユーザー指示により未実施。
+- **次の作業:** PAA Section 5の表セル・リストの既知不一致を別タスクで調査する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -2578,7 +2614,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 ## 次回セッションでの再開プロンプト
 
 あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `725cd2a`、前回進捗同期コミットは `9b2bac0` です。
+最新実装 HEAD は `6d9e25df`、仕様同期は `3e98c61e`、前回進捗同期コミットは `04f06323` です。セキュアCI/CDガイドの18テスト、型チェック、Lintが成功し、全体Vitestは2093成功/既知の2失敗です。ビルド・Playwright・目視確認はユーザー指示により未実施。次の作業はPAA Section 5の既知不一致の調査です。
 AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。最新の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。E2E、Visualテスト、ビルドは未実施です。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
