@@ -193,8 +193,8 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
                     const p = part.trim();
                     if (p === 'html' || p === 'body') return '.secure-cicd-page';
                     if (p === 'pre code.hljs') return '.secure-cicd-page .code-block .code-line';
-                        if (p === 'pre code') return '.secure-cicd-page .code-block .code-line';
-                        if (p === 'pre') return '.secure-cicd-page .code-block';
+                    if (p === 'pre code') return '.secure-cicd-page .code-block .code-line';
+                    if (p === 'pre') return '.secure-cicd-page .code-block';
                     return `.secure-cicd-page ${p}`;
                 })
                 .filter((s, i, a) => a.indexOf(s) === i)
@@ -213,6 +213,11 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
             expect(found.length, rule.selector).toBeGreaterThan(0);
             for (const declaration of rule.declarations) {
                 if (exceptions[rule.selector]?.includes(declaration.prop)) continue;
+                // 横長の図の左側が負のスクロール領域へはみ出す原本のcenterを補正する。
+                const expectedValue =
+                    rule.selector === '.mermaid-target' && declaration.prop === 'justify-content'
+                        ? 'safe center'
+                        : declaration.value;
                 const candidates = found
                     .flatMap((r) => r.nodes)
                     .filter(
@@ -222,7 +227,7 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
                 expect(
                     candidates.some(
                         (d) =>
-                            resolve(d.value, vars) === resolve(declaration.value, originalVars) &&
+                            resolve(d.value, vars) === resolve(expectedValue, originalVars) &&
                             Boolean(d.important) === declaration.important,
                     ),
                     `${rule.selector}: ${declaration.prop}`,
@@ -253,12 +258,38 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
     it('コード内テキストのリセットがコード枠の余白と角丸を上書きしない', () => {
         const css = postcss.parse(fs.readFileSync(cssPath, 'utf8'));
         const declarations = new Map<string, string>();
-        css.walkRules(rule => {
+        css.walkRules((rule) => {
             if (rule.selector === '.secure-cicd-page .code-block') {
-                rule.walkDecls(declaration => { declarations.set(declaration.prop, declaration.value); });
+                rule.walkDecls((declaration) => {
+                    declarations.set(declaration.prop, declaration.value);
+                });
             }
         });
         expect(declarations.get('padding')).toBe('20px 24px');
         expect(declarations.get('border-radius')).toBe('8px');
+    });
+    it('図3・4の二重ラッパーでも共通のsafe centerを上書きせず左端へ戻れる配置を保持する', () => {
+        const root = mount();
+        const style = document.createElement('style');
+        // CSS Modules側のクラスはビルド時に変換される。ページCSSとの詳細度を再現する。
+        style.textContent =
+            '.shared-mermaid-target { display: flex; justify-content: safe center; }\n' +
+            fs.readFileSync(cssPath, 'utf8');
+        document.head.appendChild(style);
+        try {
+            for (const id of ['verify', 'sequence']) {
+                const outer = root.querySelector(`#diagram-${id}`)!;
+                const inner = document.createElement('div');
+                inner.className = 'shared-mermaid-target mermaid-target';
+                outer.appendChild(inner);
+                expect(getComputedStyle(outer).justifyContent).toBe('safe center');
+                expect(getComputedStyle(inner).justifyContent).toBe('safe center');
+                expect(getComputedStyle(outer.closest('.mermaid-container')!).overflowX).toBe(
+                    'auto',
+                );
+            }
+        } finally {
+            style.remove();
+        }
     });
 });
