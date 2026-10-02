@@ -710,3 +710,9 @@ archive/                            # 移行済み資料の正規アーカイブ
 ## セキュアCI/CDガイドの移行検証（2026-10-02）
 
 `/gcl/hands-on/secure-cicd-pipeline-guide` をHands-onへ登録済み。40見出し・106表セル・41リスト項目・59外部リンク・9コード・4図を固定インベントリで照合し、原本のCSS宣言、リストマーカー、参考文献01〜23、コード枠の余白・角丸も検証する。共有モック・抽出ヘルパーは `__tests__/helpers/migration-test-utils.tsx`。原本は `archive/Gcl/Hands-on/html/Secure-cicd-pipeline-guide.html` と `archive/Gcl/Hands-on/md/Secure-cicd-pipeline-guide.md` に保持する。ユーザー指示によりnpm・ビルド・Playwright・目視確認は実施しない。全体Vitestには移行前からPAA Section 5の既知の失敗2件がある。
+
+### 2026-10-02: CI/CD図3・図4の左端切れ修正
+
+ページCSSの `.mermaid-target { justify-content: center; }` が、共通Mermaidコンポーネントの `safe center` を詳細度で上書きし、横長SVGの左側が負のスクロール領域へはみ出していた。ページの指定を `safe center` に変更し、収まる図は中央寄せ、収まらない図は左寄せへ退避させる。図のDSL・自然倍率・文字サイズは保持。
+
+Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測はユーザー対応、npm・ビルド・Playwrightは実行しない。

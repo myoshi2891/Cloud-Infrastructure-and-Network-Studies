@@ -1270,10 +1270,10 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** セキュアCI/CDガイド全量移行・Hands-on統合・原本アーカイブ
 - **最終更新日:** 2026-10-02
-- **最新実装 HEAD:** `6d9e25df`（コード枠の余白・角丸修正）
+- **最新実装 HEAD:** `1b2c58d0`（図3・図4の左端切れ修正）
 - **仕様同期コミット:** `3e98c61e`
-- **前回進捗同期コミット:** `04f06323`
-- **検証状態:** 今回18テスト・型チェック・Lint成功。全体2093成功/2既知失敗。ビルド・Playwright・目視確認はユーザー指示により未実施。
+- **前回進捗同期コミット:** `fe79bb33`
+- **検証状態:** 左端切れ修正後はガイド19件を含む関連156テスト・型チェック・Lint成功。直近の全体実行は移行時の2093成功/2既知失敗。ビルド・Playwright・目視確認はユーザー指示により未実施。
 - **次の作業:** PAA Section 5の表セル・リストの既知不一致を別タスクで調査する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
@@ -2614,7 +2614,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 ## 次回セッションでの再開プロンプト
 
 あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `6d9e25df`、仕様同期は `3e98c61e`、前回進捗同期コミットは `04f06323` です。セキュアCI/CDガイドの18テスト、型チェック、Lintが成功し、全体Vitestは2093成功/既知の2失敗です。ビルド・Playwright・目視確認はユーザー指示により未実施。次の作業はPAA Section 5の既知不一致の調査です。
+最新実装 HEAD は `1b2c58d0`、仕様同期は `3e98c61e`、前回進捗同期コミットは `fe79bb33` です。セキュアCI/CDガイドの18テスト、型チェック、Lintが成功し、全体Vitestは2093成功/既知の2失敗です。ビルド・Playwright・目視確認はユーザー指示により未実施。次の作業はPAA Section 5の既知不一致の調査です。
 AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。最新の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。E2E、Visualテスト、ビルドは未実施です。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
@@ -2805,3 +2805,9 @@ HTML `:root` variables must be mapped to the project's `globals.css` `@theme` to
 ## 2026-05-03: Cloud Digital Leader Section 4 & 5 品質改善タスク (完了)
 
 ...
+
+### 2026-10-02: CI/CD図3・図4の左端切れ修正
+
+ページCSSの `.mermaid-target { justify-content: center; }` が、共通Mermaidコンポーネントの `safe center` を詳細度で上書きし、横長SVGの左側が負のスクロール領域へはみ出していた。ページの指定を `safe center` に変更し、収まる図は中央寄せ、収まらない図は左寄せへ退避させる。図のDSL・自然倍率・文字サイズは保持。
+
+Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測はユーザー対応、npm・ビルド・Playwrightは実行しない。
