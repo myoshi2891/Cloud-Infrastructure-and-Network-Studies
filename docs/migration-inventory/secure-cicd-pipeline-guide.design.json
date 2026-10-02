@@ -1,0 +1,2036 @@
+{
+  "structure": {
+    "lists": [
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "GoogleCloudのコンテナデプロイに初めて触れるソフトウェアエンジニア/QAエンジニア",
+          "ArtifactRegistry・CloudBuild・BinaryAuthorizationを「使ったことはあるが、なぜそう設定するのか」を理解したい方",
+          "ソフトウェアサプライチェーンセキュリティ（SLSA、脆弱性スキャン、イメージ署名）の実践的な考え方を学びたい方"
+        ]
+      },
+      {
+        "tag": "ol",
+        "className": "",
+        "start": null,
+        "items": [
+          "コンテナイメージを「検証前」と「検証後」で分離管理する設計思想を理解する",
+          "CloudBuildを使ったビルド→スキャン→署名→デプロイの自動化パイプラインを構築できる",
+          "BinaryAuthorizationのAttestor・Note・Attestation・Policyの関係を説明できる",
+          "脆弱性スキャン結果をCI/CDのゲート（品質関門）として使う理由と実装方法を理解する",
+          "実際にビルドが失敗した際、どう調査し、修正し、再実行するかのフローを体得する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "必要なAPI（CloudKMS、CloudRun、CloudBuild、GKE、ContainerRegistry、ArtifactRegistry、ContainerScanning、On-DemandScanning、BinaryAuthorization）を有効化する",
+          "サンプルアプリのソース一式を取得する",
+          "artifact-scanning-repo（スキャン用）とartifact-prod-repo（本番用）の2つのDockerリポジトリを作成する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "CloudBuildのサービスアカウントにroles/iam.serviceAccountUserとroles/ondemandscanning.adminを付与する",
+          "cloudbuild.yamlのイメージ名プレースホルダーを埋める（artifact-scanning-repo/sample-image）",
+          "ビルドを実行し、スキャン結果にCRITICAL脆弱性があることを確認する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "Dockerfileのベースイメージをpython:3.8-alpineに変更",
+          "Flask3.0.3/Gunicorn23.0.0/Werkzeug3.0.4へ依存パッケージを更新",
+          "パイプラインを再実行し、成功を確認",
+          "検証目的でallUsersにroles/run.invokerを付与し、動作確認"
+        ]
+      },
+      {
+        "tag": "ol",
+        "className": "reference-list",
+        "start": null,
+        "items": [
+          "01BinaryAuthorizationoverviewdocs.cloud.google.com/binary-authorization/docs/overview",
+          "02BinaryAuthorizationconceptsdocs.cloud.google.com/binary-authorization/docs/key-concepts",
+          "03Attestationsoverview|BinaryAuthorizationdocs.cloud.google.com/binary-authorization/docs/attestations",
+          "04Createattestations|BinaryAuthorizationdocs.cloud.google.com/binary-authorization/docs/making-attestations",
+          "05CreateaBinaryAuthorizationattestationinaCloudBuildpipelinedocs.cloud.google.com/binary-authorization/docs/cloud-build",
+          "06cloud-builders-community:binauthz-attestation(GitHub)github.com/GoogleCloudPlatform/cloud-builders-community",
+          "07SetupoverviewforCloudRun|BinaryAuthorizationdocs.cloud.google.com/binary-authorization/docs/run/overview",
+          "08EnableBinaryAuthorizationforCloudRundocs.cloud.google.com/binary-authorization/docs/run/enabling-binauthz-cloud-run",
+          "09Quickstart:ConfigureaBinaryAuthorizationpolicywithCloudRundocs.cloud.google.com/binary-authorization/docs/run/configure-policy-cloud-run",
+          "10Artifactanalysisandvulnerabilityscanning|ArtifactRegistrydocs.cloud.google.com/artifact-registry/docs/analysis",
+          "11Containerscanningoverview|ArtifactAnalysisdocs.cloud.google.com/artifact-analysis/docs/container-scanning-overview",
+          "12UseOn-DemandScanninginyourCloudBuildpipelinedocs.cloud.google.com/artifact-analysis/docs/ods-cloudbuild",
+          "13gcloudartifactsdockerimagesscanリファレンスcloud.google.com/sdk/gcloud/reference/artifacts/docker/images/scan",
+          "14Createstandardrepositories|ArtifactRegistrydocs.cloud.google.com/artifact-registry/docs/repositories/create-repos",
+          "15Quickstart:StoreDockercontainerimagesinArtifactRegistrydocs.cloud.google.com/artifact-registry/docs/docker/store-docker-container-images",
+          "16Createakey|CloudKeyManagementServicedocs.cloud.google.com/kms/docs/create-key",
+          "17Creatingandvalidatingdigitalsignatures|CloudKMSdocs.cloud.google.com/kms/docs/create-validate-signatures",
+          "18IAMrolesandpermissions|CloudBuilddocs.cloud.google.com/build/docs/iam-roles-permissions",
+          "19ConfigureaccessforthedefaultCloudBuildserviceaccountdocs.cloud.google.com/build/docs/securing-builds/set-service-account-permissions",
+          "20gcloudrundeployリファレンスdocs.cloud.google.com/sdk/gcloud/reference/run/deploy",
+          "21Bestpracticesforcontainersdocs.cloud.google.com/container-registry/docs/container-best-practices",
+          "22Baseimages|Softwaresupplychainsecuritycloud.google.com/software-supply-chain-security/docs/base-images",
+          "23元となるChallengeLab:SecureSoftwareDeliveryskills.google/course_templates/1164/labs/610922"
+        ]
+      }
+    ],
+    "icons": [
+      "ti ti-info-circle",
+      "ti ti-topology-star-3",
+      "ti ti-book",
+      "ti ti-number-1",
+      "ti ti-number-2",
+      "ti ti-number-3",
+      "ti ti-number-4",
+      "ti ti-number-5",
+      "ti ti-arrows-exchange",
+      "ti ti-checklist",
+      "ti ti-bug",
+      "ti ti-link",
+      "ti ti-shield-lock",
+      "ti ti-info-circle",
+      "ti ti-topology-star-3",
+      "ti ti-link",
+      "ti ti-book",
+      "ti ti-link",
+      "ti ti-number-1",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-number-2",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-number-3",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-number-4",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-link",
+      "ti ti-bulb",
+      "ti ti-number-5",
+      "ti ti-link",
+      "ti ti-alert-triangle",
+      "ti ti-link",
+      "ti ti-arrows-exchange",
+      "ti ti-checklist",
+      "ti ti-bug",
+      "ti ti-link",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon",
+      "ti ti-external-link reference-icon"
+    ],
+    "sections": [
+      "overview",
+      "architecture",
+      "concepts",
+      "task1",
+      "task2",
+      "task3",
+      "task4",
+      "task5",
+      "sequence",
+      "best-practices",
+      "troubleshooting",
+      "references"
+    ],
+    "navigation": [
+      {
+        "href": "#overview",
+        "text": "概要"
+      },
+      {
+        "href": "#architecture",
+        "text": "全体アーキテクチャ"
+      },
+      {
+        "href": "#concepts",
+        "text": "主要概念の整理"
+      },
+      {
+        "href": "#task1",
+        "text": "Task1:環境準備"
+      },
+      {
+        "href": "#task2",
+        "text": "Task2:基本パイプライン"
+      },
+      {
+        "href": "#task3",
+        "text": "Task3:BinaryAuthorization"
+      },
+      {
+        "href": "#task4",
+        "text": "Task4:セキュアパイプライン"
+      },
+      {
+        "href": "#task5",
+        "text": "Task5:修正と再デプロイ"
+      },
+      {
+        "href": "#sequence",
+        "text": "全体シーケンス"
+      },
+      {
+        "href": "#best-practices",
+        "text": "ベストプラクティス総まとめ"
+      },
+      {
+        "href": "#troubleshooting",
+        "text": "よくあるつまずき"
+      },
+      {
+        "href": "#references",
+        "text": "参考文献"
+      }
+    ]
+  },
+  "diagrams": {
+    "architecture": "flowchart TB\n    Dev[\"開発者がソースコードをpush\"] --> Build[\"Cloud Build: docker build\"]\n    Build --> ScanRepo[\"artifact-scanning-repo へpush\"]\n    ScanRepo --> Scan[\"Container/Artifact Analysis: 脆弱性スキャン実行\"]\n    Scan --> Check{\"CRITICAL重大度の脆弱性は0件か\"}\n    Check -->|\"いいえ\"| Fail[\"ビルド失敗として停止\"]\n    Check -->|\"はい\"| Sign[\"binauthz-attestation: Attestation作成\"]\n    Sign --> ProdRepo[\"artifact-prod-repo へretagしてpush\"]\n    ProdRepo --> Deploy[\"gcloud run deploy を実行\"]\n    Deploy --> Enforce[\"Binary Authorization: Attestation検証\"]\n    Enforce -->|\"検証OK\"| Running[\"Cloud Run上でサービス稼働\"]\n    Enforce -->|\"検証NG\"| Blocked[\"デプロイを拒否\"]\n\n    classDef flow fill:#241b47,stroke:#beb3ff,color:#efeaff\n    classDef store fill:#0f2f2c,stroke:#9fe3d8,color:#e3fbf6\n    classDef security fill:#3a1530,stroke:#ffb3dd,color:#ffe3f3\n    classDef danger fill:#3a1f16,stroke:#ff9a7a,color:#ffe8dc\n    classDef success fill:#123a24,stroke:#7ee0a8,color:#e3fff0\n\n    class Dev,Build,Deploy flow\n    class ScanRepo,ProdRepo store\n    class Scan,Sign,Enforce security\n    class Fail,Blocked danger\n    class Running success",
+    "binauthz": "flowchart LR\n    Note[\"Container Analysis Note: vulnerability_note\"] --> Attestor[\"Binary Authorization Attestor: vulnerability-attestor\"]\n    Key[\"Cloud KMS鍵: lab-key version 1\"] --> Attestor\n    Attestor --> Policy[\"Binary Authorization Policy: defaultRuleにAttestorを要求\"]\n    Policy --> CloudRun[\"Cloud Run deploy --binary-authorization=default\"]\n\n    classDef flow fill:#241b47,stroke:#beb3ff,color:#efeaff\n    classDef security fill:#3a1530,stroke:#ffb3dd,color:#ffe3f3\n\n    class Note,Key flow\n    class Attestor,Policy,CloudRun security",
+    "verify": "flowchart LR\n    Fix[\"Dockerfile・requirementsを修正\"] --> Rebuild[\"Cloud Buildを再実行\"]\n    Rebuild --> Rescan[\"脆弱性スキャンを再実行\"]\n    Rescan --> Gate{\"CRITICAL脆弱性は0件か\"}\n    Gate -->|\"はい\"| SignDeploy[\"Attestation発行してCloud Runへデプロイ\"]\n    Gate -->|\"いいえ\"| FixAgain[\"パッケージ・ベースイメージを見直す\"]\n    SignDeploy --> Verify[\"Cloud Run URLへアクセスして動作確認\"]\n\n    classDef flow fill:#241b47,stroke:#beb3ff,color:#efeaff\n    classDef danger fill:#3a1f16,stroke:#ff9a7a,color:#ffe8dc\n    classDef success fill:#123a24,stroke:#7ee0a8,color:#e3fff0\n\n    class Fix,Rebuild,Rescan flow\n    class FixAgain danger\n    class SignDeploy,Verify success",
+    "sequence": "sequenceDiagram\n    participant Dev as 開発者\n    participant CB as Cloud Build\n    participant ARS as Artifact Registry scanning\n    participant AA as Artifact Analysis\n    participant KMS as Cloud KMS\n    participant ARP as Artifact Registry prod\n    participant CR as Cloud Run\n    participant BA as Binary Authorization\n\n    Dev->>CB: cloudbuild.yamlを送信\n    CB->>CB: docker build\n    CB->>ARS: imageをpush\n    CB->>AA: 脆弱性スキャンを要求\n    AA-->>CB: スキャン結果を返却\n    CB->>CB: CRITICAL件数を判定\n    alt CRITICALあり\n        CB-->>Dev: ビルド失敗を通知\n    else CRITICALなし\n        CB->>KMS: 署名鍵でAttestationに署名\n        KMS-->>CB: 署名済みAttestation\n        CB->>ARP: imageをretagしてpush\n        CB->>CR: gcloud run deployを実行\n        CR->>BA: Attestationの検証を要求\n        BA-->>CR: 検証結果を返却\n        CR-->>Dev: デプロイ完了を通知\n    end"
+  },
+  "rules": [
+    {
+      "selector": ":root",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "--bg-primary",
+          "value": "#07111e",
+          "important": false
+        },
+        {
+          "prop": "--bg-secondary",
+          "value": "#0d1b2e",
+          "important": false
+        },
+        {
+          "prop": "--bg-tertiary",
+          "value": "#12253d",
+          "important": false
+        },
+        {
+          "prop": "--bg-info",
+          "value": "#10233d",
+          "important": false
+        },
+        {
+          "prop": "--bg-danger",
+          "value": "#2a1418",
+          "important": false
+        },
+        {
+          "prop": "--bg-success",
+          "value": "#0f2419",
+          "important": false
+        },
+        {
+          "prop": "--bg-warning",
+          "value": "#2a2110",
+          "important": false
+        },
+        {
+          "prop": "--text-primary",
+          "value": "#e8edf5",
+          "important": false
+        },
+        {
+          "prop": "--text-secondary",
+          "value": "#a8b6cc",
+          "important": false
+        },
+        {
+          "prop": "--text-tertiary",
+          "value": "#6b7a94",
+          "important": false
+        },
+        {
+          "prop": "--text-info",
+          "value": "#8fb4ff",
+          "important": false
+        },
+        {
+          "prop": "--text-danger",
+          "value": "#ff9a9a",
+          "important": false
+        },
+        {
+          "prop": "--text-success",
+          "value": "#7ee0a8",
+          "important": false
+        },
+        {
+          "prop": "--text-warning",
+          "value": "#f0c674",
+          "important": false
+        },
+        {
+          "prop": "--border-tertiary",
+          "value": "#16233a",
+          "important": false
+        },
+        {
+          "prop": "--border-secondary",
+          "value": "#223350",
+          "important": false
+        },
+        {
+          "prop": "--border-primary",
+          "value": "#2f4468",
+          "important": false
+        },
+        {
+          "prop": "--accent",
+          "value": "#7c9eff",
+          "important": false
+        },
+        {
+          "prop": "--font-sans",
+          "value": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,\n                    'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif",
+          "important": false
+        },
+        {
+          "prop": "--font-mono",
+          "value": "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
+          "important": false
+        },
+        {
+          "prop": "--radius-md",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "--radius-lg",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "--radius-xl",
+          "value": "16px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "*",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "box-sizing",
+          "value": "border-box",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "html,\n            body",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-primary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "font-family",
+          "value": "var(--font-sans)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.7",
+          "important": false
+        },
+        {
+          "prop": "-webkit-font-smoothing",
+          "value": "antialiased",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".layout",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "block",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "position",
+          "value": "fixed",
+          "important": false
+        },
+        {
+          "prop": "top",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "left",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "300px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "100vh",
+          "important": false
+        },
+        {
+          "prop": "overflow-y",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-secondary)",
+          "important": false
+        },
+        {
+          "prop": "border-right",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "32px 20px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-brand",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "block",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.06em",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "4px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-title",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 28px 0",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.4",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "flex-direction",
+          "value": "column",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "2px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "9px 12px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "var(--radius-md)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-secondary)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "400",
+          "important": false
+        },
+        {
+          "prop": "border-left",
+          "value": "2px solid transparent",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "17px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "text-align",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a.active",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "border-left-color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a.active i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-source",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-top",
+          "value": "28px",
+          "important": false
+        },
+        {
+          "prop": "padding-top",
+          "value": "20px",
+          "important": false
+        },
+        {
+          "prop": "border-top",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.6",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-source a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "word-break",
+          "value": "break-all",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-source a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-decoration",
+          "value": "underline",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".content",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-left",
+          "value": "300px",
+          "important": false
+        },
+        {
+          "prop": "max-width",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "56px 64px 96px 64px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "max-width",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "56px",
+          "important": false
+        },
+        {
+          "prop": "padding-bottom",
+          "value": "40px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero-eyebrow",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "inline-flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.04em",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "16px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "h1",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "22px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.4",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 12px 0",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero-subtitle",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-secondary)",
+          "important": false
+        },
+        {
+          "prop": "max-width",
+          "value": "760px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "section",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-bottom",
+          "value": "64px",
+          "important": false
+        },
+        {
+          "prop": "scroll-margin-top",
+          "value": "24px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "h2",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 20px 0",
+          "important": false
+        },
+        {
+          "prop": "padding-bottom",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "10px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "h2 i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "18px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "h3",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "32px 0 12px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "h4",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "24px 0 8px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "p",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0 0 16px 0",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "p.lead",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-secondary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "ul,\n            ol",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0 0 16px 0",
+          "important": false
+        },
+        {
+          "prop": "padding-left",
+          "value": "22px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "li",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-bottom",
+          "value": "6px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "strong",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "table",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "width",
+          "value": "100%",
+          "important": false
+        },
+        {
+          "prop": "border-collapse",
+          "value": "collapse",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 24px 0",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "caption",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-align",
+          "value": "left",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "8px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "th",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-align",
+          "value": "left",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "10px 16px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-secondary)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-secondary)",
+          "important": false
+        },
+        {
+          "prop": "white-space",
+          "value": "nowrap",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "td",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "padding",
+          "value": "12px 16px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "vertical-align",
+          "value": "top",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "tbody tr:last-child td",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-bottom",
+          "value": "none",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-tertiary)",
+          "important": true
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border-secondary)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "var(--radius-md)",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "20px 24px",
+          "important": false
+        },
+        {
+          "prop": "overflow-x",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 20px 0",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.6",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre code.hljs",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "transparent",
+          "important": true
+        },
+        {
+          "prop": "padding",
+          "value": "0",
+          "important": true
+        },
+        {
+          "prop": "font-family",
+          "value": "var(--font-mono)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "15px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "code",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-family",
+          "value": "var(--font-mono)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "2px 6px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "4px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre code",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "transparent",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "inherit",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".code-label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "block",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "-8px 0 8px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "16px 20px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "var(--radius-md)",
+          "important": false
+        },
+        {
+          "prop": "border-left",
+          "value": "3px solid var(--border-primary)",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-secondary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 20px 0",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "margin-top",
+          "value": "1px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-info",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-left-color",
+          "value": "var(--text-info)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-info i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-warning",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-left-color",
+          "value": "var(--text-warning)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-warning i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-warning)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".source-note",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "flex-start",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "12px 16px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-secondary)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "var(--radius-md)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "15px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "-8px 0 24px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".source-note i",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "15px",
+          "important": false
+        },
+        {
+          "prop": "margin-top",
+          "value": "3px",
+          "important": false
+        },
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".source-note a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-info)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "word-break",
+          "value": "break-all",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".source-note a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-decoration",
+          "value": "underline",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".source-note .source-label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-secondary)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "500",
+          "important": false
+        },
+        {
+          "prop": "margin-right",
+          "value": "4px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".mermaid-card",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-secondary)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "var(--radius-lg)",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "24px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 24px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".mermaid-caption",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 16px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".mermaid-container",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "width",
+          "value": "100%",
+          "important": false
+        },
+        {
+          "prop": "overflow-x",
+          "value": "auto",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".mermaid-target",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "center",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-list",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "list-style",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "border-top",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-item",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "20px",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "baseline",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "16px 4px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-index",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "32px",
+          "important": false
+        },
+        {
+          "prop": "font-family",
+          "value": "var(--font-mono)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-body",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "flex-direction",
+          "value": "column",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "4px",
+          "important": false
+        },
+        {
+          "prop": "min-width",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-body a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-primary)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "400",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-body a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "underline",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-body .reference-url",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "font-family",
+          "value": "var(--font-mono)",
+          "important": false
+        },
+        {
+          "prop": "word-break",
+          "value": "break-all",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".reference-icon",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "15px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".footnote",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-tertiary)",
+          "important": false
+        },
+        {
+          "prop": "padding-top",
+          "value": "24px",
+          "important": false
+        },
+        {
+          "prop": "border-top",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar",
+      "media": "(max-width: 900px)",
+      "declarations": [
+        {
+          "prop": "position",
+          "value": "static",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "100%",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "border-right",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-tertiary)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".content",
+      "media": "(max-width: 900px)",
+      "declarations": [
+        {
+          "prop": "margin-left",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "32px 24px 64px 24px",
+          "important": false
+        }
+      ]
+    }
+  ]
+}
