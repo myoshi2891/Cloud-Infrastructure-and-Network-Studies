@@ -381,7 +381,8 @@
 
 .secure-cicd-page .mermaid-target {
     display: flex;
-    justify-content: center;
+    /* 幅超過時は左寄せに退避し、スクロールで届かない左側のはみ出しを防ぐ。 */
+    justify-content: safe center;
 }
 
 /* ---------- Reference list ---------- */
