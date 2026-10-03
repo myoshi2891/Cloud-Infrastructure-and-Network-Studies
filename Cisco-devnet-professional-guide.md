@@ -229,7 +229,7 @@ ACL は `cisco.ios.ios_acls`（`afi` → `acls` → `aces` の階層構造）、
 |---|---|---|
 | `merged` | 指定した設定を既存に**追加・更新**（他は触らない） | 安全な追加 |
 | `replaced` | 指定した**リソース単位**を置き換え | 特定インターフェースを丸ごと定義し直す |
-| `overridden` | 機器全体を指定内容に**上書き**（無い設定は削除） | 完全な宣言管理（影響大・要注意） |
+| `overridden` | モジュールが管理するリソースの設定全体を指定内容に**上書き**（無い設定は削除） | 完全な宣言管理（影響大・要注意） |
 | `deleted` | 指定した設定を削除 | クリーンアップ |
 | `gathered` | 現在の設定を構造化データで**取得** | 既存設定の取り込み（brownfield） |
 | `rendered` | 機器へ接続せず、**CLI を生成**して返す | レビュー・テスト |
@@ -529,7 +529,9 @@ flowchart TD
 ```python
 def paginate(session, url, params=None):
     """Link ヘッダの rel=next を最後までたどるジェネレータ"""
-    while url:
+    seen = set()           # 訪問済み URL（next が循環した場合の無限ループ防止）
+    while url and url not in seen:
+        seen.add(url)
         resp = session.get(url, params=params, timeout=15)
         resp.raise_for_status()
         yield from resp.json()
@@ -1696,7 +1698,7 @@ flowchart LR
 
 | 試験 | 名称 | 対象領域 | 向いている人 |
 |---|---|---|---|
-| **300-435 ENAUTO v2.0** | Automating Cisco Enterprise Solutions | キャンパス / ブランチ / WAN（IOS XE、Catalyst Center、SD-WAN、Meraki、ISE、ThousandEyes） | エンタープライズ NW の自動化・運用担当 |
+| **300-435 ENAUTO v2.0** | Automating and Programming Cisco Enterprise Solutions | キャンパス / ブランチ / WAN（IOS XE、Catalyst Center、SD-WAN、Meraki、ISE、ThousandEyes） | エンタープライズ NW の自動化・運用担当 |
 | **300-635 DCNAUTO v2.0** | Automating Cisco Data Center Networking Solutions | データセンター（NX-OS、ACI、NDFC など） | DC ネットワークの自動化・IaC 担当 |
 
 ```mermaid
