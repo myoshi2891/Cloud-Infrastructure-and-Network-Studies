@@ -2614,7 +2614,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 ## 次回セッションでの再開プロンプト
 
 あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `1b2c58d0`、仕様同期は `3e98c61e`、前回進捗同期コミットは `fe79bb33` です。セキュアCI/CDガイドの18テスト、型チェック、Lintが成功し、全体Vitestは2093成功/既知の2失敗です。ビルド・Playwright・目視確認はユーザー指示により未実施。次の作業はPAA Section 5の既知不一致の調査です。
+最新実装 HEAD は `1b2c58d0`、仕様同期は `3e98c61e`、前回進捗同期コミットは `fe79bb33` です。セキュアCI/CDガイドの19テスト、型チェック、Lintが成功し、全体Vitestは2093成功/既知の2失敗です。ビルド・Playwright・目視確認はユーザー指示により未実施。次の作業はPAA Section 5の既知不一致の調査です。
 AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。最新の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。E2E、Visualテスト、ビルドは未実施です。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
