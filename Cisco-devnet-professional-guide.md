@@ -460,6 +460,10 @@ device = {
     "username": os.environ["NET_USER"],
     "password": os.environ["NET_PASS"],
     "secret": os.environ["NET_ENABLE"],
+    "ssh_strict": True,                              # 未知のホスト鍵は接続を拒否する
+    "system_host_keys": False,
+    "alt_host_keys": True,
+    "alt_key_file": os.environ["NET_KNOWN_HOSTS"],   # 機器の正しいホスト鍵を登録した known_hosts
 }
 
 with ConnectHandler(**device) as conn:
@@ -535,15 +539,29 @@ flowchart TD
 | Link ヘッダ | `rel="next"` の URL をたどる（RFC 8288） | `requests` は `resp.links` で解析可能 |
 
 ```python
-def paginate(session, url, params=None):
+from urllib.parse import urljoin, urlsplit
+
+
+def ensure_api_url(url, api_origin):
+    """HTTPS かつ想定した API オリジンの URL だけを許可する（Bearer ヘッダの外部送信を防ぐ）"""
+    target, expected = urlsplit(url), urlsplit(api_origin)
+    if target.scheme != "https" or expected.scheme != "https":
+        raise ValueError(f"HTTPS 以外の URL は送信しません: {url}")
+    if (target.hostname, target.port or 443) != (expected.hostname, expected.port or 443):
+        raise ValueError(f"想定外のオリジンには送信しません: {url}")
+    return url
+
+
+def paginate(session, url, api_origin, params=None):
     """Link ヘッダの rel=next を最後までたどるジェネレータ"""
     seen = set()           # 訪問済み URL（next が循環した場合の無限ループ防止）
     while url and url not in seen:
         seen.add(url)
-        resp = session.get(url, params=params, timeout=15)
+        resp = session.get(ensure_api_url(url, api_origin), params=params, timeout=15)
         resp.raise_for_status()
         yield from resp.json()
-        url = resp.links.get("next", {}).get("url")
+        next_url = resp.links.get("next", {}).get("url")
+        url = urljoin(resp.url, next_url) if next_url else None  # 相対 URL も絶対化して検証
         params = None      # 2 ページ目以降は next の URL に含まれる
 ```
 
@@ -606,9 +624,16 @@ def build_session(token: str) -> requests.Session:
 
 
 def request_with_reauth(
-    s: requests.Session, get_token: Callable[[], str], method: str, url: str, **kwargs
+    s: requests.Session,
+    get_token: Callable[[], str],
+    method: str,
+    url: str,
+    api_origin: str,
+    **kwargs,
 ) -> requests.Response:
     """401 を受けたらトークンを 1 回だけ取り直してリトライする（持続認証）"""
+    ensure_api_url(url, api_origin)   # 3.6.1 で定義。HTTPS かつ想定オリジン以外へは送らない
+    kwargs.setdefault("allow_redirects", False)  # リダイレクト先へ Bearer を持ち出さない
     kwargs.setdefault("timeout", 15)
     resp = s.request(method, url, **kwargs)
     if resp.status_code != 401:
@@ -869,9 +894,14 @@ try:
     lab.start()                        # ノードを起動（収束を待つ）
     # ここで Ansible / pyATS などのテストを実行
 finally:
-    lab.stop()
-    lab.wipe()
-    lab.remove()                       # テスト後は必ず後始末する
+    # 途中で例外が出ても後続の後始末を必ず試みる（順序は stop → wipe → remove）
+    try:
+        lab.stop()
+    finally:
+        try:
+            lab.wipe()
+        finally:
+            lab.remove()               # テスト後は必ず後始末する
 ```
 
 （メソッドの細部は `virl2_client` のバージョンで異なる場合があるため、公式ドキュメントで確認してください。）
@@ -1138,18 +1168,21 @@ crypto pki trustpoint COLLECTOR-CA     ! コレクタのサーバー証明書を
 !
 crypto pki authenticate COLLECTOR-CA   ! CA 証明書（PEM）を貼り付けて登録
 !
+telemetry protocol grpc profile COLLECTOR-PROFILE
+ ca-trustpoint COLLECTOR-CA            ! コレクタ証明書の検証に使うトラストポイント
+!
 telemetry ietf subscription 101
  encoding encode-kvgpb
  filter xpath /interfaces-ios-xe-oper:interfaces/interface/statistics
  source-address 192.0.2.11
  stream yang-push
  update-policy periodic 1000
- receiver ip address 192.0.2.100 57500 protocol grpc-tls profile COLLECTOR-CA
+ receiver ip address 192.0.2.100 57500 protocol grpc-tls profile COLLECTOR-PROFILE
 ```
 
 - `filter xpath`：**どのデータを購読するか**（YANG の XPath）。
 - `update-policy periodic 1000`：周期（単位は 1/100 秒＝10 秒）。
-- `receiver`：送信先コレクタのアドレスとポート。`grpc-tls` と `profile`（上で作成したトラストポイント名）で **TLS 暗号化とコレクタ証明書の検証** を行う。`protocol grpc-tcp` は **平文（暗号化なし）** のため、閉じたラボ環境以外では使わない。
+- `receiver`：送信先コレクタのアドレスとポート。`grpc-tls` と `profile`（`telemetry protocol grpc profile` で作成し、`ca-trustpoint` で COLLECTOR-CA を紐付けたプロファイル名。IOS XE 17.9.x 以降の書式）で **TLS 暗号化とコレクタ証明書の検証** を行う。`protocol grpc-tcp` は **平文（暗号化なし）** のため、閉じたラボ環境以外では使わない。
 
 #### ベストプラクティス
 
