@@ -741,7 +741,8 @@
     --color-secure-cicd-bg-success: #0f2419;
     --color-secure-cicd-text-primary: #e8edf5;
     --color-secure-cicd-text-secondary: #a8b6cc;
-    --color-secure-cicd-text-tertiary: #6b7a94;
+    /* 原本 #6b7a94 は #0d1b2e 上で 3.99:1 のため WCAG AA (4.5:1) へ引き上げ */
+    --color-secure-cicd-text-tertiary: #7d8ca6;
     --color-secure-cicd-text-info: #8fb4ff;
     --color-secure-cicd-text-danger: #ff9a9a;
     --color-secure-cicd-text-success: #7ee0a8;
