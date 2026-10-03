@@ -9,11 +9,11 @@ import {
     codeLineCount,
     extractBodyContent,
     squash,
-} from '@/__tests__/gcl/agwa/migration-test-utils';
+} from '@/__tests__/helpers/migration-test-utils';
 
 // MermaidDiagram は名前付きエクスポート。default でモックすると必ず落ちる。
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

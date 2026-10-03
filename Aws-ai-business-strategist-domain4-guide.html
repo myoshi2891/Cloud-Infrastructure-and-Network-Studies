@@ -1,0 +1,4431 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>AWS Certified AI Business Strategist (AIB-C01) Domain 4 完全ガイド</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Source+Serif+4:wght@600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.48.0/dist/tabler-icons.min.css"
+            integrity="sha384-vLTRpuTnY1DxbKXUegP6YfVJo5azL+nO4yWUyJjWFDChoMy9oUTnSmIZhMWjI5qs"
+            crossorigin="anonymous"
+        />
+        <style>
+            :root {
+                --paper: #fbf8f1;
+                --card: #fff;
+                --alt: #f3eee2;
+                --ink: #25221c;
+                --soft: #4a4538;
+                --faint: #726858;
+                --indigo: #2f3f9e;
+                --indigo-s: #e3e8ff;
+                --gold: #7d5c14;
+                --gold-s: #fff4d6;
+                --forest: #2e6b3a;
+                --forest-s: #dff3e4;
+                --border: #ded6c4;
+                --shadow: 0 1px 3px rgba(60, 50, 30, 0.1);
+                --side: 288px;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                font-size: 16px;
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                display: block;
+                background: var(--paper);
+                color: var(--ink);
+                font-family: 'Noto Sans JP', system-ui, sans-serif;
+                font-size: 1rem;
+                line-height: 1.85;
+            }
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: var(--side);
+                overflow-y: auto;
+                background: var(--alt);
+                border-right: 1px solid var(--border);
+                padding: 20px 14px;
+                z-index: 30;
+            }
+            .brand {
+                font-family: 'Source Serif 4', 'Noto Sans JP', serif;
+                font-weight: 700;
+                font-size: 1.1rem;
+                line-height: 1.5;
+                margin: 0 6px 14px;
+                color: var(--indigo);
+            }
+            .nav-a,
+            .nav-sub {
+                display: flex;
+                gap: 8px;
+                align-items: flex-start;
+                color: var(--soft);
+                text-decoration: none;
+                border-radius: 8px;
+                padding: 6px 10px;
+                font-size: 1rem;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+            }
+            .nav-a {
+                font-weight: 700;
+                margin-top: 6px;
+            }
+            .nav-sub {
+                padding-left: 34px;
+                font-weight: 400;
+            }
+            .nav-a:hover,
+            .nav-sub:hover {
+                background: #e8e1d0;
+            }
+            .nav-a.active,
+            .nav-sub.active {
+                background: var(--indigo-s);
+                color: var(--indigo);
+            }
+            .mobile-bar {
+                display: none;
+            }
+            .mobile-bar button {
+                font-size: 1rem;
+            }
+            .backdrop {
+                display: none;
+            }
+            .main {
+                margin-left: var(--side);
+                min-width: 0;
+            }
+            .hero {
+                background: linear-gradient(135deg, #161d42, #263172, #33417f);
+                color: #e6e2ff;
+                padding: 64px 56px 56px;
+            }
+            .eyebrow {
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                color: #cfd6ff;
+            }
+            .hero h1 {
+                font-family: 'Source Serif 4', 'Noto Sans JP', serif;
+                font-size: 2.3rem;
+                line-height: 1.4;
+                margin: 0.4em 0;
+                color: #fff;
+            }
+            .hero p {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+            .section {
+                padding: 34px 56px;
+            }
+            h2 {
+                font-family: 'Source Serif 4', 'Noto Sans JP', serif;
+                font-size: 1.75rem;
+                line-height: 1.45;
+                color: var(--indigo);
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                margin: 0.2em 0 0.6em;
+            }
+            h2 .ti {
+                font-size: 1.9rem;
+            }
+            h3 {
+                font-size: 1.3rem;
+                margin: 2.2em 0 0.6em;
+                padding-left: 12px;
+                border-left: 5px solid var(--gold);
+                scroll-margin-top: 20px;
+            }
+            h4 {
+                font-size: 1.1rem;
+            }
+            p,
+            li {
+                overflow-wrap: break-word;
+            }
+            a {
+                color: var(--indigo);
+            }
+            code {
+                background: var(--alt);
+                padding: 2px 6px;
+                border-radius: 5px;
+                font-size: 1rem;
+            }
+            blockquote {
+                margin: 1.2em 0;
+                padding: 14px 20px;
+                background: var(--gold-s);
+                border-left: 5px solid var(--gold);
+                border-radius: 10px;
+            }
+            blockquote p {
+                margin: 0.4em 0;
+            }
+            .table-wrap {
+                overflow-x: auto;
+                min-width: 0;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                box-shadow: var(--shadow);
+                margin: 1.2em 0;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                min-width: 520px;
+                font-size: 1rem;
+            }
+            th,
+            td {
+                padding: 10px 14px;
+                text-align: left;
+                vertical-align: top;
+                border-bottom: 1px solid var(--border);
+                overflow-wrap: anywhere;
+            }
+            thead th {
+                background: var(--indigo);
+                color: #fff;
+                font-weight: 700;
+            }
+            tbody tr:last-child td {
+                border-bottom: none;
+            }
+            tbody tr:hover {
+                background: var(--alt);
+            }
+            .diagram-card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                box-shadow: var(--shadow);
+                margin: 1.5em 0;
+                padding: 20px;
+            }
+            .diagram-wrap {
+                overflow-x: auto;
+                display: flex;
+                justify-content: safe center;
+                width: 100%;
+                min-width: 0;
+            }
+            .diagram-wrap > * {
+                min-width: 0;
+            }
+            .diagram-canvas svg {
+                flex-shrink: 0;
+                max-width: none;
+            }
+            .mermaidTooltip {
+                font-size: 1rem !important;
+            }
+            details {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                margin: 0.8em 0 1.6em;
+                padding: 12px 18px;
+            }
+            summary {
+                cursor: pointer;
+                font-weight: 700;
+                color: var(--indigo);
+            }
+            ul.checklist {
+                list-style: none;
+                padding: 0;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                box-shadow: var(--shadow);
+            }
+            ul.checklist li {
+                padding: 10px 18px;
+                border-bottom: 1px solid var(--border);
+            }
+            ul.checklist li:last-child {
+                border-bottom: none;
+            }
+            .chk {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                cursor: pointer;
+            }
+            .chk input {
+                appearance: none;
+                flex: 0 0 22px;
+                width: 22px;
+                height: 22px;
+                margin-top: 5px;
+                border: 2px solid var(--faint);
+                border-radius: 6px;
+                background: #fff;
+                font-size: 1rem;
+                cursor: pointer;
+            }
+            .chk input:checked {
+                background: var(--forest);
+                border-color: var(--forest);
+                box-shadow: inset 0 0 0 3px #fff;
+            }
+            .chk input:checked + span {
+                color: var(--faint);
+                text-decoration: line-through;
+            }
+            .chk-count {
+                font-weight: 700;
+                color: var(--forest);
+                margin: 1em 0 0.4em;
+            }
+            .chk-bar {
+                height: 10px;
+                background: var(--alt);
+                border-radius: 6px;
+                overflow: hidden;
+                margin-bottom: 12px;
+            }
+            .chk-bar i {
+                display: block;
+                height: 100%;
+                width: 0;
+                background: var(--forest);
+                transition: width 0.2s;
+            }
+            .footer {
+                padding: 28px 56px 56px;
+                color: var(--faint);
+            }
+            @media (max-width: 900px) {
+                .sidebar {
+                    transform: translateX(-102%);
+                    transition: transform 0.2s;
+                    width: 300px;
+                    max-width: 86vw;
+                }
+                body.menu-open .sidebar {
+                    transform: none;
+                }
+                body.menu-open .backdrop {
+                    display: block;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(20, 20, 30, 0.45);
+                    z-index: 25;
+                }
+                .mobile-bar {
+                    display: flex;
+                    position: sticky;
+                    top: 0;
+                    z-index: 20;
+                    background: var(--alt);
+                    border-bottom: 1px solid var(--border);
+                    padding: 8px 14px;
+                    align-items: center;
+                    gap: 10px;
+                }
+                .mobile-bar button {
+                    background: var(--indigo);
+                    color: #fff;
+                    border: 0;
+                    border-radius: 8px;
+                    padding: 6px 12px;
+                    display: inline-flex;
+                    gap: 6px;
+                    align-items: center;
+                }
+                .main {
+                    margin-left: 0;
+                }
+                .hero,
+                .section,
+                .footer {
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
+                .hero h1 {
+                    font-size: 1.75rem;
+                }
+                h2 {
+                    font-size: 1.45rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">AIB-C01 Domain 4<br />準備度・リーダーシップ・変革</div>
+            <a class="nav-a" href="#s0"
+                ><i class="ti ti-info-circle"></i><span>この文書について</span></a
+            >
+            <a class="nav-a" href="#s1"
+                ><i class="ti ti-compass"></i><span>試験の全体像と Domain 4 の位置づけ</span></a
+            >
+            <a class="nav-a" href="#s2"
+                ><i class="ti ti-map-2"></i><span>Domain 4 の地図(全 19 スキル)</span></a
+            >
+            <a class="nav-a" href="#s3"
+                ><i class="ti ti-gauge"></i><span>Task 4.1 AI の準備度と成熟度を評価する</span></a
+            >
+            <a class="nav-sub" href="#k4-1-1">4.1.1 事業準備度を複数の観点で評価する</a>
+            <a class="nav-sub" href="#k4-1-2">4.1.2 AI 成熟度モデルで現在地を評価する</a>
+            <a class="nav-sub" href="#k4-1-3"
+                >4.1.3 人・プロセス・技術・ガバナンスの能力ギャップを特定する</a
+            >
+            <a class="nav-sub" href="#k4-1-4">4.1.4 投資の優先順位と成長の道筋を作る</a>
+            <a class="nav-a" href="#s4"
+                ><i class="ti ti-database"></i
+                ><span>Task 4.2 データとインフラの土台を整える</span></a
+            >
+            <a class="nav-sub" href="#k4-2-1"
+                >4.2.1 データの準備度を評価する(品質・アクセス性・サイロ)</a
+            >
+            <a class="nav-sub" href="#k4-2-2">4.2.2 データ戦略・オーナーシップ・共有の枠組み</a>
+            <a class="nav-sub" href="#k4-2-3">4.2.3 技術・インフラ要件を戦略レベルで評価する</a>
+            <a class="nav-a" href="#s5"
+                ><i class="ti ti-users-group"></i
+                ><span>Task 4.3 全社の変革を率い、AI 人材を育てる</span></a
+            >
+            <a class="nav-sub" href="#k4-3-1">4.3.1 経営層のスポンサーシップと AI チャンピオン</a>
+            <a class="nav-sub" href="#k4-3-2">4.3.2 部門横断チームと明確な責任体制</a>
+            <a class="nav-sub" href="#k4-3-3">4.3.3 透明なコミュニケーション戦略</a>
+            <a class="nav-sub" href="#k4-3-4"
+                >4.3.4 文化的な障壁を見抜き、リーダーの介入策を決める</a
+            >
+            <a class="nav-sub" href="#k4-3-5">4.3.5 AI リテラシーを加速する人材育成の手法</a>
+            <a class="nav-sub" href="#k4-3-6">4.3.6 人の役割を「手作業」から「監督と協働」へ移す</a>
+            <a class="nav-a" href="#s6"
+                ><i class="ti ti-rocket"></i
+                ><span>Task 4.4 パイロットから全社展開へスケールする</span></a
+            >
+            <a class="nav-sub" href="#k4-4-1">4.4.1 反復的な変革アプローチ(段階を踏んで進める)</a>
+            <a class="nav-sub" href="#k4-4-2">4.4.2 短期の成果から全社展開へ積み上げる</a>
+            <a class="nav-sub" href="#k4-4-3"
+                >4.4.3 AI センターオブエクセレンス(COE)と部門横断の連携</a
+            >
+            <a class="nav-sub" href="#k4-4-4">4.4.4 継続的なフィードバックと成功指標</a>
+            <a class="nav-sub" href="#k4-4-5"
+                >4.4.5 実験から本番品質への移行(ガバナンスと運用要件)</a
+            >
+            <a class="nav-sub" href="#k4-4-6">4.4.6 スケール中に事業継続とパフォーマンスを守る</a>
+            <a class="nav-a" href="#s7"
+                ><i class="ti ti-cloud"></i
+                ><span>関連する AWS サービス・フレームワーク早見表</span></a
+            >
+            <a class="nav-a" href="#s8"
+                ><i class="ti ti-bulb"></i><span>試験での判断ルール</span></a
+            >
+            <a class="nav-a" href="#s9"
+                ><i class="ti ti-help-circle"></i><span>練習問題(自作)</span></a
+            >
+            <a class="nav-a" href="#s10"
+                ><i class="ti ti-checklist"></i><span>直前チェックリスト</span></a
+            >
+            <a class="nav-a" href="#s11"><i class="ti ti-book"></i><span>用語集</span></a>
+            <a class="nav-a" href="#s12"><i class="ti ti-link"></i><span>参考 URL 一覧</span></a>
+        </aside>
+        <div class="backdrop" id="backdrop"></div>
+        <div class="main">
+            <div class="mobile-bar">
+                <button id="menuBtn" aria-label="目次を開く">
+                    <i class="ti ti-menu-2"></i>目次</button
+                ><span>AIB-C01 Domain 4</span>
+            </div>
+            <header class="hero">
+                <div class="eyebrow">AWS Certified AI Business Strategist · AIB-C01</div>
+                <h1>Domain 4 完全ガイド</h1>
+                <p>
+                    Business Readiness, Leadership, and AI
+                    Transformation(準備度・リーダーシップ・変革)を、初学者向けにステップバイステップで解説します。
+                </p>
+            </header>
+            <section class="section" id="s0">
+                <h2><i class="ti ti-info-circle"></i>この文書について</h2>
+                <p>
+                    <strong
+                        >Business Readiness, Leadership, and AI
+                        Transformation(準備度・リーダーシップ・変革)</strong
+                    >
+                    を、初学者向けにステップバイステップで解説します。
+                </p>
+                <ul>
+                    <li>対象試験: AWS Certified AI Business Strategist (AIB-C01)</li>
+                    <li>対象ドメイン: Content Domain 4(試験全体の <strong>24%</strong>)</li>
+                    <li>
+                        根拠の表記: 本文中の <code>[S1]</code> などは、末尾「参考 URL
+                        一覧」の番号に対応します。
+                    </li>
+                </ul>
+                <blockquote>
+                    <p>
+                        <strong>この文書の読み方</strong>
+                        「公式が書いていること」と「初学者向けに筆者が整理した考え方」を区別するため、各項目を次の順で書いています。
+                        <strong
+                            >①何を問われるか → ②やさしい説明 → ③具体例 → ④ベストプラクティス →
+                            ⑤ひっかけ注意 → ⑥根拠</strong
+                        >
+                    </p>
+                </blockquote>
+            </section>
+            <section class="section" id="s1">
+                <h2><i class="ti ti-compass"></i>0. 試験の全体像と Domain 4 の位置づけ</h2>
+                <h3>0-1. この試験は何を測るのか</h3>
+                <p>
+                    AIB-C01 は、AI を「作る人」ではなく
+                    <strong>「評価し、推進し、拡大する人」</strong>
+                    のための試験です。公式の試験ガイドは、AI
+                    の能力をビジネス成果に結びつけ、責任ある AI を実践し、AI
+                    の導入を大規模に進める力を検証すると説明しています。また、技術的な実装よりも戦略的な意思決定を重視します。[S2]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>想定受験者</td>
+                                <td>
+                                    プロダクトマネージャー、プログラムマネージャー、営業、事業部門の責任者、コンサルタント、マーケター、ビジネスアナリストなど
+                                </td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>コーディング経験</td>
+                                <td>不要(AWS の構築経験も不要)</td>
+                                <td>
+                                    <a
+                                        href="https://aws.amazon.com/certification/certified-ai-business-strategist/"
+                                        >[S1]</a
+                                    ><a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>推奨経験</td>
+                                <td>
+                                    AI を導入しているチームと、またはその近くで働いた約 6 か月の経験
+                                </td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>出題形式</td>
+                                <td>択一(正解 1 つ)と複数選択(5 択以上から 2 つ以上を選ぶ)</td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>採点</td>
+                                <td>
+                                    100〜1,000 のスケールスコア、合格は
+                                    700。補償型採点(ドメインごとの足切りなし)
+                                </td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>不正解の扱い</td>
+                                <td>未回答は不正解。誤答による減点はなし</td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Domain 4 の比率</td>
+                                <td>24%(Domain 1: 24%、Domain 2: 28%、Domain 3: 24%)</td>
+                                <td>
+                                    <a
+                                        href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+                                        >[S2]</a
+                                    >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <blockquote>
+                    <p>
+                        <strong>注意: 試験時間の記載が 2 つのページで異なります。</strong>
+                        試験ガイドには 130 分と書かれていますが、認定ページのベータ試験概要には 170
+                        分・85
+                        問と記載されています。ベータ試験か通常版かで異なる可能性があるため、受験前に必ず最新の公式ページを確認してください。[S1][S2]
+                    </p>
+                </blockquote>
+                <h3>0-2. Domain 4 をひとことで言うと</h3>
+                <p>
+                    <strong
+                        >「AI を使いたい」から「AI
+                        が組織で当たり前に成果を出している」状態まで、組織を連れていく方法</strong
+                    >
+                    を問うドメインです。技術の話より、<strong>人・データ・仕組み・進め方</strong>
+                    の話が中心です。
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d0"
+                            role="img"
+                            aria-label="フローチャート 1"
+                        ></div>
+                    </div>
+                </figure>
+                <h3>0-3. 試験ガイドに載っている関連キーワード</h3>
+                <p>
+                    公式の「試験に出る可能性のある技術と概念」には、Domain 4
+                    に直結する次の項目が含まれます。[S4]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>分類</th>
+                                <th>キーワード</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>準備度・成熟度</td>
+                                <td>組織の AI 準備度と成熟度の評価</td>
+                            </tr>
+                            <tr>
+                                <td>データ</td>
+                                <td>
+                                    データ戦略、データオーナーシップ、データサイロの解消、データ品質
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>変革</td>
+                                <td>変更管理、ワークフォース変革、組織全体の AI リテラシー向上</td>
+                            </tr>
+                            <tr>
+                                <td>スケール</td>
+                                <td>パイロットから全社展開へ、AI センターオブエクセレンス(COE)</td>
+                            </tr>
+                            <tr>
+                                <td>AWS</td>
+                                <td>
+                                    Amazon Bedrock / Amazon SageMaker AI / Amazon
+                                    Quick(戦略レベル)、AWS
+                                    CAF、責任共有モデル、料金体系とコスト最適化
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>標準</td>
+                                <td>ISO/IEC 23053、ISO/IEC 42001 などの国際的な AI 標準</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="section" id="s2">
+                <h2><i class="ti ti-map-2"></i>1. Domain 4 の地図(全 19 スキル)</h2>
+                <p>
+                    公式の試験ガイドにある 4 つのタスクと 19
+                    のスキルを、やさしい言葉に言い換えた一覧です。[S3]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>公式スキル(要約)</th>
+                                <th>一言でいうと</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Task 4.1</strong></td>
+                                <td><strong>AI の事業準備度と成熟度を評価する</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4.1.1</td>
+                                <td>
+                                    リーダーの合意、データ品質、文化、技術基盤、ガバナンスなどの観点で準備度を評価
+                                </td>
+                                <td>「AI を始められる状態か」を診断する</td>
+                            </tr>
+                            <tr>
+                                <td>4.1.2</td>
+                                <td>AI 成熟度モデルで企業の現在地(実験〜全社展開)を評価</td>
+                                <td>「いまどの段階か」を知る</td>
+                            </tr>
+                            <tr>
+                                <td>4.1.3</td>
+                                <td>人・プロセス・技術・ガバナンスの能力ギャップを特定</td>
+                                <td>「何が足りないか」を洗い出す</td>
+                            </tr>
+                            <tr>
+                                <td>4.1.4</td>
+                                <td>戦略目標と成熟度に基づき投資の優先順位と成長の道筋を作る</td>
+                                <td>「どこから手を付けるか」を決める</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task 4.2</strong></td>
+                                <td><strong>AI のためのデータとインフラの土台を整える</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4.2.1</td>
+                                <td>データ品質、アクセス性、データサイロの影響を評価</td>
+                                <td>データが「使える状態」か確認する</td>
+                            </tr>
+                            <tr>
+                                <td>4.2.2</td>
+                                <td>
+                                    データ戦略、データオーナーシップ、データ共有の枠組みの重要性を説明
+                                </td>
+                                <td>データの「持ち主とルール」を決める</td>
+                            </tr>
+                            <tr>
+                                <td>4.2.3</td>
+                                <td>AI を支える技術・インフラ要件を評価</td>
+                                <td>必要な「基盤」を見極める</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task 4.3</strong></td>
+                                <td><strong>全社の変革を率い、AI 対応の人材を育てる</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4.3.1</td>
+                                <td>経営層のスポンサーシップと AI チャンピオンで推進力を維持</td>
+                                <td>「偉い人の後ろ盾」と「現場の旗振り役」</td>
+                            </tr>
+                            <tr>
+                                <td>4.3.2</td>
+                                <td>多様な専門性を持つ部門横断チームと明確な責任体制を作る</td>
+                                <td>「みんなで進め、責任者を決める」</td>
+                            </tr>
+                            <tr>
+                                <td>4.3.3</td>
+                                <td>従業員の不安に応える透明なコミュニケーション戦略を作る</td>
+                                <td>「隠さず、早く、繰り返し伝える」</td>
+                            </tr>
+                            <tr>
+                                <td>4.3.4</td>
+                                <td>
+                                    文化的な障壁(リスク回避、変化への抵抗、失敗への恐れ)を見抜き、リーダーの介入策を決める
+                                </td>
+                                <td>「心理的な壁」を取り除く</td>
+                            </tr>
+                            <tr>
+                                <td>4.3.5</td>
+                                <td>
+                                    POC、ハッカソン、研修、責任ある AI 研修など人材育成の手法を選ぶ
+                                </td>
+                                <td>「AI リテラシー」を底上げする</td>
+                            </tr>
+                            <tr>
+                                <td>4.3.6</td>
+                                <td>
+                                    人の役割を手作業から AI の監督・協働へ移し、人と AI の強みを両立
+                                </td>
+                                <td>「人にしかできないこと」を残す</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task 4.4</strong></td>
+                                <td><strong>パイロットから全社展開へスケールする</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4.4.1</td>
+                                <td>
+                                    段階的(Envision、Experiment、Launch、Scale
+                                    など)に進める反復的変革
+                                </td>
+                                <td>「小さく始めて段階的に広げる」</td>
+                            </tr>
+                            <tr>
+                                <td>4.4.2</td>
+                                <td>短期の成果から始めて全社展開へ積み上げる</td>
+                                <td>「クイックウィン」で勢いをつける</td>
+                            </tr>
+                            <tr>
+                                <td>4.4.3</td>
+                                <td>AI COE と部門横断の連携の仕組みを作る</td>
+                                <td>「専門家の拠点」を作る</td>
+                            </tr>
+                            <tr>
+                                <td>4.4.4</td>
+                                <td>継続的なフィードバックと成功指標で進捗と長期価値を追跡</td>
+                                <td>「測り続け、改善し続ける」</td>
+                            </tr>
+                            <tr>
+                                <td>4.4.5</td>
+                                <td>実験から本番品質への移行(ガバナンスと運用要件を含む)</td>
+                                <td>「実験」と「本番」の壁を越える</td>
+                            </tr>
+                            <tr>
+                                <td>4.4.6</td>
+                                <td>
+                                    スケール中に事業継続とパフォーマンスを守るため複数の要因を評価
+                                </td>
+                                <td>「広げても壊れない」ようにする</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="section" id="s3">
+                <h2><i class="ti ti-gauge"></i>2. Task 4.1 AI の準備度と成熟度を評価する</h2>
+                <h3>2-0. まず全体の流れ</h3>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d1"
+                            role="img"
+                            aria-label="フローチャート 2"
+                        ></div>
+                    </div>
+                </figure>
+                <h3 id="k4-1-1">Skill 4.1.1 事業準備度を複数の観点で評価する</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI
+                    を導入する前に、組織が「始められる状態か」を、リーダーの合意・データ品質・文化的な準備・技術基盤・ガバナンスといった
+                    <strong>複数の観点</strong> で診断できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 登山にたとえると、山頂(AI
+                    の成果)を目指す前に、体力・装備・天気・仲間・地図が揃っているかを確認する作業です。「装備(ツール)だけ買って、体力(人と文化)がない」状態が最も危険です。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>観点</th>
+                                <th>確認する問い</th>
+                                <th>危険信号の例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>リーダーの合意</td>
+                                <td>経営層は目的・予算・責任者に合意しているか</td>
+                                <td>「まず AI を入れろ」とだけ指示があり、目的が曖昧</td>
+                            </tr>
+                            <tr>
+                                <td>データ品質</td>
+                                <td>必要なデータは存在し、正確で、最新か</td>
+                                <td>部署ごとに形式がバラバラ、更新が止まっている</td>
+                            </tr>
+                            <tr>
+                                <td>文化的な準備</td>
+                                <td>失敗を許容し、試す文化があるか</td>
+                                <td>新しいことは「前例がない」で止まる</td>
+                            </tr>
+                            <tr>
+                                <td>技術基盤</td>
+                                <td>データを集め、モデルを使い、運用できる基盤があるか</td>
+                                <td>データが各部署のファイルに散在</td>
+                            </tr>
+                            <tr>
+                                <td>ガバナンス</td>
+                                <td>利用ルール、リスク管理、責任者が決まっているか</td>
+                                <td>誰が AI の判断に責任を持つか不明</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> ある小売企業が「問い合わせ対応を生成 AI
+                    で自動化したい」と考えた場合。経営層の合意はあるが、FAQ
+                    が古く、商品データが部署ごとに別管理で、利用ルールもない。この場合の正しい判断は「いきなり全店導入」ではなく、<strong
+                        >データの整備とルール作りを優先しつつ小さく検証する</strong
+                    >
+                    ことです。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>理由</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>構築を始める前に準備度アセスメントを行う</td>
+                                <td>必要な能力のギャップを先に見える化できる</td>
+                                <td>[S22][S6]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    評価は技術だけでなく、ビジネス・人・ガバナンス・基盤・セキュリティ・運用の
+                                    6 つの視点で見る
+                                </td>
+                                <td>AWS CAF for AI が 6 つの視点で能力を整理している</td>
+                                <td>[S8]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    一度きりで終わらせず、導入の進行に合わせて基礎能力を進化させ、準備度を更新する
+                                </td>
+                                <td>準備度は導入が進むにつれて変わる</td>
+                                <td>[S7]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>
+                                    データ戦略の問い(必要なデータ種別の利用可能性、品質指標、ガバナンス体制)を評価項目に入れる
+                                </td>
+                                <td>データの準備度が AI の成否を左右する</td>
+                                <td>[S21]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong> -
+                    「最新ツールの導入」や「エンジニアの大量採用」を最初の一手にする選択肢は誤りになりやすいです。<strong
+                        >準備度の診断が先</strong
+                    >
+                    です。 - 準備度の評価は「合格・不合格の判定」ではなく、<strong
+                        >次の一手を決めるための診断</strong
+                    >
+                    です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S6] [S7] [S8] [S21] [S22]</p>
+                <h3 id="k4-1-2">Skill 4.1.2 AI 成熟度モデルで現在地を評価する</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI
+                    成熟度モデルを使い、企業が「実験段階」から「全社展開」までのどこにいるかを評価できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 成熟度モデルは
+                    <strong>「AI 活用の階段」</strong>
+                    です。自分が何段目にいるかが分かれば、次の一段に必要なことだけに集中できます。
+                </p>
+                <p>
+                    AWS の規範的ガイダンスには、生成 AI の成熟度モデルがあり、<strong
+                        >Envision → Experiment → Launch → Scale</strong
+                    >
+                    の 4 段階で整理されています。[S11][S12]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d2"
+                            role="img"
+                            aria-label="フローチャート 3"
+                        ></div>
+                    </div>
+                </figure>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>段階</th>
+                                <th>主な状態</th>
+                                <th>次の段階へ進むための主な活動</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Level 1 Envision</td>
+                                <td>生成 AI の基本を理解し、用途の候補を探す</td>
+                                <td>構造化されたパイロットを計画する</td>
+                                <td>[S12][S18]</td>
+                            </tr>
+                            <tr>
+                                <td>Level 2 Experiment</td>
+                                <td>
+                                    部門横断の専任チームが、検証済みのモデルやツールでパイロットを実施。リスク・ガバナンス・責任ある
+                                    AI の方針も整備
+                                </td>
+                                <td>
+                                    本番品質のインフラ(CI/CD、標準デプロイパターン)、本番用ガバナンス、可観測性(監視・ログ)を整える
+                                </td>
+                                <td>[S12][S13]</td>
+                            </tr>
+                            <tr>
+                                <td>Level 3 Launch</td>
+                                <td>
+                                    本番品質の生成 AI を、ガバナンス・監視・サポート体制付きで運用
+                                </td>
+                                <td>
+                                    運用モデルと RACI
+                                    の正式化、再利用可能なパターンの抽出、データガバナンスがセルフサービスに耐えるか見直す
+                                </td>
+                                <td>[S14]</td>
+                            </tr>
+                            <tr>
+                                <td>Level 4 Scale</td>
+                                <td>
+                                    複数部門が広く利用。全社のインフラとツール、再利用可能な部品のライブラリがある
+                                </td>
+                                <td>
+                                    標準化・自動化されたガバナンスとコスト最適化を維持しながら拡大
+                                </td>
+                                <td>[S15]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> 「部署 A が PoC を 3
+                    つ実施し、専任チームもできたが、本番用の監視や責任分担は未整備」という企業は、<strong
+                        >Level 2(Experiment)から Level 3(Launch)への移行期</strong
+                    >
+                    にいます。次の一手は、新しい PoC を増やすことではなく、<strong
+                        >本番のインフラ・ガバナンス・監視を整えること</strong
+                    >
+                    です。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    成熟度評価で「現在地」と「次の段階で重点を置く領域」を特定する
+                                </td>
+                                <td>[S11][S16]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    組織を 1 つのラベルで決めつけない。部門ごとに段階が違ってよい
+                                </td>
+                                <td>[S12]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    成熟度レベルは「次の一手」を選ぶための目安として使い、必ず順番に通過すべき関門とはみなさない。導入の各側面(aspect)には複数レベルの特徴が混在しうる
+                                </td>
+                                <td>[S12][S13][S14]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>⑤ ひっかけ注意(重要)</strong></p>
+                <blockquote>
+                    <p>
+                        <strong>成熟度モデルの段階名は、資料によって違います。</strong> -
+                        <strong>生成 AI 成熟度モデル(規範的ガイダンス)</strong>: Envision →
+                        <strong>Experiment</strong> → Launch → Scale -
+                        <strong>AWS CAF for AI の変革の旅</strong>: Envision →
+                        <strong>Align</strong> → Launch → Scale [S7]
+                    </p>
+                    <p>
+                        試験ガイドの Skill 4.4.1 の例は「envision, experiment, launch,
+                        scale」です。[S3] 「Align」は CAF の 2 番目の段階で、<strong
+                            >能力ギャップの特定や関係者の合意</strong
+                        >
+                        に焦点があります。混同しないようにしましょう。
+                    </p>
+                </blockquote>
+                <p><strong>⑥ 根拠</strong>: [S3] [S7] [S11] [S12] [S13] [S14] [S15] [S16] [S18]</p>
+                <h3 id="k4-1-3">
+                    Skill 4.1.3 人・プロセス・技術・ガバナンスの能力ギャップを特定する
+                </h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI 変革の成功を妨げる具体的な不足を、<strong
+                        >人・プロセス・技術・ガバナンス</strong
+                    >
+                    の 4 領域で見つけられるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 「AI
+                    がうまくいかない」という漠然とした悩みを、<strong
+                        >どの領域の何が足りないのか</strong
+                    >
+                    に分解する作業です。医師が「体調が悪い」を検査で具体的な原因に絞るのと同じです。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>領域</th>
+                                <th>典型的なギャップ</th>
+                                <th>対応の方向性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>人</td>
+                                <td>AI リテラシー不足、専任人材の不足、変化への抵抗</td>
+                                <td>研修、チャンピオンの任命、採用と外部パートナー活用</td>
+                            </tr>
+                            <tr>
+                                <td>プロセス</td>
+                                <td>
+                                    用途の選定・評価・承認の流れがない、ワークフローが AI 前提でない
+                                </td>
+                                <td>用途の評価基準と承認フローの整備、業務プロセスの再設計</td>
+                            </tr>
+                            <tr>
+                                <td>技術</td>
+                                <td>データ基盤の分断、評価・監視の仕組みがない</td>
+                                <td>データ統合、評価と可観測性の仕組み、本番運用の基盤</td>
+                            </tr>
+                            <tr>
+                                <td>ガバナンス</td>
+                                <td>
+                                    責任者不明、リスク分類やポリシーの欠如、データの管理ルールがない
+                                </td>
+                                <td>責任体制(RACI)、ポリシー、データガバナンスの整備</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> 「PoC
+                    は成功するのに本番に進まない」という症状を分解すると、多くの場合
+                    <strong>プロセス(本番移行の基準がない)</strong> と
+                    <strong>ガバナンス(本番運用の責任者と承認が不明)</strong>
+                    の不足が見つかります。技術を増強しても解決しません。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>4 領域すべてを見る。技術だけの診断にしない</td>
+                                <td>[S3][S8]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    部門間の依存関係と、関係者の懸念も同時に洗い出す(CAF の Align
+                                    段階の焦点)
+                                </td>
+                                <td>[S7]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    AI
+                                    導入は他の技術より部門横断の取り組みになると認識し、ギャップ対応も部門横断で進める
+                                </td>
+                                <td>[S7]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    選択肢に「技術」だけを強化する案と、「人・プロセス・ガバナンスも含む案」が並ぶ場合、後者が正解になりやすいです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S7] [S8]</p>
+                <h3 id="k4-1-4">Skill 4.1.4 投資の優先順位と成長の道筋を作る</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    戦略目標と現在の成熟度に基づき、<strong>どのギャップにどの順番で投資するか</strong>、そして
+                    <strong>次の段階へ進む道筋</strong> を作れるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong>
+                    限られた予算と人員で、全部を一度に直すことはできません。<strong
+                        >「戦略目標に効くか」と「いまの段階で実行できるか」</strong
+                    >
+                    の 2 軸で優先順位を付けます。
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d3"
+                            role="img"
+                            aria-label="フローチャート 4"
+                        ></div>
+                    </div>
+                </figure>
+                <p><strong>③ 具体例</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>状況</th>
+                                <th>優先度の判断</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>「顧客対応の効率化」が戦略目標で、FAQ データは整備済み</td>
+                                <td>最優先。すぐに小さく検証できる</td>
+                            </tr>
+                            <tr>
+                                <td>同じ目標だが、データが部署ごとに分断</td>
+                                <td>まずデータ統合と責任者の任命(前提整備)</td>
+                            </tr>
+                            <tr>
+                                <td>目標と関係が薄い高度な AI 機能の導入</td>
+                                <td>後回し。定期的に再評価</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    成熟度の各段階の「次へ進むための活動」を投資計画に落とし込む
+                                </td>
+                                <td>[S13][S14]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    用途はビジネスインパクトと実現可能性の 2 軸で優先順位を付ける
+                                </td>
+                                <td>[S4]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>成長の道筋は段階的にし、各段階で測定可能な成果を置く</td>
+                                <td>[S7][S27]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「最も高度な技術」や「最大規模の投資」を優先する選択肢は誤りになりやすいです。<strong
+                        >戦略目標と現在地に合うもの</strong
+                    >
+                    が正解です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S4] [S7] [S13] [S14] [S27]</p>
+            </section>
+            <section class="section" id="s4">
+                <h2><i class="ti ti-database"></i>3. Task 4.2 データとインフラの土台を整える</h2>
+                <h3>3-0. データが AI の燃料になる</h3>
+                <p>
+                    AWS CAF for AI は、<strong
+                        >高品質なデータが AI
+                        を学習・調整し、予測が業務成果を生み、その成果が新しいデータを生む</strong
+                    >、という好循環を
+                    <strong>AI フライホイール</strong>
+                    と呼びます。データとデータ戦略が、このフライホイールを回し続ける燃料です。[S7]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d4"
+                            role="img"
+                            aria-label="フローチャート 5"
+                        ></div>
+                    </div>
+                </figure>
+                <h3 id="k4-2-1">Skill 4.2.1 データの準備度を評価する(品質・アクセス性・サイロ)</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> データの
+                    <strong>品質</strong>、<strong>アクセス性</strong>、そして
+                    <strong>データサイロ(部門ごとに孤立したデータ)</strong> が AI
+                    の取り組みに与える影響を評価できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AI
+                    は「入れたデータの質」がそのまま出力の質になります。これは「Garbage in, garbage
+                    out(ゴミを入れればゴミが出る)」と呼ばれます。[S19] 量が多いだけでは足りません。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>評価軸</th>
+                                <th>意味</th>
+                                <th>確認の問い</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>完全性</td>
+                                <td>必要な項目が欠けていないか</td>
+                                <td>空欄や欠損が多くないか</td>
+                            </tr>
+                            <tr>
+                                <td>正確性</td>
+                                <td>内容が事実と合っているか</td>
+                                <td>誤記や重複がないか</td>
+                            </tr>
+                            <tr>
+                                <td>一貫性</td>
+                                <td>形式や定義が揃っているか</td>
+                                <td>部署ごとに単位や表記が違わないか</td>
+                            </tr>
+                            <tr>
+                                <td>適時性</td>
+                                <td>最新の状態か</td>
+                                <td>更新が止まっていないか</td>
+                            </tr>
+                            <tr>
+                                <td>アクセス性</td>
+                                <td>必要な人とシステムが安全に使えるか</td>
+                                <td>取り出すのに何週間もかかっていないか</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    (完全性・正確性・一貫性・適時性は、AWS の生成 AI
+                    ワークロード評価の設問例で品質指標として挙げられています。[S21])
+                </p>
+                <p>
+                    <strong>データサイロの影響</strong> サイロがあると、AI
+                    は会社の一部の情報しか見られず、回答が偏ったり、部署ごとに似た AI
+                    を重複して作ったりします。AWS の Generative AI Lens
+                    は、構造化データと非構造化データを統合し、データがどこにあっても一元的にアクセスできる状態を目指すよう述べています。[S20]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> 営業部は顧客データを CRM
+                    に、サポート部はチケット管理ツールに、マーケ部は表計算ファイルに保存している。各部門が別々に
+                    AI を試すと、顧客像が一致せず、<strong
+                        >「顧客の全体像を把握する AI」が作れません</strong
+                    >。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    AI
+                                    に使うデータ種別を洗い出し、利用可能な割合と品質基準を満たす割合を測る
+                                </td>
+                                <td>[S21]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    データ品質の KPI とダッシュボードを設定し、事業目標と結び付ける
+                                </td>
+                                <td>[S29]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    データ品質を担う専任のスチュワード(管理担当)を置き、権限と資源を与える
+                                </td>
+                                <td>[S29]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>非構造化データ(文書、画像など)も戦略的な資産として扱う</td>
+                                <td>[S17][S20]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>
+                                    生成 AI の RAG
+                                    やファインチューニングでも、データ準備の質が結果を左右すると認識する
+                                </td>
+                                <td>[S19]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「データ量を増やせば解決する」は誤りになりやすいです。<strong
+                        >質・アクセス性・統合</strong
+                    >
+                    が重要です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S17] [S19] [S20] [S21] [S29]</p>
+                <p><strong>フローで見るデータ準備度の判断</strong></p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d5"
+                            role="img"
+                            aria-label="フローチャート 6"
+                        ></div>
+                    </div>
+                </figure>
+                <h3 id="k4-2-2">Skill 4.2.2 データ戦略・オーナーシップ・共有の枠組み</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI の基盤となる
+                    <strong>データ戦略、データオーナーシップ、データ共有の枠組み</strong>
+                    の重要性を説明できるか。[S3]
+                </p>
+                <p><strong>② やさしい説明</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>用語</th>
+                                <th>やさしい意味</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>データ戦略</td>
+                                <td>「どのデータを、何のために、どう集め守り活用するか」の方針</td>
+                                <td>顧客対応 AI のために FAQ と問い合わせ履歴を整備する</td>
+                            </tr>
+                            <tr>
+                                <td>データオーナーシップ</td>
+                                <td>「このデータに責任を持つのは誰か」を決めること</td>
+                                <td>商品マスタは商品企画部が責任者</td>
+                            </tr>
+                            <tr>
+                                <td>データ共有の枠組み</td>
+                                <td>部門間や外部とデータを共有する際の規則と合意</td>
+                                <td>誰が、何の目的で、どの範囲まで使えるか</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    AWS の資料は、データガバナンスを支える柱に <strong>品質保証</strong> と
+                    <strong>オーナーシップ</strong> を挙げ、オーナーシップは単なる所有ではなく
+                    <strong>スチュワードシップ(責任ある管理)</strong>
+                    の意識への転換が重要だと述べています。[S29]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> ある保険会社では、契約データの責任部署が曖昧で、AI
+                    用に使ってよい範囲が不明。結果、法務確認のたびに数週間止まる。<strong
+                        >データ責任者、利用目的別のアクセス規則、個人情報の扱い</strong
+                    >
+                    を事前に定めていれば、検証のスピードが上がる。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>部門横断のデータガバナンス委員会を置き、方針を管理する</td>
+                                <td>[S21]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    ロールベースのアクセス制御、データ分類、定期監査を組み合わせる
+                                </td>
+                                <td>[S21]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>データ戦略を AI 導入の各段階(Envision〜Scale)に結び付ける</td>
+                                <td>[S17][S18]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>4 つの柱(人・基盤・運用・ガバナンス)でデータ戦略を整理する</td>
+                                <td>[S18]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>
+                                    プライバシー保護と AI のデータ需要のバランスを戦略に明記する
+                                </td>
+                                <td>[S21]</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>
+                                    過度に制限的・中央集権的なデータガバナンスは、部門を超えた拡大を妨げる。セルフサービスを許しつつ標準ポリシーとアクセス制御を維持する
+                                </td>
+                                <td>[S14]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「データを全社で自由に共有する」も「データを全部ロックダウンする」も極端です。<strong
+                        >ルールに基づく共有</strong
+                    >
+                    が正解になりやすいです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S14] [S17] [S18] [S21] [S29]</p>
+                <h3 id="k4-2-3">Skill 4.2.3 技術・インフラ要件を戦略レベルで評価する</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI の取り組みを支えるための
+                    <strong>基盤の要件</strong>
+                    を、技術者ではなくビジネス側の視点で評価できるか。[S3]
+                    (設計や構築そのものは範囲外です。[S2])
+                </p>
+                <p><strong>② やさしい説明</strong> 経営者として確認したいのは次の問いです。</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>観点</th>
+                                <th>ビジネス側の問い</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>使うモデルの選択肢</td>
+                                <td>既製の AI サービスで足りるか、独自のカスタマイズが必要か</td>
+                            </tr>
+                            <tr>
+                                <td>データの流れ</td>
+                                <td>必要なデータを安全に AI へ届けられるか</td>
+                            </tr>
+                            <tr>
+                                <td>セキュリティと責任分担</td>
+                                <td>
+                                    どこまでが自社の責任で、どこからがクラウド事業者・モデル提供者の責任か
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>運用と監視</td>
+                                <td>本番で品質・コスト・リスクを監視できるか</td>
+                            </tr>
+                            <tr>
+                                <td>コスト</td>
+                                <td>料金体系と総コストを見通せるか</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>AWS の主要サービス(戦略レベルの理解で十分)</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>サービス</th>
+                                <th>戦略レベルの位置づけ</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Amazon Bedrock</td>
+                                <td>
+                                    生成 AI
+                                    アプリやエージェントを構築するためのプラットフォーム。Guardrails、Knowledge
+                                    Bases、料金の選択肢が論点
+                                </td>
+                                <td>[S2][S31]</td>
+                            </tr>
+                            <tr>
+                                <td>Amazon SageMaker AI</td>
+                                <td>
+                                    カスタム
+                                    ML。マネージド型で足りるか、カスタム構築が必要かを判断する場面で登場
+                                </td>
+                                <td>[S2]</td>
+                            </tr>
+                            <tr>
+                                <td>Amazon Quick</td>
+                                <td>
+                                    AI
+                                    による業務支援アシスタント(調査、ビジネスインサイト、自動化など)
+                                </td>
+                                <td>[S1][S2]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>責任共有モデルと AI</strong> AWS の責任共有モデルは、AWS
+                    がクラウドの基盤部分を運用し、顧客が自分のデータやアプリの保護を担う、という役割分担です。生成
+                    AI では、<strong
+                        >自社の使い方(既存モデルを API
+                        で使う、自社データでファインチューニングするなど)によって、自社が担う範囲が変わります</strong
+                    >。AWS はこれを整理する「Generative AI Security Scoping
+                    Matrix」を公開しています。[S30] また Amazon Bedrock
+                    は、入力と出力をモデル提供者と共有せず、基盤モデルの学習にも使わないと説明しています。[S31]
+                </p>
+                <p>
+                    <strong>料金体系</strong> 試験ガイドは、AWS の AI サービスの料金体系として
+                    <strong>従量課金型、インスタンス型、シート(利用者数)型</strong>
+                    を挙げ、コスト最適化の例として Savings Plans、見積もりに AWS Pricing Calculator
+                    と AWS Cost Explorer、構築・購入・提携の判断に AWS Marketplace
+                    を挙げています。[S2][S5]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ツール・概念</th>
+                                <th>使いどころ</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AWS Pricing Calculator</td>
+                                <td>導入前のコスト見積もり</td>
+                                <td>[S2][S33]</td>
+                            </tr>
+                            <tr>
+                                <td>AWS Cost Explorer</td>
+                                <td>
+                                    過去のコストと使用量を可視化・分析し、将来を予測する(過去 13
+                                    か月の表示、18 か月先の予測が可能)
+                                </td>
+                                <td>[S32]</td>
+                            </tr>
+                            <tr>
+                                <td>Savings Plans</td>
+                                <td>利用量のコミットによる割引(コスト最適化策)</td>
+                                <td>[S2][S33]</td>
+                            </tr>
+                            <tr>
+                                <td>AWS Marketplace</td>
+                                <td>構築(Build)・購入(Buy)・提携(Partner)の比較検討</td>
+                                <td>[S2]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong>
+                    「社内文書の検索・要約」という用途なら、自前でモデルを開発するより、<strong
+                        >マネージドサービスで既存モデルを使い、自社データを組み合わせる</strong
+                    >
+                    ほうが短期間で価値を出せる場合が多い。ただし、独自データでの高度なカスタマイズが競争優位に直結するなら、カスタム
+                    ML も検討対象になる。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    AI サービス層(既製モデルを利用する層)と ML
+                                    サービス層(モデルを訓練・調整する層)を区別して基盤を考える
+                                </td>
+                                <td>[S10]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    導入の採用状況を測るフィードバックの仕組みと指標を最初から設ける
+                                </td>
+                                <td>[S10]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>責任共有の範囲を、自社の AI の使い方ごとに確認する</td>
+                                <td>[S30]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>
+                                    料金体系(従量、インスタンス、シート)を理解し、総コストで判断する
+                                </td>
+                                <td>[S2][S27]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>
+                                    セキュリティ・ガバナンスの実装詳細は専門チームに任せ、ビジネス側は要件と責任範囲の確認に集中する
+                                </td>
+                                <td>[S2]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「アルゴリズムの選定」「ハイパーパラメータ調整」「パイプライン構築」など
+                    <strong>技術実装の選択肢</strong>
+                    は範囲外です。戦略・責任・コストの観点の選択肢を選びます。[S2]
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S1] [S2] [S5] [S10] [S27] [S30] [S31] [S32] [S33]</p>
+            </section>
+            <section class="section" id="s5">
+                <h2>
+                    <i class="ti ti-users-group"></i>4. Task 4.3 全社の変革を率い、AI 人材を育てる
+                </h2>
+                <h3>4-0. 全体の流れ</h3>
+                <p>
+                    AWS CAF for AI は、AI の取り組みは
+                    <strong
+                        >技術だけの課題ではなく、ガードレールを作り推進する「人」に決定的に依存する</strong
+                    >
+                    と述べ、<strong>文化の重要性</strong> を強調しています。[S9]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d6"
+                            role="img"
+                            aria-label="フローチャート 7"
+                        ></div>
+                    </div>
+                </figure>
+                <h3 id="k4-3-1">Skill 4.3.1 経営層のスポンサーシップと AI チャンピオン</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> 経営層の後ろ盾を確立し、現場で推進する
+                    <strong>AI チャンピオン</strong>
+                    を見つけて権限を与えることで、全社で勢いを保てるか。[S3]
+                </p>
+                <p><strong>② やさしい説明</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>役割</th>
+                                <th>何をする人か</th>
+                                <th>例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>経営スポンサー</td>
+                                <td>予算・優先順位・障害の除去を担保する上位の後ろ盾</td>
+                                <td>役員が AI 推進の成果責任を持つ</td>
+                            </tr>
+                            <tr>
+                                <td>AI チャンピオン</td>
+                                <td>各部門で AI 活用を広め、現場の声を吸い上げる旗振り役</td>
+                                <td>営業部の中堅が勉強会を主催</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    AWS の COE 解説では、AI/ML COE を作る最初の一歩は
+                    <strong>上級リーダーからのスポンサーシップの確保</strong>
+                    だとされています。[S25] また、AI ステアリング委員会に AI
+                    チャンピオンを置くことも推奨されています。[S26]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> AI
+                    の専任チームだけが頑張っても、営業・経理・法務が動かなければ全社には広がりません。<strong
+                        >スポンサーが優先順位を明言し、各部門のチャンピオンが現場に橋をかける</strong
+                    >
+                    ことで、継続的な推進力になります。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>スポンサーは目的・予算・意思決定権限を持つ人にする</td>
+                                <td>[S25]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>各部門にチャンピオンを置き、時間と権限を公式に与える</td>
+                                <td>[S3][S26]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    経営層の関与は一度きりでなく、進捗レビューなど継続的な仕組みにする
+                                </td>
+                                <td>[S9][S35]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>取り組みを事業目標・KPI と結び付けて報告する</td>
+                                <td>[S26]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong> 「ボトムアップだけで自然に広がる」「IT
+                    部門に全責任を任せる」は、推進力が続かない選択肢として誤りになりやすいです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S9] [S25] [S26] [S35]</p>
+                <h3 id="k4-3-2">Skill 4.3.2 部門横断チームと明確な責任体制</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    事業責任者、技術専門家、法務、コンプライアンスなど
+                    <strong>多様な専門性を持つ部門横断チーム</strong> を作り、AI の取り組みに
+                    <strong>明確な責任基準</strong> を割り当てられるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AI
+                    のプロジェクトは、技術だけでは成立しません。法務(権利・規制)、コンプライアンス(ルール)、事業部門(価値)、技術(実現)が揃って初めて前に進みます。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>メンバー</th>
+                                <th>貢献</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>事業責任者</td>
+                                <td>課題・価値・成功指標を定義</td>
+                            </tr>
+                            <tr>
+                                <td>技術専門家</td>
+                                <td>実現可能性と実装</td>
+                            </tr>
+                            <tr>
+                                <td>法務・コンプライアンス</td>
+                                <td>規制、知的財産、契約、リスクの確認</td>
+                            </tr>
+                            <tr>
+                                <td>データ責任者</td>
+                                <td>データの品質とアクセス</td>
+                            </tr>
+                            <tr>
+                                <td>現場の代表者</td>
+                                <td>実際の業務との整合、受け入れ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    責任体制には
+                    <strong>RACI(実行責任者・説明責任者・相談先・報告先を整理する表)</strong>
+                    がよく使われます。AWS の成熟度モデルでも、運用モデルと RACI の整備が
+                    Launch〜Scale の重要な活動とされています。[S14][S15]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> 採用スクリーニングの AI
+                    を検討する場合、人事(業務)、技術、法務(差別禁止や個人情報)、コンプライアンスが最初から関与していれば、後から「使えない」と判明する手戻りを防げる。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    IT、データサイエンス、法務、事業部門の代表を含むチームを作る
+                                </td>
+                                <td>[S24]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    各取り組みに <strong>説明責任を負う責任者を 1 人</strong> 置く
+                                </td>
+                                <td>[S3][S14]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>運用モデルと RACI を文書化し、組織内に公開する</td>
+                                <td>[S14][S15]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>
+                                    モデルの評価、法務レビュー、アクセス申請などの社内プロセスを整備する
+                                </td>
+                                <td>[S23]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「技術者だけのチーム」「責任者が曖昧な合議制」は誤りになりやすいです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S14] [S15] [S23] [S24]</p>
+                <h3 id="k4-3-3">Skill 4.3.3 透明なコミュニケーション戦略</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    従業員の不安(導入時期、期待する成果、自分の役割への影響)に応える
+                    <strong>透明なコミュニケーション戦略</strong> を作れるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 「AI
+                    に仕事を奪われるのでは」という不安は自然です。情報が少ないほど噂が広がります。<strong
+                        >早く、正直に、繰り返し、双方向で</strong
+                    >
+                    伝えることが基本です。AWS の資料も、AI
+                    が生成する洞察への信頼を築くための変更管理プログラムや、関係者向けのコミュニケーションチャネルの再設計を推奨しています。[S26]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>伝えるべきこと</th>
+                                <th>具体的な内容の例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>なぜ導入するか</td>
+                                <td>目的と期待する成果(業務の負荷軽減、品質向上など)</td>
+                            </tr>
+                            <tr>
+                                <td>いつ何が変わるか</td>
+                                <td>導入のスケジュール、段階、影響を受ける業務</td>
+                            </tr>
+                            <tr>
+                                <td>自分の役割はどうなるか</td>
+                                <td>役割の変化、再教育の機会、意思決定への関与</td>
+                            </tr>
+                            <tr>
+                                <td>どう意見を届けるか</td>
+                                <td>質問窓口、フィードバックの経路</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> 経理部門に請求書処理の AI
+                    を導入する際、「何か月後に」「どの作業が」「どう変わり」「どんな研修があるか」を導入前に説明し、説明会と質疑の場を複数回設けると、抵抗が大きく下がる。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>導入の計画段階から伝え、決定後の通知だけにしない</td>
+                                <td>[S7][S35]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>良い情報だけでなく、不確実な点や限界も正直に伝える</td>
+                                <td>[S3]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>一方向の発表でなく、質問・意見を集める双方向の仕組みにする</td>
+                                <td>[S26]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>役割への影響を具体的に示し、再教育の機会とセットで伝える</td>
+                                <td>[S9]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「不安を煽らないよう、導入直前まで伝えない」は誤りです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S7] [S9] [S26] [S35]</p>
+                <h3 id="k4-3-4">Skill 4.3.4 文化的な障壁を見抜き、リーダーの介入策を決める</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    <strong>リスク回避、変化への抵抗、失敗への恐れ</strong>
+                    などの文化的障壁を認識し、リーダーが取るべき介入を選べるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AI
+                    は「やってみないと分からない」「出力を調整して改善する」性質が強く、<strong
+                        >試して学ぶ文化</strong
+                    >
+                    が重要です。AWS CAF for AI も、AI
+                    では望ましい出力を得るために適切な入力を探し続ける文化が、より重要だと述べています。[S9]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>障壁</th>
+                                <th>よく見られる兆候</th>
+                                <th>リーダーの介入策</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>リスク回避</td>
+                                <td>「前例がない」「失敗したら責任問題」</td>
+                                <td>安全に実験できる範囲を明示し、失敗しても責めない</td>
+                            </tr>
+                            <tr>
+                                <td>変化への抵抗</td>
+                                <td>新しいツールを使わない、従来のやり方に固執</td>
+                                <td>
+                                    早期から関与させ、現場の課題解決から始める。クイックウィンを共有
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>失敗への恐れ</td>
+                                <td>完璧になるまで公開しない</td>
+                                <td>「生産的な失敗」から学びを共有する文化を作る</td>
+                            </tr>
+                            <tr>
+                                <td>雇用不安</td>
+                                <td>噂が広がる、協力が減る</td>
+                                <td>役割の変化と再教育を透明に説明</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    AWS は、<strong>安全に実験できる文化</strong> を作ること、そして
+                    <strong>「生産的な失敗」から学びを体系的に集めること</strong>
+                    を原則に挙げています。行動しないコストが計算された実験のリスクを上回ることもあると述べています。[S27]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> ある部門で AI の試行が進まない場合、マネージャー自身が
+                    AI
+                    ツールを使い、うまくいかなかった例も共有すると、メンバーが試しやすくなる(リーダーが手本を示す)。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>安全な実験の範囲とルールを明示する</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>失敗から得た学びを、プロジェクトをまたいで体系的に蓄積する</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    変革の初期から、リーダーシップ・文化・組織構造に関する変更管理の枠組みを組み込む
+                                </td>
+                                <td>[S35]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>リーダー自身が行動で示す</td>
+                                <td>[S9]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「ルールで使用を義務化して罰則を設ける」などの強制は、抵抗を強めるため誤りになりやすいです。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S9] [S27] [S35]</p>
+                <h3 id="k4-3-5">Skill 4.3.5 AI リテラシーを加速する人材育成の手法</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> 全社の AI リテラシーを高めるため、<strong
+                        >POC プログラム、ハッカソン、研修、責任ある AI 研修</strong
+                    >
+                    などから適切な手法を選べるか。[S3]
+                </p>
+                <p><strong>② やさしい説明</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>手法</th>
+                                <th>目的</th>
+                                <th>向いている対象・場面</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>POC(概念実証)プログラム</td>
+                                <td>小さく作って価値と実現性を体験で確認</td>
+                                <td>具体的な用途がある部門</td>
+                            </tr>
+                            <tr>
+                                <td>ハッカソン</td>
+                                <td>短期間で多くのアイデアを形にし、熱量を高める</td>
+                                <td>発想を広げたい、部門横断の交流を作りたい</td>
+                            </tr>
+                            <tr>
+                                <td>研修・トレーニング</td>
+                                <td>体系的に知識とスキルを底上げ</td>
+                                <td>全社員、役割別</td>
+                            </tr>
+                            <tr>
+                                <td>責任ある AI 研修</td>
+                                <td>公平性・透明性・プライバシー・安全性などの原則と運用を理解</td>
+                                <td>全員(特に AI を使う・承認する人)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    AWS の COE 解説は、COE
+                    が研修プログラム、ワークショップ、認定プログラム、ハッカソンを提供できるとしています。[S25]
+                    また、技術面と責任ある AI
+                    の両方を含む包括的な研修プログラムを推奨しています。[S23]
+                </p>
+                <p>
+                    AWS CAF の People 視点には、従業員の現在の知識・スキル・関心を分析する「Learning
+                    Needs Analysis(学習ニーズ分析)」の例があります。[S36b] また、CAF for AI は、AI
+                    人材を「ユーザーからビルダーまで」引き入れ、育成・維持していくことを強調しています。[S9]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> 全社員向けには基礎研修と責任ある AI
+                    研修、営業・人事など用途が明確な部門には POC
+                    プログラム、部門横断の発想を広げたいときはハッカソン、と
+                    <strong>目的に応じて組み合わせる</strong>。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>まず現在のスキルと関心を把握してから育成計画を作る</td>
+                                <td>[S36b]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>役割別(一般利用者、推進者、ビルダー)に内容を分ける</td>
+                                <td>[S9]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>技術研修と責任ある AI 研修をセットにする</td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>継続的な再教育の機会を設ける</td>
+                                <td>[S9]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>研修を COE の活動として定着させる</td>
+                                <td>[S25]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「一部の専門家だけを育成する」「一度の研修で完了」は誤りになりやすいです。<strong
+                        >全社・継続的・目的別</strong
+                    >
+                    が基本です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S9] [S23] [S25] [S36b]</p>
+                <h3 id="k4-3-6">Skill 4.3.6 人の役割を「手作業」から「監督と協働」へ移す</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> 人の役割を、手作業中心から
+                    <strong>AI の監督・AI との協働</strong>
+                    へ移す機会を見つけ、人の強み(批判的思考、共感、創造性)と AI の能力を
+                    <strong>戦略的にバランス</strong> させられるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AI
+                    は大量で繰り返しの処理やパターン認識が得意で、人は文脈の理解、倫理的判断、共感、創造が得意です。<strong
+                        >AI に任せる部分と人が担う部分を設計する</strong
+                    >
+                    ことが重要です。
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d7"
+                            role="img"
+                            aria-label="フローチャート 8"
+                        ></div>
+                    </div>
+                </figure>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>業務の特徴</th>
+                                <th>推奨される役割分担(考え方)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>大量・反復・ルールが明確</td>
+                                <td>
+                                    AI が中心、人は品質監視。ルールで足りるなら AI
+                                    でなくルールベースの自動化も選択肢
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>判断にリスクや影響が大きい</td>
+                                <td>人が最終判断。AI は材料を提供</td>
+                            </tr>
+                            <tr>
+                                <td>共感・交渉・創造が価値の源泉</td>
+                                <td>人が中心、AI は準備や分析を支援</td>
+                            </tr>
+                            <tr>
+                                <td>AI の出力が不確実(ハルシネーション、バイアス)</td>
+                                <td>人の確認とエスカレーション基準を設ける</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    (役割分担の表は、試験ガイドの「人による監督、ガードレール、エスカレーションの判断」「AI
+                    でなくルールベース自動化を使うべき場面」の観点を初学者向けに整理したものです。[S4])
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> カスタマーサポートで、AI
+                    が問い合わせの一次回答を下書きし、人が確認して送信。怒りや複雑な事情を含む案件は自動でオペレーターに引き継ぐ。人は
+                    <strong>感情への配慮と例外対応</strong> に時間を使えるようになる。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    「自動化できる作業」でなく「人が価値を出せる仕事」を起点に再設計する
+                                </td>
+                                <td>[S3]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>エスカレーションの基準(どんな場合に人へ戻すか)を明文化する</td>
+                                <td>[S4]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>監督する人への研修と、責任の所在の明確化をセットにする</td>
+                                <td>[S9][S14]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>役割の変化と再教育の機会を、従業員へ透明に説明する</td>
+                                <td>[S3][S9]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「人を完全に置き換える」「人は何も変わらない」の両極端は誤りになりやすいです。<strong
+                        >人の役割が監督・協働へ進化する</strong
+                    >
+                    という見方が正解です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S4] [S9] [S14]</p>
+            </section>
+            <section class="section" id="s6">
+                <h2>
+                    <i class="ti ti-rocket"></i>5. Task 4.4 パイロットから全社展開へスケールする
+                </h2>
+                <h3 id="k4-4-1">Skill 4.4.1 反復的な変革アプローチ(段階を踏んで進める)</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    <strong>Envision → Experiment → Launch → Scale</strong> のような段階を踏む
+                    <strong>反復的な変革アプローチ</strong> を適用できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 一度に完璧な全社導入を目指さず、<strong
+                        >小さく試し、学び、広げる</strong
+                    >
+                    を繰り返します。AWS CAF for AI
+                    も、変革は反復的・漸進的な改善に基づくべきとしています。[S7]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d8"
+                            role="img"
+                            aria-label="フローチャート 9"
+                        ></div>
+                    </div>
+                </figure>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>段階</th>
+                                <th>ゴール</th>
+                                <th>主な活動</th>
+                                <th>進める目安(出口)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Envision</td>
+                                <td>用途と目的を明確化</td>
+                                <td>事業成果から逆算、関係者の特定、必要データの把握</td>
+                                <td>優先用途と成功指標が合意されている</td>
+                            </tr>
+                            <tr>
+                                <td>Experiment</td>
+                                <td>価値と実現性を検証</td>
+                                <td>パイロット、PoC、モデルやツールの選定</td>
+                                <td>検証結果が出て、継続・中止が判断できる</td>
+                            </tr>
+                            <tr>
+                                <td>Launch</td>
+                                <td>本番で価値を実証</td>
+                                <td>本番用インフラ、ガバナンス、監視、サポート</td>
+                                <td>本番で成果を測定できている</td>
+                            </tr>
+                            <tr>
+                                <td>Scale</td>
+                                <td>広範囲に持続的な価値</td>
+                                <td>再利用部品、標準パターン、運用モデルの整備</td>
+                                <td>複数部門が自走して活用している</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    (Envision の活動は [S7][S18]、各段階の内容は [S12][S13][S14][S15]
+                    を基にしています。出口の目安は初学者向けの整理です。)
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    各段階でデータ戦略・ガバナンス・セキュリティ・運用の整合を取る
+                                </td>
+                                <td>[S17]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>事業成果から逆算して進める</td>
+                                <td>[S7]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    すべてのプロジェクトが本番に到達するとは限らない。学びを蓄積して次に活かす
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「要件をすべて固めてから一括導入(ビッグバン)」は誤りになりやすいです。<strong
+                        >反復的・段階的</strong
+                    >
+                    が正解です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S7] [S12] [S13] [S14] [S15] [S17] [S18] [S27]</p>
+                <h3 id="k4-4-2">Skill 4.4.2 短期の成果から全社展開へ積み上げる</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    <strong>短期の成果(クイックウィン)から始めて、全社展開へ築く</strong>
+                    スケーリング手法を実行できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AWS は、最初は
+                    <strong
+                        >明確に定義された範囲の小さなプロジェクトで、はっきりした事業価値を示す</strong
+                    >
+                    ことを推奨しています。[S23] また、AI の取り組みを
+                    <strong>投資ポートフォリオ</strong>
+                    とみなし、クイックウィン(数か月で価値)、戦略的施策(中長期の変革)、ムーンショット(事業を変革しうる挑戦)をバランスさせる考え方を示しています。[S27]
+                </p>
+                <p>
+                    用途の優先順位付けは、<strong>ビジネスインパクトと実現可能性</strong>
+                    で行います。[S4]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>実現可能性が高い</th>
+                                <th>実現可能性が低い</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>インパクト大</strong></td>
+                                <td><strong>最優先</strong>(クイックウィンの候補)</td>
+                                <td>戦略的施策(前提整備を進めながら中長期で)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>インパクト小</strong></td>
+                                <td>余力があれば(学習目的)</td>
+                                <td>見送り</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong>
+                    「社内問い合わせの一次対応」のように、範囲が明確でデータが揃い、効果を測りやすい用途を最初に選ぶ。成功事例と学びを他部門へ展開し、次により大きな用途へ進む。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>範囲が限定され、測定可能な価値がある案件から始める</td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>成果を可視化して共有し、次の投資の根拠にする</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>クイックウィンだけに偏らず、戦略的施策も並行して育てる</td>
+                                <td>[S27]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「最も大規模で野心的な案件から始める」は誤りになりやすいです。ただし
+                    <strong>クイックウィンだけで終わらせず、全社展開へ橋渡しする</strong>
+                    ことが重要です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S4] [S23] [S27]</p>
+                <h3 id="k4-4-3">Skill 4.4.3 AI センターオブエクセレンス(COE)と部門横断の連携</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    <strong>AI COE</strong>
+                    と、部門横断の連携の仕組みを作り、スケールを支えられるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> AWS の解説では、AI/ML COE は、組織内の AI/ML
+                    の取り組みを調整・監督する専任の組織で、<strong>集中型または連合型</strong>
+                    があり、事業戦略と価値提供の橋渡しをします。成果物は
+                    <strong>ガイダンス(ベストプラクティス、教訓、チュートリアルなど)</strong> と
+                    <strong
+                        >能力(人のスキル、ツール、技術ソリューション、再利用可能なテンプレート)</strong
+                    >
+                    の 2 種類です。[S25]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d9"
+                            role="img"
+                            aria-label="フローチャート 10"
+                        ></div>
+                    </div>
+                </figure>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>内容</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>最初の一歩</td>
+                                <td>
+                                    上級リーダーのスポンサーシップ、リーダーシップ体制、ミッションと目的の設定
+                                </td>
+                                <td>[S25]</td>
+                            </tr>
+                            <tr>
+                                <td>組織形態</td>
+                                <td>集中型または連合型</td>
+                                <td>[S25]</td>
+                            </tr>
+                            <tr>
+                                <td>連携</td>
+                                <td>
+                                    事業部門と定期的に関わり、用途の機会を発見しつつ、ガバナンスと品質基準を維持
+                                </td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>関連体制</td>
+                                <td>AI COE に加え、モデルガバナンス委員会を置くことを検討</td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>社内プロセス</td>
+                                <td>新モデルの技術評価、法務レビュー、アクセス申請などを整備</td>
+                                <td>[S23]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    集中型と連合型の違いは、次のように整理できます(整理は筆者によるもので、詳細は
+                    [S25] を参照)。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>形態</th>
+                                <th>特徴</th>
+                                <th>向いている状況</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>集中型</td>
+                                <td>専門家を 1 か所に集め、標準化と品質を強く担保</td>
+                                <td>立ち上げ期、専門家が少ない</td>
+                            </tr>
+                            <tr>
+                                <td>連合型</td>
+                                <td>各部門に拠点を置き、中央が調整</td>
+                                <td>部門ごとに文脈が異なり、規模が大きい</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> 各部門が別々に AI
+                    を調達・構築して重複や品質のばらつきが生じている場合、COE が
+                    <strong>共通のテンプレート、評価基準、ガイドライン</strong>
+                    を提供し、部門の取り組みを支える。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>COE のミッションと責任範囲を明確にし、スポンサーを確保する</td>
+                                <td>[S25]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    「ゲートキーパー」でなく、ガイダンスと能力を提供する
+                                    <strong>支援役</strong> にする
+                                </td>
+                                <td>[S25]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    COE を中心に、組織全体が既存の AI サービスと COE
+                                    を活用できるよう人材を育てる
+                                </td>
+                                <td>[S9]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>開発の運用成熟(MLOps)の実践を COE から広める</td>
+                                <td>[S9]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>
+                                    クラウド COE
+                                    の考え方(ガイダンスとガバナンスの提供、文化変革の推進)も参考にする
+                                </td>
+                                <td>[S36]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong> 「COE がすべての AI 開発を集中して担う」「COE
+                    はルールを押し付ける部署」は誤りになりやすいです。<strong
+                        >支援し、標準化し、再利用を促す</strong
+                    >
+                    役割です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S9] [S23] [S25] [S36]</p>
+                <h3 id="k4-4-4">Skill 4.4.4 継続的なフィードバックと成功指標</h3>
+                <p>
+                    <strong>① 何を問われるか</strong>
+                    <strong>継続的なフィードバックの仕組みと成功指標</strong> で、AI
+                    の取り組みの進捗と長期的な価値を追跡できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong> 「導入した」で終わらず、<strong
+                        >効果が出ているか、使われているか、品質は保たれているか</strong
+                    >
+                    を測り続けます。AWS は、測定の枠組みを
+                    <strong>過去データによるベースライン指標</strong>
+                    から始め、技術指標(精度、応答時間)と事業指標(生産性向上、顧客満足度)の両方を扱うよう述べています。[S27]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>指標カテゴリ</th>
+                                <th>例</th>
+                                <th>見ること</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>事業価値</td>
+                                <td>コスト削減、生産性向上、収益、顧客満足度</td>
+                                <td>事業目標への貢献</td>
+                            </tr>
+                            <tr>
+                                <td>利用・浸透</td>
+                                <td>利用者数、利用頻度、継続率</td>
+                                <td>現場で使われているか</td>
+                            </tr>
+                            <tr>
+                                <td>品質・信頼性</td>
+                                <td>精度、応答時間、エラーや誤情報の発生率</td>
+                                <td>品質が保たれているか</td>
+                            </tr>
+                            <tr>
+                                <td>リスク・コンプライアンス</td>
+                                <td>インシデント件数、ポリシー違反、エスカレーション率</td>
+                                <td>安全に運用できているか</td>
+                            </tr>
+                            <tr>
+                                <td>コスト</td>
+                                <td>単位あたりコスト、総所有コスト</td>
+                                <td>採算が合っているか</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    (カテゴリ分けは初学者向けの整理で、ベースライン指標・技術指標と事業指標の両方を扱う考え方は
+                    [S27]、プラットフォームの採用状況の指標は [S10] に基づきます。)
+                </p>
+                <p>
+                    <strong>AI は「放置できない」</strong>
+                    試験ガイドの関連キーワードには、モデルドリフト(時間とともに性能が変わる現象)や性能変化を理由に、AI
+                    システムには継続的な監視が必要という点が挙がっています。[S4] 生成 AI
+                    は出力が一定でない(非決定的)ため、従来のソフトウェアとは違う評価の枠組みが必要です。[S28]
+                </p>
+                <p>
+                    <strong>③ 具体例</strong> 問い合わせ対応 AI
+                    の導入前に、対応時間と満足度のベースラインを測る。導入後は、対応時間、満足度、誤回答率、エスカレーション率、利用率を月次で確認し、ユーザーのフィードバックを改善に反映する。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <strong>導入前にベースラインを測定</strong>
+                                    し、効果を比較できるようにする
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>技術指標と事業指標の両方を設定する</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>
+                                    ユーザーのフィードバックを評価データ・改善に還流させる仕組みを作る
+                                </td>
+                                <td>[S19]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>指標と継続的な測定は、導入段階ごとに見直す</td>
+                                <td>[S7]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>性能の劣化(ドリフト)を監視し、必要なら見直す</td>
+                                <td>[S4]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong>
+                    「導入完了をもって成功」や「技術指標だけ」の選択肢は誤りになりやすいです。<strong
+                        >事業成果と継続的な測定</strong
+                    >
+                    が重要です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S4] [S7] [S10] [S19] [S27] [S28]</p>
+                <h3 id="k4-4-5">Skill 4.4.5 実験から本番品質への移行(ガバナンスと運用要件)</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI の取り組みが
+                    <strong>実験段階から本番品質</strong> へ移る際の、<strong
+                        >ガバナンスと運用の要件</strong
+                    >
+                    を扱えるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong>
+                    パイロットは「うまく動くか」を確かめる場、本番は「壊れず、安全に、採算が合って動き続ける」場です。AWS
+                    の資料は、Experiment から Launch へ進む際に、<strong
+                        >本番品質のインフラ、本番用ガバナンス、生成 AI 向けの可観測性</strong
+                    >
+                    を整えるよう述べています。[S13]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>観点</th>
+                                <th>パイロット</th>
+                                <th>本番</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>目的</td>
+                                <td>価値・実現性の検証</td>
+                                <td>継続的な価値提供と安定運用</td>
+                            </tr>
+                            <tr>
+                                <td>体制</td>
+                                <td>臨時のチーム</td>
+                                <td>継続的な監視・改善・サポート体制</td>
+                            </tr>
+                            <tr>
+                                <td>ガバナンス</td>
+                                <td>簡易</td>
+                                <td>本番用の枠組み(利用管理、モデル更新の管理)</td>
+                            </tr>
+                            <tr>
+                                <td>監視</td>
+                                <td>担当者が手作業で確認</td>
+                                <td>観測・ログ・自動の監視</td>
+                            </tr>
+                            <tr>
+                                <td>インシデント</td>
+                                <td>想定なし</td>
+                                <td>生成 AI 向けのインシデント対応手順</td>
+                            </tr>
+                            <tr>
+                                <td>コスト</td>
+                                <td>少量で見えにくい</td>
+                                <td>単位コストと総コストの管理</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>(観点の一部は [S13][S23] に基づき、表としての整理は初学者向けです。)</p>
+                <p>
+                    AWS は、<strong>AI の取り組みは小規模の成功が本番の成功を保証しない</strong>
+                    ことも示しています。<strong>Five V's Framework</strong>
+                    は、Value、Visualize、Validate、Verify、Venture の 5
+                    つで、本番までの道筋を示します。[S27]
+                </p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d10"
+                            role="img"
+                            aria-label="フローチャート 11"
+                        ></div>
+                    </div>
+                </figure>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>フェーズ</th>
+                                <th>中心となる問い</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Value</td>
+                                <td>
+                                    これは解く価値があるか(戦略的優先度に沿った高インパクトの機会を狙う)
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>Visualize</td>
+                                <td>成功をどう測るか(事業成果と結び付く指標、ベースライン)</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>Validate</td>
+                                <td>
+                                    現実の要件・制約で検証できるか(統合・負荷・コンプライアンス・ユーザー評価)
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>Verify</td>
+                                <td>
+                                    大規模に運用できるか(ガバナンス、変更管理、運用準備、アーキテクチャのトレードオフ)
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>Venture</td>
+                                <td>
+                                    資金とリソースを長期的に確保できるか(総所有コスト、経営層の関与、保守の専任チーム)
+                                </td>
+                                <td>[S27]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>本番移行の判断フロー(整理)</strong></p>
+                <figure class="diagram-card">
+                    <div class="diagram-wrap">
+                        <div
+                            class="diagram-canvas"
+                            data-diagram-id="d11"
+                            role="img"
+                            aria-label="フローチャート 12"
+                        ></div>
+                    </div>
+                </figure>
+                <p>
+                    <strong>③ 具体例</strong> PoC で精度が高かった文書要約 AI
+                    を全社展開する前に、本番の受け入れ基準(精度・応答時間・コスト)、監視と障害時の連絡体制、利用ルール、モデル更新時の確認手順を決める。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    本番用のガバナンス、CI/CD などの標準デプロイ、可観測性を整備する
+                                </td>
+                                <td>[S13]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    生成 AI 特有の <strong>インシデント対応手順</strong> を用意する
+                                </td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>非決定的な出力を前提に、評価の枠組みを作る</td>
+                                <td>[S28]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>運用準備(ワークフロー、連携点、チームの能力)を評価する</td>
+                                <td>[S27]</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>総所有コスト(開発・統合・研修・運用)を見積もる</td>
+                                <td>[S27]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong> 「PoC
+                    が成功したので、そのまま全社展開」は誤りになりやすいです。<strong
+                        >本番の要件を別途整える</strong
+                    >
+                    ことが必要です。
+                </p>
+                <p><strong>⑥ 根拠</strong>: [S3] [S13] [S23] [S27] [S28]</p>
+                <h3 id="k4-4-6">Skill 4.4.6 スケール中に事業継続とパフォーマンスを守る</h3>
+                <p>
+                    <strong>① 何を問われるか</strong> AI を全社へ広げる間、<strong
+                        >事業の継続性と性能を守る</strong
+                    >
+                    ために、複数の要因を評価できるか。[S3]
+                </p>
+                <p>
+                    <strong>② やさしい説明</strong>
+                    拡大すると、コスト、品質、セキュリティ、ガバナンス、人の受け入れなど、パイロットでは見えなかった問題が一気に表面化します。
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>要因</th>
+                                <th>無視した場合のリスク</th>
+                                <th>対策の方向性</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>コスト(単位コスト・総コスト)</td>
+                                <td>利用拡大で予算超過、採算割れ</td>
+                                <td>総所有コストの見積もり、料金体系の理解、継続的なコスト管理</td>
+                                <td>[S2][S27]</td>
+                            </tr>
+                            <tr>
+                                <td>品質・性能</td>
+                                <td>誤り・遅延の増加</td>
+                                <td>継続的な評価と監視、ドリフトの検知</td>
+                                <td>[S4][S28]</td>
+                            </tr>
+                            <tr>
+                                <td>セキュリティ・コンプライアンス</td>
+                                <td>データ漏えい、規制違反</td>
+                                <td>責任範囲の確認、ガバナンスの自動化</td>
+                                <td>[S15][S30]</td>
+                            </tr>
+                            <tr>
+                                <td>データガバナンス</td>
+                                <td>拡大を妨げる、または統制が効かない</td>
+                                <td>標準ポリシーを保ちつつセルフサービスを許容</td>
+                                <td>[S14]</td>
+                            </tr>
+                            <tr>
+                                <td>人材・組織</td>
+                                <td>離職や受け入れ不足で推進が止まる</td>
+                                <td>人材の再教育、離職に強いプロセス、外部パートナーの活用</td>
+                                <td>[S9]</td>
+                            </tr>
+                            <tr>
+                                <td>調達・提携</td>
+                                <td>特定の構築方針への依存</td>
+                                <td>構築・購入・提携を比較して判断</td>
+                                <td>[S2]</td>
+                            </tr>
+                            <tr>
+                                <td>インシデント対応</td>
+                                <td>障害時に混乱</td>
+                                <td>生成 AI 向けのインシデント対応手順</td>
+                                <td>[S23]</td>
+                            </tr>
+                            <tr>
+                                <td>共通基盤</td>
+                                <td>部門ごとの重複、品質のばらつき</td>
+                                <td>再利用可能なパターン、部品ライブラリ</td>
+                                <td>[S15]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>③ 具体例</strong> 全社展開で利用者が 10
+                    倍になった際、コストが想定を超え、応答が遅くなり、部門ごとに似た AI
+                    が乱立した。事前に
+                    <strong>単位コスト、監視、共通の部品、責任者</strong> を整えていれば防げた。
+                </p>
+                <p><strong>④ ベストプラクティス</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>実践</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    スケールの各段階で、コスト・品質・リスク・組織の受け入れを同時に評価する
+                                </td>
+                                <td>[S15]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>
+                                    再利用可能な部品、標準パターン、セルフサービスの基盤を整える
+                                </td>
+                                <td>[S15]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>ガバナンスを自動化し、拡大に耐える形にする</td>
+                                <td>[S15][S18]</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>導入の進行に合わせて基礎能力を進化させる</td>
+                                <td>[S7]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    <strong>⑤ ひっかけ注意</strong> 「性能だけ」「コストだけ」など
+                    <strong>1 つの要因だけ</strong>
+                    を最適化する選択肢は誤りになりやすいです。<strong
+                        >複数の要因を総合的に評価</strong
+                    >
+                    します。
+                </p>
+                <p>
+                    <strong>⑥ 根拠</strong>: [S2] [S3] [S4] [S7] [S9] [S14] [S15] [S18] [S23] [S27]
+                    [S28] [S30]
+                </p>
+            </section>
+            <section class="section" id="s7">
+                <h2><i class="ti ti-cloud"></i>6. 関連する AWS サービス・フレームワーク早見表</h2>
+                <p>
+                    試験ガイドが「対象範囲」とするものを、Domain 4 の観点で整理します。いずれも
+                    <strong>戦略レベル(基本的な適用のみ)</strong> の理解で十分です。[S5]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>カテゴリ</th>
+                                <th>項目</th>
+                                <th>Domain 4 での位置づけ</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AI / ML</td>
+                                <td>Amazon Bedrock</td>
+                                <td>
+                                    生成 AI の基盤。Guardrails(安全策)、Knowledge
+                                    Bases、料金体系を知る
+                                </td>
+                                <td>[S2][S5][S31]</td>
+                            </tr>
+                            <tr>
+                                <td>AI / ML</td>
+                                <td>Amazon SageMaker AI</td>
+                                <td>カスタム ML。マネージドかカスタムかの判断</td>
+                                <td>[S2][S5]</td>
+                            </tr>
+                            <tr>
+                                <td>BI</td>
+                                <td>Amazon Quick</td>
+                                <td>AI を活用した業務アシスタント</td>
+                                <td>[S1][S2][S5]</td>
+                            </tr>
+                            <tr>
+                                <td>戦略・ガバナンス</td>
+                                <td>AWS Cloud Adoption Framework(CAF)</td>
+                                <td>
+                                    6 つの視点(Business / People / Governance / Platform / Security
+                                    / Operations)で AI 導入を計画・拡大
+                                </td>
+                                <td>[S2][S8][S34]</td>
+                            </tr>
+                            <tr>
+                                <td>戦略・ガバナンス</td>
+                                <td>AWS 責任共有モデル</td>
+                                <td>AI ワークロードでのデータ保護とコンプライアンスの責任分担</td>
+                                <td>[S2][S5][S30]</td>
+                            </tr>
+                            <tr>
+                                <td>戦略・ガバナンス</td>
+                                <td>Well-Architected Framework(Responsible AI レンズ)</td>
+                                <td>ガバナンスのベストプラクティス</td>
+                                <td>[S2]</td>
+                            </tr>
+                            <tr>
+                                <td>料金・コスト</td>
+                                <td>料金体系(従量・インスタンス・シート)</td>
+                                <td>総コストの見積もり</td>
+                                <td>[S2][S5]</td>
+                            </tr>
+                            <tr>
+                                <td>料金・コスト</td>
+                                <td>AWS Pricing Calculator / Cost Explorer</td>
+                                <td>見積もりと分析</td>
+                                <td>[S2][S5][S32][S33]</td>
+                            </tr>
+                            <tr>
+                                <td>料金・コスト</td>
+                                <td>Savings Plans</td>
+                                <td>コスト最適化の例</td>
+                                <td>[S2][S33]</td>
+                            </tr>
+                            <tr>
+                                <td>料金・コスト</td>
+                                <td>AWS Marketplace</td>
+                                <td>構築・購入・提携の判断</td>
+                                <td>[S2][S5]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>AWS CAF for AI の 6 つの視点(Domain 4 に関係が深いもの)</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>視点</th>
+                                <th>役割(要約)</th>
+                                <th>AI で加わる代表的な能力</th>
+                                <th>根拠</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Business</td>
+                                <td>AI 投資を事業成果につなげる</td>
+                                <td>Generative AI</td>
+                                <td>[S8]</td>
+                            </tr>
+                            <tr>
+                                <td>People</td>
+                                <td>技術とビジネスの橋渡しとなり、学び続ける文化を育む</td>
+                                <td>ML Fluency、ワークフォース変革、文化の進化</td>
+                                <td>[S8][S9]</td>
+                            </tr>
+                            <tr>
+                                <td>Governance</td>
+                                <td>AI の取り組みを調整し、便益を最大化、リスクを最小化</td>
+                                <td>Responsible use of AI</td>
+                                <td>[S8]</td>
+                            </tr>
+                            <tr>
+                                <td>Platform</td>
+                                <td>AI ライフサイクルを支える基盤設計</td>
+                                <td>AI ライフサイクル管理と MLOps</td>
+                                <td>[S10]</td>
+                            </tr>
+                            <tr>
+                                <td>Security</td>
+                                <td>AI システムへの脅威への対応</td>
+                                <td>(CAF の考え方を基に AI 特有の攻撃経路を整理)</td>
+                                <td>[S8]</td>
+                            </tr>
+                            <tr>
+                                <td>Operations</td>
+                                <td>本番での継続的な運用</td>
+                                <td>(本番運用・監視)</td>
+                                <td>[S8]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <blockquote>
+                    <p>
+                        <strong>補足</strong>: AWS CAF for AI
+                        のホワイトペーパーには「歴史的な参考資料」との注記があります。概念は今も有用ですが、最新の内容は
+                        AWS の公式ページで確認してください。[S6]
+                    </p>
+                </blockquote>
+            </section>
+            <section class="section" id="s8">
+                <h2><i class="ti ti-bulb"></i>7. 試験での判断ルール</h2>
+                <p>
+                    Domain 4
+                    の選択肢で迷ったときの考え方です。試験ガイドが「技術実装より戦略的意思決定を重視する」としていること、および前章までの
+                    AWS の推奨を基にした <strong>筆者の整理</strong> です。[S2]
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>判断ルール</th>
+                                <th>正解になりやすい例</th>
+                                <th>誤りになりやすい例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>診断が先</td>
+                                <td>準備度アセスメントから始める</td>
+                                <td>いきなり大規模導入</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>事業成果から逆算</td>
+                                <td>目的と成功指標を決めてから選ぶ</td>
+                                <td>最新技術の導入自体を目的化</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>段階的・反復的</td>
+                                <td>小さく検証して広げる</td>
+                                <td>ビッグバンの一括導入</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>人と文化を軽視しない</td>
+                                <td>研修、チャンピオン、透明な説明</td>
+                                <td>技術だけ強化、強制的な利用</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>データが土台</td>
+                                <td>品質・オーナー・サイロ解消を先に</td>
+                                <td>データ量を増やすだけ</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>責任を明確に</td>
+                                <td>説明責任者と RACI</td>
+                                <td>合議で責任が曖昧</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>本番は別物</td>
+                                <td>受け入れ基準・運用・ガバナンスを整える</td>
+                                <td>PoC 成功 = 本番準備完了</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>測定し続ける</td>
+                                <td>ベースライン → 継続測定 → 改善</td>
+                                <td>導入完了で終了</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>範囲外の実装は選ばない</td>
+                                <td>戦略・責任・コストの判断</td>
+                                <td>アルゴリズム選定・パイプライン構築の詳細</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>極端を避ける</td>
+                                <td>ルールに基づく共有、段階的な移行</td>
+                                <td>全面禁止 / 全面自由</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <blockquote>
+                    <p>
+                        <strong>シャドー AI について</strong>: 試験の関連キーワードには「未承認の AI
+                        ツール利用(シャドー AI)のリスクと管理」があります。[S4]
+                        単純な全面禁止ではなく、<strong
+                            >承認された選択肢の提供、ガバナンス、教育</strong
+                        >
+                        を組み合わせる方向が、上記ルール 10 と整合的です(整理は筆者)。
+                    </p>
+                </blockquote>
+            </section>
+            <section class="section" id="s9">
+                <h2><i class="ti ti-help-circle"></i>8. 練習問題(自作)</h2>
+                <blockquote>
+                    <p>以下は学習用に筆者が作成した問題で、実際の試験問題ではありません。</p>
+                </blockquote>
+                <p>
+                    <strong>Q1(択一)</strong> ある企業で経営層は生成 AI
+                    に意欲的だが、データは部署ごとに形式がバラバラで、データの責任者も決まっていない。最も適切な最初の一手は?
+                </p>
+                <ul>
+                    <li>A. 全社向けの生成 AI チャットボットを直ちに展開する</li>
+                    <li>
+                        B.
+                        データ準備度を評価し、責任者の任命とサイロの解消方針を決めたうえで、小さな検証を進める
+                    </li>
+                    <li>C. 最新の高性能モデルを契約する</li>
+                    <li>D. ML エンジニアを大量に採用する</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p>
+                        <strong>B</strong>。データの準備度、オーナーシップ、サイロ解消が AI
+                        の土台です(Skill 4.2.1、4.2.2)。A・C・D
+                        は土台が整う前の投資で、リスクが高い選択です。
+                    </p>
+                </details>
+                <p>
+                    <strong>Q2(択一)</strong> 生成 AI 成熟度モデルの 4
+                    つのレベルを、低い順に並べたものは?
+                </p>
+                <ul>
+                    <li>A. Envision → Experiment → Launch → Scale</li>
+                    <li>B. Experiment → Envision → Scale → Launch</li>
+                    <li>C. Launch → Envision → Experiment → Scale</li>
+                    <li>D. Envision → Align → Launch → Scale</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p>
+                        <strong>A</strong>。D は AWS CAF for AI の変革の旅の段階名(Align
+                        を含む)で、ひっかけです(Skill 4.1.2)。
+                    </p>
+                </details>
+                <p>
+                    <strong>Q3(複数選択: 2 つ選ぶ)</strong> 従業員が「AI
+                    で仕事がなくなる」と不安を抱いている。リーダーの適切な対応はどれか。
+                </p>
+                <ul>
+                    <li>A. 導入時期と役割への影響を、早い段階から透明に説明する</li>
+                    <li>B. 導入直前まで情報を伏せる</li>
+                    <li>C. 実践的な研修と小さな PoC への参加機会を提供する</li>
+                    <li>D. 利用を義務化し、使わない場合は評価を下げる</li>
+                    <li>E. 質問は受け付けない</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p>
+                        <strong>A と C</strong>(Skill 4.3.3、4.3.4、4.3.5)。B・D・E
+                        は不安と抵抗を強めます。
+                    </p>
+                </details>
+                <p>
+                    <strong>Q4(択一)</strong> PoC
+                    が成功し、経営層が全社展開を求めている。最も適切な次の対応は?
+                </p>
+                <ul>
+                    <li>A. そのまま全社へ展開する</li>
+                    <li>
+                        B.
+                        本番の受け入れ基準、運用体制、ガバナンス、監視、コストを整えてから段階的に展開する
+                    </li>
+                    <li>C. PoC を追加で 10 件実施する</li>
+                    <li>D. 展開を無期限に延期する</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p>
+                        <strong>B</strong>(Skill 4.4.5)。PoC の成功は本番準備の完了を意味しません。
+                    </p>
+                </details>
+                <p><strong>Q5(択一)</strong> AI COE の説明として最も適切なものは?</p>
+                <ul>
+                    <li>A. すべての AI 開発を COE だけが行う</li>
+                    <li>
+                        B.
+                        ガイダンスや再利用可能な能力を提供し、事業部門との連携でスケールを支える専任の組織
+                    </li>
+                    <li>C. 各部門の AI 活用を禁止する部署</li>
+                    <li>D. 技術者だけで構成される監査部門</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p>
+                        <strong>B</strong>(Skill 4.4.3)。COE は支援・標準化・再利用促進の役割です。
+                    </p>
+                </details>
+                <p>
+                    <strong>Q6(複数選択: 2 つ選ぶ)</strong> AI
+                    の効果を継続的に追跡するために適切な施策は?
+                </p>
+                <ul>
+                    <li>A. 導入前にベースライン指標を測定する</li>
+                    <li>B. 導入後は技術指標だけを確認する</li>
+                    <li>C. 技術指標と事業指標の両方を設定する</li>
+                    <li>D. 導入完了をもって測定を終了する</li>
+                    <li>E. フィードバックは集めない</li>
+                </ul>
+                <details>
+                    <summary>答えと解説</summary>
+                    <p><strong>A と C</strong>(Skill 4.4.4)。</p>
+                </details>
+            </section>
+            <section class="section" id="s10">
+                <h2><i class="ti ti-checklist"></i>9. 直前チェックリスト</h2>
+                <ul class="checklist">
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >4 つのタスク(4.1〜4.4)と 19
+                                のスキルを、自分の言葉で説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >準備度の 5
+                                観点(リーダー合意・データ品質・文化・技術基盤・ガバナンス)を言える</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >生成 AI 成熟度モデル(Envision → Experiment → Launch → Scale)と、CAF
+                                の段階(Envision → Align → Launch → Scale)の違いを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >能力ギャップの 4
+                                領域(人・プロセス・技術・ガバナンス)を具体例で説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >投資の優先順位を「戦略目標」と「現在の成熟度」で判断できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >データ品質・アクセス性・サイロの影響を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >データ戦略、オーナーシップ、共有の枠組みの違いを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >AI フライホイールを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >Bedrock / SageMaker AI / Quick の役割を戦略レベルで説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >責任共有モデルが生成 AI の使い方で変わることを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >料金体系(従量・インスタンス・シート)と、コスト関連ツールの役割を言える</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >経営スポンサーと AI チャンピオンの違いを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >部門横断チームの構成と RACI の考え方を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >透明なコミュニケーションで伝えるべき 4 点を言える</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >文化的障壁(リスク回避・抵抗・失敗への恐れ)と介入策を対応付けられる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >人材育成の手法(POC・ハッカソン・研修・責任ある AI
+                                研修)の使い分けを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >人の役割の移行(手作業 →
+                                監督・協働)と、エスカレーションの考え方を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >クイックウィンとポートフォリオの考え方を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >COE
+                                の役割(ガイダンスと能力の提供、集中型と連合型)を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >ベースライン、技術指標と事業指標、継続的な監視(ドリフト)を説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >パイロットと本番の違い、Five V's の 5 フェーズを説明できる</span
+                            ></label
+                        >
+                    </li>
+                    <li>
+                        <label class="chk"
+                            ><input type="checkbox" /><span
+                                >スケール時に評価すべき複数の要因(コスト・品質・セキュリティ・ガバナンス・人材)を挙げられる</span
+                            ></label
+                        >
+                    </li>
+                </ul>
+            </section>
+            <section class="section" id="s11">
+                <h2><i class="ti ti-book"></i>10. 用語集</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>用語</th>
+                                <th>意味</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AI チャンピオン</td>
+                                <td>各部門で AI 活用を推進する旗振り役</td>
+                            </tr>
+                            <tr>
+                                <td>AWS CAF</td>
+                                <td>
+                                    AWS Cloud Adoption Framework。クラウド導入を 6
+                                    つの視点で整理した枠組み
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CAF for AI</td>
+                                <td>CAF を AI/ML/生成 AI 向けに拡張した枠組み</td>
+                            </tr>
+                            <tr>
+                                <td>COE</td>
+                                <td>Center of Excellence。専門知識を集約して全社を支援する組織</td>
+                            </tr>
+                            <tr>
+                                <td>Envision / Experiment / Launch / Scale</td>
+                                <td>生成 AI 成熟度モデルの 4 段階</td>
+                            </tr>
+                            <tr>
+                                <td>Five V's Framework</td>
+                                <td>
+                                    Value, Visualize, Validate, Verify, Venture。AWS が示す、AI
+                                    を本番へ進める枠組み
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>AI フライホイール</td>
+                                <td>
+                                    高品質なデータが AI を改善し、成果が新しいデータを生む好循環
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>ガードレール</td>
+                                <td>AI の出力や動作を安全な範囲に保つ仕組み</td>
+                            </tr>
+                            <tr>
+                                <td>データサイロ</td>
+                                <td>部門ごとに孤立して共有されないデータ</td>
+                            </tr>
+                            <tr>
+                                <td>データオーナーシップ / スチュワードシップ</td>
+                                <td>データへの責任(所有から責任ある管理へ)</td>
+                            </tr>
+                            <tr>
+                                <td>ドリフト</td>
+                                <td>時間の経過でモデルの性能が変わること</td>
+                            </tr>
+                            <tr>
+                                <td>ハルシネーション</td>
+                                <td>AI がもっともらしい誤りを生成すること</td>
+                            </tr>
+                            <tr>
+                                <td>RACI</td>
+                                <td>実行責任・説明責任・相談先・報告先を整理する責任分担表</td>
+                            </tr>
+                            <tr>
+                                <td>クイックウィン</td>
+                                <td>短期間で成果が見える取り組み</td>
+                            </tr>
+                            <tr>
+                                <td>責任共有モデル</td>
+                                <td>クラウド事業者と顧客のセキュリティ責任の分担</td>
+                            </tr>
+                            <tr>
+                                <td>シャドー AI</td>
+                                <td>組織の承認なく使われる AI ツール</td>
+                            </tr>
+                            <tr>
+                                <td>ベースライン</td>
+                                <td>導入前の基準値。効果測定の比較元</td>
+                            </tr>
+                            <tr>
+                                <td>RAG</td>
+                                <td>外部の情報を検索して回答に活用する生成 AI の手法</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="section" id="s12">
+                <h2><i class="ti ti-link"></i>11. 参考 URL 一覧</h2>
+                <blockquote>
+                    <p>
+                        確認日: 2026 年 10 月 1 日。AWS
+                        の公式資料は更新されるため、受験前に最新版を確認してください。
+                    </p>
+                </blockquote>
+                <h3>A. 試験の公式情報</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>内容</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S1</td>
+                                <td>AWS Certified AI Business Strategist(認定ページ)</td>
+                                <td>
+                                    https://aws.amazon.com/certification/certified-ai-business-strategist/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S2</td>
+                                <td>試験ガイド(AIB-C01) トップ</td>
+                                <td>
+                                    https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S3</td>
+                                <td>
+                                    Content Domain 4: Business Readiness, Leadership, and AI
+                                    Transformation
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain4.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S4</td>
+                                <td>試験に出る可能性のある技術と概念</td>
+                                <td>
+                                    https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S5</td>
+                                <td>対象範囲の AWS サービスと機能</td>
+                                <td>
+                                    https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>試験対策プラン(AWS Skill Builder)</td>
+                                <td>
+                                    https://skillbuilder.aws/category/exam-prep/ai-business-strategist-business-AIB-C01
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>B. 変革・成熟度・ガバナンスの枠組み</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>内容</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S6</td>
+                                <td>AWS CAF for AI, ML, and Generative AI(ホワイトペーパー)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S7</td>
+                                <td>
+                                    Your AI transformation journey(Envision / Align / Launch /
+                                    Scale、AI フライホイール)
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/your-ai-transformation-journey.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S8</td>
+                                <td>Foundational AI capabilities(6 つの視点)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/foundational-ai-capabilities.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S9</td>
+                                <td>People perspective: Culture and change towards AI-first</td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/people-perspective-culture-and-change-towards-aiml-first.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S10</td>
+                                <td>
+                                    Platform perspective: Infrastructure for and applications of AI
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/platform-perspective-infrastructure-for-and-applications-of-aiml.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S11</td>
+                                <td>Maturity model for adopting generative AI on AWS(概要)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S12</td>
+                                <td>Levels in the generative AI maturity model</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-levels.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S13</td>
+                                <td>Level 2: Experiment</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-2.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S14</td>
+                                <td>Level 3: Launch</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-3.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S15</td>
+                                <td>Level 4: Scale</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-4.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S16</td>
+                                <td>Aspects of generative AI maturity</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-aspects.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S34</td>
+                                <td>AWS Cloud Adoption Framework(概要)</td>
+                                <td>https://aws.amazon.com/cloud-adoption-framework/</td>
+                            </tr>
+                            <tr>
+                                <td>S35</td>
+                                <td>CAF People perspective: culture and change</td>
+                                <td>
+                                    https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/people-perspective.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S36</td>
+                                <td>
+                                    Building a Cloud Center of Excellence within your organization
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-center-of-excellence/introduction.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S36b</td>
+                                <td>AWS CAF: People Perspective(Learning Needs Analysis の記載)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-people-perspective/aws-caf-people-perspective.pdf
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>C. データ戦略とデータガバナンス</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>内容</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S17</td>
+                                <td>
+                                    Data security, lifecycle, and strategy for generative AI
+                                    applications
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/introduction.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S18</td>
+                                <td>Data strategy(導入の 4 段階と 4 つの柱)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/journey.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S19</td>
+                                <td>Data lifecycle in generative AI</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/lifecycle.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S20</td>
+                                <td>Data architecture - Generative AI Lens(Well-Architected)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/data-architecture.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S21</td>
+                                <td>Generative AI workload assessment: Data strategy</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/data-strategy.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S22</td>
+                                <td>Generative AI workload assessment: FAQ</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/faq.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S29</td>
+                                <td>
+                                    Data Governance in the Age of Generative AI(AWS Executive in
+                                    Residence Blog)
+                                </td>
+                                <td>
+                                    https://aws.amazon.com/blogs/enterprise-strategy/data-governance-in-the-age-of-generative-ai
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>D. 組織・COE・スケール</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>内容</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S23</td>
+                                <td>
+                                    Best practices for enterprise generative AI adoption and scaling
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/best-practices.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S24</td>
+                                <td>Enterprise-ready generative AI platform: Next steps</td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/next-steps.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S25</td>
+                                <td>
+                                    Establishing an AI/ML center of excellence(AWS Machine Learning
+                                    Blog)
+                                </td>
+                                <td>
+                                    https://aws.amazon.com/blogs/machine-learning/establishing-an-ai-ml-center-of-excellence/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S26</td>
+                                <td>
+                                    Transforming ADM operating models with generative AI: Action
+                                    areas and recommendations
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-transform-adm-operating-model-gen-ai/recommendations.html
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S27</td>
+                                <td>
+                                    Beyond pilots: A proven framework for scaling AI to
+                                    production(Five V's Framework)
+                                </td>
+                                <td>
+                                    https://aws.amazon.com/blogs/machine-learning/beyond-pilots-a-proven-framework-for-scaling-ai-to-production/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S28</td>
+                                <td>
+                                    Generative AI Lifecycle Operational Excellence framework on
+                                    AWS(PDF)
+                                </td>
+                                <td>
+                                    https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/gen-ai-lifecycle-operational-excellence/gen-ai-lifecycle-operational-excellence.pdf
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>How to Implement AI in Your Business(AWS)</td>
+                                <td>https://aws.amazon.com/ai/implementation/</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>E. セキュリティ・責任共有・コスト</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>内容</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>S30</td>
+                                <td>Generative AI Security Scoping Matrix</td>
+                                <td>
+                                    https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S31</td>
+                                <td>Security, privacy, and responsible AI - Amazon Bedrock</td>
+                                <td>
+                                    https://aws.amazon.com/bedrock/security-privacy-responsible-ai/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S32</td>
+                                <td>AWS Cost Explorer(ドキュメント / 製品ページ)</td>
+                                <td>
+                                    https://docs.aws.amazon.com/console/billing/costexplorer /
+                                    https://aws.amazon.com/aws-cost-management/aws-cost-explorer/
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>S33</td>
+                                <td>
+                                    AWS Pricing Calculator / Savings Plans / Bedrock の料金 /
+                                    SageMaker の料金 / AWS Marketplace
+                                </td>
+                                <td>
+                                    https://calculator.aws/ / https://aws.amazon.com/savingsplans/ /
+                                    https://aws.amazon.com/bedrock/pricing/ /
+                                    https://aws.amazon.com/sagemaker/pricing/ /
+                                    https://aws.amazon.com/marketplace
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>出典の扱いについて</h3>
+                <ul>
+                    <li>
+                        本文の「公式が書いていること」は、上記の AWS
+                        公式ドキュメントとブログに基づいています。
+                    </li>
+                    <li>
+                        各スキルの「やさしい説明」「具体例」「ひっかけ注意」「判断ルール」「練習問題」は、初学者が理解しやすいよう筆者が整理・作成したもので、AWS
+                        の公式見解そのものではありません。
+                    </li>
+                    <li>
+                        公式資料の文章は、著作権に配慮して言い換えて要約しています。正確な記述は必ず元の
+                        URL で確認してください。
+                    </li>
+                </ul>
+            </section>
+            <footer class="footer">
+                AWS 公式資料に基づく学習用ガイドです。最新情報は必ず公式ページで確認してください。
+            </footer>
+        </div>
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js"
+            integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            const DIAGRAMS = {
+                d0: `flowchart TD
+    A["Domain 4 の全体像"]:::hub
+    B["4.1 現在地を知る 準備度と成熟度"]:::box
+    C["4.2 土台を整える データと基盤"]:::box
+    D["4.3 人と文化を動かす 変革リーダーシップ"]:::box
+    E["4.4 広げる パイロットから全社展開"]:::done
+    A --> B
+    B -->|"ギャップを把握"| C
+    C -->|"使える状態にする"| D
+    D -->|"組織を巻き込む"| E
+    E -.->|"学びを次の取り組みへ"| B
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d1: `flowchart TD
+    S["AI 変革を始めたい"]:::hub
+    A["リーダーの合意"]:::box
+    B["データ品質"]:::box
+    C["組織文化"]:::box
+    D["技術基盤"]:::box
+    E["ガバナンス"]:::box
+    G["成熟度モデルで現在地を確認"]:::box
+    H["能力ギャップを特定"]:::box
+    I["優先順位と成長の道筋を決定"]:::done
+    S --> A
+    S --> B
+    S --> C
+    S --> D
+    S --> E
+    A --> G
+    B --> G
+    C --> G
+    D --> G
+    E --> G
+    G --> H --> I
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d2: `flowchart TD
+    L1["Level 1 Envision 気づきと用途の発見"]:::hub
+    L2["Level 2 Experiment パイロットと PoC で検証"]:::box
+    L3["Level 3 Launch 本番への投入と運用"]:::box
+    L4["Level 4 Scale 全社展開と再利用"]:::done
+    L1 -->|"小さく検証へ"| L2
+    L2 -->|"本番要件とガバナンスを整える"| L3
+    L3 -->|"運用モデルと再利用部品を整える"| L4
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d3: `flowchart TD
+    A["特定したギャップ"]:::hub
+    Q1{"戦略目標に直結するか"}
+    Q2{"現在の成熟度で着手できるか"}
+    H["最優先で投資"]:::done
+    P["前提となる能力を先に整備"]:::box
+    L["後回しにして定期的に再評価"]:::box
+    A --> Q1
+    Q1 -->|"はい"| Q2
+    Q1 -->|"いいえ"| L
+    Q2 -->|"はい"| H
+    Q2 -->|"いいえ"| P
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d4: `flowchart TD
+    A["高品質なデータ"]:::hub
+    B["AI モデルの学習または調整"]:::box
+    C["予測や生成結果"]:::box
+    D["業務成果と顧客価値"]:::done
+    E["新しいデータと学び"]:::box
+    A --> B --> C --> D --> E --> A
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d5: `flowchart TD
+    S["AI ユースケース候補"]:::hub
+    Q1{"必要なデータを特定できているか"}
+    Q2{"品質と鮮度は基準を満たすか"}
+    Q3{"必要な人が安全にアクセスできるか"}
+    A1["データの棚卸しとカタログ化"]:::box
+    A2["品質改善と責任者の任命"]:::box
+    A3["サイロ解消とアクセス設計"]:::box
+    R["再評価する"]:::box
+    G["パイロットに着手"]:::done
+    S --> Q1
+    Q1 -->|"はい"| Q2
+    Q1 -->|"いいえ"| A1
+    Q2 -->|"はい"| Q3
+    Q2 -->|"いいえ"| A2
+    Q3 -->|"はい"| G
+    Q3 -->|"いいえ"| A3
+    A1 --> R
+    A2 --> R
+    A3 --> R
+    R --> Q1
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d6: `flowchart TD
+    A["経営層のスポンサーシップ"]:::hub
+    B["AI チャンピオンの任命"]:::box
+    C["部門横断チームと責任分担"]:::box
+    D["透明なコミュニケーション"]:::box
+    E["文化的な壁への介入"]:::box
+    F["AI リテラシー向上の施策"]:::box
+    G["人は監督と協働へ 役割の移行"]:::done
+    A --> B --> C --> D --> E --> F --> G
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d7: `flowchart TD
+    A["手作業中心の業務"]:::hub
+    B["AI が下書きや分析を支援"]:::box
+    C["人が確認して承認する"]:::box
+    D["AI が実行し人が監視する"]:::box
+    E["例外や高リスクは人へエスカレーション"]:::done
+    A --> B --> C --> D --> E
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d8: `flowchart TD
+    E["Envision 機会の発見と目的の設定"]:::hub
+    X["Experiment 小さく検証して学ぶ"]:::box
+    L["Launch 本番投入と価値の実証"]:::box
+    S["Scale 全社へ拡大と再利用"]:::done
+    E --> X --> L --> S
+    S -.->|"学びを次の用途へ"| E
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d9: `flowchart TD
+    C["AI COE"]:::hub
+    A["ガイダンス ベストプラクティスと教訓"]:::box
+    B["能力 ツールとテンプレート"]:::box
+    D["教育 研修とハッカソン"]:::box
+    E["倫理とガバナンスの支援"]:::box
+    F["事業部門との定期的な連携"]:::done
+    C --> A
+    C --> B
+    C --> D
+    C --> E
+    C --> F
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d10: `flowchart TD
+    V1["Value 解く価値のある課題か"]:::hub
+    V2["Visualize 成功をどう測るか"]:::box
+    V3["Validate 現実の条件で検証できるか"]:::box
+    V4["Verify 本番で大規模に運用できるか"]:::box
+    V5["Venture 価値が出るまで資金を確保できるか"]:::done
+    V1 --> V2 --> V3 --> V4 --> V5
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+                d11: `flowchart TD
+    P["パイロットが成功"]:::hub
+    Q1{"本番の受け入れ基準を定義したか"}
+    Q2{"運用体制と責任者は決まったか"}
+    Q3{"ガバナンスと監視は整ったか"}
+    Q4{"単位コストは採算に合うか"}
+    G["本番へ移行"]:::done
+    X["ギャップを解消する"]:::box
+    P --> Q1
+    Q1 -->|"はい"| Q2
+    Q2 -->|"はい"| Q3
+    Q3 -->|"はい"| Q4
+    Q4 -->|"はい"| G
+    Q1 -->|"いいえ"| X
+    Q2 -->|"いいえ"| X
+    Q3 -->|"いいえ"| X
+    Q4 -->|"いいえ"| X
+    X --> Q1
+    classDef hub fill:#e3e8ff,stroke:#3b4cca,color:#1a1f4d
+    classDef box fill:#fff4d6,stroke:#b8860b,color:#3d2e00
+    classDef done fill:#dff3e4,stroke:#2e7d32,color:#0f3d16`,
+            };
+            let mermaidReady = false;
+            try {
+                mermaid.initialize({
+                    startOnLoad: false,
+                    securityLevel: 'loose',
+                    theme: 'base',
+                    flowchart: { useMaxWidth: false, htmlLabels: true, curve: 'basis' },
+                    themeVariables: {
+                        fontFamily: '"Noto Sans JP", sans-serif',
+                        fontSize: '16px',
+                        primaryColor: '#ffffff',
+                        primaryBorderColor: '#9b927c',
+                        primaryTextColor: '#25221c',
+                        lineColor: '#6b6452',
+                    },
+                });
+                mermaidReady = true;
+            } catch (e) {
+                console.error('mermaid init failed', e);
+            }
+            async function renderDiagrams() {
+                if (!mermaidReady) return;
+                for (const el of document.querySelectorAll('.diagram-canvas')) {
+                    const id = el.dataset.diagramId;
+                    try {
+                        const { svg } = await mermaid.render('svg-' + id, DIAGRAMS[id]);
+                        el.innerHTML = svg;
+                        const s = el.querySelector('svg');
+                        const vb = s.viewBox.baseVal;
+                        s.removeAttribute('width');
+                        s.removeAttribute('height');
+                        s.setAttribute('viewBox', [vb.x, vb.y, vb.width, vb.height + 15].join(' '));
+                        Object.assign(s.style, {
+                            width: vb.width + 'px',
+                            maxWidth: 'none',
+                            height: 'auto',
+                            overflow: 'visible',
+                            flexShrink: '0',
+                        });
+                    } catch (e) {
+                        el.textContent = '図の描画に失敗しました';
+                        console.error(id, e);
+                    }
+                }
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                renderDiagrams();
+                const body = document.body,
+                    close = () => body.classList.remove('menu-open');
+                document.getElementById('menuBtn').onclick = () =>
+                    body.classList.toggle('menu-open');
+                document.getElementById('backdrop').onclick = close;
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') close();
+                });
+                window.addEventListener('resize', () => {
+                    if (innerWidth > 900) close();
+                });
+                const links = [...document.querySelectorAll('.sidebar a')];
+                links.forEach((a) => a.addEventListener('click', close));
+                const targets = links.map((a) => document.querySelector(a.getAttribute('href')));
+                const sb = document.getElementById('sidebar');
+                let tick = false;
+                function mark() {
+                    tick = false;
+                    let cur = 0;
+                    targets.forEach((t, i) => {
+                        if (t && t.getBoundingClientRect().top <= innerHeight * 0.25) cur = i;
+                    });
+                    links.forEach((a, i) => a.classList.toggle('active', i === cur));
+                    const a = links[cur],
+                        r = a.getBoundingClientRect(),
+                        sr = sb.getBoundingClientRect();
+                    if (r.top < sr.top + 20 || r.bottom > sr.bottom - 20)
+                        sb.scrollTop += r.top - sr.top - sr.height / 3;
+                }
+                addEventListener(
+                    'scroll',
+                    () => {
+                        if (!tick) {
+                            tick = true;
+                            requestAnimationFrame(mark);
+                        }
+                    },
+                    { passive: true },
+                );
+                mark();
+                const list = document.querySelector('ul.checklist');
+                if (list) {
+                    const boxes = [...list.querySelectorAll('input')];
+                    const info = document.createElement('div');
+                    info.innerHTML =
+                        '<div class="chk-count"></div><div class="chk-bar"><i></i></div>';
+                    list.before(info);
+                    const upd = () => {
+                        const n = boxes.filter((b) => b.checked).length;
+                        info.querySelector('.chk-count').textContent =
+                            n + ' / ' + boxes.length + ' 完了';
+                        info.querySelector('i').style.width = (100 * n) / boxes.length + '%';
+                    };
+                    boxes.forEach((b) => b.addEventListener('change', upd));
+                    upd();
+                }
+            });
+        </script>
+    </body>
+</html>

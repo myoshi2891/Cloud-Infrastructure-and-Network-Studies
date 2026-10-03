@@ -3,10 +3,10 @@
 import { vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/comptia-network-plus-network-operations-guide.json';
 import Page from '@/app/comptia/network-plus/network-operations-guide/page';
-import { defineMigrationSuite } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/gcl/agwa/migration-test-utils');
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
 });
 

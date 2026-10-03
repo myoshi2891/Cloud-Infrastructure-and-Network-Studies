@@ -1,0 +1,619 @@
+{
+  "source": "Secure-cicd-pipeline-guide.html",
+  "h1": [
+    "セキュアなコンテナ CI/CD パイプライン構築ガイド"
+  ],
+  "h2": [
+    "1. このガイドについて",
+    "2. 全体アーキテクチャ",
+    "3. 主要概念の整理",
+    "4. Task 1: 環境準備と Artifact Registry リポジトリの設計",
+    "5. Task 2: 基本的な Cloud Build パイプラインの構築",
+    "6. Task 3: Binary Authorization のセットアップ",
+    "7. Task 4: 脆弱性スキャン・重大度チェック・署名を組み込んだセキュアパイプライン",
+    "8. Task 5: 脆弱性の修正と再デプロイ",
+    "9. パイプライン全体のシーケンス",
+    "10. ベストプラクティス総まとめ",
+    "11. よくあるつまずきポイント",
+    "12. 参考文献（出典一覧）"
+  ],
+  "h3": [
+    "1.1 対象読者",
+    "1.2 学習目標",
+    "このアーキテクチャが優れている理由",
+    "4.1 やること",
+    "4.2 ベストプラクティスと根拠",
+    "5.1 やること",
+    "5.2 ベストプラクティスと根拠",
+    "6.1 Attestor の作成: なぜ Note と Attestor を分けて設計するのか",
+    "6.2 Attestor を gcloud で作成・確認する",
+    "6.3 Cloud KMS 鍵ペアの生成: なぜ非対称署名鍵を使うのか",
+    "6.4 Binary Authorization ポリシーの更新",
+    "7.1 Cloud Build サービスアカウントへの追加権限",
+    "7.2 Custom Build Step（binauthz-attestation）を使う理由",
+    "7.3 完成させた cloudbuild.yaml（各ステップの設計意図つき）",
+    "8.1 やること",
+    "8.2 ベストプラクティスと根拠",
+    "8.3 再実行後の確認フロー"
+  ],
+  "h4": [
+    "API は必要最小限を「事前に」まとめて有効化する",
+    "リポジトリを「用途」で分離する",
+    "最小権限の原則（Principle of Least Privilege）を Cloud Build のサービスアカウントにも適用する",
+    "イメージ名は完全修飾パスで固定する",
+    "この段階でわざと脆弱性のあるイメージを確認する意味",
+    "IAM ポリシーで Note へのアクセスを絞る理由",
+    "ステップ設計で意識すべきポイント",
+    "Alpine ベースイメージを選ぶ理由",
+    "依存パッケージのバージョンをピン留めして更新する理由",
+    "検証用の allUsers 権限は一時的なものと明確に扱う"
+  ],
+  "th": [
+    "設計判断",
+    "理由",
+    "用語",
+    "役割",
+    "ロール",
+    "付与対象",
+    "目的",
+    "ポイント",
+    "なぜ重要か",
+    "領域",
+    "ベストプラクティス",
+    "出典",
+    "症状",
+    "想定される原因",
+    "対処"
+  ],
+  "td": [
+    "スキャン用と本番用でリポジトリを分ける",
+    "スキャン未完了・未署名のイメージが誤って参照・デプロイされるリスクを構造的に排除できる",
+    "CRITICAL 脆弱性でビルドを止める",
+    "「気づいたら直す」ではなく「検出したら先に進めない」ことで、脆弱性のある成果物がそもそも生成されない",
+    "Cloud Run 側でも Binary Authorization を強制する",
+    "パイプラインを経由しない手動デプロイからも本番環境を守る、多層防御（Defense in Depth）になる",
+    "Artifact Registry",
+    "Docker イメージなどの成果物を保管するリポジトリサービス。リポジトリ単位でアクセス制御・スキャン設定ができる",
+    "Artifact Analysis（旧 Container Analysis）",
+    "イメージ内のパッケージを解析し、既知の脆弱性（CVE）情報をメタデータとして付与するサービス",
+    "Note",
+    "「このような検証・属性を表す」というメタデータの型を定義するリソース。例：脆弱性の分類、Attestation の型",
+    "Occurrence",
+    "特定のイメージに対して、ある Note が実際に発生した記録（例：このイメージにこの脆弱性が見つかった、というインスタンス）",
+    "Binary Authorization",
+    "デプロイ時に「このイメージは信頼できるプロセスを経たか」を強制検証するポリシーエンジン",
+    "Attestor（検証者）",
+    "誰が・どの鍵で署名したかを表すエンティティ。Note と紐づく",
+    "Attestation（証明書）",
+    "Attestor が特定のイメージに対して発行する「デジタル署名付きの合格証」",
+    "Cloud KMS",
+    "Attestation に使う非対称署名鍵を安全に生成・保管・利用するための鍵管理サービス",
+    "Cloud Build",
+    "ソースコードからイメージのビルド・テスト・デプロイまでを自動化する CI/CD サービス",
+    "roles/binaryauthorization.attestorsViewer",
+    "Cloud Build SA",
+    "Attestor の情報を参照するため",
+    "roles/cloudkms.signerVerifier",
+    "Cloud Build SA / Compute Engine デフォルト SA",
+    "KMS 鍵で署名・検証を行うため",
+    "roles/containeranalysis.notes.attacher",
+    "Cloud Build SA",
+    "Note に Occurrence（Attestation）を付与するため",
+    "roles/iam.serviceAccountUser",
+    "Cloud Build SA",
+    "他のサービスアカウントとして振る舞うため",
+    "roles/ondemandscanning.admin",
+    "Cloud Build SA",
+    "On-Demand Scanning を実行するため",
+    "スキャン結果を scan_id.txt でステップ間受け渡し",
+    "Cloud Build の各ステップはコンテナが独立しているため、/workspace を介したファイル共有で状態を引き継ぐ",
+    "grep -Fxq で完全一致検索",
+    "部分一致だと別文字列も誤検出しうるため、行全体一致（-x）で厳密に判定する",
+    "署名ステップを severity check の後に配置",
+    "Cloud Build はデフォルトで前ステップの成功を条件に直列実行するため、脆弱性ありのイメージには絶対に署名されない",
+    "images: フィールドにビルド成果物を明記",
+    "Cloud Build のビルド履歴・Build Provenance に、どのイメージがこのビルドから生成されたかを正しく記録するため",
+    "--binary-authorization=default を Cloud Run 側にも指定",
+    "パイプライン外から未署名イメージが直接デプロイされることをサービス自体がブロックする、多層防御の要",
+    "リポジトリ設計",
+    "スキャン用と本番用のリポジトリを分離する",
+    "Create standard repositories",
+    "権限管理",
+    "Cloud Build SA には機能単位の最小権限ロールのみ付与する",
+    "IAM roles and permissions",
+    "脆弱性スキャン",
+    "On-Demand Scanning をビルドパイプラインに組み込み、重大度でゲートする",
+    "On-Demand Scanning in Cloud Build",
+    "署名 / Attestation",
+    "非対称鍵（Cloud KMS）でビルドプロセス自体を証明する",
+    "Create a Binary Authorization attestation",
+    "デプロイ強制",
+    "Cloud Run 側にも --binary-authorization=default を設定し多層防御にする",
+    "Enable Binary Authorization for Cloud Run",
+    "ポリシー設計",
+    "原則拒否＋明示的な許可条件でポリシーを構成する",
+    "Binary Authorization concepts",
+    "ベースイメージ",
+    "Alpine など最小構成のベースイメージを選ぶ",
+    "Base images",
+    "依存関係管理",
+    "脆弱性修正済みバージョンへ明示的にピン留めする",
+    "Best practices for containers",
+    "一時的な公開設定",
+    "検証用の緩和設定は本番投入前に必ず取り除く運用ルールを持つ",
+    "gcloud run deploy リファレンス",
+    "severity check ステップが常に成功してしまう",
+    "grep -Fxq の対象文字列や大文字小文字が一致していない",
+    "--format=\"value(vulnerability.effectiveSeverity)\" の出力値と CRITICAL の表記を完全一致させる",
+    "create-attestation ステップが権限エラーで失敗する",
+    "Cloud Build SA / Compute Engine デフォルト SA に roles/cloudkms.signerVerifier が付与されていない",
+    "Task 4 のロール一覧を再確認し、両方の SA に付与する",
+    "Cloud Run へのデプロイが Binary Authorization に拒否される",
+    "Policy に Attestor が正しく登録されていない、または Attestation が異なる Note に紐づいている",
+    "gcloud container binauthz policy export でポリシーの内容を確認する",
+    "binauthz-attestation イメージが見つからない",
+    "Custom Build Step がまだプロジェクトの Container Registry にビルド・push されていない",
+    "Task 4 の git clone 〜 gcloud builds submit の手順を再実行する",
+    "KMS の鍵バージョンパスを間違える",
+    "keyVersion は必ず cryptoKeyVersions/1 までのフルパスが必要",
+    "鍵リング名・鍵名・バージョン番号をすべて含むフルパスを使用する"
+  ],
+  "listItems": [
+    "Google Cloud のコンテナデプロイに初めて触れるソフトウェアエンジニア / QA エンジニア",
+    "Artifact Registry・Cloud Build・Binary Authorization を「使ったことはあるが、なぜそう設定するのか」を理解したい方",
+    "ソフトウェアサプライチェーンセキュリティ（SLSA、脆弱性スキャン、イメージ署名）の実践的な考え方を学びたい方",
+    "コンテナイメージを「検証前」と「検証後」で分離管理する設計思想を理解する",
+    "Cloud Build を使ったビルド → スキャン → 署名 → デプロイの自動化パイプラインを構築できる",
+    "Binary Authorization の Attestor・Note・Attestation・Policy の関係を説明できる",
+    "脆弱性スキャン結果を CI/CD のゲート（品質関門）として使う理由と実装方法を理解する",
+    "実際にビルドが失敗した際、どう調査し、修正し、再実行するかのフローを体得する",
+    "必要な API（Cloud KMS、Cloud Run、Cloud Build、GKE、Container Registry、Artifact Registry、Container Scanning、On-Demand Scanning、Binary Authorization）を有効化する",
+    "サンプルアプリのソース一式を取得する",
+    "artifact-scanning-repo（スキャン用）と artifact-prod-repo（本番用）の2つの Docker リポジトリを作成する",
+    "Cloud Build のサービスアカウントに roles/iam.serviceAccountUser と roles/ondemandscanning.admin を付与する",
+    "cloudbuild.yaml のイメージ名プレースホルダーを埋める（artifact-scanning-repo / sample-image）",
+    "ビルドを実行し、スキャン結果に CRITICAL 脆弱性があることを確認する",
+    "Dockerfile のベースイメージを python:3.8-alpine に変更",
+    "Flask 3.0.3 / Gunicorn 23.0.0 / Werkzeug 3.0.4 へ依存パッケージを更新",
+    "パイプラインを再実行し、成功を確認",
+    "検証目的で allUsers に roles/run.invoker を付与し、動作確認",
+    "01 Binary Authorization overview docs.cloud.google.com/binary-authorization/docs/overview",
+    "02 Binary Authorization concepts docs.cloud.google.com/binary-authorization/docs/key-concepts",
+    "03 Attestations overview | Binary Authorization docs.cloud.google.com/binary-authorization/docs/attestations",
+    "04 Create attestations | Binary Authorization docs.cloud.google.com/binary-authorization/docs/making-attestations",
+    "05 Create a Binary Authorization attestation in a Cloud Build pipeline docs.cloud.google.com/binary-authorization/docs/cloud-build",
+    "06 cloud-builders-community: binauthz-attestation (GitHub) github.com/GoogleCloudPlatform/cloud-builders-community",
+    "07 Set up overview for Cloud Run | Binary Authorization docs.cloud.google.com/binary-authorization/docs/run/overview",
+    "08 Enable Binary Authorization for Cloud Run docs.cloud.google.com/binary-authorization/docs/run/enabling-binauthz-cloud-run",
+    "09 Quickstart: Configure a Binary Authorization policy with Cloud Run docs.cloud.google.com/binary-authorization/docs/run/configure-policy-cloud-run",
+    "10 Artifact analysis and vulnerability scanning | Artifact Registry docs.cloud.google.com/artifact-registry/docs/analysis",
+    "11 Container scanning overview | Artifact Analysis docs.cloud.google.com/artifact-analysis/docs/container-scanning-overview",
+    "12 Use On-Demand Scanning in your Cloud Build pipeline docs.cloud.google.com/artifact-analysis/docs/ods-cloudbuild",
+    "13 gcloud artifacts docker images scan リファレンス cloud.google.com/sdk/gcloud/reference/artifacts/docker/images/scan",
+    "14 Create standard repositories | Artifact Registry docs.cloud.google.com/artifact-registry/docs/repositories/create-repos",
+    "15 Quickstart: Store Docker container images in Artifact Registry docs.cloud.google.com/artifact-registry/docs/docker/store-docker-container-images",
+    "16 Create a key | Cloud Key Management Service docs.cloud.google.com/kms/docs/create-key",
+    "17 Creating and validating digital signatures | Cloud KMS docs.cloud.google.com/kms/docs/create-validate-signatures",
+    "18 IAM roles and permissions | Cloud Build docs.cloud.google.com/build/docs/iam-roles-permissions",
+    "19 Configure access for the default Cloud Build service account docs.cloud.google.com/build/docs/securing-builds/set-service-account-permissions",
+    "20 gcloud run deploy リファレンス docs.cloud.google.com/sdk/gcloud/reference/run/deploy",
+    "21 Best practices for containers docs.cloud.google.com/container-registry/docs/container-best-practices",
+    "22 Base images | Software supply chain security cloud.google.com/software-supply-chain-security/docs/base-images",
+    "23 元となる Challenge Lab: Secure Software Delivery skills.google/course_templates/1164/labs/610922"
+  ],
+  "links": [
+    {
+      "text": "Secure Software Delivery",
+      "href": "https://www.skills.google/course_templates/1164/labs/610922"
+    },
+    {
+      "text": "Artifact analysis and vulnerability scanning | Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/analysis"
+    },
+    {
+      "text": "Binary Authorization overview",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/overview"
+    },
+    {
+      "text": "Binary Authorization concepts",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/key-concepts"
+    },
+    {
+      "text": "Attestations overview",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/attestations"
+    },
+    {
+      "text": "gcloud services enable リファレンス",
+      "href": "https://docs.cloud.google.com/sdk/gcloud/reference/services/enable"
+    },
+    {
+      "text": "Create standard repositories | Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/repositories/create-repos"
+    },
+    {
+      "text": "Quickstart: Store Docker container images in Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/docker/store-docker-container-images"
+    },
+    {
+      "text": "IAM roles and permissions | Cloud Build",
+      "href": "https://docs.cloud.google.com/build/docs/iam-roles-permissions"
+    },
+    {
+      "text": "Configure access for the default Cloud Build service account",
+      "href": "https://docs.cloud.google.com/build/docs/securing-builds/set-service-account-permissions"
+    },
+    {
+      "text": "Container scanning overview | Artifact Analysis",
+      "href": "https://docs.cloud.google.com/artifact-analysis/docs/container-scanning-overview"
+    },
+    {
+      "text": "Attestations overview | Binary Authorization",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/attestations"
+    },
+    {
+      "text": "Binary Authorization concepts",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/key-concepts"
+    },
+    {
+      "text": "Create a Binary Authorization attestation in a Cloud Build pipeline",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/cloud-build"
+    },
+    {
+      "text": "Create a key | Cloud Key Management Service",
+      "href": "https://docs.cloud.google.com/kms/docs/create-key"
+    },
+    {
+      "text": "Creating and validating digital signatures",
+      "href": "https://docs.cloud.google.com/kms/docs/create-validate-signatures"
+    },
+    {
+      "text": "Binary Authorization concepts",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/key-concepts"
+    },
+    {
+      "text": "Quickstart: Configure a Binary Authorization policy with Cloud Run",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/configure-policy-cloud-run"
+    },
+    {
+      "text": "IAM roles and permissions | Cloud Build",
+      "href": "https://docs.cloud.google.com/build/docs/iam-roles-permissions"
+    },
+    {
+      "text": "cloud-builders-community: binauthz-attestation (GitHub)",
+      "href": "https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/binauthz-attestation"
+    },
+    {
+      "text": "Create a Binary Authorization attestation in a Cloud Build pipeline",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/cloud-build"
+    },
+    {
+      "text": "gcloud run deploy リファレンス",
+      "href": "https://docs.cloud.google.com/sdk/gcloud/reference/run/deploy"
+    },
+    {
+      "text": "Enable Binary Authorization for Cloud Run",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/enabling-binauthz-cloud-run"
+    },
+    {
+      "text": "Use On-Demand Scanning in your Cloud Build pipeline",
+      "href": "https://docs.cloud.google.com/artifact-analysis/docs/ods-cloudbuild"
+    },
+    {
+      "text": "Best practices for containers",
+      "href": "https://docs.cloud.google.com/container-registry/docs/container-best-practices"
+    },
+    {
+      "text": "Base images | Software supply chain security",
+      "href": "https://cloud.google.com/software-supply-chain-security/docs/base-images"
+    },
+    {
+      "text": "gcloud run deploy リファレンス",
+      "href": "https://docs.cloud.google.com/sdk/gcloud/reference/run/deploy"
+    },
+    {
+      "text": "Create standard repositories",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/repositories/create-repos"
+    },
+    {
+      "text": "IAM roles and permissions",
+      "href": "https://docs.cloud.google.com/build/docs/iam-roles-permissions"
+    },
+    {
+      "text": "On-Demand Scanning in Cloud Build",
+      "href": "https://docs.cloud.google.com/artifact-analysis/docs/ods-cloudbuild"
+    },
+    {
+      "text": "Create a Binary Authorization attestation",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/cloud-build"
+    },
+    {
+      "text": "Enable Binary Authorization for Cloud Run",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/enabling-binauthz-cloud-run"
+    },
+    {
+      "text": "Binary Authorization concepts",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/key-concepts"
+    },
+    {
+      "text": "Base images",
+      "href": "https://cloud.google.com/software-supply-chain-security/docs/base-images"
+    },
+    {
+      "text": "Best practices for containers",
+      "href": "https://docs.cloud.google.com/container-registry/docs/container-best-practices"
+    },
+    {
+      "text": "gcloud run deploy リファレンス",
+      "href": "https://docs.cloud.google.com/sdk/gcloud/reference/run/deploy"
+    },
+    {
+      "text": "Binary Authorization overview",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/overview"
+    },
+    {
+      "text": "Binary Authorization concepts",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/key-concepts"
+    },
+    {
+      "text": "Attestations overview | Binary Authorization",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/attestations"
+    },
+    {
+      "text": "Create attestations | Binary Authorization",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/making-attestations"
+    },
+    {
+      "text": "Create a Binary Authorization attestation in a Cloud Build pipeline",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/cloud-build"
+    },
+    {
+      "text": "cloud-builders-community: binauthz-attestation (GitHub)",
+      "href": "https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/binauthz-attestation"
+    },
+    {
+      "text": "Set up overview for Cloud Run | Binary Authorization",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/overview"
+    },
+    {
+      "text": "Enable Binary Authorization for Cloud Run",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/enabling-binauthz-cloud-run"
+    },
+    {
+      "text": "Quickstart: Configure a Binary Authorization policy with Cloud Run",
+      "href": "https://docs.cloud.google.com/binary-authorization/docs/run/configure-policy-cloud-run"
+    },
+    {
+      "text": "Artifact analysis and vulnerability scanning | Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/analysis"
+    },
+    {
+      "text": "Container scanning overview | Artifact Analysis",
+      "href": "https://docs.cloud.google.com/artifact-analysis/docs/container-scanning-overview"
+    },
+    {
+      "text": "Use On-Demand Scanning in your Cloud Build pipeline",
+      "href": "https://docs.cloud.google.com/artifact-analysis/docs/ods-cloudbuild"
+    },
+    {
+      "text": "gcloud artifacts docker images scan リファレンス",
+      "href": "https://cloud.google.com/sdk/gcloud/reference/artifacts/docker/images/scan"
+    },
+    {
+      "text": "Create standard repositories | Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/repositories/create-repos"
+    },
+    {
+      "text": "Quickstart: Store Docker container images in Artifact Registry",
+      "href": "https://docs.cloud.google.com/artifact-registry/docs/docker/store-docker-container-images"
+    },
+    {
+      "text": "Create a key | Cloud Key Management Service",
+      "href": "https://docs.cloud.google.com/kms/docs/create-key"
+    },
+    {
+      "text": "Creating and validating digital signatures | Cloud KMS",
+      "href": "https://docs.cloud.google.com/kms/docs/create-validate-signatures"
+    },
+    {
+      "text": "IAM roles and permissions | Cloud Build",
+      "href": "https://docs.cloud.google.com/build/docs/iam-roles-permissions"
+    },
+    {
+      "text": "Configure access for the default Cloud Build service account",
+      "href": "https://docs.cloud.google.com/build/docs/securing-builds/set-service-account-permissions"
+    },
+    {
+      "text": "gcloud run deploy リファレンス",
+      "href": "https://docs.cloud.google.com/sdk/gcloud/reference/run/deploy"
+    },
+    {
+      "text": "Best practices for containers",
+      "href": "https://docs.cloud.google.com/container-registry/docs/container-best-practices"
+    },
+    {
+      "text": "Base images | Software supply chain security",
+      "href": "https://cloud.google.com/software-supply-chain-security/docs/base-images"
+    },
+    {
+      "text": "元となる Challenge Lab: Secure Software Delivery",
+      "href": "https://www.skills.google/course_templates/1164/labs/610922"
+    }
+  ],
+  "bodyContent": [
+    {
+      "kind": "paragraph",
+      "text": "セキュアなコンテナ CI/CD パイプライン構築ガイド"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Artifact Registry × Binary Authorization × Cloud Build によるソフトウェアサプライチェーンセキュリティ実践。Cymbal Bank のコンテナアプリケーションをセキュアにデプロイするシナリオを題材に、初学者でも一つずつ理解しながら進められるよう、各タスクの背景にあるベストプラクティスとその根拠を解説します。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "このパイプラインは「信頼されていないイメージ」と「信頼されたイメージ」を物理的に別のリポジトリへ分離することが最大の設計ポイントです。スキャンや署名が完了する前のイメージが誤って本番相当の場所から参照されることを防ぎます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "図1: ビルドからデプロイまでの全体フロー"
+    },
+    {
+      "kind": "paragraph",
+      "text": "事前にこれらの用語の関係を理解しておくと、後続の作業がスムーズになります。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "パイプライン実行中に権限不足で失敗すると、どのステップで何が足りないのか切り分けに時間がかかります。使用するサービス群を最初にまとめて有効化しておくことで、後続タスクでの手戻りを防げます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Artifact Registry のリポジトリは、CMEK 暗号化やクリーンアップポリシー、Immutable Tags（イメージタグの上書き防止）などをリポジトリ単位で設定できます。スキャン専用リポジトリと本番用リポジトリを分けることで、たとえば本番用リポジトリだけに Immutable Tags を有効化し、「一度検証したイメージは書き換えられない」という不変性を保証する、といった段階ごとに異なるガバナンスを適用できます。"
+    },
+    {
+      "kind": "code",
+      "text": "gcloud artifacts repositories create artifact-scanning-repo \\\n  --repository-format=docker \\\n  --location=REGION \\\n  --description=\"Scanning repository for pre-verified images\"\n\ngcloud artifacts repositories create artifact-prod-repo \\\n  --repository-format=docker \\\n  --location=REGION \\\n  --description=\"Production repository for signed images\""
+    },
+    {
+      "kind": "paragraph",
+      "text": "Cloud Build のデフォルトサービスアカウントは強い権限を持ちがちですが、パイプラインが実際に必要とする操作単位でロールを追加する方が安全です。roles/ondemandscanning.admin はスキャンの実行だけに必要な権限であり、汎用的な Editor ロールなどを付与しない方が事故を防げます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "<region>-docker.pkg.dev/<project-id>/artifact-scanning-repo/sample-image の形式でイメージ URL を明示することで、ビルド・プッシュ・スキャンの各ステップが必ず同じイメージを指すようになり、参照ミスを防げます。"
+    },
+    {
+      "kind": "code",
+      "text": "steps:\n  - id: \"build\"\n    name: 'gcr.io/cloud-builders/docker'\n    args: ['build', '-t', 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image', '.']\n  - id: \"push\"\n    name: 'gcr.io/cloud-builders/docker'\n    args: ['push', 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image']"
+    },
+    {
+      "kind": "paragraph",
+      "text": "実務では「動くから安全」ではありません。この時点でスキャン結果に CRITICAL 脆弱性が出ることを確認しておくことで、Task 4 で組み込む自動ゲートが正しく機能していることを後で検証できます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "ここが本ラボの中核です。Attestor・Note・Cloud KMS 鍵・Policy の4つがどう連携するかを図で整理します。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "図2: Binary Authorization を構成するリソースの関係"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Binary Authorization では、Note が「何を証明するか」の定義であり、Attestor が「誰がその証明を行う権限を持つか」の実体です。この分離により、同じ Note（例：脆弱性検証済み）に対して、将来的に複数の Attestor（複数チームの署名鍵）を関連付けるといった拡張が可能になります。"
+    },
+    {
+      "kind": "code",
+      "text": "cat > ./vulnerability_note.json << EOM\n{\n  \"attestation\": {\n    \"hint\": {\n      \"human_readable_name\": \"Container Vulnerabilities attestation authority\"\n    }\n  }\n}\nEOM\n\ncurl -X POST \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $(gcloud auth print-access-token)\" \\\n  --data-binary @./vulnerability_note.json \\\n  \"https://containeranalysis.googleapis.com/v1/projects/$PROJECT_ID/notes/?noteId=vulnerability_note\""
+    },
+    {
+      "kind": "code",
+      "text": "gcloud container binauthz attestors create vulnerability-attestor \\\n  --attestation-authority-note=vulnerability_note \\\n  --attestation-authority-note-project=$PROJECT_ID\n\ngcloud container binauthz attestors list"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Binary Authorization のサービスエージェントが Note の Occurrence（脆弱性や Attestation の実データ）を参照できる必要がありますが、roles/containeranalysis.notes.occurrences.viewer という限定的な閲覧権限のみを Note リソース単位で付与することで、プロジェクト全体ではなくこの Note に対してのみアクセスを許可する、最小権限のスコーピングが実現できます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Attestation は「誰かが確かにこのプロセスを実行した」ことを暗号学的に証明するものです。対称鍵と異なり、非対称署名鍵（秘密鍵で署名し、公開鍵で検証）は Cloud KMS 内に秘密鍵を保持したまま外部に出さずに署名処理を実行でき、検証は公開鍵だけで完結します。これにより署名鍵の漏えいリスクを大きく下げられます。"
+    },
+    {
+      "kind": "code",
+      "text": "gcloud kms keyrings create binauthz-keys --location=global\n\ngcloud kms keys create lab-key \\\n  --keyring=binauthz-keys \\\n  --location=global \\\n  --purpose=asymmetric-signing \\\n  --default-algorithm=ec-sign-p256-sha256"
+    },
+    {
+      "kind": "paragraph",
+      "text": "鍵を Attestor に紐づける"
+    },
+    {
+      "kind": "code",
+      "text": "gcloud container binauthz attestors public-keys add \\\n  --attestor=vulnerability-attestor \\\n  --keyversion-project=$PROJECT_ID \\\n  --keyversion-location=global \\\n  --keyversion-keyring=binauthz-keys \\\n  --keyversion-key=lab-key \\\n  --keyversion=1"
+    },
+    {
+      "kind": "paragraph",
+      "text": "デフォルトポリシーはすべてのイメージのデプロイを許可する設定になっています。これを「vulnerability-attestor による Attestation がなければデプロイを拒否する」というホワイトリスト方式（拒否がデフォルト）に変更します。ポリシーは例外リストではなく「原則拒否 + 明示的な許可条件」で構成するのが、サプライチェーン攻撃対策の定石です。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Task 4 では、スキャン結果の判定と署名処理という新しい操作が加わるため、権限も追加します。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "役割を機能単位で細かく分けて付与することで、後から「このパイプラインが実際に何をしているか」を IAM ポリシーだけから読み取れるようになります。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Attestation の作成は、ペイロード生成・署名・Attestation の登録という複数手順から成ります。Google 提供の Custom Build Step（binauthz-attestation）はこれをラップしており、cloudbuild.yaml からは1ステップの宣言で済みます。生の API 呼び出しを毎回手書きするより、実装ミスによる誤った Attestation 発行のリスクを下げられます。"
+    },
+    {
+      "kind": "code",
+      "text": "git clone https://github.com/GoogleCloudPlatform/cloud-builders-community.git\ncd cloud-builders-community/binauthz-attestation\ngcloud builds submit . --config cloudbuild.yaml\ncd ../..\nrm -rf cloud-builders-community"
+    },
+    {
+      "kind": "code",
+      "text": "steps:\n\n# 1. ビルド: artifact-scanning-repo 宛てにタグ付け\n- id: \"build\"\n  name: 'gcr.io/cloud-builders/docker'\n  args: ['build', '-t', 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image', '.']\n  waitFor: ['-']\n\n# 2. push: まず「検証前」リポジトリへ\n- id: \"push\"\n  name: 'gcr.io/cloud-builders/docker'\n  args: ['push', 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image']\n\n# 3. On-Demand Scanning でスキャンを実行し、scan_id を後続ステップに渡す\n- id: scan\n  name: 'gcr.io/cloud-builders/gcloud'\n  entrypoint: 'bash'\n  args:\n  - '-c'\n  - |\n    (gcloud artifacts docker images scan \\\n    REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image \\\n    --location us \\\n    --format=\"value(response.scan)\") > /workspace/scan_id.txt\n\n# 4. CRITICAL が1件でもあればビルドを止める（品質ゲート）\n- id: severity check\n  name: 'gcr.io/cloud-builders/gcloud'\n  entrypoint: 'bash'\n  args:\n  - '-c'\n  - |\n      gcloud artifacts docker images list-vulnerabilities $(cat /workspace/scan_id.txt) \\\n      --format=\"value(vulnerability.effectiveSeverity)\" | if grep -Fxq CRITICAL; \\\n      then echo \"Failed vulnerability check for CRITICAL level\" && exit 1; else echo \\\n      \"No CRITICAL vulnerability found, congrats !\" && exit 0; fi\n\n# 5. 検査を通過したイメージにのみ Attestation を発行\n- id: 'create-attestation'\n  name: 'gcr.io/${PROJECT_ID}/binauthz-attestation:latest'\n  args:\n    - '--artifact-url'\n    - 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image'\n    - '--attestor'\n    - 'projects/$PROJECT_ID/attestors/vulnerability-attestor'\n    - '--keyversion'\n    - 'projects/$PROJECT_ID/locations/global/keyRings/binauthz-keys/cryptoKeys/lab-key/cryptoKeyVersions/1'\n\n# 6. 署名済みイメージだけを本番リポジトリへ昇格させる\n- id: \"push-to-prod\"\n  name: 'gcr.io/cloud-builders/docker'\n  args:\n    - 'tag'\n    - 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image'\n    - 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-prod-repo/sample-image'\n- id: \"push-to-prod-final\"\n  name: 'gcr.io/cloud-builders/docker'\n  args: ['push', 'REGION-docker.pkg.dev/$PROJECT_ID/artifact-prod-repo/sample-image']\n\n# 7. Cloud Run に Binary Authorization 強制ありでデプロイ\n- id: 'deploy-to-cloud-run'\n  name: 'gcr.io/cloud-builders/gcloud'\n  entrypoint: 'bash'\n  args:\n  - '-c'\n  - |\n    gcloud run deploy auth-service \\\n    --image=REGION-docker.pkg.dev/$PROJECT_ID/artifact-prod-repo/sample-image \\\n    --binary-authorization=default --region=REGION --allow-unauthenticated\n\nimages:\n  - REGION-docker.pkg.dev/$PROJECT_ID/artifact-scanning-repo/sample-image"
+    },
+    {
+      "kind": "annotation",
+      "text": "ここでビルドが CRITICAL 脆弱性により失敗するのは想定どおりの挙動です。これは「セキュリティゲートが機能していることの動作確認」であり、次のタスクで初めて根本原因（依存パッケージの脆弱性）を修正します。障害対応の基本と同じく、まず失敗を正しく検知できているかを確認してから、原因を修正するという順序を踏むことが重要です。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Alpine は必要最小限のパッケージのみで構成された軽量な Linux ディストリビューションです。含まれるパッケージ数が少ないほど、攻撃対象領域（Attack Surface）と既知脆弱性の混入経路が減ります。イメージサイズが小さくなることで、pull・デプロイの速度向上という副次効果も得られます。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "Flask、Gunicorn、Werkzeug はいずれも Web サーバーの根幹に関わるパッケージです。バージョンを明示的に固定することで「ビルドのたびに異なるバージョンが解決され、再現性がなくなる」問題を防ぎつつ、既知の CVE が修正されたバージョンへ確実にアップグレードできます。"
+    },
+    {
+      "kind": "code",
+      "text": "gcloud beta run services add-iam-policy-binding \\\n  --region=REGION \\\n  --member=allUsers \\\n  --role=roles/run.invoker \\\n  auth-service"
+    },
+    {
+      "kind": "annotation",
+      "text": "これは動作確認のためだけの設定であり、本番運用では IAP（Identity-Aware Proxy）や認証必須の呼び出し（gcloud run services proxy や ID トークン）に置き換えるべきです。ラボの手順書自体も「本番環境では使用しないこと」と明記している点は、実務でもそのまま踏襲すべき注意点です。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "図3: 修正から再デプロイまでの確認フロー"
+    },
+    {
+      "kind": "paragraph",
+      "text": "各コンポーネントがどのタイミングでやり取りするかを俯瞰しておくと、障害発生時にどこを調査すべきか判断しやすくなります。"
+    },
+    {
+      "kind": "paragraph",
+      "text": "図4: ビルドから検証までのシーケンス図"
+    },
+    {
+      "kind": "paragraph",
+      "text": "本ガイドは公式ドキュメントの内容を要約・再構成したものであり、実際の設定値（リージョン名やプロジェクトIDなど）は各自の環境に合わせて置き換えてください。"
+    }
+  ],
+  "counts": {
+    "table": 6,
+    "diagram": 4,
+    "codeBlock": 9,
+    "figure": 0
+  },
+  "structures": {
+    "tableColumnHeaders": [
+      2,
+      2,
+      3,
+      2,
+      3,
+      3
+    ],
+    "codeLines": [
+      9,
+      7,
+      15,
+      5,
+      7,
+      7,
+      5,
+      72,
+      5
+    ]
+  }
+}

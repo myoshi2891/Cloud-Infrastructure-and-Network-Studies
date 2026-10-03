@@ -4,7 +4,6 @@
 
 - 対象試験: AWS Certified AI Business Strategist (AIB-C01)
 - 対象ドメイン: Content Domain 4(試験全体の **24%**)
-- 文書の方針: 図解は Mermaid(フローチャート)と Markdown(表)のみ。ASCII 図解は使用しません。
 - 根拠の表記: 本文中の `[S1]` などは、末尾「参考 URL 一覧」の番号に対応します。
 
 > **この文書の読み方**

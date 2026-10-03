@@ -30,6 +30,16 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'secure-cicd-pipeline-guide': {
+        source: 'Secure-cicd-pipeline-guide.html',
+        sourceCommit: '96f9488a8805139d10a5674dd5bbf7f2a49c839b',
+        textSelector: 'main h1, main h2, main h3, main h4, main p, main li, main th, main td, main .hero-eyebrow, .sidebar-brand, .sidebar-source',
+        tables: true,
+        supplementalSelector: '.source-note, .callout, .code-label, .mermaid-caption, .reference-index, .reference-url',
+        codeBlocks: true,
+        styledClasses: true,
+        placementSelector: 'table, pre, .code-block, .mermaid-card, .callout, .source-note',
+    },
     'comptia-network-plus-guide': {
         source: 'archive/CompTIA/html/Comptia-network-plus-guide.html',
         sourceCommit: '7833298^',

@@ -14,7 +14,7 @@ paths:
 
 # TDD & Step-by-Step Commit Workflow Rules
 
-(最終更新日: 2026-08-15)
+(最終更新日: 2026-10-02)
 
 ## 目的 (Objective)
 
@@ -293,7 +293,7 @@ Red フェーズのテストは、以下を**すべて**満たさなければコ
 | import 元 | 提供するもの |
 |---|---|
 | `@/scripts/inventory-extraction.mjs` | `codeBlockSelector` / `codeLines` / `codeText` / `codeLineCount` / `bodySelector` / `extractBodyContent` / `normalize`（**生成側 `scripts/gen-inventory.mjs` と同一実装**） |
-| `@/__tests__/gcl/agwa/migration-test-utils` | `MermaidDiagramMock`（`ariaLabel` / `decorative` / `preserveNaturalScale` をテスト用属性へ透過）、`squash`。同モジュールは `codeBlockSelector` / `codeLineCount` / `extractBodyContent` を再エクスポートするため、テストからの import 元はここ1箇所でよい |
+| `@/__tests__/helpers/migration-test-utils` | `MermaidDiagramMock`（`ariaLabel` / `decorative` / `preserveNaturalScale` をテスト用属性へ透過）、`squash`。同モジュールは `codeBlockSelector` / `codeLineCount` / `extractBodyContent` を再エクスポートするため、テストからの import 元はここ1箇所でよい |
 
 ```tsx
 // __tests__/<領域>/<page-slug>/page.test.tsx   ← パスは対象ページのルートを写す（§2-4）
@@ -308,7 +308,7 @@ import {
     codeLineCount,
     extractBodyContent,
     squash,
-} from '@/__tests__/gcl/agwa/migration-test-utils';
+} from '@/__tests__/helpers/migration-test-utils';
 
 // MermaidDiagram は名前付きエクスポート。default でモックすると必ず落ちる。
 vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
@@ -410,9 +410,8 @@ describe('<page-slug> — 移行元コンテンツの全量移行', () => {
 > そのまま出力され、エージェントが次に何を直すべきかを自力で判断できる。`expect(body).toContain(x)` を
 > `forEach` で回すと最初の1件で停止し、残りの漏れが見えない。件数だけの `toHaveLength` も同じ理由で不十分。
 >
-> **共有モジュールを別領域へ広げる場合**: `migration-test-utils` は現在 `__tests__/gcl/agwa/` にある。
-> AGWA 以外の領域でも使う場合は `__tests__/helpers/migration-test-utils.tsx` へ**移動する単独のコミット**を切り、
-> 全 import を追随させる。領域ごとにコピーを作ることは禁止（PR レビューで実際に指摘された重複パターン）。
+> **共有モジュール**: `__tests__/helpers/migration-test-utils.tsx` を全領域で使用する。
+> AGWA配下からの移動は単独コミットで完了している。領域ごとにコピーを作ることは禁止。
 
 ---
 

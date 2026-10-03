@@ -1,0 +1,3384 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>CCNP Service Provider 認定 初学者向けステップバイステップ完全ガイド</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&family=Source+Serif+4:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"
+        />
+        <style>
+            :root {
+                color-scheme: light;
+                --color-paper: #f6f7f9;
+                --color-ink: #161b26;
+                --color-indigo: #2e3f72;
+                --color-gold: #b8802a;
+                --color-forest: #1b6e6a;
+                --color-plum: #8c3a5c;
+                --surface: #ffffff;
+                --tint-indigo: #eef1f8;
+                --tint-gold: #faf1df;
+                --tint-forest: #e3f0ee;
+                --tint-plum: #f5e8ee;
+                --code-bg: #f0f2f7;
+                --color-text-primary: #161b26;
+                --color-text-secondary: #454e63;
+                --color-text-tertiary: #5a647c;
+                --color-border-tertiary: #e2e6ee;
+                --color-border-secondary: #cbd2e0;
+                --color-border-primary: #a9b4cb;
+                --font-sans:
+                    'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
+                    'Meiryo', system-ui, sans-serif;
+                --font-serif:
+                    'Source Serif 4', 'Noto Serif JP', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia,
+                    serif;
+                --font-mono:
+                    ui-monospace, 'SF Mono', Menlo, Consolas, 'Noto Sans Mono CJK JP',
+                    'Noto Sans JP', monospace;
+                --border-radius-md: 8px;
+                --border-radius-lg: 12px;
+                --border-radius-xl: 16px;
+                --sidebar-w: 288px;
+            }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 16px;
+            }
+            body {
+                margin: 0;
+                background: var(--color-paper);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                line-height: 1.7;
+                font-weight: 400;
+                -webkit-text-size-adjust: 100%;
+            }
+            .layout {
+                display: block;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: var(--surface);
+                border-right: 1px solid var(--color-border-secondary);
+                display: flex;
+                flex-direction: column;
+                z-index: 10;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 20px 20px 16px;
+                border-bottom: 1px solid var(--color-border-tertiary);
+            }
+            .crest {
+                width: 44px;
+                height: 44px;
+                flex: none;
+            }
+            .crest .ring {
+                fill: var(--tint-indigo);
+                stroke: var(--color-indigo);
+                stroke-width: 1.5;
+            }
+            .crest .ring2 {
+                fill: none;
+                stroke: var(--color-gold);
+                stroke-width: 1;
+            }
+            .crest .link {
+                fill: none;
+                stroke: var(--color-indigo);
+                stroke-width: 1.5;
+                stroke-linejoin: round;
+            }
+            .crest .node {
+                fill: var(--color-indigo);
+            }
+            .crest .core {
+                fill: var(--color-gold);
+            }
+            .brand-title {
+                font-family: var(--font-serif);
+                font-weight: 500;
+                font-size: 1rem;
+                line-height: 1.3;
+                color: var(--color-indigo);
+            }
+            .brand-sub {
+                font-size: 1rem;
+                line-height: 1.4;
+                color: var(--color-text-secondary);
+            }
+            .nav {
+                position: relative;
+                flex: 1;
+                overflow-y: auto;
+                padding: 12px 12px 28px;
+            }
+            .nav ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .nav li {
+                padding-left: 0;
+                margin: 0;
+            }
+            .nav li::before {
+                content: none;
+            }
+            .nav a {
+                display: block;
+                padding: 6px 12px;
+                border-left: 3px solid transparent;
+                border-radius: var(--border-radius-md);
+                color: var(--color-text-secondary);
+                font-size: 1rem;
+                line-height: 1.45;
+                text-decoration: none;
+            }
+            .nav a.l2 {
+                margin-top: 8px;
+                color: var(--color-ink);
+                font-weight: 500;
+            }
+            .nav a.l3 {
+                padding-left: 24px;
+            }
+            .nav a.l4 {
+                padding-left: 36px;
+            }
+            .nav a:hover {
+                background: var(--tint-indigo);
+                color: var(--color-indigo);
+            }
+            .nav a.active {
+                background: var(--tint-indigo);
+                border-left-color: var(--color-indigo);
+                color: var(--color-indigo);
+                font-weight: 500;
+            }
+            main {
+                margin-left: var(--sidebar-w);
+                min-width: 0;
+            }
+            .hero {
+                padding: 48px 48px 32px;
+                background: var(--surface);
+                border-bottom: 1px solid var(--color-border-secondary);
+            }
+            .hero h1 {
+                margin: 0 0 20px;
+                font-family: var(--font-serif);
+                font-weight: 500;
+                font-size: 2rem;
+                line-height: 1.35;
+                color: var(--color-indigo);
+            }
+            .hero-meta {
+                display: grid;
+                gap: 10px;
+                margin: 0;
+            }
+            .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 8px 14px;
+            }
+            .meta-label {
+                flex: none;
+                padding: 2px 12px;
+                border: 1px solid var(--color-border-primary);
+                border-radius: var(--border-radius-md);
+                background: var(--tint-indigo);
+                color: var(--color-indigo);
+                font-weight: 500;
+            }
+            .meta-text {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .section {
+                padding: 36px 48px;
+                border-bottom: 1px solid var(--color-border-tertiary);
+            }
+            .section.lvl4 {
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+            .section.intro {
+                padding-top: 28px;
+                padding-bottom: 12px;
+            }
+            .section > h2:last-child,
+            .section > h3:last-child,
+            .section > h4:last-child {
+                margin-bottom: 0;
+            }
+            .section.lvl2:has(> h2:only-child) {
+                padding-top: 28px;
+                padding-bottom: 20px;
+            }
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: var(--font-serif);
+                font-weight: 500;
+                line-height: 1.4;
+                color: var(--color-ink);
+            }
+            h2 {
+                margin: 0 0 22px;
+                padding-left: 14px;
+                border-left: 4px solid var(--color-gold);
+                font-size: 1.625rem;
+                color: var(--color-indigo);
+            }
+            h3 {
+                margin: 0 0 18px;
+                font-size: 1.375rem;
+                color: var(--color-indigo);
+            }
+            h4 {
+                margin: 0 0 18px;
+                font-size: 1.1875rem;
+            }
+            h5 {
+                margin: 30px 0 12px;
+                padding-bottom: 6px;
+                border-bottom: 1px solid var(--color-border-secondary);
+                font-size: 1.0625rem;
+                color: var(--color-indigo);
+            }
+            h6 {
+                margin: 24px 0 10px;
+                font-size: 1rem;
+            }
+            p {
+                margin: 0 0 14px;
+            }
+            strong {
+                font-weight: 500;
+            }
+            a {
+                color: var(--color-indigo);
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                overflow-wrap: anywhere;
+            }
+            a:hover {
+                color: var(--color-plum);
+            }
+            ul,
+            ol {
+                list-style: none;
+                margin: 0 0 14px;
+                padding: 0;
+            }
+            li {
+                position: relative;
+                margin: 0 0 6px;
+            }
+            ul > li {
+                padding-left: 22px;
+            }
+            ul > li::before {
+                content: '';
+                position: absolute;
+                left: 6px;
+                top: 0.72em;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--color-gold);
+            }
+            ol {
+                counter-reset: item;
+            }
+            ol > li {
+                counter-increment: item;
+                padding-left: 36px;
+            }
+            ol > li::before {
+                content: counter(item);
+                position: absolute;
+                left: 0;
+                top: 0.12em;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: var(--tint-indigo);
+                color: var(--color-indigo);
+                font-weight: 500;
+                line-height: 26px;
+                text-align: center;
+            }
+            li > ul,
+            li > ol {
+                margin: 6px 0 0;
+            }
+            code {
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                padding: 1px 6px;
+                border: 1px solid var(--color-border-tertiary);
+                border-radius: 6px;
+                background: var(--code-bg);
+                color: var(--color-ink);
+                overflow-wrap: anywhere;
+            }
+            pre {
+                margin: 0 0 20px;
+                padding: 16px 20px;
+                overflow-x: auto;
+                border: 1px solid var(--color-border-secondary);
+                border-left: 4px solid var(--color-indigo);
+                border-radius: var(--border-radius-lg);
+                background: var(--code-bg);
+                font-size: 1rem;
+                line-height: 1.65;
+                tab-size: 2;
+            }
+            pre code {
+                padding: 0;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+                font-size: 1rem;
+                white-space: pre;
+                overflow-wrap: normal;
+            }
+            .tk-comment {
+                color: var(--color-text-tertiary);
+                font-style: italic;
+            }
+            .tk-prompt {
+                color: var(--color-text-secondary);
+            }
+            .tk-kw,
+            .tk-cmd {
+                color: var(--color-indigo);
+                font-weight: 500;
+            }
+            .tk-ip {
+                color: var(--color-forest);
+            }
+            .tk-ph {
+                color: var(--color-plum);
+            }
+            .tk-num {
+                color: var(--color-plum);
+            }
+            .table-wrap {
+                margin: 0 0 22px;
+                overflow-x: auto;
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                background: var(--surface);
+            }
+            table {
+                width: 100%;
+                min-width: 560px;
+                border-collapse: collapse;
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            th {
+                padding: 10px 14px;
+                border-bottom: 1px solid var(--color-border-secondary);
+                background: var(--tint-indigo);
+                color: var(--color-indigo);
+                font-weight: 500;
+                text-align: left;
+            }
+            td {
+                padding: 10px 14px;
+                border-bottom: 1px solid var(--color-border-tertiary);
+                vertical-align: top;
+            }
+            th + th,
+            td + td {
+                border-left: 1px solid var(--color-border-tertiary);
+            }
+            tbody tr:nth-child(even) td {
+                background: var(--color-paper);
+            }
+            tbody tr:last-child td {
+                border-bottom: 0;
+            }
+            .callout {
+                margin: 0 0 22px;
+                padding: 14px 20px 8px;
+                border: 1px solid var(--color-border-secondary);
+                border-left-width: 5px;
+                border-radius: var(--border-radius-lg);
+                background: var(--surface);
+            }
+            .callout > *:last-child {
+                margin-bottom: 6px;
+            }
+            .callout-title {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 0 0 10px;
+                font-family: var(--font-serif);
+                font-weight: 500;
+                color: var(--color-ink);
+            }
+            .callout-title i {
+                font-size: 1.25rem;
+                line-height: 1;
+            }
+            .callout.practice {
+                border-left-color: var(--color-gold);
+                background: var(--tint-gold);
+            }
+            .callout.practice .callout-title i {
+                color: var(--color-gold);
+            }
+            .callout.source {
+                border-left-color: var(--color-forest);
+                background: var(--tint-forest);
+            }
+            .callout.source .callout-title i {
+                color: var(--color-forest);
+            }
+            .callout.source ul > li::before {
+                background: var(--color-forest);
+            }
+            .callout.note {
+                border-left-color: var(--color-plum);
+                background: var(--tint-plum);
+            }
+            .callout.note .callout-title i {
+                color: var(--color-plum);
+            }
+            .callout.note ul > li::before {
+                background: var(--color-plum);
+            }
+            .diagram {
+                display: flex;
+                justify-content: center;
+                margin: 0 0 24px;
+                padding: 20px;
+                overflow-x: auto;
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                background: var(--surface);
+            }
+            .diagram:empty {
+                min-height: 96px;
+            }
+            .diagram svg {
+                flex: none;
+                overflow: visible;
+            }
+            .diagram-error {
+                margin: 0;
+                color: var(--color-plum);
+            }
+            @media (max-width: 1024px) {
+                .sidebar {
+                    position: static;
+                    width: auto;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--color-border-secondary);
+                }
+                .nav {
+                    max-height: 280px;
+                }
+                main {
+                    margin-left: 0;
+                }
+                .hero {
+                    padding: 32px 24px 24px;
+                }
+                .section {
+                    padding: 28px 24px;
+                }
+            }
+            @media (max-width: 640px) {
+                .hero h1 {
+                    font-size: 1.5rem;
+                }
+                .section {
+                    padding: 24px 16px;
+                }
+                .hero {
+                    padding: 28px 16px 20px;
+                }
+                h2 {
+                    font-size: 1.375rem;
+                }
+                h3 {
+                    font-size: 1.25rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="brand">
+                    <svg class="crest" viewBox="0 0 44 44" aria-hidden="true">
+                        <circle class="ring" cx="22" cy="22" r="20" />
+                        <circle class="ring2" cx="22" cy="22" r="15" />
+                        <path class="link" d="M22 11 L12 29 L32 29 Z" />
+                        <circle class="node" cx="22" cy="11" r="3" />
+                        <circle class="node" cx="12" cy="29" r="3" />
+                        <circle class="node" cx="32" cy="29" r="3" />
+                        <circle class="core" cx="22" cy="23" r="2.5" />
+                    </svg>
+                    <div>
+                        <div class="brand-title">CCNP Service Provider</div>
+                        <div class="brand-sub">初学者向け完全ガイド</div>
+                    </div>
+                </div>
+                <nav class="nav" aria-label="目次">
+                    <ul>
+                        <li><a class="l2" href="#s1">1. このガイドの使い方</a></li>
+                        <li><a class="l3" href="#s2">1.1 各トピックの共通フォーマット</a></li>
+                        <li><a class="l3" href="#s3">1.2 表記について</a></li>
+                        <li><a class="l3" href="#s4">1.3 重要な注意（試験内容の変動）</a></li>
+                        <li><a class="l2" href="#s5">2. 認定の全体像</a></li>
+                        <li><a class="l3" href="#s6">2.1 取得要件</a></li>
+                        <li><a class="l3" href="#s7">2.2 試験一覧</a></li>
+                        <li>
+                            <a class="l3" href="#s8"
+                                >2.3 その他の重要事項（Cisco 公式ページより）</a
+                            >
+                        </li>
+                        <li><a class="l3" href="#s9">2.4 コンセントレーション試験の選び方</a></li>
+                        <li>
+                            <a class="l2" href="#s10">3. 前提知識：SP ネットワークの基本用語</a>
+                        </li>
+                        <li><a class="l3" href="#s11">3.1 SP ネットワークの典型構成</a></li>
+                        <li><a class="l3" href="#s12">3.2 用語集（最低限これだけは）</a></li>
+                        <li>
+                            <a class="l3" href="#s13">3.3 SP ネットワークの「3 つの層」で考える</a>
+                        </li>
+                        <li><a class="l2" href="#s14">4. 学習ロードマップ</a></li>
+                        <li><a class="l3" href="#s15">4.1 推奨学習順序</a></li>
+                        <li>
+                            <a class="l3" href="#s16"
+                                >4.2 コア試験の出題配分（350-501 SPCOR v1.1）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l3" href="#s17">4.3 コンセントレーション試験の出題配分</a>
+                        </li>
+                        <li><a class="l3" href="#s18">4.4 ラボ環境の選び方</a></li>
+                        <li><a class="l2" href="#s19">5. Part A：コア試験 350-501 SPCOR</a></li>
+                        <li><a class="l3" href="#s20">5.1 アーキテクチャ（15%）</a></li>
+                        <li>
+                            <a class="l4" href="#s21"
+                                >5.1.1 サービスプロバイダー アーキテクチャの説明（出題範囲 1.1）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l4" href="#s22"
+                                >5.1.2 シスコのネットワークソフトウェア アーキテクチャ（出題範囲
+                                1.2）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l4" href="#s23"
+                                >5.1.3 サービスプロバイダー仮想化（出題範囲 1.3）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l4" href="#s24">5.1.4 QoS アーキテクチャ（出題範囲 1.4）</a>
+                        </li>
+                        <li>
+                            <a class="l4" href="#s25"
+                                >5.1.5 コントロールプレーンのセキュリティ（出題範囲 1.5）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l4" href="#s26"
+                                >5.1.6 管理プレーンのセキュリティ（出題範囲 1.6）</a
+                            >
+                        </li>
+                        <li>
+                            <a class="l4" href="#s27"
+                                >5.1.7 データプレーンのセキュリティ（出題範囲 1.7）</a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <main>
+                <header class="hero">
+                    <h1>CCNP Service Provider 認定 初学者向けステップバイステップ完全ガイド</h1>
+                    <div class="hero-meta">
+                        <div class="meta-row">
+                            <span class="meta-label">対象読者</span
+                            ><span class="meta-text"
+                                >サービスプロバイダー（SP）ネットワークをこれから学ぶ方、CCNP
+                                Enterprise 相当の知識から SP 領域へ進む方</span
+                            >
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">作成日</span
+                            ><span class="meta-text">2026-09-30</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">根拠となる公式情報</span
+                            ><span class="meta-text"
+                                >Cisco Japan「CCNP Service Provider
+                                認定とトレーニングプログラム」および各試験の出題範囲 PDF（300-540
+                                SPCNI: v1.0 / 350-501 SPCOR: v1.1、2024 年版）</span
+                            >
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">書式ルール</span
+                            ><span class="meta-text"
+                                >ASCII アートによる図解は使用せず、フローチャートは
+                                Mermaid、図解・表は Markdown で表現します</span
+                            >
+                        </div>
+                    </div>
+                </header>
+                <section class="section intro">
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-info-circle"></i><span>補足</span>
+                        </div>
+                        <p>
+                            <strong>本ガイドの収録範囲</strong>: 現版はコア試験の
+                            <strong>5.1 アーキテクチャ（出題範囲 1.1〜1.7）まで</strong>
+                            を収録しています。5.2〜5.5（ネットワーキング、MPLS/SR、サービス、自動化とアシュアランス）と各コンセントレーション試験の詳細解説は未収録です。出典
+                            URL は各項目の「出典」に記載しています。
+                        </p>
+                    </div>
+                </section>
+                <section class="section lvl2" id="s1"><h2>1. このガイドの使い方</h2></section>
+                <section class="section lvl3" id="s2">
+                    <h3>1.1 各トピックの共通フォーマット</h3>
+                    <p>各項目は、次の 5 ステップで統一しています。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ステップ</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>① 何のための技術か</td>
+                                    <td>解決したい課題（Why）</td>
+                                </tr>
+                                <tr>
+                                    <td>② 仕組み</td>
+                                    <td>動作原理（How）。必要に応じて Mermaid 図・表</td>
+                                </tr>
+                                <tr>
+                                    <td>③ 設定・確認の勘所</td>
+                                    <td>
+                                        IOS XR / IOS XE のコマンド例、<code>show</code> コマンド
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>④ ベストプラクティス</td>
+                                    <td>実運用で推奨される設計・運用指針</td>
+                                </tr>
+                                <tr>
+                                    <td>⑤ 出典</td>
+                                    <td>RFC・Cisco 公式ドキュメントなどの URL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s3">
+                    <h3>1.2 表記について</h3>
+                    <ul>
+                        <li>
+                            出題範囲の項番（例: <code>1.4.a</code>）は Cisco 公式の出題範囲 PDF
+                            の項番に対応しています。
+                        </li>
+                        <li>
+                            コマンド例は <strong>主に IOS XR</strong>（SP
+                            コアの主流）を使い、必要な箇所で IOS XE
+                            を併記します。プラットフォームやバージョンで構文が異なる場合は本文で注記します。
+                        </li>
+                        <li>
+                            設定例のパスワードや IP
+                            アドレスは、文書用アドレス（<code>192.0.2.0/24</code>、<code>198.51.100.0/24</code>、<code>203.0.113.0/24</code>、<code>2001:db8::/32</code>）とプレースホルダーです。本番へそのまま流用しないでください。
+                        </li>
+                    </ul>
+                </section>
+                <section class="section lvl3" id="s4">
+                    <h3>1.3 重要な注意（試験内容の変動）</h3>
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-info-circle"></i><span>補足</span>
+                        </div>
+                        <p>
+                            Cisco の出題範囲 PDF
+                            には「実際の試験ではここに記載のない関連トピックが出題される場合がある」「予告なく変更される場合がある」と明記されています。学習開始前と受験直前に、必ず最新の出題範囲を
+                            Cisco 公式の各試験ページで確認してください。<br />
+                            なお、本ガイドは 2026-09-30 時点で取得できた Cisco Japan 公開の出題範囲
+                            PDF（300-540 SPCNI: v1.0 / 350-501 SPCOR: v1.1）を基準に作成しています。
+                        </p>
+                    </div>
+                </section>
+                <section class="section lvl2" id="s5"><h2>2. 認定の全体像</h2></section>
+                <section class="section lvl3" id="s6">
+                    <h3>2.1 取得要件</h3>
+                    <p>
+                        CCNP Service Provider は、<strong
+                            >コア試験 1 つ + コンセントレーション試験 1 つ（選択式）</strong
+                        >
+                        の合計 2 試験に合格すると取得できます。
+                    </p>
+                    <div
+                        aria-label="Mermaid diagram d1"
+                        class="diagram"
+                        data-diagram="d1"
+                        role="img"
+                    ></div>
+                </section>
+                <section class="section lvl3" id="s7">
+                    <h3>2.2 試験一覧</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>区分</th>
+                                    <th>試験コード</th>
+                                    <th>名称</th>
+                                    <th>試験時間</th>
+                                    <th>主なテーマ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>コア（必須）</td>
+                                    <td>350-501 SPCOR</td>
+                                    <td>
+                                        Implementing and Operating Cisco Service Provider Network
+                                        Core Technologies
+                                    </td>
+                                    <td>120 分</td>
+                                    <td>
+                                        アーキテクチャ、ネットワーキング、MPLS/SR、サービス、自動化、QoS、セキュリティ、アシュアランス
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>コンセントレーション</td>
+                                    <td>300-510 SPRI</td>
+                                    <td>
+                                        Implementing Cisco Service Provider Advanced Routing
+                                        Solutions
+                                    </td>
+                                    <td>90 分</td>
+                                    <td>
+                                        ルーティングプロトコル、ポリシー言語、MPLS、セグメントルーティング
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>コンセントレーション</td>
+                                    <td>300-515 SPVI</td>
+                                    <td>Implementing Cisco Service Provider VPN Services</td>
+                                    <td>90 分</td>
+                                    <td>レイヤ 2、レイヤ 3、IPv6 の VPN</td>
+                                </tr>
+                                <tr>
+                                    <td>コンセントレーション</td>
+                                    <td>300-540 SPCNI</td>
+                                    <td>
+                                        Designing and Implementing Cisco Service Provider Cloud
+                                        Network Infrastructure
+                                    </td>
+                                    <td>90 分</td>
+                                    <td>
+                                        仮想化アーキテクチャ、クラウド相互接続、高可用性、セキュリティ、サービスアシュアランスと最適化
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-info-circle"></i><span>補足</span>
+                        </div>
+                        <p>
+                            旧コンセントレーションの 300-535 SPAUTO は 2026-02-02
+                            に受験終了しています。SP の自動化は引き続きコア試験 SPCOR
+                            の「自動化とアシュアランス」分野で問われます。
+                        </p>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s8">
+                    <h3>2.3 その他の重要事項（Cisco 公式ページより）</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>前提条件</td>
+                                    <td>
+                                        正式な前提条件はなし。ただし SP ソリューションの
+                                        <strong>3〜5 年の実装経験</strong> を推奨
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>有効期間</td>
+                                    <td><strong>3 年間</strong>（再認定ポリシーに従う）</td>
+                                </tr>
+                                <tr>
+                                    <td>副次的な認定</td>
+                                    <td>各試験ごとに個別のスペシャリスト認定を取得できる</td>
+                                </tr>
+                                <tr>
+                                    <td>コア試験の位置づけ</td>
+                                    <td>
+                                        CCIE Service Provider の筆記試験としても使える（1
+                                        回の合格で両方の道が開ける）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s9">
+                    <h3>2.4 コンセントレーション試験の選び方</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>あなたの現在の役割</th>
+                                    <th>おすすめ</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>バックボーン設計・運用（IGP/BGP/SR に触れる）</td>
+                                    <td><strong>SPRI</strong></td>
+                                    <td>
+                                        コアで学んだ内容をトラブルシューティングレベルまで深掘りできる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>法人向け VPN サービス（L2VPN/L3VPN/EVPN）の提供</td>
+                                    <td><strong>SPVI</strong></td>
+                                    <td>顧客向けサービスの設計・障害対応に直結する</td>
+                                </tr>
+                                <tr>
+                                    <td>NFV/コンテナ基盤、クラウド相互接続、高可用性設計を扱う</td>
+                                    <td><strong>SPCNI</strong></td>
+                                    <td>SP のクラウドネットワーク基盤の設計・実装に直結する</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl2" id="s10">
+                    <h2>3. 前提知識：SP ネットワークの基本用語</h2>
+                </section>
+                <section class="section lvl3" id="s11">
+                    <h3>3.1 SP ネットワークの典型構成</h3>
+                    <div
+                        aria-label="Mermaid diagram d2"
+                        class="diagram"
+                        data-diagram="d2"
+                        role="img"
+                    ></div>
+                </section>
+                <section class="section lvl3" id="s12">
+                    <h3>3.2 用語集（最低限これだけは）</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>正式名称</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CE</td>
+                                    <td>Customer Edge</td>
+                                    <td>顧客側の境界ルーター/スイッチ</td>
+                                </tr>
+                                <tr>
+                                    <td>PE</td>
+                                    <td>Provider Edge</td>
+                                    <td>
+                                        SP 網の入口。VRF や L2VPN を終端し、顧客ごとの分離を行う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P</td>
+                                    <td>Provider (core)</td>
+                                    <td>
+                                        SP 網の中継ルーター。顧客経路は持たず、ラベルで高速転送する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>RR</td>
+                                    <td>Route Reflector</td>
+                                    <td>iBGP のフルメッシュ問題を解消する経路反射器</td>
+                                </tr>
+                                <tr>
+                                    <td>ASBR</td>
+                                    <td>AS Boundary Router</td>
+                                    <td>他 AS との境界ルーター</td>
+                                </tr>
+                                <tr>
+                                    <td>LSR / LER</td>
+                                    <td>Label Switching Router / Label Edge Router</td>
+                                    <td>ラベルスイッチを行うルーター / MPLS 網の端点</td>
+                                </tr>
+                                <tr>
+                                    <td>FEC</td>
+                                    <td>Forwarding Equivalence Class</td>
+                                    <td>同じ転送扱いを受けるパケットの集合</td>
+                                </tr>
+                                <tr>
+                                    <td>LSP</td>
+                                    <td>Label Switched Path</td>
+                                    <td>ラベルで構成される一方向の経路</td>
+                                </tr>
+                                <tr>
+                                    <td>VRF</td>
+                                    <td>VPN Routing and Forwarding</td>
+                                    <td>顧客ごとに独立したルーティング/転送テーブル</td>
+                                </tr>
+                                <tr>
+                                    <td>AC</td>
+                                    <td>Attachment Circuit</td>
+                                    <td>顧客と PE をつなぐ接続回線（L2VPN 用語）</td>
+                                </tr>
+                                <tr>
+                                    <td>PW</td>
+                                    <td>Pseudowire</td>
+                                    <td>L2 フレームを MPLS 上で運ぶ仮想回線</td>
+                                </tr>
+                                <tr>
+                                    <td>IGP</td>
+                                    <td>Interior Gateway Protocol</td>
+                                    <td>OSPF / IS-IS など AS 内ルーティング</td>
+                                </tr>
+                                <tr>
+                                    <td>SLA</td>
+                                    <td>Service Level Agreement</td>
+                                    <td>可用性・遅延などの品質契約</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s13">
+                    <h3>3.3 SP ネットワークの「3 つの層」で考える</h3>
+                    <p>
+                        SP の技術は次の 3 層に分けて理解すると、暗記ではなく「構造」で理解できます。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>層</th>
+                                    <th>役割</th>
+                                    <th>代表技術</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>アンダーレイ（トランスポート）</strong></td>
+                                    <td>PE 間の到達性とラベル/セグメントによる高速転送</td>
+                                    <td>IS-IS/OSPF、LDP、RSVP-TE、Segment Routing、SRv6</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>オーバーレイ（サービス）</strong></td>
+                                    <td>顧客向けサービスの提供</td>
+                                    <td>L3VPN、L2VPN、EVPN、mVPN</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>運用・制御（管理）</strong></td>
+                                    <td>自動化・可視化・保護</td>
+                                    <td>
+                                        NETCONF/RESTCONF/gNMI、NSO、テレメトリ、QoS、セキュリティ
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl2" id="s14"><h2>4. 学習ロードマップ</h2></section>
+                <section class="section lvl3" id="s15">
+                    <h3>4.1 推奨学習順序</h3>
+                    <div
+                        aria-label="Mermaid diagram d3"
+                        class="diagram"
+                        data-diagram="d3"
+                        role="img"
+                    ></div>
+                </section>
+                <section class="section lvl3" id="s16">
+                    <h3>4.2 コア試験の出題配分（350-501 SPCOR v1.1）</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>章</th>
+                                    <th>分野</th>
+                                    <th>配分</th>
+                                    <th>本ガイドの節</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1.0</td>
+                                    <td>アーキテクチャ</td>
+                                    <td>15%</td>
+                                    <td>5.1</td>
+                                </tr>
+                                <tr>
+                                    <td>2.0</td>
+                                    <td>ネットワーキング</td>
+                                    <td>30%</td>
+                                    <td>未収録</td>
+                                </tr>
+                                <tr>
+                                    <td>3.0</td>
+                                    <td>MPLS とセグメントルーティング</td>
+                                    <td>20%</td>
+                                    <td>未収録</td>
+                                </tr>
+                                <tr>
+                                    <td>4.0</td>
+                                    <td>サービス</td>
+                                    <td>20%</td>
+                                    <td>未収録</td>
+                                </tr>
+                                <tr>
+                                    <td>5.0</td>
+                                    <td>自動化とアシュアランス</td>
+                                    <td>15%</td>
+                                    <td>未収録</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s17">
+                    <h3>4.3 コンセントレーション試験の出題配分</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>試験</th>
+                                    <th>分野と配分</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>SPRI</strong> 300-510</td>
+                                    <td>
+                                        ユニキャストルーティング 35% / マルチキャストルーティング
+                                        15% / ルーティングポリシーとルート操作 25% / MPLS
+                                        とセグメントルーティング 25%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SPVI</strong> 300-515</td>
+                                    <td>
+                                        VPN アーキテクチャ 25% / レイヤ 2 VPN 30% / レイヤ 3 VPN 35%
+                                        / IPv6 VPN 10%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SPCNI</strong> 300-540</td>
+                                    <td>
+                                        仮想化アーキテクチャ 25% / クラウド相互接続 25% / 高可用性
+                                        20% / セキュリティ 15% / サービスアシュアランスと最適化 15%
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section lvl3" id="s18">
+                    <h3>4.4 ラボ環境の選び方</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>選択肢</th>
+                                    <th>特徴</th>
+                                    <th>向いている学習</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Cisco Modeling Labs (CML)</td>
+                                    <td>公式のネットワークシミュレーション</td>
+                                    <td>IOS XE / IOS XR の仮想イメージで L3VPN/SR を検証</td>
+                                </tr>
+                                <tr>
+                                    <td>Cisco DevNet Sandbox</td>
+                                    <td>ブラウザから使える無償のリモート環境</td>
+                                    <td>NETCONF/RESTCONF/gNMI、NSO の動作確認</td>
+                                </tr>
+                                <tr>
+                                    <td>コンテナ/仮想ルーター（XRd など）</td>
+                                    <td>軽量でラップトップ上でも動作</td>
+                                    <td>SR・IS-IS・BGP の設定練習</td>
+                                </tr>
+                                <tr>
+                                    <td>物理機器</td>
+                                    <td>実機の挙動確認</td>
+                                    <td>QoS・ハードウェア依存機能</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            学習は「読む → ラボで設定 → <code>show</code> で確認 →
+                            わざと壊して直す」の 4 拍子で回します。SP
+                            系試験はトラブルシューティング問題が多いため、<strong
+                                >壊して直す</strong
+                            >
+                            練習が最も効果的です。
+                        </p>
+                    </div>
+                </section>
+                <section class="section lvl2" id="s19">
+                    <h2>5. Part A：コア試験 350-501 SPCOR</h2>
+                    <p>
+                        コア試験は <strong>120 分</strong>。CCNP Service Provider と CCIE Service
+                        Provider の両方に共通する土台です。5 つの分野を順に学びます。
+                    </p>
+                </section>
+                <section class="section lvl3" id="s20"><h3>5.1 アーキテクチャ（15%）</h3></section>
+                <section class="section lvl4" id="s21">
+                    <h4>5.1.1 サービスプロバイダー アーキテクチャの説明（出題範囲 1.1）</h4>
+                    <h5>① 1.1.a コアアーキテクチャ</h5>
+                    <p>
+                        <strong>何のための技術か</strong>: 顧客の通信（L2 フレームや L3
+                        パケット）を、SP 網内で安全・高速・大規模に運ぶための「土台」を選ぶ話です。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>アーキテクチャ</th>
+                                    <th>概要</th>
+                                    <th>長所</th>
+                                    <th>短所・注意</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Metro Ethernet</strong></td>
+                                    <td>
+                                        Ethernet を都市圏規模に拡張。VLAN / Q-in-Q / PBB / G.8032
+                                        で構成
+                                    </td>
+                                    <td>安価・単純・L2 サービス（E-Line/E-LAN）と相性が良い</td>
+                                    <td>大規模化でブロードキャストドメインや MAC テーブルが課題</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MPLS</strong></td>
+                                    <td>ラベルで転送。L3VPN / L2VPN / TE を同一基盤で提供</td>
+                                    <td>実績豊富、サービス統合、TE/FRR</td>
+                                    <td>LDP・RSVP-TE など複数プロトコルの運用負荷</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Unified MPLS</strong>（Seamless MPLS）</td>
+                                    <td>
+                                        アクセス/集約/コアの複数 IGP ドメインを BGP
+                                        ラベル付きユニキャスト（BGP-LU）でつなぎ、エンドツーエンドの
+                                        LSP を実現
+                                    </td>
+                                    <td>数万ノード規模へスケール</td>
+                                    <td>BGP-LU の設計と運用が複雑</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SR（Segment Routing）</strong></td>
+                                    <td>
+                                        送信元がセグメントリスト（ラベルスタック）で経路を指定。LDP/RSVP-TE
+                                        不要
+                                    </td>
+                                    <td>プロトコル削減、TI-LFA、SR-TE による単純な TE</td>
+                                    <td>SRGB 設計・移行計画が必要</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SRTE（SR Traffic Engineering）</strong></td>
+                                    <td>SR ポリシーでパスを制御</td>
+                                    <td>中間ノードの状態が不要（ステートレス）</td>
+                                    <td>ヘッドエンドのラベルスタック深度・プラットフォーム制限</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SRv6</strong></td>
+                                    <td>
+                                        IPv6 アドレスをセグメント（SID）として使用。MPLS ラベル不要
+                                    </td>
+                                    <td>
+                                        IPv6
+                                        ネイティブ、ネットワークプログラミング、サービスとトランスポートの統合
+                                    </td>
+                                    <td>ヘッダー長、ハードウェア/相互接続、運用知見の蓄積が課題</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        aria-label="Mermaid diagram d4"
+                        class="diagram"
+                        data-diagram="d4"
+                        role="img"
+                    ></div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                新規構築では
+                                <strong>SR-MPLS もしくは SRv6</strong> を第一候補にし、LDP/RSVP-TE
+                                は既存資産との共存・移行目的に限定する。
+                            </li>
+                            <li>
+                                大規模網は IGP ドメインを分割し、境界を BGP-LU（Unified MPLS）または
+                                SR の BGP 拡張で接続して IGP 肥大化を防ぐ。
+                            </li>
+                            <li>
+                                「今ある機器が何を実装しているか」をまず棚卸しし、機能差分（SRv6
+                                対応、ラベル深度、TI-LFA 対応）を確認してから方式を決める。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 8402 Segment Routing Architecture:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8402"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8402</a
+                                >
+                            </li>
+                            <li>
+                                RFC 8986 SRv6 Network Programming:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8986"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8986</a
+                                >
+                            </li>
+                            <li>
+                                RFC 3031 MPLS Architecture:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc3031"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc3031</a
+                                >
+                            </li>
+                            <li>
+                                RFC 8277 Using BGP to Bind MPLS Labels to Address Prefixes:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8277"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8277</a
+                                >
+                            </li>
+                            <li>
+                                Segment Routing 情報サイト:
+                                <a
+                                    href="https://www.segment-routing.net/"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.segment-routing.net/</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>② 1.1.b トランスポート技術</h5>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>技術</th>
+                                    <th>媒体・特徴</th>
+                                    <th>典型的な用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>xDSL</strong></td>
+                                    <td>既存の銅線電話回線を利用。距離が伸びると速度低下</td>
+                                    <td>旧来の家庭/小規模拠点向けブロードバンド</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DWDM</strong></td>
+                                    <td>1 本の光ファイバーに多数の波長を多重化</td>
+                                    <td>都市間・長距離バックボーンの大容量伝送</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DOCSIS</strong></td>
+                                    <td>ケーブルテレビ同軸網で IP 通信（HFC 網）</td>
+                                    <td>ケーブル事業者のブロードバンド</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>TDM</strong>（SONET/SDH など）</td>
+                                    <td>時分割多重の固定スロット伝送</td>
+                                    <td>旧来の専用線、回線エミュレーションで残存</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>xPON</strong>（GPON/XGS-PON）</td>
+                                    <td>
+                                        光ファイバーを分岐器（スプリッター）で共有する P2MP
+                                        光アクセス
+                                    </td>
+                                    <td>FTTH アクセス網</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>比較軸</th>
+                                    <th>xDSL</th>
+                                    <th>DOCSIS</th>
+                                    <th>xPON</th>
+                                    <th>DWDM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>媒体</td>
+                                    <td>銅線</td>
+                                    <td>同軸+光（HFC）</td>
+                                    <td>光ファイバー</td>
+                                    <td>光ファイバー</td>
+                                </tr>
+                                <tr>
+                                    <td>共有形態</td>
+                                    <td>専有（加入者ごと）</td>
+                                    <td>共有</td>
+                                    <td>共有（分岐）</td>
+                                    <td>波長ごとに専有</td>
+                                </tr>
+                                <tr>
+                                    <td>主な位置づけ</td>
+                                    <td>アクセス</td>
+                                    <td>アクセス</td>
+                                    <td>アクセス</td>
+                                    <td>コア/長距離</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            トランスポート層（光）と IP/MPLS 層の障害を切り分けられるよう、<strong
+                                >リンクダウン検出（LoS、BFD、FRR のトリガー）</strong
+                            >
+                            の設計をレイヤごとに揃える。
+                        </p>
+                    </div>
+                    <h5>③ 1.1.c モビリティ</h5>
+                    <p>
+                        <strong>何のための技術か</strong>:
+                        モバイル基地局とコアネットワークを結ぶ「モバイルバックホール/xHaul」を
+                        IP/MPLS/SR で実現します。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>パケットコア</td>
+                                    <td>
+                                        4G の EPC、5G の
+                                        5GC。ユーザー通信のセッション管理とデータ転送を担う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>xHaul</strong></td>
+                                    <td>
+                                        フロントホール（RU–DU）、ミッドホール（DU–CU）、バックホール（CU–コア）の総称
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>5G vRAN 向け RAN xHaul トランスポート</strong></td>
+                                    <td>
+                                        仮想化 RAN
+                                        環境で、厳しい遅延・同期要件を満たすトランスポート
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ORAN トランスポート</strong></td>
+                                    <td>
+                                        O-RAN アライアンス仕様に基づく RAN トランスポート。eCPRI
+                                        やタイミング配信（PTP、SyncE）が重要
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        aria-label="Mermaid diagram d5"
+                        class="diagram"
+                        data-diagram="d5"
+                        role="img"
+                    ></div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                5G の xHaul は
+                                <strong>遅延・ジッター・同期精度（PTP/SyncE）</strong> が最重要。QoS
+                                で同期パケットを最優先にし、パスを SR-TE の低遅延ポリシー（Flex-Algo
+                                の delay メトリックなど）で制御する。
+                            </li>
+                            <li>
+                                ネットワークスライシング用に、L3VPN/EVPN と SR-TE
+                                ポリシーをセットで設計する。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                O-RAN Alliance:
+                                <a
+                                    href="https://www.o-ran.org/"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.o-ran.org/</a
+                                >
+                            </li>
+                            <li>
+                                RFC 8402（SR による TE）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8402"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8402</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>④ 1.1.d ルーテッド オプティカル ネットワーク（RON）</h5>
+                    <p>
+                        <strong>概要</strong>: ルーターに
+                        <strong>コヒーレント光プラガブル（ZR/ZR+ など）</strong> を直接搭載し、IP
+                        層と光層を統合して運用する考え方です。従来のトランスポンダーを不要にし、装置数・電力・運用点数を削減します。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>従来</th>
+                                    <th>ルーテッド オプティカル ネットワーク</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ルーター → 客先側光 → トランスポンダー → DWDM</td>
+                                    <td>ルーター（コヒーレント光プラガブル）→ DWDM</td>
+                                </tr>
+                                <tr>
+                                    <td>IP と光で運用チームが別</td>
+                                    <td>IP と光を統合オーケストレーション</td>
+                                </tr>
+                                <tr>
+                                    <td>装置間の障害連携が限定的</td>
+                                    <td>光層の状態を IP 層の制御（TE/FRR）へ反映しやすい</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            光パスの状態（OSNR、ビット誤り率）を
+                            <strong>テレメトリで取得し、閾値超過時に SR-TE で迂回</strong
+                            >する運用を検討する。
+                        </p>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <p>
+                            Cisco Routed Optical Networking の概要（Cisco 公式サイトの Routed
+                            Optical Networking ページを検索して最新版を確認してください）
+                        </p>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s22">
+                    <h4>5.1.2 シスコのネットワークソフトウェア アーキテクチャ（出題範囲 1.2）</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>IOS</th>
+                                    <th>IOS XE</th>
+                                    <th>IOS XR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1.2.a / b / c</td>
+                                    <td>1.2.a</td>
+                                    <td>1.2.b</td>
+                                    <td>1.2.c</td>
+                                </tr>
+                                <tr>
+                                    <td>構造</td>
+                                    <td>モノリシック（単一プロセス空間）</td>
+                                    <td>
+                                        Linux カーネル上で IOS
+                                        デーモン（IOSd）が動作、他機能はプロセス分離
+                                    </td>
+                                    <td>
+                                        プロセス分離・障害封じ込めを重視したモジュラー設計（現在は
+                                        Linux ベース）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>主な用途</td>
+                                    <td>従来のルーター/スイッチ</td>
+                                    <td>エンタープライズ、支店、SP エッジ（ASR 900 系など）</td>
+                                    <td>SP コア/エッジ（ASR 9000、NCS 系など）</td>
+                                </tr>
+                                <tr>
+                                    <td>設定モデル</td>
+                                    <td>即時反映</td>
+                                    <td>即時反映（一部 NETCONF の候補データストアあり）</td>
+                                    <td>
+                                        <strong>2 段階コミット</strong>（<code>commit</code>
+                                        で反映）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>プログラマビリティ</td>
+                                    <td>CLI 中心</td>
+                                    <td>NETCONF / RESTCONF / gNMI</td>
+                                    <td>NETCONF / gNMI / gRPC など YANG モデル駆動が充実</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>IOS XR の 2 段階コミット</strong></p>
+                    <div
+                        aria-label="Mermaid diagram d6"
+                        class="diagram"
+                        data-diagram="d6"
+                        role="img"
+                    ></div>
+                    <pre><code class="lang-text"><span class="tk-prompt">RP/0/RP0/CPU0:PE1#</span> <span class="tk-cmd">configure</span>
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1(config)#</span> <span class="tk-cmd">interface</span> TenGigE0/<span class="tk-num">0</span>/<span class="tk-num">0</span>/<span class="tk-num">0</span>
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1(config-if)#</span> <span class="tk-cmd">description</span> TO-P1
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1(config-if)#</span> <span class="tk-cmd">commit</span> confirmed <span class="tk-num">60</span>
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1(config-if)#</span> <span class="tk-cmd">commit</span>
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1#</span> <span class="tk-cmd">show</span> configuration commit changes last <span class="tk-num">1</span>
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1#</span> <span class="tk-cmd">rollback</span> configuration last <span class="tk-num">1</span></code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                リモートから変更する場合は
+                                <strong><code>commit confirmed &lt;秒数&gt;</code></strong>
+                                を必ず使い、切断されても自動でロールバックされるようにする。
+                            </li>
+                            <li>
+                                <code>commit label</code> /
+                                <code>commit comment</code> に変更管理番号を入れ、<code
+                                    >show configuration commit list</code
+                                >
+                                で追跡可能にする。
+                            </li>
+                            <li>
+                                IOS XE/XR ともに
+                                <strong>YANG モデル駆動のインターフェース（NETCONF/gNMI）</strong>
+                                を使えるよう、早めに整備する。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                ASR 9000 設定ガイド一覧（Cisco 公式）:
+                                <a
+                                    href="https://www.cisco.com/en/US/products/ps9853/products_installation_and_configuration_guides_list.html"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.cisco.com/en/US/products/ps9853/products_installation_and_configuration_guides_list.html</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s23">
+                    <h4>5.1.3 サービスプロバイダー仮想化（出題範囲 1.3）</h4>
+                    <p>
+                        <strong>何のための技術か</strong>:
+                        専用ハードウェア（ファイアウォール、vCPE、vBNG、モバイルコアなど）を、汎用サーバー上のソフトウェアで実現し、展開の迅速化とコスト削減を狙います。
+                    </p>
+                    <div
+                        aria-label="Mermaid diagram d7"
+                        class="diagram"
+                        data-diagram="d7"
+                        role="img"
+                    ></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目（出題範囲）</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1.3.a NFV インフラストラクチャ（NFVI）</strong></td>
+                                    <td>
+                                        VNF
+                                        を動かす物理/仮想リソース（計算・ストレージ・ネットワーク）の総体
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.3.b VNF ワークロード</strong></td>
+                                    <td>
+                                        ネットワーク機能をソフトウェア化したもの（vRouter、vFirewall
+                                        等）。VM またはコンテナで稼働
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.3.c コンテナ</strong></td>
+                                    <td>
+                                        OS
+                                        カーネルを共有する軽量な分離実行環境。起動が速くリソース効率が高い
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.3.d アプリケーション ホスティング</strong></td>
+                                    <td>
+                                        ルーター自身の上でサードパーティ製アプリ/コンテナを動かす機能（IOS
+                                        XE のアプリホスティング、IOS XR のコンテナ実行環境）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>比較</th>
+                                    <th>VM</th>
+                                    <th>コンテナ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>分離レベル</td>
+                                    <td>強い（ゲスト OS ごと）</td>
+                                    <td>弱め（カーネル共有）</td>
+                                </tr>
+                                <tr>
+                                    <td>起動時間</td>
+                                    <td>分単位</td>
+                                    <td>秒単位</td>
+                                </tr>
+                                <tr>
+                                    <td>リソース効率</td>
+                                    <td>やや低い</td>
+                                    <td>高い</td>
+                                </tr>
+                                <tr>
+                                    <td>向いている用途</td>
+                                    <td>強い分離が必要な VNF、異なる OS</td>
+                                    <td>マイクロサービス、エッジでの軽量アプリ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                VNF のパフォーマンスが必要な場合は
+                                <strong>SR-IOV / DPDK / CPU ピンニング / NUMA 配慮</strong>
+                                を検討する。
+                            </li>
+                            <li>
+                                コンテナは
+                                <strong>最小権限・イメージ署名・リソース制限（cgroup）</strong>
+                                を必ず設定する。
+                            </li>
+                            <li>
+                                ルーター上のアプリホスティングは
+                                <strong>コントロールプレーンへの影響（CPU/メモリ上限）</strong>
+                                を制限する。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                ETSI NFV:
+                                <a
+                                    href="https://www.etsi.org/technologies/nfv"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.etsi.org/technologies/nfv</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s24">
+                    <h4>5.1.4 QoS アーキテクチャ（出題範囲 1.4）</h4>
+                    <h5>① 1.4.a MPLS QoS モデル（パイプ、ショートパイプ、ユニフォーム）</h5>
+                    <p>
+                        <strong>何のための技術か</strong>: 顧客の DSCP と SP 網内の MPLS TC（旧
+                        EXP）の関係を決め、<strong
+                            >顧客の QoS マーキングを SP 網でどこまで尊重・維持するか</strong
+                        >
+                        を定義します。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>モデル</th>
+                                    <th>顧客 DSCP の扱い</th>
+                                    <th>出口 PE でのスケジューリング基準</th>
+                                    <th>特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Uniform</strong></td>
+                                    <td>
+                                        入口で TC にコピー。網内で TC が変更されると、出口で顧客
+                                        DSCP にも反映
+                                    </td>
+                                    <td>TC（変更後）</td>
+                                    <td>SP と顧客が 1 つの QoS ドメインとして動作</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pipe</strong></td>
+                                    <td>顧客 DSCP は網内で一切変更しない</td>
+                                    <td><strong>MPLS TC（トンネル側）</strong></td>
+                                    <td>SP 独自の QoS を維持しつつ顧客マーキングを保護</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Short Pipe</strong></td>
+                                    <td>Pipe と同様に顧客 DSCP は変更しない</td>
+                                    <td><strong>顧客の DSCP（IP ヘッダー）</strong></td>
+                                    <td>
+                                        PHP によりラベルが出口 PE の手前で除去されるため、IP
+                                        ヘッダーで判断する
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        aria-label="Mermaid diagram d8"
+                        class="diagram"
+                        data-diagram="d8"
+                        role="img"
+                    ></div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                <strong>マネージドサービス（SP が CE も管理）</strong> は
+                                Uniform、<strong>顧客と QoS ポリシーが独立する一般的な VPN</strong>
+                                は Pipe/Short Pipe が定石。
+                            </li>
+                            <li>
+                                MPLS TC は
+                                <strong>3 ビット（8 クラス）</strong> しかないため、顧客の DSCP（64
+                                値）から SP クラスへの
+                                <strong>マッピングテーブルを標準化</strong>する。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 3270 MPLS Support of Differentiated Services:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc3270"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc3270</a
+                                >
+                            </li>
+                            <li>
+                                RFC 3443 Time To Live (TTL) Processing in MPLS Networks:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc3443"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc3443</a
+                                >
+                            </li>
+                            <li>
+                                RFC 2475 An Architecture for Differentiated Services:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2475"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc2475</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>② 1.4.b MPLS TE QoS（MAM、RDM、CBTS、PBTS、DS-TE）</h5>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>説明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>DS-TE</strong></td>
+                                    <td>
+                                        DiffServ-aware
+                                        TE。クラス（クラスタイプ）ごとに帯域を予約する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>MAM</strong>（Maximum Allocation Model）</td>
+                                    <td>
+                                        各クラスタイプに
+                                        <strong>固定上限</strong>
+                                        を割り当てる。クラス間の干渉がない反面、未使用帯域を他クラスが借りられない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>RDM</strong>（Russian Doll Model）</td>
+                                    <td>
+                                        入れ子構造で
+                                        <strong>上位クラスの未使用分を下位クラスが利用</strong
+                                        >できる。帯域効率が高い
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CBTS</strong>（Class-Based Tunnel Selection）</td>
+                                    <td>
+                                        パケットの
+                                        <strong>MPLS TC</strong>
+                                        に基づいて、同じ宛先への複数トンネルから選択
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PBTS</strong>（Policy-Based Tunnel Selection）</td>
+                                    <td>
+                                        ACL 等の <strong>ポリシー</strong>（DSCP
+                                        など）に基づいてトンネルを選択
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>比較</th>
+                                    <th>MAM</th>
+                                    <th>RDM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>帯域共有</td>
+                                    <td>しない（固定）</td>
+                                    <td>する（入れ子）</td>
+                                </tr>
+                                <tr>
+                                    <td>帯域効率</td>
+                                    <td>低め</td>
+                                    <td>高め</td>
+                                </tr>
+                                <tr>
+                                    <td>予測しやすさ</td>
+                                    <td>高い</td>
+                                    <td>プリエンプション設計が必要</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            音声（低遅延）用と一般データ用に
+                            <strong>別トンネル</strong> を用意し、CBTS/PBTS
+                            でクラス別に振り分ける。SR-TE では
+                            <strong>カラー（Color）とポリシー</strong> が同じ役割を担う。
+                        </p>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 4124 Protocol Extensions for Support of DiffServ-aware MPLS TE:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc4124"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc4124</a
+                                >
+                            </li>
+                            <li>
+                                RFC 4125 Maximum Allocation Bandwidth Constraints Model for DS-TE:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc4125"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc4125</a
+                                >
+                            </li>
+                            <li>
+                                RFC 4127 Russian Dolls Bandwidth Constraints Model for DS-TE:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc4127"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc4127</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>③ 1.4.c DiffServ と IntServ の QoS モデル</h5>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>DiffServ</th>
+                                    <th>IntServ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>考え方</td>
+                                    <td>
+                                        パケットをクラス分けし、ホップごとに PHB（Per-Hop
+                                        Behavior）を適用
+                                    </td>
+                                    <td>フローごとに <strong>RSVP</strong> で事前に資源予約</td>
+                                </tr>
+                                <tr>
+                                    <td>状態管理</td>
+                                    <td>
+                                        ルーターは <strong>クラスのみ</strong>保持（スケーラブル）
+                                    </td>
+                                    <td>
+                                        ルーターが
+                                        <strong>フロー単位</strong> で状態保持（スケールしにくい）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SP での採用</td>
+                                    <td>◎（標準）</td>
+                                    <td>△（MPLS-TE の RSVP-TE の概念に名残）</td>
+                                </tr>
+                                <tr>
+                                    <td>代表的 PHB</td>
+                                    <td>EF（優先）、AF（保証転送）、CS、BE</td>
+                                    <td>Guaranteed Service、Controlled-Load</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 2475（DiffServ）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2475"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc2475</a
+                                >
+                            </li>
+                            <li>
+                                RFC 1633 Integrated Services in the Internet Architecture:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc1633"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc1633</a
+                                >
+                            </li>
+                            <li>
+                                RFC 4594 Configuration Guidelines for DiffServ Service Classes:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc4594"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc4594</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>④ 1.4.d エンタープライズ環境と SP 環境の間の信頼境界</h5>
+                    <p>
+                        <strong>考え方</strong>: 顧客からのマーキングを
+                        <strong>信頼するか、書き換えるか</strong> の境界（トラストバウンダリ）を PE
+                        の入口（AC）に置きます。
+                    </p>
+                    <div
+                        aria-label="Mermaid diagram d9"
+                        class="diagram"
+                        data-diagram="d9"
+                        role="img"
+                    ></div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            顧客マーキングは <strong>原則信頼せず</strong>、PE 入口で
+                            <strong>分類 → 再マーキング → ポリシング</strong>
+                            を実施する。マネージドサービスのみ信頼する。
+                        </p>
+                    </div>
+                    <h5>⑤ 1.4.e IPv6 フローラベル</h5>
+                    <ul>
+                        <li>
+                            IPv6 ヘッダーの <strong>20 ビット</strong> のフィールド。同一フロー（5
+                            タプル相当）に同じ値を付ける。
+                        </li>
+                        <li>
+                            ECMP やリンクアグリゲーションでの
+                            <strong>ロードバランス</strong>（エントロピー）に利用できる。MPLS 上では
+                            <strong>エントロピーラベル</strong> と同様の発想。
+                        </li>
+                        <li>
+                            QoS の分類キーとしては DSCP が主で、フローラベルは
+                            <strong>負荷分散用途が中心</strong>。
+                        </li>
+                    </ul>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 6437 IPv6 Flow Label Specification:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6437"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6437</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6438 Using the IPv6 Flow Label for Equal Cost Multipath Routing:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6438"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6438</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6790 The Use of Entropy Labels in MPLS Forwarding:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6790"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6790</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s25">
+                    <h4>5.1.5 コントロールプレーンのセキュリティ（出題範囲 1.5）</h4>
+                    <p>
+                        <strong>背景</strong>: ルーターの
+                        CPU（コントロールプレーン）が過負荷になれば、ルーティングプロトコルが落ち網全体が停止します。<strong>データプレーンの攻撃がコントロールプレーンに波及しない</strong>設計が必要です。
+                    </p>
+                    <h5>① 1.5.a コントロールプレーン保護（LPTS と CoPP）</h5>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>技術</th>
+                                    <th>プラットフォーム</th>
+                                    <th>仕組み</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>LPTS</strong>（Local Packet Transport Services）
+                                    </td>
+                                    <td>IOS XR</td>
+                                    <td>
+                                        ルーター宛てパケットを
+                                        <strong>フロー種別ごと（BGP、SSH、OSPF、ICMP など）</strong>
+                                        に分類し、自動生成されるポリサーで
+                                        <strong>種別ごとに</strong>
+                                        レート制限する。フローごとの動的テンプレートを持つ
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CoPP</strong>（Control Plane Policing）</td>
+                                    <td>IOS / IOS XE</td>
+                                    <td>
+                                        コントロールプレーン宛てトラフィックに
+                                        <strong>QoS ポリシー（分類＋ポリサー）</strong> を適用
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pre><code class="lang-text"><span class="tk-prompt">RP/0/RP0/CPU0:PE1#</span> <span class="tk-cmd">show</span> lpts pifib hardware police location <span class="tk-num">0</span>/<span class="tk-num">0</span>/CPU0
+<span class="tk-prompt">RP/0/RP0/CPU0:PE1#</span> <span class="tk-cmd">show</span> lpts flows</code></pre>
+                    <pre><code class="lang-text"><span class="tk-comment">! IOS XE の CoPP 例（考え方）</span>
+<span class="tk-kw">class-map</span> match-any CM-ROUTING
+ <span class="tk-kw">match</span> access-group name ACL-ROUTING
+<span class="tk-kw">policy-map</span> PM-COPP
+ <span class="tk-kw">class</span> CM-ROUTING
+  <span class="tk-kw">police</span> rate <span class="tk-num">2000</span> pps conform-action transmit exceed-action drop
+<span class="tk-kw">control-plane</span>
+ <span class="tk-kw">service-policy</span> input PM-COPP</code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                LPTS は既定値が安全側だが、<strong
+                                    >BGP セッション数が多い場合や eBGP
+                                    ピアが多い場合は、フロー種別ごとのポリサー値を見直す</strong
+                                >。
+                            </li>
+                            <li>
+                                <strong><code>show lpts</code> の drop カウンター</strong>
+                                を継続監視し、想定外の値増加をアラートにする。
+                            </li>
+                            <li>
+                                CoPP は「許可リストを先に分類 →
+                                残りをまとめて低レートで制限」の順序にする。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                ASR 9000 設定ガイド一覧（LPTS の章を含む）:
+                                <a
+                                    href="https://www.cisco.com/en/US/products/ps9853/products_installation_and_configuration_guides_list.html"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.cisco.com/en/US/products/ps9853/products_installation_and_configuration_guides_list.html</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6192 Protecting the Router Control Plane:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6192"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6192</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>② 1.5.b BGP-TTL のセキュリティとプロトコル認証</h5>
+                    <ul>
+                        <li>
+                            <strong>GTSM（BGP TTL Security）</strong>: eBGP ピアが
+                            <strong>直接接続</strong> であることを前提に、送信側は TTL=255
+                            で送り、受信側は
+                            <strong>TTL ≥ 254</strong>
+                            以外を破棄する。遠隔からの偽装パケットを防ぐ。
+                        </li>
+                        <li>
+                            <strong>認証</strong>: BGP は TCP MD5（古い）または
+                            <strong>TCP-AO</strong>（推奨）。OSPF/IS-IS は
+                            <strong>HMAC-SHA</strong> 系の認証（キーチェーン）を使う。
+                        </li>
+                    </ul>
+                    <pre><code class="lang-text"><span class="tk-kw">router</span> bgp <span class="tk-num">65000</span>
+ <span class="tk-kw">neighbor</span> <span class="tk-ip">198.51.100.2</span>
+  <span class="tk-kw">remote-as</span> <span class="tk-num">65100</span>
+  <span class="tk-kw">ttl-security</span>
+  <span class="tk-kw">password</span> encrypted <span class="tk-ph">&lt;PASSWORD&gt;</span></code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>eBGP 直接接続ピアには <strong>GTSM を必ず併用</strong>する。</li>
+                            <li>
+                                認証キーは
+                                <strong>キーチェーン</strong
+                                >で管理し、ローテーション手順（重複期間を持つ）を用意する。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 5082 The Generalized TTL Security Mechanism (GTSM):
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5082"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc5082</a
+                                >
+                            </li>
+                            <li>
+                                RFC 5925 The TCP Authentication Option:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5925"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc5925</a
+                                >
+                            </li>
+                            <li>
+                                RFC 7454 BGP Operations and Security（BCP 194）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7454"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc7454</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>③ 1.5.c BGP プレフィックスの抑制</h5>
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-info-circle"></i><span>補足</span>
+                        </div>
+                        <p>
+                            出題範囲の文言は幅広く解釈できるため、ここでは
+                            <strong
+                                >BGP
+                                で不要・不正なプレフィックスを受け取らない/出さない仕組み全般</strong
+                            >
+                            と、関連する
+                            <strong>IGP のプレフィックス抑制</strong> をまとめて整理します。
+                        </p>
+                        <p>
+                            <strong>BGP 集約抑制（Cisco IOS XR）</strong>:
+                            <code>aggregate-address &lt;prefix/len&gt; summary-only</code>
+                            を設定すると、集約経路を BGP
+                            アップデートに広告する一方で、その集約に含まれるより詳細な経路（more-specific
+                            routes）を BGP
+                            アップデートから抑制します。これはプレフィックスフィルタ（prefix-set/policy）・<code>maximum-prefix</code>・RPKI
+                            とは独立したメカニズムであり、ルーティングテーブルの集約と広告制御を目的とします。IGP
+                            のプレフィックス抑制（OSPF
+                            <code>prefix-suppression</code> など、トランジットリンクアドレスを LSA
+                            から隠す機能）とも別の概念です。
+                        </p>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>手段</th>
+                                    <th>効果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong
+                                            >プレフィックスリスト/prefix-set
+                                            による入出力フィルタ</strong
+                                        >
+                                    </td>
+                                    <td>
+                                        想定外のプレフィックスを拒否（顧客は割り当て済みのみ許可）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>maximum-prefix</strong></td>
+                                    <td>
+                                        受信数の上限を超えたらセッションを警告/切断（経路リーク・過剰広告の保護）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong
+                                            >Bogon / プライベート/デフォルト経路のフィルタ</strong
+                                        >
+                                    </td>
+                                    <td>使われてはならないアドレスを除外</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>RPKI 起点検証（ROV）</strong></td>
+                                    <td>経路の起点 AS が正当かを検証（RFC 6811）</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>IGP のプレフィックス抑制</strong>（OSPF
+                                        <code>prefix-suppression</code>、IS-IS も同様の概念）
+                                    </td>
+                                    <td>
+                                        リンクのトランジット網アドレスを IGP
+                                        に載せず、ルーティングテーブル縮小と攻撃面の削減
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pre><code class="lang-text"><span class="tk-comment">! CUST-IN: 顧客への割り当て済みプレフィックスのみを受理するルートポリシー</span>
+<span class="tk-kw">router</span> bgp <span class="tk-num">65000</span>
+ <span class="tk-kw">neighbor</span> <span class="tk-ip">198.51.100.2</span>
+  <span class="tk-kw">remote-as</span> <span class="tk-num">65100</span>
+  <span class="tk-kw">address-family</span> ipv4 unicast
+   <span class="tk-kw">maximum-prefix</span> <span class="tk-num">1000</span> <span class="tk-num">85</span>   <span class="tk-comment">! 上限超過時にセッションを切断（warning-only なし = 強制制限）</span>
+   <span class="tk-kw">route-policy</span> CUST-IN in  <span class="tk-comment">! 許可プレフィックスのみ受理</span>
+   <span class="tk-kw">route-policy</span> CUST-OUT out</code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                <strong
+                                    >顧客 BGP は「許可プレフィックスのみ受理」＋
+                                    maximum-prefix</strong
+                                >
+                                を標準セットにする。
+                            </li>
+                            <li>
+                                IOS XR の eBGP は
+                                <strong>ポリシー適用が必須</strong
+                                >（未設定だと経路が受理/広告されない）。デフォルト動作を必ず理解しておく。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 7454（BGP 運用とセキュリティ）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7454"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc7454</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6811 BGP Prefix Origin Validation:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6811"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6811</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6860 Hiding Transit-Only Networks in OSPF:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6860"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6860</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>④ 1.5.d LDP セキュリティ（認証およびラベル割り当てフィルタリング）</h5>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>対策</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>LDP 認証</strong></td>
+                                    <td>TCP MD5（またはキーチェーン）で LDP セッションを認証</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ラベル割り当てフィルタリング</strong></td>
+                                    <td>
+                                        ラベルを割り当てるプレフィックスを制限（<strong
+                                            >PE ループバック（/32）のみ</strong
+                                        >にする）。LFIB を小さくし不要な FEC を避ける
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>LDP ネイバー制限</strong></td>
+                                    <td>想定外ピアとのセッション確立を拒否（ACL）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pre><code class="lang-text"><span class="tk-kw">mpls</span> ldp
+ <span class="tk-kw">router-id</span> <span class="tk-ip">10.0.0.1</span>
+ <span class="tk-kw">neighbor</span> <span class="tk-ip">10.0.0.2</span> password encrypted <span class="tk-ph">&lt;PASSWORD&gt;</span>
+ <span class="tk-kw">label</span>
+  <span class="tk-kw">allocate</span> for LDP-ALLOWED-PFX</code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            LDP ラベル割り当ては <strong>PE ループバックだけ</strong>に限定。全 IGP
+                            プレフィックスにラベルを付けると LFIB が肥大化する。
+                        </p>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 5036 LDP Specification:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5036"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc5036</a
+                                >
+                            </li>
+                            <li>
+                                RFC 5920 Security Framework for MPLS and GMPLS Networks:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5920"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc5920</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>⑤ 1.5.e BGPsec</h5>
+                    <ul>
+                        <li>
+                            BGP の <strong>AS_PATH を暗号署名で保護</strong>し、経路が正当な AS
+                            列を通ったことを検証する（RFC 8205）。
+                        </li>
+                        <li><strong>RPKI</strong>（ROA / 証明書）が基盤。</li>
+                        <li>
+                            実運用では <strong>ROV（起点検証）が先に普及</strong>しており、BGPsec
+                            の本格展開は限定的。試験では
+                            <strong
+                                >「何を保護するか（パス）」「ROV との違い（起点のみ vs
+                                パス全体）」</strong
+                            >
+                            が重要。
+                        </li>
+                    </ul>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>比較</th>
+                                    <th>ROV（RFC 6811）</th>
+                                    <th>BGPsec（RFC 8205）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>検証対象</td>
+                                    <td>起点 AS</td>
+                                    <td>AS_PATH 全体</td>
+                                </tr>
+                                <tr>
+                                    <td>必要な仕組み</td>
+                                    <td>ROA</td>
+                                    <td>ROA + ルーター鍵/署名</td>
+                                </tr>
+                                <tr>
+                                    <td>普及度</td>
+                                    <td>広い</td>
+                                    <td>限定的</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 8205 BGPsec Protocol Specification:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8205"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8205</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6480 An Infrastructure to Support Secure Internet Routing:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6480"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6480</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>⑥ 1.5.f BGP Flowspec</h5>
+                    <p>
+                        <strong>何のための技術か</strong>: DDoS 攻撃などの
+                        <strong>フローフィルタ規則を BGP で自動配布</strong
+                        >し、網全体で即時に遮断・レート制限します。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>要素</th>
+                                    <th>例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>マッチ条件</td>
+                                    <td>
+                                        宛先/送信元プレフィックス、IP プロトコル、ポート、TCP
+                                        フラグ、パケット長、DSCP、フラグメント
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>アクション</td>
+                                    <td>
+                                        traffic-rate（0 で破棄）、redirect（VRF/IP）、DSCP
+                                        書換、サンプル
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>アドレスファミリ</td>
+                                    <td>IPv4 flowspec / IPv6 flowspec（VPN 版もあり）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        aria-label="Mermaid diagram d10"
+                        class="diagram"
+                        data-diagram="d10"
+                        role="img"
+                    ></div>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <ul>
+                            <li>
+                                Flowspec は
+                                <strong>信頼できるコントローラー/RR からのみ受理</strong
+                                >し、受理する規則数（TCAM 上限）を制限する。
+                            </li>
+                            <li>
+                                誤った規則で正常通信を止めない運用のため、<strong>二人承認・自動タイムアウト</strong>を設ける。
+                            </li>
+                            <li>
+                                規則は
+                                <strong>検証（RFC 8955 の検証手順）</strong>
+                                を有効にして、ルート起点と整合するものだけ受け入れる。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 8955 Dissemination of Flow Specification Rules:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8955"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8955</a
+                                >
+                            </li>
+                            <li>
+                                RFC 8956 Dissemination of Flow Specification Rules for IPv6:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8956"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8956</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s26">
+                    <h4>5.1.6 管理プレーンのセキュリティ（出題範囲 1.6）</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                    <th>ベストプラクティス</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>1.6.a トレースバック</strong></td>
+                                    <td>
+                                        DDoS などで
+                                        <strong>攻撃トラフィックの入口ルーター/ポートを特定</strong
+                                        >する手法（送信元追跡、ACL カウンター、NetFlow、RTBH
+                                        を利用したバックスキャッター観測など）
+                                    </td>
+                                    <td>
+                                        攻撃発生時に「どこから入っているか」を短時間で特定できる
+                                        <strong>NetFlow/IPFIX の常時収集</strong>を用意する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.6.b AAA と TACACS+</strong></td>
+                                    <td>
+                                        認証(Authentication)・認可(Authorization)・アカウンティング(Accounting)。<strong
+                                            >TACACS+ は TCP 49、AAA
+                                            を分離でき、コマンド単位の認可が可能</strong
+                                        >（RADIUS は主にネットワークアクセス向け）
+                                    </td>
+                                    <td>
+                                        TACACS+ 障害時に備え
+                                        <strong>ローカルユーザーをフォールバック</strong
+                                        >、コマンドアカウンティングを有効化、管理は専用
+                                        VRF/管理ネットワークに閉じる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.6.c REST API のセキュリティ</strong></td>
+                                    <td>
+                                        <strong>TLS 必須</strong>、トークン/OAuth
+                                        2.0、ロールベースアクセス制御（RBAC）、入力検証、レート制限、監査ログ
+                                    </td>
+                                    <td>
+                                        HTTP（平文）は禁止。<strong
+                                            >最小権限の API アカウント</strong
+                                        >
+                                        を発行し、証明書を定期更新
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1.6.d DDoS</strong></td>
+                                    <td>
+                                        帯域・プロトコル・アプリ層の攻撃。SP は
+                                        RTBH、Flowspec、スクラビング、BCP 38 で対処
+                                    </td>
+                                    <td>
+                                        <strong>検知 → 迂回（スクラビング）→ 復旧</strong
+                                        >の手順を事前に定義して訓練する
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div
+                        aria-label="Mermaid diagram d11"
+                        class="diagram"
+                        data-diagram="d11"
+                        role="img"
+                    ></div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 8907 The TACACS+ Protocol:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8907"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8907</a
+                                >
+                            </li>
+                            <li>
+                                RFC 8040 RESTCONF Protocol（TLS 前提の API 設計）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc8040"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc8040</a
+                                >
+                            </li>
+                            <li>
+                                RFC 6749 The OAuth 2.0 Authorization Framework:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc6749"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc6749</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <section class="section lvl4" id="s27">
+                    <h4>5.1.7 データプレーンのセキュリティ（出題範囲 1.7）</h4>
+                    <h5>① 1.7.a uRPF（Unicast Reverse Path Forwarding）</h5>
+                    <p>
+                        送信元アドレスへの
+                        <strong>戻り経路が FIB 上で妥当か</strong> を検証し、送信元詐称を防ぎます。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>モード</th>
+                                    <th>判定</th>
+                                    <th>用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Strict</strong></td>
+                                    <td>
+                                        受信インターフェースが送信元への
+                                        <strong>最適な戻り経路</strong> であること
+                                    </td>
+                                    <td>単一ホーム顧客</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Loose</strong></td>
+                                    <td>送信元への経路が <strong>FIB に存在すれば</strong> OK</td>
+                                    <td>マルチホーム/非対称ルーティング、RTBH との併用</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Feasible</strong></td>
+                                    <td>
+                                        最適経路でなくても
+                                        <strong>代替経路が存在すれば</strong>
+                                        OK（一部プラットフォーム）
+                                    </td>
+                                    <td>非対称だが受信 IF が想定内</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <pre><code class="lang-text"><span class="tk-kw">interface</span> TenGigE0/<span class="tk-num">0</span>/<span class="tk-num">0</span>/<span class="tk-num">1</span>
+ <span class="tk-kw">ipv4</span> verify unicast source reachable-via rx</code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            顧客向け接続は Strict（可能な限り）、ピアリング/トランジットは
+                            Loose。<strong
+                                >IOS XR では、デフォルト経路が存在しても Loose uRPF
+                                はデフォルト経路をソース検証に使用しない（<code>allow-default</code>
+                                を設定した場合のみ使用する）</strong
+                            >。<code>allow-default</code> なし：デフォルト経路は無視されソース IP
+                            が他の経路で到達可能でなければドロップ。<code>allow-default</code>
+                            あり：デフォルト経路もソース検証の根拠として使用（実質的に大多数のソース
+                            IP が通過するため緩い検証になる）。
+                        </p>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 3704 Ingress Filtering for Multihomed Networks（BCP 84）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc3704"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc3704</a
+                                >
+                            </li>
+                            <li>
+                                RFC 2827 Network Ingress Filtering（BCP 38）:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc2827"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc2827</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>② 1.7.b ACL</h5>
+                    <ul>
+                        <li>
+                            <strong>入力/出力 ACL</strong> でトラフィックを許可/拒否。インフラ保護
+                            ACL（iACL）で <strong>ルーター宛て通信を許可リスト化</strong>する。
+                        </li>
+                        <li>
+                            IOS XR では ACL の <strong>カウンターと logging</strong> の負荷に注意。
+                        </li>
+                    </ul>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            <strong>インフラ ACL（iACL）</strong> で SP
+                            内部アドレス宛ての外部トラフィックを拒否し、必要なプロトコル（eBGP
+                            等）のみ許可する。
+                        </p>
+                    </div>
+                    <h5>③ 1.7.c RTBH（Remotely Triggered Black Hole）</h5>
+                    <p>
+                        <strong>仕組み</strong>: 攻撃対象の宛先を、BGP で
+                        <strong>ブラックホール用ネクストホップ（Null0 に向く）</strong>
+                        にして網全体で破棄します。
+                    </p>
+                    <div
+                        aria-label="Mermaid diagram d12"
+                        class="diagram"
+                        data-diagram="d12"
+                        role="img"
+                    ></div>
+                    <ul>
+                        <li>
+                            <strong>Destination-based RTBH</strong>:
+                            宛先を破棄（被害者は不到達になるが、網は守られる）。
+                        </li>
+                        <li>
+                            <strong>Source-based RTBH</strong>: uRPF Loose
+                            と組み合わせ、<strong>送信元</strong>を破棄。
+                        </li>
+                        <li>
+                            業界標準の
+                            <strong>ブラックホール community は <code>65535:666</code></strong
+                            >（RFC 7999）。
+                        </li>
+                    </ul>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                RFC 5635 Remote Triggered Black Hole Filtering with uRPF:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc5635"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc5635</a
+                                >
+                            </li>
+                            <li>
+                                RFC 7999 BLACKHOLE Community:
+                                <a
+                                    href="https://www.rfc-editor.org/rfc/rfc7999"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://www.rfc-editor.org/rfc/rfc7999</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <h5>④ 1.7.d MACsec</h5>
+                    <ul>
+                        <li>
+                            <strong>IEEE 802.1AE</strong>。<strong
+                                >ホップバイホップ（リンク単位）の L2 暗号化</strong
+                            >。鍵管理は
+                            <strong>MKA（MACsec Key Agreement, IEEE 802.1X-2010）</strong>。
+                        </li>
+                        <li>
+                            IPsec と違い、L2 で暗号化するため
+                            <strong>ラインレート・低遅延</strong>。
+                        </li>
+                        <li>暗号スイートは GCM-AES-128/256（XPN で 64 ビットパケット番号）。</li>
+                    </ul>
+                    <pre><code class="lang-text"><span class="tk-comment">! IOS XR の考え方（バージョンにより差異あり）</span>
+<span class="tk-kw">key</span> chain MACSEC-KC macsec
+ <span class="tk-kw">key</span> <span class="tk-num">01</span>
+  <span class="tk-kw">key-string</span> <span class="tk-ph">&lt;CAK&gt;</span>
+  <span class="tk-kw">cryptographic-algorithm</span> aes-<span class="tk-num">256</span>-cmac
+  <span class="tk-kw">lifetime</span> <span class="tk-ph">&lt;start&gt;</span> infinite
+<span class="tk-kw">macsec-policy</span> MSEC-POL
+ <span class="tk-kw">cipher-suite</span> GCM-AES-XPN-<span class="tk-num">256</span>
+<span class="tk-kw">interface</span> TenGigE0/<span class="tk-num">0</span>/<span class="tk-num">0</span>/<span class="tk-num">2</span>
+ <span class="tk-kw">macsec</span> psk-keychain MACSEC-KC policy MSEC-POL</code></pre>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-bulb"></i
+                            ><span>ベストプラクティス</span>
+                        </div>
+                        <p>
+                            <strong>拠点間の暗号化が必要なリンク</strong>（DC
+                            間、サードパーティ光回線上など）に MACsec を適用。<strong
+                                >MTU（MACsec ヘッダー分）と同期/OAM トラフィックの扱い</strong
+                            >を事前確認する。
+                        </p>
+                    </div>
+                    <div class="callout source">
+                        <div class="callout-title">
+                            <i aria-hidden="true" class="ti ti-external-link"></i
+                            ><span>ソース</span>
+                        </div>
+                        <ul>
+                            <li>
+                                IEEE 802.1AE:
+                                <a
+                                    href="https://1.ieee802.org/security/802-1ae/"
+                                    rel="noopener noreferrer"
+                                    target="_blank"
+                                    >https://1.ieee802.org/security/802-1ae/</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script>
+            window.DIAGRAMS = {
+                d1: `
+flowchart TD
+START["CCNP Service Provider を目指す"] --> CORE["必須: コア試験 350-501 SPCOR (120分)"]
+CORE --> CHOOSE{"コンセントレーション試験を1つ選択"}
+CHOOSE -->|"ルーティングを深めたい"| SPRI["300-510 SPRI (90分) 高度なルーティング"]
+CHOOSE -->|"VPNサービスを深めたい"| SPVI["300-515 SPVI (90分) VPNサービス"]
+CHOOSE -->|"クラウド基盤を深めたい"| SPCNI["300-540 SPCNI (90分) クラウドネットワーク基盤"]
+SPRI --> CCNP["CCNP Service Provider 取得 (有効期間 3年)"]
+SPVI --> CCNP
+SPCNI --> CCNP
+CORE -.->|"コア試験のみでも取得可"| SPEC["Cisco Certified Specialist - Service Provider Core"]
+CORE -.->|"CCIE SP の筆記試験も兼ねる"| CCIE["CCIE Service Provider 筆記"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class CHOOSE hub
+class CCNP done
+`,
+                d2: `
+flowchart LR
+subgraph CUST1["顧客サイトA"]
+CE1["CE1 (顧客ルーター)"]
+end
+subgraph SPNET["サービスプロバイダー網 (AS 65000)"]
+PE1["PE1 (Provider Edge)"]
+P1["P1 (Provider Core)"]
+P2["P2 (Provider Core)"]
+PE2["PE2 (Provider Edge)"]
+RR["RR (Route Reflector)"]
+end
+subgraph CUST2["顧客サイトB"]
+CE2["CE2 (顧客ルーター)"]
+end
+CE1 -->|"PE-CE リンク"| PE1
+PE1 --> P1
+P1 --> P2
+P2 --> PE2
+PE1 --> P2
+P1 --> PE2
+PE2 -->|"PE-CE リンク"| CE2
+RR -.->|"iBGP セッション"| PE1
+RR -.->|"iBGP セッション"| PE2
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+                d3: `
+flowchart TD
+S0["Step 0: TCP/IP・OSPF・BGP の基礎確認"] --> S1["Step 1: IS-IS / OSPF / BGP を SP 目線で深掘り (出題範囲 2.0)"]
+S1 --> S2["Step 2: MPLS・LDP・RSVP-TE の基礎 (出題範囲 3.0)"]
+S2 --> S3["Step 3: Segment Routing / TI-LFA / SR-TE (出題範囲 3.0)"]
+S3 --> S4["Step 4: L3VPN → L2VPN → EVPN (出題範囲 4.0)"]
+S4 --> S5["Step 5: QoS・セキュリティ・アーキテクチャ (5.1)"]
+S5 --> S6["Step 6: 自動化・テレメトリ (出題範囲 5.0)"]
+S6 --> EXAM1["350-501 SPCOR 受験"]
+EXAM1 --> S7{"コンセントレーションを選択"}
+S7 --> P1["SPRI"]
+S7 --> P2["SPVI"]
+S7 --> P3["SPCNI"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class S7 hub
+class EXAM1 done
+`,
+                d4: `
+flowchart LR
+A["Metro Ethernet L2中心"] --> B["MPLS (LDP) ラベル転送"]
+B --> C["MPLS-TE (RSVP-TE) 帯域・FRR"]
+B --> D["Segment Routing (SR-MPLS) LDP/RSVP-TE 不要"]
+C --> D
+D --> E["SR-TE SRポリシー"]
+D --> F["SRv6 IPv6 SID"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+                d5: `
+flowchart LR
+RU["RU (無線装置)"] -->|"フロントホール"| DU["DU (分散ユニット)"]
+DU -->|"ミッドホール"| CU["CU (集約ユニット)"]
+CU -->|"バックホール"| CORE["5G コア (5GC)"]
+SYNC["同期源 (GNSS / PTP GM)"] -.->|"位相・周波数同期"| RU
+SYNC -.-> DU
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+                d6: `
+flowchart LR
+A["設定変更 (ターゲット設定)"] --> B["show configuration 差分確認"]
+B --> C{"commit"}
+C -->|"成功"| D["実行中設定へ反映"]
+C -->|"失敗"| E["エラー修正して再度 commit"]
+D --> F["rollback configuration last 1 で戻せる"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class C hub
+`,
+                d7: `
+flowchart TD
+subgraph MANO["NFV MANO (管理・オーケストレーション)"]
+NFVO["NFVO (オーケストレーター)"]
+VNFM["VNFM (VNF管理)"]
+VIM["VIM (仮想基盤管理)"]
+end
+subgraph NFVI["NFVI (NFV インフラ)"]
+HW["物理サーバー・ネットワーク"]
+HV["ハイパーバイザー/コンテナ基盤"]
+end
+VNF1["VNF (仮想ルーター等)"]
+VNF2["VNF (仮想FW等)"]
+NFVO --> VNFM
+NFVO --> VIM
+VNFM --> VNF1
+VNFM --> VNF2
+VIM --> HV
+HV --> HW
+VNF1 --> HV
+VNF2 --> HV
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+                d8: `
+flowchart LR
+IN["入口PE DSCP → TC へマッピング"] --> CORE["コア TC で PHB を決定"]
+CORE --> EG{"出口PEの動作モデル"}
+EG -->|"Uniform"| U["TC を DSCP に書き戻し TC で送信制御"]
+EG -->|"Pipe"| P["DSCP は不変 TC で送信制御"]
+EG -->|"Short Pipe"| SP["DSCP は不変 DSCP で送信制御"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class EG hub
+`,
+                d9: `
+flowchart TD
+PKT["顧客からのパケット受信 (PE AC 入口)"] --> Q1{"契約に QoS クラスが含まれる?"}
+Q1 -->|"はい"| Q2{"顧客マーキングを信頼する?"}
+Q1 -->|"いいえ"| BE["全て Best Effort に再マーキング"]
+Q2 -->|"信頼する (マネージド)"| TRUST["DSCP をそのまま採用してマッピング"]
+Q2 -->|"信頼しない (一般)"| CLS["入口で分類し直して再マーキング + ポリサー"]
+TRUST --> POL["契約帯域でポリシング"]
+CLS --> POL
+BE --> POL
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class Q1 hub
+class Q2 hub
+`,
+                d10: `
+flowchart LR
+DET["検知システム (DDoS 検知器)"] -->|"規則生成"| CTRL["Flowspec コントローラー/RR"]
+CTRL -->|"BGP Flowspec"| PE1["PE1 (フィルタ適用)"]
+CTRL -->|"BGP Flowspec"| PE2["PE2 (フィルタ適用)"]
+ATK["攻撃トラフィック"] --> PE1
+PE1 -->|"規則にマッチ → 破棄/レート制限"| DROP["攻撃トラフィック遮断"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+                d11: `
+flowchart TD
+A["DDoS 検知 (NetFlow/テレメトリ)"] --> B{"攻撃の種類は?"}
+B -->|"特定の宛先を狙う"| C["Flowspec でフィルタ配布"]
+B -->|"帯域が枯渇"| D["RTBH または スクラビングへ迂回"]
+B -->|"送信元詐称"| E["uRPF / BCP38 の適用確認"]
+C --> F["効果確認 (カウンター)"]
+D --> F
+E --> F
+F --> G["収束後に規則を撤去して事後レビュー"]
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+class B hub
+`,
+                d12: `
+flowchart LR
+OP["運用者/自動化"] -->|"攻撃対象 /32 を BGP で広告 (ブラックホール community)"| TRG["トリガールーター"]
+TRG -->|"iBGP"| ALLPE["全 PE/エッジ"]
+ALLPE --> NULL["ネクストホップ 192.0.2.1 → Null0 (破棄)"]
+ATK["攻撃トラフィック"] --> ALLPE
+classDef box fill:#EEF1F8,stroke:#2E3F72,color:#161B26
+classDef hub fill:#FAF1DF,stroke:#B8802A,color:#161B26
+classDef done fill:#EAF4EC,stroke:#2F6B3D,color:#161B26
+`,
+            };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+        <script>
+            (async function () {
+                var targets = Array.prototype.slice.call(
+                    document.querySelectorAll('.diagram[data-diagram]'),
+                );
+                if (!window.mermaid) {
+                    return;
+                }
+                if (document.fonts && document.fonts.ready) {
+                    try {
+                        await document.fonts.ready;
+                    } catch (e) {}
+                }
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'base',
+                    securityLevel: 'loose',
+                    flowchart: {
+                        useMaxWidth: false,
+                        htmlLabels: true,
+                        wrappingWidth: 360,
+                        nodeSpacing: 40,
+                        rankSpacing: 45,
+                        curve: 'basis',
+                    },
+                    themeVariables: {
+                        fontFamily:
+                            '"Noto Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif',
+                        fontSize: '16px',
+                        background: '#FFFFFF',
+                        primaryColor: '#EEF1F8',
+                        primaryBorderColor: '#2E3F72',
+                        primaryTextColor: '#161B26',
+                        secondaryColor: '#FAF1DF',
+                        tertiaryColor: '#EAF4EC',
+                        lineColor: '#2E3F72',
+                        textColor: '#161B26',
+                        mainBkg: '#EEF1F8',
+                        nodeBorder: '#2E3F72',
+                        clusterBkg: '#F6F7F9',
+                        clusterBorder: '#A9B4CB',
+                        titleColor: '#161B26',
+                        edgeLabelBackground: '#FFFFFF',
+                    },
+                });
+                var defs = window.DIAGRAMS || {};
+                for (var i = 0; i < targets.length; i++) {
+                    var el = targets[i];
+                    var key = el.getAttribute('data-diagram');
+                    var src = defs[key];
+                    if (!src) {
+                        continue;
+                    }
+                    try {
+                        var out = await mermaid.render('mmd-' + key, src.trim());
+                        el.innerHTML = out.svg;
+                        var svg = el.querySelector('svg');
+                        var vb = svg.getAttribute('viewBox');
+                        svg.removeAttribute('width');
+                        svg.removeAttribute('height');
+                        if (vb) {
+                            var p = vb.split(/[\s,]+/).map(Number);
+                            p[3] = p[3] + 15;
+                            svg.setAttribute('viewBox', p.join(' '));
+                            svg.style.width = p[2] + 'px';
+                        }
+                        svg.style.maxWidth = '100%';
+                        svg.style.height = 'auto';
+                        svg.style.overflow = 'visible';
+                    } catch (err) {
+                        el.innerHTML = '';
+                        var msg = document.createElement('p');
+                        msg.className = 'diagram-error';
+                        msg.textContent = '図を表示できませんでした: ' + key;
+                        el.appendChild(msg);
+                        console.error(key, err);
+                    }
+                }
+                document.documentElement.setAttribute('data-diagrams-done', '1');
+            })();
+        </script>
+        <script>
+            (function () {
+                var nav = document.querySelector('.nav');
+                var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+                var map = {};
+                links.forEach(function (a) {
+                    map[a.getAttribute('href').slice(1)] = a;
+                });
+                function keepVisible(a) {
+                    var top = a.offsetTop;
+                    if (top < nav.scrollTop + 40 || top > nav.scrollTop + nav.clientHeight - 80) {
+                        nav.scrollTop = Math.max(0, top - nav.clientHeight / 3);
+                    }
+                }
+                var io = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (en) {
+                            if (en.isIntersecting) {
+                                links.forEach(function (l) {
+                                    l.classList.remove('active');
+                                });
+                                var a = map[en.target.id];
+                                if (a) {
+                                    a.classList.add('active');
+                                    keepVisible(a);
+                                }
+                            }
+                        });
+                    },
+                    { rootMargin: '-20% 0px -70% 0px' },
+                );
+                document.querySelectorAll('section[id]').forEach(function (s) {
+                    io.observe(s);
+                });
+            })();
+        </script>
+    </body>
+</html>

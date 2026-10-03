@@ -9,7 +9,7 @@ description: >
 
 # Mermaid 構文・描画修正スキル
 
-(最終更新日: 2026-08-15)
+(最終更新日: 2026-10-02)
 
 ## 前提バージョンと正準実装（推測禁止）
 
@@ -424,13 +424,13 @@ const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: str
 
 **⚠️ エクスポート形態は「名前付き」です。`default` でモックすると `undefined` になり必ず落ちます。**
 
-**モックはテストごとに書き起こさず、共有モジュール `__tests__/gcl/agwa/migration-test-utils.tsx` の
+**モックはテストごとに書き起こさず、共有モジュール `__tests__/helpers/migration-test-utils.tsx` の
 `MermaidDiagramMock` を使う。** 同一定義を複数テストへ複製すると、契約（`ariaLabel` / `decorative` /
 `preserveNaturalScale` の透過）を1箇所だけ直して他が古いまま残る。
 
 ```tsx
 // ✅ 正しい — components/MermaidDiagram.tsx は `export const MermaidDiagram`
-import { MermaidDiagramMock } from '@/__tests__/gcl/agwa/migration-test-utils';
+import { MermaidDiagramMock } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
 ```

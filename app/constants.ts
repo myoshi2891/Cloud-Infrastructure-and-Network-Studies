@@ -490,6 +490,11 @@ const ALL_EXAMS: Exam[] = [
                 href: '/gcl/hands-on/griffin-wordpress-gke-guide',
                 pct: 'ハンズオン',
             },
+            {
+                label: 'セキュアなコンテナ CI/CD パイプライン構築ガイド',
+                href: '/gcl/hands-on/secure-cicd-pipeline-guide',
+                pct: 'ハンズオン',
+            },
         ],
         badge: 'ハンズオン',
         icon: '🛠️',
