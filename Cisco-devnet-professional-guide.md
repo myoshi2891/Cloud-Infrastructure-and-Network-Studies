@@ -821,6 +821,7 @@ default:
   image: python:3.12-slim      # タグは固定する（latest にしない）
   before_script:
     - pip install --no-cache-dir -r requirements.txt
+    - ansible-galaxy collection install -r collections/requirements.yml  # 各ジョブは新しいコンテナで動くため全ジョブで導入する
 
 variables:
   ANSIBLE_FORCE_COLOR: "1"
@@ -830,7 +831,6 @@ build:
   script:
     - yamllint .
     - ansible-lint site.yml
-    - ansible-galaxy collection install -r collections/requirements.yml
 
 prevalidation:
   stage: prevalidation
@@ -1235,11 +1235,12 @@ class WebhookHandler(logging.Handler):
 
     def emit(self, record: logging.LogRecord) -> None:
         try:
-            requests.post(
+            resp = requests.post(
                 self.url,
                 json={"text": f"[{record.levelname}] {record.getMessage()}"},
                 timeout=5,
             )
+            resp.raise_for_status()        # 4xx / 5xx も通知失敗として扱う
         except Exception:
             self.handleError(record)       # 通知失敗で本処理を止めない
 
