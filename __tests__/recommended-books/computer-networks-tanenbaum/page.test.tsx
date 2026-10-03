@@ -74,6 +74,17 @@ describe('Tanenbaum 原本の全量照合', () => {
             expect(root.querySelector(a.getAttribute('href')!), a.textContent ?? '').not.toBeNull();
         }
     });
+    it('横スクロールする21図と12表にキーボードフォーカスと領域名がある', () => {
+        const root = mount();
+        const regions = [...root.querySelectorAll('.mermaid-wrap, .table-scroll')];
+        expect(regions).toHaveLength(33);
+        for (const region of regions) {
+            expect(region).toHaveAttribute('tabindex', '0');
+            expect(region).toHaveAttribute('role', 'region');
+            expect(region.getAttribute('aria-label')?.trim()).toBeTruthy();
+        }
+        expect(fs.readFileSync('app/recommended-books/computer-networks-tanenbaum/page.css', 'utf8')).toContain('.mermaid-wrap > [role="img"] { overflow: visible; }');
+    });
 });
 
 describe('Tanenbaum の操作', () => {
