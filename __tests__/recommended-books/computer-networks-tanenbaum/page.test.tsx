@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import postcss from 'postcss';
 import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/computer-networks-tanenbaum.json';
@@ -166,9 +167,9 @@ describe('Tanenbaum CSS全宣言とリストスタイル', () => {
     it('全セレクタ・メディア条件・宣言・importantを原本と比較する', () => {
         const actual = snapshotCssRules(fs.readFileSync(cssPath, 'utf8'));
         const globalVars = new Map<string, string>();
-        for (const rule of snapshotCssRules(fs.readFileSync('app/globals.css', 'utf8'))) {
-            for (const d of rule.declarations) if (d.prop.startsWith('--')) globalVars.set(d.prop, d.value);
-        }
+        postcss.parse(fs.readFileSync('app/globals.css', 'utf8')).walkDecls(d => {
+            if (d.prop.startsWith('--')) globalVars.set(d.prop, d.value);
+        });
         const originalVars = new Map(design.rules.find(rule => rule.selector === ':root')!.declarations.map(d => [d.prop, d.value]));
         for (const rule of design.rules.filter(rule => rule.selector !== ':root')) {
             const found = actual.filter(r => r.selector.replace(/\s+/g, ' ') === mappedSelector(rule.selector).replace(/\s+/g, ' ') && r.media === rule.media);
