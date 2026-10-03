@@ -1,0 +1,2747 @@
+{
+  "source": "Computer-networks-tanenbaum.html",
+  "sourceCommit": "437f4d77674f2569e30a7d44b2feb5508caf4b11",
+  "structure": {
+    "lists": [
+      {
+        "tag": "ol",
+        "className": "",
+        "start": null,
+        "items": [
+          "障害切り分けの速度が上がる:「アプリの問題か、DNSの問題か、TLSの問題か、経路の問題か」をレイヤーごとに仮説立てできるようになります。",
+          "設計判断の質が上がる:タイムアウト値、リトライ戦略、コネクションプーリング、CDN配置などは、すべて下位層の特性(RTT、パケットロス、輻輳制御)の理解に基づいて決めるべき設計です。",
+          "セキュリティの土台になる:TLS、VPN、ファイアウォール、ゼロトラストはいずれもネットワーク層・トランスポート層の仕組みの上に成り立っています。"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "上位層(HTTPやアプリ)から入りたくなっても、まずは下位層(物理・データリンク・ネットワーク)を先に押さえる。上位層のプロトコルは下位層の制約(帯域・遅延・信頼性)を前提に設計されているため、順序を逆にすると「なぜこの仕様なのか」が腑に落ちにくい",
+          "各ステップの図解は、実際にping/traceroute/curl-v/digなどのコマンドを自分の端末で実行しながら照らし合わせる",
+          "用語は英語表記も併記して覚える。RFCやベンダーのドキュメントは英語が一次情報であることがほとんど",
+          "「なぜこの設計なのか」を都度自問する。ネットワークプロトコルの多くは歴史的な制約(帯域が細い、CPUが遅い、信頼できない回線)への対処として生まれており、背景を知ると暗記量が減る"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "OSI参照モデル:国際標準化機構(ISO)が策定した7層モデル。教育・トラブルシューティングの共通言語として広く使われる",
+          "TCP/IPモデル(インターネットプロトコルスイート):実際のインターネットが採用している4層(または5層)モデル。IETFのRFC群として標準化されている"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "「パケット」「フレーム」「セグメント」という用語はレイヤーごとに使い分ける(ネットワーク層=パケット、リンク層=フレーム、トランスポート層=セグメント/データグラム)。曖昧に「パケット」と呼ぶと議論がすれ違いやすい",
+          "障害調査では「どの層のヘッダが正しく付いているか」をtcpdump/Wiresharkで確認する癖をつける。上位層のエラーに見えて実は下位層(MTU超過など)が原因のことは多い"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "周波数分割多重(FDM:FrequencyDivisionMultiplexing):周波数帯を分割して同時に複数信号を送る(アナログ放送などで利用)",
+          "時分割多重(TDM:TimeDivisionMultiplexing):時間をスロットに分割して順番に送る(デジタル電話網などで利用)",
+          "波長分割多重(WDM:WavelengthDivisionMultiplexing):光ファイバ内で異なる波長(色)の光を同時に伝送する。長距離光回線の大容量化に不可欠"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "データセンター間の帯域設計では、銅線の距離制限(Cat6Aで約100m)を意識し、それ以上の距離は光ファイバを選定する",
+          "Wi-Fiの電波干渉は物理層の問題であることが多い。アプリ側の再送・タイムアウト調整だけで対処せず、チャネル設計や電波環境の見直しも検討する",
+          "光ファイバのWDMにより1本の芯線で数十〜数百chの多重化が可能になっている点を理解しておくと、バックボーン回線の容量設計の勘所がつかめる"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "業務ネットワークでは部署・用途ごとにVLANを分割し、ブロードキャストドメインを小さく保つことでブロードキャストストームの影響範囲を限定する",
+          "スイッチのポートミラーリング(SPAN)機能を使うと、トラブルシュート時にパケットキャプチャが取りやすくなる",
+          "MACアドレステーブルのエントリ数上限に注意する。仮想化基盤などでMACアドレスが多数生成される環境ではテーブル溢れによるフラッディング増加が起こりうる"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "無線環境の性能問題を切り分ける際は、まずMACサブレイヤーの競合(同一チャネルを使う端末数、隠れ端末問題)を疑う",
+          "Wi-Fi7導入時はMLO(Multi-LinkOperation)対応のクライアントとAPの組み合わせでのみ真価を発揮する点に注意し、混在環境での互換性を事前検証する",
+          "有線環境で今も半二重(hub経由など)が残っていないか確認する。全二重化されていればCSMA/CDによる衝突は原理的に発生しない"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "サブネット設計では将来の拡張余地を残す。ぎりぎりのホスト数で設計すると増設のたびに再設計が必要になる",
+          "クラウド環境のVPC設計でも、CIDRブロックの重複を避けるため組織全体でIPアドレス管理(IPAM)の台帳を持つ",
+          "NAT環境では「内側から外側への接続」は容易だが「外側から内側への接続」には追加設定(ポートフォワーディングなど)が必要になる非対称性を理解しておく",
+          "インターネットの経路制御(BGP)は「宛先までの最短距離」ではなく「ポリシー」で決まる点に注意する。詳細はステップ8で扱う"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "リアルタイム性が重要(音声・動画・ゲーム)なら再送によるヘッドオブラインブロッキングを避けるためUDPベースのプロトコルを検討する",
+          "TCPコネクションのTIME_WAIT状態が大量に滞留する場合はソケットの再利用設定やコネクションプーリングを見直す",
+          "輻輳制御アルゴリズムはOSやカーネルバージョンによって既定値が異なる(CUBICが長らくLinuxの既定、BBR系への移行が進行中)。高スループットが必要なサーバーでは明示的に選定・検証する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "TTL(TimeToLive)を短くしすぎるとDNSサーバー負荷とレイテンシが増え、長くしすぎるとフェイルオーバー時の切り替えが遅くなる。用途に応じたバランスを取る",
+          "DNSSECによる応答の署名検証や、DNSoverHTTPS/TLS(DoH/DoT)による問い合わせの暗号化・改ざん防止も、セキュリティ要件次第で検討する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "HTTPS化(TLS導入)は今やデフォルトの前提とする。平文HTTPは中間者による盗聴・改ざんのリスクを常に伴う",
+          "DHCPのリース期間は、端末の入れ替わり頻度(オフィスWi-Fi、来客用ネットワークなど)に応じて調整する",
+          "APIのタイムアウト設計では、通信区間ごとに要する時間を分けて見積もる。HTTP/1.1・HTTP/2(TCP)ではDNS解決・TCP確立・TLSハンドシェイク・リクエスト処理を、HTTP/3(QUIC)ではDNS解決・QUIC接続確立(トランスポートとTLS1.3ハンドシェイクが統合される)・リクエスト処理を、それぞれ個別に見積もる"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "TLS証明書の自動更新(ACMEプロトコルなど)を導入し、有効期限切れによる障害を防ぐ",
+          "VPNの認証情報は多要素認証(MFA)と組み合わせ、単一の秘密情報漏洩でネットワーク全体が突破されない設計にする",
+          "ファイアウォールルールは「デフォルト拒否・必要な通信のみ許可」を原則とし、定期的な棚卸しでルールの陳腐化を防ぐ",
+          "DDoS対策は自組織のインフラだけで完結させず、上流のISPやCDN/DDoS対策サービスと連携した多層防御を検討する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "新規サービス構築時はIPv4/IPv6デュアルスタックを既定とし、IPv6専用環境からのアクセスを排除しない",
+          "CDNやロードバランサの設定でHTTP/3(QUIC)対応状況を定期的に見直す。UDPを通す必要があるためファイアウォール・NAT機器側の対応も合わせて確認する",
+          "BGPを運用する組織はRPKIROA(RouteOriginAuthorization)の登録を進め、経路乗っ取り(ハイジャック)への耐性を高める",
+          "耐量子暗号への移行計画(クリプトインベントリの棚卸し、ハイブリッド鍵交換対応のライブラリ選定)を早期に着手する。特に長期秘匿が必要なデータを扱う場合は優先度を上げる"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "「遅い」という報告を受けたら、まずpingでRTTのベースラインを取り、tracerouteでどのホップから遅延が増えているかを確認する",
+          "TLSエラーの切り分けではcurl-vやopenssls_clientで証明書チェーン・プロトコルバージョン・暗号スイートのネゴシエーション結果を直接確認する",
+          "パケットキャプチャは本番環境で無制限に取得せず、フィルタ(ホスト・ポート指定)と時間・サイズの上限を設けて実施する",
+          "切り分けの前に宛先サービスがTCPかUDP/QUIC(DNS、SNMP、syslog、HTTP/3など)かを確認する。UDPはコネクションを確立しないため、telnetやnc(TCP)が失敗しても、それはUDPサービスのトランスポート障害の根拠にはならない",
+          "UDPベースのサービスはプロトコル固有の応答で判定する。DNSならdig@<宛先>、HTTP/3ならcurl--http3-vでQUICハンドシェイクの成否を見る。curl--http3が失敗して--http2が成功する場合は、経路上でUDP/443が遮断されている可能性を疑う"
+        ]
+      },
+      {
+        "tag": "ol",
+        "className": "",
+        "start": null,
+        "items": [
+          "基礎固め:本ガイドのステップ0〜3(階層モデル・物理層・データリンク層・MACサブレイヤー)を、手元のPCでipconfig/ifconfigやARPテーブルを確認しながら学ぶ",
+          "ネットワーク層とトランスポート層:サブネッティングを実際に手計算し、tcpdumpでTCP3ウェイハンドシェイクを観察する",
+          "アプリケーション層:digでDNSの再帰的問い合わせを観察し、curl-vでHTTP/HTTPSのやり取りを確認する",
+          "セキュリティ:自分の管理下にある環境でTLS設定・VPN・ファイアウォールルールを実際に構成してみる",
+          "実運用の視点:クラウド環境(VPC、セキュリティグループ、CDN)の設定を、これまで学んだレイヤー構造と対応付けて理解する",
+          "最新動向の継続的キャッチアップ:IETF・主要CDNベンダー(Cloudflare、Google、AWS)のブログ、APNICBlogやISOCPulseなどの一次情報を定期的に確認する"
+        ]
+      },
+      {
+        "tag": "ul",
+        "className": "",
+        "start": null,
+        "items": [
+          "階層モデル(OSI/TCP-IP)を使って「どの層の問題か」を切り分けられる",
+          "カプセル化・非カプセル化の流れを、実際のパケットキャプチャと対応付けて説明できる",
+          "CIDR表記からネットワークアドレス・ブロードキャストアドレス・利用可能ホスト数を計算できる",
+          "TCPの3ウェイハンドシェイクと4ウェイクローズ(FIN/ACKのやり取り)を図なしで説明できる",
+          "TCPとUDPの使い分けを、遅延・信頼性・輻輳制御の観点で判断できる",
+          "DNSの再帰的問い合わせの流れと、TTL設定がもたらすトレードオフを理解している",
+          "TLSハンドシェイクの流れと、証明書検証が果たす役割を説明できる",
+          "NATがもたらす到達性の非対称性(内→外は容易、外→内は要設定)を理解している",
+          "障害調査時にping/traceroute/dig/curl-v/tcpdumpを使い分けられる",
+          "IPv6デュアルスタック、HTTP/3、耐量子TLSなど2026年時点の実装動向を把握し、自組織のロードマップに反映できる"
+        ]
+      }
+    ],
+    "icons": [],
+    "sections": [],
+    "navigation": [
+      {
+        "href": "#introduction",
+        "text": "はじめに:なぜコンピュータネットワークを学ぶのか"
+      },
+      {
+        "href": "#best-practices",
+        "text": "学習の進め方(ベストプラクティス)"
+      },
+      {
+        "href": "#step0",
+        "text": "ステップ0:全体像を掴む―インターネットはどう成り立っているか"
+      },
+      {
+        "href": "#step0-1",
+        "text": "インターネットを構成する要素"
+      },
+      {
+        "href": "#step0-2",
+        "text": "プロトコル階層化という考え方"
+      },
+      {
+        "href": "#step0-3",
+        "text": "カプセル化:データが層を降りていく仕組み"
+      },
+      {
+        "href": "#step1",
+        "text": "ステップ1:物理層―ビットを電気信号・光・電波に変える"
+      },
+      {
+        "href": "#step1-1",
+        "text": "伝送媒体の比較"
+      },
+      {
+        "href": "#step1-2",
+        "text": "信号化・多重化の基礎"
+      },
+      {
+        "href": "#step2",
+        "text": "ステップ2:データリンク層―フレーム化と誤り検出でリンクを渡す"
+      },
+      {
+        "href": "#step2-1",
+        "text": "フレーミングと誤り検出"
+      },
+      {
+        "href": "#step2-2",
+        "text": "イーサネット(Ethernet)フレームの構造"
+      },
+      {
+        "href": "#step2-3",
+        "text": "スイッチの学習と転送(自己学習ブリッジ)"
+      },
+      {
+        "href": "#step2-4",
+        "text": "VLAN(仮想LAN)による論理分割"
+      },
+      {
+        "href": "#step3",
+        "text": "ステップ3:メディアアクセス制御(MAC)サブレイヤー―誰が話す番かを決める"
+      },
+      {
+        "href": "#step3-1",
+        "text": "CSMA/CD(有線イーサネットの歴史的方式)"
+      },
+      {
+        "href": "#step3-2",
+        "text": "CSMA/CA(無線LANで使われる方式)"
+      },
+      {
+        "href": "#step3-3",
+        "text": "Wi-Fi世代の比較"
+      },
+      {
+        "href": "#step4",
+        "text": "ステップ4:ネットワーク層―異なるネットワークをまたいで届ける"
+      },
+      {
+        "href": "#step4-1",
+        "text": "IPv4アドレッシングとCIDR"
+      },
+      {
+        "href": "#step4-2",
+        "text": "サブネッティングの手順"
+      },
+      {
+        "href": "#step4-3",
+        "text": "IPv6が必要な理由と基本構造"
+      },
+      {
+        "href": "#step4-4",
+        "text": "ルーティングアルゴリズムの2つの系統"
+      },
+      {
+        "href": "#step4-5",
+        "text": "NAT(ネットワークアドレス変換)"
+      },
+      {
+        "href": "#step4-6",
+        "text": "ICMPとインターネットの経路検証"
+      },
+      {
+        "href": "#step5",
+        "text": "ステップ5:トランスポート層―エンドツーエンドの信頼性"
+      },
+      {
+        "href": "#step5-1",
+        "text": "TCPの3ウェイハンドシェイク"
+      },
+      {
+        "href": "#step5-2",
+        "text": "TCPコネクションの状態遷移"
+      },
+      {
+        "href": "#step5-3",
+        "text": "フロー制御と輻輳制御"
+      },
+      {
+        "href": "#step5-4",
+        "text": "TCPとUDPの比較"
+      },
+      {
+        "href": "#step6",
+        "text": "ステップ6:アプリケーション層―人とアプリのためのプロトコル"
+      },
+      {
+        "href": "#step6-1",
+        "text": "DNS(DomainNameSystem)による名前解決"
+      },
+      {
+        "href": "#step6-2",
+        "text": "HTTP/HTTPSの基本"
+      },
+      {
+        "href": "#step6-3",
+        "text": "メールプロトコルの概要"
+      },
+      {
+        "href": "#step6-4",
+        "text": "DHCPによる自動設定"
+      },
+      {
+        "href": "#step7",
+        "text": "ステップ7:ネットワークセキュリティ―守るべきものと手段"
+      },
+      {
+        "href": "#step7-1",
+        "text": "TLSによる暗号化通信"
+      },
+      {
+        "href": "#step7-2",
+        "text": "VPN(VirtualPrivateNetwork)"
+      },
+      {
+        "href": "#step7-3",
+        "text": "ファイアウォールとDMZアーキテクチャ"
+      },
+      {
+        "href": "#step7-4",
+        "text": "耐量子暗号(PQC)への移行"
+      },
+      {
+        "href": "#step8",
+        "text": "ステップ8:2026年の最新動向―今のインターネットはどう変わったか"
+      },
+      {
+        "href": "#step9",
+        "text": "ステップ9:トラブルシューティングの基本―現場で使う一次切り分け"
+      },
+      {
+        "href": "#step9-1",
+        "text": "よく使う一次切り分けコマンド"
+      },
+      {
+        "href": "#roadmap",
+        "text": "学習ロードマップ"
+      },
+      {
+        "href": "#checklist",
+        "text": "ベストプラクティスチェックリスト"
+      },
+      {
+        "href": "#glossary",
+        "text": "用語集"
+      },
+      {
+        "href": "#references",
+        "text": "参考文献"
+      }
+    ],
+    "anchors": [
+      "introduction",
+      "best-practices",
+      "step0",
+      "step0-1",
+      "step0-2",
+      "step0-3",
+      "step1",
+      "step1-1",
+      "step1-2",
+      "step2",
+      "step2-1",
+      "step2-2",
+      "step2-3",
+      "step2-4",
+      "step3",
+      "step3-1",
+      "step3-2",
+      "step3-3",
+      "step4",
+      "step4-1",
+      "step4-2",
+      "step4-3",
+      "step4-4",
+      "step4-5",
+      "step4-6",
+      "step5",
+      "step5-1",
+      "step5-2",
+      "step5-3",
+      "step5-4",
+      "step6",
+      "step6-1",
+      "step6-2",
+      "step6-3",
+      "step6-4",
+      "step7",
+      "step7-1",
+      "step7-2",
+      "step7-3",
+      "step7-4",
+      "step8",
+      "step9",
+      "step9-1",
+      "roadmap",
+      "checklist",
+      "glossary",
+      "references"
+    ],
+    "references": [
+      {
+        "id": "ref1",
+        "number": "1",
+        "text": "1AndrewS.Tanenbaum,DavidJ.Wetherall,ComputerNetworks,FifthEdition—O'Reilly:https://www.oreilly.com/library/view/computer-networks-fifth/9780133485936/"
+      },
+      {
+        "id": "ref2",
+        "number": "2",
+        "text": "2WhatistheOSIModel?:https://www.cloudflare.com/learning/ddos/glossary/open-systems-interconnection-model-osi/"
+      },
+      {
+        "id": "ref3",
+        "number": "3",
+        "text": "3Whatisthenetworklayer?:https://www.cloudflare.com/learning/network-layer/what-is-the-network-layer/"
+      },
+      {
+        "id": "ref4",
+        "number": "4",
+        "text": "4WhatisLayer7?:https://www.cloudflare.com/learning/ddos/what-is-layer-7/"
+      },
+      {
+        "id": "ref5",
+        "number": "5",
+        "text": "5NetworkLayersreference(CloudflareDevelopers):https://developers.cloudflare.com/fundamentals/reference/network-layers/"
+      },
+      {
+        "id": "ref6",
+        "number": "6",
+        "text": "6OverviewofHTTP:https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+      },
+      {
+        "id": "ref7",
+        "number": "7",
+        "text": "7EvolutionofHTTP:https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Evolution_of_HTTP"
+      },
+      {
+        "id": "ref8",
+        "number": "8",
+        "text": "8RFC791,InternetProtocol(IPv4):https://www.rfc-editor.org/rfc/rfc791"
+      },
+      {
+        "id": "ref9",
+        "number": "9",
+        "text": "9RFC8200,InternetProtocol,Version6(IPv6):https://www.rfc-editor.org/rfc/rfc8200"
+      },
+      {
+        "id": "ref10",
+        "number": "10",
+        "text": "10RFC9293,TransmissionControlProtocol(TCP):https://www.rfc-editor.org/rfc/rfc9293"
+      },
+      {
+        "id": "ref11",
+        "number": "11",
+        "text": "11RFC768,UserDatagramProtocol(UDP):https://www.rfc-editor.org/rfc/rfc768"
+      },
+      {
+        "id": "ref12",
+        "number": "12",
+        "text": "12RFC9000,QUIC:AUDP-BasedMultiplexedandSecureTransport:https://www.rfc-editor.org/rfc/rfc9000"
+      },
+      {
+        "id": "ref13",
+        "number": "13",
+        "text": "13RFC9114,HTTP/3:https://www.rfc-editor.org/rfc/rfc9114"
+      },
+      {
+        "id": "ref14",
+        "number": "14",
+        "text": "14RFC8446,TheTransportLayerSecurity(TLS)ProtocolVersion1.3:https://www.rfc-editor.org/rfc/rfc8446"
+      },
+      {
+        "id": "ref15",
+        "number": "15",
+        "text": "15RFC1035,DomainNames-ImplementationandSpecification(DNS):https://www.rfc-editor.org/rfc/rfc1035"
+      },
+      {
+        "id": "ref16",
+        "number": "16",
+        "text": "16RFC2131,DynamicHostConfigurationProtocol(DHCP):https://www.rfc-editor.org/rfc/rfc2131"
+      },
+      {
+        "id": "ref17",
+        "number": "17",
+        "text": "17RFC1918,AddressAllocationforPrivateInternets:https://www.rfc-editor.org/rfc/rfc1918"
+      },
+      {
+        "id": "ref18",
+        "number": "18",
+        "text": "1818YearsLater,IPv6ReachesMajority—InternetSocietyPulse(2026年4月):https://pulse.internetsociety.org/en/blog/2026/04/18-years-later-ipv6-reaches-majority/"
+      },
+      {
+        "id": "ref19",
+        "number": "19",
+        "text": "19Googlehits50%IPv6—APNICBlog(2026年4月):https://blog.apnic.net/2026/04/28/google-hits-50-ipv6/"
+      },
+      {
+        "id": "ref20",
+        "number": "20",
+        "text": "20CloudflareRadar2025YearinReview(HTTPバージョン分布、IPv6採用率、RPKI経路検証率、DDoS規模の推移を含む):https://radar.cloudflare.com/year-in-review/2025"
+      },
+      {
+        "id": "ref21",
+        "number": "21",
+        "text": "21Stateofthepost-quantumInternetin2025—CloudflareBlog:https://blog.cloudflare.com/pq-2025/"
+      },
+      {
+        "id": "ref22",
+        "number": "22",
+        "text": "22Post-quantumcryptography(PQC)—CloudflareSSL/TLSDocumentation:https://developers.cloudflare.com/ssl/post-quantum-cryptography/"
+      },
+      {
+        "id": "ref23",
+        "number": "23",
+        "text": "23AutomaticallySecure:howweupgraded6,000,000domainsbydefault—CloudflareBlog:https://blog.cloudflare.com/automatically-secure/"
+      },
+      {
+        "id": "ref24",
+        "number": "24",
+        "text": "24HTTP/3(withQUIC)—CloudflareSpeedDocumentation:https://developers.cloudflare.com/speed/optimization/protocol/http3/"
+      },
+      {
+        "id": "ref25",
+        "number": "25",
+        "text": "25Wi-Fi8in2026:Next-genwirelessstandardprioritizesreliabilityoverspeedgains—NetworkWorld:https://www.networkworld.com/article/4112600/wi-fi-8-in-2026-next-gen-wireless-standard-prioritizes-reliability-over-speed-gains.html"
+      },
+      {
+        "id": "ref26",
+        "number": "26",
+        "text": "26Wi-Fi7(802.11be)TechnicalGuide—CiscoMerakiDocumentation:https://documentation.meraki.com/Wireless/Design_and_Configure/Architecture_and_Best_Practices/Wi-Fi_7_(802.11be)_Technical_Guide"
+      }
+    ],
+    "footnotes": [],
+    "checklist": [
+      {
+        "id": "chk1",
+        "labelFor": "chk1",
+        "text": "階層モデル(OSI/TCP-IP)を使って「どの層の問題か」を切り分けられる"
+      },
+      {
+        "id": "chk2",
+        "labelFor": "chk2",
+        "text": "カプセル化・非カプセル化の流れを、実際のパケットキャプチャと対応付けて説明できる"
+      },
+      {
+        "id": "chk3",
+        "labelFor": "chk3",
+        "text": "CIDR表記からネットワークアドレス・ブロードキャストアドレス・利用可能ホスト数を計算できる"
+      },
+      {
+        "id": "chk4",
+        "labelFor": "chk4",
+        "text": "TCPの3ウェイハンドシェイクと4ウェイクローズ(FIN/ACKのやり取り)を図なしで説明できる"
+      },
+      {
+        "id": "chk5",
+        "labelFor": "chk5",
+        "text": "TCPとUDPの使い分けを、遅延・信頼性・輻輳制御の観点で判断できる"
+      },
+      {
+        "id": "chk6",
+        "labelFor": "chk6",
+        "text": "DNSの再帰的問い合わせの流れと、TTL設定がもたらすトレードオフを理解している"
+      },
+      {
+        "id": "chk7",
+        "labelFor": "chk7",
+        "text": "TLSハンドシェイクの流れと、証明書検証が果たす役割を説明できる"
+      },
+      {
+        "id": "chk8",
+        "labelFor": "chk8",
+        "text": "NATがもたらす到達性の非対称性(内→外は容易、外→内は要設定)を理解している"
+      },
+      {
+        "id": "chk9",
+        "labelFor": "chk9",
+        "text": "障害調査時にping/traceroute/dig/curl-v/tcpdumpを使い分けられる"
+      },
+      {
+        "id": "chk10",
+        "labelFor": "chk10",
+        "text": "IPv6デュアルスタック、HTTP/3、耐量子TLSなど2026年時点の実装動向を把握し、自組織のロードマップに反映できる"
+      }
+    ]
+  },
+  "diagrams": [
+    "flowchart TB\nsubgraph OSI[\"OSI参照モデル(7層)\"]\ndirection TB\nO7[\"第7層 アプリケーション層<br/>Application\"]\nO6[\"第6層 プレゼンテーション層<br/>Presentation\"]\nO5[\"第5層 セッション層<br/>Session\"]\nO4[\"第4層 トランスポート層<br/>Transport\"]\nO3[\"第3層 ネットワーク層<br/>Network\"]\nO2[\"第2層 データリンク層<br/>Data Link\"]\nO1[\"第1層 物理層<br/>Physical\"]\nO7 --> O6 --> O5 --> O4 --> O3 --> O2 --> O1\nend\n\nsubgraph TCPIP[\"TCP/IPモデル(4層)\"]\ndirection TB\nT4[\"アプリケーション層<br/>HTTP・DNS・SMTPなど\"]\nT3[\"トランスポート層<br/>TCP・UDP\"]\nT2[\"インターネット層<br/>IP\"]\nT1[\"リンク層<br/>Ethernet・Wi-Fiなど\"]\nT4 --> T3 --> T2 --> T1\nend\n\nO7 -.対応.- T4\nO6 -.対応.- T4\nO5 -.対応.- T4\nO4 -.対応.- T3\nO3 -.対応.- T2\nO2 -.対応.- T1\nO1 -.対応.- T1",
+    "flowchart LR\nsubgraph Sender[\"送信側(下向きにカプセル化)\"]\ndirection TB\nA1[\"アプリケーション層<br/>データ本体\"] --> A2[\"トランスポート層<br/>TCP/UDPヘッダを付加<br/>→ セグメント/データグラム\"]\nA2 --> A3[\"ネットワーク層<br/>IPヘッダを付加<br/>→ パケット\"]\nA3 --> A4[\"リンク層<br/>Ethernetヘッダ・トレーラを付加<br/>→ フレーム\"]\nA4 --> A5[\"物理層<br/>ビット列として送出\"]\nend\n\nsubgraph Receiver[\"受信側(上向きに非カプセル化)\"]\ndirection TB\nB5[\"物理層<br/>ビット列を受信\"] --> B4[\"リンク層<br/>Ethernetヘッダを除去\"]\nB4 --> B3[\"ネットワーク層<br/>IPヘッダを除去\"]\nB3 --> B2[\"トランスポート層<br/>TCP/UDPヘッダを除去\"]\nB2 --> B1[\"アプリケーション層<br/>データ本体を受け取る\"]\nend\n\nA5 -- 伝送路 --> B5",
+    "flowchart TB\nsubgraph FDM[\"周波数分割多重(FDM)\"]\ndirection LR\nF1[\"チャネルA<br/>周波数帯1\"]\nF2[\"チャネルB<br/>周波数帯2\"]\nF3[\"チャネルC<br/>周波数帯3\"]\nend\nsubgraph TDM[\"時分割多重(TDM)\"]\ndirection LR\nT1[\"A用スロット\"] --> T2[\"B用スロット\"] --> T3[\"C用スロット\"] --> T4[\"A用スロット...\"]\nend\nsubgraph WDM[\"波長分割多重(WDM・光ファイバ)\"]\ndirection LR\nW1[\"波長λ1\"]\nW2[\"波長λ2\"]\nW3[\"波長λ3\"]\nend",
+    "sequenceDiagram\nparticipant PC-A as PC-A\nparticipant SW as L2スイッチ\nparticipant PC-B as PC-B\nparticipant PC-C as PC-C\n\nPC-A->>SW: フレーム送信(宛先:PC-Bの MAC)\nNote over SW: 送信元MAC(PC-A)とポート番号を<br/>MACアドレステーブルに学習\nNote over SW: 宛先MACがテーブルに未登録のため<br/>受信ポート以外へフラッディング\nSW->>PC-B: フレーム転送\nSW->>PC-C: フレーム転送(該当なし・破棄)\nPC-B->>SW: 応答フレーム送信(宛先:PC-Aの MAC)\nNote over SW: 送信元MAC(PC-B)とポート番号を学習\nNote over SW: 宛先MAC(PC-A)はテーブルに登録済み\nSW->>PC-A: 応答フレームをPC-Aのポートのみへ転送",
+    "flowchart TB\nSW[\"1台の物理スイッチ\"]\nsubgraph VLAN10[\"VLAN 10(経理部)\"]\nPC1[\"PC-1\"]\nPC2[\"PC-2\"]\nend\nsubgraph VLAN20[\"VLAN 20(開発部)\"]\nPC3[\"PC-3\"]\nPC4[\"PC-4\"]\nend\nPC1 --- SW\nPC2 --- SW\nPC3 --- SW\nPC4 --- SW",
+    "flowchart TD\nStart[\"送信データが発生\"] --> Sense[\"回線が空いているか<br/>キャリアセンス\"]\nSense -->|使用中| Wait[\"ランダム時間待機\"]\nWait --> Sense\nSense -->|空いている| Send[\"送信開始\"]\nSend --> Collide{\"送信中に衝突を検出したか\"}\nCollide -->|衝突あり| Jam[\"ジャム信号を送出し<br/>全ノードに衝突を通知\"]\nJam --> Backoff[\"バックオフアルゴリズムで<br/>再送までの待機時間を計算\"]\nBackoff --> Wait\nCollide -->|衝突なし| Done[\"送信完了\"]",
+    "flowchart TD\nStart2[\"送信データが発生\"] --> Sense2[\"回線が空いているか<br/>キャリアセンス\"]\nSense2 -->|使用中| Defer[\"送信を保留し待機\"]\nDefer --> Sense2\nSense2 -->|一定時間空いている| RTS[\"必要に応じてRTS<br/>送信要求フレームを送出\"]\nRTS --> CTS{\"一定時間内に受信側からCTS<br/>送信許可フレームを受信できたか\"}\nCTS -->|\"受信した\"| Send2[\"データフレームを送信\"]\nCTS -->|\"CTSタイムアウト\"| RtsRetry{\"RTSの再送回数が<br/>上限に達したか\"}\nRtsRetry -->|\"未達\"| RtsBackoff[\"ランダムバックオフ後にRTSを再送\"]\nRtsBackoff --> RTS\nRtsRetry -->|\"上限に達した\"| RtsFail[\"送信失敗<br/>フレームを破棄し上位層へ通知\"]\nSend2 --> ACK{\"受信側からACKが<br/>返ってきたか\"}\nACK -->|ACKなし=衝突とみなす| Backoff2[\"ランダムバックオフ後に再送\"]\nBackoff2 --> Sense2\nACK -->|ACKあり| Done2[\"送信完了\"]",
+    "flowchart TD\nS1[\"Step1: 必要なホスト数を洗い出す<br/>(将来の増加分も考慮)\"] --> S2[\"Step2: 必要ホスト数を満たす<br/>最小のホストビット数nを求める<br/>(2^n − 2 ≥ 必要ホスト数)\"]\nS2 --> S3[\"Step3: プレフィックス長を<br/>32 − n として決定\"]\nS3 --> S4[\"Step4: サブネットマスクを算出\"]\nS4 --> S5[\"Step5: ネットワークアドレス・<br/>ブロードキャストアドレス・<br/>利用可能範囲を確定\"]\nS5 --> S6[\"Step6: VLSM(可変長サブネットマスク)で<br/>用途ごとに無駄なく分割\"]",
+    "flowchart LR\nsubgraph DV[\"距離ベクトル型\"]\ndirection TB\nDV1[\"ルータA: 隣接ルータへ<br/>『自分が知る全宛先への距離』を通知\"] --> DV2[\"ルータB: 受け取った距離+1ホップで<br/>自分の経路表を更新\"]\nDV2 --> DV3[\"変化があれば<br/>さらに隣へ伝播\"]\nend\nsubgraph LS[\"リンクステート型\"]\ndirection TB\nLS1[\"各ルータ: 自分に直結する<br/>リンク情報をフラッディングで<br/>全ルータへ配布\"] --> LS2[\"各ルータ: 集めた情報から<br/>ネットワーク全体の地図を構築\"]\nLS2 --> LS3[\"ダイクストラ法で<br/>自分から見た最短経路木を計算\"]\nend",
+    "sequenceDiagram\nparticipant Host as 内部ホスト<br/>192.168.1.10:54321\nparticipant Router as NATルータ<br/>グローバルIP: 203.0.113.5\nparticipant Server as インターネット上のサーバー\n\nHost->>Router: 送信元 192.168.1.10:54321<br/>宛先 サーバーのIP:443\nNote over Router: NATテーブルに変換対応を記録<br/>(192.168.1.10:54321 ⇔ 203.0.113.5:40001)\nRouter->>Server: 送信元 203.0.113.5:40001<br/>宛先 サーバーのIP:443\nServer->>Router: 応答 送信元:サーバーのIP:443<br/>宛先 203.0.113.5:40001\nNote over Router: NATテーブルを参照し<br/>元の内部ホストへ変換\nRouter->>Host: 応答 送信元:サーバーのIP:443<br/>宛先 192.168.1.10:54321",
+    "sequenceDiagram\nparticipant Client as クライアント\nparticipant Server as サーバー\n\nClient->>Server: SYN(seq=x)\nNote over Server: 接続要求を受理し<br/>応答を準備\nServer->>Client: SYN-ACK(seq=y, ack=x+1)\nClient->>Server: ACK(seq=x+1, ack=y+1)\nNote over Client,Server: コネクション確立完了<br/>データ転送開始",
+    "stateDiagram-v2\ndirection LR\n[*] --> CLOSED\nCLOSED --> LISTEN: サーバー側がlisten開始\nCLOSED --> SYN_SENT: クライアント側がconnect実行\nLISTEN --> SYN_RCVD: SYNを受信しSYN-ACKを返す\nSYN_SENT --> ESTABLISHED: SYN-ACKを受信しACKを返す\nSYN_RCVD --> ESTABLISHED: ACKを受信\nESTABLISHED --> FIN_WAIT_1: closeを呼び出しFIN送信\nESTABLISHED --> CLOSE_WAIT: 相手からFINを受信\nFIN_WAIT_1 --> FIN_WAIT_2: ACKを受信\nFIN_WAIT_2 --> TIME_WAIT: 相手からFINを受信しACKを返す\nCLOSE_WAIT --> LAST_ACK: closeを呼び出しFIN送信\nLAST_ACK --> CLOSED: ACKを受信\nTIME_WAIT --> CLOSED: 一定時間経過後",
+    "flowchart TD\nStart3[\"接続確立\"] --> SS[\"スロースタート<br/>ウィンドウを指数的に増加\"]\nSS --> Threshold{\"輻輳ウィンドウが<br/>閾値(ssthresh)に到達したか\"}\nThreshold -->|未到達| SS\nThreshold -->|到達| CA[\"輻輳回避<br/>ウィンドウを線形的に増加\"]\nCA --> Loss{\"パケットロスを検出したか\"}\nLoss -->|タイムアウトによる検出| SlowReset[\"ssthreshを半分に設定し<br/>スロースタートへ戻る\"]\nLoss -->|重複ACK3回による検出| FastRecovery[\"高速リトランスミット/<br/>高速リカバリで<br/>ウィンドウを緩やかに調整\"]\nSlowReset --> SS\nFastRecovery --> CA",
+    "sequenceDiagram\nparticipant App as アプリケーション\nparticipant Resolver as スタブリゾルバ<br/>(OS内)\nparticipant Recursive as フルサービスリゾルバ<br/>(ISPやパブリックDNS)\nparticipant Root as ルートDNSサーバー\nparticipant TLD as TLDサーバー(.com等)\nparticipant Auth as 権威DNSサーバー<br/>(example.com)\n\nApp->>Resolver: example.comのIPは?\nResolver->>Recursive: 再帰的問い合わせ\nRecursive->>Root: .comの権威サーバーは?\nRoot-->>Recursive: TLDサーバーのアドレス\nRecursive->>TLD: example.comの権威サーバーは?\nTLD-->>Recursive: 権威サーバーのアドレス\nRecursive->>Auth: example.comのAレコードは?\nAuth-->>Recursive: IPアドレスを応答\nRecursive-->>Resolver: IPアドレスを応答(結果をキャッシュ)\nResolver-->>App: IPアドレスを返却",
+    "sequenceDiagram\nparticipant Browser as ブラウザ\nparticipant DNS as DNSリゾルバ\nparticipant Server as Webサーバー\n\nBrowser->>DNS: ドメイン名解決\nDNS-->>Browser: IPアドレス\nBrowser->>Server: TCP 3ウェイハンドシェイク\nBrowser->>Server: TLSハンドシェイク(HTTPSの場合)\nBrowser->>Server: HTTP GETリクエスト\nNote over Server: リクエストを処理し<br/>レスポンスを生成\nServer-->>Browser: HTTP 200 OK + レスポンスボディ\nNote over Browser: レンダリングして表示",
+    "sequenceDiagram\nparticipant Client as クライアント端末\nparticipant DHCP as DHCPサーバー\n\nClient->>DHCP: DHCP Discover(ブロードキャスト)\nDHCP-->>Client: DHCP Offer(候補IPアドレスを提示)\nClient->>DHCP: DHCP Request(そのIPアドレスの利用を要求)\nDHCP-->>Client: DHCP Ack(割り当てを確定し設定情報を送付)",
+    "sequenceDiagram\nparticipant Client2 as クライアント\nparticipant Server2 as サーバー\n\nClient2->>Server2: ClientHello(対応する鍵交換方式・暗号スイートを提示)\nServer2-->>Client2: ServerHello + 証明書 + 鍵交換情報(1往復で応答)\nNote over Client2,Server2: 双方で共通鍵を導出\nClient2->>Server2: Finished(暗号化されたアプリケーションデータの送信開始)\nServer2-->>Client2: Finished(暗号化された応答)",
+    "flowchart LR\nsubgraph SiteA[\"拠点A(社内LAN)\"]\nUserA[\"端末A\"]\nGwA[\"VPNゲートウェイA\"]\nend\nsubgraph Internet2[\"インターネット\"]\nTunnel((\"暗号化トンネル<br/>IPsec / WireGuardなど\"))\nend\nsubgraph SiteB[\"拠点B(社内LAN)\"]\nGwB[\"VPNゲートウェイB\"]\nUserB[\"端末B\"]\nend\nUserA --- GwA\nGwA === Tunnel\nTunnel === GwB\nGwB --- UserB",
+    "flowchart LR\nInternet3((\"インターネット\")) --> FW1[\"外部ファイアウォール\"]\nFW1 --> DMZ[\"DMZ<br/>公開Webサーバー・メールサーバー\"]\nDMZ --> FW2[\"内部ファイアウォール\"]\nFW2 --> Internal[\"内部ネットワーク<br/>業務システム・データベース\"]",
+    "flowchart TB\nY1[\"2024年以前<br/>IPv4依存・TCPベースHTTP/2主流\"] --> Y2[\"2025年<br/>Wi-Fi 7標準化・RPKI 53.9%へ<br/>耐量子TLSが人間トラフィックの過半数に\"]\nY2 --> Y3[\"2026年3月<br/>IPv6ネイティブアクセスが<br/>Google計測で初めて50%突破\"]\nY3 --> Y4[\"2026年後半<br/>Wi-Fi 7出荷が本格拡大<br/>Wi-Fi 8の実装検討が始動\"]",
+    "flowchart TD\nQ1[\"症状: 通信ができない/遅い\"] --> Q2{\"物理的な接続は<br/>正常か(リンクランプ・電波強度)\"}\nQ2 -->|異常| F1[\"物理層の問題<br/>ケーブル・電波環境を確認\"]\nQ2 -->|正常| Q3{\"同一セグメント内の<br/>通信(ARP解決など)は可能か\"}\nQ3 -->|不可| F2[\"データリンク層の問題<br/>スイッチ設定・VLANを確認\"]\nQ3 -->|可能| Q4{\"デフォルトゲートウェイへ<br/>pingが通るか\"}\nQ4 -->|不可| F3[\"ネットワーク層(自セグメント〜GW)の問題の可能性<br/>IP設定・ルーティングに加え<br/>ICMPがFW/ACLで遮断されていないか確認\"]\nQ4 -->|可能| Q5{\"traceroute/tracertで<br/>宛先まで到達するか\"}\nQ5 -->|不可| F4[\"経路上のネットワーク層の問題の可能性<br/>途中ルータのルーティングを確認しつつ<br/>ICMP/UDPプローブがFW・ACLで<br/>遮断されていないかも確認\"]\nQ5 -->|可能| Q6{\"宛先サービスのトランスポートは<br/>TCPか、UDP/QUIC(HTTP/3を含む)か\"}\nQ6 -->|TCP| Q6T{\"宛先ポートへの<br/>TCP接続(telnet/nc)は成立するか\"}\nQ6 -->|UDP/QUIC| Q6U{\"プロトコル固有の応答が返るか<br/>(dig @宛先 / nc -u / curl --http3)\"}\nQ6T -->|不可| F5[\"トランスポート層(TCP)の問題の可能性<br/>宛先サービスがLISTENしているか<br/>経路のFW・ACL・SGで遮断されていないか<br/>戻り経路のルーティングを確認\"]\nQ6U -->|不可| F5U[\"トランスポート層(UDP/QUIC)の問題の可能性<br/>UDPはコネクションを張らないため<br/>telnet/ncのTCP失敗を障害の根拠にしない<br/>該当UDPポート(HTTP/3では通例UDP/443)の許可と<br/>UDPを落とすミドルボックスの有無を確認\"]\nQ6T -->|可能| Q7{\"アプリケーションの応答<br/>(HTTPステータス等)は正常か\"}\nQ6U -->|可能| Q7\nQ7 -->|異常| F6[\"アプリケーション層の問題<br/>アプリログ・証明書・DNSを確認\"]\nQ7 -->|正常| F7[\"ネットワーク経路は正常<br/>クライアント側の実装・キャッシュ等を確認\"]"
+  ],
+  "rules": [
+    {
+      "selector": ":root",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "--bg",
+          "value": "#07111e",
+          "important": false
+        },
+        {
+          "prop": "--bg-card",
+          "value": "#0d1a2b",
+          "important": false
+        },
+        {
+          "prop": "--bg-card-2",
+          "value": "#101f33",
+          "important": false
+        },
+        {
+          "prop": "--border",
+          "value": "#1d3350",
+          "important": false
+        },
+        {
+          "prop": "--border-soft",
+          "value": "#16283f",
+          "important": false
+        },
+        {
+          "prop": "--text",
+          "value": "#dbe4f3",
+          "important": false
+        },
+        {
+          "prop": "--text-dim",
+          "value": "#8fa2c0",
+          "important": false
+        },
+        {
+          "prop": "--text-faint",
+          "value": "#6a7d9c",
+          "important": false
+        },
+        {
+          "prop": "--accent",
+          "value": "#7c9eff",
+          "important": false
+        },
+        {
+          "prop": "--accent-soft",
+          "value": "#3a4f80",
+          "important": false
+        },
+        {
+          "prop": "--accent-bg",
+          "value": "#15233d",
+          "important": false
+        },
+        {
+          "prop": "--danger",
+          "value": "#ff8fa3",
+          "important": false
+        },
+        {
+          "prop": "--danger-bg",
+          "value": "#3a1420",
+          "important": false
+        },
+        {
+          "prop": "--warn",
+          "value": "#ffbd6e",
+          "important": false
+        },
+        {
+          "prop": "--warn-bg",
+          "value": "#3a2810",
+          "important": false
+        },
+        {
+          "prop": "--success",
+          "value": "#7fe0a8",
+          "important": false
+        },
+        {
+          "prop": "--success-bg",
+          "value": "#0f2c1e",
+          "important": false
+        },
+        {
+          "prop": "--sidebar-w",
+          "value": "300px",
+          "important": false
+        },
+        {
+          "prop": "--font-jp",
+          "value": "'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "*",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "box-sizing",
+          "value": "border-box",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "html,\n            body",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "overflow-x",
+          "value": "hidden",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "body",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-family",
+          "value": "var(--font-jp)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.85",
+          "important": false
+        },
+        {
+          "prop": "-webkit-font-smoothing",
+          "value": "antialiased",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-decoration",
+          "value": "underline",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".layout",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "block",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "position",
+          "value": "fixed",
+          "important": false
+        },
+        {
+          "prop": "top",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "left",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "bottom",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "var(--sidebar-w)",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "#060d17",
+          "important": false
+        },
+        {
+          "prop": "border-right",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "overflow-y",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "28px 0 40px",
+          "important": false
+        },
+        {
+          "prop": "z-index",
+          "value": "50",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-header",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "padding",
+          "value": "0 24px 20px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "16px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-header .kicker",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.08em",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-header h2",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "16px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "6px 0 0",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.5",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "padding",
+          "value": "0 12px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "block",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "9px 12px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "13.5px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-dim)",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.5",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "2px",
+          "important": false
+        },
+        {
+          "prop": "transition",
+          "value": "background 0.15s,\n                    color 0.15s",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--accent-bg)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "text-decoration",
+          "value": "none",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a.active",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--accent-bg)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar nav a.lvl3",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "padding-left",
+          "value": "28px",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "12.5px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-toggle",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "position",
+          "value": "fixed",
+          "important": false
+        },
+        {
+          "prop": "top",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "left",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "z-index",
+          "value": "60",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "42px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "42px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "cursor",
+          "value": "pointer",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-left",
+          "value": "var(--sidebar-w)",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "56px 64px 120px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-bottom",
+          "value": "8px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero .kicker",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "13px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.08em",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "14px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero h1",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "clamp(28px, 3.6vw, 42px)",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.35",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 18px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "linear-gradient(135deg, #dbe4f3 0%, #7c9eff 100%)",
+          "important": false
+        },
+        {
+          "prop": "-webkit-background-clip",
+          "value": "text",
+          "important": false
+        },
+        {
+          "prop": "-webkit-text-fill-color",
+          "value": "transparent",
+          "important": false
+        },
+        {
+          "prop": "background-clip",
+          "value": "text",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "800",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".hero .meta-row",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "flex-wrap",
+          "value": "wrap",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "32px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".pill",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "inline-flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "6px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "6px 14px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "999px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "12.5px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-dim)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".pill strong",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main h2",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "26px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "56px 0 20px",
+          "important": false
+        },
+        {
+          "prop": "padding-top",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "border-top",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "800",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "-0.01em",
+          "important": false
+        },
+        {
+          "prop": "scroll-margin-top",
+          "value": "24px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main > h2:first-of-type",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-top",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "padding-top",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "margin-top",
+          "value": "8px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main h3",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "20px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "38px 0 16px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        },
+        {
+          "prop": "scroll-margin-top",
+          "value": "24px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main h3::before",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "content",
+          "value": "''",
+          "important": false
+        },
+        {
+          "prop": "display",
+          "value": "inline-block",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "5px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "18px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "3px",
+          "important": false
+        },
+        {
+          "prop": "margin-right",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "vertical-align",
+          "value": "-2px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main p",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0 0 18px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main ul,\n            .main ol",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0 0 18px",
+          "important": false
+        },
+        {
+          "prop": "padding-left",
+          "value": "1.4em",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main li",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-bottom",
+          "value": "8px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main hr",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "border-top",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "44px 0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main strong",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "#f0f4fc",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".footnote-ref",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin-left",
+          "value": "2px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".footnote-ref sup",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "11px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main code:not(pre code)",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-card-2)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "5px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "1px 6px",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "0.9em",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "#ffd08a",
+          "important": false
+        },
+        {
+          "prop": "overflow-wrap",
+          "value": "break-word",
+          "important": false
+        },
+        {
+          "prop": "word-break",
+          "value": "break-word",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".table-scroll",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "overflow-x",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 26px",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "table",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-collapse",
+          "value": "collapse",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "100%",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14.5px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "thead th",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--accent-bg)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "text-align",
+          "value": "left",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "12px 16px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "white-space",
+          "value": "nowrap",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "tbody td",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "padding",
+          "value": "12px 16px",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-dim)",
+          "important": false
+        },
+        {
+          "prop": "vertical-align",
+          "value": "top",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "tbody tr:last-child td",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "border-bottom",
+          "value": "none",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "tbody tr:hover td",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "rgba(124, 158, 255, 0.04)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre.mermaid",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "width",
+          "value": "100%",
+          "important": false
+        },
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "safe center",
+          "important": false
+        },
+        {
+          "prop": "overflow-x",
+          "value": "auto",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "28px 20px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 30px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre.mermaid svg",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "pre.mermaid p",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "inherit",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-practice",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--success-bg)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid #1d5a3a",
+          "important": false
+        },
+        {
+          "prop": "border-left",
+          "value": "4px solid var(--success)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "20px 22px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 26px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-practice .icon",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "26px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "26px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "7px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--success)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "#08150e",
+          "important": false
+        },
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "900",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-practice .body",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-practice .label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "11.5px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "800",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.06em",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--success)",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "6px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".callout-practice p",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".practice-label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "inline-flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "800",
+          "important": false
+        },
+        {
+          "prop": "letter-spacing",
+          "value": "0.06em",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--success)",
+          "important": false
+        },
+        {
+          "prop": "text-transform",
+          "value": "uppercase",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 10px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".practice-label::before",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "content",
+          "value": "'✓'",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "13px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-grid",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "grid",
+          "important": false
+        },
+        {
+          "prop": "grid-template-columns",
+          "value": "repeat(2, minmax(0, 1fr))",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 30px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-card",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "14px 16px",
+          "important": false
+        },
+        {
+          "prop": "min-width",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-card .num",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "26px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "26px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "7px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--accent-bg)",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "800",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-card .txt",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "13px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-dim)",
+          "important": false
+        },
+        {
+          "prop": "min-width",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "overflow-wrap",
+          "value": "break-word",
+          "important": false
+        },
+        {
+          "prop": "word-break",
+          "value": "break-word",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-card .txt a",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "600",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--bg-card)",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "14px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "8px 22px 12px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0 0 30px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-header",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "center",
+          "important": false
+        },
+        {
+          "prop": "justify-content",
+          "value": "space-between",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "14px 0",
+          "important": false
+        },
+        {
+          "prop": "border-bottom",
+          "value": "1px solid var(--border-soft)",
+          "important": false
+        },
+        {
+          "prop": "margin-bottom",
+          "value": "6px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-header .title",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14.5px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-header .count",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "font-size",
+          "value": "13px",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "font-weight",
+          "value": "700",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card ul",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "list-style",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "0",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card li",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        },
+        {
+          "prop": "align-items",
+          "value": "flex-start",
+          "important": false
+        },
+        {
+          "prop": "gap",
+          "value": "12px",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "11px 4px",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "8px",
+          "important": false
+        },
+        {
+          "prop": "margin",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "transition",
+          "value": "background 0.15s",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card li:hover",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "rgba(124, 158, 255, 0.05)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card input[type='checkbox']",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "appearance",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "-webkit-appearance",
+          "value": "none",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "19px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "19px",
+          "important": false
+        },
+        {
+          "prop": "flex-shrink",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "margin-top",
+          "value": "2px",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "1.5px solid var(--border)",
+          "important": false
+        },
+        {
+          "prop": "border-radius",
+          "value": "5px",
+          "important": false
+        },
+        {
+          "prop": "background",
+          "value": "var(--bg-card-2)",
+          "important": false
+        },
+        {
+          "prop": "cursor",
+          "value": "pointer",
+          "important": false
+        },
+        {
+          "prop": "position",
+          "value": "relative",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card input[type='checkbox']:checked",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "background",
+          "value": "var(--accent)",
+          "important": false
+        },
+        {
+          "prop": "border-color",
+          "value": "var(--accent)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card input[type='checkbox']:checked::after",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "content",
+          "value": "''",
+          "important": false
+        },
+        {
+          "prop": "position",
+          "value": "absolute",
+          "important": false
+        },
+        {
+          "prop": "left",
+          "value": "5px",
+          "important": false
+        },
+        {
+          "prop": "top",
+          "value": "1px",
+          "important": false
+        },
+        {
+          "prop": "width",
+          "value": "5px",
+          "important": false
+        },
+        {
+          "prop": "height",
+          "value": "10px",
+          "important": false
+        },
+        {
+          "prop": "border",
+          "value": "solid #08101f",
+          "important": false
+        },
+        {
+          "prop": "border-width",
+          "value": "0 2px 2px 0",
+          "important": false
+        },
+        {
+          "prop": "transform",
+          "value": "rotate(40deg)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "color",
+          "value": "var(--text)",
+          "important": false
+        },
+        {
+          "prop": "font-size",
+          "value": "14.5px",
+          "important": false
+        },
+        {
+          "prop": "cursor",
+          "value": "pointer",
+          "important": false
+        },
+        {
+          "prop": "line-height",
+          "value": "1.6",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".checklist-card li:has(input:checked) label",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "text-decoration",
+          "value": "line-through",
+          "important": false
+        },
+        {
+          "prop": "color",
+          "value": "var(--text-faint)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": "aside.footnotes",
+      "media": null,
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "none",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar",
+      "media": "(max-width: 980px)",
+      "declarations": [
+        {
+          "prop": "transform",
+          "value": "translateX(-100%)",
+          "important": false
+        },
+        {
+          "prop": "transition",
+          "value": "transform 0.25s ease",
+          "important": false
+        },
+        {
+          "prop": "box-shadow",
+          "value": "0 0 40px rgba(0, 0, 0, 0.5)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar.open",
+      "media": "(max-width: 980px)",
+      "declarations": [
+        {
+          "prop": "transform",
+          "value": "translateX(0)",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".main",
+      "media": "(max-width: 980px)",
+      "declarations": [
+        {
+          "prop": "margin-left",
+          "value": "0",
+          "important": false
+        },
+        {
+          "prop": "padding",
+          "value": "80px 20px 100px",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".sidebar-toggle",
+      "media": "(max-width: 980px)",
+      "declarations": [
+        {
+          "prop": "display",
+          "value": "flex",
+          "important": false
+        }
+      ]
+    },
+    {
+      "selector": ".ref-grid",
+      "media": "(max-width: 980px)",
+      "declarations": [
+        {
+          "prop": "grid-template-columns",
+          "value": "1fr",
+          "important": false
+        }
+      ]
+    }
+  ]
+}
