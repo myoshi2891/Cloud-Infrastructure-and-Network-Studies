@@ -393,15 +393,17 @@ HEADERS = {
 CA = "/etc/ssl/certs/corp-ca.pem"        # verify=False は使わない
 
 body = {
-    "ietf-interfaces:interface": {
-        "name": "Loopback100",
-        "description": "managed-by-automation",
-        "type": "iana-if-type:softwareLoopback",
-        "enabled": True,
-        "ietf-ip:ipv4": {
-            "address": [{"ip": "10.100.100.1", "netmask": "255.255.255.255"}]
-        },
-    }
+    "ietf-interfaces:interface": [
+        {
+            "name": "Loopback100",
+            "description": "managed-by-automation",
+            "type": "iana-if-type:softwareLoopback",
+            "enabled": True,
+            "ietf-ip:ipv4": {
+                "address": [{"ip": "10.100.100.1", "netmask": "255.255.255.255"}]
+            },
+        }
+    ]
 }
 
 # PUT = 作成または置換（冪等）
