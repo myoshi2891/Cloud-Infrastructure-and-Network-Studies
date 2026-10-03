@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-10-02
+Updated 2026-10-04
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -603,6 +603,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（56図）
       page.css                      # ページ固有スタイル
+    computer-networks-tanenbaum/
+      page.tsx                      # Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド (Server)
+      ComputerNetworksTanenbaumGuide.tsx # 全10ステップ・21図・12表・10チェック項目の本文 (Client)
+      NavBar.tsx                    # 47アンカー・scroll spy・モバイル開閉・フォーカス管理
+      constants.ts                  # 原本の目次と21図のDSL
+      page.css                      # ページ固有CSS。全宣言・リストマーカーを原本fixtureと照合
     computer-networking-topdown/
       page.tsx                      # 『Computer Networking: A Top-Down Approach』完全学習ガイド (Server)
       ComputerNetworkingTopdownGuide.tsx # 本文＋インタラクション (Client。全10部、Mermaid 41図、チェックリスト等)

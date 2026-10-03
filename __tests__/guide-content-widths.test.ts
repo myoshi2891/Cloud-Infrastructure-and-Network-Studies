@@ -53,6 +53,7 @@ const guideLayouts = [
     ['app/recommended-books/systems-performance/page.css', '.systems-performance-page .sidebar', '.systems-performance-page .main'],
     ['app/recommended-books/operating-systems-three-easy-pieces/page.css', '.ostep-page .sidebar', '.ostep-page .main'],
     ['app/recommended-books/computer-networking-topdown/page.css', '.cntd-page .sidebar', '.cntd-page .main'],
+    ['app/recommended-books/computer-networks-tanenbaum/page.css', '.tanenbaum-page .sidebar', '.tanenbaum-page .main'],
     ['app/recommended-books/kubernetes-in-action/page.css', '.kia-page .sidebar', '.kia-page .main'],
     ['app/gcl/professional-agentic-architect/page.css', '.agentic-guide-page .sidebar', '.agentic-guide-page .main'],
     ['app/gcl/professional-agentic-architect/section1/page.css', '.agentic-section1-page .sidebar', '.agentic-section1-page .main'],
