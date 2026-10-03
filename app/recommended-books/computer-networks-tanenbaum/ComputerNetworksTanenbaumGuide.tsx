@@ -9,7 +9,7 @@ import { NavBar } from './NavBar';
 const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: string }) {
     const chart = DIAGRAMS[id];
     if (!chart) return null;
-    return <div className="mermaid-wrap"><MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale /></div>;
+    return <div className="mermaid-wrap" tabIndex={0} role="region" aria-label={label}><MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale /></div>;
 });
 
 /** 下位層から積み上げるネットワーク学習ガイドの全本文。 */
@@ -106,7 +106,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <p>{" インターネットは単一の組織が管理する1つのネットワークではなく、"}<strong>{"自律システム(AS: Autonomous System)"}</strong>{" と呼ばれる無数の独立したネットワークが、BGPというプロトコルで経路情報を交換し合うことで成立している「ネットワークのネットワーク」です。 "}</p>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="インターネットを構成する要素の表">
                     {" "}
                     <table>
                         <thead>
@@ -199,7 +199,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step1-1" tabIndex={-1}>{"伝送媒体の比較"}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="伝送媒体の比較の表">
                     {" "}
                     <table>
                         <thead>
@@ -296,7 +296,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step2-2" tabIndex={-1}>{" イーサネット(Ethernet)フレームの構造 "}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="イーサネット(Ethernet)フレームの構造の表">
                     {" "}
                     <table>
                         <thead>
@@ -408,7 +408,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step3-3" tabIndex={-1}>{"Wi-Fi世代の比較"}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="Wi-Fi世代の比較の表">
                     {" "}
                     <table>
                         <thead>
@@ -502,7 +502,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <p>{" IPv4アドレスは32ビットで、慣習的に8ビットずつ4つに区切ったドット区切り10進数(例: 192.168.1.10)で表記されます。アドレス空間は約43億個(2^32)しかなく、インターネットの急成長により枯渇が進んだため、"}<strong>{"CIDR(Classless Inter-Domain Routing)"}</strong>{"というクラスに縛られない可変長のアドレス割り当て方式が導入されました。CIDR表記では "}<code>{"192.168.1.0/24"}</code>{" のように「/」の後にネットワーク部のビット数(プレフィックス長)を示します。 "}</p>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="IPv4アドレッシングとCIDRの表">
                     {" "}
                     <table>
                         <thead>
@@ -565,7 +565,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <p>{" ルータが「宛先までどの経路が最適か」を決めるアルゴリズムは、大きく2系統に分類されます。 "}</p>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="ルーティングアルゴリズムの2つの系統の表">
                     {" "}
                     <table>
                         <thead>
@@ -664,7 +664,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step5-4" tabIndex={-1}>{"TCPとUDPの比較"}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="TCPとUDPの比較の表">
                     {" "}
                     <table>
                         <thead>
@@ -774,7 +774,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <p>{"HTTPバージョンごとの特徴を整理します。"}</p>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="HTTP/HTTPSの基本の表">
                     {" "}
                     <table>
                         <thead>
@@ -807,7 +807,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step6-3" tabIndex={-1}>{"メールプロトコルの概要"}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="メールプロトコルの概要の表">
                     {" "}
                     <table>
                         <thead>
@@ -920,7 +920,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <p>{" ここまでの原理は変わりませんが、実際にインターネット上でどのプロトコルがどの程度使われているかは年々変化しています。2026年9月時点で確認できる主要な動向を整理します。 "}</p>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="ステップ8: 2026年の最新動向 ― 今のインターネットはどう変わったかの表">
                     {" "}
                     <table>
                         <thead>
@@ -1002,7 +1002,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h3 id="step9-1" tabIndex={-1}>{"よく使う一次切り分けコマンド"}</h3>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="よく使う一次切り分けコマンドの表">
                     {" "}
                     <table>
                         <thead>
@@ -1148,7 +1148,7 @@ export function ComputerNetworksTanenbaumGuide() {
                 {" "}
                 <h2 id="glossary" tabIndex={-1}>{"用語集"}</h2>
                 {" "}
-                <div className="table-scroll">
+                <div className="table-scroll" tabIndex={0} role="region" aria-label="用語集の表">
                     {" "}
                     <table>
                         <thead>
