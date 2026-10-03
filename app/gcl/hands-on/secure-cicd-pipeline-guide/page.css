@@ -80,6 +80,13 @@
     color: var(--color-secure-cicd-text-primary);
 }
 
+.secure-cicd-page .sidebar nav a:focus-visible {
+    background: var(--color-secure-cicd-bg-tertiary);
+    color: var(--color-secure-cicd-text-primary);
+    outline: 2px solid var(--color-pcd-accent);
+    outline-offset: 2px;
+}
+
 .secure-cicd-page .sidebar nav a.active {
     background: var(--color-secure-cicd-bg-tertiary);
     color: var(--color-secure-cicd-text-primary);
