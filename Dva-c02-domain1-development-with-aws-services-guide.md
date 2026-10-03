@@ -4,7 +4,7 @@
 > 対象: DVA-C02 の **Content Domain 1: Development with AWS Services**(スコア対象問題の **32%**)
 > 構成: 本ガイドは **Task 1(13 スキル)** を 1 つずつ解説します(Task 2: Lambda〔7 スキル〕と Task 3: データストア〔9 スキル〕は本ガイドの対象外)
 > 各 Step の末尾に **ベストプラクティス**、**試験のひっかけポイント**、**出典 URL** を付けています。
-> 情報の確認日: 2026-10-02(クォータや機能名は変わることがあります。受験前に必ず公式ドキュメントで再確認してください)
+> 情報の確認日: 2026-10-02(クォータや機能名は変わることがあります。受験前に必ず公式ドキュメントで再確認してください)。DVA-C02 の最終受験日は **2026-11-30**、後継の DVA-C03 の受験登録開始日は **2026-10-27** です
 
 ---
 
@@ -565,6 +565,7 @@ Resources:
   HelloFunction:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: src/            # app.py（handler 関数）を置くディレクトリ
       Handler: app.handler
       Runtime: python3.13
       Events:
