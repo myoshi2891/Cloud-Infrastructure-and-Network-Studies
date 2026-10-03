@@ -155,6 +155,7 @@ flowchart LR
 ### 3.1 【1.1】Ansible でネットワーク構成を管理する（VLAN / OSPF / 資産管理 / インターフェース / ACL）
 
 #### 何ができるか
+
 Ansible は **エージェントレス** で、YAML の **Playbook** に「あるべき状態」を書いて実行する自動化ツールです。Cisco 機器向けには **`cisco.ios` コレクション**（IOS XE 向け）が公式に用意されています。
 
 #### 用語
@@ -244,6 +245,7 @@ flowchart LR
 ```
 
 #### ベストプラクティス
+
 - **`--check --diff` を必ず先に実行**（ドライランと差分確認）。
 - 最初は `merged`、運用が成熟してから `replaced`、**`overridden` は影響範囲を理解してから**。
 - パスワード等は **Ansible Vault** か CI の秘密変数で渡し、Playbook に直書きしない。出力に秘密が出るタスクは **`no_log: true`**。
@@ -253,6 +255,7 @@ flowchart LR
 - 機器側の設定保存（`write memory` 相当）の要否を確認し、`ios_config` の `save_when` などで制御する。
 
 #### つまずきやすい点
+
 - `ansible_connection` と `ansible_network_os` の指定漏れ（認証前に失敗する）。
 - `become`（enable パスワード）の指定漏れ。
 - `network_cli` と `httpapi`（RESTCONF 用）の接続プラグインの取り違え。
@@ -262,6 +265,7 @@ flowchart LR
 ### 3.2 【1.2】Terraform でネットワーク構成を管理する
 
 #### 何ができるか
+
 Terraform は **HCL** で書いた宣言から、**plan（差分計算）→ apply（適用）** でインフラを管理するツールです。Cisco 向けには **CiscoDevNet の `iosxe` プロバイダ**（RESTCONF を内部で利用）などがあります。
 
 #### 基本構造
@@ -319,6 +323,7 @@ flowchart LR
 | 向く場面 | 既存機器への変更、アドホック作業 | クラウド・コントローラ・繰り返し構築 |
 
 #### ベストプラクティス
+
 - **リモート backend + state ロック**、state ファイルは Git に入れない。
 - `terraform plan` の出力を **CI でレビュー**（マージ前に差分を人が確認）。
 - プロバイダ・Terraform 本体の **バージョン固定**。
@@ -330,6 +335,7 @@ flowchart LR
 ### 3.3 【1.3】RESTCONF（RFC 8040）で YANG モデルに基づき構成管理する
 
 #### 位置づけ
+
 **YANG** はデータモデルの言語、**NETCONF / RESTCONF** はそのモデルを操作するプロトコルです。RESTCONF は HTTPS 上で YANG データを **JSON/XML** で CRUD します。
 
 | 比較 | NETCONF | RESTCONF |
@@ -364,7 +370,7 @@ flowchart LR
 
 #### IOS XE 側の有効化（例）
 
-```
+```text
 ip http secure-server
 restconf
 ```
@@ -420,6 +426,7 @@ VLAN などは **ネイティブモデル**（`Cisco-IOS-XE-native`）でも扱�
 | 409 | 競合 | POST で既に存在 |
 
 #### ベストプラクティス
+
 - **YANG モデルを先に読む**（`pyang` / YANG Suite でツリー表示 → ペイロードを組み立てる）。
 - 冪等にしたいなら **POST より PUT/PATCH**。
 - 変更前に GET で現状取得、変更後に GET で検証する。
@@ -479,6 +486,7 @@ with manager.connect(
 ```
 
 #### ベストプラクティス
+
 - **例外処理**：認証失敗・タイムアウト・コマンドエラーを区別して捕捉し、ログに残す。
 - **関数に分割**して、テスト可能な単位（取得／検証／適用）にする。
 - **冪等性**：適用前に現状を取得し、差分がある時だけ変更する。
@@ -575,6 +583,8 @@ sequenceDiagram
 
 ```python
 import os
+from collections.abc import Callable
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -593,9 +603,22 @@ def build_session(token: str) -> requests.Session:
     s.headers.update({"Authorization": f"Bearer {token}", "Accept": "application/json"})
     s.verify = os.environ.get("CA_BUNDLE") or True  # 未設定・空文字は True（検証は常に有効）
     return s
+
+
+def request_with_reauth(
+    s: requests.Session, get_token: Callable[[], str], method: str, url: str, **kwargs
+) -> requests.Response:
+    """401 を受けたらトークンを 1 回だけ取り直してリトライする（持続認証）"""
+    kwargs.setdefault("timeout", 15)
+    resp = s.request(method, url, **kwargs)
+    if resp.status_code != 401:
+        return resp
+    s.headers["Authorization"] = f"Bearer {get_token()}"   # 再認証してセッションを更新
+    return s.request(method, url, **kwargs)                # リトライは 1 回だけ
 ```
 
 #### ベストプラクティス
+
 - **必ず `timeout` を指定**（接続・読み取り）。
 - **冪等でない操作（POST など）は自動リトライしない**（二重作成の危険）。
 - 一括処理は **並列度を制限**（レート制限に合わせる）。
@@ -604,6 +627,7 @@ def build_session(token: str) -> requests.Session:
 - API のバージョンと非推奨（deprecation）通知を追跡する。
 
 ---
+
 ## 4. AUTOCOR ドメイン 2：Infrastructure as Code（30%）
 
 ネットワーク構成を **コードとして管理し、テスト・配備・検証まで自動で回す**ための領域です。
@@ -670,6 +694,7 @@ vlan 10 name USER-NET
 4. 中断したいときは `git merge --abort`。
 
 #### 2.1.b `git cherry-pick`
+
 **特定のコミットだけ**を現在のブランチに取り込みます。ホットフィックスを複数ブランチへ反映するときに使います。
 
 ```bash
@@ -687,6 +712,7 @@ git cherry-pick -x 3f2a9c1       # 元コミットの ID をメッセージに�
 | `--hard` | 移動 | 戻す | **戻す（変更が消える）** | 完全に巻き戻す（危険） |
 
 #### 2.1.d `git checkout`
+
 - ブランチ切替：`git checkout <branch>`（現在は **`git switch <branch>`** が推奨）。
 - ファイル復元：`git checkout -- <file>`（現在は **`git restore <file>`** が推奨）。
 - 過去の状態の確認：`git checkout <commit>`（**detached HEAD** になる点に注意）。
@@ -702,6 +728,7 @@ flowchart TD
 ```
 
 #### ベストプラクティス
+
 - **共有ブランチでは `reset --hard` や force push を使わない**。やむを得ない場合は `--force-with-lease`。
 - 取り消しは **`revert`**、ローカル整理は **`reset` / `rebase`**。
 - **main を保護ブランチ**にし、レビュー済みの MR のみマージ。
@@ -810,6 +837,7 @@ post-validation:
 > 認証情報は **Settings → CI/CD → Variables** に登録し、**Masked**（ログで伏せ字）と **Protected**（保護ブランチのみ）を有効にします。`.gitlab-ci.yml` に直書きしません。
 
 #### ベストプラクティス
+
 - **MR パイプライン（レビュー時）と main パイプライン（配備時）を分ける**（`rules:`）。
 - 本番デプロイには **手動承認（`when: manual`）** や `environment` の保護を併用。
 - **`resource_group`** で同一環境への同時デプロイを防ぐ。
@@ -821,6 +849,7 @@ post-validation:
 ### 4.4 【2.4】Cisco Modeling Labs（CML）でネットワークをシミュレーションする
 
 #### CML とは
+
 実機の OS イメージ（IOS XE、NX-OS など）を使って**仮想トポロジを作成・起動できるシミュレータ**です。**本番に触れずに自動化コードをテスト**できます。
 
 #### 自動化との接続：REST API / `virl2_client`
@@ -860,6 +889,7 @@ sequenceDiagram
 ```
 
 #### ベストプラクティス
+
 - **トポロジを YAML でコード化して Git 管理**（誰でも同じ検証環境を再現）。
 - **パイプラインごとにラボを作り、終わったら破棄**（状態が混ざらない）。
 - 本番に近い **OS バージョン**でテストする。
@@ -926,6 +956,7 @@ secrets:
 読み方：`runner` と `db` は同じ `backend` ネットワーク上にあり、`runner` から `db:5432` で接続できる。`db` が healthy になってから `runner` が起動する。データは `dbdata` ボリュームに残る。
 
 #### ベストプラクティス
+
 - **イメージのタグを固定**（`latest` 禁止）。
 - **秘密情報は `secrets` / 環境変数 / `.env`（Git 管理外）** で渡す。
 - 不要なポートを公開しない。ボリュームは可能なら `:ro`。
@@ -937,6 +968,7 @@ secrets:
 ### 4.6 【2.6】Source of Truth（SoT）を自動化ソリューションに統合する
 
 #### SoT とは
+
 ネットワークの**「あるべき姿」を一元管理する信頼できる唯一の情報源**です（デバイス、IP、VLAN、サイト、接続関係など）。代表例は **NetBox** や **Nautobot**。
 
 | 項目 | 設定ファイル（Playbook）を真実とする | SoT を真実とする |
@@ -969,6 +1001,7 @@ for dev in nb.dcim.devices.filter(site="tokyo", role="access-switch"):
 Ansible では **NetBox 動的インベントリプラグイン**（`netbox.netbox.nb_inventory`）でインベントリを自動生成できます。
 
 #### ベストプラクティス
+
 - **SoT を変更起点にする**（機器を先に手で変えない）。
 - SoT のデータを**検証してから**配備に使う（入力検証）。
 - **ドリフト検出**：実機と SoT の差を定期的に比べて通知する。
@@ -1049,11 +1082,13 @@ vlans:
 | `:` 付きの名前 | 別モジュールから拡張された要素（`ietf-ip:ipv4`） |
 
 #### ベストプラクティス
+
 - **YANG Suite や `pyang` でモデルを確認 → ペイロード作成**（推測で書かない）。
 - 作成した JSON/XML は **モデルに対して検証**してから送る。
 - 型・範囲・必須キーの違反は 400 エラーの典型原因。
 
 ---
+
 ## 5. AUTOCOR ドメイン 3：Operations（20%）
 
 作った自動化を **見える化し、変更を検証し、安全に運用する**ための領域です。
@@ -1063,6 +1098,7 @@ vlans:
 ### 5.1 【3.1】Model-Driven Telemetry（MDT）を構成する
 
 #### MDT とは
+
 YANG モデルで定義されたデータを、**機器から収集基盤へ継続的に送る**仕組みです。SNMP のような「問い合わせ（ポーリング）」ではなく、**購読（Subscription）による配信（ストリーミング）** が中心です。
 
 | 比較 | SNMP | モデル駆動テレメトリ |
@@ -1097,20 +1133,26 @@ flowchart LR
 #### IOS XE の Dial-out 設定例（概念を理解するための例）
 
 ```text
+crypto pki trustpoint COLLECTOR-CA     ! コレクタのサーバー証明書を検証する CA
+ enrollment terminal
+!
+crypto pki authenticate COLLECTOR-CA   ! CA 証明書（PEM）を貼り付けて登録
+!
 telemetry ietf subscription 101
  encoding encode-kvgpb
  filter xpath /interfaces-ios-xe-oper:interfaces/interface/statistics
  source-address 192.0.2.11
  stream yang-push
  update-policy periodic 1000
- receiver ip address 192.0.2.100 57500 protocol grpc-tcp
+ receiver ip address 192.0.2.100 57500 protocol grpc-tls profile COLLECTOR-CA
 ```
 
 - `filter xpath`：**どのデータを購読するか**（YANG の XPath）。
 - `update-policy periodic 1000`：周期（単位は 1/100 秒＝10 秒）。
-- `receiver`：送信先コレクタのアドレスとポート。
+- `receiver`：送信先コレクタのアドレスとポート。`grpc-tls` と `profile`（上で作成したトラストポイント名）で **TLS 暗号化とコレクタ証明書の検証** を行う。`protocol grpc-tcp` は **平文（暗号化なし）** のため、閉じたラボ環境以外では使わない。
 
 #### ベストプラクティス
+
 - **必要な XPath だけ**を購読し、頻度を適切にする（収集・保存コストが跳ね上がる）。
 - 状態は **on-change**、カウンタは **periodic** と使い分ける。
 - gRPC は **TLS を有効化**して通信を保護する。
@@ -1186,6 +1228,7 @@ logger.info(json.dumps({"event": "deploy_start", "device": "sw01", "change_id": 
 ```
 
 #### ベストプラクティス
+
 - **構造化ログ（JSON）** にして、機器名・変更 ID・実行者などの **相関 ID** を入れる（検索・集計が容易）。
 - **秘密情報（パスワード、トークン、SNMP コミュニティ）は絶対にログに出さない**（マスキング）。
 - 通知は **ERROR 以上に限定**し、通知疲れを防ぐ。通知失敗で本処理を止めない。
@@ -1235,6 +1278,7 @@ flowchart TD
 ### 5.4 【3.4】pyATS で変更を検証する
 
 #### pyATS / Genie とは
+
 Cisco 提供の **テスト自動化フレームワーク（pyATS）** と、機器の **状態の取得・パース・比較ライブラリ（Genie）**。変更前後の状態を構造化データで取得し、**差分で評価**できます。
 
 #### testbed.yaml の例
@@ -1285,6 +1329,7 @@ pyats parse "show ip route" --testbed-file testbed.yaml     # 1 コマンドを�
 | `run job` | テストスクリプトをジョブとして実行し、結果をレポート化 |
 
 #### ベストプラクティス
+
 - 「**期待する変更だけが起きた**こと」と「**無関係な部分が壊れていない**こと」を両方確認。
 - 変更前スナップショットを **アーティファクトとして保存**（監査・ロールバックの根拠）。
 - 収束に時間がかかる機能（OSPF/BGP）は、**収束待ち（リトライ・待機）**を入れてから比較。
@@ -1295,6 +1340,7 @@ pyats parse "show ip route" --testbed-file testbed.yaml     # 1 コマンドを�
 ### 5.5 【3.5】CA 署名付き TLS 証明書を取得し、Cisco 製品に適用する
 
 #### なぜ自己署名ではなく CA 署名か
+
 自己署名証明書は**既定ではクライアントに信頼されず**、警告を無視する運用（`verify=False`）を招きがちです（クライアントに明示的にインストールするなどしてトラストアンカーとして設定すれば検証は可能ですが、配布・更新・失効の管理が個別作業になります）。**信頼された CA（社内 CA を含む）の署名**があれば、中間者攻撃を防ぎつつ検証を有効にできます。
 
 ```mermaid
@@ -1335,6 +1381,7 @@ openssl req -in sw01.csr -noout -text
 | 中間 CA / チェーン | ルート CA → 中間 CA → サーバー証明書の信頼の連鎖。**チェーン不足**は検証失敗の典型原因 |
 
 #### IOS XE での適用イメージ（概念）
+
 `crypto pki trustpoint` を作成 → CA 証明書の認証 → サーバー証明書のインポート → `ip http secure-trustpoint <名前>` で HTTPS サーバー（RESTCONF など）に割り当て。ISE 等は管理 GUI で「Trusted Certificates に CA を追加 → システム証明書をバインドし、用途（Admin など）を指定」します。具体的な操作は製品・バージョンで異なるため、各製品ガイドで確認してください。
 
 #### 自動化クライアント側
@@ -1344,6 +1391,7 @@ requests.get(url, verify="/etc/ssl/certs/corp-ca-chain.pem", timeout=10)   # 社
 ```
 
 #### ベストプラクティス
+
 - **SAN を正しく設定**（FQDN / IP）。
 - **秘密鍵は安全な場所に保管**し、CSR は機器内生成を優先できるなら優先する。
 - **有効期限を監視**し、更新を自動化（ACME 対応 CA、社内 PKI の自動発行）。
@@ -1397,12 +1445,13 @@ vlan = validate_vlan(user_input)
 requests.get(
     url,
     auth=(os.environ["NET_USER"], os.environ["NET_PASS"]),
-    verify=os.environ["CA_BUNDLE"],
+    verify=os.environ.get("CA_BUNDLE") or True,   # 空文字で検証が無効にならないよう True にフォールバック
     timeout=10,
 )
 ```
 
 #### ベストプラクティス（運用に組み込む）
+
 - **pre-commit** に `gitleaks` 等のシークレット検出を入れる。
 - 依存ライブラリは定期的に更新・監査（CI で `pip-audit`）。
 - **OWASP Top 10 / Cheat Sheet Series** を設計レビューの基準にする。
@@ -1410,6 +1459,7 @@ requests.get(
 - 監査のため、**誰が・いつ・何を変更したか**を記録する。
 
 ---
+
 ## 6. AUTOCOR ドメイン 4：AI in Automation（20%）
 
 v2.0 で新設された領域です。**AI をネットワーク自動化に安全に取り入れる**ための知識を問います。
@@ -1477,6 +1527,7 @@ flowchart TD
 ### 6.3 【4.3】MCP サーバーを構築して、自動化ツールを AI に公開する
 
 #### MCP（Model Context Protocol）とは
+
 AI アプリ（クライアント）が**外部のツールやデータに接続するためのオープンな標準プロトコル**です。MCP サーバーが機能を公開します。
 
 | 概念 | 意味 | 例 |
@@ -1514,7 +1565,7 @@ from fastmcp import FastMCP
 mcp = FastMCP("Network Info (read-only)")
 
 ALLOWED_HOSTS = {"sw01", "sw02"}          # 許可リスト（SoT から生成してもよい）
-CA = os.environ["CA_BUNDLE"]
+CA = os.environ.get("CA_BUNDLE") or True   # 空文字で検証が無効にならないよう True にフォールバック
 
 
 @mcp.tool
@@ -1545,6 +1596,7 @@ if __name__ == "__main__":
 > 上記は構造理解用の例です。FastMCP のバージョンで API が変わる場合があるため、公式ドキュメントで確認してください。
 
 #### ベストプラクティス
+
 - **最初は読み取り専用ツールだけ**を公開し、変更系は別サーバー／別承認フローにする。
 - ツール名・docstring・引数型を**明確に**書く（LLM が正しく選べる）。
 - 引数は**検証**（許可リスト、型、範囲）。**任意コマンド実行ツールは作らない**。
@@ -1607,6 +1659,7 @@ for call in resp.message.tool_calls or []:
 （ライブラリの仕様・対応モデルは公式ドキュメントで確認。ここでは「ツール呼び出し → 検証 → 結果を戻す」というループの構造理解が目的です。）
 
 #### ベストプラクティス
+
 - **根拠となるツール結果**を回答に含めさせる（幻覚の検出が容易）。
 - 機器の情報を**プロンプトに丸ごと入れない**（最小限・要約・マスキング）。
 - 変更系は **「提案 → 差分表示 → 人が承認 → 実行 → 検証」** の順を固定する。
@@ -1698,6 +1751,7 @@ flowchart LR
 | ISE | developer.cisco.com/docs/identity-services-engine |
 
 ---
+
 ## 8. コンセントレーション試験（ENAUTO / DCNAUTO）
 
 コア試験に加え、**専門分野の試験を 1 つ**選びます。Cisco 公式の CCNP Automation ページに現在掲載されているのは次の 2 種です。
@@ -1742,7 +1796,7 @@ import os
 import requests
 
 DNAC = "https://catalyst-center.example.com"
-CA = os.environ["CA_BUNDLE"]
+CA = os.environ.get("CA_BUNDLE") or True   # 空文字で検証が無効にならないよう True にフォールバック
 
 # 1. トークン取得
 r = requests.post(
