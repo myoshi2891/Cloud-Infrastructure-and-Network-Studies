@@ -1597,6 +1597,7 @@ Globals:
 Resources:
   OrdersTable:
     Type: AWS::Serverless::SimpleTable
+    DeletionPolicy: Retain              # スタック削除時もテーブルとデータを残す
     Properties:
       PrimaryKey:
         Name: orderId
@@ -1621,14 +1622,20 @@ Resources:
           Properties:
             Path: /orders
             Method: post
+            Auth:
+              Authorizer: AWS_IAM       # SigV4 署名付きリクエストのみ許可（匿名アクセス不可）
 
 Outputs:
   ApiUrl:
-    Description: Invoke URL
+    Description: Invoke URL (IAM 認証必須。execute-api:Invoke 権限を持つ署名付きリクエストのみ)
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/orders"
 ```
 
 > SAM の `Events: Type: Api` を使うと、暗黙的な REST API（`ServerlessRestApi`）が作られ、既定のステージ名は `Prod` になります。ステージ名を指定したい場合は、前の Step のように `AWS::Serverless::Api` を明示的に定義します。
+>
+> `Auth: Authorizer: AWS_IAM` により、この URL は **`execute-api:Invoke` 権限を持つ IAM プリンシパルの SigV4 署名付きリクエストでしか呼べません**（エンドユーザー向けなら Cognito オーソライザーや Lambda オーソライザーを使います）。認証なしの公開 API にはしないでください。
+>
+> `DeletionPolicy: Retain` を付けたテーブルは、`sam delete` でスタックを削除しても **DynamoDB テーブルとデータが残ります**。不要になったら、データの退避を確認したうえで **テーブルを手動で削除** してください（残したままだと課金が続き、同名テーブルの再作成も失敗します）。
 
 ### 15.6 デプロイの手順（SAM）
 
