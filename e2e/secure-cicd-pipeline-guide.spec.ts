@@ -30,7 +30,14 @@ for (const width of [1440, 390]) {
         await expect(page).toHaveURL(/#task3$/);
         await expect(page.locator('#task3')).toBeFocused();
         await expect(page.locator('.sidebar a[href="#task3"]')).toHaveAttribute('aria-current','location');
-        await expect.poll(async()=>page.locator('#task3').evaluate(el=>el.getBoundingClientRect().top)).toBeGreaterThan(80);
+        // スクロール完了（2 フレーム間で位置不変）を待ち、scroll-margin 境界以下かつ viewport 内にあることを検証
+        await expect.poll(async()=>page.locator('#task3').evaluate(async el=>{
+            const before=el.getBoundingClientRect().top;
+            await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+            const top=el.getBoundingClientRect().top;
+            const margin=parseFloat(getComputedStyle(el).scrollMarginTop)||0;
+            return Math.abs(top-before)<1 && top>=margin-1 && top<innerHeight;
+        })).toBe(true);
         expect(errors).toEqual([]);
     });
 }
