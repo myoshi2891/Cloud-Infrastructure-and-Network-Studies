@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DVA-C02 Domain 1 学習ガイド</title>
+<!-- 依存はすべて CDN。ビルド不要で、このファイルをそのままブラウザで開けます -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+JP:wght@400;500;700&display=swap">
+<style>
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;font-family:"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",sans-serif;background:#f7f8fa;color:#14161a;font-size:1rem;line-height:1.85;overflow-wrap:break-word}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+.rich b{font-weight:700;color:#0b0d11;background:linear-gradient(transparent 62%,#ffe3d6 62%)}
+.rich code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:1rem;background:#eceff3;color:#a8310a;padding:1px 6px}
+/* 図解: 左端が切れる不具合の修正点
+   旧: justify-content:center のまま overflow-x:auto → 溢れた分が左側へはみ出し、スクロールでも到達不能
+   新: コンテナは flex-start + svg に margin-inline:auto → 余白がある時だけ中央寄せ、溢れる時は左端から見える */
+.dg{display:flex;justify-content:flex-start;overflow-x:auto;min-width:0;padding:16px}
+.dg>*{min-width:0}
+.dg svg{margin-inline:auto;flex-shrink:0;max-width:none}
+.mermaidTooltip{font-size:1rem!important}
+</style>
+</head>
+<body>
+<div class="lg:grid lg:grid-cols-[272px_1fr]">
+  <aside id="aside" class="hidden border-r border-[#e1e5ea] bg-white lg:block"></aside>
+  <main class="min-w-0">
+    <div id="topbar" class="sticky top-0 z-10 flex items-center gap-3 border-b border-[#e1e5ea] bg-white/95 px-4 py-2 lg:hidden"></div>
+    <header id="overview" data-spy="overview" class="border-b border-[#e1e5ea] bg-white px-5 pb-10 pt-12 sm:px-10 lg:px-14"></header>
+    <div id="controls" class="flex flex-wrap items-center gap-3 px-5 pt-8 sm:px-10 lg:px-14"></div>
+    <div id="body" class="px-5 pb-16 sm:px-10 lg:px-14"></div>
+  </main>
+</div>
+
+<script>
+/* ===== データ(内容は旧版と同一) ===== */
+const D = {
+ "overview": [
+  [
+   "試験時間 / 問題数",
+   "130 分 / スコア対象 50 問 + 採点対象外 15 問(見分け不可)"
+  ],
+  [
+   "合格ライン",
+   "720 / 1,000(補償型採点。分野ごとの足切りなし)"
+  ],
+  [
+   "配点",
+   "<b>Domain 1: 32%</b> / Domain 2 Security: 26% / Domain 3 Deployment: 24% / Domain 4 Troubleshooting: 18%"
+  ],
+  [
+   "出題されない作業",
+   "アーキテクチャ設計、CI/CD パイプライン設計、IAM 管理、サーバー/OS 管理、VPC などのネットワーク設計"
+  ]
+ ],
+ "tasks": [
+  {
+   "key": "task1",
+   "title": "Task 1: Develop code for applications hosted on AWS(13 スキル)",
+   "skills": [
+    {
+     "id": "1.1.1",
+     "name": "アーキテクチャパターン",
+     "point": "モノリス=1 つに集約、マイクロサービス=機能別に分割、イベント駆動=イベントを合図に処理、<b>コレオグラフィ</b>=各サービスが自律反応(EventBridge/SNS)、<b>オーケストレーション</b>=指揮者が制御(Step Functions)、<b>ファンアウト</b>=1 件を複数宛先へ(SNS→SQS)",
+     "bp": "順序・分岐・補償が重要なら Step Functions。1 イベントを複数へ配るなら SNS(SQS 単体はファンアウトにならない)"
+    },
+    {
+     "id": "1.1.2",
+     "name": "ステートフル / ステートレス",
+     "point": "状態をアプリ内に持つか、外部に出すか",
+     "bp": "セッションは ElastiCache / DynamoDB へ。Lambda の <code>/tmp</code> は永続領域ではない。スティッキーセッションは完全解ではない"
+    },
+    {
+     "id": "1.1.3",
+     "name": "密結合 / 疎結合",
+     "point": "直接呼び出し vs キュー・トピック・イベントバスを挟む",
+     "bp": "SQS でバッファし、受け側は冪等に。DLQ を設定"
+    },
+    {
+     "id": "1.1.4",
+     "name": "同期 / 非同期",
+     "point": "結果を待つか待たないか。Lambda は同期(<code>RequestResponse</code>)・非同期(<code>Event</code>)・イベントソースマッピング(ポーリング)の 3 系統",
+     "bp": "同期のエラーは呼び出し元が再試行。非同期は<b>関数エラーを最大 2 回</b>自動再試行(スロットリング等はイベント最大保持時間まで)。API Gateway 統合タイムアウトは既定 29 秒"
+    },
+    {
+     "id": "1.1.5",
+     "name": "耐障害性コード",
+     "point": "タイムアウト・リトライ・冪等性・隔離(DLQ)・縮退運転",
+     "bp": "リトライは<b>指数バックオフ + ジッター</b>。SDK の標準リトライ(standard / adaptive)をまず使う。400 系は再試行しない"
+    },
+    {
+     "id": "1.1.6",
+     "name": "API の作成・保守",
+     "point": "API Gateway(REST / HTTP / WebSocket)。非プロキシ統合でマッピングテンプレート(VTL)による変換、リクエストバリデーター(JSON Schema モデル)、統合レスポンスでステータス上書き",
+     "bp": "不正入力は Lambda 起動前に 400 で拒否。REST API は変更後にステージへ再デプロイ。プロキシ統合は変換不可"
+    },
+    {
+     "id": "1.1.7",
+     "name": "ユニットテストと SAM",
+     "point": "ロジックと AWS 呼び出しを分離しモック。SAM は <code>Transform: AWS::Serverless-2016-10-31</code> が目印",
+     "bp": "<code>sam local invoke</code>(1 回実行)、<code>start-api</code>(ローカル API)、<code>generate-event</code>(サンプルイベント)。Docker が必要"
+    },
+    {
+     "id": "1.1.8",
+     "name": "メッセージング",
+     "point": "SQS=キュー(1 コンシューマー)、SNS=Pub/Sub。標準=順序ベストエフォート・少なくとも 1 回、FIFO=グループ内で厳密順序・5 分の重複排除",
+     "bp": "可視性タイムアウト 既定 30 秒・最大 12 時間 / ロングポーリング最大 20 秒 / 保持 既定 4 日・最大 14 日 / サイズ最大 1 MiB / バッチ最大 10 件。Lambda の失敗は <code>batchItemFailures</code>(部分バッチ応答)。DLQ は SQS 側に設定"
+    },
+    {
+     "id": "1.1.9",
+     "name": "API・SDK 利用",
+     "point": "SDK/CLI は SigV4 署名で API を呼ぶ。認証情報はプロバイダーチェーンで探索",
+     "bp": "キーをコードに書かず IAM ロールを使う。ページネーション(Paginator)、クライアントはハンドラー外で再利用、大きなファイルは署名付き URL / マルチパート"
+    },
+    {
+     "id": "1.1.10",
+     "name": "ストリーミング",
+     "point": "Kinesis Data Streams(シャード: 書き込み 1 MB/秒または 1,000 件/秒、読み取り 2 MB/秒)、Firehose(S3 等へ自動配信)、Flink、MSK",
+     "bp": "パーティションキーは高カーディナリティに。複数コンシューマーは拡張ファンアウト。<code>IteratorAge</code> を監視。Kinesis は保持期間内なら再読み取り可(SQS は消える)"
+    },
+    {
+     "id": "1.1.11",
+     "name": "Amazon Q Developer",
+     "point": "生成 AI のコーディング支援(インライン提案、チャット、エージェント、セキュリティスキャン)",
+     "bp": "生成コードは必ずレビュー・テスト、機密情報は貼らない。※IDE プラグインは 2027-04-30 にサポート終了予定で後継は Kiro と案内あり。最新状況は公式で確認"
+    },
+    {
+     "id": "1.1.12",
+     "name": "EventBridge",
+     "point": "イベントバス + ルール(イベントパターン)+ ターゲット。Scheduler、Pipes、アーカイブ/リプレイ、API 送信先",
+     "bp": "配信は少なくとも 1 回なので冪等に。ターゲットごとに DLQ と再試行ポリシー。SaaS イベントはパートナーイベントソース"
+    },
+    {
+     "id": "1.1.13",
+     "name": "サードパーティ連携の回復性",
+     "point": "タイムアウト + リトライ + <b>サーキットブレーカー</b>(Closed→Open→Half-Open)+ フォールバック",
+     "bp": "429 は <code>Retry-After</code> とバックオフ。非冪等な呼び出しは冪等キー。API キーは Secrets Manager"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "key": "task2",
+   "title": "Task 2: Develop code for AWS Lambda(7 スキル)",
+   "skills": [
+    {
+     "id": "1.2.1",
+     "name": "VPC 内リソースへのアクセス",
+     "point": "関数に VPC のサブネットとセキュリティグループを設定すると VPC 内の RDS 等へ届く",
+     "bp": "VPC 内の関数はそのままではインターネットへ出られない。NAT ゲートウェイか VPC エンドポイントを使う。RDS には RDS Proxy で接続をプール"
+    },
+    {
+     "id": "1.2.2",
+     "name": "設定",
+     "point": "メモリ 128〜10,240 MB(CPU は比例)、タイムアウト最大 900 秒、環境変数、ハンドラー、レイヤー(最大 5)、拡張機能、トリガー、Destinations、予約/プロビジョンド同時実行",
+     "bp": "機密値は環境変数に平文で置かず Secrets Manager / Parameter Store。バージョンとエイリアスで安全に切り替え"
+    },
+    {
+     "id": "1.2.3",
+     "name": "イベントライフサイクルとエラー",
+     "point": "非同期は <b>Destinations(OnSuccess / OnFailure)</b> または DLQ(SQS / SNS)。ポーリング系は各ソース側の設定",
+     "bp": "Destinations の方が情報が多く推奨。SQS トリガーの DLQ は<b>キュー側</b>。ストリームは BisectBatchOnFunctionError と OnFailure 送信先"
+    },
+    {
+     "id": "1.2.4",
+     "name": "テスト",
+     "point": "ユニットテスト、<code>sam local</code>、コンソールのテストイベント、クラウド上の統合テスト",
+     "bp": "エイリアスの重み付けでカナリア切り替え"
+    },
+    {
+     "id": "1.2.5",
+     "name": "AWS サービス統合",
+     "point": "API Gateway / ALB / Function URL(同期)、S3 / SNS / EventBridge(非同期)、SQS / Kinesis / DynamoDB Streams(ポーリング)",
+     "bp": "呼び出しタイプごとの再試行の違いを区別する(Step 4 参照)"
+    },
+    {
+     "id": "1.2.6",
+     "name": "パフォーマンスチューニング",
+     "point": "メモリ増=CPU 増。コールドスタート対策は Provisioned Concurrency / SnapStart",
+     "bp": "SDK クライアントや接続は<b>ハンドラー外</b>(初期化フェーズ)で作成。パッケージを小さく。arm64(Graviton)も選択肢。Power Tuning で最適メモリを測定"
+    },
+    {
+     "id": "1.2.7",
+     "name": "ほぼリアルタイムのデータ処理",
+     "point": "Kinesis / DynamoDB Streams / SQS をトリガーにバッチ処理。イベントフィルタ、タンブリングウィンドウ",
+     "bp": "処理は冪等に。<code>IteratorAge</code> と部分バッチ応答を活用"
+    }
+   ],
+   "note": "<b>主要上限(確認済み)</b>: 同期ペイロード 6 MB / 非同期ペイロード 1 MB / タイムアウト 900 秒 / メモリ 128〜10,240 MB。新規アカウントは同時実行・メモリのクォータが低く設定されることがあります。"
+  },
+  {
+   "key": "task3",
+   "title": "Task 3: Use data stores in application development(9 スキル)",
+   "skills": [
+    {
+     "id": "1.3.1",
+     "name": "高カーディナリティのパーティションキー",
+     "point": "値の種類が多いキーでデータとアクセスを分散",
+     "bp": "ホットパーティション(偏り)を避ける。例: ユーザー ID は良く、日付だけは悪い"
+    },
+    {
+     "id": "1.3.2",
+     "name": "一貫性モデル",
+     "point": "DynamoDB の読み取りは既定で結果整合性。<code>ConsistentRead</code> で強い整合性(RCU は 2 倍)",
+     "bp": "GSI は強い整合性を選べない。S3 は強い読み取り後書き込み整合性"
+    },
+    {
+     "id": "1.3.3",
+     "name": "Query と Scan",
+     "point": "Query=パーティションキーで対象を絞る。Scan=テーブル全体を読む",
+     "bp": "基本は Query。フィルター式は読んだ後に適用されるので消費容量は減らない。1 回の応答は最大 1 MB でページネーション"
+    },
+    {
+     "id": "1.3.4",
+     "name": "DynamoDB のキーとインデックス",
+     "point": "パーティションキー(+ソートキー)。LSI=同じパーティションキーで別ソートキー(<b>テーブル作成時のみ</b>)。GSI=別のキー体系(後から追加可、結果整合性、独自の容量)",
+     "bp": "条件付き書き込みで楽観ロック。容量計算: 1 RCU=4 KB の強い整合性読み取り 1 回/秒、1 WCU=1 KB 書き込み 1 回/秒。アイテム最大 400 KB"
+    },
+    {
+     "id": "1.3.5",
+     "name": "シリアライズ / デシリアライズ",
+     "point": "データを JSON などに変換して保存・復元。DynamoDB は型記述子(S, N, B, BOOL, L, M など)の形式",
+     "bp": "SDK の高レベルクライアントを使う。信頼できないデータを unsafe にデシリアライズしない。スキーマにバージョンを持たせる"
+    },
+    {
+     "id": "1.3.6",
+     "name": "データストアの利用・管理",
+     "point": "DynamoDB(オンデマンド / プロビジョンド、PITR バックアップ)、RDS / Aurora、S3",
+     "bp": "RDS は接続管理に RDS Proxy。S3 は署名付き URL、バージョニング、マルチパート"
+    },
+    {
+     "id": "1.3.7",
+     "name": "データライフサイクル",
+     "point": "S3 ライフサイクルルール、DynamoDB TTL、SQS 保持期間、ログ保持期間",
+     "bp": "TTL の削除は WCU を消費しない(エポック秒の属性を使用)。S3 は不要な古いバージョンや未完了マルチパートも削除ルールに含める"
+    },
+    {
+     "id": "1.3.8",
+     "name": "キャッシュ",
+     "point": "ElastiCache(Redis OSS / Valkey / Memcached)、DAX(DynamoDB 専用、API 互換)、API Gateway キャッシュ、CloudFront",
+     "bp": "遅延読み込み(cache-aside)と書き込み時更新(write-through)を使い分け。必ず TTL を設定。DAX は結果整合性の読み取り向き"
+    },
+    {
+     "id": "1.3.9",
+     "name": "特化型データストア",
+     "point": "全文検索 / ログ分析 / ベクトル検索=OpenSearch Service。グラフ=Neptune、時系列=Timestream、ドキュメント=DocumentDB など",
+     "bp": "アクセスパターンから選ぶ。DynamoDB は検索が苦手なので全文検索は OpenSearch を併用"
+    }
+   ],
+   "note": ""
+  }
+ ],
+ "traps": [
+  [
+   "SQS と SNS",
+   "SQS=1 件を 1 コンシューマーが処理(pull)/ SNS=全購読者へ配信(push)。両者の組み合わせがファンアウト"
+  ],
+  [
+   "SQS と Kinesis",
+   "SQS は消費すると消える / Kinesis は保持期間内なら再読み取り可能・キー単位で順序保持"
+  ],
+  [
+   "Kinesis Data Streams と Firehose",
+   "自前のコンシューマーでリアルタイム処理 / コード不要で S3 等へほぼリアルタイム配信"
+  ],
+  [
+   "Step Functions と EventBridge",
+   "指揮者が順序制御 / イベントパターンで振り分け"
+  ],
+  [
+   "LSI と GSI",
+   "LSI=作成時のみ・同じパーティションキー・強い整合性可 / GSI=後から追加可・別キー・結果整合性のみ"
+  ],
+  [
+   "Query と Scan",
+   "キー指定で効率的 / 全件読み取りで高コスト"
+  ],
+  [
+   "Lambda DLQ と Destinations",
+   "DLQ は SQS / SNS のみ・失敗時のみ / Destinations は成功/失敗の両方・送信先が多彩"
+  ],
+  [
+   "Lambda プロキシと非プロキシ(API Gateway)",
+   "プロキシ=Lambda が全て制御、API Gateway は変換しない / 非プロキシ=VTL で変換、ステータス上書き可"
+  ]
+ ],
+ "refs": [
+  {
+   "label": "認定ページ",
+   "url": "https://aws.amazon.com/certification/certified-developer-associate/"
+  },
+  {
+   "label": "試験ガイド",
+   "url": "https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html"
+  },
+  {
+   "label": "Domain 1(スキル一覧)",
+   "url": "https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain1.html"
+  },
+  {
+   "label": "Lambda クォータ",
+   "url": "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+  },
+  {
+   "label": "Lambda 非同期呼び出し",
+   "url": "https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html"
+  },
+  {
+   "label": "Lambda と SQS",
+   "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html"
+  },
+  {
+   "label": "Lambda と Kinesis",
+   "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html"
+  },
+  {
+   "label": "SQS メッセージのクォータ",
+   "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/quotas-messages.html"
+  },
+  {
+   "label": "SQS 可視性タイムアウト",
+   "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html"
+  },
+  {
+   "label": "SNS ファンアウト",
+   "url": "https://docs.aws.amazon.com/sns/latest/dg/sns-common-scenarios.html"
+  },
+  {
+   "label": "EventBridge",
+   "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html"
+  },
+  {
+   "label": "Kinesis Data Streams",
+   "url": "https://docs.aws.amazon.com/streams/latest/dev/introduction.html"
+  },
+  {
+   "label": "API Gateway",
+   "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html"
+  },
+  {
+   "label": "AWS SAM",
+   "url": "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html"
+  },
+  {
+   "label": "タイムアウト・リトライ・ジッター",
+   "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+  },
+  {
+   "label": "SDK のリトライ動作",
+   "url": "https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html"
+  },
+  {
+   "label": "サーキットブレーカー",
+   "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/circuit-breaker.html"
+  },
+  {
+   "label": "Amazon Q Developer(IDE)",
+   "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-in-IDE.html"
+  },
+  {
+   "label": "DynamoDB パーティションキー設計",
+   "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html"
+  },
+  {
+   "label": "DynamoDB 読み取り整合性",
+   "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html"
+  },
+  {
+   "label": "DynamoDB セカンダリインデックス",
+   "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html"
+  },
+  {
+   "label": "DynamoDB TTL",
+   "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html"
+  },
+  {
+   "label": "ElastiCache キャッシュ戦略",
+   "url": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html"
+  },
+  {
+   "label": "S3 ライフサイクル",
+   "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html"
+  },
+  {
+   "label": "OpenSearch Service",
+   "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html"
+  }
+ ]
+};
+const DIAGRAMS = {
+d0: `flowchart LR
+    A["Task 1 アプリ開発の基礎"] --> B["Task 2 Lambda"]
+    B --> C["Task 3 データストア"]
+    A --> A1["同期 非同期 疎結合"]
+    A --> A2["SQS SNS Kinesis EventBridge"]
+    B --> B1["設定 エラー処理 チューニング"]
+    C --> C1["DynamoDB キー 一貫性 キャッシュ"]`,
+d1: `flowchart TD
+    S["Lambda をどう呼ぶか"] --> Q{"結果をすぐ返す必要があるか"}
+    Q -->|"はい"| Y["同期 API Gateway ALB SDK Invoke"]
+    Q -->|"いいえ"| N{"呼び出し元の種類"}
+    N -->|"S3 SNS EventBridge"| AS["非同期 関数エラーは最大2回再試行"]
+    N -->|"SQS Kinesis DynamoDB Streams"| ES["イベントソースマッピング ポーリング"]
+    AS --> F["失敗は Destinations か DLQ へ"]
+    ES --> F2["SQS はキュー側 DLQ ストリームは OnFailure 送信先"]`,
+d2: `flowchart TD
+    R["DynamoDB でデータを読む"] --> K{"パーティションキーを指定できるか"}
+    K -->|"はい"| QU["Query"]
+    K -->|"いいえ"| I{"別のキーで検索したいか"}
+    I -->|"はい"| GS["GSI を追加して Query"]
+    I -->|"いいえ"| SC["Scan 全件読み取りなので最終手段"]
+    QU --> C{"最新値が必須か"}
+    C -->|"はい"| SCR["ConsistentRead true"]
+    C -->|"いいえ"| EC["結果整合性 既定で低コスト"]`
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+<script>
+const R = h => `<span class="rich">${h}</span>`;
+const fig = (id, cap) => `<figure class="my-8 border-y border-[#d9dde4] bg-white"><div class="mono px-4 pt-3 text-base tracking-wide text-[#6a7280]">FIG. ${cap}</div><div class="dg" id="dg-${id}">図を描画中…</div></figure>`;
+const ids = D.tasks.flatMap(t => t.skills.map(s => s.id));
+const st = { done: new Set(), q: '', tab: 'all' };
+const strip = h => h.replace(/<[^>]+>/g, '').toLowerCase();
+
+/* ---- 静的な骨組み(一度だけ描画。図はここに置くので再描画で消えない) ---- */
+document.getElementById('overview').innerHTML = `
+  <div class="mono text-base tracking-widest text-[#6a7280]">AWS CERTIFIED DEVELOPER - ASSOCIATE</div>
+  <div class="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2">
+    <div class="mono text-[5.5rem] font-semibold leading-none text-[#d4400f] sm:text-[8rem]">32<span class="text-[3rem] sm:text-[4.5rem]">%</span></div>
+    <h1 class="max-w-xl pb-2 text-2xl font-bold leading-snug sm:text-3xl">Development with AWS Services<br><span class="text-xl font-medium text-[#5b6270]">全 29 スキルを初学者向けに整理</span></h1>
+  </div>
+  <dl class="mt-10 grid max-w-4xl border-t border-[#14161a] sm:grid-cols-2">
+    ${D.overview.map(([k, v]) => `<div class="border-b border-[#e1e5ea] py-3 sm:pr-8"><dt class="text-base font-bold text-[#6a7280]">${k}</dt><dd class="mt-0.5">${R(v)}</dd></div>`).join('')}
+  </dl>
+  <p class="mt-6 max-w-3xl text-[#3d4452]">問われるのは「設計」より「サービスを選んで正しく実装・設定できるか」です。数値は更新されることがあるため、受験前に公式のクォータページで再確認してください。</p>
+  ${fig('d0', '1 — Domain 1 の構成')}`;
+
+const nav = [['overview', '試験の全体像'], ...D.tasks.map(t => [t.key, t.title.split(':')[0]]), ['traps', '比較表'], ['refs', '参考 URL']];
+document.getElementById('aside').innerHTML = `
+  <div class="sticky top-0 flex h-screen flex-col overflow-y-auto p-6">
+    <div class="mono text-base font-semibold tracking-widest text-[#d4400f]">DVA-C02</div>
+    <div class="mt-1 text-lg font-bold leading-snug">Domain 1<br>Development with AWS Services</div>
+    <div class="mt-6"><div class="flex items-end justify-between"><span class="text-base text-[#6a7280]">学習済み</span>
+      <span class="mono text-2xl font-semibold"><span class="cnt">0</span><span class="text-base text-[#6a7280]"> / ${ids.length}</span></span></div>
+      <div class="mt-2 h-1.5 bg-[#e8ebf0]"><div class="bar h-full bg-[#d4400f] transition-all" style="width:0%"></div></div></div>
+    <nav class="mt-8 space-y-1">${nav.map(([k, l]) => `<a data-nav="${k}" href="#${k}" class="block border-l-2 border-transparent py-1.5 pl-3 text-[#5b6270] hover:text-[#14161a]">${l}</a>`).join('')}</nav>
+  </div>`;
+document.getElementById('topbar').innerHTML = `<span class="mono text-base font-semibold text-[#d4400f]">DVA-C02</span><div class="h-1.5 flex-1 bg-[#e8ebf0]"><div class="bar h-full bg-[#d4400f]" style="width:0%"></div></div><span class="mono text-base"><span class="cnt">0</span>/${ids.length}</span>`;
+
+document.getElementById('controls').innerHTML = `
+  <div class="flex border border-[#14161a]">${[['all', 'すべて'], ...D.tasks.map(t => [t.key, 'Task ' + t.key.slice(-1)])]
+    .map(([k, l]) => `<button data-tab="${k}" class="px-4 py-1.5">${l}</button>`).join('')}</div>
+  <input id="q" placeholder="キーワードで絞り込み(例: SQS, 冪等)" class="min-w-[14rem] flex-1 border border-[#c9cfd8] bg-white px-3 py-1.5 outline-none focus:border-[#d4400f] sm:max-w-sm">`;
+
+document.getElementById('body').innerHTML =
+  D.tasks.map(t => `<section id="${t.key}" data-spy="${t.key}" data-task="${t.key}" class="pt-12">
+    <h2 class="text-2xl font-bold"><span class="mono mr-3 text-[#d4400f]">T${t.key.slice(-1)}</span>${t.title.replace(/^Task \d:\s*/, '')}</h2>
+    <div class="list mt-4 border-t-2 border-[#14161a]"></div>
+    ${t.note ? `<p class="mt-5 border-l-4 border-[#e8a317] bg-[#fff8e6] px-4 py-3">${R(t.note)}</p>` : ''}
+    ${t.key === 'task1' ? fig('d1', '2 — Lambda の呼び出しタイプ') : ''}${t.key === 'task3' ? fig('d2', '3 — DynamoDB の読み取り方法') : ''}
+  </section>`).join('') + `
+  <section id="traps" data-spy="traps" class="pt-14"><h2 class="text-2xl font-bold">試験直前: 頻出の比較</h2>
+    <div class="mt-4 border-t-2 border-[#14161a]">${D.traps.map(([a, b]) => `<div class="grid gap-x-8 gap-y-1 border-b border-[#dfe3e9] py-4 md:grid-cols-[16rem_1fr]"><div class="font-bold">${R(a)}</div><div class="text-[#2b3140]">${R(b)}</div></div>`).join('')}</div></section>
+  <section id="refs" data-spy="refs" class="pt-14"><h2 class="text-2xl font-bold">根拠となる公式ソース</h2>
+    <ol class="mt-4 border-t-2 border-[#14161a]">${D.refs.map((r, i) => `<li class="grid grid-cols-[2.5rem_1fr] gap-x-2 border-b border-[#dfe3e9] py-2.5"><span class="mono text-[#6a7280]">${String(i + 1).padStart(2, '0')}</span><div class="min-w-0"><div class="font-medium">${r.label}</div><a href="${r.url}" target="_blank" rel="noreferrer" class="mono break-all text-[#1d4ed8] underline-offset-2 hover:underline">${r.url}</a></div></li>`).join('')}</ol></section>
+  <p class="mt-14 text-base text-[#6a7280]">情報は公式ドキュメントを根拠にしていますが、受験前に最新情報を必ず確認してください。</p>`;
+
+/* ---- 状態で変わる部分だけを再描画 ---- */
+function render() {
+  const q = st.q.toLowerCase();
+  D.tasks.forEach(t => {
+    const sec = document.getElementById(t.key);
+    sec.style.display = (st.tab === 'all' || st.tab === t.key) ? '' : 'none';
+    const list = t.skills.filter(s => !q || strip(s.id + s.name + s.point + s.bp).includes(q));
+    sec.querySelector('.list').innerHTML = list.length ? list.map(s => `
+      <article class="grid gap-x-8 gap-y-3 border-b border-[#dfe3e9] py-6 md:grid-cols-[7.5rem_1fr_1fr] ${st.done.has(s.id) ? 'opacity-55' : ''}">
+        <div><div class="mono text-lg font-semibold text-[#d4400f]">${s.id}</div>
+          <label class="mt-2 flex cursor-pointer items-center gap-2 text-[#5b6270]"><input type="checkbox" data-done="${s.id}" ${st.done.has(s.id) ? 'checked' : ''} class="h-4 w-4 accent-[#d4400f]">学習済み</label></div>
+        <div><h3 class="text-lg font-bold leading-snug">${s.name}</h3><div class="mono mt-3 text-base tracking-wide text-[#6a7280]">要点</div><p class="mt-0.5">${R(s.point)}</p></div>
+        <div class="border-l-2 border-[#d4400f] bg-white py-3 pl-4 pr-3"><div class="mono text-base tracking-wide text-[#a8310a]">BEST PRACTICE / 試験の罠</div><p class="mt-1">${R(s.bp)}</p></div>
+      </article>`).join('') : '<p class="py-6 text-[#6a7280]">該当するスキルがありません。</p>';
+  });
+  document.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === st.tab; b.className = 'px-4 py-1.5 ' + (on ? 'bg-[#14161a] text-white' : 'bg-white hover:bg-[#eef0f3]'); });
+  const n = st.done.size;
+  document.querySelectorAll('.cnt').forEach(e => e.textContent = n);
+  document.querySelectorAll('.bar').forEach(e => e.style.width = Math.round(n / ids.length * 100) + '%');
+}
+document.addEventListener('change', e => { const id = e.target.dataset.done; if (id) { e.target.checked ? st.done.add(id) : st.done.delete(id); render(); } });
+document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { st.tab = b.dataset.tab; render(); } });
+document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; render(); });
+
+/* ---- 現在地ハイライト ---- */
+function spy() {
+  let cur = 'overview';
+  document.querySelectorAll('[data-spy]').forEach(e => { if (e.offsetParent !== null && e.getBoundingClientRect().top <= innerHeight * .3) cur = e.dataset.spy; });
+  document.querySelectorAll('[data-nav]').forEach(a => { const on = a.dataset.nav === cur; a.classList.toggle('border-[#d4400f]', on); a.classList.toggle('font-bold', on); a.classList.toggle('text-[#14161a]', on); });
+}
+addEventListener('scroll', spy, { passive: true });
+
+/* ---- Mermaid(CDN から取得した v11.12.0 でクライアント描画) ---- */
+async function drawDiagrams() {
+  mermaid.initialize({ startOnLoad: false, theme: 'base', securityLevel: 'loose',
+    flowchart: { useMaxWidth: false, htmlLabels: true, padding: 16 },
+    themeVariables: { fontSize: '16px', fontFamily: '"IBM Plex Sans JP","Hiragino Sans",sans-serif', primaryColor: '#ffffff', primaryTextColor: '#14161a', primaryBorderColor: '#14161a', lineColor: '#5b6270', secondaryColor: '#fff1e8', tertiaryColor: '#f6f7f9' } });
+  await document.fonts.ready;
+  for (const [id, src] of Object.entries(DIAGRAMS)) {
+    const host = document.getElementById('dg-' + id);
+    try {
+      const { svg } = await mermaid.render('m-' + id, src);
+      host.innerHTML = svg;
+      const s = host.querySelector('svg');
+      const [x, y, w, h] = s.getAttribute('viewBox').split(/\s+/).map(Number);
+      s.setAttribute('viewBox', `${x} ${y} ${w} ${h + 15}`);
+      s.removeAttribute('width'); s.removeAttribute('height');
+      Object.assign(s.style, { width: w + 'px', height: 'auto', maxWidth: 'none', flexShrink: '0', overflow: 'visible' });
+    } catch (err) { host.textContent = '図の描画に失敗しました: ' + err.message; }
+  }
+}
+render(); spy(); drawDiagrams();
+</script>
+</body>
+</html>
