@@ -1,6 +1,6 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-02
+Updated 2026-10-04
 
 このプロジェクトは、Google Cloud / AWS / Cisco / CompTIA のクラウド・ネットワーク資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』など）の解説を目的とした学習用 Next.js アプリケーションです。
 試験ガイド、重要ポイントの解説、およびテスト対策コンテンツを提供します。
@@ -70,6 +70,7 @@ Updated 2026-10-02
   - `/app/recommended-books/unix-linux-sysadmin-handbook`: 『UNIX and Linux System Administration Handbook』完全解説ガイド（Evi Nemeth et al. 原著、4パート・31章構成、基本管理・ネットワーキング・ストレージ・運用実践・セキュリティ、Mermaid 29図）。
   - `/app/recommended-books/systems-performance`: 『Systems Performance: Enterprise and the Cloud』実践ガイド（Brendan Gregg 原著、16章+付録構成、USE法・perf・eBPF・クラウド性能分析、Mermaid 18図）。
   - `/app/recommended-books/operating-systems-three-easy-pieces`: 『Operating Systems: Three Easy Pieces（OSTEP）』完全学習ガイド（Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau 原著、57章+付録構成、仮想化・並行性・永続性・セキュリティ・xv6、Mermaid 56図）。
+  - `/app/recommended-books/computer-networks-tanenbaum`: Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド。Serverルート、Client本文、NavBar、constants、page.cssの5ファイル構成。全10ステップ、21図、12表、10チェック項目、47アンカーを原本fixture・CSS全宣言照合で検証。
   - `/app/recommended-books/computer-networking-topdown`: 『Computer Networking: A Top-Down Approach』完全学習ガイド（James F. Kurose, Keith W. Ross 原著、全10部構成、アプリケーション層〜物理層、2026年最新動向、Mermaid 41図）。
   - `/app/recommended-books/high-performance-browser-networking`: 『High Performance Browser Networking』完全解説ガイド（Ilya Grigorik 原著、全5部18章構成、TCP/UDP/TLS/ワイヤレス/HTTP/ブラウザAPI、2026年最新動向、Mermaid 33図）。
   - `/app/recommended-books/kubernetes-in-action`: 『Kubernetes in Action, Second Edition』完全解説ガイド（Marko Lukša 原著、全6部18章+2026年最新動向、Mermaid 41図、テーブル15点、チェックリスト19点、参考文献27点）。

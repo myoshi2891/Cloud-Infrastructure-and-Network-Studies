@@ -30,6 +30,14 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'computer-networks-tanenbaum': {
+        source: 'Computer-networks-tanenbaum.html',
+        sourceCommit: '437f4d77',
+        textSelector: 'main h1, main h2, main h3, main p, main li, main th, main td, main .kicker, main .pill, main .ref-card',
+        tables: true,
+        supplementalSelector: '.callout-practice, .practice-label, .checklist-header .title',
+        inlineCode: true,
+    },
     'secure-cicd-pipeline-guide': {
         source: 'Secure-cicd-pipeline-guide.html',
         sourceCommit: '96f9488a8805139d10a5674dd5bbf7f2a49c839b',

@@ -938,6 +938,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Books',
     },
     {
+        id: 'computer-networks-tanenbaum',
+        label: 'Computer Networks (Tanenbaum & Wetherall)',
+        abbr: 'CNT',
+        level: 'Computer Networking',
+        score: '全10ステップ / 21図解',
+        color: 'card-computer-networking-topdown',
+        href: '/recommended-books/computer-networks-tanenbaum',
+        description:
+            'Tanenbaum & Wetherall著『Computer Networks』の学習順序に着想を得た入門ガイド。物理層からアプリケーション層、ネットワークセキュリティまで全10ステップで体系的に学びます。',
+        domains: [
+            {
+                label: '初学者向け学習ガイド',
+                href: '/recommended-books/computer-networks-tanenbaum',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
         id: 'computer-networking-topdown',
         label: 'Computer Networking: A Top-Down Approach',
         abbr: 'CNTD',
