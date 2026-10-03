@@ -23,7 +23,11 @@ export function snapshotTanenbaumStructure(root) {
     };
 }
 
-/** CSS宣言をメディア条件・順序・important指定を含めて原本から固定する。 */
+/**
+ * CSS宣言をメディア条件・順序・important指定を含めて原本から固定する。
+ * @param {string} source
+ * @returns {Array<{selector: string, media: string|null, declarations: Array<{prop: string, value: string, important: boolean}>}>}
+ */
 export function snapshotCssRules(source) {
     const rules = [];
     postcss.parse(source).walkRules(rule => {
