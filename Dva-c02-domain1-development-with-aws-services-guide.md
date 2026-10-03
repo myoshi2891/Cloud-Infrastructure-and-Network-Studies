@@ -759,14 +759,14 @@ def handler(event, context):
 
 ### 9-2. 認証情報の探索順(認証情報プロバイダーチェーン)
 
-SDK/CLI は、おおむね次の順で認証情報を探します(言語や設定で細部は異なります)。
+探索順は SDK・CLI ごとに異なります。次の図は **Python SDK(boto3)の公式ドキュメントに記載された順序** の例です(他の SDK では、共有ファイルと Web ID・SSO などの順序が入れ替わる場合があります)。
 
 ```mermaid
 flowchart TD
     A["コード内の明示指定"] --> B["環境変数"]
-    B --> C["共有認証情報 設定ファイルとプロファイル"]
-    C --> D["Web ID トークンや SSO"]
-    D --> E["コンテナ認証情報 ECS EKS"]
+    B --> D["Web ID トークンと IAM Identity Center SSO"]
+    D --> C["共有認証情報ファイルと設定ファイル"]
+    C --> E["コンテナ認証情報 ECS EKS"]
     E --> F["インスタンスプロファイル EC2"]
 ```
 
@@ -976,7 +976,7 @@ flowchart TD
 
 ### 11-2. 受験時の注意: 製品の移行状況
 
-公式ドキュメントには、**Amazon Q Developer の IDE プラグインのサポートが 2027 年 4 月 30 日に終了** し、同等の機能(エージェント型コーディング、チャット、MCP 対応)は **Kiro** を案内する旨の告知が出ています。試験ガイドの表記は「Use Amazon Q Developer to assist with development」のため、**考え方(AI 支援で開発を加速し、結果は必ず人間が検証する)** を押さえつつ、最新の製品名・提供状況は公式ドキュメントで確認してください。
+**2026 年 5 月 15 日以降、Amazon Q Developer の新規アカウント作成(無料枠)と新規サブスクリプション作成は受け付けられていません**(既存の Pro サブスクリプションへのユーザー追加は引き続き可能)。また公式ドキュメントには、**Amazon Q Developer の IDE プラグインのサポートが 2027 年 4 月 30 日に終了** し、同等の機能(エージェント型コーディング、チャット、MCP 対応)は **Kiro** を案内する旨の告知が出ています。試験ガイドの表記は「Use Amazon Q Developer to assist with development」のため、**考え方(AI 支援で開発を加速し、結果は必ず人間が検証する)** を押さえつつ、最新の製品名・提供状況は公式ドキュメントで確認してください。
 
 ### 11-3. 使い方のベストプラクティス
 
@@ -997,6 +997,8 @@ flowchart TD
 **出典**
 - Amazon Q Developer とは: https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html
 - IDE での Amazon Q Developer(サポート終了告知を含む): https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-in-IDE.html
+- Amazon Q Developer サポート終了の告知(新規受付停止を含む): https://aws.amazon.com/blogs/devops/amazon-q-developer-end-of-support-announcement/
+- boto3 の認証情報探索順: https://docs.aws.amazon.com/boto3/latest/guide/credentials.html
 - インライン提案: https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/inline-suggestions.html
 - 試験ガイド(Emerging topics): https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html
 
