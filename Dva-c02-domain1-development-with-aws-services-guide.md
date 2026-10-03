@@ -2,7 +2,7 @@
 # Domain 1: Development with AWS Services 完全ガイド(初学者向けステップバイステップ)
 
 > 対象: DVA-C02 の **Content Domain 1: Development with AWS Services**(スコア対象問題の **32%**)
-> 構成: Task 1(13 スキル) + Task 2(7 スキル) + Task 3(9 スキル) = **全 29 スキル**を 1 つずつ解説
+> 構成: 本ガイドは **Task 1(13 スキル)** を 1 つずつ解説します(Task 2: Lambda〔7 スキル〕と Task 3: データストア〔9 スキル〕は本ガイドの対象外)
 > 各 Step の末尾に **ベストプラクティス**、**試験のひっかけポイント**、**出典 URL** を付けています。
 > 情報の確認日: 2026-10-02(クォータや機能名は変わることがあります。受験前に必ず公式ドキュメントで再確認してください)
 
@@ -25,13 +25,6 @@
   - [Step 11. Amazon Q Developer による開発支援(Skill 1.1.11)](#step-11-amazon-q-developer-による開発支援skill-1111)
   - [Step 12. Amazon EventBridge によるイベント駆動(Skill 1.1.12)](#step-12-amazon-eventbridge-によるイベント駆動skill-1112)
   - [Step 13. サードパーティ連携の回復性(Skill 1.1.13)](#step-13-サードパーティ連携の回復性skill-1113)
-- [Task 2: Develop code for AWS Lambda](#task-2-develop-code-for-aws-lambda)
-  - [Step 14〜20(Skill 1.2.1〜1.2.7)](#step-14-lambda-から-vpc-内のプライベートリソースへアクセスskill-121)
-- [Task 3: Use data stores in application development](#task-3-use-data-stores-in-application-development)
-  - [Step 21〜29(Skill 1.3.1〜1.3.9)](#step-21-高カーディナリティなパーティションキーskill-131)
-- [付録 A. 試験直前の比較表](#付録-a-試験直前の比較表)
-- [付録 B. 学習の進め方と直前チェックリスト](#付録-b-学習の進め方と直前チェックリスト)
-- [付録 C. 参考 URL 一覧](#付録-c-参考-url-一覧)
 
 ---
 
@@ -388,7 +381,7 @@ import boto3
 from botocore.config import Config
 
 config = Config(
-    retries={"max_attempts": 5, "mode": "standard"},  # 総試行回数
+    retries={"total_max_attempts": 5, "mode": "standard"},  # 総試行回数(初回リクエストを含む)
     connect_timeout=3,
     read_timeout=10,
 )
