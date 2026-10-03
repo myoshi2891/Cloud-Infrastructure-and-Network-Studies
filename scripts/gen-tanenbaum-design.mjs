@@ -12,6 +12,7 @@ const fixture = {
     source: config.source, sourceCommit,
     structure: snapshotTanenbaumStructure(doc),
     diagrams: snapshotTanenbaumDiagrams(doc),
+    diagramPredecessors: [...doc.querySelectorAll('pre.mermaid')].map(el => el.previousElementSibling?.textContent?.replace(/\s+/g, ' ').trim()),
     rules: snapshotCssRules(doc.querySelector('style').textContent),
 };
 writeFileSync('docs/migration-inventory/computer-networks-tanenbaum.design.json', `${JSON.stringify(fixture, null, 2)}\n`);
