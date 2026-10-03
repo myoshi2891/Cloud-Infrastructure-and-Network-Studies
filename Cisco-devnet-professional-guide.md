@@ -591,7 +591,7 @@ def build_session(token: str) -> requests.Session:
     s = requests.Session()
     s.mount("https://", HTTPAdapter(max_retries=retry))
     s.headers.update({"Authorization": f"Bearer {token}", "Accept": "application/json"})
-    s.verify = os.environ.get("CA_BUNDLE", True)    # 検証は常に有効
+    s.verify = os.environ.get("CA_BUNDLE") or True  # 未設定・空文字は True（検証は常に有効）
     return s
 ```
 
@@ -901,6 +901,8 @@ services:
     image: postgres:16
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_pass
+    secrets:
+      - db_pass                     # /run/secrets/db_pass としてマウントされる
     volumes:
       - dbdata:/var/lib/postgresql/data
     networks: [backend]
@@ -915,6 +917,10 @@ networks:
 volumes:
   artifacts: {}
   dbdata: {}
+
+secrets:
+  db_pass:
+    file: ./secrets/db_pass.txt     # Git 管理外のファイルから読み込む
 ```
 
 読み方：`runner` と `db` は同じ `backend` ネットワーク上にあり、`runner` から `db:5432` で接続できる。`db` が healthy になってから `runner` が起動する。データは `dbdata` ボリュームに残る。
@@ -1289,7 +1295,7 @@ pyats parse "show ip route" --testbed-file testbed.yaml     # 1 コマンドを�
 ### 5.5 【3.5】CA 署名付き TLS 証明書を取得し、Cisco 製品に適用する
 
 #### なぜ自己署名ではなく CA 署名か
-自己署名証明書は**クライアントが検証できず**、警告を無視する運用（`verify=False`）を招きます。**信頼された CA（社内 CA を含む）の署名**があれば、中間者攻撃を防ぎつつ検証を有効にできます。
+自己署名証明書は**既定ではクライアントに信頼されず**、警告を無視する運用（`verify=False`）を招きがちです（クライアントに明示的にインストールするなどしてトラストアンカーとして設定すれば検証は可能ですが、配布・更新・失効の管理が個別作業になります）。**信頼された CA（社内 CA を含む）の署名**があれば、中間者攻撃を防ぎつつ検証を有効にできます。
 
 ```mermaid
 sequenceDiagram
@@ -1834,7 +1840,7 @@ Cisco 公式の試験ページでは、**データセンターのネットワー
 | ローカル Python（venv） | Netmiko / ncclient / pyATS / FastMCP の検証 | 実機・仮想機器が必要 |
 | **DevNet Sandbox**（Cisco 提供の共有環境） | 手軽に Catalyst Center や IOS XE を試せる | **提供状況が変動中**（下記） |
 
-> **DevNet Sandbox について**：Cisco は 2026 年 8 月にサンドボックスの再構築に伴う停止を告知し、公式ブログの更新（8 月 5 日付）で「長期停止ではなく短時間のメンテナンス枠に変更する」と説明しています。一方、コミュニティ上では 2027 年初の再開を目標とする情報も見られ、状況が流動的です。**共有環境だけに依存せず、CML とローカルコンテナで自前のラボを持つ**ことをお勧めします。最新情報は公式サイトで確認してください。
+> **DevNet Sandbox について**：Cisco は 2026 年 6 月 1 日（米国時間）の[公式ブログ](https://blogs.cisco.com/developer/devnet-sandbox-rebuild-future-developer-experiences)と[コミュニティ告知](https://community.cisco.com/t5/devnet-sandbox/a-new-chapter-for-devnet-sandbox/td-p/5556359)で、サンドボックス再構築のため 8 月 1 日から現行プラットフォームを一時停止する計画を発表しました。その後、同ブログの 8 月 5 日付の更新で「長期停止ではなく、短時間のメンテナンス枠を重ねて移行する」方針に変更されています。2027 年初（Q1CY27）は、**新しい Sandbox 体験の提供開始を目指す公式の目標時期**です。**共有環境だけに依存せず、CML とローカルコンテナで自前のラボを持つ**ことをお勧めします。最新情報は [developer.cisco.com](https://developer.cisco.com/) で確認してください。
 
 ### 9.3 無料・低コストで始める手順（例）
 
