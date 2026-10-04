@@ -621,6 +621,8 @@
 
     --color-theme-cli-bg: hsl(215 55% 40% / 0.25);
     --color-theme-cli-fg: hsl(215 90% 74%);
+    --color-theme-tcpip-illustrated-vol1-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-tcpip-illustrated-vol1-fg: hsl(220 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -816,6 +818,7 @@ body {
 .card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
 .card-kubernetes-in-action { --card-accent: var(--color-theme-kubernetes-in-action-fg); }
 .card-cli { --card-accent: var(--color-theme-cli-fg); }
+.card-tcpip-illustrated-vol1 { --card-accent: var(--color-theme-tcpip-illustrated-vol1-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -967,6 +970,11 @@ body {
 @utility icon-theme-cli {
     background: var(--color-theme-cli-bg);
     color: var(--color-theme-cli-fg);
+}
+
+@utility icon-theme-tcpip-illustrated-vol1 {
+    background: var(--color-theme-tcpip-illustrated-vol1-bg);
+    color: var(--color-theme-tcpip-illustrated-vol1-fg);
 }
 
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */

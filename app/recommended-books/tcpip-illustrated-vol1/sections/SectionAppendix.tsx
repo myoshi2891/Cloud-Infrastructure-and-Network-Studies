@@ -357,22 +357,22 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref1">
                         <div className="num">1</div>
                         <div className="txt">
-                            O'Reilly Media. "TCP/IP Illustrated, Volume 1: The Protocols, 2nd
-                            Edition" 書籍ページ.
+                            O&apos;Reilly Media. &quot;TCP/IP Illustrated, Volume 1: The Protocols, 2nd
+                            Edition&quot; 書籍ページ.
                             <a href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/">https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref2">
                         <div className="num">2</div>
                         <div className="txt">
-                            O'Reilly Media. 同書 目次（Contents）ページ.
+                            O&apos;Reilly Media. 同書 目次（Contents）ページ.
                             <a href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/toc.xhtml">https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/toc.xhtml</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref3">
                         <div className="num">3</div>
                         <div className="txt">
-                            IETF RFC Editor. "RFC 9293: Transmission Control Protocol (TCP)"
+                            IETF RFC Editor. &quot;RFC 9293: Transmission Control Protocol (TCP)&quot;
                             (2022年8月, STD 7).
                             <a href="https://www.rfc-editor.org/info/rfc9293/">https://www.rfc-editor.org/info/rfc9293/</a>
                         </div>
@@ -380,14 +380,14 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref4">
                         <div className="num">4</div>
                         <div className="txt">
-                            IETF Datatracker. "RFC 9293" 文書詳細ページ.
+                            IETF Datatracker. &quot;RFC 9293&quot; 文書詳細ページ.
                             <a href="https://datatracker.ietf.org/doc/rfc9293/">https://datatracker.ietf.org/doc/rfc9293/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref5">
                         <div className="num">5</div>
                         <div className="txt">
-                            IETF RFC Editor. "RFC 9438: CUBIC for Fast and Long-Distance Networks"
+                            IETF RFC Editor. &quot;RFC 9438: CUBIC for Fast and Long-Distance Networks&quot;
                             (2023年8月).
                             <a href="https://www.rfc-editor.org/info/rfc9438/">https://www.rfc-editor.org/info/rfc9438/</a>
                         </div>
@@ -395,15 +395,15 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref6">
                         <div className="num">6</div>
                         <div className="txt">
-                            Forasoft. "Congestion Control in Plain English: BBR, CUBIC, Copa, and
-                            Why It Matters".
+                            Forasoft. &quot;Congestion Control in Plain English: BBR, CUBIC, Copa, and
+                            Why It Matters&quot;.
                             <a href="https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa">https://www.forasoft.com/learn/video-streaming/articles-streaming/congestion-control-bbr-cubic-copa</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref7">
                         <div className="num">7</div>
                         <div className="txt">
-                            arXiv. "TCP ROCCET" 論文内
+                            arXiv. &quot;TCP ROCCET&quot; 論文内
                             BBRv3参照（Google公式GitHubリリースnoteを引用）.
                             <a href="https://arxiv.org/pdf/2510.25281">https://arxiv.org/pdf/2510.25281</a>
                         </div>
@@ -411,21 +411,21 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref8">
                         <div className="num">8</div>
                         <div className="txt">
-                            A10 Networks. "What is CGNAT? Carrier-Grade NAT Explained".
+                            A10 Networks. &quot;What is CGNAT? Carrier-Grade NAT Explained&quot;.
                             <a href="https://www.a10networks.com/glossary/what-is-carrier-grade-nat-cgn-cgnat/">https://www.a10networks.com/glossary/what-is-carrier-grade-nat-cgn-cgnat/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref9">
                         <div className="num">9</div>
                         <div className="txt">
-                            Wikipedia. "NAT64".
+                            Wikipedia. &quot;NAT64&quot;.
                             <a href="https://en.wikipedia.org/wiki/NAT64">https://en.wikipedia.org/wiki/NAT64</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref10">
                         <div className="num">10</div>
                         <div className="txt">
-                            APNIC Blog. "Towards an industry best practice for DNSSEC automation"
+                            APNIC Blog. &quot;Towards an industry best practice for DNSSEC automation&quot;
                             (2026年2月).
                             <a href="https://blog.apnic.net/2026/02/25/towards-an-industry-best-practice-for-dnssec-automation/">https://blog.apnic.net/2026/02/25/towards-an-industry-best-practice-for-dnssec-automation/</a>
                         </div>
@@ -433,23 +433,23 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref11">
                         <div className="num">11</div>
                         <div className="txt">
-                            TechnologyChecker.io. "DNSSEC Adoption in 2026" (2026年4月).
+                            TechnologyChecker.io. &quot;DNSSEC Adoption in 2026&quot; (2026年4月).
                             <a href="https://technologychecker.io/blog/dnssec-adoption">https://technologychecker.io/blog/dnssec-adoption</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref12">
                         <div className="num">12</div>
                         <div className="txt">
-                            欧州委員会共同研究センター(JRC). "Internet Standards: DNSSEC standards -
-                            an analysis of uptake in the EU".
+                            欧州委員会共同研究センター(JRC). &quot;Internet Standards: DNSSEC standards -
+                            an analysis of uptake in the EU&quot;.
                             <a href="https://ec.europa.eu/internet-standards/publications.html">https://ec.europa.eu/internet-standards/publications.html</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref13">
                         <div className="num">13</div>
                         <div className="txt">
-                            Sujeet Jaiswal (Principal Software Engineer). "DNS Security and Privacy:
-                            DNSSEC, DoH, and DoT" (2026年4月、Encrypted Client Hello / RFC
+                            Sujeet Jaiswal (Principal Software Engineer). &quot;DNS Security and Privacy:
+                            DNSSEC, DoH, and DoT&quot; (2026年4月、Encrypted Client Hello / RFC
                             9849に言及).
                             <a href="https://sujeet.pro/articles/dns-security-doh-dot-dnssec">https://sujeet.pro/articles/dns-security-doh-dot-dnssec</a>
                         </div>
@@ -457,7 +457,7 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref14">
                         <div className="num">14</div>
                         <div className="txt">
-                            IETF Datatracker. "draft-ietf-tls-ecdhe-mlkem"
+                            IETF Datatracker. &quot;draft-ietf-tls-ecdhe-mlkem&quot;
                             ポスト量子ハイブリッド鍵交換ドラフト.
                             <a href="https://datatracker.ietf.org/doc/draft-ietf-tls-ecdhe-mlkem/">https://datatracker.ietf.org/doc/draft-ietf-tls-ecdhe-mlkem/</a>
                         </div>
@@ -465,7 +465,7 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref15">
                         <div className="num">15</div>
                         <div className="txt">
-                            EverTrust. "Hybrid Post-Quantum Certificates" (2026年6月、Cloudflare
+                            EverTrust. &quot;Hybrid Post-Quantum Certificates&quot; (2026年6月、Cloudflare
                             Radarデータ引用).
                             <a href="https://evertrust.io/blog/hybrid-post-quantum-certificates/">https://evertrust.io/blog/hybrid-post-quantum-certificates/</a>
                         </div>
@@ -473,40 +473,40 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref16">
                         <div className="num">16</div>
                         <div className="txt">
-                            Steven P.G. "The Ultimate Guide to Post-Quantum Cryptography and TLS
-                            1.3" (2026年7月).
+                            Steven P.G. &quot;The Ultimate Guide to Post-Quantum Cryptography and TLS
+                            1.3&quot; (2026年7月).
                             <a href="https://stevenpg.com/posts/ultimate-guide-post-quantum-cryptography-tls/">https://stevenpg.com/posts/ultimate-guide-post-quantum-cryptography-tls/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref17">
                         <div className="num">17</div>
                         <div className="txt">
-                            Cloudflare Blog. "Cloudflare One is the first SASE offering modern
-                            post-quantum encryption across the full platform" (2026年2月).
+                            Cloudflare Blog. &quot;Cloudflare One is the first SASE offering modern
+                            post-quantum encryption across the full platform&quot; (2026年2月).
                             <a href="https://blog.cloudflare.com/post-quantum-sase/">https://blog.cloudflare.com/post-quantum-sase/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref18">
                         <div className="num">18</div>
                         <div className="txt">
-                            InfoQ. "Standardizing Post-Quantum IPsec: Cloudflare Adopts Hybrid
-                            ML-KEM" (2026年3月).
+                            InfoQ. &quot;Standardizing Post-Quantum IPsec: Cloudflare Adopts Hybrid
+                            ML-KEM&quot; (2026年3月).
                             <a href="https://www.infoq.com/news/2026/03/cloudflare-post-quantum-ipsec">https://www.infoq.com/news/2026/03/cloudflare-post-quantum-ipsec</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref19">
                         <div className="num">19</div>
                         <div className="txt">
-                            Kentik Blog（Doug Madory氏）／MANRS. "RPKI ROV Deployment Reaches Major
-                            Milestone" (2024年5月).
+                            Kentik Blog（Doug Madory氏）／MANRS. &quot;RPKI ROV Deployment Reaches Major
+                            Milestone&quot; (2024年5月).
                             <a href="https://manrs.org/2024/05/rpki-rov-deployment-reaches-major-milestone/">https://manrs.org/2024/05/rpki-rov-deployment-reaches-major-milestone/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref20">
                         <div className="num">20</div>
                         <div className="txt">
-                            ipregistry.co. "RPKI Covers 67% of Routes, But Four Attack Classes Slip
-                            Right Past It"（Hurricane Electric・RIPE Labs Antonio
+                            ipregistry.co. &quot;RPKI Covers 67% of Routes, But Four Attack Classes Slip
+                            Right Past It&quot;（Hurricane Electric・RIPE Labs Antonio
                             Prado氏の分析を引用、2026年7月）.
                             <a href="https://ipregistry.co/blog/rpki-blind-spots/">https://ipregistry.co/blog/rpki-blind-spots/</a>
                         </div>
@@ -514,22 +514,22 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref21">
                         <div className="num">21</div>
                         <div className="txt">
-                            SIDN. "Adoption of RPKI/ROV security protocol progressing very
-                            quickly"（Job Snijders氏の年次調査を引用）.
+                            SIDN. &quot;Adoption of RPKI/ROV security protocol progressing very
+                            quickly&quot;（Job Snijders氏の年次調査を引用）.
                             <a href="https://www.sidn.nl/en/news-and-blogs/adoption-of-rpki-rov-security-protocol-progressing-very-quickly">https://www.sidn.nl/en/news-and-blogs/adoption-of-rpki-rov-security-protocol-progressing-very-quickly</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref22">
                         <div className="num">22</div>
                         <div className="txt">
-                            APNIC Blog. "Google hits 50% IPv6" (2026年4月).
+                            APNIC Blog. &quot;Google hits 50% IPv6&quot; (2026年4月).
                             <a href="https://blog.apnic.net/2026/04/28/google-hits-50-ipv6/">https://blog.apnic.net/2026/04/28/google-hits-50-ipv6/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref23">
                         <div className="num">23</div>
                         <div className="txt">
-                            Internet Society (ISOC) Pulse. "18 Years Later, IPv6 Reaches Majority"
+                            Internet Society (ISOC) Pulse. &quot;18 Years Later, IPv6 Reaches Majority&quot;
                             (2026年4月).
                             <a href="https://pulse.internetsociety.org/en/blog/2026/04/18-years-later-ipv6-reaches-majority/">https://pulse.internetsociety.org/en/blog/2026/04/18-years-later-ipv6-reaches-majority/</a>
                         </div>
@@ -537,15 +537,15 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref24">
                         <div className="num">24</div>
                         <div className="txt">
-                            oneuptime.com. "How to Set Up IPv6 SLAAC vs DHCPv6 for Address
-                            Assignment" (2026年1月).
+                            oneuptime.com. &quot;How to Set Up IPv6 SLAAC vs DHCPv6 for Address
+                            Assignment&quot; (2026年1月).
                             <a href="https://oneuptime.com/blog/post/2026-01-08-ipv6-slaac-dhcpv6/view">https://oneuptime.com/blog/post/2026-01-08-ipv6-slaac-dhcpv6/view</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref25">
                         <div className="num">25</div>
                         <div className="txt">
-                            rule11.tech. "SLAAC and DHCPv6"（RFC 8156
+                            rule11.tech. &quot;SLAAC and DHCPv6&quot;（RFC 8156
                             DHCPv6フェイルオーバーに言及）.
                             <a href="https://rule11.tech/slaac-and-dhcpv6/">https://rule11.tech/slaac-and-dhcpv6/</a>
                         </div>
@@ -553,55 +553,55 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref26">
                         <div className="num">26</div>
                         <div className="txt">
-                            RunCloud. "HTTP/2 vs HTTP/3: What Every Web Server Owner Needs to Know
-                            2026"（Cloudflare Radarデータ引用）.
+                            RunCloud. &quot;HTTP/2 vs HTTP/3: What Every Web Server Owner Needs to Know
+                            2026&quot;（Cloudflare Radarデータ引用）.
                             <a href="https://runcloud.io/blog/http2-vs-http3">https://runcloud.io/blog/http2-vs-http3</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref27">
                         <div className="num">27</div>
                         <div className="txt">
-                            technologychecker.io. "We analyzed HTTP protocol adoption in
-                            2026"（Cloudflare Radarデータの独自分析、2026年8月取得時点）.
+                            technologychecker.io. &quot;We analyzed HTTP protocol adoption in
+                            2026&quot;（Cloudflare Radarデータの独自分析、2026年8月取得時点）.
                             <a href="https://technologychecker.io/blog/http-protocol-adoption">https://technologychecker.io/blog/http-protocol-adoption</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref28">
                         <div className="num">28</div>
                         <div className="txt">
-                            WundertechNet. "WireGuard vs. IPsec: Side-by-Side Comparison (2026)".
+                            WundertechNet. &quot;WireGuard vs. IPsec: Side-by-Side Comparison (2026)&quot;.
                             <a href="https://www.wundertech.net/wireguard-vs-ipsec/">https://www.wundertech.net/wireguard-vs-ipsec/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref29">
                         <div className="num">29</div>
                         <div className="txt">
-                            QuickZTNA Blog. "WireGuard vs OpenVPN vs IPsec: A 2026 Engineering
-                            Comparison"（RFC 9518に言及）.
+                            QuickZTNA Blog. &quot;WireGuard vs OpenVPN vs IPsec: A 2026 Engineering
+                            Comparison&quot;（RFC 9518に言及）.
                             <a href="https://www.quickztna.com/blog/wireguard-vs-openvpn-vs-ipsec/">https://www.quickztna.com/blog/wireguard-vs-openvpn-vs-ipsec/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref30">
                         <div className="num">30</div>
                         <div className="txt">
-                            oneuptime.com. "How to Prevent ARP Poisoning with Dynamic ARP
-                            Inspection" (2026年3月).
+                            oneuptime.com. &quot;How to Prevent ARP Poisoning with Dynamic ARP
+                            Inspection&quot; (2026年3月).
                             <a href="https://oneuptime.com/blog/post/2026-03-20-prevent-arp-poisoning-dai/view">https://oneuptime.com/blog/post/2026-03-20-prevent-arp-poisoning-dai/view</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref31">
                         <div className="num">31</div>
                         <div className="txt">
-                            network-switch.com. "How Address Resolution Works 2026, Security Risks,
-                            and Best Practices".
+                            network-switch.com. &quot;How Address Resolution Works 2026, Security Risks,
+                            and Best Practices&quot;.
                             <a href="https://network-switch.com/blogs/networking/what-is-arp-in-2026">https://network-switch.com/blogs/networking/what-is-arp-in-2026</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref32">
                         <div className="num">32</div>
                         <div className="txt">
-                            AWS Networking & Content Delivery Blog. "Best Practices for TCP
-                            Connection Management on EC2" (2026年6月、Nitro
+                            AWS Networking & Content Delivery Blog. &quot;Best Practices for TCP
+                            Connection Management on EC2&quot; (2026年6月、Nitro
                             V6アイドルタイムアウト変更に言及).
                             <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/best-practices-for-tcp-connection-management-on-ec2/">https://aws.amazon.com/blogs/networking-and-content-delivery/best-practices-for-tcp-connection-management-on-ec2/</a>
                         </div>
@@ -609,23 +609,23 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref33">
                         <div className="num">33</div>
                         <div className="txt">
-                            AWS What's New. "AWS Network Load Balancer now supports configurable TCP
-                            idle timeout" (2024年9月).
+                            AWS What&apos;s New. &quot;AWS Network Load Balancer now supports configurable TCP
+                            idle timeout&quot; (2024年9月).
                             <a href="https://aws.amazon.com/about-aws/whats-new/2024/09/aws-network-load-balancer-tcp-idle-timeout/">https://aws.amazon.com/about-aws/whats-new/2024/09/aws-network-load-balancer-tcp-idle-timeout/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref34">
                         <div className="num">34</div>
                         <div className="txt">
-                            Microsoft Learn. "Configure TCP reset and idle timeout for Azure Load
-                            Balancer".
+                            Microsoft Learn. &quot;Configure TCP reset and idle timeout for Azure Load
+                            Balancer&quot;.
                             <a href="https://learn.microsoft.com/sr-latn-rs/azure/load-balancer/load-balancer-tcp-idle-timeout">https://learn.microsoft.com/sr-latn-rs/azure/load-balancer/load-balancer-tcp-idle-timeout</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref35">
                         <div className="num">35</div>
                         <div className="txt">
-                            IronWiFi Blog. "Wi-Fi 7 for Enterprise Networks: 802.11be Guide"
+                            IronWiFi Blog. &quot;Wi-Fi 7 for Enterprise Networks: 802.11be Guide&quot;
                             (2026年3月).
                             <a href="https://www.ironwifi.com/blogs/wifi-7-enterprise-guide/">https://www.ironwifi.com/blogs/wifi-7-enterprise-guide/</a>
                         </div>
@@ -633,8 +633,8 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref36">
                         <div className="num">36</div>
                         <div className="txt">
-                            vcom.hk. "Wi-Fi 7 Final Standard Released — What It Means for
-                            Connectivity in 2026" (2026年1月、IEEE/Wi-Fi
+                            vcom.hk. &quot;Wi-Fi 7 Final Standard Released — What It Means for
+                            Connectivity in 2026&quot; (2026年1月、IEEE/Wi-Fi
                             Alliance最終標準発行に言及).
                             <a href="https://www.vcom.hk/blogs/news/wi-fi-7-ieee-802-11be-final-standard-released-what-it-means-for-connectivity-in-2026-and-beyond">https://www.vcom.hk/blogs/news/wi-fi-7-ieee-802-11be-final-standard-released-what-it-means-for-connectivity-in-2026-and-beyond</a>
                         </div>
@@ -642,7 +642,7 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref37">
                         <div className="num">37</div>
                         <div className="txt">
-                            opelink.com. "Enterprise LAN Fiber Network Guide 2026"（IEEE 802.3df
+                            opelink.com. &quot;Enterprise LAN Fiber Network Guide 2026&quot;（IEEE 802.3df
                             800GbE標準化に言及）.
                             <a href="https://www.opelink.com/article/enterprise-lan-fiber-network-planning-implementation-guide-i01465i1.html">https://www.opelink.com/article/enterprise-lan-fiber-network-planning-implementation-guide-i01465i1.html</a>
                         </div>
@@ -650,7 +650,7 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref38">
                         <div className="num">38</div>
                         <div className="txt">
-                            btw.media. "The 'father of the internet': Interview with Vint Cerf"
+                            btw.media. &quot;The &apos;father of the internet&apos;: Interview with Vint Cerf&quot;
                             (2026年6月).
                             <a href="https://btw.media/en/the-father-of-the-internet-interview-with-vint-cerf">https://btw.media/en/the-father-of-the-internet-interview-with-vint-cerf</a>
                         </div>
@@ -658,7 +658,7 @@ export function SectionAppendix() {
                     <div className="ref-card" id="ref39">
                         <div className="num">39</div>
                         <div className="txt">
-                            Data Center Dynamics. "Vint Cerf's Interplanetary ambitions"
+                            Data Center Dynamics. &quot;Vint Cerf&apos;s Interplanetary ambitions&quot;
                             (2026年7月).
                             <a href="https://www.datacenterdynamics.com/en/analysis/vint-cerfs-interplanetary-ambitions/">https://www.datacenterdynamics.com/en/analysis/vint-cerfs-interplanetary-ambitions/</a>
                         </div>

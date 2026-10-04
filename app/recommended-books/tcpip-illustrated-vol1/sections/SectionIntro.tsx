@@ -20,8 +20,8 @@ export function SectionIntro() {
             <p>
                     原著: <em>TCP/IP Illustrated, Volume 1: The Protocols, 2nd Edition</em>（Kevin
                     R. Fall, W. Richard Stevens 著、Addison-Wesley
-                    Professional／O'Reilly、2011年11月刊、1,056ページ） 参照:{' '}
-                    <a href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/">O'Reilly公式書籍ページ</a>
+                    Professional／O&apos;Reilly、2011年11月刊、1,056ページ） 参照:{' '}
+                    <a href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/">O&apos;Reilly公式書籍ページ</a>
                 </p>
             <p>
                     本ガイドは原著の目次構成（全18章＋付録）に沿って、TCP/IPプロトコルスイートの内部動作を初学者向けに独自の説明・図解で再構成したものです。原文の複製・転載は一切行っていません。2026年8月30日時点の最新動向についてはWeb検索で調査し、末尾の参考文献に一次情報源のURLを明記しています。
@@ -33,7 +33,7 @@ export function SectionIntro() {
                     <code>TCP/IP Illustrated, Volume 1</code> は、1994年に故W. Richard
                     Stevens氏が著した初版を、Kevin R. Fall氏（元Intel
                     Research／PARC研究者、DTN＝Delay Tolerant
-                    Networkingの提唱者の一人）が2011年に全面刷新した第2版です。初版の特徴だった「<code>tcpdump</code>で実際のパケットをキャプチャしながらプロトコルの動きを"見る"」というスタイルを継承しつつ、Linux・Windows・Mac
+                    Networkingの提唱者の一人）が2011年に全面刷新した第2版です。初版の特徴だった「<code>tcpdump</code>で実際のパケットをキャプチャしながらプロトコルの動きを&quot;見る&quot;」というスタイルを継承しつつ、Linux・Windows・Mac
                     OSの最新実装、IPv6、NAT、DNSSECなど2010年代前半までの技術を反映しています。
                 </p>
             <p>
@@ -44,7 +44,7 @@ export function SectionIntro() {
             <h3 id="s0-2">0.2 なぜ2026年に読む価値があるか</h3>
             <ul>
                     <li>
-                        <strong>RFCは変わっても"考え方"は変わらない</strong>：TCP/IPのアーキテクチャ原則（レイヤ分離、end-to-endの原則、ベストエフォート配送）は1970年代から本質的に不変です。BBRv3やQUICのような新技術も、この本が説明する基礎モデルの上に構築されています。
+                        <strong>RFCは変わっても&quot;考え方&quot;は変わらない</strong>：TCP/IPのアーキテクチャ原則（レイヤ分離、end-to-endの原則、ベストエフォート配送）は1970年代から本質的に不変です。BBRv3やQUICのような新技術も、この本が説明する基礎モデルの上に構築されています。
                     </li>
                     <li>
                         <strong>障害調査・パケット解析の実務直結スキル</strong>：<code>tcpdump</code>／Wiresharkでパケットを読む力は、クラウドネイティブ時代でもロードバランサやサービスメッシュのトラブルシューティングに直結します。

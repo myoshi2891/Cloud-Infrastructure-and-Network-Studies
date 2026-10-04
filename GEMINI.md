@@ -75,6 +75,7 @@ Updated 2026-10-04
   - `/app/recommended-books/high-performance-browser-networking`: 『High Performance Browser Networking』完全解説ガイド（Ilya Grigorik 原著、全5部18章構成、TCP/UDP/TLS/ワイヤレス/HTTP/ブラウザAPI、2026年最新動向、Mermaid 33図）。
   - `/app/recommended-books/kubernetes-in-action`: 『Kubernetes in Action, Second Edition』完全解説ガイド（Marko Lukša 原著、全6部18章+2026年最新動向、Mermaid 41図、テーブル15点、チェックリスト19点、参考文献27点）。
   - `/app/recommended-books/terraform-up-and-running`: 『Terraform: Up & Running』完全解説ガイド（Yevgeniy Brikman 原著、全11部構成、S3ネイティブロック・OpenTofu・terraform test・Ephemeral Resources・Stacks等2026年最新動向、Mermaid 19図、テーブル18点、コードブロック31点、チェックリスト9点、参考文献7点）。
+  - `/app/recommended-books/tcpip-illustrated-vol1`: 『TCP/IP Illustrated, Volume 1: The Protocols（第2版）』完全解説ガイド（W. Richard Stevens, Kevin R. Fall 原著、全20部+付録構成、Mermaid 35図、テーブル22点、コードブロック16点、チェックリスト10点、参考文献15点）。
   - `/app/cli`: CLIコマンド実践ワンライナー集（基礎知識・パイプライン・主要コマンド・シナリオ・ベストプラクティス・リファレンス全15セクション完全解説ガイド、Mermaid 7図）。
 - `/app/constants.ts`: 試験データ正本（`ALL_EXAMS` / `STATS`）。編集対象は `ALL_EXAMS` で、公開値 `EXAMS` は `HANDS_ON_ENABLED` フラグで `ALL_EXAMS` をフィルタした派生値（直接編集しない）。`provider: 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools'` で分類され、`toNavTree` が自動グルーピング。
 - AWS: `app/aws/` 配下（`solutions-architect-associate/page.tsx` 完全対策ガイド、`solutions-architect-associate/domain1/page.tsx` ドメイン1ガイド、`solutions-architect-associate/domain2/page.tsx` ドメイン2ガイド、`solutions-architect-associate/domain3/page.tsx` ドメイン3ガイド、`solutions-architect-associate/domain4/page.tsx` ドメイン4ガイド）

@@ -169,7 +169,7 @@ export function SectionParts5to8() {
                         <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                <code>traceroute</code>／<code>mtr</code>はTTL超過ICMPを利用した診断ツールであることを理解しておくと、途中経路のファイアウォールがICMPをブロックしている場合の"見えない区間"の解釈を誤らずに済む。{' '}
+                                <code>traceroute</code>／<code>mtr</code>はTTL超過ICMPを利用した診断ツールであることを理解しておくと、途中経路のファイアウォールがICMPをブロックしている場合の&quot;見えない区間&quot;の解釈を誤らずに済む。{' '}
                             </li>
                             <li>
                                 IPv6移行時は「フラグメンテーションはホストのみが行う」という設計変更を踏まえ、PMTUDが正しく機能する経路設計（ICMPv6
@@ -395,7 +395,7 @@ export function SectionParts5to8() {
                 </div>
             <h3 id="s8-3">8.3 Path MTU Discovery（PMTUD）の仕組み</h3>
             <p>
-                    送信ホストはまずDFビット（Don't
+                    送信ホストはまずDFビット（Don&apos;t
                     Fragment）を立てた最大サイズのパケットを送出します。経路上のどこかのリンクでMTUを超えた場合、そのルータはパケットを破棄し「Fragmentation
                     Needed and DF Set（Type 3, Code
                     4）」ICMPメッセージを、超過できなかったリンクの実際のMTU値を添えて送信元に返します。送信ホストはこれを受けてパケットサイズを縮小し再送します。

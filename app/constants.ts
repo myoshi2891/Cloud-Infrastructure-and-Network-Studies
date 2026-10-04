@@ -35,6 +35,7 @@ export type ColorKey =
     | 'card-professional-agentic-architect'
     | 'card-kubernetes-in-action'
     | 'card-cli'
+    | 'card-tcpip-illustrated-vol1'
     | 'card-terraform-up-and-running';
 
 export interface Exam {
@@ -81,6 +82,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-professional-agentic-architect': 'card-professional-agentic-architect',
     'card-kubernetes-in-action': 'card-kubernetes-in-action',
     'card-cli': 'card-cli',
+    'card-tcpip-illustrated-vol1': 'card-tcpip-illustrated-vol1',
     'card-terraform-up-and-running': 'card-terraform-up-and-running',
 };
 
@@ -1037,6 +1039,27 @@ const ALL_EXAMS: Exam[] = [
             {
                 label: '完全解説ガイド',
                 href: '/recommended-books/kubernetes-in-action',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'tcpip-illustrated-vol1',
+        label: 'TCP/IP Illustrated, Vol 1: The Protocols',
+        abbr: 'TCPIP',
+        level: 'プロトコル・ネットワークアーキテクチャ',
+        score: '全20部 / 35図解',
+        color: 'card-tcpip-illustrated-vol1',
+        href: '/recommended-books/tcpip-illustrated-vol1',
+        description:
+            'W. Richard Stevens, Kevin R. Fall 著『TCP/IP Illustrated, Volume 1: The Protocols（第2版）』を軸に、リンク層からIP・ARP・ICMP・DHCP・NAT・DNS・TCP・UDP・セキュリティ、そして2026年最新動向までを体系的に解説した完全解説ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/tcpip-illustrated-vol1',
                 pct: '完全解説',
             },
         ],
