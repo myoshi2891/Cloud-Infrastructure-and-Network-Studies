@@ -1242,13 +1242,14 @@ flowchart TD
 ```mermaid
 flowchart TD
     A["ユーザー/拠点"] --> B{"経路"}
-    B -->|"Secure Client"| C["Secure Access"]
+    B -->|"Secure Client"| C["Secure Access（SWG へ誘導）"]
     B -->|"IPsec トンネル"| C
-    B -->|"DNS のみ向け先変更"| C
-    C --> D["DNS 保護"]
-    D --> E["SWG / FW / DLP / ファイル解析"]
-    E --> F["インターネット/SaaS"]
-    C --> G["ログ/ダッシュボード"]
+    B -->|"DNS のみ向け先変更"| D["DNS レイヤ保護（名前解決のみ）"]
+    D -->|"解決後の通信本体は直接"| F["インターネット/SaaS"]
+    C --> E["SWG / FW / DLP / ファイル解析"]
+    E --> F
+    D --> G["ログ/ダッシュボード"]
+    E --> G
 ```
 
 **ベストプラクティス**

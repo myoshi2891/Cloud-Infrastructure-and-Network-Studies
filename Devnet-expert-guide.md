@@ -65,7 +65,7 @@ flowchart TD
 | 費用 | 400米ドル（Cisco Learning Credits 利用可） | 1,600米ドル（Cisco Learning Credits 利用可） |
 | 前提条件 | なし | 正式な前提なし（筆記試験合格が先に必要） |
 | 結果 | 合否判定、オンラインで48時間以内 | 合否判定、オンラインで48時間以内 |
-| 不合格後の待機 | CCIE 筆記試験は15暦日 | エキスパートのラボは30暦日 |
+| 不合格後の待機 | 未確定（参照した公式情報の間で、350-901 に適用される間隔の記載が食い違うため。CCIE 筆記試験の一般規定では15暦日。受験前に Cisco の再受験ポリシーで確認） | エキスパートのラボは30暦日 |
 | 備考 | 合格で Specialist 認定を取得 | 合格後は、認定が失効しない限り再受験不可 |
 
 > 推奨経験：旧日本語ページでは「NetDevOps テクノロジーとソリューションの設計・導入・運用・最適化に **5〜7年** の経験」が推奨されています。初学者がいきなり合格を目指す認定ではなく、**数年かけて土台を作る長期目標** と捉えるのが現実的です。
@@ -193,14 +193,32 @@ flowchart LR
 ```python
 import random
 import time
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+
 import requests
+
+def retry_after_seconds(value):
+    """Retry-After（秒数 または HTTP-date）を待ち秒数に変換する。解釈できなければ None"""
+    if value is None:
+        return None
+    if value.strip().isdigit():
+        return int(value)
+    try:
+        when = parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        return None
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=timezone.utc)
+    return max(0.0, (when - datetime.now(timezone.utc)).total_seconds())
 
 def get_with_backoff(url, headers, max_retries=5):
     """429 や一時的エラーに対して、指数バックオフ＋ジッターで再試行する例"""
     for attempt in range(max_retries):
         r = requests.get(url, headers=headers, timeout=10)
         if r.status_code == 429:
-            wait = int(r.headers.get("Retry-After", 2 ** attempt))
+            delay = retry_after_seconds(r.headers.get("Retry-After"))
+            wait = delay if delay is not None else 2 ** attempt
         elif r.status_code >= 500:
             wait = 2 ** attempt
         else:
@@ -311,6 +329,9 @@ build-image:
 
 deploy-prod:
   stage: deploy
+  before_script:
+    - pip install ansible-core
+    - ansible-galaxy collection install -r collections/requirements.yml
   script:
     - ansible-playbook -i inventory/prod site.yml
   rules:
@@ -1465,6 +1486,9 @@ ENV APP_ENV=production \
     PORT=8000
 
 EXPOSE 8000
+
+# VOLUME 宣言より前に作成・所有者設定する（宣言後の変更はボリュームに反映されない）
+RUN mkdir -p /app/data && chown appuser:appuser /app/data
 VOLUME ["/app/data"]
 
 USER appuser
@@ -1943,7 +1967,7 @@ def list_devices():
 | 認証 | `Authorization: Bearer ...` ヘッダでトークンを検証（無効なら 401） |
 | 認可 | トークンの権限（スコープ）に応じて 403 を返す |
 | セキュリティヘッダ | `Strict-Transport-Security`、`X-Content-Type-Options` など |
-| 通信路 | TLS 必須（HTTP は拒否） |
+| 通信路 | TLS 必須。HTTP の拒否はアプリまたは信頼できる Ingress／リバースプロキシで行う（HSTS ヘッダ自体は TLS を有効化せず、HTTP も拒否しない。HTTPS 応答を受けたブラウザに以後の HTTPS 利用を指示するだけ） |
 | 悪用対策 | レート制限、入力検証、監査ログ |
 
 **ベストプラクティス**
@@ -2089,7 +2113,7 @@ flowchart TD
 | 最初に全体を読む | 後半のタスクが前半の成果に依存することがある |
 | 動いたら必ず **要件と照合** | 「動く」と「要件を満たす」は別 |
 | 詰まったら先へ進む | 1つのタスクに時間を溶かすのが最大の失敗要因 |
-| ドキュメントを素早く引く | 暗記ではなく、**探す力** が問われる（SDK や仕様書は参照できる前提） |
+| 外部資料なしで書けるようにする | 本番で SDK や仕様書を参照できるとは限らない。普段から**外部リファレンスを見ずに**主要な API・構文を書く練習をしておく |
 | こまめに保存・コミット | 環境トラブル時の損失を減らす |
 
 ### 9.3 日頃の練習で身につけたいこと
