@@ -1,24 +1,9 @@
 /* app/recommended-books/terraform-up-and-running/page.css */
 
 .terraform-up-and-running-page {
-    --bg: #07111e;
-    --bg-card: #0d1b2e;
-    --bg-card-2: #101f34;
-    --bg-elevated: #132540;
-    --border: #1e3352;
-    --accent: #7c9eff;
-    --accent-2: #4caf82;
-    --danger: #c05a6e;
-    --warn: #d9a441;
-    --text: #eaf1ff;
-    --text-dim: #9db1d4;
-    --text-dimmer: #6f84a8;
-    --font-main: var(--font-body, 'Noto Sans JP', sans-serif);
-    --font-mono: var(--font-mono, 'JetBrains Mono', monospace);
-
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-main);
+    background: var(--color-terraform-background);
+    color: var(--color-terraform-foreground);
+    font-family: var(--font-body);
     line-height: 1.85;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
@@ -30,7 +15,7 @@
 }
 
 .terraform-up-and-running-page a {
-    color: var(--accent);
+    color: var(--color-accent);
     text-decoration: none;
 }
 
@@ -44,15 +29,15 @@
     width: calc(100% - 280px);
     max-width: none;
     padding: 64px 48px 40px 48px;
-    background: radial-gradient(ellipse at top left, #0e2038 0%, var(--bg) 60%);
-    border-bottom: 1px solid var(--border);
+    background: radial-gradient(ellipse at top left, #0e2038 0%, var(--color-terraform-background) 60%);
+    border-bottom: 1px solid var(--color-terraform-border);
 }
 
 .terraform-up-and-running-page .hero-eyebrow {
     display: inline-block;
     font-size: 13px;
     letter-spacing: 0.08em;
-    color: var(--accent);
+    color: var(--color-accent);
     font-weight: 700;
     margin-bottom: 16px;
     text-transform: uppercase;
@@ -77,9 +62,9 @@
 }
 
 .terraform-up-and-running-page .pill {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
+    color: var(--color-terraform-foreground-dim);
     padding: 7px 16px;
     border-radius: 999px;
     font-size: 13px;
@@ -87,7 +72,7 @@
 }
 
 .terraform-up-and-running-page .pill strong {
-    color: var(--text);
+    color: var(--color-terraform-foreground);
     font-weight: 700;
 }
 
@@ -107,7 +92,7 @@
     height: calc(100vh - (var(--header-h, 60px) + var(--disclaimer-height, 0px)));
     overflow-y: auto;
     background: #081525;
-    border-right: 1px solid var(--border);
+    border-right: 1px solid var(--color-terraform-border);
     padding: 24px 0 60px 0;
     z-index: 40;
 }
@@ -116,10 +101,10 @@
     padding: 0 24px 16px 24px;
     font-size: 12px;
     letter-spacing: 0.1em;
-    color: var(--text-dimmer);
+    color: var(--color-terraform-foreground-dimmer);
     text-transform: uppercase;
     font-weight: 700;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-terraform-border);
     margin-bottom: 8px;
 }
 
@@ -137,21 +122,21 @@
 .terraform-up-and-running-page .nav-link {
     display: block;
     padding: 8px 24px;
-    color: var(--text-dim);
+    color: var(--color-terraform-foreground-dim);
     font-size: 13.5px;
     border-left: 3px solid transparent;
     transition: all 0.15s ease;
 }
 
 .terraform-up-and-running-page .nav-link:hover {
-    background: var(--bg-card);
-    color: var(--text);
+    background: var(--color-terraform-surface);
+    color: var(--color-terraform-foreground);
     text-decoration: none;
 }
 
 .terraform-up-and-running-page .nav-link.nav-h2 {
     font-weight: 700;
-    color: var(--text);
+    color: var(--color-terraform-foreground);
     margin-top: 10px;
     font-size: 14px;
 }
@@ -162,8 +147,8 @@
 }
 
 .terraform-up-and-running-page .nav-link.active {
-    border-left-color: var(--accent);
-    color: var(--accent);
+    border-left-color: var(--color-accent);
+    color: var(--color-accent);
     background: rgba(124, 158, 255, 0.08);
 }
 
@@ -173,9 +158,9 @@
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px);
     left: 16px;
     z-index: 50;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
+    color: var(--color-terraform-foreground);
     width: 44px;
     height: 44px;
     border-radius: 10px;
@@ -201,8 +186,8 @@
     font-size: 27px;
     font-weight: 900;
     margin: 64px 0 22px 0;
-    color: var(--text);
-    border-top: 1px solid var(--border);
+    color: var(--color-terraform-foreground);
+    border-top: 1px solid var(--color-terraform-border);
     padding-top: 32px;
 }
 
@@ -217,19 +202,19 @@
     font-size: 20px;
     font-weight: 700;
     margin: 40px 0 16px 0;
-    color: var(--accent);
+    color: var(--color-accent);
 }
 
 .terraform-up-and-running-page .main p {
     margin: 0 0 18px 0;
-    color: var(--text);
+    color: var(--color-terraform-foreground);
 }
 
 .terraform-up-and-running-page .main ul,
 .terraform-up-and-running-page .main ol {
     margin: 0 0 18px 0;
     padding-left: 28px;
-    color: var(--text);
+    color: var(--color-terraform-foreground);
 }
 
 .terraform-up-and-running-page .main li {
@@ -242,12 +227,12 @@
 }
 
 .terraform-up-and-running-page .main em {
-    color: var(--text-dim);
+    color: var(--color-terraform-foreground-dim);
 }
 
 .terraform-up-and-running-page code {
     font-family: var(--font-mono);
-    background: var(--bg-elevated);
+    background: var(--color-terraform-surface-elevated);
     padding: 2px 7px;
     border-radius: 5px;
     font-size: 0.88em;
@@ -258,8 +243,8 @@
 /* Code blocks (.code-block and .code-line) */
 .terraform-up-and-running-page .code-block,
 .terraform-up-and-running-page pre.code-block {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
     border-radius: 12px;
     padding: 20px 22px;
     overflow-x: auto;
@@ -293,7 +278,7 @@
 .terraform-up-and-running-page .token.prolog,
 .terraform-up-and-running-page .token.doctype,
 .terraform-up-and-running-page .token.cdata {
-    color: var(--text-dimmer);
+    color: var(--color-terraform-foreground-dimmer);
     font-style: italic;
 }
 
@@ -302,7 +287,7 @@
 .terraform-up-and-running-page .token.boolean,
 .terraform-up-and-running-page .token.important,
 .terraform-up-and-running-page .token.atrule {
-    color: var(--accent);
+    color: var(--color-accent);
 }
 
 .terraform-up-and-running-page .token.string,
@@ -315,7 +300,7 @@
 .terraform-up-and-running-page .token.type,
 .terraform-up-and-running-page .token.class-name,
 .terraform-up-and-running-page .token.function {
-    color: var(--accent-2);
+    color: var(--color-terraform-success);
 }
 
 .terraform-up-and-running-page .token.number {
@@ -324,12 +309,12 @@
 
 .terraform-up-and-running-page .token.punctuation,
 .terraform-up-and-running-page .token.operator {
-    color: var(--text-dim);
+    color: var(--color-terraform-foreground-dim);
 }
 
 .terraform-up-and-running-page .token.variable,
 .terraform-up-and-running-page .token.property {
-    color: var(--text);
+    color: var(--color-terraform-foreground);
 }
 
 /* Mermaid Wrapper */
@@ -338,14 +323,14 @@
     display: flex;
     justify-content: safe center;
     overflow-x: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
     border-radius: 14px;
     padding: 28px 20px;
     margin: 1.5rem auto 2rem;
 }
 
-.terraform-up-and-running-page .mermaid-wrap :global(svg) {
+.terraform-up-and-running-page .mermaid-wrap svg {
     display: block;
     margin: 0 auto;
     max-width: 100% !important;
@@ -356,7 +341,7 @@
 .terraform-up-and-running-page .table-scroll {
     overflow-x: auto;
     margin: 0 0 26px 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-terraform-border);
     border-radius: 12px;
 }
 
@@ -370,21 +355,21 @@
 .terraform-up-and-running-page td {
     padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-terraform-border);
     white-space: normal;
 }
 
 .terraform-up-and-running-page tr.row-header th,
 .terraform-up-and-running-page thead th {
-    background: var(--bg-elevated);
-    color: var(--accent);
+    background: var(--color-terraform-surface-elevated);
+    color: var(--color-accent);
     font-weight: 700;
     font-size: 13px;
     letter-spacing: 0.02em;
 }
 
 .terraform-up-and-running-page tr.row-odd td {
-    background: var(--bg-card);
+    background: var(--color-terraform-surface);
 }
 
 .terraform-up-and-running-page tr.row-even td {
@@ -402,7 +387,7 @@
     padding: 20px 22px;
     border-radius: 12px;
     margin: 0 0 24px 0;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-terraform-border);
 }
 
 .terraform-up-and-running-page .callout-icon {
@@ -442,11 +427,11 @@
 }
 
 .terraform-up-and-running-page .callout-practice .callout-icon {
-    background: var(--accent-2);
+    background: var(--color-terraform-success);
 }
 
 .terraform-up-and-running-page .callout-practice .callout-label {
-    color: var(--accent-2);
+    color: var(--color-terraform-success);
 }
 
 .terraform-up-and-running-page .callout-warning {
@@ -455,11 +440,11 @@
 }
 
 .terraform-up-and-running-page .callout-warning .callout-icon {
-    background: var(--warn);
+    background: var(--color-terraform-warning);
 }
 
 .terraform-up-and-running-page .callout-warning .callout-label {
-    color: var(--warn);
+    color: var(--color-terraform-warning);
 }
 
 .terraform-up-and-running-page .callout-note {
@@ -468,17 +453,17 @@
 }
 
 .terraform-up-and-running-page .callout-note .callout-icon {
-    background: var(--accent);
+    background: var(--color-accent);
 }
 
 .terraform-up-and-running-page .callout-note .callout-label {
-    color: var(--accent);
+    color: var(--color-accent);
 }
 
 /* Checklist */
 .terraform-up-and-running-page .checklist-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
     border-radius: 14px;
     padding: 4px 0 12px 0;
     margin: 0 0 26px 0;
@@ -489,17 +474,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 22px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-terraform-border);
 }
 
 .terraform-up-and-running-page .checklist-title {
     font-weight: 700;
-    color: var(--text);
+    color: var(--color-terraform-foreground);
 }
 
 .terraform-up-and-running-page .checklist-counter {
     font-size: 13px;
-    color: var(--accent);
+    color: var(--color-accent);
     font-weight: 700;
 }
 
@@ -520,11 +505,11 @@
     padding: 10px 12px;
     border-radius: 8px;
     cursor: pointer;
-    color: var(--text);
+    color: var(--color-terraform-foreground);
 }
 
 .terraform-up-and-running-page ul.checklist label:hover {
-    background: var(--bg-elevated);
+    background: var(--color-terraform-surface-elevated);
 }
 
 .terraform-up-and-running-page ul.checklist input[type='checkbox'] {
@@ -532,18 +517,18 @@
     -webkit-appearance: none;
     width: 19px;
     height: 19px;
-    border: 2px solid var(--border);
+    border: 2px solid var(--color-terraform-border);
     border-radius: 5px;
     flex-shrink: 0;
     margin-top: 2px;
     position: relative;
     cursor: pointer;
-    background: var(--bg-elevated);
+    background: var(--color-terraform-surface-elevated);
 }
 
 .terraform-up-and-running-page ul.checklist input[type='checkbox']:checked {
-    background: var(--accent-2);
-    border-color: var(--accent-2);
+    background: var(--color-terraform-success);
+    border-color: var(--color-terraform-success);
 }
 
 .terraform-up-and-running-page ul.checklist input[type='checkbox']:checked::after {
@@ -559,7 +544,7 @@
 }
 
 .terraform-up-and-running-page ul.checklist li:has(input:checked) label {
-    color: var(--text-dimmer);
+    color: var(--color-terraform-foreground-dimmer);
     text-decoration: line-through;
 }
 
@@ -572,8 +557,8 @@
 }
 
 .terraform-up-and-running-page .ref-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-terraform-surface);
+    border: 1px solid var(--color-terraform-border);
     border-radius: 12px;
     padding: 18px 20px;
     overflow-wrap: anywhere;
@@ -582,16 +567,16 @@
 
 .terraform-up-and-running-page .ref-card-label {
     font-weight: 700;
-    color: var(--accent);
+    color: var(--color-accent);
     font-size: 14.5px;
     margin-bottom: 12px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-terraform-border);
 }
 
 .terraform-up-and-running-page .ref-line {
     font-size: 13.5px;
-    color: var(--text-dim);
+    color: var(--color-terraform-foreground-dim);
     margin-bottom: 10px;
     line-height: 1.65;
 }
@@ -601,7 +586,7 @@
 }
 
 .terraform-up-and-running-page .ref-line a {
-    color: var(--accent);
+    color: var(--color-accent);
     overflow-wrap: anywhere;
 }
 

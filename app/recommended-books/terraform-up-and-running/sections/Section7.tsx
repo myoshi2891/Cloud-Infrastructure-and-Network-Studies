@@ -61,7 +61,7 @@ export function Section7({ Diagram }: SectionProps) {
 <p>{' '}TerraformはAWSのようなクラウドAPIだけでなく、DockerデーモンやKubernetes APIも「プロバイダー」として扱えます。{' '}</p>
 <Diagram id="diag-12" ariaLabel="Terraformによる複数プロバイダー（AWS, Kubernetes, Docker）の連携構成" />
 <h3 id="7-5-eksでのdockerコンテナデプロイ">7-5. EKSでのDockerコンテナデプロイ</h3>
-<p>{' '}クラスタ本体とクラスタ内のリソースは、**別々のroot module（＝別State）**として構成します。まずEKSクラスタを作る側です。{' '}</p>
+<p>{' '}クラスタ本体とクラスタ内のリソースは、<strong>別々のroot module（＝別State）</strong>として構成します。まずEKSクラスタを作る側です。{' '}</p>
 <pre className="code-block">
                     <div className="code-line"><span className="hl-cm"># root module A（例: live/eks-cluster）: aws プロバイダーでクラスタ本体だけを管理する</span></div>
                     <div className="code-line"></div>

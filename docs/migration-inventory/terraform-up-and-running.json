@@ -979,7 +979,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "クラスタ本体とクラスタ内のリソースは、**別々のroot module（＝別State）**として構成します。まずEKSクラスタを作る側です。"
+      "text": "クラスタ本体とクラスタ内のリソースは、別々のroot module（＝別State）として構成します。まずEKSクラスタを作る側です。"
     },
     {
       "kind": "code",

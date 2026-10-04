@@ -698,6 +698,17 @@
     --color-theme-agwa-border: #b8dfc9;
     --color-theme-agwa-dark: #0d4a30;
 
+    /* Terraform: Up & Running guide */
+    --color-terraform-background: #07111e;
+    --color-terraform-surface: #0d1b2e;
+    --color-terraform-surface-elevated: #132540;
+    --color-terraform-border: #1e3352;
+    --color-terraform-success: #4caf82;
+    --color-terraform-warning: #d9a441;
+    --color-terraform-foreground: #eaf1ff;
+    --color-terraform-foreground-dim: #9db1d4;
+    --color-terraform-foreground-dimmer: #6f84a8;
+
     /* Layer 2: 共有プリミティブ */
     --color-shadow-rgb: 0, 0, 0;
     --color-shadow: rgba(var(--color-shadow-rgb), 0.4);
