@@ -275,6 +275,19 @@
     color: #d7e3ff;
 }
 
+/* Syntax Highlighting */
+.terraform-up-and-running-page .hl-kw { color: #c792ea; font-weight: 600; }
+.terraform-up-and-running-page .hl-type { color: #82aaff; }
+.terraform-up-and-running-page .hl-str { color: #c3e88d; }
+.terraform-up-and-running-page .hl-num { color: #f78c6c; }
+.terraform-up-and-running-page .hl-bool { color: #ff5370; }
+.terraform-up-and-running-page .hl-attr { color: #ffcb6b; }
+.terraform-up-and-running-page .hl-fn { color: #82aaff; }
+.terraform-up-and-running-page .hl-cm { color: #738a9c; font-style: italic; }
+.terraform-up-and-running-page .hl-var { color: #89ddff; }
+.terraform-up-and-running-page .hl-op { color: #89ddff; }
+.terraform-up-and-running-page .hl-cmd { color: #80cbc4; font-weight: 600; }
+
 /* Prism tokens */
 .terraform-up-and-running-page .token.comment,
 .terraform-up-and-running-page .token.prolog,

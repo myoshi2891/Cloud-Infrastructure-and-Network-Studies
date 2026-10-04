@@ -58,10 +58,10 @@ export function Section6({ Diagram }: SectionProps) {
 <h3 id="6-3-terraformでのシークレット利用パターン">{' '}6-3. Terraformでのシークレット利用パターン{' '}</h3>
 <p>{' '}Terraformの<code>sensitive = true</code>はCLI出力へのマスキングのみを行い、<strong>State fileには平文（またはそれに近い形）でシークレットが記録されてしまう</strong>という長年の課題がありました。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">variable &quot;db_password&quot; &#123;</div>
-                    <div className="code-line">  description = &quot;The password for the database&quot;</div>
-                    <div className="code-line">  type        = string</div>
-                    <div className="code-line">  sensitive   = true</div>
+                    <div className="code-line"><span className="hl-kw">variable</span> <span className="hl-str">&quot;db_password&quot;</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-attr">description</span> = <span className="hl-str">&quot;The password for the database&quot;</span></div>
+                    <div className="code-line">    <span className="hl-attr">type</span>        = <span className="hl-type">string</span></div>
+                    <div className="code-line">    <span className="hl-attr">sensitive</span>   = <span className="hl-bool">true</span></div>
                     <div className="code-line">&#125;</div>
                 </pre>
 <div className="callout callout-warning">{' '}<div className="callout-icon">⚠{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">重要な注意{' '}</div>{' '}<p>{' '}<code>sensitive</code>はあくまで表示上のマスクです。State file自体を暗号化する（リモートバックエンドの暗号化オプションを有効にする）ことと、アクセス権限をIAMで絞ることが必須のベストプラクティスです。{' '}</p>{' '}</div>{' '}</div>
@@ -70,29 +70,29 @@ export function Section6({ Diagram }: SectionProps) {
 <ul>{' '}<li>{' '}<strong>Ephemeral Resources</strong>（<code>ephemeral</code>ブロック、<strong>Terraform 1.10以降</strong>）:{' '}<code>apply</code>実行中のメモリ上にのみ存在し、PlanファイルにもStateファイルにも書き込まれないリソース{' '}</li>{' '}<li>{' '}<strong>Write-Only Arguments</strong>（<code>_wo</code>サフィックスの引数、<strong>Terraform 1.11以降</strong>）: プロバイダー側がサポートする場合、値を受け取って設定するが、Stateには保存しない引数{' '}</li>{' '}</ul>
 <Diagram id="diag-10" ariaLabel="Ephemeral ResourcesとWrite-Only Argumentsによるシークレット漏洩防止フロー" />
 <pre className="code-block">
-                    <div className="code-line">ephemeral &quot;random_password&quot; &quot;db_password&quot; &#123;</div>
-                    <div className="code-line">  length           = 16</div>
-                    <div className="code-line">  override_special = &quot;!#$%&amp;*()-_=+[]&#123;&#125;&lt;&gt;:?&quot;</div>
+                    <div className="code-line"><span className="hl-kw">ephemeral</span> <span className="hl-type">&quot;random_password&quot;</span> <span className="hl-str">&quot;db_password&quot;</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-attr">length</span>           = <span className="hl-num">16</span></div>
+                    <div className="code-line">    <span className="hl-attr">override_special</span> = <span className="hl-str">&quot;!#$%&amp;*()-_=+[]&#123;&#125;&lt;&gt;:?&quot;</span></div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource &quot;aws_db_instance&quot; &quot;example&quot; &#123;</div>
-                    <div className="code-line">  identifier        = &quot;my-db&quot;</div>
-                    <div className="code-line">  engine            = &quot;postgres&quot;</div>
-                    <div className="code-line">  instance_class    = &quot;db.t3.micro&quot;</div>
-                    <div className="code-line">  allocated_storage = 20</div>
+                    <div className="code-line"><span className="hl-kw">resource</span> <span className="hl-type">&quot;aws_db_instance&quot;</span> <span className="hl-str">&quot;example&quot;</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-attr">identifier</span>        = <span className="hl-str">&quot;my-db&quot;</span></div>
+                    <div className="code-line">    <span className="hl-attr">engine</span>            = <span className="hl-str">&quot;postgres&quot;</span></div>
+                    <div className="code-line">    <span className="hl-attr">instance_class</span>    = <span className="hl-str">&quot;db.t3.micro&quot;</span></div>
+                    <div className="code-line">    <span className="hl-attr">allocated_storage</span> = <span className="hl-num">20</span></div>
                     <div className="code-line"></div>
-                    <div className="code-line">  username = &quot;app_user&quot;</div>
+                    <div className="code-line">    <span className="hl-attr">username</span> = <span className="hl-str">&quot;app_user&quot;</span></div>
                     <div className="code-line"></div>
-                    <div className="code-line">  password_wo         = ephemeral.random_password.db_password.result</div>
-                    <div className="code-line">  password_wo_version  = 1</div>
+                    <div className="code-line">    <span className="hl-attr">password_wo</span>         = ephemeral.random_password.db_password.result</div>
+                    <div className="code-line">    <span className="hl-attr">password_wo_version</span>  = <span className="hl-num">1</span></div>
                     <div className="code-line"></div>
-                    <div className="code-line">  # 学習・検証用DBの前提。これを省くとAWSが最終スナップショット識別子を要求し、</div>
-                    <div className="code-line">  # terraform destroy が失敗する。本番DBでは skip_final_snapshot は false のままにし、</div>
-                    <div className="code-line">  # final_snapshot_identifier に有効な識別子を指定すること</div>
-                    <div className="code-line">  #   skip_final_snapshot       = false</div>
-                    <div className="code-line">  #   final_snapshot_identifier = var.final_snapshot_identifier  # 例: &quot;my-db-final-2026-08-29&quot;</div>
-                    <div className="code-line">  # timestamp() のような毎回変わる関数は差分が消えなくなるため使わない</div>
-                    <div className="code-line">  skip_final_snapshot = true</div>
+                    <div className="code-line">    <span className="hl-cm"># 学習・検証用DBの前提。これを省くとAWSが最終スナップショット識別子を要求し、</span></div>
+                    <div className="code-line">    <span className="hl-cm"># terraform destroy が失敗する。本番DBでは skip_final_snapshot は false のままにし、</span></div>
+                    <div className="code-line">    <span className="hl-cm"># final_snapshot_identifier に有効な識別子を指定すること</span></div>
+                    <div className="code-line">    <span className="hl-cm">#   skip_final_snapshot       = false</span></div>
+                    <div className="code-line">    <span className="hl-cm">#   final_snapshot_identifier = var.final_snapshot_identifier  # 例: &quot;my-db-final-2026-08-29&quot;</span></div>
+                    <div className="code-line">    <span className="hl-cm"># timestamp() のような毎回変わる関数は差分が消えなくなるため使わない</span></div>
+                    <div className="code-line">    <span className="hl-attr">skip_final_snapshot</span> = <span className="hl-bool">true</span></div>
                     <div className="code-line">&#125;</div>
                 </pre>
 <p>{' '}<strong>生成したパスワードの受け取りとローテーション</strong>: この構成では生成値がStateにもPlanにも残らないため、<code>terraform output</code>で後から取り出すことは<strong>できません</strong>。値を人やアプリが使う必要がある場合は、同じ<code>apply</code>の中でシークレットストアへ書き込み、以後はそこから読む運用にします（<code>aws_secretsmanager_secret_version</code>の<code>secret_string_wo</code>と<code>secret_string_wo_version</code>を使えば、Secrets Manager側にもStateを経由せずに書き込めます）。{' '}</p>

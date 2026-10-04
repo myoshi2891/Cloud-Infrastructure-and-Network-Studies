@@ -699,7 +699,7 @@
     },
     {
       "kind": "code",
-      "text": "terraform {\n  required_version = \">= 1.16.0, < 2.0.0\"\n}"
+      "text": "terraform {\n    required_version = \">= 1.16.0, < 2.0.0\"\n}"
     },
     {
       "kind": "paragraph",
@@ -707,7 +707,7 @@
     },
     {
       "kind": "code",
-      "text": "provider \"aws\" {\n  region = \"us-east-2\"\n}\n\nresource \"aws_instance\" \"example\" {\n  ami           = \"ami-0fb653ca2d3203ac1\"\n  instance_type = \"t2.micro\"\n\n  tags = {\n    Name = \"terraform-example\"\n  }\n}"
+      "text": "provider \"aws\" {\n    region = \"us-east-2\"\n}\n\nresource \"aws_instance\" \"example\" {\n    ami           = \"ami-0fb653ca2d3203ac1\"\n    instance_type = \"t2.micro\"\n\n    tags = {\n        Name = \"terraform-example\"\n    }\n}"
     },
     {
       "kind": "annotation",
@@ -715,7 +715,7 @@
     },
     {
       "kind": "code",
-      "text": "data \"aws_ami\" \"ubuntu\" {\n  most_recent = true\n  owners      = [\"099720109477\"] # Canonical\n\n  filter {\n    name   = \"name\"\n    values = [\"ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*\"]\n  }\n}\n\nresource \"aws_instance\" \"example\" {\n  ami           = data.aws_ami.ubuntu.id\n  instance_type = \"t2.micro\"\n\n  tags = {\n    Name = \"terraform-example\"\n  }\n}"
+      "text": "data \"aws_ami\" \"ubuntu\" {\n    most_recent = true\n    owners      = [\"099720109477\"] # Canonical\n\n    filter {\n        name   = \"name\"\n        values = [\"ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*\"]\n    }\n}\n\nresource \"aws_instance\" \"example\" {\n    ami           = data.aws_ami.ubuntu.id\n    instance_type = \"t2.micro\"\n\n    tags = {\n        Name = \"terraform-example\"\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -731,7 +731,7 @@
     },
     {
       "kind": "code",
-      "text": "resource \"aws_security_group\" \"instance\" {\n  name = \"terraform-example-instance\"\n\n  ingress {\n    from_port   = 8080\n    to_port     = 8080\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]\n  }\n}\n\nresource \"aws_instance\" \"example\" {\n  ami                    = \"ami-0fb653ca2d3203ac1\"\n  instance_type          = \"t2.micro\"\n  vpc_security_group_ids = [aws_security_group.instance.id]\n\n  user_data = <<-EOF\n              #!/bin/bash\n              echo \"Hello, World\" > index.html\n              nohup busybox httpd -f -p 8080 &\n              EOF\n\n  user_data_replace_on_change = true\n\n  tags = {\n    Name = \"terraform-example\"\n  }\n}"
+      "text": "resource \"aws_security_group\" \"instance\" {\n    name = \"terraform-example-instance\"\n\n    ingress {\n        from_port   = 8080\n        to_port     = 8080\n        protocol    = \"tcp\"\n        cidr_blocks = [\"0.0.0.0/0\"]\n    }\n}\n\nresource \"aws_instance\" \"example\" {\n    ami                    = \"ami-0fb653ca2d3203ac1\"\n    instance_type          = \"t2.micro\"\n    vpc_security_group_ids = [aws_security_group.instance.id]\n\n    user_data = <<-EOF\n        #!/bin/bash\n        echo \"Hello, World\" > index.html\n        nohup busybox httpd -f -p 8080 &\n        EOF\n\n    user_data_replace_on_change = true\n\n    tags = {\n        Name = \"terraform-example\"\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -743,11 +743,11 @@
     },
     {
       "kind": "code",
-      "text": "variable \"server_port\" {\n  description = \"The port the server will use for HTTP requests\"\n  type        = number\n  default     = 8080\n}"
+      "text": "variable \"server_port\" {\n    description = \"The port the server will use for HTTP requests\"\n    type        = number\n    default     = 8080\n}"
     },
     {
       "kind": "code",
-      "text": "resource \"aws_security_group\" \"instance\" {\n  name = \"terraform-example-instance\"\n\n  ingress {\n    from_port   = var.server_port\n    to_port     = var.server_port\n    protocol    = \"tcp\"\n    cidr_blocks = [\"0.0.0.0/0\"]\n  }\n}\n\nresource \"aws_instance\" \"example\" {\n  ami                    = \"ami-0fb653ca2d3203ac1\"\n  instance_type          = \"t2.micro\"\n  vpc_security_group_ids = [aws_security_group.instance.id]\n\n  # ${var.server_port} で変数の値をスクリプトへ埋め込む（HEREDOC内でも補間が効く）\n  user_data = <<-EOF\n              #!/bin/bash\n              echo \"Hello, World\" > index.html\n              nohup busybox httpd -f -p ${var.server_port} &\n              EOF\n\n  user_data_replace_on_change = true\n\n  tags = {\n    Name = \"terraform-example\"\n  }\n}\n\noutput \"public_ip\" {\n  value       = aws_instance.example.public_ip\n  description = \"The public IP address of the web server\"\n}"
+      "text": "resource \"aws_security_group\" \"instance\" {\n    name = \"terraform-example-instance\"\n\n    ingress {\n        from_port   = var.server_port\n        to_port     = var.server_port\n        protocol    = \"tcp\"\n        cidr_blocks = [\"0.0.0.0/0\"]\n    }\n}\n\nresource \"aws_instance\" \"example\" {\n    ami                    = \"ami-0fb653ca2d3203ac1\"\n    instance_type          = \"t2.micro\"\n    vpc_security_group_ids = [aws_security_group.instance.id]\n\n    # ${var.server_port} で変数の値をスクリプトへ埋め込む（HEREDOC内でも補間が効く）\n    user_data = <<-EOF\n        #!/bin/bash\n        echo \"Hello, World\" > index.html\n        nohup busybox httpd -f -p ${var.server_port} &\n        EOF\n\n    user_data_replace_on_change = true\n\n    tags = {\n        Name = \"terraform-example\"\n    }\n}\n\noutput \"public_ip\" {\n    value       = aws_instance.example.public_ip\n    description = \"The public IP address of the web server\"\n}"
     },
     {
       "kind": "paragraph",
@@ -763,7 +763,7 @@
     },
     {
       "kind": "code",
-      "text": "resource \"aws_launch_template\" \"example\" {\n  image_id      = \"ami-0fb653ca2d3203ac1\"\n  instance_type = \"t2.micro\"\n\n  vpc_security_group_ids = [aws_security_group.instance.id]\n\n  user_data = base64encode(<<-EOF\n              #!/bin/bash\n              echo \"Hello, World\" > index.html\n              nohup busybox httpd -f -p 8080 &\n              EOF\n  )\n}\n\nresource \"aws_autoscaling_group\" \"example\" {\n  launch_template {\n    id      = aws_launch_template.example.id\n    version = aws_launch_template.example.latest_version\n  }\n\n  instance_refresh {\n    strategy = \"Rolling\"\n  }\n\n  min_size = 2\n  max_size = 10\n\n  tag {\n    key                 = \"Name\"\n    value               = \"terraform-asg-example\"\n    propagate_at_launch = true\n  }\n}"
+      "text": "resource \"aws_launch_template\" \"example\" {\n    image_id      = \"ami-0fb653ca2d3203ac1\"\n    instance_type = \"t2.micro\"\n\n    vpc_security_group_ids = [aws_security_group.instance.id]\n\n    user_data = base64encode(<<-EOF\n        #!/bin/bash\n        echo \"Hello, World\" > index.html\n        nohup busybox httpd -f -p 8080 &\n        EOF\n    )\n}\n\nresource \"aws_autoscaling_group\" \"example\" {\n    launch_template {\n        id      = aws_launch_template.example.id\n        version = aws_launch_template.example.latest_version\n    }\n\n    instance_refresh {\n        strategy = \"Rolling\"\n    }\n\n    min_size = 2\n    max_size = 10\n\n    tag {\n        key                 = \"Name\"\n        value               = \"terraform-asg-example\"\n        propagate_at_launch = true\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -783,7 +783,7 @@
     },
     {
       "kind": "code",
-      "text": "resource \"aws_db_instance\" \"production\" {\n  # ...\n\n  lifecycle {\n    prevent_destroy = true\n  }\n}"
+      "text": "resource \"aws_db_instance\" \"production\" {\n    # ...\n\n    lifecycle {\n        prevent_destroy = true\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -795,7 +795,7 @@
     },
     {
       "kind": "code",
-      "text": "terraform {\n  backend \"s3\" {\n    bucket       = \"my-company-terraform-state\"\n    key          = \"global/services/webserver-cluster/terraform.tfstate\"\n    region       = \"us-east-2\"\n    encrypt      = true\n    use_lockfile = true\n  }\n}"
+      "text": "terraform {\n    backend \"s3\" {\n        bucket       = \"my-company-terraform-state\"\n        key          = \"global/services/webserver-cluster/terraform.tfstate\"\n        region       = \"us-east-2\"\n        encrypt      = true\n        use_lockfile = true\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -819,7 +819,7 @@
     },
     {
       "kind": "code",
-      "text": "data \"terraform_remote_state\" \"vpc\" {\n  backend = \"s3\"\n\n  config = {\n    bucket = \"my-company-terraform-state\"\n    key    = \"global/vpc/terraform.tfstate\"\n    region = \"us-east-2\"\n  }\n}\n\nresource \"aws_instance\" \"example\" {\n  subnet_id = data.terraform_remote_state.vpc.outputs.subnet_id\n}"
+      "text": "data \"terraform_remote_state\" \"vpc\" {\n    backend = \"s3\"\n\n    config = {\n        bucket = \"my-company-terraform-state\"\n        key    = \"global/vpc/terraform.tfstate\"\n        region = \"us-east-2\"\n    }\n}\n\nresource \"aws_instance\" \"example\" {\n    subnet_id = data.terraform_remote_state.vpc.outputs.subnet_id\n}"
     },
     {
       "kind": "annotation",
@@ -835,7 +835,7 @@
     },
     {
       "kind": "code",
-      "text": "module \"webserver_cluster\" {\n  source = \"../../modules/services/webserver-cluster\"\n\n  cluster_name  = \"webservers-stage\"\n  instance_type = \"t2.micro\"\n  min_size      = 2\n  max_size      = 2\n}"
+      "text": "module \"webserver_cluster\" {\n    source = \"../../modules/services/webserver-cluster\"\n\n    cluster_name  = \"webservers-stage\"\n    instance_type = \"t2.micro\"\n    min_size      = 2\n    max_size      = 2\n}"
     },
     {
       "kind": "paragraph",
@@ -843,7 +843,7 @@
     },
     {
       "kind": "code",
-      "text": "variable \"cluster_name\" {\n  description = \"The name to use for all the cluster resources\"\n  type        = string\n}\n\nvariable \"instance_type\" {\n  description = \"The type of EC2 Instance to run\"\n  type        = string\n  default     = \"t2.micro\"\n\n  # 空文字を弾く。この validation があって初めて、\n  # 第9部の expect_failures = [var.instance_type] が検証エラーを検出できる\n  validation {\n    condition     = length(trimspace(var.instance_type)) > 0\n    error_message = \"instance_type must not be empty.\"\n  }\n}"
+      "text": "variable \"cluster_name\" {\n    description = \"The name to use for all the cluster resources\"\n    type        = string\n}\n\nvariable \"instance_type\" {\n    description = \"The type of EC2 Instance to run\"\n    type        = string\n    default     = \"t2.micro\"\n\n    # 空文字を弾く。この validation があって初めて、\n    # 第9部の expect_failures = [var.instance_type] が検証エラーを検出できる\n    validation {\n        condition     = length(trimspace(var.instance_type)) > 0\n        error_message = \"instance_type must not be empty.\"\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -851,7 +851,7 @@
     },
     {
       "kind": "code",
-      "text": "locals {\n  http_port    = 80\n  any_port     = 0\n  any_protocol = \"-1\"\n  all_ips      = [\"0.0.0.0/0\"]\n}"
+      "text": "locals {\n    http_port    = 80\n    any_port     = 0\n    any_protocol = \"-1\"\n    all_ips      = [\"0.0.0.0/0\"]\n}"
     },
     {
       "kind": "paragraph",
@@ -859,11 +859,11 @@
     },
     {
       "kind": "code",
-      "text": "output \"asg_name\" {\n  value       = aws_autoscaling_group.example.name\n  description = \"The name of the Auto Scaling Group\"\n}\n\noutput \"alb_dns_name\" {\n  value       = aws_lb.example.dns_name\n  description = \"The domain name of the load balancer\"\n}"
+      "text": "output \"asg_name\" {\n    value       = aws_autoscaling_group.example.name\n    description = \"The name of the Auto Scaling Group\"\n}\n\noutput \"alb_dns_name\" {\n    value       = aws_lb.example.dns_name\n    description = \"The domain name of the load balancer\"\n}"
     },
     {
       "kind": "code",
-      "text": "# path.moduleの利用例（落とし穴の対処）\nresource \"aws_instance\" \"example\" {\n  user_data = file(\"${path.module}/user-data.sh\")\n}"
+      "text": "# path.moduleの利用例（落とし穴の対処）\nresource \"aws_instance\" \"example\" {\n    user_data = file(\"${path.module}/user-data.sh\")\n}"
     },
     {
       "kind": "paragraph",
@@ -871,7 +871,7 @@
     },
     {
       "kind": "code",
-      "text": "module \"webserver_cluster\" {\n  source  = \"github.com/foo/modules//services/webserver-cluster?ref=v0.1.4\"\n\n  cluster_name  = \"webservers-stage\"\n  instance_type = \"t2.micro\"\n}\n\n# Terraformレジストリ経由の場合\nmodule \"vpc\" {\n  source  = \"terraform-aws-modules/vpc/aws\"\n  version = \"~> 5.0\"\n}"
+      "text": "module \"webserver_cluster\" {\n    source  = \"github.com/foo/modules//services/webserver-cluster?ref=v0.1.4\"\n\n    cluster_name  = \"webservers-stage\"\n    instance_type = \"t2.micro\"\n}\n\n# Terraformレジストリ経由の場合\nmodule \"vpc\" {\n    source  = \"terraform-aws-modules/vpc/aws\"\n    version = \"~> 5.0\"\n}"
     },
     {
       "kind": "annotation",
@@ -883,7 +883,7 @@
     },
     {
       "kind": "code",
-      "text": "# 以下の例が参照する入力変数。宣言がないと undeclared variable エラーになる\nvariable \"names\" {\n  description = \"for式で大文字化する名前のリスト\"\n  type        = list(string)\n  default     = [\"neo\", \"trinity\", \"morpheus\"]\n}\n\nvariable \"users\" {\n  description = \"バケットポリシーへ展開するユーザー名のリスト\"\n  type        = list(string)\n  default     = [\"neo\", \"trinity\"]\n}\n\n# count: 単純な複製（ただしリスト順序に依存し途中削除に弱い）\nresource \"aws_iam_user\" \"example\" {\n  count = 3\n  name  = \"neo.${count.index}\"\n}\n\n# for_each: キーに基づく複製（推奨）。順序に依存しないため安全に増減できる\nresource \"aws_iam_user\" \"example2\" {\n  for_each = toset([\"neo\", \"trinity\", \"morpheus\"])\n  name     = each.value\n}\n\n# for式: 値の変換\nlocals {\n  upper_names = [for name in var.names : upper(name)]\n}\n\n# for文字列ディレクティブ: テンプレート内でのループ\nlocals {\n  bucket_policy = <<-EOF\n  %{ for user in var.users ~}\n  Allow access for ${user}\n  %{ endfor ~}\n  EOF\n}"
+      "text": "# 以下の例が参照する入力変数。宣言がないと undeclared variable エラーになる\nvariable \"names\" {\n    description = \"for式で大文字化する名前のリスト\"\n    type        = list(string)\n    default     = [\"neo\", \"trinity\", \"morpheus\"]\n}\n\nvariable \"users\" {\n    description = \"バケットポリシーへ展開するユーザー名のリスト\"\n    type        = list(string)\n    default     = [\"neo\", \"trinity\"]\n}\n\n# count: 単純な複製（ただしリスト順序に依存し途中削除に弱い）\nresource \"aws_iam_user\" \"example\" {\n    count = 3\n    name  = \"neo.${count.index}\"\n}\n\n# for_each: キーに基づく複製（推奨）。順序に依存しないため安全に増減できる\nresource \"aws_iam_user\" \"example2\" {\n    for_each = toset([\"neo\", \"trinity\", \"morpheus\"])\n    name     = each.value\n}\n\n# for式: 値の変換\nlocals {\n    upper_names = [for name in var.names : upper(name)]\n}\n\n# for文字列ディレクティブ: テンプレート内でのループ\nlocals {\n    bucket_policy = <<-EOF\n    %{ for user in var.users ~}\n    Allow access for ${user}\n    %{ endfor ~}\n    EOF\n}"
     },
     {
       "kind": "annotation",
@@ -895,7 +895,7 @@
     },
     {
       "kind": "code",
-      "text": "variable \"enable_autoscaling\" {\n  description = \"スケジュールベースのオートスケーリングを有効にするか\"\n  type        = bool\n  default     = false\n}\n\nresource \"aws_autoscaling_schedule\" \"scale_out_during_business_hours\" {\n  count = var.enable_autoscaling ? 1 : 0\n\n  scheduled_action_name = \"scale-out-during-business-hours\"\n  min_size               = 2\n  max_size               = 10\n  desired_capacity       = 10\n  recurrence             = \"0 9 * * *\"\n  autoscaling_group_name = aws_autoscaling_group.example.name\n}"
+      "text": "variable \"enable_autoscaling\" {\n    description = \"スケジュールベースのオートスケーリングを有効にするか\"\n    type        = bool\n    default     = false\n}\n\nresource \"aws_autoscaling_schedule\" \"scale_out_during_business_hours\" {\n    count = var.enable_autoscaling ? 1 : 0\n\n    scheduled_action_name = \"scale-out-during-business-hours\"\n    min_size               = 2\n    max_size               = 10\n    desired_capacity       = 10\n    recurrence             = \"0 9 * * *\"\n    autoscaling_group_name = aws_autoscaling_group.example.name\n}"
     },
     {
       "kind": "paragraph",
@@ -907,11 +907,11 @@
     },
     {
       "kind": "code",
-      "text": "resource \"aws_launch_template\" \"example\" {\n  # ...\n  lifecycle {\n    create_before_destroy = true\n  }\n}\n\n# ASGが参照するターゲットグループ。この宣言がないと\n# aws_lb_target_group.asg は未定義参照となり terraform validate が失敗する\nresource \"aws_lb_target_group\" \"asg\" {\n  name = \"terraform-asg-example\"\n\n  # インスタンスが待ち受け、セキュリティグループが開放しているポートと一致させる。\n  # ここを 80 のままにするとヘルスチェックが通らず、min_elb_capacity の待機が\n  # タイムアウトして apply が失敗する\n  port     = 8080\n  protocol = \"HTTP\"\n  vpc_id   = var.vpc_id\n\n  health_check {\n    path     = \"/\"\n    protocol = \"HTTP\"\n    matcher  = \"200\"\n  }\n}\n\nvariable \"vpc_id\" {\n  description = \"ターゲットグループを作成するVPCのID\"\n  type        = string\n}\n\nvariable \"min_size\" {\n  description = \"ASGの最小インスタンス数（min_elb_capacityの待機台数にも使う）\"\n  type        = number\n  default     = 2\n}\n\nresource \"aws_autoscaling_group\" \"example\" {\n  # ...\n\n  # 1. ロードバランサー（ターゲットグループ）へ接続し、健全性の判定もELBに委ねる\n  target_group_arns = [aws_lb_target_group.asg.arn]\n  health_check_type = \"ELB\"\n\n  # 2. 指定台数がELBのヘルスチェックを通過するまで apply を完了させない\n  #    min_elb_capacity は「作成時」しか待たないため、既存ASGの更新でも待つ\n  #    wait_for_elb_capacity を使う\n  wait_for_elb_capacity = var.min_size\n\n  # 3. 既存ASGのインスタンス入れ替えは instance_refresh に任せる\n  #    ただし apply 完了後もAWS側で非同期に進むため、\n  #    CD側で完了確認とロールバックを別途実装すること\n  instance_refresh {\n    strategy = \"Rolling\"\n    preferences {\n      min_healthy_percentage = 100\n    }\n  }\n\n  lifecycle {\n    create_before_destroy = true\n  }\n}"
+      "text": "resource \"aws_launch_template\" \"example\" {\n    # ...\n    lifecycle {\n        create_before_destroy = true\n    }\n}\n\n# ASGが参照するターゲットグループ。この宣言がないと\n# aws_lb_target_group.asg は未定義参照となり terraform validate が失敗する\nresource \"aws_lb_target_group\" \"asg\" {\n    name = \"terraform-asg-example\"\n\n    # インスタンスが待ち受け、セキュリティグループが開放しているポートと一致させる。\n    # ここを 80 のままにするとヘルスチェックが通らず、min_elb_capacity の待機が\n    # タイムアウトして apply が失敗する\n    port     = 8080\n    protocol = \"HTTP\"\n    vpc_id   = var.vpc_id\n\n    health_check {\n        path     = \"/\"\n        protocol = \"HTTP\"\n        matcher  = \"200\"\n    }\n}\n\nvariable \"vpc_id\" {\n    description = \"ターゲットグループを作成するVPCのID\"\n    type        = string\n}\n\nvariable \"min_size\" {\n    description = \"ASGの最小インスタンス数（min_elb_capacityの待機台数にも使う）\"\n    type        = number\n    default     = 2\n}\n\nresource \"aws_autoscaling_group\" \"example\" {\n    # ...\n\n    # 1. ロードバランサー（ターゲットグループ）へ接続し、健全性の判定もELBに委ねる\n    target_group_arns = [aws_lb_target_group.asg.arn]\n    health_check_type = \"ELB\"\n\n    # 2. 指定台数がELBのヘルスチェックを通過するまで apply を完了させない\n    #    min_elb_capacity は「作成時」しか待たないため、既存ASGの更新でも待つ\n    #    wait_for_elb_capacity を使う\n    wait_for_elb_capacity = var.min_size\n\n    # 3. 既存ASGのインスタンス入れ替えは instance_refresh に任せる\n    #    ただし apply 完了後もAWS側で非同期に進むため、\n    #    CD側で完了確認とロールバックを別途実装すること\n    instance_refresh {\n        strategy = \"Rolling\"\n        preferences {\n            min_healthy_percentage = 100\n        }\n    }\n\n    lifecycle {\n        create_before_destroy = true\n    }\n}"
     },
     {
       "kind": "code",
-      "text": "# リソース名変更時の安全な移行(movedブロック)\nmoved {\n  from = aws_instance.old_name\n  to   = aws_instance.new_name\n}"
+      "text": "# リソース名変更時の安全な移行(movedブロック)\nmoved {\n    from = aws_instance.old_name\n    to   = aws_instance.new_name\n}"
     },
     {
       "kind": "paragraph",
@@ -923,7 +923,7 @@
     },
     {
       "kind": "code",
-      "text": "variable \"db_password\" {\n  description = \"The password for the database\"\n  type        = string\n  sensitive   = true\n}"
+      "text": "variable \"db_password\" {\n    description = \"The password for the database\"\n    type        = string\n    sensitive   = true\n}"
     },
     {
       "kind": "annotation",
@@ -935,7 +935,7 @@
     },
     {
       "kind": "code",
-      "text": "ephemeral \"random_password\" \"db_password\" {\n  length           = 16\n  override_special = \"!#$%&*()-_=+[]{}<>:?\"\n}\n\nresource \"aws_db_instance\" \"example\" {\n  identifier        = \"my-db\"\n  engine            = \"postgres\"\n  instance_class    = \"db.t3.micro\"\n  allocated_storage = 20\n\n  username = \"app_user\"\n\n  password_wo         = ephemeral.random_password.db_password.result\n  password_wo_version  = 1\n\n  # 学習・検証用DBの前提。これを省くとAWSが最終スナップショット識別子を要求し、\n  # terraform destroy が失敗する。本番DBでは skip_final_snapshot は false のままにし、\n  # final_snapshot_identifier に有効な識別子を指定すること\n  #   skip_final_snapshot       = false\n  #   final_snapshot_identifier = var.final_snapshot_identifier  # 例: \"my-db-final-2026-08-29\"\n  # timestamp() のような毎回変わる関数は差分が消えなくなるため使わない\n  skip_final_snapshot = true\n}"
+      "text": "ephemeral \"random_password\" \"db_password\" {\n    length           = 16\n    override_special = \"!#$%&*()-_=+[]{}<>:?\"\n}\n\nresource \"aws_db_instance\" \"example\" {\n    identifier        = \"my-db\"\n    engine            = \"postgres\"\n    instance_class    = \"db.t3.micro\"\n    allocated_storage = 20\n\n    username = \"app_user\"\n\n    password_wo         = ephemeral.random_password.db_password.result\n    password_wo_version  = 1\n\n    # 学習・検証用DBの前提。これを省くとAWSが最終スナップショット識別子を要求し、\n    # terraform destroy が失敗する。本番DBでは skip_final_snapshot は false のままにし、\n    # final_snapshot_identifier に有効な識別子を指定すること\n    #   skip_final_snapshot       = false\n    #   final_snapshot_identifier = var.final_snapshot_identifier  # 例: \"my-db-final-2026-08-29\"\n    # timestamp() のような毎回変わる関数は差分が消えなくなるため使わない\n    skip_final_snapshot = true\n}"
     },
     {
       "kind": "paragraph",
@@ -955,7 +955,7 @@
     },
     {
       "kind": "code",
-      "text": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 6.0\"\n    }\n  }\n}"
+      "text": "terraform {\n    required_providers {\n        aws = {\n            source  = \"hashicorp/aws\"\n            version = \"~> 6.0\"\n        }\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -963,7 +963,7 @@
     },
     {
       "kind": "code",
-      "text": "provider \"aws\" {\n  region = \"us-east-2\"\n}\n\nprovider \"aws\" {\n  alias  = \"usa_west_2\"\n  region = \"us-west-2\"\n}\n\nresource \"aws_instance\" \"east\" {\n  provider = aws\n  # ...\n}\n\nresource \"aws_instance\" \"west\" {\n  provider = aws.usa_west_2\n  # ...\n}"
+      "text": "provider \"aws\" {\n    region = \"us-east-2\"\n}\n\nprovider \"aws\" {\n    alias  = \"usa_west_2\"\n    region = \"us-west-2\"\n}\n\nresource \"aws_instance\" \"east\" {\n    provider = aws\n    # ...\n}\n\nresource \"aws_instance\" \"west\" {\n    provider = aws.usa_west_2\n    # ...\n}"
     },
     {
       "kind": "paragraph",
@@ -971,7 +971,7 @@
     },
     {
       "kind": "code",
-      "text": "terraform {\n  required_providers {\n    aws = {\n      source                = \"hashicorp/aws\"\n      version               = \"~> 6.0\"\n      configuration_aliases = [aws.usa_west_2]\n    }\n  }\n}"
+      "text": "terraform {\n    required_providers {\n        aws = {\n            source                = \"hashicorp/aws\"\n            version               = \"~> 6.0\"\n            configuration_aliases = [aws.usa_west_2]\n        }\n    }\n}"
     },
     {
       "kind": "paragraph",
@@ -983,7 +983,7 @@
     },
     {
       "kind": "code",
-      "text": "# root module A（例: live/eks-cluster）: aws プロバイダーでクラスタ本体だけを管理する\n\n# クラスタが参照する前提を同じroot module内で宣言しておく\nvariable \"subnet_ids\" {\n  description = \"EKSコントロールプレーンを配置するサブネットID（最低2つ、別AZ）\"\n  type        = list(string)\n}\n\ndata \"aws_iam_policy_document\" \"cluster_assume_role\" {\n  statement {\n    effect  = \"Allow\"\n    actions = [\"sts:AssumeRole\"]\n\n    principals {\n      type        = \"Service\"\n      identifiers = [\"eks.amazonaws.com\"]\n    }\n  }\n}\n\nresource \"aws_iam_role\" \"cluster\" {\n  name               = \"example-cluster-role\"\n  assume_role_policy = data.aws_iam_policy_document.cluster_assume_role.json\n}\n\nresource \"aws_iam_role_policy_attachment\" \"cluster\" {\n  role       = aws_iam_role.cluster.name\n  policy_arn = \"arn:aws:iam::aws:policy/AmazonEKSClusterPolicy\"\n}\n\nresource \"aws_eks_cluster\" \"cluster\" {\n  name     = \"example-cluster\"\n  role_arn = aws_iam_role.cluster.arn\n\n  vpc_config {\n    subnet_ids = var.subnet_ids\n  }\n\n  # ロール権限が付与される前にクラスタ作成が走らないようにする\n  depends_on = [aws_iam_role_policy_attachment.cluster]\n}\n\noutput \"cluster_name\" {\n  value       = aws_eks_cluster.cluster.name\n  description = \"Kubernetesリソース側のroot moduleへ渡すクラスタ名\"\n}"
+      "text": "# root module A（例: live/eks-cluster）: aws プロバイダーでクラスタ本体だけを管理する\n\n# クラスタが参照する前提を同じroot module内で宣言しておく\nvariable \"subnet_ids\" {\n    description = \"EKSコントロールプレーンを配置するサブネットID（最低2つ、別AZ）\"\n    type        = list(string)\n}\n\ndata \"aws_iam_policy_document\" \"cluster_assume_role\" {\n    statement {\n        effect  = \"Allow\"\n        actions = [\"sts:AssumeRole\"]\n\n        principals {\n            type        = \"Service\"\n            identifiers = [\"eks.amazonaws.com\"]\n        }\n    }\n}\n\nresource \"aws_iam_role\" \"cluster\" {\n    name               = \"example-cluster-role\"\n    assume_role_policy = data.aws_iam_policy_document.cluster_assume_role.json\n}\n\nresource \"aws_iam_role_policy_attachment\" \"cluster\" {\n    role       = aws_iam_role.cluster.name\n    policy_arn = \"arn:aws:iam::aws:policy/AmazonEKSClusterPolicy\"\n}\n\nresource \"aws_eks_cluster\" \"cluster\" {\n    name     = \"example-cluster\"\n    role_arn = aws_iam_role.cluster.arn\n\n    vpc_config {\n        subnet_ids = var.subnet_ids\n    }\n\n    # ロール権限が付与される前にクラスタ作成が走らないようにする\n    depends_on = [aws_iam_role_policy_attachment.cluster]\n}\n\noutput \"cluster_name\" {\n    value       = aws_eks_cluster.cluster.name\n    description = \"Kubernetesリソース側のroot moduleへ渡すクラスタ名\"\n}"
     },
     {
       "kind": "paragraph",
@@ -991,7 +991,7 @@
     },
     {
       "kind": "code",
-      "text": "# root module B（例: live/eks-workloads）: kubernetes プロバイダーでクラスタ内リソースを管理する\nvariable \"cluster_name\" {\n  description = \"root module A の cluster_name 出力（terraform_remote_state 等で受け取る）\"\n  type        = string\n}\n\ndata \"aws_eks_cluster\" \"cluster\" {\n  name = var.cluster_name\n}\n\n# provider ブロックが参照する認証トークンの供給元\ndata \"aws_eks_cluster_auth\" \"cluster\" {\n  name = var.cluster_name\n}\n\nprovider \"kubernetes\" {\n  host                   = data.aws_eks_cluster.cluster.endpoint\n  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)\n  token                  = data.aws_eks_cluster_auth.cluster.token\n}\n\nresource \"kubernetes_deployment\" \"example\" {\n  metadata {\n    name = \"example-app\"\n  }\n\n  spec {\n    replicas = 3\n    # selector と template は紙面の都合で省略している（どちらも必須ブロック）\n  }\n}"
+      "text": "# root module B（例: live/eks-workloads）: kubernetes プロバイダーでクラスタ内リソースを管理する\nvariable \"cluster_name\" {\n    description = \"root module A の cluster_name 出力（terraform_remote_state 等で受け取る）\"\n    type        = string\n}\n\ndata \"aws_eks_cluster\" \"cluster\" {\n    name = var.cluster_name\n}\n\n# provider ブロックが参照する認証トークンの供給元\ndata \"aws_eks_cluster_auth\" \"cluster\" {\n    name = var.cluster_name\n}\n\nprovider \"kubernetes\" {\n    host                   = data.aws_eks_cluster.cluster.endpoint\n    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)\n    token                  = data.aws_eks_cluster_auth.cluster.token\n}\n\nresource \"kubernetes_deployment\" \"example\" {\n    metadata {\n        name = \"example-app\"\n    }\n\n    spec {\n        replicas = 3\n        # selector と template は紙面の都合で省略している（どちらも必須ブロック）\n    }\n}"
     },
     {
       "kind": "annotation",
@@ -1023,7 +1023,7 @@
     },
     {
       "kind": "code",
-      "text": "mock_provider \"aws\" {}\n\nrun \"validate_cluster_size\" {\n  command = plan\n\n  variables {\n    cluster_name  = \"test-cluster\"\n    instance_type = \"t2.micro\"\n    min_size      = 2\n    max_size      = 2\n  }\n\n  assert {\n    condition     = aws_autoscaling_group.example.min_size == 2\n    error_message = \"ASGのmin_sizeが期待値と一致しません\"\n  }\n}\n\nrun \"reject_invalid_instance_type\" {\n  command = plan\n\n  variables {\n    # instance_type の validation 失敗だけをテストしたいので、\n    # 必須変数である cluster_name には有効な値を与えておく\n    # （未指定だと「変数未設定」で先に失敗し、意図したテストにならない）\n    cluster_name  = \"test-cluster\"\n    instance_type = \"\"\n  }\n\n  expect_failures = [var.instance_type]\n}"
+      "text": "mock_provider \"aws\" {}\n\nrun \"validate_cluster_size\" {\n    command = plan\n\n    variables {\n        cluster_name  = \"test-cluster\"\n        instance_type = \"t2.micro\"\n        min_size      = 2\n        max_size      = 2\n    }\n\n    assert {\n        condition     = aws_autoscaling_group.example.min_size == 2\n        error_message = \"ASGのmin_sizeが期待値と一致しません\"\n    }\n}\n\nrun \"reject_invalid_instance_type\" {\n    command = plan\n\n    variables {\n        # instance_type の validation 失敗だけをテストしたいので、\n        # 必須変数である cluster_name には有効な値を与えておく\n        # （未指定だと「変数未設定」で先に失敗し、意図したテストにならない）\n        cluster_name  = \"test-cluster\"\n        instance_type = \"\"\n    }\n\n    expect_failures = [var.instance_type]\n}"
     },
     {
       "kind": "paragraph",
@@ -1047,7 +1047,7 @@
     },
     {
       "kind": "code",
-      "text": "package test\n\nimport (\n    \"testing\"\n    \"github.com/gruntwork-io/terratest/modules/terraform\"\n)\n\nfunc TestWebServerCluster(t *testing.T) {\n    terraformOptions := &terraform.Options{\n        TerraformDir: \"../examples/webserver-cluster\",\n    }\n\n    defer terraform.Destroy(t, terraformOptions)\n    terraform.InitAndApply(t, terraformOptions)\n    // HTTPリクエストなどで検証\n}"
+      "text": "package test\n\nimport (\n        \"testing\"\n        \"github.com/gruntwork-io/terratest/modules/terraform\"\n)\n\nfunc TestWebServerCluster(t *testing.T) {\n        terraformOptions := &terraform.Options{\n                TerraformDir: \"../examples/webserver-cluster\",\n        }\n\n        defer terraform.Destroy(t, terraformOptions)\n        terraform.InitAndApply(t, terraformOptions)\n        // HTTPリクエストなどで検証\n}"
     },
     {
       "kind": "paragraph",

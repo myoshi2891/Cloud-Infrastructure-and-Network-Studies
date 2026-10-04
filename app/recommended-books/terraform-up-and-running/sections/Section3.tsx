@@ -14,14 +14,14 @@ export function Section3({ Diagram }: SectionProps) {
 <h3 id="3-2-stateの共有ストレージリモートバックエンド">{' '}3-2. Stateの共有ストレージ（リモートバックエンド）{' '}</h3>
 <p>{' '}チーム開発ではState fileをローカルに置かず、S3・Google Cloud Storage・Azure Blob Storage・HCP Terraformのようなリモートバックエンドで共有・排他制御するのが必須のベストプラクティスです。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">terraform &#123;</div>
-                    <div className="code-line">  backend &quot;s3&quot; &#123;</div>
-                    <div className="code-line">    bucket       = &quot;my-company-terraform-state&quot;</div>
-                    <div className="code-line">    key          = &quot;global/services/webserver-cluster/terraform.tfstate&quot;</div>
-                    <div className="code-line">    region       = &quot;us-east-2&quot;</div>
-                    <div className="code-line">    encrypt      = true</div>
-                    <div className="code-line">    use_lockfile = true</div>
-                    <div className="code-line">  &#125;</div>
+                    <div className="code-line"><span className="hl-kw">terraform</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-kw">backend</span> <span className="hl-str">&quot;s3&quot;</span> &#123;</div>
+                    <div className="code-line">        <span className="hl-attr">bucket</span>       = <span className="hl-str">&quot;my-company-terraform-state&quot;</span></div>
+                    <div className="code-line">        <span className="hl-attr">key</span>          = <span className="hl-str">&quot;global/services/webserver-cluster/terraform.tfstate&quot;</span></div>
+                    <div className="code-line">        <span className="hl-attr">region</span>       = <span className="hl-str">&quot;us-east-2&quot;</span></div>
+                    <div className="code-line">        <span className="hl-attr">encrypt</span>      = <span className="hl-bool">true</span></div>
+                    <div className="code-line">        <span className="hl-attr">use_lockfile</span> = <span className="hl-bool">true</span></div>
+                    <div className="code-line">    &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="3-3-2026年最新s3ネイティブロックとdynamodbの非推奨化">{' '}3-3. 【2026年最新】S3ネイティブロックとDynamoDBの非推奨化{' '}</h3>
@@ -104,18 +104,18 @@ export function Section3({ Diagram }: SectionProps) {
 <h3 id="3-6-terraform_remote_stateデータソース">{' '}3-6.{' '}<code>terraform_remote_state</code>データソース{' '}</h3>
 <p>{' '}あるコンポーネントのStateから、別のコンポーネントが出力値を参照する仕組みです。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">data &quot;terraform_remote_state&quot; &quot;vpc&quot; &#123;</div>
-                    <div className="code-line">  backend = &quot;s3&quot;</div>
+                    <div className="code-line"><span className="hl-kw">data</span> <span className="hl-type">&quot;terraform_remote_state&quot;</span> <span className="hl-str">&quot;vpc&quot;</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-kw">backend</span> = <span className="hl-str">&quot;s3&quot;</span></div>
                     <div className="code-line"></div>
-                    <div className="code-line">  config = &#123;</div>
-                    <div className="code-line">    bucket = &quot;my-company-terraform-state&quot;</div>
-                    <div className="code-line">    key    = &quot;global/vpc/terraform.tfstate&quot;</div>
-                    <div className="code-line">    region = &quot;us-east-2&quot;</div>
-                    <div className="code-line">  &#125;</div>
+                    <div className="code-line">    <span className="hl-attr">config</span> = &#123;</div>
+                    <div className="code-line">        <span className="hl-attr">bucket</span> = <span className="hl-str">&quot;my-company-terraform-state&quot;</span></div>
+                    <div className="code-line">        <span className="hl-attr">key</span>    = <span className="hl-str">&quot;global/vpc/terraform.tfstate&quot;</span></div>
+                    <div className="code-line">        <span className="hl-attr">region</span> = <span className="hl-str">&quot;us-east-2&quot;</span></div>
+                    <div className="code-line">    &#125;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource &quot;aws_instance&quot; &quot;example&quot; &#123;</div>
-                    <div className="code-line">  subnet_id = data.terraform_remote_state.vpc.outputs.subnet_id</div>
+                    <div className="code-line"><span className="hl-kw">resource</span> <span className="hl-type">&quot;aws_instance&quot;</span> <span className="hl-str">&quot;example&quot;</span> &#123;</div>
+                    <div className="code-line">    <span className="hl-attr">subnet_id</span> = data.terraform_remote_state.vpc.outputs.subnet_id</div>
                     <div className="code-line">&#125;</div>
                 </pre>
 <div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}モジュール間の依存関係を<code>terraform_remote_state</code>で明示することで、VPCのような基盤コンポーネントと、アプリケーション固有のリソースを別々のStateに分離しつつ連携できます。{' '}</p>{' '}</div>{' '}</div>
