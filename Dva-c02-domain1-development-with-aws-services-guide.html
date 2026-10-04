@@ -88,7 +88,7 @@ const D = {
      "id": "1.1.5",
      "name": "耐障害性コード",
      "point": "タイムアウト・リトライ・冪等性・隔離(DLQ)・縮退運転",
-     "bp": "リトライは<b>指数バックオフ + ジッター</b>。SDK の標準リトライ(standard / adaptive)をまず使う。400 系は再試行しない"
+     "bp": "リトライは<b>指数バックオフ + ジッター</b>。SDK の標準リトライ(standard / adaptive)をまず使う。判定は HTTP ステータスだけでなく<b>エラーコード</b>で行う: 検証エラー(<code>ValidationException</code> など)は再試行しない。スロットリング(<code>ThrottlingException</code> など、HTTP 400 で返るものを含む)や一時的エラーは再試行する"
     },
     {
      "id": "1.1.6",
@@ -487,8 +487,18 @@ function render() {
   document.querySelectorAll('.cnt').forEach(e => e.textContent = n);
   document.querySelectorAll('.bar').forEach(e => e.style.width = Math.round(n / ids.length * 100) + '%');
 }
-document.addEventListener('change', e => { const id = e.target.dataset.done; if (id) { e.target.checked ? st.done.add(id) : st.done.delete(id); render(); } });
-document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { st.tab = b.dataset.tab; render(); } });
+/* 再描画でチェックボックスが置き換わるため、同じスキルの新しい要素へフォーカスを戻す */
+document.addEventListener('change', e => { const id = e.target.dataset.done; if (id) { e.target.checked ? st.done.add(id) : st.done.delete(id); render(); document.querySelector(`[data-done="${id}"]`)?.focus({ preventScroll: true }); } });
+/* タスク絞り込みで非表示のセクションへ移動する場合は、先にそのタスクのタブを有効化する */
+function reveal(key) {
+  if (!D.tasks.some(t => t.key === key) || st.tab === 'all' || st.tab === key) return;
+  st.tab = key; render();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-tab]'); if (b) { st.tab = b.dataset.tab; render(); return; }
+  const a = e.target.closest('a[href^="#"]'); if (a) reveal(a.getAttribute('href').slice(1));
+});
+addEventListener('hashchange', () => { const key = location.hash.slice(1); reveal(key); document.getElementById(key)?.scrollIntoView(); });
 document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; render(); });
 
 /* ---- 現在地ハイライト ---- */

@@ -1,0 +1,4117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>AWS DVA-C02 Domain 3: Deployment 初学者向けガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#faf8f3;--paper-alt:#f1ede2;--white:#fff;--ink:#1f2430;--muted:#556070;--indigo:#33408f;--indigo-soft:#e8ebf8;--gold:#b7862b;--gold-soft:#fbf3de;--forest:#2f6b4f;--plum:#7a3b69;--border:#ddd6c6;--code:#f4f0e6;--sb:290px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;font-size:1rem;line-height:1.85}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sb);background:var(--white);border-right:1px solid var(--border);overflow-y:auto;padding:20px 14px 40px;z-index:20}
+.sidebar .brand{font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:1rem;color:var(--indigo);margin:0 8px 14px;line-height:1.4}
+.nav{display:block;color:var(--ink);text-decoration:none;font-size:1rem;line-height:1.45;padding:6px 10px;border-radius:6px;border-left:3px solid transparent}
+.nav.l1{font-weight:700;color:var(--indigo);margin-top:12px}
+.nav:hover{background:var(--paper-alt)}
+.nav.active{background:var(--indigo-soft);border-left-color:var(--indigo);color:var(--indigo);font-weight:700}
+main{margin-left:var(--sb);display:block}
+.hero{background:linear-gradient(135deg,#eef0fb,#faf3df);border-bottom:1px solid var(--border);padding:48px 36px 40px}
+.hero .eyebrow{font-weight:700;color:var(--gold);letter-spacing:.06em}
+.hero h1{background:none;padding:0;border-radius:0;font-family:"Source Serif 4","Noto Sans JP",serif;font-size:2.4rem;line-height:1.3;margin:.25em 0 .4em;color:var(--ink);letter-spacing:.01em}
+.hero h1 .sub{display:block;font-family:"Noto Sans JP",sans-serif;font-size:1.3rem;font-weight:700;color:var(--indigo);margin-top:.5em;padding-left:14px;border-left:5px solid var(--gold)}
+.hero p{margin:.5em 0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{background:var(--white);border:1px solid var(--border);border-radius:999px;padding:4px 14px;font-weight:500}
+.content{padding:28px 36px 80px}
+h1{font-family:"Source Serif 4","Noto Sans JP",serif;font-size:1.7rem;color:var(--white);background:var(--indigo);padding:14px 20px;border-radius:10px;margin:64px 0 8px}
+h2{font-size:1.5rem;margin:56px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--indigo);color:var(--ink)}
+h3{font-size:1.2rem;margin:32px 0 8px;color:var(--indigo)}
+h4{font-size:1.05rem;margin:24px 0 6px;color:var(--forest)}
+p,li{overflow-wrap:break-word}
+a{color:var(--indigo);overflow-wrap:anywhere}
+blockquote{margin:16px 0;padding:10px 18px;background:var(--gold-soft);border-left:4px solid var(--gold);border-radius:0 8px 8px 0}
+blockquote p{margin:.4em 0}
+code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:1rem;background:var(--code);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+pre{background:var(--code);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;line-height:1.6}
+pre code{background:none;padding:0;overflow-wrap:normal}
+.table-wrap{overflow-x:auto;min-width:0;margin:16px 0;border:1px solid var(--border);border-radius:8px;background:var(--white)}
+table{border-collapse:collapse;width:100%}
+th{background:var(--indigo);color:#fff;text-align:left;font-weight:700}
+th,td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;overflow-wrap:anywhere}
+tr:hover td{background:var(--paper-alt)}
+.diagram-wrap{display:flex;justify-content:safe center;overflow-x:auto;min-width:0;width:100%;margin:20px 0;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:10px}
+.diagram-wrap>*{min-width:0}
+.diagram-canvas svg{flex-shrink:0;max-width:none;height:auto}
+.mermaidTooltip{font-size:1rem!important}
+details{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:8px 14px;margin:8px 0 18px}
+summary{cursor:pointer;font-weight:700;color:var(--forest)}
+hr{border:0;margin:0;height:0}
+.mobile-bar{display:none}
+.mobile-bar button{font-size:1rem}
+.footer{padding:24px 36px;border-top:1px solid var(--border);color:var(--muted)}
+@media(max-width:900px){
+ .sidebar{transform:translateX(-100%);transition:transform .2s;box-shadow:2px 0 12px rgba(0,0,0,.15)}
+ .sidebar.open{transform:none}
+ main{margin-left:0}
+ .mobile-bar{display:flex;position:sticky;top:0;z-index:30;background:var(--white);border-bottom:1px solid var(--border);padding:8px 14px;align-items:center;gap:10px}
+ .mobile-bar button{background:var(--indigo);color:#fff;border:0;border-radius:6px;padding:6px 14px;font-family:inherit}
+ .hero{padding:32px 16px}.content{padding:20px 16px 60px}.hero h1{font-size:1.7rem}.hero h1 .sub{font-size:1.1rem}h1{font-size:1.35rem}h2{font-size:1.3rem}.footer{padding:20px 18px}
+}
+
+.hljs{color:#24292f;background:transparent}
+.hljs-comment,.hljs-quote{color:#6b7684;font-style:italic}
+.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-built_in{color:#8a2f7a;font-weight:600}
+.hljs-string,.hljs-regexp,.hljs-addition{color:#1f6b46}
+.hljs-number,.hljs-symbol,.hljs-bullet{color:#b4540a}
+.hljs-attr,.hljs-attribute,.hljs-property{color:#2b3f9e}
+.hljs-title,.hljs-section,.hljs-name,.hljs-type{color:#0b6e8a;font-weight:600}
+.hljs-variable,.hljs-template-variable,.hljs-params{color:#9a5b00}
+.hljs-meta,.hljs-doctag{color:#6b7684}
+.hljs-deletion{color:#b3261e}
+
+li.chk{list-style:none;margin:0}
+.refs{margin:32px 0 8px;padding:16px 18px 18px;background:linear-gradient(180deg,#f3f4fc,#fbf9f2);border:1px solid #cfd4ee;border-radius:12px}
+.refs-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.refs-title{font-weight:700;color:var(--indigo);display:inline-flex;align-items:center;gap:8px}
+.refs-title::before{content:"";width:6px;height:1.2em;background:var(--gold);border-radius:3px;display:inline-block}
+.refs-count{margin-left:auto;background:var(--white);border:1px solid var(--border);border-radius:999px;padding:0 12px;color:var(--muted);font-weight:500}
+.refs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+a.ref{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:var(--white);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--ink);line-height:1.55;min-width:0;transition:transform .12s,box-shadow .12s,border-color .12s}
+a.ref:hover{transform:translateY(-2px);border-color:var(--indigo);box-shadow:0 6px 16px rgba(51,64,143,.14)}
+.ref-top{display:flex;align-items:center;justify-content:space-between}
+.ref-kind{font-weight:700;border-radius:999px;padding:0 10px;border:1px solid}
+.ref-kind.aws{color:var(--indigo);background:var(--indigo-soft);border-color:#c5cbee}
+.ref-kind.oss{color:var(--plum);background:#f6e9f2;border-color:#e2c3d8}
+.ref-kind.ext{color:var(--forest);background:#e6f2ec;border-color:#b9d9c8}
+.ref-arrow{color:var(--indigo);font-weight:700}
+a.ref:hover .ref-arrow{color:var(--gold)}
+.ref-label{font-weight:700}
+.ref-url{color:var(--muted);overflow-wrap:anywhere;word-break:break-all}
+.ref-url b{color:var(--indigo);font-weight:500}
+.checklist{margin:20px 0;padding:18px 20px 20px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 10px rgba(31,36,48,.05)}
+.cl-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.cl-title{font-weight:700;font-size:1.15rem;color:var(--ink)}
+.cl-count{color:var(--muted)}.cl-count b{color:var(--forest);font-size:1.4rem}
+.cl-bar{height:10px;background:var(--paper-alt);border-radius:999px;overflow:hidden;margin:10px 0 16px}
+.cl-fill{height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--forest));border-radius:999px;transition:width .25s}
+.checklist ul{margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:10px}
+.checklist li.chk label{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--paper);height:100%;transition:background .15s,border-color .15s}
+.checklist li.chk label:hover{border-color:var(--indigo);background:var(--indigo-soft)}
+.checklist li.chk input{appearance:none;-webkit-appearance:none;flex:none;width:1.5rem;height:1.5rem;margin:2px 0 0;border:2px solid #9aa3c4;border-radius:7px;background:var(--white);display:grid;place-content:center;cursor:pointer;font-size:1rem}
+.checklist li.chk input::after{content:"";width:.7rem;height:.4rem;border-left:3px solid #fff;border-bottom:3px solid #fff;transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.checklist li.chk input:checked{background:var(--forest);border-color:var(--forest)}
+.checklist li.chk input:checked::after{opacity:1}
+.checklist li.chk.done label{background:#eaf5ef;border-color:#b9d9c8}
+.cl-text{min-width:0;overflow-wrap:anywhere}
+.cl-done{margin-top:14px;padding:10px 14px;background:#eaf5ef;border:1px solid #b9d9c8;border-radius:10px;color:var(--forest);font-weight:700}
+@media(max-width:900px){.refs{padding:12px}.checklist{padding:14px}}
+</style>
+</head>
+<body>
+<nav class="sidebar" id="sb"><div class="brand">DVA-C02<br>Domain 3: Deployment</div><a class="nav l2" href="#s1">0. はじめに：このガイドの使い方と Domain 3 の全体像</a><a class="nav l2" href="#s2">Step 1：デプロイの全体像（CI/CD と環境の考え方）</a><a class="nav l1" href="#s3">Task 1：デプロイ用アプリケーションアーティファクトの準備</a><a class="nav l2" href="#s4">Step 2：依存関係の管理（Skill 3.1.1）</a><a class="nav l2" href="#s5">Step 3：ファイルとディレクトリ構造（Skill 3.1.2）</a><a class="nav l2" href="#s6">Step 4：コードリポジトリの活用（Skill 3.1.3）</a><a class="nav l2" href="#s7">Step 5：リソース要件（メモリ・CPU）（Skill 3.1.4）</a><a class="nav l2" href="#s8">Step 6：環境別の設定と AWS AppConfig（Skill 3.1.5）</a><a class="nav l1" href="#s9">Task 2：開発環境でのアプリケーションテスト</a><a class="nav l2" href="#s10">Step 7：デプロイ済みコードのテスト（Skill 3.2.1）</a><a class="nav l2" href="#s11">Step 8：統合テストと外部依存のモック（Skill 3.2.2）</a><a class="nav l2" href="#s12">Step 9：開発用エンドポイントと API Gateway ステージ（Skill 3.2.3）</a><a class="nav l2" href="#s13">Step 10：既存環境へのスタック更新（Skill 3.2.4）</a><a class="nav l2" href="#s14">Step 11：イベント駆動アプリケーションのテスト（Skill 3.2.5）</a><a class="nav l1" href="#s15">Task 3：デプロイテストの自動化</a><a class="nav l2" href="#s16">Step 12：テストイベントの作成（Skill 3.3.1）</a><a class="nav l2" href="#s17">Step 13：API リソースの複数環境へのデプロイと環境管理（Skill 3.3.2 / 3.3.5）</a><a class="nav l2" href="#s18">Step 14：承認済みバージョンを使う環境（Skill 3.3.3）</a><a class="nav l2" href="#s19">Step 15：IaC テンプレートの実装とデプロイ（Skill 3.3.4）</a><a class="nav l2" href="#s20">Step 16：Amazon Q Developer（と後継 Kiro）によるテスト生成（Skill 3.3.6）</a><a class="nav l1" href="#s21">Task 4：AWS CI/CD サービスによるコードデプロイ</a><a class="nav l2" href="#s22">Step 17：Lambda のデプロイパッケージ形式（Skill 3.4.1）</a><a class="nav l2" href="#s23">Step 18：API Gateway のステージとカスタムドメイン（Skill 3.4.2）</a><a class="nav l2" href="#s24">Step 19：既存 IaC テンプレートの更新（Skill 3.4.3）</a><a class="nav l2" href="#s25">Step 20：AWS サービスによるアプリケーション環境の管理（Skill 3.4.4）</a><a class="nav l2" href="#s26">Step 21：コミットで起動する CI/CD とワークフローのオーケストレーション（Skill 3.4.6 / 3.4.7）</a><a class="nav l2" href="#s27">Step 22：デプロイ戦略（Skill 3.4.5 / 3.4.11）</a><a class="nav l2" href="#s28">Step 23：ロールバック（Skill 3.4.8）</a><a class="nav l2" href="#s29">Step 24：ラベルとブランチによるバージョン・リリース管理（Skill 3.4.9）</a><a class="nav l2" href="#s30">Step 25：ランタイム設定による動的デプロイ（Skill 3.4.10）</a><a class="nav l2" href="#s31">Step 26：総合演習（練習問題・チェックリスト）</a><a class="nav l2" href="#s32">付録：スキル番号と Step の対応表</a><a class="nav l2" href="#s33">付録：根拠となる一次情報</a></nav>
+<div class="mobile-bar"><button id="mb" type="button">目次</button><span>Domain 3: Deployment</span></div>
+<main>
+<header class="hero">
+<div class="eyebrow">AWS Certified Developer - Associate (DVA-C02)</div>
+<h1>Content Domain 3: Deployment<span class="sub">初学者向けステップバイステップ・ガイド</span></h1>
+<p>公式試験ガイドの 4 タスク・27 スキルを漏れなく Step に対応させ、各 Step にベストプラクティスと根拠 URL を付けています。フローチャートは Mermaid、図解・表は Markdown 由来の表で記述しています（ASCII 図は不使用）。</p>
+<p>情報確認日: 2026-10-03（サービス状況は変わることがあるため、最終確認は公式ドキュメントで行ってください）。</p>
+<div class="chips"><span class="chip">出題比率 24%</span><span class="chip">4 タスク / 27 スキル</span><span class="chip">試験 130 分・合格 720/1000</span></div>
+</header>
+<div class="content">
+<hr />
+<h2 id="s1">0. はじめに：このガイドの使い方と Domain 3 の全体像</h2>
+<h3>0.1 Domain 3 で問われること</h3>
+<p>公式試験ガイドでは、Domain 3「Deployment」は <strong>スコア対象問題の 24%</strong> を占めます（Domain 1: 32%、Domain 2: 26%、Domain 4: 18%）。試験は 65 問（うちスコア対象は 50 問、15 問は採点対象外）、制限時間は 130 分、合格スコアは 720（100〜1,000 の換算スコア）です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>タスク</th>
+<th>内容</th>
+<th>スキル数</th>
+<th>対応 Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task 1</td>
+<td>デプロイ用アプリケーションアーティファクトの準備</td>
+<td>5</td>
+<td>Step 2〜6</td>
+</tr>
+<tr>
+<td>Task 2</td>
+<td>開発環境でのアプリケーションテスト</td>
+<td>5</td>
+<td>Step 7〜11</td>
+</tr>
+<tr>
+<td>Task 3</td>
+<td>デプロイテストの自動化</td>
+<td>6</td>
+<td>Step 12〜16</td>
+</tr>
+<tr>
+<td>Task 4</td>
+<td>AWS CI/CD サービスによるコードデプロイ</td>
+<td>11</td>
+<td>Step 17〜25</td>
+</tr>
+</tbody>
+</table></div>
+<h3>0.2 初学者のための学習ロードマップ</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d0"></div></div>
+
+<h3>0.3 学習の進め方（おすすめ）</h3>
+<ol>
+<li><strong>Step 1</strong> で「ビルド → テスト → デプロイ」の流れと用語をつかみます。</li>
+<li>Task 1〜4 を順に読み、各 Step の <strong>「試験での狙われどころ」</strong> の表を必ず確認します。</li>
+<li>手を動かせる人は、SAM（AWS Serverless Application Model）のサンプルアプリで <code>sam build</code> → <code>sam deploy</code> を一度体験すると、理解が一気に深まります。</li>
+<li>最後に <strong>Step 26</strong> の練習問題で確認します。</li>
+</ol>
+<h3>0.4 【重要】最新のサービス状況（2026-10-03 時点）</h3>
+<p>試験ガイドの記述と、実際のサービス状況に差が出ている項目があります。<strong>試験では試験ガイドの用語が使われます</strong>が、実務では最新状況を知っておくことが大切です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>試験ガイドの記述</th>
+<th>最新状況（確認日: 2026-10-03）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS CodeCommit</td>
+<td>リポジトリ利用が前提</td>
+<td>2024年7月に新規受付停止（de-emphasized）となったが、<strong>2025年11月24日に GA（一般提供）へ復帰</strong>し、新規顧客も利用可能</td>
+</tr>
+<tr>
+<td>Amazon Q Developer</td>
+<td>Skill 3.3.6 でテスト自動生成</td>
+<td>IDE プラグインと有料サブスクリプションは <strong>2027-04-30 にサポート終了</strong>。<strong>新規サインアップは 2026-05-15 に停止</strong>。後継は <strong>Kiro</strong>。AWS マネジメントコンソール内の Q Developer 等は継続</td>
+</tr>
+<tr>
+<td>AWS Copilot CLI</td>
+<td>Skill 3.3.3 の例に登場</td>
+<td><strong>2026-06-12 にサポート終了</strong>（OSS として GitHub には残るが、AWS による更新・セキュリティパッチ・サポートなし）</td>
+</tr>
+<tr>
+<td>AWS Cloud9 / CodeStar など</td>
+<td>（試験範囲外）</td>
+<td>新規顧客の受付停止などの動きあり。新規採用は避ける</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>💡 <strong>学習のコツ</strong>: 試験対策としては「Q Developer」「Copilot」という言葉と概念を理解しつつ、実務では「Kiro」「ECS Express Mode / CloudFormation / CDK」などの現行手段も知っておくと安心です。</p>
+</blockquote>
+<h3>0.5 エマージングトピック（採点対象外の先行出題）</h3>
+<p>試験ガイドには「採点対象外の事前テスト問題」として、次の AI 関連トピックが出題され得ると記載されています。Domain 3 に関係するものは以下です。</p>
+<ul>
+<li>AI を使った CI/CD の支援（自動デプロイ承認、環境プロビジョニング、デプロイ後検証など）</li>
+<li>AI ツールによるテスト生成・テスト自動化（テスト実行、結果分析、リグレッションテスト、カバレッジ）</li>
+<li>AI 支援開発ツールでのコード生成・レビュー・リファクタリング・セキュリティスキャン</li>
+</ul>
+<p>これらは <strong>スコアには影響しません</strong> が、Step 16 で基本的な考え方を紹介します。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この章）</span><span class="refs-count">7 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">試験ガイド（DVA-C02）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/developer-associate-02.html</span></a><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain3.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Domain 3 の公式ページ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/developer-associate-02-domain3.html</span></a><a class="ref" href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">認定の公式ページ</span><span class="ref-url"><b>aws.amazon.com</b>/certification/certified-developer-associate/</span></a><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-technologies-concepts.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">技術・概念の一覧</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/dva-technologies-concepts.html</span></a><a class="ref" href="https://aws.amazon.com/blogs/devops/aws-codecommit-returns-to-general-availability/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeCommit の GA 復帰</span><span class="ref-url"><b>aws.amazon.com</b>/blogs/devops/aws-codecommit-returns-to-general-availability/</span></a><a class="ref" href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-developer-ide-end-of-support.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Q Developer IDE プラグインのサポート終了</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amazonq/latest/qdeveloper-ug/q-developer-ide-end-of-support.html</span></a><a class="ref" href="https://aws.amazon.com/blogs/containers/announcing-the-end-of-support-for-the-aws-copilot-cli" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS Copilot CLI のサポート終了告知</span><span class="ref-url"><b>aws.amazon.com</b>/blogs/containers/announcing-the-end-of-support-for-the-aws-copilot-cli</span></a></div></section>
+<hr />
+<h2 id="s2">Step 1：デプロイの全体像（CI/CD と環境の考え方）</h2>
+<h3>1.1 そもそも「デプロイ」とは</h3>
+<p><strong>デプロイ</strong> とは、開発者が書いたコードを、利用者が使える環境（AWS 上のサーバーや Lambda など）に <strong>届けて動かすこと</strong> です。手作業でやると、ミス・ばらつき・時間がかかる、という問題が起きます。そこで <strong>自動化</strong> します。</p>
+<h3>1.2 用語を先におさえよう</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アーティファクト</td>
+<td>デプロイの対象となる「成果物」</td>
+<td>zip ファイル、コンテナイメージ、CloudFormation テンプレート</td>
+</tr>
+<tr>
+<td>ビルド</td>
+<td>ソースコードから成果物を作る作業</td>
+<td>依存ライブラリのインストール、コンパイル、zip 化</td>
+</tr>
+<tr>
+<td>CI（継続的インテグレーション）</td>
+<td>コードを頻繁に統合し、自動でビルド・テストする</td>
+<td>コミットのたびに CodeBuild がテストを実行</td>
+</tr>
+<tr>
+<td>CD（継続的デリバリー／デプロイ）</td>
+<td>成果物を自動で環境へ届ける</td>
+<td>CodeDeploy や CloudFormation が本番へ反映</td>
+</tr>
+<tr>
+<td>IaC（Infrastructure as Code）</td>
+<td>インフラ構成をコードで書く</td>
+<td>CloudFormation、AWS SAM、AWS CDK</td>
+</tr>
+<tr>
+<td>環境（Environment）</td>
+<td>用途ごとに分けた実行場所</td>
+<td>dev（開発）、test / staging（検証）、prod（本番）</td>
+</tr>
+<tr>
+<td>ロールバック</td>
+<td>問題が起きたとき、前の状態に戻すこと</td>
+<td>前バージョンへ切り戻し</td>
+</tr>
+</tbody>
+</table></div>
+<h3>1.3 AWS の CI/CD サービスの役割分担</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d1"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>役割</th>
+<th>一言でいうと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS CodeCommit</td>
+<td>Git リポジトリ（ソース管理）</td>
+<td>コードの置き場所</td>
+</tr>
+<tr>
+<td>AWS CodeBuild</td>
+<td>ビルド・テストの実行</td>
+<td>作業用の使い捨てサーバー</td>
+</tr>
+<tr>
+<td>AWS CodeDeploy</td>
+<td>EC2 / Lambda / ECS へのデプロイ</td>
+<td>配達員（戦略つき）</td>
+</tr>
+<tr>
+<td>AWS CodePipeline</td>
+<td>ステージをつなぐワークフロー</td>
+<td>ベルトコンベア</td>
+</tr>
+<tr>
+<td>AWS CloudFormation / SAM</td>
+<td>インフラとアプリの宣言的デプロイ</td>
+<td>設計図から環境を作る</td>
+</tr>
+<tr>
+<td>AWS AppConfig</td>
+<td>実行時の設定を安全に配信</td>
+<td>設定のデプロイ専用</td>
+</tr>
+</tbody>
+</table></div>
+<h3>1.4 環境分離のベストプラクティス</h3>
+<ul>
+<li><strong>環境ごとに分ける</strong>: dev / test / prod は <strong>別スタック</strong>、できれば <strong>別 AWS アカウント</strong> に分けます（影響範囲の限定、権限分離）。</li>
+<li><strong>同じ成果物を昇格させる</strong>: 「テストで通ったものと同じ成果物」を本番に出します（本番用に作り直さない）。これを <strong>Build once, deploy many</strong> と呼びます。</li>
+<li><strong>設定はコードの外へ</strong>: 環境差分（DB 接続先など）は環境変数・Parameter Store・AppConfig で与えます（The Twelve-Factor App の考え方）。</li>
+<li><strong>すべてをコード化</strong>: 手作業の変更は避け、IaC とパイプラインで再現可能にします。</li>
+</ul>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Practicing CI/CD on AWS（ホワイトペーパー）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS CodePipeline とは</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/welcome.html</span></a><a class="ref" href="https://12factor.net/config" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">The Twelve-Factor App（設定）</span><span class="ref-url"><b>12factor.net</b>/config</span></a><a class="ref" href="https://martinfowler.com/bliki/ContinuousDelivery.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Martin Fowler「Continuous Delivery」関連</span><span class="ref-url"><b>martinfowler.com</b>/bliki/ContinuousDelivery.html</span></a></div></section>
+<hr />
+<h1 id="s3">Task 1：デプロイ用アプリケーションアーティファクトの準備</h1>
+<p>この Task は「デプロイ <strong>できる形</strong> に仕上げる」工程です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d2"></div></div>
+
+<hr />
+<h2 id="s4">Step 2：依存関係の管理（Skill 3.1.1）</h2>
+<blockquote>
+<p><strong>Skill 3.1.1</strong>: コードモジュールの依存関係（環境変数、設定ファイル、コンテナイメージなど）をパッケージ内で管理する</p>
+</blockquote>
+<h3>2.1 依存関係とは？</h3>
+<p>アプリは自分のコードだけでは動きません。次のような <strong>「動くために必要なもの」</strong> をまとめて管理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>例</th>
+<th>管理場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ライブラリ</td>
+<td>Python の <code>requests</code>、Node.js の <code>axios</code></td>
+<td><code>requirements.txt</code> / <code>package.json</code></td>
+</tr>
+<tr>
+<td>実行時設定</td>
+<td><code>TABLE_NAME</code> などの環境変数</td>
+<td>Lambda の環境変数、SAM の <code>Environment</code></td>
+</tr>
+<tr>
+<td>設定ファイル</td>
+<td><code>config.json</code>、<code>.ini</code></td>
+<td>パッケージ内、または AppConfig</td>
+</tr>
+<tr>
+<td>コンテナイメージ</td>
+<td>ベースイメージ、OS パッケージ</td>
+<td><code>Dockerfile</code>、Amazon ECR</td>
+</tr>
+<tr>
+<td>共通コード</td>
+<td>複数関数で共有するユーティリティ</td>
+<td>Lambda レイヤー</td>
+</tr>
+</tbody>
+</table></div>
+<h3>2.2 Lambda における依存関係の持ち方（3 つの選択肢）</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d3"></div></div>
+
+<h3>2.3 コード例：Python の依存関係を zip に同梱する流れ</h3>
+<pre><code class="language-bash"># 依存ライブラリを一時ディレクトリへインストール
+pip install -r requirements.txt -t ./package
+
+# アプリコードを追加して zip 化
+cp app.py ./package/
+cd package &amp;&amp; zip -r ../function.zip . &amp;&amp; cd ..
+
+# 関数を更新
+aws lambda update-function-code \
+  --function-name my-func \
+  --zip-file fileb://function.zip
+</code></pre>
+<p>SAM を使うと、依存関係の解決〜パッケージングを <code>sam build</code> が自動で行います。</p>
+<pre><code class="language-bash">sam build        # requirements.txt を読み、.aws-sam/build に成果物を作る
+sam deploy --guided
+</code></pre>
+<h3>2.4 環境変数の扱い</h3>
+<ul>
+<li>Lambda の環境変数は <strong>関数ごとに合計 4 KB まで</strong>。</li>
+<li>値は保存時に暗号化されます（デフォルトで AWS 管理のキー）。<strong>機密情報（パスワード等）を平文で入れない</strong> のが基本。Secrets Manager や SSM Parameter Store（SecureString）を使い、環境変数には <strong>参照先の名前</strong> を入れます。</li>
+</ul>
+<pre><code class="language-yaml"># SAM の例：環境変数に「テーブル名」と「パラメータ名」を渡す
+Resources:
+  OrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref OrdersTable
+          DB_PASSWORD_PARAM: /myapp/prod/db_password   # 値ではなく名前を渡す
+</code></pre>
+<h3>2.5 コンテナイメージの依存関係</h3>
+<ul>
+<li>Lambda や ECS ではコンテナイメージにすべての依存関係を封じ込められます。</li>
+<li><strong>ベストプラクティス</strong></li>
+<li>ベースイメージは <strong>公式（AWS 提供の Lambda ベースイメージ等）</strong> を使い、最小構成にする。</li>
+<li>変更頻度の低い層（OS・ライブラリ）を <strong>Dockerfile の上位</strong> に置き、変更が多いアプリコードを下位に置く（ビルドキャッシュが効く）。</li>
+<li>イメージは <strong>Amazon ECR</strong> に置き、<strong>イメージスキャン</strong> を有効にする。</li>
+<li>タグは <strong>不変（immutable）</strong> に設定するか、デプロイ時に <strong>ダイジェスト（sha256）</strong> で固定する。</li>
+</ul>
+<pre><code class="language-dockerfile">FROM public.ecr.aws/lambda/python:3.13
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
+RUN pip install -r requirements.txt
+COPY app.py ${LAMBDA_TASK_ROOT}
+CMD [&quot;app.handler&quot;]
+</code></pre>
+<h3>2.6 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>依存関係は <strong>バージョン固定</strong>（ロックファイル利用）</td>
+<td>ビルドの再現性を保つ</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>不要な依存を入れない</strong></td>
+<td>パッケージ縮小 → コールドスタート短縮・攻撃面縮小</td>
+</tr>
+<tr>
+<td>3</td>
+<td>共通ライブラリは <strong>レイヤー</strong> で共有</td>
+<td>重複排除、更新の一元化</td>
+</tr>
+<tr>
+<td>4</td>
+<td>機密値は <strong>環境変数に直書きしない</strong></td>
+<td>漏洩防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td>AWS SDK は <strong>ランタイム同梱版か自前同梱かを意識</strong></td>
+<td>再現性を重視するなら同梱して固定</td>
+</tr>
+<tr>
+<td>6</td>
+<td>依存関係の <strong>脆弱性スキャン</strong> を CI に組み込む</td>
+<td>供給網リスク対策</td>
+</tr>
+</tbody>
+</table></div>
+<h3>2.7 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>複数関数で共通ライブラリを使い、更新を一元化したい</td>
+<td><strong>Lambda レイヤー</strong></td>
+</tr>
+<tr>
+<td>依存関係が合計で解凍後 250MB を超える</td>
+<td><strong>コンテナイメージ</strong>（最大 10GB）</td>
+</tr>
+<tr>
+<td>DB パスワードを安全に渡したい</td>
+<td><strong>Secrets Manager / Parameter Store（SecureString）</strong> を実行時に取得</td>
+</tr>
+<tr>
+<td>環境ごとに変わる値を同じパッケージで切り替えたい</td>
+<td><strong>環境変数</strong> や AppConfig など、コード外の設定</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">7 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda デプロイパッケージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-package.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda レイヤー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/chapter-layers.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda 環境変数</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuration-envvars.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/images-create.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda コンテナイメージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/images-create.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda クォータ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-limits.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Amazon ECR イメージタグの変更可否</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AmazonECR/latest/userguide/image-tag-mutability.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">SAM とは</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/what-is-sam.html</span></a></div></section>
+<hr />
+<h2 id="s5">Step 3：ファイルとディレクトリ構造（Skill 3.1.2）</h2>
+<blockquote>
+<p><strong>Skill 3.1.2</strong>: アプリケーションのデプロイ用にファイルとディレクトリ構造を整理する</p>
+</blockquote>
+<h3>3.1 なぜ構造が大切なのか</h3>
+<p>デプロイツールは <strong>「決まった場所」に「決まった名前」のファイルがあること</strong> を前提に動きます。名前や場所を間違えると、デプロイが失敗します。</p>
+<h3>3.2 AWS のツールが探す「決まったファイル」</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>必要なファイル</th>
+<th>置き場所</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS CodeBuild</td>
+<td><code>buildspec.yml</code></td>
+<td>ソースのルート（既定）</td>
+<td>ビルド手順の定義</td>
+</tr>
+<tr>
+<td>AWS CodeDeploy（EC2/オンプレ）</td>
+<td><code>appspec.yml</code></td>
+<td><strong>アーカイブのルート</strong></td>
+<td>配置先とライフサイクルフックの定義</td>
+</tr>
+<tr>
+<td>AWS CodeDeploy（Lambda / ECS）</td>
+<td>AppSpec（YAML または JSON）</td>
+<td>デプロイ時に指定</td>
+<td>切り替えるバージョンやタスク定義</td>
+</tr>
+<tr>
+<td>AWS SAM</td>
+<td><code>template.yaml</code>、<code>samconfig.toml</code></td>
+<td>プロジェクトのルート</td>
+<td>アプリ全体の定義・デプロイ設定</td>
+</tr>
+<tr>
+<td>AWS CloudFormation</td>
+<td>テンプレート（YAML/JSON）</td>
+<td>任意（S3 または手元）</td>
+<td>インフラの定義</td>
+</tr>
+<tr>
+<td>Elastic Beanstalk</td>
+<td><code>.ebextensions/*.config</code>、<code>Procfile</code> など</td>
+<td>ソースバンドルのルート</td>
+<td>環境設定の拡張</td>
+</tr>
+<tr>
+<td>AWS Amplify Hosting</td>
+<td><code>amplify.yml</code></td>
+<td>リポジトリのルート</td>
+<td>ビルド設定</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3.3 SAM プロジェクトの標準的なディレクトリ構成</h3>
+<pre><code class="language-text">my-app/
+├── template.yaml            # SAM テンプレート（インフラ定義）
+├── samconfig.toml           # sam deploy の設定（環境別）
+├── buildspec.yml            # CodeBuild のビルド手順
+├── src/
+│   ├── orders/
+│   │   ├── app.py           # Lambda ハンドラー
+│   │   └── requirements.txt # 依存関係
+│   └── payments/
+│       ├── app.py
+│       └── requirements.txt
+├── layers/
+│   └── common/              # 共通レイヤー
+├── events/
+│   └── order-created.json   # テスト用イベント
+└── tests/
+    ├── unit/
+    └── integration/
+</code></pre>
+<blockquote>
+<p>上記はディレクトリ構造の例示です（図解ではなく、ファイルの配置例を示すコードブロックです）。</p>
+</blockquote>
+<h3>3.4 Lambda の zip パッケージで最も多い失敗</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d4"></div></div>
+
+<ul>
+<li>例：<code>Handler</code> を <code>app.handler</code> と設定した場合、zip の直下に <code>app.py</code> が必要です。</li>
+<li>フォルダごと圧縮すると <code>my-app/app.py</code> となり、ハンドラーが見つかりません。</li>
+</ul>
+<h3>3.5 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>関数ごとにディレクトリを分ける</strong></td>
+<td>依存関係の肥大化を防ぎ、パッケージを小さく保つ</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>buildspec.yml</code> / <code>appspec.yml</code> は <strong>ルート</strong> に置く</td>
+<td>ツールが自動で見つける</td>
+</tr>
+<tr>
+<td>3</td>
+<td>テスト用イベント・テストコードは <strong>本番パッケージに含めない</strong></td>
+<td>サイズ削減と情報漏洩防止</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>.gitignore</code> と <code>.samignore</code> 等で <strong>不要ファイル（<code>node_modules</code> のキャッシュ、<code>.env</code> など）を除外</strong></td>
+<td>機密や不要物の混入防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>インフラ（template）とアプリ（src）を同じリポジトリ</strong> で管理</td>
+<td>変更を一緒にレビュー・デプロイできる</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CodeDeploy で EC2 にデプロイしたら「appspec.yml が見つからない」</td>
+<td><code>appspec.yml</code> を <strong>アーカイブのルート</strong> に置く</td>
+</tr>
+<tr>
+<td>CodeBuild のビルド手順の置き場所</td>
+<td>ルートの <code>buildspec.yml</code>（または別名ファイルをプロジェクトで指定）</td>
+</tr>
+<tr>
+<td>Lambda が <code>Handler not found</code></td>
+<td>zip のルート直下にハンドラーがあるか確認</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeBuild の buildspec リファレンス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codebuild/latest/userguide/build-spec-ref.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeDeploy の AppSpec ファイル</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codedeploy/latest/userguide/reference-appspec-file.html</span></a><a class="ref" href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/ebextensions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Elastic Beanstalk の .ebextensions</span><span class="ref-url"><b>docs.aws.amazon.com</b>/elasticbeanstalk/latest/dg/ebextensions.html</span></a><a class="ref" href="https://docs.aws.amazon.com/amplify/latest/userguide/build-settings.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Amplify のビルド設定</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amplify/latest/userguide/build-settings.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda デプロイパッケージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-package.html</span></a></div></section>
+<hr />
+<h2 id="s6">Step 4：コードリポジトリの活用（Skill 3.1.3）</h2>
+<blockquote>
+<p><strong>Skill 3.1.3</strong>: デプロイ環境でコードリポジトリを使用する</p>
+</blockquote>
+<h3>4.1 コードリポジトリとは</h3>
+<p><strong>バージョン管理（Git）されたコードの保管庫</strong> です。デプロイでは「どのコミットを環境に出すか」の <strong>唯一の情報源（Single Source of Truth）</strong> になります。</p>
+<h3>4.2 AWS でのリポジトリの選択肢</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>選択肢</th>
+<th>特徴</th>
+<th>パイプラインとの接続</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS CodeCommit</strong></td>
+<td>AWS のマネージド Git。IAM・VPC エンドポイント・CloudTrail と統合。2025-11 に GA 復帰</td>
+<td>CodePipeline の Source に直接指定</td>
+</tr>
+<tr>
+<td><strong>GitHub / GitLab / Bitbucket</strong></td>
+<td>外部の Git サービス</td>
+<td><strong>AWS CodeConnections</strong>（旧 CodeStar Connections）で接続</td>
+</tr>
+<tr>
+<td><strong>Amazon S3</strong></td>
+<td>zip を置く簡易ソース。バージョニング有効が必須</td>
+<td>CodePipeline / CodeDeploy / Beanstalk が参照</td>
+</tr>
+<tr>
+<td><strong>Amazon ECR</strong></td>
+<td>コンテナイメージのリポジトリ</td>
+<td>イメージ push をパイプライン起動に使える</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.3 コミットがデプロイされるまで</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d5"></div></div>
+
+<h3>4.4 CodeCommit の接続方法（頻出）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>認証</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS（Git 認証情報）</td>
+<td>IAM ユーザーに発行した Git 認証情報</td>
+<td>手軽。IAM ユーザーが前提</td>
+</tr>
+<tr>
+<td><strong>HTTPS（git-remote-codecommit）</strong></td>
+<td>IAM ロール／一時認証情報</td>
+<td><strong>フェデレーションや IAM ロールで使える</strong>（推奨）</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>IAM ユーザーに登録した SSH 公開鍵</td>
+<td>鍵管理が必要</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>⚠️ AWS アクセスキーをコードにコミットしてはいけません。EC2 / Lambda / CodeBuild などの <strong>IAM ロール</strong> を使います。</p>
+</blockquote>
+<h3>4.5 リポジトリ運用のベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>メインブランチを保護</strong>（直接 push 禁止、プルリクエスト必須）</td>
+<td>本番品質を守る</td>
+</tr>
+<tr>
+<td>2</td>
+<td>CodeCommit では <strong>承認ルールテンプレート</strong>（Approval rule template）でレビュー必須化</td>
+<td>レビュー漏れ防止</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>機密情報（鍵・パスワード）をコミットしない</strong>。誤コミット対策に <code>git-secrets</code> 等を導入</td>
+<td>漏洩防止</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>IaC・アプリ・パイプライン定義</strong> を同じ（または関連する）リポジトリで管理</td>
+<td>変更履歴を追跡できる</td>
+</tr>
+<tr>
+<td>5</td>
+<td>外部 Git との接続は <strong>CodeConnections</strong> を使い、<strong>最小権限</strong> のリポジトリアクセスにする</td>
+<td>セキュリティ</td>
+</tr>
+<tr>
+<td>6</td>
+<td>S3 をソースにするなら <strong>バージョニング</strong> を有効化</td>
+<td>過去版へ戻せる</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GitHub のコミットで CodePipeline を起動したい</td>
+<td><strong>CodeConnections</strong>（接続）を Source に使う</td>
+</tr>
+<tr>
+<td>IAM ロールで CodeCommit に安全に接続したい</td>
+<td><strong>git-remote-codecommit</strong></td>
+</tr>
+<tr>
+<td>S3 をソースにするときの必須設定</td>
+<td><strong>バージョニングの有効化</strong></td>
+</tr>
+<tr>
+<td>CodeCommit のコミットを起点に他サービスを呼ぶ</td>
+<td><strong>EventBridge ルール／CodeCommit トリガー（SNS・Lambda）</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/codecommit/latest/userguide/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeCommit とは</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codecommit/latest/userguide/welcome.html</span></a><a class="ref" href="https://aws.amazon.com/blogs/devops/aws-codecommit-returns-to-general-availability/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeCommit GA 復帰の告知</span><span class="ref-url"><b>aws.amazon.com</b>/blogs/devops/aws-codecommit-returns-to-general-availability/</span></a><a class="ref" href="https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeConnections</span><span class="ref-url"><b>docs.aws.amazon.com</b>/dtconsole/latest/userguide/welcome-connections.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodePipeline の概念</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/concepts.html</span></a><a class="ref" href="https://trunkbaseddevelopment.com/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Trunk Based Development</span><span class="ref-url"><b>trunkbaseddevelopment.com</b>/</span></a></div></section>
+<hr />
+<h2 id="s7">Step 5：リソース要件（メモリ・CPU）（Skill 3.1.4）</h2>
+<blockquote>
+<p><strong>Skill 3.1.4</strong>: アプリケーションのリソース要件（メモリ、コア数など）を適用する</p>
+</blockquote>
+<h3>5.1 サービスごとの「リソース指定」の違い</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>指定するもの</th>
+<th>補足</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS Lambda</strong></td>
+<td><strong>メモリ（128 MB〜10,240 MB）</strong>、タイムアウト（最大 15 分）、一時ストレージ（/tmp）</td>
+<td><strong>CPU は直接指定できず、メモリに比例して割り当て</strong></td>
+</tr>
+<tr>
+<td><strong>Amazon ECS（Fargate）</strong></td>
+<td>タスクの <strong>vCPU とメモリ</strong> の組み合わせ</td>
+<td>許可された組み合わせのみ（例：0.25 vCPU は 0.5〜2 GB）</td>
+</tr>
+<tr>
+<td><strong>Amazon ECS（EC2）</strong></td>
+<td>コンテナごとの CPU ユニットとメモリ</td>
+<td><code>memory</code> は <strong>ハード制限</strong>、<code>memoryReservation</code> は <strong>ソフト制限</strong></td>
+</tr>
+<tr>
+<td><strong>EC2 / Elastic Beanstalk</strong></td>
+<td><strong>インスタンスタイプ</strong></td>
+<td>用途別（汎用・コンピュート最適化・メモリ最適化）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 Lambda：メモリを増やすと CPU も増える</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d6"></div></div>
+
+<ul>
+<li>約 <strong>1,769 MB で 1 vCPU 相当</strong> になります。</li>
+<li><strong>ポイント</strong>：メモリを上げて実行時間が大きく短縮されれば、<strong>総コストが下がる</strong> こともあります。最適値は <strong>計測</strong> で決めます（AWS Lambda Power Tuning などのツールが使われます）。</li>
+<li><strong>メモリ不足</strong>：<code>Runtime exited with error: signal: killed</code> やメモリ超過メッセージ → メモリを増やす。</li>
+<li><strong>タイムアウト</strong>：処理が長い場合は、タイムアウト値の引き上げ、処理の分割（Step Functions、SQS）を検討します。</li>
+</ul>
+<h3>5.3 SAM テンプレートでリソース要件を設定する</h3>
+<pre><code class="language-yaml">Globals:
+  Function:
+    Runtime: python3.13
+    MemorySize: 512          # 全関数の既定メモリ
+    Timeout: 10              # 秒
+
+Resources:
+  ReportFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      CodeUri: src/report/
+      MemorySize: 1769       # この関数だけ個別に上書き
+      Timeout: 60
+      EphemeralStorage:
+        Size: 2048           # /tmp を 2GB に拡張（MB単位）
+</code></pre>
+<h3>5.4 ECS のタスク定義でのリソース指定（抜粋）</h3>
+<pre><code class="language-json">{
+  &quot;family&quot;: &quot;orders-api&quot;,
+  &quot;requiresCompatibilities&quot;: [&quot;FARGATE&quot;],
+  &quot;cpu&quot;: &quot;512&quot;,
+  &quot;memory&quot;: &quot;1024&quot;,
+  &quot;containerDefinitions&quot;: [
+    {
+      &quot;name&quot;: &quot;app&quot;,
+      &quot;image&quot;: &quot;123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/orders:1.4.2&quot;,
+      &quot;memory&quot;: 1024
+    }
+  ]
+}
+</code></pre>
+<h3>5.5 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>推測ではなく計測</strong> してサイズを決める（CloudWatch、Power Tuning、Compute Optimizer）</td>
+<td>過不足を避ける</td>
+</tr>
+<tr>
+<td>2</td>
+<td>環境ごとに <strong>サイズを変えてよい</strong>（dev は小さく、prod は十分に）</td>
+<td>コスト最適化</td>
+</tr>
+<tr>
+<td>3</td>
+<td>リソース設定は <strong>IaC に明記</strong> する</td>
+<td>再現性と変更履歴</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Lambda の <strong>タイムアウトは必要最小限</strong> に設定</td>
+<td>暴走時の課金・影響を抑える</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ECS は <strong>タスクとコンテナの制限の整合</strong> をとる</td>
+<td>配置失敗・OOM Kill を防ぐ</td>
+</tr>
+<tr>
+<td>6</td>
+<td>定期的に <strong>見直す</strong>（トラフィック増減に合わせる）</td>
+<td>劣化の早期発見</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lambda の処理が遅い。CPU を増やしたい</td>
+<td><strong>メモリを増やす</strong>（CPU は直接設定できない）</td>
+</tr>
+<tr>
+<td><code>/tmp</code> に大きなファイルを置きたい</td>
+<td><strong>EphemeralStorage</strong> を拡張（最大 10,240 MB）</td>
+</tr>
+<tr>
+<td>Lambda の最大実行時間</td>
+<td><strong>15 分</strong></td>
+</tr>
+<tr>
+<td>Fargate で指定する必須項目</td>
+<td><strong>タスクレベルの cpu と memory</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-memory.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda メモリ設定</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuration-memory.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda クォータ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-limits.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ECS タスク定義のパラメータ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AmazonECS/latest/developerguide/task_definition_parameters.html</span></a><a class="ref" href="https://github.com/alexcasalboni/aws-lambda-power-tuning" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind oss">GitHub</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS Lambda Power Tuning（OSS）</span><span class="ref-url"><b>github.com</b>/alexcasalboni/aws-lambda-power-tuning</span></a><a class="ref" href="https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Serverless Applications Lens</span><span class="ref-url"><b>docs.aws.amazon.com</b>/wellarchitected/latest/serverless-applications-lens/welcome.html</span></a></div></section>
+<hr />
+<h2 id="s8">Step 6：環境別の設定と AWS AppConfig（Skill 3.1.5）</h2>
+<blockquote>
+<p><strong>Skill 3.1.5</strong>: 特定の環境向けにアプリケーション設定を準備する（例：AWS AppConfig の使用）</p>
+</blockquote>
+<h3>6.1 課題：dev / test / prod で設定が違う</h3>
+<p>接続先 DB、外部 API の URL、機能のオン/オフ、ログレベル…。<strong>コードは同じ、設定だけ違う</strong> のが理想です。</p>
+<h3>6.2 設定の置き場所の比較（最重要）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>向いている用途</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>環境変数</strong></td>
+<td>起動時に決まる単純な値</td>
+<td>変更には関数の更新（再デプロイ）が必要。合計 4 KB（Lambda）</td>
+</tr>
+<tr>
+<td><strong>SSM Parameter Store</strong></td>
+<td>設定値、階層管理（<code>/app/prod/key</code>）</td>
+<td>無料枠あり。<code>SecureString</code> は KMS で暗号化。バージョン管理・ラベルあり</td>
+</tr>
+<tr>
+<td><strong>AWS Secrets Manager</strong></td>
+<td>パスワード、API キー</td>
+<td><strong>自動ローテーション</strong>、きめ細かな制御</td>
+</tr>
+<tr>
+<td><strong>AWS AppConfig</strong></td>
+<td><strong>実行時に変わる設定</strong>、機能フラグ</td>
+<td><strong>段階的配信・検証・自動ロールバック</strong>。コード再デプロイ不要</td>
+</tr>
+<tr>
+<td>設定ファイル（パッケージ同梱）</td>
+<td>変わらない既定値</td>
+<td>変更はビルド・デプロイが必要</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d7"></div></div>
+
+<h3>6.3 AWS AppConfig のしくみ</h3>
+<p>AppConfig は <strong>AWS Systems Manager の機能</strong> で、設定を <strong>デプロイ（段階的に配信）</strong> するサービスです。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d8"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Application</strong></td>
+<td>設定を使うアプリの単位</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>配信先の論理グループ（dev / prod）。<strong>監視用の CloudWatch アラーム</strong> を紐付けられる</td>
+</tr>
+<tr>
+<td><strong>Configuration profile</strong></td>
+<td>設定データの定義。<strong>Freeform（自由形式）</strong> と <strong>Feature flags（機能フラグ）</strong> がある</td>
+</tr>
+<tr>
+<td><strong>Validator</strong></td>
+<td>配信前に <strong>JSON Schema</strong> または <strong>Lambda</strong> で設定の妥当性を検証</td>
+</tr>
+<tr>
+<td><strong>Deployment strategy</strong></td>
+<td>配信速度：<strong>デプロイ時間</strong>、<strong>増加率</strong>、<strong>ベイク時間</strong>（監視期間）</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>設定を環境に配信する実行。ロールバック可能</td>
+</tr>
+</tbody>
+</table></div>
+<p>事前定義の配信戦略（代表例）：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>戦略</th>
+<th>動き</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AppConfig.AllAtOnce</code></td>
+<td>一括で即時配信</td>
+</tr>
+<tr>
+<td><code>AppConfig.Linear50PercentEvery30Seconds</code></td>
+<td>30 秒ごとに 50% ずつ増やして配信</td>
+</tr>
+<tr>
+<td><code>AppConfig.Canary10Percent20Minutes</code></td>
+<td>まず 10% に配信し、20 分かけて全体へ</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>上記以外にも事前定義の戦略があります。カスタム戦略も作成できます。</p>
+</blockquote>
+<h3>6.4 アプリから設定を取得する</h3>
+<ul>
+<li><strong>Lambda では「AWS AppConfig Lambda 拡張機能（Extension）」</strong> を使うのが定番です。拡張機能が <strong>設定をキャッシュ</strong> し、ローカル HTTP（<code>localhost:2772</code>）経由で取得できます。API 呼び出しを減らし、コストと遅延を抑えます。</li>
+<li>直接 SDK で取得する場合は、<code>StartConfigurationSession</code> と <code>GetLatestConfiguration</code> を使います。</li>
+</ul>
+<pre><code class="language-python">import urllib.request, json
+
+def handler(event, context):
+    url = (&quot;http://localhost:2772/applications/myapp&quot;
+           &quot;/environments/prod/configurations/feature-flags&quot;)
+    with urllib.request.urlopen(url) as res:
+        config = json.loads(res.read())
+    if config.get(&quot;newCheckout&quot;, {}).get(&quot;enabled&quot;):
+        return &quot;new flow&quot;
+    return &quot;old flow&quot;
+</code></pre>
+<h3>6.5 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>設定は <strong>コードと分離</strong> し、環境ごとに用意する</td>
+<td>同じ成果物を全環境で使える</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>機密は Secrets Manager</strong> / SecureString。AppConfig に平文の秘密を置かない</td>
+<td>漏洩防止</td>
+</tr>
+<tr>
+<td>3</td>
+<td>AppConfig では <strong>Validator を必ず設定</strong> する</td>
+<td>不正な設定の配信を防ぐ</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>段階的配信（Linear / Canary）＋ CloudWatch アラーム</strong> を組み合わせる</td>
+<td>異常時に自動ロールバック</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Lambda では <strong>AppConfig 拡張機能</strong> でキャッシュする</td>
+<td>呼び出し回数・遅延を削減</td>
+</tr>
+<tr>
+<td>6</td>
+<td>パラメータは <code>/アプリ名/環境名/キー</code> の <strong>階層命名</strong> にする</td>
+<td>環境の切り替えが簡単</td>
+</tr>
+<tr>
+<td>7</td>
+<td>機能フラグは <strong>用が済んだら削除</strong> する</td>
+<td>技術的負債の蓄積防止</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>再デプロイなしで設定を安全に変更し、問題があれば自動で戻したい</td>
+<td><strong>AWS AppConfig</strong>（段階的配信＋アラーム連携）</td>
+</tr>
+<tr>
+<td>設定を JSON Schema で検証してから配信</td>
+<td><strong>AppConfig の Validator</strong></td>
+</tr>
+<tr>
+<td>パスワードを自動ローテーションしたい</td>
+<td><strong>Secrets Manager</strong></td>
+</tr>
+<tr>
+<td>環境ごとの値を階層で管理</td>
+<td><strong>Parameter Store の階層パス</strong></td>
+</tr>
+<tr>
+<td>Lambda から AppConfig を低コスト・低遅延で使う</td>
+<td><strong>AppConfig Lambda 拡張機能</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">7 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/appconfig/latest/userguide/what-is-appconfig.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS AppConfig とは</span><span class="ref-url"><b>docs.aws.amazon.com</b>/appconfig/latest/userguide/what-is-appconfig.html</span></a><a class="ref" href="https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-configuration-and-profile.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">設定プロファイルの作成</span><span class="ref-url"><b>docs.aws.amazon.com</b>/appconfig/latest/userguide/appconfig-creating-configuration-and-profile.html</span></a><a class="ref" href="https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-creating-deployment-strategy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">配信戦略</span><span class="ref-url"><b>docs.aws.amazon.com</b>/appconfig/latest/userguide/appconfig-creating-deployment-strategy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-feature-flags.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">機能フラグ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/appconfig/latest/userguide/appconfig-feature-flags.html</span></a><a class="ref" href="https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-integration-lambda-extensions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda 拡張機能との統合</span><span class="ref-url"><b>docs.aws.amazon.com</b>/appconfig/latest/userguide/appconfig-integration-lambda-extensions.html</span></a><a class="ref" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Parameter Store</span><span class="ref-url"><b>docs.aws.amazon.com</b>/systems-manager/latest/userguide/systems-manager-parameter-store.html</span></a><a class="ref" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Secrets Manager</span><span class="ref-url"><b>docs.aws.amazon.com</b>/secretsmanager/latest/userguide/intro.html</span></a></div></section>
+<hr />
+<h1 id="s9">Task 2：開発環境でのアプリケーションテスト</h1>
+<p>この Task は「本番に出す前に、<strong>開発環境で安全に確かめる</strong>」工程です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d9"></div></div>
+
+<hr />
+<h2 id="s10">Step 7：デプロイ済みコードのテスト（Skill 3.2.1）</h2>
+<blockquote>
+<p><strong>Skill 3.2.1</strong>: AWS のサービスとツールを使って、デプロイ済みのコードをテストする</p>
+</blockquote>
+<h3>7.1 テストの置き場所は 2 つ：手元 と クラウド</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>場所</th>
+<th>方法</th>
+<th>長所</th>
+<th>短所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>手元（ローカル）</strong></td>
+<td><code>sam local invoke</code>、<code>sam local start-api</code>（Docker 使用）</td>
+<td>速い、無料、すぐ試せる</td>
+<td>本物の IAM・ネットワーク・サービス連携とは差が出る</td>
+</tr>
+<tr>
+<td><strong>クラウド（dev 環境）</strong></td>
+<td>Lambda コンソールの <strong>テスト</strong>、<code>aws lambda invoke</code>、<code>sam sync</code></td>
+<td><strong>本物の環境</strong> で検証できる</td>
+<td>デプロイが必要、少額の課金</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d10"></div></div>
+
+<h3>7.2 デプロイ済み Lambda をテストする方法</h3>
+<p><strong>① Lambda コンソールの「テスト」タブ</strong>
+テストイベント（JSON）を保存して何度でも実行できます。結果・ログ・実行時間・使用メモリが画面に出ます。</p>
+<p><strong>② AWS CLI で呼び出す</strong></p>
+<pre><code class="language-bash">aws lambda invoke \
+  --function-name my-func \
+  --payload '{&quot;orderId&quot;: &quot;A-001&quot;}' \
+  --cli-binary-format raw-in-base64-out \
+  --log-type Tail \
+  response.json
+</code></pre>
+<ul>
+<li>AWS CLI v2 では、JSON を直接渡すときに <code>--cli-binary-format raw-in-base64-out</code> が必要です（付けないと base64 を期待してエラーになる）。</li>
+<li><code>--log-type Tail</code> で、直近のログ末尾（base64）をレスポンスに含められます。</li>
+</ul>
+<p><strong>③ 呼び出しタイプ（Invocation type）</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>タイプ</th>
+<th>動作</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RequestResponse</code>（既定）</td>
+<td><strong>同期</strong>。結果を待つ</td>
+<td>テスト、API 連携</td>
+</tr>
+<tr>
+<td><code>Event</code></td>
+<td><strong>非同期</strong>。すぐ 202 を返す</td>
+<td>イベント処理のテスト</td>
+</tr>
+<tr>
+<td><code>DryRun</code></td>
+<td>権限・パラメータだけ確認し、<strong>実行しない</strong></td>
+<td>権限チェック</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7.3 確認に使うツール</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>何がわかるか</th>
+<th>コマンド・場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon CloudWatch Logs</strong></td>
+<td>出力ログ、エラーのスタックトレース</td>
+<td><code>sam logs --name Func --tail</code></td>
+</tr>
+<tr>
+<td><strong>CloudWatch Logs Insights</strong></td>
+<td>ログのクエリ集計</td>
+<td>コンソール</td>
+</tr>
+<tr>
+<td><strong>AWS X-Ray</strong></td>
+<td>リクエストの経路・各サービスの遅延</td>
+<td>関数でアクティブトレースを有効化</td>
+</tr>
+<tr>
+<td><strong>CloudWatch Metrics</strong></td>
+<td>Invocations、Errors、Duration、Throttles</td>
+<td>コンソール</td>
+</tr>
+<tr>
+<td><strong>SAM Accelerate（<code>sam sync</code>）</strong></td>
+<td>コード変更を <strong>素早く</strong> クラウドへ同期</td>
+<td><code>sam sync --watch</code>（開発用）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>⚠️ <code>sam sync</code> は <strong>開発環境向け</strong>（CloudFormation を経由せず直接更新する場合がある）です。<strong>本番には使わず</strong>、<code>sam deploy</code> とパイプラインを使います。</p>
+</blockquote>
+<h3>7.4 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>構造化ログ（JSON）</strong> を出力し、相関 ID を付ける</td>
+<td>ログ検索・追跡が容易</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>X-Ray</strong> を有効化して外部呼び出しの遅延を可視化</td>
+<td>ボトルネックの特定</td>
+</tr>
+<tr>
+<td>3</td>
+<td>テストは <strong>dev 専用環境</strong> で行い、本番データを使わない</td>
+<td>事故防止</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>ローカル → クラウド</strong> の順で段階的に確認</td>
+<td>速く、安く、早期に不具合発見</td>
+</tr>
+<tr>
+<td>5</td>
+<td>機密情報や個人情報を <strong>ログに出さない</strong></td>
+<td>コンプライアンス</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7.5 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ローカルで Lambda を Docker 上で試したい</td>
+<td><code>sam local invoke</code></td>
+</tr>
+<tr>
+<td>ローカルで API を起動して試したい</td>
+<td><code>sam local start-api</code></td>
+</tr>
+<tr>
+<td>デプロイ済み関数の実行ログを見る</td>
+<td><strong>CloudWatch Logs</strong>（<code>sam logs</code>）</td>
+</tr>
+<tr>
+<td>呼び出し経路と遅延を可視化</td>
+<td><strong>AWS X-Ray</strong></td>
+</tr>
+<tr>
+<td>権限だけ確認して実行はしたくない</td>
+<td>呼び出しタイプ <strong>DryRun</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda 関数のテスト</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/testing-functions.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">SAM CLI コマンドリファレンス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/serverless-sam-cli-command-reference.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-using-invoke.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">sam local invoke</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/serverless-sam-cli-using-invoke.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-sync.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">sam sync（SAM Accelerate）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-sync.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda の呼び出し</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/lambda-invocation.html</span></a></div></section>
+<hr />
+<h2 id="s11">Step 8：統合テストと外部依存のモック（Skill 3.2.2）</h2>
+<blockquote>
+<p><strong>Skill 3.2.2</strong>: 統合テストを作成し、外部依存に対する API をモック化する</p>
+</blockquote>
+<h3>8.1 テストの種類</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>対象</th>
+<th>速度</th>
+<th>外部依存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>単体テスト（Unit）</strong></td>
+<td>1 つの関数・クラス</td>
+<td>非常に速い</td>
+<td><strong>モックに置換</strong></td>
+</tr>
+<tr>
+<td><strong>統合テスト（Integration）</strong></td>
+<td>複数の部品の連携（Lambda + DynamoDB など）</td>
+<td>中</td>
+<td>本物（dev 環境）または一部モック</td>
+</tr>
+<tr>
+<td><strong>E2E テスト</strong></td>
+<td>利用者視点の一連の流れ</td>
+<td>遅い</td>
+<td>本物</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d11"></div></div>
+
+<blockquote>
+<p>比率は「単体 &gt; 統合 &gt; E2E」とするのが定石です（テストピラミッド）。</p>
+</blockquote>
+<h3>8.2 モックとは？</h3>
+<p><strong>モック／スタブ</strong> は、本物の代わりに動く「<strong>偽物</strong>」です。外部 API や AWS サービスを呼ぶ部分を偽物に差し替えると、<strong>速く・安く・安定して・狙った状況（エラー等）を再現</strong> できます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+<th>言語</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>moto</strong></td>
+<td>AWS サービス（S3、DynamoDB、SQS 等）を <strong>メモリ上で模擬</strong></td>
+<td>Python</td>
+</tr>
+<tr>
+<td><strong>botocore Stubber</strong></td>
+<td>boto3 クライアントの応答を <strong>指定どおりに返す</strong></td>
+<td>Python</td>
+</tr>
+<tr>
+<td><strong>aws-sdk-client-mock</strong></td>
+<td>AWS SDK v3 のクライアントを模擬</td>
+<td>JavaScript/TypeScript</td>
+</tr>
+<tr>
+<td><strong>unittest.mock / Jest モック</strong></td>
+<td>任意の関数・HTTP 呼び出しを置換</td>
+<td>各言語</td>
+</tr>
+<tr>
+<td><strong>API Gateway の Mock 統合</strong></td>
+<td>バックエンドなしで <strong>固定レスポンス</strong> を返す</td>
+<td>API Gateway</td>
+</tr>
+</tbody>
+</table></div>
+<h3>8.3 コード例：moto で DynamoDB をモックした単体テスト（Python）</h3>
+<pre><code class="language-python">import boto3
+from moto import mock_aws
+
+@mock_aws
+def test_save_order():
+    # 偽の DynamoDB を作る（本物には一切つながらない）
+    ddb = boto3.resource(&quot;dynamodb&quot;, region_name=&quot;ap-northeast-1&quot;)
+    ddb.create_table(
+        TableName=&quot;Orders&quot;,
+        KeySchema=[{&quot;AttributeName&quot;: &quot;orderId&quot;, &quot;KeyType&quot;: &quot;HASH&quot;}],
+        AttributeDefinitions=[{&quot;AttributeName&quot;: &quot;orderId&quot;, &quot;AttributeType&quot;: &quot;S&quot;}],
+        BillingMode=&quot;PAY_PER_REQUEST&quot;,
+    )
+
+    import app                       # テスト対象
+    app.save_order({&quot;orderId&quot;: &quot;A-001&quot;})
+
+    item = ddb.Table(&quot;Orders&quot;).get_item(Key={&quot;orderId&quot;: &quot;A-001&quot;})[&quot;Item&quot;]
+    assert item[&quot;orderId&quot;] == &quot;A-001&quot;
+</code></pre>
+<h3>8.4 API Gateway の Mock 統合</h3>
+<p><strong>Mock 統合</strong> は、リクエストを <strong>バックエンドに転送せず</strong>、API Gateway 自身が応答を返す機能です。</p>
+<ul>
+<li>用途：バックエンド完成前の <strong>API 仕様の先行確認</strong>、CORS の <strong>OPTIONS プリフライト応答</strong>、テスト用スタブ。</li>
+<li>外部サービスの代役として <strong>dev 環境専用のスタブ API</strong> を用意し、環境変数やステージ変数で <strong>接続先を切り替える</strong> 使い方もあります。</li>
+</ul>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d12"></div></div>
+
+<h3>8.5 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ハンドラー内で <strong>ビジネスロジックと AWS 呼び出しを分離</strong> する</td>
+<td>単体テストしやすくなる</td>
+</tr>
+<tr>
+<td>2</td>
+<td>クライアントは <strong>ハンドラー外（初期化時）で生成</strong> し、テストで差し替え可能にする</td>
+<td>再利用＋モック容易</td>
+</tr>
+<tr>
+<td>3</td>
+<td>外部依存の <strong>接続先 URL は設定として注入</strong>（環境変数など）</td>
+<td>環境ごとにスタブ／本物を切替</td>
+</tr>
+<tr>
+<td>4</td>
+<td>統合テストは <strong>使い捨ての環境</strong>（専用スタックやブランチ別スタック）で実行</td>
+<td>干渉を防ぐ</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>異常系（タイムアウト、4xx/5xx、スロットリング）</strong> もモックで再現</td>
+<td>障害時の動作を確認</td>
+</tr>
+<tr>
+<td>6</td>
+<td>統合テストの <strong>後始末（データ削除・スタック削除）</strong> を自動化</td>
+<td>コスト・汚染の防止</td>
+</tr>
+</tbody>
+</table></div>
+<h3>8.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>バックエンド未完成でも API の挙動を確認したい</td>
+<td><strong>API Gateway Mock 統合</strong></td>
+</tr>
+<tr>
+<td>テストで本物の AWS を使わずに DynamoDB を再現</td>
+<td><strong>モック</strong>（moto など）を利用</td>
+</tr>
+<tr>
+<td>外部サービスの料金や不安定さをテストから切り離す</td>
+<td><strong>モック／スタブ</strong> に置き換える</td>
+</tr>
+<tr>
+<td>統合テストの対象</td>
+<td><strong>実際の AWS サービスとの連携</strong>（dev 環境で実施）</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-mock-integration.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">API Gateway の Mock 統合</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/how-to-mock-integration.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda 関数のテスト</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/testing-functions.html</span></a><a class="ref" href="https://github.com/getmoto/moto" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind oss">GitHub</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">moto（OSS）</span><span class="ref-url"><b>github.com</b>/getmoto/moto</span></a><a class="ref" href="https://martinfowler.com/articles/practical-test-pyramid.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">The Practical Test Pyramid（Martin Fowler / Ham Vocke）</span><span class="ref-url"><b>martinfowler.com</b>/articles/practical-test-pyramid.html</span></a><a class="ref" href="https://serverlessland.com/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Serverless Land（AWS 公式のサーバーレス情報）</span><span class="ref-url"><b>serverlessland.com</b>/</span></a></div></section>
+<hr />
+<h2 id="s12">Step 9：開発用エンドポイントと API Gateway ステージ（Skill 3.2.3）</h2>
+<blockquote>
+<p><strong>Skill 3.2.3</strong>: 開発用エンドポイントを使ってアプリケーションをテストする（例：Amazon API Gateway のステージを設定する）</p>
+</blockquote>
+<h3>9.1 API Gateway の「ステージ」とは</h3>
+<p><strong>ステージ</strong> は、API のデプロイ済みスナップショットに付ける <strong>名前付きの公開窓口</strong>（例：<code>dev</code>、<code>test</code>、<code>prod</code>）です。ステージごとに <strong>別の URL</strong> が付きます。</p>
+<pre><code class="language-text">https://{api-id}.execute-api.{region}.amazonaws.com/{stage-name}/{resource}
+</code></pre>
+<h3>9.2 REST API の「デプロイ」と「ステージ」の関係</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d13"></div></div>
+
+<blockquote>
+<p>⚠️ <strong>最重要ポイント</strong>: REST API は、リソースやメソッドを変更しても <strong>再デプロイしない限り、ステージには反映されません</strong>。「変更したのに動かない」は、まず <strong>再デプロイ漏れ</strong> を疑います。</p>
+</blockquote>
+<h3>9.3 ステージで設定できること</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ステージ変数</strong></td>
+<td>環境ごとに変わる値（例：Lambda エイリアス名、バックエンド URL）。<code>${stageVariables.変数名}</code> で参照</td>
+</tr>
+<tr>
+<td><strong>スロットリング</strong></td>
+<td>ステージ／メソッド単位のレート制限</td>
+</tr>
+<tr>
+<td><strong>キャッシュ</strong></td>
+<td>レスポンスキャッシュの有効化</td>
+</tr>
+<tr>
+<td><strong>ログ・メトリクス</strong></td>
+<td>CloudWatch Logs への実行ログ、詳細メトリクス</td>
+</tr>
+<tr>
+<td><strong>カナリアリリース</strong></td>
+<td>ステージ内で <strong>一部のトラフィックだけ新しいデプロイへ</strong> 流す</td>
+</tr>
+<tr>
+<td><strong>WAF / クライアント証明書</strong></td>
+<td>セキュリティ設定</td>
+</tr>
+</tbody>
+</table></div>
+<h3>9.4 REST API と HTTP API の違い（ステージ観点）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>REST API</th>
+<th>HTTP API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>デプロイ操作</td>
+<td><strong>明示的なデプロイが必要</strong></td>
+<td><strong>自動デプロイ（auto-deploy）</strong> を有効にできる</td>
+</tr>
+<tr>
+<td>既定のステージ</td>
+<td>なし（作成する）</td>
+<td><strong><code>$default</code> ステージ</strong></td>
+</tr>
+<tr>
+<td>ステージ変数</td>
+<td>使える</td>
+<td>使える</td>
+</tr>
+<tr>
+<td>カナリアリリース</td>
+<td><strong>使える</strong></td>
+<td>使えない</td>
+</tr>
+</tbody>
+</table></div>
+<h3>9.5 開発エンドポイントを使ったテストの流れ</h3>
+<ol>
+<li><code>dev</code> ステージを作成してデプロイする。</li>
+<li><code>dev</code> の <strong>Invoke URL</strong> に <code>curl</code> やテストコードでアクセスする。</li>
+<li>ステージ変数で、バックエンド（Lambda エイリアス <code>dev</code>）に接続する。</li>
+<li>問題なければ、同じ定義を <code>test</code> → <code>prod</code> ステージに昇格する。</li>
+</ol>
+<pre><code class="language-bash">curl -i https://abc123.execute-api.ap-northeast-1.amazonaws.com/dev/orders
+</code></pre>
+<h3>9.6 SAM でのステージ指定</h3>
+<pre><code class="language-yaml">Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev            # ステージ名
+      Variables:
+        lambdaAlias: dev        # ステージ変数
+</code></pre>
+<h3>9.7 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>dev / test / prod の <strong>ステージ（または別アカウント）を分ける</strong></td>
+<td>影響範囲の限定</td>
+</tr>
+<tr>
+<td>2</td>
+<td>環境差分は <strong>ステージ変数</strong> で吸収し、API 定義は共通にする</td>
+<td>定義のずれを防ぐ</td>
+</tr>
+<tr>
+<td>3</td>
+<td>dev ステージでは <strong>詳細ログ</strong> を有効、prod ではデータ量を考慮</td>
+<td>調査性とコストの両立</td>
+</tr>
+<tr>
+<td>4</td>
+<td>prod へは <strong>カナリアリリース</strong> で段階展開</td>
+<td>事故の影響を最小化</td>
+</tr>
+<tr>
+<td>5</td>
+<td>コンソールの <strong>テスト機能（Test invoke）</strong> で、デプロイ前にメソッドを確認</td>
+<td>早期の不具合発見</td>
+</tr>
+</tbody>
+</table></div>
+<h3>9.8 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API を変更したが、ステージの動作が変わらない</td>
+<td><strong>API を再デプロイ</strong> していない</td>
+</tr>
+<tr>
+<td>環境ごとに異なる Lambda を呼びたい（API 定義は共通）</td>
+<td><strong>ステージ変数</strong></td>
+</tr>
+<tr>
+<td>本番ステージに一部のトラフィックだけ新バージョンを流す</td>
+<td><strong>カナリアリリース設定</strong>（REST API）</td>
+</tr>
+<tr>
+<td>開発用に手軽な URL でテスト</td>
+<td><strong>dev ステージの Invoke URL</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">6 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">API Gateway のステージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/stages.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-stages.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ステージの設定</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/set-up-stages.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-deploy-api.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">REST API のデプロイ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/how-to-deploy-api.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ステージ変数</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/canary-release.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">カナリアリリース</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/canary-release.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-stages.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">HTTP API のステージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/http-api-stages.html</span></a></div></section>
+<hr />
+<h2 id="s13">Step 10：既存環境へのスタック更新（Skill 3.2.4）</h2>
+<blockquote>
+<p><strong>Skill 3.2.4</strong>: 既存の環境にアプリケーションスタックの更新をデプロイする（例：AWS SAM テンプレートを別のステージング環境にデプロイする）</p>
+</blockquote>
+<h3>10.1 考え方：同じテンプレート × 違うパラメータ × 違うスタック</h3>
+<p><strong>同じ SAM / CloudFormation テンプレート</strong> を使い、<strong>パラメータとスタック名を変えるだけ</strong> で、dev / staging / prod を作り分けます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d14"></div></div>
+
+<h3>10.2 samconfig.toml で環境別の設定を持つ</h3>
+<pre><code class="language-toml">version = 0.1
+
+[default.deploy.parameters]
+stack_name = &quot;myapp-dev&quot;
+resolve_s3 = true
+capabilities = &quot;CAPABILITY_IAM&quot;
+parameter_overrides = &quot;Stage=dev&quot;
+
+[staging.deploy.parameters]
+stack_name = &quot;myapp-staging&quot;
+resolve_s3 = true
+capabilities = &quot;CAPABILITY_IAM&quot;
+parameter_overrides = &quot;Stage=staging LogLevel=INFO&quot;
+
+[prod.deploy.parameters]
+stack_name = &quot;myapp-prod&quot;
+resolve_s3 = true
+capabilities = &quot;CAPABILITY_IAM&quot;
+parameter_overrides = &quot;Stage=prod LogLevel=WARN&quot;
+confirm_changeset = true
+</code></pre>
+<pre><code class="language-bash">sam build
+sam deploy --config-env staging      # staging 用の設定でデプロイ
+sam deploy --config-env prod         # prod 用（変更セットの確認つき）
+</code></pre>
+<h3>10.3 テンプレート側：Parameters と Conditions</h3>
+<pre><code class="language-yaml">Parameters:
+  Stage:
+    Type: String
+    AllowedValues: [dev, staging, prod]
+
+Conditions:
+  IsProd: !Equals [!Ref Stage, prod]
+
+Resources:
+  OrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Runtime: python3.13
+      MemorySize: !If [IsProd, 1024, 256]    # 本番だけ大きく
+      Environment:
+        Variables:
+          STAGE: !Ref Stage
+</code></pre>
+<h3>10.4 更新の安全な流れ（変更セット）</h3>
+<p><code>sam deploy</code> は内部で CloudFormation の <strong>変更セット（Change Set）</strong> を作成し、それを実行します。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d15"></div></div>
+
+<h3>10.5 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>環境ごとにスタックを分ける</strong>（スタック名に環境名）</td>
+<td>独立性・安全性</td>
+</tr>
+<tr>
+<td>2</td>
+<td>prod は <strong><code>confirm_changeset</code>（または <code>--no-execute-changeset</code>）</strong> で内容確認</td>
+<td>意図しない削除・置換の防止</td>
+</tr>
+<tr>
+<td>3</td>
+<td>環境差分は <strong>Parameters / Conditions / Mappings</strong> で表現</td>
+<td>テンプレートを 1 つに保てる</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong><code>sam validate --lint</code></strong> や <strong>cfn-lint</strong> で事前検査</td>
+<td>構文・ベストプラクティス違反の早期検出</td>
+</tr>
+<tr>
+<td>5</td>
+<td>本番デプロイは <strong>人の手ではなくパイプライン</strong> から行う</td>
+<td>再現性と監査性</td>
+</tr>
+<tr>
+<td>6</td>
+<td>同じ成果物（ビルド済み）を staging → prod に昇格</td>
+<td>「テストしたものを出す」</td>
+</tr>
+</tbody>
+</table></div>
+<h3>10.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同じ SAM テンプレートを staging にもデプロイ</td>
+<td><strong>スタック名とパラメータを変えて <code>sam deploy</code></strong>（<code>--config-env</code>）</td>
+</tr>
+<tr>
+<td>本番更新前に変更内容を確認したい</td>
+<td><strong>変更セット</strong></td>
+</tr>
+<tr>
+<td>環境ごとに値を変えたい</td>
+<td><strong>Parameters</strong>（＋ Conditions / Mappings）</td>
+</tr>
+<tr>
+<td>デプロイ失敗時の挙動</td>
+<td>既定で <strong>ロールバック</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">samconfig（SAM CLI の設定ファイル）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">変更セットによる更新</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CloudFormation テンプレートの構造</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/template-anatomy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">sam deploy</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-deploy.html</span></a></div></section>
+<hr />
+<h2 id="s14">Step 11：イベント駆動アプリケーションのテスト（Skill 3.2.5）</h2>
+<blockquote>
+<p><strong>Skill 3.2.5</strong>: イベント駆動型アプリケーションをテストする</p>
+</blockquote>
+<h3>11.1 イベント駆動とは</h3>
+<p>「ファイルがアップロードされた」「メッセージがキューに届いた」といった <strong>出来事（イベント）をきっかけに処理が動く</strong> 仕組みです。呼び出し元が見えにくいため、<strong>テストの工夫が必要</strong> です。</p>
+<h3>11.2 代表的なイベントソースとテスト方法</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>イベントソース</th>
+<th>呼び出し方式</th>
+<th>テスト方法の例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon S3</td>
+<td>非同期</td>
+<td><code>sam local generate-event s3 put</code> で疑似イベント生成、または実際にテストファイルをアップロード</td>
+</tr>
+<tr>
+<td>Amazon SNS</td>
+<td>非同期</td>
+<td><code>aws sns publish</code> でテストメッセージ送信</td>
+</tr>
+<tr>
+<td>Amazon SQS</td>
+<td><strong>ポーリング（イベントソースマッピング）</strong></td>
+<td><code>aws sqs send-message</code> で送信し、処理結果とキューを確認</td>
+</tr>
+<tr>
+<td>Amazon EventBridge</td>
+<td>非同期</td>
+<td><code>aws events put-events</code> / <strong>イベントパターンのテスト</strong></td>
+</tr>
+<tr>
+<td>DynamoDB Streams / Kinesis</td>
+<td><strong>ポーリング</strong></td>
+<td>テーブルを更新して Stream レコードを発生させる</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>同期</td>
+<td><code>curl</code> / テストイベント / <code>sam local start-api</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>11.3 テストの 3 段階</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d16"></div></div>
+
+<h3>11.4 疑似イベントを作る</h3>
+<pre><code class="language-bash"># S3 に put されたイベントの JSON を生成
+sam local generate-event s3 put --bucket my-bucket --key images/a.png &gt; events/s3-put.json
+
+# 生成したイベントでローカル実行
+sam local invoke ImageFunction -e events/s3-put.json
+</code></pre>
+<p>EventBridge のルールが <strong>意図したイベントに一致するか</strong> は、イベントパターンのテストで確認できます。</p>
+<pre><code class="language-bash">aws events test-event-pattern \
+  --event-pattern file://pattern.json \
+  --event file://event.json
+</code></pre>
+<h3>11.5 イベント駆動で必ず考えるべきこと</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>論点</th>
+<th>内容</th>
+<th>対策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>少なくとも 1 回配信（At-least-once）</strong></td>
+<td>同じイベントが <strong>2 回以上</strong> 届くことがある</td>
+<td><strong>冪等性（べきとうせい）</strong> を実装（同じ入力で結果が変わらない）</td>
+</tr>
+<tr>
+<td><strong>失敗時の扱い</strong></td>
+<td>処理が失敗し続けるメッセージ</td>
+<td><strong>DLQ（デッドレターキュー）</strong> や <strong>失敗時の送信先（Destinations）</strong></td>
+</tr>
+<tr>
+<td><strong>一部だけ失敗（バッチ）</strong></td>
+<td>SQS・Kinesis のバッチ処理</td>
+<td><strong>部分バッチ応答（ReportBatchItemFailures）</strong></td>
+</tr>
+<tr>
+<td><strong>順序</strong></td>
+<td>標準キューは順序保証なし</td>
+<td>FIFO キュー、または順序に依存しない設計</td>
+</tr>
+<tr>
+<td><strong>リトライ</strong></td>
+<td>非同期呼び出しは自動リトライあり</td>
+<td>リトライ回数・最大イベント経過時間を設定</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>冪等性の実装には、Powertools for AWS Lambda の Idempotency ユーティリティがよく使われます。</p>
+</blockquote>
+<h3>11.5.1 DLQ とリトライの全体像</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d17"></div></div>
+
+<h3>11.6 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>サンプルイベントを <code>events/</code> に保存</strong> し、リポジトリで管理</td>
+<td>再現可能なテスト</td>
+</tr>
+<tr>
+<td>2</td>
+<td>実イベントのペイロードを <strong>ログからサンプリング</strong> してテストに活用（個人情報はマスク）</td>
+<td>実態に即したテスト</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>冪等性・DLQ・リトライ</strong> をテストで必ず検証</td>
+<td>本番での障害を想定</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>X-Ray / 相関 ID</strong> でイベントの流れを追跡</td>
+<td>非同期の可視化</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>統合テストでは、イベント発生 → 結果が出るまでポーリング</strong> して検証</td>
+<td>非同期のため待機が必要</td>
+</tr>
+</tbody>
+</table></div>
+<h3>11.7 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 イベントの形式をローカルで再現</td>
+<td><strong><code>sam local generate-event</code></strong></td>
+</tr>
+<tr>
+<td>重複配信されても結果を変えない</td>
+<td><strong>冪等性</strong></td>
+</tr>
+<tr>
+<td>何度も失敗するメッセージを退避して調査</td>
+<td><strong>DLQ / on-failure destination</strong></td>
+</tr>
+<tr>
+<td>SQS バッチの一部だけ失敗した</td>
+<td><strong>ReportBatchItemFailures（部分バッチ応答）</strong></td>
+</tr>
+<tr>
+<td>EventBridge ルールのパターンが合うか確認</td>
+<td><strong>イベントパターンのテスト</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">6 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">sam local generate-event</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda の非同期呼び出し</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/invocation-async.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/services-sqs-errorhandling.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">SQS と Lambda（部分バッチ応答）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/services-sqs-errorhandling.html</span></a><a class="ref" href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">EventBridge のイベントパターン</span><span class="ref-url"><b>docs.aws.amazon.com</b>/eventbridge/latest/userguide/eb-event-patterns.html</span></a><a class="ref" href="https://docs.powertools.aws.dev/lambda/python/latest/utilities/idempotency/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Powertools for AWS Lambda（冪等性）</span><span class="ref-url"><b>docs.powertools.aws.dev</b>/lambda/python/latest/utilities/idempotency/</span></a><a class="ref" href="https://serverlessland.com/patterns" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Serverless Land（イベント駆動パターン集）</span><span class="ref-url"><b>serverlessland.com</b>/patterns</span></a></div></section>
+<hr />
+<h1 id="s15">Task 3：デプロイテストの自動化</h1>
+<p>この Task は「テストとデプロイを <strong>人の手を介さず繰り返せる形</strong> にする」工程です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d18"></div></div>
+
+<hr />
+<h2 id="s16">Step 12：テストイベントの作成（Skill 3.3.1）</h2>
+<blockquote>
+<p><strong>Skill 3.3.1</strong>: アプリケーションのテストイベントを作成する（例：Lambda、API Gateway、AWS SAM リソース向けの JSON ペイロード）</p>
+</blockquote>
+<h3>12.1 テストイベントとは</h3>
+<p>Lambda は <strong>イベント（JSON）を受け取って動く関数</strong> です。テストでは、そのイベントを <strong>自分で作って渡す</strong> ことになります。これが <strong>テストイベント</strong> です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d19"></div></div>
+
+<h3>12.2 テストイベントを作る 4 つの方法</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+<th>使いどころ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lambda コンソールのテストイベント</strong></td>
+<td>サービス別の <strong>テンプレート</strong>（S3、SQS、API Gateway など）から作成・保存。<strong>共有可能なテストイベント</strong>（EventBridge のスキーマレジストリ利用）もある</td>
+<td>手早い確認</td>
+</tr>
+<tr>
+<td><strong><code>sam local generate-event</code></strong></td>
+<td>サービス別のイベントを <strong>コマンドで生成</strong></td>
+<td>ローカルテスト、リポジトリ保存</td>
+</tr>
+<tr>
+<td><strong>ログからサンプリング</strong></td>
+<td>実際に届いたイベントを CloudWatch Logs から取得（個人情報は除去）</td>
+<td>実態に即したテスト</td>
+</tr>
+<tr>
+<td><strong>手書き JSON</strong></td>
+<td>最小限のフィールドで作る</td>
+<td>単体テスト</td>
+</tr>
+</tbody>
+</table></div>
+<h3>12.3 API Gateway（REST・Lambda プロキシ統合）のイベント例</h3>
+<pre><code class="language-json">{
+  &quot;httpMethod&quot;: &quot;POST&quot;,
+  &quot;path&quot;: &quot;/orders&quot;,
+  &quot;headers&quot;: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  &quot;queryStringParameters&quot;: { &quot;dryRun&quot;: &quot;true&quot; },
+  &quot;pathParameters&quot;: null,
+  &quot;stageVariables&quot;: { &quot;lambdaAlias&quot;: &quot;dev&quot; },
+  &quot;requestContext&quot;: { &quot;stage&quot;: &quot;dev&quot; },
+  &quot;body&quot;: &quot;{\&quot;orderId\&quot;:\&quot;A-001\&quot;,\&quot;qty\&quot;:2}&quot;,
+  &quot;isBase64Encoded&quot;: false
+}
+</code></pre>
+<ul>
+<li><code>body</code> は <strong>JSON を文字列としてエスケープ</strong> した形になります（ここが初学者のつまずきポイント）。</li>
+<li>HTTP API（ペイロード形式 2.0）では構造が異なります（<code>version: "2.0"</code>、<code>routeKey</code>、<code>rawPath</code>、<code>requestContext.http.method</code> など）。</li>
+</ul>
+<h3>12.4 Lambda プロキシ統合のレスポンス形式（頻出）</h3>
+<p>Lambda は <strong>次の形式</strong> で返さないと、API Gateway が <strong>502 Bad Gateway（Malformed Lambda proxy response）</strong> を返します。</p>
+<pre><code class="language-python">import json
+
+def handler(event, context):
+    body = json.loads(event[&quot;body&quot;])
+    return {
+        &quot;statusCode&quot;: 200,
+        &quot;headers&quot;: {&quot;Content-Type&quot;: &quot;application/json&quot;},
+        &quot;body&quot;: json.dumps({&quot;received&quot;: body[&quot;orderId&quot;]}),   # body は文字列
+    }
+</code></pre>
+<h3>12.5 SAM でテストイベントを使う</h3>
+<pre><code class="language-bash"># イベントを生成して保存
+sam local generate-event apigateway aws-proxy --method POST --path orders --body '{&quot;orderId&quot;:&quot;A-001&quot;}' &gt; events/api-post.json
+
+# 関数をそのイベントで実行
+sam local invoke OrderFunction -e events/api-post.json
+
+# 環境変数を上書きして実行（dev 用の値でテスト）
+sam local invoke OrderFunction -e events/api-post.json --env-vars env.json
+</code></pre>
+<h3>12.6 テストの自動化（CI での実行）</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d20"></div></div>
+
+<pre><code class="language-python">import json, glob, pytest
+from app import handler
+
+@pytest.mark.parametrize(&quot;path&quot;, glob.glob(&quot;events/*.json&quot;))
+def test_handler_returns_valid_response(path):
+    event = json.load(open(path))
+    res = handler(event, None)
+    assert res[&quot;statusCode&quot;] in (200, 201, 400)
+</code></pre>
+<h3>12.7 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>テストイベントを <strong>リポジトリで版管理</strong></td>
+<td>チームで共有・再現</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>正常系＋異常系</strong>（欠損フィールド、不正値、空）を用意</td>
+<td>堅牢性の確認</td>
+</tr>
+<tr>
+<td>3</td>
+<td>実データ由来のイベントは <strong>個人情報をマスク</strong></td>
+<td>情報保護</td>
+</tr>
+<tr>
+<td>4</td>
+<td>イベントに <strong>環境依存の値を埋め込まない</strong>（ステージ名、ARN など）</td>
+<td>環境間で使い回す</td>
+</tr>
+<tr>
+<td>5</td>
+<td>プロキシ統合の <strong>レスポンス形式をテストで検証</strong></td>
+<td>502 エラー防止</td>
+</tr>
+</tbody>
+</table></div>
+<h3>12.8 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 / SQS などのイベント JSON を簡単に作りたい</td>
+<td><strong><code>sam local generate-event</code></strong> または Lambda コンソールのイベントテンプレート</td>
+</tr>
+<tr>
+<td>API Gateway で 502 エラー（Lambda プロキシ統合）</td>
+<td><strong>レスポンス形式（statusCode / body 文字列）</strong> の誤り</td>
+</tr>
+<tr>
+<td>チーム間でテストイベントを共有</td>
+<td><strong>共有可能なテストイベント</strong>（スキーマレジストリ）や、リポジトリ管理</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda コンソールでのテストイベント</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/testing-functions.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">sam local generate-event</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-generate-event.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda プロキシ統合</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-test-method.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">API Gateway メソッドのテスト</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/how-to-test-method.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">HTTP API ペイロード形式</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html</span></a></div></section>
+<hr />
+<h2 id="s17">Step 13：API リソースの複数環境へのデプロイと環境管理（Skill 3.3.2 / 3.3.5）</h2>
+<blockquote>
+<p><strong>Skill 3.3.2</strong>: API リソースをさまざまな環境にデプロイする
+<strong>Skill 3.3.5</strong>: 個々の AWS サービス内で環境を管理する（例：API Gateway で開発・テスト・本番を区別する）</p>
+</blockquote>
+<h3>13.1 「環境」は AWS サービスごとに表現方法が違う</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>環境の表現方法</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API Gateway</strong></td>
+<td><strong>ステージ</strong></td>
+<td><code>dev</code> / <code>test</code> / <code>prod</code></td>
+</tr>
+<tr>
+<td><strong>AWS Lambda</strong></td>
+<td><strong>エイリアス</strong>（＋バージョン）、関数名の接尾辞</td>
+<td><code>dev</code> エイリアス、<code>prod</code> エイリアス</td>
+</tr>
+<tr>
+<td><strong>AWS AppConfig</strong></td>
+<td><strong>Environment</strong></td>
+<td>dev / prod</td>
+</tr>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td><strong>環境（Environment）</strong></td>
+<td><code>myapp-dev</code>、<code>myapp-prod</code></td>
+</tr>
+<tr>
+<td><strong>AWS Amplify Hosting</strong></td>
+<td><strong>ブランチ</strong></td>
+<td><code>main</code>=本番、<code>dev</code>=開発</td>
+</tr>
+<tr>
+<td><strong>CodeDeploy</strong></td>
+<td><strong>デプロイグループ</strong></td>
+<td><code>staging-group</code> / <code>prod-group</code></td>
+</tr>
+<tr>
+<td><strong>Amazon ECS</strong></td>
+<td>クラスター／サービス／タスク定義リビジョン</td>
+<td><code>orders-dev</code> サービス</td>
+</tr>
+<tr>
+<td><strong>CloudFormation / SAM</strong></td>
+<td><strong>スタック</strong>（名前＋パラメータ）</td>
+<td><code>myapp-dev</code> スタック</td>
+</tr>
+<tr>
+<td><strong>AWS アカウント</strong></td>
+<td>アカウント単位の分離（最も強い分離）</td>
+<td>dev アカウント / prod アカウント</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13.2 API Gateway：デプロイの実行</h3>
+<pre><code class="language-bash"># REST API の変更を dev ステージへデプロイ
+aws apigateway create-deployment \
+  --rest-api-id abc123 \
+  --stage-name dev \
+  --description &quot;add GET /orders&quot;
+</code></pre>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d21"></div></div>
+
+<h3>13.3 IaC での落とし穴（CloudFormation で API Gateway を管理する場合）</h3>
+<ul>
+<li>素の CloudFormation では、<code>AWS::ApiGateway::Deployment</code> は <strong>リソースの内容が変わらないと再作成されません</strong>。API の中身を変えてもステージに反映されない問題が起きます。</li>
+<li><strong>AWS SAM（<code>AWS::Serverless::Api</code>）を使うと、デプロイとステージの管理を自動で行ってくれる</strong> ため、この問題は起きにくくなります。</li>
+</ul>
+<h3>13.4 ステージ変数と環境ごとの接続先</h3>
+<pre><code class="language-yaml"># SAM：dev/prod で呼ぶ Lambda エイリアスをステージ変数で切り替える
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      Variables:
+        lambdaAlias: !Ref Stage
+</code></pre>
+<h3>13.5 環境分離の強さ（弱い → 強い）</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d22"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>長所</th>
+<th>短所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ステージ分離</td>
+<td>手軽</td>
+<td>設定ミスの影響が他ステージに及ぶ可能性</td>
+</tr>
+<tr>
+<td>別スタック</td>
+<td>リソースが完全に別</td>
+<td>同一アカウント内の権限分離は別途必要</td>
+</tr>
+<tr>
+<td><strong>別アカウント</strong></td>
+<td><strong>権限・課金・障害の完全分離</strong>（AWS Organizations で管理）</td>
+<td>初期設定が増える</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13.6 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>ステージ名＝環境名</strong> に統一し、命名規則を決める</td>
+<td>混乱防止</td>
+</tr>
+<tr>
+<td>2</td>
+<td>環境ごとに <strong>別の IAM ロール／最小権限</strong></td>
+<td>誤操作の影響を限定</td>
+</tr>
+<tr>
+<td>3</td>
+<td>本番ステージには <strong>スロットリング・ログ・WAF</strong> を有効化</td>
+<td>保護と可観測性</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>同じ定義を昇格</strong> させ、環境固有値は変数で与える</td>
+<td>差異による不具合を防ぐ</td>
+</tr>
+<tr>
+<td>5</td>
+<td>本番デプロイは <strong>自動化されたパイプライン＋承認</strong> 経由のみ</td>
+<td>統制</td>
+</tr>
+<tr>
+<td>6</td>
+<td>可能なら <strong>dev / prod は別アカウント</strong></td>
+<td>強い分離</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13.7 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API Gateway で dev / test / prod を区別</td>
+<td><strong>ステージ</strong></td>
+</tr>
+<tr>
+<td>API を変更したが反映されない</td>
+<td><strong>再デプロイ</strong></td>
+</tr>
+<tr>
+<td>環境ごとに呼び先 Lambda を変えたい</td>
+<td><strong>ステージ変数＋Lambda エイリアス</strong></td>
+</tr>
+<tr>
+<td>最も強い環境分離</td>
+<td><strong>別アカウント</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-deploy-api.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">API Gateway のデプロイ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/how-to-deploy-api.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-stages.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ステージの設定</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/set-up-stages.html</span></a><a class="ref" href="https://docs.aws.amazon.com/wellarchitected/latest/framework/sec_securely_operate_multi_accounts.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS Organizations と複数アカウント戦略（Well-Architected）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/wellarchitected/latest/framework/sec_securely_operate_multi_accounts.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS SAM の Api リソース</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-resource-api.html</span></a></div></section>
+<hr />
+<h2 id="s18">Step 14：承認済みバージョンを使う環境（Skill 3.3.3）</h2>
+<blockquote>
+<p><strong>Skill 3.3.3</strong>: 統合テスト用に、承認済みバージョンを使うアプリケーション環境を作成する（例：Lambda エイリアス、コンテナイメージタグ、AWS Amplify ブランチ、AWS Copilot 環境）</p>
+</blockquote>
+<h3>14.1 考え方：「どのバージョンがどの環境にあるか」を固定する</h3>
+<p>統合テストでは、<strong>「テストしたものと同じもの」が本番に行く</strong> ことが大切です。そのため <strong>バージョンに名前（ラベル）を付け、環境がそれを指す</strong> 形にします。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d23"></div></div>
+
+<h3>14.2 例①：Lambda バージョンとエイリアス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>$LATEST</code></strong></td>
+<td>最新の編集中コード</td>
+<td><strong>変更可能（ミュータブル）</strong></td>
+</tr>
+<tr>
+<td><strong>バージョン</strong></td>
+<td><code>$LATEST</code> のスナップショット（1, 2, 3…）</td>
+<td><strong>不変（イミュータブル）</strong>。コードと設定が固定</td>
+</tr>
+<tr>
+<td><strong>エイリアス</strong></td>
+<td>バージョンを指す <strong>名前付きポインタ</strong>（<code>dev</code>、<code>prod</code>）</td>
+<td>別のバージョンに <strong>付け替え可能</strong>。<strong>加重ルーティング（2 バージョン間の割合）</strong> も可能</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d24"></div></div>
+
+<pre><code class="language-bash"># バージョンを発行
+aws lambda publish-version --function-name my-func --description &quot;release 1.4.0&quot;
+
+# エイリアスを作る / 付け替える
+aws lambda create-alias --function-name my-func --name test --function-version 2
+aws lambda update-alias --function-name my-func --name test --function-version 3
+
+# 加重ルーティング（prod: バージョン1に 90%、バージョン2に 10%）
+aws lambda update-alias --function-name my-func --name prod \
+  --function-version 1 \
+  --routing-config '{&quot;AdditionalVersionWeights&quot;: {&quot;2&quot;: 0.1}}'
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>ポイント</strong>: イベントソース（S3、API Gateway 等）には <strong>エイリアスの ARN</strong> を設定します。エイリアスを付け替えるだけで、呼び出し元の設定を変えずに切り替えられます。</p>
+</blockquote>
+<h3>14.3 例②：コンテナイメージのタグ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>タグ付けの方法</th>
+<th>例</th>
+<th>評価</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>latest</code></td>
+<td><code>orders:latest</code></td>
+<td>❌ <strong>何が入っているか不明、再現性なし</strong></td>
+</tr>
+<tr>
+<td><strong>セマンティックバージョン</strong></td>
+<td><code>orders:1.4.2</code></td>
+<td>✅ 人が読める</td>
+</tr>
+<tr>
+<td><strong>Git コミット SHA</strong></td>
+<td><code>orders:3f9a2c1</code></td>
+<td>✅ 追跡性が高い</td>
+</tr>
+<tr>
+<td><strong>ダイジェスト</strong></td>
+<td><code>orders@sha256:...</code></td>
+<td>✅ <strong>完全に不変</strong>（最も確実）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Amazon ECR の <strong>タグのイミュータビリティ（不変）設定</strong> を有効にすると、<strong>既存タグの上書きを防げます</strong>。</li>
+<li>環境（タスク定義・Lambda）には <strong>承認済みの特定タグ（またはダイジェスト）</strong> を指定します。</li>
+</ul>
+<h3>14.4 例③：AWS Amplify のブランチ</h3>
+<ul>
+<li>Amplify Hosting では <strong>Git の ブランチ＝環境</strong> として扱えます（例：<code>main</code>＝本番、<code>dev</code>＝開発、<code>feature/xxx</code>＝機能ブランチの一時環境）。</li>
+<li>ブランチごとに <strong>環境変数</strong> を設定でき、<strong>プルリクエストのプレビュー環境</strong> も作れます。</li>
+<li>承認済みのブランチ（例：<code>release</code>）だけを統合テスト環境に接続すれば、「承認されたコード」だけを検証できます。</li>
+</ul>
+<h3>14.5 例④：AWS Copilot の環境（注意：サポート終了）</h3>
+<ul>
+<li>AWS Copilot CLI は、<code>copilot env</code> で <strong>環境（test / prod など）</strong> を作る仕組みで、試験ガイドの例に挙がっています。</li>
+<li>ただし <strong>2026-06-12 にサポートが終了</strong> しました（OSS として GitHub には残るが、AWS による新機能・セキュリティ更新・サポートはなし）。</li>
+<li>AWS のコンテナブログでは、移行先として、<strong>CloudFormation／CDK による ECS の定義</strong> や、<strong>Amazon ECS Express Mode</strong> などの選択肢が紹介されています。</li>
+<li>試験対策としては「Copilot は <strong>環境（Environment）単位でアプリを管理し、パイプラインを生成するコンテナ向け CLI</strong>」と理解しておけば十分です。</li>
+</ul>
+<h3>14.6 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>成果物を一度だけビルド</strong> し、同じものを各環境へ昇格</td>
+<td>差異の排除</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>latest</code> タグを <strong>本番で使わない</strong></td>
+<td>再現性の確保</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ECR は <strong>イミュータブルタグ＋ライフサイクルポリシー</strong>（古いイメージの自動削除）</td>
+<td>安全とコスト</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Lambda は <strong>エイリアス経由で呼び出す</strong>（<code>$LATEST</code> を本番で直接参照しない）</td>
+<td>安定した切り替え</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>承認（レビュー／テスト合格）後</strong> にだけ、承認済みタグ・エイリアスを進める</td>
+<td>品質ゲート</td>
+</tr>
+<tr>
+<td>6</td>
+<td>一時環境（ブランチ別）は <strong>自動削除</strong></td>
+<td>コスト削減</td>
+</tr>
+</tbody>
+</table></div>
+<h3>14.7 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lambda でテスト用と本番用に別バージョンを指したい</td>
+<td><strong>バージョン＋エイリアス</strong></td>
+</tr>
+<tr>
+<td>本番が使うコンテナイメージを確実に固定したい</td>
+<td><strong>不変タグまたはダイジェスト</strong></td>
+</tr>
+<tr>
+<td>ブランチごとに自動で環境を作りたい（フロントエンド）</td>
+<td><strong>Amplify Hosting のブランチデプロイ</strong></td>
+</tr>
+<tr>
+<td><code>$LATEST</code> が危険な理由</td>
+<td><strong>変更可能</strong>で、意図せず挙動が変わる</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">7 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda のバージョン</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuration-versions.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda のエイリアス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuration-aliases.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuring-alias-routing.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">エイリアスによるトラフィックシフト</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuring-alias-routing.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ECR のイメージタグ変更可否</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AmazonECR/latest/userguide/image-tag-mutability.html</span></a><a class="ref" href="https://docs.aws.amazon.com/amplify/latest/userguide/multi-environments.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Amplify のブランチ／複数環境</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amplify/latest/userguide/multi-environments.html</span></a><a class="ref" href="https://docs.aws.amazon.com/amplify/latest/userguide/environment-variables.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Amplify の環境変数</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amplify/latest/userguide/environment-variables.html</span></a><a class="ref" href="https://aws.amazon.com/blogs/containers/announcing-the-end-of-support-for-the-aws-copilot-cli" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS Copilot CLI サポート終了の告知</span><span class="ref-url"><b>aws.amazon.com</b>/blogs/containers/announcing-the-end-of-support-for-the-aws-copilot-cli</span></a></div></section>
+<hr />
+<h2 id="s19">Step 15：IaC テンプレートの実装とデプロイ（Skill 3.3.4）</h2>
+<blockquote>
+<p><strong>Skill 3.3.4</strong>: Infrastructure as Code（IaC）テンプレートを実装・デプロイする（例：AWS SAM テンプレート、AWS CloudFormation テンプレート）</p>
+</blockquote>
+<h3>15.1 IaC を使う理由</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>手作業（コンソール操作）</th>
+<th>IaC（コードで定義）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手順が人の記憶頼み</td>
+<td><strong>テンプレートが手順書そのもの</strong></td>
+</tr>
+<tr>
+<td>環境ごとに微妙に違う</td>
+<td><strong>同じテンプレートから同じ環境</strong> を何度でも作れる</td>
+</tr>
+<tr>
+<td>変更履歴が残らない</td>
+<td><strong>Git で差分レビュー・履歴管理</strong></td>
+</tr>
+<tr>
+<td>削除漏れが出る</td>
+<td><strong>スタック削除で関連リソースをまとめて削除</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.2 CloudFormation と SAM の関係</h3>
+<p><strong>AWS SAM は CloudFormation の拡張</strong> です。SAM テンプレートの先頭に <code>Transform: AWS::Serverless-2016-10-31</code> と書くと、デプロイ時に <strong>通常の CloudFormation テンプレートへ展開</strong> されます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d25"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>比較項目</th>
+<th>CloudFormation</th>
+<th>AWS SAM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対象</td>
+<td>AWS のほぼ全リソース</td>
+<td>サーバーレス向けに簡略化（Lambda、API、テーブル等）</td>
+</tr>
+<tr>
+<td>記述量</td>
+<td>多い</td>
+<td><strong>少ない</strong>（IAM ロールや API を自動生成）</td>
+</tr>
+<tr>
+<td>ローカルテスト</td>
+<td>なし</td>
+<td><code>sam local</code>（Docker）</td>
+</tr>
+<tr>
+<td>段階的デプロイ</td>
+<td>別途 CodeDeploy 設定</td>
+<td><strong><code>DeploymentPreference</code> で簡単に設定</strong></td>
+</tr>
+<tr>
+<td>併用</td>
+<td>可能（SAM テンプレートに通常の CFN リソースも書ける）</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.3 テンプレートの構造（セクション）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>必須</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AWSTemplateFormatVersion</code></td>
+<td>任意</td>
+<td>テンプレート形式のバージョン</td>
+</tr>
+<tr>
+<td><code>Description</code></td>
+<td>任意</td>
+<td>説明</td>
+</tr>
+<tr>
+<td><code>Metadata</code></td>
+<td>任意</td>
+<td>追加情報</td>
+</tr>
+<tr>
+<td><code>Parameters</code></td>
+<td>任意</td>
+<td><strong>デプロイ時に外から渡す値</strong></td>
+</tr>
+<tr>
+<td><code>Rules</code></td>
+<td>任意</td>
+<td>パラメータの組み合わせ検証</td>
+</tr>
+<tr>
+<td><code>Mappings</code></td>
+<td>任意</td>
+<td>固定の対応表（リージョン別 AMI など）</td>
+</tr>
+<tr>
+<td><code>Conditions</code></td>
+<td>任意</td>
+<td>条件による作成の切り替え</td>
+</tr>
+<tr>
+<td><code>Transform</code></td>
+<td>任意</td>
+<td>マクロ（SAM はここで指定）</td>
+</tr>
+<tr>
+<td><strong><code>Resources</code></strong></td>
+<td><strong>必須</strong></td>
+<td><strong>作成するリソース</strong></td>
+</tr>
+<tr>
+<td><code>Outputs</code></td>
+<td>任意</td>
+<td>スタックの出力（他スタックから参照可能）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.4 よく使う組み込み関数</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>関数</th>
+<th>用途</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>!Ref</code></td>
+<td>パラメータ・リソースの参照</td>
+<td><code>!Ref Stage</code></td>
+</tr>
+<tr>
+<td><code>!GetAtt</code></td>
+<td>リソースの属性を取得</td>
+<td><code>!GetAtt Table.Arn</code></td>
+</tr>
+<tr>
+<td><code>!Sub</code></td>
+<td>文字列の変数置換</td>
+<td><code>!Sub "${AWS::StackName}-fn"</code></td>
+</tr>
+<tr>
+<td><code>!Join</code></td>
+<td>文字列の連結</td>
+<td><code>!Join ["-", [a, b]]</code></td>
+</tr>
+<tr>
+<td><code>!If</code> / <code>!Equals</code></td>
+<td>条件分岐</td>
+<td><code>!If [IsProd, 1024, 256]</code></td>
+</tr>
+<tr>
+<td><code>!FindInMap</code></td>
+<td>Mappings の参照</td>
+<td></td>
+</tr>
+<tr>
+<td><code>!ImportValue</code></td>
+<td>他スタックの <strong>Export</strong> を参照</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>擬似パラメータ：<code>AWS::Region</code>、<code>AWS::AccountId</code>、<code>AWS::StackName</code> など。</p>
+<h3>15.5 実践：SAM テンプレートの完成例（API + Lambda + DynamoDB）</h3>
+<pre><code class="language-yaml">AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Orders API
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 10
+    MemorySize: 256
+
+Resources:
+  OrdersTable:
+    Type: AWS::Serverless::SimpleTable
+    DeletionPolicy: Retain              # スタック削除時もテーブルとデータを残す
+    Properties:
+      PrimaryKey:
+        Name: orderId
+        Type: String
+
+  OrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/orders/
+      Handler: app.handler
+      AutoPublishAlias: live            # デプロイごとにバージョン発行＋エイリアス更新
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref OrdersTable
+          STAGE: !Ref Stage
+      Policies:
+        - DynamoDBCrudPolicy:           # SAM のポリシーテンプレート（最小権限）
+            TableName: !Ref OrdersTable
+      Events:
+        PostOrder:
+          Type: Api
+          Properties:
+            Path: /orders
+            Method: post
+            Auth:
+              Authorizer: AWS_IAM       # SigV4 署名付きリクエストのみ許可
+
+Outputs:
+  ApiUrl:
+    Description: Invoke URL
+    Value: !Sub &quot;https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/orders&quot;
+</code></pre>
+<blockquote>
+<p><code>Auth: Authorizer: AWS_IAM</code> により匿名アクセスは拒否されます（エンドユーザー向けなら Cognito / Lambda オーソライザー）。<code>DeletionPolicy: Retain</code> のテーブルは <code>sam delete</code> 後も残るため、不要になったら手動で削除してください。</p>
+<p>SAM の <code>Events: Type: Api</code> を使うと、暗黙的な REST API（<code>ServerlessRestApi</code>）が作られ、既定のステージ名は <code>Prod</code> になります。ステージ名を指定したい場合は、前の Step のように <code>AWS::Serverless::Api</code> を明示的に定義します。</p>
+</blockquote>
+<h3>15.6 デプロイの手順（SAM）</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d26"></div></div>
+
+<p>CloudFormation を直接使う場合は、<strong>ローカルのコード（Lambda ソースなど）を S3 にアップロードしてテンプレート内の参照を書き換える</strong> ため、次の 2 コマンドを使います。</p>
+<pre><code class="language-bash">aws cloudformation package \
+  --template-file template.yaml \
+  --s3-bucket my-artifact-bucket \
+  --output-template-file packaged.yaml
+
+aws cloudformation deploy \
+  --template-file packaged.yaml \
+  --stack-name myapp-dev \
+  --capabilities CAPABILITY_IAM \
+  --parameter-overrides Stage=dev
+</code></pre>
+<h3>15.6.1 <code>CAPABILITY_IAM</code> とは</h3>
+<p>テンプレートが <strong>IAM ロールなどを作成する場合</strong>、事故防止のため「それを理解して許可する」という <strong>明示的な同意</strong> が必要です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>値</th>
+<th>場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CAPABILITY_IAM</code></td>
+<td>IAM リソースを作る（名前は自動生成）</td>
+</tr>
+<tr>
+<td><code>CAPABILITY_NAMED_IAM</code></td>
+<td><strong>名前を指定した</strong> IAM リソースを作る</td>
+</tr>
+<tr>
+<td><code>CAPABILITY_AUTO_EXPAND</code></td>
+<td>マクロや <strong>ネストされたアプリ</strong> を展開する</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.7 AWS CDK（参考）</h3>
+<p><strong>AWS CDK</strong> は TypeScript・Python などの <strong>プログラミング言語で IaC を書く</strong> 仕組みです。実行すると CloudFormation テンプレートが生成されます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cdk bootstrap</code></td>
+<td>初回に、デプロイ用リソース（S3 バケット等）を準備</td>
+</tr>
+<tr>
+<td><code>cdk synth</code></td>
+<td>CloudFormation テンプレートを生成</td>
+</tr>
+<tr>
+<td><code>cdk diff</code></td>
+<td>現在のスタックとの差分を表示</td>
+</tr>
+<tr>
+<td><code>cdk deploy</code></td>
+<td>デプロイ</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.8 その他の知っておくべき機能</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DeletionPolicy</strong></td>
+<td>スタック削除時の扱い：<code>Delete</code>／<code>Retain</code>（残す）／<code>Snapshot</code>（スナップショットを残す。RDS・EBS 等）</td>
+</tr>
+<tr>
+<td><strong>ドリフト検出</strong></td>
+<td>手作業変更などで <strong>実リソースがテンプレートとずれていないか</strong> 確認</td>
+</tr>
+<tr>
+<td><strong>ネストスタック</strong></td>
+<td>大きなテンプレートを部品に分割</td>
+</tr>
+<tr>
+<td><strong>動的参照</strong></td>
+<td><code>{{resolve:ssm:/path}}</code>、<code>{{resolve:secretsmanager:id:SecretString:key}}</code> で、テンプレートに値を書かず参照</td>
+</tr>
+<tr>
+<td><strong>cfn-lint</strong></td>
+<td>テンプレートの静的検査</td>
+</tr>
+<tr>
+<td><strong>ロールバック</strong></td>
+<td>作成・更新の失敗で自動的に元へ戻る（<code>UPDATE_ROLLBACK_COMPLETE</code>）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.9 ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>すべてのインフラ変更をテンプレート経由</strong> にする（手動変更しない）</td>
+<td>ドリフト防止</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Parameters / Conditions</strong> で環境差分を吸収し、テンプレートを共通化</td>
+<td>保守性</td>
+</tr>
+<tr>
+<td>3</td>
+<td>リソース名は <strong>自動生成（名前を固定しない）</strong></td>
+<td>同一テンプレートを複数スタックで使える</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>ステートフルなリソース（DB 等）に <code>DeletionPolicy: Retain</code>／Snapshot</strong> を設定</td>
+<td>誤削除防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td>機密値は <strong>動的参照</strong> で渡し、テンプレートに <strong>直書きしない</strong></td>
+<td>漏洩防止</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>sam validate --lint</code> / <code>cfn-lint</code> を <strong>CI で実行</strong></td>
+<td>早期検出</td>
+</tr>
+<tr>
+<td>7</td>
+<td>IAM は <strong>SAM のポリシーテンプレート等で最小権限</strong></td>
+<td>セキュリティ</td>
+</tr>
+<tr>
+<td>8</td>
+<td>更新前に <strong>変更セット</strong> で影響を確認</td>
+<td>意図しない置換の防止</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15.10 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAM テンプレートの先頭に必要な記述</td>
+<td><strong><code>Transform: AWS::Serverless-2016-10-31</code></strong></td>
+</tr>
+<tr>
+<td>CloudFormation テンプレートで必須のセクション</td>
+<td><strong><code>Resources</code></strong></td>
+</tr>
+<tr>
+<td>ローカルのコードを S3 に上げてテンプレートへ反映</td>
+<td><strong><code>aws cloudformation package</code></strong>（SAM なら <code>sam package</code> / <code>sam deploy</code>）</td>
+</tr>
+<tr>
+<td>IAM ロールを含むスタックの作成でエラー</td>
+<td><strong><code>--capabilities CAPABILITY_IAM</code></strong> を付ける</td>
+</tr>
+<tr>
+<td>他スタックの出力値を参照</td>
+<td><strong>Outputs の Export ＋ <code>Fn::ImportValue</code></strong></td>
+</tr>
+<tr>
+<td>DB を誤って消したくない</td>
+<td><strong><code>DeletionPolicy: Retain</code>（または Snapshot）</strong></td>
+</tr>
+<tr>
+<td>手作業で変更されたかを調べる</td>
+<td><strong>ドリフト検出</strong></td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">8 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CloudFormation テンプレートの構造</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/template-anatomy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">組み込み関数リファレンス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">DeletionPolicy 属性</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ドリフト検出</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">動的参照</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/dynamic-references.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS SAM とは</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/what-is-sam.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">SAM の Function リソース</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/sam-resource-function.html</span></a><a class="ref" href="https://docs.aws.amazon.com/cdk/v2/guide/home.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AWS CDK 開発者ガイド</span><span class="ref-url"><b>docs.aws.amazon.com</b>/cdk/v2/guide/home.html</span></a></div></section>
+<hr />
+<h2 id="s20">Step 16：Amazon Q Developer（と後継 Kiro）によるテスト生成（Skill 3.3.6）</h2>
+<blockquote>
+<p><strong>Skill 3.3.6</strong>: Amazon Q Developer を使って自動テストを生成する</p>
+</blockquote>
+<h3>16.1 まず最新状況を押さえる（重要）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容（2026-10-03 時点で確認）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>試験ガイド</td>
+<td>Skill 3.3.6 は <strong>Amazon Q Developer</strong> と記載</td>
+</tr>
+<tr>
+<td>新規サインアップ</td>
+<td><strong>2026-05-15 に停止</strong></td>
+</tr>
+<tr>
+<td>IDE プラグイン／有料サブスクリプション</td>
+<td><strong>2027-04-30 にサポート終了</strong>（それまで重大なバグ修正は継続）</td>
+</tr>
+<tr>
+<td>後継</td>
+<td><strong>Kiro</strong>（仕様駆動のエージェント型開発環境：IDE / CLI）</td>
+</tr>
+<tr>
+<td>継続するもの</td>
+<td>AWS マネジメントコンソール内の Q Developer、ドキュメントサイト、コンソールモバイルアプリ、Slack / Teams 向けチャットアプリ連携</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>💡 <strong>学習のコツ</strong>: 試験では「Q Developer がテストコードを生成できる」という <strong>機能概念</strong> が問われる可能性があります。実務や今後の学習では Kiro でも同様のこと（テスト生成、レビュー、リファクタリング）ができる、と理解しておきましょう。</p>
+</blockquote>
+<h3>16.2 AI によるテスト生成の流れ</h3>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d27"></div></div>
+
+<h3>16.3 何ができるか</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>単体テストの生成</strong></td>
+<td>関数を読み取り、正常系・境界値・異常系のテスト案を作る</td>
+</tr>
+<tr>
+<td><strong>モックの提案</strong></td>
+<td>AWS SDK 呼び出し等を模擬するコードを提案</td>
+</tr>
+<tr>
+<td><strong>カバレッジ向上</strong></td>
+<td>不足しているケースの追加</td>
+</tr>
+<tr>
+<td><strong>説明・リファクタリング</strong></td>
+<td>コードの説明、改善案</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16.4 使い方のコツ（プロンプトの例）</h3>
+<ul>
+<li>「この関数に対して pytest の単体テストを書いてください。DynamoDB 呼び出しは moto でモック化し、<strong>正常系・入力欠損・DB エラー</strong> の 3 パターンを含めてください。」</li>
+<li><strong>テスト対象、テストフレームワーク、モック方針、網羅したいケース</strong> を明示すると品質が上がります。</li>
+</ul>
+<h3>16.5 ベストプラクティス（AI 利用時の注意）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>生成されたテストは必ず人がレビュー</strong> する</td>
+<td>期待値が実装の誤りをそのまま追認している場合がある</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>機密情報（鍵・個人情報）をプロンプトに入れない</strong></td>
+<td>情報漏洩防止</td>
+</tr>
+<tr>
+<td>3</td>
+<td>生成物も <strong>CI で実行し、通ることを確認</strong></td>
+<td>品質保証</td>
+</tr>
+<tr>
+<td>4</td>
+<td>生成されたテストを <strong>コードレビューの対象</strong> にする</td>
+<td>チーム標準の維持</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>セキュリティスキャン</strong> と併用する</td>
+<td>脆弱なコードの混入防止</td>
+</tr>
+<tr>
+<td>6</td>
+<td>AI に <strong>頼りきらず、重要な仕様ケースは自分で定義</strong> する</td>
+<td>品質の最終責任は人にある</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16.6 試験での狙われどころ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問われ方</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既存コードに対する単体テストを素早く作りたい</td>
+<td><strong>Amazon Q Developer のテスト生成</strong>（IDE のチャット）</td>
+</tr>
+<tr>
+<td>生成されたテストの扱い</td>
+<td><strong>レビューして CI に組み込む</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>16.7 エマージングトピック：AI と CI/CD（採点対象外の先行出題）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>例</th>
+<th>気をつける点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自動デプロイ承認</td>
+<td>変更内容・テスト結果を AI が要約して承認者を支援</td>
+<td><strong>最終承認は人間</strong> またはポリシーで明確に制御</td>
+</tr>
+<tr>
+<td>環境プロビジョニング</td>
+<td>AI が IaC の雛形を生成</td>
+<td>生成 IaC は <strong>cfn-lint・レビュー・変更セット</strong> で検証</td>
+</tr>
+<tr>
+<td>デプロイ後検証</td>
+<td>AI がログ・メトリクスを分析して異常を検出</td>
+<td>誤検知を前提に、<strong>自動ロールバック条件はアラームで明示</strong></td>
+</tr>
+<tr>
+<td>テスト自動化</td>
+<td>テスト生成・結果分析・リグレッション</td>
+<td>生成物のレビュー必須</td>
+</tr>
+</tbody>
+</table></div>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/q-developer-ide-end-of-support.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Q Developer IDE プラグインのサポート終了と Kiro への移行</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amazonq/latest/qdeveloper-ug/q-developer-ide-end-of-support.html</span></a><a class="ref" href="https://kiro.dev/docs/upgrade-guides/migrating-from-q-developer/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">Kiro 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Kiro への移行ガイド</span><span class="ref-url"><b>kiro.dev</b>/docs/upgrade-guides/migrating-from-q-developer/</span></a><a class="ref" href="https://kiro.dev/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">Kiro 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Kiro 公式サイト</span><span class="ref-url"><b>kiro.dev</b>/</span></a><a class="ref" href="https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Amazon Q Developer ユーザーガイド</span><span class="ref-url"><b>docs.aws.amazon.com</b>/amazonq/latest/qdeveloper-ug/what-is.html</span></a><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html#developer-associate-02-emerging-topics" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">試験ガイド（エマージングトピック）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/developer-associate-02.html#developer-associate-02-emerging-topics</span></a></div></section>
+<hr />
+<h1 id="s21">Task 4：AWS CI/CD サービスによるコードデプロイ</h1>
+<p>この Task は「作って試したものを、<strong>安全に・繰り返し・戻せる形で本番へ届ける</strong>」工程で、配点の中心です（11 スキル）。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d28"></div></div>
+
+<hr />
+<h2 id="s22">Step 17：Lambda のデプロイパッケージ形式（Skill 3.4.1）</h2>
+<blockquote>
+<p><strong>Skill 3.4.1</strong>: Lambda のデプロイパッケージの選択肢を説明する</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>形式</th>
+<th>上限・特徴</th>
+<th>向いている場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>.zip（直接アップロード）</strong></td>
+<td>zip 50 MB まで（コンソール／CLI／SDK で直接）</td>
+<td>小さな関数</td>
+</tr>
+<tr>
+<td><strong>.zip（S3 経由）</strong></td>
+<td>解凍後 <strong>250 MB</strong>（レイヤー含む）</td>
+<td>一般的な関数、SAM / CloudFormation</td>
+</tr>
+<tr>
+<td><strong>レイヤー</strong></td>
+<td>1 関数に最大 <strong>5 つ</strong>。合計で解凍後 250 MB の枠内</td>
+<td>共通ライブラリの共有</td>
+</tr>
+<tr>
+<td><strong>コンテナイメージ</strong></td>
+<td>最大 <strong>10 GB</strong>。ECR（同一リージョン）に置く</td>
+<td>大きな依存関係（ML など）、既存の Docker 資産</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d29"></div></div>
+
+<p><strong>ベストプラクティス</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>内容</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>zip が 50MB 超なら <strong>S3 経由</strong>（<code>CodeUri</code> と <code>sam package</code>/<code>sam deploy</code> が自動化）</td>
+<td>直接アップロードの上限回避</td>
+</tr>
+<tr>
+<td>2</td>
+<td>コンテナは <strong>AWS 提供ベースイメージ</strong> か <strong>Runtime Interface Client</strong> を含む OCI イメージを使う</td>
+<td>Lambda が起動できる必要がある</td>
+</tr>
+<tr>
+<td>3</td>
+<td>イメージは <strong>ECR に push し、不変タグまたはダイジェスト</strong> で参照</td>
+<td>再現性</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>コード署名（Code signing）</strong> で改ざんを防ぐ</td>
+<td>供給網対策</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ローカルでは <strong>Runtime Interface Emulator</strong> でコンテナを検証</td>
+<td>デプロイ前確認</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>試験での狙われどころ</strong>: 「250MB を超える」→ コンテナ、「共通コードの一元更新」→ レイヤー、「zip を 1 回で直接アップロードできるサイズ」→ 50MB。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">デプロイパッケージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-package.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/images-create.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">コンテナイメージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/images-create.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">レイヤー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/chapter-layers.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">クォータ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/gettingstarted-limits.html</span></a></div></section>
+<hr />
+<h2 id="s23">Step 18：API Gateway のステージとカスタムドメイン（Skill 3.4.2）</h2>
+<blockquote>
+<p><strong>Skill 3.4.2</strong>: API Gateway のステージとカスタムドメインを説明する</p>
+</blockquote>
+<p>既定の URL（<code>https://{api-id}.execute-api.{region}.amazonaws.com/{stage}</code>）の代わりに、<strong>自社ドメイン</strong>（例：<code>api.example.com</code>）で公開する仕組みが <strong>カスタムドメイン名</strong> です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d30"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>証明書</td>
+<td><strong>AWS Certificate Manager（ACM）</strong> で発行・管理</td>
+</tr>
+<tr>
+<td><strong>エッジ最適化</strong>エンドポイント</td>
+<td>証明書は <strong>us-east-1</strong> に必要（CloudFront 経由）</td>
+</tr>
+<tr>
+<td><strong>リージョン</strong>エンドポイント</td>
+<td>証明書は <strong>API と同じリージョン</strong></td>
+</tr>
+<tr>
+<td>DNS</td>
+<td><strong>Route 53 のエイリアスレコード</strong>（または CNAME）をドメイン名のターゲットに向ける</td>
+</tr>
+<tr>
+<td>マッピング</td>
+<td><strong>ベースパスマッピング／API マッピング</strong> で「パス → API + ステージ」を対応づける</td>
+</tr>
+<tr>
+<td>追加機能</td>
+<td><strong>相互 TLS（mTLS）</strong>、TLS の最小バージョン指定</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>ベストプラクティス</strong>: ① ステージ名を URL に露出させたくないなら、カスタムドメインに <strong>マッピング</strong> して隠す ② 証明書は ACM の <strong>自動更新</strong> を使う ③ バージョンは <code>v1/</code>、<code>v2/</code> のように <strong>ベースパスで分離</strong> ④ dev / prod で <strong>別ドメイン</strong>（<code>dev-api.</code> / <code>api.</code>）を用意する。</p>
+<p><strong>狙われどころ</strong>: 「エッジ最適化 + カスタムドメイン」→ <strong>us-east-1 の ACM 証明書</strong>。「独自ドメインで API を公開」→ <strong>カスタムドメイン + Route 53 + ACM</strong>。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">3 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">カスタムドメイン名</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/how-to-custom-domains.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ステージ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/stages.html</span></a><a class="ref" href="https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ACM</span><span class="ref-url"><b>docs.aws.amazon.com</b>/acm/latest/userguide/acm-overview.html</span></a></div></section>
+<hr />
+<h2 id="s24">Step 19：既存 IaC テンプレートの更新（Skill 3.4.3）</h2>
+<blockquote>
+<p><strong>Skill 3.4.3</strong>: 既存の IaC テンプレート（SAM、CloudFormation）を更新する</p>
+</blockquote>
+<p>テンプレートを編集して再デプロイすると、CloudFormation は <strong>差分だけ</strong> を反映します。ただし変更内容によって <strong>リソースへの影響の重さ</strong> が違います。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>更新動作</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No interruption</strong></td>
+<td>中断なしで更新</td>
+<td>Lambda のタイムアウト変更</td>
+</tr>
+<tr>
+<td><strong>Some interruption</strong></td>
+<td>一時的な中断あり</td>
+<td>EC2 のインスタンスタイプ変更</td>
+</tr>
+<tr>
+<td><strong>Replacement</strong></td>
+<td><strong>新しいリソースを作って古いものを削除</strong>（物理 ID が変わる）</td>
+<td>名前固定リソースの名前変更、RDS の一部プロパティ</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d31"></div></div>
+
+<p><strong>ベストプラクティス</strong>: ① <strong>変更セット</strong> で Replacement の有無を必ず確認 ② 名前を固定しない ③ <strong>スタックポリシー</strong> で重要リソースの更新を禁止 ④ <strong>ドリフト検出</strong> で手作業変更を把握 ⑤ ステートフルなリソースに <code>DeletionPolicy</code> と <code>UpdateReplacePolicy</code> ⑥ <code>UPDATE_ROLLBACK_FAILED</code> は原因を直して <strong>ContinueUpdateRollback</strong>。</p>
+<p><strong>狙われどころ</strong>: 「更新前に影響確認」→ 変更セット。「本番 DB を更新で消したくない」→ スタックポリシー / UpdateReplacePolicy。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">更新動作</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">変更セット</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">スタックポリシー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/protect-stack-resources.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ドリフト検出</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html</span></a></div></section>
+<hr />
+<h2 id="s25">Step 20：AWS サービスによるアプリケーション環境の管理（Skill 3.4.4）</h2>
+<blockquote>
+<p><strong>Skill 3.4.4</strong>: AWS サービスを使ってアプリケーション環境を管理する</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>環境の単位</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td>環境（Environment）</td>
+<td>同一アプリで dev / prod 環境を作成。<strong>CNAME スワップ</strong> で blue/green</td>
+</tr>
+<tr>
+<td><strong>AWS Amplify Hosting</strong></td>
+<td>ブランチ</td>
+<td>ブランチごとに環境変数・URL</td>
+</tr>
+<tr>
+<td><strong>AWS CodeDeploy</strong></td>
+<td>アプリケーション → <strong>デプロイグループ</strong></td>
+<td>グループごとに対象・戦略・アラームを設定</td>
+</tr>
+<tr>
+<td><strong>AWS AppConfig</strong></td>
+<td>Environment</td>
+<td>環境ごとにアラーム・配信戦略</td>
+</tr>
+<tr>
+<td><strong>API Gateway</strong></td>
+<td>ステージ</td>
+<td>ステージ変数・スロットリング</td>
+</tr>
+<tr>
+<td><strong>CloudFormation / SAM</strong></td>
+<td>スタック</td>
+<td>環境名をパラメータ化</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d32"></div></div>
+
+<p><strong>ベストプラクティス</strong>: ① 環境ごとに <strong>別の IAM ロール</strong> ② Beanstalk では <strong>DB を環境の外（RDS 別管理）</strong> に置く ③ 環境設定は <strong>保存済み設定（Saved configuration）や .ebextensions</strong> でコード化 ④ 不要な一時環境は自動削除。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">3 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.environments.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Elastic Beanstalk の環境</span><span class="ref-url"><b>docs.aws.amazon.com</b>/elasticbeanstalk/latest/dg/using-features.environments.html</span></a><a class="ref" href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.CNAMESwap.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CNAME スワップ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/elasticbeanstalk/latest/dg/using-features.CNAMESwap.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-groups.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeDeploy のデプロイグループ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codedeploy/latest/userguide/deployment-groups.html</span></a></div></section>
+<hr />
+<h2 id="s26">Step 21：コミットで起動する CI/CD とワークフローのオーケストレーション（Skill 3.4.6 / 3.4.7）</h2>
+<blockquote>
+<p><strong>Skill 3.4.6</strong>: コードをリポジトリにコミットして、ビルド・テスト・デプロイを起動する
+<strong>Skill 3.4.7</strong>: オーケストレーションされたワークフローで、各環境にコードをデプロイする</p>
+</blockquote>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d33"></div></div>
+
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>役割</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CodePipeline</strong></td>
+<td>ステージ（Source / Build / Test / Approval / Deploy）をつなぐ</td>
+<td>アーティファクトは <strong>S3</strong> 経由で受け渡し。<strong>V2</strong> はブランチ・タグ・ファイルパスのトリガーフィルターと変数に対応</td>
+</tr>
+<tr>
+<td><strong>CodeBuild</strong></td>
+<td>ビルド・テストの実行環境</td>
+<td><code>buildspec.yml</code>（version 0.2）：<code>phases</code>（install / pre_build / build / post_build）、<code>artifacts</code>、<code>cache</code>、<code>env</code></td>
+</tr>
+<tr>
+<td><strong>CodeDeploy</strong></td>
+<td>EC2 / Lambda / ECS へ配備</td>
+<td><code>appspec.yml</code> と <strong>ライフサイクルフック</strong></td>
+</tr>
+<tr>
+<td><strong>CloudFormation アクション</strong></td>
+<td>スタックの作成・更新（変更セットの作成 → 実行）</td>
+<td>IaC を段階的に昇格</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-yaml"># buildspec.yml（抜粋）
+version: 0.2
+env:
+  parameter-store:
+    API_ENDPOINT: /myapp/dev/api_endpoint     # 機密は Secrets Manager 参照も可
+phases:
+  install:
+    runtime-versions:
+      python: 3.13
+  pre_build:
+    commands:
+      - pip install -r requirements.txt
+  build:
+    commands:
+      - pytest tests/unit
+      - sam build
+  post_build:
+    commands:
+      - sam package --s3-bucket $ARTIFACT_BUCKET --output-template-file packaged.yaml
+artifacts:
+  files:
+    - packaged.yaml
+</code></pre>
+<pre><code class="language-yaml"># appspec.yml（EC2 / オンプレ向け。アーカイブのルートに置く）
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/app
+hooks:
+  BeforeInstall:
+    - location: scripts/stop_server.sh
+  AfterInstall:
+    - location: scripts/install_deps.sh
+  ApplicationStart:
+    - location: scripts/start_server.sh
+  ValidateService:
+    - location: scripts/health_check.sh
+      timeout: 120
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>プラットフォーム</th>
+<th>主なライフサイクルフック</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 / オンプレ</td>
+<td>ApplicationStop → BeforeInstall → AfterInstall → ApplicationStart → ValidateService（LB 利用時は BeforeBlockTraffic / AfterBlockTraffic / BeforeAllowTraffic / AfterAllowTraffic も）</td>
+</tr>
+<tr>
+<td>Lambda</td>
+<td><strong>BeforeAllowTraffic</strong>、<strong>AfterAllowTraffic</strong>（検証用 Lambda を指定）</td>
+</tr>
+<tr>
+<td>ECS</td>
+<td>BeforeInstall、AfterInstall、AfterAllowTestTraffic、BeforeAllowTraffic、AfterAllowTraffic</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>ベストプラクティス</strong>: ① 本番手前に <strong>手動承認ステージ</strong>（SNS 通知）② <strong>同じアーティファクト</strong>を各環境にデプロイ ③ CodeBuild のサービスロールは <strong>最小権限</strong>、機密は環境変数に平文で置かず <strong>Parameter Store / Secrets Manager</strong> ④ <strong>キャッシュ</strong>でビルド短縮 ⑤ クロスアカウントは <strong>KMS カスタマー管理キー + クロスアカウントロール</strong> ⑥ パイプライン自体もIaC管理 ⑦ 実行失敗は <strong>EventBridge</strong> で通知。</p>
+<p><strong>狙われどころ</strong>: 「コミットで自動デプロイ」→ CodePipeline の Source 検知（イベント駆動）。「ビルド手順の置き場所」→ <code>buildspec.yml</code>。「Lambda デプロイ前後の検証」→ BeforeAllowTraffic / AfterAllowTraffic フック。「EC2 の配置先とスクリプト」→ <code>appspec.yml</code>。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">6 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodePipeline の概念</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/concepts.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/approvals.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">手動承認</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/approvals.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/pipeline-types.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">パイプラインタイプ（V1/V2）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/pipeline-types.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">buildspec リファレンス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codebuild/latest/userguide/build-spec-ref.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">AppSpec フック</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/pipelines-create-cross-account.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">クロスアカウントのパイプライン</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/pipelines-create-cross-account.html</span></a></div></section>
+<hr />
+<h2 id="s27">Step 22：デプロイ戦略（Skill 3.4.5 / 3.4.11）</h2>
+<blockquote>
+<p><strong>Skill 3.4.5</strong>: デプロイ戦略を使ってアプリケーションバージョンをデプロイする
+<strong>Skill 3.4.11</strong>: リリース用のデプロイ戦略（blue/green、canary、rolling など）を設定する</p>
+</blockquote>
+<h3>22.1 戦略の基本</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>戦略</th>
+<th>仕組み</th>
+<th>長所</th>
+<th>短所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>All at once</strong></td>
+<td>全台を一括更新</td>
+<td>最速・単純</td>
+<td><strong>ダウンタイム</strong>・失敗時の影響大</td>
+</tr>
+<tr>
+<td><strong>Rolling</strong></td>
+<td>数台ずつ順番に更新</td>
+<td>追加コストなし</td>
+<td>更新中は <strong>容量が減る</strong>、新旧が混在</td>
+</tr>
+<tr>
+<td><strong>Rolling with additional batch</strong></td>
+<td>追加バッチを先に起動してから更新</td>
+<td><strong>容量を維持</strong></td>
+<td>少額の追加コスト</td>
+</tr>
+<tr>
+<td><strong>Immutable</strong></td>
+<td><strong>新しい Auto Scaling グループ</strong> に新バージョンを作り、成功後に入れ替え</td>
+<td>安全、ロールバックが速い</td>
+<td>一時的に 2 倍のインスタンス</td>
+</tr>
+<tr>
+<td><strong>Blue/Green</strong></td>
+<td><strong>別環境（green）</strong> を用意して切り替え</td>
+<td>即時切替・即時ロールバック</td>
+<td>環境を 2 つ分用意（コスト）</td>
+</tr>
+<tr>
+<td><strong>Canary</strong></td>
+<td><strong>少量（例 10%）</strong> に先行して流し、問題なければ残りへ</td>
+<td>影響範囲が小さい</td>
+<td>設定が複雑</td>
+</tr>
+<tr>
+<td><strong>Linear</strong></td>
+<td><strong>一定割合ずつ</strong>（例 10% ずつ毎分）増やす</td>
+<td>段階的で監視しやすい</td>
+<td>完了まで時間がかかる</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d34"></div></div>
+
+<h3>22.2 サービス別の対応表（頻出）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>選べる戦略</th>
+<th>設定場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td>All at once / Rolling / Rolling with additional batch / Immutable / Traffic splitting。<strong>Blue/green は CNAME スワップ</strong></td>
+<td>環境の設定（デプロイポリシー）</td>
+</tr>
+<tr>
+<td><strong>CodeDeploy EC2/オンプレ</strong></td>
+<td><strong>In-place</strong>（AllAtOnce / HalfAtATime / OneAtATime）と <strong>Blue/Green</strong></td>
+<td>デプロイ設定</td>
+</tr>
+<tr>
+<td><strong>CodeDeploy Lambda</strong></td>
+<td><strong>Canary</strong>、<strong>Linear</strong>、<strong>AllAtOnce</strong>（エイリアスの重みを移す）</td>
+<td>デプロイ設定</td>
+</tr>
+<tr>
+<td><strong>CodeDeploy ECS</strong></td>
+<td><strong>Canary</strong>、<strong>Linear</strong>、<strong>AllAtOnce</strong>（Blue/Green。ALB のターゲットグループを切替）</td>
+<td>デプロイ設定</td>
+</tr>
+<tr>
+<td><strong>API Gateway（REST）</strong></td>
+<td><strong>カナリアリリース</strong>（ステージ内で割合指定）</td>
+<td>ステージ設定</td>
+</tr>
+<tr>
+<td><strong>AWS AppConfig</strong></td>
+<td>AllAtOnce / Linear / Canary（設定の配信）</td>
+<td>配信戦略</td>
+</tr>
+<tr>
+<td><strong>ECS ローリング更新</strong></td>
+<td><code>minimumHealthyPercent</code> / <code>maximumPercent</code>。<strong>デプロイサーキットブレーカー</strong> で自動ロールバック</td>
+<td>サービス設定</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>💡 CodeDeploy の事前定義設定名の例：<code>CodeDeployDefault.LambdaCanary10Percent5Minutes</code>、<code>CodeDeployDefault.LambdaLinear10PercentEvery1Minute</code>、<code>CodeDeployDefault.ECSCanary10Percent5Minutes</code>、<code>CodeDeployDefault.HalfAtATime</code>。</p>
+</blockquote>
+<h3>22.3 SAM で Lambda のカナリアデプロイを設定する</h3>
+<pre><code class="language-yaml">Resources:
+  OrderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Runtime: python3.13
+      CodeUri: src/orders/
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Canary10Percent5Minutes     # 10% を 5 分間先行 → 問題なければ 100%
+        Alarms:
+          - !Ref ErrorsAlarm              # このアラームが ALARM になったら自動ロールバック
+        Hooks:
+          PreTraffic: !Ref PreTrafficFn   # 切替前の検証 Lambda
+          PostTraffic: !Ref PostTrafficFn # 切替後の検証 Lambda
+</code></pre>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d35"></div></div>
+
+<p><strong>ベストプラクティス</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>内容</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>本番は <strong>All at once を避け</strong>、canary / linear / blue-green を使う</td>
+<td>被害最小化</td>
+</tr>
+<tr>
+<td>2</td>
+<td>戦略と必ず <strong>CloudWatch アラーム</strong>（エラー率・レイテンシ）を組み合わせる</td>
+<td>自動ロールバック</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>ヘルスチェック／検証フック</strong> を実装する</td>
+<td>異常を早期に検知</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DB スキーマ変更は <strong>後方互換</strong>（新旧が同時に動いても壊れない）に</td>
+<td>新旧混在期間がある</td>
+</tr>
+<tr>
+<td>5</td>
+<td>dev は簡易（All at once）、prod は慎重、と <strong>環境で変える</strong></td>
+<td>速度と安全の両立</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>狙われどころ</strong>: 「ダウンタイムなし + 容量維持」→ Rolling with additional batch / Blue-Green。「最も速くロールバック」→ Blue/Green・Immutable。「Lambda を 10% だけ先に」→ CodeDeploy canary（SAM の DeploymentPreference）。「追加コストなしで段階更新」→ Rolling。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">8 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Beanstalk のデプロイポリシー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeDeploy のデプロイ設定</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codedeploy/latest/userguide/deployment-configurations.html</span></a><a class="ref" href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/automating-updates-to-serverless-apps.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">SAM の段階的デプロイ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/serverless-application-model/latest/developerguide/automating-updates-to-serverless-apps.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ECS ローリング更新</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AmazonECS/latest/developerguide/deployment-type-ecs.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-circuit-breaker.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ECS サーキットブレーカー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AmazonECS/latest/developerguide/deployment-circuit-breaker.html</span></a><a class="ref" href="https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Blue/Green Deployments on AWS（ホワイトペーパー）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/whitepapers/latest/blue-green-deployments/welcome.html</span></a><a class="ref" href="https://martinfowler.com/bliki/BlueGreenDeployment.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Martin Fowler「BlueGreenDeployment」</span><span class="ref-url"><b>martinfowler.com</b>/bliki/BlueGreenDeployment.html</span></a><a class="ref" href="https://martinfowler.com/bliki/CanaryRelease.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Martin Fowler「CanaryRelease」</span><span class="ref-url"><b>martinfowler.com</b>/bliki/CanaryRelease.html</span></a></div></section>
+<hr />
+<h2 id="s28">Step 23：ロールバック（Skill 3.4.8）</h2>
+<blockquote>
+<p><strong>Skill 3.4.8</strong>: 既存のデプロイ戦略を使ってアプリケーションをロールバックする</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>ロールバックの方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CodeDeploy</strong></td>
+<td><strong>自動ロールバック</strong>（デプロイ失敗、またはアラーム閾値超過）。実体は「<strong>直近の成功リビジョンを新しいデプロイとして再実行</strong>」。Lambda / ECS ではトラフィックを旧バージョンへ戻す</td>
+</tr>
+<tr>
+<td><strong>Lambda エイリアス</strong></td>
+<td><code>update-alias</code> で <strong>旧バージョンへ付け替え</strong>（即時）</td>
+</tr>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td>旧アプリケーションバージョンを再デプロイ。Immutable は新グループを破棄、Blue/Green は <strong>CNAME を戻す</strong></td>
+</tr>
+<tr>
+<td><strong>CloudFormation / SAM</strong></td>
+<td>作成・更新の失敗で <strong>自動ロールバック</strong>。ロールバックトリガー（CloudWatch アラーム）で監視可能</td>
+</tr>
+<tr>
+<td><strong>API Gateway</strong></td>
+<td>カナリアを <strong>削除（破棄）</strong>、または以前の <strong>デプロイ</strong> をステージに再適用</td>
+</tr>
+<tr>
+<td><strong>ECS</strong></td>
+<td><strong>サーキットブレーカー</strong> で失敗時に前のタスク定義へ戻す</td>
+</tr>
+<tr>
+<td><strong>AppConfig</strong></td>
+<td>アラームで <strong>自動ロールバック</strong>、または手動で前の設定へ</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d36"></div></div>
+
+<p><strong>ベストプラクティス</strong>: ① 戻せる前提で <strong>旧バージョンを残す</strong>（Lambda バージョン、ECR タグ、S3 バージョニング）② <strong>自動ロールバック条件（アラーム）を事前定義</strong> ③ ロールバック手順を <strong>テストしておく</strong> ④ <strong>DB マイグレーションは後方互換</strong>にして戻せるようにする ⑤ <strong>UPDATE_ROLLBACK_FAILED</strong> の対処（原因修正後 ContinueUpdateRollback）を知っておく。</p>
+<p><strong>狙われどころ</strong>: 「アラーム発報で自動的に戻したい」→ CodeDeploy のデプロイグループに <strong>アラーム + 自動ロールバック</strong>。「Lambda を即座に戻す」→ エイリアスを旧バージョンへ。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">3 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/codedeploy/latest/userguide/deployments-rollback-and-redeploy.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodeDeploy のロールバック</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codedeploy/latest/userguide/deployments-rollback-and-redeploy.html</span></a><a class="ref" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-rollback-triggers.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CloudFormation のロールバックトリガー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/AWSCloudFormation/latest/UserGuide/using-cfn-rollback-triggers.html</span></a><a class="ref" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda のエイリアス</span><span class="ref-url"><b>docs.aws.amazon.com</b>/lambda/latest/dg/configuration-aliases.html</span></a></div></section>
+<hr />
+<h2 id="s29">Step 24：ラベルとブランチによるバージョン・リリース管理（Skill 3.4.9）</h2>
+<blockquote>
+<p><strong>Skill 3.4.9</strong>: ラベルとブランチを使って、バージョンとリリースを管理する</p>
+</blockquote>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>仕組み</th>
+<th>使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Git ブランチ</strong></td>
+<td><code>main</code>（本番）、<code>develop</code>（統合）、<code>feature/*</code>、<code>release/*</code>、<code>hotfix/*</code>。ブランチを環境に対応づける（例：<code>main</code>→prod、<code>develop</code>→dev）</td>
+</tr>
+<tr>
+<td><strong>Git タグ</strong></td>
+<td><code>v1.4.0</code> のように <strong>リリースの起点を固定</strong>。CodePipeline V2 は <strong>タグをトリガー</strong> にできる</td>
+</tr>
+<tr>
+<td><strong>セマンティックバージョニング</strong></td>
+<td><code>MAJOR.MINOR.PATCH</code>（互換性を壊す／機能追加／バグ修正）</td>
+</tr>
+<tr>
+<td><strong>Lambda バージョン + エイリアス</strong></td>
+<td>バージョンは不変。エイリアスで dev / prod を示す</td>
+</tr>
+<tr>
+<td><strong>ECR イメージタグ</strong></td>
+<td>バージョン番号やコミット SHA。<strong>不変タグ</strong> 推奨</td>
+</tr>
+<tr>
+<td><strong>S3 バージョニング</strong></td>
+<td>アーティファクトの履歴管理</td>
+</tr>
+<tr>
+<td><strong>Parameter Store のラベル</strong></td>
+<td>パラメータの特定バージョンに <strong>ラベル</strong> を付けて参照</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager のステージングラベル</strong></td>
+<td><code>AWSCURRENT</code> / <code>AWSPREVIOUS</code> / <code>AWSPENDING</code> でローテーション管理</td>
+</tr>
+<tr>
+<td><strong>Amplify ブランチ</strong></td>
+<td>ブランチ＝環境（ブランチ単位で自動デプロイ）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d37"></div></div>
+
+<p><strong>ベストプラクティス</strong>: ① <strong>trunk-based（短命ブランチ）</strong> で小さく頻繁に統合 ② <strong>main を保護</strong>（PR 必須）③ リリースは <strong>タグ</strong> で固定し、成果物の <strong>バージョンと Git のタグを対応づける</strong> ④ <code>latest</code> に頼らない ⑤ 本番へは <strong>タグ／リリースブランチのみ</strong> をデプロイ対象にする。</p>
+<p><strong>狙われどころ</strong>: 「特定コミットを本番リリースとして固定したい」→ <strong>Git タグ</strong>。「ブランチごとに自動で環境」→ <strong>Amplify</strong>。「ブランチごとに別ステージへデプロイ」→ パイプラインのブランチフィルター。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">5 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/codepipeline/latest/userguide/pipeline-types.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">CodePipeline V2 のトリガー</span><span class="ref-url"><b>docs.aws.amazon.com</b>/codepipeline/latest/userguide/pipeline-types.html</span></a><a class="ref" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-labels.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Parameter Store のラベル</span><span class="ref-url"><b>docs.aws.amazon.com</b>/systems-manager/latest/userguide/sysman-paramstore-labels.html</span></a><a class="ref" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/getting-started.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Secrets Manager のバージョンとステージングラベル</span><span class="ref-url"><b>docs.aws.amazon.com</b>/secretsmanager/latest/userguide/getting-started.html</span></a><a class="ref" href="https://semver.org/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Semantic Versioning</span><span class="ref-url"><b>semver.org</b>/</span></a><a class="ref" href="https://trunkbaseddevelopment.com/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind ext">外部資料</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Trunk Based Development</span><span class="ref-url"><b>trunkbaseddevelopment.com</b>/</span></a></div></section>
+<hr />
+<h2 id="s30">Step 25：ランタイム設定による動的デプロイ（Skill 3.4.10）</h2>
+<blockquote>
+<p><strong>Skill 3.4.10</strong>: 既存のランタイム設定を使って動的なデプロイを作成する（例：Lambda 関数内で API Gateway のステージ変数を使用する）</p>
+</blockquote>
+<p><strong>同じ API 定義・同じコードで、ステージごとに接続先を変える</strong> 手法です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-id="d38"></div></div>
+
+<ol>
+<li><strong>ステージ変数</strong> を定義（例：<code>lambdaAlias = dev</code>）。</li>
+<li>統合のターゲットで参照：<code>arn:aws:lambda:ap-northeast-1:123456789012:function:orders:${stageVariables.lambdaAlias}</code></li>
+<li><strong>Lambda 側に API Gateway の呼び出し権限</strong> を付与（ステージ変数を使う場合、コンソールの自動付与が効かないため手動）。</li>
+</ol>
+<pre><code class="language-bash">aws lambda add-permission \
+  --function-name orders:dev \
+  --statement-id apigw-dev \
+  --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn &quot;arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders&quot;
+</code></pre>
+<ol start="4">
+<li>Lambda（プロキシ統合）では <strong>イベントの <code>stageVariables</code></strong> から値を読めます。</li>
+</ol>
+<pre><code class="language-python">def handler(event, context):
+    stage_vars = event.get(&quot;stageVariables&quot;) or {}
+    table = stage_vars.get(&quot;tableName&quot;, &quot;Orders-dev&quot;)
+    stage = event[&quot;requestContext&quot;][&quot;stage&quot;]
+    return {&quot;statusCode&quot;: 200, &quot;body&quot;: f&quot;stage={stage}, table={table}&quot;}
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設定の持ち方</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ステージ変数</strong></td>
+<td>環境ごとの接続先（Lambda エイリアス、バックエンド URL、テーブル名）</td>
+</tr>
+<tr>
+<td><strong>Lambda 環境変数</strong></td>
+<td>関数単位の設定</td>
+</tr>
+<tr>
+<td><strong>AppConfig / Parameter Store</strong></td>
+<td>実行時に変わる設定、機能フラグ</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>ベストプラクティス</strong>: ① <strong>機密はステージ変数に入れない</strong>（Secrets Manager 参照）② ステージ変数名は <strong>全ステージで統一</strong> ③ ステージ名はイベントの <code>requestContext.stage</code> からも取れる ④ 権限付与（add-permission）も IaC に含める。</p>
+<p><strong>狙われどころ</strong>: 「API 定義は 1 つで dev / prod の Lambda を切り替え」→ <strong>ステージ変数 + エイリアス</strong>。「Lambda 内でステージ名や変数を使う」→ <strong>イベントの stageVariables / requestContext</strong>。</p>
+<section class="refs"><div class="refs-head"><span class="refs-title">参照 URL（この Step）</span><span class="refs-count">2 件</span></div><div class="refs-grid"><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">ステージ変数</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html</span></a><a class="ref" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Lambda プロキシ統合</span><span class="ref-url"><b>docs.aws.amazon.com</b>/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html</span></a></div></section>
+<hr />
+<h2 id="s31">Step 26：総合演習（練習問題・チェックリスト）</h2>
+<h3>練習問題</h3>
+<p><strong>Q1.</strong> Lambda の依存ライブラリが解凍後 400MB になった。最も適切な対応は？</p>
+<details><summary>答えを見る</summary>**コンテナイメージ**でデプロイする（上限 10GB）。zip（レイヤー込み）は解凍後 250MB まで。</details>
+
+<p><strong>Q2.</strong> 本番の Lambda を、まず 10% のトラフィックだけ新バージョンに流し、エラーが出たら自動で戻したい。</p>
+<details><summary>答えを見る</summary>SAM の **DeploymentPreference（Canary10Percent5Minutes）+ CloudWatch アラーム**（実体は CodeDeploy）。</details>
+
+<p><strong>Q3.</strong> API Gateway（REST）でメソッドを追加したが、ステージに反映されない。</p>
+<details><summary>答えを見る</summary>**API を再デプロイ**していない。変更後はステージへデプロイが必要。</details>
+
+<p><strong>Q4.</strong> エッジ最適化 API に独自ドメインを設定したい。証明書はどこに作る？</p>
+<details><summary>答えを見る</summary>**us-east-1 の ACM** に証明書を作成する。</details>
+
+<p><strong>Q5.</strong> EC2 へ CodeDeploy で配備したら appspec.yml が見つからないと失敗した。</p>
+<details><summary>答えを見る</summary>`appspec.yml` を**アーカイブのルート**に置く。</details>
+
+<p><strong>Q6.</strong> ダウンタイムなし・容量維持・追加コスト小で Beanstalk を更新したい。</p>
+<details><summary>答えを見る</summary>**Rolling with additional batch**（さらに安全性重視なら Immutable）。</details>
+
+<p><strong>Q7.</strong> 再デプロイせずに設定を安全に変更し、異常時は自動で戻したい。</p>
+<details><summary>答えを見る</summary>**AWS AppConfig**（段階的配信 + CloudWatch アラーム + Validator）。</details>
+
+<p><strong>Q8.</strong> 更新前に「どのリソースが置き換えられるか」を確認したい。</p>
+<details><summary>答えを見る</summary>CloudFormation の**変更セット**。</details>
+
+<p><strong>Q9.</strong> API 定義は共通のまま、dev / prod で呼ぶ Lambda を切り替えたい。</p>
+<details><summary>答えを見る</summary>**ステージ変数**（`${stageVariables.lambdaAlias}`）+ **Lambda エイリアス**。Lambda に呼び出し権限の付与が必要。</details>
+
+<p><strong>Q10.</strong> コンテナイメージを確実に固定して本番に出したい。</p>
+<details><summary>答えを見る</summary>**不変タグまたはダイジェスト**で指定し、`latest` は使わない。</details>
+
+<h3>最終チェックリスト</h3>
+<div class="checklist"><div class="cl-head"><span class="cl-title">理解度セルフチェック</span><span class="cl-count"><b>0</b> / 9</span></div><div class="cl-bar"><div class="cl-fill"></div></div><ul><li class="chk"><label><input type="checkbox"><span class="cl-text">Lambda のパッケージ形式と上限（50MB / 250MB / 10GB / レイヤー 5）を言える</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">環境変数・Parameter Store・Secrets Manager・AppConfig の使い分けを説明できる</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text"><code>sam local</code> / <code>sam sync</code> / <code>sam deploy --config-env</code> の違いがわかる</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">Lambda のバージョン／エイリアス／重み付けルーティングを使える</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">CloudFormation の変更セット・更新動作・ロールバック・ドリフトを説明できる</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">buildspec.yml / appspec.yml の役割と置き場所を言える</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">各サービスで選べるデプロイ戦略と、ロールバック方法を対応づけられる</span></label></li>
+<li class="chk"><label><input type="checkbox"><span class="cl-text">Q Developer の件（後継 Kiro）と Copilot CLI 終了を把握している</span></label></li>
+</ul><div class="cl-done" hidden>すべて確認できました。次は練習問題や公式ドキュメントで仕上げましょう。</div></div>
+<hr />
+<h2 id="s32">付録：スキル番号と Step の対応表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Skill</th>
+<th>Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>3.1.1 / 3.1.2 / 3.1.3 / 3.1.4 / 3.1.5</td>
+<td>2 / 3 / 4 / 5 / 6</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3.2.1 / 3.2.2 / 3.2.3 / 3.2.4 / 3.2.5</td>
+<td>7 / 8 / 9 / 10 / 11</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3.3.1 / 3.3.2 / 3.3.3 / 3.3.4 / 3.3.5 / 3.3.6</td>
+<td>12 / 13 / 14 / 15 / 13 / 16</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3.4.1 / 3.4.2 / 3.4.3 / 3.4.4</td>
+<td>17 / 18 / 19 / 20</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3.4.5 / 3.4.11</td>
+<td>22</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3.4.6 / 3.4.7</td>
+<td>21</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3.4.8 / 3.4.9 / 3.4.10</td>
+<td>23 / 24 / 25</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="s33">付録：根拠となる一次情報</h2><section class="refs"><div class="refs-head"><span class="refs-title">一次情報へのリンク</span><span class="refs-count">4 件</span></div><div class="refs-grid"><a class="ref" href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">認定の公式ページ</span><span class="ref-url"><b>aws.amazon.com</b>/certification/certified-developer-associate/</span></a><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">試験ガイド（DVA-C02）</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/developer-associate-02.html</span></a><a class="ref" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain3.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Domain 3 の公式ページ</span><span class="ref-url"><b>docs.aws.amazon.com</b>/aws-certification/latest/developer-associate-02/developer-associate-02-domain3.html</span></a><a class="ref" href="https://docs.aws.amazon.com/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html" target="_blank" rel="noopener noreferrer"><span class="ref-top"><span class="ref-kind aws">AWS 公式</span><span class="ref-arrow" aria-hidden="true">↗</span></span><span class="ref-label">Practicing CI/CD on AWS</span><span class="ref-url"><b>docs.aws.amazon.com</b>/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html</span></a></div></section>
+</div>
+<footer class="footer">© 学習用資料。AWS サービスの仕様・名称は公式ドキュメントを優先してください。</footer>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+<script>
+const DIAGRAMS = {
+"d0": `flowchart TD
+    A["Step 1 全体像を知る"] --> B["Task 1 作る 準備"]
+    B --> C["Task 2 試す 開発環境"]
+    C --> D["Task 3 自動化する"]
+    D --> E["Task 4 届ける CI/CD"]
+    E --> F["Step 26 演習で定着"]`,
+"d1": `flowchart LR
+    SRC["Source<br/>CodeCommit / GitHub"] --> BLD["Build<br/>CodeBuild"]
+    BLD --> TST["Test<br/>CodeBuild など"]
+    TST --> APR["Approval<br/>手動承認"]
+    APR --> DEP["Deploy<br/>CodeDeploy / CloudFormation"]
+    PL["CodePipeline<br/>全体の流れを管理"] -.-> SRC
+    PL -.-> BLD
+    PL -.-> DEP`,
+"d2": `flowchart TD
+    T1["Task 1 アーティファクト準備"] --> S1["3.1.1 依存関係"]
+    T1 --> S2["3.1.2 ディレクトリ構成"]
+    T1 --> S3["3.1.3 リポジトリ"]
+    T1 --> S4["3.1.4 リソース要件"]
+    T1 --> S5["3.1.5 環境別設定"]`,
+"d3": `flowchart TD
+    Q["依存関係をどう含める?"] --> A["zip に同梱<br/>最もシンプル"]
+    Q --> B["レイヤーに分離<br/>共通ライブラリを共有"]
+    Q --> C["コンテナイメージ<br/>大きい依存関係やOS要件"]
+    A --> A1["上限: 解凍後 250MB<br/>レイヤー含む"]
+    B --> B1["1関数に最大5レイヤー"]
+    C --> C1["イメージ上限 10GB"]`,
+"d4": `flowchart TD
+    A["zip を作る"] --> B{"ハンドラーは zip の<br/>ルート直下にある?"}
+    B -- "はい" --> C["正常に呼び出される"]
+    B -- "いいえ フォルダごと圧縮した" --> D["Handler not found エラー"]
+    D --> E["フォルダの中身を<br/>ルートに置いて再圧縮"]`,
+"d5": `flowchart LR
+    DEV["開発者"] -->|"git push"| REPO["コードリポジトリ"]
+    REPO -->|"変更を検知"| PL["CodePipeline"]
+    PL --> BLD["CodeBuild<br/>ビルド・テスト"]
+    BLD --> ART["アーティファクト<br/>S3 / ECR"]
+    ART --> DEP["デプロイ"]`,
+"d6": `flowchart LR
+    M["メモリを増やす"] --> C["CPU も比例して増える"]
+    C --> D["実行時間が短くなることがある"]
+    D --> P["課金は GBミリ秒<br/>メモリ x 時間"]
+    P --> R["最適点を探す<br/>必ずしも最小メモリが最安ではない"]`,
+"d7": `flowchart TD
+    Q["設定をどこに置く?"] --> A{"機密情報?"}
+    A -- "はい" --> S["Secrets Manager<br/>または SecureString"]
+    A -- "いいえ" --> B{"再デプロイなしで<br/>安全に切り替えたい?"}
+    B -- "はい" --> AC["AWS AppConfig"]
+    B -- "いいえ" --> C{"起動時に固定の値?"}
+    C -- "はい" --> E["環境変数"]
+    C -- "いいえ" --> P["Parameter Store"]`,
+"d8": `flowchart TD
+    APP["Application<br/>アプリ"] --> ENV["Environment<br/>dev / test / prod"]
+    APP --> PROF["Configuration profile<br/>設定の元データ"]
+    PROF --> SRC["保存場所<br/>AppConfig hosted / S3 /<br/>Parameter Store など"]
+    PROF --> VAL["Validator<br/>JSON Schema / Lambda"]
+    ENV --> DEPLOY["Deployment<br/>配信の実行"]
+    PROF --> DEPLOY
+    STRAT["Deployment strategy<br/>配信の速度"] --> DEPLOY
+    DEPLOY --> ALARM["CloudWatch アラーム<br/>異常で自動ロールバック"]`,
+"d9": `flowchart TD
+    T2["Task 2 開発環境でテスト"] --> S1["3.2.1 デプロイ済みコードのテスト"]
+    T2 --> S2["3.2.2 統合テスト とモック"]
+    T2 --> S3["3.2.3 開発エンドポイント"]
+    T2 --> S4["3.2.4 スタック更新"]
+    T2 --> S5["3.2.5 イベント駆動のテスト"]`,
+"d10": `flowchart LR
+    A["コードを書く"] --> B["ローカルで単体テスト<br/>sam local invoke"]
+    B --> C["dev 環境へデプロイ<br/>sam deploy / sam sync"]
+    C --> D["クラウド上でテスト<br/>invoke / API 呼び出し"]
+    D --> E["ログ・トレースで確認<br/>CloudWatch / X-Ray"]
+    E --> A`,
+"d11": `flowchart TD
+    U["単体テスト 多い 速い<br/>外部はモック"] --> I["統合テスト 中程度<br/>dev 環境の実サービス"]
+    I --> E["E2E テスト 少ない 遅い<br/>本番に近い環境"]`,
+"d12": `flowchart LR
+    C["クライアント"] --> AG["API Gateway"]
+    AG -->|"本番 dev 環境"| BE["本物のバックエンド"]
+    AG -->|"Mock 統合"| MK["固定レスポンスを返す"]`,
+"d13": `flowchart TD
+    DEF["API の定義<br/>リソース・メソッド"] -->|"デプロイ作成"| D1["Deployment<br/>スナップショット"]
+    D1 --> ST1["dev ステージ"]
+    D1 --> ST2["test ステージ"]
+    D2["別の Deployment"] --> ST3["prod ステージ"]`,
+"d14": `flowchart TD
+    TPL["template.yaml<br/>同じ 1 つ"] --> DEV["スタック myapp-dev<br/>Stage=dev"]
+    TPL --> STG["スタック myapp-staging<br/>Stage=staging"]
+    TPL --> PRD["スタック myapp-prod<br/>Stage=prod"]`,
+"d15": `flowchart TD
+    A["sam build"] --> B["sam deploy"]
+    B --> C["変更セットを作成<br/>追加 変更 削除の一覧"]
+    C --> D{"確認する?"}
+    D -- "confirm_changeset が true" --> E["人が内容を確認"]
+    D -- "false" --> F["自動で実行"]
+    E --> F
+    F --> G["スタックを更新"]
+    G --> H{"成功?"}
+    H -- "はい" --> I["完了"]
+    H -- "いいえ" --> J["自動ロールバック"]`,
+"d16": `flowchart TD
+    A["段階 1 ハンドラー単体<br/>疑似イベント JSON を渡す"] --> B["段階 2 連携確認<br/>dev 環境でイベントを実際に発生"]
+    B --> C["段階 3 異常系<br/>失敗 重複 順序違いを再現"]`,
+"d17": `flowchart LR
+    SRC["イベント発生"] --> Q["Lambda 呼び出し"]
+    Q --> OK{"成功?"}
+    OK -- "はい" --> DONE["完了"]
+    OK -- "いいえ" --> RT["自動リトライ"]
+    RT --> OK2{"成功?"}
+    OK2 -- "はい" --> DONE
+    OK2 -- "いいえ" --> DLQ["DLQ または Destination へ<br/>後で調査 再処理"]`,
+"d18": `flowchart TD
+    T3["Task 3 デプロイテストの自動化"] --> S1["3.3.1 テストイベント"]
+    T3 --> S2["3.3.2 API を複数環境へ"]
+    T3 --> S3["3.3.3 承認済みバージョンの環境"]
+    T3 --> S4["3.3.4 IaC テンプレート"]
+    T3 --> S5["3.3.5 サービス別の環境管理"]
+    T3 --> S6["3.3.6 Q Developer でテスト生成"]`,
+"d19": `flowchart LR
+    EV["テストイベント JSON"] --> LF["Lambda 関数"]
+    LF --> RS["レスポンス JSON"]
+    RS --> AS["期待値と比較"]`,
+"d20": `flowchart TD
+    A["events ディレクトリに<br/>テストイベントを保存"] --> B["pytest 等で<br/>全イベントを読み込み"]
+    B --> C["ハンドラーに渡す"]
+    C --> D["戻り値を検証"]
+    D --> E["CodeBuild で自動実行"]`,
+"d21": `flowchart LR
+    A["API 定義を変更"] --> B["create-deployment<br/>デプロイを作成"]
+    B --> C["dev ステージに反映"]
+    C --> D["動作確認"]
+    D --> E["同じ定義を test ステージへ"]
+    E --> F["prod ステージへ"]`,
+"d22": `flowchart LR
+    A["同一 API の<br/>ステージ分離"] --> B["同一アカウントの<br/>別スタック"]
+    B --> C["別アカウント<br/>推奨"]`,
+"d23": `flowchart LR
+    BLD["ビルド成果物<br/>不変のバージョン"] --> V["バージョン番号 やタグ"]
+    V --> E1["統合テスト環境<br/>承認済みバージョンを指す"]
+    V --> E2["本番環境<br/>承認後に同じものを指す"]`,
+"d24": `flowchart TD
+    L["$LATEST 編集中"] -->|"publish-version"| V1["バージョン 1"]
+    L -->|"publish-version"| V2["バージョン 2"]
+    L -->|"publish-version"| V3["バージョン 3"]
+    V3 --> AD["エイリアス dev"]
+    V2 --> AT["エイリアス test 承認済み"]
+    V1 --> AP["エイリアス prod"]`,
+"d25": `flowchart LR
+    SAM["SAM テンプレート<br/>短い記述"] -->|"Transform で展開"| CFN["CloudFormation<br/>テンプレート"]
+    CFN --> STK["スタック"]
+    STK --> RES["Lambda / API Gateway /<br/>DynamoDB / IAM など"]`,
+"d26": `flowchart TD
+    A["sam validate --lint<br/>テンプレート検査"] --> B["sam build<br/>依存関係を解決"]
+    B --> C["sam local invoke / start-api<br/>ローカル確認"]
+    C --> D["sam deploy --guided<br/>初回デプロイ"]
+    D --> E["スタック作成 CREATE_COMPLETE"]
+    E --> F["以降は sam deploy で更新"]`,
+"d27": `flowchart TD
+    A["テスト対象の関数を選択<br/>IDE で開く"] --> B["AI アシスタントに依頼<br/>Q Developer の /test など"]
+    B --> C["単体テストの案が生成される"]
+    C --> D["人がレビュー<br/>期待値は正しいか"]
+    D --> E{"妥当?"}
+    E -- "はい" --> F["リポジトリにコミット"]
+    E -- "いいえ" --> G["指示を具体化して再生成<br/>または手で修正"]
+    G --> C
+    F --> H["CI で自動実行<br/>CodeBuild"]`,
+"d28": `flowchart TD
+    T4["Task 4 CI/CD でデプロイ"] --> A["3.4.1 Lambda パッケージ"]
+    T4 --> B["3.4.2 ステージとカスタムドメイン"]
+    T4 --> C["3.4.3 IaC 更新"]
+    T4 --> D["3.4.4 環境管理"]
+    T4 --> E["3.4.5 / 3.4.11 デプロイ戦略"]
+    T4 --> F["3.4.6 / 3.4.7 コミット起動とワークフロー"]
+    T4 --> G["3.4.8 ロールバック"]
+    T4 --> H["3.4.9 ラベルとブランチ"]
+    T4 --> I["3.4.10 動的デプロイ"]`,
+"d29": `flowchart TD
+    Q["パッケージ形式を選ぶ"] --> A{"解凍後 250MB 以下?"}
+    A -- "はい" --> B{"共通ライブラリを複数関数で共有?"}
+    B -- "はい" --> L["zip + レイヤー"]
+    B -- "いいえ" --> Z["zip のみ"]
+    A -- "いいえ" --> C["コンテナイメージ 最大 10GB"]`,
+"d30": `flowchart LR
+    U["利用者"] --> R53["Route 53 エイリアスレコード<br/>api.example.com"]
+    R53 --> CD["API Gateway カスタムドメイン名<br/>ACM 証明書"]
+    CD -->|"base path v1"| S1["API A の prod ステージ"]
+    CD -->|"base path v2"| S2["API B の prod ステージ"]`,
+"d31": `flowchart TD
+    E["テンプレートを編集"] --> V["sam validate --lint / cfn-lint"]
+    V --> C["変更セットを作成"]
+    C --> R{"Replacement を含む?"}
+    R -- "はい" --> W["データ消失やリンク切れを確認<br/>DeletionPolicy や Retain を検討"]
+    R -- "いいえ" --> X["変更セットを実行"]
+    W --> X
+    X --> OK{"成功?"}
+    OK -- "はい" --> D1["UPDATE_COMPLETE"]
+    OK -- "いいえ" --> RB["UPDATE_ROLLBACK_COMPLETE 自動で元に戻る"]`,
+"d32": `flowchart LR
+    APP["アプリケーション"] --> DEV["dev 環境"]
+    APP --> STG["staging 環境"]
+    APP --> PRD["prod 環境"]
+    DEV -->|"同じ成果物を昇格"| STG
+    STG -->|"承認後に昇格"| PRD`,
+"d33": `flowchart LR
+    G["git push"] --> S["Source<br/>CodeCommit / GitHub"]
+    S --> B["Build<br/>CodeBuild buildspec.yml"]
+    B --> T["Test<br/>CodeBuild"]
+    T --> D1["Deploy staging<br/>CodeDeploy / CloudFormation"]
+    D1 --> M["Manual approval<br/>SNS 通知"]
+    M --> D2["Deploy prod"]`,
+"d34": `flowchart TD
+    Q["デプロイ戦略を選ぶ"] --> A{"ダウンタイムを許容できる?"}
+    A -- "はい 開発環境" --> AA["All at once"]
+    A -- "いいえ" --> B{"追加コストを払える?"}
+    B -- "いいえ" --> R["Rolling"]
+    B -- "はい" --> C{"最優先は?"}
+    C -- "即時切替と即時ロールバック" --> BG["Blue/Green"]
+    C -- "影響範囲を小さく" --> CN["Canary / Linear"]
+    C -- "容量維持" --> RA["Rolling with additional batch"]
+    C -- "安全な入れ替え Beanstalk" --> IM["Immutable"]`,
+"d35": `flowchart LR
+    V1["旧バージョン 100%"] --> C["新バージョン 10%<br/>旧バージョン 90%"]
+    C -->|"5 分間 アラーム監視"| D{"アラームなし?"}
+    D -- "はい" --> N["新バージョン 100%"]
+    D -- "いいえ" --> RB["自動ロールバック<br/>旧バージョン 100%"]`,
+"d36": `flowchart TD
+    D["新バージョンをデプロイ"] --> M["アラーム ヘルスチェックで監視"]
+    M --> OK{"異常?"}
+    OK -- "なし" --> FIN["デプロイ完了"]
+    OK -- "あり" --> RB["自動ロールバック"]
+    RB --> PREV["直近の成功バージョンに復帰"]`,
+"d37": `flowchart LR
+    F["feature ブランチ"] -->|"プルリクエスト レビュー"| M["main"]
+    M -->|"git tag v1.4.0"| T["リリースタグ"]
+    T --> P["パイプライン起動"]
+    P --> ART["成果物にバージョンを付与<br/>イメージタグ Lambda バージョン"]
+    ART --> ENV["staging から prod へ昇格"]`,
+"d38": `flowchart LR
+    C["クライアント"] --> ST["API Gateway<br/>dev ステージ<br/>lambdaAlias = dev"]
+    C --> SP["API Gateway<br/>prod ステージ<br/>lambdaAlias = prod"]
+    ST --> LD["Lambda エイリアス dev"]
+    SP --> LP["Lambda エイリアス prod"]`
+};
+(function(){
+  if(window.hljs){document.querySelectorAll('pre code').forEach(function(b){if(/language-(text|plaintext)/.test(b.className)){b.classList.add('nohighlight')}hljs.highlightElement(b)})}
+  document.querySelectorAll('.checklist').forEach(function(cl){var boxes=cl.querySelectorAll('input[type=checkbox]'),n=boxes.length,cnt=cl.querySelector('.cl-count b'),fill=cl.querySelector('.cl-fill'),done=cl.querySelector('.cl-done');
+    function up(){var c=0;boxes.forEach(function(b){if(b.checked)c++;b.closest('li').classList.toggle('done',b.checked)});cnt.textContent=c;fill.style.width=(c/n*100)+'%';done.hidden=c!==n}
+    boxes.forEach(function(b){b.addEventListener('change',up)});up()});
+  var sb=document.getElementById('sb');
+  document.getElementById('mb').addEventListener('click',function(){sb.classList.toggle('open')});
+  sb.addEventListener('click',function(e){if(e.target.classList.contains('nav'))sb.classList.remove('open')});
+  var links=[].slice.call(document.querySelectorAll('.nav')),heads=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  var tick=false;
+  function upd(){tick=false;var y=window.innerHeight*0.25,cur=0;heads.forEach(function(h,i){if(h&&h.getBoundingClientRect().top<=y)cur=i});links.forEach(function(a,i){a.classList.toggle('active',i===cur)});}
+  window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});upd();
+  async function run(){
+    if(!window.mermaid)return;
+    mermaid.initialize({startOnLoad:false,theme:'base',securityLevel:'loose',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'},
+      themeVariables:{fontSize:'16px',fontFamily:'"Noto Sans JP",sans-serif',primaryColor:'#e8ebf8',primaryTextColor:'#1f2430',primaryBorderColor:'#33408f',lineColor:'#556070',secondaryColor:'#fbf3de',tertiaryColor:'#f1ede2',background:'#ffffff'}});
+    var cs=document.querySelectorAll('.diagram-canvas');
+    for(var i=0;i<cs.length;i++){
+      var id=cs[i].getAttribute('data-id');
+      try{
+        var r=await mermaid.render('m-'+id,DIAGRAMS[id]);
+        cs[i].innerHTML=r.svg;
+        var svg=cs[i].querySelector('svg');
+        if(svg){var vb=svg.viewBox&&svg.viewBox.baseVal;
+          if(vb&&vb.width){svg.removeAttribute('width');svg.removeAttribute('height');svg.style.width=vb.width+'px';svg.style.maxWidth='none';svg.style.height='auto';svg.style.overflow='visible';svg.style.flexShrink='0';}}
+      }catch(e){cs[i].textContent='図の描画に失敗しました: '+id;console.error(id,e)}
+    }
+  }
+  if(document.readyState==='complete')run();else window.addEventListener('load',run);
+})();
+</script>
+</body>
+</html>

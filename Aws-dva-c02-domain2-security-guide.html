@@ -1,0 +1,5132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AWS DVA-C02 ドメイン2 セキュリティ完全ガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Source+Serif+4:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+:root{--paper:#faf7f0;--paper-alt:#f2ede0;--ink:#1c2333;--ink-soft:#4a5266;--indigo:#3b3f9e;--indigo-soft:#eceefb;--gold:#b8892b;--forest:#2f6b4f;--plum:#6b3a5b;--border:#ddd6c4;--sidebar:300px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;font-size:1.0625rem;line-height:1.85;overflow-wrap:break-word}
+button,input{font-size:1rem}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:#fff;border-right:1px solid var(--border);overflow-y:auto;padding:24px 14px 40px;z-index:30}
+.brand{font-family:"Source Serif 4","Noto Sans JP",serif;font-weight:700;font-size:1.125rem;color:var(--indigo);line-height:1.4;padding:0 8px 14px}
+.nav-group{margin:18px 8px 6px;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
+.nav-a{display:block;padding:6px 10px;border-radius:8px;color:var(--ink-soft);text-decoration:none;font-size:1rem;line-height:1.5;border-left:3px solid transparent}
+.nav-a:hover{background:var(--paper-alt)}
+.nav-a.active{background:var(--indigo-soft);color:var(--indigo);font-weight:700;border-left-color:var(--indigo)}
+.main{margin-left:var(--sidebar)}
+.hero{background:linear-gradient(135deg,#2b2f7a,#3b3f9e 55%,#5a4a8f);color:#fff;padding:64px 56px 56px}
+.hero .eyebrow{font-size:1rem;letter-spacing:.12em;color:#f0d9a0;font-weight:700}
+.hero h1{font-family:"Source Serif 4","Noto Sans JP",serif;font-size:2.4rem;line-height:1.35;margin:10px 0 14px;color:#fff}
+.hero p{margin:0;font-size:1.125rem;color:#e6e8ff}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 16px;font-size:1rem}
+.section{padding:34px 56px}
+.section.part-sec{padding-top:46px;padding-bottom:6px}
+h1.part{font-family:"Source Serif 4","Noto Sans JP",serif;font-size:1.9rem;color:var(--plum);margin:0;padding-bottom:10px;border-bottom:3px solid var(--gold);display:inline-block}
+h2{font-family:"Source Serif 4","Noto Sans JP",serif;font-size:1.75rem;line-height:1.4;color:var(--indigo);margin:0 0 18px;padding-left:14px;border-left:6px solid var(--gold)}
+h3{font-size:1.3rem;color:var(--forest);margin:32px 0 10px;line-height:1.5}
+h3::before{content:"";display:inline-block;width:10px;height:10px;background:var(--forest);border-radius:2px;margin-right:10px}
+h4{font-size:1.125rem;color:var(--plum)}
+p,li{margin:.6em 0}
+ul,ol{padding-left:1.5em}
+a{color:var(--indigo);overflow-wrap:anywhere}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:1rem;background:var(--indigo-soft);color:#2b2f7a;padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+.code-block{margin:14px 0}
+.code-block pre{margin:0;background:#1f2335;border-radius:12px;padding:16px 18px;overflow-x:auto;line-height:1.65}
+.code-block pre code{background:none;color:#e6e8f5;padding:0;font-size:1rem;overflow-wrap:normal;white-space:pre}
+.code-block pre code.hljs{background:transparent;padding:0}
+blockquote{margin:16px 0;padding:10px 18px;background:#fff8e6;border-left:5px solid var(--gold);border-radius:0 10px 10px 0;color:#4a3b12}
+blockquote p{margin:.4em 0}
+.table-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--border);border-radius:12px;background:#fff;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:1rem;line-height:1.65}
+th{background:var(--indigo);color:#fff;text-align:left;padding:10px 14px;font-weight:700;white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+th,td{overflow-wrap:anywhere}
+th{white-space:normal}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--paper-alt)}
+.diagram-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;margin:18px 0;min-width:0}
+.diagram-wrap{display:flex;justify-content:safe center;overflow-x:auto;width:100%;min-width:0}
+.diagram-wrap>*{min-width:0}
+.diagram-wrap svg{flex-shrink:0;max-width:none}
+.mermaidTooltip{font-size:1rem!important}
+details{margin:14px 0;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px 18px}
+summary{cursor:pointer;font-weight:700;color:var(--indigo);padding:10px 0}
+li.chk{list-style:none;margin-left:-1.2em}
+li.chk label{cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+li.chk input{appearance:none;flex:none;width:1.25rem;height:1.25rem;margin-top:.35em;border:2px solid var(--indigo);border-radius:5px;background:#fff;cursor:pointer;display:grid;place-content:center;font-size:1rem}
+li.chk input:checked{background:var(--indigo)}
+li.chk input:checked::after{content:"✓";color:#fff;font-size:1rem;line-height:1}
+li.chk.done{color:var(--ink-soft);text-decoration:line-through}
+.progress{position:sticky;top:0;z-index:20;background:rgba(250,247,240,.95);border-bottom:1px solid var(--border);padding:8px 56px;font-size:1rem;color:var(--ink-soft)}
+.progress b{color:var(--indigo)}
+hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+.footer{padding:30px 56px 60px;color:var(--ink-soft)}
+.mobile-bar{display:none}
+.mobile-bar button{font-size:1rem}
+@media (max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s;width:min(86vw,320px)}
+  .sidebar.open{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
+  .main{margin-left:0}
+  .mobile-bar{display:flex;position:sticky;top:0;z-index:25;background:#fff;border-bottom:1px solid var(--border);padding:8px 14px;align-items:center;gap:12px;font-weight:700;color:var(--indigo)}
+  .mobile-bar button{background:var(--indigo);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer}
+  .hero,.section,.footer,.progress{padding-left:18px;padding-right:18px}
+  .hero{padding-top:36px}
+  .hero h1{font-size:1.7rem}
+  h2{font-size:1.4rem}
+  .progress{top:52px}
+}
+</style>
+</head>
+<body>
+<div class="mobile-bar"><button id="menuBtn" aria-label="目次を開く">目次</button><span>DVA-C02 Security</span></div>
+<nav class="sidebar" aria-label="目次">
+<div class="brand">AWS DVA-C02<br>ドメイン2 セキュリティ</div>
+<a class="nav-a" href="#step-0">Step 0 試験の概要とこのガイドの使い方</a>
+<a class="nav-a" href="#step-1">Step 1 セキュリティの全体像</a>
+<a class="nav-a" href="#step-2">Step 2 IAMの基礎とポリシー評価（Skill 2.1.6）</a>
+<a class="nav-a" href="#step-3">Step 3 IAMロールとAWS STS（Skill 2.1.5）</a>
+<a class="nav-a" href="#step-4">Step 4 プログラムによるアクセスの設定（Skill 2.1.3）</a>
+<a class="nav-a" href="#step-5">Step 5 AWSサービスへの認証済み呼び出し（Skill 2.1.4）</a>
+<a class="nav-a" href="#step-6">Step 6 IDプロバイダーによるフェデレーション（Skill 2.1.1）</a>
+<a class="nav-a" href="#step-7">Step 7 ベアラートークンによるアプリの保護（Skill 2.1.2）</a>
+<a class="nav-a" href="#step-8">Step 8 アプリケーションレベルの認可（Skill 2.1.7）</a>
+<a class="nav-a" href="#step-9">Step 9 マイクロサービス間の認証（Skill 2.1.8）</a>
+<a class="nav-a" href="#step-10">Step 10 保管時・転送中の暗号化（Skill 2.2.1）</a>
+<a class="nav-a" href="#step-11">Step 11 AWS KMSと鍵の使い方（Skill 2.2.4）</a>
+<a class="nav-a" href="#step-12">Step 12 クライアントサイド暗号化とサーバーサイド暗号化（Skill 2.2.3）</a>
+<a class="nav-a" href="#step-13">Step 13 証明書管理：ACMとAWS Private CA（Skill 2.2.2）</a>
+<a class="nav-a" href="#step-14">Step 14 開発用の証明書とSSH鍵の生成（Skill 2.2.5）</a>
+<a class="nav-a" href="#step-15">Step 15 アカウントをまたぐ暗号化（Skill 2.2.6）</a>
+<a class="nav-a" href="#step-16">Step 16 キーローテーションの有効化と無効化（Skill 2.2.7）</a>
+<a class="nav-a" href="#step-17">Step 17 データ分類：PII・PHIなど（Skill 2.3.1）</a>
+<a class="nav-a" href="#step-18">Step 18 機密を含む環境変数の暗号化（Skill 2.3.2）</a>
+<a class="nav-a" href="#step-19">Step 19 シークレット管理サービスの活用（Skill 2.3.3）</a>
+<a class="nav-a" href="#step-20">Step 20 サニタイズとデータマスキング（Skill 2.3.4・2.3.5）</a>
+<a class="nav-a" href="#step-21">Step 21 マルチテナントのデータアクセスパターン（Skill 2.3.6）</a>
+<a class="nav-a" href="#step-22">Step 22 AIサービスを組み込むときのセキュリティ（新興トピック）</a>
+<a class="nav-a" href="#step-23">Step 23 総まとめ：選択フロー・ひっかけ・練習問題</a>
+<a class="nav-a" href="#appendix-a">付録A スキルとStepの対応表</a>
+<a class="nav-a" href="#appendix-b">付録B 参照ソースURL一覧</a>
+<div class="nav-group">Task 1</div>
+<div class="nav-group">Task 2</div>
+<div class="nav-group">Task 3</div>
+</nav>
+<main class="main">
+<header class="hero">
+<div class="eyebrow">AWS CERTIFIED DEVELOPER - ASSOCIATE (DVA-C02)</div>
+<h1>ドメイン2：セキュリティ（Security）完全ガイド</h1>
+<p>初学者向け・ステップバイステップ解説。各項目の詳細説明、サービス／機能ごとのベストプラクティス、根拠となる公式ソースURL付き。</p>
+<div class="chips"><span class="chip">配点 26%</span><span class="chip">3タスク・17スキル</span><span class="chip">24 Steps</span><span class="chip">Mermaid 35図</span><span class="chip">練習問題12問</span></div>
+</header>
+<div class="progress">自己採点チェックリスト達成: <b id="pcount">0 / 0</b></div>
+<section class="section"><h2 id="step-0">Step 0　試験の概要とこのガイドの使い方</h2>
+<h3>0-1　DVA-C02とは</h3>
+<p>公式試験ガイドによると、DVA-C02は開発者ロールの人向けで、AWSクラウド上のアプリケーションの<strong>開発・テスト・デプロイ・デバッグ</strong>の能力を検証します。検証される能力には「アプリケーションコードとデータの保護（Secure application code and data）」が含まれています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>スコア対象の問題数</td>
+<td>50問</td>
+</tr>
+<tr>
+<td>採点対象外（アンスコア）問題</td>
+<td>15問（どれがそれかは分からない）</td>
+</tr>
+<tr>
+<td>試験時間</td>
+<td>130分</td>
+</tr>
+<tr>
+<td>合格スコア</td>
+<td>720点（100〜1,000のスケールスコア）</td>
+</tr>
+<tr>
+<td>採点モデル</td>
+<td>補償型（各ドメインで合格点を取る必要はなく、全体で合格すればよい）</td>
+</tr>
+<tr>
+<td>問題形式</td>
+<td>単一選択（正解1・不正解3）と複数選択（5択以上から2つ以上選ぶ）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>0-2　ドメインの重み</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ドメイン</th>
+<th>配点比率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. AWSサービスによる開発</td>
+<td>32%</td>
+</tr>
+<tr>
+<td><strong>2. セキュリティ（このガイド）</strong></td>
+<td><strong>26%</strong></td>
+</tr>
+<tr>
+<td>3. デプロイ</td>
+<td>24%</td>
+</tr>
+<tr>
+<td>4. トラブルシューティングと最適化</td>
+<td>18%</td>
+</tr>
+</tbody>
+</table></div>
+<p>セキュリティは<strong>全体の約4分の1</strong>を占める重要ドメインです。</p>
+<h3>0-3　ドメイン2の構成（3タスク・17スキル）</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="0" role="img" aria-label="図解"></div></div>
+<h3>0-4　試験範囲外（Out of scope）の目安</h3>
+<p>公式ガイドは、受験者に期待されない業務として、アーキテクチャ設計、CI/CDパイプラインの設計・作成、<strong>IAMユーザー／グループの管理</strong>、サーバー／OSの管理、ネットワーク基盤の設計（VPC、Direct Connectなど）を挙げています。したがって本ガイドでは、IAMは「<strong>開発者として安全に使う</strong>」観点（ロール、ポリシーを読み書きする、トークンを扱う）を中心に学びます。</p>
+<h3>0-5　学習ロードマップ</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="1" role="img" aria-label="図解"></div></div>
+<h3>0-6　各Stepの読み方</h3>
+<p>各Stepは次の順序で書かれています。</p>
+<ol>
+<li><strong>試験で問われること</strong>（対応するスキルID）</li>
+<li><strong>やさしい解説</strong>（用語の意味から）</li>
+<li><strong>図・表</strong>（Mermaidと表）</li>
+<li><strong>コード例</strong>（CLI／Python／JSON）</li>
+<li><strong>ベストプラクティス</strong></li>
+<li><strong>試験のひっかけポイント</strong></li>
+<li><strong>根拠ソース（URL）</strong></li>
+</ol>
+<blockquote>
+<p><strong>注意</strong>：AWSのサービスは頻繁に更新されます。数値（上限・既定値）や新機能は、受験直前に必ず公式ドキュメントで再確認してください。</p>
+</blockquote>
+<hr />
+</section>
+<section class="section"><h2 id="step-1">Step 1　セキュリティの全体像</h2>
+<h3>1-1　責任共有モデル</h3>
+<p>AWSでは、セキュリティの責任をAWSと利用者で分担します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>区分</th>
+<th>責任を持つ側</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>クラウド<strong>の</strong>セキュリティ</td>
+<td>AWS</td>
+<td>データセンター、ハードウェア、ホストOS、マネージドサービスの基盤</td>
+</tr>
+<tr>
+<td>クラウド<strong>における</strong>セキュリティ</td>
+<td>利用者（開発者）</td>
+<td>IAM設定、アプリのコード、データの暗号化設定、シークレットの扱い、OS／ミドルウェアのパッチ（EC2の場合）</td>
+</tr>
+</tbody>
+</table></div>
+<p>開発者が直接責任を負うのは「<strong>自分のアプリが誰に何を許すか（認証・認可）</strong>」「<strong>データをどう守るか（暗号化）</strong>」「<strong>秘密情報をどう持つか（機密管理）</strong>」です。これがそのままドメイン2の3タスクになります。</p>
+<h3>1-2　セキュリティの4本柱</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="2" role="img" aria-label="図解"></div></div>
+<h3>1-3　最重要用語</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>認証（AuthN）</td>
+<td>本人確認</td>
+<td>パスワード、MFA、署名付きリクエスト</td>
+</tr>
+<tr>
+<td>認可（AuthZ）</td>
+<td>権限の確認</td>
+<td>「このユーザーはこのS3バケットを読める」</td>
+</tr>
+<tr>
+<td>プリンシパル</td>
+<td>操作主体（人・ロール・サービス）</td>
+<td>IAMユーザー、IAMロール、AWSサービス</td>
+</tr>
+<tr>
+<td>ポリシー</td>
+<td>権限を記述したJSON</td>
+<td>Allow / Deny、Action、Resource、Condition</td>
+</tr>
+<tr>
+<td>一時認証情報</td>
+<td>有効期限つき認証情報</td>
+<td>STSが発行（アクセスキーID＋シークレット＋セッショントークン）</td>
+</tr>
+<tr>
+<td>保管時の暗号化</td>
+<td>保存されたデータの暗号化</td>
+<td>S3のSSE、EBS暗号化</td>
+</tr>
+<tr>
+<td>転送中の暗号化</td>
+<td>通信経路の暗号化</td>
+<td>TLS（HTTPS）</td>
+</tr>
+<tr>
+<td>最小権限</td>
+<td>必要最小限の権限だけ与える原則</td>
+<td>特定バケット・特定アクションのみ許可</td>
+</tr>
+</tbody>
+</table></div>
+<h3>1-4　全Stepを貫く「5つの大原則」</h3>
+<ol>
+<li><strong>最小権限</strong>：必要な権限だけを与える。</li>
+<li><strong>長期認証情報を避ける</strong>：IAMロールと一時認証情報を使う。</li>
+<li><strong>コードに秘密を書かない</strong>：Secrets ManagerやParameter Storeから取得する。</li>
+<li><strong>常に暗号化</strong>：保管時も転送中も。</li>
+<li><strong>多層防御</strong>：認証・認可・暗号化・ログを重ねる。</li>
+</ol>
+<h3>根拠ソース（Step 0・1）</h3>
+<ul>
+<li>試験ガイド（DVA-C02）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html</a></li>
+<li>ドメイン2（Security）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain2.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain2.html</a></li>
+<li>対象サービス一覧（In-Scope）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-02-in-scope-services.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-02-in-scope-services.html</a></li>
+<li>資格ページ：<a target="_blank" rel="noopener" href="https://aws.amazon.com/certification/certified-developer-associate/">https://aws.amazon.com/certification/certified-developer-associate/</a></li>
+<li>責任共有モデル：<a target="_blank" rel="noopener" href="https://aws.amazon.com/compliance/shared-responsibility-model/">https://aws.amazon.com/compliance/shared-responsibility-model/</a></li>
+<li>IAMのセキュリティベストプラクティス：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section part-sec"><h1 class="part">Task 1：認証・認可の実装</h1>
+</section>
+<section class="section"><h2 id="step-2">Step 2　IAMの基礎とポリシー評価（Skill 2.1.6）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「IAMプリンシパルの権限を定義する」</strong>：ポリシーの種類を理解し、JSONを読み書きし、最小権限で設計できること。</p>
+<h3>2-1　IAMの登場人物</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>説明</th>
+<th>開発者の関わり方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAMユーザー</td>
+<td>長期認証情報を持つ個人・アプリ</td>
+<td>できるだけ使わない</td>
+</tr>
+<tr>
+<td>IAMグループ</td>
+<td>ユーザーの集まり</td>
+<td>管理者が扱う（範囲外）</td>
+</tr>
+<tr>
+<td><strong>IAMロール</strong></td>
+<td>一時的に引き受ける権限の入れ物</td>
+<td><strong>主役</strong>。Lambda、EC2、ECSなどに付ける</td>
+</tr>
+<tr>
+<td>ポリシー</td>
+<td>権限のJSON</td>
+<td>読み書きできる必要がある</td>
+</tr>
+</tbody>
+</table></div>
+<h3>2-2　ポリシーの種類</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>アタッチ先</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アイデンティティベース</td>
+<td>ユーザー・グループ・ロール</td>
+<td>「この主体は何ができるか」</td>
+</tr>
+<tr>
+<td>リソースベース</td>
+<td>S3バケット、SQSキュー、KMSキー、Lambdaなど</td>
+<td>「このリソースに誰が何をできるか」</td>
+</tr>
+<tr>
+<td>信頼ポリシー</td>
+<td>IAMロール</td>
+<td>「誰がこのロールを引き受けられるか」</td>
+</tr>
+<tr>
+<td>アクセス許可の境界</td>
+<td>ユーザー・ロール</td>
+<td>付与できる権限の<strong>上限</strong></td>
+</tr>
+<tr>
+<td>SCP（Organizations）</td>
+<td>アカウント・OU</td>
+<td>アカウント全体の<strong>上限</strong></td>
+</tr>
+<tr>
+<td>セッションポリシー</td>
+<td>一時セッション</td>
+<td>その場の権限をさらに<strong>絞る</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>2-3　ポリシーの構造</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;ReadOnlyOneBucket&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;s3:GetObject&quot;, &quot;s3:ListBucket&quot;],
+      &quot;Resource&quot;: [
+        &quot;arn:aws:s3:::my-app-bucket&quot;,
+        &quot;arn:aws:s3:::my-app-bucket/*&quot;
+      ],
+      &quot;Condition&quot;: {
+        &quot;Bool&quot;: { &quot;aws:SecureTransport&quot;: &quot;true&quot; }
+      }
+    }
+  ]
+}
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Effect</td>
+<td>Allow または Deny</td>
+</tr>
+<tr>
+<td>Action</td>
+<td>許可・拒否するAPI操作</td>
+</tr>
+<tr>
+<td>Resource</td>
+<td>対象リソースのARN</td>
+</tr>
+<tr>
+<td>Principal</td>
+<td>リソースベースポリシーで「誰に」</td>
+</tr>
+<tr>
+<td>Condition</td>
+<td>追加条件（IP、タグ、MFA、TLSなど）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><code>s3:ListBucket</code> は<strong>バケットARN</strong>、<code>s3:GetObject</code> は**オブジェクトARN（<code>/*</code>付き）**に対する権限です。両方のResourceを書き忘れるのが典型的な失敗です。</p>
+</blockquote>
+<h3>2-4　ポリシー評価のルール</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="3" role="img" aria-label="図解"></div></div>
+<p><strong>覚えるべき3原則</strong></p>
+<ol>
+<li>既定は<strong>暗黙のDeny</strong>（何も許可がなければ拒否）。</li>
+<li><strong>明示的なDenyは常に最優先</strong>。</li>
+<li>同一アカウント内では、アイデンティティベースかリソースベースのどちらかがAllowなら許可されうる。<strong>アカウントをまたぐ場合は、両側の許可が必要</strong>（Step 15でKMSを例に再確認）。</li>
+</ol>
+<h3>2-5　便利な条件キー</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>条件キー</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aws:SecureTransport</code></td>
+<td>HTTPS通信のみ許可（S3バケットポリシーの定番）</td>
+</tr>
+<tr>
+<td><code>aws:PrincipalTag/キー</code></td>
+<td>主体のタグによるABAC</td>
+</tr>
+<tr>
+<td><code>aws:PrincipalOrgID</code></td>
+<td>組織内のアカウントに限定</td>
+</tr>
+<tr>
+<td><code>aws:MultiFactorAuthPresent</code></td>
+<td>MFAを使った場合のみ許可</td>
+</tr>
+<tr>
+<td><code>aws:SourceArn</code> / <code>aws:SourceAccount</code></td>
+<td>混乱した代理問題の対策（Step 3）</td>
+</tr>
+<tr>
+<td><code>kms:ViaService</code></td>
+<td>特定サービス経由のKMS利用に限定（Step 11）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>2-6　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>AWSマネージドポリシーで始め、<strong>カスタマー管理ポリシーで絞り込む</strong></td>
+<td>広すぎる権限を避ける</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>&quot;Action&quot;: &quot;*&quot;</code> と <code>&quot;Resource&quot;: &quot;*&quot;</code> の同時使用を避ける</td>
+<td>事実上の管理者権限になる</td>
+</tr>
+<tr>
+<td>3</td>
+<td>開発中はアクセスアドバイザー／ポリシー生成などで、実際に使った権限に絞る</td>
+<td>最小権限の継続的な見直し</td>
+</tr>
+<tr>
+<td>4</td>
+<td>条件キーでHTTPS・MFA・組織を強制</td>
+<td>多層防御</td>
+</tr>
+<tr>
+<td>5</td>
+<td>rootユーザーは日常で使わない</td>
+<td>権限が無制限</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「明示的なDenyとAllowが競合したら？」→ <strong>Denyが勝つ</strong>。</li>
+<li>「ポリシーを何もアタッチしていない新規ユーザーの権限は？」→ <strong>暗黙のDenyで何もできない</strong>。</li>
+<li>「アクセス許可の境界だけでAllowされる？」→ <strong>されない</strong>（境界は上限であり、許可を付与しない）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>IAMポリシーの評価ロジック：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html</a></li>
+<li>IAMのポリシーとアクセス許可：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html</a></li>
+<li>IAMのセキュリティベストプラクティス：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</a></li>
+<li>ABAC：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-3">Step 3　IAMロールとAWS STS（Skill 2.1.5）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「IAMロールを引き受ける（Assume an IAM role）」</strong>：誰が・どうやってロールを引き受け、何が返ってくるかを理解すること。</p>
+<h3>3-1　ロールとは</h3>
+<p>IAMロールは「<strong>一時的に着る制服</strong>」のようなものです。ロールには固定のパスワードやアクセスキーがありません。引き受けると、AWS STS（Security Token Service）が<strong>有効期限つきの一時認証情報</strong>を発行します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>一時認証情報の構成要素</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AccessKeyId</td>
+<td>一時的なアクセスキーID（<code>ASIA</code>で始まる）</td>
+</tr>
+<tr>
+<td>SecretAccessKey</td>
+<td>署名用の秘密鍵</td>
+</tr>
+<tr>
+<td>SessionToken</td>
+<td>一時認証情報であることを示すトークン（必須）</td>
+</tr>
+<tr>
+<td>Expiration</td>
+<td>有効期限</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3-2　ロールの2つのポリシー</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシー</th>
+<th>役割</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>信頼ポリシー</strong></td>
+<td>誰がこのロールを引き受けられるか</td>
+<td><code>lambda.amazonaws.com</code> に許可</td>
+</tr>
+<tr>
+<td><strong>アクセス許可ポリシー</strong></td>
+<td>引き受けた後に何ができるか</td>
+<td>S3の読み取りなど</td>
+</tr>
+</tbody>
+</table></div>
+<p>Lambdaの実行ロール用の信頼ポリシー例：</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: { &quot;Service&quot;: &quot;lambda.amazonaws.com&quot; },
+      &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+    }
+  ]
+}
+</code></pre></div>
+<h3>3-3　AssumeRoleの流れ</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="4" role="img" aria-label="図解"></div></div>
+<h3>3-4　STSの主なAPI</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>引き受ける主体</th>
+<th>典型的な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AssumeRole</code></td>
+<td>IAMユーザー／ロール</td>
+<td>クロスアカウント、権限の一時的な切り替え</td>
+</tr>
+<tr>
+<td><code>AssumeRoleWithWebIdentity</code></td>
+<td>OIDC対応IdPのユーザー</td>
+<td>Cognito、GitHub Actions、EKSのIRSA</td>
+</tr>
+<tr>
+<td><code>AssumeRoleWithSAML</code></td>
+<td>SAML 2.0のユーザー</td>
+<td>企業IdPとのフェデレーション</td>
+</tr>
+<tr>
+<td><code>GetSessionToken</code></td>
+<td>IAMユーザー</td>
+<td>MFA付き一時認証情報</td>
+</tr>
+<tr>
+<td><code>GetCallerIdentity</code></td>
+<td>誰でも</td>
+<td>「今の自分は誰か」を確認（権限不要）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3-5　セッション時間のポイント</h3>
+<ul>
+<li><code>AssumeRole</code>の既定のセッション時間は<strong>1時間</strong>。最小15分、最大はロールの<strong>最大セッション期間</strong>（1〜12時間の設定）まで。</li>
+<li><strong>ロールチェーン</strong>（ロールからさらに別ロールを引き受ける）の場合、セッションは<strong>最大1時間</strong>に制限される。</li>
+</ul>
+<h3>3-6　コード例</h3>
+<p><strong>CLIで確認</strong></p>
+<div class="code-block"><pre><code class="language-bash"># 今のIDを確認（デバッグの基本）
+aws sts get-caller-identity
+
+# 別アカウントのロールを引き受ける
+aws sts assume-role \
+  --role-arn arn:aws:iam::222233334444:role/PartnerReadRole \
+  --role-session-name dev-session \
+  --external-id my-external-id
+</code></pre></div>
+<p><strong>Python（boto3）</strong></p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+sts = boto3.client(&quot;sts&quot;)
+resp = sts.assume_role(
+    RoleArn=&quot;arn:aws:iam::222233334444:role/PartnerReadRole&quot;,
+    RoleSessionName=&quot;dev-session&quot;,
+    ExternalId=&quot;my-external-id&quot;,
+    DurationSeconds=900,
+)
+c = resp[&quot;Credentials&quot;]
+
+s3 = boto3.client(
+    &quot;s3&quot;,
+    aws_access_key_id=c[&quot;AccessKeyId&quot;],
+    aws_secret_access_key=c[&quot;SecretAccessKey&quot;],
+    aws_session_token=c[&quot;SessionToken&quot;],
+)
+print(s3.list_buckets()[&quot;Buckets&quot;])
+</code></pre></div>
+<h3>3-7　混乱した代理問題（Confused Deputy）と対策</h3>
+<p>第三者サービスにロールの引き受けを許可するとき、別の顧客がそのサービスを悪用して<strong>自分のロールを引き受けさせる</strong>リスクがあります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>対策</th>
+<th>使いどころ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ExternalId</code>（外部ID）</td>
+<td>サードパーティ（SaaSなど）にクロスアカウントロールを渡すとき</td>
+</tr>
+<tr>
+<td><code>aws:SourceArn</code> / <code>aws:SourceAccount</code></td>
+<td>AWSサービス（SNS、S3、Lambdaなど）がロールやリソースを使うとき</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3-8　AWSサービスにロールを渡す：PassRole</h3>
+<p>LambdaやECSのタスクを作る開発者は、<strong>そのロールをサービスに「渡す」権限</strong>（<code>iam:PassRole</code>）が必要です。この権限は、渡せるロールを<strong>特定のARNに限定</strong>するのが鉄則です。</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: &quot;iam:PassRole&quot;,
+  &quot;Resource&quot;: &quot;arn:aws:iam::111122223333:role/MyLambdaExecutionRole&quot;,
+  &quot;Condition&quot;: { &quot;StringEquals&quot;: { &quot;iam:PassedToService&quot;: &quot;lambda.amazonaws.com&quot; } }
+}
+</code></pre></div>
+<h3>3-9　コンピュートごとの「ロールの付け方」</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>実行環境</th>
+<th>ロールの仕組み</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lambda</td>
+<td>実行ロール（Execution Role）</td>
+</tr>
+<tr>
+<td>EC2</td>
+<td>インスタンスプロファイル（ロールを格納）</td>
+</tr>
+<tr>
+<td>ECS</td>
+<td>タスクロール（アプリ用）とタスク実行ロール（イメージ取得・ログ・シークレット取得用）</td>
+</tr>
+<tr>
+<td>EKS</td>
+<td>IRSA（OIDC）またはEKS Pod Identity</td>
+</tr>
+<tr>
+<td>CodeBuild / CodePipeline</td>
+<td>サービスロール</td>
+</tr>
+</tbody>
+</table></div>
+<h3>3-10　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>アプリの認証は<strong>ロール</strong>で行い、IAMユーザーのアクセスキーを埋め込まない</td>
+</tr>
+<tr>
+<td>2</td>
+<td>信頼ポリシーの<code>Principal</code>を<strong>具体的に</strong>書く（<code>&quot;AWS&quot;: &quot;*&quot;</code>は避ける）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>セッション時間は必要最小限にする</td>
+</tr>
+<tr>
+<td>4</td>
+<td>サードパーティには<code>ExternalId</code>を使う</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ECSでは「タスクロール」と「タスク実行ロール」を混同しない</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「EC2上のアプリにアクセスキーを配る」→ ほぼ常に<strong>誤り</strong>。**インスタンスプロファイル（ロール）**が正解。</li>
+<li>「ロールにはアクセスキーがある」→ <strong>誤り</strong>。引き受け時に一時認証情報が発行される。</li>
+<li>「<code>SessionToken</code>は任意」→ <strong>誤り</strong>。一時認証情報では必須。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>IAMロール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html</a></li>
+<li>AssumeRole API：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html">https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html</a></li>
+<li>混乱した代理問題：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html</a></li>
+<li>Lambda実行ロール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html">https://docs.aws.amazon.com/lambda/latest/dg/lambda-intro-execution-role.html</a></li>
+<li>EC2のIAMロール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html</a></li>
+<li>ECSタスクIAMロール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html">https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html</a></li>
+<li>EKS Pod Identity：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html">https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-4">Step 4　プログラムによるアクセスの設定（Skill 2.1.3）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「AWSへのプログラムアクセスを設定する」</strong>：CLI・SDKが認証情報をどこから取得するかを理解し、安全な方法を選べること。</p>
+<h3>4-1　アクセス方法の整理</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>使う場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>マネジメントコンソール</td>
+<td>人が画面で操作</td>
+</tr>
+<tr>
+<td>AWS CLI</td>
+<td>シェルから操作・スクリプト</td>
+</tr>
+<tr>
+<td>AWS SDK（boto3など）</td>
+<td>アプリケーションコード</td>
+</tr>
+<tr>
+<td>直接REST API</td>
+<td>通常はSDKに任せる（SigV4署名が必要。Step 5）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4-2　認証情報の種類と安全性</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>例</th>
+<th>安全性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ロールの一時認証情報</td>
+<td>Lambda、EC2、ECSが自動取得</td>
+<td>高い（自動更新・失効する）</td>
+</tr>
+<tr>
+<td>IAM Identity Centerのセッション</td>
+<td><code>aws sso login</code></td>
+<td>高い（人間の開発者向け）</td>
+</tr>
+<tr>
+<td>IAMユーザーのアクセスキー（長期）</td>
+<td><code>AKIA...</code></td>
+<td>低い（漏洩リスク。使わないのが理想）</td>
+</tr>
+<tr>
+<td>rootのアクセスキー</td>
+<td>-</td>
+<td><strong>作らない</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>4-3　認証情報プロバイダーチェーン</h3>
+<p>SDK／CLIは、認証情報を<strong>決まった順序で探索</strong>します。代表的な探索元は次のとおりです（細かい順序はSDKごとに異なるため、公式の「標準化された認証情報プロバイダー」を確認してください）。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="5" role="img" aria-label="図解"></div></div>
+<blockquote>
+<p>「ローカル開発では環境変数やプロファイル、AWS上の実行環境ではロール」と使い分けます。<strong>コード内に認証情報を書く必要はありません</strong>。</p>
+</blockquote>
+<h3>4-4　ローカル開発の推奨設定（IAM Identity Center）</h3>
+<div class="code-block"><pre><code class="language-bash"># 初回のみ：SSOプロファイルを作成
+aws configure sso
+
+# ログイン（ブラウザで認証。一時認証情報が取得される）
+aws sso login --profile dev
+
+# プロファイルを使って実行
+aws s3 ls --profile dev
+</code></pre></div>
+<p>プロファイルのAssumeRole設定例（<code>~/.aws/config</code>）：</p>
+<div class="code-block"><pre><code class="language-ini">[profile partner]
+role_arn = arn:aws:iam::222233334444:role/PartnerReadRole
+source_profile = dev
+role_session_name = dev-session
+region = ap-northeast-1
+</code></pre></div>
+<h3>4-5　EC2のメタデータ：IMDSv2</h3>
+<p>EC2上のアプリはインスタンスメタデータサービス（IMDS）から一時認証情報を取得します。SSRF攻撃による認証情報の窃取を防ぐため、<strong>セッショントークン方式のIMDSv2</strong>を必須にします。</p>
+<div class="code-block"><pre><code class="language-bash"># IMDSv2：まずトークンを取得してからメタデータを読む
+TOKEN=$(curl -s -X PUT &quot;http://169.254.169.254/latest/api/token&quot; \
+  -H &quot;X-aws-ec2-metadata-token-ttl-seconds: 21600&quot;)
+curl -s -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot; \
+  http://169.254.169.254/latest/meta-data/iam/security-credentials/
+</code></pre></div>
+<h3>4-6　AWS外の環境から使う場合</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>推奨</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>オンプレミス・他クラウドのワークロード</td>
+<td>IAM Roles Anywhere（X.509証明書で一時認証情報を取得）</td>
+</tr>
+<tr>
+<td>GitHub Actionsなど外部CI</td>
+<td>OIDCフェデレーション（<code>AssumeRoleWithWebIdentity</code>）。長期キー不要</td>
+</tr>
+<tr>
+<td>開発者のPC</td>
+<td>IAM Identity Center</td>
+</tr>
+</tbody>
+</table></div>
+<h3>4-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>長期アクセスキーを<strong>作らない・使わない</strong>。やむを得ない場合は定期的にローテーションし、使っていないキーは無効化・削除</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>コード・Git・ログ・環境変数ファイルにキーを残さない</strong>（<code>.gitignore</code>、シークレットスキャン）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>AWS上ではロール、人にはIdentity Centerを使う</td>
+</tr>
+<tr>
+<td>4</td>
+<td>プロファイルを使い分けて本番と開発を混ぜない</td>
+</tr>
+<tr>
+<td>5</td>
+<td>EC2ではIMDSv2を必須にする</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「Lambdaのコードに<code>aws_access_key_id</code>を直書き」→ <strong>誤り</strong>。実行ロールを使う。</li>
+<li>「Gitに誤ってキーをコミットした」→ キーを<strong>即時に無効化・削除</strong>してから新規発行し、履歴の対処をする（コミットを消すだけでは不十分）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>SDK・ツール共通の認証情報プロバイダー（標準化）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html">https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html</a></li>
+<li>AWS CLIの認証設定：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-authentication.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-authentication.html</a></li>
+<li>IAM Identity Center：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html">https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html</a></li>
+<li>IAM Roles Anywhere：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/rolesanywhere/latest/userguide/introduction.html">https://docs.aws.amazon.com/rolesanywhere/latest/userguide/introduction.html</a></li>
+<li>IMDSv2：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html</a></li>
+<li>長期アクセスキーの代替：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-5">Step 5　AWSサービスへの認証済み呼び出し（Skill 2.1.4）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「AWSサービスへ認証付きの呼び出しをする」</strong>：リクエスト署名（SigV4）の考え方と、各サービスが採用する認証方式の違いを理解すること。</p>
+<h3>5-1　Signature Version 4（SigV4）とは</h3>
+<p>AWS APIへのリクエストは、<strong>シークレットアクセスキーを使って署名</strong>します。シークレット自体はネットワークに送りません。サーバーは同じ計算を行い、署名が一致すれば本人のリクエストと判断します。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="6" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポイント</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>署名の対象</td>
+<td>HTTPメソッド、パス、ヘッダー、ペイロードのハッシュ、日時など</td>
+</tr>
+<tr>
+<td>一時認証情報を使う場合</td>
+<td><code>X-Amz-Security-Token</code>（セッショントークン）も付与</td>
+</tr>
+<tr>
+<td>通常は自分で実装しない</td>
+<td><strong>SDK／CLIが自動で署名する</strong></td>
+</tr>
+<tr>
+<td>署名エラーの典型原因</td>
+<td>端末の時刻ずれ、リージョン違い、キーの誤り、期限切れ</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5-2　署名付きURL（Presigned URL）</h3>
+<p>認証情報を持たない第三者に、<strong>期限つきで特定操作だけ</strong>を許可する仕組みです（S3が代表例）。</p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+s3 = boto3.client(&quot;s3&quot;, region_name=&quot;ap-northeast-1&quot;)
+url = s3.generate_presigned_url(
+    &quot;get_object&quot;,
+    Params={&quot;Bucket&quot;: &quot;my-app-bucket&quot;, &quot;Key&quot;: &quot;reports/2026-10.pdf&quot;},
+    ExpiresIn=300,  # 5分
+)
+print(url)
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>注意点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>権限</td>
+<td>URLを<strong>作った主体の権限</strong>で実行される。作成者に権限がなければ使えない</td>
+</tr>
+<tr>
+<td>有効期限</td>
+<td>一時認証情報（ロール）で作成した場合、<strong>認証情報の有効期限を超えては使えない</strong></td>
+</tr>
+<tr>
+<td>運用</td>
+<td>期限は<strong>できるだけ短く</strong>し、URLをログに残さない</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5-3　サービスごとの認証方式（開発者が選ぶ場面）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>主な認証・認可オプション</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API Gateway</td>
+<td>IAM（SigV4）、Cognitoユーザープールオーソライザー（REST）、JWTオーソライザー（HTTP API）、Lambdaオーソライザー、リソースポリシー</td>
+</tr>
+<tr>
+<td>Lambda関数URL</td>
+<td><code>AWS_IAM</code>（SigV4）または<code>NONE</code>（公開）</td>
+</tr>
+<tr>
+<td>AppSync</td>
+<td>APIキー、Cognitoユーザープール、IAM、OIDC、Lambda</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>IAM／バケットポリシー／署名付きURL</td>
+</tr>
+<tr>
+<td>ALB</td>
+<td>OIDC／Cognito認証アクション（リスナールール）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5-4　API Gatewayの認証オプション比較</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>向いている場面</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM認証</td>
+<td>AWS内のサービス間・社内システム</td>
+<td>SigV4が必要。呼び出し元にIAM権限を付与</td>
+</tr>
+<tr>
+<td>Cognitoオーソライザー／JWTオーソライザー</td>
+<td>モバイル・Webのエンドユーザー</td>
+<td>トークンを検証（Step 7）</td>
+</tr>
+<tr>
+<td>Lambdaオーソライザー</td>
+<td>独自のトークン・サードパーティIdP・複雑なロジック</td>
+<td>戻り値としてIAMポリシーを返す。結果をキャッシュ可能</td>
+</tr>
+<tr>
+<td>リソースポリシー</td>
+<td>IP制限、特定アカウント・VPCエンドポイントからのみ</td>
+<td>他方式と併用</td>
+</tr>
+<tr>
+<td>APIキー</td>
+<td><strong>使用量プランによるスロットリング・計量用</strong></td>
+<td><strong>認証・認可の手段としては不十分</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>5-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>自前でSigV4を実装せず、SDK／CLIを使う</td>
+</tr>
+<tr>
+<td>2</td>
+<td>署名付きURLの期限を短くし、用途（GET／PUT）を限定する</td>
+</tr>
+<tr>
+<td>3</td>
+<td>公開APIでも、認可なし（<code>NONE</code>）にする理由を明確にする</td>
+</tr>
+<tr>
+<td>4</td>
+<td>APIキーを認証の代わりに使わない</td>
+</tr>
+<tr>
+<td>5</td>
+<td>署名エラーでは<strong>時刻・リージョン・認証情報の期限</strong>を最初に確認する</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「APIキーでAPIを保護する」→ APIキーは<strong>認証ではない</strong>（使用量制御）。</li>
+<li>「署名付きURLは誰でも作れる」→ <strong>作成者の権限で動く</strong>。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>SigV4（AWS API リクエストの署名）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html</a></li>
+<li>S3の署名付きURL：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html</a></li>
+<li>API Gatewayのアクセス制御：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html</a></li>
+<li>Lambdaオーソライザー：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html</a></li>
+<li>Lambda関数URLの認証：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html">https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html</a></li>
+<li>AppSyncの認可：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html">https://docs.aws.amazon.com/appsync/latest/devguide/security-authz.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-6">Step 6　IDプロバイダーによるフェデレーション（Skill 2.1.1）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「IDプロバイダー（IdP）を使ってフェデレーションアクセスを実装する（例：Amazon Cognito、IAM）」</strong></p>
+<h3>6-1　フェデレーションとは</h3>
+<p>「<strong>自社でユーザー管理せず、すでに信頼されたIdP（Google、企業のAD、Apple等）の認証結果を借りる</strong>」仕組みです。ユーザーは、IdPで認証され、その証明（トークン／アサーション）を使ってアプリやAWSにアクセスします。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IdP（IDプロバイダー）</td>
+<td>ユーザーを認証する側（Google、Entra ID、Okta、企業ADなど）</td>
+</tr>
+<tr>
+<td>SP / アプリ</td>
+<td>認証結果を受け取る側</td>
+</tr>
+<tr>
+<td>SAML 2.0</td>
+<td>企業向けSSOで多いXMLベースのプロトコル</td>
+</tr>
+<tr>
+<td>OpenID Connect（OIDC）</td>
+<td>OAuth 2.0の上に作られたIDレイヤー。JWT形式のIDトークンを使う</td>
+</tr>
+<tr>
+<td>OAuth 2.0</td>
+<td>認可の枠組み（アクセストークンの発行方法を定める）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6-2　AWSでフェデレーションを実現する3つの道</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="7" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>選択肢</th>
+<th>用途</th>
+<th>仕組み</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon Cognito</strong></td>
+<td>アプリのユーザー管理・サインイン</td>
+<td>ユーザープール＋IDプール</td>
+</tr>
+<tr>
+<td><strong>IAM Identity Center</strong></td>
+<td>社員のAWSアカウント／アプリへのSSO</td>
+<td>外部IdPと連携、権限セット</td>
+</tr>
+<tr>
+<td><strong>IAM IDプロバイダー（SAML／OIDC）</strong></td>
+<td>既存IdPと直接フェデレーション。GitHub Actions、EKSのIRSAなど</td>
+<td><code>AssumeRoleWithSAML</code> / <code>AssumeRoleWithWebIdentity</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>6-3　Amazon Cognitoの2本柱</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th><strong>ユーザープール（User Pools）</strong></th>
+<th><strong>IDプール（Identity Pools）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>役割</td>
+<td><strong>ユーザーディレクトリ＋認証</strong></td>
+<td><strong>AWS一時認証情報の発行</strong></td>
+</tr>
+<tr>
+<td>出力</td>
+<td>JWT（IDトークン、アクセストークン、リフレッシュトークン）</td>
+<td>STS一時認証情報（AWSリソースへ直接アクセス用）</td>
+</tr>
+<tr>
+<td>認証元</td>
+<td>自前ユーザー、Google／Apple等のソーシャル、SAML、OIDC</td>
+<td>ユーザープール、ソーシャル、SAML、OIDC、（任意で）未認証ゲスト</td>
+</tr>
+<tr>
+<td>主な用途</td>
+<td>サインアップ／サインイン、MFA、API Gatewayの保護</td>
+<td>モバイル・Webから<strong>S3やDynamoDBを直接</strong>呼ぶ</td>
+</tr>
+<tr>
+<td>覚え方</td>
+<td>「<strong>誰か</strong>を確認する」</td>
+<td>「<strong>AWSに入る鍵</strong>を渡す」</td>
+</tr>
+</tbody>
+</table></div>
+<p>Cognitoの公式ドキュメントでは、<strong>IDトークンはユーザーの認証、アクセストークンはユーザーの認可、リフレッシュトークンは認証情報の更新</strong>に使うと整理されています。</p>
+<h3>6-4　代表的な構成：ユーザープール＋IDプール</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="8" role="img" aria-label="図解"></div></div>
+<h3>6-5　IDプールが付与するロール</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ロール</th>
+<th>対象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>認証済みロール</td>
+<td>サインイン済みユーザー</td>
+</tr>
+<tr>
+<td>未認証ロール</td>
+<td>ゲスト（有効にする場合）。<strong>最小権限</strong>に</td>
+</tr>
+<tr>
+<td>ロールマッピング</td>
+<td>ユーザーの属性やグループに応じて異なるロールを割り当て</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6-6　Cognito ユーザープールの主な機能</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>サインイン方式</td>
+<td>ユーザー名／メール／電話、パスキー、ワンタイムパスワードなど</td>
+</tr>
+<tr>
+<td>MFA</td>
+<td>SMS、TOTP、メール OTP など</td>
+</tr>
+<tr>
+<td>ソーシャル／SAML／OIDC連携</td>
+<td>外部IdPのユーザーをユーザープールに統合</td>
+</tr>
+<tr>
+<td>グループ</td>
+<td>ユーザーをグループに分類し、IDプールのロール割り当てや認可に利用</td>
+</tr>
+<tr>
+<td>Lambdaトリガー</td>
+<td>サインアップ前検証、トークン生成前のクレーム追加（Pre Token Generation）など</td>
+</tr>
+<tr>
+<td>機能プラン</td>
+<td>Lite／Essentials／Plusのプランがあり、新規ユーザープールの既定はEssentials（料金・機能は公式で要確認）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>6-7　SAML／OIDCとIAMを直接つなぐ場合</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: { &quot;Federated&quot;: &quot;arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com&quot; },
+      &quot;Action&quot;: &quot;sts:AssumeRoleWithWebIdentity&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringEquals&quot;: {
+          &quot;token.actions.githubusercontent.com:aud&quot;: &quot;sts.amazonaws.com&quot;
+        },
+        &quot;StringLike&quot;: {
+          &quot;token.actions.githubusercontent.com:sub&quot;: &quot;repo:my-org/my-repo:ref:refs/heads/main&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre></div>
+<blockquote>
+<p>信頼ポリシーの<code>sub</code>（主体）条件を絞らないと、<strong>他リポジトリのワークフローにも引き受けを許してしまう</strong>ため必須です。</p>
+</blockquote>
+<h3>6-8　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>パスワードを自前で保存せず、Cognitoなどの<strong>マネージドIdP</strong>に任せる</td>
+</tr>
+<tr>
+<td>2</td>
+<td>認証コードフロー＋<strong>PKCE</strong>を使う（SPAやモバイルでは特に）。Implicitグラントは避ける</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>MFA</strong>を有効にする（可能なら必須に）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>IDプールの<strong>未認証アクセスは原則無効</strong>。有効にしても権限を最小限にする</td>
+</tr>
+<tr>
+<td>5</td>
+<td>IDプールのロールには<strong>ポリシー変数</strong>（例：ユーザーIDごとのS3プレフィックス）で個人単位に絞る（Step 8）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>IdP側の信頼ポリシーで<code>aud</code>・<code>sub</code>を必ず検証</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問い</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アプリのユーザーがS3に<strong>直接</strong>アップロードしたい</td>
+<td>IDプール（一時認証情報）</td>
+</tr>
+<tr>
+<td>API GatewayをCognitoで保護したい</td>
+<td><strong>ユーザープール</strong>のトークン（IDプールではない）</td>
+</tr>
+<tr>
+<td>社員が複数AWSアカウントにSSOしたい</td>
+<td>IAM Identity Center</td>
+</tr>
+<tr>
+<td>企業のSAML IdPのユーザーをアプリに統合</td>
+<td>ユーザープールのSAML連携</td>
+</tr>
+</tbody>
+</table></div>
+<h3>根拠ソース</h3>
+<ul>
+<li>Cognitoの用語と概念：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-terms.html">https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-terms.html</a></li>
+<li>Amazon Cognitoとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html">https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html</a></li>
+<li>Cognito IDプール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html">https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html</a></li>
+<li>IAMのIDプロバイダーとフェデレーション：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html</a></li>
+<li>IAM Identity Center：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html">https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html</a></li>
+<li>AssumeRoleWithWebIdentity：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html">https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-7">Step 7　ベアラートークンによるアプリの保護（Skill 2.1.2）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「ベアラートークンでアプリケーションを保護する」</strong>：JWTの構造、検証すべき項目、Cognitoのトークンの種類と有効期限を理解すること。</p>
+<h3>7-1　ベアラートークンとは</h3>
+<p>「<strong>持っている人（bearer）を正当な利用者とみなす</strong>」トークンです。HTTPの<code>Authorization</code>ヘッダーで送ります。</p>
+<div class="code-block"><pre><code class="language-http">GET /orders HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJraWQiOiJ...（JWT）
+</code></pre></div>
+<p><strong>鍵のかかっていない鍵束</strong>のようなもので、盗まれると誰でも使えます。そのため、<strong>HTTPS必須・短い有効期限・安全な保管</strong>が絶対条件です（RFC 6750）。</p>
+<h3>7-2　JWT（JSON Web Token）の構造</h3>
+<p>JWTは <code>ヘッダー.ペイロード.署名</code> の3部構成で、各部をBase64URLエンコードしてドットで連結します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>パート</th>
+<th>内容</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ヘッダー</td>
+<td>アルゴリズムと鍵ID</td>
+<td><code>alg</code>、<code>kid</code></td>
+</tr>
+<tr>
+<td>ペイロード（クレーム）</td>
+<td>発行者、対象者、有効期限、ユーザー情報</td>
+<td><code>iss</code>、<code>aud</code>（またはclient_id）、<code>exp</code>、<code>sub</code>、<code>scope</code></td>
+</tr>
+<tr>
+<td>署名</td>
+<td>改ざん検知</td>
+<td>発行者の秘密鍵で署名</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>ペイロードは暗号化ではなくエンコードにすぎません</strong>。誰でも読めるため、<strong>秘密情報（パスワードなど）を入れない</strong>こと。</p>
+</blockquote>
+<h3>7-3　JWTを検証するときのチェックリスト</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>検証項目</th>
+<th>失敗すると</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>署名</strong>が発行元の公開鍵（JWKS）で正しい</td>
+<td>偽造トークンを受け入れる</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong><code>exp</code></strong>（有効期限）が切れていない</td>
+<td>失効トークンの再利用</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong><code>iss</code></strong>（発行者）が想定したユーザープールか</td>
+<td>他のIdPのトークンを受け入れる</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong><code>aud</code> / <code>client_id</code></strong> が自分のアプリか</td>
+<td>他アプリ向けトークンの流用</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong><code>token_use</code></strong>（<code>id</code>／<code>access</code>）が期待どおりか</td>
+<td>IDトークンをAPI認可に誤用</td>
+</tr>
+<tr>
+<td>6</td>
+<td>**<code>scope</code>**やグループが必要な権限を満たすか</td>
+<td>認可の抜け</td>
+</tr>
+</tbody>
+</table></div>
+<p>署名の公開鍵は、ユーザープールの<strong>JWKSエンドポイント</strong>から取得して使います。実運用では、API Gatewayのオーソライザーやライブラリに検証を任せるのが安全です。</p>
+<h3>7-4　Cognitoの3種類のトークン</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>トークン</th>
+<th>用途</th>
+<th>既定の有効期限（設定可）</th>
+<th>送り先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IDトークン</strong></td>
+<td>ユーザーが誰かを示す（プロフィール属性など）</td>
+<td>1時間</td>
+<td>アプリ内の本人確認</td>
+</tr>
+<tr>
+<td><strong>アクセストークン</strong></td>
+<td>認可。スコープ付きでAPIにアクセス</td>
+<td>1時間</td>
+<td><strong>リソースサーバー（API）</strong></td>
+</tr>
+<tr>
+<td><strong>リフレッシュトークン</strong></td>
+<td>新しいID／アクセストークンの取得</td>
+<td>30日</td>
+<td><strong>Cognitoのみ</strong>（APIに送らない）</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>有効期限は<strong>アプリクライアント単位</strong>で設定でき、リフレッシュトークンは取り消し（<strong>失効</strong>）が可能です。失効させると、そこから発行されたトークンも使えなくなります。</li>
+<li><strong>IDトークンとアクセストークンは別の鍵で署名</strong>されます（<code>kid</code>が異なる）。それぞれ独立して検証します。</li>
+</ul>
+<h3>7-5　API Gatewayでトークンを検証する流れ</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="9" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>API種別</th>
+<th>オーソライザー</th>
+<th>設定の要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REST API</td>
+<td>Cognitoユーザープールオーソライザー</td>
+<td>トークンを渡すヘッダー名を指定。IDトークンまたはスコープ付きアクセストークン</td>
+</tr>
+<tr>
+<td>HTTP API</td>
+<td>JWTオーソライザー</td>
+<td>issuerとaudience（クライアントID）を設定。OIDC準拠のIdPならCognito以外も可</td>
+</tr>
+<tr>
+<td>共通</td>
+<td>Lambdaオーソライザー</td>
+<td>独自トークン／外部IdPのためのカスタム検証。認可ポリシーを返す</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7-6　OAuth 2.0 の主要なフロー</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>フロー</th>
+<th>使う場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>認可コード＋PKCE</td>
+<td>Web・モバイル・SPAのユーザーサインイン（推奨）</td>
+</tr>
+<tr>
+<td>クライアントクレデンシャル</td>
+<td><strong>マシン間通信（M2M）</strong>。ユーザーを介さずスコープ付きアクセストークンを取得</td>
+</tr>
+<tr>
+<td>Implicit</td>
+<td>旧方式。トークンがURLに露出するため非推奨</td>
+</tr>
+</tbody>
+</table></div>
+<h3>7-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>必ずHTTPS</strong>で送る。URLのクエリ文字列にトークンを入れない</td>
+</tr>
+<tr>
+<td>2</td>
+<td>アクセストークンは<strong>短寿命</strong>、更新はリフレッシュトークン</td>
+</tr>
+<tr>
+<td>3</td>
+<td>検証は<strong>署名・exp・iss・aud・token_use</strong>をすべて行う</td>
+</tr>
+<tr>
+<td>4</td>
+<td>IDトークンで<strong>API認可をしない</strong>（アクセストークンを使う）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>トークンの保存先に注意（Webなら<code>HttpOnly</code>・<code>Secure</code>クッキーなど。<code>localStorage</code>はXSSの影響を受けやすい）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ログアウトやユーザー無効化時に<strong>リフレッシュトークンを失効</strong>させる</td>
+</tr>
+<tr>
+<td>7</td>
+<td>トークンを<strong>ログに出力しない</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「JWTのペイロードは暗号化されている」→ <strong>誤り</strong>（署名されているだけ）。</li>
+<li>「リフレッシュトークンをAPIに送る」→ <strong>誤り</strong>（Cognitoのトークンエンドポイント専用）。</li>
+<li>「APIキーを渡せば認証になる」→ 認証ではない（Step 5）。</li>
+<li>「M2Mで安全にトークンを得たい」→ <strong>クライアントクレデンシャル</strong>（Cognitoのリソースサーバー＋スコープ）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>Cognitoのトークン（アクセストークン）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-access-token.html">https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-access-token.html</a></li>
+<li>リフレッシュトークンの利用・失効：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-refresh-token.html">https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-refresh-token.html</a></li>
+<li>JWTの検証：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html">https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html</a></li>
+<li>トークン有効期限（CreateUserPoolClient API）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_CreateUserPoolClient.html">https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_CreateUserPoolClient.html</a></li>
+<li>API GatewayのJWTオーソライザー（HTTP API）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-jwt-authorizer.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-jwt-authorizer.html</a></li>
+<li>RFC 6750（Bearer Token）：<a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc6750">https://datatracker.ietf.org/doc/html/rfc6750</a></li>
+<li>RFC 7519（JWT）：<a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc7519">https://datatracker.ietf.org/doc/html/rfc7519</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-8">Step 8　アプリケーションレベルの認可（Skill 2.1.7）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「きめ細かなアクセス制御のため、アプリケーションレベルの認可を実装する」</strong></p>
+<h3>8-1　認可のレイヤー</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>レイヤー</th>
+<th>何を守る？</th>
+<th>手段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWSレベル</strong></td>
+<td>AWSのAPIやリソース</td>
+<td>IAMポリシー、リソースポリシー</td>
+</tr>
+<tr>
+<td><strong>APIレベル</strong></td>
+<td>エンドポイント単位</td>
+<td>API Gatewayオーソライザー、スコープ</td>
+</tr>
+<tr>
+<td><strong>アプリケーションレベル</strong></td>
+<td>「このユーザーはこの注文を編集できるか」など業務ルール</td>
+<td>コード内のチェック、ポリシーエンジン、DBの条件</td>
+</tr>
+</tbody>
+</table></div>
+<p>IAMだけでは「ユーザーAは自分の注文だけ」といった<strong>アプリ固有の細かい権限</strong>を表現しきれないことがあります。そこでアプリ側でも認可を行います。</p>
+<h3>8-2　RBACとABAC</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>考え方</th>
+<th>例</th>
+<th>長所</th>
+<th>短所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RBAC</strong>（ロールベース）</td>
+<td>役割（admin、editor）に権限を紐づける</td>
+<td>Cognitoグループ <code>admins</code></td>
+<td>シンプル</td>
+<td>ロールが増えやすい</td>
+</tr>
+<tr>
+<td><strong>ABAC</strong>（属性ベース）</td>
+<td>属性（部署、タグ、所有者）の一致で判定</td>
+<td><code>department = 営業</code>のデータのみ</td>
+<td>スケールしやすい</td>
+<td>設計が難しい</td>
+</tr>
+</tbody>
+</table></div>
+<p>AWSでは、IAMの<strong>プリンシパルタグ・リソースタグ</strong>によるABACや、Cognitoのトークンのクレーム（グループ、カスタム属性）を使ったABACが使えます。</p>
+<h3>8-3　Cognitoグループ・スコープによるRBAC</h3>
+<div class="code-block"><pre><code class="language-python"># Lambda内でトークンのクレームを使って判定する例（API Gateway検証済みクレーム）
+def handler(event, context):
+    claims = event[&quot;requestContext&quot;][&quot;authorizer&quot;][&quot;claims&quot;]
+    groups = claims.get(&quot;cognito:groups&quot;, &quot;&quot;)
+    if &quot;admins&quot; not in groups:
+        return {&quot;statusCode&quot;: 403, &quot;body&quot;: &quot;Forbidden&quot;}
+    return {&quot;statusCode&quot;: 200, &quot;body&quot;: &quot;OK&quot;}
+</code></pre></div>
+<blockquote>
+<p>HTTP APIのJWTオーソライザーでは<code>event[&quot;requestContext&quot;][&quot;authorizer&quot;][&quot;jwt&quot;][&quot;claims&quot;]</code>に入ります。API種別でイベント構造が違う点に注意してください。</p>
+</blockquote>
+<p><strong>認可のよくある失敗：IDOR（他人のIDを指定して他人のデータを見る）</strong></p>
+<div class="code-block"><pre><code class="language-python"># 悪い例：リクエストのuserIdを信用している
+user_id = event[&quot;pathParameters&quot;][&quot;userId&quot;]
+
+# 良い例：検証済みトークンのsubを使う
+user_id = event[&quot;requestContext&quot;][&quot;authorizer&quot;][&quot;claims&quot;][&quot;sub&quot;]
+</code></pre></div>
+<h3>8-4　IAMポリシー変数で「自分のデータだけ」を実現（DynamoDB）</h3>
+<p>Cognito IDプールで直接DynamoDBにアクセスさせる場合、<strong>パーティションキー（LeadingKeys）をユーザーIDに限定</strong>できます。</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;dynamodb:GetItem&quot;, &quot;dynamodb:PutItem&quot;, &quot;dynamodb:Query&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:dynamodb:ap-northeast-1:111122223333:table/UserNotes&quot;,
+  &quot;Condition&quot;: {
+    &quot;ForAllValues:StringEquals&quot;: {
+      &quot;dynamodb:LeadingKeys&quot;: [&quot;${cognito-identity.amazonaws.com:sub}&quot;]
+    }
+  }
+}
+</code></pre></div>
+<p>S3でも、ユーザーごとのプレフィックスに限定できます。</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;s3:GetObject&quot;, &quot;s3:PutObject&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:s3:::my-app-bucket/private/${cognito-identity.amazonaws.com:sub}/*&quot;
+}
+</code></pre></div>
+<h3>8-5　Amazon Verified Permissions（アプリ向けの認可サービス）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>概要</td>
+<td>アプリの認可ロジックをコードから**ポリシー（Cedar言語）**に切り出して管理するサービス</td>
+</tr>
+<tr>
+<td>利点</td>
+<td>認可ルールの一元管理、監査、変更時にアプリ再デプロイ不要</td>
+</tr>
+<tr>
+<td>連携</td>
+<td>Cognito／OIDC IdP、API Gatewayと連携可能</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>試験の主役は、Cognito・IAM・API Gatewayです。Verified Permissionsは「<strong>アプリの認可をポリシーとして外出しする選択肢</strong>」として名前と役割を押さえておけば十分です。</p>
+</blockquote>
+<h3>8-6　認可の選び方</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="10" role="img" aria-label="図解"></div></div>
+<h3>8-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>サーバー側で必ず認可チェック</strong>（フロントのボタン非表示は認可ではない）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ユーザーIDは<strong>検証済みトークン</strong>から取得（リクエストの値を信じない）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>既定は拒否（Deny by default）、許可を明示</td>
+</tr>
+<tr>
+<td>4</td>
+<td>IAMで可能な制御はIAMで、業務ルールだけアプリで実装し二重化</td>
+</tr>
+<tr>
+<td>5</td>
+<td>権限の変更は<strong>ログ</strong>に残す（CloudTrail、アプリログ）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>大きなロールの代わりに、属性・スコープで<strong>細かく</strong>制御</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「フロントエンドで非表示にすれば安全」→ <strong>誤り</strong>。</li>
+<li>「クライアントが送る<code>userId</code>で絞り込む」→ <strong>IDOR脆弱性</strong>。</li>
+<li>「各ユーザーが自分のDynamoDB行だけアクセス」→ <strong><code>dynamodb:LeadingKeys</code>＋ポリシー変数</strong>。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>IAMのABAC：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html</a></li>
+<li>DynamoDBのきめ細かなアクセス制御（IAM条件）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html">https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html</a></li>
+<li>IAMポリシー変数：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html</a></li>
+<li>Amazon Verified Permissions：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html">https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html</a></li>
+<li>Cognito IDプールのIAMロール：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html">https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-9">Step 9　マイクロサービス間の認証（Skill 2.1.8）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「マイクロサービスアーキテクチャにおけるサービス間（クロスサービス）認証を扱う」</strong></p>
+<h3>9-1　2種類の「誰」を区別する</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>エンドユーザーの身元</strong></td>
+<td>画面を操作している人</td>
+<td>Cognitoのアクセストークン</td>
+</tr>
+<tr>
+<td><strong>サービスの身元</strong></td>
+<td>呼び出しているサービス自体</td>
+<td>IAMロール、クライアントクレデンシャルのトークン</td>
+</tr>
+</tbody>
+</table></div>
+<p>サービス間通信では、<strong>サービス自身の認証</strong>と、必要に応じて<strong>エンドユーザー情報の伝搬</strong>を分けて考えます。</p>
+<h3>9-2　代表的なパターン</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="11" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>パターン</th>
+<th>仕組み</th>
+<th>向いている場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IAM認証（SigV4）</strong></td>
+<td>呼び出し側のロールが署名し、呼び出される側がIAMで許可</td>
+<td>AWS内のサービス間（API Gateway、Lambda関数URL、AppSyncなど）</td>
+</tr>
+<tr>
+<td><strong>リソースベースポリシー</strong></td>
+<td>呼び出される側で「このロールを許可」と指定</td>
+<td>Lambda、SQS、SNS、S3、EventBridgeなど</td>
+</tr>
+<tr>
+<td><strong>OAuth 2.0 クライアントクレデンシャル</strong></td>
+<td>サービスがクライアントID・シークレットでトークンを取得</td>
+<td>IAMを使えない環境、外部システムとのM2M、スコープ制御</td>
+</tr>
+<tr>
+<td><strong>トークンの伝搬</strong></td>
+<td>ユーザーのJWTを下流サービスに引き継ぐ</td>
+<td>下流でもユーザー単位の認可が必要なとき</td>
+</tr>
+<tr>
+<td><strong>mTLS</strong></td>
+<td>クライアント証明書で相互認証</td>
+<td>強い相互認証が要件のとき（Step 13のPrivate CAと関連）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>9-3　サービスに権限を付ける：2つの方向</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方向</th>
+<th>内容</th>
+<th>設定場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>呼び出す側に権限</strong></td>
+<td>「サービスAはサービスBを呼べる」</td>
+<td>Aのロール（アイデンティティベース）</td>
+</tr>
+<tr>
+<td><strong>呼び出される側に許可</strong></td>
+<td>「サービスAからの呼び出しを受け付ける」</td>
+<td>Bのリソースベースポリシー</td>
+</tr>
+</tbody>
+</table></div>
+<p>例：S3のイベントでLambdaを起動する場合、<strong>Lambdaのリソースベースポリシー</strong>で<code>s3.amazonaws.com</code>に<code>lambda:InvokeFunction</code>を許可し、混乱した代理問題の対策として<code>aws:SourceArn</code>と<code>aws:SourceAccount</code>の条件を付けます。</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Principal&quot;: { &quot;Service&quot;: &quot;s3.amazonaws.com&quot; },
+  &quot;Action&quot;: &quot;lambda:InvokeFunction&quot;,
+  &quot;Resource&quot;: &quot;arn:aws:lambda:ap-northeast-1:111122223333:function:ProcessUpload&quot;,
+  &quot;Condition&quot;: {
+    &quot;ArnLike&quot;: { &quot;aws:SourceArn&quot;: &quot;arn:aws:s3:::my-app-bucket&quot; },
+    &quot;StringEquals&quot;: { &quot;aws:SourceAccount&quot;: &quot;111122223333&quot; }
+  }
+}
+</code></pre></div>
+<h3>9-4　Cognitoのクライアントクレデンシャルによる M2M</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="12" role="img" aria-label="図解"></div></div>
+<h3>9-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>サービスごとに専用ロール</strong>を作り、権限を最小化（共有ロールを避ける）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>AWS内ではまず**IAM認証（SigV4）**を検討（秘密情報の管理が不要）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>共有のシークレットや固定のAPIキーを避ける。使うならSecrets Managerで管理・ローテーション</td>
+</tr>
+<tr>
+<td>4</td>
+<td>呼び出される側で<strong>必ず認可</strong>する（ネットワークが内部でも信用しない）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>リソースポリシーに<code>aws:SourceArn</code>／<code>aws:SourceAccount</code>を付ける</td>
+</tr>
+<tr>
+<td>6</td>
+<td>相関ID（トレースID）を伝搬し、<strong>X-RayやCloudTrail</strong>で呼び出し経路を追跡可能に</td>
+</tr>
+<tr>
+<td>7</td>
+<td>外部のM2Mには<strong>短寿命のスコープ付きトークン</strong>を使う</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「サービス間は同じVPCだから認証不要」→ <strong>誤り</strong>（ゼロトラストの考え方）。</li>
+<li>「全サービスで1つの強力なロールを共有」→ <strong>誤り</strong>（最小権限に反する）。</li>
+<li>「Lambda間呼び出しにアクセスキーを埋め込む」→ <strong>誤り</strong>（実行ロールを使う）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>Lambdaのリソースベースポリシー：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html">https://docs.aws.amazon.com/lambda/latest/dg/access-control-resource-based.html</a></li>
+<li>Cognito：リソースサーバーとM2M認可：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html">https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-define-resource-servers.html</a></li>
+<li>API GatewayのIAM認証：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html</a></li>
+<li>AWS X-Ray：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html">https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html</a></li>
+<li>混乱した代理問題：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html</a></li>
+<li>Well-Architected（セキュリティの柱）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html">https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section part-sec"><h1 class="part">Task 2：AWSサービスによる暗号化の実装</h1>
+</section>
+<section class="section"><h2 id="step-10">Step 10　保管時・転送中の暗号化（Skill 2.2.1）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「保管時（at rest）の暗号化と転送中（in transit）の暗号化を定義する」</strong></p>
+<h3>10-1　2つの暗号化</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>保管時の暗号化（Encryption at rest）</th>
+<th>転送中の暗号化（Encryption in transit）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>守る対象</td>
+<td>ディスク・DB・バックアップに<strong>保存された</strong>データ</td>
+<td>ネットワークを<strong>流れている</strong>データ</td>
+</tr>
+<tr>
+<td>主な脅威</td>
+<td>ストレージの不正取得、権限の誤設定</td>
+<td>盗聴、中間者攻撃</td>
+</tr>
+<tr>
+<td>代表技術</td>
+<td>AES-256、AWS KMS</td>
+<td>TLS（HTTPS）</td>
+</tr>
+<tr>
+<td>AWSでの例</td>
+<td>S3 SSE、EBS・RDS暗号化、DynamoDB暗号化</td>
+<td>HTTPSエンドポイント、ALBのHTTPSリスナー、DBへのTLS接続</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="13" role="img" aria-label="図解"></div></div>
+<h3>10-2　サービス別の保管時暗号化（開発者が知るべき要点）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>保管時の暗号化</th>
+<th>覚えるポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3</strong></td>
+<td>新しいオブジェクトは既定でSSE-S3で暗号化。SSE-KMS、DSSE-KMS、SSE-Cも選択可</td>
+<td>バケットの既定暗号化を明示的に設定し、必要ならKMSキーを指定</td>
+</tr>
+<tr>
+<td><strong>DynamoDB</strong></td>
+<td><strong>すべてのテーブルが常に保管時に暗号化</strong>（所有キー／AWSマネージドキー／カスタマーマネージドキーから選択）</td>
+<td>暗号化を「オフ」にはできない</td>
+</tr>
+<tr>
+<td><strong>EBS</strong></td>
+<td>暗号化ボリューム（KMS）。アカウントの既定暗号化を有効化可</td>
+<td>既存の未暗号化ボリュームは、スナップショットのコピー時に暗号化して作り直す</td>
+</tr>
+<tr>
+<td><strong>RDS / Aurora</strong></td>
+<td><strong>作成時</strong>に暗号化を指定（KMS）</td>
+<td>既存の未暗号化DBは、スナップショットをコピーして暗号化し復元</td>
+</tr>
+<tr>
+<td><strong>SQS / SNS</strong></td>
+<td>サーバーサイド暗号化（SSE）をKMSで有効化</td>
+<td>暗号化キューに発行するサービスにはKMS権限が必要</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager / Parameter Store(SecureString)</strong></td>
+<td>KMSで暗号化</td>
+<td>Step 19</td>
+</tr>
+<tr>
+<td><strong>Lambda環境変数</strong></td>
+<td>既定で暗号化（KMSキーの変更も可）</td>
+<td>Step 18</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>最新の既定値や選択肢は変更されるため、各サービスの公式ドキュメントで確認してください。</p>
+</blockquote>
+<h3>10-3　転送中の暗号化を「強制」する方法</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>場面</th>
+<th>強制方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3</td>
+<td>バケットポリシーで<code>aws:SecureTransport</code>が<code>false</code>のリクエストをDeny</td>
+</tr>
+<tr>
+<td>CloudFront</td>
+<td>ビューワープロトコルポリシーを「Redirect HTTP to HTTPS」または「HTTPS only」</td>
+</tr>
+<tr>
+<td>ALB</td>
+<td>HTTPリスナー（80）からHTTPS（443）へのリダイレクト</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>HTTPSのみ（HTTPは利用不可）</td>
+</tr>
+<tr>
+<td>RDS</td>
+<td>パラメーターグループでTLS接続を必須化（例：PostgreSQLの<code>rds.force_ssl</code>）</td>
+</tr>
+<tr>
+<td>SDK／CLI</td>
+<td>既定でHTTPSを使用。エンドポイントを<code>http://</code>に変更しない</td>
+</tr>
+</tbody>
+</table></div>
+<p>S3でHTTPを拒否するバケットポリシー：</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyInsecureTransport&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:*&quot;,
+      &quot;Resource&quot;: [
+        &quot;arn:aws:s3:::my-app-bucket&quot;,
+        &quot;arn:aws:s3:::my-app-bucket/*&quot;
+      ],
+      &quot;Condition&quot;: { &quot;Bool&quot;: { &quot;aws:SecureTransport&quot;: &quot;false&quot; } }
+    }
+  ]
+}
+</code></pre></div>
+<h3>10-4　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>保管時・転送中の両方</strong>を暗号化する（どちらか片方では不十分）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>暗号化は「あとから付ける」より<strong>作成時から</strong>有効化（RDS・EBSの特性）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>機密性の高いデータは<strong>カスタマーマネージドKMSキー</strong>で、鍵の使用をCloudTrailで監査</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HTTPを<strong>拒否</strong>するポリシー・設定で強制する（クライアント任せにしない）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TLSの証明書は<strong>ACM</strong>で自動更新（Step 13）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「DynamoDBの暗号化を有効にする設定を忘れた」→ 常に暗号化されているため<strong>該当しない</strong>。</li>
+<li>「RDSの既存DBに暗号化をそのままオン」→ できない。<strong>スナップショットのコピー時に暗号化→復元</strong>。</li>
+<li>「S3バケットにHTTPSを強制」→ **<code>aws:SecureTransport</code>**のDeny。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>S3のデータ保護と暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html</a></li>
+<li>DynamoDBの保管時の暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html">https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html</a></li>
+<li>RDSの暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html">https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html</a></li>
+<li>EBSの暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html">https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html</a></li>
+<li>SQSの保管時の暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html">https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html</a></li>
+<li>CloudFrontでHTTPSを要求：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https.html">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-11">Step 11　AWS KMSと鍵の使い方（Skill 2.2.4）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「暗号化鍵を使ってデータを暗号化・復号する」</strong>：KMSの鍵の種類、エンベロープ暗号化、鍵ポリシー、主なAPIを理解すること。</p>
+<h3>11-1　AWS KMSとは</h3>
+<p><strong>鍵の作成・保管・利用管理を行うマネージドサービス</strong>です。KMSキー（旧称CMK）の<strong>平文の鍵素材は、KMSの外に出ません</strong>。アプリはKMSにAPIで「暗号化して」「復号して」と依頼します。</p>
+<h3>11-2　KMSキーの種類</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>作成・管理</th>
+<th>ローテーション</th>
+<th>鍵ポリシーの編集</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS所有キー</strong></td>
+<td>AWSが内部で管理</td>
+<td>AWS側で管理</td>
+<td>不可</td>
+<td>アカウントのKMSには表示されない。無料</td>
+</tr>
+<tr>
+<td><strong>AWSマネージドキー</strong></td>
+<td>サービスが作成（例：<code>aws/s3</code>）</td>
+<td><strong>自動で毎年</strong></td>
+<td>不可</td>
+<td>有効化・無効化の操作は不可</td>
+</tr>
+<tr>
+<td><strong>カスタマーマネージドキー</strong></td>
+<td><strong>利用者が作成・管理</strong></td>
+<td>任意で有効化</td>
+<td><strong>可</strong></td>
+<td>細かな制御、クロスアカウント共有、監査に向く</td>
+</tr>
+</tbody>
+</table></div>
+<h3>11-3　KMSキーのタイプ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>タイプ</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対称（AES-256-GCM）</td>
+<td>暗号化／復号。AWSサービス統合で一般的</td>
+</tr>
+<tr>
+<td>非対称（RSA／ECC）</td>
+<td>署名・検証、または公開鍵暗号</td>
+</tr>
+<tr>
+<td>HMAC</td>
+<td>メッセージ認証コード（MAC）の生成・検証</td>
+</tr>
+</tbody>
+</table></div>
+<h3>11-4　エンベロープ暗号化（最重要）</h3>
+<p>KMSの<code>Encrypt</code>APIで直接暗号化できるのは<strong>最大4KB（4,096バイト）<strong>です。大きなデータは</strong>データキーでデータを暗号化し、そのデータキーをKMSキーで暗号化</strong>する方式（エンベロープ暗号化）で扱います。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="14" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>手順</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暗号化</td>
+<td><code>GenerateDataKey</code> →平文データキーでデータを暗号化→平文キーを破棄→暗号文と暗号化済みデータキーを一緒に保存</td>
+</tr>
+<tr>
+<td>復号</td>
+<td>暗号化済みデータキーを<code>Decrypt</code>でKMSに復号させる→平文データキーでデータを復号</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>利点：大きなデータでも<strong>KMSへの通信は小さなキーだけ</strong>で済み、データはローカルで高速に処理できる。S3のSSE-KMSもこの方式で動いています。</p>
+</blockquote>
+<h3>11-5　主なKMS API</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Encrypt</code> / <code>Decrypt</code></td>
+<td>小さなデータ（最大4KB）の暗号化・復号</td>
+</tr>
+<tr>
+<td><code>GenerateDataKey</code></td>
+<td>データキー（平文＋暗号化済み）を生成</td>
+</tr>
+<tr>
+<td><code>GenerateDataKeyWithoutPlaintext</code></td>
+<td>暗号化済みデータキーのみ生成（後で使う用）</td>
+</tr>
+<tr>
+<td><code>ReEncrypt</code></td>
+<td>平文を出さずに別のキーで暗号化し直す</td>
+</tr>
+<tr>
+<td><code>CreateGrant</code></td>
+<td>一時的・限定的な権限を付与</td>
+</tr>
+<tr>
+<td><code>Sign</code> / <code>Verify</code></td>
+<td>非対称キーでの署名</td>
+</tr>
+</tbody>
+</table></div>
+<h3>11-6　暗号化コンテキスト（Encryption Context）</h3>
+<p>暗号化・復号の際に渡す<strong>追加の認証データ（AAD）<strong>で、秘密ではないキーと値のペアです。復号時に同じコンテキストが必要になり、<strong>改ざん・取り違えの検知</strong>と、CloudTrailでの</strong>監査</strong>に役立ちます。</p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+kms = boto3.client(&quot;kms&quot;)
+key_id = &quot;alias/my-app-key&quot;
+
+enc = kms.encrypt(
+    KeyId=key_id,
+    Plaintext=b&quot;my small secret&quot;,
+    EncryptionContext={&quot;app&quot;: &quot;orders&quot;, &quot;tenant&quot;: &quot;t-001&quot;},
+)
+blob = enc[&quot;CiphertextBlob&quot;]
+
+dec = kms.decrypt(
+    CiphertextBlob=blob,
+    EncryptionContext={&quot;app&quot;: &quot;orders&quot;, &quot;tenant&quot;: &quot;t-001&quot;},  # 一致しないと失敗
+)
+print(dec[&quot;Plaintext&quot;])
+</code></pre></div>
+<h3>11-7　鍵ポリシーとIAMポリシー（KMS独自のルール）</h3>
+<ul>
+<li><strong>KMSキーには必ず鍵ポリシーがあります</strong>。他のサービスと違い、鍵ポリシーが許可の起点です。</li>
+<li>IAMポリシーでKMSを許可するには、<strong>鍵ポリシーがアカウントのIAMによる制御を許可していること</strong>（既定の鍵ポリシーはアカウントのrootに許可を委任している）が必要です。</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>鍵ポリシー</td>
+<td>キーのリソースベースポリシー。管理者と利用者を分けて定義</td>
+</tr>
+<tr>
+<td>IAMポリシー</td>
+<td>鍵ポリシーが許す範囲でユーザー／ロールに付与</td>
+</tr>
+<tr>
+<td>グラント</td>
+<td>一時的・プログラムによる委任（AWSサービスが内部でよく使う）</td>
+</tr>
+<tr>
+<td>エイリアス</td>
+<td><code>alias/my-app-key</code>のような分かりやすい名前</td>
+</tr>
+</tbody>
+</table></div>
+<p>鍵ポリシーの考え方（管理者と利用者を分離）：</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Sid&quot;: &quot;AllowUseOfTheKey&quot;,
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Principal&quot;: { &quot;AWS&quot;: &quot;arn:aws:iam::111122223333:role/OrdersAppRole&quot; },
+  &quot;Action&quot;: [&quot;kms:Encrypt&quot;, &quot;kms:Decrypt&quot;, &quot;kms:GenerateDataKey&quot;],
+  &quot;Resource&quot;: &quot;*&quot;,
+  &quot;Condition&quot;: {
+    &quot;StringEquals&quot;: { &quot;kms:ViaService&quot;: &quot;s3.ap-northeast-1.amazonaws.com&quot; }
+  }
+}
+</code></pre></div>
+<h3>11-8　アプリが使うロールに必要なKMS権限（よくある落とし穴）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>必要な権限</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSE-KMSのS3オブジェクトを読む</td>
+<td><code>s3:GetObject</code> に加え <strong><code>kms:Decrypt</code></strong></td>
+</tr>
+<tr>
+<td>SSE-KMSのS3へ書き込む</td>
+<td><code>s3:PutObject</code> に加え <strong><code>kms:GenerateDataKey</code></strong>（必要に応じて<code>kms:Encrypt</code>）</td>
+</tr>
+<tr>
+<td>暗号化SQSに送信</td>
+<td><code>kms:GenerateDataKey</code> と <code>kms:Decrypt</code></td>
+</tr>
+<tr>
+<td>「Access Denied」でS3権限は正しい</td>
+<td>**KMS側の権限（鍵ポリシー／IAM）**を疑う</td>
+</tr>
+</tbody>
+</table></div>
+<h3>11-9　鍵の削除</h3>
+<ul>
+<li>KMSキーの削除は<strong>待機期間（7〜30日）<strong>を経て実行され、その間は</strong>キャンセル可能</strong>です。</li>
+<li>削除すると、そのキーで暗号化されたデータは<strong>復号できなくなります</strong>。削除の前に<strong>無効化</strong>して影響を確認するのが定石です。</li>
+</ul>
+<h3>11-10　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>4KB超のデータは<strong>エンベロープ暗号化</strong>（<code>GenerateDataKey</code>）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>鍵ポリシーで<strong>管理者と利用者を分離</strong>し、最小権限にする</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>kms:ViaService</code>で特定サービス経由のみに限定</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>暗号化コンテキスト</strong>を使って用途を縛り、監査に活かす</td>
+</tr>
+<tr>
+<td>5</td>
+<td>業務／データ分類ごとにキーを分け、<strong>エイリアス</strong>で管理</td>
+</tr>
+<tr>
+<td>6</td>
+<td>自動ローテーションを有効化（Step 16）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>CloudTrailでKMS API呼び出しを監査</td>
+</tr>
+<tr>
+<td>8</td>
+<td>平文のデータキーは<strong>メモリにだけ置き、使用後に破棄</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「KMSの<code>Encrypt</code>で数MBのファイルを直接暗号化」→ <strong>不可（4KB上限）</strong>。エンベロープ暗号化。</li>
+<li>「KMSキーそのものをダウンロードして使う」→ <strong>不可</strong>（鍵素材は取り出せない）。</li>
+<li>「S3の読み取り権限があるのに復号できない」→ <strong><code>kms:Decrypt</code>が不足</strong>。</li>
+<li>「鍵を即時削除したい」→ <strong>待機期間7〜30日</strong>が必須。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>AWS KMSとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">https://docs.aws.amazon.com/kms/latest/developerguide/overview.html</a></li>
+<li>KMSの概念（エンベロープ暗号化など）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html">https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html</a></li>
+<li>鍵ポリシー：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html">https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html</a></li>
+<li>暗号化コンテキスト：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/encrypt_context.html">https://docs.aws.amazon.com/kms/latest/developerguide/encrypt_context.html</a></li>
+<li>KMS APIリファレンス：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/APIReference/Welcome.html">https://docs.aws.amazon.com/kms/latest/APIReference/Welcome.html</a></li>
+<li>KMSキーの削除：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html">https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-12">Step 12　クライアントサイド暗号化とサーバーサイド暗号化（Skill 2.2.3）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「クライアントサイド暗号化とサーバーサイド暗号化の違いを説明する」</strong></p>
+<h3>12-1　違いの核心：<strong>誰が、どこで、暗号化するか</strong></h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="15" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th><strong>サーバーサイド暗号化（SSE）</strong></th>
+<th><strong>クライアントサイド暗号化（CSE）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暗号化の場所</td>
+<td>AWSサービス側（保存時）</td>
+<td><strong>アプリ側</strong>（送信前）</td>
+</tr>
+<tr>
+<td>平文がAWSに届くか</td>
+<td>届く（TLSで保護、サービス内で暗号化）</td>
+<td><strong>届かない</strong>（常に暗号文）</td>
+</tr>
+<tr>
+<td>鍵の管理</td>
+<td>AWS（KMSなど）が行う</td>
+<td>アプリが鍵を取得・管理</td>
+</tr>
+<tr>
+<td>実装の手間</td>
+<td>少ない（設定のみ）</td>
+<td>多い（SDK利用が一般的）</td>
+</tr>
+<tr>
+<td>向く場面</td>
+<td>通常の要件</td>
+<td>AWS側にも平文を見せたくない、<strong>特定フィールドだけ</strong>暗号化したい、規制要件</td>
+</tr>
+<tr>
+<td>検索・クエリ</td>
+<td>サービスの機能がそのまま使える</td>
+<td>暗号化した項目は検索・条件指定しにくい</td>
+</tr>
+</tbody>
+</table></div>
+<h3>12-2　S3のサーバーサイド暗号化方式</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>鍵の管理者</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SSE-S3</strong></td>
+<td>S3（AWS管理）</td>
+<td>追加設定がほぼ不要。新規オブジェクトの既定</td>
+</tr>
+<tr>
+<td><strong>SSE-KMS</strong></td>
+<td>KMSキー（AWSマネージド or カスタマーマネージド）</td>
+<td><strong>鍵の使用をCloudTrailで監査</strong>、鍵ポリシーで制御可能</td>
+</tr>
+<tr>
+<td><strong>DSSE-KMS</strong></td>
+<td>KMS</td>
+<td>二層の暗号化（規制要件向け）</td>
+</tr>
+<tr>
+<td><strong>SSE-C</strong></td>
+<td><strong>利用者が鍵を提供</strong>（リクエストごと）</td>
+<td>AWSは鍵を保存しない。鍵管理は利用者の責任。HTTPS必須</td>
+</tr>
+</tbody>
+</table></div>
+<p>SSE-KMSでの<strong>S3バケットキー</strong>を使うと、KMSへのリクエストが減り、コストとスロットリングを抑えられます。</p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+s3 = boto3.client(&quot;s3&quot;)
+
+# SSE-KMSでアップロード
+s3.put_object(
+    Bucket=&quot;my-app-bucket&quot;,
+    Key=&quot;reports/secret.txt&quot;,
+    Body=b&quot;confidential&quot;,
+    ServerSideEncryption=&quot;aws:kms&quot;,
+    SSEKMSKeyId=&quot;alias/my-app-key&quot;,
+)
+</code></pre></div>
+<h3>12-3　クライアントサイド暗号化に使うツール</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS Encryption SDK</strong></td>
+<td>汎用のクライアントサイド暗号化（エンベロープ暗号化を自動化）</td>
+</tr>
+<tr>
+<td><strong>Amazon S3 Encryption Client</strong></td>
+<td>S3へ保存する前にクライアント側で暗号化</td>
+</tr>
+<tr>
+<td><strong>AWS Database Encryption SDK</strong></td>
+<td>DynamoDB等の項目単位の暗号化</td>
+</tr>
+</tbody>
+</table></div>
+<h3>12-4　選び方フロー</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="16" role="img" aria-label="図解"></div></div>
+<h3>12-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>通常はSSE-S3またはSSE-KMS。<strong>監査・鍵制御が必要ならSSE-KMS</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>特に機密の項目（カード番号など）は<strong>項目単位のクライアントサイド暗号化</strong>を検討</td>
+</tr>
+<tr>
+<td>3</td>
+<td>クライアントサイド暗号化では<strong>鍵（KMS）への権限管理</strong>をアプリのロールに限定</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SSE-Cは鍵の紛失＝データ喪失。<strong>やむを得ない場合のみ</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>暗号化した項目の検索要件（ソートキー、フィルターなど）を事前に設計</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「AWSにも平文を渡したくない」→ <strong>クライアントサイド暗号化</strong>。</li>
+<li>「KMSキー使用の監査ログが欲しい」→ <strong>SSE-KMS</strong>（CloudTrailに記録される）。</li>
+<li>「SSE-Cの鍵はAWSが保存する」→ <strong>誤り</strong>（AWSは保存しない）。</li>
+<li>「暗号化したDynamoDB項目を条件検索」→ クライアント側で暗号化した項目は<strong>そのままでは検索不可</strong>。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>S3のサーバーサイド暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html</a></li>
+<li>S3のクライアントサイド暗号化：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingClientSideEncryption.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingClientSideEncryption.html</a></li>
+<li>AWS Encryption SDK：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/introduction.html">https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/introduction.html</a></li>
+<li>AWS Database Encryption SDK：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/what-is-database-encryption-sdk.html">https://docs.aws.amazon.com/database-encryption-sdk/latest/devguide/what-is-database-encryption-sdk.html</a></li>
+<li>S3バケットキー：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-13">Step 13　証明書管理：ACMとAWS Private CA（Skill 2.2.2）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「証明書の管理を説明する（例：AWS Private CA）」</strong></p>
+<h3>13-1　証明書とは</h3>
+<p>TLS証明書は、<strong>サーバーが本物であること</strong>と<strong>公開鍵</strong>を、認証局（CA）の署名で保証するデジタル文書です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CA（認証局）</td>
+<td>証明書に署名する機関</td>
+</tr>
+<tr>
+<td>パブリック証明書</td>
+<td>ブラウザ等が信頼するCAが発行。インターネット公開サービス向け</td>
+</tr>
+<tr>
+<td>プライベート証明書</td>
+<td>組織内のプライベートCAが発行。<strong>社内の通信・mTLS・IoT</strong>向け</td>
+</tr>
+<tr>
+<td>CSR</td>
+<td>証明書署名要求（公開鍵とドメイン情報）</td>
+</tr>
+<tr>
+<td>証明書チェーン</td>
+<td>ルートCA→中間CA→サーバー証明書</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13-2　AWS Certificate Manager（ACM）と AWS Private CA</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th><strong>ACM（パブリック証明書）</strong></th>
+<th><strong>AWS Private CA</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目的</td>
+<td>インターネット向けTLS証明書</td>
+<td>**組織内（プライベート）**の証明書</td>
+</tr>
+<tr>
+<td>発行元</td>
+<td>ACM（Amazonのパブリック信頼CA）</td>
+<td>自分で作る<strong>プライベートCA階層</strong></td>
+</tr>
+<tr>
+<td>ドメイン検証</td>
+<td><strong>DNS検証</strong>（推奨）／メール検証</td>
+<td>不要（自組織で発行ポリシーを定義）</td>
+</tr>
+<tr>
+<td>更新</td>
+<td>条件を満たせば<strong>自動更新</strong></td>
+<td>ACM経由で発行した証明書は自動更新に対応</td>
+</tr>
+<tr>
+<td>主な利用先</td>
+<td>ALB／NLB、CloudFront、API Gateway</td>
+<td>社内サービス、mTLS、IoT、デバイス、コード署名など</td>
+</tr>
+<tr>
+<td>失効</td>
+<td>-</td>
+<td>CRL／OCSPで失効管理</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13-3　ACMが使えるサービスと注意点</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elastic Load Balancing</td>
+<td>リージョン内のACM証明書を関連付け</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td>証明書は<strong>米国東部（バージニア北部）<code>us-east-1</code>のACM</strong>に作成する必要がある</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>カスタムドメインにACM証明書を使用（エッジ最適化は<code>us-east-1</code>）</td>
+</tr>
+<tr>
+<td>EC2上のアプリ</td>
+<td>ACMのパブリック証明書は、既定では<strong>秘密鍵を取り出して直接インストールできない</strong>。<strong>ALB等に終端させる</strong>のが基本</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13-4　ACMでの発行・更新の流れ</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="17" role="img" aria-label="図解"></div></div>
+<blockquote>
+<p><strong>DNS検証のCNAMEを削除すると自動更新に失敗</strong>します。残しておくのが鉄則です。</p>
+</blockquote>
+<h3>13-5　AWS Private CAの使いどころ</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="18" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>社内の内部通信</td>
+<td>マイクロサービス間のTLS／<strong>mTLS（相互TLS）</strong></td>
+</tr>
+<tr>
+<td>内部ドメイン</td>
+<td><code>service.internal.example.com</code>のようなプライベート名</td>
+</tr>
+<tr>
+<td>デバイス認証</td>
+<td>IoT・端末のクライアント証明書</td>
+</tr>
+<tr>
+<td>ACM連携</td>
+<td>ACMのプライベート証明書として発行・自動更新</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13-6　証明書管理の運用ポイント</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>有効期限</td>
+<td>失効は障害になる。自動更新を前提にする</td>
+</tr>
+<tr>
+<td>失効</td>
+<td>秘密鍵が漏洩したら失効（CRL／OCSP）</td>
+</tr>
+<tr>
+<td>インポート証明書</td>
+<td>ACMにインポートした証明書は<strong>自動更新されない</strong>（自分で更新が必要）</td>
+</tr>
+<tr>
+<td>監視</td>
+<td>期限切れ間近をCloudWatch／EventBridgeなどで通知</td>
+</tr>
+<tr>
+<td>秘密鍵</td>
+<td>絶対にコードやGitに含めない</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>パブリックな通信は<strong>ACM</strong>で証明書を取得し、自動更新に任せる</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>DNS検証</strong>を使い、検証用レコードを維持する</td>
+</tr>
+<tr>
+<td>3</td>
+<td>社内通信は<strong>AWS Private CA</strong>で内部PKIを構築（自己署名の乱立を避ける）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>証明書の期限を監視・アラートする</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CloudFrontでは**<code>us-east-1</code>**に証明書を用意</td>
+</tr>
+<tr>
+<td>6</td>
+<td>本番で<strong>自己署名証明書を使わない</strong>（Step 14は開発用のみ）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「CloudFront用のACM証明書を東京リージョンに作成」→ <strong>誤り</strong>（<code>us-east-1</code>）。</li>
+<li>「ACMにインポートした証明書も自動更新される」→ <strong>誤り</strong>。</li>
+<li>「社内サービス間の相互認証（mTLS）の証明書」→ <strong>AWS Private CA</strong>。</li>
+<li>「ACMの証明書をEC2に直接インストール」→ 通常は<strong>不可</strong>。ALBなどで終端。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>AWS Certificate Managerとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html">https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html</a></li>
+<li>ACMのDNS検証：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/acm/latest/userguide/dns-validation.html">https://docs.aws.amazon.com/acm/latest/userguide/dns-validation.html</a></li>
+<li>ACM証明書の更新：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html">https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html</a></li>
+<li>AWS Private CAとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html">https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html</a></li>
+<li>CloudFrontでACM証明書を使う：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-14">Step 14　開発用の証明書とSSH鍵の生成（Skill 2.2.5）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「開発目的で証明書とSSH鍵を生成する」</strong>：コマンドの基本と、<strong>開発専用であること</strong>の理解。</p>
+<h3>14-1　SSH鍵ペアの基本</h3>
+<p>SSH鍵は<strong>公開鍵</strong>（サーバーに置く）と<strong>秘密鍵</strong>（自分だけが持つ）のペアです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公開鍵</td>
+<td>EC2に登録される。漏れても問題なし</td>
+</tr>
+<tr>
+<td>秘密鍵（<code>.pem</code>／秘密鍵ファイル）</td>
+<td><strong>他人に渡さない・Gitに入れない</strong>。権限<code>400</code></td>
+</tr>
+<tr>
+<td>EC2キーペア</td>
+<td>公開鍵をインスタンスに埋め込み、秘密鍵でSSH接続</td>
+</tr>
+<tr>
+<td>紛失</td>
+<td>秘密鍵は後から再取得<strong>できない</strong>（新しい鍵ペアで対応）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>14-2　EC2のキーペアを作る2つの方法</h3>
+<div class="code-block"><pre><code class="language-bash"># 方法1：AWSに作らせる（秘密鍵は作成時に一度だけ取得可能）
+aws ec2 create-key-pair \
+  --key-name dev-key \
+  --key-type ed25519 \
+  --query &#x27;KeyMaterial&#x27; --output text &gt; dev-key.pem
+chmod 400 dev-key.pem
+
+# 方法2：自分で作って公開鍵だけインポート（秘密鍵は手元から出さない）
+ssh-keygen -t ed25519 -f ~/.ssh/dev-key -C &quot;dev@example.com&quot;
+aws ec2 import-key-pair \
+  --key-name dev-key \
+  --public-key-material fileb://~/.ssh/dev-key.pub
+
+# 接続
+ssh -i ~/.ssh/dev-key ec2-user@&lt;パブリックIPまたはDNS&gt;
+</code></pre></div>
+<blockquote>
+<p>方法2は、<strong>秘密鍵がAWSを通らない</strong>ため、より安全です。</p>
+</blockquote>
+<h3>14-3　開発用の自己署名証明書（OpenSSL）</h3>
+<div class="code-block"><pre><code class="language-bash"># 秘密鍵と自己署名証明書を同時に作る（開発・テスト専用）
+openssl req -x509 -newkey rsa:2048 -nodes \
+  -keyout dev.key -out dev.crt -days 30 \
+  -subj &quot;/CN=localhost&quot; \
+  -addext &quot;subjectAltName=DNS:localhost,IP:127.0.0.1&quot;
+</code></pre></div>
+<p>CSRを作ってCAに署名してもらう流れ：</p>
+<div class="code-block"><pre><code class="language-bash">openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr -subj &quot;/CN=dev.internal.example.com&quot;
+# server.csr をCA（例：AWS Private CA）に提出して署名してもらう
+</code></pre></div>
+<h3>14-4　用途の整理</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>推奨</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ローカル開発のHTTPS</td>
+<td>自己署名証明書や開発用ツール</td>
+</tr>
+<tr>
+<td>開発環境のSSH</td>
+<td>ed25519／RSAのキーペア</td>
+</tr>
+<tr>
+<td>ステージング・本番の公開TLS</td>
+<td><strong>ACM</strong>（Step 13）</td>
+</tr>
+<tr>
+<td>社内通信の本番</td>
+<td><strong>AWS Private CA</strong></td>
+</tr>
+<tr>
+<td>インスタンスへの安全な接続</td>
+<td><strong>Systems Manager Session Manager</strong>（SSHポート開放・鍵管理が不要）、EC2 Instance Connect</td>
+</tr>
+</tbody>
+</table></div>
+<h3>14-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>自己署名証明書は<strong>開発・テスト専用</strong>。本番に使わない</td>
+</tr>
+<tr>
+<td>2</td>
+<td>秘密鍵は<code>chmod 400</code>、<strong>Gitに含めない</strong>（<code>.gitignore</code>）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>鍵の種類は<strong>ed25519</strong>または十分な長さのRSA（2048ビット以上）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>開発用証明書の<strong>有効期間は短く</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>本番サーバーでは<strong>SSH鍵に頼らずSession Manager</strong>の利用を検討</td>
+</tr>
+<tr>
+<td>6</td>
+<td>セキュリティグループで<strong>SSH（22）を全世界に開放しない</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「秘密鍵をなくしたので再ダウンロード」→ <strong>できない</strong>。新規キーペアで対応。</li>
+<li>「本番の公開サイトに自己署名証明書」→ <strong>不適切</strong>（ブラウザが警告）。</li>
+<li>「SSHの公開鍵を厳重に隠す」→ 隠すべきは<strong>秘密鍵</strong>。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>EC2キーペア：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html</a></li>
+<li>Systems Manager Session Manager：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html</a></li>
+<li>AWS Private CAで証明書を発行：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/privateca/latest/userguide/PcaIssueCert.html">https://docs.aws.amazon.com/privateca/latest/userguide/PcaIssueCert.html</a></li>
+<li>OpenSSL <code>req</code> コマンド：<a target="_blank" rel="noopener" href="https://docs.openssl.org/master/man1/openssl-req/">https://docs.openssl.org/master/man1/openssl-req/</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-15">Step 15　アカウントをまたぐ暗号化（Skill 2.2.6）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「アカウント境界をまたいで暗号化を使用する」</strong>：別アカウントのKMSキー・暗号化データを共有する条件。</p>
+<h3>15-1　基本ルール：<strong>両方の許可が必要</strong></h3>
+<p>別アカウントのKMSキーを使うには、次の<strong>2つがそろう</strong>必要があります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>場所</th>
+<th>必要な設定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>キー所有アカウントA</strong>：鍵ポリシー</td>
+<td>アカウントB（またはBのロール）に<code>kms:Decrypt</code>等を許可</td>
+</tr>
+<tr>
+<td><strong>利用アカウントB</strong>：IAMポリシー</td>
+<td>Bのロールに、AのキーARNへの<code>kms:Decrypt</code>等を許可</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="19" role="img" aria-label="図解"></div></div>
+<h3>15-2　鍵ポリシー（アカウントA側）の例</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Sid&quot;: &quot;AllowAccountBUse&quot;,
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Principal&quot;: { &quot;AWS&quot;: &quot;arn:aws:iam::222233334444:role/PartnerReaderRole&quot; },
+  &quot;Action&quot;: [&quot;kms:Decrypt&quot;, &quot;kms:DescribeKey&quot;],
+  &quot;Resource&quot;: &quot;*&quot;
+}
+</code></pre></div>
+<h3>15-3　利用側（アカウントB）のIAMポリシー例</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;kms:Decrypt&quot;, &quot;kms:DescribeKey&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab&quot;
+}
+</code></pre></div>
+<h3>15-4　代表的なシナリオ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>シナリオ</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>別アカウントのSSE-KMS暗号化S3オブジェクトを読む</strong></td>
+<td>S3の権限（バケットポリシー）＋<strong>KMSキーの共有</strong>が必要</td>
+</tr>
+<tr>
+<td><strong>暗号化EBS／RDSスナップショットの共有</strong></td>
+<td><strong>カスタマーマネージドキー</strong>で暗号化し、キーも共有する</td>
+</tr>
+<tr>
+<td><strong>Secrets Managerのシークレットを別アカウントと共有</strong></td>
+<td><strong>リソースポリシー</strong>＋<strong>カスタマーマネージドキー</strong>（AWSマネージドキー<code>aws/secretsmanager</code>は共有不可）</td>
+</tr>
+<tr>
+<td><strong>ログ配信など</strong></td>
+<td>配信元サービスに鍵の使用を許可（<code>kms:ViaService</code>・<code>aws:SourceArn</code>で限定）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>15-5　重要な制約：AWSマネージドキーは共有できない</h3>
+<p><strong>AWSマネージドキー</strong>（<code>aws/s3</code>、<code>aws/ebs</code>など）は<strong>鍵ポリシーを編集できず、他アカウントに共有できません</strong>。アカウントをまたぐ暗号化が必要な場合は、<strong>カスタマーマネージドキーを使います</strong>。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="20" role="img" aria-label="図解"></div></div>
+<h3>15-6　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>共有が必要なデータは最初から<strong>カスタマーマネージドキー</strong>で暗号化</td>
+</tr>
+<tr>
+<td>2</td>
+<td>許可は<strong>アカウント全体ではなく特定ロール</strong>に絞る</td>
+</tr>
+<tr>
+<td>3</td>
+<td>必要な操作（<code>Decrypt</code>のみ等）に<strong>限定</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>kms:ViaService</code>／<code>kms:CallerAccount</code>／<code>aws:PrincipalOrgID</code>などの条件で制限</td>
+</tr>
+<tr>
+<td>5</td>
+<td>両アカウントの<strong>CloudTrail</strong>でKMS利用を監査</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「アカウントBのIAMポリシーだけ設定すれば他アカウントのキーを使える」→ <strong>誤り</strong>（鍵ポリシーも必要）。</li>
+<li>「<code>aws/s3</code>で暗号化したオブジェクトを他アカウントに共有」→ <strong>不可</strong>。</li>
+<li>「暗号化スナップショットを別アカウントへ共有」→ <strong>カスタマーマネージドキー</strong>が必須。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>別アカウントでのKMSキーの使用（鍵ポリシー）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html">https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html</a></li>
+<li>KMSキーへのアクセス許可の仕組み：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html">https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html</a></li>
+<li>Secrets Managerのクロスアカウントアクセス：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples_cross.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access_examples_cross.html</a></li>
+<li>EBSスナップショットの共有（暗号化）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/ebs/latest/userguide/share-encrypted-snapshot.html">https://docs.aws.amazon.com/ebs/latest/userguide/share-encrypted-snapshot.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-16">Step 16　キーローテーションの有効化と無効化（Skill 2.2.7）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「キーローテーションを有効化・無効化する」</strong>：対象となるキー、既定の期間、手動・オンデマンドの違い。</p>
+<h3>16-1　ローテーションとは</h3>
+<p>KMSキーの<strong>裏側の暗号化素材（キーマテリアル）を新しいものに切り替える</strong>ことです。<strong>キーID・ARN・エイリアスは変わりません</strong>。以前のキーマテリアルは保持されるため、<strong>過去に暗号化したデータも復号できます</strong>（アプリの変更・再暗号化は不要）。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="21" role="img" aria-label="図解"></div></div>
+<h3>16-2　ローテーションの種類</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>内容</th>
+<th>対象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自動ローテーション</strong></td>
+<td>設定した周期で自動</td>
+<td>対称暗号化KMSキー（鍵素材をKMSが生成した<code>AWS_KMS</code>起源）の<strong>カスタマーマネージドキー</strong></td>
+</tr>
+<tr>
+<td><strong>オンデマンドローテーション</strong></td>
+<td>任意のタイミングで即時実行（自動ローテーションの有無に関係なく可能）</td>
+<td>対称暗号化のカスタマーマネージドキー</td>
+</tr>
+<tr>
+<td><strong>手動ローテーション</strong></td>
+<td>新しいキーを作り、<strong>エイリアスを付け替える</strong></td>
+<td>自動・オンデマンドに非対応のキー（非対称、HMAC、カスタムキーストア等）</td>
+</tr>
+<tr>
+<td><strong>AWSマネージドキー</strong></td>
+<td><strong>AWSが毎年自動</strong>（利用者は有効・無効を切り替えられない）</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>AWS所有キー</strong></td>
+<td>サービス側が管理</td>
+<td>利用者は操作不可</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16-3　自動ローテーションの主な仕様</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既定の周期</td>
+<td><strong>365日</strong></td>
+</tr>
+<tr>
+<td>カスタム周期</td>
+<td>設定可能（90〜2,560日）</td>
+</tr>
+<tr>
+<td>無効化されたキー</td>
+<td>ローテーションされない</td>
+</tr>
+<tr>
+<td>削除待ちのキー</td>
+<td>ローテーションされない</td>
+</tr>
+<tr>
+<td>監視</td>
+<td>CloudTrail／CloudWatchで確認可能</td>
+</tr>
+<tr>
+<td>対象外（手動が必要）</td>
+<td>非対称キー、HMACキー、カスタムキーストアのキー。インポートした鍵素材は<strong>自動ローテーション対象外</strong>（対称キーのオンデマンドローテーションは対応）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16-4　有効化・無効化（CLI／API）</h3>
+<div class="code-block"><pre><code class="language-bash"># 自動ローテーションを有効化（既定は365日）
+aws kms enable-key-rotation --key-id alias/my-app-key
+
+# 周期を指定して有効化
+aws kms enable-key-rotation --key-id alias/my-app-key --rotation-period-in-days 180
+
+# 状態を確認
+aws kms get-key-rotation-status --key-id alias/my-app-key
+
+# 今すぐローテーション（オンデマンド）
+aws kms rotate-key-on-demand --key-id alias/my-app-key
+
+# 自動ローテーションを無効化
+aws kms disable-key-rotation --key-id alias/my-app-key
+</code></pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>API</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EnableKeyRotation</code></td>
+<td>自動ローテーションを有効化</td>
+</tr>
+<tr>
+<td><code>DisableKeyRotation</code></td>
+<td>自動ローテーションを無効化</td>
+</tr>
+<tr>
+<td><code>GetKeyRotationStatus</code></td>
+<td>状態を確認</td>
+</tr>
+<tr>
+<td><code>RotateKeyOnDemand</code></td>
+<td>即時ローテーション</td>
+</tr>
+<tr>
+<td><code>ListKeyRotations</code></td>
+<td>ローテーション履歴を取得</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16-5　手動ローテーション（エイリアスの付け替え）</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="22" role="img" aria-label="図解"></div></div>
+<ul>
+<li>アプリが<strong>エイリアス</strong>を参照していれば、コード変更なしで切り替えられます。</li>
+<li>古いキーは、古いデータの復号が必要なうちは<strong>削除しません</strong>。</li>
+</ul>
+<h3>16-6　他のローテーションとの違い</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>対象</th>
+<th>ローテーション方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KMSのキーマテリアル</td>
+<td>本Stepのとおり（自動・オンデマンド・手動）</td>
+</tr>
+<tr>
+<td><strong>Secrets Managerのシークレット</strong></td>
+<td>Lambdaによる<strong>自動ローテーション</strong>（Step 19）</td>
+</tr>
+<tr>
+<td>IAMのアクセスキー（長期）</td>
+<td>手動または運用で定期的に更新（使わないのが理想）</td>
+</tr>
+<tr>
+<td>ACM証明書</td>
+<td>ACMが自動更新（Step 13）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>16-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>カスタマーマネージドキー（対称）は<strong>自動ローテーションを有効</strong>にする</td>
+</tr>
+<tr>
+<td>2</td>
+<td>組織の規程があれば<strong>カスタム周期</strong>を設定</td>
+</tr>
+<tr>
+<td>3</td>
+<td>アプリは<strong>キーIDではなくエイリアス</strong>を参照</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ローテーションは<strong>暗号文の再暗号化を不要にする</strong>ため、運用負荷が低い</td>
+</tr>
+<tr>
+<td>5</td>
+<td>コンプライアンスはAWS Configのルール（キーローテーション有効の確認）で継続監視</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「ローテーションするとキーARNが変わる」→ <strong>誤り</strong>（変わらない）。</li>
+<li>「ローテーション後、古いデータが復号できなくなる」→ <strong>誤り</strong>（古い素材が保持される）。</li>
+<li>「AWSマネージドキーのローテーションを無効にしたい」→ <strong>不可</strong>（毎年自動）。</li>
+<li>「非対称キーの自動ローテーション」→ <strong>不可</strong>（手動で新キーに切り替え）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>KMSキーのローテーション：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html</a></li>
+<li>RotateKeyOnDemand API：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/APIReference/API_RotateKeyOnDemand.html">https://docs.aws.amazon.com/kms/latest/APIReference/API_RotateKeyOnDemand.html</a></li>
+<li>EnableKeyRotation API：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/APIReference/API_EnableKeyRotation.html">https://docs.aws.amazon.com/kms/latest/APIReference/API_EnableKeyRotation.html</a></li>
+<li>インポートキーのオンデマンドローテーション（AWSセキュリティブログ）：<a target="_blank" rel="noopener" href="https://aws.amazon.com/blogs/security/how-to-use-on-demand-rotation-for-aws-kms-imported-keys/">https://aws.amazon.com/blogs/security/how-to-use-on-demand-rotation-for-aws-kms-imported-keys/</a></li>
+</ul>
+<hr />
+</section>
+<section class="section part-sec"><h1 class="part">Task 3：アプリケーション内の機密データ管理</h1>
+</section>
+<section class="section"><h2 id="step-17">Step 17　データ分類：PII・PHIなど（Skill 2.3.1）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「データ分類（例：個人を特定できる情報［PII］、保護対象医療情報［PHI］）を説明する」</strong></p>
+<h3>17-1　なぜ分類するのか</h3>
+<p><strong>守るべきデータの重要度に応じて、保護の強さを変える</strong>ためです。すべてを最高レベルで守るのは非効率で、逆に分類しないと重要データが守られません。</p>
+<h3>17-2　代表的なデータ区分</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>区分</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PII</strong>（Personally Identifiable Information）</td>
+<td>個人を特定できる情報</td>
+<td>氏名、住所、メールアドレス、電話番号、マイナンバー、パスポート番号、IPアドレス（文脈による）</td>
+</tr>
+<tr>
+<td><strong>PHI</strong>（Protected Health Information）</td>
+<td>個人に紐づく<strong>医療・健康情報</strong></td>
+<td>診断名、検査結果、診療履歴、保険情報（医療情報の取り扱い規制の対象）</td>
+</tr>
+<tr>
+<td><strong>決済カード情報</strong></td>
+<td>クレジットカード番号など</td>
+<td>PANなど（PCI DSSの対象）</td>
+</tr>
+<tr>
+<td>認証情報</td>
+<td>パスワード、APIキー、トークン、秘密鍵</td>
+<td>Step 19で厳格に管理</td>
+</tr>
+<tr>
+<td>機密事業情報</td>
+<td>企業秘密、契約、財務</td>
+<td>社内規程で分類</td>
+</tr>
+<tr>
+<td>公開情報</td>
+<td>公開しても問題ない</td>
+<td>製品カタログなど</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>法令（個人情報保護法、GDPR、HIPAAなど）は、対象となる情報の定義と保護義務が異なります。<strong>試験ではPII／PHIの意味と、分類に応じた保護策の選択</strong>が問われます。</p>
+</blockquote>
+<h3>17-3　分類レベルの例と、対応する保護策</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分類</th>
+<th>例</th>
+<th>暗号化</th>
+<th>アクセス制御</th>
+<th>追加対策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公開</td>
+<td>製品情報</td>
+<td>転送中のみ</td>
+<td>緩やか</td>
+<td>-</td>
+</tr>
+<tr>
+<td>社内限定</td>
+<td>社内資料</td>
+<td>保管時＋転送中</td>
+<td>ロールベース</td>
+<td>ログ取得</td>
+</tr>
+<tr>
+<td>機密</td>
+<td>顧客PII</td>
+<td><strong>KMS（カスタマーマネージドキー）</strong>、必要に応じ項目単位</td>
+<td><strong>最小権限</strong>、MFA</td>
+<td>監査ログ、マスキング、保持期間の設定</td>
+</tr>
+<tr>
+<td>最重要</td>
+<td>PHI、カード情報、認証情報</td>
+<td>クライアントサイド暗号化も検討</td>
+<td><strong>厳格な分離</strong>、承認制</td>
+<td>専用アカウント／キー、ログへの出力禁止</td>
+</tr>
+</tbody>
+</table></div>
+<h3>17-4　AWSで分類を実装・支援する機能</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon Macie</strong></td>
+<td>S3内の<strong>機密データ（PIIなど）を自動検出・分類</strong>し、リスクを可視化</td>
+</tr>
+<tr>
+<td><strong>タグ付け</strong></td>
+<td>リソース・S3オブジェクトに<code>DataClassification=Confidential</code>などのタグ → <strong>ABAC</strong>や課金・監査に活用</td>
+</tr>
+<tr>
+<td><strong>KMSキーの分離</strong></td>
+<td>分類レベルごとにキーを分け、利用者を絞る</td>
+</tr>
+<tr>
+<td><strong>S3ライフサイクル／保持設定</strong></td>
+<td>保持期間・削除ルールの自動化</td>
+</tr>
+<tr>
+<td><strong>CloudWatch Logsのデータ保護ポリシー</strong></td>
+<td>ログ内の機密データを検出・マスク（Step 20）</td>
+</tr>
+<tr>
+<td><strong>Amazon Comprehend</strong></td>
+<td>テキストからPIIを検出（<code>DetectPiiEntities</code>）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="23" role="img" aria-label="図解"></div></div>
+<h3>17-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>データを収集する段階で分類</strong>し、不要な個人情報は<strong>そもそも集めない</strong>（データ最小化）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>分類をタグで機械可読にし、アクセス制御・暗号化・ライフサイクルに自動連動</td>
+</tr>
+<tr>
+<td>3</td>
+<td>PII／PHIは、<strong>ログ・エラーメッセージ・URL・環境変数に出さない</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>保持期間</strong>を定め、不要になったら削除</td>
+</tr>
+<tr>
+<td>5</td>
+<td>分類ごとに<strong>KMSキー・IAMロールを分け</strong>、影響範囲を限定</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Macieなどで<strong>意図しない場所に機密データがないか</strong>継続的に点検</td>
+</tr>
+<tr>
+<td>7</td>
+<td>本番データを<strong>開発・テスト環境にそのまま持ち込まない</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「PHIとは決済カード番号」→ <strong>誤り</strong>（PHIは医療・健康情報）。</li>
+<li>「S3内のPIIを自動で検出したい」→ <strong>Amazon Macie</strong>。</li>
+<li>「全データに同じ最高レベルの保護を一律に適用」→ <strong>非効率</strong>。分類に応じて調整。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>Amazon Macieとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html">https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html</a></li>
+<li>データ分類（AWSホワイトペーパー）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/whitepapers/latest/data-classification/data-classification.html">https://docs.aws.amazon.com/whitepapers/latest/data-classification/data-classification.html</a></li>
+<li>Amazon Comprehend：PII検出：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html">https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html</a></li>
+<li>S3オブジェクトのタグ付け：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-tagging.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-tagging.html</a></li>
+<li>AWSのHIPAA対応：<a target="_blank" rel="noopener" href="https://aws.amazon.com/compliance/hipaa-compliance/">https://aws.amazon.com/compliance/hipaa-compliance/</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-18">Step 18　機密を含む環境変数の暗号化（Skill 2.3.2）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「機密データを含む環境変数を暗号化する」</strong></p>
+<h3>18-1　環境変数と機密情報</h3>
+<p>環境変数は設定を渡す便利な手段ですが、<strong>平文のまま機密情報（パスワード、APIキー）を入れると漏れやすい</strong>という問題があります（コンソールで見える、ログに出る、クラッシュダンプに載る、など）。</p>
+<h3>18-2　Lambda環境変数の暗号化</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>階層</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>保管時の暗号化（既定）</strong></td>
+<td>環境変数は、<strong>AWSが管理するKMSキー</strong>で既定で暗号化される（<code>aws/lambda</code>相当）</td>
+</tr>
+<tr>
+<td><strong>カスタマーマネージドキーの指定</strong></td>
+<td>関数に<strong>自分のKMSキー</strong>を設定可能。関数の実行ロールに<code>kms:Decrypt</code>が必要</td>
+</tr>
+<tr>
+<td><strong>暗号化ヘルパー（転送中の暗号化）</strong></td>
+<td>コンソールで環境変数をKMSで<strong>クライアントサイド暗号化</strong>し、コードで復号。<strong>コンソール・APIで平文が見えない</strong></td>
+</tr>
+<tr>
+<td>合計サイズ</td>
+<td>環境変数全体で<strong>4KB</strong>まで</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="24" role="img" aria-label="図解"></div></div>
+<blockquote>
+<p>既定の暗号化は「保存されたものが暗号化される」だけで、<strong>関数を見る権限がある人にはコンソールで平文が見える</strong>点に注意。より強く隠すなら暗号化ヘルパー、あるいは<strong>そもそも環境変数に秘密を入れない</strong>（次項）。</p>
+</blockquote>
+<h3>18-3　最も推奨されるパターン：<strong>環境変数には「参照先」だけを入れる</strong></h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="25" role="img" aria-label="図解"></div></div>
+<div class="code-block"><pre><code class="language-python">import os
+import json
+import boto3
+
+secrets = boto3.client(&quot;secretsmanager&quot;)
+_cache = {}
+
+def get_db_credentials():
+    name = os.environ[&quot;SECRET_NAME&quot;]  # 環境変数にあるのは「名前」だけ
+    if name not in _cache:
+        resp = secrets.get_secret_value(SecretId=name)
+        _cache[name] = json.loads(resp[&quot;SecretString&quot;])
+    return _cache[name]
+</code></pre></div>
+<ul>
+<li><strong>コールドスタート時に取得してキャッシュ</strong>し、API呼び出しとコストを抑えます（キャッシュの有効期限にも注意。ローテーション後に古い値を使い続けないよう）。</li>
+</ul>
+<h3>18-4　他の実行環境での機密の渡し方</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>環境</th>
+<th>推奨される方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ECS</strong></td>
+<td>タスク定義の<code>secrets</code>でSecrets ManagerまたはParameter Storeの値を<strong>環境変数として注入</strong>（タスク実行ロールに取得権限が必要）</td>
+</tr>
+<tr>
+<td><strong>EKS</strong></td>
+<td>Secrets Manager連携（CSIドライバー等）、Kubernetes Secretsの暗号化</td>
+</tr>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td>環境プロパティに平文を入れず、Secrets Manager／Parameter Storeを参照</td>
+</tr>
+<tr>
+<td><strong>CodeBuild</strong></td>
+<td>環境変数のタイプを<code>PARAMETER_STORE</code>または<code>SECRETS_MANAGER</code>にする（<code>PLAINTEXT</code>に機密を置かない）</td>
+</tr>
+<tr>
+<td><strong>CloudFormation</strong></td>
+<td>動的参照（<code>{{resolve:secretsmanager:...}}</code>／<code>{{resolve:ssm-secure:...}}</code>）。テンプレートに平文を書かない</td>
+</tr>
+</tbody>
+</table></div>
+<p>ECSタスク定義の例：</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;containerDefinitions&quot;: [
+    {
+      &quot;name&quot;: &quot;app&quot;,
+      &quot;image&quot;: &quot;123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/app:latest&quot;,
+      &quot;secrets&quot;: [
+        {
+          &quot;name&quot;: &quot;DB_PASSWORD&quot;,
+          &quot;valueFrom&quot;: &quot;arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db-AbCdEf:password::&quot;
+        }
+      ]
+    }
+  ]
+}
+</code></pre></div>
+<h3>18-5　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>機密を<strong>環境変数に平文で入れない</strong>。名前（参照先）だけを入れ、実行時に取得</td>
+</tr>
+<tr>
+<td>2</td>
+<td>環境変数を使う場合、<strong>カスタマーマネージドキー</strong>＋最小権限の<code>kms:Decrypt</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>より強く保護するなら<strong>暗号化ヘルパー</strong>で暗号文として保持</td>
+</tr>
+<tr>
+<td>4</td>
+<td>環境変数の値を<strong>ログ・エラー出力に出さない</strong>（<code>print(os.environ)</code>を避ける）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ビルド（CodeBuild等）でも機密は<strong>シークレットサービス経由</strong>で注入</td>
+</tr>
+<tr>
+<td>6</td>
+<td>IaC（CloudFormation／CDK）に機密を<strong>ハードコードしない</strong>。動的参照を使う</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「Lambdaの環境変数にDBパスワードを平文で設定すれば、既定の暗号化があるので安全」→ <strong>不十分</strong>（コンソールで閲覧可能）。<strong>Secrets Manager等の利用が推奨</strong>。</li>
+<li>「CodeBuildの環境変数タイプ<code>PLAINTEXT</code>にシークレット」→ <strong>不適切</strong>。</li>
+<li>「環境変数のKMSカスタマーマネージドキーを指定したら、実行ロールの追加権限は不要」→ <strong>誤り</strong>（<code>kms:Decrypt</code>が必要）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>Lambda環境変数の使用（暗号化・ヘルパー）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html">https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html</a></li>
+<li>ECSでSecrets Managerのシークレットを渡す：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html">https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html</a></li>
+<li>CodeBuildの環境変数：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html">https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html</a></li>
+<li>CloudFormationの動的参照：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html</a></li>
+<li>Elastic Beanstalkでシークレットを使う：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.secrets.html">https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.secrets.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-19">Step 19　シークレット管理サービスの活用（Skill 2.3.3）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「シークレット管理サービスを使って機密データを保護する」</strong>：<strong>Secrets ManagerとParameter Storeの使い分け</strong>が最頻出。</p>
+<h3>19-1　シークレットを「コードに書かない」理由</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ありがちな悪い例</th>
+<th>リスク</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ソースコードに直書き</td>
+<td>Git履歴に残る、リポジトリ共有で流出</td>
+</tr>
+<tr>
+<td>設定ファイルをリポジトリにコミット</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>平文の環境変数</td>
+<td>コンソールやログで漏れる</td>
+</tr>
+<tr>
+<td>全環境で同じパスワード</td>
+<td>1か所の漏洩が全体に波及</td>
+</tr>
+</tbody>
+</table></div>
+<h3>19-2　AWS Secrets Manager</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目的</td>
+<td>DB認証情報、APIキー、OAuthトークンなどの<strong>保管・取得・ローテーション</strong></td>
+</tr>
+<tr>
+<td>暗号化</td>
+<td><strong>KMSで暗号化</strong>（既定はAWSマネージドキー<code>aws/secretsmanager</code>、カスタマーマネージドキーも指定可）</td>
+</tr>
+<tr>
+<td><strong>自動ローテーション</strong></td>
+<td><strong>Lambda関数</strong>でスケジュール実行（RDS／Aurora／Redshift等はマネージドローテーションあり）</td>
+</tr>
+<tr>
+<td>バージョン管理</td>
+<td><strong>ステージングラベル</strong>（<code>AWSCURRENT</code>、<code>AWSPREVIOUS</code>、<code>AWSPENDING</code>）</td>
+</tr>
+<tr>
+<td>アクセス制御</td>
+<td>IAMポリシー＋<strong>リソースポリシー</strong>（クロスアカウント共有に対応）</td>
+</tr>
+<tr>
+<td>レプリケーション</td>
+<td>複数リージョンへのレプリケーション可能</td>
+</tr>
+<tr>
+<td>料金</td>
+<td>シークレットごと＋API呼び出しごとの従量課金</td>
+</tr>
+</tbody>
+</table></div>
+<h3>19-3　AWS Systems Manager Parameter Store</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>目的</td>
+<td>設定値（接続先、フラグ）と、<strong>SecureString</strong>による機密値の保管</td>
+</tr>
+<tr>
+<td>暗号化</td>
+<td><strong>SecureString</strong>はKMSで暗号化（<code>String</code>／<code>StringList</code>は平文）</td>
+</tr>
+<tr>
+<td>ローテーション</td>
+<td><strong>自動ローテーション機能なし</strong>（自前で実装）</td>
+</tr>
+<tr>
+<td>階層</td>
+<td><code>/app/prod/db/host</code>のようなパス階層で整理・IAMで権限を階層単位に付与</td>
+</tr>
+<tr>
+<td>料金</td>
+<td><strong>標準パラメータは無料</strong>、高度なパラメータ（大きな値・ポリシー）は有料</td>
+</tr>
+<tr>
+<td>用途</td>
+<td>設定管理と、頻繁にローテーションしない機密値</td>
+</tr>
+</tbody>
+</table></div>
+<h3>19-4　どちらを選ぶ？（最重要）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th><strong>Secrets Manager</strong></th>
+<th><strong>Parameter Store</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>自動ローテーション</td>
+<td><strong>あり</strong>（Lambda／マネージド）</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>主な用途</td>
+<td><strong>DB認証情報・APIキーなどの機密</strong></td>
+<td>設定値全般＋機密（SecureString）</td>
+</tr>
+<tr>
+<td>コスト</td>
+<td>有料</td>
+<td>標準は無料</td>
+</tr>
+<tr>
+<td>クロスアカウント共有</td>
+<td>リソースポリシーで可（カスタマーマネージドキー要）</td>
+<td>高度なパラメータで可（制約あり）</td>
+</tr>
+<tr>
+<td>暗号化</td>
+<td>常にKMS</td>
+<td>SecureStringのみKMS</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="26" role="img" aria-label="図解"></div></div>
+<h3>19-5　Secrets Managerの自動ローテーションの仕組み</h3>
+<p>ローテーションLambdaは、<strong>4つのステップ</strong>を実行します。</p>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="27" role="img" aria-label="図解"></div></div>
+<ul>
+<li>アプリは常に**<code>AWSCURRENT</code>**を取得すれば、最新の値を使えます。</li>
+<li>ローテーションが有効でも、<strong>キャッシュした古い値を使い続けない</strong>ようにアプリを作ります。</li>
+<li>ローテーションLambdaがDBに到達するには、VPC内の接続設定（ネットワーク）が必要な場合があります。</li>
+</ul>
+<h3>19-6　取得のコード例</h3>
+<p><strong>Secrets Manager</strong></p>
+<div class="code-block"><pre><code class="language-python">import json
+import boto3
+
+client = boto3.client(&quot;secretsmanager&quot;, region_name=&quot;ap-northeast-1&quot;)
+resp = client.get_secret_value(SecretId=&quot;prod/db/credentials&quot;)
+creds = json.loads(resp[&quot;SecretString&quot;])
+# creds[&quot;username&quot;], creds[&quot;password&quot;] を使って接続
+</code></pre></div>
+<p><strong>Parameter Store（SecureString）</strong></p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+ssm = boto3.client(&quot;ssm&quot;)
+resp = ssm.get_parameter(Name=&quot;/myapp/prod/api-key&quot;, WithDecryption=True)
+api_key = resp[&quot;Parameter&quot;][&quot;Value&quot;]
+</code></pre></div>
+<p><strong>CLI</strong></p>
+<div class="code-block"><pre><code class="language-bash">aws secretsmanager get-secret-value --secret-id prod/db/credentials
+aws ssm get-parameter --name /myapp/prod/api-key --with-decryption
+</code></pre></div>
+<h3>19-7　最小権限のIAMポリシー例（アプリ側）</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;secretsmanager:GetSecretValue&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db/credentials-*&quot;
+    },
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;kms:Decrypt&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab&quot;
+    }
+  ]
+}
+</code></pre></div>
+<blockquote>
+<p>カスタマーマネージドキーで暗号化したシークレットは、<strong><code>secretsmanager:GetSecretValue</code>と<code>kms:Decrypt</code>の両方</strong>が必要です（Step 11の落とし穴）。</p>
+</blockquote>
+<h3>19-8　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>シークレットをコード・Git・平文ファイルに置かない</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>DB認証情報・APIキーは<strong>Secrets Managerで自動ローテーション</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>環境ごと（dev／stg／prod）に<strong>シークレットと権限を分離</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>最小権限</strong>：<code>GetSecretValue</code>を<strong>特定のシークレットARNだけ</strong>に付与</td>
+</tr>
+<tr>
+<td>5</td>
+<td>実行時に取得して<strong>キャッシュ</strong>（有効期限を設定）。取得の失敗時の再試行も考慮</td>
+</tr>
+<tr>
+<td>6</td>
+<td>シークレットの<strong>値をログ・例外メッセージに出さない</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>CloudTrailで<code>GetSecretValue</code>を監査、不審なアクセスをアラート</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>漏洩が疑われたら即ローテーション</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>漏洩を防ぐため、コミット前のシークレットスキャン（git-secretsなど）を導入</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問い</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDSのパスワードを<strong>自動で定期変更</strong>したい</td>
+<td><strong>Secrets Manager</strong></td>
+</tr>
+<tr>
+<td>低コストで設定値を階層管理</td>
+<td><strong>Parameter Store（標準）</strong></td>
+</tr>
+<tr>
+<td>Parameter Storeで自動ローテーション</td>
+<td><strong>不可</strong>（自前実装）</td>
+</tr>
+<tr>
+<td>他アカウントとシークレットを共有</td>
+<td>Secrets Managerの<strong>リソースポリシー＋カスタマーマネージドキー</strong></td>
+</tr>
+<tr>
+<td>最新のシークレットを取得</td>
+<td>ステージングラベル**<code>AWSCURRENT</code>**</td>
+</tr>
+</tbody>
+</table></div>
+<h3>根拠ソース</h3>
+<ul>
+<li>AWS Secrets Managerとは：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html</a></li>
+<li>シークレットのローテーション：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html</a></li>
+<li>Lambdaによるローテーション関数：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_lambda.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotate-secrets_lambda.html</a></li>
+<li>Secrets Managerのベストプラクティス：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html</a></li>
+<li>Systems Manager Parameter Store：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html</a></li>
+<li>Powertools for AWS Lambda（パラメータ取得・キャッシュ）：<a target="_blank" rel="noopener" href="https://docs.powertools.aws.dev/lambda/python/latest/utilities/parameters/">https://docs.powertools.aws.dev/lambda/python/latest/utilities/parameters/</a></li>
+<li>git-secrets（awslabs）：<a target="_blank" rel="noopener" href="https://github.com/awslabs/git-secrets">https://github.com/awslabs/git-secrets</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-20">Step 20　サニタイズとデータマスキング（Skill 2.3.4・2.3.5）</h2>
+<h3>試験で問われること</h3>
+<ul>
+<li><strong>Skill 2.3.4</strong>「機密データを<strong>サニタイズ</strong>する」</li>
+<li><strong>Skill 2.3.5</strong>「<strong>アプリケーションレベルのデータマスキングとサニタイズ</strong>を実装する」</li>
+</ul>
+<h3>20-1　用語を整理する</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>サニタイズ（sanitize）</strong></td>
+<td>不要・危険な部分を<strong>取り除く／無害化</strong>する。機密のログ出力の除去や、入力の無害化</td>
+<td>ログからトークンを除去、入力のエスケープ</td>
+</tr>
+<tr>
+<td><strong>マスキング（masking）</strong></td>
+<td>一部を伏せて<strong>表示を隠す</strong>（元の値は別の場所に存在）</td>
+<td><code>4111-****-****-1111</code>、<code>t***@example.com</code></td>
+</tr>
+<tr>
+<td><strong>リダクション（redaction）</strong></td>
+<td>機密部分を<strong>完全に削除・黒塗り</strong></td>
+<td><code>[REDACTED]</code></td>
+</tr>
+<tr>
+<td><strong>トークン化</strong></td>
+<td>機密値を**無意味な代替値（トークン）**に置換し、本物は別の安全な場所に保管</td>
+<td>カード番号→トークン</td>
+</tr>
+<tr>
+<td><strong>ハッシュ化</strong></td>
+<td>元に戻せない値に変換</td>
+<td>パスワード（ソルト＋低速ハッシュ）、一意性の検索キー</td>
+</tr>
+<tr>
+<td><strong>匿名化／仮名化</strong></td>
+<td>個人が特定できなくする／別名で置換</td>
+<td>テスト用データの作成</td>
+</tr>
+<tr>
+<td><strong>暗号化</strong></td>
+<td>鍵で元に戻せる形で保護</td>
+<td>KMS、Encryption SDK</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>**暗号化は「鍵があれば元に戻る」、マスキング・ハッシュ化は「元に戻さない／見せない」**という違いが重要です。</p>
+</blockquote>
+<h3>20-2　機密データが漏れる主な経路</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="28" role="img" aria-label="図解"></div></div>
+<h3>20-3　アプリケーションレベルの実装例</h3>
+<p><strong>表示用マスキング</strong></p>
+<div class="code-block"><pre><code class="language-python">import re
+
+def mask_email(email: str) -&gt; str:
+    local, _, domain = email.partition(&quot;@&quot;)
+    return (local[:1] + &quot;***@&quot; + domain) if domain else &quot;***&quot;
+
+def mask_card(number: str) -&gt; str:
+    digits = re.sub(r&quot;\D&quot;, &quot;&quot;, number)
+    return &quot;*&quot; * (len(digits) - 4) + digits[-4:]
+
+print(mask_email(&quot;taro@example.com&quot;))   # t***@example.com
+print(mask_card(&quot;4111 1111 1111 1111&quot;)) # ************1111
+</code></pre></div>
+<p><strong>ログのサニタイズ（ロギングフィルター）</strong></p>
+<div class="code-block"><pre><code class="language-python">import logging
+import re
+
+SENSITIVE = [
+    (re.compile(r&quot;(?i)(password|secret|token|api[_-]?key)\s*[:=]\s*\S+&quot;), r&quot;\1=[REDACTED]&quot;),
+    (re.compile(r&quot;\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b&quot;), &quot;[CARD]&quot;),
+]
+
+class RedactFilter(logging.Filter):
+    def filter(self, record):
+        msg = record.getMessage()
+        for pattern, repl in SENSITIVE:
+            msg = pattern.sub(repl, msg)
+        record.msg, record.args = msg, ()
+        return True
+
+logger = logging.getLogger(&quot;app&quot;)
+logger.addFilter(RedactFilter())
+</code></pre></div>
+<p><strong>レスポンスの最小化（必要な項目だけ返す）</strong></p>
+<div class="code-block"><pre><code class="language-python">def to_public_user(user: dict) -&gt; dict:
+    allowed = {&quot;id&quot;, &quot;display_name&quot;, &quot;created_at&quot;}
+    return {k: v for k, v in user.items() if k in allowed}  # 許可リスト方式
+</code></pre></div>
+<blockquote>
+<p><strong>許可リスト（allow-list）方式</strong>：返す項目を明示的に指定すると、新しい機密項目が追加されても<strong>うっかり漏れません</strong>。</p>
+</blockquote>
+<h3>20-4　AWSの機能による支援</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CloudWatch Logsのデータ保護ポリシー</strong></td>
+<td>ログ内の機密データ（個人情報など）を<strong>検出し、マスク</strong>。マスクされていない値は、権限（<code>logs:Unmask</code>）のある人だけが参照可能</td>
+</tr>
+<tr>
+<td><strong>Amazon Macie</strong></td>
+<td>S3内の機密データを検出（保存先の点検）</td>
+</tr>
+<tr>
+<td><strong>Amazon Comprehend</strong></td>
+<td>テキスト内のPIIを検出・（編集用に）位置を特定</td>
+</tr>
+<tr>
+<td><strong>API Gatewayのマッピングテンプレート／レスポンス変換</strong></td>
+<td>レスポンスに含める項目を制限</td>
+</tr>
+<tr>
+<td><strong>Amazon Bedrock Guardrails</strong></td>
+<td>生成AIの入出力から機密情報をフィルタ（Step 22）</td>
+</tr>
+<tr>
+<td><strong>X-Ray</strong></td>
+<td>アノテーション／メタデータに機密を入れない設計</td>
+</tr>
+</tbody>
+</table></div>
+<h3>20-5　入力のサニタイズ（セキュアコーディング）</h3>
+<p>機密データの保護と並んで、<strong>外部入力を信用しない</strong>ことも基本です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>脅威</th>
+<th>対策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLインジェクション</td>
+<td><strong>パラメータ化クエリ（プレースホルダ）</strong>、ORM</td>
+</tr>
+<tr>
+<td>NoSQLインジェクション</td>
+<td>入力の型・形式を検証</td>
+</tr>
+<tr>
+<td>XSS</td>
+<td>出力時のエスケープ、コンテンツセキュリティポリシー</td>
+</tr>
+<tr>
+<td>コマンドインジェクション</td>
+<td>シェル呼び出しを避ける、入力の許可リスト検証</td>
+</tr>
+<tr>
+<td>パストラバーサル</td>
+<td>パス正規化、許可ディレクトリの外を拒否</td>
+</tr>
+<tr>
+<td>過大な入力</td>
+<td>サイズ制限、API Gatewayのリクエスト検証（スキーマ）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="code-block"><pre><code class="language-python"># 悪い例（SQLインジェクション）
+cursor.execute(f&quot;SELECT * FROM users WHERE id = &#x27;{user_input}&#x27;&quot;)
+
+# 良い例（パラメータ化）
+cursor.execute(&quot;SELECT * FROM users WHERE id = %s&quot;, (user_input,))
+</code></pre></div>
+<h3>20-6　テスト・開発環境のデータ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>合成データ（ダミー）</td>
+<td>本番に似せた架空データを生成</td>
+</tr>
+<tr>
+<td>匿名化／マスキングしたコピー</td>
+<td>本番データを変換してから非本番へ</td>
+</tr>
+<tr>
+<td>アクセス分離</td>
+<td>非本番環境から本番データストアへの権限を与えない</td>
+</tr>
+</tbody>
+</table></div>
+<h3>20-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>ログに機密を出さない</strong>を原則に、ロギングフィルターとCloudWatch Logsのデータ保護で二重に防ぐ</td>
+</tr>
+<tr>
+<td>2</td>
+<td>レスポンスは<strong>許可リスト方式</strong>で最小限に</td>
+</tr>
+<tr>
+<td>3</td>
+<td>表示は<strong>マスキング</strong>、保管は<strong>暗号化</strong>、検索用には<strong>ハッシュ</strong>など目的で使い分け</td>
+</tr>
+<tr>
+<td>4</td>
+<td>パスワードは<strong>ソルト付きの低速ハッシュ</strong>（bcrypt／Argon2等）。自前で暗号化して保存しない（Cognito等に委任が望ましい）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>URL・クエリ文字列に機密を載せない（POSTのボディやヘッダー）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>非本番環境には<strong>合成データ</strong>または<strong>匿名化データ</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>入力は<strong>検証（許可リスト）＋パラメータ化</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「ログにカード番号が出てしまった。対策は？」→ <strong>ログ出力前のサニタイズ／CloudWatch Logsデータ保護ポリシー</strong>。</li>
+<li>「パスワードを暗号化して保存」→ 通常は<strong>ハッシュ化</strong>（復号できる必要がない）。</li>
+<li>「マスキング済みなので暗号化は不要」→ <strong>誤り</strong>（保管データは別途暗号化が必要）。</li>
+<li>「テスト環境で本番データをそのまま使う」→ <strong>不適切</strong>（匿名化・合成データ）。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>CloudWatch Logsの機密データのマスク（データ保護ポリシー）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/mask-sensitive-log-data.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/mask-sensitive-log-data.html</a></li>
+<li>Amazon Macie：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html">https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html</a></li>
+<li>Amazon ComprehendのPII検出：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html">https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html</a></li>
+<li>API Gatewayのリクエスト検証：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-method-request-validation.html</a></li>
+<li>OWASP Top 10：<a target="_blank" rel="noopener" href="https://owasp.org/www-project-top-ten/">https://owasp.org/www-project-top-ten/</a></li>
+<li>OWASP Input Validation Cheat Sheet：<a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html</a></li>
+<li>OWASP SQL Injection Prevention Cheat Sheet：<a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html</a></li>
+<li>OWASP Password Storage Cheat Sheet：<a target="_blank" rel="noopener" href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-21">Step 21　マルチテナントのデータアクセスパターン（Skill 2.3.6）</h2>
+<h3>試験で問われること</h3>
+<p><strong>「マルチテナントアプリケーション向けのデータアクセスパターンを実装する」</strong>：<strong>テナント間のデータ分離</strong>。</p>
+<h3>21-1　マルチテナントとは</h3>
+<p><strong>1つのアプリ（SaaS）を複数の顧客（テナント）が共有</strong>する構成です。最大のリスクは、<strong>テナントAのユーザーがテナントBのデータを見てしまう</strong>ことです。</p>
+<h3>21-2　テナント分離モデル</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>モデル</th>
+<th>概要</th>
+<th>分離の強さ</th>
+<th>コスト・運用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>サイロ（Silo）</strong></td>
+<td>テナントごとに<strong>専用リソース</strong>（アカウント／DB／テーブル）</td>
+<td>強い</td>
+<td>コスト高・管理が複雑</td>
+</tr>
+<tr>
+<td><strong>プール（Pool）</strong></td>
+<td><strong>共有リソース</strong>にテナントIDで論理分離</td>
+<td>論理的（設計次第）</td>
+<td>コスト効率が良い・規模に強い</td>
+</tr>
+<tr>
+<td><strong>ブリッジ（Bridge）</strong></td>
+<td>サイロとプールの<strong>混在</strong>（階層・用途ごと）</td>
+<td>中間</td>
+<td>バランス型</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="29" role="img" aria-label="図解"></div></div>
+<h3>21-3　基本原則：<strong>テナントIDは「信頼できる出所」から取る</strong></h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="30" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>悪い例</th>
+<th>良い例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>リクエストのJSONの<code>tenantId</code>を信じる</td>
+<td><strong>検証済みトークンのクレーム</strong>（<code>custom:tenant_id</code>やグループ）から取得</td>
+</tr>
+<tr>
+<td>全テナントのデータにアクセスできる強い権限でクエリし、アプリ側のフィルターだけで分ける</td>
+<td><strong>データアクセス層の権限自体をテナントに限定</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3>21-4　DynamoDBでの分離パターン</h3>
+<p><strong>パーティションキーにテナントIDを含める</strong>設計と、<strong>IAMの条件</strong>で強制する設計を組み合わせます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>テーブル設計</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>パーティションキー＝テナントID</td>
+<td><code>PK = TENANT#t-001</code>、<code>SK = ORDER#...</code></td>
+</tr>
+<tr>
+<td>複合キー</td>
+<td><code>PK = TENANT#t-001#ORDER</code>、<code>SK = 日付</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>IAMで<strong>テナントに属するキーのみ</strong>に限定（STSセッションタグやポリシー変数を活用）：</p>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;dynamodb:GetItem&quot;, &quot;dynamodb:Query&quot;, &quot;dynamodb:PutItem&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:dynamodb:ap-northeast-1:111122223333:table/Orders&quot;,
+  &quot;Condition&quot;: {
+    &quot;ForAllValues:StringLike&quot;: {
+      &quot;dynamodb:LeadingKeys&quot;: [&quot;TENANT#${aws:PrincipalTag/TenantId}*&quot;]
+    }
+  }
+}
+</code></pre></div>
+<p><strong>テナント限定の認証情報を作る（セッションタグ）</strong></p>
+<div class="code-block"><pre><code class="language-python">import boto3
+
+sts = boto3.client(&quot;sts&quot;)
+resp = sts.assume_role(
+    RoleArn=&quot;arn:aws:iam::111122223333:role/TenantAccessRole&quot;,
+    RoleSessionName=f&quot;tenant-{tenant_id}&quot;,
+    Tags=[{&quot;Key&quot;: &quot;TenantId&quot;, &quot;Value&quot;: tenant_id}],  # IAM条件で参照できる
+    DurationSeconds=900,
+)
+</code></pre></div>
+<blockquote>
+<p>ロールの信頼ポリシーに<code>sts:TagSession</code>の許可が必要です。<strong>アプリ（Lambda）が信頼できるテナントIDを検証したうえでのみタグを付ける</strong>ことが前提です。</p>
+</blockquote>
+<h3>21-5　S3・RDSでの分離</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>分離方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3</td>
+<td><strong>テナントごとのプレフィックス</strong>（<code>tenants/t-001/</code>）＋IAM／ABACで制限。<strong>S3アクセスポイント</strong>でテナント別のアクセスポイントを作成する方法もある</td>
+</tr>
+<tr>
+<td>RDS／Aurora（PostgreSQL）</td>
+<td><strong>行レベルセキュリティ（RLS）</strong>、またはテナントごとのスキーマ／DB</td>
+</tr>
+<tr>
+<td>OpenSearch</td>
+<td>インデックス分離、ドキュメントレベルのセキュリティ</td>
+</tr>
+<tr>
+<td>KMS</td>
+<td><strong>テナントごとのKMSキー</strong>（高分離要件。鍵の無効化でテナントのデータを使用不可にもできる）</td>
+</tr>
+</tbody>
+</table></div>
+<p>PostgreSQLのRLSの考え方：</p>
+<div class="code-block"><pre><code class="language-sql">ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY tenant_isolation ON orders
+  USING (tenant_id = current_setting(&#x27;app.tenant_id&#x27;)::uuid);
+
+-- 接続ごとにテナントを設定（アプリが検証済みの値で）
+SET app.tenant_id = &#x27;11111111-1111-1111-1111-111111111111&#x27;;
+</code></pre></div>
+<h3>21-6　分離を「迂回できない」層に置く</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="31" role="img" aria-label="図解"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>対策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アプリ</td>
+<td>必ずテナントコンテキストを通す共通ライブラリ</td>
+</tr>
+<tr>
+<td>認証情報</td>
+<td><strong>テナント限定の一時認証情報</strong>（コードのバグがあっても他テナントに届かない）</td>
+</tr>
+<tr>
+<td>データ</td>
+<td>RLS／LeadingKeys条件で<strong>強制</strong></td>
+</tr>
+<tr>
+<td>監査</td>
+<td>ログに<code>tenant_id</code>を付与し、CloudTrail／アクセスログで追跡</td>
+</tr>
+<tr>
+<td>性能</td>
+<td><strong>ノイジーネイバー</strong>対策（スロットリング、使用量プラン、テナント別クォータ）</td>
+</tr>
+</tbody>
+</table></div>
+<h3>21-7　ベストプラクティス</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>テナントIDはリクエストのパラメータを信じず</strong>、検証済みトークンのクレームから取得</td>
+</tr>
+<tr>
+<td>2</td>
+<td>アプリのフィルターだけに頼らず、<strong>IAM条件・RLS・テナント限定認証情報</strong>でデータ層も強制</td>
+</tr>
+<tr>
+<td>3</td>
+<td>要件に応じて<strong>サイロ／プール／ブリッジ</strong>を選ぶ（規制の厳しいテナントはサイロ）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>すべてのログ・メトリクスに<strong>テナントIDを付与</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>テナント別の暗号化キー</strong>やアクセス制御を検討</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>クロステナントアクセスのテスト</strong>（異なるテナントの資格情報で他テナントのIDを指定して拒否されるか）を自動テストに含める</td>
+</tr>
+<tr>
+<td>7</td>
+<td>スロットリング・クォータで<strong>ノイジーネイバー</strong>を抑制</td>
+</tr>
+</tbody>
+</table></div>
+<h3>試験のひっかけ</h3>
+<ul>
+<li>「リクエストボディの<code>tenantId</code>でクエリを絞る」→ <strong>改ざん可能</strong>。トークンのクレームを使う。</li>
+<li>「プールモデルは共有なので分離できない」→ <strong>誤り</strong>。IAM条件・RLSなどで論理分離できる。</li>
+<li>「すべてのテナントに同じ強力なロールでアクセス」→ <strong>最小権限違反</strong>。テナント限定の認証情報を使う。</li>
+</ul>
+<h3>根拠ソース</h3>
+<ul>
+<li>SaaS Lens（Well-Architected）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html">https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html</a></li>
+<li>SaaSアーキテクチャの基礎（ホワイトペーパー）：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/whitepapers/latest/saas-architecture-fundamentals/saas-architecture-fundamentals.html">https://docs.aws.amazon.com/whitepapers/latest/saas-architecture-fundamentals/saas-architecture-fundamentals.html</a></li>
+<li>DynamoDB：きめ細かなアクセス制御：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html">https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html</a></li>
+<li>STSのセッションタグ：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/id_session-tags.html</a></li>
+<li>PostgreSQL 行レベルセキュリティ：<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">https://www.postgresql.org/docs/current/ddl-rowsecurity.html</a></li>
+<li>AWSホワイトペーパー「SaaS Tenant Isolation Strategies」：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html">https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-22">Step 22　AIサービスを組み込むときのセキュリティ（新興トピック）</h2>
+<h3>位置づけ</h3>
+<p>公式の試験ガイドは「新興トピック（Emerging topics）」として、<strong>AIサービスを開発に統合する際のセキュリティリスクの特定と軽減</strong>（データプライバシー制御、アクセス管理、AIモデルの入出力の制御、AIエージェントのやり取りの保護、機密コンテンツがログに出ないようにすること）を挙げています。これらは<strong>採点対象外のプレテスト問題として出る可能性がある</strong>とされています。配点には影響しませんが、現場で重要なため基本を押さえます。</p>
+<h3>22-1　リスクと対策の対応表</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>リスク</th>
+<th>具体例</th>
+<th>対策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>過剰な権限</strong></td>
+<td>AIを呼ぶロールが<code>bedrock:*</code>＋<code>Resource: *</code></td>
+<td><code>bedrock:InvokeModel</code>を<strong>特定のモデルARN</strong>に限定</td>
+</tr>
+<tr>
+<td><strong>機密データの漏えい（入力）</strong></td>
+<td>プロンプトにPII・シークレットを含める</td>
+<td>送信前の<strong>マスキング／リダクション</strong>、Guardrailsの機密情報フィルター</td>
+</tr>
+<tr>
+<td><strong>機密データの漏えい（出力）</strong></td>
+<td>モデルがPIIや内部情報を出力</td>
+<td>出力のフィルタリング、ガードレール</td>
+</tr>
+<tr>
+<td><strong>プロンプトインジェクション</strong></td>
+<td>入力に「前の指示を無視して…」と埋め込まれる</td>
+<td>入力の検証、システム指示と外部データの分離、<strong>出力を信頼しない</strong></td>
+</tr>
+<tr>
+<td><strong>ログへの機密混入</strong></td>
+<td>プロンプト・応答の全文を平文でログ</td>
+<td>ログ出力の制限、CloudWatch Logsのデータ保護、保持期間の設定</td>
+</tr>
+<tr>
+<td><strong>エージェントの過剰な操作</strong></td>
+<td>AIエージェントが任意のAPIを実行</td>
+<td>ツールごとの<strong>最小権限ロール</strong>、人間の承認、操作の許可リスト</td>
+</tr>
+<tr>
+<td><strong>データの学習利用・保管</strong></td>
+<td>機密データが意図せず外部へ</td>
+<td>サービスのデータ取り扱い方針を確認、暗号化、VPCエンドポイント</td>
+</tr>
+</tbody>
+</table></div>
+<h3>22-2　最小権限の例</h3>
+<div class="code-block"><pre><code class="language-json">{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;bedrock:InvokeModel&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:bedrock:ap-northeast-1::foundation-model/&lt;利用するモデルID&gt;&quot;
+}
+</code></pre></div>
+<h3>22-3　押さえるべき考え方</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>AIも<strong>通常のAWSサービスと同じ</strong>セキュリティ原則（IAM最小権限・暗号化・ログ・シークレット管理）で守る</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>モデルの出力は信頼できない入力</strong>として扱う（SQL・シェルへ直接渡さない、必ず検証）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>プロンプト・応答に<strong>機密を含めない／含める場合はマスキング</strong>し、ログを制御する</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>AIエージェントには、実行できるツール・権限を最小限に</strong>する</td>
+</tr>
+<tr>
+<td>5</td>
+<td>AIによるコード生成・レビュー結果も、<strong>人間がレビュー</strong>し、セキュリティスキャンを通す</td>
+</tr>
+</tbody>
+</table></div>
+<h3>根拠ソース</h3>
+<ul>
+<li>試験ガイド：Emerging topics：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html</a></li>
+<li>Amazon Bedrock Guardrails：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html">https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html</a></li>
+<li>Amazon Bedrockのセキュリティ：<a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/bedrock/latest/userguide/security.html">https://docs.aws.amazon.com/bedrock/latest/userguide/security.html</a></li>
+<li>OWASP Top 10 for LLM Applications：<a target="_blank" rel="noopener" href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">https://owasp.org/www-project-top-10-for-large-language-model-applications/</a></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="step-23">Step 23　総まとめ：選択フロー・ひっかけ・練習問題</h2>
+<h3>23-1　「認証・認可」サービス選択フロー</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="32" role="img" aria-label="図解"></div></div>
+<h3>23-2　「暗号化」判断フロー</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="33" role="img" aria-label="図解"></div></div>
+<h3>23-3　「機密データ管理」判断フロー</h3>
+<div class="diagram-card"><div class="diagram-wrap" data-diagram="34" role="img" aria-label="図解"></div></div>
+<h3>23-4　サービス別「やること・やってはいけないこと」早見表</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>やること</th>
+<th>やってはいけないこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM</td>
+<td>ロール＋最小権限、条件キー</td>
+<td><code>*:*</code>の付与、アクセスキーのコード埋め込み</td>
+</tr>
+<tr>
+<td>STS</td>
+<td>一時認証情報、<code>ExternalId</code></td>
+<td>長期キーの配布</td>
+</tr>
+<tr>
+<td>Cognito</td>
+<td>ユーザープール＋PKCE、MFA、トークン検証</td>
+<td>IDトークンでAPI認可、Implicit、未認証アクセスの放置</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>オーソライザー（JWT／IAM／Lambda）</td>
+<td>APIキーだけで認証したつもりになる</td>
+</tr>
+<tr>
+<td>KMS</td>
+<td>エンベロープ暗号化、ローテーション、鍵ポリシー分離</td>
+<td>4KB超を直接暗号化、鍵の即時削除</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>既定暗号化、HTTPS強制、署名付きURLは短期限</td>
+<td>公開設定の放置、HTTP許可</td>
+</tr>
+<tr>
+<td>ACM／Private CA</td>
+<td>自動更新、DNS検証維持</td>
+<td>本番で自己署名、証明書の期限切れ放置</td>
+</tr>
+<tr>
+<td>Secrets Manager</td>
+<td>自動ローテーション、最小権限、キャッシュ</td>
+<td>コード・Gitに直書き、ログ出力</td>
+</tr>
+<tr>
+<td>Parameter Store</td>
+<td>SecureString、パス階層で権限分離</td>
+<td>機密を<code>String</code>で保存</td>
+</tr>
+<tr>
+<td>Lambda環境変数</td>
+<td>参照先だけ入れる、CMK＋最小権限</td>
+<td>平文の機密を入れる</td>
+</tr>
+<tr>
+<td>マルチテナント</td>
+<td>検証済みクレームでテナント特定、データ層で強制</td>
+<td>リクエストボディのテナントIDを信用</td>
+</tr>
+</tbody>
+</table></div>
+<h3>23-5　試験頻出の「ひっかけ」総まとめ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ひっかけ</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>明示的DenyとAllowの競合</td>
+<td><strong>Denyが勝つ</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>EC2にアクセスキーを渡す</td>
+<td><strong>インスタンスプロファイル（ロール）</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>IDトークンでAPIを認可</td>
+<td><strong>アクセストークン</strong>を使う</td>
+</tr>
+<tr>
+<td>4</td>
+<td>APIキー＝認証</td>
+<td><strong>使用量制御</strong>であり認証ではない</td>
+</tr>
+<tr>
+<td>5</td>
+<td>JWTは暗号化されている</td>
+<td><strong>署名のみ</strong>（中身は読める）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>KMS Encryptで大きなファイル</td>
+<td><strong>4KB上限</strong>。エンベロープ暗号化</td>
+</tr>
+<tr>
+<td>7</td>
+<td>AWSマネージドキーを他アカウントと共有</td>
+<td><strong>不可</strong>。カスタマーマネージドキー</td>
+</tr>
+<tr>
+<td>8</td>
+<td>キーローテーションでARNが変わる</td>
+<td><strong>変わらない</strong>。古い素材も保持</td>
+</tr>
+<tr>
+<td>9</td>
+<td>CloudFront用ACM証明書のリージョン</td>
+<td><strong>us-east-1</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Parameter Storeの自動ローテーション</td>
+<td><strong>なし</strong>（Secrets Manager）</td>
+</tr>
+<tr>
+<td>11</td>
+<td>RDSの既存DBに暗号化をオン</td>
+<td><strong>スナップショットのコピー→暗号化→復元</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>S3読み取りできるのに復号失敗</td>
+<td><strong><code>kms:Decrypt</code>不足</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>パスワードを暗号化して保存</td>
+<td><strong>ハッシュ化</strong></td>
+</tr>
+<tr>
+<td>14</td>
+<td>フロントで非表示にすれば安全</td>
+<td><strong>サーバー側で認可</strong></td>
+</tr>
+<tr>
+<td>15</td>
+<td>リクエストのtenantIdで絞る</td>
+<td><strong>検証済みトークンのクレーム</strong>から</td>
+</tr>
+</tbody>
+</table></div>
+<h3>23-6　練習問題（解答は折りたたみ内）</h3>
+<p><strong>問1.</strong> Lambda関数から別アカウントのS3バケットを読み取る必要があります。最小権限で安全な方法はどれですか。</p>
+<p>A. 別アカウントのIAMユーザーのアクセスキーをLambdaの環境変数に保存する
+B. 別アカウントのロールを<code>AssumeRole</code>で引き受け、一時認証情報を使う
+C. バケットを公開する
+D. rootユーザーの認証情報を使う</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。信頼ポリシーで許可されたクロスアカウントロールを引き受けて一時認証情報を使います。A・Dは長期認証情報の漏洩リスク、Cは公開で不適切です。（Step 3）</p>
+</details>
+<p><strong>問2.</strong> モバイルアプリのユーザーが、自分専用のS3プレフィックスに<strong>直接</strong>ファイルをアップロードできるようにしたい。適切な構成は？</p>
+<p>A. ユーザープールのみ使用し、アクセストークンでS3へアクセス
+B. ユーザープール＋IDプールで一時認証情報を取得し、ポリシー変数でユーザーごとのプレフィックスに限定
+C. 全ユーザーでIAMユーザーのキーを共有
+D. S3バケットをパブリックにする</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。AWSリソースへの直接アクセスにはIDプールが一時認証情報を発行します。<code>${cognito-identity.amazonaws.com:sub}</code>のポリシー変数で個人ごとに限定します。（Step 6・8）</p>
+</details>
+<p><strong>問3.</strong> API Gateway（REST API）を、Cognitoでサインインしたユーザーだけが呼べるようにしたい。<strong>最小の運用負荷</strong>で実現する方法は？</p>
+<p>A. すべてのリクエストでLambdaが署名を自前計算
+B. Cognitoユーザープールオーソライザーを設定する
+C. APIキーのみを要求する
+D. IPアドレスで許可する</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。マネージドなオーソライザーがトークンを検証します。APIキーは認証手段ではありません。（Step 5・7）</p>
+</details>
+<p><strong>問4.</strong> 5MBのファイルを、KMSキーを使ってアプリ側で暗号化したい。適切な方法は？</p>
+<p>A. KMSの<code>Encrypt</code>を直接呼ぶ
+B. <code>GenerateDataKey</code>でデータキーを取得し、ローカルでデータを暗号化し、暗号化されたデータキーを一緒に保存する
+C. KMSキーをダウンロードして使う
+D. 暗号化せずHTTPSだけにする</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。<code>Encrypt</code>は最大4KB。エンベロープ暗号化を使います。KMSキーの素材は取り出せません。（Step 11）</p>
+</details>
+<p><strong>問5.</strong> 別アカウントのKMSキーで暗号化されたS3オブジェクトを、自アカウントのLambdaで読み取りたい。必要な設定を<strong>2つ</strong>選べ。</p>
+<p>A. キー所有アカウントの鍵ポリシーで、自アカウントのロールに<code>kms:Decrypt</code>を許可
+B. 自アカウントのロールのIAMポリシーで、そのキーARNへの<code>kms:Decrypt</code>を許可
+C. キーを<code>aws/s3</code>に変更する
+D. バケットのHTTPSを無効にする
+E. IAMユーザーを作成してキーを配布</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：A・B</strong>。クロスアカウントでは鍵ポリシーと利用側のIAMポリシーの<strong>両方</strong>が必要です。（Step 15）</p>
+</details>
+<p><strong>問6.</strong> RDSのDBパスワードを<strong>自動で定期的に変更</strong>し、アプリは常に最新のパスワードで接続したい。最適な組み合わせは？</p>
+<p>A. Parameter StoreのSecureStringに保存し、手動で更新
+B. Secrets Managerに保存し、自動ローテーションを有効化。アプリは<code>AWSCURRENT</code>を取得
+C. Lambdaの環境変数に平文で保存
+D. ソースコードに定数として記述</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。自動ローテーションはSecrets Managerの機能です。（Step 19）</p>
+</details>
+<p><strong>問7.</strong> Lambda関数にDBパスワードを渡す方法として<strong>最も推奨</strong>されるものは？</p>
+<p>A. 環境変数に平文で設定
+B. 環境変数にシークレット名のみを設定し、実行時にSecrets Managerから取得してキャッシュ
+C. デプロイパッケージに設定ファイルとして同梱
+D. Gitリポジトリに<code>.env</code>をコミット</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。環境変数には参照先だけを持たせ、実行ロールに<code>secretsmanager:GetSecretValue</code>（必要に応じて<code>kms:Decrypt</code>）を付与します。（Step 18・19）</p>
+</details>
+<p><strong>問8.</strong> KMSのカスタマーマネージドキー（対称）のキーマテリアルを<strong>毎年自動で</strong>入れ替えたい。正しい説明は？</p>
+<p>A. ローテーションすると、キーARNが変わるので、アプリを更新する必要がある
+B. <code>EnableKeyRotation</code>で有効化。ARNは変わらず、過去の暗号文も復号できる
+C. 非対称キーでも自動ローテーションできる
+D. AWSマネージドキーの自動ローテーションを無効にできる</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。ARN・エイリアスは変わらず、古いキーマテリアルは保持されます。非対称キーは手動、AWSマネージドキーは自動で毎年（無効化不可）です。（Step 16）</p>
+</details>
+<p><strong>問9.</strong> マルチテナントSaaSのLambdaが、テナントごとのDynamoDBデータへアクセスします。テナント間のデータ漏えいを防ぐ<strong>最も適切な</strong>設計は？</p>
+<p>A. リクエストボディの<code>tenantId</code>を使い、アプリのコードでフィルターする
+B. 検証済みJWTのクレームからテナントIDを取得し、テナントに限定した一時認証情報（セッションタグ＋IAM条件）でアクセスする
+C. すべてのテナントで共通の管理者ロールを使う
+D. テナントIDをURLのクエリ文字列で渡す</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。テナントIDは信頼できる出所から取得し、データ層（IAM条件・LeadingKeys）でも強制します。（Step 21）</p>
+</details>
+<p><strong>問10.</strong> アプリのログに、顧客のカード番号とメールアドレスが平文で出力されていることが判明しました。<strong>今後の再発防止</strong>として適切なものを<strong>2つ</strong>選べ。</p>
+<p>A. ログ出力前にサニタイズ（マスキング／リダクション）するフィルターを実装する
+B. CloudWatch Logsのデータ保護ポリシーで機密データを検出・マスクする
+C. ログの保持期間を無期限にする
+D. ログを全ユーザーに公開する
+E. 環境変数にカード番号を保存する</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：A・B</strong>。アプリ側のサニタイズとサービス側のデータ保護の二重対策です。（Step 20）</p>
+</details>
+<p><strong>問11.</strong> CloudFrontのカスタムドメインにHTTPSを設定するため、ACMで証明書を発行します。どのリージョンで作成しますか。</p>
+<p>A. ap-northeast-1（東京）
+B. us-east-1（バージニア北部）
+C. 配信元（オリジン）と同じリージョン
+D. リージョンは問わない</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：B</strong>。CloudFrontで使うACM証明書は<code>us-east-1</code>に作成します。（Step 13）</p>
+</details>
+<p><strong>問12.</strong> 組織内の複数のマイクロサービス間で、**相互にクライアント証明書で認証（mTLS）**したい。内部用の証明書を発行・管理するのに適したサービスは？</p>
+<p>A. AWS Private CA
+B. ACMのパブリック証明書のみ
+C. 自己署名証明書を各チームが自由に作成
+D. IAMユーザーのアクセスキー</p>
+<details><summary>解答と解説</summary>
+<p><strong>正解：A</strong>。社内PKIにはAWS Private CAを使用します。（Step 13）</p>
+</details>
+<h3>23-7　最終チェックリスト（自己採点用）</h3>
+<p><strong>Task 1：認証・認可</strong></p>
+<ul>
+<li class="chk"><label><input type="checkbox"> ポリシーの評価ルール（暗黙のDeny／明示的Deny優先）を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> ロールの信頼ポリシーと許可ポリシーの違いを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> 認証情報プロバイダーチェーンと、長期キーを避ける理由を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> SigV4と署名付きURLの役割を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> ユーザープールとIDプールの違いを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> JWTの検証項目（署名・exp・iss・aud）と3種のトークンを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> IDOR対策とDynamoDB LeadingKeysの使い方を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> サービス間認証の選択肢（IAM／M2M／リソースポリシー）を説明できる</label></li>
+</ul>
+<p><strong>Task 2：暗号化</strong></p>
+<ul>
+<li class="chk"><label><input type="checkbox"> 保管時／転送中の暗号化と、HTTPS強制の方法を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> エンベロープ暗号化の流れと4KB制限を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> SSE-S3／SSE-KMS／SSE-C／クライアントサイド暗号化の違いを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> ACMとPrivate CAの使い分け、CloudFrontの<code>us-east-1</code>を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> 開発用のSSH鍵・自己署名証明書の作り方と、本番に使わない理由を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> クロスアカウントで必要な両側の許可と、AWSマネージドキーの制約を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> 自動・オンデマンド・手動ローテーションの違いを説明できる</label></li>
+</ul>
+<p><strong>Task 3：機密データ管理</strong></p>
+<ul>
+<li class="chk"><label><input type="checkbox"> PII／PHIなどのデータ分類と保護策を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> Lambda環境変数の暗号化と、参照先だけを持たせる設計を説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> Secrets ManagerとParameter Storeの使い分けを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> サニタイズ・マスキング・トークン化・ハッシュ化の違いを説明できる</label></li>
+<li class="chk"><label><input type="checkbox"> マルチテナントの分離モデルと、テナントIDの信頼できる取得方法を説明できる</label></li>
+</ul>
+<hr />
+</section>
+<section class="section"><h2 id="appendix-a">付録A　スキルとStepの対応表</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>スキルID</th>
+<th>公式の記述（要約）</th>
+<th>解説Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1.1</td>
+<td>IDプロバイダーでフェデレーションアクセスを実装（Cognito、IAM）</td>
+<td>Step 6</td>
+</tr>
+<tr>
+<td>2.1.2</td>
+<td>ベアラートークンでアプリを保護</td>
+<td>Step 7</td>
+</tr>
+<tr>
+<td>2.1.3</td>
+<td>AWSへのプログラムアクセスを構成</td>
+<td>Step 4</td>
+</tr>
+<tr>
+<td>2.1.4</td>
+<td>AWSサービスへの認証済み呼び出しを行う</td>
+<td>Step 5</td>
+</tr>
+<tr>
+<td>2.1.5</td>
+<td>IAMロールを引き受ける</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td>2.1.6</td>
+<td>IAMプリンシパルの権限を定義</td>
+<td>Step 2</td>
+</tr>
+<tr>
+<td>2.1.7</td>
+<td>きめ細かなアクセス制御のためのアプリレベル認可</td>
+<td>Step 8</td>
+</tr>
+<tr>
+<td>2.1.8</td>
+<td>マイクロサービスにおけるサービス間認証</td>
+<td>Step 9</td>
+</tr>
+<tr>
+<td>2.2.1</td>
+<td>保管時・転送中の暗号化を定義</td>
+<td>Step 10</td>
+</tr>
+<tr>
+<td>2.2.2</td>
+<td>証明書管理（例：AWS Private CA）</td>
+<td>Step 13</td>
+</tr>
+<tr>
+<td>2.2.3</td>
+<td>クライアントサイドとサーバーサイド暗号化の違い</td>
+<td>Step 12</td>
+</tr>
+<tr>
+<td>2.2.4</td>
+<td>暗号化キーで暗号化・復号</td>
+<td>Step 11</td>
+</tr>
+<tr>
+<td>2.2.5</td>
+<td>開発用の証明書とSSH鍵を生成</td>
+<td>Step 14</td>
+</tr>
+<tr>
+<td>2.2.6</td>
+<td>アカウント境界をまたぐ暗号化</td>
+<td>Step 15</td>
+</tr>
+<tr>
+<td>2.2.7</td>
+<td>キーローテーションの有効化・無効化</td>
+<td>Step 16</td>
+</tr>
+<tr>
+<td>2.3.1</td>
+<td>データ分類（PII、PHIなど）</td>
+<td>Step 17</td>
+</tr>
+<tr>
+<td>2.3.2</td>
+<td>機密データを含む環境変数の暗号化</td>
+<td>Step 18</td>
+</tr>
+<tr>
+<td>2.3.3</td>
+<td>シークレット管理サービスの利用</td>
+<td>Step 19</td>
+</tr>
+<tr>
+<td>2.3.4</td>
+<td>機密データのサニタイズ</td>
+<td>Step 20</td>
+</tr>
+<tr>
+<td>2.3.5</td>
+<td>アプリレベルのデータマスキングとサニタイズ</td>
+<td>Step 20</td>
+</tr>
+<tr>
+<td>2.3.6</td>
+<td>マルチテナントのデータアクセスパターン</td>
+<td>Step 21</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+</section>
+<section class="section"><h2 id="appendix-b">付録B　参照ソースURL一覧</h2>
+<h3>B-1　試験・公式ガイド</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>資格ページ（AWS Certified Developer - Associate）</td>
+<td><a target="_blank" rel="noopener" href="https://aws.amazon.com/certification/certified-developer-associate/">https://aws.amazon.com/certification/certified-developer-associate/</a></td>
+</tr>
+<tr>
+<td>試験ガイド（DVA-C02）</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02.html</a></td>
+</tr>
+<tr>
+<td>Content Domain 2: Security</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain2.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/developer-associate-02-domain2.html</a></td>
+</tr>
+<tr>
+<td>対象サービス一覧（In-Scope）</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-02-in-scope-services.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-02-in-scope-services.html</a></td>
+</tr>
+<tr>
+<td>試験ガイド：Technologies and Concepts</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-technologies-concepts.html">https://docs.aws.amazon.com/aws-certification/latest/developer-associate-02/dva-technologies-concepts.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>B-2　認証・認可（Task 1）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAMポリシーの評価ロジック</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html</a></td>
+</tr>
+<tr>
+<td>IAMのセキュリティベストプラクティス</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</a></td>
+</tr>
+<tr>
+<td>IAMロール</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html</a></td>
+</tr>
+<tr>
+<td>AssumeRole API</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html">https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html</a></td>
+</tr>
+<tr>
+<td>混乱した代理問題</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html</a></td>
+</tr>
+<tr>
+<td>SDK・ツール共通の認証情報プロバイダー</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html">https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html</a></td>
+</tr>
+<tr>
+<td>SigV4（AWSリクエストの署名）</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html</a></td>
+</tr>
+<tr>
+<td>Cognitoの用語と概念</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-terms.html">https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-terms.html</a></td>
+</tr>
+<tr>
+<td>Cognito：アクセストークン</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-access-token.html">https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-access-token.html</a></td>
+</tr>
+<tr>
+<td>Cognito：リフレッシュトークン</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-refresh-token.html">https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-the-refresh-token.html</a></td>
+</tr>
+<tr>
+<td>API Gatewayのアクセス制御</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html">https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html</a></td>
+</tr>
+<tr>
+<td>Verified Permissions</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html">https://docs.aws.amazon.com/verifiedpermissions/latest/userguide/what-is-avp.html</a></td>
+</tr>
+<tr>
+<td>RFC 6750（Bearer Token）</td>
+<td><a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc6750">https://datatracker.ietf.org/doc/html/rfc6750</a></td>
+</tr>
+<tr>
+<td>RFC 7519（JWT）</td>
+<td><a target="_blank" rel="noopener" href="https://datatracker.ietf.org/doc/html/rfc7519">https://datatracker.ietf.org/doc/html/rfc7519</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>B-3　暗号化（Task 2）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS KMSとは</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">https://docs.aws.amazon.com/kms/latest/developerguide/overview.html</a></td>
+</tr>
+<tr>
+<td>KMSの概念</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html">https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html</a></td>
+</tr>
+<tr>
+<td>KMSキーのローテーション</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html</a></td>
+</tr>
+<tr>
+<td>別アカウントでのKMSキー使用</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html">https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-modifying-external-accounts.html</a></td>
+</tr>
+<tr>
+<td>S3のサーバーサイド暗号化</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html</a></td>
+</tr>
+<tr>
+<td>AWS Encryption SDK</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/introduction.html">https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/introduction.html</a></td>
+</tr>
+<tr>
+<td>AWS Certificate Manager</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html">https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html</a></td>
+</tr>
+<tr>
+<td>AWS Private CA</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html">https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html</a></td>
+</tr>
+<tr>
+<td>EC2キーペア</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>B-4　機密データ管理（Task 3）</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Secrets Manager</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html</a></td>
+</tr>
+<tr>
+<td>シークレットのローテーション</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html">https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html</a></td>
+</tr>
+<tr>
+<td>Parameter Store</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html</a></td>
+</tr>
+<tr>
+<td>Lambda環境変数</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html">https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html</a></td>
+</tr>
+<tr>
+<td>Amazon Macie</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html">https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html</a></td>
+</tr>
+<tr>
+<td>CloudWatch Logsのデータ保護</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/mask-sensitive-log-data.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/mask-sensitive-log-data.html</a></td>
+</tr>
+<tr>
+<td>SaaS Lens（Well-Architected）</td>
+<td><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html">https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/saas-lens.html</a></td>
+</tr>
+<tr>
+<td>OWASP Top 10</td>
+<td><a target="_blank" rel="noopener" href="https://owasp.org/www-project-top-ten/">https://owasp.org/www-project-top-ten/</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3>B-5　URLの確認状況について</h3>
+<ul>
+<li>試験ガイド3ページ（概要・ドメイン2・対象サービス）の内容と、KMSキーのローテーション、Cognitoのトークン仕様（既定の有効期限など）は、作成時に公式ドキュメントを取得して確認しました。</li>
+<li>それ以外のURLは、AWS公式ドキュメントの構成に基づいて掲載しています。<strong>ページの移動・改版があり得る</strong>ため、リンク切れがあればページ内検索で最新ページを探してください。</li>
+<li>上限値・既定値・料金・機能プラン（Cognito、KMS、Secrets Managerなど）は更新されることがあります。受験前に必ず最新の公式情報で再確認してください。</li>
+</ul>
+<hr />
+<p><em>作成日：2026-10-03　対象：AWS Certified Developer - Associate（DVA-C02）　ドメイン2：セキュリティ</em></p>
+</section>
+
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js"></script>
+<script>
+const DIAGRAMS = ["flowchart TB\n  D[\"ドメイン2 セキュリティ\"] --> T1[\"Task 1<br/>認証・認可の実装\"]\n  D --> T2[\"Task 2<br/>AWSサービスによる暗号化\"]\n  D --> T3[\"Task 3<br/>アプリ内の機密データ管理\"]\n  T1 --> S1[\"2.1.1〜2.1.8<br/>8スキル\"]\n  T2 --> S2[\"2.2.1〜2.2.7<br/>7スキル\"]\n  T3 --> S3[\"2.3.1〜2.3.6<br/>6スキル\"]\n", "flowchart LR\n  A[\"Step 1<br/>全体像\"] --> B[\"Step 2-9<br/>Task 1<br/>認証・認可\"]\n  B --> C[\"Step 10-16<br/>Task 2<br/>暗号化\"]\n  C --> D[\"Step 17-21<br/>Task 3<br/>機密データ\"]\n  D --> E[\"Step 22-23<br/>AI・総まとめ\"]\n", "flowchart TB\n  U[\"ユーザー・アプリ\"] --> A[\"1. 認証<br/>あなたは誰か\"]\n  A --> B[\"2. 認可<br/>何をしてよいか\"]\n  B --> C[\"3. 暗号化<br/>データを読めなくする\"]\n  C --> D[\"4. 機密管理<br/>鍵・パスワードを安全に持つ\"]\n", "flowchart TD\n  S[\"リクエスト\"] --> D1{\"明示的な Deny<br/>がある？\"}\n  D1 -- \"ある\" --> X[\"拒否\"]\n  D1 -- \"ない\" --> D2{\"SCP・境界・セッション<br/>ポリシーが適用されている場合<br/>すべて許可している？\"}\n  D2 -- \"いいえ\" --> X\n  D2 -- \"はい\" --> D3{\"どこかに Allow<br/>がある？\"}\n  D3 -- \"ない\" --> X2[\"暗黙の Deny<br/>拒否\"]\n  D3 -- \"ある\" --> OK[\"許可\"]\n", "sequenceDiagram\n  participant App as アプリ（アカウントA）\n  participant STS as AWS STS\n  participant S3 as アカウントBのS3\n  App->>STS: AssumeRole（対象ロールARN）\n  STS->>STS: 信頼ポリシーを確認\n  STS-->>App: 一時認証情報（有効期限つき）\n  App->>S3: 一時認証情報で署名したリクエスト\n  S3-->>App: 結果を返す\n", "flowchart TD\n  A[\"コードやCLIオプションで<br/>明示した認証情報\"] --> B[\"環境変数<br/>AWS_ACCESS_KEY_ID など\"]\n  B --> C[\"共有設定・認証情報ファイル<br/>プロファイル・SSO・AssumeRole\"]\n  C --> D[\"コンテナの認証情報<br/>ECSタスクロールなど\"]\n  D --> E[\"EC2インスタンスメタデータ<br/>インスタンスプロファイル\"]\n", "sequenceDiagram\n  participant C as クライアント（SDK/CLI）\n  participant A as AWSサービス\n  C->>C: リクエスト内容・日時・リージョン・サービス名で署名を計算\n  C->>A: リクエスト＋署名（Authorizationヘッダー）\n  A->>A: 同じ手順で署名を再計算して比較\n  A-->>C: 一致すれば処理、不一致なら拒否\n", "flowchart TD\n  Q{\"誰がAWSにアクセスしたい？\"} -->|\"自社アプリのエンドユーザー<br/>数千〜数百万人\"| C[\"Amazon Cognito\"]\n  Q -->|\"社員・開発者（ワークフォース）\"| I[\"IAM Identity Center\"]\n  Q -->|\"既存IdPを直接AWSに信頼させたい<br/>少数の用途・特殊構成\"| M[\"IAM IDプロバイダー<br/>SAML / OIDC + STS\"]\n", "sequenceDiagram\n  participant U as ユーザー（アプリ）\n  participant UP as Cognito ユーザープール\n  participant IP as Cognito IDプール\n  participant STS as AWS STS\n  participant S3 as Amazon S3\n  U->>UP: サインイン（ID/パスワード、ソーシャル等）\n  UP-->>U: IDトークン・アクセストークン・リフレッシュトークン\n  U->>IP: IDトークンを提示して認証情報を要求\n  IP->>STS: ロールの一時認証情報を要求\n  STS-->>IP: 一時認証情報\n  IP-->>U: 一時認証情報\n  U->>S3: 一時認証情報で直接アクセス\n", "sequenceDiagram\n  participant App as クライアントアプリ\n  participant Cog as Cognito ユーザープール\n  participant GW as API Gateway\n  participant L as Lambda\n  App->>Cog: サインイン\n  Cog-->>App: アクセストークン（JWT）\n  App->>GW: Authorization: Bearer アクセストークン\n  GW->>GW: オーソライザーで署名・exp・iss・audを検証\n  GW->>L: 検証済みクレームを付けて転送\n  L-->>App: レスポンス\n", "flowchart TD\n  Q{\"何を制御したい？\"} -->|\"AWSリソースへの操作\"| A[\"IAMポリシー<br/>リソースポリシー\"]\n  Q -->|\"APIのエンドポイント単位\"| B[\"API Gatewayの<br/>スコープ・オーソライザー\"]\n  Q -->|\"ユーザーごとのデータ範囲\"| C[\"DynamoDB LeadingKeys<br/>S3プレフィックス<br/>ポリシー変数\"]\n  Q -->|\"複雑な業務ルール\"| D[\"アプリコード または<br/>Verified Permissions\"]\n", "flowchart TB\n  U[\"ユーザー\"] -->|\"アクセストークン\"| GW[\"API Gateway<br/>Cognitoで検証\"]\n  GW --> A[\"サービスA<br/>Lambda ロールA\"]\n  A -->|\"SigV4署名<br/>IAM認証\"| B[\"サービスB<br/>関数URLまたはAPI Gateway\"]\n  A -->|\"最小権限のロールA\"| DDB[\"DynamoDB\"]\n  B -->|\"最小権限のロールB\"| SQS[\"SQS\"]\n", "sequenceDiagram\n  participant SA as サービスA\n  participant Cog as Cognito（リソースサーバーとスコープ）\n  participant SB as サービスB（API）\n  SA->>Cog: クライアントID・シークレットでトークン要求（スコープ指定）\n  Cog-->>SA: アクセストークン（scope付きJWT）\n  SA->>SB: Authorization: Bearer アクセストークン\n  SB->>SB: 署名・scopeを検証\n  SB-->>SA: レスポンス\n", "flowchart LR\n  C[\"クライアント\"] -->|\"転送中：TLS\"| E[\"ALB / API Gateway / CloudFront\"]\n  E -->|\"転送中：TLS\"| A[\"アプリ（Lambda/EC2）\"]\n  A -->|\"転送中：TLS\"| D[(\"S3 / DynamoDB / RDS<br/>保管時：KMSで暗号化\")]\n", "sequenceDiagram\n  participant App as アプリ\n  participant KMS as AWS KMS\n  participant St as ストレージ（S3等）\n  App->>KMS: GenerateDataKey（KMSキー指定）\n  KMS-->>App: 平文データキー＋暗号化されたデータキー\n  App->>App: 平文データキーでデータを暗号化\n  App->>App: 平文データキーをメモリから破棄\n  App->>St: 暗号文＋暗号化されたデータキーを保存\n  Note over App,St: 復号時は暗号化されたデータキーをKMSのDecryptで平文に戻して使う\n", "flowchart LR\n  subgraph CS[\"クライアントサイド暗号化\"]\n    A1[\"アプリが暗号化\"] --> A2[\"暗号文を送信\"] --> A3[(\"AWSには<br/>暗号文のみ届く\")]\n  end\n  subgraph SS[\"サーバーサイド暗号化\"]\n    B1[\"アプリが平文を送信<br/>TLSで保護\"] --> B2[\"AWSが保存時に暗号化\"] --> B3[(\"暗号文として保存\")]\n  end\n", "flowchart TD\n  Q1{\"AWSの内部にも<br/>平文を見せたくない？\"} -->|\"はい\"| CSE[\"クライアントサイド暗号化<br/>Encryption SDKなど\"]\n  Q1 -->|\"いいえ\"| Q2{\"鍵の使用を監査<br/>・細かく制御したい？\"}\n  Q2 -->|\"はい\"| KMS[\"SSE-KMS<br/>カスタマーマネージドキー\"]\n  Q2 -->|\"いいえ\"| S3[\"SSE-S3<br/>（既定）\"]\n  Q1 -->|\"鍵そのものを自分で持ち込む\"| C[\"SSE-C<br/>（利用者がリクエストごとに鍵を提供）\"]\n", "flowchart TD\n  A[\"ACMで証明書をリクエスト<br/>ドメイン名を指定\"] --> B[\"DNS検証用のCNAMEレコードを<br/>Route 53などに追加\"]\n  B --> C[\"ACMが検証して発行\"]\n  C --> D[\"ALB・CloudFront・API Gatewayに関連付け\"]\n  D --> E[\"期限前にACMが自動更新<br/>DNSレコードが残っていれば\"]\n", "flowchart TB\n  R[\"ルートCA<br/>オフライン運用が基本\"] --> S[\"下位CA<br/>日常の発行用\"]\n  S --> C1[\"サービスAのサーバー証明書\"]\n  S --> C2[\"サービスBのクライアント証明書<br/>mTLS\"]\n  S --> C3[\"IoTデバイスの証明書\"]\n", "sequenceDiagram\n  participant B as アカウントBのロール\n  participant IAM as Bの IAMポリシー\n  participant KP as アカウントAの鍵ポリシー\n  participant K as KMSキー（アカウントA）\n  B->>IAM: kms:Decrypt を呼ぶ権限は？\n  IAM-->>B: AのキーARNに許可あり\n  B->>K: Decrypt リクエスト\n  K->>KP: Bを許可しているか確認\n  KP-->>K: 許可あり\n  K-->>B: 復号結果\n", "flowchart TD\n  Q[\"別アカウントと暗号化データを共有したい\"] --> K{\"暗号化に使っている鍵は？\"}\n  K -->|\"AWSマネージドキー\"| N[\"共有不可<br/>カスタマーマネージドキーで暗号化し直す\"]\n  K -->|\"カスタマーマネージドキー\"| Y[\"鍵ポリシーでBを許可<br/>＋BのIAMポリシーで許可\"]\n", "flowchart LR\n  A[\"キーマテリアルv1<br/>で暗号化したデータ\"] -.->|\"復号時：自動的にv1を使用\"| K[\"同じKMSキー<br/>ID・ARN・エイリアス不変\"]\n  K --> B[\"新規の暗号化：最新のv2を使用\"]\n", "sequenceDiagram\n  participant Op as 運用者\n  participant KMS as AWS KMS\n  participant App as アプリ\n  Op->>KMS: 新しいKMSキーを作成\n  Op->>KMS: エイリアス alias/my-app-key を新キーに付け替え\n  App->>KMS: alias/my-app-key で暗号化（新キー）\n  Note over App,KMS: 古いデータの復号には古いキーを残して使用\n", "flowchart TD\n  D[\"データを受け取る・保存する\"] --> C{\"分類する\"}\n  C -->|\"PII / PHI / カード / 認証情報\"| H[\"高保護<br/>CMKで暗号化・最小権限<br/>マスキング・監査\"]\n  C -->|\"社内限定\"| M[\"標準保護<br/>暗号化・ロールで制御\"]\n  C -->|\"公開\"| L[\"基本保護<br/>転送中の暗号化\"]\n  H --> T[\"タグ付け＋Macieで継続的に検出\"]\n  M --> T\n  L --> T\n", "flowchart LR\n  subgraph L1[\"既定\"]\n    A[\"環境変数<br/>保管時にAWS管理キーで暗号化\"] --> B[\"実行時に自動復号して<br/>関数に渡される\"]\n  end\n  subgraph L2[\"暗号化ヘルパー\"]\n    C[\"値をKMSで事前に暗号化<br/>暗号文を環境変数に設定\"] --> D[\"コードでkms:Decryptを呼び<br/>メモリ上で復号\"]\n  end\n", "flowchart LR\n  E[\"環境変数<br/>SECRET_NAME=prod/db/credentials\"] --> F[\"Lambdaコード\"]\n  F -->|\"実行時にAPIで取得\"| S[\"Secrets Manager<br/>または Parameter Store\"]\n  S -->|\"KMSで暗号化されたまま保管\"| K[\"KMS\"]\n", "flowchart TD\n  Q1{\"自動ローテーションが<br/>必要？\"} -->|\"はい\"| SM[\"Secrets Manager\"]\n  Q1 -->|\"いいえ\"| Q2{\"機密情報か？\"}\n  Q2 -->|\"いいえ（設定値）\"| PS1[\"Parameter Store<br/>String / StringList\"]\n  Q2 -->|\"はい\"| Q3{\"コスト重視で<br/>ローテーション不要？\"}\n  Q3 -->|\"はい\"| PS2[\"Parameter Store<br/>SecureString\"]\n  Q3 -->|\"いいえ・DB認証情報など\"| SM\n", "sequenceDiagram\n  participant SM as Secrets Manager\n  participant L as ローテーションLambda\n  participant DB as データベース\n  SM->>L: createSecret：新しいパスワードを生成しAWSPENDINGで保存\n  SM->>L: setSecret：DBに新しいパスワードを設定\n  L->>DB: パスワード変更\n  SM->>L: testSecret：新しい認証情報で接続を確認\n  L->>DB: テスト接続\n  SM->>L: finishSecret：AWSPENDINGをAWSCURRENTに昇格\n", "flowchart TD\n  D[\"機密データ\"] --> L[\"アプリログ・例外メッセージ\"]\n  D --> R[\"APIレスポンス<br/>必要以上の項目を返す\"]\n  D --> U[\"URL・クエリ文字列<br/>アクセスログに残る\"]\n  D --> T[\"テスト・開発環境<br/>本番データのコピー\"]\n  D --> A[\"分析・監視・トレース<br/>X-Ray・メトリクスのタグ\"]\n", "flowchart TB\n  subgraph Silo[\"サイロ\"]\n    S1[\"テナントA<br/>専用DB\"]\n    S2[\"テナントB<br/>専用DB\"]\n  end\n  subgraph Pool[\"プール\"]\n    P[\"共有テーブル<br/>パーティションキーにテナントID\"]\n  end\n  subgraph Bridge[\"ブリッジ\"]\n    B1[\"共有アプリ層\"]\n    B2[\"高機密テナントのみ専用DB\"]\n  end\n", "sequenceDiagram\n  participant U as テナントAのユーザー\n  participant GW as API Gateway（JWT検証）\n  participant L as Lambda\n  participant STS as AWS STS\n  participant D as DynamoDB\n  U->>GW: アクセストークン（tenant_idクレーム入り）\n  GW->>L: 検証済みクレームを渡す\n  L->>L: リクエストボディではなくクレームからtenant_idを取得\n  L->>STS: テナント限定の一時認証情報を取得\n  STS-->>L: 範囲がテナントAに限定された認証情報\n  L->>D: 限定された認証情報でクエリ\n  D-->>L: テナントAのデータのみ\n", "flowchart TD\n  A[\"1. 認証<br/>JWT検証\"] --> B[\"2. テナント特定<br/>信頼できるクレームから\"]\n  B --> C[\"3. 権限の絞り込み<br/>テナント限定の認証情報／RLS\"]\n  C --> D[\"4. データアクセス\"]\n  D --> E[\"5. 監視<br/>テナントIDをログ・メトリクスに付与\"]\n", "flowchart TD\n  Q{\"誰が何にアクセスする？\"} -->|\"アプリのエンドユーザー\"| A1{\"AWSリソースへ直接アクセス？\"}\n  A1 -->|\"はい\"| IP[\"Cognito IDプール<br/>一時認証情報\"]\n  A1 -->|\"いいえ（API経由）\"| UP[\"Cognito ユーザープール<br/>JWT＋API Gatewayオーソライザー\"]\n  Q -->|\"社員・開発者\"| IC[\"IAM Identity Center\"]\n  Q -->|\"AWS上のコード（Lambda/EC2/ECS）\"| R[\"IAMロール<br/>実行ロール・タスクロール\"]\n  Q -->|\"外部CI・オンプレ\"| O[\"OIDCフェデレーション または<br/>IAM Roles Anywhere\"]\n  Q -->|\"サービス間（M2M）\"| M[\"IAM認証SigV4 または<br/>クライアントクレデンシャル\"]\n", "flowchart TD\n  Q{\"何をしたい？\"} -->|\"AWSに任せて簡単に暗号化\"| S[\"サーバーサイド暗号化<br/>SSE-S3 / SSE-KMS\"]\n  Q -->|\"AWSにも平文を見せない\"| C[\"クライアントサイド暗号化<br/>Encryption SDK\"]\n  Q -->|\"4KB超のデータをKMSで\"| E[\"エンベロープ暗号化<br/>GenerateDataKey\"]\n  Q -->|\"鍵の使用を監査・細かく制御\"| K[\"カスタマーマネージドキー\"]\n  Q -->|\"別アカウントと共有\"| X[\"カスタマーマネージドキー<br/>鍵ポリシー＋IAMの両方\"]\n  Q -->|\"TLS証明書（公開）\"| A[\"ACM\"]\n  Q -->|\"社内PKI・mTLS\"| P[\"AWS Private CA\"]\n", "flowchart TD\n  Q{\"機密情報をどう扱う？\"} -->|\"DBパスワード・APIキー<br/>ローテーションあり\"| SM[\"Secrets Manager\"]\n  Q -->|\"設定値・低コストな機密\"| PS[\"Parameter Store<br/>SecureString\"]\n  Q -->|\"環境変数に入れたい\"| E[\"名前だけを入れ<br/>実行時に取得\"]\n  Q -->|\"ログ・レスポンスに出る\"| M[\"サニタイズ・マスキング<br/>データ保護ポリシー\"]\n  Q -->|\"S3内の機密を探す\"| MA[\"Amazon Macie\"]\n  Q -->|\"複数顧客のデータ\"| MT[\"テナント分離<br/>IAM条件・RLS\"]\n"];
+function dedent(s){return s.replace(/^\n+|\s+$/g,'')}
+async function renderAll(){
+  mermaid.initialize({startOnLoad:false,securityLevel:'loose',theme:'base',
+    themeVariables:{fontFamily:'"Noto Sans JP",sans-serif',fontSize:'16px',primaryColor:'#eceefb',primaryBorderColor:'#3b3f9e',primaryTextColor:'#1c2333',lineColor:'#4a5266',secondaryColor:'#fff8e6',tertiaryColor:'#f2ede0',actorBkg:'#eceefb',actorBorder:'#3b3f9e',noteBkgColor:'#fff8e6',noteBorderColor:'#b8892b'},
+    flowchart:{useMaxWidth:false,htmlLabels:true,subGraphTitleMargin:{top:10,bottom:28}},
+    sequence:{useMaxWidth:false}});
+  const wraps=document.querySelectorAll('.diagram-wrap');
+  for(const w of wraps){
+    const i=+w.dataset.diagram;
+    try{
+      const {svg}=await mermaid.render('mmd-'+i,dedent(DIAGRAMS[i]));
+      w.innerHTML=svg;
+      const s=w.querySelector('svg');
+      const vb=s.viewBox.baseVal;
+      let h=vb.height+(/sequence/i.test(DIAGRAMS[i].slice(0,20))?110:15);
+      s.removeAttribute('width');s.removeAttribute('height');
+      s.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.width} ${h}`);
+      Object.assign(s.style,{width:vb.width+'px',maxWidth:'none',height:'auto',overflow:'visible',flexShrink:'0'});
+    }catch(e){w.textContent='図の描画に失敗しました: '+e.message}
+  }
+}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{if(window.mermaid)renderAll();});
+if(window.hljs){hljs.highlightAll()}
+// sidebar
+const links=[...document.querySelectorAll('.nav-a')];
+const secs=links.map(a=>document.getElementById(a.getAttribute('href').slice(1)));
+function onScroll(){
+  const y=window.innerHeight*0.25;let cur=0;
+  secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<=y)cur=i});
+  links.forEach((a,i)=>a.classList.toggle('active',i===cur));
+}
+let tick=false;
+addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(()=>{onScroll();tick=false})}},{passive:true});
+onScroll();
+// mobile drawer
+const sb=document.querySelector('.sidebar');
+document.getElementById('menuBtn').addEventListener('click',()=>sb.classList.toggle('open'));
+links.forEach(a=>a.addEventListener('click',()=>sb.classList.remove('open')));
+document.addEventListener('click',e=>{if(sb.classList.contains('open')&&!sb.contains(e.target)&&e.target.id!=='menuBtn')sb.classList.remove('open')});
+// checklist progress
+const boxes=[...document.querySelectorAll('li.chk input')];
+const pb=document.getElementById('pcount');
+function upd(){const n=boxes.filter(b=>b.checked).length;pb.textContent=n+' / '+boxes.length;boxes.forEach(b=>b.closest('li').classList.toggle('done',b.checked))}
+boxes.forEach(b=>b.addEventListener('change',upd));upd();
+</script>
+</body>
+</html>
