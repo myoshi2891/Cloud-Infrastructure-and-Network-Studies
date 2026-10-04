@@ -178,3 +178,32 @@ describe('terraform-up-and-running — 目次リンクのスクロールとフ�
         expect(target).toHaveFocus();
     });
 });
+
+describe('terraform-up-and-running — モバイル目次の Escape 操作', () => {
+    it('開いている目次は Escape で閉じ、フォーカスを .sidebar-toggle へ戻す', () => {
+        const { container } = render(<Page />);
+        const toggle = container.querySelector<HTMLButtonElement>('.sidebar-toggle')!;
+        const link = container.querySelector<HTMLAnchorElement>('#sidebar a[data-target]')!;
+        fireEvent.click(toggle);
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        link.focus();
+
+        fireEvent.keyDown(window, { key: 'Escape' });
+
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(container.querySelector('#sidebar')).not.toHaveClass('open');
+        expect(toggle).toHaveFocus();
+    });
+
+    it('閉じている目次では Escape でフォーカスを動かさない', () => {
+        const { container } = render(<Page />);
+        const toggle = container.querySelector<HTMLButtonElement>('.sidebar-toggle')!;
+        const link = container.querySelector<HTMLAnchorElement>('#sidebar a[data-target]')!;
+        link.focus();
+
+        fireEvent.keyDown(window, { key: 'Escape' });
+
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(link).toHaveFocus();
+    });
+});

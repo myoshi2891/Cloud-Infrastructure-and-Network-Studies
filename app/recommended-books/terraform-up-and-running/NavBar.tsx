@@ -1,7 +1,7 @@
 // app/recommended-books/terraform-up-and-running/NavBar.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS, type NavItem } from './constants';
 
 interface NavBarProps {
@@ -16,6 +16,7 @@ interface NavBarProps {
  */
 export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
     const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0]?.target ?? '');
+    const toggleRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (typeof IntersectionObserver === 'undefined') return;
@@ -45,6 +46,18 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
         };
     }, []);
 
+    // 開いている間だけ Escape を監視し、閉じた状態ではフォーカスを動かさない。
+    useEffect(() => {
+        if (!isOpen) return;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key !== 'Escape') return;
+            onClose();
+            toggleRef.current?.focus();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [isOpen, onClose]);
+
     const handleLinkClick = (href: string, targetId: string) => {
         onClose();
         setActiveId(targetId);
@@ -61,6 +74,7 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
     return (
         <>
             <button
+                ref={toggleRef}
                 type="button"
                 className="sidebar-toggle"
                 onClick={onToggle}
