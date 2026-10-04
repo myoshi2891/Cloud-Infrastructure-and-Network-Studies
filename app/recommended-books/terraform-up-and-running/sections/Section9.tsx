@@ -47,33 +47,33 @@ export function Section9({ Diagram }: SectionProps) {
 <p>{' '}原著刊行時点（2022年）ではTerraform公式のテストフレームワークは存在せず、Go言語製のTerratest（Gruntwork社製）が事実上の標準でした。しかし<strong>Terraform 1.6でネイティブの<code>terraform test</code>コマンドがGAとなり、Terraform 1.7で<code>mock_provider</code>によるモック機能が追加</strong>されたことで、HCLだけで書ける公式テストの選択肢が確立しました。2026年時点では「ロジック検証はネイティブ<code>terraform test</code>＋モック、実クラウド確認が必要な深いテストはTerratest」という併用が一般的なベストプラクティスです。{' '}</p>
 <p><code>tests/webserver_cluster.tftest.hcl</code>の例:</p>
 <pre className="code-block">
-                    <div className="code-line">mock_provider "aws" &#123;&#125;</div>
+                    <div className="code-line">mock_provider &quot;aws&quot; &#123;&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">run "validate_cluster_size" &#123;</div>
+                    <div className="code-line">run &quot;validate_cluster_size&quot; &#123;</div>
                     <div className="code-line">  command = plan</div>
                     <div className="code-line"></div>
                     <div className="code-line">  variables &#123;</div>
-                    <div className="code-line">    cluster_name  = "test-cluster"</div>
-                    <div className="code-line">    instance_type = "t2.micro"</div>
+                    <div className="code-line">    cluster_name  = &quot;test-cluster&quot;</div>
+                    <div className="code-line">    instance_type = &quot;t2.micro&quot;</div>
                     <div className="code-line">    min_size      = 2</div>
                     <div className="code-line">    max_size      = 2</div>
                     <div className="code-line">  &#125;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  assert &#123;</div>
                     <div className="code-line">    condition     = aws_autoscaling_group.example.min_size == 2</div>
-                    <div className="code-line">    error_message = "ASGのmin_sizeが期待値と一致しません"</div>
+                    <div className="code-line">    error_message = &quot;ASGのmin_sizeが期待値と一致しません&quot;</div>
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">run "reject_invalid_instance_type" &#123;</div>
+                    <div className="code-line">run &quot;reject_invalid_instance_type&quot; &#123;</div>
                     <div className="code-line">  command = plan</div>
                     <div className="code-line"></div>
                     <div className="code-line">  variables &#123;</div>
                     <div className="code-line">    # instance_type の validation 失敗だけをテストしたいので、</div>
                     <div className="code-line">    # 必須変数である cluster_name には有効な値を与えておく</div>
                     <div className="code-line">    # （未指定だと「変数未設定」で先に失敗し、意図したテストにならない）</div>
-                    <div className="code-line">    cluster_name  = "test-cluster"</div>
-                    <div className="code-line">    instance_type = ""</div>
+                    <div className="code-line">    cluster_name  = &quot;test-cluster&quot;</div>
+                    <div className="code-line">    instance_type = &quot;&quot;</div>
                     <div className="code-line">  &#125;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  expect_failures = [var.instance_type]</div>
@@ -93,18 +93,18 @@ export function Section9({ Diagram }: SectionProps) {
                     <div className="code-line">package test</div>
                     <div className="code-line"></div>
                     <div className="code-line">import (</div>
-                    <div className="code-line">    "testing"</div>
-                    <div className="code-line">    "github.com/gruntwork-io/terratest/modules/terraform"</div>
+                    <div className="code-line">    &quot;testing&quot;</div>
+                    <div className="code-line">    &quot;github.com/gruntwork-io/terratest/modules/terraform&quot;</div>
                     <div className="code-line">)</div>
                     <div className="code-line"></div>
                     <div className="code-line">func TestWebServerCluster(t *testing.T) &#123;</div>
                     <div className="code-line">    terraformOptions := &amp;terraform.Options&#123;</div>
-                    <div className="code-line">        TerraformDir: "../examples/webserver-cluster",</div>
+                    <div className="code-line">        TerraformDir: &quot;../examples/webserver-cluster&quot;,</div>
                     <div className="code-line">    &#125;</div>
                     <div className="code-line"></div>
                     <div className="code-line">    defer terraform.Destroy(t, terraformOptions)</div>
                     <div className="code-line">    terraform.InitAndApply(t, terraformOptions)</div>
-                    <div className="code-line">    // HTTPリクエストなどで検証</div>
+                    <div className="code-line">    {'//'} HTTPリクエストなどで検証</div>
                     <div className="code-line">&#125;</div>
                 </pre>
 

@@ -8,7 +8,7 @@ interface SectionProps {
 export function SectionIntro({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<div className="callout callout-note">{' '}<div className="callout-icon">ℹ{' '}</div>{' '}<div className="callout-body">{' '}<p>{' '}<strong>原著</strong>:{' '}<em>Terraform: Up and Running, 3rd Edition</em>（Yevgeniy Brikman著、O'Reilly Media、2022年9月刊、全460ページ）{' '}<strong>原著URL</strong>:{' '}<a href="https://www.oreilly.com/library/view/terraform-up-and/9781098116736/">https://www.oreilly.com/library/view/terraform-up-and/9781098116736/</a>{' '}本ガイドは同書の10章構成（前書き・第1〜10章・付録A「推奨読書リスト」）を土台に、初学者が挫折しないよう独自に再構成し、2026年8月時点の最新エコシステム動向（HCP Terraform、OpenTofu、Ephemeral Resources等）を補足した学習ドキュメントです。書籍本文の引用ではなく、公式ドキュメントとWeb検索で確認した一次情報に基づく解説です。{' '}</p>{' '}</div>{' '}</div>
+<div className="callout callout-note">{' '}<div className="callout-icon">ℹ{' '}</div>{' '}<div className="callout-body">{' '}<p>{' '}<strong>原著</strong>:{' '}<em>Terraform: Up and Running, 3rd Edition</em>（Yevgeniy Brikman著、O&apos;Reilly Media、2022年9月刊、全460ページ）{' '}<strong>原著URL</strong>:{' '}<a href="https://www.oreilly.com/library/view/terraform-up-and/9781098116736/">https://www.oreilly.com/library/view/terraform-up-and/9781098116736/</a>{' '}本ガイドは同書の10章構成（前書き・第1〜10章・付録A「推奨読書リスト」）を土台に、初学者が挫折しないよう独自に再構成し、2026年8月時点の最新エコシステム動向（HCP Terraform、OpenTofu、Ephemeral Resources等）を補足した学習ドキュメントです。書籍本文の引用ではなく、公式ドキュメントとWeb検索で確認した一次情報に基づく解説です。{' '}</p>{' '}</div>{' '}</div>
 <h2 id="この記事について">この記事について</h2>
 <div className="table-scroll">{' '}<table>
                         <thead>

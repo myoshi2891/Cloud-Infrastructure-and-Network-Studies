@@ -49,27 +49,27 @@ export function Section5({ Diagram }: SectionProps) {
                     </table>{' '}</div>
 <pre className="code-block">
                     <div className="code-line"># 以下の例が参照する入力変数。宣言がないと undeclared variable エラーになる</div>
-                    <div className="code-line">variable "names" &#123;</div>
-                    <div className="code-line">  description = "for式で大文字化する名前のリスト"</div>
+                    <div className="code-line">variable &quot;names&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;for式で大文字化する名前のリスト&quot;</div>
                     <div className="code-line">  type        = list(string)</div>
-                    <div className="code-line">  default     = ["neo", "trinity", "morpheus"]</div>
+                    <div className="code-line">  default     = [&quot;neo&quot;, &quot;trinity&quot;, &quot;morpheus&quot;]</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">variable "users" &#123;</div>
-                    <div className="code-line">  description = "バケットポリシーへ展開するユーザー名のリスト"</div>
+                    <div className="code-line">variable &quot;users&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;バケットポリシーへ展開するユーザー名のリスト&quot;</div>
                     <div className="code-line">  type        = list(string)</div>
-                    <div className="code-line">  default     = ["neo", "trinity"]</div>
+                    <div className="code-line">  default     = [&quot;neo&quot;, &quot;trinity&quot;]</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
                     <div className="code-line"># count: 単純な複製（ただしリスト順序に依存し途中削除に弱い）</div>
-                    <div className="code-line">resource "aws_iam_user" "example" &#123;</div>
+                    <div className="code-line">resource &quot;aws_iam_user&quot; &quot;example&quot; &#123;</div>
                     <div className="code-line">  count = 3</div>
-                    <div className="code-line">  name  = "neo.$&#123;count.index&#125;"</div>
+                    <div className="code-line">  name  = &quot;neo.$&#123;count.index&#125;&quot;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
                     <div className="code-line"># for_each: キーに基づく複製（推奨）。順序に依存しないため安全に増減できる</div>
-                    <div className="code-line">resource "aws_iam_user" "example2" &#123;</div>
-                    <div className="code-line">  for_each = toset(["neo", "trinity", "morpheus"])</div>
+                    <div className="code-line">resource &quot;aws_iam_user&quot; &quot;example2&quot; &#123;</div>
+                    <div className="code-line">  for_each = toset([&quot;neo&quot;, &quot;trinity&quot;, &quot;morpheus&quot;])</div>
                     <div className="code-line">  name     = each.value</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
@@ -91,20 +91,20 @@ export function Section5({ Diagram }: SectionProps) {
 <h3 id="5-5-条件分岐">5-5. 条件分岐</h3>
 <p>{' '}Terraformには<code>if</code>文はありませんが、三項演算子と<code>count</code>/<code>for_each</code>を組み合わせて条件付きリソース作成を表現します。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">variable "enable_autoscaling" &#123;</div>
-                    <div className="code-line">  description = "スケジュールベースのオートスケーリングを有効にするか"</div>
+                    <div className="code-line">variable &quot;enable_autoscaling&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;スケジュールベースのオートスケーリングを有効にするか&quot;</div>
                     <div className="code-line">  type        = bool</div>
                     <div className="code-line">  default     = false</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource "aws_autoscaling_schedule" "scale_out_during_business_hours" &#123;</div>
+                    <div className="code-line">resource &quot;aws_autoscaling_schedule&quot; &quot;scale_out_during_business_hours&quot; &#123;</div>
                     <div className="code-line">  count = var.enable_autoscaling ? 1 : 0</div>
                     <div className="code-line"></div>
-                    <div className="code-line">  scheduled_action_name = "scale-out-during-business-hours"</div>
+                    <div className="code-line">  scheduled_action_name = &quot;scale-out-during-business-hours&quot;</div>
                     <div className="code-line">  min_size               = 2</div>
                     <div className="code-line">  max_size               = 10</div>
                     <div className="code-line">  desired_capacity       = 10</div>
-                    <div className="code-line">  recurrence             = "0 9 * * *"</div>
+                    <div className="code-line">  recurrence             = &quot;0 9 * * *&quot;</div>
                     <div className="code-line">  autoscaling_group_name = aws_autoscaling_group.example.name</div>
                     <div className="code-line">&#125;</div>
                 </pre>
@@ -114,7 +114,7 @@ export function Section5({ Diagram }: SectionProps) {
 <ol type="1">{' '}<li>{' '}<strong>新旧のASGを同じロードバランサー（ターゲットグループ）に接続する。</strong>{' '}接続していなければ、そもそもトラフィックの引き継ぎ先が存在しません。{' '}</li>{' '}<li>{' '}<strong><code>min_elb_capacity</code>（ASG新規作成時）または<code>wait_for_elb_capacity</code>（既存ASGの容量変更時）で、指定台数がELBのヘルスチェックを通過するまでTerraformを待たせる。</strong>{' '}この待機がないと、健全なインスタンスが揃う前に旧ASGが破棄されます。{' '}</li>{' '}<li>{' '}<strong>既存ASGのインスタンス入れ替えは<code>instance_refresh</code>に任せ、その完了を明示的に確認する。</strong>{' '}<code>instance_refresh</code>は<code>apply</code>の完了後もAWS側で非同期に進むため、<strong><code>apply</code>が成功しても入れ替えが成功したとは限りません</strong>。CDパイプライン側でリフレッシュのステータス（<code>Successful</code>{' '}/{' '}<code>Failed</code>{' '}/{' '}<code>Cancelled</code>）をポーリングし、失敗・中断時は直前のLaunch Templateバージョンへ戻すロールバック手順まで用意して初めて運用に耐えます。{' '}</li>{' '}</ol>
 <Diagram id="diag-9" ariaLabel="ASGとALBを用いたゼロダウンタイム（ローリング/ブルーグリーン）デプロイフロー" />
 <pre className="code-block">
-                    <div className="code-line">resource "aws_launch_template" "example" &#123;</div>
+                    <div className="code-line">resource &quot;aws_launch_template&quot; &quot;example&quot; &#123;</div>
                     <div className="code-line">  # ...</div>
                     <div className="code-line">  lifecycle &#123;</div>
                     <div className="code-line">    create_before_destroy = true</div>
@@ -123,40 +123,40 @@ export function Section5({ Diagram }: SectionProps) {
                     <div className="code-line"></div>
                     <div className="code-line"># ASGが参照するターゲットグループ。この宣言がないと</div>
                     <div className="code-line"># aws_lb_target_group.asg は未定義参照となり terraform validate が失敗する</div>
-                    <div className="code-line">resource "aws_lb_target_group" "asg" &#123;</div>
-                    <div className="code-line">  name = "terraform-asg-example"</div>
+                    <div className="code-line">resource &quot;aws_lb_target_group&quot; &quot;asg&quot; &#123;</div>
+                    <div className="code-line">  name = &quot;terraform-asg-example&quot;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  # インスタンスが待ち受け、セキュリティグループが開放しているポートと一致させる。</div>
                     <div className="code-line">  # ここを 80 のままにするとヘルスチェックが通らず、min_elb_capacity の待機が</div>
                     <div className="code-line">  # タイムアウトして apply が失敗する</div>
                     <div className="code-line">  port     = 8080</div>
-                    <div className="code-line">  protocol = "HTTP"</div>
+                    <div className="code-line">  protocol = &quot;HTTP&quot;</div>
                     <div className="code-line">  vpc_id   = var.vpc_id</div>
                     <div className="code-line"></div>
                     <div className="code-line">  health_check &#123;</div>
-                    <div className="code-line">    path     = "/"</div>
-                    <div className="code-line">    protocol = "HTTP"</div>
-                    <div className="code-line">    matcher  = "200"</div>
+                    <div className="code-line">    path     = &quot;/&quot;</div>
+                    <div className="code-line">    protocol = &quot;HTTP&quot;</div>
+                    <div className="code-line">    matcher  = &quot;200&quot;</div>
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">variable "vpc_id" &#123;</div>
-                    <div className="code-line">  description = "ターゲットグループを作成するVPCのID"</div>
+                    <div className="code-line">variable &quot;vpc_id&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;ターゲットグループを作成するVPCのID&quot;</div>
                     <div className="code-line">  type        = string</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">variable "min_size" &#123;</div>
-                    <div className="code-line">  description = "ASGの最小インスタンス数（min_elb_capacityの待機台数にも使う）"</div>
+                    <div className="code-line">variable &quot;min_size&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;ASGの最小インスタンス数（min_elb_capacityの待機台数にも使う）&quot;</div>
                     <div className="code-line">  type        = number</div>
                     <div className="code-line">  default     = 2</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource "aws_autoscaling_group" "example" &#123;</div>
+                    <div className="code-line">resource &quot;aws_autoscaling_group&quot; &quot;example&quot; &#123;</div>
                     <div className="code-line">  # ...</div>
                     <div className="code-line"></div>
                     <div className="code-line">  # 1. ロードバランサー（ターゲットグループ）へ接続し、健全性の判定もELBに委ねる</div>
                     <div className="code-line">  target_group_arns = [aws_lb_target_group.asg.arn]</div>
-                    <div className="code-line">  health_check_type = "ELB"</div>
+                    <div className="code-line">  health_check_type = &quot;ELB&quot;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  # 2. 指定台数がELBのヘルスチェックを通過するまで apply を完了させない</div>
                     <div className="code-line">  #    min_elb_capacity は「作成時」しか待たないため、既存ASGの更新でも待つ</div>
@@ -167,7 +167,7 @@ export function Section5({ Diagram }: SectionProps) {
                     <div className="code-line">  #    ただし apply 完了後もAWS側で非同期に進むため、</div>
                     <div className="code-line">  #    CD側で完了確認とロールバックを別途実装すること</div>
                     <div className="code-line">  instance_refresh &#123;</div>
-                    <div className="code-line">    strategy = "Rolling"</div>
+                    <div className="code-line">    strategy = &quot;Rolling&quot;</div>
                     <div className="code-line">    preferences &#123;</div>
                     <div className="code-line">      min_healthy_percentage = 100</div>
                     <div className="code-line">    &#125;</div>

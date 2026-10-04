@@ -598,6 +598,9 @@
     --color-theme-infrastructure-as-code-bg: hsl(220 55% 40% / 0.25);
     --color-theme-infrastructure-as-code-fg: hsl(220 90% 74%);
 
+    --color-theme-terraform-up-and-running-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-terraform-up-and-running-fg: hsl(220 90% 74%);
+
     --color-theme-understanding-the-linux-kernel-bg: hsl(220 55% 40% / 0.25);
     --color-theme-understanding-the-linux-kernel-fg: hsl(220 90% 74%);
 
@@ -804,6 +807,7 @@ body {
 .card-devops-handbook { --card-accent: var(--color-theme-devops-handbook-fg); }
 .card-release-it { --card-accent: var(--color-theme-release-it-fg); }
 .card-infrastructure-as-code { --card-accent: var(--color-theme-infrastructure-as-code-fg); }
+.card-terraform-up-and-running { --card-accent: var(--color-theme-terraform-up-and-running-fg); }
 .card-understanding-the-linux-kernel { --card-accent: var(--color-theme-understanding-the-linux-kernel-fg); }
 .card-unix-linux-sysadmin-handbook { --card-accent: var(--color-theme-unix-linux-sysadmin-handbook-fg); }
 .card-systems-performance { --card-accent: var(--color-theme-systems-performance-fg); }
@@ -918,6 +922,11 @@ body {
 @utility icon-theme-infrastructure-as-code {
     background: var(--color-theme-infrastructure-as-code-bg);
     color: var(--color-theme-infrastructure-as-code-fg);
+}
+
+@utility icon-theme-terraform-up-and-running {
+    background: var(--color-theme-terraform-up-and-running-bg);
+    color: var(--color-theme-terraform-up-and-running-fg);
 }
 
 @utility icon-theme-understanding-the-linux-kernel {

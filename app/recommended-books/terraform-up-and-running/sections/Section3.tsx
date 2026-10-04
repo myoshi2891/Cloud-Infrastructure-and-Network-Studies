@@ -15,10 +15,10 @@ export function Section3({ Diagram }: SectionProps) {
 <p>{' '}チーム開発ではState fileをローカルに置かず、S3・Google Cloud Storage・Azure Blob Storage・HCP Terraformのようなリモートバックエンドで共有・排他制御するのが必須のベストプラクティスです。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">terraform &#123;</div>
-                    <div className="code-line">  backend "s3" &#123;</div>
-                    <div className="code-line">    bucket       = "my-company-terraform-state"</div>
-                    <div className="code-line">    key          = "global/services/webserver-cluster/terraform.tfstate"</div>
-                    <div className="code-line">    region       = "us-east-2"</div>
+                    <div className="code-line">  backend &quot;s3&quot; &#123;</div>
+                    <div className="code-line">    bucket       = &quot;my-company-terraform-state&quot;</div>
+                    <div className="code-line">    key          = &quot;global/services/webserver-cluster/terraform.tfstate&quot;</div>
+                    <div className="code-line">    region       = &quot;us-east-2&quot;</div>
                     <div className="code-line">    encrypt      = true</div>
                     <div className="code-line">    use_lockfile = true</div>
                     <div className="code-line">  &#125;</div>
@@ -43,7 +43,7 @@ export function Section3({ Diagram }: SectionProps) {
                             </tr>
                             <tr className="row-even">
                                 <td>設定パラメータ</td>
-                                <td><code>dynamodb_table = "terraform-locks"</code></td>
+                                <td><code>dynamodb_table = &quot;terraform-locks&quot;</code></td>
                                 <td><code>use_lockfile = true</code></td>
                             </tr>
                             <tr className="row-odd">
@@ -104,17 +104,17 @@ export function Section3({ Diagram }: SectionProps) {
 <h3 id="3-6-terraform_remote_stateデータソース">{' '}3-6.{' '}<code>terraform_remote_state</code>データソース{' '}</h3>
 <p>{' '}あるコンポーネントのStateから、別のコンポーネントが出力値を参照する仕組みです。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">data "terraform_remote_state" "vpc" &#123;</div>
-                    <div className="code-line">  backend = "s3"</div>
+                    <div className="code-line">data &quot;terraform_remote_state&quot; &quot;vpc&quot; &#123;</div>
+                    <div className="code-line">  backend = &quot;s3&quot;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  config = &#123;</div>
-                    <div className="code-line">    bucket = "my-company-terraform-state"</div>
-                    <div className="code-line">    key    = "global/vpc/terraform.tfstate"</div>
-                    <div className="code-line">    region = "us-east-2"</div>
+                    <div className="code-line">    bucket = &quot;my-company-terraform-state&quot;</div>
+                    <div className="code-line">    key    = &quot;global/vpc/terraform.tfstate&quot;</div>
+                    <div className="code-line">    region = &quot;us-east-2&quot;</div>
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource "aws_instance" "example" &#123;</div>
+                    <div className="code-line">resource &quot;aws_instance&quot; &quot;example&quot; &#123;</div>
                     <div className="code-line">  subnet_id = data.terraform_remote_state.vpc.outputs.subnet_id</div>
                     <div className="code-line">&#125;</div>
                 </pre>

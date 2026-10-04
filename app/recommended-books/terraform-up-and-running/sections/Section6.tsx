@@ -58,8 +58,8 @@ export function Section6({ Diagram }: SectionProps) {
 <h3 id="6-3-terraformでのシークレット利用パターン">{' '}6-3. Terraformでのシークレット利用パターン{' '}</h3>
 <p>{' '}Terraformの<code>sensitive = true</code>はCLI出力へのマスキングのみを行い、<strong>State fileには平文（またはそれに近い形）でシークレットが記録されてしまう</strong>という長年の課題がありました。{' '}</p>
 <pre className="code-block">
-                    <div className="code-line">variable "db_password" &#123;</div>
-                    <div className="code-line">  description = "The password for the database"</div>
+                    <div className="code-line">variable &quot;db_password&quot; &#123;</div>
+                    <div className="code-line">  description = &quot;The password for the database&quot;</div>
                     <div className="code-line">  type        = string</div>
                     <div className="code-line">  sensitive   = true</div>
                     <div className="code-line">&#125;</div>
@@ -70,18 +70,18 @@ export function Section6({ Diagram }: SectionProps) {
 <ul>{' '}<li>{' '}<strong>Ephemeral Resources</strong>（<code>ephemeral</code>ブロック、<strong>Terraform 1.10以降</strong>）:{' '}<code>apply</code>実行中のメモリ上にのみ存在し、PlanファイルにもStateファイルにも書き込まれないリソース{' '}</li>{' '}<li>{' '}<strong>Write-Only Arguments</strong>（<code>_wo</code>サフィックスの引数、<strong>Terraform 1.11以降</strong>）: プロバイダー側がサポートする場合、値を受け取って設定するが、Stateには保存しない引数{' '}</li>{' '}</ul>
 <Diagram id="diag-10" ariaLabel="Ephemeral ResourcesとWrite-Only Argumentsによるシークレット漏洩防止フロー" />
 <pre className="code-block">
-                    <div className="code-line">ephemeral "random_password" "db_password" &#123;</div>
+                    <div className="code-line">ephemeral &quot;random_password&quot; &quot;db_password&quot; &#123;</div>
                     <div className="code-line">  length           = 16</div>
-                    <div className="code-line">  override_special = "!#$%&amp;*()-_=+[]&#123;&#125;&lt;&gt;:?"</div>
+                    <div className="code-line">  override_special = &quot;!#$%&amp;*()-_=+[]&#123;&#125;&lt;&gt;:?&quot;</div>
                     <div className="code-line">&#125;</div>
                     <div className="code-line"></div>
-                    <div className="code-line">resource "aws_db_instance" "example" &#123;</div>
-                    <div className="code-line">  identifier        = "my-db"</div>
-                    <div className="code-line">  engine            = "postgres"</div>
-                    <div className="code-line">  instance_class    = "db.t3.micro"</div>
+                    <div className="code-line">resource &quot;aws_db_instance&quot; &quot;example&quot; &#123;</div>
+                    <div className="code-line">  identifier        = &quot;my-db&quot;</div>
+                    <div className="code-line">  engine            = &quot;postgres&quot;</div>
+                    <div className="code-line">  instance_class    = &quot;db.t3.micro&quot;</div>
                     <div className="code-line">  allocated_storage = 20</div>
                     <div className="code-line"></div>
-                    <div className="code-line">  username = "app_user"</div>
+                    <div className="code-line">  username = &quot;app_user&quot;</div>
                     <div className="code-line"></div>
                     <div className="code-line">  password_wo         = ephemeral.random_password.db_password.result</div>
                     <div className="code-line">  password_wo_version  = 1</div>
@@ -90,7 +90,7 @@ export function Section6({ Diagram }: SectionProps) {
                     <div className="code-line">  # terraform destroy が失敗する。本番DBでは skip_final_snapshot は false のままにし、</div>
                     <div className="code-line">  # final_snapshot_identifier に有効な識別子を指定すること</div>
                     <div className="code-line">  #   skip_final_snapshot       = false</div>
-                    <div className="code-line">  #   final_snapshot_identifier = var.final_snapshot_identifier  # 例: "my-db-final-2026-08-29"</div>
+                    <div className="code-line">  #   final_snapshot_identifier = var.final_snapshot_identifier  # 例: &quot;my-db-final-2026-08-29&quot;</div>
                     <div className="code-line">  # timestamp() のような毎回変わる関数は差分が消えなくなるため使わない</div>
                     <div className="code-line">  skip_final_snapshot = true</div>
                     <div className="code-line">&#125;</div>

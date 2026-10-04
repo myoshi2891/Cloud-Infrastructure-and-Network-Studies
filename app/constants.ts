@@ -34,7 +34,8 @@ export type ColorKey =
     | 'card-high-performance-browser-networking'
     | 'card-professional-agentic-architect'
     | 'card-kubernetes-in-action'
-    | 'card-cli';
+    | 'card-cli'
+    | 'card-terraform-up-and-running';
 
 export interface Exam {
     id: string;
@@ -80,6 +81,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-professional-agentic-architect': 'card-professional-agentic-architect',
     'card-kubernetes-in-action': 'card-kubernetes-in-action',
     'card-cli': 'card-cli',
+    'card-terraform-up-and-running': 'card-terraform-up-and-running',
 };
 
 export const providerMeta: Record<
@@ -846,6 +848,27 @@ const ALL_EXAMS: Exam[] = [
             {
                 label: '完全解説ガイド',
                 href: '/recommended-books/infrastructure-as-code',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'terraform-up-and-running',
+        label: 'Terraform: Up & Running',
+        abbr: 'Terraform',
+        level: 'IaC & Automation',
+        score: '11部 / 19図解',
+        color: 'card-terraform-up-and-running',
+        href: '/recommended-books/terraform-up-and-running',
+        description:
+            'Yevgeniy Brikman 著『Terraform: Up & Running』の構成を土台に、2026年最新エコシステム（S3ネイティブロック、OpenTofu、terraform test、Ephemeral Resources、Stacks 等）を踏まえて完全解説した学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/terraform-up-and-running',
                 pct: '完全解説',
             },
         ],
