@@ -15,9 +15,9 @@ export function SectionAppendix() {
     };
     return (
         <>
-            <h2 id="roadmap">学習ロードマップ</h2>
-            <p>初学者が本書の内容を段階的に消化するための、4段階の学習パスを提案します。</p>
-            <Diagram id="diag-34" label="初学者が本書の内容を段階的に消化するための、4段階の学習パスを提案します。" />
+            <h2 id="roadmap" tabIndex={-1}>学習ロードマップ</h2>
+            <p>初学者が本書の内容を段階的に消化するための、5段階の学習パスを提案します。</p>
+            <Diagram id="diag-34" label="初学者が本書の内容を段階的に消化するための、5段階の学習パスを提案します。" />
             <div className="table-scroll" tabIndex={0} role="region" aria-label="flowchart TB S1[&quot;ステージ1：基礎固め<br/>第0〜2部<br/>アーキテクチャ原則とアドレッシング&quot;] --> S2[&quot;ステージ2：ローカルネットワーク<br/>第3〜9部<br/>リンク層・ARP・IP・DHCP・NAT・ICMP・マルチキャスト&quot;] S2 --> S3[&quot;ステージ3：トランスポートとアプリ<br/>第10〜13部<br/>UDP・DNS・TCP基礎・接続管理&quot;] S3 --> S4[&quot;ステージ4：性能とセキュリティ<br/>第14〜18部<br/>再送・輻輳制御・キープアライブ・暗号化&quot;] S4 --> S5[&quot;ステージ5：最新動向へのブリッジ<br/>第19部<br/>2026年時点の実運用知識&quot;] classDef stage fill:#eaf1ff,stroke:#2f6feb,color:#173d7a class S1,S2,S3,S4,S5 stage">
                     <table>
                         <thead>
@@ -70,7 +70,7 @@ export function SectionAppendix() {
                     </table>
                 </div>
             <hr />
-            <h2 id="checklist">章末チェックリスト</h2>
+            <h2 id="checklist" tabIndex={-1}>章末チェックリスト</h2>
             <div className="checklist-card">
                     <div className="checklist-header">
                         <span className="title">章末チェックリスト</span><span className="count">{checkedIds.size} / 26 完了</span>
@@ -161,7 +161,7 @@ export function SectionAppendix() {
                     </ul>
                 </div>
             <hr />
-            <h2 id="glossary">用語集</h2>
+            <h2 id="glossary" tabIndex={-1}>用語集</h2>
             <div className="table-scroll" tabIndex={0} role="region" aria-label="用語集">
                     <table>
                         <thead>
@@ -267,7 +267,7 @@ export function SectionAppendix() {
                                 <td>MTU</td>
                                 <td>
                                     Maximum Transmission
-                                    Unit。リンク層が一度に運べる最大フレームサイズ
+                                    Unit。リンク層が1フレームで運べるパケット（IPデータグラム等）の最大サイズ。Ethernetフレーム全体はこれに加えてヘッダとFCSを含む
                                 </td>
                             </tr>
                             <tr className="even">
@@ -349,9 +349,9 @@ export function SectionAppendix() {
                     </table>
                 </div>
             <hr />
-            <h2 id="references">参考文献</h2>
+            <h2 id="references" tabIndex={-1}>参考文献</h2>
             <p>
-                    原著情報および、原著刊行後の進展について調査した一次情報源（2026年8月30日時点でWeb検索により確認）を掲載します。
+                    原著情報および、原著刊行後の進展について調査した情報源（2026年8月30日時点でWeb検索により確認）を掲載します。一次情報源は1〜5・12・14・17・32〜34（出版社ページ・RFC・IETF文書・公的機関や事業者の公式発表）で、それ以外は解説記事・ベンダーブログ・百科事典などの二次情報源です。
                 </p>
             <div className="ref-grid" id="referenceGrid">
                     <div className="ref-card" id="ref1">

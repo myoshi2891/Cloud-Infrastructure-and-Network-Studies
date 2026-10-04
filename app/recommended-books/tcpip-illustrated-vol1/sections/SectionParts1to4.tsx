@@ -7,7 +7,7 @@ import { Diagram } from '../Diagram';
 export function SectionParts1to4() {
     return (
         <>
-            <h2 id="part1">第1部：序論とアーキテクチャ原則（原著第1章 Introduction）</h2>
+            <h2 id="part1" tabIndex={-1}>第1部：序論とアーキテクチャ原則（原著第1章 Introduction）</h2>
             <h3 id="s1-1">1.1 パケット、コネクション、データグラムという3つの視点</h3>
             <p>ネットワークプロトコルの設計には大きく2つの流儀があります。</p>
             <ol>
@@ -150,7 +150,7 @@ export function SectionParts1to4() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part2">
+            <h2 id="part2" tabIndex={-1}>
                     第2部：インターネットアドレスアーキテクチャ（原著第2章 The Internet Address
                     Architecture）
                 </h2>
@@ -318,7 +318,7 @@ export function SectionParts1to4() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part3">第3部：リンク層（原著第3章 Link Layer）</h2>
+            <h2 id="part3" tabIndex={-1}>第3部：リンク層（原著第3章 Link Layer）</h2>
             <h3 id="s3-1">3.1 リンク層の責務</h3>
             <p>
                     リンク層は「同一物理／論理セグメント上の隣接ノード間でフレームを届ける」ことに責任を持ちます。IPが担う「異なるネットワークをまたいだ経路選択」とは異なり、リンク層はMACアドレスのようなローカルな識別子だけを扱います。
@@ -369,7 +369,7 @@ export function SectionParts1to4() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part4">第4部：ARP アドレス解決プロトコル（原著第4章）</h2>
+            <h2 id="part4" tabIndex={-1}>第4部：ARP アドレス解決プロトコル（原著第4章）</h2>
             <h3 id="s4-1">4.1 ARPが解決する問題</h3>
             <p>
                     IP層は宛先IPアドレスを知っていますが、同一リンク上でフレームを送るにはMACアドレスが必要です。ARP（Address

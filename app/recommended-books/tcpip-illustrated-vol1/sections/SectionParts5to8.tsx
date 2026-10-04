@@ -7,7 +7,7 @@ import { Diagram } from '../Diagram';
 export function SectionParts5to8() {
     return (
         <>
-            <h2 id="part5">
+            <h2 id="part5" tabIndex={-1}>
                     第5部：インターネットプロトコル IP（原著第5章 The Internet Protocol）
                 </h2>
             <h3 id="s5-1">5.1 IPの基本的な性質</h3>
@@ -182,7 +182,7 @@ export function SectionParts5to8() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part6">第6部：システム構成 DHCPと自動設定（原著第6章）</h2>
+            <h2 id="part6" tabIndex={-1}>第6部：システム構成 DHCPと自動設定（原著第6章）</h2>
             <h3 id="s6-1">6.1 なぜ自動設定が必要か</h3>
             <p>
                     ホストがネットワークに参加するには、IPアドレス・サブネットマスク・デフォルトゲートウェイ・DNSサーバといった複数の情報が必要です。これらを手作業で設定するのは大規模ネットワークでは非現実的なため、DHCP（Dynamic
@@ -261,7 +261,7 @@ export function SectionParts5to8() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part7">第7部：ファイアウォールとNAT（原著第7章）</h2>
+            <h2 id="part7" tabIndex={-1}>第7部：ファイアウォールとNAT（原著第7章）</h2>
             <h3 id="s7-1">7.1 ファイアウォールの基本分類</h3>
             <div className="table-scroll" tabIndex={0} role="region" aria-label="7.1 ファイアウォールの基本分類">
                     <table>
@@ -342,7 +342,7 @@ export function SectionParts5to8() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part8">第8部：ICMPv4/ICMPv6（原著第8章）</h2>
+            <h2 id="part8" tabIndex={-1}>第8部：ICMPv4/ICMPv6（原著第8章）</h2>
             <h3 id="s8-1">8.1 ICMPの役割：IPの「アシスタントプロトコル」</h3>
             <p>
                     ICMP（Internet Control Message

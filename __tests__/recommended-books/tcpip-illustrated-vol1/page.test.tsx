@@ -288,3 +288,74 @@ describe('tcpip-illustrated-vol1 — Mermaid 図の原本忠実描画', () => {
         expect(inherit).toMatch(/color:\s*inherit\s*!important/);
     });
 });
+
+describe('tcpip-illustrated-vol1 — レビュー指摘の回帰防止', () => {
+    const luminance = (hex: string): number => {
+        const ch = (i: number) => {
+            const s = parseInt(hex.slice(i, i + 2), 16) / 255;
+            return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+        };
+        return 0.2126 * ch(1) + 0.7152 * ch(3) + 0.0722 * ch(5);
+    };
+    const contrast = (a: string, b: string): number => {
+        const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+        return (hi + 0.05) / (lo + 0.05);
+    };
+
+    it('目次リンクの移動先見出しは tabIndex=-1 を持ち、メニューを閉じた後にフォーカスが移る', () => {
+        const container = mount();
+        NAV_ITEMS.forEach((item) => {
+            expect(container.querySelector(`#${item.id}`)).toHaveAttribute('tabindex', '-1');
+        });
+        const toggle = container.querySelector('.sidebar-toggle')!;
+        fireEvent.click(toggle);
+        fireEvent.click(container.querySelector('.sidebar nav a[href="#part3"]')!);
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(container.querySelector('#part3')).toHaveFocus();
+    });
+
+    it('モバイルで閉じたサイドバーは visibility: hidden でキーボード操作から外れ、open で戻る', () => {
+        const css = fs.readFileSync('app/recommended-books/tcpip-illustrated-vol1/page.css', 'utf8');
+        const media = css.slice(css.indexOf('@media (max-width: 900px)'));
+        expect(media).toMatch(/\.tcpip-page \.sidebar \{[^}]*transform:\s*translateX\(-100%\)[^}]*visibility:\s*hidden/);
+        expect(media).toMatch(/\.tcpip-page \.sidebar\.open \{[^}]*transform:\s*translateX\(0\)[^}]*visibility:\s*visible/);
+    });
+
+    it('diag-18 の Fragment Offset は8バイト単位の符号化値（0 / 185 / 370）で表示する', () => {
+        const chart = DIAGRAMS['diag-18'];
+        expect(chart).toContain('Offset=0, MF=1');
+        expect(chart).toContain('Offset=185');
+        expect(chart).toContain('Offset=370');
+        expect(chart).toContain('8byte単位');
+        expect(chart).not.toContain('Offset=1480');
+        expect(chart).not.toContain('Offset=2960');
+    });
+
+    it('diag-25 は3回目の重複ACKの後に高速再送し、受信済み全セグメントを累積ACKする', () => {
+        const chart = DIAGRAMS['diag-25'];
+        const dupAcks = [...chart.matchAll(/重複ACK 2000/g)].map((m) => m.index ?? -1);
+        expect(dupAcks).toHaveLength(3);
+        const retransmit = chart.indexOf('セグメント2を再送');
+        expect(dupAcks[2]).toBeLessThan(retransmit);
+        expect(chart).toContain('セグメント5 (seq=5000)');
+        expect(chart.slice(retransmit)).toContain('ACK 6000');
+        expect(chart).not.toContain('ACK 4000');
+    });
+
+    it('diag-27 の acked / future クラスは塗りに対して 4.5:1 以上のコントラストを持つ', () => {
+        const chart = DIAGRAMS['diag-27'];
+        for (const cls of ['acked', 'future']) {
+            const m = chart.match(new RegExp(`classDef ${cls} fill:(#[0-9a-f]{6}),stroke:#[0-9a-f]{6},color:(#[0-9a-f]{6})`));
+            expect(m, cls).not.toBeNull();
+            expect(contrast(m![2]!, m![1]!), cls).toBeGreaterThanOrEqual(4.5);
+        }
+    });
+
+    it('diag-28 のスロースタートは「新規データのACKごとに最大1MSS増、1RTTで約2倍」と表す', () => {
+        const chart = DIAGRAMS['diag-28'];
+        expect(chart).not.toContain('倍増');
+        expect(chart).toContain('新規データのACKごとに<br/>cwndを最大1MSS増加');
+        expect(chart).toContain('1RTTあたり約2倍');
+        expect(chart).toContain('SS -->|"cwndがssthreshに到達"| CA');
+    });
+});

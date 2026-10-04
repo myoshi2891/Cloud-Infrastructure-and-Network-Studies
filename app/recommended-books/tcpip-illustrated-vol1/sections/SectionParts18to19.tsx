@@ -7,7 +7,7 @@ import { Diagram } from '../Diagram';
 export function SectionParts18to19() {
     return (
         <>
-            <h2 id="part18">
+            <h2 id="part18" tabIndex={-1}>
                     第18部：セキュリティ EAP・IPsec・TLS・DNSSEC・DKIM（原著第18章）
                 </h2>
             <p>
@@ -95,7 +95,7 @@ export function SectionParts18to19() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part19">第19部：2026年8月時点の最新動向</h2>
+            <h2 id="part19" tabIndex={-1}>第19部：2026年8月時点の最新動向</h2>
             <p>
                     原著第2版の刊行（2011年）から10年以上が経過し、TCP/IPスイートの各要素は大きく進化しています。本章では2026年8月30日時点の情報をWeb検索で調査し、原著の各章に対応させる形でアップデートを整理します。
                 </p>
@@ -112,7 +112,7 @@ export function SectionParts18to19() {
                         8312を置き換えました。Linux・Windows・Appleの各スタックで既定アルゴリズムとして採用され続けています。
                     </li>
                     <li>
-                        <strong>BBR</strong>はGoogleが開発した独自アルゴリズムとして広く実運用されており、2026年時点でBBRv3がLinuxカーネル6.x系に組み込まれています。IETF
+                        <strong>BBR</strong>はGoogleが開発した独自アルゴリズムとして広く実運用されています。メインラインのLinuxカーネル（6.x系を含む）に標準で含まれるのはBBRv1で、BBRv3はGoogleが公開する別ブランチ（google/bbrのv3ブランチ）のカーネルをビルドして利用します。IETF
                         CCWG（Congestion Control Working
                         Group）でdraft-ietf-ccwg-bbr仕様の標準化が進行中です。CloudflareのquicheやMetaのmvfst（QUICスタック）でも第一級の選択肢として提供されています。
                     </li>

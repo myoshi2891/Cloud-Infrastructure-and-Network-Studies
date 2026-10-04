@@ -7,7 +7,7 @@ import { Diagram } from '../Diagram';
 export function SectionParts9to11() {
     return (
         <>
-            <h2 id="part9">第9部：ブロードキャストとマルチキャスト IGMP/MLD（原著第9章）</h2>
+            <h2 id="part9" tabIndex={-1}>第9部：ブロードキャストとマルチキャスト IGMP/MLD（原著第9章）</h2>
             <h3 id="s9-1">9.1 ブロードキャストの限界とマルチキャストの利点</h3>
             <p>
                     ブロードキャストは「同一セグメント上の全ホストへ届ける」単純な仕組みですが、興味のないホストにも強制的に処理負荷をかけてしまいます。IPマルチキャストは「関心のあるホストだけが加入するグループ」にのみ配送する仕組みで、映像配信やルーティングプロトコル（OSPFなど）の制御メッセージ配布に使われます。IPv6にはそもそもブロードキャストが存在せず、この用途はすべてマルチキャストに一本化されています。
@@ -70,7 +70,7 @@ export function SectionParts9to11() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part10">第10部：UDPとIPフラグメンテーション（原著第10章）</h2>
+            <h2 id="part10" tabIndex={-1}>第10部：UDPとIPフラグメンテーション（原著第10章）</h2>
             <h3 id="s10-1">10.1 UDPの設計思想：シンプルさの追求</h3>
             <p>
                     UDP（User Datagram Protocol, RFC
@@ -146,7 +146,7 @@ export function SectionParts9to11() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part11">第11部：名前解決とDNS（原著第11章）</h2>
+            <h2 id="part11" tabIndex={-1}>第11部：名前解決とDNS（原著第11章）</h2>
             <h3 id="s11-1">11.1 階層型データベースとしてのDNS</h3>
             <p>
                     DNS（Domain Name System, RFC

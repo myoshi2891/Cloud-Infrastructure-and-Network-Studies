@@ -28,8 +28,7 @@ test('TCP/IP Illustrated: 全35図が原本どおりライトテーマ・自然�
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-    const baseURL = page.context()._options.baseURL || 'http://localhost:3001';
-    await page.goto(baseURL.includes('3000') ? 'http://localhost:3001/recommended-books/tcpip-illustrated-vol1' : '/recommended-books/tcpip-illustrated-vol1');
+    await page.goto('/recommended-books/tcpip-illustrated-vol1');
 
     const root = page.locator('.tcpip-page');
     const wraps = root.locator('.mermaid-wrap');
@@ -92,9 +91,9 @@ test('TCP/IP Illustrated: 全35図が原本どおりライトテーマ・自然�
                 // classDef の color がラベル子孫まで継承される
                 if (node.spanColor) expect(color, `diag-${i} inherit`).toBe(node.spanColor);
                 if (fill && luminance(fill) > 0.5) {
-                    // 明色ノードに白文字を載せない（原本の淡色 classDef 'future' #a8b5c9 も許容する下限）
+                    // 明色ノードに白文字を載せず、WCAG AA（4.5:1）以上のコントラストを保つ
                     expect(color, `diag-${i} white on light`).not.toBe('rgb(255, 255, 255)');
-                    expect(contrast(rgb!, fill), `diag-${i} contrast ${color} on ${node.fill}`).toBeGreaterThanOrEqual(1.9);
+                    expect(contrast(rgb!, fill), `diag-${i} contrast ${color} on ${node.fill}`).toBeGreaterThanOrEqual(4.5);
                 }
             }
         }
@@ -109,7 +108,7 @@ test('TCP/IP Illustrated: 全35図が原本どおりライトテーマ・自然�
     // classDef 色の代表値（原本どおり）
     const colorsOf = (i: number) => facts[i]!.nodes.flatMap((n) => n.colors);
     expect(colorsOf(0)).toContain('rgb(23, 61, 122)'); // vol: #173d7a
-    expect(colorsOf(27)).toContain('rgb(134, 149, 171)'); // acked: #8695ab
+    expect(colorsOf(27)).toContain('rgb(79, 93, 115)'); // acked: #4f5d73
 
     // 自然幅がカード幅を超える図はカード（フォーカス可能な region）自体が横スクロールする
     const wide = wraps.nth(3);

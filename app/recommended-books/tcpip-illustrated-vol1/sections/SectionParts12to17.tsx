@@ -7,7 +7,7 @@ import { Diagram } from '../Diagram';
 export function SectionParts12to17() {
     return (
         <>
-            <h2 id="part12">
+            <h2 id="part12" tabIndex={-1}>
                     第12部：TCPの基礎（原著第12章 TCP: The Transmission Control Protocol,
                     Preliminaries）
                 </h2>
@@ -143,7 +143,7 @@ export function SectionParts12to17() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part13">第13部：TCP接続管理（原著第13章）</h2>
+            <h2 id="part13" tabIndex={-1}>第13部：TCP接続管理（原著第13章）</h2>
             <h3 id="s13-1">13.1 3ウェイハンドシェイクによるコネクション確立</h3>
             <p>
                     TCPコネクションはSYN、SYN-ACK、ACKという3つのセグメントの交換で確立されます。これにより両者は互いの初期シーケンス番号（ISN）を交換し、以降のバイトストリームの起点を合意します。
@@ -189,7 +189,7 @@ export function SectionParts12to17() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part14">第14部：TCPタイムアウトと再送（原著第14章）</h2>
+            <h2 id="part14" tabIndex={-1}>第14部：TCPタイムアウトと再送（原著第14章）</h2>
             <h3 id="s14-1">14.1 再送の基本原理：ACKが届かなければ再送する</h3>
             <p>
                     TCPは送信したセグメントごとにタイマーを設定し、一定時間内にACKが返ってこなければそのセグメントをロスと見なして再送します。この待機時間を<strong>RTO（Retransmission Timeout）</strong>と呼びます。
@@ -230,7 +230,7 @@ export function SectionParts12to17() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part15">第15部：TCPデータフローとウィンドウ管理（原著第15章）</h2>
+            <h2 id="part15" tabIndex={-1}>第15部：TCPデータフローとウィンドウ管理（原著第15章）</h2>
             <h3 id="s15-1">15.1 フロー制御：受信側のバッファ保護</h3>
             <p>
                     フロー制御は「受信側が処理しきれる速度を超えて送信側がデータを送らないようにする」仕組みです。TCPヘッダのWindow
@@ -285,7 +285,7 @@ export function SectionParts12to17() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part16">第16部：TCP輻輳制御（原著第16章）</h2>
+            <h2 id="part16" tabIndex={-1}>第16部：TCP輻輳制御（原著第16章）</h2>
             <h3 id="s16-1">16.1 輻輳制御が解決する問題</h3>
             <p>
                     フロー制御が「受信側の処理能力」を守るのに対し、輻輳制御は「ネットワーク経路全体の処理能力（ボトルネック帯域）」を守るための仕組みです。送信側は<code>cwnd</code>（輻輳ウィンドウ）という内部変数を管理し、実際の送信量は<code>min(cwnd, 受信ウィンドウ)</code>で決まります。
@@ -353,7 +353,7 @@ export function SectionParts12to17() {
                     </div>
                 </div>
             <hr />
-            <h2 id="part17">第17部：TCPキープアライブ（原著第17章）</h2>
+            <h2 id="part17" tabIndex={-1}>第17部：TCPキープアライブ（原著第17章）</h2>
             <h3 id="s17-1">17.1 キープアライブが解決する問題</h3>
             <p>
                     TCPコネクションはデータのやり取りがなければ「アイドル」状態のままいつまでも維持されます。しかし実際には、相手ホストがクラッシュした、経路上のNAT/ファイアウォールがセッションテーブルからエントリを削除した、といった理由で相手にはもう届かないのに、こちら側だけがコネクションが生きていると誤認している状態（<strong>半開（half-open）コネクション</strong>）が起こり得ます。TCPキープアライブは、アイドル状態が続いた際に定期的にプローブパケットを送り、相手がまだ生きているかを確認する仕組みです（RFC
