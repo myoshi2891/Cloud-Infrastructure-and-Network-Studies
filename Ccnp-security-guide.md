@@ -1,4 +1,4 @@
-# CCNP Security 認定 初学者向けステップバイステップ完全ガイド
+# CCNP Security 認定 初学者向けステップバイステップガイド（SCOR v2.0 ドメイン 1.0〜4.0 編）
 
 > **対象**: Cisco Certified Network Professional (CCNP) Security 認定（コア試験 SCOR v2.0 ＋ コンセントレーション試験 1 つ）
 > **作成日**: 2026-10-03（この日付時点の公開情報にもとづく）
@@ -13,12 +13,9 @@
 1. 【最重要】公式日本語ページと最新状況の差分
 2. 認定の全体像（取得要件・試験一覧・選び方・再認定）
 3. 前提知識（初学者のための基礎）
-4. **Part A: コア試験 350-701 SCOR v2.0**（6 ドメイン / 47 トピック）
-5. **Part B: 300-710 SNCF**（Cisco Secure Firewall）
-6. **Part C: 300-715 SISE**（Cisco Identity Services Engine）
-7. **Part D: 300-740 SSCA**（Secure Cloud Access / SSE・ZTNA）
-8. **Part E: 300-745 SDSI**（セキュリティ設計）
-9. 付録（旧コンセントレーションの扱い・学習計画・用語集・参考 URL 一覧）
+4. **Part A: コア試験 350-701 SCOR v2.0**（全 6 ドメインのうち A-1〜A-4：ドメイン 1.0〜4.0）
+
+> **掲載範囲**: 本ガイドは SCOR v2.0 のドメイン 1.0〜4.0 までを扱います。ドメイン 5.0（Endpoint Protection and Detection）、ドメイン 6.0（Network Access, Visibility, and Enforcement）、コンセントレーション試験（300-710 SNCF／300-715 SISE／300-740 SSCA／300-745 SDSI）、付録は未掲載です。これらの試験範囲は、各試験の公式トピック PDF で確認してください。
 
 ---
 
@@ -83,8 +80,8 @@ flowchart LR
 
 **このガイドの方針**
 
-1. 現行の取得ルート（**SCOR v2.0 ＋ SNCF / SISE / SSCA / SDSI のいずれか 1 つ**）を中心に解説します。
-2. 廃止されたコンセントレーションは「付録 A」で位置づけと関連トピックの移動先を整理します。
+1. 現行の取得ルート（**SCOR v2.0 ＋ SNCF / SISE / SSCA / SDSI のいずれか 1 つ**）を前提に、SCOR v2.0 のドメイン 1.0〜4.0 を解説します。
+2. 廃止されたコンセントレーションの扱いと、コンセントレーション試験の詳細は本ガイドの掲載範囲外です。
 3. すでに旧版（SCOR v1.1 など）に合格している場合でも、**3 年以内にもう一方を取得すれば CCNP Security が付与**されます（詳細は 2.4 節）。
 
 **根拠**
@@ -187,7 +184,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     P0["Step 0\n基礎固め\n第3章"] --> P1["Step 1\nSCOR v2.0\nPart A"]
-    P1 --> P2["Step 2\nコンセントレーション選択\nPart B〜E"]
+    P1 --> P2["Step 2\nコンセントレーション選択\n本ガイド未掲載"]
     P2 --> P3["Step 3\nラボ/ハンズオン"]
     P3 --> P4["Step 4\n公式ブループリントで\n抜け漏れチェック"]
     P4 --> P5["Step 5\n受験"]
@@ -294,8 +291,8 @@ pie showData
 | 2.0 Network Security | 25% | FW／IPS、L2 防御、AAA、機器管理、FTD の設定 | A-2 |
 | 3.0 Cloud Security | 15% | 責任共有、CASB、Multicloud Defense、Splunk、DevSecOps | A-3 |
 | 4.0 Secure Service Edge | 10% | SSE／SASE、Cisco Secure Access | A-4 |
-| 5.0 Endpoint Protection and Detection | 15% | EPP／EDR、MDM、ポスチャ、Secure Endpoint、メール脅威 | A-5 |
-| 6.0 Network Access, Visibility, and Enforcement | 15% | ISE（802.1X/MAB/CoA）、持ち出し手口、XDR/SIEM、Duo、Splunk | A-6 |
+| 5.0 Endpoint Protection and Detection | 15% | EPP／EDR、MDM、ポスチャ、Secure Endpoint、メール脅威 | 未掲載 |
+| 6.0 Network Access, Visibility, and Enforcement | 15% | ISE（802.1X/MAB/CoA）、持ち出し手口、XDR/SIEM、Duo、Splunk | 未掲載 |
 
 **根拠**
 - 【公式】SCOR v2.0 試験トピック PDF（全 47 トピック・比率の出典） https://learningcontent.cisco.com/documents/marketing/exam-topics/350-701-SCOR-v2.0.pdf
