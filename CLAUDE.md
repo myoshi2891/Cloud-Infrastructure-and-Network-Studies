@@ -627,6 +627,13 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # ナビ・Mermaid・参考文献定義（41図）
       page.css                      # ページ固有スタイル
+    terraform-up-and-running/
+      page.tsx                      # 『Terraform: Up & Running』完全解説ガイド (Server)
+      TerraformUpAndRunningGuide.tsx # 本文＋インタラクション (Client。全11部、Mermaid 19図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # ナビ・Mermaid・参考文献定義（19図）
+      page.css                      # ページ固有スタイル
+      sections/                     # セクション分割コンポーネント (SectionIntro, Section0-11, SectionRoadmap, SectionAppendix, SectionReferences)
   cli/
     page.tsx                        # CLIコマンド実践ワンライナー集 (Server)
     CliGuide.tsx                    # 本文＋インタラクション (全15セクション、Mermaid 7図等)

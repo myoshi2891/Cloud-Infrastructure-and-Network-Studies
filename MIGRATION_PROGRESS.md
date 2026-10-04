@@ -2,6 +2,43 @@
 
 (最終更新日: 2026-10-04)
 
+## 2026-10-04: Terraform: Up and Running 実践ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Terraform-up-and-running.html`（および `Terraform-up-and-running.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `TerraformUpAndRunningGuide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css` + `sections/`) で `/recommended-books/terraform-up-and-running` ルートへ移行。見出し(h1:1, h2:16, h3:67, h4:0)、全18個のテーブル（th:60, td:291）、全19個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(44件)、全コードブロック(31件・.code-line構造)、全外部リンク(34件)、全本文・注釈ブロック(108件)、チェックリスト(9項目・動的カウントアップ)、参考文献(7件)を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Terraform-up-and-running.html` および `Terraform-up-and-running.md`）を `archive/Books/html/` および `archive/Books/md/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for terraform-up-and-running` (`9382548e`)
+- [x] **Step 1 (Red)**: `test(books): add failing tests for terraform-up-and-running` (`0b625915`)
+- [x] **Step 2-1 (Scaffold)**: `feat(books): scaffold terraform-up-and-running guide with constants and styles` (`ffc22bbb`)
+- [x] **Step 2-2 (Sections 0-3)**: `feat(books): implement sections 0-3 for terraform-up-and-running` (`a0b05def`)
+- [x] **Step 2-3 (Sections 4-7)**: `feat(books): implement sections 4-7 for terraform-up-and-running` (`e036652f`)
+- [x] **Step 2-4 (Sections 8-11)**: `feat(books): implement sections 8-11 for terraform-up-and-running` (`1cb42de9`)
+- [x] **Step 2-5 (Remaining & Green)**: `feat(books): implement remaining sections and pass all DOM tests` (`22057c0b`)
+- [x] **Step 3 (Refactor)**: `refactor(books): integrate terraform-up-and-running into routing and update docs` (`1f4d4fa0`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive source files`
+
+### 関連ファイル
+
+- [app/recommended-books/terraform-up-and-running/page.tsx](app/recommended-books/terraform-up-and-running/page.tsx)
+- [app/recommended-books/terraform-up-and-running/TerraformUpAndRunningGuide.tsx](app/recommended-books/terraform-up-and-running/TerraformUpAndRunningGuide.tsx)
+- [app/recommended-books/terraform-up-and-running/NavBar.tsx](app/recommended-books/terraform-up-and-running/NavBar.tsx)
+- [app/recommended-books/terraform-up-and-running/constants.ts](app/recommended-books/terraform-up-and-running/constants.ts)
+- [app/recommended-books/terraform-up-and-running/page.css](app/recommended-books/terraform-up-and-running/page.css)
+- [本文テスト: terraform-up-and-running](__tests__/recommended-books/terraform-up-and-running/page.test.tsx)
+- [docs/migration-inventory/terraform-up-and-running.json](docs/migration-inventory/terraform-up-and-running.json)
+- [archive/Books/html/Terraform-up-and-running.html](archive/Books/html/Terraform-up-and-running.html)
+- [archive/Books/md/Terraform-up-and-running.md](archive/Books/md/Terraform-up-and-running.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
 ## 2026-10-04: Computer Networks（Tanenbaum）HTML移行（完了）
 
 `Computer-networks-tanenbaum.html` を `/recommended-books/computer-networks-tanenbaum` に移行し、BooksカードとHeaderナビゲーションへ統合した。原本HTML・Markdownを保持し、ローカル専用の `archive/Books/` にも同一内容を保存した。テストはコミット済みfixtureだけを参照し、原本・archiveがない環境でも23件成功した。
