@@ -77,8 +77,8 @@ export function NavBar() {
             </button>
             <aside id="sidebar" className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="ガイドの目次">
                 <div className="sidebar-header">
-                    <div className="kicker">TCP/IP Illustrated</div>
-                    <h2>目次</h2>
+                    <div className="kicker">TCP/IP Illustrated</div>{' '}
+                    <h2>Volume 1: The Protocols（第2版）</h2>{' '}
                 </div>
                 <nav aria-label="セクション目次">
                     <ul>
@@ -94,7 +94,7 @@ export function NavBar() {
                                         onClick={() => handleLinkClick(item.id)}
                                     >
                                         {item.label}
-                                    </a>
+                                    </a>{' '}
                                 </li>
                             );
                         })}

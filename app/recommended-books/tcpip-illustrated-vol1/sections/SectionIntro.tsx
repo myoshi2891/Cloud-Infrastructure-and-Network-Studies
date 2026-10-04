@@ -20,7 +20,7 @@ export function SectionIntro() {
             <p>
                     原著: <em>TCP/IP Illustrated, Volume 1: The Protocols, 2nd Edition</em>（Kevin
                     R. Fall, W. Richard Stevens 著、Addison-Wesley
-                    Professional／O'Reilly、2011年11月刊、1,056ページ） 参照:
+                    Professional／O'Reilly、2011年11月刊、1,056ページ） 参照:{' '}
                     <a href="https://www.oreilly.com/library/view/tcp-ip-illustrated-volume/9780132808200/">O'Reilly公式書籍ページ</a>
                 </p>
             <p>

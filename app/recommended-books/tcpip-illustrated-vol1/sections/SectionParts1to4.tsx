@@ -26,8 +26,8 @@ export function SectionParts1to4() {
                     「end-to-endの原則」とは、通信の信頼性確保などの複雑な仕事は、ネットワークの中間ノード（ルータ）ではなく、通信の両端（ホスト）に置くべきだという設計思想です。ルータは「できるだけ速く、できるだけシンプルに転送する」ことに専念し、再送や順序保証といった責務はTCPのようなエンドポイント側のプロトコルが担います。
                 </p>
             <p>
-                    この思想から導かれるのが
-                    <strong>fate sharing（運命共有）</strong>
+                    この思想から導かれるのが{' '}
+                    <strong>fate sharing（運命共有）</strong>{' '}
                     という考え方です。あるコネクションの状態情報は、そのコネクションの両端のホストだけが保持すべきであり、ネットワーク内部の特定のルータに保持させてはいけません。ルータが1台落ちても、迂回路が生きていれば通信の"状態"自体は失われない、という耐障害性がここから生まれます。
                 </p>
             <Diagram id="diag-1" label="この思想から導かれるのが fate sharing（運命共有） という考え方です。あるコネクションの状態情報は、そのコネクションの両端のホストだけが保持すべきであり、ネットワーク内部の特定のルータに保持させてはいけません。ルータが1台落ちても、迂回路が生きていれば通信の&quot;状態&quot;自体は失われない、という耐障害性がここから生まれます。" />
@@ -132,15 +132,15 @@ export function SectionParts1to4() {
                     UNIXから現在のLinux／Windows／macOSまで基本設計が受け継がれています。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                レイヤの責務を混同しない：アプリケーションコードでIPアドレスをハードコードせず、名前解決を経由させることでネットワーク変更への耐性を確保する。
+                                レイヤの責務を混同しない：アプリケーションコードでIPアドレスをハードコードせず、名前解決を経由させることでネットワーク変更への耐性を確保する。{' '}
                             </li>
                             <li>
-                                end-to-endの原則を意識する：中間のプロキシ／ロードバランサに状態を過度に依存させると、そのノードが単一障害点になる。
+                                end-to-endの原則を意識する：中間のプロキシ／ロードバランサに状態を過度に依存させると、そのノードが単一障害点になる。{' '}
                             </li>
                             <li>
                                 多重分離のフィールド（EtherType、IP
@@ -293,7 +293,7 @@ export function SectionParts1to4() {
                     </table>
                 </div>
             <p>
-                    IPv6ではブロードキャストが廃止され、代わりにマルチキャストと<strong>エニーキャスト</strong>（同じアドレスを持つ複数ノードのうち最も近い1つに届く）が使われます。エニーキャストはDNSルートサーバやパブリックDNSリゾルバ（例：<code>1.1.1.1</code>,
+                    IPv6ではブロードキャストが廃止され、代わりにマルチキャストと<strong>エニーキャスト</strong>（同じアドレスを持つ複数ノードのうち最も近い1つに届く）が使われます。エニーキャストはDNSルートサーバやパブリックDNSリゾルバ（例：<code>1.1.1.1</code>,{' '}
                     <code>8.8.8.8</code>）の実運用で広く使われています。
                 </p>
             <h3 id="s2-5">2.5 IPv4アドレス枯渇とその後：本書刊行後の状況</h3>
@@ -301,15 +301,15 @@ export function SectionParts1to4() {
                     原著執筆時点（2011年）はまだIANAの中央在庫からIPv4アドレスを配布できていましたが、2011年2月にIANAの中央在庫が枯渇し、その後地域レジストリ（RIR）も順次枯渇しました。これが本書第2版でIPv4アドレス枯渇とCGNAT・IPv6移行の議論が増補された背景です。この状況は2026年現在も基本的に継続しており、詳細は第19部で扱います。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                サブネット設計は将来の成長を見込んでVLSMで余白を残す。境界ぎりぎりの設計は後々の再設計コストが高い。
+                                サブネット設計は将来の成長を見込んでVLSMで余白を残す。境界ぎりぎりの設計は後々の再設計コストが高い。{' '}
                             </li>
                             <li>
-                                プライベートアドレス空間とCGNAT共有アドレス空間（<code>100.64.0.0/10</code>）を混同しない。後者はISP側の内部利用を想定した特別な範囲。
+                                プライベートアドレス空間とCGNAT共有アドレス空間（<code>100.64.0.0/10</code>）を混同しない。後者はISP側の内部利用を想定した特別な範囲。{' '}
                             </li>
                             <li>
                                 IPv6設計では「ホストあたり複数アドレス（一時アドレス＋安定アドレス）」が標準的挙動であることを前提に、ログ・監視設計を行う。
@@ -350,17 +350,17 @@ export function SectionParts1to4() {
                     Tree Protocol）またはその高速版RSTP/MSTPでループ防止トポロジーを維持します。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
                                 MTUの不一致はパケロス・パフォーマンス劣化の典型的な原因。トンネル（VXLAN,
                                 GRE,
-                                IPsecなど）を挟む構成では実効MTUが1500バイトを下回ることを忘れずに設計する。
+                                IPsecなど）を挟む構成では実効MTUが1500バイトを下回ることを忘れずに設計する。{' '}
                             </li>
                             <li>
-                                VLAN設計はブロードキャストドメインの分離が主目的。1つのVLANに過度なホスト数を詰め込むとARPブロードキャストの負荷が問題になる。
+                                VLAN設計はブロードキャストドメインの分離が主目的。1つのVLANに過度なホスト数を詰め込むとARPブロードキャストの負荷が問題になる。{' '}
                             </li>
                             <li>
                                 無線LANのトラブルシューティングでは、有線と異なり「電波干渉」「隠れ端末」というリンク層固有の要因を考慮する。
@@ -437,16 +437,16 @@ export function SectionParts1to4() {
                     6105/7113で標準化）がスイッチに実装されています。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                本番スイッチではDHCPスヌーピング＋ダイナミックARP検査を有効化し、未知の送信元からのARP応答を無条件に信頼しない構成にする。
+                                本番スイッチではDHCPスヌーピング＋ダイナミックARP検査を有効化し、未知の送信元からのARP応答を無条件に信頼しない構成にする。{' '}
                             </li>
                             <li>
                                 IPv6を導入する際はARPだけでなくNDPのセキュリティ（RA
-                                Guard）も合わせて設計する。「IPv4だけ守ってIPv6は素通し」という抜け漏れが起きやすい。
+                                Guard）も合わせて設計する。「IPv4だけ守ってIPv6は素通し」という抜け漏れが起きやすい。{' '}
                             </li>
                             <li>
                                 Gratuitous ARPはHA構成（keepalived,

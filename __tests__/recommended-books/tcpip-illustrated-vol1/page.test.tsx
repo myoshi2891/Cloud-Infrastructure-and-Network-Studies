@@ -33,13 +33,18 @@ describe('tcpip-illustrated-vol1 — 移行元コンテンツの全量照合', (
         ['h4', inventory.h4],
         ['th', inventory.th],
         ['td', inventory.td],
-        ['li', inventory.listItems],
+        ['main li', inventory.listItems],
     ] as const)('%s の件数・順序・テキストが移行元と一致する', (selector, expectedItems) => {
         const container = mount();
         const rendered = [...container.querySelectorAll(selector)].map((element) =>
             squash(element.textContent ?? ''),
         );
         expect(rendered).toEqual(expectedItems.map(squash));
+    });
+
+    it('サイドバーナビゲーションの li 件数が NAV_ITEMS と一致する', () => {
+        const container = mount();
+        expect(container.querySelectorAll('nav ul > li')).toHaveLength(NAV_ITEMS.length);
     });
 
     it('外部リンクが件数・順序・URL・ラベルまで移行元と一致する', () => {

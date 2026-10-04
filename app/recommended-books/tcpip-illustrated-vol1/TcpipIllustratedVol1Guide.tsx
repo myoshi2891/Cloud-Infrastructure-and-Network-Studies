@@ -10,6 +10,7 @@ import { SectionParts5to8 } from './sections/SectionParts5to8';
 import { SectionParts9to11 } from './sections/SectionParts9to11';
 import { SectionParts12to17 } from './sections/SectionParts12to17';
 import { SectionParts18to19 } from './sections/SectionParts18to19';
+import { SectionAppendix } from './sections/SectionAppendix';
 
 export function TcpipIllustratedVol1Guide() {
     return (
@@ -23,6 +24,7 @@ export function TcpipIllustratedVol1Guide() {
                     <SectionParts9to11 />
                     <SectionParts12to17 />
                     <SectionParts18to19 />
+                    <SectionAppendix />
                 </main>
             </div>
         </div>

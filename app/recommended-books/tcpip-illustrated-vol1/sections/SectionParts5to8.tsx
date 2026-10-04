@@ -164,16 +164,16 @@ export function SectionParts5to8() {
                     Options, Routing, Fragment, Destination Optionsなど）。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                <code>traceroute</code>／<code>mtr</code>はTTL超過ICMPを利用した診断ツールであることを理解しておくと、途中経路のファイアウォールがICMPをブロックしている場合の"見えない区間"の解釈を誤らずに済む。
+                                <code>traceroute</code>／<code>mtr</code>はTTL超過ICMPを利用した診断ツールであることを理解しておくと、途中経路のファイアウォールがICMPをブロックしている場合の"見えない区間"の解釈を誤らずに済む。{' '}
                             </li>
                             <li>
                                 IPv6移行時は「フラグメンテーションはホストのみが行う」という設計変更を踏まえ、PMTUDが正しく機能する経路設計（ICMPv6
-                                Packet Too Bigの到達性確保）が必須になる。
+                                Packet Too Bigの到達性確保）が必須になる。{' '}
                             </li>
                             <li>
                                 IPv4ヘッダのDSCP/ECNフィールドは輻輳制御・QoSと直結する。クラウド環境ではロードバランサやNATがこれらのフィールドを書き換える／落とす場合があるため、エンドツーエンドでの挙動を検証する。
@@ -242,16 +242,16 @@ export function SectionParts5to8() {
                     DHCP）が偽の設定情報（悪意あるデフォルトゲートウェイなど）を配布できてしまいます。緩和策として、スイッチ側で正規のDHCPサーバが接続されたポートのみを信頼する<strong>DHCPスヌーピング</strong>（第4部のARP対策とも連携）が標準的に使われます。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                リース期間はネットワークの流動性（ゲスト無線か固定オフィス機器か）に応じて調整する。短すぎるとDHCPサーバ負荷が増し、長すぎるとアドレス枯渇時の回収が遅れる。
+                                リース期間はネットワークの流動性（ゲスト無線か固定オフィス機器か）に応じて調整する。短すぎるとDHCPサーバ負荷が増し、長すぎるとアドレス枯渇時の回収が遅れる。{' '}
                             </li>
                             <li>
                                 IPv6ネットワークでは、SLAACのみ・DHCPv6のみ・ハイブリッドのどれを採用するか、DNS配布方法（RA
-                                RDNSS vs DHCPv6）まで含めて設計時に明確化する。
+                                RDNSS vs DHCPv6）まで含めて設計時に明確化する。{' '}
                             </li>
                             <li>
                                 Rogue
@@ -325,15 +325,15 @@ export function SectionParts5to8() {
                     NATはIPヘッダだけでなく、TCP/UDPのポート番号やチェックサムも書き換える必要があります。またFTPのようにペイロード内にIPアドレスやポート番号を埋め込むプロトコル（アクティブFTPのPORTコマンドなど）は、NAT側で<strong>ALG（Application Level Gateway）</strong>によるペイロード書き換えを必要とします。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                サーバを外部公開する構成では、CGNAT環境下のクライアントからの着信接続を前提にしない（IPv6デュアルスタックや明示的なポートフォワーディングで代替する）。
+                                サーバを外部公開する構成では、CGNAT環境下のクライアントからの着信接続を前提にしない（IPv6デュアルスタックや明示的なポートフォワーディングで代替する）。{' '}
                             </li>
                             <li>
-                                NATの「フルコーンNAT」「制限コーンNAT」「対称NAT」といった振る舞いの違いはP2P・VoIPの接続性に直結する。STUN/TURN/ICEといったNATトラバーサル技術の選定前に、実際のNATタイプを確認する。
+                                NATの「フルコーンNAT」「制限コーンNAT」「対称NAT」といった振る舞いの違いはP2P・VoIPの接続性に直結する。STUN/TURN/ICEといったNATトラバーサル技術の選定前に、実際のNATタイプを確認する。{' '}
                             </li>
                             <li>
                                 ステートフルファイアウォール／NATのセッションテーブルにはタイムアウトがある（第17部のTCPキープアライブとも関連）。アイドル接続を維持したいアプリケーションは、この既定タイムアウトより短い間隔でキープアライブを送る設計にする。
@@ -452,17 +452,17 @@ export function SectionParts5to8() {
                     Discovery関連メッセージは、IPv6の基本的な通信そのものに必須（ARPに相当）であるため、ICMPv4と同じ感覚で「とりあえず全部ブロック」するとIPv6通信そのものが機能しなくなります。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
                                 ファイアウォール設計では「ICMP＝不要な雑音」として一律遮断せず、Type3/Code4（PMTUD）とICMPv6のNeighbor
-                                Discovery関連メッセージは必ず許可する。
+                                Discovery関連メッセージは必ず許可する。{' '}
                             </li>
                             <li>
                                 <code>ping</code>が通らないことと実サービスが疎通しないことは別問題。ICMPだけを見て「ネットワークがダウンしている」と即断しない（多くの本番環境でICMP
-                                Echoは意図的にフィルタされている）。
+                                Echoは意図的にフィルタされている）。{' '}
                             </li>
                             <li>
                                 IPv6環境の構築・トラブルシューティングでは、ARP相当の機能がICMPv6に統合されていることを踏まえ、<code>tcpdump</code>のフィルタも<code>icmp6</code>側を確認する習慣をつける。

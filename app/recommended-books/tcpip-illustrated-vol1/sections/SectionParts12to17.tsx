@@ -124,17 +124,17 @@ export function SectionParts12to17() {
                     </table>
                 </div>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
                                 Window
-                                ScaleオプションはWi-Fi・衛星回線・大陸間通信のような高帯域遅延積（BDP）環境でスループットを左右する。オプションが経路上のミドルボックスで剥がされていないか<code>tcpdump</code>で確認する習慣をつける。
+                                ScaleオプションはWi-Fi・衛星回線・大陸間通信のような高帯域遅延積（BDP）環境でスループットを左右する。オプションが経路上のミドルボックスで剥がされていないか<code>tcpdump</code>で確認する習慣をつける。{' '}
                             </li>
                             <li>
                                 MSSはリンクのMTUから逆算される値であり、トンネル（VPN、VXLANなど）を挟む構成ではMSS
-                                clamping（MSSを意図的に小さく書き換える）が必要になる場合がある。
+                                clamping（MSSを意図的に小さく書き換える）が必要になる場合がある。{' '}
                             </li>
                             <li>
                                 SACKが無効化されている環境では、1つのパケロスで大量の再送が発生しやすい。現代のOSでは既定で有効だが、意図せず無効化されていないか確認する価値がある。
@@ -171,16 +171,16 @@ export function SectionParts12to17() {
                 </p>
             <Diagram id="diag-23" label="対策として広く実装されているのがSYN Cookiesです。サーバはSYN受信時に接続状態をすぐには保存せず、必要な情報を暗号学的に符号化してSYN-ACKのシーケンス番号自体に埋め込みます。正規のACKが返ってきたときにその値を検証・復元することで、SYNキューへのメモリ割り当てを実質的に不要にし、攻撃への耐性を高めます。" />
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                多数の短命接続を扱うサーバ（Webサーバ、ロードバランサ）ではTIME_WAIT状態のソケットが大量に滞留しポート枯渇を招くことがある。<code>SO_REUSEADDR</code>や適切なコネクションプーリング設計で緩和する。
+                                多数の短命接続を扱うサーバ（Webサーバ、ロードバランサ）ではTIME_WAIT状態のソケットが大量に滞留しポート枯渇を招くことがある。<code>SO_REUSEADDR</code>や適切なコネクションプーリング設計で緩和する。{' '}
                             </li>
                             <li>
                                 SYN
-                                Cookiesはほとんどの現代OSでデフォルト有効だが、有効化状態と閾値（SYNキューが何%埋まったら発動するか）を運用環境で確認しておく。
+                                Cookiesはほとんどの現代OSでデフォルト有効だが、有効化状態と閾値（SYNキューが何%埋まったら発動するか）を運用環境で確認しておく。{' '}
                             </li>
                             <li>
                                 <code>netstat</code>／<code>ss</code>コマンドでTCP状態別のソケット数を可視化すると、CLOSE_WAITが溜まり続けるといったアプリケーション側のバグ（closeし忘れ）を早期に発見できる。
@@ -213,15 +213,15 @@ export function SectionParts12to17() {
                     重複ACKだけでは「どこまで届いたか」しか分からず、複数のセグメントが同時にロスした場合に非効率な再送が発生します。SACKオプション（第12部）を使うと、受信側は「どの範囲を受信済みか」を明示的にACKに含められるため、送信側は本当に欠けている範囲だけをピンポイントで再送できます。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                高遅延・高パケロス環境（衛星回線、混雑した無線網）では高速再送とSACKの効果が特に大きい。これらが有効になっているか（多くのOSで既定有効）を確認する。
+                                高遅延・高パケロス環境（衛星回線、混雑した無線網）では高速再送とSACKの効果が特に大きい。これらが有効になっているか（多くのOSで既定有効）を確認する。{' '}
                             </li>
                             <li>
-                                RTOの動的計算は「安定したネットワークでは速く、不安定なネットワークでは慎重に」というトレードオフを自動調整する仕組みであることを理解しておくと、モバイル回線特有の遅延挙動を誤解しにくくなる。
+                                RTOの動的計算は「安定したネットワークでは速く、不安定なネットワークでは慎重に」というトレードオフを自動調整する仕組みであることを理解しておくと、モバイル回線特有の遅延挙動を誤解しにくくなる。{' '}
                             </li>
                             <li>
                                 アプリケーション層でも独自の再送・タイムアウトを実装する場合、TCP自体の再送と二重に働いて無駄な負荷を生まないよう設計する（例：HTTPクライアントのリトライとTCP再送の相互作用）。
@@ -267,16 +267,16 @@ export function SectionParts12to17() {
                     この2つを同時に有効にすると、双方が互いの送信を待ち合ってしまい、数百ミリ秒単位の不要な遅延が発生する<strong>Nagle/遅延ACK問題</strong>が古くから知られています。対話的・低遅延が求められるアプリケーション（SSHのキー入力、リアルタイムAPIなど）では、送信側で<code>TCP_NODELAY</code>ソケットオプションを設定してNagleのアルゴリズムを無効化するのが定石です。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
                                 高帯域・高遅延（BDPが大きい）回線を使うアプリケーションでは、Window
-                                Scaleが有効か、OSの送受信バッファサイズ上限（<code>net.core.rmem_max</code>等）がBDPに対して十分かを確認する。
+                                Scaleが有効か、OSの送受信バッファサイズ上限（<code>net.core.rmem_max</code>等）がBDPに対して十分かを確認する。{' '}
                             </li>
                             <li>
-                                低遅延が要求される小メッセージ通信（RPC、対話型シェル）では<code>TCP_NODELAY</code>の設定を検討する。ただし大量の小パケットがネットワーク効率を悪化させるリスクとのトレードオフを理解した上で使う。
+                                低遅延が要求される小メッセージ通信（RPC、対話型シェル）では<code>TCP_NODELAY</code>の設定を検討する。ただし大量の小パケットがネットワーク効率を悪化させるリスクとのトレードオフを理解した上で使う。{' '}
                             </li>
                             <li>
                                 フロー制御（受信側の都合）と輻輳制御（ネットワークの都合）は別物であり、実際の送信ウィンドウは両者の小さい方（min）で制限されることを押さえておく（詳細は第16部）。
@@ -336,15 +336,15 @@ export function SectionParts12to17() {
                     3168）のように、ルータが輻輳を検知した際にパケットを破棄する代わりにIPヘッダにマークを付け、それを見た受信側がACK経由で送信側に通知するという、ネットワーク機器が協調するオプション機構も存在します。
                 </p>
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                アプリケーションの体感速度がボトルネック帯域より低い場合、輻輳制御アルゴリズムの選択（<code>sysctl net.ipv4.tcp_congestion_control</code>）を確認する価値がある。ただし多くの場合ボトルネックは他要因（DNS解決、TLSハンドシェイク、アプリケーション処理）にある点に注意。
+                                アプリケーションの体感速度がボトルネック帯域より低い場合、輻輳制御アルゴリズムの選択（<code>sysctl net.ipv4.tcp_congestion_control</code>）を確認する価値がある。ただし多くの場合ボトルネックは他要因（DNS解決、TLSハンドシェイク、アプリケーション処理）にある点に注意。{' '}
                             </li>
                             <li>
-                                高遅延回線でのスループットテストでは、スロースタートの立ち上がりに一定のRTT数がかかることを踏まえ、短時間の計測で結論を出さない。
+                                高遅延回線でのスループットテストでは、スロースタートの立ち上がりに一定のRTT数がかかることを踏まえ、短時間の計測で結論を出さない。{' '}
                             </li>
                             <li>
                                 ECNは有効化することで無駄なパケロス（＝再送コスト）を減らせる可能性があるが、経路上のミドルボックスがECNビットを不正に扱うケースが歴史的にあったため、有効化後は実測で確認する。
@@ -376,15 +376,15 @@ export function SectionParts12to17() {
                 </p>
             <Diagram id="diag-31" label="クラウドのロードバランサやNATゲートウェイは、TCPの仕様とは無関係に独自のアイドルタイムアウトでコネクションを強制切断することがあります。例えばAWSのNetwork Load Balancer（NLB）は既定でTCPアイドルタイムアウトが350秒に設定されており（2024年9月以降は60〜6000秒の範囲で調整可能）、Azure Load Balancerは既定4分（4〜100分の範囲で設定可能）です。アプリケーション側のキープアライブ間隔がこれより長いと、ロードバランサに気づかれないまま接続が切断され、次回送信時に予期しないリセットエラーが発生します。" />
             <div className="callout-practice">
-                    <div className="icon">✓</div>
+                    <div className="icon">✓ </div>
                     <div className="body">
-                        <div className="label">ベストプラクティス</div>
+                        <div className="label">ベストプラクティス </div>
                         <ul>
                             <li>
-                                長時間接続を維持するアプリケーション（DBコネクションプール、WebSocket、gRPCストリーム）では、経路上の各ミドルボックス（ロードバランサ、NATゲートウェイ、プロキシ）のアイドルタイムアウトのうち<strong>最も短いもの</strong>より確実に短い間隔でキープアライブを送るよう設計する。
+                                長時間接続を維持するアプリケーション（DBコネクションプール、WebSocket、gRPCストリーム）では、経路上の各ミドルボックス（ロードバランサ、NATゲートウェイ、プロキシ）のアイドルタイムアウトのうち<strong>最も短いもの</strong>より確実に短い間隔でキープアライブを送るよう設計する。{' '}
                             </li>
                             <li>
-                                OSの既定TCPキープアライブ（数時間単位）に依存せず、アプリケーション層で明示的にキープアライブ・ハートビートを実装する。
+                                OSの既定TCPキープアライブ（数時間単位）に依存せず、アプリケーション層で明示的にキープアライブ・ハートビートを実装する。{' '}
                             </li>
                             <li>
                                 クラウド環境ではインスタンスタイプやNIC世代によってもコネクション追跡のアイドルタイムアウトの既定値が変わることがある（例：AWSはNitro第6世代で既定値を大幅に短縮した実績がある）。既定値を過信せず、必要に応じて明示的に設定する。
