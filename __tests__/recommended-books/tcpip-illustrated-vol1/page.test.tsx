@@ -1,0 +1,227 @@
+// __tests__/recommended-books/tcpip-illustrated-vol1/page.test.tsx
+// @vitest-environment jsdom
+import fs from 'node:fs';
+import { fireEvent, render } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import inventory from '@/docs/migration-inventory/tcpip-illustrated-vol1.json';
+import Page from '@/app/recommended-books/tcpip-illustrated-vol1/page';
+import { DIAGRAMS, NAV_ITEMS } from '@/app/recommended-books/tcpip-illustrated-vol1/constants';
+import {
+    MermaidDiagramMock,
+    codeBlockSelector,
+    extractBodyContent,
+    squash,
+} from '@/__tests__/helpers/migration-test-utils';
+
+vi.mock('@/components/MermaidDiagram', () => ({
+    MermaidDiagram: MermaidDiagramMock,
+}));
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+    window.history.replaceState(null, '', '/');
+});
+
+const mount = () => render(<Page />).container;
+
+describe('tcpip-illustrated-vol1 — 移行元コンテンツの全量照合', () => {
+    it.each([
+        ['h1', inventory.h1],
+        ['h2', inventory.h2],
+        ['h3', inventory.h3],
+        ['h4', inventory.h4],
+        ['th', inventory.th],
+        ['td', inventory.td],
+        ['li', inventory.listItems],
+    ] as const)('%s の件数・順序・テキストが移行元と一致する', (selector, expectedItems) => {
+        const container = mount();
+        const rendered = [...container.querySelectorAll(selector)].map((element) =>
+            squash(element.textContent ?? ''),
+        );
+        expect(rendered).toEqual(expectedItems.map(squash));
+    });
+
+    it('外部リンクが件数・順序・URL・ラベルまで移行元と一致する', () => {
+        const container = mount();
+        const rendered = [...container.querySelectorAll('a[href^="http"]')].map((anchor) => ({
+            href: anchor.getAttribute('href'),
+            text: squash(anchor.textContent ?? ''),
+        }));
+        expect(rendered).toEqual(
+            inventory.links.map((link) => ({ href: link.href, text: squash(link.text) })),
+        );
+    });
+
+    it('本文・注釈・コールアウト全文が移行元の順序どおり一致する', () => {
+        const container = mount();
+        expect(extractBodyContent(container)).toEqual(inventory.bodyContent);
+    });
+
+    it('35点の図が件数どおり存在し、説明と自然スケール(preserveNaturalScale)を持つ', () => {
+        const container = mount();
+        const diagramSelector = '[data-testid="mermaid-diagram"]';
+        const diagrams = [...container.querySelectorAll(diagramSelector)];
+        expect(diagrams).toHaveLength(inventory.counts.diagram);
+        expect(diagrams).toHaveLength(35);
+
+        diagrams.forEach((element) => {
+            const hasLabel = Boolean(element.getAttribute('aria-label')?.trim());
+            const isDecorative = element.getAttribute('data-decorative') === 'true'
+                || element.getAttribute('aria-hidden') === 'true';
+            expect(hasLabel || isDecorative).toBe(true);
+            expect(element.getAttribute('data-preserve-natural-scale')).toBe('true');
+        });
+
+        // コードブロックや不正な静的画像がないこと
+        expect(container.querySelectorAll(codeBlockSelector)).toHaveLength(0);
+        expect(container.querySelectorAll('img, svg:not([data-testid="mermaid-diagram"] svg)')).toHaveLength(0);
+    });
+
+    it('テーブルが22件存在し、thead と th[scope="col"] を正しく持つ', () => {
+        const container = mount();
+        const tables = [...container.querySelectorAll('table')];
+        expect(tables).toHaveLength(inventory.counts.table);
+        expect(tables).toHaveLength(22);
+
+        tables.forEach((table, index) => {
+            expect(table.querySelector('thead')).not.toBeNull();
+            expect(table.querySelectorAll('thead th[scope="col"]').length).toBe(
+                inventory.structures.tableColumnHeaders[index],
+            );
+        });
+    });
+
+    it('原本の全アンカーIDを保持し、内部リンクの到達先が100%存在する', () => {
+        const container = mount();
+        const ids = [...container.querySelectorAll('[id]')].map((el) => el.id);
+        expect(new Set(ids).size).toBe(ids.length);
+
+        const internalLinks = [...container.querySelectorAll('a[href^="#"]')];
+        expect(internalLinks.length).toBeGreaterThan(0);
+        for (const link of internalLinks) {
+            const href = link.getAttribute('href');
+            if (!href || href === '#') continue;
+            const target = container.querySelector(href);
+            expect(target, `Missing anchor target for ${href}`).not.toBeNull();
+        }
+    });
+
+    it('横スクロールする全35図と全22表にキーボードフォーカス(tabIndex=0)と領域名(role="region", aria-label)がある', () => {
+        const container = mount();
+        const regions = [...container.querySelectorAll('.mermaid-wrap, .table-scroll')];
+        expect(regions).toHaveLength(35 + 22);
+
+        regions.forEach((region) => {
+            expect(region).toHaveAttribute('tabindex', '0');
+            expect(region).toHaveAttribute('role', 'region');
+            expect(region.getAttribute('aria-label')?.trim()).toBeTruthy();
+        });
+    });
+});
+
+describe('tcpip-illustrated-vol1 — 操作・インタラクション', () => {
+    it('サイドバー目次のリンク数が 24 件存在し、NAV_ITEMS と同期していること', () => {
+        const container = mount();
+        const navLinks = [...container.querySelectorAll('.sidebar nav a')];
+        expect(navLinks).toHaveLength(24);
+        expect(navLinks).toHaveLength(NAV_ITEMS.length);
+        navLinks.forEach((link, idx) => {
+            expect(link.getAttribute('href')).toBe(`#${NAV_ITEMS[idx]?.id}`);
+            expect(squash(link.textContent ?? '')).toBe(squash(NAV_ITEMS[idx]?.label ?? ''));
+        });
+    });
+
+    it('モバイルサイドバートグルが正しく動作し、aria-expanded が同期すること', () => {
+        const container = mount();
+        const toggle = container.querySelector<HTMLButtonElement>('.sidebar-toggle');
+        expect(toggle).not.toBeNull();
+        expect(toggle).toHaveAttribute('type', 'button');
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+        const sidebar = container.querySelector('.sidebar');
+        expect(sidebar).not.toBeNull();
+
+        // 開く
+        fireEvent.click(toggle!);
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        expect(sidebar?.classList.contains('open')).toBe(true);
+
+        // Escapeキーで閉じる
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(sidebar?.classList.contains('open')).toBe(false);
+
+        // リンククリックで閉じる
+        fireEvent.click(toggle!);
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        const firstNavLink = container.querySelector('.sidebar nav a');
+        if (firstNavLink) {
+            fireEvent.click(firstNavLink);
+            expect(toggle).toHaveAttribute('aria-expanded', 'false');
+            expect(sidebar?.classList.contains('open')).toBe(false);
+        }
+    });
+
+    it('章末チェックリストが 26 項目存在し、トグルでカウンターが正しく更新されること', () => {
+        const container = mount();
+        const checklistCard = container.querySelector('.checklist-card');
+        expect(checklistCard).not.toBeNull();
+
+        const checkboxes = container.querySelectorAll<HTMLInputElement>('.checklist-card input[type="checkbox"]');
+        expect(checkboxes).toHaveLength(26);
+
+        const counter = container.querySelector('.checklist-header .count');
+        expect(counter?.textContent?.trim()).toBe('0 / 26 完了');
+
+        // 1つ目をチェック
+        fireEvent.click(checkboxes[0]!);
+        expect(counter?.textContent?.trim()).toBe('1 / 26 完了');
+
+        // 2つ目をチェック
+        fireEvent.click(checkboxes[1]!);
+        expect(counter?.textContent?.trim()).toBe('2 / 26 完了');
+
+        // 1つ目を解除
+        fireEvent.click(checkboxes[0]!);
+        expect(counter?.textContent?.trim()).toBe('1 / 26 完了');
+    });
+
+    it('すべての Mermaid ダイアグラム定義（35点）が構文エラーなく parse できること', async () => {
+        const { DIAGRAMS } = await import('@/app/recommended-books/tcpip-illustrated-vol1/constants');
+        const mermaidModule = await import('mermaid');
+        const mermaid = mermaidModule.default;
+        mermaid.initialize({ startOnLoad: false });
+
+        expect(Object.keys(DIAGRAMS)).toHaveLength(35);
+        for (const [id, chart] of Object.entries(DIAGRAMS)) {
+            const result = await mermaid.parse(chart);
+            expect(result, `Diagram ${id} failed syntax validation`).toBeTruthy();
+        }
+    });
+});
+
+describe('tcpip-illustrated-vol1 — CSSスタイル・リスト設定の検証', () => {
+    const cssPath = 'app/recommended-books/tcpip-illustrated-vol1/page.css';
+
+    it('CSSファイルが存在し、Tailwind preflightに負けないリストスタイルが定義されていること', () => {
+        expect(fs.existsSync(cssPath)).toBe(true);
+        const css = fs.readFileSync(cssPath, 'utf8');
+
+        // 本文リストの disc, decimal が定義されていること
+        expect(css).toMatch(/\.tcpip-page[^{}]*\s+ul[^{}]*\{[^}]*list-style-type:\s*disc/);
+        expect(css).toMatch(/\.tcpip-page[^{}]*\s+ol[^{}]*\{[^}]*list-style-type:\s*decimal/);
+
+        // チェックリスト・サイドバーのリストスタイルが none であること
+        expect(css).toMatch(/\.checklist-card\s+ul[^{}]*\{[^}]*list-style:\s*none/);
+        expect(css).toMatch(/\.sidebar\s+nav\s+ul[^{}]*\{[^}]*list-style:\s*none/);
+
+        // 人工的な maxWidth 幅制限がなく、全幅と中央寄せが保たれていること
+        expect(css).not.toMatch(/\.mermaid-wrap[^{}]*\{[^}]*max-width:\s*\d/);
+
+        // @layer components を使っていないこと（plain CSS）
+        expect(css).not.toContain('@layer');
+
+        // 非推奨プロパティ word-break: break-word がないこと
+        expect(css).not.toContain('word-break: break-word');
+    });
+});
