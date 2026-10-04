@@ -466,6 +466,11 @@ class Device(BaseModel):
 
 devices: dict[str, Device] = {}   # 学習用のメモリ上データ（本番では DB を使う）
 
+@app.get("/health")
+def health():
+    # Kubernetes の readinessProbe / livenessProbe が叩く軽量エンドポイント
+    return {"status": "ok"}
+
 @app.get("/devices", response_model=list[Device])
 def list_devices():
     return list(devices.values())
