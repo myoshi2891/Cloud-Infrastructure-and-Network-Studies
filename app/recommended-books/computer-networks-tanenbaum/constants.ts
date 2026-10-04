@@ -465,7 +465,8 @@ Client2->>Server2: ClientHello(対応する鍵交換方式・暗号スイート�
 Server2-->>Client2: ServerHello + 証明書 + 鍵交換情報(1往復で応答)
 Note over Client2,Server2: 双方で共通鍵を導出
 Server2-->>Client2: Finished(サーバー側のハンドシェイク完了)
-Client2->>Server2: Finished(暗号化されたアプリケーションデータの送信開始)`,
+Client2->>Server2: Finished(クライアント側のハンドシェイク完了)
+Client2->>Server2: 暗号化されたアプリケーションデータの送信開始`,
     'diag-18': `flowchart LR
 subgraph SiteA["拠点A(社内LAN)"]
 UserA["端末A"]

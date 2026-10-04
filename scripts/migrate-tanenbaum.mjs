@@ -100,6 +100,8 @@ css.walkRules(rule => {
     }
     if (original === 'body') rule.append({ prop: 'min-height', value: '100vh' });
     if (original === '.checklist-card ul') rule.append({ prop: 'list-style-type', value: 'none' });
+    // モバイルではトグルを z-index 40 のサイドバーより上に置き、開いた後も押せるようにする。
+    if (original === '.sidebar-toggle' && rule.parent.type === 'atrule') rule.append({ prop: 'z-index', value: '41' });
 });
 write('page.css', css.toString() + `\n\n.tanenbaum-page .main ul { list-style-type: disc; list-style-position: outside; }\n.tanenbaum-page .main ol { list-style-type: decimal; list-style-position: outside; }\n.tanenbaum-page .main .checklist-card ul { list-style-type: none; }\n.tanenbaum-page .sidebar nav ul { list-style-type: none; margin: 0; padding: 0; }\n.tanenbaum-page .sidebar nav li { margin: 0; padding: 0; }\n.tanenbaum-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 39; background: rgba(0, 0, 0, 0.5); border: 0; }\n@media (min-width: 981px) { .tanenbaum-page .sidebar-backdrop { display: none; } }\n@media (max-width: 980px) { .tanenbaum-page .sidebar:not(.open) { visibility: hidden; } }\n.tanenbaum-page .mermaid-wrap .mermaid-container { width: 100%; }\n.tanenbaum-page .mermaid-wrap > [role="img"] { overflow: visible; }\n.tanenbaum-page :focus-visible { outline: 2px solid var(--color-pca-s4-accent); outline-offset: 4px; }\n`);
 console.log(`Converted ${diagramIndex} diagrams and ${navItems.length} navigation anchors`);
