@@ -2,7 +2,8 @@
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 
-const html = fs.readFileSync('Tcpip-illustrated-vol1-guide.html', 'utf-8');
+// 原本はリポジトリ直下から archive/ へ退避済み。実行時の cwd に依存しないようスクリプト位置から解決する。
+const html = fs.readFileSync(new URL('../archive/Books/html/Tcpip-illustrated-vol1-guide.html', import.meta.url), 'utf-8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main.main');
 const children = [...main.children];
