@@ -444,6 +444,7 @@ document.getElementById('overview').innerHTML = `
   <div class="mt-4 flex flex-wrap items-end gap-x-8 gap-y-2">
     <div class="mono text-[5.5rem] font-semibold leading-none text-[#d4400f] sm:text-[8rem]">32<span class="text-[3rem] sm:text-[4.5rem]">%</span></div>
     <h1 class="max-w-xl pb-2 text-2xl font-bold leading-snug sm:text-3xl">Development with AWS Services<br><span class="text-xl font-medium text-[#5b6270]">全 29 スキルを初学者向けに整理</span></h1>
+    <p role="note" class="max-w-xl border-l-4 border-[#e8a317] bg-[#fff8e6] px-4 py-2 text-base"><span class="mono font-semibold">2026-10-04 時点</span>: DVA-C02 を受験できるのは <b>2026 年 11 月 30 日まで</b>です。それ以降に受験する場合は、更新版 DVA-C03 の試験ガイド（2026 年 10 月 27 日公開予定）を<a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank" rel="noreferrer" class="text-[#1d4ed8] underline">認定ページ</a>で確認してください。</p>
   </div>
   <dl class="mt-10 grid max-w-4xl border-t border-[#14161a] sm:grid-cols-2">
     ${D.overview.map(([k, v]) => `<div class="border-b border-[#e1e5ea] py-3 sm:pr-8"><dt class="text-base font-bold text-[#6a7280]">${k}</dt><dd class="mt-0.5">${R(v)}</dd></div>`).join('')}
@@ -497,7 +498,7 @@ function render() {
         <div class="border-l-2 border-[#d4400f] bg-white py-3 pl-4 pr-3"><div class="mono text-base tracking-wide text-[#a8310a]">BEST PRACTICE / 試験の罠</div><p class="mt-1">${R(s.bp)}</p></div>
       </article>`).join('') : '<p class="py-6 text-[#6a7280]">該当するスキルがありません。</p>';
   });
-  document.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === st.tab; b.className = 'px-4 py-1.5 ' + (on ? 'bg-[#14161a] text-white' : 'bg-white hover:bg-[#eef0f3]'); });
+  document.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === st.tab; b.className = 'px-4 py-1.5 ' + (on ? 'bg-[#14161a] text-white' : 'bg-white hover:bg-[#eef0f3]'); b.setAttribute('aria-pressed', String(on)); });
   const n = st.done.size;
   document.querySelectorAll('.cnt').forEach(e => e.textContent = n);
   document.querySelectorAll('.bar').forEach(e => e.style.width = Math.round(n / ids.length * 100) + '%');
