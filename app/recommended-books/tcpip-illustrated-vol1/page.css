@@ -1,28 +1,10 @@
 /* app/recommended-books/tcpip-illustrated-vol1/page.css */
 
 .tcpip-page {
-    --tcpip-bg: #f7f9fc;
-    --tcpip-bg-card: #ffffff;
-    --tcpip-bg-card-2: #eef2f8;
-    --tcpip-border: #d8e0ec;
-    --tcpip-border-soft: #e6ecf5;
-    --tcpip-text: #1c2733;
-    --tcpip-text-dim: #56637a;
-    --tcpip-text-faint: #8494ac;
-    --tcpip-accent: #2f6feb;
-    --tcpip-accent-soft: #b9cdfa;
-    --tcpip-accent-bg: #eaf1ff;
-    --tcpip-danger: #c8384f;
-    --tcpip-danger-bg: #fdeef1;
-    --tcpip-warn: #a8650a;
-    --tcpip-warn-bg: #fdf3e1;
-    --tcpip-success: #1a8a4f;
-    --tcpip-success-bg: #e8f8ee;
-
     overflow-x: hidden;
     margin: 0;
-    background: var(--tcpip-bg);
-    color: var(--tcpip-text);
+    background: var(--color-tcpip-bg);
+    color: var(--color-tcpip-text);
     font-family: var(--font-body, 'Noto Sans JP', sans-serif);
     font-size: 16px;
     line-height: 1.85;
@@ -35,7 +17,7 @@
 }
 
 .tcpip-page a {
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     text-decoration: none;
 }
 
@@ -56,7 +38,7 @@
     bottom: 0;
     width: 280px;
     background: #ffffff;
-    border-right: 1px solid var(--tcpip-border-soft);
+    border-right: 1px solid var(--color-tcpip-border-soft);
     overflow-y: auto;
     padding: 28px 0 40px;
     z-index: 40;
@@ -64,14 +46,14 @@
 
 .tcpip-page .sidebar-header {
     padding: 0 24px 20px;
-    border-bottom: 1px solid var(--tcpip-border-soft);
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
     margin-bottom: 16px;
 }
 
 .tcpip-page .sidebar-header .kicker {
     font-size: 12px;
     letter-spacing: 0.08em;
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -79,7 +61,7 @@
 .tcpip-page .sidebar-header h2 {
     font-size: 16px;
     margin: 6px 0 0;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
     line-height: 1.5;
     font-weight: 700;
     border: none;
@@ -101,21 +83,21 @@
     padding: 9px 12px;
     border-radius: 8px;
     font-size: 13.5px;
-    color: var(--tcpip-text-dim);
+    color: var(--color-tcpip-text-dim);
     line-height: 1.5;
     margin-bottom: 2px;
     transition: background 0.15s, color 0.15s;
 }
 
 .tcpip-page .sidebar nav a:hover {
-    background: var(--tcpip-accent-bg);
-    color: var(--tcpip-text);
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-text);
     text-decoration: none;
 }
 
 .tcpip-page .sidebar nav a.active {
-    background: var(--tcpip-accent-bg);
-    color: var(--tcpip-accent);
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-accent);
     font-weight: 700;
 }
 
@@ -133,9 +115,9 @@
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: var(--tcpip-bg-card);
-    border: 1px solid var(--tcpip-border);
-    color: var(--tcpip-text);
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
+    color: var(--color-tcpip-text);
     font-size: 18px;
     align-items: center;
     justify-content: center;
@@ -161,7 +143,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     margin-bottom: 14px;
 }
 
@@ -189,22 +171,22 @@
     gap: 6px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: var(--tcpip-bg-card);
-    border: 1px solid var(--tcpip-border);
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
     font-size: 12.5px;
-    color: var(--tcpip-text-dim);
+    color: var(--color-tcpip-text-dim);
 }
 
 .tcpip-page .pill strong {
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .main h2 {
     font-size: 26px;
     margin: 56px 0 20px;
     padding-top: 8px;
-    border-top: 1px solid var(--tcpip-border-soft);
-    color: var(--tcpip-text);
+    border-top: 1px solid var(--color-tcpip-border-soft);
+    color: var(--color-tcpip-text);
     font-weight: 800;
     letter-spacing: -0.01em;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
@@ -219,7 +201,7 @@
 .tcpip-page .main h3 {
     font-size: 20px;
     margin: 38px 0 16px;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
     font-weight: 700;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
@@ -229,7 +211,7 @@
     display: inline-block;
     width: 5px;
     height: 18px;
-    background: var(--tcpip-accent);
+    background: var(--color-tcpip-accent);
     border-radius: 3px;
     margin-right: 10px;
     vertical-align: -2px;
@@ -237,7 +219,7 @@
 
 .tcpip-page .main p {
     margin: 0 0 18px;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 /* リストスタイル: Tailwind preflight で none になるのを防ぎ、disc と decimal を明示 */
@@ -246,7 +228,7 @@
     list-style-position: outside;
     margin: 0 0 18px;
     padding-left: 1.5rem;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .main ol {
@@ -254,7 +236,7 @@
     list-style-position: outside;
     margin: 0 0 18px;
     padding-left: 1.5rem;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .main li {
@@ -263,7 +245,7 @@
 
 .tcpip-page .main hr {
     border: none;
-    border-top: 1px solid var(--tcpip-border-soft);
+    border-top: 1px solid var(--color-tcpip-border-soft);
     margin: 44px 0;
 }
 
@@ -278,13 +260,13 @@
 
 .tcpip-page .footnote-ref sup {
     font-size: 11px;
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     font-weight: 700;
 }
 
 .tcpip-page .main code:not(pre code) {
-    background: var(--tcpip-bg-card-2);
-    border: 1px solid var(--tcpip-border);
+    background: var(--color-tcpip-bg-card-2);
+    border: 1px solid var(--color-tcpip-border);
     border-radius: 5px;
     padding: 1px 6px;
     font-size: 0.9em;
@@ -296,9 +278,9 @@
 .tcpip-page .table-scroll {
     overflow-x: auto;
     margin: 0 0 26px;
-    border: 1px solid var(--tcpip-border);
+    border: 1px solid var(--color-tcpip-border);
     border-radius: 12px;
-    background: var(--tcpip-bg-card);
+    background: var(--color-tcpip-bg-card);
 }
 
 .tcpip-page table {
@@ -308,19 +290,19 @@
 }
 
 .tcpip-page thead th {
-    background: var(--tcpip-accent-bg);
-    color: var(--tcpip-text);
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-text);
     text-align: left;
     padding: 12px 16px;
     font-weight: 700;
-    border-bottom: 1px solid var(--tcpip-border);
+    border-bottom: 1px solid var(--color-tcpip-border);
     white-space: nowrap;
 }
 
 .tcpip-page tbody td {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--tcpip-border-soft);
-    color: var(--tcpip-text-dim);
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
+    color: var(--color-tcpip-text-dim);
     vertical-align: top;
 }
 
@@ -378,9 +360,9 @@
 .tcpip-page .callout-practice {
     display: flex;
     gap: 14px;
-    background: var(--tcpip-success-bg);
+    background: var(--color-tcpip-success-bg);
     border: 1px solid #b7e6c8;
-    border-left: 4px solid var(--tcpip-success);
+    border-left: 4px solid var(--color-tcpip-success);
     border-radius: 12px;
     padding: 20px 22px;
     margin: 0 0 26px;
@@ -391,7 +373,7 @@
     width: 26px;
     height: 26px;
     border-radius: 7px;
-    background: var(--tcpip-success);
+    background: var(--color-tcpip-success);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -401,27 +383,27 @@
 }
 
 .tcpip-page .callout-practice .body {
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .callout-practice .label {
     font-size: 11.5px;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: var(--tcpip-success);
+    color: var(--color-tcpip-success);
     text-transform: uppercase;
     margin-bottom: 6px;
 }
 
 .tcpip-page .callout-practice p {
     margin: 0;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .callout-practice ul {
     margin: 0;
     padding-left: 1.2em;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
 }
 
 .tcpip-page .callout-practice li {
@@ -439,7 +421,7 @@
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: var(--tcpip-success);
+    color: var(--color-tcpip-success);
     text-transform: uppercase;
     margin: 0 0 10px;
 }
@@ -460,8 +442,8 @@
 .tcpip-page .ref-card {
     display: flex;
     gap: 12px;
-    background: var(--tcpip-bg-card);
-    border: 1px solid var(--tcpip-border);
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
     border-radius: 10px;
     padding: 14px 16px;
     min-width: 0;
@@ -472,8 +454,8 @@
     width: 26px;
     height: 26px;
     border-radius: 7px;
-    background: var(--tcpip-accent-bg);
-    color: var(--tcpip-accent);
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -483,20 +465,20 @@
 
 .tcpip-page .ref-card .txt {
     font-size: 13px;
-    color: var(--tcpip-text-dim);
+    color: var(--color-tcpip-text-dim);
     min-width: 0;
     overflow-wrap: anywhere;
 }
 
 .tcpip-page .ref-card .txt a {
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     font-weight: 600;
 }
 
 /* Checklist */
 .tcpip-page .checklist-card {
-    background: var(--tcpip-bg-card);
-    border: 1px solid var(--tcpip-border);
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
     border-radius: 14px;
     padding: 8px 22px 12px;
     margin: 0 0 30px;
@@ -507,19 +489,19 @@
     align-items: center;
     justify-content: space-between;
     padding: 14px 0;
-    border-bottom: 1px solid var(--tcpip-border-soft);
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
     margin-bottom: 6px;
 }
 
 .tcpip-page .checklist-header .title {
     font-weight: 700;
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
     font-size: 14.5px;
 }
 
 .tcpip-page .checklist-header .count {
     font-size: 13px;
-    color: var(--tcpip-accent);
+    color: var(--color-tcpip-accent);
     font-weight: 700;
 }
 
@@ -550,16 +532,16 @@
     height: 19px;
     flex-shrink: 0;
     margin-top: 2px;
-    border: 1.5px solid var(--tcpip-border);
+    border: 1.5px solid var(--color-tcpip-border);
     border-radius: 5px;
-    background: var(--tcpip-bg-card-2);
+    background: var(--color-tcpip-bg-card-2);
     cursor: pointer;
     position: relative;
 }
 
 .tcpip-page .checklist-card input[type='checkbox']:checked {
-    background: var(--tcpip-accent);
-    border-color: var(--tcpip-accent);
+    background: var(--color-tcpip-accent);
+    border-color: var(--color-tcpip-accent);
 }
 
 .tcpip-page .checklist-card input[type='checkbox']:checked::after {
@@ -575,7 +557,7 @@
 }
 
 .tcpip-page .checklist-card label {
-    color: var(--tcpip-text);
+    color: var(--color-tcpip-text);
     font-size: 14.5px;
     cursor: pointer;
     line-height: 1.6;
@@ -583,7 +565,7 @@
 
 .tcpip-page .checklist-card li:has(input:checked) label {
     text-decoration: line-through;
-    color: var(--tcpip-text-faint);
+    color: var(--color-tcpip-text-faint);
 }
 
 /* Footnotes (pandoc) */

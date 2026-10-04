@@ -709,6 +709,25 @@
     --color-terraform-foreground-dim: #9db1d4;
     --color-terraform-foreground-dimmer: #6f84a8;
 
+    /* TCP/IP Illustrated, Volume 1 guide */
+    --color-tcpip-bg: #f7f9fc;
+    --color-tcpip-bg-card: #ffffff;
+    --color-tcpip-bg-card-2: #eef2f8;
+    --color-tcpip-border: #d8e0ec;
+    --color-tcpip-border-soft: #e6ecf5;
+    --color-tcpip-text: #1c2733;
+    --color-tcpip-text-dim: #56637a;
+    --color-tcpip-text-faint: #8494ac;
+    --color-tcpip-accent: #2f6feb;
+    --color-tcpip-accent-soft: #b9cdfa;
+    --color-tcpip-accent-bg: #eaf1ff;
+    --color-tcpip-danger: #c8384f;
+    --color-tcpip-danger-bg: #fdeef1;
+    --color-tcpip-warn: #a8650a;
+    --color-tcpip-warn-bg: #fdf3e1;
+    --color-tcpip-success: #1a8a4f;
+    --color-tcpip-success-bg: #e8f8ee;
+
     /* Layer 2: 共有プリミティブ */
     --color-shadow-rgb: 0, 0, 0;
     --color-shadow: rgba(var(--color-shadow-rgb), 0.4);
