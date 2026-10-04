@@ -332,9 +332,7 @@
 
 .terraform-up-and-running-page .mermaid-wrap svg {
     display: block;
-    margin: 0 auto;
-    max-width: 100% !important;
-    height: auto !important;
+    flex-shrink: 0;
 }
 
 /* Tables */
