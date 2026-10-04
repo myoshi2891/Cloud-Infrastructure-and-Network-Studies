@@ -183,7 +183,7 @@ bun run dashboard
 
 ## 7. 次回セッションでのテスト追加再開プロンプト
 
-最新実装HEADは `5eb7ed51`。Tanenbaumガイドの移行・Books統合・原本保持とアーカイブは実装済み。ガイド23件を含む関連141テストと、3001番のE2E（1440px・768px・390px）3件が成功し、各画面幅でa11y違反0件。型チェック・Lintも成功。全体Vitestの既知の失敗はPAA Section 5の表セル・リスト照合2件（移行前から存在）。次回はこの教材とインベントリの差分を別タスクで調査する。npm・ビルドは禁止。目視確認は未実施で、自動のDOM検証（Vitest）とPlaywright検証（上記3件成功・a11y違反0件）で代替した。過去タスクの未実施項目は下記の各実行記録を参照。
+最新実装HEADは `5eb7ed51`。Tanenbaumガイドの移行・Books統合・原本保持とアーカイブは実装済み。ガイド23件を含む関連141テストと、3001番のE2E（1440px・768px・390px）3件が成功し、各画面幅でa11y違反0件。型チェック・Lintも成功。全体Vitestの既知の失敗はPAA Section 5の表セル・リスト照合2件（移行前から存在）。次回はこの教材とインベントリの差分を別タスクで調査する。この作業ではユーザー指定によりnpm・ビルドを実行していない（下記の実行記録と同じ）。今後のタスクでは `.agents/rules/tdd-commit-workflow.md` の必須検証に従う。目視確認は未実施で、自動のDOM検証（Vitest）とPlaywright検証（上記3件成功・a11y違反0件）で代替した。過去タスクの未実施項目は下記の各実行記録を参照。
 
 あなたは熟練したテストエンジニアであり、Next.js (App Router) / TypeScript / Vitest / Playwright のテストスペシャリストです。
 現在、[docs/TEST_COVERAGE_PROGRESS.md](TEST_COVERAGE_PROGRESS.md) の既存 **🔴 P0 / 🟡 P1 / 🔵 P2** は完了済みですが、CCNA / DevNetの独立集計によりCisco向けP1 E2Eが新たに未完了として可視化されています。サイドバー付き全24スタイルシートの横断レイアウト契約は `guide-content-widths.test.ts` の73ケースで保護されています。次フェーズではCisco E2Eを優先し、以下の候補もステップバイステップで進めてください。

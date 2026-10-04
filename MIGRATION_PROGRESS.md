@@ -73,8 +73,8 @@
 - [app/recommended-books/terraform-up-and-running/page.css](app/recommended-books/terraform-up-and-running/page.css)
 - [本文テスト: terraform-up-and-running](__tests__/recommended-books/terraform-up-and-running/page.test.tsx)
 - [docs/migration-inventory/terraform-up-and-running.json](docs/migration-inventory/terraform-up-and-running.json)
-- [archive/Books/html/Terraform-up-and-running.html](archive/Books/html/Terraform-up-and-running.html)
-- [archive/Books/md/Terraform-up-and-running.md](archive/Books/md/Terraform-up-and-running.md)
+- `archive/Books/html/Terraform-up-and-running.html`（ローカル専用。`/archive/` は `.gitignore` 対象のため clone には含まれない）
+- `archive/Books/md/Terraform-up-and-running.md`（同上）
 - [app/constants.ts](app/constants.ts)
 - [app/globals.css](app/globals.css)
 - [GEMINI.md](GEMINI.md)
