@@ -426,7 +426,7 @@ flowchart TD
 **根拠**
 - 【標準】RFC 7208（SPF） https://www.rfc-editor.org/rfc/rfc7208
 - 【標準】RFC 6376（DKIM） https://www.rfc-editor.org/rfc/rfc6376
-- 【標準】RFC 7489（DMARC） https://www.rfc-editor.org/rfc/rfc7489
+- 【標準】RFC 9989（DMARC。RFC 7489 を廃止） https://www.rfc-editor.org/rfc/rfc9989
 - 【製品文書】Duo「認証方式のセキュリティガイド（Verified Duo Push など）」 https://duo.com/docs/authentication-methods-security-guide
 
 ### 1.5 暗号コンポーネント（ハッシュ、暗号化、PKI、TLS、QUIC、MASQUE、IPsec、PQC）
