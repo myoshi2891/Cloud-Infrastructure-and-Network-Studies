@@ -18,7 +18,7 @@ export function SectionAppendix() {
             <h2 id="roadmap" tabIndex={-1}>学習ロードマップ</h2>
             <p>初学者が本書の内容を段階的に消化するための、5段階の学習パスを提案します。</p>
             <Diagram id="diag-34" label="初学者が本書の内容を段階的に消化するための、5段階の学習パスを提案します。" />
-            <div className="table-scroll" tabIndex={0} role="region" aria-label="flowchart TB S1[&quot;ステージ1：基礎固め<br/>第0〜2部<br/>アーキテクチャ原則とアドレッシング&quot;] --> S2[&quot;ステージ2：ローカルネットワーク<br/>第3〜9部<br/>リンク層・ARP・IP・DHCP・NAT・ICMP・マルチキャスト&quot;] S2 --> S3[&quot;ステージ3：トランスポートとアプリ<br/>第10〜13部<br/>UDP・DNS・TCP基礎・接続管理&quot;] S3 --> S4[&quot;ステージ4：性能とセキュリティ<br/>第14〜18部<br/>再送・輻輳制御・キープアライブ・暗号化&quot;] S4 --> S5[&quot;ステージ5：最新動向へのブリッジ<br/>第19部<br/>2026年時点の実運用知識&quot;] classDef stage fill:#eaf1ff,stroke:#2f6feb,color:#173d7a class S1,S2,S3,S4,S5 stage">
+            <div className="table-scroll" tabIndex={0} role="region" aria-label="学習ロードマップ：5段階の学習ステージと目安期間">
                     <table>
                         <thead>
                             <tr className="header">

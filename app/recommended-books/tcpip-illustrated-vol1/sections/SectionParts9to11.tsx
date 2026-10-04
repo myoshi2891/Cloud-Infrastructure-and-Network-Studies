@@ -17,7 +17,7 @@ export function SectionParts9to11() {
                     <table>
                         <thead>
                             <tr className="header">
-                                <th scope="col">プロジェクト</th>
+                                <th scope="col">項目</th>
                                 <th scope="col">IPv4</th>
                                 <th scope="col">IPv6</th>
                             </tr>
