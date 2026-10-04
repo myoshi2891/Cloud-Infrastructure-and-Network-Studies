@@ -10,12 +10,19 @@ const children = [...main.children];
 let diagramCounter = 0;
 let tableCounter = 0;
 
+// JSX テキストで特別な意味を持つ文字の置換表
+const JSX_TEXT_ESCAPES = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '{': '{"{"}',
+    '}': '{"}"}',
+};
+
 function escapeJsxText(text) {
     if (!text) return '';
-    // JSXでエラーになる { や } をエスケープ
-    return text
-        .replace(/\{/g, '{"{"}')
-        .replace(/\}/g, '{"}"}');
+    // 1 パスで置換し、挿入した {"{"} / {"}"} の波括弧を再処理しない
+    return text.replace(/[&<>{}]/g, (ch) => JSX_TEXT_ESCAPES[ch] ?? ch);
 }
 
 function domToJsx(node) {
