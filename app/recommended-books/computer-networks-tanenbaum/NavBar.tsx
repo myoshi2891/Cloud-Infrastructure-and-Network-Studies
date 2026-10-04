@@ -14,12 +14,6 @@ export function NavBar() {
             if (!id) setActiveId(NAV_ITEMS[0]?.id ?? '');
             else if (NAV_ITEMS.some(item => item.id === id)) setActiveId(id);
         };
-        const onKey = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                setOpen(false);
-                document.getElementById('sidebarToggle')?.focus();
-            }
-        };
         const onScroll = () => {
             if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
                 setActiveId(NAV_ITEMS.at(-1)?.id ?? '');
@@ -42,16 +36,26 @@ export function NavBar() {
         fromHash();
         window.addEventListener('hashchange', fromHash);
         window.addEventListener('popstate', fromHash);
-        window.addEventListener('keydown', onKey);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => {
             observer?.disconnect();
             window.removeEventListener('hashchange', fromHash);
             window.removeEventListener('popstate', fromHash);
-            window.removeEventListener('keydown', onKey);
             window.removeEventListener('scroll', onScroll);
         };
     }, []);
+
+    // 開いている間だけ Escape を監視し、閉じた状態ではフォーカスを動かさない。
+    useEffect(() => {
+        if (!open) return;
+        const onKey = (event: KeyboardEvent) => {
+            if (event.key !== 'Escape') return;
+            setOpen(false);
+            document.getElementById('sidebarToggle')?.focus();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [open]);
 
     const navigate = useCallback((event: MouseEvent<HTMLAnchorElement>, id: string) => {
         if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;

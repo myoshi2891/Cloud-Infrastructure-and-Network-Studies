@@ -154,6 +154,8 @@ describe('Tanenbaum の操作', () => {
         vi.stubGlobal('scrollY', 2000 - window.innerHeight);
         fireEvent.scroll(window);
         expect(container.querySelector('nav a[href="#references"]')).toHaveAttribute('aria-current', 'location');
+        // Escape の keydown は開いている間だけ登録されるため、開いた状態でアンマウントして解除を検証する
+        fireEvent.click(container.querySelector('.sidebar-toggle')!);
         unmount();
         expect(disconnect).toHaveBeenCalledOnce();
         for (const event of ['hashchange', 'popstate', 'scroll', 'keydown']) {
@@ -221,5 +223,26 @@ describe('Tanenbaum CSS全宣言とリストスタイル', () => {
         expect(css).not.toMatch(/\.mermaid-wrap[^{}]*\{[^}]*max-width:\s*\d/);
         expect(fs.readFileSync('app/recommended-books/computer-networks-tanenbaum/page.tsx', 'utf8')).toContain("import './page.css'");
         expect(fs.readFileSync('app/recommended-books/computer-networks-tanenbaum/ComputerNetworksTanenbaumGuide.tsx', 'utf8')).toContain('memo(function Diagram');
+    });
+});
+
+describe('Tanenbaum の Escape 処理', () => {
+    it('サイドバーが閉じているときの Escape はフォーカスを動かさない', () => {
+        const root = mount();
+        const link = root.querySelector<HTMLAnchorElement>('nav a[href="#step5"]')!;
+        link.focus();
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(link).toHaveFocus();
+        expect(root.querySelector('.sidebar-toggle')).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('サイドバーが開いているときの Escape は閉じてトグルへフォーカスを戻す', () => {
+        const root = mount();
+        const toggle = root.querySelector<HTMLButtonElement>('.sidebar-toggle')!;
+        fireEvent.click(toggle);
+        root.querySelector<HTMLAnchorElement>('nav a[href="#step5"]')!.focus();
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(toggle).toHaveFocus();
     });
 });
