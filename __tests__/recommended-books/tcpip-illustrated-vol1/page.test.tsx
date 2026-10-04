@@ -231,3 +231,60 @@ describe('tcpip-illustrated-vol1 — CSSスタイル・リスト設定の検証'
         expect(css).not.toContain('word-break: break-word');
     });
 });
+
+describe('tcpip-illustrated-vol1 — Mermaid 図の原本忠実描画', () => {
+    const cssPath = 'app/recommended-books/tcpip-illustrated-vol1/page.css';
+    const ruleBody = (css: string, selector: string): string => {
+        const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+        const match = css.match(new RegExp(`(?:^|[}\\s])${escaped}\\s*\\{([^}]*)\\}`));
+        return match?.[1] ?? '';
+    };
+
+    it('35点の図が原本 pre.mermaid と同じ出現順で DIAGRAMS(diag-0〜diag-34) を描画する', () => {
+        const container = mount();
+        const charts = [...container.querySelectorAll('[data-testid="mermaid-diagram"]')].map((el) =>
+            el.getAttribute('data-chart'),
+        );
+        const expected = Array.from({ length: 35 }, (_, i) => DIAGRAMS[`diag-${i}` as keyof typeof DIAGRAMS]);
+        expect(charts).toEqual(expected);
+    });
+
+    it('全35図が原本の mermaid.initialize(theme: base / 明色ノード) と同じライトテーマで描画される', () => {
+        const container = mount();
+        const themes = [...container.querySelectorAll('[data-testid="mermaid-diagram"]')].map((el) =>
+            el.getAttribute('data-theme'),
+        );
+        expect(themes).toEqual(Array.from({ length: 35 }, () => 'light'));
+    });
+
+    it('図カードは原本 pre.mermaid と同じ白背景・#d8e0ec 枠・角丸14px・padding 28px 20px の単一カードである', () => {
+        const css = fs.readFileSync(cssPath, 'utf8');
+        const wrap = ruleBody(css, '.tcpip-page .mermaid-wrap');
+        expect(wrap).toMatch(/background:\s*#ffffff/);
+        expect(wrap).toMatch(/border:\s*1px solid #d8e0ec/);
+        expect(wrap).toMatch(/border-radius:\s*14px/);
+        expect(wrap).toMatch(/padding:\s*28px 20px/);
+        expect(wrap).toMatch(/overflow-x:\s*auto/);
+        expect(wrap).toMatch(/margin:\s*1\.5rem auto 2rem/);
+
+        // 共通コンポーネント側のライトカードを打ち消し、カードの二重化を防ぐ
+        const inner = ruleBody(css, '.tcpip-page .mermaid-wrap > [data-theme="light"]');
+        expect(inner).toMatch(/background:\s*transparent/);
+        expect(inner).toMatch(/border:\s*0/);
+        expect(inner).toMatch(/padding:\s*0/);
+        expect(inner).toMatch(/margin:\s*0/);
+        expect(inner).toMatch(/overflow:\s*visible/);
+        expect(inner).toMatch(/box-shadow:\s*none/);
+    });
+
+    it('preserveNaturalScale 図の SVG に max-width: 100% !important を当てない (AGENTS.md §2 例外規定)', () => {
+        const css = fs.readFileSync(cssPath, 'utf8');
+        expect(css).not.toMatch(/\.mermaid-wrap[^{]*svg\s*\{[^}]*max-width:\s*100%\s*!important/);
+    });
+
+    it('classDef の color 指定(例: acked #8695ab / bad #7a1f30)がノードラベル子孫へ継承される', () => {
+        const css = fs.readFileSync(cssPath, 'utf8');
+        const inherit = ruleBody(css, '.tcpip-page .mermaid-wrap .mermaid-target .node .nodeLabel *');
+        expect(inherit).toMatch(/color:\s*inherit\s*!important/);
+    });
+});
