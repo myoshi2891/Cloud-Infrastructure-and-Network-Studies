@@ -422,6 +422,20 @@ const R = h => `<span class="rich">${h}</span>`;
 const fig = (id, cap) => `<figure class="my-8 border-y border-[#d9dde4] bg-white"><div class="mono px-4 pt-3 text-base tracking-wide text-[#6a7280]">FIG. ${cap}</div><div class="dg" id="dg-${id}">図を描画中…</div></figure>`;
 const ids = D.tasks.flatMap(t => t.skills.map(s => s.id));
 const st = { done: new Set(), q: '', tab: 'all' };
+/* 学習済みスキル ID を localStorage に保存し、再読み込み後も進捗を復元する。
+   プライベートモード等で storage が使えない場合は保存なしで動作を続ける */
+const STORE_KEY = 'dva-c02-domain1-done';
+function loadDone() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORE_KEY) ?? '[]');
+    if (!Array.isArray(parsed)) return;
+    parsed.filter(id => typeof id === 'string' && ids.includes(id)).forEach(id => st.done.add(id));
+  } catch (err) { console.warn('学習進捗を復元できませんでした:', err); }
+}
+function saveDone() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify([...st.done])); }
+  catch (err) { console.warn('学習進捗を保存できませんでした:', err); }
+}
 const strip = h => h.replace(/<[^>]+>/g, '').toLowerCase();
 
 /* ---- 静的な骨組み(一度だけ描画。図はここに置くので再描画で消えない) ---- */
@@ -489,7 +503,7 @@ function render() {
   document.querySelectorAll('.bar').forEach(e => e.style.width = Math.round(n / ids.length * 100) + '%');
 }
 /* 再描画でチェックボックスが置き換わるため、同じスキルの新しい要素へフォーカスを戻す */
-document.addEventListener('change', e => { const id = e.target.dataset.done; if (id) { e.target.checked ? st.done.add(id) : st.done.delete(id); render(); document.querySelector(`[data-done="${id}"]`)?.focus({ preventScroll: true }); } });
+document.addEventListener('change', e => { const id = e.target.dataset.done; if (id) { e.target.checked ? st.done.add(id) : st.done.delete(id); saveDone(); render(); document.querySelector(`[data-done="${id}"]`)?.focus({ preventScroll: true }); } });
 /* タスク絞り込みで非表示のセクションへ移動する場合は、先にそのタスクのタブを有効化する */
 function reveal(key) {
   if (!D.tasks.some(t => t.key === key) || st.tab === 'all' || st.tab === key) return;
@@ -529,7 +543,7 @@ async function drawDiagrams() {
     } catch (err) { host.textContent = '図の描画に失敗しました: ' + err.message; }
   }
 }
-render(); spy(); drawDiagrams();
+loadDone(); render(); spy(); drawDiagrams();
 </script>
 </body>
 </html>
