@@ -109,7 +109,10 @@ function styleStringToReact(styleStr) {
         .join(', ');
 }
 
-export function generateSection(startIndex, endIndex, componentName, extraImports = '') {
+export function generateSection(startIndex, endIndex, componentName, startDiagramIndex, startTableIndex, extraImports = '') {
+    if (typeof startDiagramIndex === 'number') diagramCounter = startDiagramIndex;
+    if (typeof startTableIndex === 'number') tableCounter = startTableIndex;
+
     const sectionNodes = children.slice(startIndex, endIndex);
     const bodyJsx = sectionNodes.map(domToJsx).join('\n            ');
     return `'use client';
