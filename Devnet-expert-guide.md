@@ -765,6 +765,8 @@ flowchart TD
 ```
 
 ```python
+from xml.sax.saxutils import escape
+
 from ncclient import manager
 
 SOT = {  # 本来は NetBox や Git 上の YAML から読み込む
@@ -772,12 +774,15 @@ SOT = {  # 本来は NetBox や Git 上の YAML から読み込む
 }
 
 def build_payload(name, attrs):
+    # 文字データに埋め込む値は & や < を含みうるため XML エスケープする
+    name = escape(name)
+    description = escape(attrs["description"])
     return f"""
     <config>
       <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
         <interface>
           <name>{name}</name>
-          <description>{attrs["description"]}</description>
+          <description>{description}</description>
           <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
           <enabled>{str(attrs["enabled"]).lower()}</enabled>
         </interface>
