@@ -8,27 +8,12 @@ interface SectionProps {
 export function Section6({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第6部原著第6章対応-シークレット管理">
-                    第6部（原著第6章対応）: シークレット管理
-                </h2>
+<h2 id="第6部原著第6章対応-シークレット管理">{' '}第6部（原著第6章対応）: シークレット管理{' '}</h2>
 <h3 id="6-1-シークレット管理の基礎">6-1. シークレット管理の基礎</h3>
 <p>シークレット管理を設計する際は、次の3つの問いに答える必要があります。</p>
-<ol type="1">
-                    <li>
-                        <strong>何を保存するか</strong>: パスワード、APIキー、証明書の秘密鍵など
-                    </li>
-                    <li>
-                        <strong>どこに保存するか</strong>: 暗号化されたストレージ（Vault、Secrets
-                        Manager等）
-                    </li>
-                    <li>
-                        <strong>どうアクセスさせるか</strong>:
-                        環境変数、ファイルマウント、動的な短命クレデンシャル発行
-                    </li>
-                </ol>
+<ol type="1">{' '}<li>{' '}<strong>何を保存するか</strong>: パスワード、APIキー、証明書の秘密鍵など{' '}</li>{' '}<li>{' '}<strong>どこに保存するか</strong>: 暗号化されたストレージ（Vault、Secrets Manager等）{' '}</li>{' '}<li>{' '}<strong>どうアクセスさせるか</strong>: 環境変数、ファイルマウント、動的な短命クレデンシャル発行{' '}</li>{' '}</ol>
 <h3 id="6-2-主要シークレット管理ツール比較">6-2. 主要シークレット管理ツール比較</h3>
-<div className="table-scroll">
-                    <table>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">ツール</th>
@@ -69,15 +54,9 @@ export function Section6({ Diagram }: SectionProps) {
                                 <td>GCP中心の環境</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
-<h3 id="6-3-terraformでのシークレット利用パターン">
-                    6-3. Terraformでのシークレット利用パターン
-                </h3>
-<p>
-                    Terraformの<code>sensitive = true</code>はCLI出力へのマスキングのみを行い、<strong>State
-                        fileには平文（またはそれに近い形）でシークレットが記録されてしまう</strong>という長年の課題がありました。
-                </p>
+                    </table>{' '}</div>
+<h3 id="6-3-terraformでのシークレット利用パターン">{' '}6-3. Terraformでのシークレット利用パターン{' '}</h3>
+<p>{' '}Terraformの<code>sensitive = true</code>はCLI出力へのマスキングのみを行い、<strong>State fileには平文（またはそれに近い形）でシークレットが記録されてしまう</strong>という長年の課題がありました。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">variable "db_password" &#123;</div>
                     <div className="code-line">  description = "The password for the database"</div>
@@ -85,33 +64,10 @@ export function Section6({ Diagram }: SectionProps) {
                     <div className="code-line">  sensitive   = true</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<div className="callout callout-warning">
-                    <div className="callout-icon">⚠</div>
-                    <div className="callout-body">
-                        <div className="callout-label">重要な注意</div>
-                        <p>
-                            <code>sensitive</code>はあくまで表示上のマスクです。State
-                            file自体を暗号化する（リモートバックエンドの暗号化オプションを有効にする）ことと、アクセス権限をIAMで絞ることが必須のベストプラクティスです。
-                        </p>
-                    </div>
-                </div>
-<h3 id="6-42026年最新ephemeral-resources--write-only-argumentsによる根本解決">
-                    6-4.【2026年最新】Ephemeral Resources &amp; Write-Only Argumentsによる根本解決
-                </h3>
-<p>
-                    長年の「Stateにシークレットが残ってしまう」問題に対し、HashiCorpは<strong>Terraform 1.10でEphemeral Resourcesを、続くTerraform 1.11でWrite-Only
-                        Argumentsを</strong>導入しました。よく一組で語られますが、両者は同じリリースで登場したわけではなく導入バージョンが1つずれています。いずれも原著第3版（2022年刊）の時点では存在しなかった、2026年時点における最重要のシークレット管理アップデートです。
-                </p>
-<ul>
-                    <li>
-                        <strong>Ephemeral Resources</strong>（<code>ephemeral</code>ブロック、<strong>Terraform 1.10以降</strong>）:
-                        <code>apply</code>実行中のメモリ上にのみ存在し、PlanファイルにもStateファイルにも書き込まれないリソース
-                    </li>
-                    <li>
-                        <strong>Write-Only Arguments</strong>（<code>_wo</code>サフィックスの引数、<strong>Terraform 1.11以降</strong>）:
-                        プロバイダー側がサポートする場合、値を受け取って設定するが、Stateには保存しない引数
-                    </li>
-                </ul>
+<div className="callout callout-warning">{' '}<div className="callout-icon">⚠{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">重要な注意{' '}</div>{' '}<p>{' '}<code>sensitive</code>はあくまで表示上のマスクです。State file自体を暗号化する（リモートバックエンドの暗号化オプションを有効にする）ことと、アクセス権限をIAMで絞ることが必須のベストプラクティスです。{' '}</p>{' '}</div>{' '}</div>
+<h3 id="6-42026年最新ephemeral-resources--write-only-argumentsによる根本解決">{' '}6-4.【2026年最新】Ephemeral Resources &amp; Write-Only Argumentsによる根本解決{' '}</h3>
+<p>{' '}長年の「Stateにシークレットが残ってしまう」問題に対し、HashiCorpは<strong>Terraform 1.10でEphemeral Resourcesを、続くTerraform 1.11でWrite-Only Argumentsを</strong>導入しました。よく一組で語られますが、両者は同じリリースで登場したわけではなく導入バージョンが1つずれています。いずれも原著第3版（2022年刊）の時点では存在しなかった、2026年時点における最重要のシークレット管理アップデートです。{' '}</p>
+<ul>{' '}<li>{' '}<strong>Ephemeral Resources</strong>（<code>ephemeral</code>ブロック、<strong>Terraform 1.10以降</strong>）:{' '}<code>apply</code>実行中のメモリ上にのみ存在し、PlanファイルにもStateファイルにも書き込まれないリソース{' '}</li>{' '}<li>{' '}<strong>Write-Only Arguments</strong>（<code>_wo</code>サフィックスの引数、<strong>Terraform 1.11以降</strong>）: プロバイダー側がサポートする場合、値を受け取って設定するが、Stateには保存しない引数{' '}</li>{' '}</ul>
 <Diagram id="diag-10" ariaLabel="Ephemeral ResourcesとWrite-Only Argumentsによるシークレット漏洩防止フロー" />
 <pre className="code-block">
                     <div className="code-line">ephemeral "random_password" "db_password" &#123;</div>
@@ -139,18 +95,9 @@ export function Section6({ Diagram }: SectionProps) {
                     <div className="code-line">  skip_final_snapshot = true</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<p>
-                    <strong>生成したパスワードの受け取りとローテーション</strong>:
-                    この構成では生成値がStateにもPlanにも残らないため、<code>terraform output</code>で後から取り出すことは<strong>できません</strong>。値を人やアプリが使う必要がある場合は、同じ<code>apply</code>の中でシークレットストアへ書き込み、以後はそこから読む運用にします（<code>aws_secretsmanager_secret_version</code>の<code>secret_string_wo</code>と<code>secret_string_wo_version</code>を使えば、Secrets
-                    Manager側にもStateを経由せずに書き込めます）。
-                </p>
-<p>
-                    ローテーション時の注意点は<code>password_wo_version</code>です。write-only引数の値そのものはStateに保存されないため、Terraformは値の変化を検知できません。<strong>新しいパスワードを実際に適用するには、<code>password_wo_version</code>をインクリメントする</strong>必要があります（<code>1</code>
-                    →
-                    <code>2</code>）。バージョンを据え置いたままパスワード生成側だけを変えても、プロバイダーは更新を行わず、コード上の値と実際のDBパスワードが乖離します。定期ローテーションを行う場合は、この整数をコードまたは変数として管理し、ローテーションのたびに必ず1つ上げる手順をランブック化しておきます。
-                </p>
-<div className="table-scroll">
-                    <table>
+<p>{' '}<strong>生成したパスワードの受け取りとローテーション</strong>: この構成では生成値がStateにもPlanにも残らないため、<code>terraform output</code>で後から取り出すことは<strong>できません</strong>。値を人やアプリが使う必要がある場合は、同じ<code>apply</code>の中でシークレットストアへ書き込み、以後はそこから読む運用にします（<code>aws_secretsmanager_secret_version</code>の<code>secret_string_wo</code>と<code>secret_string_wo_version</code>を使えば、Secrets Manager側にもStateを経由せずに書き込めます）。{' '}</p>
+<p>{' '}ローテーション時の注意点は<code>password_wo_version</code>です。write-only引数の値そのものはStateに保存されないため、Terraformは値の変化を検知できません。<strong>新しいパスワードを実際に適用するには、<code>password_wo_version</code>をインクリメントする</strong>必要があります（<code>1</code>{' '}→{' '}<code>2</code>）。バージョンを据え置いたままパスワード生成側だけを変えても、プロバイダーは更新を行わず、コード上の値と実際のDBパスワードが乖離します。定期ローテーションを行う場合は、この整数をコードまたは変数として管理し、ローテーションのたびに必ず1つ上げる手順をランブック化しておきます。{' '}</p>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">比較項目</th>
@@ -177,39 +124,21 @@ export function Section6({ Diagram }: SectionProps) {
                             <tr className="row-even">
                                 <td>対応バージョン</td>
                                 <td>全バージョン</td>
-                                <td>
-                                    Ephemeral Resources: Terraform 1.10以降／Write-Only Arguments:
-                                    Terraform 1.11以降
-                                </td>
+                                <td>{' '}Ephemeral Resources: Terraform 1.10以降／Write-Only Arguments: Terraform 1.11以降{' '}</td>
                             </tr>
                             <tr className="row-odd">
                                 <td>プロバイダー側の対応</td>
                                 <td>不要</td>
-                                <td>
-                                    Write-Only引数の実装が必要（<code>hashicorp/aws</code>は<code>password_wo</code>等で順次対応）
-                                </td>
+                                <td>{' '}Write-Only引数の実装が必要（<code>hashicorp/aws</code>は<code>password_wo</code>等で順次対応）{' '}</td>
                             </tr>
                             <tr className="row-even">
                                 <td>主な利用先</td>
                                 <td>変数、リソース属性全般</td>
-                                <td>
-                                    <code>locals</code>、Ephemeral変数（<code>ephemeral = true</code>）、子モジュールのEphemeral出力、<code>ephemeral</code>ブロック、プロバイダー設定、プロビジョナーと<code>connection</code>ブロック、対応リソースのWrite-Only引数
-                                </td>
+                                <td>{' '}<code>locals</code>、Ephemeral変数（<code>ephemeral = true</code>）、子モジュールのEphemeral出力、<code>ephemeral</code>ブロック、プロバイダー設定、プロビジョナーと<code>connection</code>ブロック、対応リソースのWrite-Only引数{' '}</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <p>
-                            2026年8月時点で新規に本番コードを書く場合、パスワードやAPIトークンのような一度きりの機微値は、プロバイダーが対応していれば積極的にEphemeral
-                            Resources + Write-Only
-                            Argumentsへ移行する。既存コードの移行は、影響範囲の大きいDB系リソースから段階的に行うのが安全です。
-                        </p>
-                    </div>
-                </div>
+                    </table>{' '}</div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}2026年8月時点で新規に本番コードを書く場合、パスワードやAPIトークンのような一度きりの機微値は、プロバイダーが対応していれば積極的にEphemeral Resources + Write-Only Argumentsへ移行する。既存コードの移行は、影響範囲の大きいDB系リソースから段階的に行うのが安全です。{' '}</p>{' '}</div>{' '}</div>
 
         </section>
     );

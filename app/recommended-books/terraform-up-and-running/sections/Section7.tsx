@@ -8,15 +8,9 @@ interface SectionProps {
 export function Section7({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第7部原著第7章対応-複数プロバイダーの利用">
-                    第7部（原著第7章対応）: 複数プロバイダーの利用
-                </h2>
-<h3 id="7-1-単一プロバイダーでの作業とプロバイダーのインストール">
-                    7-1. 単一プロバイダーでの作業とプロバイダーのインストール
-                </h3>
-<p>
-                    プロバイダーは<code>required_providers</code>ブロックでソースとバージョンを明示します。
-                </p>
+<h2 id="第7部原著第7章対応-複数プロバイダーの利用">{' '}第7部（原著第7章対応）: 複数プロバイダーの利用{' '}</h2>
+<h3 id="7-1-単一プロバイダーでの作業とプロバイダーのインストール">{' '}7-1. 単一プロバイダーでの作業とプロバイダーのインストール{' '}</h3>
+<p>{' '}プロバイダーは<code>required_providers</code>ブロックでソースとバージョンを明示します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">terraform &#123;</div>
                     <div className="code-line">  required_providers &#123;</div>
@@ -27,12 +21,8 @@ export function Section7({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<h3 id="7-2-同一プロバイダーの複数コピーマルチリージョンマルチアカウント">
-                    7-2. 同一プロバイダーの複数コピー（マルチリージョン・マルチアカウント）
-                </h3>
-<p>
-                    <code>alias</code>を使うことで、1つのTerraformコード内から複数リージョン・複数AWSアカウントを扱えます。
-                </p>
+<h3 id="7-2-同一プロバイダーの複数コピーマルチリージョンマルチアカウント">{' '}7-2. 同一プロバイダーの複数コピー（マルチリージョン・マルチアカウント）{' '}</h3>
+<p>{' '}<code>alias</code>を使うことで、1つのTerraformコード内から複数リージョン・複数AWSアカウントを扱えます。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">provider "aws" &#123;</div>
                     <div className="code-line">  region = "us-east-2"</div>
@@ -54,12 +44,8 @@ export function Section7({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <Diagram id="diag-11" ariaLabel="マルチリージョン・マルチアカウントでの複数プロバイダーエイリアス構成" />
-<h3 id="7-3-複数プロバイダーに対応したモジュールの作成">
-                    7-3. 複数プロバイダーに対応したモジュールの作成
-                </h3>
-<p>
-                    モジュールを複数プロバイダーで再利用可能にするには、<code>configuration_aliases</code>でエイリアスの受け渡しを明示します。
-                </p>
+<h3 id="7-3-複数プロバイダーに対応したモジュールの作成">{' '}7-3. 複数プロバイダーに対応したモジュールの作成{' '}</h3>
+<p>{' '}モジュールを複数プロバイダーで再利用可能にするには、<code>configuration_aliases</code>でエイリアスの受け渡しを明示します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">terraform &#123;</div>
                     <div className="code-line">  required_providers &#123;</div>
@@ -71,19 +57,11 @@ export function Section7({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<h3 id="7-4-異なる複数プロバイダーの利用-dockerkubernetesクラッシュコース">
-                    7-4. 異なる複数プロバイダーの利用: Docker/Kubernetesクラッシュコース
-                </h3>
-<p>
-                    TerraformはAWSのようなクラウドAPIだけでなく、DockerデーモンやKubernetes
-                    APIも「プロバイダー」として扱えます。
-                </p>
+<h3 id="7-4-異なる複数プロバイダーの利用-dockerkubernetesクラッシュコース">{' '}7-4. 異なる複数プロバイダーの利用: Docker/Kubernetesクラッシュコース{' '}</h3>
+<p>{' '}TerraformはAWSのようなクラウドAPIだけでなく、DockerデーモンやKubernetes APIも「プロバイダー」として扱えます。{' '}</p>
 <Diagram id="diag-12" ariaLabel="Terraformによる複数プロバイダー（AWS, Kubernetes, Docker）の連携構成" />
 <h3 id="7-5-eksでのdockerコンテナデプロイ">7-5. EKSでのDockerコンテナデプロイ</h3>
-<p>
-                    クラスタ本体とクラスタ内のリソースは、**別々のroot
-                    module（＝別State）**として構成します。まずEKSクラスタを作る側です。
-                </p>
+<p>{' '}クラスタ本体とクラスタ内のリソースは、**別々のroot module（＝別State）**として構成します。まずEKSクラスタを作る側です。{' '}</p>
 <pre className="code-block">
                     <div className="code-line"># root module A（例: live/eks-cluster）: aws プロバイダーでクラスタ本体だけを管理する</div>
                     <div className="code-line"></div>
@@ -132,9 +110,7 @@ export function Section7({ Diagram }: SectionProps) {
                     <div className="code-line">  description = "Kubernetesリソース側のroot moduleへ渡すクラスタ名"</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<p>
-                    次に、そのクラスタ内でKubernetesリソースを管理する側です。クラスタは自分では作らず、<strong>data sourceで既存クラスタを参照</strong>して<code>provider "kubernetes"</code>を構成します。
-                </p>
+<p>{' '}次に、そのクラスタ内でKubernetesリソースを管理する側です。クラスタは自分では作らず、<strong>data sourceで既存クラスタを参照</strong>して<code>provider "kubernetes"</code>を構成します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line"># root module B（例: live/eks-workloads）: kubernetes プロバイダーでクラスタ内リソースを管理する</div>
                     <div className="code-line">variable "cluster_name" &#123;</div>
@@ -168,24 +144,8 @@ export function Section7({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<div className="callout callout-note">
-                    <div className="callout-icon">ℹ</div>
-                    <div className="callout-body">
-                        <p>
-                            このスニペットは要点のみを抜き出した<strong>断片</strong>です。そのまま<code>apply</code>できる形にするには、<code>terraform</code>ブロックの<code>required_providers</code>で<code>hashicorp/aws</code>と<code>hashicorp/kubernetes</code>を宣言し、<code>kubernetes_deployment</code>の<code>spec</code>に必須の<code>selector</code>と<code>template</code>を補う必要があります。
-                        </p>
-                    </div>
-                </div>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <p>
-                            EKSクラスタ本体（<code>aws</code>プロバイダー管轄）と、その中で動くKubernetesリソース（<code>kubernetes</code>プロバイダー管轄）は、必ずroot
-                            module／Stateを分離します。同一のapplyでクラスタを作りながら、そのクラスタの<code>endpoint</code>や<code>token</code>で<code>provider "kubernetes"</code>を構成すると、プロバイダー設定が「まだ存在しないリソースの属性」に依存することになり、初回<code>apply</code>や<code>plan</code>が失敗したり、クラスタの再作成時にプロバイダーの初期化ごと壊れてStateを手当てできなくなったりします。分離しておけば、クラスタ側の変更（バージョンアップ、ノードグループ変更）とアプリ側の変更（Deploymentの更新）を独立した変更頻度・責任分界点で回せます。
-                        </p>
-                    </div>
-                </div>
+<div className="callout callout-note">{' '}<div className="callout-icon">ℹ{' '}</div>{' '}<div className="callout-body">{' '}<p>{' '}このスニペットは要点のみを抜き出した<strong>断片</strong>です。そのまま<code>apply</code>できる形にするには、<code>terraform</code>ブロックの<code>required_providers</code>で<code>hashicorp/aws</code>と<code>hashicorp/kubernetes</code>を宣言し、<code>kubernetes_deployment</code>の<code>spec</code>に必須の<code>selector</code>と<code>template</code>を補う必要があります。{' '}</p>{' '}</div>{' '}</div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}EKSクラスタ本体（<code>aws</code>プロバイダー管轄）と、その中で動くKubernetesリソース（<code>kubernetes</code>プロバイダー管轄）は、必ずroot module／Stateを分離します。同一のapplyでクラスタを作りながら、そのクラスタの<code>endpoint</code>や<code>token</code>で<code>provider "kubernetes"</code>を構成すると、プロバイダー設定が「まだ存在しないリソースの属性」に依存することになり、初回<code>apply</code>や<code>plan</code>が失敗したり、クラスタの再作成時にプロバイダーの初期化ごと壊れてStateを手当てできなくなったりします。分離しておけば、クラスタ側の変更（バージョンアップ、ノードグループ変更）とアプリ側の変更（Deploymentの更新）を独立した変更頻度・責任分界点で回せます。{' '}</p>{' '}</div>{' '}</div>
 
         </section>
     );

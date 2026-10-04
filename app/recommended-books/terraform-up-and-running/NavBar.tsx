@@ -73,27 +73,24 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
                 aria-label="目次"
             >
                 <div className="sidebar-title">目次</div>
-                <ul className="sidebar-nav">
-                    {NAV_ITEMS.map((item: NavItem) => {
-                        const isActive = activeId === item.target;
-                        const className = `nav-link ${item.isH2 ? 'nav-h2' : 'nav-h3'} ${isActive ? 'active' : ''}`;
-                        return (
-                            <li key={item.target}>
-                                <a
-                                    href={item.href}
-                                    className={className}
-                                    data-target={item.target}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleLinkClick(item.href, item.target);
-                                    }}
-                                >
-                                    {item.text}
-                                </a>
-                            </li>
-                        );
-                    })}
-                </ul>
+                {NAV_ITEMS.map((item: NavItem) => {
+                    const isActive = activeId === item.target;
+                    const className = `nav-link ${item.isH2 ? 'nav-h2' : 'nav-h3'} ${isActive ? 'active' : ''}`;
+                    return (
+                        <a
+                            key={item.target}
+                            href={item.href}
+                            className={className}
+                            data-target={item.target}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleLinkClick(item.href, item.target);
+                            }}
+                        >
+                            {item.text}
+                        </a>
+                    );
+                })}
             </nav>
         </>
     );

@@ -8,13 +8,9 @@ interface SectionProps {
 export function Section4({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第4部原著第4章対応-再利用可能なインフラをモジュールで作る">
-                    第4部（原著第4章対応）: 再利用可能なインフラをモジュールで作る
-                </h2>
+<h2 id="第4部原著第4章対応-再利用可能なインフラをモジュールで作る">{' '}第4部（原著第4章対応）: 再利用可能なインフラをモジュールで作る{' '}</h2>
 <h3 id="4-1-モジュールの基本">4-1. モジュールの基本</h3>
-<p>
-                    モジュールとは、<code>.tf</code>ファイル群をまとめたディレクトリのことです。ルートモジュール（実行の起点）から子モジュールを<code>module</code>ブロックで呼び出します。
-                </p>
+<p>{' '}モジュールとは、<code>.tf</code>ファイル群をまとめたディレクトリのことです。ルートモジュール（実行の起点）から子モジュールを<code>module</code>ブロックで呼び出します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">module "webserver_cluster" &#123;</div>
                     <div className="code-line">  source = "../../modules/services/webserver-cluster"</div>
@@ -26,12 +22,8 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <Diagram id="diag-8" ariaLabel="再利用可能なTerraformモジュールの入力・リソース・出力構造" />
-<h3 id="4-2-モジュール入力変数module-inputs">
-                    4-2. モジュール入力変数（Module Inputs）
-                </h3>
-<p>
-                    呼び出し元から値を注入するためのインターフェースです。<code>default</code>を持たない変数は必須パラメータになります。
-                </p>
+<h3 id="4-2-モジュール入力変数module-inputs">{' '}4-2. モジュール入力変数（Module Inputs）{' '}</h3>
+<p>{' '}呼び出し元から値を注入するためのインターフェースです。<code>default</code>を持たない変数は必須パラメータになります。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">variable "cluster_name" &#123;</div>
                     <div className="code-line">  description = "The name to use for all the cluster resources"</div>
@@ -52,9 +44,7 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="4-3-モジュールのlocal値">4-3. モジュールのlocal値</h3>
-<p>
-                    繰り返し使う計算式や、外部に公開する必要のない中間値は<code>locals</code>にまとめます。
-                </p>
+<p>{' '}繰り返し使う計算式や、外部に公開する必要のない中間値は<code>locals</code>にまとめます。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">locals &#123;</div>
                     <div className="code-line">  http_port    = 80</div>
@@ -63,9 +53,7 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">  all_ips      = ["0.0.0.0/0"]</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<h3 id="4-4-モジュール出力値module-outputs">
-                    4-4. モジュール出力値（Module Outputs）
-                </h3>
+<h3 id="4-4-モジュール出力値module-outputs">{' '}4-4. モジュール出力値（Module Outputs）{' '}</h3>
 <p>呼び出し元やCLIから参照できる戻り値です。</p>
 <pre className="code-block">
                     <div className="code-line">output "asg_name" &#123;</div>
@@ -79,8 +67,7 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="4-5-モジュールの落とし穴">4-5. モジュールの落とし穴</h3>
-<div className="table-scroll">
-                    <table>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">落とし穴</th>
@@ -91,32 +78,21 @@ export function Section4({ Diagram }: SectionProps) {
                         <tbody>
                             <tr className="row-odd">
                                 <td>ファイルパス</td>
-                                <td>
-                                    <code>user_data</code>等でモジュール内の相対ファイルを読む際、実行時のカレントディレクトリ基準になってしまう
-                                </td>
-                                <td>
-                                    <code>path.module</code>を使い、常にモジュール自身のディレクトリからの相対パスにする
-                                </td>
+                                <td>{' '}<code>user_data</code>等でモジュール内の相対ファイルを読む際、実行時のカレントディレクトリ基準になってしまう{' '}</td>
+                                <td>{' '}<code>path.module</code>を使い、常にモジュール自身のディレクトリからの相対パスにする{' '}</td>
                             </tr>
                             <tr className="row-even">
                                 <td>インラインブロック</td>
-                                <td>
-                                    <code>ingress &#123;&#125;</code>のようなインラインブロックは、呼び出し元から動的に個数を増減できない
-                                </td>
-                                <td>
-                                    可能な限り<code>aws_security_group_rule</code>等の別リソースに分離し、<code>for_each</code>で動的生成する
-                                </td>
+                                <td>{' '}<code>ingress &#123;&#125;</code>のようなインラインブロックは、呼び出し元から動的に個数を増減できない{' '}</td>
+                                <td>{' '}可能な限り<code>aws_security_group_rule</code>等の別リソースに分離し、<code>for_each</code>で動的生成する{' '}</td>
                             </tr>
                             <tr className="row-odd">
                                 <td>ハードコードされたリージョン/プロバイダー</td>
-                                <td>
-                                    モジュール内で<code>provider "aws" &#123; region = ... &#125;</code>を固定すると再利用性が落ちる
-                                </td>
+                                <td>{' '}モジュール内で<code>provider "aws" &#123; region = ... &#125;</code>を固定すると再利用性が落ちる{' '}</td>
                                 <td>プロバイダー設定は呼び出し元（ルートモジュール）に任せる</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table>{' '}</div>
 <pre className="code-block">
                     <div className="code-line"># path.moduleの利用例（落とし穴の対処）</div>
                     <div className="code-line">resource "aws_instance" "example" &#123;</div>
@@ -124,9 +100,7 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="4-6-モジュールバージョニング">4-6. モジュールバージョニング</h3>
-<p>
-                    Gitリポジトリやレジストリの参照時に<code>ref</code>やバージョン制約を明示し、意図しない破壊的変更の巻き込みを防ぎます。
-                </p>
+<p>{' '}Gitリポジトリやレジストリの参照時に<code>ref</code>やバージョン制約を明示し、意図しない破壊的変更の巻き込みを防ぎます。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">module "webserver_cluster" &#123;</div>
                     <div className="code-line">  source  = "github.com/foo/modules//services/webserver-cluster?ref=v0.1.4"</div>
@@ -141,20 +115,7 @@ export function Section4({ Diagram }: SectionProps) {
                     <div className="code-line">  version = "~&gt; 5.0"</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <ul>
-                            <li>
-                                <code>ref</code>にブランチ名（<code>main</code>等）を指定しない。必ずタグ／コミットハッシュで固定する
-                            </li>
-                            <li>
-                                セマンティックバージョニング（<code>~&gt; 5.0</code>のような制約演算子）で、意図しないメジャーアップデートの巻き込みを防ぐ
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<ul>{' '}<li>{' '}<code>ref</code>にブランチ名（<code>main</code>等）を指定しない。必ずタグ／コミットハッシュで固定する{' '}</li>{' '}<li>{' '}セマンティックバージョニング（<code>~&gt; 5.0</code>のような制約演算子）で、意図しないメジャーアップデートの巻き込みを防ぐ{' '}</li>{' '}</ul>{' '}</div>{' '}</div>
 
         </section>
     );

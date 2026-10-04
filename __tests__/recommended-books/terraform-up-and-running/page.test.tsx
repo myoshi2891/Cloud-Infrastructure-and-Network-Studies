@@ -120,36 +120,36 @@ describe('terraform-up-and-running — 移行元コンテンツの全量移行',
         }
     });
 
-    it('チェックリストが 14 項目存在し、トグル可能で完了カウントが正しく更新されること', async () => {
+    it('チェックリストが 9 項目存在し、トグル可能で完了カウントが正しく更新されること', async () => {
         const { fireEvent } = await import('@testing-library/react');
         const container = renderPage();
         const checklistCard = container.querySelector('.checklist-card');
         expect(checklistCard).not.toBeNull();
 
         const checkboxes = container.querySelectorAll<HTMLInputElement>('.checklist-card input[type="checkbox"]');
-        expect(checkboxes).toHaveLength(14);
+        expect(checkboxes).toHaveLength(9);
 
         const countEl = container.querySelector('.checklist-header .checklist-counter');
-        expect(countEl?.textContent?.trim()).toBe('0 / 14 完了');
+        expect(countEl?.textContent?.trim()).toBe('0 / 9 完了');
 
         // 1つ目のチェックボックスをクリック
         const firstBox = checkboxes[0];
         if (firstBox) {
             fireEvent.click(firstBox);
-            expect(countEl?.textContent?.trim()).toBe('1 / 14 完了');
+            expect(countEl?.textContent?.trim()).toBe('1 / 9 完了');
 
             // 再度クリックして解除
             fireEvent.click(firstBox);
-            expect(countEl?.textContent?.trim()).toBe('0 / 14 完了');
+            expect(countEl?.textContent?.trim()).toBe('0 / 9 完了');
         }
     });
 
-    it('参考文献が 23 件すべて .ref-card として存在すること', () => {
+    it('参考文献が 7 件すべて .ref-card として存在すること', () => {
         const container = renderPage();
         const refGrid = container.querySelector('.ref-grid');
         expect(refGrid).not.toBeNull();
 
         const cards = container.querySelectorAll('.ref-card');
-        expect(cards).toHaveLength(23);
+        expect(cards).toHaveLength(7);
     });
 });

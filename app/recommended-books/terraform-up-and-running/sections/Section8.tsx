@@ -8,20 +8,11 @@ interface SectionProps {
 export function Section8({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第8部原著第8章対応-本番グレードのterraformコード">
-                    第8部（原著第8章対応）: 本番グレードのTerraformコード
-                </h2>
-<h3 id="8-1-なぜ本番グレードのインフラ構築は時間がかかるのか">
-                    8-1. なぜ本番グレードのインフラ構築は時間がかかるのか
-                </h3>
-<p>
-                    「動くだけのTerraformコード」と「本番運用に耐えるTerraformコード」の間には大きなギャップがあります。原著はこのギャップを埋める要素を「本番グレードインフラのチェックリスト」として整理しています。
-                </p>
-<h3 id="8-2-本番グレードインフラのチェックリスト">
-                    8-2. 本番グレードインフラのチェックリスト
-                </h3>
-<div className="table-scroll">
-                    <table>
+<h2 id="第8部原著第8章対応-本番グレードのterraformコード">{' '}第8部（原著第8章対応）: 本番グレードのTerraformコード{' '}</h2>
+<h3 id="8-1-なぜ本番グレードのインフラ構築は時間がかかるのか">{' '}8-1. なぜ本番グレードのインフラ構築は時間がかかるのか{' '}</h3>
+<p>{' '}「動くだけのTerraformコード」と「本番運用に耐えるTerraformコード」の間には大きなギャップがあります。原著はこのギャップを埋める要素を「本番グレードインフラのチェックリスト」として整理しています。{' '}</p>
+<h3 id="8-2-本番グレードインフラのチェックリスト">{' '}8-2. 本番グレードインフラのチェックリスト{' '}</h3>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">カテゴリ</th>
@@ -67,17 +58,13 @@ export function Section8({ Diagram }: SectionProps) {
                             </tr>
                             <tr className="row-even">
                                 <td>コスト最適化</td>
-                                <td>
-                                    適切なインスタンスサイズ、スポットインスタンス活用、未使用リソースの削除
-                                </td>
+                                <td>{' '}適切なインスタンスサイズ、スポットインスタンス活用、未使用リソースの削除{' '}</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table>{' '}</div>
 <h3 id="8-3-本番グレードモジュールの4原則">8-3. 本番グレードモジュールの4原則</h3>
 <Diagram id="diag-13" ariaLabel="本番グレードモジュールを支える4原則（明示的、分離、テスト可能、バージョニング）" />
-<div className="table-scroll">
-                    <table>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">原則</th>
@@ -107,13 +94,9 @@ export function Section8({ Diagram }: SectionProps) {
                                 <td>タグ・コミットハッシュでバージョン固定</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table>{' '}</div>
 <h3 id="8-4-terraformを超えて">8-4. Terraformを超えて</h3>
-<p>
-                    本番運用では、Terraformだけで完結せず、CI/CDパイプライン、監視ツール（Datadog等）、Policy
-                    as Codeツール（第11部参照）との組み合わせが前提になります。
-                </p>
+<p>{' '}本番運用では、Terraformだけで完結せず、CI/CDパイプライン、監視ツール（Datadog等）、Policy as Codeツール（第11部参照）との組み合わせが前提になります。{' '}</p>
 
         </section>
     );

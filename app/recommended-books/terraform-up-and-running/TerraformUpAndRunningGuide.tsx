@@ -19,6 +19,9 @@ import { Section8 } from './sections/Section8';
 import { Section9 } from './sections/Section9';
 import { Section10 } from './sections/Section10';
 import { Section11 } from './sections/Section11';
+import { SectionRoadmap } from './sections/SectionRoadmap';
+import { SectionAppendix } from './sections/SectionAppendix';
+import { SectionReferences } from './sections/SectionReferences';
 
 interface DiagramProps {
     id: DiagramId;
@@ -88,6 +91,14 @@ export function TerraformUpAndRunningGuide() {
                     <Section9 Diagram={Diagram} />
                     <Section10 Diagram={Diagram} />
                     <Section11 Diagram={Diagram} />
+                    <SectionRoadmap
+                        Diagram={Diagram}
+                        checkedItems={checkedItems}
+                        onCheckboxChange={handleCheckboxChange}
+                        completedCount={completedCount}
+                    />
+                    <SectionAppendix Diagram={Diagram} />
+                    <SectionReferences Diagram={Diagram} />
                 </main>
             </div>
         </div>

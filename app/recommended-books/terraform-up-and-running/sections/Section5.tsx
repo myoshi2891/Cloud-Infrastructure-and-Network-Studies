@@ -8,15 +8,10 @@ interface SectionProps {
 export function Section5({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第5部原著第5章対応-ループ条件分岐デプロイ落とし穴">
-                    第5部（原著第5章対応）: ループ・条件分岐・デプロイ・落とし穴
-                </h2>
+<h2 id="第5部原著第5章対応-ループ条件分岐デプロイ落とし穴">{' '}第5部（原著第5章対応）: ループ・条件分岐・デプロイ・落とし穴{' '}</h2>
 <h3 id="5-15-4-ループの4パターン">5-1〜5-4. ループの4パターン</h3>
-<p>
-                    Terraformには目的の異なる4種類のループ構文があります。使い分けを誤ると保守性が大きく下がるため、表で整理します。
-                </p>
-<div className="table-scroll">
-                    <table>
+<p>{' '}Terraformには目的の異なる4種類のループ構文があります。使い分けを誤ると保守性が大きく下がるため、表で整理します。{' '}</p>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">構文</th>
@@ -51,8 +46,7 @@ export function Section5({ Diagram }: SectionProps) {
                                 <td><code>user_data</code>スクリプト等の動的生成</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table>{' '}</div>
 <pre className="code-block">
                     <div className="code-line"># 以下の例が参照する入力変数。宣言がないと undeclared variable エラーになる</div>
                     <div className="code-line">variable "names" &#123;</div>
@@ -93,19 +87,9 @@ export function Section5({ Diagram }: SectionProps) {
                     <div className="code-line">  EOF</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <p>
-                            <code>count</code>は「同じものをN個作る」だけの単純なケースに留め、要素の識別が必要な場合は<code>for_each</code>を優先する。<code>for_each</code>はキーで管理されるため、リストの途中の要素を削除しても他のリソースが不要に再作成されません。
-                        </p>
-                    </div>
-                </div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}<code>count</code>は「同じものをN個作る」だけの単純なケースに留め、要素の識別が必要な場合は<code>for_each</code>を優先する。<code>for_each</code>はキーで管理されるため、リストの途中の要素を削除しても他のリソースが不要に再作成されません。{' '}</p>{' '}</div>{' '}</div>
 <h3 id="5-5-条件分岐">5-5. 条件分岐</h3>
-<p>
-                    Terraformには<code>if</code>文はありませんが、三項演算子と<code>count</code>/<code>for_each</code>を組み合わせて条件付きリソース作成を表現します。
-                </p>
+<p>{' '}Terraformには<code>if</code>文はありませんが、三項演算子と<code>count</code>/<code>for_each</code>を組み合わせて条件付きリソース作成を表現します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">variable "enable_autoscaling" &#123;</div>
                     <div className="code-line">  description = "スケジュールベースのオートスケーリングを有効にするか"</div>
@@ -125,29 +109,9 @@ export function Section5({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="5-6-ゼロダウンタイムデプロイ">5-6. ゼロダウンタイムデプロイ</h3>
-<p>
-                    <code>create_before_destroy</code>ライフサイクルルールは、Terraformの既定の「削除してから作成」を「作成してから削除」へ<strong>順序を入れ替える</strong>ものです。ただしこれ<strong>単体ではダウンタイムがなくなることは保証されません</strong>。Terraformはリソースの作成APIが完了した時点で次のステップへ進むだけで、新しいインスタンス上でアプリケーションが実際にリクエストを処理できる状態になったかどうかは判断しないためです。ヘルスチェックを待たずに旧リソースを破棄すれば、その隙間はそのままサービス断になります。
-                </p>
-<p>
-                    無停止に近づけるには、<code>create_before_destroy</code>に加えて次の3点を揃える必要があります。
-                </p>
-<ol type="1">
-                    <li>
-                        <strong>新旧のASGを同じロードバランサー（ターゲットグループ）に接続する。</strong>
-                        接続していなければ、そもそもトラフィックの引き継ぎ先が存在しません。
-                    </li>
-                    <li>
-                        <strong><code>min_elb_capacity</code>（ASG新規作成時）または<code>wait_for_elb_capacity</code>（既存ASGの容量変更時）で、指定台数がELBのヘルスチェックを通過するまでTerraformを待たせる。</strong>
-                        この待機がないと、健全なインスタンスが揃う前に旧ASGが破棄されます。
-                    </li>
-                    <li>
-                        <strong>既存ASGのインスタンス入れ替えは<code>instance_refresh</code>に任せ、その完了を明示的に確認する。</strong>
-                        <code>instance_refresh</code>は<code>apply</code>の完了後もAWS側で非同期に進むため、<strong><code>apply</code>が成功しても入れ替えが成功したとは限りません</strong>。CDパイプライン側でリフレッシュのステータス（<code>Successful</code> /
-                        <code>Failed</code> /
-                        <code>Cancelled</code>）をポーリングし、失敗・中断時は直前のLaunch
-                        Templateバージョンへ戻すロールバック手順まで用意して初めて運用に耐えます。
-                    </li>
-                </ol>
+<p>{' '}<code>create_before_destroy</code>ライフサイクルルールは、Terraformの既定の「削除してから作成」を「作成してから削除」へ<strong>順序を入れ替える</strong>ものです。ただしこれ<strong>単体ではダウンタイムがなくなることは保証されません</strong>。Terraformはリソースの作成APIが完了した時点で次のステップへ進むだけで、新しいインスタンス上でアプリケーションが実際にリクエストを処理できる状態になったかどうかは判断しないためです。ヘルスチェックを待たずに旧リソースを破棄すれば、その隙間はそのままサービス断になります。{' '}</p>
+<p>{' '}無停止に近づけるには、<code>create_before_destroy</code>に加えて次の3点を揃える必要があります。{' '}</p>
+<ol type="1">{' '}<li>{' '}<strong>新旧のASGを同じロードバランサー（ターゲットグループ）に接続する。</strong>{' '}接続していなければ、そもそもトラフィックの引き継ぎ先が存在しません。{' '}</li>{' '}<li>{' '}<strong><code>min_elb_capacity</code>（ASG新規作成時）または<code>wait_for_elb_capacity</code>（既存ASGの容量変更時）で、指定台数がELBのヘルスチェックを通過するまでTerraformを待たせる。</strong>{' '}この待機がないと、健全なインスタンスが揃う前に旧ASGが破棄されます。{' '}</li>{' '}<li>{' '}<strong>既存ASGのインスタンス入れ替えは<code>instance_refresh</code>に任せ、その完了を明示的に確認する。</strong>{' '}<code>instance_refresh</code>は<code>apply</code>の完了後もAWS側で非同期に進むため、<strong><code>apply</code>が成功しても入れ替えが成功したとは限りません</strong>。CDパイプライン側でリフレッシュのステータス（<code>Successful</code>{' '}/{' '}<code>Failed</code>{' '}/{' '}<code>Cancelled</code>）をポーリングし、失敗・中断時は直前のLaunch Templateバージョンへ戻すロールバック手順まで用意して初めて運用に耐えます。{' '}</li>{' '}</ol>
 <Diagram id="diag-9" ariaLabel="ASGとALBを用いたゼロダウンタイム（ローリング/ブルーグリーン）デプロイフロー" />
 <pre className="code-block">
                     <div className="code-line">resource "aws_launch_template" "example" &#123;</div>
@@ -215,8 +179,7 @@ export function Section5({ Diagram }: SectionProps) {
                     <div className="code-line">&#125;</div>
                 </pre>
 <h3 id="5-7-terraformの落とし穴">5-7. Terraformの落とし穴</h3>
-<div className="table-scroll">
-                    <table>
+<div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
                             <th scope="col">落とし穴</th>
@@ -227,12 +190,8 @@ export function Section5({ Diagram }: SectionProps) {
                         <tbody>
                             <tr className="row-odd">
                                 <td><code>count</code>/<code>for_each</code>の制約</td>
-                                <td>
-                                    値をリソースブロック内の計算結果に依存させられない場合がある（plan時に値が未確定だとエラー）
-                                </td>
-                                <td>
-                                    可能な限り<code>variable</code>など、plan前に確定する値をループ対象にする
-                                </td>
+                                <td>{' '}値をリソースブロック内の計算結果に依存させられない場合がある（plan時に値が未確定だとエラー）{' '}</td>
+                                <td>{' '}可能な限り<code>variable</code>など、plan前に確定する値をループ対象にする{' '}</td>
                             </tr>
                             <tr className="row-even">
                                 <td>ゼロダウンタイムデプロイの限界</td>
@@ -241,23 +200,16 @@ export function Section5({ Diagram }: SectionProps) {
                             </tr>
                             <tr className="row-odd">
                                 <td>Valid Plansが失敗することがある</td>
-                                <td>
-                                    <code>plan</code>が通っても、<code>apply</code>時にクラウド側の制約（クォータ等）でエラーになることがある
-                                </td>
+                                <td>{' '}<code>plan</code>が通っても、<code>apply</code>時にクラウド側の制約（クォータ等）でエラーになることがある{' '}</td>
                                 <td>リトライ処理・クォータの事前申請・段階的apply</td>
                             </tr>
                             <tr className="row-even">
                                 <td>リファクタリングの難しさ</td>
-                                <td>
-                                    リソース名の変更やモジュール構造の変更は、Terraform内部では「削除→再作成」と解釈されがち
-                                </td>
-                                <td>
-                                    <code>moved</code>ブロック（Terraform 1.1以降）や<code>terraform state mv</code>で安全に移行する
-                                </td>
+                                <td>{' '}リソース名の変更やモジュール構造の変更は、Terraform内部では「削除→再作成」と解釈されがち{' '}</td>
+                                <td>{' '}<code>moved</code>ブロック（Terraform 1.1以降）や<code>terraform state mv</code>で安全に移行する{' '}</td>
                             </tr>
                         </tbody>
-                    </table>
-                </div>
+                    </table>{' '}</div>
 <pre className="code-block">
                     <div className="code-line"># リソース名変更時の安全な移行(movedブロック)</div>
                     <div className="code-line">moved &#123;</div>

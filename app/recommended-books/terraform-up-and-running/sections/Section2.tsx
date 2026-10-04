@@ -8,30 +8,11 @@ interface SectionProps {
 export function Section2({ Diagram }: SectionProps) {
     return (
         <section className="section-block">
-<h2 id="第2部原著第2章対応-terraformことはじめ">
-                    第2部（原著第2章対応）: Terraformことはじめ
-                </h2>
-<p>
-                    原著第2章は、AWS上で「単一サーバー」→「単一Webサーバー」→「設定可能なWebサーバー」→「Webサーバークラスタ」→「ロードバランサー」という順に、段階的に本番相当の構成へ育てていくハンズオン構成になっています。本ガイドでも同じ順序で、各ステップの目的とHCLコード例を示します。
-                </p>
-<h3 id="2-1-awsアカウントの準備ベストプラクティス">
-                    2-1. AWSアカウントの準備（ベストプラクティス）
-                </h3>
+<h2 id="第2部原著第2章対応-terraformことはじめ">{' '}第2部（原著第2章対応）: Terraformことはじめ{' '}</h2>
+<p>{' '}原著第2章は、AWS上で「単一サーバー」→「単一Webサーバー」→「設定可能なWebサーバー」→「Webサーバークラスタ」→「ロードバランサー」という順に、段階的に本番相当の構成へ育てていくハンズオン構成になっています。本ガイドでも同じ順序で、各ステップの目的とHCLコード例を示します。{' '}</p>
+<h3 id="2-1-awsアカウントの準備ベストプラクティス">{' '}2-1. AWSアカウントの準備（ベストプラクティス）{' '}</h3>
 <p>本番運用を見据える場合、以下は必ず押さえておくべき基本です。</p>
-<ul>
-                    <li>
-                        <strong>ルートユーザーは日常利用しない</strong>:
-                        MFAを設定した上で金庫にしまい、IAMユーザー/IAM Identity Center経由で作業する
-                    </li>
-                    <li>
-                        <strong>最小権限のIAMユーザーでTerraformを実行する</strong>:
-                        <code>AdministratorAccess</code>を安易に付与しない
-                    </li>
-                    <li>
-                        <strong>認証情報をコードに埋め込まない</strong>:
-                        環境変数や<code>~/.aws/credentials</code>、あるいはCI/CDのOIDC連携を使う
-                    </li>
-                </ul>
+<ul>{' '}<li>{' '}<strong>ルートユーザーは日常利用しない</strong>: MFAを設定した上で金庫にしまい、IAMユーザー/IAM Identity Center経由で作業する{' '}</li>{' '}<li>{' '}<strong>最小権限のIAMユーザーでTerraformを実行する</strong>:{' '}<code>AdministratorAccess</code>を安易に付与しない{' '}</li>{' '}<li>{' '}<strong>認証情報をコードに埋め込まない</strong>: 環境変数や<code>~/.aws/credentials</code>、あるいはCI/CDのOIDC連携を使う{' '}</li>{' '}</ul>
 <h3 id="2-2-terraformのインストール">2-2. Terraformのインストール</h3>
 <pre className="code-block">
                     <div className="code-line"># macOS (Homebrew)</div>
@@ -41,9 +22,7 @@ export function Section2({ Diagram }: SectionProps) {
                     <div className="code-line"># バージョン確認</div>
                     <div className="code-line">terraform version</div>
                 </pre>
-<p>
-                    複数バージョンを切り替える場合は<code>tfenv</code>や<code>asdf</code>のようなバージョンマネージャの利用が推奨されます。プロジェクトごとにバージョンを固定するため、<code>required_version</code>をコード側にも明示します。
-                </p>
+<p>{' '}複数バージョンを切り替える場合は<code>tfenv</code>や<code>asdf</code>のようなバージョンマネージャの利用が推奨されます。プロジェクトごとにバージョンを固定するため、<code>required_version</code>をコード側にも明示します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">terraform &#123;</div>
                     <div className="code-line">  required_version = "&gt;= 1.16.0, &lt; 2.0.0"</div>
@@ -65,19 +44,7 @@ export function Section2({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<div className="callout callout-warning">
-                    <div className="callout-icon">⚠</div>
-                    <div className="callout-body">
-                        <div className="callout-label">注意</div>
-                        <p>
-                            AMI ID
-                            はリージョン固有かつ時間とともに廃止・置き換えが進むため、上のようにハードコードした
-                            ID は別リージョンや将来の実行では解決できずに
-                            <code>apply</code> が失敗します。実務では
-                            <code>aws_ami</code> データソースで最新の AMI を動的に解決します。
-                        </p>
-                    </div>
-                </div>
+<div className="callout callout-warning">{' '}<div className="callout-icon">⚠{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">注意{' '}</div>{' '}<p>{' '}AMI ID はリージョン固有かつ時間とともに廃止・置き換えが進むため、上のようにハードコードした ID は別リージョンや将来の実行では解決できずに{' '}<code>apply</code>{' '}が失敗します。実務では{' '}<code>aws_ami</code>{' '}データソースで最新の AMI を動的に解決します。{' '}</p>{' '}</div>{' '}</div>
 <pre className="code-block">
                     <div className="code-line">data "aws_ami" "ubuntu" &#123;</div>
                     <div className="code-line">  most_recent = true</div>
@@ -100,24 +67,9 @@ export function Section2({ Diagram }: SectionProps) {
                 </pre>
 <p>基本ワークフローは次の3ステップです。</p>
 <Diagram id="diag-4" ariaLabel="単一サーバーデプロイの基本フロー（main.tfからAWS EC2への反映）" />
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <ul>
-                            <li>
-                                <code>terraform plan</code>の出力は必ず目視確認してから<code>apply</code>する（CI上でも<code>plan</code>結果をレビュー対象にする）
-                            </li>
-                            <li>
-                                <code>terraform apply</code>の前に<code>terraform fmt</code>と<code>terraform validate</code>をCIに組み込み、構文エラーを早期検出する
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<ul>{' '}<li>{' '}<code>terraform plan</code>の出力は必ず目視確認してから<code>apply</code>する（CI上でも<code>plan</code>結果をレビュー対象にする）{' '}</li>{' '}<li>{' '}<code>terraform apply</code>の前に<code>terraform fmt</code>と<code>terraform validate</code>をCIに組み込み、構文エラーを早期検出する{' '}</li>{' '}</ul>{' '}</div>{' '}</div>
 <h3 id="2-4-単一webサーバーのデプロイ">2-4. 単一Webサーバーのデプロイ</h3>
-<p>
-                    <code>user_data</code>でサーバー起動時にスクリプトを実行し、<code>aws_security_group</code>でポートを開放します。
-                </p>
+<p>{' '}<code>user_data</code>でサーバー起動時にスクリプトを実行し、<code>aws_security_group</code>でポートを開放します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">resource "aws_security_group" "instance" &#123;</div>
                     <div className="code-line">  name = "terraform-example-instance"</div>
@@ -148,15 +100,9 @@ export function Section2({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<p>
-                    <code>0.0.0.0/0</code>のような全開放CIDRは学習用の最小構成であり、本番では特定のCIDRブロックやセキュリティグループ参照に絞り込むのがベストプラクティスです。
-                </p>
-<h3 id="2-5-設定可能なwebサーバー変数の導入">
-                    2-5. 設定可能なWebサーバー（変数の導入）
-                </h3>
-<p>
-                    ハードコードを避けるため<code>variable</code>ブロックで入力値を外出しします。変数を定義しただけでは何も変わらないため、2-4でポート番号を直書きしていた箇所（セキュリティグループの<code>ingress</code>と<code>user_data</code>）を必ず<code>var.server_port</code>への参照に置き換えます。
-                </p>
+<p>{' '}<code>0.0.0.0/0</code>のような全開放CIDRは学習用の最小構成であり、本番では特定のCIDRブロックやセキュリティグループ参照に絞り込むのがベストプラクティスです。{' '}</p>
+<h3 id="2-5-設定可能なwebサーバー変数の導入">{' '}2-5. 設定可能なWebサーバー（変数の導入）{' '}</h3>
+<p>{' '}ハードコードを避けるため<code>variable</code>ブロックで入力値を外出しします。変数を定義しただけでは何も変わらないため、2-4でポート番号を直書きしていた箇所（セキュリティグループの<code>ingress</code>と<code>user_data</code>）を必ず<code>var.server_port</code>への参照に置き換えます。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">variable "server_port" &#123;</div>
                     <div className="code-line">  description = "The port the server will use for HTTP requests"</div>
@@ -200,26 +146,10 @@ export function Section2({ Diagram }: SectionProps) {
                     <div className="code-line">  description = "The public IP address of the web server"</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<p>
-                    これで<code>server_port</code>の値を変えるだけで、<strong>実際に待ち受けるポートと許可するポートの両方</strong>が追従します。片方だけを変数化すると、サーバーは新しいポートで待ち受けるのにセキュリティグループは旧ポートを開けたまま、という接続不能な状態になるため、必ず両方をひとつの変数から導出します。
-                </p>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <ul>
-                            <li>
-                                すべての<code>variable</code>と<code>output</code>に<code>description</code>を書く（自己文書化、<code>terraform-docs</code>との相性も良い）
-                            </li>
-                            <li>型制約（<code>type</code>）を明示し、想定外の値の混入を防ぐ</li>
-                        </ul>
-                    </div>
-                </div>
+<p>{' '}これで<code>server_port</code>の値を変えるだけで、<strong>実際に待ち受けるポートと許可するポートの両方</strong>が追従します。片方だけを変数化すると、サーバーは新しいポートで待ち受けるのにセキュリティグループは旧ポートを開けたまま、という接続不能な状態になるため、必ず両方をひとつの変数から導出します。{' '}</p>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<ul>{' '}<li>{' '}すべての<code>variable</code>と<code>output</code>に<code>description</code>を書く（自己文書化、<code>terraform-docs</code>との相性も良い）{' '}</li>{' '}<li>型制約（<code>type</code>）を明示し、想定外の値の混入を防ぐ</li>{' '}</ul>{' '}</div>{' '}</div>
 <h3 id="2-6-webサーバークラスタのデプロイ">2-6. Webサーバークラスタのデプロイ</h3>
-<p>
-                    単一サーバーでは可用性が確保できないため、Auto Scaling Group（ASG）とLaunch
-                    Templateでクラスタ化します。
-                </p>
+<p>{' '}単一サーバーでは可用性が確保できないため、Auto Scaling Group（ASG）とLaunch Templateでクラスタ化します。{' '}</p>
 <pre className="code-block">
                     <div className="code-line">resource "aws_launch_template" "example" &#123;</div>
                     <div className="code-line">  image_id      = "ami-0fb653ca2d3203ac1"</div>
@@ -255,34 +185,13 @@ export function Section2({ Diagram }: SectionProps) {
                     <div className="code-line">  &#125;</div>
                     <div className="code-line">&#125;</div>
                 </pre>
-<p>
-                    <code>version</code>に文字列<code>"$Latest"</code>を書くと、Launch
-                    Templateの中身（AMIやユーザーデータ）を変更してもASG側の属性値は<code>"$Latest"</code>のまま変わらないため、Terraformは差分を検知せずASGを更新しません。<code>aws_launch_template.example.latest_version</code>を参照すれば、テンプレート更新のたびにバージョン番号が変わってASGにも差分が現れ、<code>instance_refresh</code>によるローリング入れ替えが起動します。
-                </p>
+<p>{' '}<code>version</code>に文字列<code>"$Latest"</code>を書くと、Launch Templateの中身（AMIやユーザーデータ）を変更してもASG側の属性値は<code>"$Latest"</code>のまま変わらないため、Terraformは差分を検知せずASGを更新しません。<code>aws_launch_template.example.latest_version</code>を参照すれば、テンプレート更新のたびにバージョン番号が変わってASGにも差分が現れ、<code>instance_refresh</code>によるローリング入れ替えが起動します。{' '}</p>
 <h3 id="2-7-ロードバランサーのデプロイ">2-7. ロードバランサーのデプロイ</h3>
-<p>
-                    ALB（Application Load
-                    Balancer）をASGの手前に配置し、ヘルスチェック付きでトラフィックを分散します。
-                </p>
+<p>{' '}ALB（Application Load Balancer）をASGの手前に配置し、ヘルスチェック付きでトラフィックを分散します。{' '}</p>
 <Diagram id="diag-5" ariaLabel="WebサーバークラスタとApplication Load Balancer（ALB）の構成図" />
 <h3 id="2-8-クリーンアップ">2-8. クリーンアップ</h3>
-<p>
-                    学習環境では課金を止めるため<code>terraform destroy</code>で作成したリソースを確実に削除します。共有環境では<code>terraform plan -destroy</code>で影響範囲を確認してから実行するのが安全です。
-                </p>
-<div className="callout callout-practice">
-                    <div className="callout-icon">✓</div>
-                    <div className="callout-body">
-                        <div className="callout-label">ベストプラクティス</div>
-                        <ul>
-                            <li>
-                                個人の検証環境は使い終わったら都度<code>destroy</code>する（コスト管理）
-                            </li>
-                            <li>
-                                本番環境では<code>prevent_destroy</code>ライフサイクルルールで誤削除を防止する
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<p>{' '}学習環境では課金を止めるため<code>terraform destroy</code>で作成したリソースを確実に削除します。共有環境では<code>terraform plan -destroy</code>で影響範囲を確認してから実行するのが安全です。{' '}</p>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<ul>{' '}<li>{' '}個人の検証環境は使い終わったら都度<code>destroy</code>する（コスト管理）{' '}</li>{' '}<li>{' '}本番環境では<code>prevent_destroy</code>ライフサイクルルールで誤削除を防止する{' '}</li>{' '}</ul>{' '}</div>{' '}</div>
 <pre className="code-block">
                     <div className="code-line">resource "aws_db_instance" "production" &#123;</div>
                     <div className="code-line">  # ...</div>
