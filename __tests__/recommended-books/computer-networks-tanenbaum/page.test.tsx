@@ -246,3 +246,20 @@ describe('Tanenbaum の Escape 処理', () => {
         expect(toggle).toHaveFocus();
     });
 });
+
+describe('Tanenbaum モバイル目次トグルの重なり順', () => {
+    it('モバイルではトグルが開いたサイドバーより前面にあり、クリックで閉じられる', () => {
+        const rules = snapshotCssRules(fs.readFileSync('app/recommended-books/computer-networks-tanenbaum/page.css', 'utf8'));
+        const zIndexOf = (selector: string, media: string | null): number => {
+            const values = rules
+                .filter(r => r.selector === selector && r.media === media)
+                .flatMap(r => r.declarations.filter(d => d.prop === 'z-index').map(d => Number(d.value)));
+            return values.at(-1) ?? Number.NaN;
+        };
+        const mobile = '(max-width: 980px)';
+        const sidebar = Number.isNaN(zIndexOf('.tanenbaum-page .sidebar', mobile))
+            ? zIndexOf('.tanenbaum-page .sidebar', null)
+            : zIndexOf('.tanenbaum-page .sidebar', mobile);
+        expect(zIndexOf('.tanenbaum-page .sidebar-toggle', mobile)).toBeGreaterThan(sidebar);
+    });
+});

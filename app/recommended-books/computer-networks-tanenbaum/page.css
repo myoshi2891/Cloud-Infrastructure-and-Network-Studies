@@ -486,6 +486,7 @@
                 }
                 .tanenbaum-page .sidebar-toggle {
                     display: flex;
+                    z-index: 41;
                 }
                 .tanenbaum-page .ref-grid {
                     grid-template-columns: 1fr;
