@@ -20,7 +20,10 @@
 - [x] **Step 2-6 (Parts 18-19)**: `feat(recommended-books): implement security and 2026 updates parts 18-19 for tcpip-illustrated-vol1` (`f4ffb383`)
 - [x] **Step 2-7 (Appendix & Green)**: `feat(recommended-books): implement appendix and pass all tests for tcpip-illustrated-vol1` (`41d7560f`)
 - [x] **Step 3 (Refactor)**: `refactor(recommended-books): integrate tcpip-illustrated-vol1 into routing and update docs` (`b33b61e8`)
-- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive source files`
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive source files` (`051e7005`)
+- [x] **Step 5 (Diagram Fidelity & Light Mode Restore)**:
+  - `test(recommended-books): add failing tests for diagram fidelity in tcpip-illustrated-vol1` (`bd6f551e`)
+  - `feat(recommended-books): restore faithful light-mode design and fix diagram rendering in tcpip-illustrated-vol1` (`07e89905`)
 
 ### 関連ファイル
 
