@@ -6,6 +6,12 @@ import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { NavBar } from './NavBar';
 import { DIAGRAMS, type DiagramId } from './constants';
 
+import { SectionIntro } from './sections/SectionIntro';
+import { Section0 } from './sections/Section0';
+import { Section1 } from './sections/Section1';
+import { Section2 } from './sections/Section2';
+import { Section3 } from './sections/Section3';
+
 interface DiagramProps {
     id: DiagramId;
     ariaLabel: string;
@@ -61,7 +67,11 @@ export function TerraformUpAndRunningGuide() {
                 />
 
                 <main className="main">
-                    {/* 各セクションを順次実装 */}
+                    <SectionIntro Diagram={Diagram} />
+                    <Section0 Diagram={Diagram} />
+                    <Section1 Diagram={Diagram} />
+                    <Section2 Diagram={Diagram} />
+                    <Section3 Diagram={Diagram} />
                 </main>
             </div>
         </div>
