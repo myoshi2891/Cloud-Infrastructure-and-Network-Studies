@@ -175,6 +175,9 @@ describe('Secure CI/CD CSS の全宣言移転', () => {
                 .find((r) => r.selector === ':root')!
                 .declarations.map((d) => [d.prop, d.value]),
         );
+        // 原本 #6b7a94 は WCAG AA を満たさないため、globals.css 側だけ #7d8ca6 へ引き上げている。
+        expect(originalVars.get('--text-tertiary')).toBe('#6b7a94');
+        originalVars.set('--text-tertiary', '#7d8ca6');
         // 許可する差分はフォントの統一・共通ヘッダー配置・280pxサイドバー・コード行構造だけ。
         const exceptions: Record<string, string[]> = {
             'html,\n            body': ['font-family'],

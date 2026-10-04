@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-10-02
+Updated 2026-10-04
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -603,6 +603,12 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # Mermaid 図定義（56図）
       page.css                      # ページ固有スタイル
+    computer-networks-tanenbaum/
+      page.tsx                      # Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド (Server)
+      ComputerNetworksTanenbaumGuide.tsx # 全10ステップ・21図・12表・10チェック項目の本文 (Client)
+      NavBar.tsx                    # 47アンカー・scroll spy・モバイル開閉・フォーカス管理
+      constants.ts                  # 原本の目次と21図のDSL
+      page.css                      # ページ固有CSS。全宣言・リストマーカーを原本fixtureと照合
     computer-networking-topdown/
       page.tsx                      # 『Computer Networking: A Top-Down Approach』完全学習ガイド (Server)
       ComputerNetworkingTopdownGuide.tsx # 本文＋インタラクション (Client。全10部、Mermaid 41図、チェックリスト等)
@@ -621,6 +627,20 @@ app/
       NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
       constants.ts                  # ナビ・Mermaid・参考文献定義（41図）
       page.css                      # ページ固有スタイル
+    terraform-up-and-running/
+      page.tsx                      # 『Terraform: Up & Running』完全解説ガイド (Server)
+      TerraformUpAndRunningGuide.tsx # 本文＋インタラクション (Client。全11部、Mermaid 19図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # ナビ・Mermaid・参考文献定義（19図）
+      page.css                      # ページ固有スタイル
+      sections/                     # セクション分割コンポーネント (SectionIntro, Section0-11, SectionRoadmap, SectionAppendix, SectionReferences)
+    tcpip-illustrated-vol1/
+      page.tsx                      # 『TCP/IP Illustrated, Volume 1: The Protocols』完全解説ガイド (Server)
+      TcpipIllustratedVol1Guide.tsx # 本文＋インタラクション (Client。全20部+付録、Mermaid 35図、チェックリスト等)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      constants.ts                  # ナビ・Mermaid・参考文献定義（35図）
+      page.css                      # ページ固有スタイル
+      sections/                     # セクション分割コンポーネント (SectionIntro, SectionParts1to4, SectionParts5to8, SectionParts9to11, SectionParts12to17, SectionParts18to19, SectionAppendix)
   cli/
     page.tsx                        # CLIコマンド実践ワンライナー集 (Server)
     CliGuide.tsx                    # 本文＋インタラクション (全15セクション、Mermaid 7図等)

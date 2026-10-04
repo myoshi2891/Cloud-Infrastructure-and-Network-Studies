@@ -34,7 +34,9 @@ export type ColorKey =
     | 'card-high-performance-browser-networking'
     | 'card-professional-agentic-architect'
     | 'card-kubernetes-in-action'
-    | 'card-cli';
+    | 'card-cli'
+    | 'card-tcpip-illustrated-vol1'
+    | 'card-terraform-up-and-running';
 
 export interface Exam {
     id: string;
@@ -80,6 +82,8 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-professional-agentic-architect': 'card-professional-agentic-architect',
     'card-kubernetes-in-action': 'card-kubernetes-in-action',
     'card-cli': 'card-cli',
+    'card-tcpip-illustrated-vol1': 'card-tcpip-illustrated-vol1',
+    'card-terraform-up-and-running': 'card-terraform-up-and-running',
 };
 
 export const providerMeta: Record<
@@ -854,6 +858,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Books',
     },
     {
+        id: 'terraform-up-and-running',
+        label: 'Terraform: Up & Running',
+        abbr: 'Terraform',
+        level: 'IaC & Automation',
+        score: '11部 / 19図解',
+        color: 'card-terraform-up-and-running',
+        href: '/recommended-books/terraform-up-and-running',
+        description:
+            'Yevgeniy Brikman 著『Terraform: Up & Running』の構成を土台に、2026年最新エコシステム（S3ネイティブロック、OpenTofu、terraform test、Ephemeral Resources、Stacks 等）を踏まえて完全解説した学習ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/terraform-up-and-running',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
         id: 'understanding-the-linux-kernel',
         label: 'Understanding the Linux Kernel',
         abbr: 'Linux Kernel',
@@ -938,6 +963,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Books',
     },
     {
+        id: 'computer-networks-tanenbaum',
+        label: 'Computer Networks (Tanenbaum & Wetherall)',
+        abbr: 'CNT',
+        level: 'Computer Networking',
+        score: '全10ステップ / 21図解',
+        color: 'card-computer-networking-topdown',
+        href: '/recommended-books/computer-networks-tanenbaum',
+        description:
+            'Tanenbaum & Wetherall著『Computer Networks』の学習順序に着想を得た入門ガイド。物理層からアプリケーション層、ネットワークセキュリティまで全10ステップで体系的に学びます。',
+        domains: [
+            {
+                label: '初学者向け学習ガイド',
+                href: '/recommended-books/computer-networks-tanenbaum',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
         id: 'computer-networking-topdown',
         label: 'Computer Networking: A Top-Down Approach',
         abbr: 'CNTD',
@@ -993,6 +1039,27 @@ const ALL_EXAMS: Exam[] = [
             {
                 label: '完全解説ガイド',
                 href: '/recommended-books/kubernetes-in-action',
+                pct: '完全解説',
+            },
+        ],
+        badge: '名著ガイド',
+        icon: '📚',
+        provider: 'Books',
+    },
+    {
+        id: 'tcpip-illustrated-vol1',
+        label: 'TCP/IP Illustrated, Vol 1: The Protocols',
+        abbr: 'TCPIP',
+        level: 'プロトコル・ネットワークアーキテクチャ',
+        score: '全20部 / 35図解',
+        color: 'card-tcpip-illustrated-vol1',
+        href: '/recommended-books/tcpip-illustrated-vol1',
+        description:
+            'W. Richard Stevens, Kevin R. Fall 著『TCP/IP Illustrated, Volume 1: The Protocols（第2版）』を軸に、リンク層からIP・ARP・ICMP・DHCP・NAT・DNS・TCP・UDP・セキュリティ、そして2026年最新動向までを体系的に解説した完全解説ガイド。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/recommended-books/tcpip-illustrated-vol1',
                 pct: '完全解説',
             },
         ],

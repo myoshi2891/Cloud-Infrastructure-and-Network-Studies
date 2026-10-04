@@ -1,0 +1,602 @@
+/* app/recommended-books/tcpip-illustrated-vol1/page.css */
+
+.tcpip-page {
+    overflow-x: hidden;
+    margin: 0;
+    background: var(--color-tcpip-bg);
+    color: var(--color-tcpip-text);
+    font-family: var(--font-body, 'Noto Sans JP', sans-serif);
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+.tcpip-page * {
+    box-sizing: border-box;
+}
+
+.tcpip-page a {
+    color: var(--color-tcpip-accent);
+    text-decoration: none;
+}
+
+.tcpip-page a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- layout ---------- */
+.tcpip-page .layout {
+    display: block;
+}
+
+/* Sidebar */
+.tcpip-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: #ffffff;
+    border-right: 1px solid var(--color-tcpip-border-soft);
+    overflow-y: auto;
+    padding: 28px 0 40px;
+    z-index: 40;
+}
+
+.tcpip-page .sidebar-header {
+    padding: 0 24px 20px;
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
+    margin-bottom: 16px;
+}
+
+.tcpip-page .sidebar-header .kicker {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--color-tcpip-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.tcpip-page .sidebar-header h2 {
+    font-size: 16px;
+    margin: 6px 0 0;
+    color: var(--color-tcpip-text);
+    line-height: 1.5;
+    font-weight: 700;
+    border: none;
+    padding: 0;
+}
+
+.tcpip-page .sidebar nav {
+    padding: 0 12px;
+}
+
+.tcpip-page .sidebar nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tcpip-page .sidebar nav a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    color: var(--color-tcpip-text-dim);
+    line-height: 1.5;
+    margin-bottom: 2px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tcpip-page .sidebar nav a:hover {
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-text);
+    text-decoration: none;
+}
+
+.tcpip-page .sidebar nav a.active {
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-accent);
+    font-weight: 700;
+}
+
+.tcpip-page .sidebar nav a.lvl3 {
+    padding-left: 28px;
+    font-size: 12.5px;
+}
+
+.tcpip-page .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+    left: 14px;
+    z-index: 45;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
+    color: var(--color-tcpip-text);
+    font-size: 18px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(28, 39, 51, 0.12);
+}
+
+/* Main content */
+.tcpip-page .main {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+    box-sizing: border-box;
+    padding: 56px 64px 120px;
+}
+
+.tcpip-page .hero {
+    margin-bottom: 8px;
+}
+
+.tcpip-page .hero .kicker {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-tcpip-accent);
+    margin-bottom: 14px;
+}
+
+.tcpip-page .hero h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.35;
+    margin: 0 0 18px;
+    background: linear-gradient(135deg, #1c2733 0%, #2f6feb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+}
+
+.tcpip-page .hero .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+}
+
+.tcpip-page .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
+    font-size: 12.5px;
+    color: var(--color-tcpip-text-dim);
+}
+
+.tcpip-page .pill strong {
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .main h2 {
+    font-size: 26px;
+    margin: 56px 0 20px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-tcpip-border-soft);
+    color: var(--color-tcpip-text);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+.tcpip-page .main > h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 8px;
+}
+
+.tcpip-page .main h3 {
+    font-size: 20px;
+    margin: 38px 0 16px;
+    color: var(--color-tcpip-text);
+    font-weight: 700;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+.tcpip-page .main h3::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 18px;
+    background: var(--color-tcpip-accent);
+    border-radius: 3px;
+    margin-right: 10px;
+    vertical-align: -2px;
+}
+
+.tcpip-page .main p {
+    margin: 0 0 18px;
+    color: var(--color-tcpip-text);
+}
+
+/* リストスタイル: Tailwind preflight で none になるのを防ぎ、disc と decimal を明示 */
+.tcpip-page .main ul {
+    list-style-type: disc;
+    list-style-position: outside;
+    margin: 0 0 18px;
+    padding-left: 1.5rem;
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .main ol {
+    list-style-type: decimal;
+    list-style-position: outside;
+    margin: 0 0 18px;
+    padding-left: 1.5rem;
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .main li {
+    margin-bottom: 8px;
+}
+
+.tcpip-page .main hr {
+    border: none;
+    border-top: 1px solid var(--color-tcpip-border-soft);
+    margin: 44px 0;
+}
+
+.tcpip-page .main strong {
+    color: #0f1720;
+    font-weight: 700;
+}
+
+.tcpip-page .footnote-ref {
+    margin-left: 2px;
+}
+
+.tcpip-page .footnote-ref sup {
+    font-size: 11px;
+    color: var(--color-tcpip-accent);
+    font-weight: 700;
+}
+
+.tcpip-page .main code:not(pre code) {
+    background: var(--color-tcpip-bg-card-2);
+    border: 1px solid var(--color-tcpip-border);
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 0.9em;
+    color: #a8560a;
+    overflow-wrap: anywhere;
+}
+
+/* Tables */
+.tcpip-page .table-scroll {
+    overflow-x: auto;
+    margin: 0 0 26px;
+    border: 1px solid var(--color-tcpip-border);
+    border-radius: 12px;
+    background: var(--color-tcpip-bg-card);
+}
+
+.tcpip-page table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14.5px;
+}
+
+.tcpip-page thead th {
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-text);
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--color-tcpip-border);
+    white-space: nowrap;
+}
+
+.tcpip-page tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
+    color: var(--color-tcpip-text-dim);
+    vertical-align: top;
+}
+
+.tcpip-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tcpip-page tbody tr:hover td {
+    background: rgba(47, 111, 235, 0.045);
+}
+
+/* Mermaid Wrapper */
+.tcpip-page .mermaid-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: safe center;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #d8e0ec;
+    border-radius: 14px;
+    padding: 28px 20px;
+    margin: 1.5rem auto 2rem;
+    box-shadow: 0 1px 2px rgba(20, 40, 80, 0.04);
+}
+
+.tcpip-page .mermaid-wrap > [data-theme="light"] {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    box-shadow: none;
+    width: 100%;
+}
+
+.tcpip-page .mermaid-wrap > [role="img"] {
+    overflow: visible;
+}
+
+.tcpip-page .mermaid-wrap svg {
+    flex-shrink: 0;
+    height: auto;
+}
+
+.tcpip-page .mermaid-wrap p {
+    color: inherit;
+    margin: 0;
+}
+
+.tcpip-page .mermaid-wrap .mermaid-target .node .nodeLabel * {
+    color: inherit !important;
+}
+
+/* Callouts */
+.tcpip-page .callout-practice {
+    display: flex;
+    gap: 14px;
+    background: var(--color-tcpip-success-bg);
+    border: 1px solid #b7e6c8;
+    border-left: 4px solid var(--color-tcpip-success);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 0 0 26px;
+}
+
+.tcpip-page .callout-practice .icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--color-tcpip-success);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.tcpip-page .callout-practice .body {
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .callout-practice .label {
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--color-tcpip-success);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.tcpip-page .callout-practice p {
+    margin: 0;
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .callout-practice ul {
+    margin: 0;
+    padding-left: 1.2em;
+    color: var(--color-tcpip-text);
+}
+
+.tcpip-page .callout-practice li {
+    margin-bottom: 6px;
+}
+
+.tcpip-page .callout-practice li:last-child {
+    margin-bottom: 0;
+}
+
+.tcpip-page .practice-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--color-tcpip-success);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+}
+
+.tcpip-page .practice-label::before {
+    content: '✓';
+    font-size: 13px;
+}
+
+/* Reference grid */
+.tcpip-page .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0 0 30px;
+}
+
+.tcpip-page .ref-card {
+    display: flex;
+    gap: 12px;
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-width: 0;
+}
+
+.tcpip-page .ref-card .num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--color-tcpip-accent-bg);
+    color: var(--color-tcpip-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.tcpip-page .ref-card .txt {
+    font-size: 13px;
+    color: var(--color-tcpip-text-dim);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.tcpip-page .ref-card .txt a {
+    color: var(--color-tcpip-accent);
+    font-weight: 600;
+}
+
+/* Checklist */
+.tcpip-page .checklist-card {
+    background: var(--color-tcpip-bg-card);
+    border: 1px solid var(--color-tcpip-border);
+    border-radius: 14px;
+    padding: 8px 22px 12px;
+    margin: 0 0 30px;
+}
+
+.tcpip-page .checklist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-tcpip-border-soft);
+    margin-bottom: 6px;
+}
+
+.tcpip-page .checklist-header .title {
+    font-weight: 700;
+    color: var(--color-tcpip-text);
+    font-size: 14.5px;
+}
+
+.tcpip-page .checklist-header .count {
+    font-size: 13px;
+    color: var(--color-tcpip-accent);
+    font-weight: 700;
+}
+
+.tcpip-page .checklist-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tcpip-page .checklist-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 4px;
+    border-radius: 8px;
+    margin: 0;
+    transition: background 0.15s;
+}
+
+.tcpip-page .checklist-card li:hover {
+    background: rgba(47, 111, 235, 0.05);
+}
+
+.tcpip-page .checklist-card input[type='checkbox'] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 1.5px solid var(--color-tcpip-border);
+    border-radius: 5px;
+    background: var(--color-tcpip-bg-card-2);
+    cursor: pointer;
+    position: relative;
+}
+
+.tcpip-page .checklist-card input[type='checkbox']:checked {
+    background: var(--color-tcpip-accent);
+    border-color: var(--color-tcpip-accent);
+}
+
+.tcpip-page .checklist-card input[type='checkbox']:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+}
+
+.tcpip-page .checklist-card label {
+    color: var(--color-tcpip-text);
+    font-size: 14.5px;
+    cursor: pointer;
+    line-height: 1.6;
+}
+
+.tcpip-page .checklist-card li:has(input:checked) label {
+    text-decoration: line-through;
+    color: var(--color-tcpip-text-faint);
+}
+
+/* Footnotes (pandoc) */
+.tcpip-page aside.footnotes {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .tcpip-page .sidebar {
+        transform: translateX(-100%);
+        /* 閉じた状態のリンクを Tab 順から外す。visibility は離散遷移のため閉じるアニメーション中は表示を保つ */
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0.25s;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+    }
+    .tcpip-page .sidebar.open {
+        transform: translateX(0);
+        visibility: visible;
+    }
+    .tcpip-page .main {
+        margin-left: 0;
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        padding: 80px 20px 100px;
+    }
+    .tcpip-page .sidebar-toggle {
+        display: flex;
+    }
+    .tcpip-page .ref-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -598,6 +598,9 @@
     --color-theme-infrastructure-as-code-bg: hsl(220 55% 40% / 0.25);
     --color-theme-infrastructure-as-code-fg: hsl(220 90% 74%);
 
+    --color-theme-terraform-up-and-running-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-terraform-up-and-running-fg: hsl(220 90% 74%);
+
     --color-theme-understanding-the-linux-kernel-bg: hsl(220 55% 40% / 0.25);
     --color-theme-understanding-the-linux-kernel-fg: hsl(220 90% 74%);
 
@@ -618,6 +621,8 @@
 
     --color-theme-cli-bg: hsl(215 55% 40% / 0.25);
     --color-theme-cli-fg: hsl(215 90% 74%);
+    --color-theme-tcpip-illustrated-vol1-bg: hsl(220 55% 40% / 0.25);
+    --color-theme-tcpip-illustrated-vol1-fg: hsl(220 90% 74%);
 
     --navy: #0a2e4d;
     --navy-mid: #123a57;
@@ -693,6 +698,36 @@
     --color-theme-agwa-border: #b8dfc9;
     --color-theme-agwa-dark: #0d4a30;
 
+    /* Terraform: Up & Running guide */
+    --color-terraform-background: #07111e;
+    --color-terraform-surface: #0d1b2e;
+    --color-terraform-surface-elevated: #132540;
+    --color-terraform-border: #1e3352;
+    --color-terraform-success: #4caf82;
+    --color-terraform-warning: #d9a441;
+    --color-terraform-foreground: #eaf1ff;
+    --color-terraform-foreground-dim: #9db1d4;
+    --color-terraform-foreground-dimmer: #6f84a8;
+
+    /* TCP/IP Illustrated, Volume 1 guide */
+    --color-tcpip-bg: #f7f9fc;
+    --color-tcpip-bg-card: #ffffff;
+    --color-tcpip-bg-card-2: #eef2f8;
+    --color-tcpip-border: #d8e0ec;
+    --color-tcpip-border-soft: #e6ecf5;
+    --color-tcpip-text: #1c2733;
+    --color-tcpip-text-dim: #56637a;
+    --color-tcpip-text-faint: #8494ac;
+    --color-tcpip-accent: #2f6feb;
+    --color-tcpip-accent-soft: #b9cdfa;
+    --color-tcpip-accent-bg: #eaf1ff;
+    --color-tcpip-danger: #c8384f;
+    --color-tcpip-danger-bg: #fdeef1;
+    --color-tcpip-warn: #a8650a;
+    --color-tcpip-warn-bg: #fdf3e1;
+    --color-tcpip-success: #1a8a4f;
+    --color-tcpip-success-bg: #e8f8ee;
+
     /* Layer 2: 共有プリミティブ */
     --color-shadow-rgb: 0, 0, 0;
     --color-shadow: rgba(var(--color-shadow-rgb), 0.4);
@@ -741,7 +776,8 @@
     --color-secure-cicd-bg-success: #0f2419;
     --color-secure-cicd-text-primary: #e8edf5;
     --color-secure-cicd-text-secondary: #a8b6cc;
-    --color-secure-cicd-text-tertiary: #6b7a94;
+    /* 原本 #6b7a94 は #0d1b2e 上で 3.99:1 のため WCAG AA (4.5:1) へ引き上げ */
+    --color-secure-cicd-text-tertiary: #7d8ca6;
     --color-secure-cicd-text-info: #8fb4ff;
     --color-secure-cicd-text-danger: #ff9a9a;
     --color-secure-cicd-text-success: #7ee0a8;
@@ -803,6 +839,7 @@ body {
 .card-devops-handbook { --card-accent: var(--color-theme-devops-handbook-fg); }
 .card-release-it { --card-accent: var(--color-theme-release-it-fg); }
 .card-infrastructure-as-code { --card-accent: var(--color-theme-infrastructure-as-code-fg); }
+.card-terraform-up-and-running { --card-accent: var(--color-theme-terraform-up-and-running-fg); }
 .card-understanding-the-linux-kernel { --card-accent: var(--color-theme-understanding-the-linux-kernel-fg); }
 .card-unix-linux-sysadmin-handbook { --card-accent: var(--color-theme-unix-linux-sysadmin-handbook-fg); }
 .card-systems-performance { --card-accent: var(--color-theme-systems-performance-fg); }
@@ -811,6 +848,7 @@ body {
 .card-high-performance-browser-networking { --card-accent: var(--color-theme-high-performance-browser-networking-fg); }
 .card-kubernetes-in-action { --card-accent: var(--color-theme-kubernetes-in-action-fg); }
 .card-cli { --card-accent: var(--color-theme-cli-fg); }
+.card-tcpip-illustrated-vol1 { --card-accent: var(--color-theme-tcpip-illustrated-vol1-fg); }
 
 @utility text-gradient-aurora {
     background: linear-gradient(135deg, var(--color-brand-text-start), var(--color-brand-text-end));
@@ -919,6 +957,11 @@ body {
     color: var(--color-theme-infrastructure-as-code-fg);
 }
 
+@utility icon-theme-terraform-up-and-running {
+    background: var(--color-theme-terraform-up-and-running-bg);
+    color: var(--color-theme-terraform-up-and-running-fg);
+}
+
 @utility icon-theme-understanding-the-linux-kernel {
     background: var(--color-theme-understanding-the-linux-kernel-bg);
     color: var(--color-theme-understanding-the-linux-kernel-fg);
@@ -957,6 +1000,11 @@ body {
 @utility icon-theme-cli {
     background: var(--color-theme-cli-bg);
     color: var(--color-theme-cli-fg);
+}
+
+@utility icon-theme-tcpip-illustrated-vol1 {
+    background: var(--color-theme-tcpip-illustrated-vol1-bg);
+    color: var(--color-theme-tcpip-illustrated-vol1-fg);
 }
 
 /* Provider identity marks: メニューとホームで同じ視覚言語を共有する。 */
