@@ -1,7 +1,7 @@
 // __tests__/recommended-books/terraform-up-and-running/page.test.tsx
 // @vitest-environment jsdom
 import { fireEvent, render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/terraform-up-and-running.json';
 import Page from '@/app/recommended-books/terraform-up-and-running/page';
 import {
@@ -155,6 +155,12 @@ describe('terraform-up-and-running — 移行元コンテンツの全量移行',
 });
 
 describe('terraform-up-and-running — 目次リンクのスクロールとフォーカス', () => {
+    // アサーション失敗時も後続テストへモックを漏らさないよう、元のメソッドを必ず戻す
+    const originalScrollIntoView = Element.prototype.scrollIntoView;
+    afterEach(() => {
+        Element.prototype.scrollIntoView = originalScrollIntoView;
+    });
+
     it('目次リンクで見出しをスクロール表示し、スクロールを戻さずにフォーカスを移す', () => {
         const scrollIntoView = vi.fn();
         Element.prototype.scrollIntoView = scrollIntoView;

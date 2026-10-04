@@ -56,6 +56,7 @@ const guideLayouts = [
     ['app/recommended-books/computer-networks-tanenbaum/page.css', '.tanenbaum-page .sidebar', '.tanenbaum-page .main'],
     ['app/recommended-books/kubernetes-in-action/page.css', '.kia-page .sidebar', '.kia-page .main'],
     ['app/recommended-books/tcpip-illustrated-vol1/page.css', '.tcpip-page .sidebar', '.tcpip-page .main'],
+    ['app/recommended-books/terraform-up-and-running/page.css', '.terraform-up-and-running-page .sidebar', '.terraform-up-and-running-page .main'],
     ['app/gcl/professional-agentic-architect/page.css', '.agentic-guide-page .sidebar', '.agentic-guide-page .main'],
     ['app/gcl/professional-agentic-architect/section1/page.css', '.agentic-section1-page .sidebar', '.agentic-section1-page .main'],
     ['app/gcl/professional-agentic-architect/section2/page.css', '.agentic-section2-page .sidebar', '.agentic-section2-page .main'],
