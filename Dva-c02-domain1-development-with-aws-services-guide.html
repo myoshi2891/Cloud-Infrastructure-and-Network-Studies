@@ -149,7 +149,7 @@ const D = {
      "id": "1.2.1",
      "name": "VPC 内リソースへのアクセス",
      "point": "関数に VPC のサブネットとセキュリティグループを設定すると VPC 内の RDS 等へ届く",
-     "bp": "VPC 内の関数はそのままではインターネットへ出られない。NAT ゲートウェイか VPC エンドポイントを使う。RDS には RDS Proxy で接続をプール"
+     "bp": "VPC 内の関数はそのままではインターネットへ出られない。IPv4 のインターネット宛ては NAT ゲートウェイ経由、IPv6 は Egress-only インターネットゲートウェイへのルート(デュアルスタック設定時)。VPC エンドポイントは対応する AWS サービスへのプライベート接続用でインターネットには出られない。RDS には RDS Proxy で接続をプール"
     },
     {
      "id": "1.2.2",
@@ -259,7 +259,7 @@ const D = {
   ],
   [
    "SQS と Kinesis",
-   "SQS は消費すると消える / Kinesis は保持期間内なら再読み取り可能・キー単位で順序保持"
+   "SQS は受信すると可視性タイムアウトの間だけ一時的に不可視になり(削除ではない)、直接のコンシューマーは処理成功後に DeleteMessage で削除する。Lambda の SQS 統合は成功したメッセージを自動削除 / Kinesis は保持期間内なら再読み取り可能・キー単位で順序保持"
   ],
   [
    "Kinesis Data Streams と Firehose",
@@ -452,7 +452,8 @@ document.getElementById('topbar').innerHTML = `<span class="mono text-base font-
 document.getElementById('controls').innerHTML = `
   <div class="flex border border-[#14161a]">${[['all', 'すべて'], ...D.tasks.map(t => [t.key, 'Task ' + t.key.slice(-1)])]
     .map(([k, l]) => `<button data-tab="${k}" class="px-4 py-1.5">${l}</button>`).join('')}</div>
-  <input id="q" placeholder="キーワードで絞り込み(例: SQS, 冪等)" class="min-w-[14rem] flex-1 border border-[#c9cfd8] bg-white px-3 py-1.5 outline-none focus:border-[#d4400f] sm:max-w-sm">`;
+  <label for="q" class="font-bold text-[#5b6270]">キーワードで絞り込み</label>
+  <input id="q" placeholder="例: SQS, 冪等" class="min-w-[14rem] flex-1 border border-[#c9cfd8] bg-white px-3 py-1.5 outline-none focus:border-[#d4400f] sm:max-w-sm">`;
 
 document.getElementById('body').innerHTML =
   D.tasks.map(t => `<section id="${t.key}" data-spy="${t.key}" data-task="${t.key}" class="pt-12">
