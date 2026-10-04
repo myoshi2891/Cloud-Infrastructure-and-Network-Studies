@@ -8,6 +8,7 @@ import { SectionIntro } from './sections/SectionIntro';
 import { SectionParts1to4 } from './sections/SectionParts1to4';
 import { SectionParts5to8 } from './sections/SectionParts5to8';
 import { SectionParts9to11 } from './sections/SectionParts9to11';
+import { SectionParts12to17 } from './sections/SectionParts12to17';
 
 export function TcpipIllustratedVol1Guide() {
     return (
@@ -19,6 +20,7 @@ export function TcpipIllustratedVol1Guide() {
                     <SectionParts1to4 />
                     <SectionParts5to8 />
                     <SectionParts9to11 />
+                    <SectionParts12to17 />
                 </main>
             </div>
         </div>
