@@ -1,14 +1,28 @@
 /* app/recommended-books/tcpip-illustrated-vol1/page.css */
 
-.tcpip-page * {
-    box-sizing: border-box;
-}
-
 .tcpip-page {
+    --tcpip-bg: #f7f9fc;
+    --tcpip-bg-card: #ffffff;
+    --tcpip-bg-card-2: #eef2f8;
+    --tcpip-border: #d8e0ec;
+    --tcpip-border-soft: #e6ecf5;
+    --tcpip-text: #1c2733;
+    --tcpip-text-dim: #56637a;
+    --tcpip-text-faint: #8494ac;
+    --tcpip-accent: #2f6feb;
+    --tcpip-accent-soft: #b9cdfa;
+    --tcpip-accent-bg: #eaf1ff;
+    --tcpip-danger: #c8384f;
+    --tcpip-danger-bg: #fdeef1;
+    --tcpip-warn: #a8650a;
+    --tcpip-warn-bg: #fdf3e1;
+    --tcpip-success: #1a8a4f;
+    --tcpip-success-bg: #e8f8ee;
+
     overflow-x: hidden;
     margin: 0;
-    background: var(--color-pca-s4-background, #0b1120);
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    background: var(--tcpip-bg);
+    color: var(--tcpip-text);
     font-family: var(--font-body, 'Noto Sans JP', sans-serif);
     font-size: 16px;
     line-height: 1.85;
@@ -16,8 +30,12 @@
     min-height: 100vh;
 }
 
+.tcpip-page * {
+    box-sizing: border-box;
+}
+
 .tcpip-page a {
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     text-decoration: none;
 }
 
@@ -37,8 +55,8 @@
     left: 0;
     bottom: 0;
     width: 280px;
-    background: var(--color-pca-s4-sidebar-bg, #0f172a);
-    border-right: 1px solid var(--color-pca-s4-border-soft, #1e293b);
+    background: #ffffff;
+    border-right: 1px solid var(--tcpip-border-soft);
     overflow-y: auto;
     padding: 28px 0 40px;
     z-index: 40;
@@ -46,14 +64,14 @@
 
 .tcpip-page .sidebar-header {
     padding: 0 24px 20px;
-    border-bottom: 1px solid var(--color-pca-s4-border-soft, #1e293b);
+    border-bottom: 1px solid var(--tcpip-border-soft);
     margin-bottom: 16px;
 }
 
 .tcpip-page .sidebar-header .kicker {
     font-size: 12px;
     letter-spacing: 0.08em;
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -61,7 +79,7 @@
 .tcpip-page .sidebar-header h2 {
     font-size: 16px;
     margin: 6px 0 0;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
     line-height: 1.5;
     font-weight: 700;
     border: none;
@@ -83,21 +101,21 @@
     padding: 9px 12px;
     border-radius: 8px;
     font-size: 13.5px;
-    color: var(--color-pca-s4-foreground-dim, #94a3b8);
+    color: var(--tcpip-text-dim);
     line-height: 1.5;
     margin-bottom: 2px;
     transition: background 0.15s, color 0.15s;
 }
 
 .tcpip-page .sidebar nav a:hover {
-    background: var(--color-pca-s4-accent-bg, rgba(96, 165, 250, 0.1));
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    background: var(--tcpip-accent-bg);
+    color: var(--tcpip-text);
     text-decoration: none;
 }
 
 .tcpip-page .sidebar nav a.active {
-    background: var(--color-pca-s4-accent-bg, rgba(96, 165, 250, 0.15));
-    color: var(--color-pca-s4-accent, #60a5fa);
+    background: var(--tcpip-accent-bg);
+    color: var(--tcpip-accent);
     font-weight: 700;
 }
 
@@ -115,14 +133,14 @@
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: var(--color-pca-s4-card-bg, #1e293b);
-    border: 1px solid var(--color-pca-s4-border, #334155);
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    background: var(--tcpip-bg-card);
+    border: 1px solid var(--tcpip-border);
+    color: var(--tcpip-text);
     font-size: 18px;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(28, 39, 51, 0.12);
 }
 
 /* Main content */
@@ -143,7 +161,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     margin-bottom: 14px;
 }
 
@@ -151,7 +169,7 @@
     font-size: clamp(28px, 3.6vw, 42px);
     line-height: 1.35;
     margin: 0 0 18px;
-    background: linear-gradient(135deg, #f8fafc 0%, #60a5fa 100%);
+    background: linear-gradient(135deg, #1c2733 0%, #2f6feb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -171,22 +189,22 @@
     gap: 6px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: var(--color-pca-s4-card-bg, #1e293b);
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    background: var(--tcpip-bg-card);
+    border: 1px solid var(--tcpip-border);
     font-size: 12.5px;
-    color: var(--color-pca-s4-foreground-dim, #94a3b8);
+    color: var(--tcpip-text-dim);
 }
 
 .tcpip-page .pill strong {
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .main h2 {
     font-size: 26px;
     margin: 56px 0 20px;
     padding-top: 8px;
-    border-top: 1px solid var(--color-pca-s4-border-soft, #1e293b);
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    border-top: 1px solid var(--tcpip-border-soft);
+    color: var(--tcpip-text);
     font-weight: 800;
     letter-spacing: -0.01em;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
@@ -201,7 +219,7 @@
 .tcpip-page .main h3 {
     font-size: 20px;
     margin: 38px 0 16px;
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    color: var(--tcpip-text);
     font-weight: 700;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
@@ -211,7 +229,7 @@
     display: inline-block;
     width: 5px;
     height: 18px;
-    background: var(--color-pca-s4-accent, #60a5fa);
+    background: var(--tcpip-accent);
     border-radius: 3px;
     margin-right: 10px;
     vertical-align: -2px;
@@ -219,7 +237,7 @@
 
 .tcpip-page .main p {
     margin: 0 0 18px;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 /* リストスタイル: Tailwind preflight で none になるのを防ぎ、disc と decimal を明示 */
@@ -228,7 +246,7 @@
     list-style-position: outside;
     margin: 0 0 18px;
     padding-left: 1.5rem;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .main ol {
@@ -236,7 +254,7 @@
     list-style-position: outside;
     margin: 0 0 18px;
     padding-left: 1.5rem;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .main li {
@@ -245,12 +263,12 @@
 
 .tcpip-page .main hr {
     border: none;
-    border-top: 1px solid var(--color-pca-s4-border-soft, #1e293b);
+    border-top: 1px solid var(--tcpip-border-soft);
     margin: 44px 0;
 }
 
 .tcpip-page .main strong {
-    color: #ffffff;
+    color: #0f1720;
     font-weight: 700;
 }
 
@@ -260,17 +278,17 @@
 
 .tcpip-page .footnote-ref sup {
     font-size: 11px;
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     font-weight: 700;
 }
 
 .tcpip-page .main code:not(pre code) {
-    background: var(--color-pca-s4-card-bg-2, #1e293b);
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    background: var(--tcpip-bg-card-2);
+    border: 1px solid var(--tcpip-border);
     border-radius: 5px;
     padding: 1px 6px;
     font-size: 0.9em;
-    color: #fbbf24;
+    color: #a8560a;
     overflow-wrap: anywhere;
 }
 
@@ -278,9 +296,9 @@
 .tcpip-page .table-scroll {
     overflow-x: auto;
     margin: 0 0 26px;
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    border: 1px solid var(--tcpip-border);
     border-radius: 12px;
-    background: var(--color-pca-s4-card-bg, #0f172a);
+    background: var(--tcpip-bg-card);
 }
 
 .tcpip-page table {
@@ -290,19 +308,19 @@
 }
 
 .tcpip-page thead th {
-    background: var(--color-pca-s4-accent-bg, rgba(96, 165, 250, 0.1));
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    background: var(--tcpip-accent-bg);
+    color: var(--tcpip-text);
     text-align: left;
     padding: 12px 16px;
     font-weight: 700;
-    border-bottom: 1px solid var(--color-pca-s4-border, #334155);
+    border-bottom: 1px solid var(--tcpip-border);
     white-space: nowrap;
 }
 
 .tcpip-page tbody td {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--color-pca-s4-border-soft, #1e293b);
-    color: var(--color-pca-s4-foreground-dim, #94a3b8);
+    border-bottom: 1px solid var(--tcpip-border-soft);
+    color: var(--tcpip-text-dim);
     vertical-align: top;
 }
 
@@ -311,7 +329,7 @@
 }
 
 .tcpip-page tbody tr:hover td {
-    background: rgba(96, 165, 250, 0.05);
+    background: rgba(47, 111, 235, 0.045);
 }
 
 /* Mermaid Wrapper */
@@ -320,11 +338,22 @@
     display: flex;
     justify-content: safe center;
     overflow-x: auto;
-    background: var(--color-pca-s4-card-bg, #0f172a);
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    background: #ffffff;
+    border: 1px solid #d8e0ec;
     border-radius: 14px;
     padding: 28px 20px;
     margin: 1.5rem auto 2rem;
+    box-shadow: 0 1px 2px rgba(20, 40, 80, 0.04);
+}
+
+.tcpip-page .mermaid-wrap > [data-theme="light"] {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    box-shadow: none;
+    width: 100%;
 }
 
 .tcpip-page .mermaid-wrap > [role="img"] {
@@ -333,8 +362,7 @@
 
 .tcpip-page .mermaid-wrap svg {
     flex-shrink: 0;
-    max-width: 100% !important;
-    height: auto !important;
+    height: auto;
 }
 
 .tcpip-page .mermaid-wrap p {
@@ -342,13 +370,17 @@
     margin: 0;
 }
 
+.tcpip-page .mermaid-wrap .mermaid-target .node .nodeLabel * {
+    color: inherit !important;
+}
+
 /* Callouts */
 .tcpip-page .callout-practice {
     display: flex;
     gap: 14px;
-    background: rgba(34, 197, 94, 0.08);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    border-left: 4px solid #22c55e;
+    background: var(--tcpip-success-bg);
+    border: 1px solid #b7e6c8;
+    border-left: 4px solid var(--tcpip-success);
     border-radius: 12px;
     padding: 20px 22px;
     margin: 0 0 26px;
@@ -359,7 +391,7 @@
     width: 26px;
     height: 26px;
     border-radius: 7px;
-    background: #22c55e;
+    background: var(--tcpip-success);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -369,27 +401,27 @@
 }
 
 .tcpip-page .callout-practice .body {
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .callout-practice .label {
     font-size: 11.5px;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: #4ade80;
+    color: var(--tcpip-success);
     text-transform: uppercase;
     margin-bottom: 6px;
 }
 
 .tcpip-page .callout-practice p {
     margin: 0;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .callout-practice ul {
     margin: 0;
     padding-left: 1.2em;
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
 }
 
 .tcpip-page .callout-practice li {
@@ -407,7 +439,7 @@
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: #4ade80;
+    color: var(--tcpip-success);
     text-transform: uppercase;
     margin: 0 0 10px;
 }
@@ -428,8 +460,8 @@
 .tcpip-page .ref-card {
     display: flex;
     gap: 12px;
-    background: var(--color-pca-s4-card-bg, #0f172a);
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    background: var(--tcpip-bg-card);
+    border: 1px solid var(--tcpip-border);
     border-radius: 10px;
     padding: 14px 16px;
     min-width: 0;
@@ -440,8 +472,8 @@
     width: 26px;
     height: 26px;
     border-radius: 7px;
-    background: var(--color-pca-s4-accent-bg, rgba(96, 165, 250, 0.15));
-    color: var(--color-pca-s4-accent, #60a5fa);
+    background: var(--tcpip-accent-bg);
+    color: var(--tcpip-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -451,20 +483,20 @@
 
 .tcpip-page .ref-card .txt {
     font-size: 13px;
-    color: var(--color-pca-s4-foreground-dim, #94a3b8);
+    color: var(--tcpip-text-dim);
     min-width: 0;
     overflow-wrap: anywhere;
 }
 
 .tcpip-page .ref-card .txt a {
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     font-weight: 600;
 }
 
 /* Checklist */
 .tcpip-page .checklist-card {
-    background: var(--color-pca-s4-card-bg, #0f172a);
-    border: 1px solid var(--color-pca-s4-border, #334155);
+    background: var(--tcpip-bg-card);
+    border: 1px solid var(--tcpip-border);
     border-radius: 14px;
     padding: 8px 22px 12px;
     margin: 0 0 30px;
@@ -475,19 +507,19 @@
     align-items: center;
     justify-content: space-between;
     padding: 14px 0;
-    border-bottom: 1px solid var(--color-pca-s4-border-soft, #1e293b);
+    border-bottom: 1px solid var(--tcpip-border-soft);
     margin-bottom: 6px;
 }
 
 .tcpip-page .checklist-header .title {
     font-weight: 700;
-    color: var(--color-pca-s4-foreground, #f8fafc);
+    color: var(--tcpip-text);
     font-size: 14.5px;
 }
 
 .tcpip-page .checklist-header .count {
     font-size: 13px;
-    color: var(--color-pca-s4-accent, #60a5fa);
+    color: var(--tcpip-accent);
     font-weight: 700;
 }
 
@@ -508,7 +540,7 @@
 }
 
 .tcpip-page .checklist-card li:hover {
-    background: rgba(96, 165, 250, 0.05);
+    background: rgba(47, 111, 235, 0.05);
 }
 
 .tcpip-page .checklist-card input[type='checkbox'] {
@@ -518,16 +550,16 @@
     height: 19px;
     flex-shrink: 0;
     margin-top: 2px;
-    border: 1.5px solid var(--color-pca-s4-border, #334155);
+    border: 1.5px solid var(--tcpip-border);
     border-radius: 5px;
-    background: var(--color-pca-s4-card-bg-2, #1e293b);
+    background: var(--tcpip-bg-card-2);
     cursor: pointer;
     position: relative;
 }
 
 .tcpip-page .checklist-card input[type='checkbox']:checked {
-    background: var(--color-pca-s4-accent, #3b82f6);
-    border-color: var(--color-pca-s4-accent, #3b82f6);
+    background: var(--tcpip-accent);
+    border-color: var(--tcpip-accent);
 }
 
 .tcpip-page .checklist-card input[type='checkbox']:checked::after {
@@ -543,7 +575,7 @@
 }
 
 .tcpip-page .checklist-card label {
-    color: var(--color-pca-s4-foreground, #e2e8f0);
+    color: var(--tcpip-text);
     font-size: 14.5px;
     cursor: pointer;
     line-height: 1.6;
@@ -551,7 +583,7 @@
 
 .tcpip-page .checklist-card li:has(input:checked) label {
     text-decoration: line-through;
-    color: var(--color-pca-s4-foreground-dim, #64748b);
+    color: var(--tcpip-text-faint);
 }
 
 /* Footnotes (pandoc) */
@@ -564,7 +596,7 @@
     .tcpip-page .sidebar {
         transform: translateX(-100%);
         transition: transform 0.25s ease;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
     }
     .tcpip-page .sidebar.open {
         transform: translateX(0);

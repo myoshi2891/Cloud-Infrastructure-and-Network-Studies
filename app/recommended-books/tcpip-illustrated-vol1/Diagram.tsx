@@ -13,7 +13,12 @@ export const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; lab
     if (!chart) return null;
     return (
         <div className="mermaid-wrap" tabIndex={0} role="region" aria-label={label}>
-            <MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale={true} />
+            <MermaidDiagram
+                chart={chart}
+                ariaLabel={label}
+                preserveNaturalScale={true}
+                theme="light"
+            />
         </div>
     );
 });

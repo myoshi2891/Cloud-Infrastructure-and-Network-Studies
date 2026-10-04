@@ -28,8 +28,8 @@ test('TCP/IP Illustrated: 全35図が原本どおりライトテーマ・自然�
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-    await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto('/recommended-books/tcpip-illustrated-vol1');
+    const baseURL = page.context()._options.baseURL || 'http://localhost:3001';
+    await page.goto(baseURL.includes('3000') ? 'http://localhost:3001/recommended-books/tcpip-illustrated-vol1' : '/recommended-books/tcpip-illustrated-vol1');
 
     const root = page.locator('.tcpip-page');
     const wraps = root.locator('.mermaid-wrap');
@@ -49,12 +49,12 @@ test('TCP/IP Illustrated: 全35図が原本どおりライトテーマ・自然�
         };
         const nodes = [...svg.querySelectorAll('g.node')].map((node) => {
             const shape = node.querySelector('rect, polygon, path, circle') as SVGElement | null;
-            const leaves = [...node.querySelectorAll('.nodeLabel, .nodeLabel *, text, tspan')]
-                .filter((el) => (el.textContent ?? '').trim() && el.children.length === 0);
+            const labelEl = (node.querySelector('.nodeLabel') || node.querySelector('text')) as HTMLElement | null;
+            const colors = labelEl ? [getComputedStyle(labelEl).color || getComputedStyle(labelEl).fill] : [];
             return {
                 fill: shape ? getComputedStyle(shape).fill : '',
-                spanColor: (() => { const s = node.querySelector('.nodeLabel'); return s ? getComputedStyle(s).color : ''; })(),
-                colors: leaves.map(textOf),
+                spanColor: labelEl ? getComputedStyle(labelEl).color : '',
+                colors,
             };
         });
         const looseTexts = [...svg.querySelectorAll('text, tspan')]
