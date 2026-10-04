@@ -2,6 +2,47 @@
 
 (最終更新日: 2026-10-04)
 
+## 2026-10-04: TCP/IP Illustrated, Volume 1: The Protocols（第2版）完全解説ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Tcpip-illustrated-vol1-guide.html`（および `Tcpip-illustrated-vol1-guide.md`）を、Next.js App Router 5ファイル構成 (`page.tsx`, `TcpipIllustratedVol1Guide.tsx`, `NavBar.tsx`, `constants.ts`, `page.css` + `sections/`) で `/recommended-books/tcpip-illustrated-vol1` ルートへ移行。見出し(h1:1, h2:23, h3:87, h4:0)、全22個のテーブル（th:64, td:261）、全35個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(44件)、全コードブロック(16件・.code-line構造)、全外部リンク(15件)、全本文・注釈ブロック(130件)、チェックリスト(10項目・動的カウントアップ)、参考文献(15件)を一切の省略・要約なしで100%全量移植。「名著ガイド」としてグローバルナビ（`Books` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Tcpip-illustrated-vol1-guide.html` および `Tcpip-illustrated-vol1-guide.md`）を `archive/Books/html/` および `archive/Books/md/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for tcpip-illustrated-vol1` (`aca4dfed`)
+- [x] **Step 1 (Red)**: `test(recommended-books): add failing tests for tcpip-illustrated-vol1` (`e6eda4b7`)
+- [x] **Step 2-1 (Scaffold)**: `feat(recommended-books): setup foundation, constants, styles, and navbar for tcpip-illustrated-vol1` (`15084019`)
+- [x] **Step 2-2 (Intro & Parts 0-4)**: `feat(recommended-books): implement intro and parts 0-4 for tcpip-illustrated-vol1` (`c54e93f2`)
+- [x] **Step 2-3 (Parts 5-8)**: `feat(recommended-books): implement parts 5-8 for tcpip-illustrated-vol1` (`76c4563d`)
+- [x] **Step 2-4 (Parts 9-11)**: `feat(recommended-books): implement parts 9-11 for tcpip-illustrated-vol1` (`dd52c75b`)
+- [x] **Step 2-5 (Parts 12-17)**: `feat(recommended-books): implement TCP deep dive parts 12-17 for tcpip-illustrated-vol1` (`a110525c`)
+- [x] **Step 2-6 (Parts 18-19)**: `feat(recommended-books): implement security and 2026 updates parts 18-19 for tcpip-illustrated-vol1` (`f4ffb383`)
+- [x] **Step 2-7 (Appendix & Green)**: `feat(recommended-books): implement appendix and pass all tests for tcpip-illustrated-vol1` (`41d7560f`)
+- [x] **Step 3 (Refactor)**: `refactor(recommended-books): integrate tcpip-illustrated-vol1 into routing and update docs` (`b33b61e8`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive source files`
+
+### 関連ファイル
+
+- [app/recommended-books/tcpip-illustrated-vol1/page.tsx](app/recommended-books/tcpip-illustrated-vol1/page.tsx)
+- [app/recommended-books/tcpip-illustrated-vol1/TcpipIllustratedVol1Guide.tsx](app/recommended-books/tcpip-illustrated-vol1/TcpipIllustratedVol1Guide.tsx)
+- [app/recommended-books/tcpip-illustrated-vol1/NavBar.tsx](app/recommended-books/tcpip-illustrated-vol1/NavBar.tsx)
+- [app/recommended-books/tcpip-illustrated-vol1/constants.ts](app/recommended-books/tcpip-illustrated-vol1/constants.ts)
+- [app/recommended-books/tcpip-illustrated-vol1/page.css](app/recommended-books/tcpip-illustrated-vol1/page.css)
+- [本文テスト: tcpip-illustrated-vol1](__tests__/recommended-books/tcpip-illustrated-vol1/page.test.tsx)
+- [統合テスト: tcpip-illustrated-vol1](__tests__/recommended-books/tcpip-illustrated-vol1/integration.test.ts)
+- [docs/migration-inventory/tcpip-illustrated-vol1.json](docs/migration-inventory/tcpip-illustrated-vol1.json)
+- [archive/Books/html/Tcpip-illustrated-vol1-guide.html](archive/Books/html/Tcpip-illustrated-vol1-guide.html)
+- [archive/Books/md/Tcpip-illustrated-vol1-guide.md](archive/Books/md/Tcpip-illustrated-vol1-guide.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [README.md](README.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
 ## 2026-10-04: Terraform: Up and Running 実践ガイド 100%全量移行 (完了)
 
 ### 目的
