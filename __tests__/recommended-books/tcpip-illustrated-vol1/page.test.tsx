@@ -152,10 +152,11 @@ describe('tcpip-illustrated-vol1 — 操作・インタラクション', () => {
         expect(toggle).toHaveAttribute('aria-expanded', 'true');
         expect(sidebar?.classList.contains('open')).toBe(true);
 
-        // Escapeキーで閉じる
+        // Escapeキーで閉じ、フォーカスをトグルへ戻す
         fireEvent.keyDown(window, { key: 'Escape' });
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(sidebar?.classList.contains('open')).toBe(false);
+        expect(toggle).toHaveFocus();
 
         // リンククリックで閉じる
         fireEvent.click(toggle!);
@@ -329,6 +330,13 @@ describe('tcpip-illustrated-vol1 — レビュー指摘の回帰防止', () => {
         expect(chart).toContain('8byte単位');
         expect(chart).not.toContain('Offset=1480');
         expect(chart).not.toContain('Offset=2960');
+    });
+
+    it('diag-18 はペイロード長と IPv4 ヘッダ込みの全長を区別する（4000byte = ヘッダ20 + ペイロード3980）', () => {
+        const chart = DIAGRAMS['diag-18'];
+        expect(chart).toContain('ペイロード1480byte<br/>全長1500byte');
+        expect(chart.match(/ペイロード1480byte/g)).toHaveLength(2);
+        expect(chart).toContain('ペイロード1020byte<br/>全長1040byte');
     });
 
     it('diag-25 は3回目の重複ACKの後に高速再送し、受信済み全セグメントを累積ACKする', () => {

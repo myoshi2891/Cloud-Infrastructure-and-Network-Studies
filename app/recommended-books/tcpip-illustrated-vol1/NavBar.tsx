@@ -25,6 +25,7 @@ export function NavBar() {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
                 closeSidebar();
+                document.querySelector<HTMLButtonElement>('.sidebar-toggle')?.focus();
             }
         };
         window.addEventListener('keydown', handleKeyDown);
