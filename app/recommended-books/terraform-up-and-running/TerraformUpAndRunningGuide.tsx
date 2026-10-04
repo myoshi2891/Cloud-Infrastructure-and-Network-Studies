@@ -1,0 +1,69 @@
+// app/recommended-books/terraform-up-and-running/TerraformUpAndRunningGuide.tsx
+'use client';
+
+import { memo, useState } from 'react';
+import { MermaidDiagram } from '@/components/MermaidDiagram';
+import { NavBar } from './NavBar';
+import { DIAGRAMS, type DiagramId } from './constants';
+
+interface DiagramProps {
+    id: DiagramId;
+    ariaLabel: string;
+}
+
+const Diagram = memo(function Diagram({ id, ariaLabel }: DiagramProps) {
+    const chart = DIAGRAMS[id];
+    if (!chart) return null;
+    return (
+        <div className="mermaid-wrap" id={id}>
+            <MermaidDiagram chart={chart} ariaLabel={ariaLabel} preserveNaturalScale={true} />
+        </div>
+    );
+});
+
+/**
+ * Terraform: Up and Running 実践ガイド クライアントコンポーネント。
+ */
+export function TerraformUpAndRunningGuide() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
+
+    const handleCheckboxChange = (index: number) => {
+        setCheckedItems((prev) => ({
+            ...prev,
+            [index]: !prev[index],
+        }));
+    };
+
+    const completedCount = Object.values(checkedItems).filter(Boolean).length;
+
+    return (
+        <div className="terraform-up-and-running-page">
+            <header className="hero">
+                <div className="hero-eyebrow">
+                    Terraform 実践ガイド · 初学者向けステップバイステップ解説
+                </div>
+                <h1>Terraform: Up and Running 実践ガイド ― 初学者のためのステップバイステップ解説</h1>
+                <div className="hero-pills">
+                    <span className="pill">対象: <strong>Terraform初学者</strong></span>
+                    <span className="pill">対応版: <strong>Terraform 1.16系 / OpenTofu 1.12系</strong></span>
+                    <span className="pill">図解: <strong>Mermaid 19点</strong></span>
+                    <span className="pill">表: <strong>18件</strong></span>
+                    <span className="pill">参考文献: <strong>7件</strong></span>
+                </div>
+            </header>
+
+            <div className="layout">
+                <NavBar
+                    isOpen={sidebarOpen}
+                    onToggle={() => setSidebarOpen((v) => !v)}
+                    onClose={() => setSidebarOpen(false)}
+                />
+
+                <main className="main">
+                    {/* 各セクションを順次実装 */}
+                </main>
+            </div>
+        </div>
+    );
+}
