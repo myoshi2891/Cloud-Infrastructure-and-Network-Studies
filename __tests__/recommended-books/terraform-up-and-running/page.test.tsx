@@ -1,6 +1,6 @@
 // __tests__/recommended-books/terraform-up-and-running/page.test.tsx
 // @vitest-environment jsdom
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import inventory from '@/docs/migration-inventory/terraform-up-and-running.json';
 import Page from '@/app/recommended-books/terraform-up-and-running/page';
@@ -151,5 +151,24 @@ describe('terraform-up-and-running — 移行元コンテンツの全量移行',
 
         const cards = container.querySelectorAll('.ref-card');
         expect(cards).toHaveLength(7);
+    });
+});
+
+describe('terraform-up-and-running — 目次リンクのスクロールとフォーカス', () => {
+    it('目次リンクで見出しをスクロール表示し、スクロールを戻さずにフォーカスを移す', () => {
+        const scrollIntoView = vi.fn();
+        Element.prototype.scrollIntoView = scrollIntoView;
+        const { container } = render(<Page />);
+        const link = container.querySelector<HTMLAnchorElement>('#sidebar a[data-target]:nth-of-type(2)')!;
+        const target = container.querySelector<HTMLElement>(`[id="${link.dataset.target}"]`)!;
+        const focus = vi.spyOn(target, 'focus');
+
+        fireEvent.click(link);
+
+        expect(scrollIntoView).toHaveBeenCalledTimes(1);
+        expect(scrollIntoView.mock.contexts[0]).toBe(target);
+        expect(target).toHaveAttribute('tabindex', '-1');
+        expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+        expect(target).toHaveFocus();
     });
 });

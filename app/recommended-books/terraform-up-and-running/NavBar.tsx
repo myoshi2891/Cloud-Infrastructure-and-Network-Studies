@@ -50,9 +50,12 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
         setActiveId(targetId);
         window.history.pushState(null, '', href);
         const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-            targetElement.focus();
-        }
+        if (!targetElement) return;
+        // 見出しはフォーカス不可のため必要時のみ tabindex=-1 を付与し、
+        // スクロール後のフォーカスで位置が戻らないよう preventScroll を指定する。
+        if (!targetElement.hasAttribute('tabindex')) targetElement.setAttribute('tabindex', '-1');
+        targetElement.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+        targetElement.focus({ preventScroll: true });
     };
 
     return (

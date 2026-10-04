@@ -106,7 +106,7 @@ export function Section11({ Diagram }: SectionProps) {
                             </tr>
                         </tbody>
                     </table>{' '}</div>
-<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}単一ツールに頼らず、「スキャナーで既知の穴を塞ぐ」＋「OPA/Sentinelで組織固有のガバナンスを強制する」の2層構成が2026年時点の成熟した構成として紹介されています。ネイティブHCLの<code>precondition</code>/<code>postcondition</code>/<code>check</code>ブロックだけでも、ポリシー違反の一定割合（分析によれば約3割程度）は事前に検出できるため、まずはHCL標準機能から始めるのも有効です。{' '}</p>{' '}</div>{' '}</div>
+<div className="callout callout-practice">{' '}<div className="callout-icon">✓{' '}</div>{' '}<div className="callout-body">{' '}<div className="callout-label">ベストプラクティス{' '}</div>{' '}<p>{' '}単一ツールに頼らず、「スキャナーで既知の穴を塞ぐ」＋「OPA/Sentinelで組織固有のガバナンスを強制する」の2層構成が2026年時点の成熟した構成として紹介されています。ネイティブHCLの<code>precondition</code>/<code>postcondition</code>/<code>check</code>ブロックだけでも、ポリシー違反の一定割合（分析によれば約3割程度）は事前に検出できるため、まずはHCL標準機能から始めるのも有効です。ただし<code>check</code>ブロックは警告を出すだけでapplyを止めない（advisory）ため、違反時にデプロイを確実に止めたい条件は<code>precondition</code>で表現するか、OPA/Sentinelの強制ポリシーとして適用します。{' '}</p>{' '}</div>{' '}</div>
 
         </section>
     );
