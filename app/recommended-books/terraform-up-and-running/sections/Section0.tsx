@@ -14,7 +14,7 @@ export function Section0({ Diagram }: SectionProps) {
 <ul>{' '}<li>変更を小さく・頻繁にリリースする</li>{' '}<li>自動化によって人的ミスを減らす</li>{' '}<li>障害からの復旧を高速化する</li>{' '}<li>チーム間のサイロ（分断）を解消する</li>{' '}</ul>
 <h3 id="0-2-infrastructure-as-codeiacとは">{' '}0-2. Infrastructure as Code（IaC）とは{' '}</h3>
 <p>{' '}IaCとは、サーバー・ネットワーク・データベースなどのインフラをGUI操作ではなく「コード」として定義し、バージョン管理・レビュー・自動テスト・自動デプロイの対象にするプラクティスです。IaCツールは大きく5つのカテゴリに分類できます。{' '}</p>
-<Diagram id="diag-1" ariaLabel="DevOpsとIaCの4分類（アドホックスクリプト、構成管理、サーバーテンプレート、サーバープロビジョニング）の体系図" />
+<Diagram id="diag-1" ariaLabel="DevOpsとIaCの5分類（アドホックスクリプト、構成管理、サーバーテンプレート、オーケストレーション、プロビジョニング）の体系図" />
 <div className="table-scroll">{' '}<table>
                         <thead>
                             <tr className="row-header">
