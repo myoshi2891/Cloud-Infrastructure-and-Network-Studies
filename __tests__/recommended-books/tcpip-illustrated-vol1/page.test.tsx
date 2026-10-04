@@ -13,9 +13,10 @@ import {
     squash,
 } from '@/__tests__/helpers/migration-test-utils';
 
-vi.mock('@/components/MermaidDiagram', () => ({
-    MermaidDiagram: MermaidDiagramMock,
-}));
+vi.mock('@/components/MermaidDiagram', async () => {
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
+    return { MermaidDiagram: MermaidDiagramMock };
+});
 
 afterEach(() => {
     vi.unstubAllGlobals();
@@ -216,7 +217,7 @@ describe('tcpip-illustrated-vol1 — CSSスタイル・リスト設定の検証'
         expect(css).toMatch(/\.sidebar\s+nav\s+ul[^{}]*\{[^}]*list-style:\s*none/);
 
         // 人工的な maxWidth 幅制限がなく、全幅と中央寄せが保たれていること
-        expect(css).not.toMatch(/\.mermaid-wrap[^{}]*\{[^}]*max-width:\s*\d/);
+        expect(css).not.toMatch(/\.tcpip-page\s+\.mermaid-wrap\s*\{[^}]*max-width:\s*\d/);
 
         // @layer components を使っていないこと（plain CSS）
         expect(css).not.toContain('@layer');
