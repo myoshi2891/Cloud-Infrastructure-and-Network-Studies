@@ -100,7 +100,7 @@
 
 検証は移行23件・関連141件成功。3001番のPlaywrightは1440・768・390pxの3件成功し、axe違反は0件。ESLint・TypeScript・Markdown lintも成功した。全体Vitestは2121件成功、既知のPAA Section 5の表セル・リスト全文不一致2件のみ失敗（206ファイル中205成功）。詳細は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-04実行記録を参照する。
 
-npm・ビルドはユーザー指示に従い未実行。目視確認はユーザー担当。確認URLは `http://localhost:3001/recommended-books/computer-networks-tanenbaum`。既存のユーザー差分は今回のコミットに含めていない。
+npm・ビルドはユーザー指示に従い未実行。目視確認は未実施（自動のDOM検証とPlaywright検証で代替）。既存のユーザー差分は今回のコミットに含めていない。
 
 ## 2026-10-02: セキュアなコンテナ CI/CD パイプライン構築ガイドのNext.js移行
 
@@ -2715,7 +2715,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 ## 次回セッションでの再開プロンプト
 
 あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `5eb7ed51`、仕様同期は `d6620986`、前回進捗同期コミットは `251fb377` です。Tanenbaumガイドの移行23件・関連141件、3001番のE2E 3件（axe違反0件）、型チェック、Lintが成功し、全体Vitestは2121成功/既知の2失敗です。npm・ビルドはユーザー指示により未実行、目視確認はユーザー担当です。確認URLは `http://localhost:3001/recommended-books/computer-networks-tanenbaum`。次の作業はPAA Section 5の既知不一致の調査です。最新の検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-04実行記録を参照してください。
+最新実装 HEAD は `5eb7ed51`、仕様同期は `d6620986`、前回進捗同期コミットは `251fb377` です。Tanenbaumガイドの移行23件・関連141件、3001番のE2E 3件（axe違反0件）、型チェック、Lintが成功し、全体Vitestは2121成功/既知の2失敗です。npm・ビルドはユーザー指示により未実行、目視確認は未実施です。次の作業はPAA Section 5の既知不一致の調査です。最新の検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-04実行記録を参照してください。
 AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。当該作業の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。AGWAのE2E・Visualテスト・ビルドは当該作業時点で未実施です。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
