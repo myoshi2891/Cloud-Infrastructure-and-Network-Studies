@@ -400,7 +400,7 @@ flowchart TD
 | `UPDATE_ROLLBACK_FAILED` | 更新の巻き戻しに失敗 | 原因を手動で直し、**`ContinueUpdateRollback`** を実行 |
 | `DELETE_FAILED` | 削除失敗 | 残っている依存物を除去して再削除、または対象リソースを**保持して削除** |
 
-`UPDATE_ROLLBACK_FAILED` の典型例は、巻き戻し先のリソース(DB など)が CloudFormation の**外で削除されていた**ケースです。CloudFormation はリソースがまだ存在すると想定して戻そうとして失敗します。このとき `ContinueUpdateRollback` を使い、必要に応じて**問題のリソースをスキップ**(`ResourcesToSkip`)します。
+`UPDATE_ROLLBACK_FAILED` の典型例は、巻き戻し先のリソース(DB など)が CloudFormation の**外で削除されていた**ケースです。CloudFormation はリソースがまだ存在すると想定して戻そうとして失敗します。このとき `ContinueUpdateRollback` を使い、必要に応じて**問題のリソースをスキップ**(`ResourcesToSkip`)します。スキップしたリソースは CloudFormation 上で巻き戻し完了扱いになりますが、実際の状態は**テンプレートと不整合**のまま残ります。**次回のスタック更新の前に**、テンプレートを修正するかリソース側を修正して両者を整合させてください。
 
 出典: https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ContinueUpdateRollback.html
 
@@ -414,7 +414,7 @@ flowchart TD
 | `LimitExceeded` / クォータ | サービスクォータ上限 | **Service Quotas** で引き上げ申請 |
 | `InsufficientInstanceCapacity` | AZ にそのタイプの空きがない | 別 AZ・別インスタンスタイプで再試行 |
 | `The image id does not exist` | AMI がそのリージョンに無い | リージョンごとの AMI を使う(Mappings や SSM パラメータ) |
-| `Circular dependency` | リソース同士が循環参照 | 依存関係を見直し(`DependsOn` や参照の分離) |
+| `Circular dependency` | リソース同士が循環参照 | 相互参照をなくすよう**テンプレートを分割・再構成**(例: セキュリティグループのルールを `AWS::EC2::SecurityGroupIngress` として別リソースに切り出す)。`DependsOn` は循環の解消ではなく、順序依存が欠けている場合の明示に使う |
 | 作成がタイムアウト | `cfn-signal` が届かない | UserData のログ(`/var/log/cfn-init.log` など)を確認 |
 | ネストスタック失敗 | 子スタックのエラー | **子スタック側のイベント**を確認 |
 
