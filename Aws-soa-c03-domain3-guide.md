@@ -605,7 +605,7 @@ flowchart LR
 |---|---|
 | Organizations 内の共有 | **RAM の組織共有を有効化**すると、招待の承諾なしで共有できる |
 | 組織外のアカウントへの共有 | **招待の承諾**が必要 |
-| リージョン | リソース共有は**リージョン単位**(Route 53 のようなグローバルは例外) |
+| リージョン | リソース共有は**リージョン単位**で、リージョンリソースは作成したリージョン内でのみ共有される(別リージョンへは共有できない)。例外は **AWS RAM が対応するグローバルリソース**のみで、それを含むリソース共有は**米国東部(バージニア北部)`us-east-1` で作成・管理**する |
 | **AZ 名の違い** | アカウントごとに AZ 名(`us-east-1a`)の割り当てが異なる。**AZ ID**(`use1-az1`)で揃えて確認する |
 
 ### 4-8. StackSets と RAM の使い分け(混同注意)
@@ -717,7 +717,7 @@ CodeDeploy は、アプリケーションのデプロイを自動化するマネ
 |---|---|
 | **AppSpec ファイル** | 配置するファイルとライフサイクルフックを定義 |
 | **ライフサイクルフック** | `BeforeInstall`、`AfterInstall`、`ApplicationStart`、`ValidateService` など |
-| **デプロイ設定** | `AllAtOnce`、`HalfAtATime`、`OneAtATime`、`Canary10Percent5Minutes`、`Linear10PercentEvery1Minute` など |
+| **デプロイ設定** | **EC2/オンプレミス**: `CodeDeployDefault.AllAtOnce`、`CodeDeployDefault.HalfAtATime`、`CodeDeployDefault.OneAtATime`<br>**Lambda**: `CodeDeployDefault.LambdaAllAtOnce`、`CodeDeployDefault.LambdaCanary10Percent5Minutes`、`CodeDeployDefault.LambdaLinear10PercentEvery1Minute` など |
 | **自動ロールバック** | デプロイ失敗または **CloudWatch アラーム**発報で自動的に戻す |
 
 ```mermaid
