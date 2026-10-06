@@ -716,7 +716,7 @@ CodeDeploy は、アプリケーションのデプロイを自動化するマネ
 | 概念 | 説明 |
 |---|---|
 | **AppSpec ファイル** | 配置するファイルとライフサイクルフックを定義 |
-| **ライフサイクルフック** | `BeforeInstall`、`AfterInstall`、`ApplicationStart`、`ValidateService` など |
+| **ライフサイクルフック** | **EC2/オンプレミス**の例: `BeforeInstall`、`AfterInstall`、`ApplicationStart`、`ValidateService` など(Lambda / ECS では `BeforeAllowTraffic`、`AfterAllowTraffic` など別のフックを使う) |
 | **デプロイ設定** | **EC2/オンプレミス**: `CodeDeployDefault.AllAtOnce`、`CodeDeployDefault.HalfAtATime`、`CodeDeployDefault.OneAtATime`<br>**Lambda**: `CodeDeployDefault.LambdaAllAtOnce`、`CodeDeployDefault.LambdaCanary10Percent5Minutes`、`CodeDeployDefault.LambdaLinear10PercentEvery1Minute` など |
 | **自動ロールバック** | デプロイ失敗または **CloudWatch アラーム**発報で自動的に戻す |
 
@@ -848,7 +848,7 @@ State には**リソースの属性や機微な値が含まれる**ことがあ�
 | 暗号化 | S3 の**サーバー側暗号化**(KMS)を有効化 |
 | バージョニング | **S3 バージョニング**で State を巻き戻せるようにする |
 | アクセス制御 | バケットポリシーと IAM で**最小権限**、パブリックアクセスはブロック |
-| ロック | **State ロック**で同時実行による破損を防ぐ(従来は DynamoDB、近年の Terraform では S3 のネイティブロックも利用可能) |
+| ロック | **State ロック**で同時実行による破損を防ぐ。新規構成では S3 ネイティブロック(`use_lockfile = true`)を推奨。DynamoDB ロックは非推奨(deprecated)で将来のマイナーリリースで削除予定のため、既存構成からの移行用のレガシー選択肢としてのみ扱う |
 | 秘密情報 | コードへの**直書きを避ける**(Secrets Manager / SSM を参照)。ただし data source で読んだ値をリソース引数に渡すと **State に平文で保存**され得る。`sensitive` は通常の CLI 出力で隠すだけなので、State に残してはならない値は**実行時注入**や **ephemeral / write-only** 機能(対応リソースのみ)を使う |
 
 State ロックの方式は Terraform のバージョンに依存します。最新の仕様は HashiCorp 公式ドキュメントで確認してください。
