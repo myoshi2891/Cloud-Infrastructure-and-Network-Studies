@@ -439,10 +439,12 @@ app/
       page.module.css               # ページ固有スタイル（CSS Modules）
     devnet-associate/
       page.tsx                      # Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（Server）
-      DevNetAssociateGuide.tsx      # 本文＋インタラクション（client。全12セクション、Mermaid等）
-      NavBar.tsx                    # サイドバーナビ（IntersectionObserver）
-      constants.ts                  # Mermaid 図定義（4図）
-      page.module.css               # ページ固有スタイル（CSS Modules／ガイド固有トークン）
+      DevNetAssociateGuide.tsx      # 本文＋全体ラッパー（Client）
+      NavBar.tsx                    # サイドバー目次ナビ（ScrollSpy、280px）
+      constants.ts                  # 全34図 Mermaid 定義、NAV_ITEMS
+      Diagram.tsx                   # MermaidDiagram メモ化コンポーネント
+      page.css                      # ページ固有スタイル（グローバル3層トークン参照、280pxサイドバー契約）
+      sections/                     # 9コンポーネント分割（HeroSection, SectionIntro, Section1〜7）
     ccde/
       complete-guide/
         page.tsx                    # Cisco CCDE試験 完全ガイド（Server。メタデータ定義）

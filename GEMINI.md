@@ -44,7 +44,7 @@ Updated 2026-10-04
   - `/app/gcl/professional-agentic-architect`: Professional Agentic Architect 認定試験 技術ガイド（概要・技術ガイド本体、および `section1`、`section2`、`section3`、`section4`、`section5` 完全ガイド含む。ライトテーマデザイン、全量完全移植済み）。
   - `/app/cisco/ccde/complete-guide`: Cisco CCDE 認定 完全ガイド。
   - `/app/cisco/devnet-professional`: Cisco Certified DevNet Professional 認定 徹底解説ガイド（CSS Modules）。
-  - `/app/cisco/devnet-associate`: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（CSS Modules／グローバルテーマトークン参照）。
+  - `/app/cisco/devnet-associate`: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（全7章+導入構成、全112表、Mermaid 34図、グローバルテーマトークン完全準拠、280pxサイドバー契約）。
   - `/components/sections/home`: ホームの Hero / ExamCard / ExamCatalog / Stats セクション。
   - `/app/cisco/ccna/beginner-guide`: Cisco CCNA試験 完全ガイド。
   - `/app/cisco/ccna/automation-software-development-design`: CCNA Automation ソフトウェア開発と設計 完全ガイド。

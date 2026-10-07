@@ -1,6 +1,41 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-04)
+(最終更新日: 2026-10-07)
+
+## 2026-10-07: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Devnet-associate-guide.html`（および `Devnet-associate-guide.md`）を、Next.js App Router 構成 (`page.tsx`, `DevNetAssociateGuide.tsx`, `NavBar.tsx`, `constants.ts`, `Diagram.tsx`, `page.css` + `sections/`) で `/cisco/devnet-associate` ルートへ移行。見出し(h1:7, h2:40, h3:154, h4:0)、全112個のテーブル（th:242, td:609）、全34個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(110件)、全コードブロック(31件・.code-line構造)、全外部リンク(83件)、全本文・注釈ブロック(100件)を一切の省略・要約なしで100%全量移植。原本ファイル（`Devnet-associate-guide.html` および `Devnet-associate-guide.md`）を `archive/Cisco/html/devnet/` および `archive/Cisco/md/devnet/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for devnet-associate-guide` (`e6bec900`)
+- [x] **Step 1 (Red)**: `test(cisco): add failing tests for devnet-associate guide migration` (`faba9497`)
+- [x] **Step 2 (Green)**: `feat(cisco): implement devnet-associate guide to pass tests` (`4dd3d021`)
+- [x] **Step 3 (Refactor)**: `refactor(cisco): integrate devnet-associate guide and archive sources` (`7440f2d9`)
+- [x] **Step 4 (Docs Sync)**: ドキュメント同期と進捗記録
+
+### 関連ファイル
+
+- [app/cisco/devnet-associate/page.tsx](app/cisco/devnet-associate/page.tsx)
+- [app/cisco/devnet-associate/DevNetAssociateGuide.tsx](app/cisco/devnet-associate/DevNetAssociateGuide.tsx)
+- [app/cisco/devnet-associate/NavBar.tsx](app/cisco/devnet-associate/NavBar.tsx)
+- [app/cisco/devnet-associate/constants.ts](app/cisco/devnet-associate/constants.ts)
+- [app/cisco/devnet-associate/Diagram.tsx](app/cisco/devnet-associate/Diagram.tsx)
+- [app/cisco/devnet-associate/page.css](app/cisco/devnet-associate/page.css)
+- [app/cisco/devnet-associate/sections/](app/cisco/devnet-associate/sections/)
+- [本文・全量移行テスト](__tests__/cisco/devnet-associate/page.test.tsx)
+- [サイドバー幅契約テスト](__tests__/guide-content-widths.test.ts)
+- [docs/migration-inventory/devnet-associate-guide.json](docs/migration-inventory/devnet-associate-guide.json)
+- [archive/Cisco/html/devnet/Devnet-associate-guide.html](archive/Cisco/html/devnet/Devnet-associate-guide.html)
+- [archive/Cisco/md/devnet/Devnet-associate-guide.md](archive/Cisco/md/devnet/Devnet-associate-guide.md)
+- [app/constants.ts](app/constants.ts)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
 
 ## 2026-10-04: TCP/IP Illustrated, Volume 1: The Protocols（第2版）完全解説ガイド 100%全量移行 (完了)
 
