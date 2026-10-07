@@ -116,11 +116,20 @@ if (stage === 'scaffold') {
         write(`sections/${name}.tsx`, `${imports}\n/** 原本の${heading?.textContent.trim() ?? section.textContent.trim()}を省略せず収録。 */\nexport function ${name}() { return (${text}); }`);
     }
     let guide = readFileSync(`${directory}/SecurityGuide.tsx`, 'utf8');
+    if (guide.includes('const GuideContents')) throw new Error('Start a complete regeneration with scaffold');
     for (const name of names) {
         guide = guide.replace(`import { ${name} } from './sections/${name}';\n`, '').replace(`            <${name} />\n`, '');
     }
     guide = guide.replace('/** 全本文', names.map(name => `import { ${name} } from './sections/${name}';`).join('\n') + '\n/** 全本文');
     guide = guide.replace('        </main>', names.map(name => `            <${name} />`).join('\n') + '\n        </main>');
+    if (stage === 'remainder') {
+        guide = guide.replace("import { useState } from 'react';", "import { memo, useState } from 'react';");
+        const start = guide.indexOf('            <Step0 />');
+        const end = guide.indexOf('        </main>', start);
+        const body = guide.slice(start, end);
+        guide = guide.slice(0, start) + '            <GuideContents />\n' + guide.slice(end);
+        guide = guide.replace('/** 全本文', '/** チェック状態に依存しない静的本文。 */\nconst GuideContents = memo(function GuideContents() { return <>\n' + body + '</>; });\n/** 全本文');
+    }
     write('SecurityGuide.tsx', guide);
     console.log(`Migrated ${stage}: ${names.join(', ')}`);
 }
