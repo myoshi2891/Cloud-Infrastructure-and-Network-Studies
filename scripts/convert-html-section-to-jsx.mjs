@@ -12,10 +12,12 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
     if (node.nodeType === 3) {
         // テキストノード
         const text = node.textContent ?? '';
-        // JSX 中での波括弧エスケープ
+        // JSX 中での波括弧および < > エスケープ
         return text
             .replace(/\{/g, '{"{"}')
-            .replace(/\}/g, '{"}"}');
+            .replace(/\}/g, '{"}"}')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     }
 
     if (node.nodeType !== 1) {

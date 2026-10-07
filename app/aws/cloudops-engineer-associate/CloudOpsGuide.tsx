@@ -4,6 +4,7 @@ import { useState } from 'react';
 import NavBar from './NavBar';
 import HeroSection from './sections/HeroSection';
 import SectionIntro from './sections/SectionIntro';
+import SectionDomain1 from './sections/SectionDomain1';
 
 /**
  * AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド。
@@ -18,6 +19,7 @@ export default function CloudOpsGuide() {
                 <HeroSection />
                 <div className="content">
                     <SectionIntro />
+                    <SectionDomain1 />
                 </div>
             </main>
         </div>
