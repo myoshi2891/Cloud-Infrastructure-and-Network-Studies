@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-10-04
+Updated 2026-10-07
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -559,6 +559,16 @@ app/
       constants.ts                  # ナビ項目・Mermaid 図・コードブロック定数
       page.css                      # ウォームペーパーライトテーマ・280pxサイドバー契約
       sections/                     # 分割セクション (HeroSection, SectionIntro, SectionDomain1~5, SectionAppendix)
+    developer-associate/domain2/
+      page.tsx                      # DVA-C02 ドメイン2 セキュリティ (Server、metadata、CSS)
+      SecurityGuide.tsx             # 全本文と20項目のチェック状態 (Client)
+      NavBar.tsx                    # 26目次・scroll spy・モバイル開閉・hashとfocus
+      constants.ts                  # 単一目次正本・原本35図・チェック件数
+      Diagram.tsx                   # memo化・自然倍率の共通Mermaid図
+      CodeBlock.tsx                 # 40コード例の空行・インデント・構文色
+      ChecklistItem.tsx             # Context経由のチェック項目
+      page.css                      # スコープCSS、280px幅、点・番号・チェック装飾
+      sections/                     # Step 0〜23、Task見出し、付録A/Bの29コンポーネント
   recommended-books/
     accelerate/
       page.tsx                      # 『Accelerate』LeanとDevOpsの科学 完全ガイド (Server)
