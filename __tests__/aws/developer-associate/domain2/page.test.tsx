@@ -54,7 +54,7 @@ describe('DVA Security 全量移行', () => {
         blocks.forEach((block, i) => {
             expect(block.querySelector(':scope > .code-line')).not.toBeNull();
             expect(codeLineCount(block)).toBe(inventory.structures.codeLines[i]);
-            expect(block.getAttribute('data-language')).toMatch(/json|bash|python|ini|http|javascript|text/);
+            expect(block.getAttribute('data-language')).toMatch(/json|bash|python|ini|http|javascript|sql|text/);
         });
     });
     it('全チェックリストを操作すると件数とdone装飾が連動し、解除できる', () => {
