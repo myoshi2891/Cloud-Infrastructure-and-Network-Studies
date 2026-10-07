@@ -63,7 +63,7 @@
 
 .devnet-associate-page .nav-group {
     font-size: 12.5px;
-    color: var(--color-devnet-associate-gold, #b8802a);
+    color: var(--color-devnet-associate-ink-2, #4a5367);
     font-weight: 600;
     padding: 0.9rem 0.5rem 0.3rem;
 }
@@ -112,7 +112,7 @@
 
 .devnet-associate-page .sidebar nav .w {
     flex: none;
-    color: var(--color-devnet-associate-gold, #b8802a);
+    color: var(--color-devnet-associate-ink-2, #4a5367);
     font-weight: 500;
     font-size: 12px;
 }
@@ -137,7 +137,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--color-devnet-associate-gold, #b8802a);
+    color: var(--color-devnet-associate-ink-2, #4a5367);
     font-weight: 600;
     font-size: 1rem;
     margin-bottom: 0.75rem;
@@ -620,7 +620,7 @@
 
 .devnet-associate-page .check .cat {
     display: block;
-    color: var(--color-devnet-associate-gold, #b8802a);
+    color: var(--color-devnet-associate-ink-2, #4a5367);
     font-weight: 600;
     font-size: 12px;
 }
