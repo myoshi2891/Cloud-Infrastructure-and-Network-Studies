@@ -210,6 +210,8 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         const integrationChanges: Record<string, string[]> = {
             html: ['scroll-padding-top'], body: ['overflow-wrap'],
             '.sidebar': ['inset'], '.progress': ['top'], '.mobile-bar': ['top','z-index'],
+            // 白背景上の小さな金文字はコントラスト不足のため、見出し色のみ ink-soft へ置換
+            '.nav-group': ['color'],
         };
         for (const rule of design.rules.filter(rule => rule.selector !== ':root')) {
             const candidates = actual.filter(r => r.selector === scopedSelector(rule.selector) && r.media === rule.media);
