@@ -1,6 +1,7 @@
 'use client';
 import { memo } from 'react';
 import { NavBar } from './NavBar';
+import { Sec0 } from './sections/Sec0';
 /** 状態に依存しない本文をメモ化し、目次操作で図を再描画しない。 */
 const GuideContents=memo(function GuideContents(){return <>
 <header className="hero">{" "}<div className="eyebrow">
@@ -18,7 +19,9 @@ const GuideContents=memo(function GuideContents(){return <>
 <span className="chip"><i className="ti ti-chart-dots-3" aria-hidden="true"></i>{"Mermaid 図 31 点"}</span>
 <span className="chip"><i className="ti ti-help-circle" aria-hidden="true"></i>{"練習問題 15 問"}</span>
 </div>{" "}</header>
+<Sec0 />
 {/* SECTIONS */}
 </>;});
 /** 目次操作と静的本文を分離した学習ガイド。 */
 export function DevelopmentGuide(){return <NavBar><GuideContents /></NavBar>;}
+
