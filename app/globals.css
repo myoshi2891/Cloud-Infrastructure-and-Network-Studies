@@ -14,6 +14,18 @@
  */
 
 @theme {
+    /* Layer 3: DVA Security 原本の固定装飾色 */
+    --color-dva-fff: var(--color-card);
+    --color-dva-2b2f7a: #2b2f7a;
+    --color-dva-3b3f9e: #3b3f9e;
+    --color-dva-5a4a8f: #5a4a8f;
+    --color-dva-f0d9a0: #f0d9a0;
+    --color-dva-e6e8ff: #e6e8ff;
+    --color-dva-1f2335: #1f2335;
+    --color-dva-e6e8f5: #e6e8f5;
+    --color-dva-fff8e6: var(--color-card-secondary);
+    --color-dva-4a3b12: var(--color-foreground);
+
     /* Layer 1: セマンティックトークン (shadcn/ui 互換) */
     --color-background: #08090f;
     --color-foreground: #e2e8f0;
