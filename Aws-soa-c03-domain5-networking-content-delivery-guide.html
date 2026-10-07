@@ -1,0 +1,5300 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Domain 5: Networking and Content Delivery 完全ガイド</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <style>
+:root{
+  --paper:#fbfaf6; --paper-alt:#f2efe6; --card:#ffffff;
+  --ink:#1c2333; --ink-2:#434c63; --ink-3:#5f6a85;
+  --indigo:#34459b; --indigo-soft:#e8ebf8; --indigo-line:#c3cbea;
+  --gold:#b7791f; --gold-soft:#fbf1dc; --forest:#2f7d5b; --forest-soft:#e5f3ec; --plum:#7b3f7a;
+  --line:#e2ddd0; --code-bg:#f0eee6; --pre-bg:#1e2433; --pre-ink:#e8ecf5;
+  --sidebar-w:320px;
+  --font:'Noto Sans JP','Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',Meiryo,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto Sans JP',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.9;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:var(--indigo);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:#1f2d77}
+.layout{display:block}
+
+/* sidebar */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:#fff;border-right:1px solid var(--line);overflow-y:auto;padding:26px 0 40px;z-index:40}
+.sidebar-head{padding:0 22px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.kicker{font-size:1rem;font-weight:700;color:var(--indigo);letter-spacing:.02em}
+.side-title{font-size:1.0625rem;font-weight:800;line-height:1.6;margin-top:6px}
+#nav{padding:0 12px}
+#nav a{display:block;padding:7px 12px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:1rem;line-height:1.55;margin-bottom:2px}
+#nav a.lvl2{font-weight:700;color:var(--ink);margin-top:10px}
+#nav a.lvl3{padding-left:26px}
+#nav a:hover{background:var(--paper-alt)}
+#nav a.active{background:var(--indigo-soft);color:var(--indigo);font-weight:700}
+
+/* main */
+.main{margin-left:var(--sidebar-w);padding:0 0 96px}
+.main>*{padding-left:max(56px,calc((100% - 1120px)/2));padding-right:max(56px,calc((100% - 1120px)/2))}
+.hero{padding-top:64px;padding-bottom:40px;background:linear-gradient(180deg,#eef0fa 0%,var(--paper) 100%);border-bottom:1px solid var(--line);margin-bottom:8px}
+.hero h1{font-size:clamp(1.75rem,3.2vw,2.5rem);line-height:1.4;margin:10px 0 20px;font-weight:800;color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.pill{display:inline-block;padding:6px 16px;border-radius:999px;background:#fff;border:1px solid var(--indigo-line);color:var(--ink-2);font-size:1rem}
+.pill strong{color:var(--indigo)}
+.hero-notes{margin:0;padding-left:1.4em;color:var(--ink-2)}
+.hero-notes li{margin-bottom:4px}
+
+.main h2{font-size:1.75rem;font-weight:800;margin:0;padding-top:34px;padding-bottom:6px;line-height:1.5;color:var(--ink);scroll-margin-top:16px}
+.main h2::before{content:"";display:block;width:56px;height:5px;border-radius:3px;background:var(--indigo);margin-bottom:14px}
+.main h3{font-size:1.3125rem;font-weight:700;margin:0;padding-top:30px;padding-bottom:2px;line-height:1.55;color:var(--ink);scroll-margin-top:16px}
+.main h3::before{content:"";display:inline-block;width:6px;height:1.1em;background:var(--gold);border-radius:3px;margin-right:10px;vertical-align:-.15em}
+.main h4{font-size:1.125rem;margin:22px 0 4px;padding-left:56px;padding-right:56px}
+.main p,.main ul,.main ol{margin-top:0;margin-bottom:18px}
+.main p{margin-top:14px}
+.main ul,.main ol{padding-top:0;margin-top:12px}
+.main li{margin-bottom:6px}
+.main ul,.main ol{padding-left:calc(max(56px,(100% - 1120px)/2) + 1.4em)}
+.main hr{border:none;height:0;margin:0;padding:0}
+strong{color:#0f1526}
+code{font-family:var(--mono);font-size:1rem;background:var(--code-bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#8a4b00;overflow-wrap:anywhere}
+blockquote{margin:16px 0;padding:12px 20px;background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:0 10px 10px 0;color:var(--ink)}
+.main blockquote{margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2));padding-left:20px;padding-right:20px}
+blockquote p{margin:4px 0}
+
+/* tables */
+.table-wrap{overflow-x:auto;margin-top:16px;margin-bottom:26px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+.main>.table-wrap{padding-left:0;padding-right:0}
+table{border-collapse:collapse;width:100%;font-size:1rem;line-height:1.7}
+thead th{background:var(--indigo);color:#fff;font-weight:700;text-align:left;padding:11px 16px;white-space:nowrap}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink);overflow-wrap:anywhere}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--paper)}
+th,td{overflow-wrap:anywhere}
+
+/* diagrams */
+.diagram-wrap{overflow-x:auto;display:flex;justify-content:safe center;width:auto;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:16px;margin-bottom:28px;padding:24px 16px;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+.diagram-wrap>*{min-width:0}
+.diagram-canvas svg{flex-shrink:0;max-width:none}
+.diagram-canvas{min-height:40px}
+.mermaidTooltip{font-size:1rem!important}
+
+/* code */
+pre.code{margin-top:14px;margin-bottom:24px;padding:16px 20px;background:var(--pre-bg);color:var(--pre-ink);border-radius:12px;overflow-x:auto;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2));line-height:1.7}
+pre.code code{background:none;border:none;padding:0;color:inherit;font-size:1rem;white-space:pre}
+
+/* quiz */
+details{margin-top:12px;margin-bottom:22px;background:var(--forest-soft);border:1px solid #bfe0cf;border-radius:12px;padding:0 20px;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+details summary{cursor:pointer;font-weight:700;color:var(--forest);padding:12px 0;list-style-position:inside}
+details[open] summary{border-bottom:1px solid #bfe0cf;margin-bottom:8px}
+details p,details ul{padding-left:0;padding-right:0;margin-bottom:12px}
+.endnote{margin-top:48px;color:var(--ink-3)}
+
+/* mobile */
+.mobile-bar{display:none}
+.mobile-bar button{font-family:var(--font);font-size:1rem;font-weight:700;color:var(--indigo);background:#fff;border:1px solid var(--indigo-line);border-radius:10px;padding:8px 14px;cursor:pointer}
+.scrim{display:none}
+@media (max-width:980px){
+  .mobile-bar{display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:10px 14px}
+  .mobile-title{font-weight:800;font-size:1rem}
+  .sidebar{transform:translateX(-102%);transition:transform .22s ease;width:min(320px,86vw);box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .sidebar.open{transform:none}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(20,26,45,.35);z-index:35}
+  .main{margin-left:0;padding-top:58px}
+  .main>*{padding-left:18px;padding-right:18px}
+  .main ul,.main ol{padding-left:calc(18px + 1.4em)}
+  .main h4{padding-left:18px;padding-right:18px}
+  .hero{padding-top:36px}
+  .table-wrap,.diagram-wrap,pre.code,details{margin-left:18px;margin-right:18px;max-width:calc(100% - 36px)}
+  .main blockquote{margin-left:18px;margin-right:18px}
+}
+
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <header class="mobile-bar">
+            <button id="menuBtn" type="button" aria-label="メニューを開く" aria-controls="sidebar" aria-expanded="false">☰ 目次</button>
+            <span class="mobile-title">SOA-C03 Domain 5</span>
+        </header>
+        <div class="scrim" id="scrim"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-head">
+                <div class="kicker">AWS CloudOps Engineer Associate</div>
+                <div class="side-title">SOA-C03 Domain 5<br />Networking and Content Delivery</div>
+            </div>
+            <nav id="nav">
+                    <a href="#step-0" class="lvl2">Step 0: Domain 5 の全体像と学習ロードマップ</a>
+                    <a href="#sec-0-1" class="lvl3">0-1. Domain 5 は何を問う分野か</a>
+                    <a href="#sec-0-2" class="lvl3">0-2. 12 スキルと本ガイドの対応表</a>
+                    <a href="#sec-0-3" class="lvl3">0-3. 試験ガイドが明示する範囲外 (出ない前提で良いもの)</a>
+                    <a href="#sec-0-4" class="lvl3">0-4. 学習の進め方</a>
+                    <a href="#sec-0-5" class="lvl3">0-5. 「パケットの旅」で全体像をつかむ</a>
+                    <a href="#step-1" class="lvl2">Step 1: ネットワークの基礎知識</a>
+                    <a href="#sec-1-1" class="lvl3">1-1. IP アドレスと CIDR</a>
+                    <a href="#sec-1-2" class="lvl3">1-2. TCP / UDP とポート</a>
+                    <a href="#sec-1-3" class="lvl3">1-3. ステートフルとステートレス</a>
+                    <a href="#sec-1-4" class="lvl3">1-4. DNS の仕組み</a>
+                    <a href="#sec-1-5" class="lvl3">1-5. ファイアウォールの階層</a>
+                    <a href="#step-2" class="lvl2">Step 2: Skill 5.1.1 VPC の構成</a>
+                    <a href="#sec-2-1" class="lvl3">2-1. VPC とは</a>
+                    <a href="#sec-2-2" class="lvl3">2-2. サブネットの予約アドレス</a>
+                    <a href="#sec-2-3" class="lvl3">2-3. パブリックサブネットとプライベートサブネット</a>
+                    <a href="#sec-2-4" class="lvl3">2-4. ルートテーブル</a>
+                    <a href="#sec-2-5" class="lvl3">2-5. インターネットゲートウェイ (IGW)</a>
+                    <a href="#sec-2-6" class="lvl3">2-6. Egress-only インターネットゲートウェイ (EIGW)</a>
+                    <a href="#sec-2-7" class="lvl3">2-7. NAT ゲートウェイ</a>
+                    <a href="#sec-2-8" class="lvl3">2-8. セキュリティグループ (SG)</a>
+                    <a href="#sec-2-9" class="lvl3">2-9. ネットワーク ACL (NACL)</a>
+                    <a href="#sec-2-10" class="lvl3">2-10. SG と NACL の比較 (最頻出)</a>
+                    <a href="#sec-2-11" class="lvl3">2-11. Elastic IP とパブリック IPv4 課金</a>
+                    <a href="#sec-2-12" class="lvl3">2-12. 関連機能 (知っておくと解きやすい)</a>
+                    <a href="#sec-2-13" class="lvl3">2-13. ベストプラクティスまとめ</a>
+                    <a href="#sec-2-14" class="lvl3">2-14. 確認クイズ (3 問)</a>
+                    <a href="#step-3" class="lvl2">Step 3: Skill 5.1.2 プライベート接続</a>
+                    <a href="#sec-3-1" class="lvl3">3-1. なぜプライベート接続が必要か</a>
+                    <a href="#sec-3-2" class="lvl3">3-2. VPC エンドポイントの 2 つの主要タイプ</a>
+                    <a href="#sec-3-3" class="lvl3">3-3. ゲートウェイエンドポイントの設定手順</a>
+                    <a href="#sec-3-4" class="lvl3">3-4. インターフェイスエンドポイントの設定ポイント</a>
+                    <a href="#sec-3-5" class="lvl3">3-5. PrivateLink で自社サービスを公開する</a>
+                    <a href="#sec-3-6" class="lvl3">3-6. VPC ピアリング</a>
+                    <a href="#sec-3-7" class="lvl3">3-7. 接続方式の使い分け</a>
+                    <a href="#sec-3-8" class="lvl3">3-8. Transit Gateway (TGW) の基礎</a>
+                    <a href="#sec-3-9" class="lvl3">3-9. ベストプラクティス</a>
+                    <a href="#step-4" class="lvl2">Step 4: Skill 5.1.3 ネットワーク保護サービスの監査</a>
+                    <a href="#sec-4-1" class="lvl3">4-1. 4 サービスの役割分担</a>
+                    <a href="#sec-4-2" class="lvl3">4-2. Route 53 Resolver DNS Firewall</a>
+                    <a href="#sec-4-3" class="lvl3">4-3. AWS WAF</a>
+                    <a href="#sec-4-4" class="lvl3">4-4. AWS Shield</a>
+                    <a href="#sec-4-5" class="lvl3">4-5. AWS Network Firewall</a>
+                    <a href="#sec-4-6" class="lvl3">4-6. 横断的な監査手段</a>
+                    <a href="#sec-4-7" class="lvl3">4-7. ベストプラクティス</a>
+                    <a href="#step-5" class="lvl2">Step 5: Skill 5.1.4 ネットワークコストの最適化</a>
+                    <a href="#sec-5-1" class="lvl3">5-1. 課金されるポイントの全体像</a>
+                    <a href="#sec-5-2" class="lvl3">5-2. 代表的な削減パターン</a>
+                    <a href="#sec-5-3" class="lvl3">5-3. コストの調べ方</a>
+                    <a href="#sec-5-4" class="lvl3">5-4. 判断のコツ (ひっかけ注意)</a>
+                    <a href="#step-6" class="lvl2">Step 6: Skill 5.2.1 DNS の構成</a>
+                    <a href="#sec-6-1" class="lvl3">6-1. Route 53 の 3 つの役割</a>
+                    <a href="#sec-6-2" class="lvl3">6-2. ホストゾーン</a>
+                    <a href="#sec-6-3" class="lvl3">6-3. 主なレコードタイプ</a>
+                    <a href="#sec-6-4" class="lvl3">6-4. Alias と CNAME (最頻出の比較)</a>
+                    <a href="#sec-6-5" class="lvl3">6-5. VPC の DNS の仕組み (Route 53 Resolver)</a>
+                    <a href="#sec-6-6" class="lvl3">6-6. ハイブリッド DNS: Resolver エンドポイント</a>
+                    <a href="#sec-6-7" class="lvl3">6-7. DNSSEC (概要)</a>
+                    <a href="#sec-6-8" class="lvl3">6-8. ベストプラクティス</a>
+                    <a href="#step-7" class="lvl2">Step 7: Skill 5.2.2 Route 53 ルーティングポリシーとクエリログ</a>
+                    <a href="#sec-7-1" class="lvl3">7-1. ルーティングポリシーの全体像</a>
+                    <a href="#sec-7-2" class="lvl3">7-2. 各ポリシーの重要ポイント</a>
+                    <a href="#sec-7-3" class="lvl3">7-3. ヘルスチェックの 3 種類</a>
+                    <a href="#sec-7-4" class="lvl3">7-4. フェイルオーバーの流れ</a>
+                    <a href="#sec-7-5" class="lvl3">7-5. Amazon Application Recovery Controller (ARC)</a>
+                    <a href="#sec-7-6" class="lvl3">7-6. クエリログ</a>
+                    <a href="#sec-7-7" class="lvl3">7-7. ベストプラクティス</a>
+                    <a href="#step-8" class="lvl2">Step 8: Skill 5.2.3 CloudFront と Global Accelerator</a>
+                    <a href="#sec-8-1" class="lvl3">8-1. 2 つのサービスの位置づけ</a>
+                    <a href="#sec-8-2" class="lvl3">8-2. CloudFront の基本構成</a>
+                    <a href="#sec-8-3" class="lvl3">8-3. セキュリティの設定</a>
+                    <a href="#sec-8-4" class="lvl3">8-4. 可用性: オリジングループ</a>
+                    <a href="#sec-8-5" class="lvl3">8-5. エッジでのコード実行</a>
+                    <a href="#sec-8-6" class="lvl3">8-6. Global Accelerator の基本構成</a>
+                    <a href="#sec-8-7" class="lvl3">8-7. ベストプラクティス</a>
+                    <a href="#step-9" class="lvl2">Step 9: Skill 5.3.1 VPC 構成のトラブルシューティング</a>
+                    <a href="#sec-9-1" class="lvl3">9-1. 基本姿勢: 「経路」と「許可」を分けて考える</a>
+                    <a href="#sec-9-2" class="lvl3">9-2. 万能の確認順序</a>
+                    <a href="#sec-9-3" class="lvl3">9-3. 症状別の早見表</a>
+                    <a href="#sec-9-4" class="lvl3">9-4. NAT ゲートウェイの障害対応</a>
+                    <a href="#sec-9-5" class="lvl3">9-5. VPC Reachability Analyzer</a>
+                    <a href="#sec-9-6" class="lvl3">9-6. SG と NACL を切り分けるコツ</a>
+                    <a href="#step-10" class="lvl2">Step 10: Skill 5.3.2 ネットワークログの収集と解釈</a>
+                    <a href="#sec-10-1" class="lvl3">10-1. ログの全体像</a>
+                    <a href="#sec-10-2" class="lvl3">10-2. VPC フローログ</a>
+                    <a href="#sec-10-3" class="lvl3">10-3. ELB アクセスログ</a>
+                    <a href="#sec-10-4" class="lvl3">10-4. AWS WAF Web ACL ログ</a>
+                    <a href="#sec-10-5" class="lvl3">10-5. CloudFront ログ</a>
+                    <a href="#sec-10-6" class="lvl3">10-6. コンテナログ</a>
+                    <a href="#step-11" class="lvl2">Step 11: Skill 5.3.3 CloudFront キャッシュ問題の特定と修復</a>
+                    <a href="#sec-11-1" class="lvl3">11-1. キャッシュの仕組みを一言で</a>
+                    <a href="#sec-11-2" class="lvl3">11-2. キャッシュ状態の確認方法</a>
+                    <a href="#sec-11-3" class="lvl3">11-3. TTL の決まり方</a>
+                    <a href="#sec-11-4" class="lvl3">11-4. 症状別の原因と対処</a>
+                    <a href="#sec-11-5" class="lvl3">11-5. エラー応答の切り分け</a>
+                    <a href="#sec-11-6" class="lvl3">11-6. ベストプラクティス</a>
+                    <a href="#step-12" class="lvl2">Step 12: Skill 5.3.4 ハイブリッド接続とプライベート接続の障害対応</a>
+                    <a href="#sec-12-1" class="lvl3">12-1. ハイブリッド接続の全体像</a>
+                    <a href="#sec-12-2" class="lvl3">12-2. Site-to-Site VPN のトラブルシューティング</a>
+                    <a href="#sec-12-3" class="lvl3">12-3. AWS Client VPN のトラブルシューティング</a>
+                    <a href="#sec-12-4" class="lvl3">12-4. Direct Connect (関連知識)</a>
+                    <a href="#sec-12-5" class="lvl3">12-5. Transit Gateway 経由の障害切り分け</a>
+                    <a href="#sec-12-6" class="lvl3">12-6. プライベート接続 (PrivateLink / エンドポイント) の障害対応</a>
+                    <a href="#step-13" class="lvl2">Step 13: Skill 5.3.5 CloudWatch ネットワーク監視</a>
+                    <a href="#sec-13-1" class="lvl3">13-1. CloudWatch Network Monitoring の 3 つのサービス</a>
+                    <a href="#sec-13-2" class="lvl3">13-2. サービス別の主要 CloudWatch メトリクス</a>
+                    <a href="#sec-13-3" class="lvl3">13-3. アラームの設計例</a>
+                    <a href="#sec-13-4" class="lvl3">13-4. ベストプラクティス</a>
+                    <a href="#step-14" class="lvl2">Step 14: 症状から原因を絞り込む総合フロー</a>
+                    <a href="#sec-14-1" class="lvl3">14-1. 「つながらない」の分類フロー</a>
+                    <a href="#sec-14-2" class="lvl3">14-2. 使うツールの選び方</a>
+                    <a href="#step-15" class="lvl2">Step 15: 練習問題</a>
+                    <a href="#step-16" class="lvl2">Step 16: ひっかけポイント一覧</a>
+                    <a href="#step-17" class="lvl2">Step 17: 直前チートシート</a>
+                    <a href="#sec-17-1" class="lvl3">17-1. 構成要素の一言まとめ</a>
+                    <a href="#sec-17-2" class="lvl3">17-2. 保護サービスの選び方</a>
+                    <a href="#sec-17-3" class="lvl3">17-3. Route 53 ルーティング早見</a>
+                    <a href="#sec-17-4" class="lvl3">17-4. CloudFront と Global Accelerator</a>
+                    <a href="#sec-17-5" class="lvl3">17-5. ログの対応表</a>
+                    <a href="#sec-17-6" class="lvl3">17-6. 数値の暗記</a>
+                    <a href="#sec-17-7" class="lvl3">17-7. 試験での解き方のコツ</a>
+                    <a href="#step-18" class="lvl2">Step 18: 参考 URL 一覧</a>
+                    <a href="#h-144" class="lvl3">試験ガイド</a>
+                    <a href="#h-145" class="lvl3">Step 2: VPC の構成 (Skill 5.1.1)</a>
+                    <a href="#h-146" class="lvl3">Step 3: プライベート接続 (Skill 5.1.2)</a>
+                    <a href="#h-147" class="lvl3">Step 4: ネットワーク保護サービス (Skill 5.1.3)</a>
+                    <a href="#h-148" class="lvl3">Step 5: コスト最適化 (Skill 5.1.4)</a>
+                    <a href="#h-149" class="lvl3">Step 6-7: DNS と Route 53 (Skill 5.2.1, 5.2.2)</a>
+                    <a href="#h-150" class="lvl3">Step 8, 11: CloudFront と Global Accelerator (Skill 5.2.3, 5.3.3)</a>
+                    <a href="#h-151" class="lvl3">Step 9, 12: トラブルシューティングとハイブリッド接続 (Skill 5.3.1, 5.3.4)</a>
+                    <a href="#h-152" class="lvl3">Step 10: ネットワークログ (Skill 5.3.2)</a>
+                    <a href="#h-153" class="lvl3">Step 13: CloudWatch ネットワーク監視 (Skill 5.3.5)</a>
+                    <a href="#h-154" class="lvl2">学習の進め方 (おわりに)</a>
+            </nav>
+        </aside>
+        <main class="main" id="main">
+            <section class="hero">
+                <div class="kicker">AWS Certified CloudOps Engineer - Associate (SOA-C03)</div>
+                <h1>Content Domain 5: Networking and Content Delivery 完全ガイド</h1>
+                <div class="pills">
+                    <span class="pill">試験配点 <strong>18%</strong></span>
+                    <span class="pill">対象 <strong>Task 5.1 〜 5.3 全 12 スキル</strong></span>
+                    <span class="pill">図解 <strong>Mermaid 30 点</strong></span>
+                    <span class="pill">参考 URL <strong>75 件</strong></span>
+                </div>
+                <ul class="hero-notes">
+<li>対象読者: AWS ネットワークの初学者 / SOA-C03 受験予定者</li>
+<li>試験全体に占める割合: <strong>18%</strong> (出題 50 問中およそ 9 問前後の目安)</li>
+<li>根拠となる一次情報: AWS 公式 Exam Guide (SOA-C03) と各サービスの公式ドキュメント</li>
+<li>図解のルール: フローチャートは Mermaid、図表は Markdown の表を使用 (ASCII アートは不使用)</li>
+                </ul>
+            </section>
+<h2 id="step-0">Step 0: Domain 5 の全体像と学習ロードマップ</h2>
+<p>この Step は出題範囲の地図です。細かい知識に入る前に、12 のスキルがどのサービスに対応するか、通信がどんな順で VPC に届くかをつかんでおくと、後の Step で「いま全体のどこを学んでいるか」を見失いません。</p>
+<h3 id="sec-0-1">0-1. Domain 5 は何を問う分野か</h3>
+<p>Domain 5 は「AWS 上のネットワークを作る・守る・名前解決する・配信する・壊れたときに直す」という運用担当者の仕事そのものを問います。公式 Exam Guide は 3 つの Task、合計 12 のスキルで構成されています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>内容</th>
+<th>スキル数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task 5.1</td>
+<td>ネットワーク機能と接続性の実装・最適化</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Task 5.2</td>
+<td>ドメイン、DNS、コンテンツ配信の設定</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Task 5.3</td>
+<td>ネットワーク接続問題のトラブルシューティング</td>
+<td>5</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-0-2">0-2. 12 スキルと本ガイドの対応表</h3>
+<p>公式の Exam Guide が示す 12 のスキルを、本ガイドのどこで学ぶかに対応づけた一覧です。学習の途中で抜けがないかを確認する目次として使ってください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>スキル</th>
+<th>公式の記述 (要約)</th>
+<th>主なサービス</th>
+<th>本ガイド</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.1.1</td>
+<td>VPC の構成</td>
+<td>サブネット、ルートテーブル、NACL、セキュリティグループ、NAT ゲートウェイ、インターネットゲートウェイ、Egress-only インターネットゲートウェイ</td>
+<td>Step 2</td>
+</tr>
+<tr>
+<td>5.1.2</td>
+<td>プライベートネットワーク接続の構成</td>
+<td>VPC エンドポイント、AWS PrivateLink、VPC ピアリング</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td>5.1.3</td>
+<td>ネットワーク保護サービスの監査 (単一アカウント)</td>
+<td>Route 53 Resolver DNS Firewall、AWS WAF、AWS Shield、AWS Network Firewall</td>
+<td>Step 4</td>
+</tr>
+<tr>
+<td>5.1.4</td>
+<td>ネットワークアーキテクチャのコスト最適化</td>
+<td>NAT ゲートウェイ、エンドポイント、データ転送、CloudFront</td>
+<td>Step 5</td>
+</tr>
+<tr>
+<td>5.2.1</td>
+<td>DNS の構成</td>
+<td>Route 53、Route 53 Resolver</td>
+<td>Step 6</td>
+</tr>
+<tr>
+<td>5.2.2</td>
+<td>Route 53 のルーティングポリシー、設定、クエリログ</td>
+<td>Route 53</td>
+<td>Step 7</td>
+</tr>
+<tr>
+<td>5.2.3</td>
+<td>コンテンツ・サービス配信の構成</td>
+<td>CloudFront、AWS Global Accelerator</td>
+<td>Step 8</td>
+</tr>
+<tr>
+<td>5.3.1</td>
+<td>VPC 構成のトラブルシューティング</td>
+<td>サブネット、ルートテーブル、NACL、SG、Transit Gateway、NAT ゲートウェイ</td>
+<td>Step 9</td>
+</tr>
+<tr>
+<td>5.3.2</td>
+<td>ネットワークログの収集と解釈</td>
+<td>VPC フローログ、ELB アクセスログ、WAF Web ACL ログ、CloudFront ログ、コンテナログ</td>
+<td>Step 10</td>
+</tr>
+<tr>
+<td>5.3.3</td>
+<td>CloudFront キャッシュ問題の特定と修復</td>
+<td>CloudFront</td>
+<td>Step 11</td>
+</tr>
+<tr>
+<td>5.3.4</td>
+<td>ハイブリッド接続・プライベート接続の障害対応</td>
+<td>Site-to-Site VPN、Client VPN、Transit Gateway、PrivateLink</td>
+<td>Step 12</td>
+</tr>
+<tr>
+<td>5.3.5</td>
+<td>CloudWatch ネットワーク監視の構成と分析</td>
+<td>Network Flow Monitor、Internet Monitor、Network Synthetic Monitor</td>
+<td>Step 13</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-0-3">0-3. 試験ガイドが明示する範囲外 (出ない前提で良いもの)</h3>
+<p>Exam Guide には「対象受験者が実施できなくてよい業務」として次が挙げられています。</p>
+<ul>
+<li>ハイブリッド / マルチ VPC ネットワークの<strong>設計</strong></li>
+<li>分散アーキテクチャの設計</li>
+<li>セキュリティ・コンプライアンス要件の<strong>定義</strong></li>
+<li>キャパシティの評価・計画、TCO 分析</li>
+</ul>
+<p>つまり Domain 5 では「設計ゼロから」ではなく「<strong>既存構成を設定し、監査し、壊れたら直せる</strong>」ことが問われます。</p>
+<h3 id="sec-0-4">0-4. 学習の進め方</h3>
+<p>Domain 5 は下の順に学ぶと理解が積み上がります。VPC の部品を知らないとプライベート接続が分からず、DNS と配信を知らないとトラブルシューティングの「どこを疑うか」が定まらないためです。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d0" role="img" aria-label="図解 1"></div></div>
+<h3 id="sec-0-5">0-5. 「パケットの旅」で全体像をつかむ</h3>
+<p>Domain 5 の登場人物は、ユーザーのリクエストが EC2 に届き、応答が返るまでの道のりに並んでいます。この順番で覚えると、障害切り分けもそのまま使えます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d1" role="img" aria-label="図解 2"></div></div>
+<hr />
+<h2 id="step-1">Step 1: ネットワークの基礎知識</h2>
+<p>ここは Domain 5 の土台です。SOA-C03 の Exam Guide も「DNS、TCP、IP、ファイアウォールなどのネットワーク概念を適用できること」を要件に挙げています。</p>
+<h3 id="sec-1-1">1-1. IP アドレスと CIDR</h3>
+<p>IPv4 アドレスは 32 ビットで、<code>10.0.0.0/16</code> のように <strong>ネットワーク部の長さ (プレフィックス長)</strong> を付けて範囲を表します。数字が小さいほど範囲が広くなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>CIDR</th>
+<th>アドレス総数</th>
+<th>用途の目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/16</td>
+<td>65,536</td>
+<td>VPC 全体 (VPC で使える最大)</td>
+</tr>
+<tr>
+<td>/20</td>
+<td>4,096</td>
+<td>大きめのサブネット</td>
+</tr>
+<tr>
+<td>/24</td>
+<td>256</td>
+<td>一般的なサブネット</td>
+</tr>
+<tr>
+<td>/28</td>
+<td>16</td>
+<td>小さなサブネット (VPC で使える最小)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>覚え方: 「/(32 − プレフィックス長)」乗が個数。/24 なら 2 の 8 乗 = 256。</p>
+</blockquote>
+<p>プライベートアドレスの範囲 (RFC 1918) は次の 3 つです。VPC の CIDR にはこの範囲を使うのが基本です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>範囲</th>
+<th>CIDR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.0.0.0 - 10.255.255.255</td>
+<td>10.0.0.0/8</td>
+</tr>
+<tr>
+<td>172.16.0.0 - 172.31.255.255</td>
+<td>172.16.0.0/12</td>
+</tr>
+<tr>
+<td>192.168.0.0 - 192.168.255.255</td>
+<td>192.168.0.0/16</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-1-2">1-2. TCP / UDP とポート</h3>
+<p>TCP と UDP は通信の約束事の違いで、ポート番号は「どのアプリケーションに届けるか」を示します。ファイアウォールのルールは、プロトコルとポートの組み合わせで書くため、ここで基本を押さえます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>プロトコル</th>
+<th>特徴</th>
+<th>代表的な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TCP</td>
+<td>接続を確立してから通信 (3 ウェイハンドシェイク)、再送制御あり</td>
+<td>HTTP(80)、HTTPS(443)、SSH(22)、RDP(3389)</td>
+</tr>
+<tr>
+<td>UDP</td>
+<td>接続なし、軽量</td>
+<td>DNS(53)、NTP(123)、VPN の IKE(500/4500)</td>
+</tr>
+<tr>
+<td>ICMP</td>
+<td>疎通確認やエラー通知</td>
+<td>ping</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>エフェメラルポート</strong>: クライアントが通信を始めるとき、OS が自動で選ぶ一時的な送信元ポート (一般に 1024-65535 の範囲) です。<strong>戻りの通信はこのポート宛て</strong>になるため、ステートレスなファイアウォール (NACL) では戻り用の許可が必要になります。</p>
+<h3 id="sec-1-3">1-3. ステートフルとステートレス</h3>
+<p>これは試験で最頻出の概念です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>ステートフル (セキュリティグループ)</th>
+<th>ステートレス (ネットワーク ACL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>戻りの通信</td>
+<td>自動で許可される</td>
+<td>明示的に許可が必要</td>
+</tr>
+<tr>
+<td>ルール</td>
+<td>許可のみ</td>
+<td>許可と拒否の両方</td>
+</tr>
+<tr>
+<td>評価順</td>
+<td>全ルールを評価</td>
+<td>番号の小さい順に評価し、最初に一致したものを適用</td>
+</tr>
+<tr>
+<td>適用先</td>
+<td>ENI (インスタンス等)</td>
+<td>サブネット</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-1-4">1-4. DNS の仕組み</h3>
+<p>DNS は「名前 (www.example.com) から IP アドレスを引く」仕組みです。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d2" role="img" aria-label="図解 3"></div></div>
+<ul>
+<li><strong>権威 DNS</strong>: ドメインの正式な答えを持つサーバー (Route 53 のホストゾーン)。</li>
+<li><strong>キャッシュリゾルバー</strong>: 代わりに問い合わせて結果を <strong>TTL の間キャッシュ</strong>するサーバー (VPC では Route 53 Resolver)。</li>
+<li><strong>TTL</strong>: キャッシュの有効秒数。長いと変更が反映されにくく、短いと問い合わせが増えます。</li>
+</ul>
+<h3 id="sec-1-5">1-5. ファイアウォールの階層</h3>
+<p>AWS では 1 つの境界ではなく、<strong>層ごとに別の防御</strong>を置きます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>層</th>
+<th>代表サービス</th>
+<th>守る対象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS 層</td>
+<td>Route 53 Resolver DNS Firewall</td>
+<td>名前解決の問い合わせ</td>
+</tr>
+<tr>
+<td>エッジ / アプリ層 (L7)</td>
+<td>AWS WAF</td>
+<td>HTTP リクエストの中身</td>
+</tr>
+<tr>
+<td>DDoS</td>
+<td>AWS Shield</td>
+<td>大量攻撃 (L3/L4/L7)</td>
+</tr>
+<tr>
+<td>ネットワーク層 (VPC 境界)</td>
+<td>AWS Network Firewall</td>
+<td>VPC を出入りする通信全体</td>
+</tr>
+<tr>
+<td>サブネット境界</td>
+<td>ネットワーク ACL</td>
+<td>サブネットの出入り</td>
+</tr>
+<tr>
+<td>ENI 境界</td>
+<td>セキュリティグループ</td>
+<td>個々のリソース</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-2">Step 2: Skill 5.1.1 VPC の構成</h2>
+<blockquote>
+<p>対象: サブネット、ルートテーブル、ネットワーク ACL、セキュリティグループ、NAT ゲートウェイ、インターネットゲートウェイ、Egress-only インターネットゲートウェイ</p>
+</blockquote>
+<p>VPC は AWS ネットワークの土台です。サブネット、ルートテーブル、各種ゲートウェイ、セキュリティグループ、ネットワーク ACL は後の Step のほぼすべてで前提になるので、ここで一つずつ役割を確認します。</p>
+<h3 id="sec-2-1">2-1. VPC とは</h3>
+<p><strong>Amazon VPC</strong> は AWS 内に作る、論理的に分離された自分専用のネットワークです。</p>
+<ul>
+<li>VPC は <strong>リージョン単位</strong>のリソースです (複数 AZ にまたがれる)。</li>
+<li>IPv4 CIDR は <strong>/16 〜 /28</strong> で指定します。後から<strong>セカンダリ CIDR を追加</strong>できます。</li>
+<li>サブネットは <strong>1 つの AZ に属します</strong> (AZ をまたげません)。</li>
+</ul>
+<h3 id="sec-2-2">2-2. サブネットの予約アドレス</h3>
+<p>各サブネットでは先頭 4 つと末尾 1 つの <strong>計 5 アドレスが使えません</strong>。例として 10.0.1.0/24 の場合です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>アドレス</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.0.1.0</td>
+<td>ネットワークアドレス</td>
+</tr>
+<tr>
+<td>10.0.1.1</td>
+<td>VPC ルーター</td>
+</tr>
+<tr>
+<td>10.0.1.2</td>
+<td>DNS サーバー (VPC の CIDR のベース + 2)</td>
+</tr>
+<tr>
+<td>10.0.1.3</td>
+<td>将来の利用のため予約</td>
+</tr>
+<tr>
+<td>10.0.1.255</td>
+<td>ブロードキャスト (VPC では未サポートだが予約)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>試験では「/28 サブネットで使えるホスト数は 16 − 5 = 11」のような計算が出ます。</p>
+</blockquote>
+<h3 id="sec-2-3">2-3. パブリックサブネットとプライベートサブネット</h3>
+<p>AWS に「パブリックサブネット」という設定項目はありません。<strong>ルートテーブルの向き先で決まります。</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>パブリックサブネット</td>
+<td>ルートテーブルに <code>0.0.0.0/0 → インターネットゲートウェイ</code> がある</td>
+</tr>
+<tr>
+<td>プライベートサブネット</td>
+<td>インターネットゲートウェイへのルートがない</td>
+</tr>
+</tbody>
+</table></div>
+<p>インターネットと双方向で通信するインスタンスには、さらに <strong>パブリック IPv4 アドレス (または Elastic IP)</strong> が必要です。IGW は「パブリック IP とプライベート IP の 1 対 1 変換」を行います。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d3" role="img" aria-label="図解 4"></div></div>
+<h3 id="sec-2-4">2-4. ルートテーブル</h3>
+<p>ルートテーブルは「宛先 CIDR → ターゲット」の対応表です。</p>
+<ul>
+<li>すべての VPC ルートテーブルに、VPC 内通信用の <strong>local ルート</strong>が自動で入ります (削除不可)。</li>
+<li>通信は <strong>最長プレフィックス一致 (最も具体的なルート)</strong> が優先されます。</li>
+<li>サブネットは<strong>必ず 1 つのルートテーブルに関連付けられます</strong> (明示しなければメインルートテーブル)。</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>宛先</th>
+<th>ターゲット</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10.0.0.0/16</td>
+<td>local</td>
+<td>VPC 内の通信</td>
+</tr>
+<tr>
+<td>0.0.0.0/0</td>
+<td>igw-xxxx</td>
+<td>インターネット向け (パブリックサブネット)</td>
+</tr>
+<tr>
+<td>0.0.0.0/0</td>
+<td>nat-xxxx</td>
+<td>NAT 経由のインターネット向け (プライベートサブネット)</td>
+</tr>
+<tr>
+<td>::/0</td>
+<td>eigw-xxxx</td>
+<td>IPv6 の外向き専用</td>
+</tr>
+<tr>
+<td>pl-xxxx (S3 の prefix list)</td>
+<td>vpce-xxxx</td>
+<td>S3 ゲートウェイエンドポイント</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>ベストプラクティス: メインルートテーブルは「プライベート扱い」にしておき、IGW へのルートは<strong>明示的に関連付けたパブリック用ルートテーブルだけ</strong>に入れます。新しいサブネットが意図せず公開されるのを防げます。</p>
+</blockquote>
+<h3 id="sec-2-5">2-5. インターネットゲートウェイ (IGW)</h3>
+<p>インターネットゲートウェイは、VPC とインターネットの間の出入口です。これを VPC にアタッチし、ルートテーブルで向き先に指定して初めて、サブネットがインターネットと通信できるようになります。</p>
+<ul>
+<li>VPC にアタッチする、<strong>水平スケール・高可用性なマネージドコンポーネント</strong>です。追加料金はありません (パブリック IPv4 アドレス自体には課金があります)。</li>
+<li>1 つの VPC にアタッチできる IGW は 1 つです。</li>
+<li>IPv4 / IPv6 の両方に対応します。</li>
+</ul>
+<h3 id="sec-2-6">2-6. Egress-only インターネットゲートウェイ (EIGW)</h3>
+<p><strong>IPv6 専用</strong>で、「VPC からインターネットへの外向き通信だけ許可し、インターネット側からの新規接続は受け付けない」ためのゲートウェイです。IPv4 の NAT ゲートウェイに相当する役割を IPv6 で担います。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>IGW</th>
+<th>EIGW</th>
+<th>NAT ゲートウェイ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対応 IP</td>
+<td>IPv4 / IPv6</td>
+<td><strong>IPv6 のみ</strong></td>
+<td><strong>IPv4 のみ</strong></td>
+</tr>
+<tr>
+<td>外向き通信</td>
+<td>可</td>
+<td>可</td>
+<td>可</td>
+</tr>
+<tr>
+<td>外部からの新規接続</td>
+<td>可</td>
+<td><strong>不可</strong></td>
+<td><strong>不可</strong></td>
+</tr>
+<tr>
+<td>ルート例</td>
+<td>0.0.0.0/0 または ::/0</td>
+<td>::/0</td>
+<td>0.0.0.0/0</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-2-7">2-7. NAT ゲートウェイ</h3>
+<p>プライベートサブネットのインスタンスが、<strong>外部からの接続は受けずに</strong> OS アップデートなどでインターネットへ出るためのマネージドサービスです。</p>
+<p>主な特徴は次のとおりです。</p>
+<ul>
+<li><strong>パブリック NAT ゲートウェイ</strong>: パブリックサブネットに置き、<strong>Elastic IP を関連付けます</strong>。プライベートサブネットのルートテーブルで <code>0.0.0.0/0 → nat</code> を指定します。</li>
+<li><strong>プライベート NAT ゲートウェイ</strong>: EIP を持たず、プライベート IP 同士 (他の VPC やオンプレミス) の通信で IP 変換に使います。インターネットには出られません。</li>
+<li>従来の NAT ゲートウェイは <strong>AZ 単位</strong>のリソースです。AZ 障害に備えるには<strong>AZ ごとに作成</strong>し、各 AZ のプライベートサブネットのルートをその AZ の NAT に向けます。</li>
+<li>2025 年 11 月に <strong>リージョナル NAT ゲートウェイ</strong>が追加されました。1 つの NAT ゲートウェイがワークロードのある AZ に自動で拡張・縮小します。<strong>ホスト用のパブリックサブネットは不要</strong>です。ただしプライベート NAT は引き続きゾーナルモードが必要です。</li>
+</ul>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d4" role="img" aria-label="図解 5"></div></div>
+<p><strong>よくある設定ミス</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ミス</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAT ゲートウェイを<strong>プライベートサブネット</strong>に置いた (ゾーナル)</td>
+<td>外に出られない (NAT 自身のサブネットに IGW ルートが必要)</td>
+</tr>
+<tr>
+<td>プライベートサブネットのルートに NAT へのルートがない</td>
+<td>外向き通信が失敗する</td>
+</tr>
+<tr>
+<td>NAT のサブネットのルートテーブルに IGW ルートがない</td>
+<td>外向き通信が失敗する</td>
+</tr>
+<tr>
+<td>1 つの AZ にだけ NAT を作り、他 AZ も同じ NAT を使う</td>
+<td>その AZ 障害で全体が止まる。AZ 間データ転送料も発生</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-2-8">2-8. セキュリティグループ (SG)</h3>
+<p>セキュリティグループは、個々のリソースの入口に置く仮想ファイアウォールです。戻りの通信を自動で通すステートフルな性質があるため、日常のアクセス制御はまず SG で組み立てるのが基本になります。</p>
+<ul>
+<li><strong>ENI (ネットワークインターフェイス) に適用</strong>するステートフルなファイアウォールです。</li>
+<li><strong>許可ルールのみ</strong>です (拒否ルールは書けません)。</li>
+<li>送信元・宛先に <strong>CIDR、プレフィックスリスト、別の SG の ID</strong> を指定できます。</li>
+<li>1 つの ENI に複数の SG を付けると、<strong>ルールの和集合</strong>が適用されます。</li>
+<li>デフォルト SG: 同じ SG 内からのインバウンドを許可し、アウトバウンドは全許可です。</li>
+<li>新規 SG: インバウンドは全拒否、アウトバウンドは全許可です。</li>
+</ul>
+<blockquote>
+<p>ベストプラクティス: 「Web 層 SG → App 層 SG → DB 層 SG」のように <strong>SG ID を参照</strong>して許可します。IP アドレスが変わっても追従でき、最小権限を保てます。0.0.0.0/0 に SSH(22) や RDP(3389) を開けない運用にします (Session Manager の利用を推奨)。</p>
+</blockquote>
+<h3 id="sec-2-9">2-9. ネットワーク ACL (NACL)</h3>
+<p>ネットワーク ACL は、サブネットの出入口に置くもう 1 枚のファイアウォールです。SG と違って戻りの通信も自分で許可する必要があり、その代わりに「拒否」ルールを書けるという強みがあります。</p>
+<ul>
+<li><strong>サブネットに適用</strong>するステートレスなファイアウォールです。</li>
+<li><strong>許可と拒否</strong>の両方を書けます。</li>
+<li>ルール番号の<strong>小さい順</strong>に評価し、最初に一致した時点で確定します。</li>
+<li>末尾に暗黙の「すべて拒否 (*)」があります。</li>
+<li><strong>デフォルト NACL</strong> は全許可、<strong>自分で作った NACL</strong> は作成直後は全拒否です。</li>
+<li>1 つのサブネットに関連付けられる NACL は 1 つです。</li>
+</ul>
+<p><strong>NACL を使うべき典型場面</strong>: 特定の IP を<strong>明示的に拒否</strong>したいとき (SG では拒否できません)。</p>
+<p><strong>NACL の落とし穴</strong>: 戻りの通信を許可し忘れます。例えば Web サーバーのサブネットでインバウンド 443 を許可したなら、アウトバウンドで<strong>エフェメラルポート (1024-65535)</strong> も許可します。</p>
+<h3 id="sec-2-10">2-10. SG と NACL の比較 (最頻出)</h3>
+<p>SG と NACL は、SOA-C03 で最も頻繁に比較されるペアです。性質の違いが障害の切り分けにそのまま使えるので、表の各行を「だから戻りの通信はどうなるか」と結び付けて覚えてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>セキュリティグループ</th>
+<th>ネットワーク ACL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>適用単位</td>
+<td>ENI</td>
+<td>サブネット</td>
+</tr>
+<tr>
+<td>状態管理</td>
+<td>ステートフル</td>
+<td>ステートレス</td>
+</tr>
+<tr>
+<td>ルールの種類</td>
+<td>許可のみ</td>
+<td>許可・拒否</td>
+</tr>
+<tr>
+<td>評価方法</td>
+<td>すべてのルールを評価</td>
+<td>番号順、最初の一致で確定</td>
+</tr>
+<tr>
+<td>戻り通信</td>
+<td>自動許可</td>
+<td>明示的に許可が必要</td>
+</tr>
+<tr>
+<td>既定</td>
+<td>受信は拒否、送信は許可</td>
+<td>既定 NACL は全許可</td>
+</tr>
+<tr>
+<td>主な使い所</td>
+<td>日常のアクセス制御</td>
+<td>特定 IP の拒否、サブネット境界の追加防御</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-2-11">2-11. Elastic IP とパブリック IPv4 課金</h3>
+<p>Elastic IP は固定のパブリック IPv4 アドレスです。便利ですが、2024 年 2 月以降はパブリック IPv4 アドレス全般が時間課金されるため、使っていない EIP を残すとそのまま無駄な費用になります。</p>
+<ul>
+<li><strong>Elastic IP (EIP)</strong> は、アカウントに確保する固定のパブリック IPv4 アドレスです。インスタンスを止めても保持できます。</li>
+<li>2024 年 2 月以降、<strong>使用中・未使用を問わずパブリック IPv4 アドレスは 1 時間あたり課金</strong>されます (未使用の EIP 放置は無駄なコストです)。</li>
+</ul>
+<h3 id="sec-2-12">2-12. 関連機能 (知っておくと解きやすい)</h3>
+<p>VPC の本筋ではありませんが、設問の背景としてよく登場する周辺機能です。名前と役割だけでも先に把握しておくと、選択肢の意味を取り違えにくくなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>概要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DHCP オプションセット</td>
+<td>VPC 内のドメイン名や DNS サーバーを指定する設定</td>
+</tr>
+<tr>
+<td>VPC IPAM (IP Address Manager)</td>
+<td>IP アドレスの計画・追跡・監視を自動化。CIDR の重複や枯渇の把握に使える</td>
+</tr>
+<tr>
+<td>AWS RAM</td>
+<td>サブネットなどを他アカウントと共有</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-2-13">2-13. ベストプラクティスまとめ</h3>
+<p>ここまでの内容を設計の指針として整理します。右端の「理由」まで読むと、単なる暗記ではなく、試験の選択肢が「なぜその構成が正しいか」で判断できるようになります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可用性</td>
+<td>複数 AZ にサブネットを作り、AZ ごとに NAT を配置 (またはリージョナル NAT)</td>
+<td>AZ 障害で NAT が使えなくなっても他の AZ の通信を止めず、AZ をまたぐデータ転送料金も避けられるため。</td>
+</tr>
+<tr>
+<td>CIDR 設計</td>
+<td>将来のピアリング・Transit Gateway・オンプレ接続を見越し、<strong>重複しない</strong> CIDR を選ぶ</td>
+<td>ピアリングや Transit Gateway は CIDR が重なるとルーティングできず、後から変えるのは作り直しに近い大工事になるため。</td>
+</tr>
+<tr>
+<td>公開範囲</td>
+<td>ロードバランサーだけパブリック、アプリ・DB はプライベート</td>
+<td>インターネットから直接届く面をロードバランサーに絞ると、攻撃対象と設定ミスの影響範囲が小さくなるため。</td>
+</tr>
+<tr>
+<td>最小権限</td>
+<td>SG は SG ID 参照。NACL は必要時のみ。不要な 0.0.0.0/0 を避ける</td>
+<td>SG ID 参照は IP が変わっても追従でき、広すぎる許可の放置が侵入の足がかりになるのを防げるため。</td>
+</tr>
+<tr>
+<td>可視化</td>
+<td><strong>VPC フローログ</strong>を有効化 (Step 10)</td>
+<td>拒否された通信の記録がないと、障害や不正アクセスの原因を後から追えないため。</td>
+</tr>
+<tr>
+<td>IPv6</td>
+<td>外向きのみなら EIGW を使う</td>
+<td>EIGW なら外部からの新規接続を受けずに IPv6 で外へ出られ、IPv4 の NAT のような時間課金や処理料金の仕組みが不要なため。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-2-14">2-14. 確認クイズ (3 問)</h3>
+<p>Step 2 の理解度を 3 問で確認します。答えを見る前に、頭の中でルートテーブルや SG の経路をたどって考えてみてください。</p>
+<ol>
+<li>サブネット 10.0.0.0/28 に作成できるインスタンスの上限はいくつか。</li>
+<li>IPv6 のみのインスタンスをインターネットへ外向きだけ通信させたい。使うのは何か。</li>
+<li>特定の悪意ある IP アドレスを VPC 内で確実に拒否したい。SG と NACL のどちらを使うか。</li>
+</ol>
+<details>
+<summary>答え</summary>
+<ol>
+<li>16 − 5 = <strong>11</strong></li>
+<li><strong>Egress-only インターネットゲートウェイ</strong></li>
+<li><strong>NACL</strong> (SG は拒否ルールを書けない)</li>
+</ol>
+</details>
+<hr />
+<h2 id="step-3">Step 3: Skill 5.1.2 プライベート接続</h2>
+<blockquote>
+<p>対象: VPC エンドポイント、AWS PrivateLink、VPC ピアリング (関連: Transit Gateway)</p>
+</blockquote>
+<p>VPC の中から AWS サービスや他の VPC へ、インターネットを経由せずに到達する方法を学びます。経路が AWS ネットワーク内で完結すると、セキュリティが高まり、NAT ゲートウェイの処理料金も減らせます。</p>
+<h3 id="sec-3-1">3-1. なぜプライベート接続が必要か</h3>
+<p>プライベートサブネットのインスタンスが S3 や DynamoDB、SSM などの AWS サービスを使うとき、何もしなければ <strong>NAT ゲートウェイ → インターネット</strong>経由になります。これには次の問題があります。</p>
+<ul>
+<li>NAT ゲートウェイの<strong>データ処理料金</strong>がかかる</li>
+<li>トラフィックがインターネット経路を通る (セキュリティ要件に合わない場合がある)</li>
+<li>NAT ゲートウェイが単一障害点になりうる</li>
+</ul>
+<p><strong>VPC エンドポイント</strong>を使うと、AWS ネットワーク内だけで完結します。</p>
+<h3 id="sec-3-2">3-2. VPC エンドポイントの 2 つの主要タイプ</h3>
+<p>VPC エンドポイントには性質の異なる 2 種類があり、この違いは頻出の出題ポイントです。S3 と DynamoDB なら無料のゲートウェイ型、それ以外やオンプレミスからの利用ならインターフェイス型、と対象サービスと到達範囲で選び分けます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>ゲートウェイエンドポイント</th>
+<th>インターフェイスエンドポイント (PrivateLink)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対応サービス</td>
+<td><strong>Amazon S3 と DynamoDB のみ</strong></td>
+<td>多数の AWS サービス、自社サービス、AWS Marketplace のサービス</td>
+</tr>
+<tr>
+<td>実体</td>
+<td>ルートテーブルのエントリ (プレフィックスリスト)</td>
+<td><strong>サブネット内の ENI (プライベート IP)</strong></td>
+</tr>
+<tr>
+<td>料金</td>
+<td><strong>無料</strong></td>
+<td>時間課金 + データ処理料金</td>
+</tr>
+<tr>
+<td>セキュリティ制御</td>
+<td>エンドポイントポリシー、ルートテーブル</td>
+<td>エンドポイントポリシー、<strong>セキュリティグループ</strong></td>
+</tr>
+<tr>
+<td>オンプレミスから利用</td>
+<td><strong>不可</strong></td>
+<td>VPN / Direct Connect 経由で<strong>可</strong></td>
+</tr>
+<tr>
+<td>他リージョン・ピアリング先 VPC から利用</td>
+<td>不可</td>
+<td>ピアリング先やオンプレから到達可能 (経路が成立していれば)</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>通常の S3 / DynamoDB のパブリック名のまま</td>
+<td><strong>プライベート DNS</strong> を有効にするとサービスの標準名がエンドポイントの IP に解決される</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>もう 1 つ <strong>Gateway Load Balancer エンドポイント</strong>があり、サードパーティ製アプライアンス (検査用) へのトラフィック誘導に使います。</p>
+</blockquote>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d5" role="img" aria-label="図解 6"></div></div>
+<h3 id="sec-3-3">3-3. ゲートウェイエンドポイントの設定手順</h3>
+<p>ゲートウェイエンドポイントは「ルートテーブルへのエントリ」として実現されます。そのため設定の要点は、どのルートテーブルに関連付けるかと、ポリシーで何を許すかの 2 点です。</p>
+<ol>
+<li>対象 VPC とサービス (<code>com.amazonaws.&lt;リージョン&gt;.s3</code>) を選んでエンドポイントを作成する。</li>
+<li><strong>関連付けるルートテーブルを選ぶ</strong> (これでプレフィックスリストへのルートが自動追加される)。</li>
+<li>必要に応じて<strong>エンドポイントポリシー</strong>で許可するバケットや操作を絞る。</li>
+<li>S3 バケットポリシーで <code>aws:SourceVpce</code> 条件を使い、「このエンドポイント経由のみ許可」にもできる。</li>
+</ol>
+<blockquote>
+<p>試験のポイント: ゲートウェイエンドポイントは<strong>ルートテーブルを選ぶ</strong>。サブネットや SG を選ぶのはインターフェイス型。</p>
+</blockquote>
+<h3 id="sec-3-4">3-4. インターフェイスエンドポイントの設定ポイント</h3>
+<p>インターフェイスエンドポイントは、サブネット内に作られる ENI として実現されます。ENI である以上、配置する AZ とセキュリティグループ、そして名前解決を変えるプライベート DNS が設定の要になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置</td>
+<td><strong>使いたい AZ ごとのサブネット</strong>を選択 (耐障害性のため複数 AZ)</td>
+</tr>
+<tr>
+<td>セキュリティグループ</td>
+<td>エンドポイントの ENI に付ける。<strong>クライアントからの HTTPS (443) を許可</strong>する</td>
+</tr>
+<tr>
+<td>プライベート DNS</td>
+<td>有効化すると <code>ssm.ap-northeast-1.amazonaws.com</code> などの<strong>標準名がそのままエンドポイントに解決</strong>される。VPC の <strong>DNS ホスト名と DNS 解決を両方有効</strong>にしておく必要がある</td>
+</tr>
+<tr>
+<td>エンドポイントポリシー</td>
+<td>使える API、プリンシパル、リソースを制限できる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-3-5">3-5. PrivateLink で自社サービスを公開する</h3>
+<p>PrivateLink は、自社のサービスを VPC 全体ではなく「サービス単位」で他の VPC や他アカウントに公開する仕組みです。ピアリングと違い、双方の CIDR が重なっていても使える点が大きな特長です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d6" role="img" aria-label="図解 7"></div></div>
+<ul>
+<li><strong>サービスプロバイダー</strong>: NLB (または GWLB) の前に「エンドポイントサービス」を作る。</li>
+<li><strong>コンシューマー</strong>: インターフェイスエンドポイントを作成して接続する。</li>
+<li>双方の VPC の <strong>CIDR が重複していても利用可能</strong>で、VPC 全体ではなく<strong>特定のサービスだけ</strong>を公開できます。これがピアリングとの大きな違いです。</li>
+</ul>
+<h3 id="sec-3-6">3-6. VPC ピアリング</h3>
+<p>2 つの VPC をプライベート IP で直接つなぐ 1 対 1 の接続です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>範囲</td>
+<td>同一リージョン、リージョン間、アカウント間</td>
+</tr>
+<tr>
+<td>料金</td>
+<td>接続自体は無料 (データ転送料は AZ 間・リージョン間で発生)</td>
+</tr>
+<tr>
+<td><strong>CIDR</strong></td>
+<td><strong>重複不可</strong></td>
+</tr>
+<tr>
+<td><strong>推移的ルーティング</strong></td>
+<td><strong>不可</strong> (A-B、B-C があっても A から C へは通信できない)</td>
+</tr>
+<tr>
+<td>必要な設定</td>
+<td><strong>リクエスト → 承諾</strong>、<strong>両側のルートテーブルにルート追加</strong>、必要に応じて SG と NACL の許可</td>
+</tr>
+<tr>
+<td>利用できない経路</td>
+<td>ピア先の IGW、NAT、VPN、ゲートウェイエンドポイントを「踏み台」にすることは不可 (エッジ間ルーティング不可)</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d7" role="img" aria-label="図解 8"></div></div>
+<h3 id="sec-3-7">3-7. 接続方式の使い分け</h3>
+<p>ここまでの接続方式を、状況別に選び分ける表にまとめます。設問では「何をつなぎたいか」と「制約(CIDR の重複、台数、公開範囲)」が条件として示されるので、そこから逆引きしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>選択</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2 つの VPC だけをつなぎたい、シンプルで安価</td>
+<td>VPC ピアリング</td>
+</tr>
+<tr>
+<td>多数の VPC、オンプレミスをハブ &amp; スポークでつなぎたい</td>
+<td><strong>Transit Gateway</strong></td>
+</tr>
+<tr>
+<td>特定のサービスだけを公開したい / CIDR が重複している</td>
+<td><strong>PrivateLink</strong></td>
+</tr>
+<tr>
+<td>VPC から S3 / DynamoDB へプライベートに</td>
+<td>ゲートウェイエンドポイント</td>
+</tr>
+<tr>
+<td>VPC から AWS のその他サービスへプライベートに</td>
+<td>インターフェイスエンドポイント</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-3-8">3-8. Transit Gateway (TGW) の基礎</h3>
+<p>(5.3.1、5.3.4 でトラブルシューティング対象になるため、ここで基本を押さえます。)</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アタッチメント</td>
+<td>VPC、VPN、Direct Connect ゲートウェイ、TGW ピアリングなどを TGW に接続する単位</td>
+</tr>
+<tr>
+<td>TGW ルートテーブル</td>
+<td>アタッチメントごとの転送先を決める</td>
+</tr>
+<tr>
+<td><strong>関連付け (Association)</strong></td>
+<td>アタッチメントが<strong>どの TGW ルートテーブルを参照するか</strong> (1 つのアタッチメントにつき 1 つ)</td>
+</tr>
+<tr>
+<td><strong>伝播 (Propagation)</strong></td>
+<td>アタッチメントの CIDR を TGW ルートテーブルに<strong>自動登録</strong></td>
+</tr>
+<tr>
+<td>ブラックホールルート</td>
+<td>該当宛先の通信を破棄</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>VPC 側のルートテーブルにも「宛先 CIDR → tgw-xxxx」の追加が必要です。<strong>TGW のルートだけ、VPC のルートだけでは通信できません。</strong></p>
+</blockquote>
+<h3 id="sec-3-9">3-9. ベストプラクティス</h3>
+<p>プライベート接続の設計指針です。理由の列も合わせて読むと、「なぜ無料のゲートウェイ型を優先するのか」といった判断の根拠まで説明できるようになります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 / DynamoDB</td>
+<td>まずゲートウェイエンドポイント (無料、NAT 料金を回避)</td>
+<td>無料で NAT のデータ処理料金を避けられ、通信が AWS ネットワーク内で完結するため。</td>
+</tr>
+<tr>
+<td>エンドポイントポリシー</td>
+<td>既定の全許可から、必要な操作・リソースに絞る</td>
+<td>既定は全許可のため、そのままだと侵害された環境から任意のバケットへデータを持ち出せてしまうため。</td>
+</tr>
+<tr>
+<td>インターフェイスエンドポイント</td>
+<td>複数 AZ に配置し、SG は 443 のみ許可。AZ ごとの課金に注意</td>
+<td>1 つの AZ の ENI が使えなくなっても他の AZ で継続でき、SG を 443 に絞れば到達できるクライアントを限定できるため。</td>
+</tr>
+<tr>
+<td>ピアリング</td>
+<td>CIDR 設計で重複を避け、ルートは必要な範囲だけ追加</td>
+<td>不要に広いルートは意図しない VPC 間通信を許し、CIDR の重複は接続自体を不可能にするため。</td>
+</tr>
+<tr>
+<td>多数の VPC</td>
+<td>ピアリングのフルメッシュを避けて TGW を検討</td>
+<td>ピアリングは 1 対 1 で推移しないため、VPC が増えると接続数とルート管理が急増するため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-4">Step 4: Skill 5.1.3 ネットワーク保護サービスの監査</h2>
+<blockquote>
+<p>対象: Route 53 Resolver DNS Firewall、AWS WAF、AWS Shield、AWS Network Firewall (<strong>単一アカウント</strong>での監査)</p>
+</blockquote>
+<p>「監査」とは、保護サービスが有効で、ログを取れていて、意図したとおりに検知しているかを確かめることです。まず 4 つのサービスが守る層の違いをつかみ、それぞれの確認ポイントを押さえます。</p>
+<p>「監査 (Audit)」とは、<strong>設定が正しく有効か・ログが取れているか・意図どおり検知しているかを確認する</strong>ことです。まず各サービスの役割を押さえます。</p>
+<h3 id="sec-4-1">4-1. 4 サービスの役割分担</h3>
+<p>4 つのサービスは守る層が異なり、互いの代わりにはなりません。「何から守りたいか」で選ぶ、という見方をすると選択肢を絞り込めます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>層</th>
+<th>何を守るか</th>
+<th>主な設定対象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Route 53 Resolver DNS Firewall</strong></td>
+<td>DNS</td>
+<td>VPC からの名前解決 (悪意あるドメインへの問い合わせをブロック)</td>
+<td>VPC に関連付けるルールグループ</td>
+</tr>
+<tr>
+<td><strong>AWS WAF</strong></td>
+<td>L7 (HTTP/HTTPS)</td>
+<td>SQL インジェクション、XSS、不正な bot、レート超過 など</td>
+<td><strong>Web ACL</strong> を CloudFront、ALB、API Gateway などに関連付け</td>
+</tr>
+<tr>
+<td><strong>AWS Shield</strong></td>
+<td>L3/L4/L7 DDoS</td>
+<td>大量攻撃</td>
+<td>Standard は自動、Advanced は保護対象リソースを登録</td>
+</tr>
+<tr>
+<td><strong>AWS Network Firewall</strong></td>
+<td>L3-L7 (VPC 境界)</td>
+<td>VPC を出入りする通信全体の検査</td>
+<td><strong>ファイアウォールサブネット</strong>にエンドポイントを置き、ルートで誘導</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d8" role="img" aria-label="図解 9"></div></div>
+<h3 id="sec-4-2">4-2. Route 53 Resolver DNS Firewall</h3>
+<p>DNS Firewall は、VPC 内のリソースが引こうとする名前を検査して、悪意あるドメインへの問い合わせを止めます。通信が始まる前の名前解決の段階で防げるのが特徴です。</p>
+<ul>
+<li>VPC の Resolver を通る DNS クエリを<strong>ドメインリスト</strong>に基づいて制御します。</li>
+<li>ルールの <strong>アクション</strong>は <strong>ALLOW / BLOCK / ALERT</strong> です。</li>
+<li>BLOCK 時の応答は <strong>NODATA / NXDOMAIN / OVERRIDE (指定した CNAME を返す)</strong> から選べます。</li>
+<li><strong>ルールグループを VPC に関連付けて</strong>有効になります。AWS 管理ドメインリスト (マルウェア関連など) も利用できます。</li>
+<li><strong>フェイルクローズ / フェイルオープン</strong>の設定があります。ファイアウォールが応答できない場合にクエリを拒否 (クローズ) するか通す (オープン) かを選びます。可用性重視ならオープンが基本です。</li>
+<li><strong>VPC の Resolver (.2) を経由しない DNS</strong> (独自 DNS サーバーへ直接問い合わせるなど) は対象外です。</li>
+</ul>
+<p><strong>監査ポイント</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>確認項目</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>対象 VPC に<strong>ルールグループが関連付いているか</strong></td>
+<td>DNS Firewall コンソールの関連付け一覧</td>
+</tr>
+<tr>
+<td>ルールの<strong>優先順位</strong>と<strong>アクション</strong></td>
+<td>ルールグループ内の priority 昇順で評価される</td>
+</tr>
+<tr>
+<td><strong>クエリログ</strong>で BLOCK / ALERT が記録されているか</td>
+<td>Resolver クエリログ (Step 7)</td>
+</tr>
+<tr>
+<td>例外ドメインが ALLOW で<strong>ブロックを打ち消していないか</strong></td>
+<td>優先順位の確認</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-3">4-3. AWS WAF</h3>
+<p>構成要素の関係です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d9" role="img" aria-label="図解 10"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web ACL</td>
+<td>ルールの集合。リソースに関連付けて使う</td>
+</tr>
+<tr>
+<td>ルール</td>
+<td>条件 (IP、ヘッダー、URI、ボディなど) とアクション (Allow / Block / Count / CAPTCHA / Challenge)</td>
+</tr>
+<tr>
+<td>マネージドルールグループ</td>
+<td>AWS や販売者が提供する既製ルール (一般的な脆弱性対策など)</td>
+</tr>
+<tr>
+<td>レートベースルール</td>
+<td>一定時間内のリクエスト数が閾値を超えた送信元を制限</td>
+</tr>
+<tr>
+<td><strong>Count モード</strong></td>
+<td>ブロックせず<strong>記録のみ</strong>。新ルールの検証に使う</td>
+</tr>
+<tr>
+<td>スコープ</td>
+<td><strong>Regional</strong> (ALB、API Gateway 等) と <strong>CloudFront</strong> (グローバル、<strong>米国東部 (バージニア北部) で作成</strong>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>監査ポイント</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>確認項目</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保護すべきリソースに Web ACL が<strong>関連付いているか</strong></td>
+<td>AWS Config のマネージドルール (例: <code>alb-waf-enabled</code>、<code>cloudfront-associated-with-waf</code>)</td>
+</tr>
+<tr>
+<td><strong>ログが有効か</strong></td>
+<td>AWS Config <code>wafv2-logging-enabled</code>。ログ先は CloudWatch Logs、S3、Data Firehose</td>
+</tr>
+<tr>
+<td>ルールが意図どおり動いているか</td>
+<td><strong>サンプルリクエスト</strong> (直近約 3 時間) とログ、CloudWatch メトリクス (AllowedRequests、BlockedRequests、CountedRequests)</td>
+</tr>
+<tr>
+<td>新規ルールを本番投入する前に Count で試したか</td>
+<td>ルールのアクション設定</td>
+</tr>
+<tr>
+<td>誤検知 (False Positive) への対処</td>
+<td>ログで <code>terminatingRuleId</code> を確認 → 該当ルールを Count に変更 / 除外設定</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>ログ出力先の命名規則: ログ先のリソース名は <strong><code>aws-waf-logs-</code> で始める</strong>必要があります (S3 バケット、CloudWatch Logs のロググループ、Firehose 配信ストリーム共通)。</p>
+</blockquote>
+<h3 id="sec-4-4">4-4. AWS Shield</h3>
+<p>Shield は DDoS 攻撃から守るサービスです。Standard はすべての利用者に自動で適用され、Advanced は保護対象を登録して使う有料の拡張版、という二段構えで理解してください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Shield Standard</th>
+<th>Shield Advanced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>料金</td>
+<td><strong>無料・全顧客に自動適用</strong></td>
+<td>有料 (月額 + データ転送使用料)</td>
+</tr>
+<tr>
+<td>防御対象</td>
+<td>一般的な L3/L4 攻撃 (SYN フラッドや UDP 反射など)</td>
+<td>Standard に加え、より大規模・高度な攻撃への検知・緩和</td>
+</tr>
+<tr>
+<td>保護対象の登録</td>
+<td>不要</td>
+<td><strong>保護対象リソースを明示的に登録</strong> (CloudFront、Route 53、Global Accelerator、ALB、EIP など)</td>
+</tr>
+<tr>
+<td>追加機能</td>
+<td>-</td>
+<td>攻撃の可視化、<strong>Shield Response Team (SRT) への支援依頼</strong>、DDoS による<strong>コスト急増の保護</strong>、WAF 連携</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>監査ポイント</strong>: Shield Advanced を使っているなら、<strong>保護対象に重要リソースが漏れなく登録されているか</strong>、DDoS 検知のアラーム (CloudWatch メトリクス <code>DDoSDetected</code>) と通知が設定されているかを確認します。</p>
+<h3 id="sec-4-5">4-5. AWS Network Firewall</h3>
+<p>Network Firewall は、VPC の境界を通る通信を詳細に検査するマネージドサービスです。専用のサブネットにエンドポイントを置き、ルートテーブルでそこへ通信を誘導して初めて機能します。</p>
+<ul>
+<li>VPC 境界で通信を検査する<strong>マネージドのステートフル / ステートレスファイアウォール</strong>です。</li>
+<li><strong>ファイアウォール</strong>、<strong>ファイアウォールポリシー</strong>、<strong>ルールグループ</strong>で構成されます。ステートフルルールは Suricata 互換の記述をサポートし、ドメインリストによる許可 / 拒否もできます。</li>
+<li>専用の<strong>ファイアウォールサブネット</strong>にエンドポイントを置き、<strong>ルートテーブルでトラフィックをそのエンドポイント経由に向ける</strong>ことで有効になります。ルート設定を忘れると検査されません。</li>
+<li>ログは <strong>アラートログとフローログ</strong>を S3、CloudWatch Logs、Data Firehose に出力できます。</li>
+</ul>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d10" role="img" aria-label="図解 11"></div></div>
+<p><strong>監査ポイント</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>確認項目</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>トラフィックが<strong>エンドポイントを経由するルート</strong>になっているか</td>
+<td>IGW とワークロードサブネットのルートテーブル</td>
+</tr>
+<tr>
+<td>ポリシーのデフォルトアクション</td>
+<td>ステートフルのデフォルトアクションや順序</td>
+</tr>
+<tr>
+<td><strong>アラート / フローログ</strong>の出力</td>
+<td>ログ設定の有無</td>
+</tr>
+<tr>
+<td>管理ルールグループが最新か</td>
+<td>ルールグループの更新設定</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-6">4-6. 横断的な監査手段</h3>
+<p>保護サービスを個別に見るだけでなく、設定が正しいか、変更が適切かを横断して確認する手段があります。「誰が変えたか」は CloudTrail、「準拠しているか」は Config、のように目的で使い分けます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>手段</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS Config</strong></td>
+<td>設定の準拠チェック。例: <code>vpc-flow-logs-enabled</code>、<code>restricted-ssh</code>、<code>vpc-default-security-group-closed</code>、<code>internet-gateway-authorized-vpc-only</code></td>
+</tr>
+<tr>
+<td><strong>AWS CloudTrail</strong></td>
+<td>「誰がいつ SG や NACL、WAF を変更したか」の API 履歴</td>
+</tr>
+<tr>
+<td><strong>AWS Trusted Advisor</strong></td>
+<td>0.0.0.0/0 に開いた SG ポートなどの検出</td>
+</tr>
+<tr>
+<td><strong>AWS Security Hub</strong></td>
+<td>セキュリティ標準に基づく設定チェックの集約</td>
+</tr>
+<tr>
+<td><strong>Amazon GuardDuty</strong></td>
+<td>フローログ、DNS ログ、CloudTrail を分析した脅威検知</td>
+</tr>
+<tr>
+<td><strong>VPC Reachability Analyzer / Network Access Analyzer</strong></td>
+<td>「意図しない経路が存在しないか」の確認</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注意: 本スキルは<strong>単一アカウント</strong>が範囲です。複数アカウントの一元管理 (AWS Firewall Manager など) は範囲外と考えて構いません。</p>
+</blockquote>
+<h3 id="sec-4-7">4-7. ベストプラクティス</h3>
+<p>保護サービス運用の指針です。理由の列は、監査の場面で「なぜその設定を確認するのか」を説明するときの根拠として使えます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>層ごとの防御</td>
+<td>DNS Firewall、WAF、Shield、Network Firewall、SG / NACL を目的別に組み合わせる</td>
+<td>1 つの防御が破られても次の層で止められ、各サービスは見ている層が異なるため。</td>
+</tr>
+<tr>
+<td>新規ルールの展開</td>
+<td>まず <strong>Count / Alert モード</strong>で影響を確認してから Block</td>
+<td>誤検知で正規ユーザーを遮断する事故を、記録だけのモードで事前に確認して防げるため。</td>
+</tr>
+<tr>
+<td>ログ</td>
+<td>全保護サービスのログを有効化し、保管期間を決める</td>
+<td>ログがないと監査も誤検知の調査もできず、あとから有効化しても過去の分は残らないため。</td>
+</tr>
+<tr>
+<td>変更の監査</td>
+<td>Config + CloudTrail で変更履歴を追えるようにする</td>
+<td>誰がいつ防御設定を弱めたかを追えないと、事故や不正の原因を特定できないため。</td>
+</tr>
+<tr>
+<td>公開リソース</td>
+<td>CloudFront + WAF + Shield を前段に置き、オリジンは直接公開しない</td>
+<td>エッジで攻撃を吸収でき、オリジンへ直接アクセスするという迂回路を断てるため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-5">Step 5: Skill 5.1.4 ネットワークコストの最適化</h2>
+<blockquote>
+<p>対象: ネットワークアーキテクチャのコスト最適化 (コスト<strong>分析・TCO</strong> そのものは範囲外ですが、<strong>ネットワーク設計上のコスト削減</strong>が出題されます)</p>
+</blockquote>
+<p>ネットワークの費用は「どの経路を通ったか」で決まります。ここでは課金される箇所の全体像と、効果の大きい削減パターンを学びます。コストの分析や TCO の算定は範囲外ですが、設計上の削減策は出題されます。</p>
+<h3 id="sec-5-1">5-1. 課金されるポイントの全体像</h3>
+<p>ネットワークのコストは「<strong>どこを通ったか</strong>」で決まります。基本の原則は次のとおりです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>通信の経路</th>
+<th>課金 (一般的な傾向)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>インターネットからの<strong>受信 (イン)</strong></td>
+<td>基本無料</td>
+</tr>
+<tr>
+<td>インターネットへの<strong>送信 (アウト)</strong></td>
+<td>課金</td>
+</tr>
+<tr>
+<td><strong>同一 AZ</strong> のプライベート IP 通信</td>
+<td>無料</td>
+</tr>
+<tr>
+<td><strong>AZ 間</strong>通信</td>
+<td>課金 (双方向)</td>
+</tr>
+<tr>
+<td><strong>リージョン間</strong>通信</td>
+<td>課金</td>
+</tr>
+<tr>
+<td>NAT ゲートウェイ経由</td>
+<td>時間料金 + <strong>処理データ量課金</strong></td>
+</tr>
+<tr>
+<td>インターフェイスエンドポイント</td>
+<td>時間料金 (AZ ごと) + 処理データ量課金</td>
+</tr>
+<tr>
+<td>ゲートウェイエンドポイント</td>
+<td><strong>無料</strong></td>
+</tr>
+<tr>
+<td>Transit Gateway</td>
+<td>アタッチメント時間料金 + 処理データ量課金</td>
+</tr>
+<tr>
+<td>パブリック IPv4 アドレス</td>
+<td>1 つあたり時間課金 (使用中・未使用とも)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>具体的な単価はリージョンや時期で変わります。例えば米国東部 (バージニア北部) では NAT ゲートウェイは時間料金と処理料金がそれぞれ約 0.045 USD ですが、必ず公式の料金ページで最新を確認してください。</p>
+</blockquote>
+<h3 id="sec-5-2">5-2. 代表的な削減パターン</h3>
+<p>削減策は、高額になりがちな原因ごとに整理すると選びやすくなります。とくに「S3 や DynamoDB への通信が NAT ゲートウェイを通っている」ケースは、最も効果が大きく試験でも頻出です。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d11" role="img" aria-label="図解 12"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>課題</th>
+<th>対策</th>
+<th>補足</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAT ゲートウェイの処理料金が大きい</td>
+<td><strong>S3 / DynamoDB はゲートウェイエンドポイント</strong>に切り替える (無料)</td>
+<td>最も効果が大きく試験でも頻出</td>
+</tr>
+<tr>
+<td>NAT 経由の AWS サービス通信</td>
+<td>インターフェイスエンドポイント (ECR、CloudWatch Logs、SSM など)</td>
+<td>通信量が少ないと時間課金の方が高くつくこともあるため試算する</td>
+</tr>
+<tr>
+<td>AZ 間データ転送</td>
+<td>NAT を各 AZ に置いて<strong>同一 AZ 内で外に出す</strong>。リバランス設定やゾーン認識のルーティングを活用</td>
+<td>可用性とのトレードオフ</td>
+</tr>
+<tr>
+<td>インターネットへの大量送信</td>
+<td><strong>CloudFront</strong> 経由にする。オリジン (S3、ALB、EC2 など) から CloudFront へのデータ転送は無料</td>
+<td>キャッシュヒット率が高いほど効果大</td>
+</tr>
+<tr>
+<td>開発 / 検証環境の NAT</td>
+<td>夜間・休日は削除、あるいは共有化、リージョナル NAT で台数を減らす</td>
+<td>時間課金のため</td>
+</tr>
+<tr>
+<td>パブリック IPv4</td>
+<td>不要な EIP を解放、<strong>IPv6 + EIGW</strong> や ALB 集約で数を減らす</td>
+<td>未使用 EIP も課金対象</td>
+</tr>
+<tr>
+<td>多数 VPC の外向き通信</td>
+<td>Transit Gateway で<strong>集約型エグレス</strong>にする場合は、NAT 台数削減と TGW 処理料金を比較</td>
+<td>設計判断なので試算が必要</td>
+</tr>
+<tr>
+<td>VPC フローログの保管費</td>
+<td>S3 に出力、<strong>必要なトラフィックだけ (REJECT のみなど)</strong> に絞る、ライフサイクルで期間管理</td>
+<td>CloudWatch Logs は取り込み・保管とも高め</td>
+</tr>
+<tr>
+<td>CloudFront の請求が読みにくい</td>
+<td><strong>フラットレート料金プラン</strong>を検討</td>
+<td>月額固定で、CDN と WAF と DDoS 防御などを含み超過料金なし。配信が予測しにくい / 攻撃が心配な場合に有効</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-5-3">5-3. コストの調べ方</h3>
+<p>削減策を打つ前に、どの通信が費用の原因かを突き止める必要があります。請求の側から調べる手段と、通信の中身から調べる手段を組み合わせて使います。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS Cost Explorer</strong></td>
+<td>サービス別、使用タイプ別 (例: <code>NatGateway-Bytes</code>、<code>DataTransfer-Regional-Bytes</code>) でグルーピングして原因を特定</td>
+</tr>
+<tr>
+<td><strong>AWS Cost and Usage Reports (CUR)</strong></td>
+<td>詳細な使用量データを分析 (Athena で SQL 集計)</td>
+</tr>
+<tr>
+<td><strong>VPC フローログ + Athena</strong></td>
+<td><strong>どの宛先に大量送信しているか</strong>を特定 (NAT の ENI のログが有効)</td>
+</tr>
+<tr>
+<td><strong>Compute Optimizer / Trusted Advisor</strong></td>
+<td>低使用リソースや未関連付けの EIP の検出</td>
+</tr>
+<tr>
+<td><strong>コスト配分タグ</strong></td>
+<td>環境・チーム別にネットワークコストを按分</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-5-4">5-4. 判断のコツ (ひっかけ注意)</h3>
+<p>コスト関連の設問は、キーワードから答えがほぼ決まる型が多くあります。下の表で「問題文の言い回し」と「選ぶべき対策」の対応を覚えておくと素早く判断できます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>問題文のキーワード</th>
+<th>正解になりやすい選択肢</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「S3 へのアクセスで NAT ゲートウェイの費用が高い」</td>
+<td><strong>ゲートウェイエンドポイント</strong> (インターフェイス型ではない)</td>
+</tr>
+<tr>
+<td>「最小の運用負荷でコスト削減」</td>
+<td>マネージド機能 (エンドポイント、CloudFront) を使う</td>
+</tr>
+<tr>
+<td>「AZ 間転送料金を減らしたい」</td>
+<td>同一 AZ 内で通信が完結する構成にする</td>
+</tr>
+<tr>
+<td>「可用性を保ちつつ NAT コスト削減」</td>
+<td>リージョナル NAT や、開発環境のみ単一 NAT など要件に応じて選ぶ</td>
+</tr>
+<tr>
+<td>「使っていない Elastic IP」</td>
+<td>解放する (課金されるため)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-6">Step 6: Skill 5.2.1 DNS の構成</h2>
+<blockquote>
+<p>対象: Amazon Route 53 (ホストゾーンとレコード)、Route 53 Resolver、VPC の DNS 設定</p>
+</blockquote>
+<p>DNS は「名前から IP アドレスを引く」基盤で、ここが壊れると、ネットワークが正常でもサービスにつながらなくなります。Route 53 のホストゾーンとレコード、そして VPC 内の名前解決を担う Resolver を学びます。</p>
+<h3 id="sec-6-1">6-1. Route 53 の 3 つの役割</h3>
+<p>Route 53 は 1 つのサービスの中に 3 つの役割を持ちます。「ドメインを登録する」「DNS に答える」「ヘルスを監視する」の違いを区別できれば、設問の対象が見えます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>役割</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ドメイン登録</td>
+<td>ドメイン名の登録・更新・移管</td>
+</tr>
+<tr>
+<td><strong>DNS ルーティング (権威 DNS)</strong></td>
+<td>ホストゾーンにレコードを持ち、名前解決に答える</td>
+</tr>
+<tr>
+<td>ヘルスチェック</td>
+<td>エンドポイントの正常性を監視し、DNS の応答に反映する</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-2">6-2. ホストゾーン</h3>
+<p>ホストゾーンは、1 つのドメインの DNS レコードを入れる箱です。インターネットに公開するか、VPC の内側だけで使うかで 2 種類に分かれます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>用途</th>
+<th>名前解決できる範囲</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>パブリックホストゾーン</strong></td>
+<td>インターネット向け</td>
+<td>インターネット全体</td>
+</tr>
+<tr>
+<td><strong>プライベートホストゾーン</strong></td>
+<td>VPC 内部の名前 (例: <code>db.internal.example.com</code>)</td>
+<td><strong>関連付けた VPC のみ</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>パブリックホストゾーンを作ると <strong>NS レコードと SOA レコード</strong>が自動で作られます。ドメインレジストラ側のネームサーバーを、この NS の値に合わせる必要があります (ここを間違えると名前解決できません)。</li>
+<li>プライベートホストゾーンを使うには、関連付ける VPC で <strong><code>enableDnsSupport</code> と <code>enableDnsHostnames</code> を両方 true</strong> にします。</li>
+<li>同じ名前でパブリックとプライベートのホストゾーンがある場合 (スプリットビューDNS)、<strong>VPC 内からはプライベートホストゾーンが優先</strong>されます。</li>
+</ul>
+<h3 id="sec-6-3">6-3. 主なレコードタイプ</h3>
+<p>レコードタイプは、「名前に対して何を返すか」の種類です。試験では A / AAAA / CNAME の使い分けと、Route 53 独自の Alias の位置づけが特に問われます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>タイプ</th>
+<th>内容</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>名前から IPv4</td>
+<td>www → 203.0.113.10</td>
+</tr>
+<tr>
+<td>AAAA</td>
+<td>名前から IPv6</td>
+<td>www → 2001:db8::1</td>
+</tr>
+<tr>
+<td>CNAME</td>
+<td>名前から別の名前</td>
+<td>blog → www.example.com</td>
+</tr>
+<tr>
+<td>MX</td>
+<td>メールサーバー</td>
+<td>優先度付き</td>
+</tr>
+<tr>
+<td>TXT</td>
+<td>任意の文字列 (ドメイン所有確認、SPF など)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>NS</td>
+<td>権威ネームサーバー</td>
+<td>-</td>
+</tr>
+<tr>
+<td><strong>Alias</strong> (Route 53 独自)</td>
+<td>AWS リソースへの別名</td>
+<td>example.com → CloudFront / ALB / S3 など</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-4">6-4. Alias と CNAME (最頻出の比較)</h3>
+<p>Alias と CNAME は、どちらも「別の名前を指す」ように見えますが、制約と料金が異なります。とくに「ゾーンの頂点(example.com)に設定できるか」は定番の出題ポイントです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>Alias</th>
+<th>CNAME</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ゾーンの頂点 (example.com)</strong> に設定</td>
+<td><strong>できる</strong></td>
+<td><strong>できない</strong></td>
+</tr>
+<tr>
+<td>クエリ料金</td>
+<td>AWS リソース宛ては<strong>無料</strong></td>
+<td>通常課金</td>
+</tr>
+<tr>
+<td>指せる先</td>
+<td>CloudFront、ELB、S3 静的サイト、API Gateway、Global Accelerator、同一ゾーン内の別レコードなど</td>
+<td>任意のドメイン名</td>
+</tr>
+<tr>
+<td>ヘルス評価</td>
+<td><strong>Evaluate Target Health</strong> が使える</td>
+<td>不可</td>
+</tr>
+<tr>
+<td>実際の動作</td>
+<td>Route 53 が A / AAAA として応答</td>
+<td>名前を返し、クライアントが再度解決</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d12" role="img" aria-label="図解 13"></div></div>
+<h3 id="sec-6-5">6-5. VPC の DNS の仕組み (Route 53 Resolver)</h3>
+<p>VPC 内のインスタンスの DNS 問い合わせは、<strong>Route 53 Resolver (Amazon Provided DNS)</strong> が受けます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アドレス</td>
+<td><strong>VPC CIDR のベース + 2</strong> (例: 10.0.0.2)、および <strong>169.254.169.253</strong></td>
+</tr>
+<tr>
+<td>解決できるもの</td>
+<td>パブリックな名前、プライベートホストゾーン、VPC の内部ホスト名、VPC エンドポイントの名前</td>
+</tr>
+<tr>
+<td>上限</td>
+<td>ENI あたり <strong>1 秒あたり 1,024 パケット</strong> (超えると DNS 失敗の原因に)</td>
+</tr>
+<tr>
+<td>VPC 属性</td>
+<td><code>enableDnsSupport</code> (DNS 解決の有効化)、<code>enableDnsHostnames</code> (パブリック DNS ホスト名の付与)</td>
+</tr>
+<tr>
+<td>DHCP オプションセット</td>
+<td>カスタム DNS サーバーを指定すると <strong>Resolver (.2) を使わなくなる</strong> (ひっかけ注意)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-6">6-6. ハイブリッド DNS: Resolver エンドポイント</h3>
+<p>オンプレミスと VPC で互いの名前を解決したいときに使います。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>エンドポイント</th>
+<th>方向</th>
+<th>使い所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>インバウンドエンドポイント</strong></td>
+<td><strong>オンプレミス → VPC</strong></td>
+<td>オンプレの DNS が VPC のプライベートホストゾーンの名前を引く</td>
+</tr>
+<tr>
+<td><strong>アウトバウンドエンドポイント</strong></td>
+<td><strong>VPC → オンプレミス</strong></td>
+<td>VPC のインスタンスが <code>corp.example.com</code> などオンプレの名前を引く。<strong>転送ルール</strong>で対象ドメインとオンプレ DNS の IP を指定</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d13" role="img" aria-label="図解 14"></div></div>
+<p><strong>設計のコツ</strong></p>
+<ul>
+<li>エンドポイントは<strong>可用性のため 2 つ以上の AZ の IP アドレス</strong>で作成する。</li>
+<li>エンドポイントの <strong>SG</strong> で、DNS (TCP/UDP <strong>53</strong>) を許可する (インバウンドは送信元オンプレ、アウトバウンドは宛先オンプレ DNS)。</li>
+<li>オンプレ ↔ VPC の <strong>VPN / Direct Connect が前提</strong>。経路が先に通っていること。</li>
+<li>転送ルールは<strong>ドメイン名ごと</strong>に作り、複数 VPC に共有 (AWS RAM) もできる。</li>
+</ul>
+<h3 id="sec-6-7">6-7. DNSSEC (概要)</h3>
+<p>DNSSEC は、DNS の応答が途中で改ざんされていないことを署名で確認できる仕組みです。試験では詳細な設定よりも、概念と、鍵を us-east-1 の KMS に置くという点が問われます。</p>
+<ul>
+<li>パブリックホストゾーンで <strong>DNSSEC 署名</strong>を有効化でき、応答の改ざん検知ができます。</li>
+<li>署名鍵は <strong>AWS KMS の非対称キー (米国東部 (バージニア北部) リージョン)</strong> を使います。</li>
+<li>レジストラ側に <strong>DS レコード</strong>の登録が必要です。</li>
+</ul>
+<h3 id="sec-6-8">6-8. ベストプラクティス</h3>
+<p>DNS 運用の指針です。DNS の変更は反映までに時間がかかり、間違えると到達不能になるため、理由の列で「何が起きるのを避けたいのか」を確認してください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS リソース宛て</td>
+<td><strong>Alias</strong> を使う (無料、頂点にも可、ヘルス連動)</td>
+<td>クエリ料金が無料で、頂点にも設定でき、ターゲットの IP 変更に追従し、ヘルス評価とも連動できるため。</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>変更が多い・フェイルオーバー用途は短く (例 60 秒)、安定したレコードは長く</td>
+<td>TTL が長いとキャッシュが残って変更が反映されず、短すぎるとクエリ量と遅延が増えるため。</td>
+</tr>
+<tr>
+<td>内部名</td>
+<td><strong>プライベートホストゾーン</strong>を使い、IP 直書きを避ける</td>
+<td>IP は変わりうるが、名前を使えば接続先の入れ替えでアプリ設定を直さずに済み、VPC の内側にだけ公開できるため。</td>
+</tr>
+<tr>
+<td>ハイブリッド DNS</td>
+<td>Resolver エンドポイントを 2 AZ 以上に作成し、転送ルールを最小限に</td>
+<td>1 つの AZ の障害でオンプレミスとの名前解決が止まらないようにし、不要な転送で通信量と障害範囲を増やさないため。</td>
+</tr>
+<tr>
+<td>変更前</td>
+<td><strong>レジストラ NS とホストゾーン NS の一致</strong>を確認</td>
+<td>不一致だとインターネットから見えるネームサーバーが別になり、名前解決に失敗するため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-7">Step 7: Skill 5.2.2 Route 53 ルーティングポリシーとクエリログ</h2>
+<blockquote>
+<p>対象: ルーティングポリシー、ヘルスチェック、クエリログの設定</p>
+</blockquote>
+<p>Route 53 には、どの答えを返すかを決める 8 種類のルーティングポリシーと、障害時に切り替えるヘルスチェックがあります。どのポリシーを何の目的に使うかを、キーワードで即答できる状態を目指します。</p>
+<h3 id="sec-7-1">7-1. ルーティングポリシーの全体像</h3>
+<p>ポリシーは、「何を基準に振り分けるか」で見分けます。比率、遅延、障害、所在地、距離、クライアントの IP といった基準を、下の表で対応づけてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシー</th>
+<th>何を基準に答えを選ぶか</th>
+<th>典型的な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>シンプル</strong></td>
+<td>条件なし (複数値なら全部返しクライアントが選択)</td>
+<td>単一リソース</td>
+</tr>
+<tr>
+<td><strong>加重 (Weighted)</strong></td>
+<td>重み (比率)</td>
+<td><strong>カナリアリリース、段階的移行、A/B テスト</strong></td>
+</tr>
+<tr>
+<td><strong>レイテンシー</strong></td>
+<td>ユーザーに最も<strong>遅延の小さいリージョン</strong></td>
+<td>マルチリージョンで速度優先</td>
+</tr>
+<tr>
+<td><strong>フェイルオーバー</strong></td>
+<td><strong>ヘルスチェック結果</strong> (プライマリ / セカンダリ)</td>
+<td>アクティブ - パッシブ DR</td>
+</tr>
+<tr>
+<td><strong>位置情報 (Geolocation)</strong></td>
+<td><strong>ユーザーの所在地</strong> (国・大陸・州)</td>
+<td>コンテンツのローカライズ、<strong>法規制による提供地域制御</strong></td>
+</tr>
+<tr>
+<td><strong>地理的近接性 (Geoproximity)</strong></td>
+<td>リソースとユーザーの<strong>距離</strong> (バイアスで範囲を拡縮)</td>
+<td>トラフィックを特定リージョンへ寄せたい</td>
+</tr>
+<tr>
+<td><strong>複数値回答 (Multivalue)</strong></td>
+<td>ヘルスの正常な値を<strong>最大 8 件</strong>返す</td>
+<td>簡易的な負荷分散 + ヘルスチェック</td>
+</tr>
+<tr>
+<td><strong>IP ベース</strong></td>
+<td>クライアントの <strong>IP アドレス範囲 (CIDR)</strong></td>
+<td>特定の ISP やネットワークを特定のエンドポイントへ</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d14" role="img" aria-label="図解 15"></div></div>
+<h3 id="sec-7-2">7-2. 各ポリシーの重要ポイント</h3>
+<p>各ポリシーには、試験で狙われやすい細かい仕様があります。「重み 0 の意味」「位置情報のデフォルトレコード」のような点を、まとめて確認します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシー</th>
+<th>試験で問われやすい点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加重</td>
+<td>重みは<strong>相対比率</strong> (合計 100 である必要はない)。重み <strong>0 はトラフィックを送らない</strong> (ただし全レコードが 0 なら均等に応答)</td>
+</tr>
+<tr>
+<td>レイテンシー</td>
+<td>「<strong>物理的な近さ</strong>」ではなく<strong>測定されたレイテンシー</strong>で決まる。各レコードに<strong>リージョンを指定</strong></td>
+</tr>
+<tr>
+<td>フェイルオーバー</td>
+<td><strong>プライマリにヘルスチェックを関連付け</strong>る。セカンダリは任意。Alias なら <strong>Evaluate Target Health</strong> を使える</td>
+</tr>
+<tr>
+<td>位置情報</td>
+<td><strong>デフォルトレコード</strong>を必ず用意 (一致しない場所のユーザーへの応答のため)。<strong>距離ではなく所在地</strong>で選ぶ</td>
+</tr>
+<tr>
+<td>複数値</td>
+<td>ELB の代替ではない。<strong>最大 8 レコード</strong></td>
+</tr>
+<tr>
+<td>共通</td>
+<td>ほぼすべてのポリシーで <strong>ヘルスチェック</strong>と組み合わせ可能。ルーティングポリシーを<strong>組み合わせた階層構成</strong>も可能 (例: 位置情報 → レイテンシー)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-3">7-3. ヘルスチェックの 3 種類</h3>
+<p>ヘルスチェックは、フェイルオーバーなどの判断材料になる「正常か異常か」を作る仕組みです。監視対象の違いにより 3 種類があり、プライベートなリソースには特別な方法が必要になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>監視対象</th>
+<th>使い所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>エンドポイント</strong></td>
+<td>IP またはドメインに対する HTTP / HTTPS / TCP</td>
+<td>公開エンドポイントの死活</td>
+</tr>
+<tr>
+<td><strong>計算済み (Calculated)</strong></td>
+<td>他のヘルスチェックの結果を AND / OR / しきい値で集約</td>
+<td>複数コンポーネントの総合判定</td>
+</tr>
+<tr>
+<td><strong>CloudWatch アラーム</strong></td>
+<td>任意の CloudWatch アラームの状態</td>
+<td><strong>プライベートな (インターネットから見えない) リソース</strong>の監視にも使える</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>重要な仕組み</strong></p>
+<ul>
+<li>ヘルスチェッカーは<strong>世界各地の複数の拠点</strong>からリクエストを送り、<strong>約 18% 超が成功</strong>なら正常と判定します。</li>
+<li>間隔は<strong>標準 30 秒 / 高速 10 秒</strong>。<strong>失敗しきい値 (既定 3 回)</strong> 連続失敗で異常になります。</li>
+<li><strong>ヘルスチェッカーの IP からのアクセスを SG / NACL / ファイアウォールで許可</strong>する必要があります (許可しないと常に異常判定される典型的な設定ミス)。</li>
+<li><strong>プライベートな VPC 内のエンドポイントは、パブリックのヘルスチェッカーから到達できない</strong>ため、<strong>CloudWatch アラームベースのヘルスチェック</strong>を使います。</li>
+<li>ヘルスチェックのメトリクス (<code>HealthCheckStatus</code> など) は <strong>米国東部 (バージニア北部) リージョンの CloudWatch</strong> に出ます。</li>
+</ul>
+<h3 id="sec-7-4">7-4. フェイルオーバーの流れ</h3>
+<p>フェイルオーバーは、ヘルスチェックの結果で DNS の応答が切り替わる流れです。切り替えは DNS の応答が変わるだけなので、クライアントのキャッシュ(TTL)の影響を受ける点まで理解してください。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d15" role="img" aria-label="図解 16"></div></div>
+<blockquote>
+<p><strong>TTL の注意</strong>: 切り替えは DNS の応答が変わるだけです。クライアントや中間リゾルバーが古い答えを <strong>TTL の間キャッシュ</strong>するため、フェイルオーバー用レコードの TTL は<strong>短く</strong>設定します。TTL に依存せず即時に切り替えたい場合は <strong>Global Accelerator</strong> (Step 8) や <strong>Application Recovery Controller</strong> を検討します。</p>
+</blockquote>
+<h3 id="sec-7-5">7-5. Amazon Application Recovery Controller (ARC)</h3>
+<p>ARC は、複数のリージョンや AZ にまたがるアプリの切り替えを、より確実に制御するサービスです。Route 53 の標準のフェイルオーバーを補う選択肢として知っておく程度で十分です。</p>
+<ul>
+<li>複数リージョン / AZ にまたがるアプリの<strong>復旧準備状況の確認</strong>と、<strong>ルーティングコントロール (トラフィックのオン / オフ切り替え)</strong> を提供するサービスです。</li>
+<li>Route 53 のヘルスチェックと連携し、<strong>手動または自動でトラフィックを安全に切り替え</strong>ます。</li>
+<li>試験では「確実性の高いフェイルオーバー制御」の選択肢として出ることがあります (詳細な構築は Domain 2 の領域)。</li>
+</ul>
+<h3 id="sec-7-6">7-6. クエリログ</h3>
+<p>「誰がどの名前を問い合わせたか」を記録する機能は <strong>2 種類</strong>あります。<strong>混同しやすい</strong>ので違いを表で押さえます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th><strong>パブリックホストゾーンのクエリログ</strong></th>
+<th><strong>Resolver クエリログ</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>記録対象</td>
+<td><strong>権威 DNS として受けた</strong>クエリ (インターネットからの問い合わせ)</td>
+<td><strong>VPC 内のリソースが出した</strong>クエリ (VPC Resolver 経由)</td>
+</tr>
+<tr>
+<td>設定対象</td>
+<td>ホストゾーン</td>
+<td><strong>VPC</strong> (に関連付け)</td>
+</tr>
+<tr>
+<td>出力先</td>
+<td><strong>CloudWatch Logs のみ</strong> (ロググループは <strong>米国東部 (バージニア北部)</strong> に作成)</td>
+<td>CloudWatch Logs、S3、Data Firehose</td>
+</tr>
+<tr>
+<td>主な用途</td>
+<td>ドメインへのアクセス傾向、不審なクエリの調査</td>
+<td>マルウェア疑いのインスタンスの特定、<strong>DNS Firewall の BLOCK / ALERT の確認</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d16" role="img" aria-label="図解 17"></div></div>
+<p><strong>Resolver クエリログに含まれる主な情報</strong>: 問い合わせた名前 (query_name)、タイプ、応答コード (rcode)、<strong>送信元 IP / インスタンス ID</strong>、VPC ID、DNS Firewall の判定結果など。</p>
+<h3 id="sec-7-7">7-7. ベストプラクティス</h3>
+<p>ルーティングとログの運用指針です。理由の列に、各設定が防ぐ失敗を書いています。障害対応の設問では、その失敗が原因になっていることが多くあります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>フェイルオーバー</td>
+<td>プライマリにヘルスチェック + 短い TTL。<strong>ヘルスチェッカーの IP を許可</strong></td>
+<td>異常の検知時間と TTL 切れの両方が切り替わりの時間を決め、チェッカーが遮断されていると常に異常と判定されるため。</td>
+</tr>
+<tr>
+<td>段階的移行</td>
+<td>加重ルーティングで 5% → 25% → 100% のように少しずつ</td>
+<td>問題があっても影響が少数のユーザーに限られ、すぐに重みを戻せるため。</td>
+</tr>
+<tr>
+<td>法規制</td>
+<td>位置情報ルーティング + <strong>デフォルトレコード</strong></td>
+<td>一致しない地域のユーザーに応答がなくなるのを防ぐため。</td>
+</tr>
+<tr>
+<td>プライベートリソース</td>
+<td><strong>CloudWatch アラームベース</strong>のヘルスチェック</td>
+<td>パブリックなヘルスチェッカーは、プライベートなリソースに到達できないため。</td>
+</tr>
+<tr>
+<td>セキュリティ調査</td>
+<td><strong>Resolver クエリログ</strong>を有効化し、GuardDuty (DNS ログを分析) と併用</td>
+<td>VPC 内のどのインスタンスがどの名前を引いたかが分かり、マルウェアの通信先の調査に使えるため。</td>
+</tr>
+<tr>
+<td>コスト</td>
+<td>クエリログは<strong>出力量が多い</strong>ため、S3 + ライフサイクルで管理</td>
+<td>DNS クエリは量が多く、CloudWatch Logs に置き続けると保管料金が膨らむため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-8">Step 8: Skill 5.2.3 CloudFront と Global Accelerator</h2>
+<blockquote>
+<p>対象: Amazon CloudFront、AWS Global Accelerator によるコンテンツ・サービス配信</p>
+</blockquote>
+<p>ユーザーに近い場所からコンテンツやサービスを届けるのが CloudFront と Global Accelerator です。名前が似ていますが目的が異なり、キャッシュで高速化するのか、固定 IP とネットワーク経路で高速化するのかが違いです。</p>
+<h3 id="sec-8-1">8-1. 2 つのサービスの位置づけ</h3>
+<p>CloudFront はキャッシュを使う CDN、Global Accelerator はキャッシュを使わないネットワーク層の加速、と覚えます。設問では「固定 IP」「TCP/UDP」「キャッシュ」のどれが要件に含まれるかが決め手になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th><strong>CloudFront</strong></th>
+<th><strong>Global Accelerator</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>種類</td>
+<td><strong>CDN</strong> (コンテンツをキャッシュして配信)</td>
+<td><strong>ネットワーク層の加速</strong> (AWS のグローバル網へ早期に取り込み)</td>
+</tr>
+<tr>
+<td>主な対象</td>
+<td>HTTP / HTTPS / WebSocket (静的 + 動的コンテンツ)</td>
+<td><strong>TCP / UDP</strong> (ゲーム、IoT、VoIP、非 HTTP も)</td>
+</tr>
+<tr>
+<td>キャッシュ</td>
+<td><strong>あり</strong></td>
+<td><strong>なし</strong></td>
+</tr>
+<tr>
+<td>IP アドレス</td>
+<td>エッジごとに変わる (固定 IP なし)</td>
+<td><strong>2 つの静的エニーキャスト IP</strong></td>
+</tr>
+<tr>
+<td>向き先</td>
+<td>S3、ALB、EC2、任意の HTTP オリジン</td>
+<td>ALB、NLB、EC2、<strong>Elastic IP</strong> (リージョンの<strong>エンドポイントグループ</strong>)</td>
+</tr>
+<tr>
+<td>フェイルオーバー</td>
+<td>オリジングループ</td>
+<td><strong>ヘルスチェック + 数秒での切り替え (DNS の TTL 非依存)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d17" role="img" aria-label="図解 18"></div></div>
+<h3 id="sec-8-2">8-2. CloudFront の基本構成</h3>
+<p>CloudFront は、ユーザーに近いエッジロケーションにコンテンツをキャッシュして配信します。ディストリビューション、オリジン、ビヘイビアといった用語の関係を、流れとあわせて押さえます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d18" role="img" aria-label="図解 19"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ディストリビューション</td>
+<td>CloudFront の配信設定の単位</td>
+</tr>
+<tr>
+<td>オリジン</td>
+<td>元のコンテンツの場所 (S3、ALB、EC2、任意の HTTP サーバー)</td>
+</tr>
+<tr>
+<td><strong>ビヘイビア (Cache behavior)</strong></td>
+<td><strong>パスパターンごと</strong>の設定 (オリジン、キャッシュポリシー、ビューワープロトコルなど)。既定ビヘイビアは <code>*</code></td>
+</tr>
+<tr>
+<td>キャッシュポリシー</td>
+<td><strong>キャッシュキー</strong> (何を区別してキャッシュするか) と TTL の設定</td>
+</tr>
+<tr>
+<td>オリジンリクエストポリシー</td>
+<td>オリジンに転送する値 (キャッシュキーには含めない)</td>
+</tr>
+<tr>
+<td>レスポンスヘッダーポリシー</td>
+<td>セキュリティヘッダーや CORS ヘッダーの付与</td>
+</tr>
+<tr>
+<td><strong>Origin Shield</strong></td>
+<td>キャッシュ層を 1 つ追加し、<strong>オリジンへのリクエストを集約</strong> (オリジン負荷とコストの軽減)</td>
+</tr>
+<tr>
+<td>料金クラス</td>
+<td>使うエッジロケーションの範囲を絞ってコスト削減 (性能とのトレードオフ)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-3">8-3. セキュリティの設定</h3>
+<p>CloudFront はオリジンの前段に置く盾でもあります。S3 や ALB へ直接アクセスされないようにする方法と、証明書や認可の設定をまとめます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3 を直接公開せず CloudFront 経由のみ</strong>にする</td>
+<td><strong>Origin Access Control (OAC)</strong> を使い、<strong>バケットポリシーで CloudFront (ディストリビューション ARN) のみ許可</strong>。旧方式の OAI より OAC が推奨</td>
+</tr>
+<tr>
+<td>ALB を CloudFront 経由のみに</td>
+<td>カスタムヘッダーの秘密値を ALB / WAF で検証、または CloudFront のマネージドプレフィックスリストを SG で許可</td>
+</tr>
+<tr>
+<td>HTTPS の強制</td>
+<td>ビューワープロトコルポリシーを <strong>Redirect HTTP to HTTPS</strong> または <strong>HTTPS only</strong></td>
+</tr>
+<tr>
+<td>独自ドメインの証明書</td>
+<td><strong>ACM の証明書を米国東部 (バージニア北部) リージョンで作成</strong> (CloudFront 用の必須条件)</td>
+</tr>
+<tr>
+<td>有料会員のみ配信</td>
+<td><strong>署名付き URL / 署名付き Cookie</strong></td>
+</tr>
+<tr>
+<td>地域制限</td>
+<td><strong>地理的制限 (Geo restriction)</strong> で許可 / 拒否リスト</td>
+</tr>
+<tr>
+<td>Web 攻撃対策</td>
+<td><strong>AWS WAF</strong> の Web ACL (CloudFront スコープ) を関連付け</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-4">8-4. 可用性: オリジングループ</h3>
+<p><strong>オリジングループ</strong>に 2 つのオリジン (プライマリ、セカンダリ) を登録すると、プライマリが<strong>指定したステータスコード (例: 500、502、503、504) を返す、または接続できない</strong>場合に、セカンダリへ自動でフェイルオーバーします (GET / HEAD / OPTIONS が対象)。</p>
+<h3 id="sec-8-5">8-5. エッジでのコード実行</h3>
+<p>エッジでコードを動かすと、リクエストやレスポンスをユーザーの近くで書き換えられます。軽い処理は CloudFront Functions、複雑な処理は Lambda@Edge、という使い分けです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CloudFront Functions</strong></td>
+<td>軽量・超低遅延。URL 書き換え、ヘッダー操作など単純な処理向け</td>
+</tr>
+<tr>
+<td><strong>Lambda@Edge</strong></td>
+<td>より高機能 (ネットワークアクセス、リクエストボディの処理など)。Lambda 関数を <strong>米国東部 (バージニア北部)</strong> で作成して関連付け</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-6">8-6. Global Accelerator の基本構成</h3>
+<p>Global Accelerator は、2 つの静的な IP アドレスを入口にして、ユーザーを最寄りのエッジから AWS のネットワークに乗せます。リージョンの切り替えは DNS ではなくヘルスチェックで行われるため、素早く切り替わります。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d19" role="img" aria-label="図解 20"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アクセラレーター</td>
+<td>静的 IP を持つ入口。<strong>標準アクセラレーター</strong>と<strong>カスタムルーティングアクセラレーター</strong></td>
+</tr>
+<tr>
+<td>リスナー</td>
+<td>受け付けるポートとプロトコル (TCP / UDP)</td>
+</tr>
+<tr>
+<td>エンドポイントグループ</td>
+<td><strong>リージョンごと</strong>の転送先の集合。<strong>トラフィックダイヤル</strong> (0-100%) でリージョンへの割合を調整</td>
+</tr>
+<tr>
+<td>エンドポイント</td>
+<td>ALB、NLB、EC2 インスタンス、EIP。<strong>エンドポイントの重み</strong>で比率を調整</td>
+</tr>
+<tr>
+<td>ヘルスチェック</td>
+<td>異常なエンドポイントを自動で除外して正常なエンドポイントへ誘導</td>
+</tr>
+<tr>
+<td>クライアント IP の保持</td>
+<td>ALB や EC2 では保持可能 (設定による)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>使い分け: <strong>トラフィックダイヤルを 0 にして</strong> メンテナンス時にリージョンを切り離す、といった運用ができます。</p>
+</blockquote>
+<h3 id="sec-8-7">8-7. ベストプラクティス</h3>
+<p>配信の運用指針です。理由の列に「どの失敗を防ぐか」を書いているので、設問で見かけた構成の問題点を指摘する際の根拠にしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>オリジンの保護</td>
+<td>S3 は OAC、ALB は CloudFront からのみ到達可能にする</td>
+<td>CloudFront を迂回した直接アクセスを許すと、WAF やキャッシュによる保護が効かなくなるため。</td>
+</tr>
+<tr>
+<td>キャッシュ効率</td>
+<td><strong>キャッシュキーを最小限</strong>にする (不要なクエリ文字列・ヘッダー・Cookie を含めない) (Step 11)</td>
+<td>キャッシュキーが細かいほど別のオブジェクトとして扱われ、ヒット率が下がってオリジンの負荷と費用が増えるため。</td>
+</tr>
+<tr>
+<td>コスト</td>
+<td>料金クラス、Origin Shield、フラットレートプランを検討</td>
+<td>配信量やオリジンへの取得回数に応じて課金が変わり、予測しにくい請求を抑えられるため。</td>
+</tr>
+<tr>
+<td>静的アセット</td>
+<td><strong>ファイル名にバージョン</strong>を付け、長い TTL を設定 (無効化に頼らない)</td>
+<td>名前が変われば新しいキャッシュとして扱われ、無効化の待ち時間と費用を避けられるため。</td>
+</tr>
+<tr>
+<td>固定 IP が必要</td>
+<td>Global Accelerator</td>
+<td>CloudFront は IP が固定されないため、許可リスト運用には静的なエニーキャスト IP が必要なため。</td>
+</tr>
+<tr>
+<td>監視</td>
+<td>CloudFront の標準ログ / CloudWatch メトリクス / WAF ログを有効化</td>
+<td>エラーやヒット率の悪化を、ユーザーの苦情より先に把握できるため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-9">Step 9: Skill 5.3.1 VPC 構成のトラブルシューティング</h2>
+<blockquote>
+<p>対象: サブネット、ルートテーブル、ネットワーク ACL、セキュリティグループ、Transit Gateway、NAT ゲートウェイ</p>
+</blockquote>
+<p>ここからはトラブルシューティングです。AWS のネットワーク障害の大半は、ルート、SG、NACL の設定ミスに集約されます。まず切り分けの考え方を身につけ、次に NAT ゲートウェイなど個別の部品の症状を見ます。</p>
+<h3 id="sec-9-1">9-1. 基本姿勢: 「経路」と「許可」を分けて考える</h3>
+<p>ネットワーク障害は、次の 2 つに分解すると切り分けやすくなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>問うこと</th>
+<th>確認する場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>経路 (Routing)</strong></td>
+<td>パケットは<strong>届く道</strong>があるか</td>
+<td>ルートテーブル、IGW / NAT / TGW / ピアリング、アタッチメント</td>
+</tr>
+<tr>
+<td><strong>許可 (Filtering)</strong></td>
+<td>道の途中で<strong>止められていない</strong>か</td>
+<td>SG、NACL、Network Firewall、OS のファイアウォール</td>
+</tr>
+<tr>
+<td><strong>名前解決</strong></td>
+<td>そもそも<strong>宛先 IP を引けて</strong>いるか</td>
+<td>DNS、Resolver、プライベートホストゾーン</td>
+</tr>
+<tr>
+<td><strong>アプリ</strong></td>
+<td>ポートで<strong>待ち受けている</strong>か</td>
+<td>OS 上のプロセス、ヘルスチェック設定</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-9-2">9-2. 万能の確認順序</h3>
+<p>下のフローは、通信できないときに上から順にたどる確認手順です。経路、送信元と宛先の SG と NACL、戻りのルートを順に見れば、ほとんどの原因に行き当たります。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d20" role="img" aria-label="図解 21"></div></div>
+<h3 id="sec-9-3">9-3. 症状別の早見表</h3>
+<p>症状から疑うべき箇所を引く表です。試験の設問は「〇〇ができない」という症状で出題されるため、症状を見た瞬間に最初の確認先が浮かぶようにしておきます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>最初に疑うこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>プライベートサブネットの EC2 がインターネットに出られない</td>
+<td>① <code>0.0.0.0/0 → NAT</code> のルート ② NAT が<strong>パブリックサブネット</strong>にあり、そのサブネットに <strong>IGW ルート</strong>があるか ③ NAT に <strong>EIP</strong> があるか ④ SG / NACL のアウトバウンド</td>
+</tr>
+<tr>
+<td>パブリックサブネットの EC2 にインターネットから届かない</td>
+<td>① IGW のアタッチ ② <code>0.0.0.0/0 → IGW</code> ③ <strong>パブリック IPv4 / EIP の有無</strong> ④ SG のインバウンド ⑤ NACL (エフェメラルポート)</td>
+</tr>
+<tr>
+<td>同一 VPC 内の 2 台で通信できない</td>
+<td><strong>SG のインバウンド</strong>。local ルートは常にあるので経路は通常問題なし。NACL も確認</td>
+</tr>
+<tr>
+<td>ピアリング先と通信できない</td>
+<td>① 承諾済み (active) ② <strong>両側のルート</strong> ③ <strong>CIDR の重複</strong>がないか ④ SG / NACL ⑤ DNS 解決の設定</td>
+</tr>
+<tr>
+<td>TGW 経由で通信できない</td>
+<td>① アタッチメントの状態 ② <strong>VPC 側ルート (→ tgw)</strong> ③ <strong>TGW ルートテーブルの関連付けと伝播</strong> ④ ブラックホールルート ⑤ アタッチメント用サブネットの NACL</td>
+</tr>
+<tr>
+<td>片方向だけ通信できる</td>
+<td><strong>NACL (ステートレス) の戻り許可漏れ</strong>、または<strong>戻りルートがない</strong> (非対称ルーティング)</td>
+</tr>
+<tr>
+<td>一部のサブネットだけ通信できない</td>
+<td>そのサブネットの<strong>ルートテーブルの関連付け</strong> (メインテーブルのままになっていないか) と <strong>NACL</strong></td>
+</tr>
+<tr>
+<td>プライベートサブネットから S3 に接続できない</td>
+<td>ゲートウェイエンドポイントの<strong>ルートテーブル関連付け</strong>、<strong>エンドポイントポリシー</strong>、<strong>S3 バケットポリシーの <code>aws:SourceVpce</code></strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-9-4">9-4. NAT ゲートウェイの障害対応</h3>
+<p>NAT ゲートウェイの障害は、設定の誤りとリソースの上限に分けて考えます。後者はメトリクスで検知できるため、症状と CloudWatch の指標を結び付けて覚えておくと有利です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因と対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAT 経由で接続できない</td>
+<td>NAT のサブネットのルートに IGW がない、プライベート側にルートがない、<strong>NAT が <code>failed</code> 状態</strong> (EIP の問題など)</td>
+</tr>
+<tr>
+<td>突然タイムアウトや接続エラーが増えた</td>
+<td><strong>ポート枯渇</strong> (CloudWatch メトリクス <strong><code>ErrorPortAllocation</code></strong>)。同一宛先へ大量の同時接続を張ると、<strong>同じ宛先 (IP + ポート + プロトコル) あたり約 55,000 の同時接続</strong>が上限になる</td>
+</tr>
+<tr>
+<td>対処 (ポート枯渇)</td>
+<td>NAT に<strong>セカンダリ EIP を追加</strong>、宛先を分散、アプリのコネクションを再利用 (Keep-Alive / プーリング)、サブネットごとに NAT を分けて分散</td>
+</tr>
+<tr>
+<td>長時間アイドルの接続が切れる</td>
+<td><strong>アイドルタイムアウトは 350 秒</strong>。TCP Keep-Alive を 350 秒未満の間隔で送る (<code>IdleTimeoutCount</code> メトリクス)</td>
+</tr>
+<tr>
+<td>パケットが落ちる</td>
+<td><code>PacketsDropCount</code> を確認。NAT の障害や上限超過の可能性</td>
+</tr>
+<tr>
+<td>IPv6 が通らない</td>
+<td>NAT ゲートウェイは <strong>IPv4 用</strong>。IPv6 の外向きは <strong>EIGW</strong>。(IPv6 専用サブネットから IPv4 宛先へは DNS64 + NAT64 の組み合わせも可)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>Regional NAT ゲートウェイ</strong>を使う場合は、サブネットごとの NAT 配置とルート変更が不要になる点が運用上の違いです。ただし<strong>プライベート NAT</strong> は従来のゾーナルモードが必要です。</p>
+</blockquote>
+<h3 id="sec-9-5">9-5. VPC Reachability Analyzer</h3>
+<p><strong>構成情報から経路を静的に解析</strong>するツールです。<strong>実際のパケットは送りません</strong>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>使い方</td>
+<td><strong>送信元と宛先 (ENI、インスタンス、IGW、VPN、TGW アタッチメントなど)、プロトコル、ポート</strong>を指定して「パス分析」を実行</td>
+</tr>
+<tr>
+<td>結果</td>
+<td><strong>到達可能 (Reachable)</strong> なら通過した各ホップを表示。<strong>到達不可 (Not reachable)</strong> なら<strong>ブロックしているコンポーネントと理由</strong> (ルートの欠落、SG / NACL の拒否など) を示す</td>
+</tr>
+<tr>
+<td>向いている場面</td>
+<td>「どこで止まっているか」を<strong>まず特定</strong>したいとき、変更後の疎通を事前に確認したいとき</td>
+</tr>
+<tr>
+<td>注意</td>
+<td>アプリ層 (プロセスの待受や OS の FW)、DNS は分析対象外。<strong>構成上の到達性</strong>のみ判定する</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d21" role="img" aria-label="図解 22"></div></div>
+<h3 id="sec-9-6">9-6. SG と NACL を切り分けるコツ</h3>
+<p>SG と NACL のどちらが原因かを、フローログの ACCEPT と REJECT の組み合わせから見分けられます。この見分け方は、設問でも実務でも使えます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観察</th>
+<th>原因の可能性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>フローログで<strong>インバウンドが REJECT</strong></td>
+<td>SG のインバウンド不許可、または NACL のインバウンド拒否</td>
+</tr>
+<tr>
+<td><strong>インバウンドは ACCEPT、戻り (アウトバウンド) が REJECT</strong></td>
+<td><strong>NACL</strong> (SG はステートフルで戻りは自動許可されるため、SG が原因になりにくい)</td>
+</tr>
+<tr>
+<td>設定は正しいのに特定 IP だけ失敗</td>
+<td><strong>NACL の拒否ルールが番号の小さい順に先に一致</strong>している</td>
+</tr>
+<tr>
+<td>追加した許可が効かない</td>
+<td>NACL の<strong>番号の小さい拒否ルール</strong>が優先されている</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-10">Step 10: Skill 5.3.2 ネットワークログの収集と解釈</h2>
+<blockquote>
+<p>対象: VPC フローログ、ELB アクセスログ、AWS WAF Web ACL ログ、CloudFront ログ、コンテナログ</p>
+</blockquote>
+<p>ログは「何が起きたか」を後から確かめる唯一の手段です。5 種類のログについて、何がわかるのか、どこに出力されるのか、どう読むのかを学びます。症状に応じて、どのログを開くかを即答できるようにします。</p>
+<h3 id="sec-10-1">10-1. ログの全体像</h3>
+<p>ログごとに、見えるものが違います。通信の許可と拒否ならフローログ、LB のエラーならアクセスログ、のように「知りたいこと」から選びます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ログ</th>
+<th>何がわかるか</th>
+<th>出力先</th>
+<th>主な用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VPC フローログ</strong></td>
+<td>ENI を通る IP トラフィックのメタデータ (送信元 / 宛先 / ポート / 許可・拒否)</td>
+<td>CloudWatch Logs、S3、Data Firehose</td>
+<td><strong>SG / NACL の拒否の特定</strong>、不審な通信の調査</td>
+</tr>
+<tr>
+<td><strong>ELB アクセスログ</strong></td>
+<td>ロードバランサーが受けた各リクエストの詳細 (ステータス、レイテンシー)</td>
+<td><strong>S3</strong></td>
+<td>502/503/504 の原因調査、遅延の分析</td>
+</tr>
+<tr>
+<td><strong>WAF Web ACL ログ</strong></td>
+<td>WAF が検査した各リクエストと<strong>判定ルール</strong></td>
+<td>CloudWatch Logs、S3、Data Firehose</td>
+<td><strong>誤検知 / 検知漏れの調査</strong></td>
+</tr>
+<tr>
+<td><strong>CloudFront ログ</strong></td>
+<td>エッジが受けた各リクエスト (キャッシュ結果、ステータス)</td>
+<td>標準ログ (S3 など)、リアルタイムログ (Kinesis Data Streams)</td>
+<td><strong>キャッシュヒット率</strong>、エラー原因</td>
+</tr>
+<tr>
+<td><strong>コンテナログ</strong></td>
+<td>アプリとコンテナ実行基盤のログ</td>
+<td>CloudWatch Logs など</td>
+<td>アプリのエラー、起動失敗、疎通エラー</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d22" role="img" aria-label="図解 23"></div></div>
+<h3 id="sec-10-2">10-2. VPC フローログ</h3>
+<p><strong>取得レベル</strong>: VPC 全体 / サブネット / 個別の ENI。</p>
+<p><strong>既定フォーマット (14 フィールド)</strong></p>
+<pre class="code" data-lang="text"><code>version account-id interface-id srcaddr dstaddr srcport dstport protocol packets bytes start end action log-status
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>フィールド</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>srcaddr / dstaddr</td>
+<td>送信元 / 宛先 IP</td>
+</tr>
+<tr>
+<td>srcport / dstport</td>
+<td>送信元 / 宛先ポート</td>
+</tr>
+<tr>
+<td>protocol</td>
+<td>IANA のプロトコル番号 (<strong>6 = TCP、17 = UDP、1 = ICMP</strong>)</td>
+</tr>
+<tr>
+<td>action</td>
+<td><strong>ACCEPT</strong> (許可) または <strong>REJECT</strong> (拒否)</td>
+</tr>
+<tr>
+<td>log-status</td>
+<td><strong>OK</strong>、NODATA (期間中の通信なし)、SKIPDATA (一部を取得できず)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>読み方の例</strong></p>
+<pre class="code" data-lang="text"><code>2 123456789010 eni-0a1b2c3d 198.51.100.7 10.0.1.25 49152 443 6 20 4249 1620140761 1620140821 ACCEPT OK
+2 123456789010 eni-0a1b2c3d 10.0.1.25 198.51.100.7 443 49152 6 19 3812 1620140761 1620140821 ACCEPT OK
+</code></pre>
+<ul>
+<li>1 行目: 外部 198.51.100.7 → 自分 10.0.1.25 の <strong>TCP 443</strong> へのアクセスが<strong>許可</strong>。</li>
+<li>2 行目: 戻りの応答 (送信元ポートが 443、宛先がエフェメラルポート 49152) も<strong>許可</strong>。両方 ACCEPT なら、少なくともネットワークレベルでは正常です。</li>
+</ul>
+<pre class="code" data-lang="text"><code>2 123456789010 eni-0a1b2c3d 203.0.113.50 10.0.1.25 55000 3389 6 1 40 1620140661 1620140721 REJECT OK
+</code></pre>
+<ul>
+<li><strong>TCP 3389 (RDP) への外部からの接続が REJECT</strong>。SG / NACL のどちらかが拒否しています。</li>
+</ul>
+<p><strong>判定の鉄則 (再掲)</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>パターン</th>
+<th>犯人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>インバウンド REJECT</td>
+<td>SG または NACL</td>
+</tr>
+<tr>
+<td><strong>インバウンド ACCEPT + アウトバウンド REJECT</strong></td>
+<td><strong>NACL</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>フローログに記録されない通信</strong>: Amazon DNS サーバー (Resolver) への通信、インスタンスメタデータ (169.254.169.254)、Amazon Time Sync Service、DHCP、Windows ライセンス認証、VPC ルーターの予約 IP への通信など。</p>
+<p><strong>運用のコツ</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>集約間隔</td>
+<td>既定 <strong>10 分</strong>、<strong>1 分</strong>も選択可</td>
+</tr>
+<tr>
+<td>カスタムフォーマット</td>
+<td><code>pkt-srcaddr</code> / <code>pkt-dstaddr</code> (NAT 越しの元アドレス)、<code>flow-direction</code>、<code>vpc-id</code>、<code>subnet-id</code>、<code>tcp-flags</code>、<code>az-id</code> などを追加できる</td>
+</tr>
+<tr>
+<td>分析</td>
+<td><strong>S3 に出力して Athena で SQL 集計</strong>、または CloudWatch Logs Insights</td>
+</tr>
+<tr>
+<td>費用対策</td>
+<td>REJECT のみ、特定 ENI のみに絞る / S3 にライフサイクルを設定</td>
+</tr>
+<tr>
+<td>変更の反映</td>
+<td>フローログの<strong>フォーマットは作成後に変更できない</strong> (作り直し)</td>
+</tr>
+<tr>
+<td>監査</td>
+<td>AWS Config <code>vpc-flow-logs-enabled</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Athena での集計例 (REJECT 上位の送信元)</strong></p>
+<pre class="code" data-lang="sql"><code>SELECT srcaddr, dstport, COUNT(*) AS cnt
+FROM vpc_flow_logs
+WHERE action = &#x27;REJECT&#x27;
+GROUP BY srcaddr, dstport
+ORDER BY cnt DESC
+LIMIT 20;
+</code></pre>
+<h3 id="sec-10-3">10-3. ELB アクセスログ</h3>
+<p>ELB のアクセスログは、ロードバランサーが受けた個々のリクエストの記録です。ステータスコードが ELB 自身のものか、ターゲットのものかを見分けると、原因の所在が分かります。</p>
+<ul>
+<li>既定で<strong>無効</strong>。有効化すると <strong>S3 バケット</strong>に約 5 分間隔でログが出力されます。バケットポリシーで <strong>ELB のログ配信を許可</strong>する必要があります。</li>
+<li>ALB のログには、<strong>リクエスト処理時間、ターゲット処理時間、応答処理時間、<code>elb_status_code</code>、<code>target_status_code</code>、ターゲットの IP:ポート、エラー理由、トレース ID</strong> などが含まれます。</li>
+</ul>
+<p><strong>ステータスコードの読み方 (ALB)</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>コード</th>
+<th>発生元</th>
+<th>典型的な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>502 Bad Gateway</strong></td>
+<td>ELB</td>
+<td>ターゲットが<strong>接続を閉じた / 不正な応答</strong>、ターゲットの Keep-Alive が <strong>ALB のアイドルタイムアウトより短い</strong>、Lambda の応答形式不正</td>
+<td>ターゲットの Keep-Alive を ALB のアイドルタイムアウトより<strong>長く</strong>する</td>
+</tr>
+<tr>
+<td><strong>503 Service Unavailable</strong></td>
+<td>ELB</td>
+<td><strong>登録された正常なターゲットがない</strong></td>
+<td>ヘルスチェック設定、ターゲットの状態、SG を確認</td>
+</tr>
+<tr>
+<td><strong>504 Gateway Timeout</strong></td>
+<td>ELB</td>
+<td><strong>ターゲットが応答しない</strong> (アイドルタイムアウト超過)、接続確立失敗</td>
+<td>ターゲットの SG / NACL、処理時間、アイドルタイムアウトの調整</td>
+</tr>
+<tr>
+<td>460</td>
+<td>ELB</td>
+<td><strong>クライアントが</strong>応答前に接続を閉じた</td>
+<td>クライアント側のタイムアウトを確認</td>
+</tr>
+<tr>
+<td>4xx / 5xx で <code>elb_status_code</code> と <code>target_status_code</code> が<strong>同じ</strong></td>
+<td><strong>ターゲット (アプリ)</strong></td>
+<td>アプリ自体の応答</td>
+<td>アプリのログを調査</td>
+</tr>
+<tr>
+<td><code>elb_status_code</code> のみエラー、<code>target_status_code</code> が <code>-</code></td>
+<td><strong>ELB 自身</strong></td>
+<td>ターゲットに届く前に終了</td>
+<td>上記の ELB 起因を確認</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>見分け方: <strong>ターゲットのコードが空 (<code>-</code>) なら ELB 側の問題、あれば アプリ側の応答</strong>を疑います。</p>
+</blockquote>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d23" role="img" aria-label="図解 24"></div></div>
+<h3 id="sec-10-4">10-4. AWS WAF Web ACL ログ</h3>
+<p>WAF のログは、検査したリクエストと判定の理由を残します。正規ユーザーが誤ってブロックされたときは、どのルールが判定したかをログで特定して直します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>出力先</td>
+<td>CloudWatch Logs、S3、Data Firehose。リソース名は <strong><code>aws-waf-logs-</code> で始める</strong></td>
+</tr>
+<tr>
+<td>主要フィールド</td>
+<td><strong><code>action</code></strong> (ALLOW / BLOCK / COUNT / CAPTCHA...)、<strong><code>terminatingRuleId</code></strong> (最終判定したルール)、<code>terminatingRuleType</code>、<strong><code>ruleGroupList</code></strong> (ルールグループ内のどのルールが一致したか)、<code>httpRequest</code> (クライアント IP、URI、ヘッダー、メソッド)、<code>labels</code></td>
+</tr>
+<tr>
+<td>機微情報</td>
+<td><strong>フィールドの伏せ字 (Redaction)</strong> を設定できる (認証ヘッダーなど)</td>
+</tr>
+<tr>
+<td>絞り込み</td>
+<td><strong>ログフィルタリング</strong>で BLOCK / COUNT のみ記録するなどコスト削減</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>誤検知 (正常なリクエストがブロックされる) の調査手順</strong></p>
+<ol>
+<li>ブロックされたリクエストを WAF ログで探す (<code>action = BLOCK</code>)。</li>
+<li><strong><code>terminatingRuleId</code></strong> と <strong><code>ruleGroupList</code></strong> で、どのルールが原因かを特定する。</li>
+<li>そのルールを <strong>Count モード</strong>にして影響を確認する、または<strong>除外条件 (例外)</strong>、<strong>スコープダウンステートメント</strong>を追加する。</li>
+<li>修正後もログと <strong>CloudWatch メトリクス</strong>で挙動を確認する。</li>
+</ol>
+<h3 id="sec-10-5">10-5. CloudFront ログ</h3>
+<p>CloudFront のログは、エッジでキャッシュに当たったか外れたかや、返したステータスを記録します。ヒット率やエラーの原因を調べる際の一次情報になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>標準ログ</strong></td>
+<td>ほぼ<strong>準リアルタイム</strong>の詳細ログ。出力先は <strong>S3、CloudWatch Logs、Data Firehose</strong> (標準ログ v2)。従来方式は S3 のみ</td>
+</tr>
+<tr>
+<td><strong>リアルタイムログ</strong></td>
+<td>数秒以内に <strong>Kinesis Data Streams</strong> へ。<strong>サンプリング率とフィールドを選べる</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>特に重要なフィールド</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>フィールド</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>x-edge-result-type</code></strong></td>
+<td>エッジでの処理結果。<strong>Hit (キャッシュから応答)</strong>、<strong>RefreshHit</strong> (期限切れだがオリジンで更新確認の上キャッシュを再利用)、<strong>Miss</strong> (オリジンへ取得)、<strong>Error</strong>、Redirect、LimitExceeded、CapacityExceeded、FunctionGeneratedResponse</td>
+</tr>
+<tr>
+<td><code>x-edge-response-result-type</code></td>
+<td>ビューワーへの最終応答の種類</td>
+</tr>
+<tr>
+<td><code>sc-status</code></td>
+<td>ビューワーに返した HTTP ステータス</td>
+</tr>
+<tr>
+<td><code>time-taken</code> / <code>time-to-first-byte</code></td>
+<td>処理時間</td>
+</tr>
+<tr>
+<td><code>x-edge-location</code></td>
+<td>処理したエッジ</td>
+</tr>
+<tr>
+<td><code>cs-uri-query</code>、<code>cs(Cookie)</code>、<code>cs(Host)</code></td>
+<td>キャッシュキーに関わる値</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>キャッシュヒット率の概算</strong>: <code>x-edge-result-type</code> が Hit + RefreshHit の件数 ÷ 全リクエスト。Athena で集計できます。</p>
+</blockquote>
+<h3 id="sec-10-6">10-6. コンテナログ</h3>
+<p>コンテナのログは、実行基盤ごとに集め方が異なります。ECS はログドライバー、EKS はエージェント、と覚え、ネットワークの問題ではエンドポイントの不足による起動失敗にも注意します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>実行基盤</th>
+<th>ログの取り方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon ECS (Fargate / EC2)</strong></td>
+<td>タスク定義で <strong><code>awslogs</code> ログドライバー</strong>を指定すると CloudWatch Logs に出力。<strong>タスク実行ロール</strong>に <code>logs:CreateLogStream</code> と <code>logs:PutLogEvents</code> が必要 (ロググループの自動作成には <code>logs:CreateLogGroup</code> や設定が必要)。柔軟な転送は <strong>FireLens (Fluent Bit / Fluentd)</strong></td>
+</tr>
+<tr>
+<td><strong>Amazon EKS</strong></td>
+<td><strong>Fluent Bit</strong> (DaemonSet) や <strong>CloudWatch Observability アドオン / Container Insights</strong> でノード・Pod のログとメトリクスを収集。コントロールプレーンログは<strong>クラスターで有効化</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>コンテナのネットワーク問題で見るポイント</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>確認</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>プライベートサブネットの Fargate タスクが起動せずイメージを取得できない (CannotPullContainerError)</strong></td>
+<td>NAT ゲートウェイのルート、または <strong>ECR 用エンドポイント (<code>ecr.api</code>、<code>ecr.dkr</code>) + S3 ゲートウェイエンドポイント</strong> + <strong>CloudWatch Logs エンドポイント</strong>、各 SG の 443 許可</td>
+</tr>
+<tr>
+<td>タスクの ENI に付く SG</td>
+<td><strong>awsvpc ネットワークモードではタスクごとに ENI と SG</strong> を持つ。サービス間通信は SG 参照で許可</td>
+</tr>
+<tr>
+<td>ログが出ない</td>
+<td>タスク実行ロールの権限、ログドライバー設定、ログ用エンドポイント</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-11">Step 11: Skill 5.3.3 CloudFront キャッシュ問題の特定と修復</h2>
+<p>CloudFront の不具合は、キャッシュが「古い」「当たらない」「他人の内容が出る」のどれかに分類できます。仕組みを理解したうえで、症状ごとの原因と対処を引けるようにします。</p>
+<h3 id="sec-11-1">11-1. キャッシュの仕組みを一言で</h3>
+<p>CloudFront は、リクエストから<strong>キャッシュキー</strong>を作り、同じキーのオブジェクトがエッジにあれば返します。<strong>キャッシュキーが多様すぎると</strong> (毎回別キー) ヒットしません。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d24" role="img" aria-label="図解 25"></div></div>
+<h3 id="sec-11-2">11-2. キャッシュ状態の確認方法</h3>
+<p>キャッシュに当たったかどうかは、レスポンスヘッダーやログから簡単に確認できます。調査はまずここから始めます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>確認手段</th>
+<th>見るもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>レスポンスヘッダー <code>X-Cache</code></strong></td>
+<td><code>Hit from cloudfront</code> / <code>RefreshHit from cloudfront</code> / <code>Miss from cloudfront</code> / <code>Error from cloudfront</code></td>
+</tr>
+<tr>
+<td><strong><code>Age</code> ヘッダー</strong></td>
+<td>エッジにキャッシュされてからの秒数 (<strong>Age があれば Hit の可能性が高い</strong>)</td>
+</tr>
+<tr>
+<td><code>X-Amz-Cf-Pop</code>、<code>X-Amz-Cf-Id</code></td>
+<td>処理したエッジ拠点 / リクエスト ID (サポート問い合わせ用)</td>
+</tr>
+<tr>
+<td>CloudFront コンソールの<strong>キャッシュ統計</strong></td>
+<td>ヒット / ミス / エラーの割合、人気オブジェクト</td>
+</tr>
+<tr>
+<td>標準ログの <code>x-edge-result-type</code></td>
+<td>詳細な傾向分析</td>
+</tr>
+<tr>
+<td>CloudWatch の追加メトリクス</td>
+<td><strong>CacheHitRate</strong> (有効化が必要) など</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>コマンド例: <code>curl -sI https://dxxxxxx.cloudfront.net/logo.png | grep -i -E &quot;x-cache|age&quot;</code></p>
+</blockquote>
+<h3 id="sec-11-3">11-3. TTL の決まり方</h3>
+<p>オブジェクトがキャッシュに残る期間は、<strong>オリジンのヘッダー</strong>と<strong>キャッシュポリシーの TTL 設定</strong>で決まります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>役割</th>
+<th>既定値 (カスタムポリシーの場合の一般的な値)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimum TTL</strong></td>
+<td>キャッシュ期間の<strong>下限</strong></td>
+<td>0 秒</td>
+</tr>
+<tr>
+<td><strong>Default TTL</strong></td>
+<td>オリジンがキャッシュ指示を出さないときの期間</td>
+<td><strong>86,400 秒 (24 時間)</strong></td>
+</tr>
+<tr>
+<td><strong>Maximum TTL</strong></td>
+<td>キャッシュ期間の<strong>上限</strong></td>
+<td><strong>31,536,000 秒 (1 年)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>オリジンの <strong><code>Cache-Control: max-age</code> / <code>s-maxage</code> / <code>Expires</code></strong> があれば、<strong>Min と Max の範囲内で</strong>それが採用されます。</li>
+<li><code>Cache-Control: no-cache</code> や <code>no-store</code> などがあり、<strong>Minimum TTL が 0 より大きい</strong>場合は Minimum TTL が優先されて<strong>キャッシュされてしまう</strong>点に注意。</li>
+<li><strong>マネージドキャッシュポリシー</strong>: <code>CachingOptimized</code> (長期キャッシュ向け)、<code>CachingDisabled</code> (キャッシュしない、動的 API 向け)。</li>
+</ul>
+<h3 id="sec-11-4">11-4. 症状別の原因と対処</h3>
+<p>キャッシュの症状は、原因がほぼ決まっています。下の表で「症状」と「原因」と「対処」をセットで覚えてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>主な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>古いコンテンツが返り続ける</strong></td>
+<td>TTL が長い、オリジン更新後にキャッシュが残っている</td>
+<td>① <strong>無効化 (Invalidation)</strong> ② <strong>ファイル名 / パスにバージョンを付ける</strong> (推奨) ③ TTL を短縮</td>
+</tr>
+<tr>
+<td><strong>キャッシュヒット率が低い</strong></td>
+<td>キャッシュキーに<strong>不要なクエリ文字列・ヘッダー・Cookie</strong> を含めている、<code>Cache-Control: no-cache / private</code> をオリジンが返している、TTL が短すぎる</td>
+<td>キャッシュポリシーを<strong>必要最小限</strong>に、オリジンのヘッダー見直し、<strong>Origin Shield</strong> で集約、クエリ文字列の<strong>正規化 (並び順を揃える)</strong></td>
+</tr>
+<tr>
+<td><strong>ユーザーごとに内容が違う / 他人のページが見える</strong></td>
+<td><strong>Cookie や Authorization ヘッダーをキャッシュキーに含めていない</strong>のに個別コンテンツをキャッシュ</td>
+<td>個別コンテンツはキャッシュを無効化するか、キーに含める。<strong>動的 / 個人情報は <code>CachingDisabled</code></strong></td>
+</tr>
+<tr>
+<td><strong>Query String を変えても同じ内容</strong></td>
+<td>キャッシュキーにクエリ文字列を<strong>含めていない</strong></td>
+<td>クエリ文字列をキャッシュキーに含める (必要なものだけ)</td>
+</tr>
+<tr>
+<td><strong>特定のヘッダーで内容を出し分けたいのに反映されない</strong></td>
+<td>ヘッダーがキャッシュキー / オリジンリクエストに含まれない</td>
+<td>必要なヘッダーだけキャッシュポリシーに追加 (例: <code>CloudFront-Viewer-Country</code>)</td>
+</tr>
+<tr>
+<td>無効化したのにすぐ反映されない / 一部のエッジで古い</td>
+<td>無効化は<strong>全エッジに伝播するのに時間</strong>がかかる (通常は短時間)</td>
+<td>反映を確認。大量パス無効化を避ける設計に</td>
+</tr>
+<tr>
+<td><strong>エラーが一定時間返り続ける</strong></td>
+<td><strong>エラーレスポンスのキャッシュ</strong> (既定の最小 TTL は <strong>10 秒</strong>)</td>
+<td><strong>エラーキャッシュの最小 TTL</strong> を調整 (障害復旧後も古いエラーが残る)</td>
+</tr>
+<tr>
+<td><strong>HTTP と HTTPS で別の内容</strong></td>
+<td>ビューワープロトコルの設定</td>
+<td>Redirect HTTP to HTTPS に統一</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>無効化 (Invalidation) の要点</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>指定方法</td>
+<td>パス (<code>/images/*</code>、<code>/*</code> など)。ワイルドカード可</td>
+</tr>
+<tr>
+<td>料金</td>
+<td><strong>月あたり最初の 1,000 パスは無料</strong>、以降は 1 パスごとに課金 (ワイルドカード 1 つは 1 パス)</td>
+</tr>
+<tr>
+<td>ベストプラクティス</td>
+<td>頻繁な更新は<strong>バージョン付きファイル名</strong> (例: <code>app.v123.js</code>)。無効化に頼らない</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-11-5">11-5. エラー応答の切り分け</h3>
+<p>ステータスコードごとに、疑う場所が異なります。403 は権限や制限、502 は SSL や接続、504 はオリジンの応答時間、のように切り分けます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ステータス</th>
+<th>意味・主な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>403</strong></td>
+<td><strong>OAC / バケットポリシーの不備</strong> (S3 へアクセスできない)、<strong>WAF のブロック</strong>、<strong>地理的制限</strong>、署名付き URL の不正 / 期限切れ、<strong>既定ルートオブジェクト未設定で <code>/</code> にアクセス</strong>、代替ドメイン名 (CNAME) が未登録</td>
+<td>バケットポリシー (ディストリビューション ARN)、WAF ログ、地理的制限、署名の有効期限を確認</td>
+</tr>
+<tr>
+<td><strong>404</strong></td>
+<td>オリジンにオブジェクトがない、パスパターンの設定ミス</td>
+<td>オリジンのパス、ビヘイビアのパスパターン</td>
+</tr>
+<tr>
+<td><strong>502 Bad Gateway</strong></td>
+<td><strong>オリジンへの SSL/TLS ネゴシエーション失敗</strong> (証明書名の不一致・期限切れ、プロトコルや暗号スイートの非互換)、オリジンに接続できない</td>
+<td>オリジンの証明書、オリジンプロトコルポリシー、SG で CloudFront のアクセスを許可</td>
+</tr>
+<tr>
+<td><strong>503</strong></td>
+<td>オリジンの容量不足、CloudFront の容量超過</td>
+<td>オリジンのスケール、再試行</td>
+</tr>
+<tr>
+<td><strong>504 Gateway Timeout</strong></td>
+<td><strong>オリジンの応答がタイムアウト</strong> (既定の応答タイムアウトは <strong>30 秒</strong>)、オリジンに到達できない (SG / NACL / ファイアウォールが CloudFront を遮断)</td>
+<td>オリジンの処理時間短縮、<strong>オリジン応答タイムアウトの調整</strong>、オリジン側のアクセス許可</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d25" role="img" aria-label="図解 26"></div></div>
+<h3 id="sec-11-6">11-6. ベストプラクティス</h3>
+<p>CloudFront 運用の指針です。理由の列は、設問の選択肢を比較するときの判断基準として使えます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>静的アセット</td>
+<td><strong>バージョニングした名前 + 長い TTL</strong></td>
+<td>内容が変わるときだけ名前が変わるので、古いキャッシュが残らず長く保持できるため。</td>
+</tr>
+<tr>
+<td>キャッシュキー</td>
+<td><strong>最小限</strong>に。マネージドキャッシュポリシーを活用</td>
+<td>不要な要素をキーに含めないほどヒット率が上がり、マネージドポリシーなら設定の誤りも減るため。</td>
+</tr>
+<tr>
+<td>動的 / 個人別コンテンツ</td>
+<td><code>CachingDisabled</code> またはキーに識別子を含める</td>
+<td>他のユーザーの内容が返ってしまう事故を防げるため。</td>
+</tr>
+<tr>
+<td>オリジン負荷</td>
+<td><strong>Origin Shield</strong></td>
+<td>キャッシュ層を集約でき、同じオブジェクトをオリジンへ何度も取りに行かずに済むため。</td>
+</tr>
+<tr>
+<td>可観測性</td>
+<td>標準ログ + CloudWatch の追加メトリクスでヒット率を継続監視</td>
+<td>ヒット率の低下は徐々に進み、気づきにくいため。</td>
+</tr>
+<tr>
+<td>エラー</td>
+<td>エラーキャッシュ TTL をアプリの復旧特性に合わせる</td>
+<td>既定の最小 TTL の間は、復旧後も古いエラーが返り続けるため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-12">Step 12: Skill 5.3.4 ハイブリッド接続とプライベート接続の障害対応</h2>
+<blockquote>
+<p>対象: Site-to-Site VPN、Client VPN、Transit Gateway、PrivateLink / VPC エンドポイント、(関連知識) Direct Connect</p>
+</blockquote>
+<p>オンプレミスとの接続(VPN)やプライベート接続(PrivateLink、エンドポイント)の障害を扱います。「トンネルは UP なのに通信できない」のように、どこまで届いていてどこで止まっているかを切り分ける力が問われます。</p>
+<h3 id="sec-12-1">12-1. ハイブリッド接続の全体像</h3>
+<p>ハイブリッド接続は、オンプレミス側の機器と、AWS 側の終端で構成されます。登場する部品を整理しておくと、障害の切り分けで「どの部品の設定を疑うか」が明確になります。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d26" role="img" aria-label="図解 27"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>構成要素</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>カスタマーゲートウェイ (CGW)</strong></td>
+<td>オンプレ側の VPN 機器とそれを表す AWS 側のリソース</td>
+</tr>
+<tr>
+<td><strong>仮想プライベートゲートウェイ (VGW)</strong></td>
+<td>1 つの VPC にアタッチする AWS 側の終端</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>複数 VPC と VPN の中継ハブ (VPN を TGW にアタッチ)</td>
+</tr>
+<tr>
+<td><strong>VPN 接続</strong></td>
+<td><strong>2 本のトンネル</strong> (異なる AZ のエンドポイント) を提供し冗長化</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-12-2">12-2. Site-to-Site VPN のトラブルシューティング</h3>
+<p><strong>ルーティング方式</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>概要</th>
+<th>注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>動的 (BGP)</strong></td>
+<td>BGP で経路を交換 (<strong>推奨</strong>)</td>
+<td><strong>ASN、BGP ピアの IP、BGP のキープアライブ</strong>を確認</td>
+</tr>
+<tr>
+<td>静的</td>
+<td>手動でルートを指定</td>
+<td>VPC 側と オンプレ側の両方に正しい経路が必要</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>VPC 側で忘れやすい設定</strong>: VGW を使う場合、<strong>ルートテーブルで「ルート伝播 (Route Propagation)」を有効化</strong>する (または静的ルートを追加)。これがないと VPC からオンプレ宛てのルートが存在しません。</p>
+<p><strong>症状別の切り分け</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因の例</th>
+<th>確認先</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>トンネルが DOWN</strong></td>
+<td>IKE / IPsec の<strong>パラメーター不一致</strong> (暗号化方式、DH グループ、ライフタイム)、事前共有鍵の不一致、<strong>オンプレ FW が UDP 500 / 4500 を遮断</strong>、CGW の<strong>グローバル IP が設定と違う</strong></td>
+<td>VPN トンネルの<strong>ステータスメッセージ</strong>、CGW 機器のログ、CloudWatch <code>TunnelState</code></td>
+</tr>
+<tr>
+<td>1 本だけ DOWN</td>
+<td><strong>冗長トンネルの設定漏れ</strong>、片方のトンネルしか構成していない</td>
+<td>2 本とも構成されているか</td>
+</tr>
+<tr>
+<td>トンネルは UP だが<strong>通信できない</strong></td>
+<td><strong>ルート未伝播</strong>、BGP でルートを受信 / 広告できていない、<strong>SG / NACL</strong>、オンプレ側のルート</td>
+<td>ルートテーブル、BGP のルート、フローログ</td>
+</tr>
+<tr>
+<td>通信が不安定 / 断続的</td>
+<td><strong>非対称ルーティング</strong>、MTU / フラグメント (<strong>MSS クランプ</strong>)、トンネルのフラップ</td>
+<td>往復の経路が同一か、MTU</td>
+</tr>
+<tr>
+<td>一定時間通信がないと切れる</td>
+<td><strong>アイドルでトンネルが落ちる</strong> (特にオンプレ起点で張る構成)</td>
+<td><strong>DPD (Dead Peer Detection)</strong> とトンネル開始方法、疎通維持のための定期通信</td>
+</tr>
+<tr>
+<td><strong>CIDR が重複</strong>している</td>
+<td>オンプレと VPC のアドレスが重なる</td>
+<td>アドレス設計の見直し (NAT で回避も可)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>VPN のスループットは<strong>トンネルあたり上限 (約 1.25 Gbps)</strong> があります。TGW を使い <strong>ECMP</strong> で複数トンネルを束ねると帯域を増やせます。</p>
+</blockquote>
+<p><strong>監視</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>メトリクス</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>TunnelState</code></strong></td>
+<td>トンネルの状態 (<strong>0 = DOWN、1 = UP</strong>)。アラームの定番</td>
+</tr>
+<tr>
+<td><code>TunnelDataIn</code> / <code>TunnelDataOut</code></td>
+<td>トンネルの受信 / 送信バイト数</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>ベストプラクティス</strong>: トンネル 2 本を<strong>両方</strong>使い、<code>TunnelState</code> の CloudWatch アラームを設定、BGP を使用、VPN ログを CloudWatch Logs に出力する。</p>
+<h3 id="sec-12-3">12-3. AWS Client VPN のトラブルシューティング</h3>
+<p><strong>Client VPN</strong> は、<strong>リモート ユーザーが PC から VPC へ接続する</strong>マネージド VPN (OpenVPN ベース) です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>構成要素</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client VPN エンドポイント</td>
+<td>接続の入口</td>
+</tr>
+<tr>
+<td><strong>ターゲットネットワークの関連付け</strong></td>
+<td><strong>サブネット</strong>を関連付け (複数 AZ 推奨)</td>
+</tr>
+<tr>
+<td><strong>認可ルール (Authorization rules)</strong></td>
+<td><strong>どの宛先 CIDR に誰がアクセスできるか</strong></td>
+</tr>
+<tr>
+<td><strong>ルート</strong></td>
+<td>クライアントから見える宛先と、どのサブネット経由かを定義</td>
+</tr>
+<tr>
+<td>クライアント CIDR</td>
+<td>クライアントに割り当てる IP の範囲 (<strong>VPC の CIDR と重複させない</strong>)</td>
+</tr>
+<tr>
+<td>認証</td>
+<td>Active Directory、<strong>相互認証 (証明書)</strong>、SAML (IAM Identity Center などと連携)</td>
+</tr>
+<tr>
+<td>スプリットトンネル</td>
+<td>有効にすると、VPC 向け通信のみ VPN 経由</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接続はできるが <strong>VPC のリソースに届かない</strong></td>
+<td><strong>認可ルール不足</strong>、<strong>ルート不足</strong>、ターゲットサブネットの SG と宛先 SG の不許可</td>
+</tr>
+<tr>
+<td>接続できない</td>
+<td>認証設定 (証明書・IdP)、クライアント設定ファイル、エンドポイントの状態が <code>available</code> か</td>
+</tr>
+<tr>
+<td><strong>インターネットに出られない</strong> (フルトンネル)</td>
+<td>認可ルール (0.0.0.0/0)、ルート (0.0.0.0/0 → NAT 経由)、NAT の設定</td>
+</tr>
+<tr>
+<td>特定の宛先だけ届かない</td>
+<td>認可ルールの<strong>宛先 CIDR</strong> と<strong>グループ制限</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-12-4">12-4. Direct Connect (関連知識)</h3>
+<p>専用線でオンプレと AWS を接続するサービスです。<strong>公式の対象サービス一覧には明記されていません</strong>が、「ハイブリッド接続」の文脈で基礎を知っておくと有利です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>特徴</td>
+<td>安定した帯域・低遅延。<strong>暗号化は既定ではされない</strong> (必要なら VPN を併用 / MACsec)</td>
+</tr>
+<tr>
+<td>冗長構成</td>
+<td>異なるロケーション / 接続を複数 + <strong>VPN をバックアップ</strong>にする構成が一般的</td>
+</tr>
+<tr>
+<td>切り分け</td>
+<td>物理接続、仮想インターフェイス (VIF)、<strong>BGP セッション</strong>の状態を確認</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-12-5">12-5. Transit Gateway 経由の障害切り分け</h3>
+<p>Transit Gateway 経由の障害は、確認する場所が多く、順番を決めて見ないと迷います。アタッチメントから始めて、VPC のルート、TGW のルート、関連付けの順にたどります。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d27" role="img" aria-label="図解 28"></div></div>
+<h3 id="sec-12-6">12-6. プライベート接続 (PrivateLink / エンドポイント) の障害対応</h3>
+<p>プライベート接続の障害は、「名前解決」「経路」「許可」の 3 つに分類できます。症状ごとの原因を表で確認してください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因と対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>インターフェイスエンドポイント経由なのに<strong>タイムアウト</strong></td>
+<td>エンドポイント ENI の <strong>SG が 443 (クライアントからの送信元) を許可していない</strong></td>
+</tr>
+<tr>
+<td><strong>名前がパブリック IP に解決され</strong>、エンドポイントを経由しない</td>
+<td><strong>プライベート DNS が無効</strong>、VPC の <strong><code>enableDnsSupport</code> / <code>enableDnsHostnames</code> が無効</strong>、独自 DNS サーバー利用で Resolver (.2) を経由していない</td>
+</tr>
+<tr>
+<td><strong><code>AccessDenied</code></strong> (ネットワークは通っている)</td>
+<td><strong>エンドポイントポリシー</strong>で拒否、リソース側のポリシー (S3 バケットポリシーの <code>aws:SourceVpce</code>) が不一致、IAM の権限</td>
+</tr>
+<tr>
+<td>ゲートウェイエンドポイント (S3) に届かない</td>
+<td><strong>ルートテーブルにプレフィックスリストのルートがない / 関連付けていない</strong>、ポリシー</td>
+</tr>
+<tr>
+<td>オンプレから S3 に<strong>ゲートウェイエンドポイントで</strong>到達できない</td>
+<td>仕様上不可。<strong>インターフェイスエンドポイント</strong>を使う</td>
+</tr>
+<tr>
+<td>特定 AZ のみ失敗</td>
+<td>その AZ にエンドポイントの ENI がない (サブネット未選択)</td>
+</tr>
+<tr>
+<td>PrivateLink で自社サービスに接続できない</td>
+<td>プロバイダー側の<strong>接続リクエストの承認</strong>、NLB のヘルスチェック、<strong>エンドポイントサービスの許可プリンシパル</strong></td>
+</tr>
+<tr>
+<td>ピアリング先の DNS 名が引けない</td>
+<td>ピアリング接続の <strong>DNS 解決オプション</strong>が未設定、プライベートホストゾーンの関連付けが不足</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-13">Step 13: Skill 5.3.5 CloudWatch ネットワーク監視</h2>
+<blockquote>
+<p>対象: CloudWatch Network Monitoring (Network Flow Monitor / Internet Monitor / Network Synthetic Monitor) と、ネットワーク関連の CloudWatch メトリクス・アラーム</p>
+</blockquote>
+<p>障害を後から調べるだけでなく、劣化を事前に検知するのが監視です。CloudWatch のネットワーク監視機能と、サービス別の指標、アラームの設計を学びます。</p>
+<h3 id="sec-13-1">13-1. CloudWatch Network Monitoring の 3 つのサービス</h3>
+<p>公式ドキュメントでは、<strong>Network Flow Monitor、Internet Monitor、Network Synthetic Monitor</strong> が CloudWatch のネットワーク / インターネット監視機能として説明されています。2024 年 12 月に AWS はこれらを <strong>CloudWatch Network Monitoring</strong> に統合し、<strong>フローモニター</strong>、<strong>シンセティックモニター</strong>、<strong>インターネットモニター</strong>として整理しました。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>監視する区間</th>
+<th>方式</th>
+<th>主なデータ・機能</th>
+<th>典型的な使い所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Network Flow Monitor</strong></td>
+<td><strong>AWS ワークロードのネットワーク</strong> (EC2 間、S3 や DynamoDB など AWS サービス向け)</td>
+<td><strong>受動 (パッシブ)</strong>。インスタンスに<strong>軽量エージェント</strong>をインストールし、TCP 接続の統計を収集</td>
+<td><strong>パケットロス、遅延</strong>をほぼリアルタイムで可視化、<strong>ネットワークヘルスインジケーター</strong></td>
+<td><strong>アプリの問題か AWS 側のネットワークの問題か</strong>の切り分け</td>
+</tr>
+<tr>
+<td><strong>Internet Monitor</strong></td>
+<td><strong>インターネット区間</strong> (ユーザーとアプリの間)</td>
+<td>AWS が世界規模で収集する接続データから<strong>パフォーマンスと可用性のベースライン</strong>を算出</td>
+<td><strong>インターネットの障害イベント</strong>の検知とアラート、影響を受けるクライアント地域の可視化</td>
+<td><strong>ユーザー側の ISP やネットワーク起因の遅延・障害</strong>の把握</td>
+</tr>
+<tr>
+<td><strong>Network Synthetic Monitor</strong></td>
+<td><strong>ハイブリッド接続</strong> (AWS からオンプレへ)</td>
+<td><strong>能動 (アクティブ)</strong>。<strong>プローブ</strong>を AWS リソースからオンプレの宛先 IP へ送信。<strong>追加エージェント不要</strong></td>
+<td><strong>遅延とパケットロス</strong>の追跡、<strong>ヘルスイベントのアラート</strong></td>
+<td>Direct Connect や VPN の<strong>品質低下の検知</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d28" role="img" aria-label="図解 29"></div></div>
+<p><strong>Network Flow Monitor の導入手順 (概要)</strong></p>
+<ol>
+<li>コンソールで機能を<strong>有効化</strong>し、必要な権限を許可する。</li>
+<li>監視対象の <strong>EC2 インスタンス (またはコンテナ) にエージェントをインストール</strong>する。エージェントがバックエンドへデータを送れるよう<strong>権限</strong>を設定する。</li>
+<li><strong>モニターを作成</strong>し、対象のローカル / リモートリソースを指定する。</li>
+<li><strong>ダッシュボード</strong>でパケットロス・遅延・ヘルスインジケーターを確認し、<strong>アラーム</strong>を設定する。</li>
+</ol>
+<blockquote>
+<p>試験の覚え方: <strong>フロー = 中 (AWS 内) を受動で、シンセティック = オンプレ向けを能動で、インターネット = ユーザー側を地球規模のデータで</strong>。</p>
+</blockquote>
+<h3 id="sec-13-2">13-2. サービス別の主要 CloudWatch メトリクス</h3>
+<p>サービスごとに、見るべきメトリクスが決まっています。NAT のポート枯渇、VPN のトンネル状態といった、症状に直結する指標を覚えておくと、設問で原因を絞りやすくなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>対象</th>
+<th>メトリクス</th>
+<th>意味と使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NAT ゲートウェイ</strong></td>
+<td><strong><code>ErrorPortAllocation</code></strong></td>
+<td><strong>ポート割り当て失敗</strong>の回数 (0 でなければポート枯渇)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>PacketsDropCount</code></td>
+<td>破棄されたパケット数</td>
+</tr>
+<tr>
+<td></td>
+<td><code>BytesOutToDestination</code> / <code>BytesOutToSource</code></td>
+<td>外向き / 内向きの転送量 (コスト分析にも有用)</td>
+</tr>
+<tr>
+<td></td>
+<td><code>ConnectionAttemptCount</code> / <code>ConnectionEstablishedCount</code></td>
+<td>試行と確立の差で<strong>接続失敗</strong>を把握</td>
+</tr>
+<tr>
+<td></td>
+<td><code>IdleTimeoutCount</code></td>
+<td>アイドルタイムアウトで切れた接続</td>
+</tr>
+<tr>
+<td><strong>Site-to-Site VPN</strong></td>
+<td><strong><code>TunnelState</code></strong></td>
+<td>トンネルの UP / DOWN</td>
+</tr>
+<tr>
+<td></td>
+<td><code>TunnelDataIn</code> / <code>TunnelDataOut</code></td>
+<td>通信量</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td><code>BytesIn</code> / <code>BytesOut</code></td>
+<td>転送量</td>
+</tr>
+<tr>
+<td></td>
+<td><code>PacketDropCountBlackhole</code></td>
+<td><strong>ブラックホールルートで破棄</strong>された数</td>
+</tr>
+<tr>
+<td></td>
+<td><code>PacketDropCountNoRoute</code></td>
+<td><strong>ルートが無く</strong>破棄された数</td>
+</tr>
+<tr>
+<td><strong>ALB</strong></td>
+<td><code>HTTPCode_ELB_5XX_Count</code>、<code>HTTPCode_Target_5XX_Count</code>、<code>TargetResponseTime</code>、<code>UnHealthyHostCount</code></td>
+<td><strong>ELB 起因かターゲット起因か</strong>の切り分け</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td><code>Requests</code>、<code>4xxErrorRate</code>、<code>5xxErrorRate</code>、(追加) <code>CacheHitRate</code>、<code>OriginLatency</code></td>
+<td><strong>米国東部 (バージニア北部) リージョン</strong>の CloudWatch に出力</td>
+</tr>
+<tr>
+<td><strong>Route 53 ヘルスチェック</strong></td>
+<td><code>HealthCheckStatus</code>、<code>HealthCheckPercentageHealthy</code></td>
+<td><strong>米国東部 (バージニア北部)</strong> の CloudWatch。<strong>アラーム作成もこのリージョン</strong></td>
+</tr>
+<tr>
+<td><strong>AWS WAF</strong></td>
+<td><code>AllowedRequests</code>、<code>BlockedRequests</code>、<code>CountedRequests</code></td>
+<td>ルール別の動作確認</td>
+</tr>
+<tr>
+<td><strong>Shield Advanced</strong></td>
+<td><code>DDoSDetected</code></td>
+<td>攻撃検知のアラーム</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-13-3">13-3. アラームの設計例</h3>
+<p>メトリクスは、アラームにして初めて運用に使えます。症状と指標の組み合わせを、そのままアラームにした例を示します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>アラームの例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NAT のポート枯渇を検知</td>
+<td><code>ErrorPortAllocation</code> が <strong>0 より大きい</strong>状態が続いたら通知</td>
+</tr>
+<tr>
+<td>VPN の切断を検知</td>
+<td><code>TunnelState</code> が <strong>1 未満</strong> (DOWN) で通知</td>
+</tr>
+<tr>
+<td>ALB の障害を検知</td>
+<td><code>HTTPCode_ELB_5XX_Count</code> の増加、<code>UnHealthyHostCount</code> が 1 以上</td>
+</tr>
+<tr>
+<td>CloudFront のオリジン障害</td>
+<td><code>5xxErrorRate</code> のしきい値超過</td>
+</tr>
+<tr>
+<td>ルート不備の検知</td>
+<td>TGW の <code>PacketDropCountNoRoute</code> が 0 より大きい</td>
+</tr>
+</tbody>
+</table></div>
+<p>アラームのアクションには <strong>SNS 通知</strong>、<strong>EventBridge</strong> との連携による自動修復 (Systems Manager Automation や Lambda)、<strong>Auto Scaling</strong> との連動が使えます。</p>
+<h3 id="sec-13-4">13-4. ベストプラクティス</h3>
+<p>ネットワーク監視の運用指針です。「どこから順に見るか」と、「どこに指標が出るか」のようなリージョンの罠まで含めて整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>推奨</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>段階的な切り分け</td>
+<td><strong>Network Flow Monitor</strong> で「AWS 側か自分のアプリ側か」→ <strong>VPC フローログ</strong> で拒否の有無 → <strong>Reachability Analyzer</strong> で経路</td>
+<td>上位の区間から順に絞れば、全部を同時に調べる手間を避けられるため。</td>
+</tr>
+<tr>
+<td>ハイブリッド</td>
+<td><strong>Network Synthetic Monitor</strong> と <code>TunnelState</code> の両方を監視</td>
+<td>トンネルが UP でも品質が劣化していることがあり、状態と品質は別々に見る必要があるため。</td>
+</tr>
+<tr>
+<td>ユーザー体験</td>
+<td><strong>Internet Monitor</strong> でユーザー側のインターネット障害を把握</td>
+<td>自分のアプリと AWS が正常でも、ユーザー側のネットワーク障害で遅くなることがあるため。</td>
+</tr>
+<tr>
+<td>通知の設計</td>
+<td>重要度ごとにアラームを分け、復旧時の通知 (OK 状態) も設定</td>
+<td>重要度が混ざると本当に重要なアラームが埋もれ、復旧の通知があれば対応の終了を判断できるため。</td>
+</tr>
+<tr>
+<td>リージョンの罠</td>
+<td>CloudFront と Route 53 ヘルスチェックのメトリクスは <strong>us-east-1</strong></td>
+<td>別のリージョンで探すと、メトリクスやアラームが存在しないように見えるため。</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-14">Step 14: 症状から原因を絞り込む総合フロー</h2>
+<p>ここまでの知識を、症状から原因へ絞り込む 1 本の流れにまとめます。試験では複数の Step にまたがる問題が出るため、全体をつなぐ視点を持つことが大切です。</p>
+<h3 id="sec-14-1">14-1. 「つながらない」の分類フロー</h3>
+<p>まず「どの区間か」を決めると、見るべきサービスとログが絞れます。区間ごとに、本ガイドのどの Step を見ればよいかも示しています。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d29" role="img" aria-label="図解 30"></div></div>
+<h3 id="sec-14-2">14-2. 使うツールの選び方</h3>
+<p>目的が決まれば、使うツールも決まります。「設定上の経路」と「実際の通信」のように、似て非なるツールの違いを整理した表です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>ツール</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>設定上の経路</strong>が通っているか確かめたい</td>
+<td>VPC Reachability Analyzer</td>
+</tr>
+<tr>
+<td><strong>実際に拒否された</strong>通信を見たい</td>
+<td>VPC フローログ</td>
+</tr>
+<tr>
+<td>DNS の問い合わせ内容を見たい</td>
+<td>Route 53 Resolver クエリログ</td>
+</tr>
+<tr>
+<td>LB のエラーの内訳を見たい</td>
+<td>ELB アクセスログ + CloudWatch メトリクス</td>
+</tr>
+<tr>
+<td>WAF の判定理由を見たい</td>
+<td>WAF ログ</td>
+</tr>
+<tr>
+<td>CDN のキャッシュの当たり外れを見たい</td>
+<td>CloudFront 標準ログ、<code>X-Cache</code></td>
+</tr>
+<tr>
+<td>ネットワーク品質 (遅延 / ロス) を見たい</td>
+<td>CloudWatch Network Monitoring</td>
+</tr>
+<tr>
+<td>誰が設定を変えたか</td>
+<td>CloudTrail、AWS Config</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-15">Step 15: 練習問題</h2>
+<blockquote>
+<p>形式は本試験に合わせた「単一選択」と「複数選択」です。各問の解説に根拠となる考え方を付けています。</p>
+</blockquote>
+<p>練習問題は本試験の形式(単一選択と複数選択)に合わせています。答えを見る前に、自分で選択肢を選び、解説で根拠まで確認してください。間違えた問題は、該当する Step に戻って読み直すのが最も効率の良い復習です。</p>
+<h3 id="q-1">問題 1 (VPC)</h3>
+<p>プライベートサブネットの EC2 が OS アップデートのためインターネットへ出る必要がありますが、外部からの接続は受け付けたくありません。最も適切な構成はどれですか。</p>
+<ul>
+<li>A. プライベートサブネットのルートテーブルに IGW へのルートを追加する</li>
+<li>B. パブリックサブネットに NAT ゲートウェイを作成し、プライベートサブネットのルートテーブルで <code>0.0.0.0/0</code> を NAT に向ける</li>
+<li>C. EC2 に Elastic IP を割り当てる</li>
+<li>D. VPC ピアリングを作成する</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。NAT ゲートウェイは外向き通信だけを許可します。A は外部からも到達可能になり、C も同様です。D は無関係です。</p>
+</details>
+<h3 id="q-2">問題 2 (SG と NACL)</h3>
+<p>Web サーバーのサブネットの NACL で、インバウンド TCP 443 を許可しましたが、クライアントは応答を受け取れません。SG は正しく設定されています。原因として最も可能性が高いものはどれですか。</p>
+<ul>
+<li>A. NACL のアウトバウンドで<strong>エフェメラルポート (1024-65535)</strong> が許可されていない</li>
+<li>B. SG のアウトバウンドが拒否されている</li>
+<li>C. IGW がアタッチされていない</li>
+<li>D. NACL はステートフルなので設定不要</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A</strong>。NACL はステートレスのため、戻りの通信も明示的に許可する必要があります。SG はステートフルなので B は原因になりません。</p>
+</details>
+<h3 id="q-3">問題 3 (IPv6)</h3>
+<p>IPv6 を使う EC2 インスタンスに、インターネットへの外向き通信だけを許可し、インターネットからの新規接続は拒否したい。どれを使いますか。</p>
+<ul>
+<li>A. NAT ゲートウェイ</li>
+<li>B. インターネットゲートウェイのみ</li>
+<li>C. Egress-only インターネットゲートウェイ</li>
+<li>D. VPC エンドポイント</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>C</strong>。NAT ゲートウェイは IPv4 用です。</p>
+</details>
+<h3 id="q-4">問題 4 (エンドポイント / コスト)</h3>
+<p>プライベートサブネットのアプリが S3 に大量のデータを送っており、NAT ゲートウェイのデータ処理料金が高額です。最も費用対効果が高く運用負荷が小さい対策はどれですか。</p>
+<ul>
+<li>A. NAT ゲートウェイを大きいインスタンスタイプに変える</li>
+<li>B. S3 用の<strong>ゲートウェイエンドポイント</strong>を作成し、ルートテーブルに関連付ける</li>
+<li>C. S3 用のインターフェイスエンドポイントを作成する</li>
+<li>D. Direct Connect を契約する</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。ゲートウェイエンドポイントは無料で、NAT 経由のデータ処理料金を回避できます。NAT ゲートウェイにインスタンスタイプはありません (A は誤り)。C は時間課金・処理課金が発生します。</p>
+</details>
+<h3 id="q-5">問題 5 (ピアリング)</h3>
+<p>VPC A と VPC B、VPC B と VPC C にそれぞれピアリングがあります。VPC A のインスタンスから VPC C のインスタンスへ通信したいが失敗します。理由と解決策として正しいものはどれですか。<strong>2 つ選択</strong>してください。</p>
+<ul>
+<li>A. ピアリングは推移的ではないため、A と C は VPC B を経由して通信できない</li>
+<li>B. A と C の間に<strong>新たにピアリングを作成</strong>し、両方のルートテーブルを更新する</li>
+<li>C. VPC B のルートテーブルに A と C の CIDR へのルートを追加すれば、B が中継して解決する</li>
+<li>D. ピアリングを承諾し直すと推移的ルーティングが有効になる</li>
+<li>E. VPC B の SG を全許可にすれば解決する</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A と B</strong>。ピアリングは<strong>推移的ルーティング不可</strong>です。C、D、E のように B 側の設定を変えても中継されません。接続する VPC が多い場合は Transit Gateway も有力な選択肢です。</p>
+</details>
+<h3 id="q-6">問題 6 (DNS Firewall)</h3>
+<p>VPC 内のインスタンスが、既知のマルウェア配布ドメインに名前解決しようとするのを防ぎたい。最も適切なサービスはどれですか。</p>
+<ul>
+<li>A. AWS WAF</li>
+<li>B. Route 53 Resolver DNS Firewall</li>
+<li>C. セキュリティグループ</li>
+<li>D. AWS Shield Advanced</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。DNS 名による制御は DNS Firewall です。WAF は HTTP リクエストの検査です。</p>
+</details>
+<h3 id="q-7">問題 7 (WAF)</h3>
+<p>新しい WAF ルールを本番に追加しますが、正規ユーザーを誤ってブロックしたくありません。最初にとるべき設定はどれですか。</p>
+<ul>
+<li>A. 直ちに Block で適用する</li>
+<li>B. ルールを <strong>Count</strong> モードで適用し、ログとメトリクスで影響を確認する</li>
+<li>C. Shield Advanced を有効化する</li>
+<li>D. NACL でブロックする</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。Count は記録のみで、誤検知を事前に確認できます。</p>
+</details>
+<h3 id="q-8">問題 8 (Route 53 ルーティング)</h3>
+<p>新バージョンのアプリに本番トラフィックの 10% だけを流して様子を見たい。使うルーティングポリシーはどれですか。</p>
+<ul>
+<li>A. シンプル</li>
+<li>B. フェイルオーバー</li>
+<li>C. 加重</li>
+<li>D. 位置情報</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>C (加重)</strong>。比率で振り分けます。</p>
+</details>
+<h3 id="q-9">問題 9 (ヘルスチェック)</h3>
+<p>VPC 内のプライベートなエンドポイントのヘルスチェックで、Route 53 を使ったフェイルオーバーを実現したい。ヘルスチェッカーはプライベートなリソースに到達できません。どうしますか。</p>
+<ul>
+<li>A. エンドポイントヘルスチェックの IP を 10.0.0.0/8 にする</li>
+<li>B. <strong>CloudWatch アラームベースのヘルスチェック</strong>を作成し、それをルーティングに関連付ける</li>
+<li>C. ヘルスチェックを使わない</li>
+<li>D. 計算済みヘルスチェックのみにする</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。リソースのメトリクスでアラームを作り、そのアラームの状態でヘルスを判定します。</p>
+</details>
+<h3 id="q-10">問題 10 (ハイブリッド DNS)</h3>
+<p>オンプレミスのサーバーから、VPC のプライベートホストゾーンにある名前 (<code>db.internal.example.com</code>) を解決したい。必要なものはどれですか。</p>
+<ul>
+<li>A. Route 53 Resolver の<strong>インバウンドエンドポイント</strong>と、オンプレ DNS からそこへの転送設定</li>
+<li>B. アウトバウンドエンドポイント</li>
+<li>C. パブリックホストゾーンの複製</li>
+<li>D. DNS Firewall のルールグループ</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A</strong>。オンプレ → VPC の問い合わせはインバウンド、VPC → オンプレはアウトバウンドです。</p>
+</details>
+<h3 id="q-11">問題 11 (CloudFront の証明書)</h3>
+<p>CloudFront で独自ドメインの HTTPS を使うため、ACM で証明書を作成します。どのリージョンで作成しますか。</p>
+<ul>
+<li>A. ディストリビューションと同じリージョン</li>
+<li>B. オリジンと同じリージョン</li>
+<li>C. 米国東部 (バージニア北部) us-east-1</li>
+<li>D. どこでもよい</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>C</strong>。CloudFront が使う ACM 証明書は us-east-1 で作成します。</p>
+</details>
+<h3 id="q-12">問題 12 (S3 オリジン)</h3>
+<p>S3 バケットを CloudFront 経由でのみ公開し、S3 の URL への直接アクセスは拒否したい。推奨される方法はどれですか。</p>
+<ul>
+<li>A. バケットをパブリックにする</li>
+<li>B. <strong>Origin Access Control (OAC)</strong> を使い、バケットポリシーで CloudFront のみ許可する</li>
+<li>C. 署名付き URL のみ</li>
+<li>D. SG でバケットを守る</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。S3 に SG はありません (D は誤り)。OAC が現在の推奨で、旧 OAI より優先されます。</p>
+</details>
+<h3 id="q-13">問題 13 (Global Accelerator)</h3>
+<p>TCP を使うゲームサーバー (複数リージョン) に対し、固定の IP アドレスを許可リストにしたいと顧客に要求されています。DNS の TTL に依存せず、異常なリージョンから素早く切り替えたい。どれを使いますか。</p>
+<ul>
+<li>A. CloudFront</li>
+<li>B. Route 53 のフェイルオーバー</li>
+<li>C. <strong>AWS Global Accelerator</strong></li>
+<li>D. Elastic IP を各サーバーに付ける</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>C</strong>。静的エニーキャスト IP と、ヘルスチェックに基づく高速フェイルオーバーが特長です。</p>
+</details>
+<h3 id="q-14">問題 14 (CloudFront キャッシュ)</h3>
+<p>CloudFront のキャッシュヒット率が非常に低い。調べると、すべてのリクエストに毎回異なるクエリ文字列 (トラッキング用) が付き、キャッシュキーに含まれている。最適な対処はどれですか。</p>
+<ul>
+<li>A. TTL を最大にする</li>
+<li>B. キャッシュポリシーから<strong>不要なクエリ文字列を除外</strong>し、キャッシュキーを最小化する</li>
+<li>C. Origin Shield を無効にする</li>
+<li>D. 無効化を毎時実行する</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。キャッシュキーが多様だと毎回 Miss になります。TTL を延ばしても同じキーでなければヒットしません。</p>
+</details>
+<h3 id="q-15">問題 15 (ALB のエラー)</h3>
+<p>ALB のアクセスログで <code>elb_status_code</code> が 503 で、<code>target_status_code</code> が <code>-</code> です。最も可能性が高い原因はどれですか。</p>
+<ul>
+<li>A. アプリケーションが 503 を返している</li>
+<li>B. <strong>登録された正常なターゲットが存在しない</strong></li>
+<li>C. クライアントが接続を閉じた</li>
+<li>D. WAF がブロックしている</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。ターゲットのコードが空なら ELB 自身がエラーを返しています。503 は正常なターゲット不在の典型です。</p>
+</details>
+<h3 id="q-16">問題 16 (フローログ)</h3>
+<p>VPC フローログで、あるサーバーへのインバウンド TCP 443 が ACCEPT ですが、その戻り (宛先ポートがエフェメラルポート) のアウトバウンドが REJECT になっています。原因はどれですか。</p>
+<ul>
+<li>A. SG のインバウンド不足</li>
+<li>B. <strong>NACL のアウトバウンドの拒否 / 許可不足</strong></li>
+<li>C. ルートテーブルのミス</li>
+<li>D. WAF のブロック</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>B</strong>。SG はステートフルのため戻りは自動許可されます。戻りが REJECT になるのは NACL です。</p>
+</details>
+<h3 id="q-17">問題 17 (NAT のエラー)</h3>
+<p>NAT ゲートウェイ経由の通信で、特定の外部 API への接続が時々失敗します。CloudWatch の <code>ErrorPortAllocation</code> が 0 より大きい値です。対処はどれですか。</p>
+<ul>
+<li>A. NAT に<strong>セカンダリ EIP を追加</strong>し、可能なら接続の再利用 (Keep-Alive) を行う</li>
+<li>B. SG のインバウンドを開ける</li>
+<li>C. NACL を削除する</li>
+<li>D. IGW を作り直す</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A</strong>。同一宛先に対する同時接続数 (ポート) の枯渇です。EIP を増やすことで利用可能なポートが増えます。</p>
+</details>
+<h3 id="q-18">問題 18 (VPN)</h3>
+<p>Site-to-Site VPN のトンネルは UP ですが、VPC のインスタンスからオンプレへ通信できません。VGW を使用しており、静的ルートは使用していません。最初に確認することはどれですか。</p>
+<ul>
+<li>A. <strong>サブネットのルートテーブルで「ルート伝播」が有効か</strong></li>
+<li>B. EC2 のインスタンスタイプ</li>
+<li>C. CloudFront のキャッシュ</li>
+<li>D. Route 53 のヘルスチェック</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A</strong>。VGW 経由のオンプレ宛てルートは、伝播を有効にすることでルートテーブルに入ります。</p>
+</details>
+<h3 id="q-19">問題 19 (PrivateLink)</h3>
+<p>インターフェイスエンドポイントを作成したが、<code>ssm.ap-northeast-1.amazonaws.com</code> がパブリック IP に解決され、プライベートサブネットから通信が失敗する。確認すべき設定を <strong>2 つ</strong>選んでください。</p>
+<ul>
+<li>A. エンドポイントの<strong>プライベート DNS</strong> が有効か</li>
+<li>B. VPC の <strong><code>enableDnsSupport</code> と <code>enableDnsHostnames</code></strong> が有効か</li>
+<li>C. IGW の数</li>
+<li>D. NAT のタイプ</li>
+<li>E. S3 バケットポリシー</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A と B</strong>。プライベート DNS を使うには VPC の DNS 解決とホスト名の両方が有効である必要があります。</p>
+</details>
+<h3 id="q-20">問題 20 (ネットワーク監視)</h3>
+<p>オンプレミスと AWS 間の接続 (VPN / Direct Connect) の遅延とパケットロスを、<strong>エージェントをインストールせずに</strong>継続的に監視し、劣化時にアラートを受けたい。最適なものはどれですか。</p>
+<ul>
+<li>A. Network Flow Monitor</li>
+<li>B. Internet Monitor</li>
+<li>C. <strong>Network Synthetic Monitor</strong></li>
+<li>D. VPC フローログ</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>C</strong>。AWS 上のリソースからオンプレの宛先 IP へプローブを送り、遅延とパケットロスを測定します。A は EC2 にエージェントを入れて AWS 内のワークロードを受動監視します。</p>
+</details>
+<h3 id="q-21">問題 21 (Reachability Analyzer)</h3>
+<p>EC2 から別のサブネットの RDS に接続できない。どこでブロックされているかを<strong>実際にパケットを送らずに</strong>特定したい。最適なものはどれですか。</p>
+<ul>
+<li>A. VPC Reachability Analyzer</li>
+<li>B. VPC フローログのみ</li>
+<li>C. CloudTrail</li>
+<li>D. AWS Config のみ</li>
+</ul>
+<details>
+<summary>答えと解説</summary>
+<p><strong>A</strong>。構成情報を解析し、ブロックしているコンポーネントを示します。</p>
+</details>
+<hr />
+<h2 id="step-16">Step 16: ひっかけポイント一覧</h2>
+<p>似た選択肢の取り違えは、失点の最大の原因です。ここでは、試験で誤解されやすい点を「ひっかけ」と「正しい理解」の組にして一覧にしました。問題演習の後に、間違えた項目を探す使い方がおすすめです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>項目</th>
+<th>ひっかけ</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>SG vs NACL</td>
+<td>「NACL で戻りは自動許可」</td>
+<td><strong>NACL はステートレス</strong>。SG がステートフル</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SG</td>
+<td>「SG で特定 IP を拒否」</td>
+<td><strong>SG は許可のみ</strong>。拒否は NACL</td>
+</tr>
+<tr>
+<td>3</td>
+<td>NACL</td>
+<td>新規 NACL の初期状態</td>
+<td><strong>自作 NACL は全拒否</strong>、デフォルト NACL は全許可</td>
+</tr>
+<tr>
+<td>4</td>
+<td>サブネット</td>
+<td>使えるアドレス数</td>
+<td><strong>5 つ予約</strong>。/28 は 11 個</td>
+</tr>
+<tr>
+<td>5</td>
+<td>パブリックサブネット</td>
+<td>「設定項目で決まる」</td>
+<td><strong>IGW へのルートの有無</strong>で決まる</td>
+</tr>
+<tr>
+<td>6</td>
+<td>NAT</td>
+<td>NAT を<strong>プライベート</strong>サブネットに置く</td>
+<td><strong>パブリックサブネット</strong>に置く (ゾーナル時)。EIP が必要</td>
+</tr>
+<tr>
+<td>7</td>
+<td>NAT</td>
+<td>IPv6 でも NAT</td>
+<td><strong>IPv6 の外向きは EIGW</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>NAT</td>
+<td>1 つの NAT で十分</td>
+<td><strong>AZ 障害に備え AZ ごと</strong>。または<strong>リージョナル NAT</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td>エンドポイント</td>
+<td>S3 はインターフェイス型で</td>
+<td><strong>ゲートウェイ型が無料</strong>で第一候補</td>
+</tr>
+<tr>
+<td>10</td>
+<td>ゲートウェイ EP</td>
+<td>オンプレから使える</td>
+<td><strong>不可</strong></td>
+</tr>
+<tr>
+<td>11</td>
+<td>ゲートウェイ EP</td>
+<td>SG をアタッチ</td>
+<td><strong>ルートテーブル</strong>に関連付ける。SG はなし</td>
+</tr>
+<tr>
+<td>12</td>
+<td>ピアリング</td>
+<td>A-B-C で A から C</td>
+<td><strong>推移的ルーティング不可</strong></td>
+</tr>
+<tr>
+<td>13</td>
+<td>ピアリング</td>
+<td>片側にルート</td>
+<td><strong>両側のルート</strong>が必要。CIDR 重複不可</td>
+</tr>
+<tr>
+<td>14</td>
+<td>TGW</td>
+<td>TGW のルートだけ</td>
+<td><strong>VPC のルート</strong>も必要</td>
+</tr>
+<tr>
+<td>15</td>
+<td>DNS Firewall</td>
+<td>HTTP をブロックできる</td>
+<td><strong>DNS クエリのみ</strong> (Resolver 経由)</td>
+</tr>
+<tr>
+<td>16</td>
+<td>WAF</td>
+<td>すべてのリソースに</td>
+<td><strong>CloudFront / ALB / API Gateway 等</strong>。NLB や EC2 直接は不可</td>
+</tr>
+<tr>
+<td>17</td>
+<td>WAF (CloudFront)</td>
+<td>任意のリージョン</td>
+<td><strong>CloudFront スコープは us-east-1</strong></td>
+</tr>
+<tr>
+<td>18</td>
+<td>Shield</td>
+<td>Standard は有料</td>
+<td><strong>Standard は無料・自動</strong></td>
+</tr>
+<tr>
+<td>19</td>
+<td>Alias</td>
+<td>頂点に CNAME</td>
+<td><strong>頂点は Alias</strong></td>
+</tr>
+<tr>
+<td>20</td>
+<td>Alias</td>
+<td>Alias は課金される</td>
+<td><strong>AWS リソース宛てのクエリは無料</strong></td>
+</tr>
+<tr>
+<td>21</td>
+<td>プライベートホストゾーン</td>
+<td>VPC の DNS 設定</td>
+<td><strong>enableDnsSupport と enableDnsHostnames の両方 true</strong></td>
+</tr>
+<tr>
+<td>22</td>
+<td>ルーティング</td>
+<td>加重の重み</td>
+<td><strong>比率</strong>で合計 100 不要。<strong>0 は送らない</strong></td>
+</tr>
+<tr>
+<td>23</td>
+<td>位置情報</td>
+<td>デフォルトレコード</td>
+<td><strong>必須級</strong>。なければ該当なしの地域は応答なし</td>
+</tr>
+<tr>
+<td>24</td>
+<td>ヘルスチェック</td>
+<td>プライベートリソース</td>
+<td><strong>CloudWatch アラームベース</strong>で監視</td>
+</tr>
+<tr>
+<td>25</td>
+<td>ヘルスチェック</td>
+<td>失敗する</td>
+<td><strong>ヘルスチェッカー IP の許可</strong>漏れ</td>
+</tr>
+<tr>
+<td>26</td>
+<td>クエリログ (パブリック)</td>
+<td>出力先</td>
+<td><strong>CloudWatch Logs のみ</strong>・<strong>us-east-1</strong></td>
+</tr>
+<tr>
+<td>27</td>
+<td>Resolver クエリログ</td>
+<td>対象</td>
+<td><strong>VPC 内</strong>の問い合わせ。出力先は 3 種類</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Resolver エンドポイント</td>
+<td>方向</td>
+<td><strong>インバウンド = オンプレ→VPC</strong>、<strong>アウトバウンド = VPC→オンプレ</strong></td>
+</tr>
+<tr>
+<td>29</td>
+<td>CloudFront 証明書</td>
+<td>リージョン</td>
+<td><strong>ACM は us-east-1</strong></td>
+</tr>
+<tr>
+<td>30</td>
+<td>CloudFront S3 保護</td>
+<td>OAI を新規採用</td>
+<td><strong>OAC が推奨</strong></td>
+</tr>
+<tr>
+<td>31</td>
+<td>CloudFront</td>
+<td>固定 IP を提供</td>
+<td><strong>Global Accelerator</strong></td>
+</tr>
+<tr>
+<td>32</td>
+<td>Global Accelerator</td>
+<td>キャッシュする</td>
+<td><strong>キャッシュなし</strong>。TCP / UDP</td>
+</tr>
+<tr>
+<td>33</td>
+<td>キャッシュ</td>
+<td>古い内容</td>
+<td><strong>バージョン付きファイル名</strong>が最良。無効化は補助</td>
+</tr>
+<tr>
+<td>34</td>
+<td>キャッシュ</td>
+<td>ヒット率が低い</td>
+<td><strong>キャッシュキーの不要な要素</strong>を削除</td>
+</tr>
+<tr>
+<td>35</td>
+<td>502 / 504 (CloudFront)</td>
+<td>502 と 504</td>
+<td><strong>502 = オリジンの SSL 失敗や接続不可</strong>、<strong>504 = オリジンの応答タイムアウト</strong></td>
+</tr>
+<tr>
+<td>36</td>
+<td>ALB</td>
+<td>503</td>
+<td><strong>正常なターゲットがない</strong></td>
+</tr>
+<tr>
+<td>37</td>
+<td>フローログ</td>
+<td>戻りだけ REJECT</td>
+<td><strong>NACL</strong></td>
+</tr>
+<tr>
+<td>38</td>
+<td>フローログ</td>
+<td>取得されない通信</td>
+<td><strong>Amazon DNS、メタデータ、DHCP、Time Sync</strong> など</td>
+</tr>
+<tr>
+<td>39</td>
+<td>NAT のメトリクス</td>
+<td>ポート枯渇</td>
+<td><strong><code>ErrorPortAllocation</code></strong></td>
+</tr>
+<tr>
+<td>40</td>
+<td>VPN</td>
+<td>トンネル UP でも通信不可</td>
+<td><strong>ルート伝播 / BGP / SG / NACL</strong></td>
+</tr>
+<tr>
+<td>41</td>
+<td>VPN</td>
+<td>1 本で十分</td>
+<td><strong>2 本使う</strong>。<code>TunnelState</code> を監視</td>
+</tr>
+<tr>
+<td>42</td>
+<td>Network Monitoring</td>
+<td>どれがエージェント必要</td>
+<td><strong>Flow Monitor はエージェント要</strong>。Synthetic Monitor は不要</td>
+</tr>
+<tr>
+<td>43</td>
+<td>メトリクスのリージョン</td>
+<td>CloudFront と Route 53 ヘルスチェック</td>
+<td><strong>us-east-1</strong></td>
+</tr>
+<tr>
+<td>44</td>
+<td>Reachability Analyzer</td>
+<td>実際に通信する</td>
+<td><strong>構成の静的解析</strong> (パケット送信なし)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-17">Step 17: 直前チートシート</h2>
+<p>試験の直前に見返すための要約です。各表は、本文で学んだ内容を「キーワードから答えが引ける」形に絞っています。理解できていない行があれば、対応する Step に戻って確認してください。</p>
+<h3 id="sec-17-1">17-1. 構成要素の一言まとめ</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>一言</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC</td>
+<td>リージョン単位。CIDR は /16 〜 /28</td>
+</tr>
+<tr>
+<td>サブネット</td>
+<td>AZ 単位。5 アドレス予約</td>
+</tr>
+<tr>
+<td>ルートテーブル</td>
+<td>最長一致。local は削除不可</td>
+</tr>
+<tr>
+<td>IGW</td>
+<td>VPC にアタッチ。双方向</td>
+</tr>
+<tr>
+<td>EIGW</td>
+<td>IPv6 の外向きのみ</td>
+</tr>
+<tr>
+<td>NAT GW</td>
+<td>IPv4 の外向きのみ。パブリックサブネット (ゾーナル) + EIP</td>
+</tr>
+<tr>
+<td>SG</td>
+<td>ENI、ステートフル、許可のみ</td>
+</tr>
+<tr>
+<td>NACL</td>
+<td>サブネット、ステートレス、許可 / 拒否、番号順</td>
+</tr>
+<tr>
+<td>ゲートウェイ EP</td>
+<td>S3 / DynamoDB、無料、ルートテーブル</td>
+</tr>
+<tr>
+<td>インターフェイス EP</td>
+<td>ENI、SG、有料、オンプレから可</td>
+</tr>
+<tr>
+<td>PrivateLink</td>
+<td>サービス単位の公開、CIDR 重複可</td>
+</tr>
+<tr>
+<td>ピアリング</td>
+<td>1 対 1、推移不可、CIDR 重複不可</td>
+</tr>
+<tr>
+<td>TGW</td>
+<td>ハブ &amp; スポーク。関連付けと伝播</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-2">17-2. 保護サービスの選び方</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>守りたいもの</th>
+<th>サービス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DNS クエリ</td>
+<td>Route 53 Resolver DNS Firewall</td>
+</tr>
+<tr>
+<td>Web アプリ (L7)</td>
+<td>AWS WAF</td>
+</tr>
+<tr>
+<td>DDoS</td>
+<td>AWS Shield (Standard 無料 / Advanced 有料)</td>
+</tr>
+<tr>
+<td>VPC 境界の詳細検査</td>
+<td>AWS Network Firewall</td>
+</tr>
+<tr>
+<td>基本のアクセス制御</td>
+<td>SG と NACL</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-3">17-3. Route 53 ルーティング早見</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>キーワード</th>
+<th>ポリシー</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>割合、カナリア、段階移行</td>
+<td>加重</td>
+</tr>
+<tr>
+<td>最も速い、低遅延</td>
+<td>レイテンシー</td>
+</tr>
+<tr>
+<td>障害時に切替、DR</td>
+<td>フェイルオーバー</td>
+</tr>
+<tr>
+<td>国別、法規制</td>
+<td>位置情報</td>
+</tr>
+<tr>
+<td>距離、バイアス</td>
+<td>地理的近接性</td>
+</tr>
+<tr>
+<td>正常な複数 IP</td>
+<td>複数値</td>
+</tr>
+<tr>
+<td>クライアント IP 範囲</td>
+<td>IP ベース</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-4">17-4. CloudFront と Global Accelerator</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>キーワード</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>キャッシュ、静的コンテンツ、動画、HTTP</td>
+<td>CloudFront</td>
+</tr>
+<tr>
+<td>固定 IP、TCP / UDP、ゲーム、DNS TTL 非依存の切替</td>
+<td>Global Accelerator</td>
+</tr>
+<tr>
+<td>S3 を CloudFront 経由のみ</td>
+<td>OAC</td>
+</tr>
+<tr>
+<td>独自ドメイン HTTPS の証明書</td>
+<td>ACM us-east-1</td>
+</tr>
+<tr>
+<td>古いコンテンツ</td>
+<td>バージョン付き名前 or 無効化</td>
+</tr>
+<tr>
+<td>ヒット率が低い</td>
+<td>キャッシュキー最小化</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-5">17-5. ログの対応表</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>疑い</th>
+<th>見るログ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SG / NACL の拒否</td>
+<td>VPC フローログ</td>
+</tr>
+<tr>
+<td>LB の 502 / 503 / 504</td>
+<td>ELB アクセスログ</td>
+</tr>
+<tr>
+<td>WAF の誤検知</td>
+<td>WAF ログ (<code>terminatingRuleId</code>)</td>
+</tr>
+<tr>
+<td>キャッシュ状況</td>
+<td>CloudFront ログ (<code>x-edge-result-type</code>)、<code>X-Cache</code></td>
+</tr>
+<tr>
+<td>DNS の問い合わせ</td>
+<td>Resolver クエリログ</td>
+</tr>
+<tr>
+<td>コンテナ</td>
+<td>CloudWatch Logs (awslogs / Fluent Bit)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-6">17-6. 数値の暗記</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC の CIDR 範囲</td>
+<td>/16 〜 /28</td>
+</tr>
+<tr>
+<td>サブネットの予約アドレス</td>
+<td>5</td>
+</tr>
+<tr>
+<td>VPC の DNS アドレス</td>
+<td>CIDR のベース + 2 / 169.254.169.253</td>
+</tr>
+<tr>
+<td>Resolver の上限</td>
+<td>ENI あたり 1,024 パケット / 秒</td>
+</tr>
+<tr>
+<td>NAT のアイドルタイムアウト</td>
+<td>350 秒</td>
+</tr>
+<tr>
+<td>NAT の同一宛先への同時接続の目安</td>
+<td>約 55,000</td>
+</tr>
+<tr>
+<td>Route 53 複数値回答</td>
+<td>最大 8 件</td>
+</tr>
+<tr>
+<td>ヘルスチェック間隔</td>
+<td>標準 30 秒 / 高速 10 秒</td>
+</tr>
+<tr>
+<td>CloudFront の既定 TTL</td>
+<td>86,400 秒</td>
+</tr>
+<tr>
+<td>CloudFront のエラーキャッシュ最小 TTL (既定)</td>
+<td>10 秒</td>
+</tr>
+<tr>
+<td>CloudFront のオリジン応答タイムアウト (既定)</td>
+<td>30 秒</td>
+</tr>
+<tr>
+<td>無効化の無料枠</td>
+<td>月 1,000 パス</td>
+</tr>
+<tr>
+<td>VPN トンネル数</td>
+<td>2 本 / 接続</td>
+</tr>
+<tr>
+<td>VPN トンネルあたりの帯域上限</td>
+<td>約 1.25 Gbps</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-17-7">17-7. 試験での解き方のコツ</h3>
+<ol>
+<li>問題文の<strong>キーワード</strong>で層を決める (DNS / エッジ / LB / VPC / ハイブリッド)。</li>
+<li>「<strong>最小の運用負荷</strong>」「<strong>コスト最適</strong>」とあれば、<strong>マネージド機能</strong>を選ぶ。</li>
+<li><strong>経路 → 許可 → 名前解決 → アプリ</strong>の順に切り分ける。</li>
+<li>似た選択肢は<strong>方向</strong> (インバウンド / アウトバウンド)、<strong>リージョン</strong> (us-east-1)、<strong>状態</strong> (ステートフル / ステートレス) で見分ける。</li>
+<li>複数選択問題は、<strong>問われた個数</strong>を必ず確認する。</li>
+</ol>
+<hr />
+<h2 id="step-18">Step 18: 参考 URL 一覧</h2>
+<p>本ガイドの根拠となる公式情報の一覧です。仕様、上限値、料金は更新されるため、学習中に疑問が出たら、まずここから各ドキュメントで最新の記述を確認してください。</p>
+<blockquote>
+<p>本ガイドの根拠となる公式情報です。仕様や料金は更新されるため、最新情報は各ページで確認してください。</p>
+</blockquote>
+<h3 id="h-144">試験ガイド</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOA-C03 試験ガイド</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html</a></td>
+</tr>
+<tr>
+<td>Content Domain 5 (本ガイドの対象)</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain5.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain5.html</a></td>
+</tr>
+<tr>
+<td>試験の対象サービス一覧</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/soa-03-in-scope-services.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/soa-03-in-scope-services.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-145">Step 2: VPC の構成 (Skill 5.1.1)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon VPC とは</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html</a></td>
+</tr>
+<tr>
+<td>サブネット</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html</a></td>
+</tr>
+<tr>
+<td>ルートテーブル</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html</a></td>
+</tr>
+<tr>
+<td>インターネットゲートウェイ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html</a></td>
+</tr>
+<tr>
+<td>Egress-only インターネットゲートウェイ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html</a></td>
+</tr>
+<tr>
+<td>NAT ゲートウェイ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html</a></td>
+</tr>
+<tr>
+<td>リージョナル NAT ゲートウェイ (発表)</td>
+<td><a href="https://aws.amazon.com/about-aws/whats-new/2025/11/aws-nat-gateway-regional-availability" target="_blank" rel="noopener">https://aws.amazon.com/about-aws/whats-new/2025/11/aws-nat-gateway-regional-availability</a></td>
+</tr>
+<tr>
+<td>リージョナル NAT ゲートウェイ (AWS ブログ)</td>
+<td><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-amazon-vpc-regional-nat-gateway/" target="_blank" rel="noopener">https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-amazon-vpc-regional-nat-gateway/</a></td>
+</tr>
+<tr>
+<td>セキュリティグループ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html</a></td>
+</tr>
+<tr>
+<td>ネットワーク ACL</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html</a></td>
+</tr>
+<tr>
+<td>VPC のセキュリティのベストプラクティス</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html</a></td>
+</tr>
+<tr>
+<td>Elastic IP アドレス</td>
+<td><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html</a></td>
+</tr>
+<tr>
+<td>VPC IPAM</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-146">Step 3: プライベート接続 (Skill 5.1.2)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS PrivateLink とは</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html</a></td>
+</tr>
+<tr>
+<td>ゲートウェイエンドポイント</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html</a></td>
+</tr>
+<tr>
+<td>インターフェイスエンドポイントの作成</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html</a></td>
+</tr>
+<tr>
+<td>エンドポイントポリシー</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html</a></td>
+</tr>
+<tr>
+<td>VPC ピアリングとは</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html</a></td>
+</tr>
+<tr>
+<td>VPC ピアリングのトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/peering/troubleshoot-vpc-peering-connections.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/peering/troubleshoot-vpc-peering-connections.html</a></td>
+</tr>
+<tr>
+<td>Transit Gateway とは</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html</a></td>
+</tr>
+<tr>
+<td>Transit Gateway のルートテーブル</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-route-tables.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/tgw/tgw-route-tables.html</a></td>
+</tr>
+<tr>
+<td>ホワイトペーパー: マルチ VPC ネットワーク基盤</td>
+<td><a href="https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-147">Step 4: ネットワーク保護サービス (Skill 5.1.3)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route 53 Resolver DNS Firewall</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html</a></td>
+</tr>
+<tr>
+<td>AWS WAF デベロッパーガイド</td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html</a></td>
+</tr>
+<tr>
+<td>AWS WAF のログ記録</td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/waf/latest/developerguide/logging.html</a></td>
+</tr>
+<tr>
+<td>AWS Shield</td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html</a></td>
+</tr>
+<tr>
+<td>AWS Network Firewall</td>
+<td><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-148">Step 5: コスト最適化 (Skill 5.1.4)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon VPC の料金 (NAT、パブリック IPv4 など)</td>
+<td><a href="https://aws.amazon.com/vpc/pricing/" target="_blank" rel="noopener">https://aws.amazon.com/vpc/pricing/</a></td>
+</tr>
+<tr>
+<td>一般的なアーキテクチャにおけるデータ転送コストの概要</td>
+<td><a href="https://aws.amazon.com/blogs/architecture/overview-of-data-transfer-costs-for-common-architectures/" target="_blank" rel="noopener">https://aws.amazon.com/blogs/architecture/overview-of-data-transfer-costs-for-common-architectures/</a></td>
+</tr>
+<tr>
+<td>CloudFront の料金</td>
+<td><a href="https://aws.amazon.com/cloudfront/pricing/" target="_blank" rel="noopener">https://aws.amazon.com/cloudfront/pricing/</a></td>
+</tr>
+<tr>
+<td>CloudFront フラットレート料金プラン</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html</a></td>
+</tr>
+<tr>
+<td>CloudFront フラットレート料金プラン (発表)</td>
+<td><a href="https://aws.amazon.com/about-aws/whats-new/2025/11/aws-flat-rate-pricing-plans" target="_blank" rel="noopener">https://aws.amazon.com/about-aws/whats-new/2025/11/aws-flat-rate-pricing-plans</a></td>
+</tr>
+<tr>
+<td>CloudFront 料金クラス</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PriceClass.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PriceClass.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-149">Step 6-7: DNS と Route 53 (Skill 5.2.1, 5.2.2)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route 53 デベロッパーガイド</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html</a></td>
+</tr>
+<tr>
+<td>VPC の DNS 属性</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-dns.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-dns.html</a></td>
+</tr>
+<tr>
+<td>Route 53 Resolver</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html</a></td>
+</tr>
+<tr>
+<td>Alias と非 Alias の選択</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html</a></td>
+</tr>
+<tr>
+<td>ルーティングポリシーの選択</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html</a></td>
+</tr>
+<tr>
+<td>ヘルスチェックと DNS フェイルオーバー</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html</a></td>
+</tr>
+<tr>
+<td>パブリック DNS クエリのログ記録</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html</a></td>
+</tr>
+<tr>
+<td>Resolver クエリのログ記録</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html</a></td>
+</tr>
+<tr>
+<td>Application Recovery Controller</td>
+<td><a href="https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-150">Step 8, 11: CloudFront と Global Accelerator (Skill 5.2.3, 5.3.3)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudFront デベロッパーガイド</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html</a></td>
+</tr>
+<tr>
+<td>キャッシュキーの制御</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html</a></td>
+</tr>
+<tr>
+<td>コンテンツの有効期限の管理</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html</a></td>
+</tr>
+<tr>
+<td>キャッシュヒット率の向上</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cache-hit-ratio.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cache-hit-ratio.html</a></td>
+</tr>
+<tr>
+<td>コンテンツの無効化</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html</a></td>
+</tr>
+<tr>
+<td>S3 オリジンへのアクセス制限 (OAC)</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html</a></td>
+</tr>
+<tr>
+<td>オリジンフェイルオーバー</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/high_availability_origin_failover.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/high_availability_origin_failover.html</a></td>
+</tr>
+<tr>
+<td>Origin Shield</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html</a></td>
+</tr>
+<tr>
+<td>地理的制限</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/georestrictions.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/georestrictions.html</a></td>
+</tr>
+<tr>
+<td>HTTPS と代替ドメイン名の要件 (ACM は us-east-1)</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html</a></td>
+</tr>
+<tr>
+<td>HTTP ステータスコードのトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/troubleshooting-response-errors.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/troubleshooting-response-errors.html</a></td>
+</tr>
+<tr>
+<td>AWS Global Accelerator とは</td>
+<td><a href="https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-151">Step 9, 12: トラブルシューティングとハイブリッド接続 (Skill 5.3.1, 5.3.4)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC Reachability Analyzer</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html</a></td>
+</tr>
+<tr>
+<td>NAT ゲートウェイのトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-troubleshooting.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-troubleshooting.html</a></td>
+</tr>
+<tr>
+<td>NAT ゲートウェイの CloudWatch メトリクス</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html</a></td>
+</tr>
+<tr>
+<td>Site-to-Site VPN とは</td>
+<td><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html</a></td>
+</tr>
+<tr>
+<td>Site-to-Site VPN のトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/Troubleshooting.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpn/latest/s2svpn/Troubleshooting.html</a></td>
+</tr>
+<tr>
+<td>Site-to-Site VPN のモニタリング</td>
+<td><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-overview-vpn.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-overview-vpn.html</a></td>
+</tr>
+<tr>
+<td>AWS Client VPN とは</td>
+<td><a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/what-is.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/what-is.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-152">Step 10: ネットワークログ (Skill 5.3.2)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC フローログ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html</a></td>
+</tr>
+<tr>
+<td>フローログレコード</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html</a></td>
+</tr>
+<tr>
+<td>フローログレコードの例</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-records-examples.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-records-examples.html</a></td>
+</tr>
+<tr>
+<td>ALB アクセスログ</td>
+<td><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html</a></td>
+</tr>
+<tr>
+<td>ALB のトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html</a></td>
+</tr>
+<tr>
+<td>CloudFront 標準ログ</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/standard-logging.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/standard-logging.html</a></td>
+</tr>
+<tr>
+<td>Amazon ECS の awslogs ログドライバー</td>
+<td><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonECS/latest/developerguide/using_awslogs.html</a></td>
+</tr>
+<tr>
+<td>Container Insights</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-153">Step 13: CloudWatch ネットワーク監視 (Skill 5.3.5)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudWatch Network Monitoring (Network Flow Monitor / Internet Monitor / Network Synthetic Monitor)</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Network-Monitoring-Sections.html" target="_blank" rel="noopener">https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Network-Monitoring-Sections.html</a></td>
+</tr>
+<tr>
+<td>発表: CloudWatch Network Monitoring のフローモニター (2024 年 12 月)</td>
+<td><a href="https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-cloudwatch-network-monitoring-workloads-monitors" target="_blank" rel="noopener">https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-cloudwatch-network-monitoring-workloads-monitors</a></td>
+</tr>
+<tr>
+<td>AWS ブログ (日本語): Network Flow Monitor でネットワークパフォーマンスを可視化</td>
+<td><a href="https://aws.amazon.com/jp/blogs/news/visualizing-network-performance-of-your-aws-cloud-workloads-with-network-flow-monitor/" target="_blank" rel="noopener">https://aws.amazon.com/jp/blogs/news/visualizing-network-performance-of-your-aws-cloud-workloads-with-network-flow-monitor/</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="h-154">学習の進め方 (おわりに)</h2>
+<ol>
+<li><strong>Step 2 → 3 → 9</strong> を通して、VPC の「経路と許可」を手を動かして確認する (サブネット、NAT、エンドポイントを実際に作る)。</li>
+<li><strong>Step 6 → 7</strong> は、Route 53 でホストゾーンを作り、加重とフェイルオーバーを試す。</li>
+<li><strong>Step 8 → 11</strong> は、S3 + CloudFront で OAC を設定し、<code>X-Cache</code> を <code>curl</code> で確認する。</li>
+<li><strong>Step 10</strong> は、フローログを S3 に出力して Athena で REJECT を集計してみる。</li>
+<li>最後に <strong>Step 15 (練習問題)</strong> と <strong>Step 16 (ひっかけ表)</strong> を繰り返す。</li>
+</ol>
+<blockquote>
+<p>ご注意: 試験の出題範囲・対象サービス・料金・上限値は変更されることがあります。受験前に必ず公式の試験ガイドと各サービスのドキュメントで最新情報を確認してください。</p>
+</blockquote>
+
+            <p class="endnote">本ガイドは学習用の解説です。機能・料金・上限値は変更されることがあるため、受験前に必ず公式ドキュメントで最新情報を確認してください。</p>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk" crossorigin="anonymous"></script>
+    <script>
+        const DIAGRAMS = {
+            'd0': `flowchart TD
+    A["Step 1 基礎知識を固める"] --> B["Step 2 VPC の部品を理解する"]
+    B --> C["Step 3 プライベート接続"]
+    C --> D["Step 4 保護サービスの監査"]
+    D --> E["Step 5 コスト最適化"]
+    E --> F["Step 6-7 DNS と Route 53"]
+    F --> G["Step 8 CloudFront と Global Accelerator"]
+    G --> H["Step 9-13 トラブルシューティング"]
+    H --> I["Step 14 総合フロー"]
+    I --> J["Step 15 練習問題で確認"]`,
+            'd1': `flowchart LR
+    U["ユーザー"] --> D["Route 53 で名前解決"]
+    D --> CF["CloudFront または Global Accelerator"]
+    CF --> W["AWS WAF と Shield"]
+    W --> LB["ELB"]
+    LB --> IGW["インターネットゲートウェイ"]
+    IGW --> RT["ルートテーブル"]
+    RT --> NACL["ネットワーク ACL"]
+    NACL --> SG["セキュリティグループ"]
+    SG --> EC2["EC2 や コンテナ"]`,
+            'd2': `sequenceDiagram
+    participant C as クライアント
+    participant R as リゾルバー
+    participant Root as ルート DNS
+    participant TLD as com の DNS
+    participant Auth as 権威 DNS (Route 53)
+    C->>R: www.example.com の IP は?
+    R->>Root: com の担当は?
+    Root-->>R: com の DNS はこちら
+    R->>TLD: example.com の担当は?
+    TLD-->>R: Route 53 のネームサーバーです
+    R->>Auth: www.example.com の IP は?
+    Auth-->>R: 203.0.113.10 (TTL 60 秒)
+    R-->>C: 203.0.113.10`,
+            'd3': `flowchart TD
+    Q1{"サブネットのルートテーブルに 0.0.0.0/0 から IGW がある?"}
+    Q1 -- "はい" --> Q2{"インスタンスにパブリック IPv4 または EIP がある?"}
+    Q1 -- "いいえ" --> P["プライベートサブネット<br/>外向きだけなら NAT ゲートウェイを使う"]
+    Q2 -- "はい" --> PUB["インターネットと双方向通信できる"]
+    Q2 -- "いいえ" --> NOIP["パブリック IP を付けるまで通信できない"]`,
+            'd4': `flowchart TD
+    A["プライベートサブネットの EC2"] --> B["ルートテーブル 0.0.0.0/0 から NAT"]
+    B --> C["パブリックサブネットの NAT ゲートウェイ"]
+    C --> D["ルートテーブル 0.0.0.0/0 から IGW"]
+    D --> E["インターネットゲートウェイ"]
+    E --> F["インターネット"]`,
+            'd5': `flowchart TD
+    Q1{"接続先は?"}
+    Q1 -- "S3 または DynamoDB" --> Q2{"オンプレや別リージョンからも使う?"}
+    Q1 -- "それ以外の AWS サービスや自社サービス" --> IF["インターフェイスエンドポイント"]
+    Q2 -- "いいえ VPC 内のみ" --> GW["ゲートウェイエンドポイント 無料"]
+    Q2 -- "はい" --> IF2["インターフェイスエンドポイント"]`,
+            'd6': `flowchart LR
+    C["コンシューマー VPC のクライアント"] --> E["インターフェイスエンドポイント"]
+    E --> PL["AWS PrivateLink"]
+    PL --> N["プロバイダー VPC の NLB またはGWLB"]
+    N --> S["サービスのバックエンド"]`,
+            'd7': `flowchart TD
+    S1["ピアリング接続を作成"] --> S2["相手側が承諾 pending-acceptance から active"]
+    S2 --> S3["自 VPC のルートテーブルに 相手 CIDR から pcx を追加"]
+    S3 --> S4["相手 VPC のルートテーブルにも 自 CIDR から pcx を追加"]
+    S4 --> S5["SG と NACL で必要な通信を許可"]
+    S5 --> S6["必要なら DNS 解決の設定を有効化"]`,
+            'd8': `flowchart TD
+    Q1{"何から守りたい?"}
+    Q1 -- "悪意あるドメインへの名前解決" --> A["Route 53 Resolver DNS Firewall"]
+    Q1 -- "SQLi や XSS や bot などの Web 攻撃" --> B["AWS WAF"]
+    Q1 -- "大量の DDoS 攻撃" --> C["AWS Shield"]
+    Q1 -- "VPC を出入りする通信の詳細検査 IPS やドメイン制御" --> D["AWS Network Firewall"]
+    Q1 -- "特定の IP やポートを簡易に制御" --> E["SG と NACL"]`,
+            'd9': `flowchart TD
+    W["Web ACL"] --> R1["ルール 1 マネージドルールグループ"]
+    W --> R2["ルール 2 レートベースルール"]
+    W --> R3["ルール 3 IP セットや geo 一致"]
+    W --> DA["デフォルトアクション Allow または Block"]
+    W --> AS["関連付け先 CloudFront ALB API Gateway など"]`,
+            'd10': `flowchart LR
+    I["インターネット"] --> IGW["IGW"]
+    IGW --> FW["ファイアウォールサブネット Network Firewall エンドポイント"]
+    FW --> PS["ワークロードのサブネット"]`,
+            'd11': `flowchart TD
+    A["コストが高い通信は?"] --> B{"NAT ゲートウェイの処理量が多い"}
+    A --> C{"AZ 間通信が多い"}
+    A --> D{"インターネット向け送信が多い"}
+    A --> E{"未使用や過剰なリソース"}
+    B --> B1["S3 と DynamoDB はゲートウェイエンドポイントへ"]
+    B --> B2["他の AWS サービスはインターフェイスエンドポイントを検討"]
+    C --> C1["同一 AZ 内で完結する構成と AZ 内ルーティング"]
+    D --> D1["CloudFront でキャッシュして配信"]
+    E --> E1["未使用 EIP と NAT と 不要なエンドポイントを削除"]`,
+            'd12': `flowchart TD
+    Q1{"ゾーンの頂点 example.com に設定する?"}
+    Q1 -- "はい" --> Q2{"向き先は AWS リソース?"}
+    Q1 -- "いいえ" --> Q3{"向き先は AWS リソース?"}
+    Q2 -- "はい" --> A["Alias レコード"]
+    Q2 -- "いいえ" --> B["A レコードで IP を直接指定"]
+    Q3 -- "はい" --> C["Alias を推奨 無料でヘルス評価も可"]
+    Q3 -- "いいえ" --> D["CNAME または A"]`,
+            'd13': `flowchart LR
+    subgraph OnPrem["オンプレミス"]
+        OD["オンプレ DNS"]
+    end
+    subgraph VPC["VPC"]
+        EC["EC2"]
+        RES["Route 53 Resolver"]
+        IN["インバウンドエンドポイント"]
+        OUT["アウトバウンドエンドポイント"]
+    end
+    EC --> RES
+    RES -- "転送ルールに一致" --> OUT
+    OUT --> OD
+    OD -- "VPC の名前を問い合わせ" --> IN
+    IN --> RES`,
+            'd14': `flowchart TD
+    Q1{"何を基準に振り分けたい?"}
+    Q1 -- "比率で段階的に" --> W["加重"]
+    Q1 -- "ユーザーに近いリージョンで速く" --> L["レイテンシー"]
+    Q1 -- "障害時に切り替えたい" --> F["フェイルオーバー"]
+    Q1 -- "ユーザーの国や地域で変えたい" --> G["位置情報"]
+    Q1 -- "距離と偏りを調整したい" --> GP["地理的近接性"]
+    Q1 -- "クライアントの IP 範囲で変えたい" --> IP["IP ベース"]
+    Q1 -- "正常な複数 IP を返したい" --> M["複数値回答"]`,
+            'd15': `sequenceDiagram
+    participant U as ユーザー
+    participant R as Route 53
+    participant H as ヘルスチェック
+    participant P as プライマリ
+    participant S as セカンダリ
+    H->>P: 定期チェック
+    P-->>H: 正常
+    U->>R: 名前解決
+    R-->>U: プライマリの IP
+    H->>P: 定期チェック
+    Note over P: 障害発生
+    H-->>R: 連続失敗でプライマリ異常
+    U->>R: 名前解決 (TTL 切れ後)
+    R-->>U: セカンダリの IP
+    U->>S: 接続`,
+            'd16': `flowchart TD
+    Q1{"ログに残したいのは?"}
+    Q1 -- "外部からの自分のドメインへの問い合わせ" --> P["パブリックホストゾーンのクエリログ 出力は us-east-1 の CloudWatch Logs"]
+    Q1 -- "VPC 内のインスタンスが引いた名前" --> R["Resolver クエリログ VPC に設定"]
+    R --> R2["出力先は CloudWatch Logs または S3 または Firehose"]`,
+            'd17': `flowchart TD
+    Q1{"配信したいトラフィックは?"}
+    Q1 -- "HTTP の静的コンテンツや動画やキャッシュ可能なもの" --> CF["CloudFront"]
+    Q1 -- "TCP や UDP の非 HTTP アプリ" --> GA["Global Accelerator"]
+    Q1 -- "固定 IP を許可リストに登録させたい" --> GA2["Global Accelerator"]
+    Q1 -- "DNS の TTL に依存しない高速フェイルオーバー" --> GA3["Global Accelerator"]
+    Q1 -- "動的 HTTP を速くしたい キャッシュ不可" --> Q2{"キャッシュや WAF やエッジ処理を使いたい?"}
+    Q2 -- "はい" --> CF2["CloudFront"]
+    Q2 -- "いいえ 固定 IP が欲しい" --> GA4["Global Accelerator"]`,
+            'd18': `flowchart LR
+    V["ビューワー"] --> E["エッジロケーション"]
+    E -- "キャッシュ ヒット" --> V
+    E -- "キャッシュ ミス" --> RE["リージョナルエッジキャッシュ"]
+    RE --> OS["Origin Shield 任意"]
+    OS --> O["オリジン S3 ALB EC2 など"]`,
+            'd19': `flowchart LR
+    U["ユーザー"] --> A["2 つの静的エニーキャスト IP"]
+    A --> E1["最寄りの AWS エッジロケーション"]
+    E1 --> N["AWS グローバルネットワーク"]
+    N --> G1["エンドポイントグループ リージョン A トラフィックダイヤル 100"]
+    N --> G2["エンドポイントグループ リージョン B トラフィックダイヤル 100"]
+    G1 --> EP1["ALB NLB EC2 EIP"]
+    G2 --> EP2["ALB NLB EC2 EIP"]`,
+            'd20': `flowchart TD
+    S["通信できない"] --> D{"名前ではなく IP 直指定ならつながる?"}
+    D -- "いいえ 名前だけ失敗" --> DNS["DNS を確認 Resolver 設定 プライベートホストゾーン DNS Firewall"]
+    D -- "はい または IP でも失敗" --> R{"送信元のルートテーブルに宛先へのルートがある?"}
+    R -- "いいえ" --> FR["ルートを追加 IGW NAT TGW pcx vpce など"]
+    R -- "はい" --> N1{"送信元の SG のアウトバウンドは許可?"}
+    N1 -- "いいえ" --> FS1["アウトバウンド許可を追加"]
+    N1 -- "はい" --> NA1{"送信元サブネットの NACL は往復とも許可?"}
+    NA1 -- "いいえ" --> FNA1["NACL のルールと番号順を修正"]
+    NA1 -- "はい" --> NA2{"宛先サブネットの NACL は往復とも許可?"}
+    NA2 -- "いいえ" --> FNA2["NACL を修正 エフェメラルポートも"]
+    NA2 -- "はい" --> N2{"宛先の SG のインバウンドは許可?"}
+    N2 -- "いいえ" --> FS2["インバウンド許可を追加 SG ID 参照が推奨"]
+    N2 -- "はい" --> BK{"宛先の戻りルートはある?"}
+    BK -- "いいえ" --> FBK["戻りのルートを追加 特にピアリングと TGW"]
+    BK -- "はい" --> APP["OS ファイアウォール アプリの待受 ヘルスチェックを確認"]`,
+            'd21': `flowchart TD
+    A["疎通できない"] --> B["Reachability Analyzer でパス分析"]
+    B --> C{"到達可能?"}
+    C -- "いいえ" --> D["表示された阻害コンポーネントを修正 ルート SG NACL など"]
+    C -- "はい" --> E["構成は正常 DNS と OS FW とアプリと実トラフィックを確認"]
+    E --> F["VPC フローログで ACCEPT か REJECT を確認"]`,
+            'd22': `flowchart TD
+    Q1{"何を調べたい?"}
+    Q1 -- "通信が許可されたか拒否されたか" --> A["VPC フローログ"]
+    Q1 -- "ロードバランサーの 5xx や遅延" --> B["ELB アクセスログ"]
+    Q1 -- "WAF にブロックされたか どのルールか" --> C["WAF ログ"]
+    Q1 -- "CDN のキャッシュヒットやエッジのエラー" --> D["CloudFront ログ"]
+    Q1 -- "アプリやコンテナ内部のエラー" --> E["コンテナログ CloudWatch Logs"]`,
+            'd23': `flowchart TD
+    A["ALB で 5xx"] --> B{"target_status_code は?"}
+    B -- "あり 例 500" --> C["アプリ ターゲットのエラー アプリログを確認"]
+    B -- "空 ハイフン" --> D{"elb_status_code は?"}
+    D -- "502" --> E["ターゲットが接続を閉じた 不正応答 Keep-Alive とアイドルタイムアウトを確認"]
+    D -- "503" --> F["正常なターゲットがない ヘルスチェックと登録を確認"]
+    D -- "504" --> G["ターゲットが時間内に応答しない SG NACL 処理時間を確認"]`,
+            'd24': `flowchart TD
+    R["リクエスト到着"] --> K["キャッシュキーを計算 パス クエリ ヘッダー Cookie のうち設定した値"]
+    K --> H{"エッジにあり 有効期限内?"}
+    H -- "はい" --> HIT["Hit キャッシュから応答"]
+    H -- "期限切れ" --> V["オリジンに更新確認"]
+    V --> RH["RefreshHit 未更新ならキャッシュを再利用"]
+    H -- "なし" --> M["Miss オリジンから取得"]
+    M --> S["TTL に従い保存して応答"]`,
+            'd25': `flowchart TD
+    E["CloudFront でエラー"] --> Q{"ステータスは?"}
+    Q -- "403" --> A["OAC とバケットポリシー WAF 地理的制限 署名 既定ルートオブジェクト"]
+    Q -- "404" --> B["オリジンのオブジェクトの有無 パスパターン"]
+    Q -- "502" --> C["オリジンの証明書 SSL ネゴシエーション オリジンへの接続"]
+    Q -- "503" --> D["オリジンの容量 負荷"]
+    Q -- "504" --> F["オリジンの応答遅延 タイムアウト値 オリジンへの到達性 SG"]`,
+            'd26': `flowchart LR
+    subgraph OnPrem["オンプレミス"]
+        CGW["カスタマーゲートウェイ機器"]
+    end
+    subgraph AWS["AWS"]
+        VGW["仮想プライベートゲートウェイ または Transit Gateway"]
+        VPC["VPC"]
+    end
+    CGW == "IPsec トンネル 2 本" ==> VGW
+    VGW --> VPC`,
+            'd27': `flowchart TD
+    S["TGW 経由で通信できない"] --> A{"アタッチメントは available?"}
+    A -- "いいえ" --> A1["アタッチメントの状態とサブネットを確認"]
+    A -- "はい" --> B{"VPC のルートテーブルに 宛先から tgw がある?"}
+    B -- "いいえ" --> B1["ルートを追加"]
+    B -- "はい" --> C{"TGW ルートテーブルに 宛先 CIDR のルートがある?"}
+    C -- "いいえ" --> C1["伝播を有効化 または 静的ルートを追加"]
+    C -- "はい" --> D{"アタッチメントが 正しい TGW ルートテーブルに関連付いている?"}
+    D -- "いいえ" --> D1["関連付けを修正"]
+    D -- "はい" --> E{"ブラックホールルートや CIDR 重複はない?"}
+    E -- "ある" --> E1["ルートを修正 重複を解消"]
+    E -- "ない" --> F["SG NACL 戻りのルートを確認 Reachability Analyzer で検証"]`,
+            'd28': `flowchart TD
+    Q1{"どこの区間を見たい?"}
+    Q1 -- "AWS 内の EC2 や AWS サービス間" --> A["Network Flow Monitor エージェントで受動監視"]
+    Q1 -- "ユーザーからアプリまでのインターネット区間" --> B["Internet Monitor"]
+    Q1 -- "AWS とオンプレミスのハイブリッド区間" --> C["Network Synthetic Monitor プローブで能動監視"]`,
+            'd29': `flowchart TD
+    S["ユーザーまたはシステムから 通信できない 遅い との報告"] --> T{"どの区間か?"}
+    T -- "名前が引けない" --> DNS["DNS 区間 Step 6 7"]
+    T -- "インターネット経由のユーザー" --> EDGE["エッジ区間 CloudFront WAF Shield Step 8 11"]
+    T -- "ロードバランサー経由" --> LB["ELB 区間 Step 10"]
+    T -- "VPC 内やサブネット間" --> VPCC["VPC 区間 Step 9"]
+    T -- "プライベートサブネットから外部" --> NAT["NAT エンドポイント区間 Step 3 9"]
+    T -- "オンプレミスとの通信" --> HYB["ハイブリッド区間 Step 12"]
+    T -- "遅い 断続的に失敗" --> PERF["監視で確認 Step 13"]
+    DNS --> D1["Resolver 設定 ホストゾーン DNS Firewall クエリログ"]
+    EDGE --> E1["X-Cache ステータスコード WAF ログ オリジン到達性"]
+    LB --> L1["アクセスログ ターゲットヘルス SG"]
+    VPCC --> V1["Reachability Analyzer ルート SG NACL フローログ"]
+    NAT --> N1["ルート NAT 状態 ErrorPortAllocation エンドポイントポリシー"]
+    HYB --> H1["TunnelState BGP ルート伝播 TGW ルート"]
+    PERF --> P1["Network Flow Monitor Internet Monitor Synthetic Monitor"]`
+        };
+(function(){
+  'use strict';
+  /* ---------- Mermaid (live, client-side) ---------- */
+  function pad(svg){
+    var vb=svg.getAttribute('viewBox'); if(!vb) return;
+    var p=vb.split(/[ ,]+/).map(parseFloat); if(p.length<4||p.some(isNaN)) return;
+    var isSeq=svg.getAttribute('aria-roledescription')==='sequence';
+    p[3]+= isSeq?110:15;
+    svg.setAttribute('viewBox',p.join(' '));
+    svg.removeAttribute('width'); svg.removeAttribute('height');
+    svg.style.width=p[2]+'px'; svg.style.maxWidth='none'; svg.style.height='auto';
+    svg.style.overflow='visible'; svg.style.flexShrink='0';
+  }
+  async function renderAll(){
+    if(typeof mermaid==='undefined'){console.warn('mermaid not loaded');return;}
+    mermaid.initialize({
+      startOnLoad:false, theme:'base', securityLevel:'loose',
+      fontFamily:getComputedStyle(document.body).fontFamily,
+      themeVariables:{
+        fontSize:'16px', background:'#ffffff',
+        primaryColor:'#eef0fa', primaryTextColor:'#1c2333', primaryBorderColor:'#34459b',
+        lineColor:'#5b6b8f', secondaryColor:'#fbf1dc', tertiaryColor:'#ffffff',
+        edgeLabelBackground:'#ffffff', clusterBkg:'#f7f6f1', clusterBorder:'#c3cbea',
+        actorBkg:'#eef0fa', actorBorder:'#34459b', actorTextColor:'#1c2333', actorLineColor:'#8a96b8',
+        signalColor:'#34459b', signalTextColor:'#1c2333', noteBkgColor:'#fbf1dc', noteTextColor:'#1c2333', noteBorderColor:'#b7791f'
+      },
+      flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis',nodeSpacing:50,rankSpacing:50,subGraphTitleMargin:{top:10,bottom:28}},
+      sequence:{useMaxWidth:false,wrap:false}
+    });
+    try{
+      await document.fonts.load('400 16px "Noto Sans JP"','設計とネットワーク');
+      await document.fonts.load('700 16px "Noto Sans JP"','設計とネットワーク');
+      await document.fonts.ready;
+    }catch(e){}
+    var nodes=document.querySelectorAll('.diagram-canvas');
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i], id=el.getAttribute('data-diagram-id'), src=DIAGRAMS[id];
+      try{
+        var r=await mermaid.render('mm-'+id, src);
+        el.innerHTML=r.svg;
+        var svg=el.querySelector('svg'); if(svg) pad(svg);
+      }catch(err){
+        console.error('mermaid render failed',id,err);
+        el.textContent='図の描画に失敗しました: '+id;
+      }
+    }
+    document.documentElement.setAttribute('data-diagrams-done','1');
+  }
+  renderAll();
+
+  /* ---------- Sidebar: mobile drawer ---------- */
+  var sidebar=document.getElementById('sidebar'), btn=document.getElementById('menuBtn'), scrim=document.getElementById('scrim');
+  function setOpen(o){
+    sidebar.classList.toggle('open',o); scrim.classList.toggle('show',o);
+    btn.setAttribute('aria-expanded',o?'true':'false');
+  }
+  btn.addEventListener('click',function(){setOpen(!sidebar.classList.contains('open'));});
+  scrim.addEventListener('click',function(){setOpen(false);});
+  var links=Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+  links.forEach(function(a){a.addEventListener('click',function(){setOpen(false);});});
+
+  /* ---------- Scroll spy (position based) ---------- */
+  var targets=links.map(function(a){return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));});
+  var ticking=false;
+  function spy(){
+    ticking=false;
+    var limit=window.innerHeight*0.25, cur=-1;
+    for(var i=0;i<targets.length;i++){
+      if(targets[i] && targets[i].getBoundingClientRect().top<=limit) cur=i; else if(targets[i]) break;
+    }
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur);});
+    if(cur>=0 && window.innerWidth>980){
+      var a=links[cur], sb=sidebar, top=a.offsetTop, h=sb.clientHeight;
+      if(top<sb.scrollTop+40 || top>sb.scrollTop+h-80) sb.scrollTop=top-h/3;
+    }
+  }
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(spy);}},{passive:true});
+  window.addEventListener('resize',spy);
+  spy();
+})();
+
+    </script>
+</body>
+</html>
