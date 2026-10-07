@@ -2,6 +2,36 @@
 
 (最終更新日: 2026-10-07)
 
+## 2026-10-07: AWS DVA-C02 ドメイン2 セキュリティのNext.js移行（完了）
+
+`Aws-dva-c02-domain2-security-guide.html` を `/aws/developer-associate/domain2` に全量移行し、ホームのDVAカードとAWS Headerナビへ登録した。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、29分割セクションで構成する。
+
+固定fixtureでh1:4・h2:26・h3:219・h4:0、110表（th:264・td:1348）、234リスト項目、158外部リンク、40コードブロック、35図、177本文ブロックを全文・順序・構造まで照合した。原本の全CSS宣言と装飾、通常リストの点・番号、入れ子、20チェック項目のマーカー非表示、コードの空行・インデント・構文色・内外余白を検証する。26目次、hash/focus、Escape、現在地表示、固定Headerとの位置関係も保持した。
+
+### 段階別コミット
+
+- [x] Inventory: `9b82a835`（本文・忠実性・CSS/図/構造のfixture）。
+- [x] Red: `61dc00dd`（全量テスト）。テストハーネス・構文色の条件修正は実装と分離してコミット。
+- [x] Scaffold: `2fd6b875`（Server/Client構成、目次、図、チェック、コード、CSS）。
+- [x] 導入: `98ff9489`（Step 0〜1）。
+- [x] Task 1: `2ff529aa`（Step 2〜9、認証・認可）。
+- [x] Task 2: `4e41fbf4`（Step 10〜16、暗号化・鍵・証明書）。
+- [x] Task 3・総まとめ・付録: `ee988069`（Step 17〜23・付録A/B、Green）。
+- [x] 統合Red: `e32b8337`。ブラウザで検出した現在地・a11y・コード余白の回帰もRedコミット後に修正。
+- [x] 統合・Refactor: `6675afcd`（ホーム/AWSナビ、文字色、a11y、scroll spy）。
+- [x] 原本退避: `a9108a46`。HTMLとMarkdownはローカル専用の `archive/Aws/html/developer-associate/domain2/` と `archive/Aws/md/developer-associate/domain2/` に保存し、Git固定リビジョンとバイト一致を確認。
+- [x] 再描画抑制Red: `f2c96560`、Green: `0807b644`。20チェック操作で静的本文を再描画しないようmemo化。
+- [x] Spec Sync: `0ee66553`、`ce012eec`（仕様3種・カバレッジ・再開プロンプト）。
+- [x] 本進捗同期: 本ファイルだけを別コミット。
+
+### 検証結果
+
+- 移行・統合26件、幅契約130件、3系統ミラー同期14件を含む関連170件成功。
+- 原本を直下とarchiveの双方から一時的に外したfixture-only実行でも26件成功。本文・表行・図・リスト点の削除をそれぞれ検出する4変異チェックも成功し、原状復元済み。
+- 1440px・768px・390pxのE2E 3件成功、各幅でaxe違反0件。35実SVGの自然倍率と操作後の倍率不変、リスト装飾、モバイル目次、Header遮蔽、コンソールエラー、チェック操作を検証。
+- TypeScript・全体ESLint・対象Markdown lint成功。全体Vitestは212ファイル・2236件中2230成功・移行前からの6失敗（PAA Section 5のtd/li、Header SAAのリンク重複、DevNet td、Cisco theme-token-ownershipの2件）。新規失敗なし。
+- npm・本番ビルドはユーザー指示により未実行。目視確認はユーザー担当。詳細は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-07実行記録を参照。
+
 ## 2026-10-07: AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド 100%全量移行 (完了)
 
 ### 目的
@@ -1446,14 +1476,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** Computer Networks（Tanenbaum）HTML全量移行・Books統合
-- **最終更新日:** 2026-10-04
-- **最新実装 HEAD:** `5eb7ed51`
-- **仕様同期コミット:** `d6620986`
-- **前回進捗同期コミット:** `251fb377`
-- **検証状態:** 移行23件・関連141件・3001番E2E 3件成功、axe違反0件。型チェック・Lint成功。全体Vitestは2121成功/2既知失敗（PAA Section 5の表セル・リスト全文不一致）。
-- **ビルド状態:** npm・ビルドはユーザー指示に従い未実行。目視確認は未実施（自動のDOM検証とPlaywright検証で代替）。
-- **次の作業:** PAA Section 5の表セル・リストの既知不一致を別タスクで調査する。
+- **最新完了タスク:** AWS DVA-C02 ドメイン2セキュリティの全量移行・AWSナビ統合
+- **最終更新日:** 2026-10-07
+- **最新実装 HEAD:** `0807b644`
+- **仕様同期コミット:** `ce012eec`（初回同期 `0ee66553`）
+- **前回進捗同期コミット:** `63af5c7e`
+- **検証状態:** 移行26件・関連170件・3画面幅E2E 3件成功、axe違反0件。型・Lint・Markdown lint成功。全体Vitestは2230成功/既存6失敗。
+- **ビルド状態:** npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。
+- **HTML残数:** 直下19件（移行済みTanenbaum原本1件・未移行18件）。
+- **次の作業:** ユーザーの目視確認。既存6失敗の調査は別タスクで行う。次の移行候補は `Dva-c02-domain1-development-with-aws-services-guide.html`。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -2792,9 +2823,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `5eb7ed51`、仕様同期は `d6620986`、前回進捗同期コミットは `251fb377` です。Tanenbaumガイドの移行23件・関連141件、3001番のE2E 3件（axe違反0件）、型チェック、Lintが成功し、全体Vitestは2121成功/既知の2失敗です。npm・ビルドはユーザー指示により未実行、目視確認は未実施です。次の作業はPAA Section 5の既知不一致の調査です。最新の検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-04実行記録を参照してください。
-AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。当該作業の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。AGWAのE2E・Visualテスト・ビルドは当該作業時点で未実施です。
+最新実装 HEAD は `0807b644`、仕様同期は `ce012eec`（初回 `0ee66553`）、前回進捗同期コミットは `63af5c7e` です。DVA-C02ドメイン2の移行26件・関連170件、1440px/768px/390pxのE2E 3件（各幅axe違反0件）、型チェック・Lint・Markdown lintが成功。全体Vitestは2230成功/移行前からの6失敗です。原本なしでの26テストと4変異チェックも成功。npm・ビルドはユーザー指示により未実行、目視確認はユーザー担当。未移行HTMLは18件（直下19件のうち移行済みTanenbaum原本1件を除外）。次の作業はユーザーの目視確認で、既存6失敗の調査は別タスクです。次の移行候補は `Dva-c02-domain1-development-with-aws-services-guide.html`。最新検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-07実行記録を参照してください。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
 
