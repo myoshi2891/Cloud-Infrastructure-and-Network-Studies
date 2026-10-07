@@ -376,16 +376,28 @@
     height: auto !important;
 }
 
+/* MermaidDiagram 内部ラッパーの二重外枠・二重パディング・背景を解消し単一枠に統一 */
+.aws-cloudops-page .mermaid-wrap .cloudops-diagram {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
 /* ---------- コードブロック ---------- */
 .aws-cloudops-page .code-block {
     margin: 0 0 26px;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
     background: #282c34;
     border: 1px solid #1b1e24;
+    padding-bottom: 16px;
 }
 
-.aws-cloudops-page .cb-head {
+.aws-cloudops-page .code-block .cb-head {
+    display: block;
     background: #1b1e24;
     color: #c8ced9;
     padding: 8px 18px;
@@ -393,13 +405,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-}
-
-.aws-cloudops-page .code-block pre {
-    margin: 0;
-    padding: 16px 18px;
-    overflow-x: auto;
-    background: #282c34;
+    margin-bottom: 12px;
 }
 
 .aws-cloudops-page .code-block .code-line {
@@ -408,6 +414,56 @@
     color: #abb2bf;
     font-size: 0.95rem;
     line-height: 1.7;
+    padding: 0 18px;
+}
+
+.aws-cloudops-page .code-block .code-line:first-child {
+    padding: 0;
+}
+
+.aws-cloudops-page .code-block .code-line:first-child .code-line-content {
+    display: block;
+    padding: 0 18px;
+}
+
+/* highlight.js (Atom One Dark 配色) シンタックスハイライト */
+.aws-cloudops-page .hljs-keyword {
+    color: #c678dd;
+    font-weight: 600;
+}
+
+.aws-cloudops-page .hljs-string {
+    color: #98c379;
+}
+
+.aws-cloudops-page .hljs-attr {
+    color: #e06c75;
+}
+
+.aws-cloudops-page .hljs-number {
+    color: #d19a66;
+}
+
+.aws-cloudops-page .hljs-literal {
+    color: #56b6c2;
+    font-weight: 600;
+}
+
+.aws-cloudops-page .hljs-comment {
+    color: #5c6370;
+    font-style: italic;
+}
+
+.aws-cloudops-page .hljs-built_in {
+    color: #e6c07b;
+}
+
+.aws-cloudops-page .hljs-variable {
+    color: #61afef;
+}
+
+.aws-cloudops-page .hljs-deletion {
+    color: #e06c75;
 }
 
 /* ---------- クイズ / アコーディオン details ---------- */

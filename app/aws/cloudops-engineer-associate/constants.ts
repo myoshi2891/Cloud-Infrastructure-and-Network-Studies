@@ -745,27 +745,26 @@ export const DIAGRAMS: Record<DiagramId, string> = {
 export interface CodeBlockData {
     index: number;
     head: string;
-    lines: string[];
     firstLineRest: string;
+    remainingLines: string[];
 }
 
 export const CODE_BLOCKS: CodeBlockData[] = [
     {
         "index": 0,
         "head": "plaintext",
-        "lines": [
-            "plaintextfields @timestamp, @message",
+        "firstLineRest": "fields @timestamp, @message",
+        "remainingLines": [
             "| filter @message like /ERROR/",
             "| stats count() as errorCount by bin(5m)",
             "| sort @timestamp desc"
-        ],
-        "firstLineRest": "fields @timestamp, @message"
+        ]
     },
     {
         "index": 1,
         "head": "json",
-        "lines": [
-            "json{",
+        "firstLineRest": "{",
+        "remainingLines": [
             "  \"metrics\": {",
             "    \"append_dimensions\": { \"InstanceId\": \"${aws:InstanceId}\" },",
             "    \"metrics_collected\": {",
@@ -787,14 +786,13 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "    }",
             "  }",
             "}"
-        ],
-        "firstLineRest": "{"
+        ]
     },
     {
         "index": 2,
         "head": "json",
-        "lines": [
-            "json{",
+        "firstLineRest": "{",
+        "remainingLines": [
             "  \"Version\": \"2012-10-17\",",
             "  \"Statement\": [{",
             "    \"Effect\": \"Allow\",",
@@ -807,26 +805,24 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "    }",
             "  }]",
             "}"
-        ],
-        "firstLineRest": "{"
+        ]
     },
     {
         "index": 3,
         "head": "json",
-        "lines": [
-            "json{",
+        "firstLineRest": "{",
+        "remainingLines": [
             "  \"source\": [\"aws.ec2\"],",
             "  \"detail-type\": [\"EC2 Instance State-change Notification\"],",
             "  \"detail\": { \"state\": [\"stopped\", \"terminated\"] }",
             "}"
-        ],
-        "firstLineRest": "{"
+        ]
     },
     {
         "index": 4,
         "head": "yaml",
-        "lines": [
-            "yamldescription: \"Restart an EC2 instance and wait until it is running\"",
+        "firstLineRest": "description: \"Restart an EC2 instance and wait until it is running\"",
+        "remainingLines": [
             "schemaVersion: \"0.3\"",
             "assumeRole: \"{{ AutomationAssumeRole }}\"",
             "parameters:",
@@ -842,14 +838,13 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "      Api: RebootInstances",
             "      InstanceIds:",
             "        - \"{{ InstanceId }}\""
-        ],
-        "firstLineRest": "description: \"Restart an EC2 instance and wait until it is running\""
+        ]
     },
     {
         "index": 5,
         "head": "yaml",
-        "lines": [
-            "yamlAWSTemplateFormatVersion: \"2010-09-09\"",
+        "firstLineRest": "AWSTemplateFormatVersion: \"2010-09-09\"",
+        "remainingLines": [
             "Parameters:",
             "  Env:",
             "    Type: String",
@@ -864,14 +859,13 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "Outputs:",
             "  BucketName:",
             "    Value: !Ref LogBucket"
-        ],
-        "firstLineRest": "AWSTemplateFormatVersion: \"2010-09-09\""
+        ]
     },
     {
         "index": 6,
         "head": "json",
-        "lines": [
-            "json{",
+        "firstLineRest": "{",
+        "remainingLines": [
             "  \"Version\": \"2012-10-17\",",
             "  \"Statement\": [{",
             "    \"Effect\": \"Deny\",",
@@ -881,14 +875,13 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "    \"Condition\": { \"Bool\": { \"aws:SecureTransport\": \"false\" } }",
             "  }]",
             "}"
-        ],
-        "firstLineRest": "{"
+        ]
     },
     {
         "index": 7,
         "head": "json",
-        "lines": [
-            "json{",
+        "firstLineRest": "{",
+        "remainingLines": [
             "  \"Version\": \"2012-10-17\",",
             "  \"Statement\": [{",
             "    \"Effect\": \"Deny\",",
@@ -899,27 +892,24 @@ export const CODE_BLOCKS: CodeBlockData[] = [
             "    }",
             "  }]",
             "}"
-        ],
-        "firstLineRest": "{"
+        ]
     },
     {
         "index": 8,
         "head": "plaintext",
-        "lines": [
-            "plaintext2 123456789010 eni-0abc 203.0.113.12 10.0.1.5 49152 22 6 10 840 1700000000 1700000060 ACCEPT OK",
+        "firstLineRest": "2 123456789010 eni-0abc 203.0.113.12 10.0.1.5 49152 22 6 10 840 1700000000 1700000060 ACCEPT OK",
+        "remainingLines": [
             "2 123456789010 eni-0abc 203.0.113.99 10.0.1.5 49153 22 6 4 240 1700000000 1700000060 REJECT OK"
-        ],
-        "firstLineRest": "2 123456789010 eni-0abc 203.0.113.12 10.0.1.5 49152 22 6 10 840 1700000000 1700000060 ACCEPT OK"
+        ]
     },
     {
         "index": 9,
         "head": "plaintext",
-        "lines": [
-            "plaintextfilter action = \"REJECT\"",
+        "firstLineRest": "filter action = \"REJECT\"",
+        "remainingLines": [
             "| stats count(*) as rejectCount by srcAddr, dstPort",
             "| sort rejectCount desc",
             "| limit 20"
-        ],
-        "firstLineRest": "filter action = \"REJECT\""
+        ]
     }
 ];

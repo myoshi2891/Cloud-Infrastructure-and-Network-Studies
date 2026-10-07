@@ -1246,7 +1246,7 @@ export default function SectionDomain5() {
 <tr>
 <td><strong>更新したのに古い内容</strong></td>
 <td>TTL 内はキャッシュが返る</td>
-<td><strong>無効化(<code>/*</code> やパス指定)</strong>。ただし <strong>バージョン付きのファイル名</strong> が確実・低コスト</td>
+<td><strong>無効化(<code>{'/*'}</code> やパス指定)</strong>。ただし <strong>バージョン付きのファイル名</strong> が確実・低コスト</td>
 </tr>
 <tr>
 <td>他人の内容が見える</td>

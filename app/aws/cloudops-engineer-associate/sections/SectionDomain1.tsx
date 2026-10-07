@@ -477,7 +477,7 @@ export default function SectionDomain1() {
 <tbody>
 <tr>
 <td>ルール式の例</td>
-<td><code>ALARM("cpu-high") AND ALARM("latency-high")</code></td>
+<td><code>{'ALARM("cpu-high") AND ALARM("latency-high")'}</code></td>
 </tr>
 <tr>
 <td>利点</td>
