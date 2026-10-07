@@ -5,6 +5,15 @@ import { ChecklistContext } from './ChecklistItem';
 import { CHECK_COUNT } from './constants';
 import { Step0 } from './sections/Step0';
 import { Step1 } from './sections/Step1';
+import { Task1Heading } from './sections/Task1Heading';
+import { Step2 } from './sections/Step2';
+import { Step3 } from './sections/Step3';
+import { Step4 } from './sections/Step4';
+import { Step5 } from './sections/Step5';
+import { Step6 } from './sections/Step6';
+import { Step7 } from './sections/Step7';
+import { Step8 } from './sections/Step8';
+import { Step9 } from './sections/Step9';
 /** 全本文とチェックリストの達成件数を保持する学習ガイド。 */
 export function SecurityGuide() {
     const [checked, setChecked] = useState<Set<number>>(() => new Set());
@@ -27,7 +36,17 @@ export function SecurityGuide() {
             <div className="progress">自己採点チェックリスト達成: <b id="pcount" aria-live="polite">{checked.size} / {CHECK_COUNT}</b></div>
             <Step0 />
             <Step1 />
+            <Task1Heading />
+            <Step2 />
+            <Step3 />
+            <Step4 />
+            <Step5 />
+            <Step6 />
+            <Step7 />
+            <Step8 />
+            <Step9 />
         </main>
     </ChecklistContext></div>;
 }
+
 
