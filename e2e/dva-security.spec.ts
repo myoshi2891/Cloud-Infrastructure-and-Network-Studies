@@ -14,10 +14,12 @@ for (const width of [1440, 768, 390]) {
         const root = page.locator('.dva-security-page');
         await expect(root).toHaveCSS('background-color', 'rgb(250, 247, 240)');
         await expect(root).toHaveCSS('color', 'rgb(28, 35, 51)');
-        await expect(root).toHaveCSS('font-size', '17px');
+        await expect(root).toHaveCSS('font-size', '14px');
         await expect(root.locator('.sidebar')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
-        await expect(root.locator('main table').first()).toHaveCSS('font-size', '16px');
-        await expect(root.locator('main h2').first()).toHaveCSS('font-size', width <= 900 ? '22.4px' : '28px');
+        await expect(root.locator('main table').first()).toHaveCSS('font-size', '14px');
+        await expect(root.locator('main code').first()).toHaveCSS('font-size', '14px');
+        await expect(root.locator('.nav-a').first()).toHaveCSS('font-size', '14px');
+        await expect(root.locator('main h2').first()).toHaveCSS('font-size', width <= 900 ? '19.6px' : '24.5px');
         await expect(root.locator('main h2').first()).toHaveCSS('font-family', /Source Serif 4 Variable/);
         await expect.poll(() => page.evaluate(() => document.fonts.check('700 28px "Source Serif 4 Variable"'))).toBe(true);
 
@@ -32,6 +34,7 @@ for (const width of [1440, 768, 390]) {
         await expect(firstDiagram.locator('.node rect').first()).toHaveCSS('stroke', 'rgb(59, 63, 158)');
         await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('color', 'rgb(28, 35, 51)');
         await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('font-family', /Noto Sans JP Variable/);
+        await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('font-size', '14px');
 
         const lists = await root.locator('main ul, main ol').evaluateAll(elements => elements.map(el => ({
             tag: el.tagName, type: getComputedStyle(el).listStyleType,

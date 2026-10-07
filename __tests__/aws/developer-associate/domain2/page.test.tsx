@@ -55,7 +55,7 @@ describe('DVA Security 全量移行', () => {
             const init = chart.match(/^%%\{init: (.+)\}%%\n/);
             expect(init, '原本のMermaid設定を注入').not.toBeNull();
             expect(mermaidTheme.source.themeVariables).toEqual(theme);
-            expect(JSON.parse(init![1]!)).toEqual({ ...mermaidTheme.resolved, themeVariables: { ...mermaidTheme.resolved.themeVariables, fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif' } });
+            expect(JSON.parse(init![1]!)).toEqual({ ...mermaidTheme.resolved, themeVariables: { ...mermaidTheme.resolved.themeVariables, fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif', fontSize: '14px' } });
             expect(chart.slice(init![0].length)).toBe(design.charts[index]);
         });
         expect(Object.values(DIAGRAMS)).toEqual(design.charts);
@@ -176,7 +176,7 @@ const scopedSelector = (selector: string) => [...new Set(selector.split(',').map
     const s = part.trim();
     return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s.replace(/\.code-block pre code/g, ".code-block code").replace(/\.code-block pre/g, ".code-block")}`;
 }))].join(', ');
-const mappedValue = (value: string) => value
+const mappedValue = (value: string, prop: string) => (prop === 'font-size' && value.endsWith('rem') ? `${(value === '1.0625rem' ? 1 : Number.parseFloat(value)) * 0.875}rem` : value)
     .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-dva-paper) 95%, transparent)')
     .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '300px' : `var(${tokens[name] ?? name})`)
     .replace(/#[\da-f]{3,6}\b/gi, hex => `var(--color-dva-${hex.slice(1).toLowerCase()})`)
@@ -185,6 +185,15 @@ const mappedValue = (value: string) => value
     .replace(/"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace/g, 'var(--font-mono)');
 
 describe('DVA CSS全宣言・リスト装飾', () => {
+    it('本文・表・コード・目次・図を14pxにし、他ページのルート文字サイズを変更しない', () => {
+        const css = readFileSync(cssPath, 'utf8');
+        const rules = snapshotCssRules(css);
+        for (const selector of ['.dva-security-page','.dva-security-page table','.dva-security-page code','.dva-security-page .nav-a']) expect(rules.some(r => r.selector === selector && r.declarations.some(d => d.prop === 'font-size' && d.value === '0.875rem')), selector).toBe(true);
+        expect(css).toContain('.dva-security-page .diagram-wrap .mermaid-target');
+        expect(css).toContain('font-size: 14px !important');
+        expect(rules.filter(r => r.declarations.some(d => d.prop === 'font-size')).every(r => r.selector.startsWith('.dva-security-page'))).toBe(true);
+    });
+
     it('原本のroot配色と固定色を実値で一致させ、見出しフォントと図もライトテーマ', () => {
         const globals: Record<string, string> = {};
         postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(d => { if (d.prop.startsWith('--')) globals[d.prop] = d.value; });
@@ -207,7 +216,7 @@ describe('DVA CSS全宣言・リスト装飾', () => {
             expect(candidates.length, rule.selector).toBeGreaterThan(0);
             for (const decl of rule.declarations) {
                 if (integrationChanges[rule.selector]?.includes(decl.prop)) continue;
-                const value = mappedValue(decl.value);
+                const value = mappedValue(decl.value, decl.prop);
                 expect(candidates.some(r => r.declarations.some(d => d.prop === decl.prop && d.value === value && d.important === decl.important)), `${rule.selector}: ${decl.prop}: ${value}`).toBe(true);
             }
         }
