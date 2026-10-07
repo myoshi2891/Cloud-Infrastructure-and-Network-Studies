@@ -145,7 +145,7 @@ const scopedSelector = (selector: string) => [...new Set(selector.split(',').map
 }))].join(', ');
 const mappedValue = (value: string, prop: string) => (prop === 'color' && value === '#fff' ? 'var(--color-primary-foreground)' : prop === 'color' && value === '#2b2f7a' ? 'var(--color-accent)' : value)
     .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-background) 95%, transparent)')
-    .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '280px' : `var(${tokens[name]})`)
+    .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '280px' : `var(${tokens[name] ?? name})`)
     .replace(/#[\da-f]{3,6}\b/gi, hex => `var(--color-dva-${hex.slice(1).toLowerCase()})`)
     .replace(/"Noto Sans JP",system-ui,sans-serif/g, 'var(--font-body)')
     .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-display)')
