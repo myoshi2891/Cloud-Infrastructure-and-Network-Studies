@@ -92,7 +92,11 @@ function styleStringToJsx(styleStr) {
         .split(';')
         .filter(Boolean)
         .map(rule => {
-            const [k, v] = rule.split(':');
+            // 最初のコロンでのみ分割し、値内のコロン（URL スキーム等）を保持する
+            const sep = rule.indexOf(':');
+            if (sep === -1) return '';
+            const k = rule.slice(0, sep);
+            const v = rule.slice(sep + 1);
             if (!k || !v) return '';
             const camelK = k.trim().replace(/-([a-z])/g, (_, g) => g.toUpperCase());
             return `${camelK}: "${v.trim().replace(/"/g, '\\"')}"`;

@@ -74,17 +74,19 @@ if(stage==='scaffold') {
     write('page.css',css.toString()+`\n.dva-development-page main ul { list-style-type: disc; list-style-position: outside; }\n.dva-development-page main ol { list-style-type: decimal; list-style-position: outside; }\n.dva-development-page main ul ul { list-style-type: circle; }\n.dva-development-page .nav-list { list-style-type: none; }\n.dva-development-page .nav-list li { margin: 0; }\n.dva-development-page section[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 72px); }\n.dva-development-page :focus-visible { outline: 2px solid var(--color-dva-development-indigo); outline-offset: 4px; }\n@media (max-width:900px) { .dva-development-page:not(.menu-open) aside.sidebar { visibility: hidden; } }\n.dva-development-page .backdrop { border: 0; padding: 0; }\n.dva-development-page .code-block { margin: 16px 0 22px; padding: 0; border: 0; overflow-x: auto; }\n.dva-development-page .code-line-content { display: block; padding: 0 16px; white-space: pre; min-height: 1.7em; font-family: var(--font-dva-development-mono); font-size: 0.875rem; line-height: 1.7; color: var(--color-dva-development-abb2bf); background: var(--color-dva-development-282c34); }\n.dva-development-page .code-line:first-child .code-line-content { padding-top: 14px; }\n.dva-development-page .code-line:last-child .code-line-content { padding-bottom: 14px; }\n.dva-development-page .hljs-comment { color: #94a3b8; font-style: italic; }\n.dva-development-page .hljs-keyword { color: #c678dd; }\n.dva-development-page .hljs-string { color: #98c379; }\n.dva-development-page .hljs-attr { color: #e88a91; }\n.dva-development-page .hljs-title { color: #61afef; }\n.dva-development-page .hljs-built_in { color: #e6c07b; }\n.dva-development-page .hljs-number, .dva-development-page .hljs-literal { color: #d19a66; }\n.dva-development-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }\n.dva-development-page .diagram-wrap .mermaid-target :is(foreignObject > div, .nodeLabel, .edgeLabel, text, tspan) { font-size: 14px !important; }\n`);
 } else {
     const matches=id=>stage==='intro'?id==='sec-0':stage==='remainder'?/^sec-3[3-7]$/.test(id):['task1','task2','task3'].includes(stage)&&(id===`task-${stage.slice(-1)}`||id.startsWith(`sk-1-${stage.slice(-1)}-`));
-    const names=[];
-    for(const section of doc.querySelectorAll('main > section')) {
-        if(!matches(section.id)) continue;
-        const name=section.id.replace(/(^|-)([a-z0-9])/g,(_,sep,char)=>char.toUpperCase());
-        names.push(name);
+    const sections=[...doc.querySelectorAll('main > section')].filter(section=>matches(section.id));
+    const names=sections.map(section=>section.id.replace(/(^|-)([a-z0-9])/g,(_,sep,char)=>char.toUpperCase()));
+    if(!names.length) throw new Error('Unknown/empty stage');
+    let guide=readFileSync(`${dir}/DevelopmentGuide.tsx`,'utf8');
+    // 再実行で import とセクションが重複しないよう、完了済み段階は書き込み前に拒否する
+    const done=names.filter(name=>guide.includes(`import { ${name} } from './sections/${name}';`));
+    if(done.length) throw new Error(`Stage already applied: ${stage} (${done.join(', ')})`);
+    sections.forEach((section,i)=>{
+        const name=names[i];
         const text=jsx(section);
         const imports=[text.includes('<Diagram ')?"import { Diagram } from '../Diagram';":'',text.includes('<CodeBlock ')?"import { CodeBlock } from '../CodeBlock';":''].filter(Boolean).join('\n');
         write(`sections/${name}.tsx`,`${imports}\n/** ${section.querySelector('h2').textContent.trim()}を全量保持する。 */\nexport function ${name}(){return (${text});}`);
-    }
-    if(!names.length) throw new Error('Unknown/empty stage');
-    let guide=readFileSync(`${dir}/DevelopmentGuide.tsx`,'utf8');
+    });
     guide=guide.replace('/** 状態',names.map(name=>`import { ${name} } from './sections/${name}';`).join('\n')+'\n/** 状態');
     guide=guide.replace('{/* SECTIONS */}',names.map(name=>`<${name} />`).join('\n')+'\n'+(stage==='remainder'?jsx(doc.querySelector('.footer')):'{/* SECTIONS */}'));
     write('DevelopmentGuide.tsx',guide);
