@@ -57,6 +57,12 @@ describe('DVA Security 全量移行', () => {
             expect(block.getAttribute('data-language')).toMatch(/json|bash|python|ini|http|javascript|sql|text/);
         });
     });
+    it('JSON・CLI・Python・SQLの構文色が保持される', () => {
+        const root = mount();
+        for (const lang of ['json','bash','python','sql']) {
+            expect(root.querySelector(`[data-language="${lang}"] .hljs-string, [data-language="${lang}"] .hljs-keyword, [data-language="${lang}"] .hljs-comment`)).not.toBeNull();
+        }
+    });
     it('全チェックリストを操作すると件数とdone装飾が連動し、解除できる', () => {
         const root = mount();
         const inputs = [...root.querySelectorAll<HTMLInputElement>('li.chk input')];
@@ -132,7 +138,7 @@ const tokens: Record<string, string> = {
 };
 const scopedSelector = (selector: string) => [...new Set(selector.split(',').map(part => {
     const s = part.trim();
-    return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s}`;
+    return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s.replace(/\.code-block pre code/g, ".code-block code").replace(/\.code-block pre/g, ".code-block")}`;
 }))].join(', ');
 const mappedValue = (value: string) => value
     .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '280px' : `var(${tokens[name]})`)
