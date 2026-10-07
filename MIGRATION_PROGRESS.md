@@ -2,6 +2,49 @@
 
 (最終更新日: 2026-10-07)
 
+## 2026-10-07: AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Aws-soa-c03-guide.html`（および `Aws-soa-c03-guide.md`）を、Next.js App Router 構成 (`page.tsx`, `CloudOpsGuide.tsx`, `NavBar.tsx`, `constants.ts`, `Diagram.tsx`, `CodeBlock.tsx`, `page.css` + `sections/`) で `/aws/cloudops-engineer-associate` ルートへ移行。見出し(h1:7, h2:21, h3:89, h4:300)、全206個のテーブル（th:443, td:1095）、全68個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(470件)、全コードブロック(10件・.code-line構造)、全外部リンク(181件)、全本文・注釈ブロック(204件)、練習問題(20問完全収録)を一切の省略・要約なしで100%全量移植。グローバルナビ（`AWS` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Aws-soa-c03-guide.html` および `Aws-soa-c03-guide.md`）を `archive/Aws/html/cloudops/` および `archive/Aws/md/cloudops/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for aws-cloudops-engineer-associate` (`422357a8`)
+- [x] **Step 1 (Red)**: `test(aws): add failing tests for aws-cloudops-engineer-associate guide migration` (`96bbcd04`)
+- [x] **Step 2-1 (Scaffold & Intro)**: `feat(aws): setup foundation, constants, styles, and intro for aws-cloudops-engineer-associate guide` (`f2e5d0cd`)
+- [x] **Step 2-2 (Domain 1)**: `feat(aws): implement domain 1 for aws-cloudops-engineer-associate guide` (`dc9ffdee`)
+- [x] **Step 2-3 (Domain 2)**: `feat(aws): implement domain 2 for aws-cloudops-engineer-associate guide` (`8d54db11`)
+- [x] **Step 2-4 (Domain 3)**: `feat(aws): implement domain 3 for aws-cloudops-engineer-associate guide` (`26a6ac86`)
+- [x] **Step 2-5 (Domain 4)**: `feat(aws): implement domain 4 for aws-cloudops-engineer-associate guide` (`06ba235f`)
+- [x] **Step 2-6 (Domain 5)**: `feat(aws): implement domain 5 for aws-cloudops-engineer-associate guide` (`bed0e526`)
+- [x] **Step 2-7 (Appendix & Green)**: `feat(aws): implement appendix and pass all tests for aws-cloudops-engineer-associate guide` (`f75515d2`)
+- [x] **Step 3 (Refactor)**: `refactor(aws): integrate aws-cloudops-engineer-associate into routing and update docs` (`23812db8`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive aws-cloudops sources`
+
+### 関連ファイル
+
+- [app/aws/cloudops-engineer-associate/page.tsx](app/aws/cloudops-engineer-associate/page.tsx)
+- [app/aws/cloudops-engineer-associate/CloudOpsGuide.tsx](app/aws/cloudops-engineer-associate/CloudOpsGuide.tsx)
+- [app/aws/cloudops-engineer-associate/NavBar.tsx](app/aws/cloudops-engineer-associate/NavBar.tsx)
+- [app/aws/cloudops-engineer-associate/constants.ts](app/aws/cloudops-engineer-associate/constants.ts)
+- [app/aws/cloudops-engineer-associate/Diagram.tsx](app/aws/cloudops-engineer-associate/Diagram.tsx)
+- [app/aws/cloudops-engineer-associate/CodeBlock.tsx](app/aws/cloudops-engineer-associate/CodeBlock.tsx)
+- [app/aws/cloudops-engineer-associate/page.css](app/aws/cloudops-engineer-associate/page.css)
+- [app/aws/cloudops-engineer-associate/sections/](app/aws/cloudops-engineer-associate/sections/)
+- [本文・全量移行テスト](__tests__/aws/cloudops-engineer-associate/page.test.tsx)
+- [サイドバー幅契約テスト](__tests__/guide-content-widths.test.ts)
+- [docs/migration-inventory/aws-cloudops-engineer-associate.json](docs/migration-inventory/aws-cloudops-engineer-associate.json)
+- [archive/Aws/html/cloudops/Aws-soa-c03-guide.html](archive/Aws/html/cloudops/Aws-soa-c03-guide.html)
+- [archive/Aws/md/cloudops/Aws-soa-c03-guide.md](archive/Aws/md/cloudops/Aws-soa-c03-guide.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
 ## 2026-10-07: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド 100%全量移行 (完了)
 
 ### 目的
