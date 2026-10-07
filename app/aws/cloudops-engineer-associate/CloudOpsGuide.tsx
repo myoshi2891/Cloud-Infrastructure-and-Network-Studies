@@ -7,6 +7,7 @@ import SectionIntro from './sections/SectionIntro';
 import SectionDomain1 from './sections/SectionDomain1';
 import SectionDomain2 from './sections/SectionDomain2';
 import SectionDomain3 from './sections/SectionDomain3';
+import SectionDomain4 from './sections/SectionDomain4';
 
 /**
  * AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド。
@@ -24,6 +25,7 @@ export default function CloudOpsGuide() {
                     <SectionDomain1 />
                     <SectionDomain2 />
                     <SectionDomain3 />
+                    <SectionDomain4 />
                 </div>
             </main>
         </div>

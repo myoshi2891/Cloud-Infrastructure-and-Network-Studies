@@ -72,3 +72,13 @@ generateSection(
     'import { Diagram } from "../Diagram";\nimport CodeBlock from "../CodeBlock";\n',
     { codeBlockIndex: 5 }
 );
+
+// 5. SectionDomain4: s-h1-4 -> s-h1-5
+generateSection(
+    's-h1-4',
+    's-h1-5',
+    'app/aws/cloudops-engineer-associate/sections/SectionDomain4.tsx',
+    'SectionDomain4',
+    'import { Diagram } from "../Diagram";\nimport CodeBlock from "../CodeBlock";\n',
+    { codeBlockIndex: 6 }
+);
