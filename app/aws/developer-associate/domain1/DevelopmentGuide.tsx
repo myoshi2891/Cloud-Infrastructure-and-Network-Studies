@@ -2,6 +2,20 @@
 import { memo } from 'react';
 import { NavBar } from './NavBar';
 import { Sec0 } from './sections/Sec0';
+import { Task1 } from './sections/Task1';
+import { Sk111 } from './sections/Sk111';
+import { Sk112 } from './sections/Sk112';
+import { Sk113 } from './sections/Sk113';
+import { Sk114 } from './sections/Sk114';
+import { Sk115 } from './sections/Sk115';
+import { Sk116 } from './sections/Sk116';
+import { Sk117 } from './sections/Sk117';
+import { Sk118 } from './sections/Sk118';
+import { Sk119 } from './sections/Sk119';
+import { Sk1110 } from './sections/Sk1110';
+import { Sk1111 } from './sections/Sk1111';
+import { Sk1112 } from './sections/Sk1112';
+import { Sk1113 } from './sections/Sk1113';
 /** 状態に依存しない本文をメモ化し、目次操作で図を再描画しない。 */
 const GuideContents=memo(function GuideContents(){return <>
 <header className="hero">{" "}<div className="eyebrow">
@@ -20,8 +34,23 @@ const GuideContents=memo(function GuideContents(){return <>
 <span className="chip"><i className="ti ti-help-circle" aria-hidden="true"></i>{"練習問題 15 問"}</span>
 </div>{" "}</header>
 <Sec0 />
+<Task1 />
+<Sk111 />
+<Sk112 />
+<Sk113 />
+<Sk114 />
+<Sk115 />
+<Sk116 />
+<Sk117 />
+<Sk118 />
+<Sk119 />
+<Sk1110 />
+<Sk1111 />
+<Sk1112 />
+<Sk1113 />
 {/* SECTIONS */}
 </>;});
 /** 目次操作と静的本文を分離した学習ガイド。 */
 export function DevelopmentGuide(){return <NavBar><GuideContents /></NavBar>;}
+
 
