@@ -22,15 +22,17 @@ export function NavBar({ children }: { children: ReactNode }) {
         const visible = new Set<string>();
         const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(entries => {
             for (const entry of entries) {
-                if (entry.isIntersecting) visible.add(entry.target.id);
-                else visible.delete(entry.target.id);
+                const id = entry.target.closest('section')?.id;
+                if (!id) continue;
+                if (entry.isIntersecting) visible.add(id);
+                else visible.delete(id);
             }
             // DOMの順序を保ち、境界で見出しが複数交差しても現在地を安定させる。
             const first = NAV_ITEMS.find(item => visible.has(item.id));
             if (first) setActiveId(first.id);
         }, { rootMargin: `0px 0px -${Math.round(window.innerHeight * 0.65)}px 0px`, threshold: 0 });
         for (const item of NAV_ITEMS) {
-            const heading = document.getElementById(item.id);
+            const heading = document.getElementById(item.id)?.querySelector('h2');
             if (heading) observer?.observe(heading);
         }
         fromHash();

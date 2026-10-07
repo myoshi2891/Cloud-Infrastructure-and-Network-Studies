@@ -558,8 +558,11 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-dva',
         href: '/aws/developer-associate/domain2',
         overviewLabel: 'ドメイン2: セキュリティ',
-        description: 'DVA-C02のセキュリティ分野を24 Steps・35図で学習。IAM、STS、Cognito、KMS、暗号化、シークレット管理と12問の練習問題を収録。',
-        domains: [{ label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' }],
+        description: 'DVA-C02の開発・セキュリティ分野を学習。開発の全29スキル・31図・15問と、IAM、Cognito、KMS、暗号化の24 Steps・35図・12問を収録。',
+        domains: [
+            { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1', pct: '32%' },
+            { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' },
+        ],
         badge: 'DVA-C02',
         icon: '🔐',
         provider: 'AWS',
