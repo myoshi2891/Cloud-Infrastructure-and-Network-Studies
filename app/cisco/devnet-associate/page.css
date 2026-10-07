@@ -607,6 +607,12 @@
     color: transparent;
 }
 
+/* 視覚的に隠した input のキーボードフォーカスを .box に可視化する */
+.devnet-associate-page .check input:focus-visible + .box {
+    outline: 2px solid var(--color-devnet-associate-indigo, #2e3f72);
+    outline-offset: 2px;
+}
+
 .devnet-associate-page .check .box::after {
     content: '✓';
     font-weight: 700;
