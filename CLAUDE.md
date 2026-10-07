@@ -568,7 +568,7 @@ app/
       mermaid-theme.json            # 原本から独立解決したMermaid設定（共通ダーク設定の混入を防ぐ）
       CodeBlock.tsx                 # 40コード例の空行・インデント・構文色
       ChecklistItem.tsx             # Context経由のチェック項目
-      page.css                      # 原本ライト配色・Source Serif 4・300px幅・点と番号の装飾
+      page.css                      # 原本ライト配色・Source Serif 4・本文と図14px・300px幅・点と番号の装飾
       sections/                     # Step 0〜23、Task見出し、付録A/Bの29コンポーネント
   recommended-books/
     accelerate/

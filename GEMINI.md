@@ -62,7 +62,7 @@ Updated 2026-10-07
   - `/app/comptia/network-plus`: CompTIA Network+ (N10-009 / V9) 完全ガイド（`networking-concepts-guide`, `network-implementation-guide`, `network-operations-guide`, `network-security-guide`, `network-troubleshooting-guide` を含む）。
   - `/app/aws/solutions-architect-associate`: AWS Certified Solutions Architect – Associate (SAA-C03) 完全対策ガイド（`domain1` を含む）。
   - `/app/aws/cloudops-engineer-associate`: AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド（全5ドメイン・13タスク・53スキル、Mermaid 68図、テーブル206点、コードブロック10点、練習問題20問完全収録、280pxサイドバー契約）。
-  - `/app/aws/developer-associate/domain2`: DVA-C02 セキュリティ。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、`sections/`。110表・35図・40コード・20チェック・26目次、点と番号の装飾を全量移行。原本のライト配色・Source Serif 4・本文17px（1rem=16px）・300pxサイドバーを保持。`mermaid-theme.json` と `preserveChartTheme` で図の原本配色も保持。
+  - `/app/aws/developer-associate/domain2`: DVA-C02 セキュリティ。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、`sections/`。110表・35図・40コード・20チェック・26目次、点と番号の装飾を全量移行。原本のライト配色・Source Serif 4・300pxサイドバーを保持。ユーザー指定で本文・表・コード・目次・図は14px（0.875rem、ルート1rem=16px）、見出しも縮小。`mermaid-theme.json` と `preserveChartTheme` で図の原本配色も保持。
   - `/app/recommended-books/accelerate`: 『Accelerate』LeanとDevOpsの科学 完全ガイド（DORA 5指標、24の能力、Westrum組織文化モデル、AI支援開発時代の最新知見）。
   - `/app/recommended-books/site-reliability-engineering`: 『Site Reliability Engineering』Googleのプロダクション運用 完全ガイド（原則・実践・マネジメント、SLI/SLO/SLA、エラーバジェット、トイル撲滅、AI時代のSRE最新動向）。
   - `/app/recommended-books/the-devops-handbook`: 『The DevOps Handbook』DevOpsバイブル 完全ガイド（全23章・6パート構成、3つの道、技術的実践、シフトレフトセキュリティ、2026年AI時代のDORA・プラットフォームエンジニアリング最新知見）。
