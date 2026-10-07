@@ -113,12 +113,14 @@ describe('DVA Security 全量移行', () => {
     it('scroll spy・hash変更・履歴移動・observer cleanup', () => {
         let callback: IntersectionObserverCallback | undefined;
         const observe = vi.fn(), disconnect = vi.fn();
+        let options: IntersectionObserverInit | undefined;
         vi.stubGlobal('IntersectionObserver', class {
-            constructor(cb: IntersectionObserverCallback) { callback = cb; }
+            constructor(cb: IntersectionObserverCallback, init: IntersectionObserverInit) { callback = cb; options = init; }
             observe = observe;
             disconnect = disconnect;
         });
         const { container, unmount } = render(<Page />);
+        expect(options?.rootMargin).toBe(`0px 0px -${Math.round(window.innerHeight * 0.65)}px 0px`);
         expect(observe.mock.calls.map(call => (call[0] as HTMLElement).id)).toEqual(design.structure.anchors);
         act(() => callback?.([{ isIntersecting: true, target: container.querySelector('#step-7')! } as IntersectionObserverEntry], {} as IntersectionObserver));
         expect(container.querySelector('a[href="#step-7"]')).toHaveAttribute('aria-current', 'location');
