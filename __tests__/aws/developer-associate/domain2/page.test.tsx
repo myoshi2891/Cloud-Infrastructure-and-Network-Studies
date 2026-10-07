@@ -176,7 +176,7 @@ const scopedSelector = (selector: string) => [...new Set(selector.split(',').map
     const s = part.trim();
     return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s.replace(/\.code-block pre code/g, ".code-block code").replace(/\.code-block pre/g, ".code-block")}`;
 }))].join(', ');
-const mappedValue = (value: string, prop: string) => (prop === 'font-size' && value.endsWith('rem') ? `${(value === '1.0625rem' ? 1 : Number.parseFloat(value)) * 0.875}rem` : value)
+const mappedValue = (value: string, prop: string) => (prop === 'font-size' && value.endsWith('rem') ? `${Number(((value === '1.0625rem' ? 1 : Number.parseFloat(value)) * 0.875).toFixed(8))}rem` : value)
     .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-dva-paper) 95%, transparent)')
     .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '300px' : `var(${tokens[name] ?? name})`)
     .replace(/#[\da-f]{3,6}\b/gi, hex => `var(--color-dva-${hex.slice(1).toLowerCase()})`)
