@@ -550,6 +550,15 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    cloudops-engineer-associate/
+      page.tsx                      # AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド (Server)
+      CloudOpsGuide.tsx             # 本文＋インタラクション (Client)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      Diagram.tsx                   # Mermaid 図レンダラー
+      CodeBlock.tsx                 # シンタックスハイライトコードブロック
+      constants.ts                  # ナビ項目・Mermaid 図・コードブロック定数
+      page.css                      # ウォームペーパーライトテーマ・280pxサイドバー契約
+      sections/                     # 分割セクション (HeroSection, SectionIntro, SectionDomain1~5, SectionAppendix)
   recommended-books/
     accelerate/
       page.tsx                      # 『Accelerate』LeanとDevOpsの科学 完全ガイド (Server)
