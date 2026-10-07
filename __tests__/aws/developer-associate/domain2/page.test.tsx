@@ -48,7 +48,14 @@ describe('DVA Security 全量移行', () => {
         });
         const diagrams = [...root.querySelectorAll('[data-testid="mermaid-diagram"]')];
         expect(diagrams).toHaveLength(inventory.counts.diagram);
-        expect(diagrams.map(el => el.getAttribute('data-chart'))).toEqual(design.charts);
+        const theme = { fontFamily: '"Noto Sans JP",sans-serif', fontSize: '16px', primaryColor: '#eceefb', primaryBorderColor: '#3b3f9e', primaryTextColor: '#1c2333', lineColor: '#4a5266', secondaryColor: '#fff8e6', tertiaryColor: '#f2ede0', actorBkg: '#eceefb', actorBorder: '#3b3f9e', noteBkgColor: '#fff8e6', noteBorderColor: '#b8892b' };
+        diagrams.forEach((el, index) => {
+            const chart = el.getAttribute('data-chart')!;
+            const init = chart.match(/^%%\{init: (.+)\}%%\n/);
+            expect(init, '原本のMermaid設定を注入').not.toBeNull();
+            expect(JSON.parse(init![1]!)).toEqual({ theme: 'base', themeVariables: theme, flowchart: { useMaxWidth: false, htmlLabels: true, subGraphTitleMargin: { top: 10, bottom: 28 } }, sequence: { useMaxWidth: false } });
+            expect(chart.slice(init![0].length)).toBe(design.charts[index]);
+        });
         expect(Object.values(DIAGRAMS)).toEqual(design.charts);
         diagrams.forEach(el => {
             expect(el.getAttribute('aria-label')?.trim()).toBeTruthy();
