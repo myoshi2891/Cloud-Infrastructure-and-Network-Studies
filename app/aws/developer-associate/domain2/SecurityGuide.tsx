@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { NavBar } from './NavBar';
 import { ChecklistContext } from './ChecklistItem';
 import { CHECK_COUNT } from './constants';
+import { Step0 } from './sections/Step0';
+import { Step1 } from './sections/Step1';
 /** 全本文とチェックリストの達成件数を保持する学習ガイド。 */
 export function SecurityGuide() {
     const [checked, setChecked] = useState<Set<number>>(() => new Set());
@@ -23,6 +25,9 @@ export function SecurityGuide() {
 <span className="chip">{"練習問題12問"}</span>
 </div>{" "}</header>
             <div className="progress">自己採点チェックリスト達成: <b id="pcount" aria-live="polite">{checked.size} / {CHECK_COUNT}</b></div>
+            <Step0 />
+            <Step1 />
         </main>
     </ChecklistContext></div>;
 }
+
