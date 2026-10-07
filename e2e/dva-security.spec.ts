@@ -27,6 +27,11 @@ for (const width of [1440, 768, 390]) {
         await expect(root.locator('main a[href^="http"]')).toHaveCount(inventory.links.length);
         await expect(root.locator('.diagram-wrap svg')).toHaveCount(inventory.counts.diagram, { timeout: 120_000 });
         await expect(root).not.toContainText('Syntax error in text');
+        const firstDiagram = root.locator('.diagram-wrap').first();
+        await expect(firstDiagram.locator('.node rect').first()).toHaveCSS('fill', 'rgb(236, 238, 251)');
+        await expect(firstDiagram.locator('.node rect').first()).toHaveCSS('stroke', 'rgb(59, 63, 158)');
+        await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('color', 'rgb(28, 35, 51)');
+
         const lists = await root.locator('main ul, main ol').evaluateAll(elements => elements.map(el => ({
             tag: el.tagName, type: getComputedStyle(el).listStyleType,
             nested: el.parentElement?.closest('ul') !== null,
