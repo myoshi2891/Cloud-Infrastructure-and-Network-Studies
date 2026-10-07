@@ -87,7 +87,7 @@ DVAセキュリティの1440px・768px・390pxで、全表・全図・リスト�
 - [x] DVA-C02 ドメイン2の全量移行・リスト装飾・ナビ登録・3画面幅E2E（a11y違反0件）。
 
 - [x] セキュアCI/CDガイドの全量移行・CSS宣言照合・コード枠回帰テスト・Hands-on統合（2026-10-02）。
-- [ ] 既存PAA Section 5の表セル・リスト照合2件の不一致を別タスクで調査する。
+- [ ] 既存6失敗を別タスクで調査する（PAA Section 5の表セル・リスト2件、Header SAAの重複リンク1件、DevNet表セル1件、Ciscoテーマ所有権2件）。
 
 ダッシュボードで推奨されている優先度順のタスクリストです。
 
@@ -194,7 +194,7 @@ bun run dashboard
 最新実装HEADは `0807b644`。AWS DVA-C02 ドメイン2を `/aws/developer-associate/domain2` に移行し、ホーム・AWSナビへ登録済み。移行・統合26件、幅契約とミラー同期を含む関連170件が成功。1440px・768px・390pxのE2E 3件も成功し、各幅でaxe違反0件。本文・表行・図・リスト点の削除を検出する変異チェック4件も成功。原本はバイト一致を確認してローカルarchiveへ退避した。今回の全体テストと型・Lintの最終結果は2026-10-07実行記録を参照。次回は既存の失敗を別タスクで調査する。今回のユーザー指示によりnpm・ビルドは未実行、目視確認はユーザーが担当する。
 
 あなたは熟練したテストエンジニアであり、Next.js (App Router) / TypeScript / Vitest / Playwright のテストスペシャリストです。
-現在、[docs/TEST_COVERAGE_PROGRESS.md](TEST_COVERAGE_PROGRESS.md) の既存 **🔴 P0 / 🟡 P1 / 🔵 P2** は完了済みですが、CCNA / DevNetの独立集計によりCisco向けP1 E2Eが新たに未完了として可視化されています。サイドバー付き全24スタイルシートの横断レイアウト契約は `guide-content-widths.test.ts` の73ケースで保護されています。次フェーズではCisco E2Eを優先し、以下の候補もステップバイステップで進めてください。
+現在、[docs/TEST_COVERAGE_PROGRESS.md](TEST_COVERAGE_PROGRESS.md) の既存 **🔴 P0 / 🟡 P1 / 🔵 P2** は完了済みですが、CCNA / DevNetの独立集計によりCisco向けP1 E2Eが新たに未完了として可視化されています。登録済み43スタイルシートの横断レイアウト契約は `guide-content-widths.test.ts` の130ケースで保護されています。DVAの幅・固定配置は専用の移行テストで保護されています。次フェーズではCisco E2Eを優先し、以下の候補もステップバイステップで進めてください。
 
 AGWA の移行検証は Section 1〜6 と共有抽出ヘルパーへ同期済みです。最新の実行記録は 2026-08-15T03:13:14Z、対象コミット `9ddf12a`、スコープは `bun run test` による全体Vitestで、131ファイル・1118件が成功しました。`bun run lint` も全体スコープで成功しています。
 
