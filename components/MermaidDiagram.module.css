@@ -309,3 +309,25 @@
     font-weight: 700 !important;
 }
 
+
+/* 原本テーマ保持: 配色を上書きせず、自然倍率・採寸・クリッピング対策のみ共有する。 */
+.sourceThemeTarget {
+    width: 100%;
+    display: flex;
+    justify-content: safe center;
+}
+.sourceThemeTarget :global(svg) {
+    display: block;
+    flex-shrink: 0;
+    max-width: 100%;
+    height: auto;
+}
+.sourceThemeTarget :global(foreignObject),
+.sourceThemeTarget :global(foreignObject > div),
+.sourceThemeTarget :global(.nodeLabel),
+.sourceThemeTarget :global(.edgeLabel),
+.sourceThemeTarget :global(text),
+.sourceThemeTarget :global(tspan) {
+    overflow: visible;
+    font-size: 16px !important;
+}
