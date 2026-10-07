@@ -1,0 +1,4447 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="light" />
+        <title>AWS Certified CloudOps Engineer - Associate (SOA-C03) - Content Domain 3: Deployment, Provisioning, and Automation 完全ガイド(初学者向け)</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                color-scheme: light;
+                --paper: #faf8f3;
+                --card: #ffffff;
+                --card-2: #f4f1e8;
+                --border: #e0dbcd;
+                --border-soft: #ece8dc;
+                --ink: #1f2433;
+                --ink-dim: #4d566b;
+                --ink-faint: #7a8296;
+                --indigo: #3b4cca;
+                --indigo-bg: #eceefb;
+                --indigo-line: #b9c0ee;
+                --gold: #a8660a;
+                --gold-bg: #fdf3e0;
+                --forest: #2a7550;
+                --forest-bg: #e8f5ee;
+                --plum: #8a2f6d;
+                --plum-bg: #f8ecf4;
+                --sidebar-w: 300px;
+                --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+                --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Noto Sans JP', monospace;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                overflow-x: hidden;
+            }
+            body {
+                margin: 0;
+                background: var(--paper);
+                color: var(--ink);
+                font-family: var(--font-jp);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+            }
+            a {
+                color: var(--indigo);
+                text-decoration: none;
+                overflow-wrap: anywhere;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: var(--card);
+                border-right: 1px solid var(--border);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 50;
+            }
+            .sidebar-header {
+                padding: 0 22px 18px;
+                border-bottom: 1px solid var(--border-soft);
+                margin-bottom: 14px;
+            }
+            .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--indigo);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .sidebar-header h2 {
+                font-size: 15px;
+                margin: 6px 0 0;
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .sidebar nav {
+                padding: 0 10px;
+            }
+            .sidebar nav a {
+                display: block;
+                padding: 8px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--ink-dim);
+                line-height: 1.5;
+                margin-bottom: 1px;
+                overflow-wrap: break-word;
+            }
+            .sidebar nav a:hover {
+                background: var(--indigo-bg);
+                color: var(--ink);
+                text-decoration: none;
+            }
+            .sidebar nav a.active {
+                background: var(--indigo-bg);
+                color: var(--indigo);
+                font-weight: 700;
+            }
+            .sidebar nav a.lvl3 {
+                padding-left: 26px;
+                font-size: 12.5px;
+            }
+            .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: 14px;
+                left: 14px;
+                z-index: 60;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                color: var(--ink);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(31, 36, 51, 0.12);
+            }
+
+            /* Main */
+            .main {
+                margin-left: var(--sidebar-w);
+                padding: 56px 64px 120px;
+            }
+            .hero {
+                margin-bottom: 20px;
+                padding-bottom: 26px;
+                border-bottom: 3px double var(--border);
+            }
+            .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--indigo);
+                margin-bottom: 12px;
+            }
+            .hero h1 {
+                font-size: clamp(26px, 3.4vw, 40px);
+                line-height: 1.35;
+                margin: 0 0 10px;
+                font-weight: 800;
+                color: var(--ink);
+            }
+            .hero .sub {
+                font-size: 16px;
+                color: var(--ink-dim);
+                margin: 0 0 20px;
+                font-weight: 500;
+            }
+            .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                font-size: 12.5px;
+                color: var(--ink-dim);
+            }
+            .pill strong {
+                color: var(--indigo);
+            }
+
+            .main h2 {
+                font-size: 26px;
+                margin: 60px 0 20px;
+                padding: 10px 0 10px 16px;
+                border-left: 6px solid var(--indigo);
+                background: linear-gradient(90deg, var(--indigo-bg), transparent 70%);
+                font-weight: 800;
+                scroll-margin-top: 24px;
+                line-height: 1.4;
+            }
+            .main h3 {
+                font-size: 20px;
+                margin: 40px 0 16px;
+                font-weight: 700;
+                scroll-margin-top: 24px;
+                padding-bottom: 6px;
+                border-bottom: 1px solid var(--border);
+                line-height: 1.5;
+            }
+            .main p {
+                margin: 0 0 18px;
+            }
+            .main ul,
+            .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.5em;
+            }
+            .main li {
+                margin-bottom: 6px;
+            }
+            .main hr {
+                border: none;
+                border-top: 1px solid var(--border);
+                margin: 44px 0 0;
+            }
+            .main strong {
+                color: #0f1424;
+                font-weight: 700;
+            }
+            .main code {
+                background: var(--plum-bg);
+                border: 1px solid #ecd3e4;
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-family: var(--font-mono);
+                font-size: 0.88em;
+                color: var(--plum);
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+            .main pre.code code {
+                background: none;
+                border: none;
+                padding: 0;
+                color: inherit;
+                font-size: 13.5px;
+                word-break: normal;
+                overflow-wrap: normal;
+            }
+
+            /* Lead blockquote */
+            blockquote.lead {
+                margin: 0 0 28px;
+                padding: 16px 20px;
+                background: var(--indigo-bg);
+                border: 1px solid var(--indigo-line);
+                border-left: 5px solid var(--indigo);
+                border-radius: 10px;
+            }
+            blockquote.lead p {
+                margin: 0;
+            }
+
+            /* Callout / source / quiz */
+            p.callout {
+                background: var(--gold-bg);
+                border: 1px solid #f0d9a8;
+                border-left: 5px solid var(--gold);
+                border-radius: 10px;
+                padding: 14px 18px;
+            }
+            p.source {
+                font-size: 13px;
+                color: var(--ink-dim);
+                background: var(--forest-bg);
+                border: 1px solid #c4e3d2;
+                border-left: 4px solid var(--forest);
+                border-radius: 8px;
+                padding: 8px 14px;
+                margin: 0 0 12px;
+            }
+            p.q {
+                margin: 26px 0 8px;
+                padding: 12px 16px;
+                background: var(--indigo-bg);
+                border-radius: 10px;
+                border: 1px solid var(--indigo-line);
+            }
+            p.q + ul {
+                list-style: none;
+                padding-left: 8px;
+            }
+            p.q + ul li {
+                padding: 6px 12px;
+                border: 1px solid var(--border-soft);
+                background: var(--card);
+                border-radius: 8px;
+                margin-bottom: 6px;
+            }
+
+            /* Tables */
+            .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--card);
+                box-shadow: 0 1px 2px rgba(31, 36, 51, 0.04);
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            thead th {
+                background: var(--indigo-bg);
+                color: var(--ink);
+                text-align: left;
+                padding: 11px 16px;
+                font-weight: 700;
+                border-bottom: 2px solid var(--indigo-line);
+                white-space: nowrap;
+            }
+            tbody td {
+                padding: 11px 16px;
+                border-bottom: 1px solid var(--border-soft);
+                color: var(--ink);
+                vertical-align: top;
+            }
+            tbody tr:nth-child(even) td {
+                background: #fbfaf6;
+            }
+            tbody tr:last-child td {
+                border-bottom: none;
+            }
+            tbody tr:hover td {
+                background: #f3f5fd;
+            }
+
+            /* Code block (only the JSON example) */
+            pre.code {
+                background: #1f2433;
+                color: #e8ebf5;
+                border-radius: 12px;
+                padding: 18px 20px;
+                margin: 0 0 26px;
+                overflow-x: auto;
+                font-family: var(--font-mono);
+                line-height: 1.7;
+            }
+
+            /* Mermaid */
+            pre.mermaid {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 26px 18px;
+                margin: 0 0 30px;
+                font-family: var(--font-jp);
+                box-shadow: 0 1px 2px rgba(31, 36, 51, 0.04);
+            }
+            pre.mermaid svg {
+                flex-shrink: 0;
+            }
+
+            @media (max-width: 980px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px rgba(31, 36, 51, 0.25);
+                }
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 80px 18px 100px;
+                }
+                .sidebar-toggle {
+                    display: flex;
+                }
+                .main h2 {
+                    font-size: 22px;
+                }
+                .main h3 {
+                    font-size: 18px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            type="button"
+            aria-label="メニュー"
+            aria-controls="sidebar"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="kicker">AWS SOA-C03</div>
+                <h2>Domain 3: デプロイ・プロビジョニング・自動化</h2>
+            </div>
+            <nav id="sidebarNav">
+                    <a href="#step-0-この-domain-の全体像">Step 0. この Domain の全体像</a>
+                    <a href="#0-1-公式の出題範囲-2-タスク・8-スキル" class="lvl3">0-1. 公式の出題範囲(2 タスク・8 スキル)</a>
+                    <a href="#0-2-試験での位置づけ" class="lvl3">0-2. 試験での位置づけ</a>
+                    <a href="#0-3-この-domain-を貫く-3-つの考え方" class="lvl3">0-3. この Domain を貫く 3 つの考え方</a>
+                    <a href="#step-1-ami-とコンテナイメージの作成・管理-skill-3-1-1">Step 1. AMI とコンテナイメージの作成・管理(Skill 3.1.1)</a>
+                    <a href="#1-1-まず用語を整理する" class="lvl3">1-1. まず用語を整理する</a>
+                    <a href="#1-2-ami-の基本知識-試験頻出" class="lvl3">1-2. AMI の基本知識(試験頻出)</a>
+                    <a href="#1-3-なぜ手作業で-ami-を作ってはいけないのか" class="lvl3">1-3. なぜ手作業で AMI を作ってはいけないのか</a>
+                    <a href="#1-4-ec2-image-builder-の構成要素" class="lvl3">1-4. EC2 Image Builder の構成要素</a>
+                    <a href="#1-5-image-builder-の動き-フロー" class="lvl3">1-5. Image Builder の動き(フロー)</a>
+                    <a href="#1-6-コンテナイメージの管理-amazon-ecr" class="lvl3">1-6. コンテナイメージの管理(Amazon ECR)</a>
+                    <a href="#1-7-ベストプラクティス" class="lvl3">1-7. ベストプラクティス</a>
+                    <a href="#1-8-試験の落とし穴" class="lvl3">1-8. 試験の落とし穴</a>
+                    <a href="#参考-url-step-1" class="lvl3">参考 URL(Step 1)</a>
+                    <a href="#step-2-cloudformation-と-aws-cdk-によるリソース管理-skill-3-1-2">Step 2. CloudFormation と AWS CDK によるリソース管理(Skill 3.1.2)</a>
+                    <a href="#2-1-infrastructure-as-code-iac-とは" class="lvl3">2-1. Infrastructure as Code(IaC)とは</a>
+                    <a href="#2-2-cloudformation-の基本用語" class="lvl3">2-2. CloudFormation の基本用語</a>
+                    <a href="#2-3-テンプレートの主なセクション" class="lvl3">2-3. テンプレートの主なセクション</a>
+                    <a href="#2-4-スタックのライフサイクル" class="lvl3">2-4. スタックのライフサイクル</a>
+                    <a href="#2-5-変更セットと更新の挙動-試験頻出" class="lvl3">2-5. 変更セットと更新の挙動(試験頻出)</a>
+                    <a href="#2-6-データを守る設定" class="lvl3">2-6. データを守る設定</a>
+                    <a href="#2-7-ec2-起動の完了を待つ-cfn-init-と-cfn-signal" class="lvl3">2-7. EC2 起動の完了を待つ(cfn-init と cfn-signal)</a>
+                    <a href="#2-8-ドリフト検出" class="lvl3">2-8. ドリフト検出</a>
+                    <a href="#2-9-複数スタックの構成" class="lvl3">2-9. 複数スタックの構成</a>
+                    <a href="#2-9b-既存リソースの取り込み" class="lvl3">2-9b. 既存リソースの取り込み</a>
+                    <a href="#2-10-aws-cdk-cloud-development-kit" class="lvl3">2-10. AWS CDK(Cloud Development Kit)</a>
+                    <a href="#2-11-cloudformation-と-cdk-の使い分け" class="lvl3">2-11. CloudFormation と CDK の使い分け</a>
+                    <a href="#2-12-ベストプラクティス" class="lvl3">2-12. ベストプラクティス</a>
+                    <a href="#2-13-試験の落とし穴" class="lvl3">2-13. 試験の落とし穴</a>
+                    <a href="#参考-url-step-2" class="lvl3">参考 URL(Step 2)</a>
+                    <a href="#step-3-デプロイ問題の特定と修復-skill-3-1-3">Step 3. デプロイ問題の特定と修復(Skill 3.1.3)</a>
+                    <a href="#3-1-切り分けの基本手順" class="lvl3">3-1. 切り分けの基本手順</a>
+                    <a href="#3-2-スタックの状態と対処-試験頻出" class="lvl3">3-2. スタックの状態と対処(試験頻出)</a>
+                    <a href="#3-3-よくある-cloudformation-エラー" class="lvl3">3-3. よくある CloudFormation エラー</a>
+                    <a href="#3-4-調査用のロールバック制御" class="lvl3">3-4. 調査用のロールバック制御</a>
+                    <a href="#3-5-サブネットサイズ問題-公式が例示" class="lvl3">3-5. サブネットサイズ問題(公式が例示)</a>
+                    <a href="#3-6-権限問題の切り分け" class="lvl3">3-6. 権限問題の切り分け</a>
+                    <a href="#3-7-ベストプラクティス" class="lvl3">3-7. ベストプラクティス</a>
+                    <a href="#3-8-試験の落とし穴" class="lvl3">3-8. 試験の落とし穴</a>
+                    <a href="#参考-url-step-3" class="lvl3">参考 URL(Step 3)</a>
+                    <a href="#step-4-複数リージョン・複数アカウントへのプロビジョニングと共有-skill-3-1-4">Step 4. 複数リージョン・複数アカウントへのプロビジョニングと共有(Skill 3.1.4)</a>
+                    <a href="#4-1-なぜ複数アカウント・複数リージョンなのか" class="lvl3">4-1. なぜ複数アカウント・複数リージョンなのか</a>
+                    <a href="#4-2-stacksets-の仕組み" class="lvl3">4-2. StackSets の仕組み</a>
+                    <a href="#4-3-2-つの権限モデル-試験頻出" class="lvl3">4-3. 2 つの権限モデル(試験頻出)</a>
+                    <a href="#4-4-展開のオペレーション設定" class="lvl3">4-4. 展開のオペレーション設定</a>
+                    <a href="#4-5-stacksets-の運用ポイント" class="lvl3">4-5. StackSets の運用ポイント</a>
+                    <a href="#4-6-aws-ram-の仕組み" class="lvl3">4-6. AWS RAM の仕組み</a>
+                    <a href="#4-7-ram-でサブネットを共有したときの役割分担-試験頻出" class="lvl3">4-7. RAM でサブネットを共有したときの役割分担(試験頻出)</a>
+                    <a href="#4-8-stacksets-と-ram-の使い分け-混同注意" class="lvl3">4-8. StackSets と RAM の使い分け(混同注意)</a>
+                    <a href="#4-9-ベストプラクティス" class="lvl3">4-9. ベストプラクティス</a>
+                    <a href="#4-10-試験の落とし穴" class="lvl3">4-10. 試験の落とし穴</a>
+                    <a href="#参考-url-step-4" class="lvl3">参考 URL(Step 4)</a>
+                    <a href="#step-5-デプロイ戦略とサービスの実装-skill-3-1-5">Step 5. デプロイ戦略とサービスの実装(Skill 3.1.5)</a>
+                    <a href="#5-1-デプロイ戦略とは" class="lvl3">5-1. デプロイ戦略とは</a>
+                    <a href="#5-2-主要な戦略の比較-最重要の表" class="lvl3">5-2. 主要な戦略の比較(最重要の表)</a>
+                    <a href="#5-3-blue-green-の考え方" class="lvl3">5-3. Blue/Green の考え方</a>
+                    <a href="#5-4-aws-codedeploy" class="lvl3">5-4. AWS CodeDeploy</a>
+                    <a href="#5-5-サービス別のデプロイ機能" class="lvl3">5-5. サービス別のデプロイ機能</a>
+                    <a href="#5-6-auto-scaling-グループのインスタンスリフレッシュ" class="lvl3">5-6. Auto Scaling グループのインスタンスリフレッシュ</a>
+                    <a href="#5-6b-lambda-の段階的デプロイ" class="lvl3">5-6b. Lambda の段階的デプロイ</a>
+                    <a href="#5-7-ベストプラクティス" class="lvl3">5-7. ベストプラクティス</a>
+                    <a href="#5-8-試験の落とし穴" class="lvl3">5-8. 試験の落とし穴</a>
+                    <a href="#参考-url-step-5" class="lvl3">参考 URL(Step 5)</a>
+                    <a href="#step-6-サードパーティツールによるデプロイ自動化-skill-3-1-6">Step 6. サードパーティツールによるデプロイ自動化(Skill 3.1.6)</a>
+                    <a href="#6-1-位置づけ" class="lvl3">6-1. 位置づけ</a>
+                    <a href="#6-2-terraform-の基本" class="lvl3">6-2. Terraform の基本</a>
+                    <a href="#6-3-state-の管理-最重要" class="lvl3">6-3. State の管理(最重要)</a>
+                    <a href="#6-4-cloudformation-と-terraform-の比較" class="lvl3">6-4. CloudFormation と Terraform の比較</a>
+                    <a href="#6-5-git-とバージョン管理" class="lvl3">6-5. Git とバージョン管理</a>
+                    <a href="#6-6-ベストプラクティス" class="lvl3">6-6. ベストプラクティス</a>
+                    <a href="#6-7-試験の落とし穴" class="lvl3">6-7. 試験の落とし穴</a>
+                    <a href="#参考-url-step-6" class="lvl3">参考 URL(Step 6)</a>
+                    <a href="#step-7-aws-サービスによる運用プロセスの自動化-skill-3-2-1">Step 7. AWS サービスによる運用プロセスの自動化(Skill 3.2.1)</a>
+                    <a href="#7-1-中心となるサービス-aws-systems-manager" class="lvl3">7-1. 中心となるサービス: AWS Systems Manager</a>
+                    <a href="#7-2-systems-manager-の主な機能" class="lvl3">7-2. Systems Manager の主な機能</a>
+                    <a href="#7-3-automation-runbook-の基本" class="lvl3">7-3. Automation(Runbook)の基本</a>
+                    <a href="#7-4-patch-manager-の流れ-試験頻出" class="lvl3">7-4. Patch Manager の流れ(試験頻出)</a>
+                    <a href="#7-5-aws-config-のリメディエーション" class="lvl3">7-5. AWS Config のリメディエーション</a>
+                    <a href="#7-6-運用作業の自動化パターン-早見表" class="lvl3">7-6. 運用作業の自動化パターン(早見表)</a>
+                    <a href="#7-7-ベストプラクティス" class="lvl3">7-7. ベストプラクティス</a>
+                    <a href="#7-8-試験の落とし穴" class="lvl3">7-8. 試験の落とし穴</a>
+                    <a href="#参考-url-step-7" class="lvl3">参考 URL(Step 7)</a>
+                    <a href="#step-8-イベント駆動の自動化-skill-3-2-2">Step 8. イベント駆動の自動化(Skill 3.2.2)</a>
+                    <a href="#8-1-イベント駆動とは" class="lvl3">8-1. イベント駆動とは</a>
+                    <a href="#8-2-amazon-eventbridge" class="lvl3">8-2. Amazon EventBridge</a>
+                    <a href="#8-3-典型パターン-自動修復" class="lvl3">8-3. 典型パターン: 自動修復</a>
+                    <a href="#8-4-aws-lambda-をターゲットにする" class="lvl3">8-4. AWS Lambda をターゲットにする</a>
+                    <a href="#8-5-s3-event-notifications" class="lvl3">8-5. S3 Event Notifications</a>
+                    <a href="#8-6-どの方式を選ぶか" class="lvl3">8-6. どの方式を選ぶか</a>
+                    <a href="#8-7-aws-devops-agent-試験ガイドに明記された新しい要素" class="lvl3">8-7. AWS DevOps Agent(試験ガイドに明記された新しい要素)</a>
+                    <a href="#8-8-ベストプラクティス" class="lvl3">8-8. ベストプラクティス</a>
+                    <a href="#8-9-試験の落とし穴" class="lvl3">8-9. 試験の落とし穴</a>
+                    <a href="#参考-url-step-8" class="lvl3">参考 URL(Step 8)</a>
+                    <a href="#練習問題-12-問">練習問題(12 問)</a>
+                    <a href="#解答と解説" class="lvl3">解答と解説</a>
+                    <a href="#試験の落とし穴-総まとめ">試験の落とし穴 総まとめ</a>
+                    <a href="#暗記用チートシート">暗記用チートシート</a>
+                    <a href="#サービス早見表" class="lvl3">サービス早見表</a>
+                    <a href="#数字で覚えるポイント" class="lvl3">数字で覚えるポイント</a>
+                    <a href="#デプロイ方式の選び方-一言" class="lvl3">デプロイ方式の選び方(一言)</a>
+                    <a href="#学習の進め方-ステップバイステップ">学習の進め方(ステップバイステップ)</a>
+                    <a href="#参考-url-一覧-総括">参考 URL 一覧(総括)</a>
+                    <a href="#公式試験ガイド" class="lvl3">公式試験ガイド</a>
+                    <a href="#サービス別ドキュメント" class="lvl3">サービス別ドキュメント</a>
+            </nav>
+        </aside>
+        <main class="main">
+            <div class="hero">
+                <div class="kicker">AWS Certified CloudOps Engineer &middot; SOA-C03</div>
+                <h1>Content Domain 3: Deployment, Provisioning, and Automation 完全ガイド(初学者向け)</h1>
+                <p class="sub">AWS Certified CloudOps Engineer - Associate (SOA-C03)</p>
+                <div class="meta-row">
+                    <span class="pill">出題比率 <strong>22%</strong></span>
+                        <span class="pill">対象 <strong>初学者〜</strong></span>
+                        <span class="pill">図解 <strong>Mermaid 23点</strong></span>
+                        <span class="pill">参考 URL <strong>55件</strong></span>
+                </div>
+            </div>
+<blockquote class="lead">
+<p>対象: SOA-C03 の <strong>Content Domain 3(出題比率 22%)</strong><br>
+方針: 公式試験ガイドの 2 タスク・8 スキルを、ステップバイステップで「何か → なぜ必要か → どう使うか → ベストプラクティス → 試験の落とし穴」の順に解説します。<br>
+図解は Mermaid と Markdown 表のみを使用しています(ASCII アート不使用)。</p>
+</blockquote>
+<hr>
+<h2 id="step-0-この-domain-の全体像">Step 0. この Domain の全体像</h2>
+<h3 id="0-1-公式の出題範囲-2-タスク・8-スキル">0-1. 公式の出題範囲(2 タスク・8 スキル)</h3>
+<p>試験ガイドは Domain 3 を 2 つのタスクに分けています。タスク 3.1 は「リソースを作る・保つ」(イメージ、IaC、複数アカウントへの展開、デプロイ)、タスク 3.2 は「運用作業を自動で回す」(Systems Manager、イベント駆動)です。下の表は、8 つのスキルが本ガイドのどの Step に対応するかを示す地図なので、迷ったらここへ戻ってきてください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>タスク</th>
+<th>スキル</th>
+<th>内容</th>
+<th>本ガイドの章</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3.1 リソースのプロビジョニングと保守</td>
+<td>3.1.1</td>
+<td>AMI とコンテナイメージの作成・管理(EC2 Image Builder など)</td>
+<td>Step 1</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>3.1.2</td>
+<td>CloudFormation と AWS CDK によるリソースの作成・管理</td>
+<td>Step 2</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>3.1.3</td>
+<td>デプロイ問題の特定と修復(サブネットサイズ、CloudFormation エラー、権限問題)</td>
+<td>Step 3</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>3.1.4</td>
+<td>複数リージョン・複数アカウントへのプロビジョニングと共有(AWS RAM、StackSets)</td>
+<td>Step 4</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>3.1.5</td>
+<td>デプロイ戦略とサービスの実装</td>
+<td>Step 5</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>3.1.6</td>
+<td>サードパーティツールによるデプロイ自動化(Terraform、Git)</td>
+<td>Step 6</td>
+</tr>
+<tr>
+<td>3.2 運用の自動化</td>
+<td>3.2.1</td>
+<td>AWS サービスによる運用プロセスの自動化(Systems Manager など)</td>
+<td>Step 7</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>3.2.2</td>
+<td>イベント駆動の自動化(Lambda、S3 Event Notifications、EventBridge、AWS DevOps Agent)</td>
+<td>Step 8</td>
+</tr>
+</tbody>
+</table></div>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain3.html">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain3.html</a></p>
+<h3 id="0-2-試験での位置づけ">0-2. 試験での位置づけ</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain 3 の比率</td>
+<td>22%(Domain 1 と 2 も各 22%)</td>
+</tr>
+<tr>
+<td>問題形式</td>
+<td>択一(正解 1 つ)と複数選択(正解 2 つ以上、選択肢 5 つ以上)</td>
+</tr>
+<tr>
+<td>スコアリング</td>
+<td>採点対象 50 問 + 採点対象外 15 問。合格は 720 点以上(100-1,000 のスケールスコア)</td>
+</tr>
+<tr>
+<td>範囲外(試験で問われない)</td>
+<td>CI/CD パイプラインの<strong>設計</strong>、ソフトウェア開発、コスト分析 など</td>
+</tr>
+</tbody>
+</table></div>
+<p class="callout">重要: 試験で問われるのは「<strong>設計</strong>」ではなく「<strong>使う・運用する・トラブルを直す</strong>」です。パイプラインをゼロから設計する問題ではなく、既存のデプロイ手段を選ぶ・失敗原因を特定する問題が中心になります。</p>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html</a></p>
+<h3 id="0-3-この-domain-を貫く-3-つの考え方">0-3. この Domain を貫く 3 つの考え方</h3>
+<p>個別のサービスを覚える前に、この Domain に共通する 3 つの考え方を押さえましょう。これが分かると、選択肢の中から「AWS が推奨する答え」を選びやすくなります。たとえば「サーバーへ SSH でログインして直接直す」という選択肢は、Immutable と Automation の考え方に反するため、多くの場合は誤答です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>考え方</th>
+<th>意味</th>
+<th>代表サービス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Immutable(不変)</strong></td>
+<td>稼働中のサーバーを手で直さず、新しいイメージで置き換える</td>
+<td>EC2 Image Builder、Auto Scaling、Blue/Green</td>
+</tr>
+<tr>
+<td><strong>Infrastructure as Code</strong></td>
+<td>構成をコードで定義し、再現可能にする</td>
+<td>CloudFormation、CDK、Terraform</td>
+</tr>
+<tr>
+<td><strong>Automation</strong></td>
+<td>人手の運用作業を、手順書(Runbook)やイベントで自動化する</td>
+<td>Systems Manager、EventBridge、Lambda</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;Step 1 イメージ作成&quot;] --&gt; B[&quot;Step 2 IaCで構築&quot;]
+    B --&gt; C[&quot;Step 3 失敗の切り分け&quot;]
+    C --&gt; D[&quot;Step 4 複数アカウント展開&quot;]
+    D --&gt; E[&quot;Step 5 デプロイ戦略&quot;]
+    E --&gt; F[&quot;Step 6 外部ツール連携&quot;]
+    F --&gt; G[&quot;Step 7 運用の自動化&quot;]
+    G --&gt; H[&quot;Step 8 イベント駆動&quot;]
+</pre>
+<hr>
+<h2 id="step-1-ami-とコンテナイメージの作成・管理-skill-3-1-1">Step 1. AMI とコンテナイメージの作成・管理(Skill 3.1.1)</h2>
+<p>この Step のゴールは、サーバーやコンテナの「雛形」を、手作業ではなく自動化された手順で作り、安全に配れるようになることです。AMI の基本的な性質(リージョン・スナップショット・共有・暗号化)と、作成・テスト・配布を自動化する EC2 Image Builder、コンテナイメージを保管する Amazon ECR を順に学びます。</p>
+<h3 id="1-1-まず用語を整理する">1-1. まず用語を整理する</h3>
+<p>最初に、この Step で使う言葉を整理します。AMI は「サーバーの雛形」、コンテナイメージは「アプリケーションと実行環境を 1 つに固めた雛形」と考えると分かりやすいです。どちらも、同じものを何度でも同じ状態で起動するために使います。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>初学者向けの説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AMI</strong>(Amazon Machine Image)</td>
+<td>EC2 インスタンスを起動するための「雛形」。OS、ミドルウェア、設定が入っている</td>
+</tr>
+<tr>
+<td><strong>ゴールデンイメージ</strong></td>
+<td>組織の標準構成を焼き込んだ AMI のこと</td>
+</tr>
+<tr>
+<td><strong>コンテナイメージ</strong></td>
+<td>Docker などのコンテナを動かすための雛形。<strong>Amazon ECR</strong> に保管する</td>
+</tr>
+<tr>
+<td><strong>EC2 Image Builder</strong></td>
+<td>AMI やコンテナイメージの作成・テスト・配布を<strong>自動化</strong>するマネージドサービス</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-2-ami-の基本知識-試験頻出">1-2. AMI の基本知識(試験頻出)</h3>
+<p>AMI は EC2 を起動するたびに使うため、試験では「リージョン」「スナップショット」「共有」「暗号化」の 4 つの性質がよく問われます。表の各行は、実際の運用で失敗しやすいポイントでもあります。特に暗号化された AMI の共有は、AMI 自体の共有設定だけでなく、暗号化に使った KMS キーへのアクセス許可も必要になる点が落とし穴です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>リージョン固有</td>
+<td>AMI は作成したリージョンでしか使えない。他リージョンでは<strong>コピー</strong>が必要</td>
+</tr>
+<tr>
+<td>EBS-backed AMI</td>
+<td>ルートボリュームの<strong>スナップショット</strong>を元にする。AMI を登録解除しても<strong>スナップショットは自動削除されない</strong></td>
+</tr>
+<tr>
+<td>共有</td>
+<td>特定アカウントや Organizations に<strong>起動許可(launch permission)</strong>を付与して共有できる</td>
+</tr>
+<tr>
+<td>暗号化 AMI の共有</td>
+<td>カスタマー管理キー(CMK)で暗号化した場合は、<strong>KMS キーも共有先に許可</strong>が必要。AWS マネージドキー(aws/ebs)で暗号化したものは共有できない</td>
+</tr>
+<tr>
+<td>削除</td>
+<td>「AMI の登録解除」→「関連スナップショットの削除」の 2 段階</td>
+</tr>
+<tr>
+<td>誤削除対策</td>
+<td>Recycle Bin(ごみ箱)で保持ルールを設定できる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-3-なぜ手作業で-ami-を作ってはいけないのか">1-3. なぜ手作業で AMI を作ってはいけないのか</h3>
+<p>手作業(インスタンスを起動して設定し、イメージ化する)には次の問題があります。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>問題</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>再現性がない</td>
+<td>誰がいつ作ったか分からず、同じものを作れない</td>
+</tr>
+<tr>
+<td>パッチが古くなる</td>
+<td>脆弱性対応が属人化する</td>
+</tr>
+<tr>
+<td>テストがない</td>
+<td>壊れたイメージが本番に出る</td>
+</tr>
+</tbody>
+</table></div>
+<p>これを解決するのが <strong>EC2 Image Builder</strong> です。</p>
+<h3 id="1-4-ec2-image-builder-の構成要素">1-4. EC2 Image Builder の構成要素</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>構成要素</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Image pipeline</strong></td>
+<td>全体の自動化単位。レシピ、インフラ設定、配布設定、スケジュールを束ねる</td>
+</tr>
+<tr>
+<td><strong>Image recipe</strong></td>
+<td>ベースイメージ + コンポーネントの組み合わせ(AMI 用)</td>
+</tr>
+<tr>
+<td><strong>Container recipe</strong></td>
+<td>ベースイメージ + コンポーネントの組み合わせ(コンテナ用)</td>
+</tr>
+<tr>
+<td><strong>Component</strong></td>
+<td>実際の処理(ビルド用とテスト用)。AWSTOE というエージェントが実行する</td>
+</tr>
+<tr>
+<td><strong>Infrastructure configuration</strong></td>
+<td>ビルド用の一時 EC2 をどこで、どのロール・サブネット・セキュリティグループで起動するか</td>
+</tr>
+<tr>
+<td><strong>Distribution settings</strong></td>
+<td>完成イメージの配布先(リージョン、アカウント、Organizations)</td>
+</tr>
+</tbody>
+</table></div>
+<p class="callout">重要な性質: <strong>レシピは作成後に変更できません</strong>。変更したい場合は新しいレシピまたは<strong>新しいバージョン</strong>を作成します。デフォルトではレシピ 1 つにつきコンポーネントは 20 個まで適用できます。</p>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-recipes.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-recipes.html</a><br>
+出典: <a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html</a></p>
+<h3 id="1-5-image-builder-の動き-フロー">1-5. Image Builder の動き(フロー)</h3>
+<pre class="mermaid">
+flowchart TD
+    S[&quot;スケジュールまたは手動実行&quot;] --&gt; I[&quot;一時EC2を起動&quot;]
+    I --&gt; B[&quot;ビルドステージ ベースイメージにコンポーネント適用&quot;]
+    B --&gt; T[&quot;テストステージ テストコンポーネント実行&quot;]
+    T --&gt; O{&quot;テスト合格&quot;}
+    O -- &quot;はい&quot; --&gt; D[&quot;AMIまたはコンテナイメージを出力&quot;]
+    O -- &quot;いいえ&quot; --&gt; F[&quot;イメージ作成失敗&quot;]
+    D --&gt; R[&quot;配布設定に従い複数リージョンやアカウントへ配布&quot;]
+    I --&gt; X[&quot;一時EC2は後で終了&quot;]
+</pre>
+<p>Image Builder には「ビルド」と「テスト」の 2 つの実行ステージがあり、オンインスタンスの処理は AWSTOE が行います。ビルド中は自分のアカウントに一時的な EC2 インスタンスが起動します。</p>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/how-image-builder-works.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/how-image-builder-works.html</a></p>
+<h3 id="1-6-コンテナイメージの管理-amazon-ecr">1-6. コンテナイメージの管理(Amazon ECR)</h3>
+<p>コンテナイメージは Amazon ECR に保管します。ECR には、「安全に保つ(イメージスキャン)」「増えすぎを防ぐ(ライフサイクルポリシー)」「別の場所へ届ける(レプリケーション)」「書き換えを防ぐ(タグのイミュータビリティ)」といった機能があります。どの機能がどのリスクを減らすのかを対応づけて覚えましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>イメージスキャン</td>
+<td>脆弱性を検出する</td>
+<td>プッシュ時スキャンを有効化し、継続スキャンも検討</td>
+</tr>
+<tr>
+<td>ライフサイクルポリシー</td>
+<td>古いイメージを自動削除</td>
+<td>「タグなしイメージを数日後に削除」などで保管コストを削減</td>
+</tr>
+<tr>
+<td>レプリケーション</td>
+<td>別リージョン・別アカウントへ複製</td>
+<td>DR や低遅延のために設定</td>
+</tr>
+<tr>
+<td>タグのイミュータビリティ</td>
+<td>同じタグの上書きを禁止</td>
+<td>本番では有効化し、<code>latest</code> 依存を避ける</td>
+</tr>
+<tr>
+<td>リポジトリポリシー</td>
+<td>他アカウントからの Pull を許可</td>
+<td>最小権限で付与</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-7-ベストプラクティス">1-7. ベストプラクティス</h3>
+<p>ベストプラクティスの根底にある考え方は、「人の手を減らし、再現できる形にする」ことです。下の表は、何をするか(左)と、なぜそうするのか(右)のペアで読んでください。理由まで理解しておくと、似た選択肢が並んでも判断できます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>AMI は手作業でなく <strong>Image Builder パイプライン</strong>で作る</td>
+<td>再現性と自動テスト</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>スケジュール</strong>で定期ビルドし、最新パッチを反映する</td>
+<td>脆弱性を放置しない</td>
+</tr>
+<tr>
+<td>3</td>
+<td>テストコンポーネントを必ず入れる</td>
+<td>壊れたイメージを配布しない</td>
+</tr>
+<tr>
+<td>4</td>
+<td>配布設定で必要なリージョンとアカウントへ自動配布する</td>
+<td>手動コピーの手間とミスを排除</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>ベース AMI</strong>(AWS 公開 AMI)の最新 ID は <strong>SSM Parameter Store</strong> のパブリックパラメータで参照し、<strong>パイプラインの出力 AMI</strong> の ID は配布設定で<strong>自アカウントの SSM パラメータ</strong>へ書き込む</td>
+<td>AMI ID のハードコードを避ける</td>
+</tr>
+<tr>
+<td>6</td>
+<td>古い AMI は登録解除し、<strong>スナップショットも削除</strong>する</td>
+<td>不要なストレージ料金を防ぐ</td>
+</tr>
+<tr>
+<td>7</td>
+<td>AMI とスナップショットに<strong>タグ</strong>を付ける</td>
+<td>管理と棚卸しを容易にする</td>
+</tr>
+<tr>
+<td>8</td>
+<td>コンテナはタグを固定し、イメージスキャンを有効にする</td>
+<td>再現性と安全性</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="1-8-試験の落とし穴">1-8. 試験の落とし穴</h3>
+<p>ここは、間違えやすいポイントを「よくある誤り」と「正しい理解」で対比した表です。誤りの列は、実際の試験で不正解の選択肢として使われやすい言い回しでもあります。「リージョンごと」「スナップショットは残る」「レシピは不変」という 3 つの性質を、自分の言葉で説明できるか確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMI を別リージョンでそのまま使える</td>
+<td><strong>コピー</strong>が必要</td>
+</tr>
+<tr>
+<td>AMI を登録解除すればコストが消える</td>
+<td><strong>スナップショットが残る</strong>ので別途削除</td>
+</tr>
+<tr>
+<td>暗号化 AMI は共有するだけで使える</td>
+<td>CMK の<strong>キーポリシーの共有</strong>も必要</td>
+</tr>
+<tr>
+<td>レシピを編集して更新する</td>
+<td>レシピは不変。<strong>新バージョンを作成</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-1">参考 URL(Step 1)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 Image Builder とは</td>
+<td><a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html</a></td>
+</tr>
+<tr>
+<td>Image Builder の仕組み</td>
+<td><a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/how-image-builder-works.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/how-image-builder-works.html</a></td>
+</tr>
+<tr>
+<td>レシピの管理</td>
+<td><a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-recipes.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/manage-recipes.html</a></td>
+</tr>
+<tr>
+<td>Amazon Machine Image(EC2 ユーザーガイド)</td>
+<td><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html</a></td>
+</tr>
+<tr>
+<td>Amazon ECR ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html">https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-2-cloudformation-と-aws-cdk-によるリソース管理-skill-3-1-2">Step 2. CloudFormation と AWS CDK によるリソース管理(Skill 3.1.2)</h2>
+<p>この Step のゴールは、インフラをコードで定義し、再現性と安全性を保ちながら作成・更新・削除できるようになることです。CloudFormation の「テンプレート → スタック」の関係、更新前の確認(変更セット)、構成のずれの検出(ドリフト検出)、データを守る設定を学び、最後にその上に載る AWS CDK との関係を整理します。</p>
+<h3 id="2-1-infrastructure-as-code-iac-とは">2-1. Infrastructure as Code(IaC)とは</h3>
+<p>コンソールで手作業でリソースを作る代わりに、<strong>コード(テンプレート)で構成を定義</strong>し、同じ構成を何度でも再現する考え方です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>手作業</th>
+<th>IaC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手順書が必要で、ミスが起きる</td>
+<td>テンプレートが手順そのもの</td>
+</tr>
+<tr>
+<td>環境ごとに差異が出る</td>
+<td>同じテンプレートで同一構成</td>
+</tr>
+<tr>
+<td>変更履歴が追えない</td>
+<td>Git で履歴管理できる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-2-cloudformation-の基本用語">2-2. CloudFormation の基本用語</h3>
+<p>CloudFormation でまず覚えるのは、「テンプレート → スタック」の関係です。テンプレートは設計図で、スタックはその設計図から実際に作られたリソースの集まりです。作成・更新・削除はスタック単位で行われるため、「何を 1 つのスタックにまとめるか」がそのまま運用のしやすさにつながります。変更セット・ドリフト検出・スタックポリシー・終了保護は、どれも「事故を防ぐ」「ずれに気づく」ための仕組みです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>テンプレート</strong></td>
+<td>JSON または YAML で書いた構成の設計図</td>
+</tr>
+<tr>
+<td><strong>スタック</strong></td>
+<td>テンプレートから作られたリソースの<strong>集まり</strong>(作成・更新・削除の単位)</td>
+</tr>
+<tr>
+<td><strong>変更セット(Change Set)</strong></td>
+<td>更新を<strong>実行する前に</strong>変更内容をプレビューする機能</td>
+</tr>
+<tr>
+<td><strong>ドリフト検出</strong></td>
+<td>実際のリソースがテンプレートと食い違っていないかを検出する</td>
+</tr>
+<tr>
+<td><strong>スタックポリシー</strong></td>
+<td>更新時に特定リソースを変更から<strong>保護</strong>する</td>
+</tr>
+<tr>
+<td><strong>終了保護</strong></td>
+<td>スタックの<strong>誤削除</strong>を防ぐ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-3-テンプレートの主なセクション">2-3. テンプレートの主なセクション</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>セクション</th>
+<th>必須</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Resources</code></td>
+<td><strong>必須(唯一)</strong></td>
+<td>作成するリソース</td>
+</tr>
+<tr>
+<td><code>Parameters</code></td>
+<td>任意</td>
+<td>実行時に値を渡す(環境ごとに変える値)</td>
+</tr>
+<tr>
+<td><code>Mappings</code></td>
+<td>任意</td>
+<td>固定の対応表(リージョン別 AMI など)</td>
+</tr>
+<tr>
+<td><code>Conditions</code></td>
+<td>任意</td>
+<td>条件によるリソース作成の切り替え</td>
+</tr>
+<tr>
+<td><code>Outputs</code></td>
+<td>任意</td>
+<td>他スタックから参照する値や確認用の値</td>
+</tr>
+<tr>
+<td><code>Metadata</code> / <code>Rules</code> / <code>Transform</code></td>
+<td>任意</td>
+<td>補助情報・検証・マクロ</td>
+</tr>
+</tbody>
+</table></div>
+<p>よく使う組み込み関数: <code>!Ref</code>、<code>!GetAtt</code>、<code>!Sub</code>、<code>!Join</code>、<code>!If</code>、<code>!ImportValue</code>、<code>!FindInMap</code></p>
+<h3 id="2-4-スタックのライフサイクル">2-4. スタックのライフサイクル</h3>
+<pre class="mermaid">
+flowchart TD
+    T[&quot;テンプレート作成&quot;] --&gt; V[&quot;検証 cfn-lint や validate-template&quot;]
+    V --&gt; C[&quot;スタック作成&quot;]
+    C --&gt; S{&quot;作成成功&quot;}
+    S -- &quot;はい&quot; --&gt; OK[&quot;CREATE_COMPLETE&quot;]
+    S -- &quot;いいえ&quot; --&gt; RB[&quot;自動ロールバック&quot;]
+    RB --&gt; RC[&quot;ROLLBACK_COMPLETE 更新不可 削除して再作成&quot;]
+    OK --&gt; CS[&quot;変更セットで差分確認&quot;]
+    CS --&gt; U[&quot;スタック更新&quot;]
+    U --&gt; US{&quot;更新成功&quot;}
+    US -- &quot;はい&quot; --&gt; UC[&quot;UPDATE_COMPLETE&quot;]
+    US -- &quot;いいえ&quot; --&gt; UR[&quot;UPDATE_ROLLBACK_COMPLETE 元の状態に戻る&quot;]
+</pre>
+<p class="callout"><strong>重要</strong>: 作成に失敗してロールバックが完了した <strong><code>ROLLBACK_COMPLETE</code></strong> のスタックは<strong>更新できません</strong>。原因を直して<strong>スタックを削除し、作り直す</strong>必要があります。</p>
+<h3 id="2-5-変更セットと更新の挙動-試験頻出">2-5. 変更セットと更新の挙動(試験頻出)</h3>
+<p>リソースのプロパティを変えると、更新の挙動が 3 種類に分かれます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>更新の種類</th>
+<th>意味</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No interruption</td>
+<td>停止なしで変更</td>
+<td>一部の設定変更</td>
+</tr>
+<tr>
+<td>Some interruptions</td>
+<td>一時的な停止を伴う</td>
+<td>インスタンスタイプの変更</td>
+</tr>
+<tr>
+<td><strong>Replacement</strong></td>
+<td><strong>新しいリソースを作って古いものを削除</strong></td>
+<td>一部プロパティの変更(物理 ID が変わる)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Replacement が起きるとデータが失われる可能性があります。<strong>変更セットで「Replacement: True」が出ていないか必ず確認</strong>します。</p>
+<h3 id="2-6-データを守る設定">2-6. データを守る設定</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DeletionPolicy: Retain</code></td>
+<td>スタック削除時もリソースを残す</td>
+</tr>
+<tr>
+<td><code>DeletionPolicy: Snapshot</code></td>
+<td>削除前にスナップショットを取る(RDS、EBS など対応リソース)</td>
+</tr>
+<tr>
+<td><code>UpdateReplacePolicy</code></td>
+<td><strong>置換(Replacement)時</strong>に古いリソースをどうするか(Retain / Snapshot / Delete)</td>
+</tr>
+<tr>
+<td>スタックポリシー</td>
+<td>更新で特定リソースが変更されるのを防ぐ</td>
+</tr>
+<tr>
+<td>終了保護</td>
+<td>スタック削除操作自体をブロック</td>
+</tr>
+</tbody>
+</table></div>
+<p>DB など<strong>データを持つリソース</strong>には <code>DeletionPolicy</code> と <code>UpdateReplacePolicy</code> の両方を設定するのが定石です。</p>
+<h3 id="2-7-ec2-起動の完了を待つ-cfn-init-と-cfn-signal">2-7. EC2 起動の完了を待つ(cfn-init と cfn-signal)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AWS::CloudFormation::Init</code> + <code>cfn-init</code></td>
+<td>インスタンス内でパッケージ導入やファイル配置を宣言的に実行</td>
+</tr>
+<tr>
+<td><code>cfn-signal</code></td>
+<td>セットアップの成否を CloudFormation に通知</td>
+</tr>
+<tr>
+<td><code>CreationPolicy</code></td>
+<td>シグナルを待ち、<strong>タイムアウトまでに届かなければ失敗</strong>にする</td>
+</tr>
+</tbody>
+</table></div>
+<p>アプリの準備ができる前に「作成完了」と扱われる問題を防げます。</p>
+<h3 id="2-8-ドリフト検出">2-8. ドリフト検出</h3>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;コンソールで手動変更&quot;] --&gt; B[&quot;テンプレートと実体がずれる&quot;]
+    B --&gt; C[&quot;ドリフト検出を実行&quot;]
+    C --&gt; D{&quot;差分あり&quot;}
+    D -- &quot;あり&quot; --&gt; E[&quot;テンプレート側を修正して反映 または手動変更を戻す&quot;]
+    D -- &quot;なし&quot; --&gt; F[&quot;IN_SYNC&quot;]
+</pre>
+<p>ドリフトは<strong>検出するだけで自動修復はされません</strong>。是正は人間(または自動化)が行います。手動変更を避けることが最大の予防策です。</p>
+<h3 id="2-9-複数スタックの構成">2-9. 複数スタックの構成</h3>
+<p>リソースが増えたときに 1 つのスタックへ全部入れると、変更の影響範囲が広がり、失敗したときのロールバックも大きくなります。そこで、ライフサイクルが違うもの(ネットワークとアプリなど)を分け、必要な値だけを受け渡します。ネストスタックは「部品として呼び出す」、クロススタック参照は「値を共有する」という違いがあります。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>内容</th>
+<th>注意点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ネストスタック</strong></td>
+<td>親スタックから子スタックをテンプレートとして呼ぶ</td>
+<td>再利用部品を階層化できる</td>
+</tr>
+<tr>
+<td><strong>クロススタック参照</strong></td>
+<td><code>Export</code> と <code>Fn::ImportValue</code> で値を共有</td>
+<td><strong>参照されている Export がある間は、元スタックを削除・値変更できない</strong></td>
+</tr>
+<tr>
+<td>スタックの分割</td>
+<td>ライフサイクルが異なるもの(ネットワーク、アプリ)を別スタックに</td>
+<td>変更の影響範囲を小さくする</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-9b-既存リソースの取り込み">2-9b. 既存リソースの取り込み</h3>
+<p>手動で作成済みのリソースを CloudFormation の管理下へ入れるには<strong>リソースのインポート</strong>を使います。事前に、テンプレートへ対象リソースの定義と <code>DeletionPolicy</code> を記述しておく必要があります。</p>
+<h3 id="2-10-aws-cdk-cloud-development-kit">2-10. AWS CDK(Cloud Development Kit)</h3>
+<p>CDK は、<strong>プログラミング言語(TypeScript、Python、Java など)でインフラを定義</strong>し、最終的に <strong>CloudFormation テンプレートへ変換(synthesize)</strong> して展開するフレームワークです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Construct</strong></td>
+<td>CDK の構成部品</td>
+</tr>
+<tr>
+<td>L1 Construct</td>
+<td>CloudFormation リソースと 1 対 1(<code>Cfn</code> で始まる名前)</td>
+</tr>
+<tr>
+<td>L2 Construct</td>
+<td>既定値や便利メソッドを備えた高水準の部品</td>
+</tr>
+<tr>
+<td>L3 Construct(パターン)</td>
+<td>複数リソースを組み合わせた構成</td>
+</tr>
+<tr>
+<td><strong>App / Stack</strong></td>
+<td>CDK のアプリ全体 / デプロイ単位</td>
+</tr>
+<tr>
+<td><code>cdk bootstrap</code></td>
+<td>デプロイに必要な資源(S3 バケット、IAM ロールなど)を準備する。<strong>アカウント・リージョンごとに 1 回</strong></td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;CDKコード TypeScriptなど&quot;] --&gt; B[&quot;cdk synth&quot;]
+    B --&gt; C[&quot;CloudFormationテンプレート&quot;]
+    C --&gt; D[&quot;cdk diff 差分確認&quot;]
+    D --&gt; E[&quot;cdk deploy&quot;]
+    E --&gt; F[&quot;CloudFormationスタック&quot;]
+</pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>コマンド</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cdk bootstrap</code></td>
+<td>初回のみ。デプロイ用リソースを準備</td>
+</tr>
+<tr>
+<td><code>cdk synth</code></td>
+<td>テンプレートを生成</td>
+</tr>
+<tr>
+<td><code>cdk diff</code></td>
+<td>現在のスタックとの差分を表示</td>
+</tr>
+<tr>
+<td><code>cdk deploy</code></td>
+<td>デプロイ(内部では CloudFormation を使用)</td>
+</tr>
+<tr>
+<td><code>cdk destroy</code></td>
+<td>スタック削除</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>CDK は CloudFormation の上に載っている</strong>ので、エラーの調査は結局 CloudFormation のイベントで行います。</p>
+<h3 id="2-11-cloudformation-と-cdk-の使い分け">2-11. CloudFormation と CDK の使い分け</h3>
+<p>どちらも最終的には CloudFormation にデプロイされるため、「どちらが高機能か」ではなく「記述のしやすさ」の選択です。試験では「CDK を使うと CloudFormation は不要になる」といった誤解を狙う選択肢が出ますが、実際は CDK の裏側で CloudFormation が動いています。そのため、エラーの調査は CloudFormation のイベントで行います。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>CloudFormation</th>
+<th>CDK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>記述</td>
+<td>宣言的な YAML / JSON</td>
+<td>プログラミング言語</td>
+</tr>
+<tr>
+<td>強み</td>
+<td>シンプル・直接的</td>
+<td>ループ・条件・再利用が楽</td>
+</tr>
+<tr>
+<td>実行基盤</td>
+<td>CloudFormation</td>
+<td><strong>同じく CloudFormation</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-12-ベストプラクティス">2-12. ベストプラクティス</h3>
+<p>IaC のベストプラクティスは、「変更を安全に行う」「事故を防ぐ」「構成のずれを防ぐ」の 3 つに整理できます。下の表の各項目が、そのどれに当たるかを考えながら読むと、理由まで覚えやすくなります。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>更新前に必ず<strong>変更セット</strong>で確認</td>
+<td>Replacement による事故を防ぐ</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>cfn-lint</strong> などでテンプレートを事前検証</td>
+<td>デプロイ失敗を減らす</td>
+</tr>
+<tr>
+<td>3</td>
+<td>値は <strong>Parameters</strong> にし、秘密情報は直書きしない(SSM Parameter Store や Secrets Manager を参照)</td>
+<td>再利用性と安全性</td>
+</tr>
+<tr>
+<td>4</td>
+<td>本番のデータ系リソースに <code>DeletionPolicy</code> / <code>UpdateReplacePolicy</code> を設定</td>
+<td>データ消失防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>手動変更をしない</strong>。定期的に<strong>ドリフト検出</strong></td>
+<td>構成の一貫性</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>終了保護</strong>を本番スタックに有効化</td>
+<td>誤削除防止</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>IAM サービスロール</strong>で CloudFormation の権限を最小化</td>
+<td>実行者の権限と分離</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ライフサイクルの異なるリソースは<strong>スタックを分ける</strong></td>
+<td>影響範囲の限定</td>
+</tr>
+<tr>
+<td>9</td>
+<td>テンプレートと CDK コードを <strong>Git で管理</strong></td>
+<td>履歴・レビュー</td>
+</tr>
+<tr>
+<td>10</td>
+<td>リソースに<strong>明示的な名前を付けすぎない</strong>(自動生成名にする)</td>
+<td>名前衝突と置換不能を避ける</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="2-13-試験の落とし穴">2-13. 試験の落とし穴</h3>
+<p>CloudFormation と CDK の問題では、「更新できない状態」「検出するだけで直さない」「CDK の裏側は CloudFormation」といった、仕組みの境界を突く選択肢がよく使われます。表の「よくある誤り」を読んで、なぜ誤りなのかを 1 文で説明できるか確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROLLBACK_COMPLETE のスタックを更新する</td>
+<td><strong>更新不可</strong>。削除して作り直す</td>
+</tr>
+<tr>
+<td>ドリフト検出で自動的に直る</td>
+<td><strong>検出のみ</strong></td>
+</tr>
+<tr>
+<td>CDK は CloudFormation と別の仕組み</td>
+<td>内部で <strong>CloudFormation にデプロイ</strong>している</td>
+</tr>
+<tr>
+<td>Export している値を後から変える</td>
+<td><strong>インポート元がある間は変更・削除不可</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-2">参考 URL(Step 2)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudFormation ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html</a></td>
+</tr>
+<tr>
+<td>テンプレートの解説</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html</a></td>
+</tr>
+<tr>
+<td>変更セット</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html</a></td>
+</tr>
+<tr>
+<td>ドリフト検出</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html</a></td>
+</tr>
+<tr>
+<td>DeletionPolicy 属性</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html</a></td>
+</tr>
+<tr>
+<td>CloudFormation のベストプラクティス</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html</a></td>
+</tr>
+<tr>
+<td>AWS CDK デベロッパーガイド</td>
+<td><a href="https://docs.aws.amazon.com/cdk/v2/guide/home.html">https://docs.aws.amazon.com/cdk/v2/guide/home.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-3-デプロイ問題の特定と修復-skill-3-1-3">Step 3. デプロイ問題の特定と修復(Skill 3.1.3)</h2>
+<p>この Step のゴールは、デプロイが失敗したときに、慌てずに原因を切り分けて直せるようになることです。試験では「このエラーが出た、どう対処するか」という形で出題されます。スタックの状態ごとの対処、よくあるエラーの原因、サブネットの IP 枯渇、権限の切り分けを学びます。</p>
+<h3 id="3-1-切り分けの基本手順">3-1. 切り分けの基本手順</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>手順</th>
+<th>やること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>どこで失敗したか</strong>を特定(CloudFormation のイベント、API エラー)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>最初に失敗したイベント</strong>(時系列で最も古い <code>FAILED</code>)の理由を読む</td>
+</tr>
+<tr>
+<td>3</td>
+<td>原因の分類(権限・容量・クォータ・設定・依存関係)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>修正して再実行。必要なら<strong>ロールバックを無効化して調査</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p class="callout">ポイント: 後続のエラーは<strong>連鎖</strong>であることが多いため、<strong>一番古い失敗</strong>が根本原因です。</p>
+<pre class="mermaid">
+flowchart TD
+    A[&quot;デプロイ失敗&quot;] --&gt; B[&quot;CloudFormationのイベント履歴を確認&quot;]
+    B --&gt; C[&quot;最初のFAILEDイベントの理由を読む&quot;]
+    C --&gt; D{&quot;原因の種類&quot;}
+    D --&gt; E[&quot;権限不足 IAM SCP PassRole&quot;]
+    D --&gt; F[&quot;容量 クォータ IP枯渇&quot;]
+    D --&gt; G[&quot;設定ミス 名前衝突 無効なAMI&quot;]
+    D --&gt; H[&quot;依存関係 削除順 Export参照&quot;]
+    E --&gt; Z[&quot;修正して再実行&quot;]
+    F --&gt; Z
+    G --&gt; Z
+    H --&gt; Z
+</pre>
+<h3 id="3-2-スタックの状態と対処-試験頻出">3-2. スタックの状態と対処(試験頻出)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>状態</th>
+<th>意味</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CREATE_FAILED</code> → <code>ROLLBACK_COMPLETE</code></td>
+<td>作成失敗後に巻き戻し完了</td>
+<td>原因修正後に<strong>スタックを削除して再作成</strong></td>
+</tr>
+<tr>
+<td><code>ROLLBACK_FAILED</code></td>
+<td>作成失敗後の巻き戻しにも失敗</td>
+<td>原因を解消して<strong>スタック削除を再試行</strong></td>
+</tr>
+<tr>
+<td><code>UPDATE_ROLLBACK_COMPLETE</code></td>
+<td>更新失敗後に元の状態へ復帰</td>
+<td>原因を直して再更新できる</td>
+</tr>
+<tr>
+<td><code>UPDATE_ROLLBACK_FAILED</code></td>
+<td>更新の巻き戻しに失敗</td>
+<td>原因を手動で直し、<strong><code>ContinueUpdateRollback</code></strong> を実行</td>
+</tr>
+<tr>
+<td><code>DELETE_FAILED</code></td>
+<td>削除失敗</td>
+<td>残っている依存物を除去して再削除、または対象リソースを<strong>保持して削除</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>UPDATE_ROLLBACK_FAILED</code> の典型例は、巻き戻し先のリソース(DB など)が CloudFormation の<strong>外で削除されていた</strong>ケースです。CloudFormation はリソースがまだ存在すると想定して戻そうとして失敗します。このとき <code>ContinueUpdateRollback</code> を使い、必要に応じて<strong>問題のリソースをスキップ</strong>(<code>ResourcesToSkip</code>)します。スキップしたリソースは CloudFormation 上で巻き戻し完了扱いになりますが、実際の状態は<strong>テンプレートと不整合</strong>のまま残ります。<strong>次回のスタック更新の前に</strong>、テンプレートを修正するかリソース側を修正して両者を整合させてください。</p>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ContinueUpdateRollback.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ContinueUpdateRollback.html</a></p>
+<h3 id="3-3-よくある-cloudformation-エラー">3-3. よくある CloudFormation エラー</h3>
+<p>デプロイが失敗したときは、エラーメッセージの文面から原因の種類を絞り込めます。下の表は「メッセージ → 典型的な原因 → 対処」の対応表です。暗記するよりも、「権限」「容量・上限」「設定ミス」「依存関係」「タイムアウト」の 5 分類のどれに当たるかを考える習慣をつけると、初見のエラーにも対応できます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>エラー例</th>
+<th>典型的な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDenied</code> / <code>is not authorized to perform</code></td>
+<td>実行ロールの権限不足、SCP、権限境界</td>
+<td>必要な権限を追加。<strong>CloudTrail</strong> で拒否された API を確認</td>
+</tr>
+<tr>
+<td><code>iam:PassRole</code> エラー</td>
+<td>ロールを渡す権限がない</td>
+<td><code>iam:PassRole</code> を対象ロールに限定して付与</td>
+</tr>
+<tr>
+<td><code>Resource already exists</code> / 名前衝突</td>
+<td>固定名のリソースが既存</td>
+<td>名前を自動生成にするか既存を削除</td>
+</tr>
+<tr>
+<td><code>LimitExceeded</code> / クォータ</td>
+<td>サービスクォータ上限</td>
+<td><strong>Service Quotas</strong> で引き上げ申請</td>
+</tr>
+<tr>
+<td><code>InsufficientInstanceCapacity</code></td>
+<td>AZ にそのタイプの空きがない</td>
+<td>別 AZ・別インスタンスタイプで再試行</td>
+</tr>
+<tr>
+<td><code>The image id does not exist</code></td>
+<td>AMI がそのリージョンに無い</td>
+<td>リージョンごとの AMI を使う(Mappings や SSM パラメータ)</td>
+</tr>
+<tr>
+<td><code>Circular dependency</code></td>
+<td>リソース同士が循環参照</td>
+<td>相互参照をなくすよう<strong>テンプレートを分割・再構成</strong>(例: セキュリティグループのルールを <code>AWS::EC2::SecurityGroupIngress</code> として別リソースに切り出す)。<code>DependsOn</code> は循環の解消ではなく、順序依存が欠けている場合の明示に使う</td>
+</tr>
+<tr>
+<td>作成がタイムアウト</td>
+<td><code>cfn-signal</code> が届かない</td>
+<td>UserData のログ(<code>/var/log/cfn-init.log</code> など)を確認</td>
+</tr>
+<tr>
+<td>ネストスタック失敗</td>
+<td>子スタックのエラー</td>
+<td><strong>子スタック側のイベント</strong>を確認</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-4-調査用のロールバック制御">3-4. 調査用のロールバック制御</h3>
+<p>原因を調べたいのに、失敗した瞬間に自動ロールバックでリソースが消えてしまうと、調べようがありません。そこで、ロールバックを止めて状態を残す方法と、逆に異常を検知したら自動で巻き戻す方法の 2 つが用意されています。目的が正反対なので、混同しないようにしましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ロールバックを無効化</strong>(Disable rollback / <code>--disable-rollback</code>)</td>
+<td>失敗時にリソースを<strong>残して</strong>中身を調査できる。調査後に手動で削除</td>
+</tr>
+<tr>
+<td>ロールバックトリガー</td>
+<td>指定した CloudWatch アラームが鳴ったら<strong>自動で巻き戻す</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-5-サブネットサイズ問題-公式が例示">3-5. サブネットサイズ問題(公式が例示)</h3>
+<p>「サブネットのIPアドレスが足りない」ことが原因で、デプロイが失敗する問題は頻出です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>事実</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>各サブネットで AWS が予約する IP</td>
+<td><strong>先頭 4 つと末尾 1 つの計 5 つ</strong>(使用不可)</td>
+</tr>
+<tr>
+<td>サブネットの CIDR 範囲</td>
+<td><strong>/28(最小)〜 /16(最大)</strong></td>
+</tr>
+<tr>
+<td><code>/24</code> の実利用可能数</td>
+<td>256 − 5 = <strong>251</strong></td>
+</tr>
+<tr>
+<td>IP を消費するもの</td>
+<td>EC2、ENI、ELB、VPC 接続の Lambda、ECS の <code>awsvpc</code> モードのタスク、EKS の Pod など</td>
+</tr>
+<tr>
+<td>ALB の要件</td>
+<td>各サブネットに<strong>空き IP が 8 個以上</strong>必要(<code>/27</code> 以上を推奨)</td>
+</tr>
+</tbody>
+</table></div>
+<p>症状の例: Auto Scaling が増やせない、<code>InsufficientFreeAddressesInSubnet</code>、Lambda や ECS タスクが起動できない。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>対処</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>サブネットを追加</td>
+<td>既存サブネットの CIDR は<strong>変更不可</strong>なので、大きな新サブネットを作る</td>
+</tr>
+<tr>
+<td>VPC に<strong>セカンダリ CIDR</strong> を追加</td>
+<td>アドレス空間そのものを拡張</td>
+</tr>
+<tr>
+<td>計画段階で余裕を持つ</td>
+<td>ENI を多用するサービス(ECS awsvpc、EKS)は特に大きめに</td>
+</tr>
+<tr>
+<td>複数 AZ にまたがって配置</td>
+<td>1 つの AZ の枯渇に強くする</td>
+</tr>
+</tbody>
+</table></div>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html">https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html</a></p>
+<h3 id="3-6-権限問題の切り分け">3-6. 権限問題の切り分け</h3>
+<p>「Access Denied」と表示されたら、まず「誰の権限で失敗したのか」を特定します。CloudFormation はサービスロールで動く場合と、実行したユーザーの権限で動く場合があり、さらに作成されたリソース自身が持つロール(Lambda の実行ロールなど)も関係するためです。下の図で原因を絞り込み、そのあとに表の 6 項目を順に確認します。</p>
+<pre class="mermaid">
+flowchart TD
+    A[&quot;Access Denied&quot;] --&gt; B{&quot;誰の権限で失敗したか&quot;}
+    B --&gt; C[&quot;CloudFormationのサービスロール&quot;]
+    B --&gt; D[&quot;デプロイを実行したユーザー&quot;]
+    B --&gt; E[&quot;リソース自身のロール 例 Lambda実行ロール&quot;]
+    C --&gt; F[&quot;IAMポリシー 権限境界 SCPを確認&quot;]
+    D --&gt; F
+    E --&gt; F
+    F --&gt; G[&quot;CloudTrailで拒否されたAPIを確認&quot;]
+    G --&gt; H[&quot;最小権限で必要な許可を追加&quot;]
+</pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>確認ポイント</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM ポリシー</td>
+<td>Allow が足りているか、明示的 Deny がないか</td>
+</tr>
+<tr>
+<td><strong>SCP</strong>(Organizations)</td>
+<td>アカウント全体で拒否されていないか</td>
+</tr>
+<tr>
+<td><strong>権限境界</strong></td>
+<td>上限を超える許可を与えていないか</td>
+</tr>
+<tr>
+<td><code>iam:PassRole</code></td>
+<td>サービスにロールを渡す権限があるか</td>
+</tr>
+<tr>
+<td>リソースポリシー</td>
+<td>KMS キーポリシー、S3 バケットポリシーなど</td>
+</tr>
+<tr>
+<td>信頼ポリシー</td>
+<td>ロールを引き受けられる相手として許可されているか</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-7-ベストプラクティス">3-7. ベストプラクティス</h3>
+<p>トラブルシューティングで一番重要なのは、手当たり次第に試すのではなく、手順を決めて原因を絞り込むことです。下の表は、そのための心得と、その理由をまとめたものです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>まず<strong>最初の FAILED イベント</strong>を読む</td>
+<td>後続のエラーは連鎖であることが多く、最初の失敗が根本原因だから</td>
+</tr>
+<tr>
+<td>2</td>
+<td>調査が必要なら<strong>ロールバックを無効化</strong>して状態を残す</td>
+<td>失敗した状態が残るので、中身を調べられる(調査後は手動で削除する)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>権限エラーは <strong>CloudTrail</strong> で実際に拒否された API を特定する</td>
+<td>誰が何の操作を拒否されたかが記録され、不足している権限を正確に特定できる</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>IAM Policy Simulator</strong> や IAM Access Analyzer で検証する</td>
+<td>本番で試す前に、付与した権限で意図した操作ができるかを確認できる</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CIDR 設計は<strong>将来のスケール</strong>を見込んで余裕を持たせる</td>
+<td>サブネットの CIDR は後から変更できず、IP の枯渇が起動失敗の原因になる</td>
+</tr>
+<tr>
+<td>6</td>
+<td>クォータは <strong>Service Quotas</strong> で事前に確認・申請</td>
+<td>上限に達してからでは、デプロイが止まり、引き上げにも時間がかかる場合がある</td>
+</tr>
+<tr>
+<td>7</td>
+<td>修正を<strong>コードに戻し</strong>、手動で直しっぱなしにしない(ドリフト防止)</td>
+<td>手動の修正は次回のデプロイで上書きされたり、構成のずれ(ドリフト)の原因になる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-8-試験の落とし穴">3-8. 試験の落とし穴</h3>
+<p>トラブルシューティングの問題では、焦って「削除して作り直す」「全部やり直す」を選ぶと誤りになることが多くあります。状態ごとに取れる手段が決まっていること、サブネットは拡張できないこと、最初のエラーが根本原因であることを、表で確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>サブネットの CIDR を後から拡張する</td>
+<td><strong>変更不可</strong>。新サブネットか<strong>セカンダリ CIDR</strong></td>
+</tr>
+<tr>
+<td><code>/24</code> で 256 個使える</td>
+<td><strong>251 個</strong>(5 個予約)</td>
+</tr>
+<tr>
+<td>UPDATE_ROLLBACK_FAILED は削除するしかない</td>
+<td><code>ContinueUpdateRollback</code> で復旧できる</td>
+</tr>
+<tr>
+<td>最後のエラーが根本原因</td>
+<td><strong>最初のエラー</strong>が根本原因</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-3">参考 URL(Step 3)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudFormation のトラブルシューティング</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html</a></td>
+</tr>
+<tr>
+<td>ContinueUpdateRollback API</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ContinueUpdateRollback.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/APIReference/API_ContinueUpdateRollback.html</a></td>
+</tr>
+<tr>
+<td>失敗した更新のロールバック継続</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-continueupdaterollback.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-continueupdaterollback.html</a></td>
+</tr>
+<tr>
+<td>VPC サブネットのサイズ</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html">https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html</a></td>
+</tr>
+<tr>
+<td>Service Quotas</td>
+<td><a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html">https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html</a></td>
+</tr>
+<tr>
+<td>IAM Policy Simulator</td>
+<td><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-4-複数リージョン・複数アカウントへのプロビジョニングと共有-skill-3-1-4">Step 4. 複数リージョン・複数アカウントへのプロビジョニングと共有(Skill 3.1.4)</h2>
+<p>この Step のゴールは、複数のアカウントやリージョンに、同じ構成を一括展開する方法と、1 つのリソースを他のアカウントへ共有する方法を区別できるようになることです。前者が CloudFormation StackSets、後者が AWS RAM です。</p>
+<h3 id="4-1-なぜ複数アカウント・複数リージョンなのか">4-1. なぜ複数アカウント・複数リージョンなのか</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>影響範囲の分離</td>
+<td>本番と開発でアカウントを分ける</td>
+</tr>
+<tr>
+<td>ガバナンス</td>
+<td>全アカウントに共通のセキュリティ基盤を配る</td>
+</tr>
+<tr>
+<td>可用性・DR</td>
+<td>複数リージョンに同じ構成を置く</td>
+</tr>
+</tbody>
+</table></div>
+<p>この Step で扱う 2 つの主役は次のとおりです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>一言でいうと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CloudFormation StackSets</strong></td>
+<td><strong>同じテンプレート</strong>を複数アカウント・複数リージョンへ<strong>一括展開</strong>する</td>
+</tr>
+<tr>
+<td><strong>AWS RAM</strong>(Resource Access Manager)</td>
+<td><strong>既存リソースを他のアカウントと共有</strong>する(コピーせず同じ実体を共有)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-2-stacksets-の仕組み">4-2. StackSets の仕組み</h3>
+<p>StackSets は、「1 つのテンプレートを、多数のアカウントとリージョンへ同時に配る」仕組みです。配る側(管理アカウント)と配られる側(ターゲットアカウント)があり、配られた先に作られるものがスタックインスタンスです。たとえば、全アカウントへ同じ監査用の IAM ロールを作りたいときに使います。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>管理アカウント(Administrator account)</strong></td>
+<td>StackSet を作成・管理するアカウント</td>
+</tr>
+<tr>
+<td><strong>ターゲットアカウント</strong></td>
+<td>スタックインスタンスが作られるアカウント</td>
+</tr>
+<tr>
+<td><strong>スタックインスタンス</strong></td>
+<td>特定のアカウント・リージョンに作られたスタックへの参照</td>
+</tr>
+<tr>
+<td><strong>StackSet</strong></td>
+<td>テンプレートと展開設定のまとまり</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart TD
+    A[&quot;管理アカウント StackSetを作成&quot;] --&gt; B[&quot;テンプレートと展開先を指定&quot;]
+    B --&gt; C[&quot;アカウントA リージョン1&quot;]
+    B --&gt; D[&quot;アカウントA リージョン2&quot;]
+    B --&gt; E[&quot;アカウントB リージョン1&quot;]
+    B --&gt; F[&quot;アカウントB リージョン2&quot;]
+</pre>
+<h3 id="4-3-2-つの権限モデル-試験頻出">4-3. 2 つの権限モデル(試験頻出)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>セルフマネージド権限</th>
+<th><strong>サービスマネージド権限</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前提</td>
+<td>管理アカウントとターゲットに<strong>手動で IAM ロールを用意</strong></td>
+<td><strong>AWS Organizations</strong> と連携し、ロールは自動</td>
+</tr>
+<tr>
+<td>展開先の指定</td>
+<td>アカウント ID を個別に指定</td>
+<td><strong>組織単位(OU)</strong> で指定</td>
+</tr>
+<tr>
+<td>自動デプロイ</td>
+<td>なし</td>
+<td><strong>新しいアカウントが OU に参加すると自動展開</strong>できる</td>
+</tr>
+<tr>
+<td>向いている場面</td>
+<td>Organizations を使わない</td>
+<td>Organizations 配下の大規模運用</td>
+</tr>
+</tbody>
+</table></div>
+<p>サービスマネージド権限では、Organizations で CloudFormation StackSets の<strong>信頼されたアクセスを有効化</strong>する必要があります。管理アカウント以外から運用したい場合は、<strong>委任管理者</strong>を登録できます。</p>
+<h3 id="4-4-展開のオペレーション設定">4-4. 展開のオペレーション設定</h3>
+<p>数百のアカウントへ一斉に展開すると、テンプレートの誤りも一気に広がります。そこで、同時に処理する数と、失敗をいくつまで許すかを制御します。基本の考え方は「小さく始めて、問題がなければ広げる」です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>意味</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>最大同時アカウント数</strong></td>
+<td>同時に処理するアカウント数</td>
+<td>最初は小さく始め、段階的に広げる</td>
+</tr>
+<tr>
+<td><strong>失敗の許容数(Failure tolerance)</strong></td>
+<td>この数を超えたら<strong>展開を停止</strong></td>
+<td>小さく設定し、広範囲に壊れた展開が広がるのを防ぐ</td>
+</tr>
+<tr>
+<td>リージョンの順序</td>
+<td>展開するリージョンの順番</td>
+<td>影響の小さいリージョンから先に展開</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-5-stacksets-の運用ポイント">4-5. StackSets の運用ポイント</h3>
+<p>StackSets は作って終わりではなく、更新・削除・ドリフト確認といった運用が続きます。特に、失敗したインスタンスの扱いと、StackSet の管理から外す操作は、運用で迷いやすいポイントです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ポイント</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StackSet を更新</td>
+<td>すべてのスタックインスタンスに更新が伝わる</td>
+</tr>
+<tr>
+<td>スタックインスタンスの削除</td>
+<td>「スタックを<strong>保持</strong>」して StackSet の管理から外すこともできる</td>
+</tr>
+<tr>
+<td>ドリフト検出</td>
+<td>StackSet 単位で実行できる</td>
+</tr>
+<tr>
+<td>失敗したインスタンス</td>
+<td>原因を直して<strong>再実行</strong>。失敗したインスタンスは <code>OUTDATED</code> 状態になる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-6-aws-ram-の仕組み">4-6. AWS RAM の仕組み</h3>
+<p>AWS RAM は、<strong>リソースの所有アカウント</strong>が、<strong>他のアカウントや組織</strong>へリソースを共有するサービスです。共有は「コピー」ではなく<strong>同じ実体を使わせる</strong>ものです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>リソース共有</td>
+<td>共有対象リソース + 共有先(プリンシパル)+ 権限のまとまり</td>
+</tr>
+<tr>
+<td>共有先</td>
+<td>アカウント、OU、組織全体、一部では IAM ロール・ユーザー</td>
+</tr>
+<tr>
+<td>マネージド権限</td>
+<td>共有先に許可する操作を定義</td>
+</tr>
+</tbody>
+</table></div>
+<p>共有できる代表例:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>リソース</th>
+<th>典型的な使い道</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VPC サブネット</strong></td>
+<td>1 つの VPC を複数アカウントで共有し、ネットワークを集約</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway</strong></td>
+<td>複数アカウントの VPC を同一ハブへ接続</td>
+</tr>
+<tr>
+<td><strong>Route 53 Resolver ルール</strong></td>
+<td>DNS 転送ルールを全アカウントで共通化</td>
+</tr>
+<tr>
+<td>License Manager の設定、Image Builder のリソース など</td>
+<td>ライセンスやイメージ部品の共有</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-7-ram-でサブネットを共有したときの役割分担-試験頻出">4-7. RAM でサブネットを共有したときの役割分担(試験頻出)</h3>
+<p>RAM でサブネットを共有する構成は、ネットワークを 1 か所に集約しつつ、アカウントごとにリソースを分けたい場合に使われます。所有者と参加者で「できること」が分かれる点が重要です。所有者はネットワークの土台を管理し、参加者はその上に自分のリソースを置くだけ、と覚えましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>役割</th>
+<th>できること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>所有者(VPC オーナー)</strong></td>
+<td>VPC・サブネット・ルートテーブル・ゲートウェイを管理。参加者のリソースは<strong>変更できない</strong></td>
+</tr>
+<tr>
+<td><strong>参加者</strong></td>
+<td>共有サブネット内に<strong>自分のリソース(EC2 など)を作成</strong>できる。VPC やサブネット自体は<strong>変更できない</strong></td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    O[&quot;所有者アカウント VPCとサブネットを管理&quot;] -- &quot;RAMで共有&quot; --&gt; P1[&quot;参加者アカウント1 EC2を作成&quot;]
+    O -- &quot;RAMで共有&quot; --&gt; P2[&quot;参加者アカウント2 RDSを作成&quot;]
+</pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>重要事項</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organizations 内の共有</td>
+<td><strong>RAM の組織共有を有効化</strong>すると、招待の承諾なしで共有できる</td>
+</tr>
+<tr>
+<td>組織外のアカウントへの共有</td>
+<td><strong>招待の承諾</strong>が必要</td>
+</tr>
+<tr>
+<td>リージョン</td>
+<td>リソース共有は<strong>リージョン単位</strong>で、リージョンリソースは作成したリージョン内でのみ共有される(別リージョンへは共有できない)。例外は <strong>AWS RAM が対応するグローバルリソース</strong>のみで、それを含むリソース共有は<strong>米国東部(バージニア北部)<code>us-east-1</code> で作成・管理</strong>する</td>
+</tr>
+<tr>
+<td><strong>AZ 名の違い</strong></td>
+<td>アカウントごとに AZ 名(<code>us-east-1a</code>)の割り当てが異なる。<strong>AZ ID</strong>(<code>use1-az1</code>)で揃えて確認する</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-8-stacksets-と-ram-の使い分け-混同注意">4-8. StackSets と RAM の使い分け(混同注意)</h3>
+<p>StackSets と RAM は、どちらも「複数アカウントに関わるサービス」なので混同しやすいですが、やっていることは別です。判断基準は「実体がアカウントごとに増えるのか、1 つのままなのか」です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>質問</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「各アカウントに<strong>同じ設定を作りたい</strong>」</td>
+<td><strong>StackSets</strong>(アカウントごとに独立した実体が作られる)</td>
+</tr>
+<tr>
+<td>「<strong>1 つのリソースを他アカウントで使わせたい</strong>」</td>
+<td><strong>RAM</strong>(実体は 1 つ)</td>
+</tr>
+<tr>
+<td>「Organizations に新規参加したアカウントに自動で基盤を配る」</td>
+<td><strong>StackSets(サービスマネージド + 自動デプロイ)</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-9-ベストプラクティス">4-9. ベストプラクティス</h3>
+<p>複数アカウント・複数リージョンの運用では、1 つの間違いが多数の環境に同時に影響します。そのため、「自動化して漏れを防ぐ」と「段階的に広げて被害を限定する」が、すべてのベストプラクティスに共通する方針です。下の表で、それぞれの理由を確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Organizations を使うなら <strong>サービスマネージド権限</strong>を選ぶ</td>
+<td>各アカウントへ IAM ロールを手動で用意する必要がなく、OU 単位で展開できる</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>自動デプロイ</strong>を有効にして、新規アカウントへの展開漏れを防ぐ</td>
+<td>OU に参加した新しいアカウントへ、手作業なしで同じ構成が配られる</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>失敗許容数と同時実行数を小さく</strong>して段階展開する</td>
+<td>テンプレートの誤りが全アカウントへ一気に広がるのを防げる</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RAM は<strong>組織共有を有効化</strong>して招待の手間を省く</td>
+<td>組織内なら、招待の承諾なしで共有でき、運用が簡単になる</td>
+</tr>
+<tr>
+<td>5</td>
+<td>共有先は<strong>個別アカウントより OU 単位</strong>で管理する</td>
+<td>アカウントの増減に自動で追従でき、設定の漏れを防げる</td>
+</tr>
+<tr>
+<td>6</td>
+<td>RAM のマネージド権限は<strong>最小権限</strong>にする</td>
+<td>共有先で、必要以上の操作をされるリスクを減らせる</td>
+</tr>
+<tr>
+<td>7</td>
+<td>AZ の指定は<strong>AZ ID</strong>で揃える</td>
+<td>AZ 名(us-east-1a など)はアカウントごとに割り当てが異なり、名前では同じ場所を指せないため</td>
+</tr>
+<tr>
+<td>8</td>
+<td>StackSet のテンプレートも <strong>Git で管理</strong>し、変更を CI で検証する</td>
+<td>多数の環境へ影響するため、レビューと自動検証で誤りを事前に見つけられる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-10-試験の落とし穴">4-10. 試験の落とし穴</h3>
+<p>StackSets と RAM は、名前が似た概念や、よく似た機能が並ぶため、取り違えを狙った選択肢が出やすい分野です。「コピーか共有か」「誰が何を変更できるか」「手動か自動デプロイか」の 3 点に注目して表を読んでください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAM でリソースをコピーしている</td>
+<td><strong>コピーではなく共有</strong>(実体は所有者のまま)</td>
+</tr>
+<tr>
+<td>参加者が共有サブネットの設定を変更できる</td>
+<td><strong>できない</strong>。自分のリソースを作るだけ</td>
+</tr>
+<tr>
+<td>StackSets は 1 つのアカウント・1 つのリージョンのみ</td>
+<td><strong>複数アカウント・複数リージョン</strong>に展開</td>
+</tr>
+<tr>
+<td>新規アカウントに手動で StackSet を追加する</td>
+<td><strong>サービスマネージド + 自動デプロイ</strong>で自動化</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-4">参考 URL(Step 4)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StackSets の概念</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-concepts.html</a></td>
+</tr>
+<tr>
+<td>StackSets の前提条件(権限モデル)</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs.html</a></td>
+</tr>
+<tr>
+<td>AWS RAM ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">https://docs.aws.amazon.com/ram/latest/userguide/what-is.html</a></td>
+</tr>
+<tr>
+<td>共有可能な AWS リソース</td>
+<td><a href="https://docs.aws.amazon.com/ram/latest/userguide/shareable.html">https://docs.aws.amazon.com/ram/latest/userguide/shareable.html</a></td>
+</tr>
+<tr>
+<td>VPC の共有</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-5-デプロイ戦略とサービスの実装-skill-3-1-5">Step 5. デプロイ戦略とサービスの実装(Skill 3.1.5)</h2>
+<p>この Step のゴールは、新しいバージョンを本番へ出すときの方式を、要件に合わせて選べるようになることです。ダウンタイム、ロールバックの速さ、追加コストのトレードオフを理解したうえで、CodeDeploy・Elastic Beanstalk・Auto Scaling・ECS・Lambda の各サービスでの実現方法を学びます。</p>
+<h3 id="5-1-デプロイ戦略とは">5-1. デプロイ戦略とは</h3>
+<p>新しいバージョンを本番へ<strong>どう切り替えるか</strong>の方式です。評価軸は 4 つです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>評価軸</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ダウンタイム</td>
+<td>切り替え中に止まるか</td>
+</tr>
+<tr>
+<td>追加コスト</td>
+<td>一時的に倍のリソースが必要か</td>
+</tr>
+<tr>
+<td>ロールバックの速さ</td>
+<td>失敗時にどれだけ速く戻せるか</td>
+</tr>
+<tr>
+<td>影響範囲</td>
+<td>問題があったとき何割のユーザーが影響を受けるか</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-2-主要な戦略の比較-最重要の表">5-2. 主要な戦略の比較(最重要の表)</h3>
+<p>デプロイ戦略は、「止めずに更新できるか」「失敗したときにどれだけ速く戻せるか」「追加コストがどれだけかかるか」のトレードオフです。一言でいうと、All at once は「全部いっぺんに替える」、Rolling は「少しずつ替える」、Immutable は「新しい一式を用意して替える」、Blue/Green は「もう 1 つの環境を用意して切り替える」、Canary は「ごく一部だけ先に試す」、Linear は「一定の割合ずつ増やす」です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>戦略</th>
+<th>仕組み</th>
+<th>ダウンタイム</th>
+<th>ロールバック</th>
+<th>追加コスト</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>All at once</strong></td>
+<td>全台を一斉に更新</td>
+<td><strong>あり</strong></td>
+<td>遅い(再デプロイ)</td>
+<td>なし</td>
+</tr>
+<tr>
+<td><strong>Rolling</strong></td>
+<td>数台ずつ順番に更新</td>
+<td>なし(容量は一時低下)</td>
+<td>遅い(再デプロイ)</td>
+<td>なし</td>
+</tr>
+<tr>
+<td><strong>Rolling with additional batch</strong></td>
+<td>追加の新バッチを先に起動して容量を維持しながら更新</td>
+<td>なし(容量維持)</td>
+<td>遅い</td>
+<td>小</td>
+</tr>
+<tr>
+<td><strong>Immutable</strong></td>
+<td>新しい Auto Scaling グループで<strong>まるごと新規作成</strong>して切り替え</td>
+<td>なし</td>
+<td><strong>速い</strong>(新環境を破棄)</td>
+<td>一時的に倍</td>
+</tr>
+<tr>
+<td><strong>Blue/Green</strong></td>
+<td>別環境(Green)を構築して<strong>トラフィックを切り替え</strong></td>
+<td>なし</td>
+<td><strong>最速</strong>(Blue へ戻す)</td>
+<td>一時的に倍</td>
+</tr>
+<tr>
+<td><strong>Canary</strong></td>
+<td><strong>少量(例 10%)だけ</strong>新版へ流し、問題なければ全量</td>
+<td>なし</td>
+<td>速い</td>
+<td>小</td>
+</tr>
+<tr>
+<td><strong>Linear</strong></td>
+<td><strong>一定割合ずつ</strong>段階的に新版へ移行</td>
+<td>なし</td>
+<td>速い</td>
+<td>小</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart TD
+    Q[&quot;デプロイ方式を選ぶ&quot;] --&gt; A{&quot;ダウンタイム許容&quot;}
+    A -- &quot;許容できる 開発環境など&quot; --&gt; AO[&quot;All at once&quot;]
+    A -- &quot;許容できない&quot; --&gt; B{&quot;即時ロールバックが必要&quot;}
+    B -- &quot;はい&quot; --&gt; BG[&quot;Blue/Green または Immutable&quot;]
+    B -- &quot;いいえ&quot; --&gt; C{&quot;段階的に影響を確認したい&quot;}
+    C -- &quot;はい&quot; --&gt; CL[&quot;Canary または Linear&quot;]
+    C -- &quot;いいえ&quot; --&gt; R[&quot;Rolling&quot;]
+</pre>
+<h3 id="5-3-blue-green-の考え方">5-3. Blue/Green の考え方</h3>
+<pre class="mermaid">
+flowchart LR
+    U[&quot;ユーザー&quot;] --&gt; LB[&quot;ロードバランサー または Route 53&quot;]
+    LB -- &quot;現行&quot; --&gt; BL[&quot;Blue 旧バージョン&quot;]
+    LB -. &quot;切り替え&quot; .-&gt; GR[&quot;Green 新バージョン&quot;]
+</pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>切り替えの手段</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ALB のターゲットグループ切り替え</td>
+<td>リスナーのルールで流す先を変更</td>
+</tr>
+<tr>
+<td>Route 53 の<strong>加重ルーティング</strong></td>
+<td>重みを少しずつ変えて移行</td>
+</tr>
+<tr>
+<td>Elastic Beanstalk の <strong>CNAME スワップ</strong></td>
+<td>環境 URL を入れ替え</td>
+</tr>
+</tbody>
+</table></div>
+<p class="callout">注意: Route 53 での切り替えは <strong>DNS の TTL</strong> や<strong>クライアントのキャッシュ</strong>の影響を受けます。ALB の切り替えより反映が遅れる場合があります。</p>
+<h3 id="5-4-aws-codedeploy">5-4. AWS CodeDeploy</h3>
+<p>CodeDeploy は、アプリケーションのデプロイを自動化するマネージドサービスです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>コンピューティング基盤</th>
+<th>方式</th>
+<th>補足</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2 / オンプレミス</strong></td>
+<td><strong>In-place</strong> または <strong>Blue/Green</strong></td>
+<td>エージェントをインスタンスに導入。<code>appspec.yml</code> を使用</td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td><strong>Canary / Linear / All-at-once</strong></td>
+<td><strong>エイリアス</strong>の重みでトラフィックを移行</td>
+</tr>
+<tr>
+<td><strong>ECS</strong></td>
+<td><strong>Blue/Green</strong></td>
+<td>ALB のターゲットグループを切り替え</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AppSpec ファイル</strong></td>
+<td>配置するファイルとライフサイクルフックを定義</td>
+</tr>
+<tr>
+<td><strong>ライフサイクルフック</strong></td>
+<td><strong>EC2/オンプレミス</strong>の例: <code>BeforeInstall</code>、<code>AfterInstall</code>、<code>ApplicationStart</code>、<code>ValidateService</code> など(Lambda / ECS では <code>BeforeAllowTraffic</code>、<code>AfterAllowTraffic</code> など別のフックを使う)</td>
+</tr>
+<tr>
+<td><strong>デプロイ設定</strong></td>
+<td><strong>EC2/オンプレミス</strong>: <code>CodeDeployDefault.AllAtOnce</code>、<code>CodeDeployDefault.HalfAtATime</code>、<code>CodeDeployDefault.OneAtATime</code><br><strong>Lambda</strong>: <code>CodeDeployDefault.LambdaAllAtOnce</code>、<code>CodeDeployDefault.LambdaCanary10Percent5Minutes</code>、<code>CodeDeployDefault.LambdaLinear10PercentEvery1Minute</code> など</td>
+</tr>
+<tr>
+<td><strong>自動ロールバック</strong></td>
+<td>デプロイ失敗または <strong>CloudWatch アラーム</strong>発報で自動的に戻す</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart TD
+    D[&quot;デプロイ開始&quot;] --&gt; H1[&quot;BeforeInstall&quot;]
+    H1 --&gt; H2[&quot;Install&quot;]
+    H2 --&gt; H3[&quot;AfterInstall&quot;]
+    H3 --&gt; H4[&quot;ApplicationStart&quot;]
+    H4 --&gt; H5[&quot;ValidateService&quot;]
+    H5 --&gt; R{&quot;成功かつアラーム無し&quot;}
+    R -- &quot;はい&quot; --&gt; OK[&quot;デプロイ完了&quot;]
+    R -- &quot;いいえ&quot; --&gt; RB[&quot;自動ロールバック&quot;]
+</pre>
+<h3 id="5-5-サービス別のデプロイ機能">5-5. サービス別のデプロイ機能</h3>
+<p>同じ戦略でも、サービスごとに呼び名や設定方法が違います。試験では「この構成で、この要件を満たすにはどの機能を使うか」という形で出るため、サービスと機能の対応を確認します。表は「サービス → 手段 → 要点」の順です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>主なデプロイ手段</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elastic Beanstalk</strong></td>
+<td>All at once / Rolling / Rolling with additional batch / <strong>Immutable</strong> / <strong>Traffic splitting</strong>(カナリア的)</td>
+<td>環境の CNAME スワップで Blue/Green も可能</td>
+</tr>
+<tr>
+<td><strong>Auto Scaling グループ</strong></td>
+<td><strong>インスタンスリフレッシュ</strong></td>
+<td><code>MinHealthyPercentage</code> で更新中に維持する正常率を指定。ローンチテンプレートの更新を反映</td>
+</tr>
+<tr>
+<td><strong>ECS</strong></td>
+<td><strong>ローリング更新</strong>(既定)、CodeDeploy による Blue/Green</td>
+<td><code>minimumHealthyPercent</code> / <code>maximumPercent</code> でローリングの幅を制御。<strong>デプロイサーキットブレーカー</strong>で失敗時に自動ロールバック</td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td><strong>バージョン + エイリアス</strong>、加重エイリアス</td>
+<td>エイリアスで新旧に配分。CodeDeploy で自動化</td>
+</tr>
+<tr>
+<td><strong>CloudFormation</strong></td>
+<td>スタック更新の <code>UpdatePolicy</code>(ASG の <code>AutoScalingRollingUpdate</code> など)</td>
+<td>更新時のローリング挙動を宣言</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-6-auto-scaling-グループのインスタンスリフレッシュ">5-6. Auto Scaling グループのインスタンスリフレッシュ</h3>
+<p>Auto Scaling グループ(ASG)のインスタンスを新しい設定(新しい AMI など)へ入れ替えるのが、インスタンスリフレッシュです。起動テンプレートを更新しても、すでに動いているインスタンスは自動では入れ替わりません。そこでインスタンスリフレッシュを開始し、正常な台数の下限を守りながら順番に入れ替えます。</p>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;新しいローンチテンプレートを作成&quot;] --&gt; B[&quot;インスタンスリフレッシュを開始&quot;]
+    B --&gt; C[&quot;MinHealthyPercentageを保ちながら順次入れ替え&quot;]
+    C --&gt; D{&quot;ヘルスチェックと待機時間&quot;}
+    D -- &quot;正常&quot; --&gt; E[&quot;次のバッチへ&quot;]
+    D -- &quot;異常 アラーム検知&quot; --&gt; F[&quot;ロールバックまたは停止&quot;]
+</pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>設定</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MinHealthyPercentage</code></td>
+<td>更新中に正常に保つ台数の下限割合</td>
+</tr>
+<tr>
+<td>インスタンスのウォームアップ</td>
+<td>新しいインスタンスが「使える」状態になるまでの時間</td>
+</tr>
+<tr>
+<td>チェックポイント</td>
+<td>一定割合で一時停止して確認</td>
+</tr>
+<tr>
+<td>自動ロールバック</td>
+<td>アラームなどをトリガーに元の状態へ戻す</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-6b-lambda-の段階的デプロイ">5-6b. Lambda の段階的デプロイ</h3>
+<p>Lambda では、関数のバージョンを作り、エイリアスという「名札」で新旧のバージョンへトラフィックを振り分けて、段階的に移行します。エイリアスが指す割合を少しずつ変え、CloudWatch アラームが異常を検知したら元へ戻す、という流れを CodeDeploy が自動化します。</p>
+<pre class="mermaid">
+flowchart LR
+    V1[&quot;バージョン1 現行&quot;] --&gt; AL[&quot;エイリアス prod&quot;]
+    V2[&quot;バージョン2 新版&quot;] --&gt; AL
+    AL --&gt; T[&quot;トラフィック配分 例 90対10&quot;]
+    T --&gt; M{&quot;CloudWatchアラーム&quot;}
+    M -- &quot;異常&quot; --&gt; RB[&quot;自動ロールバック&quot;]
+    M -- &quot;正常&quot; --&gt; FULL[&quot;全量を新版へ&quot;]
+</pre>
+<h3 id="5-7-ベストプラクティス">5-7. ベストプラクティス</h3>
+<p>デプロイのベストプラクティスは、「止めない」「異常を自動で検知して戻す」「影響範囲を小さくする」にまとめられます。下の表の理由の列で、それぞれがどのリスクを減らすのかを確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>本番は <strong>ダウンタイムの出ない戦略</strong>(Rolling 以上)を選ぶ</td>
+<td>可用性</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>自動ロールバック + CloudWatch アラーム</strong>を組み合わせる</td>
+<td>異常を人が見る前に戻せる</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>ヘルスチェック</strong>を正しく設定する(ELB のヘルスチェックを ASG に使う)</td>
+<td>不良インスタンスの自動入れ替え</td>
+</tr>
+<tr>
+<td>4</td>
+<td>設定変更は<strong>不変(Immutable)</strong>に寄せる</td>
+<td>構成ずれを防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td>カナリア / リニアで<strong>影響範囲を限定</strong>して検証</td>
+<td>問題の早期発見</td>
+</tr>
+<tr>
+<td>6</td>
+<td>検証用の <code>ValidateService</code> フックで<strong>自動テスト</strong></td>
+<td>壊れた版を本番へ出さない</td>
+</tr>
+<tr>
+<td>7</td>
+<td>切り替え前に<strong>ウォームアップ</strong>時間を取る</td>
+<td>起動直後のエラーを防ぐ</td>
+</tr>
+<tr>
+<td>8</td>
+<td>データベースのスキーマ変更は<strong>後方互換</strong>にする</td>
+<td>新旧同居中の整合性</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="5-8-試験の落とし穴">5-8. 試験の落とし穴</h3>
+<p>デプロイ戦略の問題では、「ダウンタイム」「ロールバックの速さ」「追加コスト」のどれを優先するかで答えが変わります。表の「正しい理解」を、この 3 つの軸のどれに当たるかを意識して確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rolling は即時ロールバックできる</td>
+<td>再デプロイが必要で<strong>遅い</strong></td>
+</tr>
+<tr>
+<td>Immutable は既存インスタンスを更新する</td>
+<td><strong>新しいインスタンス群を作る</strong></td>
+</tr>
+<tr>
+<td>Lambda に In-place デプロイがある</td>
+<td>Lambda は<strong>エイリアスでのトラフィック移行</strong>(Canary / Linear / All-at-once)</td>
+</tr>
+<tr>
+<td>ECS で CodeDeploy が使えない</td>
+<td><strong>Blue/Green に使える</strong></td>
+</tr>
+<tr>
+<td>Blue/Green は追加コストがかからない</td>
+<td>一時的に<strong>倍のリソース</strong>が必要</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-5">参考 URL(Step 5)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CodeDeploy ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html">https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html</a></td>
+</tr>
+<tr>
+<td>CodeDeploy のデプロイ設定</td>
+<td><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html">https://docs.aws.amazon.com/codedeploy/latest/userguide/deployment-configurations.html</a></td>
+</tr>
+<tr>
+<td>AppSpec ファイルのリファレンス</td>
+<td><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file.html">https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file.html</a></td>
+</tr>
+<tr>
+<td>Elastic Beanstalk のデプロイポリシー</td>
+<td><a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html">https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html</a></td>
+</tr>
+<tr>
+<td>Auto Scaling インスタンスリフレッシュ</td>
+<td><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-instance-refresh.html">https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-instance-refresh.html</a></td>
+</tr>
+<tr>
+<td>ECS のデプロイタイプ</td>
+<td><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-types.html">https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-types.html</a></td>
+</tr>
+<tr>
+<td>Lambda のエイリアスと段階的デプロイ</td>
+<td><a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html">https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-6-サードパーティツールによるデプロイ自動化-skill-3-1-6">Step 6. サードパーティツールによるデプロイ自動化(Skill 3.1.6)</h2>
+<p>この Step のゴールは、AWS の外のツールである Terraform と Git を、AWS 上で安全に運用する要点を理解することです。試験範囲は、ツールの「利用と管理」であり、パイプラインの設計は問われません。State の管理と、認証情報・秘密情報の扱いが中心です。</p>
+<h3 id="6-1-位置づけ">6-1. 位置づけ</h3>
+<p>試験範囲は「ツールの<strong>利用と管理</strong>」です。パイプラインの設計や、ソフトウェア開発は範囲外です。AWS の外のツール(Terraform、Git)を<strong>AWS 上でどう安全に回すか</strong>を理解します。</p>
+<h3 id="6-2-terraform-の基本">6-2. Terraform の基本</h3>
+<p>Terraform は HashiCorp 社の IaC ツールで、AWS だけでなく様々なクラウドや SaaS を同じ書き方で管理できます。CloudFormation との最大の違いは、「現在の状態(State)を自分で保管・管理する」点です。基本の流れは、init で準備し、plan で差分を確認し、apply で適用する、という 3 ステップです。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Provider</strong></td>
+<td>AWS などの API を操作するプラグイン</td>
+</tr>
+<tr>
+<td><strong>Resource</strong></td>
+<td>作成する対象(<code>aws_instance</code> など)</td>
+</tr>
+<tr>
+<td><strong>State(状態ファイル)</strong></td>
+<td>Terraform が管理中のリソースの<strong>記録</strong></td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>State の保管場所(S3 など)</td>
+</tr>
+<tr>
+<td><code>terraform init</code></td>
+<td>プロバイダーとバックエンドを初期化</td>
+</tr>
+<tr>
+<td><code>terraform plan</code></td>
+<td>変更内容をプレビュー(CloudFormation の変更セットに相当)</td>
+</tr>
+<tr>
+<td><code>terraform apply</code></td>
+<td>変更を適用</td>
+</tr>
+<tr>
+<td><code>terraform destroy</code></td>
+<td>管理中のリソースを削除</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;tfファイルを記述&quot;] --&gt; B[&quot;terraform init&quot;]
+    B --&gt; C[&quot;terraform plan 差分確認&quot;]
+    C --&gt; D{&quot;レビュー承認&quot;}
+    D -- &quot;承認&quot; --&gt; E[&quot;terraform apply&quot;]
+    D -- &quot;差し戻し&quot; --&gt; A
+    E --&gt; F[&quot;State更新 S3バックエンド&quot;]
+</pre>
+<h3 id="6-3-state-の管理-最重要">6-3. State の管理(最重要)</h3>
+<p>State には<strong>リソースの属性や機微な値が含まれる</strong>ことがあり、チームで共有するため、ローカルに置かず<strong>リモートバックエンド</strong>にします。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>ベストプラクティス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保管先</td>
+<td><strong>S3 バケット</strong>をバックエンドにする</td>
+</tr>
+<tr>
+<td>暗号化</td>
+<td>S3 の<strong>サーバー側暗号化</strong>(KMS)を有効化</td>
+</tr>
+<tr>
+<td>バージョニング</td>
+<td><strong>S3 バージョニング</strong>で State を巻き戻せるようにする</td>
+</tr>
+<tr>
+<td>アクセス制御</td>
+<td>バケットポリシーと IAM で<strong>最小権限</strong>、パブリックアクセスはブロック</td>
+</tr>
+<tr>
+<td>ロック</td>
+<td><strong>State ロック</strong>で同時実行による破損を防ぐ。新規構成では S3 ネイティブロック(<code>use_lockfile = true</code>)を推奨。DynamoDB ロックは非推奨(deprecated)で将来のマイナーリリースで削除予定のため、既存構成からの移行用のレガシー選択肢としてのみ扱う</td>
+</tr>
+<tr>
+<td>秘密情報</td>
+<td>コードへの<strong>直書きを避ける</strong>(Secrets Manager / SSM を参照)。ただし data source で読んだ値をリソース引数に渡すと <strong>State に平文で保存</strong>され得る。<code>sensitive</code> は通常の CLI 出力で隠すだけなので、State に残してはならない値は<strong>実行時注入</strong>や <strong>ephemeral / write-only</strong> 機能(対応リソースのみ)を使う</td>
+</tr>
+</tbody>
+</table></div>
+<p>State ロックの方式は Terraform のバージョンに依存します。最新の仕様は HashiCorp 公式ドキュメントで確認してください。</p>
+<h3 id="6-4-cloudformation-と-terraform-の比較">6-4. CloudFormation と Terraform の比較</h3>
+<p>試験では、どちらが優れているかではなく、「状態を誰が管理するか」と「AWS 以外も扱うか」といった違いが問われます。比較表を、この 2 つの観点を意識しながら読んでください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>CloudFormation</th>
+<th>Terraform</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>提供元</td>
+<td>AWS</td>
+<td>HashiCorp(サードパーティ)</td>
+</tr>
+<tr>
+<td>対象</td>
+<td><strong>AWS が中心</strong></td>
+<td>マルチクラウド・SaaS も扱える</td>
+</tr>
+<tr>
+<td>状態管理</td>
+<td><strong>AWS 側で管理</strong>(スタック)</td>
+<td><strong>利用者が State を管理</strong>(S3 など)</td>
+</tr>
+<tr>
+<td>プレビュー</td>
+<td>変更セット</td>
+<td><code>terraform plan</code></td>
+</tr>
+<tr>
+<td>言語</td>
+<td>YAML / JSON</td>
+<td>HCL</td>
+</tr>
+<tr>
+<td>ドリフト</td>
+<td>ドリフト検出</td>
+<td><code>plan</code> で差分検出(リフレッシュ)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-5-git-とバージョン管理">6-5. Git とバージョン管理</h3>
+<p>IaC は<strong>コード</strong>なので、アプリケーションと同様に Git で管理します。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>リポジトリ</td>
+<td>コードと履歴の保管場所</td>
+</tr>
+<tr>
+<td>ブランチ</td>
+<td>並行作業の分岐</td>
+</tr>
+<tr>
+<td>プルリクエスト(PR)</td>
+<td>変更を提案し、<strong>レビューを経て</strong>マージする仕組み</td>
+</tr>
+<tr>
+<td><strong>GitOps</strong></td>
+<td>Git のコードを<strong>唯一の正</strong>とし、変更は PR 経由でのみ本番へ反映する運用</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;ブランチで変更&quot;] --&gt; B[&quot;プルリクエスト&quot;]
+    B --&gt; C[&quot;自動テスト cfn-lint terraform validate plan&quot;]
+    C --&gt; D{&quot;レビュー承認&quot;}
+    D -- &quot;承認&quot; --&gt; E[&quot;mainへマージ&quot;]
+    E --&gt; F[&quot;パイプラインが自動デプロイ&quot;]
+    D -- &quot;差し戻し&quot; --&gt; A
+</pre>
+<p>AWS 側では、AWS CodeBuild / CodePipeline などが Git リポジトリ(GitHub など)と連携できます。接続には <strong>AWS CodeConnections</strong> を使います。</p>
+<h3 id="6-6-ベストプラクティス">6-6. ベストプラクティス</h3>
+<p>外部ツールを AWS で安全に使うときの要点は、「状態(State)を守る」「認証情報を守る」「変更をレビューする」の 3 つです。下の表の理由の列とあわせて確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>State は<strong>リモート</strong>(S3 + 暗号化 + バージョニング + ロック)</td>
+<td>破損・漏えい防止</td>
+</tr>
+<tr>
+<td>2</td>
+<td>プロバイダーと Terraform の<strong>バージョンを固定</strong></td>
+<td>再現性</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>plan</code> の結果を<strong>レビューしてから</strong> <code>apply</code></td>
+<td>想定外の削除を防止</td>
+</tr>
+<tr>
+<td>4</td>
+<td>認証は<strong>一時的な認証情報(IAM ロール)</strong>を使い、長期アクセスキーを避ける</td>
+<td>漏えい対策</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>秘密情報を Git にコミットしない</strong></td>
+<td>漏えい対策</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>main</code> ブランチを<strong>保護</strong>し、直接プッシュを禁止</td>
+<td>変更の統制</td>
+</tr>
+<tr>
+<td>7</td>
+<td>環境ごとに State を<strong>分離</strong>する</td>
+<td>影響範囲の限定</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>手動変更を避け</strong>、コードを唯一の正にする</td>
+<td>ドリフト防止</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="6-7-試験の落とし穴">6-7. 試験の落とし穴</h3>
+<p>Terraform の問題では、「State を誰がどこに置くか」と「認証情報を Git に入れない」が最頻出です。表で確認したあと、自分の環境ならどう構成するかを考えてみましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terraform の State は AWS が管理してくれる</td>
+<td><strong>利用者が管理</strong>する</td>
+</tr>
+<tr>
+<td>State をローカルで共有すれば十分</td>
+<td><strong>リモート + ロック</strong>が必須級</td>
+</tr>
+<tr>
+<td>アクセスキーを Git に入れて CI で使う</td>
+<td><strong>IAM ロール / 一時認証情報</strong>を使う</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-6">参考 URL(Step 6)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Terraform AWS Provider(公式ドキュメント)</td>
+<td><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">https://registry.terraform.io/providers/hashicorp/aws/latest/docs</a></td>
+</tr>
+<tr>
+<td>Terraform のリモート State(S3 バックエンド)</td>
+<td><a href="https://developer.hashicorp.com/terraform/language/backend/s3">https://developer.hashicorp.com/terraform/language/backend/s3</a></td>
+</tr>
+<tr>
+<td>AWS Prescriptive Guidance Terraform</td>
+<td><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/choose-iac-tool/terraform.html">https://docs.aws.amazon.com/prescriptive-guidance/latest/choose-iac-tool/terraform.html</a></td>
+</tr>
+<tr>
+<td>AWS CodeConnections</td>
+<td><a href="https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html">https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html</a></td>
+</tr>
+<tr>
+<td>Git 公式ドキュメント</td>
+<td><a href="https://git-scm.com/doc">https://git-scm.com/doc</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-7-aws-サービスによる運用プロセスの自動化-skill-3-2-1">Step 7. AWS サービスによる運用プロセスの自動化(Skill 3.2.1)</h2>
+<p>この Step のゴールは、人手で行っている運用作業を、AWS のサービスで自動化できるようになることです。中心となるのは AWS Systems Manager で、一括実行、パッチ適用、手順の自動化、構成の維持といった機能を、場面に応じて使い分けます。</p>
+<h3 id="7-1-中心となるサービス-aws-systems-manager">7-1. 中心となるサービス: AWS Systems Manager</h3>
+<p>Systems Manager(SSM)は、EC2 やオンプレミスのサーバーを<strong>まとめて運用するための道具箱</strong>です。SSH やバスティオンを使わずに管理できます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>前提条件</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SSM Agent</strong></td>
+<td>管理対象にインストール(Amazon Linux などには既定で入っている)</td>
+</tr>
+<tr>
+<td><strong>IAM ロール</strong></td>
+<td>インスタンスプロファイルに <code>AmazonSSMManagedInstanceCore</code> 相当の権限</td>
+</tr>
+<tr>
+<td><strong>ネットワーク</strong></td>
+<td>SSM のエンドポイントへ到達できる(NAT、または <strong>VPC エンドポイント</strong>)</td>
+</tr>
+<tr>
+<td>ハイブリッド環境</td>
+<td>オンプレミスは<strong>ハイブリッドアクティベーション</strong>で登録</td>
+</tr>
+</tbody>
+</table></div>
+<p>管理対象に表示されない場合の確認順は「Agent → IAM ロール → ネットワーク」です。</p>
+<h3 id="7-2-systems-manager-の主な機能">7-2. Systems Manager の主な機能</h3>
+<p>Systems Manager は多くの機能の集合体で、「サーバーを操作する」「構成を保つ」「設定値を持つ」の 3 系統に分けると整理しやすくなります。操作系は Run Command・Session Manager・Automation、構成の維持系は State Manager・Patch Manager・Inventory、設定値系は Parameter Store です。Maintenance Windows は「いつ実行するか」を決める時間枠として、他の機能と組み合わせて使います。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>何をするか</th>
+<th>使いどころ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Automation</strong></td>
+<td><strong>Runbook(手順書)</strong>を実行して運用作業を自動化</td>
+<td>再起動、AMI 作成、復旧手順の自動化</td>
+</tr>
+<tr>
+<td><strong>Run Command</strong></td>
+<td>複数インスタンスへ<strong>一括でコマンド実行</strong></td>
+<td>臨時の設定変更、ログ収集</td>
+</tr>
+<tr>
+<td><strong>State Manager</strong></td>
+<td>望ましい<strong>構成状態を維持</strong>(定期適用)</td>
+<td>エージェント導入、設定の維持</td>
+</tr>
+<tr>
+<td><strong>Patch Manager</strong></td>
+<td>OS パッチの<strong>適用の自動化とコンプライアンス確認</strong></td>
+<td>定期パッチ適用</td>
+</tr>
+<tr>
+<td><strong>Maintenance Windows</strong></td>
+<td>作業を<strong>実行してよい時間帯</strong>を定義</td>
+<td>夜間のパッチ適用</td>
+</tr>
+<tr>
+<td><strong>Parameter Store</strong></td>
+<td>設定値や秘密情報の<strong>一元管理</strong></td>
+<td>AMI ID、DB 接続設定</td>
+</tr>
+<tr>
+<td><strong>Session Manager</strong></td>
+<td>SSH 不要の<strong>安全なシェル接続</strong></td>
+<td>ポート 22 を開けずに接続</td>
+</tr>
+<tr>
+<td><strong>Inventory</strong></td>
+<td>ソフトウェアや構成の<strong>棚卸し</strong></td>
+<td>資産管理</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-3-automation-runbook-の基本">7-3. Automation(Runbook)の基本</h3>
+<p>Automation は、運用手順書(Runbook)を AWS が実行してくれる機能です。Run Command が「1 つのコマンドを複数台へ実行する」のに対し、Automation は「複数のステップを、条件分岐や承認を挟みながら実行する」ことができます。Runbook が AWS API を呼ぶときは、指定した IAM ロールを引き受けて動くため、そのロールの権限が足りないと失敗します。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Runbook(Automation ドキュメント)</strong></td>
+<td>手順を YAML / JSON で定義したもの</td>
+</tr>
+<tr>
+<td>AWS 提供の Runbook</td>
+<td><code>AWS-RestartEC2Instance</code>、<code>AWS-CreateImage</code> などの定型手順</td>
+</tr>
+<tr>
+<td><strong>AutomationAssumeRole</strong></td>
+<td>Runbook が AWS API を呼ぶときに引き受ける <strong>IAM ロール</strong></td>
+</tr>
+<tr>
+<td>実行制御</td>
+<td><strong>レート制御</strong>(同時実行数、エラーしきい値)、<strong>承認ステップ</strong></td>
+</tr>
+<tr>
+<td>実行のきっかけ</td>
+<td>手動、<strong>EventBridge</strong>、<strong>AWS Config のリメディエーション</strong>、Maintenance Window</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart TD
+    T[&quot;トリガー 手動 EventBridge Config&quot;] --&gt; A[&quot;Automation実行&quot;]
+    A --&gt; R[&quot;AutomationAssumeRoleを引き受ける&quot;]
+    R --&gt; S1[&quot;ステップ1 状態確認&quot;]
+    S1 --&gt; S2{&quot;承認が必要&quot;}
+    S2 -- &quot;はい&quot; --&gt; AP[&quot;承認者が承認&quot;]
+    S2 -- &quot;いいえ&quot; --&gt; S3[&quot;ステップ3 修復アクション&quot;]
+    AP --&gt; S3
+    S3 --&gt; S4[&quot;ステップ4 結果の検証&quot;]
+    S4 --&gt; O[&quot;成功または失敗を記録&quot;]
+</pre>
+<h3 id="7-4-patch-manager-の流れ-試験頻出">7-4. Patch Manager の流れ(試験頻出)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>パッチベースライン</strong></td>
+<td>どのパッチを承認するか(分類、重大度、<strong>自動承認までの日数</strong>)</td>
+</tr>
+<tr>
+<td><strong>パッチグループ</strong></td>
+<td>タグ(<code>Patch Group</code>)でインスタンスをグルーピング</td>
+</tr>
+<tr>
+<td><strong>Maintenance Window</strong></td>
+<td>パッチを当てる時間帯</td>
+</tr>
+<tr>
+<td><strong>Scan と Install</strong></td>
+<td><code>Scan</code> は不足パッチの<strong>確認のみ</strong>。<code>Install</code> は<strong>適用</strong>(必要なら再起動)</td>
+</tr>
+<tr>
+<td>コンプライアンス</td>
+<td>適用状況を一覧で確認できる</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    B[&quot;パッチベースラインを定義&quot;] --&gt; G[&quot;タグでパッチグループを指定&quot;]
+    G --&gt; W[&quot;Maintenance Windowを設定&quot;]
+    W --&gt; I[&quot;Install実行 AWS-RunPatchBaseline&quot;]
+    I --&gt; C[&quot;コンプライアンスを確認&quot;]
+</pre>
+<p class="callout">ポイント: 本番に当てる前に、<strong>検証環境で先にパッチを適用</strong>し、問題がなければ本番へ展開する運用が基本です。</p>
+<h3 id="7-5-aws-config-のリメディエーション">7-5. AWS Config のリメディエーション</h3>
+<p>AWS Config は、リソースの設定が「決めたルールに合っているか」を継続的に評価するサービスです。これだけでは非準拠を見つけるだけですが、リメディエーションで SSM Automation の Runbook を紐づけると、見つけた問題を自動で直せます。「検出」と「修復」を分けて覚えましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Config ルール</td>
+<td>リソースが<strong>ルールに準拠しているか</strong>を評価</td>
+</tr>
+<tr>
+<td>非準拠の検出</td>
+<td>例: 「暗号化されていない EBS」「パブリックな S3」</td>
+</tr>
+<tr>
+<td><strong>リメディエーション</strong></td>
+<td>非準拠時に <strong>SSM Automation の Runbook</strong> を実行して<strong>自動修復</strong></td>
+</tr>
+<tr>
+<td>実行方式</td>
+<td>手動 / <strong>自動</strong>(リトライ設定あり)</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    R[&quot;リソース変更&quot;] --&gt; C[&quot;Configがルール評価&quot;]
+    C --&gt; D{&quot;準拠&quot;}
+    D -- &quot;非準拠&quot; --&gt; A[&quot;SSM Automationで自動修復&quot;]
+    A --&gt; E[&quot;再評価して準拠へ&quot;]
+    D -- &quot;準拠&quot; --&gt; OK[&quot;対応不要&quot;]
+</pre>
+<h3 id="7-6-運用作業の自動化パターン-早見表">7-6. 運用作業の自動化パターン(早見表)</h3>
+<p>この表は、運用の目的から使うサービスを引くための早見表です。試験の問題文は「〜したい」という目的で書かれることが多いので、左の列を目的として読み、右の列を答えとして確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>使うもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>定期的に OS パッチを当てる</td>
+<td><strong>Patch Manager + Maintenance Windows</strong></td>
+</tr>
+<tr>
+<td>多数のサーバーで同じコマンドを実行</td>
+<td><strong>Run Command</strong>(タグでターゲット指定)</td>
+</tr>
+<tr>
+<td>構成を常に一定に保つ</td>
+<td><strong>State Manager</strong></td>
+</tr>
+<tr>
+<td>障害時に決まった復旧手順を実行</td>
+<td><strong>Automation Runbook</strong>(EventBridge から起動)</td>
+</tr>
+<tr>
+<td>SSH なしでサーバーに入る</td>
+<td><strong>Session Manager</strong></td>
+</tr>
+<tr>
+<td>設定値・秘密情報を一元管理</td>
+<td><strong>Parameter Store / Secrets Manager</strong></td>
+</tr>
+<tr>
+<td>非準拠リソースを自動で直す</td>
+<td><strong>AWS Config + SSM Automation</strong></td>
+</tr>
+<tr>
+<td>定期的に AMI を作る</td>
+<td><strong>Image Builder</strong> または Automation(<code>AWS-CreateImage</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-7-ベストプラクティス">7-7. ベストプラクティス</h3>
+<p>運用自動化のベストプラクティスは、「安全に操作する」「権限と範囲を絞る」「記録を残す」に整理できます。自動化は強力な反面、誤ると広い範囲に同時に影響するため、それを防ぐ工夫が項目の中心になっています。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>SSH ではなく Session Manager</strong> を使う(ポート 22 を閉じる)</td>
+<td>攻撃面の縮小、操作ログの記録</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ターゲット指定は<strong>タグ</strong>で行う</td>
+<td>台数が増えても同じ運用</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Automation の<strong>ロールは最小権限</strong>にする</td>
+<td>暴走時の被害限定</td>
+</tr>
+<tr>
+<td>4</td>
+<td>大規模実行は<strong>レート制御とエラーしきい値</strong>を設定</td>
+<td>失敗が全台に広がるのを防ぐ</td>
+</tr>
+<tr>
+<td>5</td>
+<td>破壊的な操作の前に<strong>承認ステップ</strong>を入れる</td>
+<td>事故防止</td>
+</tr>
+<tr>
+<td>6</td>
+<td>実行結果と操作ログを <strong>CloudWatch Logs / S3 / CloudTrail</strong> に残す</td>
+<td>監査性</td>
+</tr>
+<tr>
+<td>7</td>
+<td>パッチは<strong>検証 → 本番</strong>の順で展開</td>
+<td>本番影響の最小化</td>
+</tr>
+<tr>
+<td>8</td>
+<td>手順を<strong>Runbook(コード)</strong>にして Git 管理</td>
+<td>属人化の排除</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="7-8-試験の落とし穴">7-8. 試験の落とし穴</h3>
+<p>Systems Manager は機能が多いため、「どの機能がどの場面向きか」を取り違える選択肢が出ます。Run Command と Automation の違い、Scan と Install の違い、管理対象に表示されない場合の確認順を、表で確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run Command で復旧手順を承認付きで自動化する</td>
+<td>複数ステップ・承認・分岐は <strong>Automation</strong></td>
+</tr>
+<tr>
+<td>Patch Manager の <code>Scan</code> でパッチが適用される</td>
+<td><code>Scan</code> は<strong>確認のみ</strong>。適用は <code>Install</code></td>
+</tr>
+<tr>
+<td>管理対象に表示されないのはパッチの問題</td>
+<td><strong>Agent / IAM ロール / ネットワーク</strong>を確認</td>
+</tr>
+<tr>
+<td>Session Manager には SSH ポートの開放が必要</td>
+<td><strong>不要</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-7">参考 URL(Step 7)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Systems Manager ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html</a></td>
+</tr>
+<tr>
+<td>Systems Manager Automation</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation.html</a></td>
+</tr>
+<tr>
+<td>Run Command</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/run-command.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/run-command.html</a></td>
+</tr>
+<tr>
+<td>Patch Manager</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager.html</a></td>
+</tr>
+<tr>
+<td>Maintenance Windows</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows.html</a></td>
+</tr>
+<tr>
+<td>State Manager</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-state.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-state.html</a></td>
+</tr>
+<tr>
+<td>Session Manager</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html</a></td>
+</tr>
+<tr>
+<td>AWS Config のリメディエーション</td>
+<td><a href="https://docs.aws.amazon.com/config/latest/developerguide/remediation.html">https://docs.aws.amazon.com/config/latest/developerguide/remediation.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="step-8-イベント駆動の自動化-skill-3-2-2">Step 8. イベント駆動の自動化(Skill 3.2.2)</h2>
+<p>この Step のゴールは、「何かが起きたら自動で処理が動く」仕組みを理解することです。イベントの振り分け役である Amazon EventBridge、処理を行う Lambda、S3 のイベント通知、そして障害調査を支援する AWS DevOps Agent を学びます。</p>
+<h3 id="8-1-イベント駆動とは">8-1. イベント駆動とは</h3>
+<p>「<strong>何かが起きたら、自動で処理を動かす</strong>」仕組みです。人が監視して手で対応する代わりに、イベントをきっかけに自動で動きます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>部品</th>
+<th>役割</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>イベントソース</strong></td>
+<td>何かが起きた</td>
+<td>EC2 の状態変化、S3 へのアップロード、アラーム発報</td>
+</tr>
+<tr>
+<td><strong>ルーター</strong></td>
+<td>イベントを振り分ける</td>
+<td><strong>Amazon EventBridge</strong></td>
+</tr>
+<tr>
+<td><strong>ターゲット</strong></td>
+<td>実際に処理する</td>
+<td>Lambda、SSM Automation、SNS、SQS、Step Functions</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    S[&quot;イベントソース EC2 S3 CloudWatch CloudTrail&quot;] --&gt; E[&quot;EventBridge ルールで振り分け&quot;]
+    E --&gt; T1[&quot;Lambda&quot;]
+    E --&gt; T2[&quot;SSM Automation&quot;]
+    E --&gt; T3[&quot;SNS 通知&quot;]
+    E --&gt; T4[&quot;SQS キュー&quot;]
+</pre>
+<h3 id="8-2-amazon-eventbridge">8-2. Amazon EventBridge</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>イベントバス</strong></td>
+<td>イベントの受け皿。<strong>デフォルトバス</strong>(AWS サービスのイベントが届く)、カスタムバス、パートナーバス</td>
+</tr>
+<tr>
+<td><strong>ルール</strong></td>
+<td><strong>イベントパターン</strong>に一致したイベント、または<strong>スケジュール</strong>をターゲットへ送る</td>
+</tr>
+<tr>
+<td><strong>ターゲット</strong></td>
+<td>1 つのルールに複数設定できる</td>
+</tr>
+<tr>
+<td><strong>入力トランスフォーマー</strong></td>
+<td>ターゲットへ渡す内容を整形・抽出</td>
+</tr>
+<tr>
+<td><strong>EventBridge Scheduler</strong></td>
+<td>1 回限り・定期の<strong>スケジュール実行</strong>に特化した機能</td>
+</tr>
+<tr>
+<td><strong>DLQ(デッドレターキュー)</strong></td>
+<td>配信に失敗したイベントの退避先(SQS)</td>
+</tr>
+<tr>
+<td><strong>リトライポリシー</strong></td>
+<td>失敗時の再試行回数と最大期間</td>
+</tr>
+</tbody>
+</table></div>
+<p>EventBridge ルールの 2 つの種類:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>契機</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>イベントパターン</strong></td>
+<td>何かが起きたとき</td>
+<td>EC2 が <code>stopped</code> になった、GuardDuty が検出した</td>
+</tr>
+<tr>
+<td><strong>スケジュール</strong></td>
+<td>時刻・間隔</td>
+<td>毎日 2 時に処理、5 分おきに処理</td>
+</tr>
+</tbody>
+</table></div>
+<p>イベントパターンの例(EC2 が停止したら):</p>
+<pre class="code"><code>{
+  &quot;source&quot;: [&quot;aws.ec2&quot;],
+  &quot;detail-type&quot;: [&quot;EC2 Instance State-change Notification&quot;],
+  &quot;detail&quot;: { &quot;state&quot;: [&quot;stopped&quot;] }
+}
+</code></pre>
+<p>AWS の操作(API 呼び出し)をきっかけにする場合は、<strong>CloudTrail</strong> が記録した管理イベントを EventBridge で受け取ります。</p>
+<h3 id="8-3-典型パターン-自動修復">8-3. 典型パターン: 自動修復</h3>
+<p>自動修復の典型は、「異常を検知 → EventBridge が受け取る → SSM Automation が直す → SNS が知らせる」という流れです。人が気づく前に復旧を始められ、同時に担当者へ通知も届きます。ただし、破壊的な操作の自動化は誤作動のリスクがあるため、通知や承認を組み合わせます。</p>
+<pre class="mermaid">
+flowchart TD
+    A[&quot;CloudWatchアラーム ALARM状態&quot;] --&gt; E[&quot;EventBridgeルール&quot;]
+    E --&gt; R[&quot;SSM Automationで再起動や復旧&quot;]
+    R --&gt; N[&quot;SNSで担当者へ通知&quot;]
+    R --&gt; V[&quot;結果を検証&quot;]
+</pre>
+<h3 id="8-4-aws-lambda-をターゲットにする">8-4. AWS Lambda をターゲットにする</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>権限</td>
+<td>EventBridge や S3 が Lambda を呼ぶには、<strong>Lambda 側のリソースベースポリシー</strong>で許可が必要(コンソールからの設定では自動付与される)</td>
+</tr>
+<tr>
+<td>実行ロール</td>
+<td>Lambda 自身が他サービスを呼ぶための <strong>IAM ロール</strong></td>
+</tr>
+<tr>
+<td>呼び出し形式</td>
+<td>EventBridge や S3 からは<strong>非同期呼び出し</strong></td>
+</tr>
+<tr>
+<td>失敗対策</td>
+<td>Lambda の非同期呼び出しは、<strong>関数エラー・ランタイムエラー</strong>を既定で最大 <strong>2 回</strong>リトライし、<strong>スロットリングやシステムエラー</strong>は既定で最大 <strong>6 時間</strong>リトライする。EventBridge のターゲット配信リトライはこれとは<strong>別の仕組み</strong>(ルール側のリトライポリシー)。失敗イベントは <strong>DLQ</strong> や <strong>Lambda Destinations</strong> で退避</td>
+</tr>
+<tr>
+<td>重複対策</td>
+<td>イベントは<strong>少なくとも 1 回</strong>届く性質があるので、処理を<strong>冪等(べきとう)</strong>にする</td>
+</tr>
+<tr>
+<td>タイムアウト</td>
+<td>最大 <strong>15 分</strong>。長い処理は Step Functions などへ</td>
+</tr>
+</tbody>
+</table></div>
+<p>「冪等」とは、同じ処理を何度実行しても結果が変わらない性質のことです。</p>
+<h3 id="8-5-s3-event-notifications">8-5. S3 Event Notifications</h3>
+<p>S3 バケットでの出来事(オブジェクトの作成・削除など)を通知する機能です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主なイベント</td>
+<td><code>s3:ObjectCreated:*</code>、<code>s3:ObjectRemoved:*</code>、<code>s3:ObjectRestore:*</code>、<code>s3:Replication:*</code> など</td>
+</tr>
+<tr>
+<td><strong>通知先</strong></td>
+<td><strong>Lambda、SNS、SQS、EventBridge</strong></td>
+</tr>
+<tr>
+<td>フィルター</td>
+<td>オブジェクトキーの<strong>プレフィックス</strong>・<strong>サフィックス</strong>で絞り込み</td>
+</tr>
+<tr>
+<td>権限</td>
+<td>通知先側に S3 からの送信を許可する<strong>リソースポリシー</strong>が必要</td>
+</tr>
+<tr>
+<td>EventBridge 連携</td>
+<td>バケットで有効化すると、<strong>EventBridge の豊富なルール・複数ターゲット</strong>を使える</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    U[&quot;画像をS3にアップロード&quot;] --&gt; S[&quot;S3 Event Notification プレフィックスとサフィックスで絞り込み&quot;]
+    S --&gt; L[&quot;Lambdaでサムネイル作成&quot;]
+    S --&gt; Q[&quot;SQSで非同期に処理&quot;]
+    S --&gt; N[&quot;SNSで通知&quot;]
+    S --&gt; E[&quot;EventBridgeで高度なルーティング&quot;]
+</pre>
+<p class="callout"><strong>無限ループに注意</strong>: 同じバケットのプレフィックスに出力する Lambda を同じプレフィックスのイベントで起動すると、<strong>自分自身を再び呼び続けます</strong>。入力と出力の<strong>プレフィックスを分ける</strong>か、別バケットにします。</p>
+<h3 id="8-6-どの方式を選ぶか">8-6. どの方式を選ぶか</h3>
+<p>イベント駆動の方式は複数あり、要件によって選び分けます。基準は「宛先の数」「条件の複雑さ」「負荷の平準化が必要か」の 3 つです。単純なら S3 通知から直接 Lambda、複雑な振り分けなら EventBridge、負荷が読めないなら SQS を挟みます。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>向いている方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 のアップロードを 1 つの Lambda で処理するだけ</td>
+<td><strong>S3 Event Notifications → Lambda</strong></td>
+</tr>
+<tr>
+<td>複数の宛先へ振り分けたい、複雑な条件で絞りたい</td>
+<td><strong>EventBridge</strong>(S3 の EventBridge 連携を有効化)</td>
+</tr>
+<tr>
+<td>負荷を平準化して確実に処理したい</td>
+<td><strong>SQS</strong> をバッファにして Lambda が取り出す</td>
+</tr>
+<tr>
+<td>定時で何かを実行したい</td>
+<td><strong>EventBridge Scheduler / スケジュールルール</strong></td>
+</tr>
+<tr>
+<td>AWS API 操作(例: セキュリティグループ変更)に反応したい</td>
+<td><strong>CloudTrail → EventBridge</strong></td>
+</tr>
+<tr>
+<td>アラーム発報で自動復旧したい</td>
+<td><strong>EventBridge → SSM Automation</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-7-aws-devops-agent-試験ガイドに明記された新しい要素">8-7. AWS DevOps Agent(試験ガイドに明記された新しい要素)</h3>
+<p>試験ガイドの 3.2.2 には <strong>AWS DevOps Agent</strong> が含まれています。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>何か</td>
+<td>障害対応と予防を支援する、<strong>自律型のエージェント</strong>(AI を活用した運用支援サービス)</td>
+</tr>
+<tr>
+<td>主な機能</td>
+<td>アラートやチケットを契機とした<strong>インシデントの自動調査</strong>、チャット形式の調査、<strong>AWS サポートケースの作成</strong></td>
+</tr>
+<tr>
+<td>仕組み</td>
+<td><strong>Agent Space</strong>(エージェントがアクセス・調査できる範囲を定める論理的な単位)を作り、リソースの関係(トポロジー)を把握して調査する</td>
+</tr>
+<tr>
+<td>連携</td>
+<td>CloudWatch アラーム、PagerDuty、ServiceNow、Slack など</td>
+</tr>
+<tr>
+<td>イベント駆動との関係</td>
+<td>アラームなどのイベントを<strong>起点に調査が自動で始まる</strong></td>
+</tr>
+</tbody>
+</table></div>
+<pre class="mermaid">
+flowchart LR
+    A[&quot;アラームや障害チケット発生&quot;] --&gt; B[&quot;DevOps Agentが自動で調査を開始&quot;]
+    B --&gt; C[&quot;ログ メトリクス 変更履歴を相関分析&quot;]
+    C --&gt; D[&quot;根本原因の分析と緩和策を提示&quot;]
+    D --&gt; E[&quot;Slackなどで運用チームへ共有&quot;]
+    E --&gt; F[&quot;担当者が内容を確認して対応を判断&quot;]
+</pre>
+<p class="callout">学習時の注意:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>注意点</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新しいサービス</td>
+<td>機能や仕様が更新されていく可能性が高い。<strong>最新の公式ドキュメントを確認</strong>すること</td>
+</tr>
+<tr>
+<td>役割の理解</td>
+<td>試験では「<strong>インシデントの調査・原因分析を自動化する</strong>」という位置づけを押さえる</td>
+</tr>
+<tr>
+<td>人の判断</td>
+<td>修復の<strong>承認判断は運用チーム</strong>が行う。承認済みの修復の<strong>実行</strong>は、昇格した IAM ロールを設定すれば AWS DevOps Agent が担える</td>
+</tr>
+</tbody>
+</table></div>
+<p class="source">出典: <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html">https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html</a><br>
+出典: <a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/incident-response-devops-agent-incident-response.html">https://docs.aws.amazon.com/devopsagent/latest/userguide/incident-response-devops-agent-incident-response.html</a></p>
+<h3 id="8-8-ベストプラクティス">8-8. ベストプラクティス</h3>
+<p>イベント駆動で注意したいのは、「失敗したイベントを失わない」「重複して届いても壊れない」「連鎖や過負荷を起こさない」の 3 点です。下の表の各項目が、そのどれを守るためのものかを意識して読んでください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ターゲットに <strong>DLQ とリトライポリシー</strong>を設定する</td>
+<td>失敗イベントの消失防止</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Lambda の処理を<strong>冪等</strong>にする</td>
+<td>重複配信への対応</td>
+</tr>
+<tr>
+<td>3</td>
+<td>イベントパターンは<strong>できるだけ具体的に</strong>絞る</td>
+<td>無駄な起動とコストを防ぐ</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Lambda の<strong>同時実行数の上限(予約済み同時実行)</strong>を検討</td>
+<td>下流への過負荷防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td>負荷が読めない場合は <strong>SQS</strong> を挟んで平準化</td>
+<td>スロットリング対策</td>
+</tr>
+<tr>
+<td>6</td>
+<td>S3 通知は入出力の<strong>プレフィックスを分離</strong></td>
+<td>無限ループ防止</td>
+</tr>
+<tr>
+<td>7</td>
+<td>自動修復には<strong>承認・通知</strong>を組み合わせる</td>
+<td>誤作動時に気づける</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ルールとターゲットも <strong>IaC(CloudFormation / CDK)</strong> で管理</td>
+<td>再現性</td>
+</tr>
+<tr>
+<td>9</td>
+<td>失敗の監視に <strong>CloudWatch メトリクス(FailedInvocations など)</strong>を使う</td>
+<td>自動化の失敗に気づく</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="8-9-試験の落とし穴">8-9. 試験の落とし穴</h3>
+<p>イベント駆動の問題では、「直接の通知先に何が指定できるか」「重複して届く前提で設計するか」「権限はどちら側に必要か」が狙われます。表の「正しい理解」を確認し、自分で例を作って説明してみましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>よくある誤り</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S3 通知の宛先に Step Functions を直接指定する</td>
+<td>直接の宛先は <strong>Lambda / SNS / SQS / EventBridge</strong></td>
+</tr>
+<tr>
+<td>イベントは必ず 1 回だけ届く</td>
+<td><strong>少なくとも 1 回</strong>。重複しうるので冪等にする</td>
+</tr>
+<tr>
+<td>EventBridge から Lambda を呼ぶのに権限は不要</td>
+<td>Lambda の<strong>リソースベースポリシー</strong>が必要</td>
+</tr>
+<tr>
+<td>S3 Event Notifications はキーの部分一致で絞れる</td>
+<td><strong>プレフィックス / サフィックス</strong>での絞り込み</td>
+</tr>
+<tr>
+<td>DevOps Agent が人の確認なしに本番を自動変更する</td>
+<td>調査と分析の支援が中心。<strong>判断は人</strong>が行う前提</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="参考-url-step-8">参考 URL(Step 8)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon EventBridge ユーザーガイド</td>
+<td><a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html">https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html</a></td>
+</tr>
+<tr>
+<td>EventBridge のイベントパターン</td>
+<td><a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html">https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-event-patterns.html</a></td>
+</tr>
+<tr>
+<td>EventBridge Scheduler</td>
+<td><a href="https://docs.aws.amazon.com/scheduler/latest/UserGuide/what-is-scheduler.html">https://docs.aws.amazon.com/scheduler/latest/UserGuide/what-is-scheduler.html</a></td>
+</tr>
+<tr>
+<td>S3 Event Notifications</td>
+<td><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html</a></td>
+</tr>
+<tr>
+<td>Lambda の非同期呼び出し</td>
+<td><a href="https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html">https://docs.aws.amazon.com/lambda/latest/dg/invocation-async.html</a></td>
+</tr>
+<tr>
+<td>AWS DevOps Agent とは</td>
+<td><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html">https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html</a></td>
+</tr>
+<tr>
+<td>DevOps Agent のインシデント対応</td>
+<td><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/incident-response-devops-agent-incident-response.html">https://docs.aws.amazon.com/devopsagent/latest/userguide/incident-response-devops-agent-incident-response.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="練習問題-12-問">練習問題(12 問)</h2>
+<p>ここまでの内容を確認する練習問題です。まず解説を見ずに自分で解き、そのあとで解答と解説を確認してください。間違えた問題は、解説に書かれた根拠を手がかりに、該当する Step の表へ戻って理解し直しましょう。</p>
+<p class="q"><strong>Q1.</strong> ある会社は、毎月最新パッチを適用した AMI を 3 つのリージョンと 2 つのアカウントへ自動配布したい。運用負荷を最小にする方法は?</p>
+<ul>
+<li>A. 手動で EC2 から AMI を作成し、各リージョンへコピーする</li>
+<li>B. EC2 Image Builder のパイプラインをスケジュール実行し、配布設定でリージョンとアカウントを指定する</li>
+<li>C. Lambda で毎日 <code>CreateImage</code> を呼ぶ</li>
+<li>D. Run Command で各インスタンスにパッチを当てる</li>
+</ul>
+<p class="q"><strong>Q2.</strong> CloudFormation で新規作成したスタックが <code>ROLLBACK_COMPLETE</code> になった。原因を修正した後の正しい対応は?</p>
+<ul>
+<li>A. テンプレートを更新して <code>UpdateStack</code> を実行する</li>
+<li>B. スタックを削除して作成し直す</li>
+<li>C. <code>ContinueUpdateRollback</code> を実行する</li>
+<li>D. ドリフト検出を実行する</li>
+</ul>
+<p class="q"><strong>Q3.</strong> スタック更新の巻き戻しが <code>UPDATE_ROLLBACK_FAILED</code> になった。原因は、巻き戻し先の DB が CloudFormation 外で削除されていたため。適切な対応は?</p>
+<ul>
+<li>A. スタックをそのまま削除する</li>
+<li>B. 問題を解消(または問題のリソースをスキップ)して <code>ContinueUpdateRollback</code> を実行する</li>
+<li>C. 新しいリージョンで同じスタックを作成する</li>
+<li>D. 終了保護を有効にする</li>
+</ul>
+<p class="q"><strong>Q4.</strong> Auto Scaling が新しいインスタンスを起動できず、<code>InsufficientFreeAddressesInSubnet</code> が出ている。最も適切な対処は?</p>
+<ul>
+<li>A. 既存サブネットの CIDR を拡張する</li>
+<li>B. より大きな CIDR の新しいサブネットを作成して使う(またはセカンダリ CIDR を追加)</li>
+<li>C. EC2 のインスタンスタイプを変更する</li>
+<li>D. サブネットのルートテーブルを変更する</li>
+</ul>
+<p class="q"><strong>Q5.</strong> 組織の全メンバーアカウントに、新規アカウントも含めて自動で同じ IAM ロールを展開したい。最適な方法は?</p>
+<ul>
+<li>A. 各アカウントで手動でスタックを作成する</li>
+<li>B. サービスマネージド権限の StackSets で自動デプロイを有効にする</li>
+<li>C. AWS RAM で IAM ロールを共有する</li>
+<li>D. CDK の <code>cdk deploy</code> を各アカウントで実行する</li>
+</ul>
+<p class="q"><strong>Q6.</strong> 中央のネットワークアカウントが所有する VPC のサブネットを、同じ組織内の複数のアカウントで使わせたい。使うサービスは?</p>
+<ul>
+<li>A. CloudFormation StackSets</li>
+<li>B. AWS RAM</li>
+<li>C. VPC ピアリング</li>
+<li>D. AWS Config</li>
+</ul>
+<p class="q"><strong>Q7.</strong> ダウンタイムなしで、問題発生時に<strong>最も速く</strong>元の状態へ戻せるデプロイ方式は?</p>
+<ul>
+<li>A. All at once</li>
+<li>B. Rolling</li>
+<li>C. Blue/Green</li>
+<li>D. Rolling with additional batch</li>
+</ul>
+<p class="q"><strong>Q8.</strong> Lambda 関数の新バージョンを、最初に 10% のトラフィックだけに流し、アラームが鳴ったら自動で戻したい。最適な手段は?</p>
+<ul>
+<li>A. Lambda のコードを直接上書きする</li>
+<li>B. CodeDeploy のカナリアデプロイ設定(エイリアスの重み付け)と CloudWatch アラームによる自動ロールバック</li>
+<li>C. Auto Scaling のインスタンスリフレッシュ</li>
+<li>D. Route 53 のフェイルオーバールーティング</li>
+</ul>
+<p class="q"><strong>Q9.</strong> チームで Terraform を使っている。State の管理として最も適切なのは?</p>
+<ul>
+<li>A. 各自のローカル PC に保存する</li>
+<li>B. Git リポジトリにコミットする</li>
+<li>C. 暗号化・バージョニングを有効にした S3 バケットに保存し、State ロックを使う</li>
+<li>D. 保存せず毎回 <code>apply</code> する</li>
+</ul>
+<p class="q"><strong>Q10.</strong> 数百台の EC2 に、毎週日曜の深夜に OS パッチを適用し、適用状況も確認したい。適切な組み合わせは?(2 つ選択)</p>
+<ul>
+<li>A. Patch Manager のパッチベースライン</li>
+<li>B. Maintenance Windows</li>
+<li>C. 各インスタンスへ SSH でログインして手動実行</li>
+<li>D. CloudFormation の <code>DeletionPolicy</code></li>
+<li>E. ECR のライフサイクルポリシー</li>
+</ul>
+<p class="q"><strong>Q11.</strong> S3 に画像がアップロードされたら Lambda でサムネイルを作成し、同じバケットに保存する。しかし Lambda が無限に呼ばれてしまう。解決策は?</p>
+<ul>
+<li>A. Lambda のタイムアウトを延ばす</li>
+<li>B. 入力用と出力用でプレフィックス(または別バケット)を分け、通知のフィルターを入力側のみに限定する</li>
+<li>C. S3 のバージョニングを無効にする</li>
+<li>D. Lambda のメモリを増やす</li>
+</ul>
+<p class="q"><strong>Q12.</strong> EC2 インスタンスのステータスチェックのアラームが ALARM になったら、自動でインスタンスを再起動し、担当者へ通知したい。最適な構成は?</p>
+<ul>
+<li>A. CloudWatch アラーム → EventBridge → SSM Automation(再起動)と SNS(通知)</li>
+<li>B. 担当者が毎回コンソールから再起動する</li>
+<li>C. CloudFormation のドリフト検出を毎分実行</li>
+<li>D. S3 Event Notifications を使う</li>
+</ul>
+<h3 id="解答と解説">解答と解説</h3>
+<p>解答だけでなく、その根拠を確認することが大切です。間違えた問題は、解説に出てくるキーワードを手がかりに、該当する Step の表へ戻って確認しましょう。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>問</th>
+<th>解答</th>
+<th>解説</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td><strong>B</strong></td>
+<td>Image Builder のスケジュールと配布設定で、ビルド・テスト・配布を自動化できる</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td><strong>B</strong></td>
+<td><code>ROLLBACK_COMPLETE</code> は更新不可。削除して再作成する。C は <code>UPDATE_ROLLBACK_FAILED</code> 用</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td><strong>B</strong></td>
+<td><code>UPDATE_ROLLBACK_FAILED</code> は原因を直して <code>ContinueUpdateRollback</code>。<code>ResourcesToSkip</code> も利用可</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td><strong>B</strong></td>
+<td>サブネットの CIDR は変更不可。新サブネットまたはセカンダリ CIDR で拡張する</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td><strong>B</strong></td>
+<td>サービスマネージド権限 + 自動デプロイで、OU に参加した新規アカウントにも展開される。RAM は IAM ロールの共有には使わない</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td><strong>B</strong></td>
+<td>RAM でサブネットを共有。参加者は共有サブネット内にリソースを作成できる</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td><strong>C</strong></td>
+<td>Blue/Green は旧環境が残っているため、トラフィックを戻すだけで済む</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td><strong>B</strong></td>
+<td>Lambda は CodeDeploy のエイリアス重み付けで Canary / Linear が可能。アラームで自動ロールバック</td>
+</tr>
+<tr>
+<td>Q9</td>
+<td><strong>C</strong></td>
+<td>State は共有・暗号化・バージョニング・ロックが基本。Git へのコミットは機微な値の漏えいリスク</td>
+</tr>
+<tr>
+<td>Q10</td>
+<td><strong>A, B</strong></td>
+<td>パッチベースライン + Maintenance Windows の組み合わせが定石</td>
+</tr>
+<tr>
+<td>Q11</td>
+<td><strong>B</strong></td>
+<td>出力が入力と同じイベントを再び起こす「再帰」を避けるため、プレフィックスやバケットを分ける</td>
+</tr>
+<tr>
+<td>Q12</td>
+<td><strong>A</strong></td>
+<td>アラーム状態変化を EventBridge で受け、SSM Automation と SNS をターゲットにする</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="試験の落とし穴-総まとめ">試験の落とし穴 総まとめ</h2>
+<p>各 Step の「試験の落とし穴」を 1 つにまとめた表です。「よくある誤り」の列を隠して「正しい理解」を答えられるか、試験の直前に確認するのに使ってください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>落とし穴</th>
+<th>正しい理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>AMI はそのまま他リージョンで使える</td>
+<td><strong>リージョンごと</strong>。コピーが必要</td>
+</tr>
+<tr>
+<td>2</td>
+<td>AMI 登録解除でスナップショットも消える</td>
+<td><strong>消えない</strong>。別途削除</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Image Builder のレシピを編集する</td>
+<td>不変。<strong>新バージョン</strong>を作る</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>ROLLBACK_COMPLETE</code> のスタックを更新できる</td>
+<td><strong>削除して再作成</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>UPDATE_ROLLBACK_FAILED</code> は削除するしかない</td>
+<td><strong><code>ContinueUpdateRollback</code></strong></td>
+</tr>
+<tr>
+<td>6</td>
+<td>ドリフト検出で自動修復される</td>
+<td><strong>検出のみ</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>CDK は CloudFormation と無関係</td>
+<td><strong>CloudFormation に変換してデプロイ</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>サブネットの CIDR は後から拡張できる</td>
+<td><strong>不可</strong>。新サブネット / セカンダリ CIDR</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>/24</code> は 256 個使える</td>
+<td><strong>251 個</strong>(5 個予約)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>StackSets と RAM は同じ</td>
+<td>StackSets は<strong>各アカウントに作成</strong>、RAM は<strong>1 つを共有</strong></td>
+</tr>
+<tr>
+<td>11</td>
+<td>RAM の参加者がサブネットを変更できる</td>
+<td><strong>できない</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>Rolling は即座にロールバックできる</td>
+<td><strong>遅い</strong>。Blue/Green が最速</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Lambda にインプレース更新がある</td>
+<td><strong>エイリアスの重み付け</strong>で移行</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Terraform の State は AWS が管理する</td>
+<td><strong>利用者が管理</strong>(S3 + ロック)</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Patch Manager の Scan でパッチが入る</td>
+<td><strong>Scan は確認のみ</strong>。適用は Install</td>
+</tr>
+<tr>
+<td>16</td>
+<td>複数ステップで承認付きの復旧は Run Command</td>
+<td><strong>Automation</strong></td>
+</tr>
+<tr>
+<td>17</td>
+<td>イベントは必ず 1 回だけ届く</td>
+<td><strong>少なくとも 1 回</strong>。冪等にする</td>
+</tr>
+<tr>
+<td>18</td>
+<td>S3 から Lambda へ権限設定は不要</td>
+<td><strong>リソースベースポリシー</strong>が必要</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="暗記用チートシート">暗記用チートシート</h2>
+<p>試験直前の確認用です。詳しい説明は各 Step にあるので、ここは「目的から答えを引く」「数字を思い出す」「方式を選ぶ」ための要点だけをまとめています。意味が思い出せない項目があれば、該当する Step へ戻ってください。</p>
+<h3 id="サービス早見表">サービス早見表</h3>
+<p>「やりたいこと」から答えのサービスを引く表です。左の列を隠して、右の列から目的を説明できるかを試すのも有効です。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMI / コンテナイメージを自動で作る</td>
+<td><strong>EC2 Image Builder</strong></td>
+</tr>
+<tr>
+<td>コンテナイメージの保管・スキャン</td>
+<td><strong>Amazon ECR</strong></td>
+</tr>
+<tr>
+<td>AWS リソースをコードで構築</td>
+<td><strong>CloudFormation / CDK</strong></td>
+</tr>
+<tr>
+<td>更新前に差分を確認</td>
+<td><strong>変更セット</strong></td>
+</tr>
+<tr>
+<td>手動変更の検出</td>
+<td><strong>ドリフト検出</strong></td>
+</tr>
+<tr>
+<td>データ系リソースの削除保護</td>
+<td><strong>DeletionPolicy / UpdateReplacePolicy</strong></td>
+</tr>
+<tr>
+<td>複数アカウント・リージョンへ一括展開</td>
+<td><strong>StackSets</strong></td>
+</tr>
+<tr>
+<td>既存リソースを他アカウントと共有</td>
+<td><strong>AWS RAM</strong></td>
+</tr>
+<tr>
+<td>段階的デプロイ(EC2 / Lambda / ECS)</td>
+<td><strong>CodeDeploy</strong></td>
+</tr>
+<tr>
+<td>ASG のインスタンス入れ替え</td>
+<td><strong>インスタンスリフレッシュ</strong></td>
+</tr>
+<tr>
+<td>AWS 外の IaC ツール</td>
+<td><strong>Terraform(State は S3 + ロック)</strong></td>
+</tr>
+<tr>
+<td>一括コマンド実行</td>
+<td><strong>Run Command</strong></td>
+</tr>
+<tr>
+<td>承認付きの手順自動化</td>
+<td><strong>Automation</strong></td>
+</tr>
+<tr>
+<td>パッチ適用の自動化</td>
+<td><strong>Patch Manager + Maintenance Windows</strong></td>
+</tr>
+<tr>
+<td>非準拠の自動修復</td>
+<td><strong>AWS Config + SSM Automation</strong></td>
+</tr>
+<tr>
+<td>イベントの振り分け</td>
+<td><strong>EventBridge</strong></td>
+</tr>
+<tr>
+<td>S3 の出来事を通知</td>
+<td><strong>S3 Event Notifications</strong></td>
+</tr>
+<tr>
+<td>インシデントの自動調査</td>
+<td><strong>AWS DevOps Agent</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="数字で覚えるポイント">数字で覚えるポイント</h3>
+<p>試験でそのまま問われやすい数字です。サブネットの予約 IP が 5 個であることから、/24 で使える数が 251 個になる、のように、意味とセットで覚えてください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain 3 の比率</td>
+<td>22%</td>
+</tr>
+<tr>
+<td>合格点</td>
+<td>720 / 1,000</td>
+</tr>
+<tr>
+<td>サブネットで予約される IP</td>
+<td>5 個</td>
+</tr>
+<tr>
+<td>サブネットの CIDR 範囲</td>
+<td>/28 〜 /16</td>
+</tr>
+<tr>
+<td>Image Builder のレシピ内コンポーネント(既定)</td>
+<td>最大 20 個</td>
+</tr>
+<tr>
+<td>Lambda の最大実行時間</td>
+<td>15 分</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="デプロイ方式の選び方-一言">デプロイ方式の選び方(一言)</h3>
+<p>状況から方式を選ぶための一言表です。詳しい比較は Step 5 の表と図で確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>状況</th>
+<th>選択</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>開発環境で止まってもよい</td>
+<td>All at once</td>
+</tr>
+<tr>
+<td>コストを増やさず順次更新</td>
+<td>Rolling</td>
+</tr>
+<tr>
+<td>容量を落とさず更新</td>
+<td>Rolling with additional batch</td>
+</tr>
+<tr>
+<td>新旧を混在させず確実に</td>
+<td>Immutable</td>
+</tr>
+<tr>
+<td>即時に戻せる必要がある</td>
+<td><strong>Blue/Green</strong></td>
+</tr>
+<tr>
+<td>少量で検証してから拡大</td>
+<td><strong>Canary / Linear</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="学習の進め方-ステップバイステップ">学習の進め方(ステップバイステップ)</h2>
+<p>読むだけでなく、手を動かすと理解が定着します。下の表は、読む順番と、各 Step で実際に試すとよいことの目安です。時間は初学者が丁寧に取り組む場合の目安なので、自分のペースで調整してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>順番</th>
+<th>やること</th>
+<th>目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Step 0 で全体像を把握</td>
+<td>15 分</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Step 1-2 を読み、Image Builder パイプラインと簡単な CloudFormation スタックを実際に作る</td>
+<td>2-3 時間</td>
+</tr>
+<tr>
+<td>3</td>
+<td>わざと失敗するテンプレートを作り、Step 3 のエラー調査を体験する</td>
+<td>1-2 時間</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Step 4-5 を読み、StackSets と CodeDeploy(Lambda のカナリア)を試す</td>
+<td>2-3 時間</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Step 6 で Terraform の基本操作と Git の PR フローを確認</td>
+<td>1-2 時間</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Step 7-8 で SSM Automation と EventBridge + Lambda の自動化を作る</td>
+<td>2-3 時間</td>
+</tr>
+<tr>
+<td>7</td>
+<td>練習問題を解き、間違えた箇所の落とし穴表を復習</td>
+<td>1-2 時間</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="参考-url-一覧-総括">参考 URL 一覧(総括)</h2>
+<p>本文の根拠として使った公式ドキュメントへのリンクを、種類別にまとめました。AWS のサービス仕様は更新されるため、受験前に最新の内容を確認してください。</p>
+<h3 id="公式試験ガイド">公式試験ガイド</h3>
+<p>最優先の一次情報は、AWS が公開している試験ガイドです。出題範囲が改訂される可能性があるため、受験前にもう一度確認してください。</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>内容</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOA-C03 試験ガイド</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html</a></td>
+</tr>
+<tr>
+<td>Content Domain 3</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain3.html">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain3.html</a></td>
+</tr>
+<tr>
+<td>試験で扱われるサービス(対象内)</td>
+<td><a href="https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/soa-03-in-scope-services.html">https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/soa-03-in-scope-services.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="サービス別ドキュメント">サービス別ドキュメント</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 Image Builder</td>
+<td><a href="https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html">https://docs.aws.amazon.com/imagebuilder/latest/userguide/what-is-image-builder.html</a></td>
+</tr>
+<tr>
+<td>Amazon ECR</td>
+<td><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html">https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html</a></td>
+</tr>
+<tr>
+<td>CloudFormation</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html</a></td>
+</tr>
+<tr>
+<td>AWS CDK</td>
+<td><a href="https://docs.aws.amazon.com/cdk/v2/guide/home.html">https://docs.aws.amazon.com/cdk/v2/guide/home.html</a></td>
+</tr>
+<tr>
+<td>StackSets</td>
+<td><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html">https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html</a></td>
+</tr>
+<tr>
+<td>AWS RAM</td>
+<td><a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">https://docs.aws.amazon.com/ram/latest/userguide/what-is.html</a></td>
+</tr>
+<tr>
+<td>CodeDeploy</td>
+<td><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html">https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html</a></td>
+</tr>
+<tr>
+<td>Systems Manager</td>
+<td><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html</a></td>
+</tr>
+<tr>
+<td>EventBridge</td>
+<td><a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html">https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html</a></td>
+</tr>
+<tr>
+<td>S3 Event Notifications</td>
+<td><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventNotifications.html</a></td>
+</tr>
+<tr>
+<td>AWS DevOps Agent</td>
+<td><a href="https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html">https://docs.aws.amazon.com/devopsagent/latest/userguide/what-is.html</a></td>
+</tr>
+<tr>
+<td>AWS Well-Architected Framework(Operational Excellence)</td>
+<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html">https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html</a></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote class="lead">
+<p>注記: AWS のサービス仕様は更新されます。特に <strong>AWS DevOps Agent</strong> や Terraform の State ロック方式など、変化の速い項目は、受験前に最新の公式ドキュメントで確認してください。</p>
+</blockquote>
+        </main>
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js"
+            integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            (function () {
+                'use strict';
+
+                function healOverflowingLabels() {
+                    document.querySelectorAll('pre.mermaid svg').forEach(function (svg) {
+                        svg.querySelectorAll('.node').forEach(function (node) {
+                            var rect = node.querySelector('rect.basic, rect');
+                            var fo = node.querySelector('foreignObject');
+                            if (!rect || !fo) return;
+                            var div = fo.querySelector('div');
+                            if (!div) return;
+                            var neededW = div.scrollWidth;
+                            var neededH = div.scrollHeight;
+                            var curW = parseFloat(fo.getAttribute('width')) || 0;
+                            var curH = parseFloat(fo.getAttribute('height')) || 0;
+                            if (neededW > curW - 2 || neededH > curH - 2) {
+                                var buffer = 6;
+                                var newW = Math.max(curW, neededW + buffer);
+                                var newH = Math.max(curH, neededH + buffer);
+                                var x = parseFloat(fo.getAttribute('x')) || 0;
+                                var y = parseFloat(fo.getAttribute('y')) || 0;
+                                var dx = (newW - curW) / 2;
+                                var dy = (newH - curH) / 2;
+                                fo.setAttribute('width', newW);
+                                fo.setAttribute('height', newH);
+                                fo.setAttribute('x', x - dx);
+                                fo.setAttribute('y', y - dy);
+                                var rx = parseFloat(rect.getAttribute('x'));
+                                var ry = parseFloat(rect.getAttribute('y'));
+                                var rw = parseFloat(rect.getAttribute('width'));
+                                var rh = parseFloat(rect.getAttribute('height'));
+                                if (!isNaN(rx) && !isNaN(rw)) {
+                                    rect.setAttribute('x', rx - dx);
+                                    rect.setAttribute('width', rw + newW - curW);
+                                }
+                                if (!isNaN(ry) && !isNaN(rh)) {
+                                    rect.setAttribute('y', ry - dy);
+                                    rect.setAttribute('height', rh + newH - curH);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                function initMermaid() {
+                    if (typeof mermaid === 'undefined') {
+                        console.warn('mermaid not loaded');
+                        return;
+                    }
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'base',
+                        securityLevel: 'loose',
+                        fontFamily: getComputedStyle(document.body).fontFamily,
+                        themeVariables: {
+                            fontSize: '16px',
+                            background: '#ffffff',
+                            primaryColor: '#eceefb',
+                            primaryTextColor: '#1f2433',
+                            primaryBorderColor: '#3b4cca',
+                            lineColor: '#5b6785',
+                            secondaryColor: '#fdf3e0',
+                            tertiaryColor: '#f4f1e8',
+                            edgeLabelBackground: '#ffffff',
+                            clusterBkg: '#faf8f3',
+                            clusterBorder: '#b9c0ee',
+                            nodeTextColor: '#1f2433',
+                        },
+                        flowchart: {
+                            useMaxWidth: false,
+                            htmlLabels: true,
+                            nodeSpacing: 60,
+                            rankSpacing: 55,
+                            curve: 'basis',
+                        },
+                    });
+                    var load = ['700', '400'].map(function (w) {
+                        try {
+                            return document.fonts.load(w + ' 16px "Noto Sans JP"', '設計とアーキテクチャ0123ABC');
+                        } catch (e) {
+                            return Promise.resolve();
+                        }
+                    });
+                    Promise.all(load)
+                        .then(function () {
+                            return document.fonts ? document.fonts.ready : Promise.resolve();
+                        })
+                        .catch(function () {})
+                        .then(function () {
+                            mermaid
+                                .run({ querySelector: 'pre.mermaid' })
+                                .then(function () {
+                                    healOverflowingLabels();
+                                    setTimeout(healOverflowingLabels, 600);
+                                })
+                                .catch(function (err) {
+                                    console.error('mermaid render error', err);
+                                });
+                        });
+                }
+                try {
+                    initMermaid();
+                } catch (e) {
+                    console.error('mermaid init failed', e);
+                }
+
+                // Sidebar toggle (mobile)
+                var sidebar = document.getElementById('sidebar');
+                var toggle = document.getElementById('sidebarToggle');
+                function sync() {
+                    toggle.setAttribute('aria-expanded', sidebar.classList.contains('open') ? 'true' : 'false');
+                }
+                toggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('open');
+                    sync();
+                });
+                document.querySelectorAll('#sidebarNav a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        sidebar.classList.remove('open');
+                        sync();
+                    });
+                });
+
+                // Scroll-spy
+                var navLinks = Array.from(document.querySelectorAll('#sidebarNav a'));
+                var linkMap = new Map();
+                navLinks.forEach(function (a) {
+                    linkMap.set(decodeURIComponent(a.getAttribute('href').slice(1)), a);
+                });
+                var observer = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (entry) {
+                            var link = linkMap.get(entry.target.id);
+                            if (link && entry.isIntersecting) {
+                                navLinks.forEach(function (a) {
+                                    a.classList.remove('active');
+                                });
+                                link.classList.add('active');
+                                var sb = document.getElementById('sidebar');
+                                var top = link.offsetTop;
+                                if (top < sb.scrollTop + 60 || top > sb.scrollTop + sb.clientHeight - 60) {
+                                    sb.scrollTo({ top: top - sb.clientHeight / 2, behavior: 'auto' });
+                                }
+                            }
+                        });
+                    },
+                    { rootMargin: '-15% 0px -75% 0px', threshold: 0 },
+                );
+                Array.from(linkMap.keys())
+                    .map(function (id) {
+                        return document.getElementById(id);
+                    })
+                    .filter(Boolean)
+                    .forEach(function (el) {
+                        observer.observe(el);
+                    });
+            })();
+        </script>
+    </body>
+</html>
