@@ -756,8 +756,8 @@ export const CODE_BLOCKS: CodeBlockData[] = [
         "firstLineRest": "fields @timestamp, @message",
         "remainingLines": [
             "| filter @message like /ERROR/",
-            "| stats count() as errorCount by bin(5m)",
-            "| sort @timestamp desc"
+            "| stats count() as errorCount by bin(5m) as timeWindow",
+            "| sort timeWindow desc"
         ]
     },
     {

@@ -4683,7 +4683,7 @@
     },
     {
       "kind": "code",
-      "text": "plaintextfields @timestamp, @message\n| filter @message like /ERROR/\n| stats count() as errorCount by bin(5m)\n| sort @timestamp desc"
+      "text": "plaintextfields @timestamp, @message\n| filter @message like /ERROR/\n| stats count() as errorCount by bin(5m) as timeWindow\n| sort timeWindow desc"
     },
     {
       "kind": "paragraph",
