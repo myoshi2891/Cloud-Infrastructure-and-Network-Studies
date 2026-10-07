@@ -73,6 +73,11 @@ describe('DVA Domain 1 全量移行', () => {
             expect(block.querySelector('.hljs-comment,.hljs-keyword,.hljs-string,.hljs-attr')).not.toBeNull();
         });
     });
+    it('YAMLの全キーに構文色を付け、Python関数名の色も保持',()=>{
+        const root=mount();
+        expect(root.querySelector('[data-language="yaml"] .hljs-attr')?.textContent).toBe('AWSTemplateFormatVersion');
+        expect(root.querySelector('[data-language="python"] .hljs-title')?.textContent).toBe('handler');
+    });
     it('38目次ターゲットへhash・focus・現在地を一致させる', () => {
         const root = mount();
         expect(NAV_ITEMS.map(item => item.id)).toEqual(design.structure.anchors);
@@ -133,6 +138,11 @@ const mapValue = (value:string,prop:string) => {
     return scaled.replace(/var\((--[\w-]+)\)/g,(_,key:string) => key==='--sidebar-w' ? '288px' : `var(${key.startsWith('--font-') ? `--font-dva-development-${key.slice(7)}` : key==='--shadow' ? '--shadow-dva-development' : `--color-dva-development-${key.slice(2)}`})`).replace(/#[\da-f]{3,6}\b/gi,hex => `var(--color-dva-development-${hex.slice(1).toLowerCase()})`);
 };
 describe('DVA Domain 1 原本の全CSSとリスト記号',()=>{
+    it('14pxコードのコメントと属性色はコントラストを確保',()=>{
+        const rules=snapshotCssRules(readFileSync(`${route}/page.css`,'utf8'));
+        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-comment')?.declarations.find(d=>d.prop==='color')?.value).toBe('#94a3b8');
+        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-attr')?.declarations.find(d=>d.prop==='color')?.value).toBe('#e88a91');
+    });
     it('全CSSセレクタ・メディア条件・宣言・importantを保持',()=>{
         const actual=snapshotCssRules(readFileSync(`${route}/page.css`,'utf8'));
         for(const rule of design.rules.filter(rule=>rule.selector!==':root')) {
