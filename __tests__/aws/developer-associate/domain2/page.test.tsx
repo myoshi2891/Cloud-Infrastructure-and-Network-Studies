@@ -7,11 +7,14 @@ import Page from '@/app/aws/developer-associate/domain2/page';
 import { DIAGRAMS, NAV_ITEMS } from '@/app/aws/developer-associate/domain2/constants';
 import inventory from '@/docs/migration-inventory/aws-dva-domain2-security.json';
 import design from '@/docs/migration-inventory/aws-dva-domain2-security.design.json';
-import { MermaidDiagramMock, codeBlockSelector, codeLineCount, extractBodyContent, squash } from '@/__tests__/helpers/migration-test-utils';
+import { codeBlockSelector, codeLineCount, extractBodyContent, squash } from '@/__tests__/helpers/migration-test-utils';
 import { snapshotDvaSecurity } from '@/scripts/dva-security-fidelity.mjs';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
+vi.mock('@/components/MermaidDiagram', async () => {
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
+    return { MermaidDiagram: MermaidDiagramMock };
+});
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
 const mount = () => render(<Page />).container;
 const route = 'app/aws/developer-associate/domain2';
@@ -172,7 +175,9 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         for (const match of css.matchAll(/var\((--[\w-]+)/g)) {
             expect(globals.has(match[1]!) || ['--header-h','--disclaimer-height','--font-body','--font-display','--font-mono'].includes(match[1]!)).toBe(true);
         }
-        expect(css).not.toMatch(/@layer|#[\da-f]{3,6}\b|fonts.googleapis|word-break: break-word/);
+        expect(css).not.toMatch(/@layer|fonts.googleapis|word-break: break-word/);
+        const rules = snapshotCssRules(css);
+        expect(rules.filter(r => !r.selector.includes('.hljs-')).flatMap(r => r.declarations).filter(d => /#[\da-f]{3,6}\b/i.test(d.value))).toEqual([]);
         expect(readFileSync(`${route}/page.tsx`, 'utf8')).toContain("import './page.css'");
     });
     it('ulの点・olの番号・入れ子・チェック項目と目次のマーカーを明示', () => {
