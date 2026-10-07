@@ -14,6 +14,14 @@ import { Step6 } from './sections/Step6';
 import { Step7 } from './sections/Step7';
 import { Step8 } from './sections/Step8';
 import { Step9 } from './sections/Step9';
+import { Task2Heading } from './sections/Task2Heading';
+import { Step10 } from './sections/Step10';
+import { Step11 } from './sections/Step11';
+import { Step12 } from './sections/Step12';
+import { Step13 } from './sections/Step13';
+import { Step14 } from './sections/Step14';
+import { Step15 } from './sections/Step15';
+import { Step16 } from './sections/Step16';
 /** 全本文とチェックリストの達成件数を保持する学習ガイド。 */
 export function SecurityGuide() {
     const [checked, setChecked] = useState<Set<number>>(() => new Set());
@@ -45,8 +53,17 @@ export function SecurityGuide() {
             <Step7 />
             <Step8 />
             <Step9 />
+            <Task2Heading />
+            <Step10 />
+            <Step11 />
+            <Step12 />
+            <Step13 />
+            <Step14 />
+            <Step15 />
+            <Step16 />
         </main>
     </ChecklistContext></div>;
 }
+
 
 
