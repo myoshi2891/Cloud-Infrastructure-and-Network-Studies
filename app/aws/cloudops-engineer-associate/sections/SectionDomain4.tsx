@@ -230,7 +230,10 @@ export default function SectionDomain4() {
 </tr>
 <tr>
 <td><strong>IAM Access Analyzer</strong></td>
-<td>・<strong>外部アクセスの検出</strong>(S3、IAM ロール、KMS、Lambda などが外部に公開されていないか)<br />・<strong>未使用アクセスの検出</strong>(未使用のロール、キー、権限)<br />・<strong>ポリシーの検証</strong>(文法・ベストプラクティス)<br />・<strong>CloudTrail に基づくポリシー生成</strong></td>
+<td>・<strong>外部アクセスの検出</strong>(S3、IAM ロール、KMS、Lambda などが外部に公開されていないか)<br />{" "}
+・<strong>未使用アクセスの検出</strong>(未使用のロール、キー、権限)<br />{" "}
+・<strong>ポリシーの検証</strong>(文法・ベストプラクティス)<br />{" "}
+・<strong>CloudTrail に基づくポリシー生成</strong></td>
 </tr>
 <tr>
 <td><strong>認証情報レポート</strong></td>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Fragment } from 'react';
 import { NAV_ITEMS } from './constants';
 
 interface NavBarProps {
@@ -89,37 +89,37 @@ export default function NavBar({ isOpen, onToggle }: NavBarProps) {
                     <div className="kicker">AWS CloudOps Engineer</div>
                     <div className="sb-title">SOA-C03 学習ガイド</div>
                 </div>
+                {' '}
                 <nav id="sidebarNav" aria-label="ガイド目次">
-                    <ul>
-                        {NAV_ITEMS.map((item) => {
-                            const id = item.href.slice(1);
-                            const isActive = activeId === id;
-                            const levelClass =
-                                item.level === 1
-                                    ? 'lvl1'
-                                    : item.level === 2
-                                      ? 'lvl2'
-                                      : 'lvl3';
-                            return (
-                                <li key={item.href}>
-                                    <a
-                                        href={item.href}
-                                        className={`${levelClass} ${isActive ? 'active' : ''}`}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleLinkClick(item.href);
-                                            const el = document.getElementById(id);
-                                            if (el) {
-                                                el.scrollIntoView({ behavior: 'smooth' });
-                                            }
-                                        }}
-                                    >
-                                        {item.label}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                    {NAV_ITEMS.map((item) => {
+                        const id = item.href.slice(1);
+                        const isActive = activeId === id;
+                        const levelClass =
+                            item.level === 1
+                                ? 'lvl1'
+                                : item.level === 2
+                                  ? 'lvl2'
+                                  : 'lvl3';
+                        return (
+                            <Fragment key={item.href}>
+                                <a
+                                    href={item.href}
+                                    className={`${levelClass} ${isActive ? 'active' : ''}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleLinkClick(item.href);
+                                        const el = document.getElementById(id);
+                                        if (el) {
+                                            el.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }}
+                                >
+                                    {item.label}
+                                </a>
+                                {' '}
+                            </Fragment>
+                        );
+                    })}
                 </nav>
             </aside>
         </>

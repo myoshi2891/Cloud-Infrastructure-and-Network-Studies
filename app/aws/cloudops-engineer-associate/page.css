@@ -137,6 +137,7 @@
     margin-left: 280px;
     width: calc(100% - 280px);
     max-width: none;
+    box-sizing: border-box;
 }
 
 .aws-cloudops-page .hero {
@@ -458,6 +459,8 @@
     .aws-cloudops-page .main {
         margin-left: 0;
         width: 100%;
+        max-width: none;
+        box-sizing: border-box;
     }
 
     .aws-cloudops-page .hero {

@@ -5,9 +5,9 @@ import { nodeToJsx } from './convert-html-section-to-jsx.mjs';
 
 const doc = new JSDOM(fs.readFileSync('Aws-soa-c03-guide.html', 'utf8')).window.document;
 
-function generateSection(startId, stopId, outPath, componentName, imports, context = { codeBlockIndex: 0 }) {
+function generateSection(start, stopId, outPath, componentName, imports, context = { codeBlockIndex: 0 }) {
     const elements = [];
-    let current = doc.getElementById(startId);
+    let current = typeof start === 'string' ? doc.getElementById(start) : start;
     const stopAt = stopId ? doc.getElementById(stopId) : null;
 
     while (current && current !== stopAt) {
@@ -33,9 +33,9 @@ ${jsxBody}
     console.log(`${componentName} written to ${outPath} (${elements.length} elements)`);
 }
 
-// 1. SectionIntro: s-h2-1 -> s-h1-1
+// 1. SectionIntro: .content firstElementChild -> s-h1-1
 generateSection(
-    's-h2-1',
+    doc.querySelector('.content').firstElementChild,
     's-h1-1',
     'app/aws/cloudops-engineer-associate/sections/SectionIntro.tsx',
     'SectionIntro',
@@ -91,4 +91,14 @@ generateSection(
     'SectionDomain5',
     'import { Diagram } from "../Diagram";\nimport CodeBlock from "../CodeBlock";\n',
     { codeBlockIndex: 8 }
+);
+
+// 7. SectionAppendix: s-h1-6 -> end
+generateSection(
+    's-h1-6',
+    null,
+    'app/aws/cloudops-engineer-associate/sections/SectionAppendix.tsx',
+    'SectionAppendix',
+    '',
+    { codeBlockIndex: 10 }
 );

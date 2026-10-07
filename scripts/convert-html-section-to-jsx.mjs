@@ -67,7 +67,11 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
 
     const attrStr = attrs.length > 0 ? ' ' + attrs.join(' ') : '';
 
-    if (['br', 'hr', 'img', 'input'].includes(tagName)) {
+    if (tagName === 'br') {
+        return '<br />{" "}\n';
+    }
+
+    if (['hr', 'img', 'input'].includes(tagName)) {
         return `<${tagName}${attrStr} />`;
     }
 

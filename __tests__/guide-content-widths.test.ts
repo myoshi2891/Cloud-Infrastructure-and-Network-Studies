@@ -25,6 +25,7 @@ const guideLayouts = [
     ['app/aws/solutions-architect-associate/domain3/page.css', '.domain3-page .sidebar', '.domain3-page .content'],
     ['app/aws/solutions-architect-associate/domain4/page.css', '.domain4-page .sidebar', '.domain4-page .content'],
     ['app/aws/solutions-architect-associate/page.css', '.aws-saa-page .sidebar', '.aws-saa-page .main'],
+    ['app/aws/cloudops-engineer-associate/page.css', '.aws-cloudops-page .sidebar', '.aws-cloudops-page .main'],
     ['app/cisco/ccna/automation-api-guide/page.css', '.ccna-automation-api-page .sidebar', '.ccna-automation-api-page .main'],
     ['app/cisco/ccna/automation-application-deployment-security/page.css', '.ccna-app-deployment-security-page .sidebar', '.ccna-app-deployment-security-page .main'],
     ['app/cisco/ccna/automation-cisco-platforms-and-development/page.module.css', '.ccnaPlatformsDevPage :global(.sidebar)', '.ccnaPlatformsDevPage :global(.content)'],

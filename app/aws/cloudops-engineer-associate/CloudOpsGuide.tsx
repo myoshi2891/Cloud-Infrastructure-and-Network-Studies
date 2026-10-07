@@ -9,6 +9,7 @@ import SectionDomain2 from './sections/SectionDomain2';
 import SectionDomain3 from './sections/SectionDomain3';
 import SectionDomain4 from './sections/SectionDomain4';
 import SectionDomain5 from './sections/SectionDomain5';
+import SectionAppendix from './sections/SectionAppendix';
 
 /**
  * AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド。
@@ -28,7 +29,11 @@ export default function CloudOpsGuide() {
                     <SectionDomain3 />
                     <SectionDomain4 />
                     <SectionDomain5 />
+                    <SectionAppendix />
                 </div>
+                <footer className="footer">
+                    AWS Certified CloudOps Engineer - Associate (SOA-C03) 初学者向けステップバイステップ解説ガイド
+                </footer>
             </main>
         </div>
     );

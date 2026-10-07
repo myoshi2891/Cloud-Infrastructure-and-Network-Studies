@@ -1,11 +1,19 @@
 import { Diagram } from "../Diagram";
 
+
 /**
- * 本書の読み方と表記ルール、および Step 0. 試験の全体像
+ * SectionIntro
  */
 export default function SectionIntro() {
     return (
-        <section id="section-intro">
+        <>
+<blockquote>
+<p>対象試験: <strong>AWS Certified CloudOps Engineer - Associate (SOA-C03)</strong><br />{" "}
+
+出題範囲の根拠: AWS 公式 Exam Guide(5 ドメイン / 13 タスク / 53 スキル)<br />{" "}
+
+本書の方針: 試験ガイドの <strong>スキル(Skill)を 1 つずつ</strong> 取り上げ、「何のためのものか → 仕組み → ベストプラクティス → つまずきポイント → 参考 URL」の順に解説します。</p>
+</blockquote>
 <h2 id="s-h2-1">本書の読み方と表記ルール</h2>
 <div className="table-wrap"><table>
 <thead>
@@ -38,8 +46,10 @@ export default function SectionIntro() {
 </tbody>
 </table></div>
 <blockquote>
-<p><strong>注意(URL について)</strong><br />
-試験ガイド本体(5 つのドメインページ・比較ページ)の URL は実際にアクセスして内容を確認済みです。<br />
+<p><strong>注意(URL について)</strong><br />{" "}
+
+試験ガイド本体(5 つのドメインページ・比較ページ)の URL は実際にアクセスして内容を確認済みです。<br />{" "}
+
 それ以外の AWS ドキュメント URL は、公式ドキュメントの標準的なページ構成に基づいて掲載しています。もしリンク切れの場合は、ページタイトルで AWS ドキュメントを検索してください。</p>
 </blockquote>
 <h2 id="s-h2-2">Step 0. 試験の全体像</h2>
@@ -394,6 +404,6 @@ export default function SectionIntro() {
 </tr>
 </tbody>
 </table></div>
-        </section>
+        </>
     );
 }
