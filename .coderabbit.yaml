@@ -147,3 +147,4 @@ reviews:
         - '!Zoo-tour-guide-mcp-adk-challenge-lab-guide.html'
         - '!Zoo-tour-guide-mcp-adk-challenge-lab-guide.md'
         - '!*.md'
+        - '!scripts/*'
