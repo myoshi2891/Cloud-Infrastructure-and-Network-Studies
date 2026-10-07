@@ -1,0 +1,483 @@
+/* ==========================================================================
+   AWS Certified CloudOps Engineer - Associate (SOA-C03) 学習ガイド スタイル
+   原本 HTML (Aws-soa-c03-guide.html) のウォーム・ペーパー調デザインを 100% 忠実に再現
+   ========================================================================== */
+
+.aws-cloudops-page {
+    background: var(--color-theme-aws-cloudops-paper);
+    color: var(--color-theme-aws-cloudops-ink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+.aws-cloudops-page a {
+    color: var(--color-theme-aws-cloudops-indigo);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+}
+
+.aws-cloudops-page a:hover {
+    color: #1b2450;
+}
+
+/* ---------- 280px サイドバー契約 ---------- */
+.aws-cloudops-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background: var(--color-theme-aws-cloudops-paper-alt);
+    border-right: 1px solid var(--color-theme-aws-cloudops-border);
+    overflow-y: auto;
+    padding: 24px 0 40px;
+    z-index: 40;
+}
+
+.aws-cloudops-page .sidebar-head {
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--color-theme-aws-cloudops-border);
+    margin-bottom: 12px;
+}
+
+.aws-cloudops-page .sidebar .kicker {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-theme-aws-cloudops-indigo);
+}
+
+.aws-cloudops-page .sidebar .sb-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-theme-aws-cloudops-ink);
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+.aws-cloudops-page .sidebar nav {
+    padding: 0 10px;
+}
+
+.aws-cloudops-page .sidebar nav a {
+    display: block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-theme-aws-cloudops-ink-soft);
+    text-decoration: none;
+    margin-bottom: 1px;
+}
+
+.aws-cloudops-page .sidebar nav a:hover {
+    background: var(--color-theme-aws-cloudops-indigo-soft);
+    color: var(--color-theme-aws-cloudops-ink);
+}
+
+.aws-cloudops-page .sidebar nav a.lvl1 {
+    font-weight: 800;
+    color: var(--color-theme-aws-cloudops-ink);
+    margin-top: 14px;
+    background: transparent;
+    border-left: 4px solid var(--color-theme-aws-cloudops-gold);
+    border-radius: 0 8px 8px 0;
+}
+
+.aws-cloudops-page .sidebar nav a.lvl2 {
+    font-weight: 700;
+    padding-left: 16px;
+    margin-top: 4px;
+}
+
+.aws-cloudops-page .sidebar nav a.lvl3 {
+    padding-left: 28px;
+    color: var(--color-theme-aws-cloudops-ink-faint);
+}
+
+.aws-cloudops-page .sidebar nav a.active {
+    background: var(--color-theme-aws-cloudops-indigo-soft);
+    color: var(--color-theme-aws-cloudops-indigo);
+    font-weight: 700;
+}
+
+.aws-cloudops-page .menu-btn {
+    display: none;
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px);
+    left: 12px;
+    z-index: 45;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--color-theme-aws-cloudops-paper-card);
+    border: 1px solid var(--color-theme-aws-cloudops-border);
+    box-shadow: 0 1px 3px rgba(60, 50, 30, 0.08);
+    color: var(--color-theme-aws-cloudops-ink);
+    font-size: 1.25rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+.aws-cloudops-page .backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 25, 15, 0.45);
+    z-index: 35;
+}
+
+/* ---------- メイン領域レイアウト ---------- */
+.aws-cloudops-page .main {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+}
+
+.aws-cloudops-page .hero {
+    background: linear-gradient(135deg, #1b2450 0%, #2e3f72 55%, #3a4f8c 100%);
+    color: #ffffff;
+    padding: 56px 56px 40px;
+}
+
+.aws-cloudops-page .hero .kicker {
+    font-weight: 700;
+    color: #dfe5f7;
+    margin-bottom: 12px;
+}
+
+.aws-cloudops-page .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    line-height: 1.4;
+    margin: 0 0 24px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.aws-cloudops-page .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.aws-cloudops-page .pill {
+    display: inline-flex;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.aws-cloudops-page .pill strong {
+    color: #ffffff;
+}
+
+.aws-cloudops-page .content {
+    padding: 24px 56px 80px;
+}
+
+.aws-cloudops-page .footer {
+    padding: 28px 56px;
+    border-top: 1px solid var(--color-theme-aws-cloudops-border);
+    color: var(--color-theme-aws-cloudops-ink-faint);
+    font-size: 0.95rem;
+}
+
+/* ---------- 見出しスタイル & アンカー着地 ---------- */
+.aws-cloudops-page .content h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1.4;
+    margin: 72px 0 24px;
+    padding: 18px 24px;
+    background: var(--color-theme-aws-cloudops-indigo);
+    color: #ffffff;
+    border-radius: 12px;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.aws-cloudops-page .content h2 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1.45;
+    margin: 56px 0 20px;
+    color: var(--color-theme-aws-cloudops-ink);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--color-theme-aws-cloudops-gold);
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.aws-cloudops-page .content h3 {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    margin: 44px 0 16px;
+    color: var(--color-theme-aws-cloudops-indigo);
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.aws-cloudops-page .content h3::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 1.1em;
+    background: var(--color-theme-aws-cloudops-gold);
+    border-radius: 3px;
+    margin-right: 10px;
+    vertical-align: -0.18em;
+}
+
+.aws-cloudops-page .content h4 {
+    font-size: 1.1rem;
+    margin: 30px 0 12px;
+    color: var(--color-theme-aws-cloudops-ink);
+}
+
+.aws-cloudops-page .content p {
+    margin: 0 0 18px;
+}
+
+.aws-cloudops-page .content ul,
+.aws-cloudops-page .content ol {
+    margin: 0 0 18px;
+    padding-left: 1.5em;
+}
+
+.aws-cloudops-page .content ul {
+    list-style-type: disc;
+}
+
+.aws-cloudops-page .content ol {
+    list-style-type: decimal;
+}
+
+.aws-cloudops-page .content li {
+    margin-bottom: 6px;
+}
+
+.aws-cloudops-page .content li > ul,
+.aws-cloudops-page .content li > ol {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.aws-cloudops-page .content strong {
+    font-weight: 700;
+    color: #14110c;
+}
+
+.aws-cloudops-page .content code:not(.code-line code) {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    background: var(--color-theme-aws-cloudops-paper-alt);
+    border: 1px solid var(--color-theme-aws-cloudops-border);
+    border-radius: 5px;
+    padding: 1px 6px;
+    color: #7a3b12;
+    overflow-wrap: anywhere;
+}
+
+.aws-cloudops-page .content blockquote {
+    margin: 0 0 22px;
+    padding: 14px 20px;
+    background: var(--color-theme-aws-cloudops-indigo-soft);
+    border-left: 5px solid var(--color-theme-aws-cloudops-indigo);
+    border-radius: 0 10px 10px 0;
+    color: var(--color-theme-aws-cloudops-ink);
+}
+
+.aws-cloudops-page .content blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---------- テーブルスタイル ---------- */
+.aws-cloudops-page .table-wrap {
+    overflow-x: auto;
+    min-width: 0;
+    margin: 0 0 26px;
+    border: 1px solid var(--color-theme-aws-cloudops-border);
+    border-radius: 12px;
+    background: var(--color-theme-aws-cloudops-paper-card);
+    box-shadow: 0 1px 3px rgba(60, 50, 30, 0.08);
+}
+
+.aws-cloudops-page table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.aws-cloudops-page thead th {
+    background: var(--color-theme-aws-cloudops-indigo);
+    color: #ffffff;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+    vertical-align: top;
+}
+
+.aws-cloudops-page tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-theme-aws-cloudops-border);
+    color: var(--color-theme-aws-cloudops-ink-soft);
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.aws-cloudops-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.aws-cloudops-page tbody tr:hover td {
+    background: var(--color-theme-aws-cloudops-paper-alt);
+}
+
+.aws-cloudops-page tbody td strong {
+    color: var(--color-theme-aws-cloudops-ink);
+}
+
+/* ---------- Mermaid ダイアグラムカード ---------- */
+.aws-cloudops-page .diagram-card {
+    background: var(--color-theme-aws-cloudops-paper-card);
+    border: 1px solid var(--color-theme-aws-cloudops-border);
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(60, 50, 30, 0.08);
+    padding: 24px 20px;
+    margin: 0 0 30px;
+}
+
+.aws-cloudops-page .mermaid-wrap {
+    display: flex;
+    justify-content: safe center;
+    overflow-x: auto;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto;
+}
+
+.aws-cloudops-page .mermaid-wrap > * {
+    min-width: 0;
+}
+
+.aws-cloudops-page .mermaid-wrap svg {
+    flex-shrink: 0;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* ---------- コードブロック ---------- */
+.aws-cloudops-page .code-block {
+    margin: 0 0 26px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #282c34;
+    border: 1px solid #1b1e24;
+}
+
+.aws-cloudops-page .cb-head {
+    background: #1b1e24;
+    color: #c8ced9;
+    padding: 8px 18px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.aws-cloudops-page .code-block pre {
+    margin: 0;
+    padding: 16px 18px;
+    overflow-x: auto;
+    background: #282c34;
+}
+
+.aws-cloudops-page .code-block .code-line {
+    white-space: pre;
+    font-family: var(--font-mono);
+    color: #abb2bf;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ---------- クイズ / アコーディオン details ---------- */
+.aws-cloudops-page details {
+    margin: 0 0 26px;
+    background: var(--color-theme-aws-cloudops-forest-soft);
+    border: 1px solid #b9d8c5;
+    border-left: 5px solid var(--color-theme-aws-cloudops-forest);
+    border-radius: 10px;
+    padding: 12px 20px;
+}
+
+.aws-cloudops-page details > summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--color-theme-aws-cloudops-forest);
+    font-size: 1rem;
+}
+
+.aws-cloudops-page details[open] > summary {
+    margin-bottom: 10px;
+}
+
+.aws-cloudops-page details p {
+    margin: 0 0 10px;
+    color: var(--color-theme-aws-cloudops-ink);
+}
+
+/* ---------- レスポンシブ規則 ---------- */
+@media (max-width: 980px) {
+    .aws-cloudops-page .sidebar {
+        transform: translateX(-102%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .aws-cloudops-page.menu-open .sidebar {
+        transform: translateX(0);
+    }
+
+    .aws-cloudops-page.menu-open .backdrop {
+        display: block;
+    }
+
+    .aws-cloudops-page .menu-btn {
+        display: flex;
+    }
+
+    .aws-cloudops-page .main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .aws-cloudops-page .hero {
+        padding: 56px 20px 32px;
+    }
+
+    .aws-cloudops-page .content {
+        padding: 16px 20px 64px;
+    }
+
+    .aws-cloudops-page .footer {
+        padding: 24px 20px;
+    }
+
+    .aws-cloudops-page .content h1 {
+        font-size: 1.5rem;
+        padding: 14px 16px;
+    }
+
+    .aws-cloudops-page .content h2 {
+        font-size: 1.35rem;
+    }
+}

@@ -469,15 +469,30 @@
     --color-ccna-fundamentals-row-hover: rgba(124, 158, 255, 0.05);
     --color-ccna-fundamentals-code-background: #0a1626;
     --color-ccna-fundamentals-code-foreground: #d7e3fb;
-    --color-devnet-associate-panel: #0d1b2e;
-    --color-devnet-associate-panel-alt: #0f2038;
-    --color-devnet-associate-accent-soft: rgba(124, 158, 255, 0.14);
-    --color-devnet-associate-accent-border: rgba(124, 158, 255, 0.3);
-    --color-devnet-associate-foreground: #e7edf8;
-    --color-devnet-associate-foreground-muted: #93a5c4;
-    --color-devnet-associate-border: rgba(124, 158, 255, 0.16);
-    --color-devnet-associate-warning: #ffb86b;
-    --color-devnet-associate-warning-soft: rgba(255, 184, 107, 0.12);
+    --color-devnet-associate-paper: #f6f7f9;
+    --color-devnet-associate-surface: #ffffff;
+    --color-devnet-associate-ink: #161b26;
+    --color-devnet-associate-ink-2: #4a5367;
+    --color-devnet-associate-ink-3: #5f687c;
+    --color-devnet-associate-indigo: #2e3f72;
+    --color-devnet-associate-indigo-50: #eef1f8;
+    --color-devnet-associate-gold: #b8802a;
+    --color-devnet-associate-gold-50: #faf1df;
+    --color-devnet-associate-forest: #1b6e6a;
+    --color-devnet-associate-forest-50: #e6f2f0;
+    --color-devnet-associate-plum: #8c3a5c;
+    --color-devnet-associate-plum-50: #f7ebf0;
+    --color-devnet-associate-line: #d9dee8;
+    --color-devnet-associate-line-2: #c2c9d8;
+    --color-devnet-associate-panel: #ffffff;
+    --color-devnet-associate-panel-alt: #f6f7f9;
+    --color-devnet-associate-accent-soft: #eef1f8;
+    --color-devnet-associate-accent-border: #d9dee8;
+    --color-devnet-associate-foreground: #161b26;
+    --color-devnet-associate-foreground-muted: #4a5367;
+    --color-devnet-associate-border: #d9dee8;
+    --color-devnet-associate-warning: #b8802a;
+    --color-devnet-associate-warning-soft: #faf1df;
     --color-devnet-professional-background: #07111e;
     --color-devnet-professional-elevated: #0d1b2e;
     --color-devnet-professional-panel: #101f36;
@@ -570,6 +585,23 @@
 
     --color-theme-aws-bg: hsl(35 100% 50% / 0.20);
     --color-theme-aws-fg: hsl(35 95% 65%);
+
+    /* AWS CloudOps Engineer - Associate (SOA-C03) Paper Theme */
+    --color-theme-aws-cloudops-paper: #fbf8f1;
+    --color-theme-aws-cloudops-paper-alt: #f3eee3;
+    --color-theme-aws-cloudops-paper-card: #ffffff;
+    --color-theme-aws-cloudops-ink: #2a2620;
+    --color-theme-aws-cloudops-ink-soft: #4a443a;
+    --color-theme-aws-cloudops-ink-faint: #6b6154;
+    --color-theme-aws-cloudops-indigo: #2e3f72;
+    --color-theme-aws-cloudops-indigo-soft: #e9edf8;
+    --color-theme-aws-cloudops-gold: #7d5c14;
+    --color-theme-aws-cloudops-gold-soft: #f6ecd2;
+    --color-theme-aws-cloudops-forest: #2f6b4a;
+    --color-theme-aws-cloudops-forest-soft: #e3f1e8;
+    --color-theme-aws-cloudops-plum: #6b3a62;
+    --color-theme-aws-cloudops-plum-soft: #f3e6f0;
+    --color-theme-aws-cloudops-border: #ddd5c4;
 
     --color-theme-cisco-bg: hsl(215 70% 50% / 0.20);
     --color-theme-cisco-fg: hsl(215 95% 70%);
