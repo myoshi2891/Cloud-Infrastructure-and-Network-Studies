@@ -50,10 +50,12 @@ function jsx(node) {
 const stage = process.argv[2];
 if (stage === 'scaffold') {
     write('constants.ts', `/** 原本の26目次項目と35図。ナビ・監視対象の単一正本。 */\nexport const NAV_ITEMS = ${JSON.stringify(nav, null, 4)} as const;\nexport const DIAGRAMS = ${JSON.stringify(extractDvaDiagrams(html), null, 4)} as const;\nexport const CHECK_COUNT = ${inputs.length};`);
-    write('page.tsx', `import type { Metadata } from 'next';\nimport { SecurityGuide } from './SecurityGuide';\nimport './page.css';\nexport const metadata: Metadata = { title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 ドメイン2 セキュリティを24 Steps・35図・12問で学ぶ完全ガイド。IAM、Cognito、KMS、暗号化、機密データ管理を詳しく解説。' };\n/** セキュリティガイドのServerルート。 */\nexport default function SecurityPage() { return <SecurityGuide />; }`);
+    write('page.tsx', `import type { Metadata } from 'next';\nimport { SecurityGuide } from './SecurityGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nexport const metadata: Metadata = { title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 ドメイン2 セキュリティを24 Steps・35図・12問で学ぶ完全ガイド。IAM、Cognito、KMS、暗号化、機密データ管理を詳しく解説。' };\n/** セキュリティガイドのServerルート。 */\nexport default function SecurityPage() { return <SecurityGuide />; }`);
     write('SecurityGuide.tsx', `'use client';\nimport { useState } from 'react';\nimport { NavBar } from './NavBar';\nimport { ChecklistContext } from './ChecklistItem';\nimport { CHECK_COUNT } from './constants';\n/** 全本文とチェックリストの達成件数を保持する学習ガイド。 */\nexport function SecurityGuide() {\n    const [checked, setChecked] = useState<Set<number>>(() => new Set());\n    const toggle = (index: number) => setChecked(previous => {\n        const next = new Set(previous);\n        if (next.has(index)) next.delete(index); else next.add(index);\n        return next;\n    });\n    return <div className="dva-security-page"><NavBar /><ChecklistContext value={{ checked, toggle }}>\n        <main className="main">\n            ${jsx(doc.querySelector('.hero'))}\n            <div className="progress">自己採点チェックリスト達成: <b id="pcount" aria-live="polite">{checked.size} / {CHECK_COUNT}</b></div>\n        </main>\n    </ChecklistContext></div>;\n}`);
-    const tokens = { '--paper': 'background', '--paper-alt': 'card-secondary', '--ink': 'foreground', '--ink-soft': 'muted-foreground', '--indigo': 'accent', '--indigo-soft': 'accent-active', '--gold': 'accent-amber', '--forest': 'google-green', '--plum': 'accent-purple', '--border': 'border' };
+    const tokens = Object.fromEntries(["paper", "paper-alt", "ink", "ink-soft", "indigo", "indigo-soft", "gold", "forest", "plum", "border"].map(name => [`--${name}`, `dva-${name}`]));
     const css = postcss.parse(doc.querySelector('style').textContent);
+    const rootTokens = [];
+    css.walkRules(':root', rule => rule.walkDecls(d => { if (d.prop !== '--sidebar') rootTokens.push(`    --color-dva-${d.prop.slice(2)}: ${d.value};`); }));
     const hexes = new Set();
     css.walkRules(rule => {
         if (rule.selector === ':root') { rule.remove(); return; }
@@ -64,36 +66,32 @@ if (stage === 'scaffold') {
         }))].join(', ');
         rule.walkDecls(d => {
             d.value = d.value.replace(/var\((--[\w-]+)\)/g, (_, key) => {
-                if (key === '--sidebar') return '280px';
+                if (key === '--sidebar') return '300px';
                 if (!tokens[key]) throw new Error(`Unmapped ${key}`);
                 return `var(--color-${tokens[key]})`;
             }).replace(/#[\da-f]{3,6}\b/gi, hex => { hexes.add(hex.toLowerCase()); return `var(--color-dva-${hex.slice(1).toLowerCase()})`; })
                 .replace(/"Noto Sans JP",system-ui,sans-serif/g, 'var(--font-body)')
-                .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-display)')
+                .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-dva-serif)')
                 .replace(/"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace/g, 'var(--font-mono)');
-            if (d.prop === 'color' && d.value === 'var(--color-dva-fff)') d.value = 'var(--color-primary-foreground)';
-            if (d.prop === 'color' && d.value === 'var(--color-dva-2b2f7a)') d.value = 'var(--color-accent)';
-            if (d.value === 'rgba(250,247,240,.95)') d.value = 'color-mix(in srgb, var(--color-background) 95%, transparent)';
-            if (['th', '.mobile-bar button'].includes(original) && d.prop === 'background') d.value = 'var(--color-dva-3b3f9e)';
+            if (d.value === 'rgba(250,247,240,.95)') d.value = 'color-mix(in srgb, var(--color-dva-paper) 95%, transparent)';
             if (original === 'html' && d.prop === 'scroll-padding-top') d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px)';
             if (original === 'body' && d.prop === 'overflow-wrap') d.value = 'anywhere';
             if (original === '.sidebar' && d.prop === 'inset') { d.prop = 'top'; d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))'; }
             if (['.progress','.mobile-bar'].includes(original) && d.prop === 'top') d.value = original === '.progress' && rule.parent.type === 'atrule' ? 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 52px)' : 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))';
-            if (original === '.sidebar' && d.prop === 'width') d.value = rule.parent.type === 'atrule' ? 'min(86vw,280px)' : '280px';
+            if (original === '.sidebar' && d.prop === 'width') d.value = rule.parent.type === 'atrule' ? 'min(86vw,320px)' : '300px';
             if (original === '.mobile-bar' && d.prop === 'z-index') d.value = '31';
         });
         if (original === '.sidebar' && rule.parent.type !== 'atrule') { rule.append({ prop: 'left', value: '0' }); rule.append({ prop: 'bottom', value: '0' }); }
         if (original === '.main') {
-            rule.append({ prop: 'width', value: rule.parent.type === 'atrule' ? '100%' : 'calc(100% - 280px)' });
+            rule.append({ prop: 'width', value: rule.parent.type === 'atrule' ? '100%' : 'calc(100% - 300px)' });
             rule.append({ prop: 'min-width', value: '0' });
         }
     });
     // 既存トークンを使い、固定装飾色はグローバルの第3層へ一元化する。
-    const mappedFixed = { '#fff': 'var(--color-card)', '#2b2f7a': '#2b2f7a', '#4a3b12': 'var(--color-foreground)', '#fff8e6': 'var(--color-card-secondary)' };
     let globalCss = readFileSync('app/globals.css', 'utf8');
-    if (!globalCss.includes('--color-dva-2b2f7a:')) globalCss = globalCss.replace('@theme {', '@theme {\n    /* Layer 3: DVA Security 原本の固定装飾色 */\n' + [...hexes].map(hex => `    --color-dva-${hex.slice(1)}: ${mappedFixed[hex] ?? hex};`).join('\n') + '\n');
+    if (!globalCss.includes('--color-dva-2b2f7a:')) globalCss = globalCss.replace('@theme {', '@theme {\n    /* Layer 3: DVA Security 原本ライトテーマ・固定装飾色 */\n' + rootTokens.join('\n') + '\n' + [...hexes].map(hex => `    --color-dva-${hex.slice(1)}: ${hex};`).join('\n') + '\n');
     writeFileSync('app/globals.css', globalCss);
-    write('page.css', css.toString() + `\n.dva-security-page .main ul { list-style-type: disc; list-style-position: outside; }\n.dva-security-page .main ol { list-style-type: decimal; list-style-position: outside; }\n.dva-security-page .main ul ul { list-style-type: circle; }\n.dva-security-page li.chk { list-style-type: none; }\n.dva-security-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }\n.dva-security-page .sidebar li { margin: 0; }\n.dva-security-page .code-line { white-space: pre; min-height: 1.65em; }\n.dva-security-page .code-block { margin: 14px 0; padding: 16px 18px; border: 0; font-family: var(--font-mono); background: var(--color-dva-1f2335); color: var(--color-dva-e6e8f5); line-height: 1.65; overflow-x: auto; }\n.dva-security-page .code-block code { white-space: pre; }\n.dva-security-page h2[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 48px); }\n.dva-security-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 29; background: rgba(0,0,0,.35); border: 0; }\n.dva-security-page :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }\n@media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }\n@media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }\n.dva-security-page .hljs-comment { color: #94a3b8; font-style: italic; }\n.dva-security-page .hljs-keyword { color: #c678dd; }\n.dva-security-page .hljs-string { color: #98c379; }\n.dva-security-page .hljs-attr { color: #e06c75; }\n.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: #d19a66; }\n`);
+    write('page.css', css.toString() + `\n.dva-security-page .main ul { list-style-type: disc; list-style-position: outside; }\n.dva-security-page .main ol { list-style-type: decimal; list-style-position: outside; }\n.dva-security-page .main ul ul { list-style-type: circle; }\n.dva-security-page li.chk { list-style-type: none; }\n.dva-security-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }\n.dva-security-page .sidebar li { margin: 0; }\n.dva-security-page .code-line { white-space: pre; min-height: 1.65em; }\n.dva-security-page .code-block { margin: 14px 0; padding: 16px 18px; border: 0; font-family: var(--font-mono); background: var(--color-dva-1f2335); color: var(--color-dva-e6e8f5); line-height: 1.65; overflow-x: auto; }\n.dva-security-page .code-block code { white-space: pre; }\n.dva-security-page h2[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 48px); }\n.dva-security-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 29; background: rgba(0,0,0,.35); border: 0; }\n.dva-security-page :focus-visible { outline: 2px solid var(--color-dva-indigo); outline-offset: 4px; }\n@media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }\n@media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }\n.dva-security-page .hljs-comment { color: #94a3b8; font-style: italic; }\n.dva-security-page .hljs-keyword { color: #c678dd; }\n.dva-security-page .hljs-string { color: #98c379; }\n.dva-security-page .hljs-attr { color: #e06c75; }\n.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: #d19a66; }\n`);
     writeFileSync(`${directory}/page.css`, readFileSync(`${directory}/page.css`, 'utf8') + '\n.dva-security-page .diagram-wrap > [role="img"] { overflow: visible; border: 0; background: transparent; padding: 0; margin: 0; }\n');
     console.log(`Scaffold: ${nav.length} anchors, ${inputs.length} checkboxes`);
 } else {
