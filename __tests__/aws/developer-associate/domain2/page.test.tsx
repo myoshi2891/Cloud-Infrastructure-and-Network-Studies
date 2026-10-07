@@ -66,6 +66,18 @@ describe('DVA Security 全量移行', () => {
             expect(root.querySelector(`[data-language="${lang}"] .hljs-string, [data-language="${lang}"] .hljs-keyword, [data-language="${lang}"] .hljs-comment`)).not.toBeNull();
         }
     });
+    it('空の列見出し・横スクロール表・図とコードの説明がアクセス可能', () => {
+        const root = mount();
+        for (const header of root.querySelectorAll('th')) {
+            if (!header.textContent?.trim()) expect(header.getAttribute('aria-label')?.trim()).toBeTruthy();
+        }
+        for (const wrap of root.querySelectorAll('.table-wrap')) {
+            expect(wrap).toHaveAttribute('tabindex', '0');
+            expect(wrap.getAttribute('aria-label')?.trim()).toBeTruthy();
+        }
+        const labels = [...root.querySelectorAll('[role="region"]')].map(el => el.getAttribute('aria-label'));
+        expect(new Set(labels).size).toBe(labels.length);
+    });
     it('全チェックリストを操作すると件数とdone装飾が連動し、解除できる', () => {
         const root = mount();
         const inputs = [...root.querySelectorAll<HTMLInputElement>('li.chk input')];
@@ -165,7 +177,7 @@ describe('DVA CSS全宣言・リスト装飾', () => {
             expect(candidates.length, rule.selector).toBeGreaterThan(0);
             for (const decl of rule.declarations) {
                 if (integrationChanges[rule.selector]?.includes(decl.prop)) continue;
-                const value = rule.selector === 'th' && decl.prop === 'background' ? 'var(--color-dva-3b3f9e)' : mappedValue(decl.value, decl.prop);
+                const value = ['th', '.mobile-bar button'].includes(rule.selector) && decl.prop === 'background' ? 'var(--color-dva-3b3f9e)' : mappedValue(decl.value, decl.prop);
                 expect(candidates.some(r => r.declarations.some(d => d.prop === decl.prop && d.value === value && d.important === decl.important)), `${rule.selector}: ${decl.prop}: ${value}`).toBe(true);
             }
         }
