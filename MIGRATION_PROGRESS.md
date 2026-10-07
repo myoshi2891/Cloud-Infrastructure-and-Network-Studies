@@ -2,6 +2,17 @@
 
 (最終更新日: 2026-10-07)
 
+## 2026-10-07: DVA原本ライトテーマ・文字サイズ・図配色の復元（完了）
+
+原本HTMLを正とするユーザー指定に従い、`/aws/developer-associate/domain2` のライト配色・Source Serif 4・本文17px（1rem=16px）・300pxサイドバーを復元した。原本の全CSS宣言とメディア条件を保持し、リストの点・番号・20チェック・26目次の全量照合も継続する。35図は原本だけを使った独立初期化でMermaid設定を解決し、共通ダーク設定・固定配色の混入を防いだ。図の採寸にも自己ホストNoto Sans JPを使う。
+
+- Red: `7ecced6a`（配色・フォント・幅）、`1d64637b`（図設定）、`fd8f57fc`（共通配色上書き）、`a0c15aa7`（共有ダーク既定値）、`b1d9e0c8`（図の自己ホストフォント）。
+- 原本図設定fixture: `2a5831da`。原本から再生成して差分なしを確認。
+- Green: `f3b6b581`（配色・フォント・幅）、`b3ff3297`（原本図設定保持）、`1e1b0e0b`（図フォント）。
+- 関連216件とPAA Section 1/2の再検証40件、3画面幅E2E 3件成功。実配色・フォント読込・文字サイズ・図の自然倍率・リスト・目次・チェック操作を確認。各幅axe違反0、コンソールエラー0。
+- 全体Vitestは212ファイル・2238件中2230成功・8失敗。既存6失敗と負荷競合によるMermaid解析のタイムアウト2件で、後者は単独再検証40件が成功。TypeScript・全体ESLint・対象Markdown lint成功。
+- npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。詳細は `docs/TEST_COVERAGE_PROGRESS.md` のライトテーマ復元記録を参照。
+
 ## 2026-10-07: AWS DVA-C02 ドメイン2 セキュリティのNext.js移行（完了）
 
 `Aws-dva-c02-domain2-security-guide.html` を `/aws/developer-associate/domain2` に全量移行し、ホームのDVAカードとAWS Headerナビへ登録した。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、29分割セクションで構成する。
@@ -1476,12 +1487,12 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** AWS DVA-C02 ドメイン2セキュリティの全量移行・AWSナビ統合
+- **最新完了タスク:** AWS DVA-C02 ドメイン2の原本ライトテーマ・文字サイズ・図配色の復元
 - **最終更新日:** 2026-10-07
-- **最新実装 HEAD:** `0807b644`
-- **仕様同期コミット:** `ce012eec`（初回同期 `0ee66553`）
-- **前回進捗同期コミット:** `63af5c7e`
-- **検証状態:** 移行26件・関連170件・3画面幅E2E 3件成功、axe違反0件。型・Lint・Markdown lint成功。全体Vitestは2230成功/既存6失敗。
+- **最新実装 HEAD:** `1e1b0e0b`
+- **仕様同期コミット:** `350fd3c0`
+- **前回進捗同期コミット:** `e0422648`
+- **検証状態:** 移行27件・関連216件・PAA再検証40件・3画面幅E2E 3件成功、axe違反0件。型・Lint・Markdown lint成功。全体Vitestは2230成功/既存6失敗/解析タイムアウト2件（単独再検証で成功）。
 - **ビルド状態:** npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。
 - **HTML残数:** 直下19件（移行済みTanenbaum原本1件・未移行18件）。
 - **次の作業:** ユーザーの目視確認。既存6失敗の調査は別タスクで行う。次の移行候補は `Dva-c02-domain1-development-with-aws-services-guide.html`。
@@ -2823,7 +2834,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD は `0807b644`、仕様同期は `ce012eec`（初回 `0ee66553`）、前回進捗同期コミットは `63af5c7e` です。DVA-C02ドメイン2の移行26件・関連170件、1440px/768px/390pxのE2E 3件（各幅axe違反0件）、型チェック・Lint・Markdown lintが成功。全体Vitestは2230成功/移行前からの6失敗です。原本なしでの26テストと4変異チェックも成功。npm・ビルドはユーザー指示により未実行、目視確認はユーザー担当。未移行HTMLは18件（直下19件のうち移行済みTanenbaum原本1件を除外）。次の作業はユーザーの目視確認で、既存6失敗の調査は別タスクです。次の移行候補は `Dva-c02-domain1-development-with-aws-services-guide.html`。最新検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-07実行記録を参照してください。
+最新実装 HEAD は `1e1b0e0b`、仕様同期は `350fd3c0`、前回進捗同期コミットは `e0422648` です。DVA-C02ドメイン2は原本のライト配色・Source Serif 4・文字サイズ（1rem=16px、本文17px）・300px幅と、35図の原本設定を復元済み。移行27件・関連216件とPAA再検証40件、3画面幅E2E 3件（各幅axe違反0）が成功。型・Lint・Markdown lintも成功。全体Vitestは2230成功・既存6失敗・解析タイムアウト2件で、後者は単独再検証成功。npm・ビルドは未実行、目視確認はユーザー担当。未移行HTML18件。次はユーザーの目視確認で、既存6失敗は別タスク。次の移行候補は `Dva-c02-domain1-development-with-aws-services-guide.html`。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
 
