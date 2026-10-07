@@ -5,6 +5,7 @@ import NavBar from './NavBar';
 import HeroSection from './sections/HeroSection';
 import SectionIntro from './sections/SectionIntro';
 import SectionDomain1 from './sections/SectionDomain1';
+import SectionDomain2 from './sections/SectionDomain2';
 
 /**
  * AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド。
@@ -20,6 +21,7 @@ export default function CloudOpsGuide() {
                 <div className="content">
                     <SectionIntro />
                     <SectionDomain1 />
+                    <SectionDomain2 />
                 </div>
             </main>
         </div>
