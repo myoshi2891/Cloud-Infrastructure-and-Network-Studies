@@ -34,6 +34,11 @@ import { Sk136 } from './sections/Sk136';
 import { Sk137 } from './sections/Sk137';
 import { Sk138 } from './sections/Sk138';
 import { Sk139 } from './sections/Sk139';
+import { Sec33 } from './sections/Sec33';
+import { Sec34 } from './sections/Sec34';
+import { Sec35 } from './sections/Sec35';
+import { Sec36 } from './sections/Sec36';
+import { Sec37 } from './sections/Sec37';
 /** 状態に依存しない本文をメモ化し、目次操作で図を再描画しない。 */
 const GuideContents=memo(function GuideContents(){return <>
 <header className="hero">{" "}<div className="eyebrow">
@@ -84,10 +89,16 @@ const GuideContents=memo(function GuideContents(){return <>
 <Sk137 />
 <Sk138 />
 <Sk139 />
-{/* SECTIONS */}
+<Sec33 />
+<Sec34 />
+<Sec35 />
+<Sec36 />
+<Sec37 />
+<footer className="footer"><p>{"本ガイドは AWS 公式ドキュメントに基づいています。数値や提供状況は変更されることがあるため、受験前に最新の公式情報を確認してください。"}</p></footer>
 </>;});
 /** 目次操作と静的本文を分離した学習ガイド。 */
 export function DevelopmentGuide(){return <NavBar><GuideContents /></NavBar>;}
+
 
 
 
