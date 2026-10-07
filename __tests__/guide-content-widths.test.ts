@@ -33,6 +33,7 @@ const guideLayouts = [
     ['app/cisco/ccna/ip-connectivity-guide/page.css', '.ccna-ip-connectivity-page .sidebar', '.ccna-ip-connectivity-page .main'],
     ['app/cisco/ccna/ip-services-guide/page.css', '.ccna-ip-services-page .sidebar', '.ccna-ip-services-page .main'],
     ['app/cisco/ccna/security-fundamentals/page.css', '.ccna-security-page .sidebar', '.ccna-security-page main'],
+    ['app/cisco/devnet-associate/page.css', '.devnet-associate-page .sidebar', '.devnet-associate-page .layout'],
     ['app/gcl/agwa/agwa.css', '.sidebar', '.main'],
     ['app/gcl/agwa/section2/page.module.css', '.sidebar', '.main'],
     ['app/gcl/associate-cloud-engineer/complete-advanced-guide/page.css', '.complete-guide-page .sidebar', '.complete-guide-page .main'],

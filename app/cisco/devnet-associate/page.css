@@ -125,6 +125,7 @@
     margin-left: 280px;
     width: calc(100% - 280px);
     max-width: none;
+    box-sizing: border-box;
 }
 
 .devnet-associate-page .hero {
@@ -598,6 +599,7 @@
     .devnet-associate-page .layout {
         margin-left: 0;
         width: 100%;
+        max-width: none;
     }
 
     .devnet-associate-page .hero {
