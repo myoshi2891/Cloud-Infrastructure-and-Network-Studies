@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import { snapshotDvaSecurity } from './dva-security-fidelity.mjs';
 import { normalizeText } from './archive-fidelity-extraction.mjs';
+import { codeLines } from './inventory-extraction.mjs';
 
 /** 原本とReact DOMで同じ抽出器を使い、配置・全文・アイコンまで記録する。 */
 export function snapshotDvaDevelopment(root) {
@@ -14,7 +15,11 @@ export function snapshotDvaDevelopment(root) {
         diagrams: [...main.querySelectorAll('[data-diagram-id]')].map(el => ({ id: el.getAttribute('data-diagram-id'), section: el.closest('section')?.id })),
         codeHeaders: [...main.querySelectorAll('.cb-head')].map(el => normalizeText(el.textContent)),
         icons: [...root.querySelectorAll('i.ti')].map(el => el.className),
-        sections: [...main.querySelectorAll('section')].map(el => ({id: el.id, className: el.className, text: normalizeText(el.textContent)})),
+        sections: [...main.querySelectorAll('section')].map(el => {
+            const clone = el.cloneNode(true);
+            for (const block of clone.querySelectorAll('.code-block')) block.textContent = codeLines(block).join('\n');
+            return {id: el.id, className: el.className, text: normalizeText(clone.textContent)};
+        }),
     };
 }
 
