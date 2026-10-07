@@ -16,6 +16,14 @@ import { Sk1110 } from './sections/Sk1110';
 import { Sk1111 } from './sections/Sk1111';
 import { Sk1112 } from './sections/Sk1112';
 import { Sk1113 } from './sections/Sk1113';
+import { Task2 } from './sections/Task2';
+import { Sk121 } from './sections/Sk121';
+import { Sk122 } from './sections/Sk122';
+import { Sk123 } from './sections/Sk123';
+import { Sk124 } from './sections/Sk124';
+import { Sk125 } from './sections/Sk125';
+import { Sk126 } from './sections/Sk126';
+import { Sk127 } from './sections/Sk127';
 /** 状態に依存しない本文をメモ化し、目次操作で図を再描画しない。 */
 const GuideContents=memo(function GuideContents(){return <>
 <header className="hero">{" "}<div className="eyebrow">
@@ -48,9 +56,18 @@ const GuideContents=memo(function GuideContents(){return <>
 <Sk1111 />
 <Sk1112 />
 <Sk1113 />
+<Task2 />
+<Sk121 />
+<Sk122 />
+<Sk123 />
+<Sk124 />
+<Sk125 />
+<Sk126 />
+<Sk127 />
 {/* SECTIONS */}
 </>;});
 /** 目次操作と静的本文を分離した学習ガイド。 */
 export function DevelopmentGuide(){return <NavBar><GuideContents /></NavBar>;}
+
 
 
