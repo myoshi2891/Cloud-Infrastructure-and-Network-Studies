@@ -1,4 +1,5 @@
 import React from 'react';
+import CodeBlock from '../CodeBlock';
 import { Diagram } from '../Diagram';
 
 /**
@@ -16,41 +17,47 @@ export default function Section3() {
                                         等）を宣言的に定義{' '}</td><td>ログイン API でセッション（Cookie）</td></tr><tr><td><strong>Catalyst SD-WAN</strong>（旧 SD-WAN）</td><td>WAN の集中管理。vManage が管理画面／API を提供</td><td>{' '}vManage REST API。デバイス、テンプレート、ポリシー、状態取得{' '}</td><td>セッション＋トークン（バージョン差に注意）</td></tr><tr><td><strong>NSO</strong>（Network Services Orchestrator）</td><td>マルチベンダー機器のサービスオーケストレーション</td><td>{' '}YANG
                                         モデルベース。NETCONF／RESTCONF、NED（機器ドライバー）で多様な機器を統一操作。トランザクション（dry-run、ロールバック）{' '}</td><td>基本認証やトークン</td></tr></tbody></table>{' '}</div>{' '}<h3>補足</h3>{' '}<ul>{' '}<li>{' '}<strong>ダッシュボード型（Meraki）</strong>{' '}はクラウドが機器を管理するため、API キーで組織全体を扱えます。{' '}</li>{' '}<li>{' '}<strong>オンプレ型コントローラー（Catalyst Center、APIC、vManage）</strong>{' '}は、まず認証 API
                             でトークンやセッションを取得し、以降の呼び出しに付与します。{' '}</li>{' '}<li>{' '}<strong>NSO</strong>{' '}は「機器ごとの CLI
-                            差異を隠蔽し、サービス単位で設定する」ことが価値です。{' '}</li>{' '}</ul>{' '}<h3>3.2.1 Meraki の例：組織内デバイス一覧（SDK 利用）</h3>{' '}<div className="code-block">
-<div className="code-line">{"import os"}</div>
-<div className="code-line">{"import meraki"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"dashboard = meraki.DashboardAPI("}</div>
-<div className="code-line">{"    api_key=os.environ[\"MERAKI_API_KEY\"],"}</div>
-<div className="code-line">{"    suppress_logging=True,"}</div>
-<div className="code-line">{")"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"orgs = dashboard.organizations.getOrganizations()"}</div>
-<div className="code-line">{"org_id = orgs[0][\"id\"]"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"devices = dashboard.organizations.getOrganizationDevices(org_id, total_pages=\"all\")"}</div>
-<div className="code-line">{"for d in devices:"}</div>
-<div className="code-line">{"    print(d[\"name\"], d[\"model\"], d[\"serial\"])"}</div>
-</div>{' '}<h3>3.2.2 Catalyst Center の例：トークン取得とデバイス一覧（REST）</h3>{' '}<div className="code-block">
-<div className="code-line">{"import os"}</div>
-<div className="code-line">{"import requests"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"host = \"https://catalyst.example.com\""}</div>
-<div className="code-line">{"auth = (os.environ[\"CC_USER\"], os.environ[\"CC_PASS\"])"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"# 1. トークン取得"}</div>
-<div className="code-line">{"r = requests.post(f\"{host}/dna/system/api/v1/auth/token\", auth=auth, timeout=10, verify=True)"}</div>
-<div className="code-line">{"r.raise_for_status()"}</div>
-<div className="code-line">{"token = r.json()[\"Token\"]"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"# 2. デバイス一覧"}</div>
-<div className="code-line">{"headers = {\"X-Auth-Token\": token, \"Accept\": \"application/json\"}"}</div>
-<div className="code-line">{"r = requests.get(f\"{host}/dna/intent/api/v1/network-device\", headers=headers, timeout=10)"}</div>
-<div className="code-line">{"r.raise_for_status()"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"for dev in r.json()[\"response\"]:"}</div>
-<div className="code-line">{"    print(dev[\"hostname\"], dev[\"managementIpAddress\"])"}</div>
-</div>{' '}<div className="callout note">{' '}<h3 className="callout-title"><i className="ti ti-info-circle"></i>補足</h3>{' '}<p>{' '}API のパスは製品バージョンで変わることがあります。必ず該当バージョンの
+                            差異を隠蔽し、サービス単位で設定する」ことが価値です。{' '}</li>{' '}</ul>{' '}<h3>3.2.1 Meraki の例：組織内デバイス一覧（SDK 利用）</h3>{' '}<CodeBlock
+    lang="python"
+    lines={[
+        "import os",
+        "import meraki",
+        "",
+        "dashboard = meraki.DashboardAPI(",
+        "    api_key=os.environ[\"MERAKI_API_KEY\"],",
+        "    suppress_logging=True,",
+        ")",
+        "",
+        "orgs = dashboard.organizations.getOrganizations()",
+        "org_id = orgs[0][\"id\"]",
+        "",
+        "devices = dashboard.organizations.getOrganizationDevices(org_id, total_pages=\"all\")",
+        "for d in devices:",
+        "    print(d[\"name\"], d[\"model\"], d[\"serial\"])",
+    ]}
+/>{' '}<h3>3.2.2 Catalyst Center の例：トークン取得とデバイス一覧（REST）</h3>{' '}<CodeBlock
+    lang="python"
+    lines={[
+        "import os",
+        "import requests",
+        "",
+        "host = \"https://catalyst.example.com\"",
+        "auth = (os.environ[\"CC_USER\"], os.environ[\"CC_PASS\"])",
+        "",
+        "# 1. トークン取得",
+        "r = requests.post(f\"{host}/dna/system/api/v1/auth/token\", auth=auth, timeout=10, verify=True)",
+        "r.raise_for_status()",
+        "token = r.json()[\"Token\"]",
+        "",
+        "# 2. デバイス一覧",
+        "headers = {\"X-Auth-Token\": token, \"Accept\": \"application/json\"}",
+        "r = requests.get(f\"{host}/dna/intent/api/v1/network-device\", headers=headers, timeout=10)",
+        "r.raise_for_status()",
+        "",
+        "for dev in r.json()[\"response\"]:",
+        "    print(dev[\"hostname\"], dev[\"managementIpAddress\"])",
+    ]}
+/>{' '}<div className="callout note">{' '}<h3 className="callout-title"><i className="ti ti-info-circle"></i>補足</h3>{' '}<p>{' '}API のパスは製品バージョンで変わることがあります。必ず該当バージョンの
                             API リファレンスを確認してください。{' '}</p>{' '}</div>{' '}<h2>3.3 コンピュート管理プラットフォーム</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">プラットフォーム</th><th scope="col">概要</th><th scope="col">API・特徴</th></tr></thead><tbody><tr><td><strong>UCS Manager</strong></td><td>UCS ドメイン（ファブリックインターコネクト配下）を管理</td><td>{' '}XML API、Python
                                         SDK（<code>ucsmsdk</code>）。サービスプロファイルで構成を定義{' '}</td></tr><tr><td><strong>Intersight</strong></td><td>{' '}クラウドベースの運用プラットフォーム（SaaS）。UCS、HyperFlex
                                         等を一元管理{' '}</td><td>{' '}REST API、各種 SDK。API
@@ -59,35 +66,41 @@ export default function Section3() {
                                         API（<code>https://webexapis.com/v1/...</code>）。Spaces（rooms）、Memberships（参加者）、Messages
                                         を操作。Webhook 対応{' '}</td></tr><tr><td><strong>Webex デバイス</strong></td><td>会議用端末・ボード</td><td>{' '}<strong>xAPI</strong>（デバイスの設定・状態・コマンドの
                                         API）{' '}</td></tr><tr><td><strong>Unified CM（CUCM）</strong></td><td>音声・ビデオ通話制御</td><td>{' '}<strong>AXL</strong>（管理操作用の SOAP/XML
-                                        API）、<strong>UDS</strong>（ユーザー向けの REST API）{' '}</td></tr><tr><td><strong>Finesse</strong></td><td>コンタクトセンターのエージェントデスクトップ</td><td>REST API、ガジェット（画面部品）による拡張</td></tr></tbody></table>{' '}</div>{' '}<h3>3.4.1 Webex：スペース・参加者・メッセージの操作</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">やりたいこと</th><th scope="col">メソッドとパス</th><th scope="col">主なボディ</th></tr></thead><tbody><tr><td>スペース一覧</td><td><code>GET /v1/rooms</code></td><td>なし</td></tr><tr><td>スペース作成</td><td><code>POST /v1/rooms</code></td><td><code>&#123;&quot;title&quot;: &quot;運用チーム&quot;&#125;</code></td></tr><tr><td>参加者追加</td><td><code>POST /v1/memberships</code></td><td>{' '}<code>&#123;&quot;roomId&quot;: &quot;...&quot;, &quot;personEmail&quot;: &quot;user@example.com&quot;&#125;</code>{' '}</td></tr><tr><td>メッセージ投稿</td><td><code>POST /v1/messages</code></td><td><code>&#123;&quot;roomId&quot;: &quot;...&quot;, &quot;text&quot;: &quot;こんにちは&quot;&#125;</code></td></tr><tr><td>メッセージ取得</td><td><code>GET /v1/messages?roomId=...</code></td><td>なし</td></tr></tbody></table>{' '}</div>{' '}<div className="code-block">
-<div className="code-line">{"import os"}</div>
-<div className="code-line">{"import requests"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"BASE = \"https://webexapis.com/v1\""}</div>
-<div className="code-line">{"headers = {"}</div>
-<div className="code-line">{"    \"Authorization\": f\"Bearer {os.environ['WEBEX_TOKEN']}\","}</div>
-<div className="code-line">{"    \"Content-Type\": \"application/json\","}</div>
-<div className="code-line">{"}"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"# スペース作成"}</div>
-<div className="code-line">{"room = requests.post(f\"{BASE}/rooms\", headers=headers, json={\"title\": \"運用チーム\"}, timeout=10).json()"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"# 参加者追加"}</div>
-<div className="code-line">{"requests.post(f\"{BASE}/memberships\", headers=headers,"}</div>
-<div className="code-line">{"              json={\"roomId\": room[\"id\"], \"personEmail\": \"user@example.com\"}, timeout=10)"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"# メッセージ投稿"}</div>
-<div className="code-line">{"requests.post(f\"{BASE}/messages\", headers=headers,"}</div>
-<div className="code-line">{"              json={\"roomId\": room[\"id\"], \"text\": \"監視を開始しました\"}, timeout=10)"}</div>
-</div>{' '}<ul>{' '}<li>{' '}開発者ポータルで取得する{' '}<strong>個人アクセストークンは有効期間が短い（約 12 時間）</strong>{' '}ため、継続運用ではボット（Bot）トークンや OAuth 統合を使います。{' '}</li>{' '}</ul>{' '}<h2>3.5 セキュリティプラットフォーム</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">プラットフォーム</th><th scope="col">役割</th><th scope="col">API の例</th></tr></thead><tbody><tr><td><strong>Secure Firewall（Firepower／FMC）</strong></td><td>次世代ファイアウォール／IPS の管理</td><td>FMC REST API：ポリシー、オブジェクト、デプロイ操作</td></tr><tr><td><strong>Umbrella</strong></td><td>クラウド提供の DNS レイヤーセキュリティ</td><td>REST API：レポート、ポリシー、ブロックリスト管理</td></tr><tr><td>{' '}<strong>Secure Endpoint</strong>（旧 AMP for Endpoints）{' '}</td><td>エンドポイントの脅威検出・対応</td><td>REST API：端末情報、イベント、隔離</td></tr><tr><td><strong>ISE</strong>（Identity Services Engine）</td><td>認証・認可・ポスチャ（アクセス制御）</td><td>ERS API（REST）、pxGrid（情報共有）</td></tr><tr><td>{' '}<strong>Secure Malware Analytics</strong>（旧 ThreatGrid）{' '}</td><td>マルウェアの動的解析（サンドボックス）</td><td>REST API：ファイル提出、解析結果取得</td></tr><tr><td><strong>XDR</strong></td><td>複数のセキュリティ製品の検知を横断して相関</td><td>REST API：インシデント、脅威インテリジェンス</td></tr></tbody></table>{' '}</div>{' '}<h3>名称対応表（古い教材で混乱しやすい）</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">旧名称</th><th scope="col">新名称</th></tr></thead><tbody><tr><td>AMP for Endpoints</td><td>Secure Endpoint</td></tr><tr><td>ThreatGrid</td><td>Secure Malware Analytics</td></tr><tr><td>Firepower</td><td>Secure Firewall</td></tr><tr><td>DNA Center</td><td>Catalyst Center</td></tr><tr><td>SD-WAN</td><td>Catalyst SD-WAN</td></tr><tr><td>Webex Teams</td><td>Webex</td></tr><tr><td>VIRL</td><td>Cisco Modeling Labs（CML）</td></tr></tbody></table>{' '}</div>{' '}<h2>3.6 デバイスレベルの API とダイナミックインターフェース</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">OS</th><th scope="col">主なインターフェース</th></tr></thead><tbody><tr><td><strong>IOS XE</strong></td><td>{' '}CLI（SSH）、<strong>NETCONF</strong>、<strong>RESTCONF</strong>、gNMI、Guest
+                                        API）、<strong>UDS</strong>（ユーザー向けの REST API）{' '}</td></tr><tr><td><strong>Finesse</strong></td><td>コンタクトセンターのエージェントデスクトップ</td><td>REST API、ガジェット（画面部品）による拡張</td></tr></tbody></table>{' '}</div>{' '}<h3>3.4.1 Webex：スペース・参加者・メッセージの操作</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">やりたいこと</th><th scope="col">メソッドとパス</th><th scope="col">主なボディ</th></tr></thead><tbody><tr><td>スペース一覧</td><td><code>GET /v1/rooms</code></td><td>なし</td></tr><tr><td>スペース作成</td><td><code>POST /v1/rooms</code></td><td><code>&#123;&quot;title&quot;: &quot;運用チーム&quot;&#125;</code></td></tr><tr><td>参加者追加</td><td><code>POST /v1/memberships</code></td><td>{' '}<code>&#123;&quot;roomId&quot;: &quot;...&quot;, &quot;personEmail&quot;: &quot;user@example.com&quot;&#125;</code>{' '}</td></tr><tr><td>メッセージ投稿</td><td><code>POST /v1/messages</code></td><td><code>&#123;&quot;roomId&quot;: &quot;...&quot;, &quot;text&quot;: &quot;こんにちは&quot;&#125;</code></td></tr><tr><td>メッセージ取得</td><td><code>GET /v1/messages?roomId=...</code></td><td>なし</td></tr></tbody></table>{' '}</div>{' '}<CodeBlock
+    lang="python"
+    lines={[
+        "import os",
+        "import requests",
+        "",
+        "BASE = \"https://webexapis.com/v1\"",
+        "headers = {",
+        "    \"Authorization\": f\"Bearer {os.environ['WEBEX_TOKEN']}\",",
+        "    \"Content-Type\": \"application/json\",",
+        "}",
+        "",
+        "# スペース作成",
+        "room = requests.post(f\"{BASE}/rooms\", headers=headers, json={\"title\": \"運用チーム\"}, timeout=10).json()",
+        "",
+        "# 参加者追加",
+        "requests.post(f\"{BASE}/memberships\", headers=headers,",
+        "              json={\"roomId\": room[\"id\"], \"personEmail\": \"user@example.com\"}, timeout=10)",
+        "",
+        "# メッセージ投稿",
+        "requests.post(f\"{BASE}/messages\", headers=headers,",
+        "              json={\"roomId\": room[\"id\"], \"text\": \"監視を開始しました\"}, timeout=10)",
+    ]}
+/>{' '}<ul>{' '}<li>{' '}開発者ポータルで取得する{' '}<strong>個人アクセストークンは有効期間が短い（約 12 時間）</strong>{' '}ため、継続運用ではボット（Bot）トークンや OAuth 統合を使います。{' '}</li>{' '}</ul>{' '}<h2>3.5 セキュリティプラットフォーム</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">プラットフォーム</th><th scope="col">役割</th><th scope="col">API の例</th></tr></thead><tbody><tr><td><strong>Secure Firewall（Firepower／FMC）</strong></td><td>次世代ファイアウォール／IPS の管理</td><td>FMC REST API：ポリシー、オブジェクト、デプロイ操作</td></tr><tr><td><strong>Umbrella</strong></td><td>クラウド提供の DNS レイヤーセキュリティ</td><td>REST API：レポート、ポリシー、ブロックリスト管理</td></tr><tr><td>{' '}<strong>Secure Endpoint</strong>（旧 AMP for Endpoints）{' '}</td><td>エンドポイントの脅威検出・対応</td><td>REST API：端末情報、イベント、隔離</td></tr><tr><td><strong>ISE</strong>（Identity Services Engine）</td><td>認証・認可・ポスチャ（アクセス制御）</td><td>ERS API（REST）、pxGrid（情報共有）</td></tr><tr><td>{' '}<strong>Secure Malware Analytics</strong>（旧 ThreatGrid）{' '}</td><td>マルウェアの動的解析（サンドボックス）</td><td>REST API：ファイル提出、解析結果取得</td></tr><tr><td><strong>XDR</strong></td><td>複数のセキュリティ製品の検知を横断して相関</td><td>REST API：インシデント、脅威インテリジェンス</td></tr></tbody></table>{' '}</div>{' '}<h3>名称対応表（古い教材で混乱しやすい）</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">旧名称</th><th scope="col">新名称</th></tr></thead><tbody><tr><td>AMP for Endpoints</td><td>Secure Endpoint</td></tr><tr><td>ThreatGrid</td><td>Secure Malware Analytics</td></tr><tr><td>Firepower</td><td>Secure Firewall</td></tr><tr><td>DNA Center</td><td>Catalyst Center</td></tr><tr><td>SD-WAN</td><td>Catalyst SD-WAN</td></tr><tr><td>Webex Teams</td><td>Webex</td></tr><tr><td>VIRL</td><td>Cisco Modeling Labs（CML）</td></tr></tbody></table>{' '}</div>{' '}<h2>3.6 デバイスレベルの API とダイナミックインターフェース</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">OS</th><th scope="col">主なインターフェース</th></tr></thead><tbody><tr><td><strong>IOS XE</strong></td><td>{' '}CLI（SSH）、<strong>NETCONF</strong>、<strong>RESTCONF</strong>、gNMI、Guest
                                         Shell（コンテナ内で Python 実行）、EEM{' '}</td></tr><tr><td><strong>NX-OS</strong></td><td>{' '}CLI、<strong>NX-API</strong>（CLI 型と REST
                                         型）、NETCONF、RESTCONF、gNMI、Bash／Guest Shell{' '}</td></tr></tbody></table>{' '}</div>{' '}<h3>コントローラー型とデバイス型の違い</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">観点</th><th scope="col">コントローラー API（Catalyst Center、Meraki 等）</th><th scope="col">デバイス API（RESTCONF、NETCONF、NX-API）</th></tr></thead><tbody><tr><td>操作対象</td><td>{' '}多数の機器を<strong>一括・意図（Intent）ベース</strong>で{' '}</td><td><strong>1 台ごと</strong>に細かい設定</td></tr><tr><td>抽象度</td><td>高い</td><td>低い（モデルに沿って詳細設定）</td></tr><tr><td>向く場面</td><td>大規模運用、ポリシーの統一</td><td>特定機器の検証、細かな設定変更</td></tr></tbody></table>{' '}</div>{' '}<h2>3.7 DevNet 関連リソースの使い分け</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">リソース</th><th scope="col">何に使うか</th><th scope="col">こんなときに</th></tr></thead><tbody><tr><td><strong>DevNet Sandbox</strong></td><td>実機・仮想環境を無償／予約で利用できる検証環境</td><td>「動かして試したい」</td></tr><tr><td><strong>Code Exchange</strong></td><td>サンプルコード・ツールのカタログ</td><td>「既存の実装例を探したい」</td></tr><tr><td>{' '}<strong>API ドキュメント</strong>（developer.cisco.com）{' '}</td><td>各製品の API リファレンス</td><td>「エンドポイントとパラメータを正確に知りたい」</td></tr><tr><td><strong>Learning Labs／Cisco U.</strong></td><td>手順付きの学習コンテンツ</td><td>「順序立てて学びたい」</td></tr><tr><td>{' '}<strong>Support／Forums（Cisco Learning Network 等）</strong>{' '}</td><td>質問・コミュニティ</td><td>「詰まったので相談したい」</td></tr></tbody></table>{' '}</div>{' '}<h2>3.8 モデル駆動プログラマビリティ：YANG・NETCONF・RESTCONF</h2>{' '}<h3>3 つの関係</h3>{' '}<Diagram id="dg15" />{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">技術</th><th scope="col">役割</th><th scope="col">データ形式</th><th scope="col">主なトランスポート／ポート</th></tr></thead><tbody><tr><td><strong>YANG</strong></td><td>{' '}設定・状態データの<strong>構造とルール</strong>を記述するデータモデリング言語{' '}</td><td>（モデル定義自体は YANG 記法）</td><td>なし（言語）</td></tr><tr><td><strong>NETCONF</strong></td><td>{' '}機器設定の取得・変更を行うプロトコル。トランザクション、候補設定（candidate）、ロック等{' '}</td><td><strong>XML</strong></td><td>SSH、TCP{' '}<strong>830</strong></td></tr><tr><td><strong>RESTCONF</strong></td><td>{' '}NETCONF の機能の一部を{' '}<strong>REST 風</strong>（HTTP
-                                        メソッド）で提供{' '}</td><td><strong>JSON／XML</strong></td><td>HTTPS（443）</td></tr></tbody></table>{' '}</div>{' '}<h3>RESTCONF と HTTP メソッドの対応</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">HTTP メソッド</th><th scope="col">動作</th></tr></thead><tbody><tr><td>GET</td><td>データの取得</td></tr><tr><td>POST</td><td>リソースの作成</td></tr><tr><td>PUT</td><td>リソースの置換</td></tr><tr><td>PATCH</td><td>一部変更（マージ）</td></tr><tr><td>DELETE</td><td>削除</td></tr></tbody></table>{' '}</div>{' '}<h3>RESTCONF の GET 例</h3>{' '}<div className="code-block">
-<div className="code-line">{"GET /restconf/data/ietf-interfaces:interfaces/interface=GigabitEthernet1 HTTP/1.1"}</div>
-<div className="code-line">{"Host: 192.0.2.1"}</div>
-<div className="code-line">{"Accept: application/yang-data+json"}</div>
-<div className="code-line">{"Authorization: Basic <base64>"}</div>
-</div>{' '}<h3>NETCONF の主な操作</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">操作</th><th scope="col">内容</th></tr></thead><tbody><tr><td><code>&lt;get&gt;</code></td><td>運用状態を含むデータの取得</td></tr><tr><td><code>&lt;get-config&gt;</code></td><td>設定データの取得</td></tr><tr><td><code>&lt;edit-config&gt;</code></td><td>設定の変更</td></tr><tr><td><code>&lt;commit&gt;</code></td><td>候補設定を反映（candidate を使う場合）</td></tr><tr><td><code>&lt;lock&gt;</code>{' '}/{' '}<code>&lt;unlock&gt;</code></td><td>データストアのロック</td></tr></tbody></table>{' '}</div>{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<ul>{' '}<li>{' '}自動化では、CLI のテキスト解析より{' '}<strong>モデル駆動（構造化データ）</strong>{' '}を優先する。出力の書式が変わっても壊れにくい。{' '}</li>{' '}<li>{' '}本番では、まず{' '}<strong>検証環境（CML、Sandbox）</strong>{' '}でモデルとパスを確認する。{' '}</li>{' '}<li>{' '}YANG モデルは機器の OS
+                                        メソッド）で提供{' '}</td><td><strong>JSON／XML</strong></td><td>HTTPS（443）</td></tr></tbody></table>{' '}</div>{' '}<h3>RESTCONF と HTTP メソッドの対応</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">HTTP メソッド</th><th scope="col">動作</th></tr></thead><tbody><tr><td>GET</td><td>データの取得</td></tr><tr><td>POST</td><td>リソースの作成</td></tr><tr><td>PUT</td><td>リソースの置換</td></tr><tr><td>PATCH</td><td>一部変更（マージ）</td></tr><tr><td>DELETE</td><td>削除</td></tr></tbody></table>{' '}</div>{' '}<h3>RESTCONF の GET 例</h3>{' '}<CodeBlock
+    lang="http"
+    lines={[
+        "GET /restconf/data/ietf-interfaces:interfaces/interface=GigabitEthernet1 HTTP/1.1",
+        "Host: 192.0.2.1",
+        "Accept: application/yang-data+json",
+        "Authorization: Basic <base64>",
+    ]}
+/>{' '}<h3>NETCONF の主な操作</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">操作</th><th scope="col">内容</th></tr></thead><tbody><tr><td><code>&lt;get&gt;</code></td><td>運用状態を含むデータの取得</td></tr><tr><td><code>&lt;get-config&gt;</code></td><td>設定データの取得</td></tr><tr><td><code>&lt;edit-config&gt;</code></td><td>設定の変更</td></tr><tr><td><code>&lt;commit&gt;</code></td><td>候補設定を反映（candidate を使う場合）</td></tr><tr><td><code>&lt;lock&gt;</code>{' '}/{' '}<code>&lt;unlock&gt;</code></td><td>データストアのロック</td></tr></tbody></table>{' '}</div>{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<ul>{' '}<li>{' '}自動化では、CLI のテキスト解析より{' '}<strong>モデル駆動（構造化データ）</strong>{' '}を優先する。出力の書式が変わっても壊れにくい。{' '}</li>{' '}<li>{' '}本番では、まず{' '}<strong>検証環境（CML、Sandbox）</strong>{' '}でモデルとパスを確認する。{' '}</li>{' '}<li>{' '}YANG モデルは機器の OS
                                 バージョンで差が出るため、機器から取得した／対応バージョンのモデルを参照する。{' '}</li>{' '}</ul>{' '}</div>{' '}<h2>3.9 コードを組み立てる問題（試験の出題形式）</h2>{' '}<p>{' '}「要件と API
                         リファレンスを与えられ、適切なコードを選ぶ／書く」タイプの問題です。以下の 3
                         パターンを押さえましょう。{' '}</p>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">要件</th><th scope="col">プラットフォーム</th><th scope="col">呼び出しの骨子</th></tr></thead><tbody><tr><td>ネットワーク機器の一覧取得</td><td>Meraki／Catalyst Center／ACI／Catalyst SD-WAN／NSO</td><td>認証 → GET → JSON の該当キーをループ</td></tr><tr><td>Webex のスペース・参加者・メッセージ管理</td><td>Webex</td><td>{' '}<code>rooms</code>{' '}→{' '}<code>memberships</code>{' '}→{' '}<code>messages</code>{' '}の順に POST{' '}</td></tr><tr><td>ネットワーク上のクライアント／ホスト一覧</td><td>Meraki／Catalyst Center</td><td>クライアント系エンドポイントを GET</td></tr></tbody></table>{' '}</div>{' '}<h3>読み解きのコツ</h3>{' '}<Diagram id="dg16" />{' '}<h3>3.10 Cisco SDK を使う（3.1 の要件）</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">観点</th><th scope="col">REST を直接呼ぶ</th><th scope="col">SDK を使う</th></tr></thead><tbody><tr><td>手間</td><td>ヘッダー・URL・ページ処理を自前で実装</td><td>関数呼び出しで抽象化</td></tr><tr><td>変更への追随</td><td>API 変更を自分で反映</td><td>SDK 更新で吸収されることが多い</td></tr><tr><td>学習</td><td>HTTP の理解が深まる</td><td>使いやすい反面、内部動作が見えにくい</td></tr></tbody></table>{' '}</div>{' '}<p>{' '}<strong>ベストプラクティス</strong>：SDK
