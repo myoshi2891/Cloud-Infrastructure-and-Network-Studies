@@ -10,7 +10,10 @@ describe('DVA Security のホーム・Header統合', () => {
         expect(exam?.domains).toContainEqual({ label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' });
         expect(cardColorMap).toHaveProperty('card-aws-dva', 'card-aws-dva');
         const nav = toNavTree(EXAMS).find(group => group.provider === 'AWS')?.exams.find(exam => exam.id === 'aws-dva');
-        expect(nav?.items).toEqual([{ label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2' }]);
+        expect(nav?.items).toEqual([
+            { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2' },
+            { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1' },
+        ]);
     });
     it('DVAカードとHeaderアイコンの色をグローバルトークンへ登録', () => {
         const css = readFileSync('app/globals.css', 'utf8');
