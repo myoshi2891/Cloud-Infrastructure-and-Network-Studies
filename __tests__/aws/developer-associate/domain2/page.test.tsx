@@ -207,6 +207,12 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         }
         expect(rules.some(r => r.selector === '.dva-security-page .code-line' && r.declarations.some(d => d.prop === 'white-space' && d.value === 'pre'))).toBe(true);
     });
+    it('コード枠の最終宣言で原本の外側余白と内側パディングを保持', () => {
+        const rules = snapshotCssRules(readFileSync(cssPath, 'utf8')).filter(rule => rule.selector === '.dva-security-page .code-block' && !rule.media);
+        const values = Object.fromEntries(rules.flatMap(rule => rule.declarations.map(decl => [decl.prop, decl.value])));
+        expect(values.margin).toBe('14px 0');
+        expect(values.padding).toBe('16px 18px');
+    });
     it('Header下の固定配置・280px幅・モバイル幅・アンカー余白と自然図倍率', () => {
         const css = readFileSync(cssPath, 'utf8');
         const rules = snapshotCssRules(css);
