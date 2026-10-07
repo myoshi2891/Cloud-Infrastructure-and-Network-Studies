@@ -146,3 +146,4 @@ reviews:
         - '!Vision-api-challenge-lab-best-practices.md'
         - '!Zoo-tour-guide-mcp-adk-challenge-lab-guide.html'
         - '!Zoo-tour-guide-mcp-adk-challenge-lab-guide.md'
+        - '!*.md'
