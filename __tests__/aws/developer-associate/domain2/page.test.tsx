@@ -55,7 +55,7 @@ describe('DVA Security 全量移行', () => {
             const init = chart.match(/^%%\{init: (.+)\}%%\n/);
             expect(init, '原本のMermaid設定を注入').not.toBeNull();
             expect(mermaidTheme.source.themeVariables).toEqual(theme);
-            expect(JSON.parse(init![1]!)).toEqual(mermaidTheme.resolved);
+            expect(JSON.parse(init![1]!)).toEqual({ ...mermaidTheme.resolved, themeVariables: { ...mermaidTheme.resolved.themeVariables, fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif' } });
             expect(chart.slice(init![0].length)).toBe(design.charts[index]);
         });
         expect(Object.values(DIAGRAMS)).toEqual(design.charts);

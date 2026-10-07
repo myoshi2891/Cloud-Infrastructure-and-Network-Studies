@@ -31,6 +31,7 @@ for (const width of [1440, 768, 390]) {
         await expect(firstDiagram.locator('.node rect').first()).toHaveCSS('fill', 'rgb(236, 238, 251)');
         await expect(firstDiagram.locator('.node rect').first()).toHaveCSS('stroke', 'rgb(59, 63, 158)');
         await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('color', 'rgb(28, 35, 51)');
+        await expect(firstDiagram.locator('.nodeLabel').first()).toHaveCSS('font-family', /Noto Sans JP Variable/);
 
         const lists = await root.locator('main ul, main ol').evaluateAll(elements => elements.map(el => ({
             tag: el.tagName, type: getComputedStyle(el).listStyleType,
