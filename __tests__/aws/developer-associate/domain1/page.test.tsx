@@ -112,8 +112,9 @@ describe('DVA Domain 1 全量移行', () => {
             observe=observe; disconnect=disconnect;
         });
         const {container,unmount}=render(<Page />);
-        expect(observe.mock.calls.map(call => (call[0] as HTMLElement).id)).toEqual(design.structure.anchors);
-        act(() => callback?.([{isIntersecting:true,target:container.querySelector('#sk-1-2-4')!} as IntersectionObserverEntry],{} as IntersectionObserver));
+        expect(observe.mock.calls.map(call => (call[0] as HTMLElement).closest('section')?.id)).toEqual(design.structure.anchors);
+        expect(observe.mock.calls.map(call => (call[0] as HTMLElement).tagName)).toEqual(NAV_ITEMS.map(()=>'H2'));
+        act(() => callback?.([{isIntersecting:true,target:container.querySelector('#sk-1-2-4 h2')!} as IntersectionObserverEntry],{} as IntersectionObserver));
         expect(container.querySelector('a[href="#sk-1-2-4"]')).toHaveAttribute('aria-current','location');
         for(const event of ['hashchange','popstate']) {
             window.history.replaceState(null,'','#sec-36'); fireEvent(window,new Event(event));
