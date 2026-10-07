@@ -11,10 +11,10 @@ Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエン�
 - **セキュアなコンテナCI/CD実践:** [構築ガイド](app/gcl/hands-on/secure-cicd-pipeline-guide/page.tsx)をHands-onに追加。Artifact Registry・Binary Authorization・Cloud Buildの12セクション、4図、6表、9コード例を掲載。
 
 - **詳細な試験ガイド & 名著解説 & 運用ツール:** Associate Cloud Engineer (ACE)、Generative AI Leader、Cloud Digital Leader (CDL)、Associate Google Workspace Administrator (AGWA)、Professional Cloud Network Engineer (PCNE)、Professional Cloud Architect (PCA)、Professional Agentic Architect、CCNA、CCNA Automation、CompTIA Network+、AWS SAA、AWS DVA-C02 ドメイン2（セキュリティ）、名著『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』、『TCP/IP Illustrated, Volume 1』、CLIコマンド実践ワンライナー集の広範なトピックを網羅。
-- **AWS DVA-C02 セキュリティ:** `/aws/developer-associate/domain2` に24 Steps・110表・35図・40コード・12練習問題を収録。20項目の自己採点チェックリスト、開閉式目次、番号・点を保持したリストを提供。
+- **AWS DVA-C02 セキュリティ:** `/aws/developer-associate/domain2` に24 Steps・110表・35図・40コード・12練習問題を収録。原本のライト配色・見出しフォント・文字サイズを保持し、20項目の自己採点チェックリスト、開閉式目次、番号・点を保持したリストを提供。
 - **データ駆動ナビゲーション:** `app/constants.ts` を正本とし、ハンバーガー Drawer が GCP/AWS/Cisco/CompTIA/Books/Tools をプロバイダ別に自動グルーピング。新試験・ガイド追加は ① `app/constants.ts` の `ALL_EXAMS` にエントリ追加 ② `app/globals.css` に `icon-theme-<id>` ユーティリティ追加 ③ ページ作成 の 3 ステップで Header は自動反映（直接編集不要）。
 - **視覚的な学習体験:** セクションごとに最適化されたデザインテーマ（Aurora, Sapphire, Laboratory, Gold）。
-- **統一ガイドレイアウト:** サイドバー付きガイドは左端固定の280pxナビゲーションと、残りの画面幅をすべて使うメインコンテンツへ統一。モバイルでは本文を幅100%へ切り替え。
+- **統一ガイドレイアウト:** サイドバー付きガイドは左端固定の280pxナビゲーションと、残りの画面幅をすべて使うメインコンテンツへ統一。モバイルでは本文を幅100%へ切り替え。DVA-C02ドメイン2は原本優先の指定により300px幅を保持。
 - **最新の技術解説:** Hypercomputer, SAIF, 責任ある AI 6原則など、試験頻出の高度なトピックを体系化。
 - **テスト済みのコンテンツ:** ユニットテスト（Vitest）と E2E テスト（Playwright）により、正確な情報提供と表示を保証。
 - **モダンな実装:** ホームとガイドのセクション分割、ガイド単位のテーマトークン、CSS Modules、アクセシビリティ対応、専用SVGコンポーネントによる高品質なコードベース。
