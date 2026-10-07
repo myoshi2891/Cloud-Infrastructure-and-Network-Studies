@@ -12,7 +12,7 @@ export function Step15() { return (<section className="section">
 {" "}
 <p>{"別アカウントのKMSキーを使うには、次の"}<strong>{"2つがそろう"}</strong>{"必要があります。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 70">
 <table>
 
 <thead>
@@ -56,15 +56,15 @@ export function Step15() { return (<section className="section">
 {" "}
 <h3>{"15-2 鍵ポリシー（アカウントA側）の例"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Sid\": \"AllowAccountBUse\",","  \"Effect\": \"Allow\",","  \"Principal\": { \"AWS\": \"arn:aws:iam::222233334444:role/PartnerReaderRole\" },","  \"Action\": [\"kms:Decrypt\", \"kms:DescribeKey\"],","  \"Resource\": \"*\"","}"]} />
+<CodeBlock index={23} language="json" lines={["{","  \"Sid\": \"AllowAccountBUse\",","  \"Effect\": \"Allow\",","  \"Principal\": { \"AWS\": \"arn:aws:iam::222233334444:role/PartnerReaderRole\" },","  \"Action\": [\"kms:Decrypt\", \"kms:DescribeKey\"],","  \"Resource\": \"*\"","}"]} />
 {" "}
 <h3>{"15-3 利用側（アカウントB）のIAMポリシー例"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"kms:Decrypt\", \"kms:DescribeKey\"],","  \"Resource\": \"arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\"","}"]} />
+<CodeBlock index={24} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"kms:Decrypt\", \"kms:DescribeKey\"],","  \"Resource\": \"arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\"","}"]} />
 {" "}
 <h3>{"15-4 代表的なシナリオ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 71">
 <table>
 
 <thead>
@@ -128,7 +128,7 @@ export function Step15() { return (<section className="section">
 {" "}
 <h3>{"15-6 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 72">
 <table>
 
 <thead>

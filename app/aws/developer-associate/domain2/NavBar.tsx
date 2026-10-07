@@ -28,7 +28,7 @@ export function NavBar() {
             // DOMの順序を保ち、境界で見出しが複数交差しても現在地を安定させる。
             const first = NAV_ITEMS.find(item => visible.has(item.id));
             if (first) setActiveId(first.id);
-        }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+        }, { rootMargin: `0px 0px -${Math.round(window.innerHeight * 0.65)}px 0px`, threshold: 0 });
         for (const item of NAV_ITEMS) {
             const heading = document.getElementById(item.id);
             if (heading) observer?.observe(heading);

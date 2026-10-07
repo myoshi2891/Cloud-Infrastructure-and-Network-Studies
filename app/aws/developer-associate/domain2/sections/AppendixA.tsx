@@ -3,7 +3,7 @@
 export function AppendixA() { return (<section className="section">
 <h2 id="appendix-a" tabIndex={-1}>{"付録A スキルとStepの対応表"}</h2>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 106">
 <table>
 
 <thead>

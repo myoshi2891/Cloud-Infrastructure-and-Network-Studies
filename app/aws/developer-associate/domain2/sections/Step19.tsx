@@ -10,7 +10,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <h3>{"19-1 シークレットを「コードに書かない」理由"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 85">
 <table>
 
 <thead>
@@ -66,7 +66,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <h3>{"19-2 AWS Secrets Manager"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 86">
 <table>
 
 <thead>
@@ -146,7 +146,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <h3>{"19-3 AWS Systems Manager Parameter Store"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 87">
 <table>
 
 <thead>
@@ -218,7 +218,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <h3>{"19-4 どちらを選ぶ？（最重要）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 88">
 <table>
 
 <thead>
@@ -318,25 +318,25 @@ export function Step19() { return (<section className="section">
 {" "}
 <p><strong>{"Secrets Manager"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import json","import boto3","","client = boto3.client(\"secretsmanager\", region_name=\"ap-northeast-1\")","resp = client.get_secret_value(SecretId=\"prod/db/credentials\")","creds = json.loads(resp[\"SecretString\"])","# creds[\"username\"], creds[\"password\"] を使って接続"]} />
+<CodeBlock index={28} language="python" lines={["import json","import boto3","","client = boto3.client(\"secretsmanager\", region_name=\"ap-northeast-1\")","resp = client.get_secret_value(SecretId=\"prod/db/credentials\")","creds = json.loads(resp[\"SecretString\"])","# creds[\"username\"], creds[\"password\"] を使って接続"]} />
 {" "}
 <p><strong>{"Parameter Store（SecureString）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","ssm = boto3.client(\"ssm\")","resp = ssm.get_parameter(Name=\"/myapp/prod/api-key\", WithDecryption=True)","api_key = resp[\"Parameter\"][\"Value\"]"]} />
+<CodeBlock index={29} language="python" lines={["import boto3","","ssm = boto3.client(\"ssm\")","resp = ssm.get_parameter(Name=\"/myapp/prod/api-key\", WithDecryption=True)","api_key = resp[\"Parameter\"][\"Value\"]"]} />
 {" "}
 <p><strong>{"CLI"}</strong></p>
 {" "}
-<CodeBlock language="bash" lines={["aws secretsmanager get-secret-value --secret-id prod/db/credentials","aws ssm get-parameter --name /myapp/prod/api-key --with-decryption"]} />
+<CodeBlock index={30} language="bash" lines={["aws secretsmanager get-secret-value --secret-id prod/db/credentials","aws ssm get-parameter --name /myapp/prod/api-key --with-decryption"]} />
 {" "}
 <h3>{"19-7 最小権限のIAMポリシー例（アプリ側）"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Action\": \"secretsmanager:GetSecretValue\",","      \"Resource\": \"arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db/credentials-*\"","    },","    {","      \"Effect\": \"Allow\",","      \"Action\": \"kms:Decrypt\",","      \"Resource\": \"arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\"","    }","  ]","}"]} />
+<CodeBlock index={31} language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Action\": \"secretsmanager:GetSecretValue\",","      \"Resource\": \"arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db/credentials-*\"","    },","    {","      \"Effect\": \"Allow\",","      \"Action\": \"kms:Decrypt\",","      \"Resource\": \"arn:aws:kms:ap-northeast-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab\"","    }","  ]","}"]} />
 {" "}
 <blockquote>{" "}<p>{"カスタマーマネージドキーで暗号化したシークレットは、"}<strong><code>{"secretsmanager:GetSecretValue"}</code>{"と"}<code>{"kms:Decrypt"}</code>{"の両方"}</strong>{"が必要です（Step 11の落とし穴）。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"19-8 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 89">
 <table>
 
 <thead>
@@ -432,7 +432,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <h3>{"試験のひっかけ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 90">
 <table>
 
 <thead>

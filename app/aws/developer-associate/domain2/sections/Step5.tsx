@@ -16,7 +16,7 @@ export function Step5() { return (<section className="section">
 <Diagram index={6} label="Step 5　AWSサービスへの認証済み呼び出し（Skill 2.1.4）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 20">
 <table>
 
 <thead>
@@ -74,9 +74,9 @@ export function Step5() { return (<section className="section">
 {" "}
 <p>{"認証情報を持たない第三者に、"}<strong>{"期限つきで特定操作だけ"}</strong>{"を許可する仕組みです（S3が代表例）。"}</p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","s3 = boto3.client(\"s3\", region_name=\"ap-northeast-1\")","url = s3.generate_presigned_url(","    \"get_object\",","    Params={\"Bucket\": \"my-app-bucket\", \"Key\": \"reports/2026-10.pdf\"},","    ExpiresIn=300,  # 5分",")","print(url)"]} />
+<CodeBlock index={8} language="python" lines={["import boto3","","s3 = boto3.client(\"s3\", region_name=\"ap-northeast-1\")","url = s3.generate_presigned_url(","    \"get_object\",","    Params={\"Bucket\": \"my-app-bucket\", \"Key\": \"reports/2026-10.pdf\"},","    ExpiresIn=300,  # 5分",")","print(url)"]} />
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 21">
 <table>
 
 <thead>
@@ -124,7 +124,7 @@ export function Step5() { return (<section className="section">
 {" "}
 <h3>{"5-3 サービスごとの認証方式（開発者が選ぶ場面）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 22">
 <table>
 
 <thead>
@@ -188,7 +188,7 @@ export function Step5() { return (<section className="section">
 {" "}
 <h3>{"5-4 API Gatewayの認証オプション比較"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 23">
 <table>
 
 <thead>
@@ -264,7 +264,7 @@ export function Step5() { return (<section className="section">
 {" "}
 <h3>{"5-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 24">
 <table>
 
 <thead>

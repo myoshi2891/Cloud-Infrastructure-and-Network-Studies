@@ -14,8 +14,8 @@ function highlight(line: string, language: string): ReactNode {
     return parts;
 }
 /** 空行・インデント・全文を保持する行単位のコードブロック。 */
-export function CodeBlock({ language, lines }: { language: string; lines: string[] }) {
-    return <div className="code-block" data-language={language} tabIndex={0} role="region" aria-label={`${language} コード例`}>
+export function CodeBlock({ language, lines, index }: { language: string; lines: string[]; index: number }) {
+    return <div className="code-block" data-language={language} tabIndex={0} role="region" aria-label={`${language} コード例 ${index + 1}`}>
         {lines.map((line, index) => <div className="code-line" key={index}><code className={`language-${language}`}>{highlight(line, language)}</code></div>)}
     </div>;
 }

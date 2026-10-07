@@ -19,6 +19,7 @@ export type ColorKey =
     | 'card-pca'
     | 'card-aws-saa'
     | 'card-aws-cloudops'
+    | 'card-aws-dva'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -68,6 +69,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-ccna': 'card-ccna',
     'card-aws-saa': 'card-aws-saa',
     'card-aws-cloudops': 'card-aws-cloudops',
+    'card-aws-dva': 'card-aws-dva',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -546,6 +548,22 @@ const ALL_EXAMS: Exam[] = [
         badge: 'ソリューションアーキテクト',
         icon: '🏗',
         provider: 'AWS',
+    },
+    {
+        id: 'aws-dva',
+        label: 'AWS Certified Developer - Associate',
+        abbr: 'DVA',
+        level: 'Associate',
+        score: '65問 / 130分',
+        color: 'card-aws-dva',
+        href: '/aws/developer-associate/domain2',
+        overviewLabel: 'ドメイン2: セキュリティ',
+        description: 'DVA-C02のセキュリティ分野を24 Steps・35図で学習。IAM、STS、Cognito、KMS、暗号化、シークレット管理と12問の練習問題を収録。',
+        domains: [{ label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' }],
+        badge: 'DVA-C02',
+        icon: '🔐',
+        provider: 'AWS',
+        status: 'available',
     },
     {
         id: 'aws-cloudops',

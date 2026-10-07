@@ -10,7 +10,7 @@ export function Step9() { return (<section className="section">
 {" "}
 <h3>{"9-1 2種類の「誰」を区別する"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 42">
 <table>
 
 <thead>
@@ -62,7 +62,7 @@ export function Step9() { return (<section className="section">
 <Diagram index={11} label="Step 9　マイクロサービス間の認証（Skill 2.1.8）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 43">
 <table>
 
 <thead>
@@ -138,7 +138,7 @@ export function Step9() { return (<section className="section">
 {" "}
 <h3>{"9-3 サービスに権限を付ける：2つの方向"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 44">
 <table>
 
 <thead>
@@ -184,7 +184,7 @@ export function Step9() { return (<section className="section">
 {" "}
 <p>{"例：S3のイベントでLambdaを起動する場合、"}<strong>{"Lambdaのリソースベースポリシー"}</strong>{"で"}<code>{"s3.amazonaws.com"}</code>{"に"}<code>{"lambda:InvokeFunction"}</code>{"を許可し、混乱した代理問題の対策として"}<code>{"aws:SourceArn"}</code>{"と"}<code>{"aws:SourceAccount"}</code>{"の条件を付けます。"}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Principal\": { \"Service\": \"s3.amazonaws.com\" },","  \"Action\": \"lambda:InvokeFunction\",","  \"Resource\": \"arn:aws:lambda:ap-northeast-1:111122223333:function:ProcessUpload\",","  \"Condition\": {","    \"ArnLike\": { \"aws:SourceArn\": \"arn:aws:s3:::my-app-bucket\" },","    \"StringEquals\": { \"aws:SourceAccount\": \"111122223333\" }","  }","}"]} />
+<CodeBlock index={15} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Principal\": { \"Service\": \"s3.amazonaws.com\" },","  \"Action\": \"lambda:InvokeFunction\",","  \"Resource\": \"arn:aws:lambda:ap-northeast-1:111122223333:function:ProcessUpload\",","  \"Condition\": {","    \"ArnLike\": { \"aws:SourceArn\": \"arn:aws:s3:::my-app-bucket\" },","    \"StringEquals\": { \"aws:SourceAccount\": \"111122223333\" }","  }","}"]} />
 {" "}
 <h3>{"9-4 Cognitoのクライアントクレデンシャルによる M2M"}</h3>
 {" "}
@@ -194,7 +194,7 @@ export function Step9() { return (<section className="section">
 {" "}
 <h3>{"9-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 45">
 <table>
 
 <thead>

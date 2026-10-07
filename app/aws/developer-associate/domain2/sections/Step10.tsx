@@ -10,14 +10,14 @@ export function Step10() { return (<section className="section">
 {" "}
 <h3>{"10-1 2つの暗号化"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 46">
 <table>
 
 <thead>
 
 <tr>
 
-<th scope="col"></th>
+<th aria-hidden="true" scope="col"></th>
 
 <th scope="col">{"保管時の暗号化（Encryption at rest）"}</th>
 
@@ -80,7 +80,7 @@ export function Step10() { return (<section className="section">
 {" "}
 <h3>{"10-2 サービス別の保管時暗号化（開発者が知るべき要点）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 47">
 <table>
 
 <thead>
@@ -178,7 +178,7 @@ export function Step10() { return (<section className="section">
 {" "}
 <h3>{"10-3 転送中の暗号化を「強制」する方法"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 48">
 <table>
 
 <thead>
@@ -250,11 +250,11 @@ export function Step10() { return (<section className="section">
 {" "}
 <p>{"S3でHTTPを拒否するバケットポリシー："}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Sid\": \"DenyInsecureTransport\",","      \"Effect\": \"Deny\",","      \"Principal\": \"*\",","      \"Action\": \"s3:*\",","      \"Resource\": [","        \"arn:aws:s3:::my-app-bucket\",","        \"arn:aws:s3:::my-app-bucket/*\"","      ],","      \"Condition\": { \"Bool\": { \"aws:SecureTransport\": \"false\" } }","    }","  ]","}"]} />
+<CodeBlock index={16} language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Sid\": \"DenyInsecureTransport\",","      \"Effect\": \"Deny\",","      \"Principal\": \"*\",","      \"Action\": \"s3:*\",","      \"Resource\": [","        \"arn:aws:s3:::my-app-bucket\",","        \"arn:aws:s3:::my-app-bucket/*\"","      ],","      \"Condition\": { \"Bool\": { \"aws:SecureTransport\": \"false\" } }","    }","  ]","}"]} />
 {" "}
 <h3>{"10-4 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 49">
 <table>
 
 <thead>

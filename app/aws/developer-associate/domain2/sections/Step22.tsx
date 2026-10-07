@@ -9,7 +9,7 @@ export function Step22() { return (<section className="section">
 {" "}
 <h3>{"22-1 リスクと対策の対応表"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 102">
 <table>
 
 <thead>
@@ -105,11 +105,11 @@ export function Step22() { return (<section className="section">
 {" "}
 <h3>{"22-2 最小権限の例"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"bedrock:InvokeModel\"],","  \"Resource\": \"arn:aws:bedrock:ap-northeast-1::foundation-model/<利用するモデルID>\"","}"]} />
+<CodeBlock index={39} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"bedrock:InvokeModel\"],","  \"Resource\": \"arn:aws:bedrock:ap-northeast-1::foundation-model/<利用するモデルID>\"","}"]} />
 {" "}
 <h3>{"22-3 押さえるべき考え方"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 103">
 <table>
 
 <thead>

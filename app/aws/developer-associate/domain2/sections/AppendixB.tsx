@@ -5,7 +5,7 @@ export function AppendixB() { return (<section className="section">
 {" "}
 <h3>{"B-1 試験・公式ガイド"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 107">
 <table>
 
 <thead>
@@ -69,7 +69,7 @@ export function AppendixB() { return (<section className="section">
 {" "}
 <h3>{"B-2 認証・認可（Task 1）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 108">
 <table>
 
 <thead>
@@ -205,7 +205,7 @@ export function AppendixB() { return (<section className="section">
 {" "}
 <h3>{"B-3 暗号化（Task 2）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 109">
 <table>
 
 <thead>
@@ -301,7 +301,7 @@ export function AppendixB() { return (<section className="section">
 {" "}
 <h3>{"B-4 機密データ管理（Task 3）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 110">
 <table>
 
 <thead>

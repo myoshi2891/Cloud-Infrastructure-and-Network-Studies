@@ -12,7 +12,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <p>{"「"}<strong>{"持っている人（bearer）を正当な利用者とみなす"}</strong>{"」トークンです。HTTPの"}<code>{"Authorization"}</code>{"ヘッダーで送ります。"}</p>
 {" "}
-<CodeBlock language="http" lines={["GET /orders HTTP/1.1","Host: api.example.com","Authorization: Bearer eyJraWQiOiJ...（JWT）"]} />
+<CodeBlock index={10} language="http" lines={["GET /orders HTTP/1.1","Host: api.example.com","Authorization: Bearer eyJraWQiOiJ...（JWT）"]} />
 {" "}
 <p><strong>{"鍵のかかっていない鍵束"}</strong>{"のようなもので、盗まれると誰でも使えます。そのため、"}<strong>{"HTTPS必須・短い有効期限・安全な保管"}</strong>{"が絶対条件です（RFC 6750）。"}</p>
 {" "}
@@ -20,7 +20,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <p>{"JWTは "}<code>{"ヘッダー.ペイロード.署名"}</code>{" の3部構成で、各部をBase64URLエンコードしてドットで連結します。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 32">
 <table>
 
 <thead>
@@ -78,7 +78,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <h3>{"7-3 JWTを検証するときのチェックリスト"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 33">
 <table>
 
 <thead>
@@ -166,7 +166,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <h3>{"7-4 Cognitoの3種類のトークン"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 34">
 <table>
 
 <thead>
@@ -242,7 +242,7 @@ export function Step7() { return (<section className="section">
 <Diagram index={9} label="Step 7　ベアラートークンによるアプリの保護（Skill 2.1.2）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 35">
 <table>
 
 <thead>
@@ -298,7 +298,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <h3>{"7-6 OAuth 2.0 の主要なフロー"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 36">
 <table>
 
 <thead>
@@ -346,7 +346,7 @@ export function Step7() { return (<section className="section">
 {" "}
 <h3>{"7-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 37">
 <table>
 
 <thead>

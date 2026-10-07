@@ -7,7 +7,7 @@ export function Step0() { return (<section className="section">
 {" "}
 <p>{"公式試験ガイドによると、DVA-C02は開発者ロールの人向けで、AWSクラウド上のアプリケーションの"}<strong>{"開発・テスト・デプロイ・デバッグ"}</strong>{"の能力を検証します。検証される能力には「アプリケーションコードとデータの保護（Secure application code and data）」が含まれています。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 1">
 <table>
 
 <thead>
@@ -79,7 +79,7 @@ export function Step0() { return (<section className="section">
 {" "}
 <h3>{"0-2 ドメインの重み"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 2">
 <table>
 
 <thead>

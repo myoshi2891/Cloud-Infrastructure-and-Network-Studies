@@ -16,7 +16,7 @@ export function Step20() { return (<section className="section">
 {" "}
 <h3>{"20-1 用語を整理する"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 91">
 <table>
 
 <thead>
@@ -122,21 +122,21 @@ export function Step20() { return (<section className="section">
 {" "}
 <p><strong>{"表示用マスキング"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import re","","def mask_email(email: str) -> str:","    local, _, domain = email.partition(\"@\")","    return (local[:1] + \"***@\" + domain) if domain else \"***\"","","def mask_card(number: str) -> str:","    digits = re.sub(r\"\\D\", \"\", number)","    return \"*\" * (len(digits) - 4) + digits[-4:]","","print(mask_email(\"taro@example.com\"))   # t***@example.com","print(mask_card(\"4111 1111 1111 1111\")) # ************1111"]} />
+<CodeBlock index={32} language="python" lines={["import re","","def mask_email(email: str) -> str:","    local, _, domain = email.partition(\"@\")","    return (local[:1] + \"***@\" + domain) if domain else \"***\"","","def mask_card(number: str) -> str:","    digits = re.sub(r\"\\D\", \"\", number)","    return \"*\" * (len(digits) - 4) + digits[-4:]","","print(mask_email(\"taro@example.com\"))   # t***@example.com","print(mask_card(\"4111 1111 1111 1111\")) # ************1111"]} />
 {" "}
 <p><strong>{"ログのサニタイズ（ロギングフィルター）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import logging","import re","","SENSITIVE = [","    (re.compile(r\"(?i)(password|secret|token|api[_-]?key)\\s*[:=]\\s*\\S+\"), r\"\\1=[REDACTED]\"),","    (re.compile(r\"\\b\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4}\\b\"), \"[CARD]\"),","]","","class RedactFilter(logging.Filter):","    def filter(self, record):","        msg = record.getMessage()","        for pattern, repl in SENSITIVE:","            msg = pattern.sub(repl, msg)","        record.msg, record.args = msg, ()","        return True","","logger = logging.getLogger(\"app\")","logger.addFilter(RedactFilter())"]} />
+<CodeBlock index={33} language="python" lines={["import logging","import re","","SENSITIVE = [","    (re.compile(r\"(?i)(password|secret|token|api[_-]?key)\\s*[:=]\\s*\\S+\"), r\"\\1=[REDACTED]\"),","    (re.compile(r\"\\b\\d{4}[- ]?\\d{4}[- ]?\\d{4}[- ]?\\d{4}\\b\"), \"[CARD]\"),","]","","class RedactFilter(logging.Filter):","    def filter(self, record):","        msg = record.getMessage()","        for pattern, repl in SENSITIVE:","            msg = pattern.sub(repl, msg)","        record.msg, record.args = msg, ()","        return True","","logger = logging.getLogger(\"app\")","logger.addFilter(RedactFilter())"]} />
 {" "}
 <p><strong>{"レスポンスの最小化（必要な項目だけ返す）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["def to_public_user(user: dict) -> dict:","    allowed = {\"id\", \"display_name\", \"created_at\"}","    return {k: v for k, v in user.items() if k in allowed}  # 許可リスト方式"]} />
+<CodeBlock index={34} language="python" lines={["def to_public_user(user: dict) -> dict:","    allowed = {\"id\", \"display_name\", \"created_at\"}","    return {k: v for k, v in user.items() if k in allowed}  # 許可リスト方式"]} />
 {" "}
 <blockquote>{" "}<p><strong>{"許可リスト（allow-list）方式"}</strong>{"：返す項目を明示的に指定すると、新しい機密項目が追加されても"}<strong>{"うっかり漏れません"}</strong>{"。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"20-4 AWSの機能による支援"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 92">
 <table>
 
 <thead>
@@ -210,7 +210,7 @@ export function Step20() { return (<section className="section">
 {" "}
 <p>{"機密データの保護と並んで、"}<strong>{"外部入力を信用しない"}</strong>{"ことも基本です。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 93">
 <table>
 
 <thead>
@@ -280,11 +280,11 @@ export function Step20() { return (<section className="section">
 </table>
 </div>
 {" "}
-<CodeBlock language="python" lines={["# 悪い例（SQLインジェクション）","cursor.execute(f\"SELECT * FROM users WHERE id = '{user_input}'\")","","# 良い例（パラメータ化）","cursor.execute(\"SELECT * FROM users WHERE id = %s\", (user_input,))"]} />
+<CodeBlock index={35} language="python" lines={["# 悪い例（SQLインジェクション）","cursor.execute(f\"SELECT * FROM users WHERE id = '{user_input}'\")","","# 良い例（パラメータ化）","cursor.execute(\"SELECT * FROM users WHERE id = %s\", (user_input,))"]} />
 {" "}
 <h3>{"20-6 テスト・開発環境のデータ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 94">
 <table>
 
 <thead>
@@ -332,7 +332,7 @@ export function Step20() { return (<section className="section">
 {" "}
 <h3>{"20-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 95">
 <table>
 
 <thead>

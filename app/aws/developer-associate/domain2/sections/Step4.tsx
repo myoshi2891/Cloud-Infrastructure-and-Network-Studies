@@ -10,7 +10,7 @@ export function Step4() { return (<section className="section">
 {" "}
 <h3>{"4-1 アクセス方法の整理"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 16">
 <table>
 
 <thead>
@@ -66,7 +66,7 @@ export function Step4() { return (<section className="section">
 {" "}
 <h3>{"4-2 認証情報の種類と安全性"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 17">
 <table>
 
 <thead>
@@ -142,21 +142,21 @@ export function Step4() { return (<section className="section">
 {" "}
 <h3>{"4-4 ローカル開発の推奨設定（IAM Identity Center）"}</h3>
 {" "}
-<CodeBlock language="bash" lines={["# 初回のみ：SSOプロファイルを作成","aws configure sso","","# ログイン（ブラウザで認証。一時認証情報が取得される）","aws sso login --profile dev","","# プロファイルを使って実行","aws s3 ls --profile dev"]} />
+<CodeBlock index={5} language="bash" lines={["# 初回のみ：SSOプロファイルを作成","aws configure sso","","# ログイン（ブラウザで認証。一時認証情報が取得される）","aws sso login --profile dev","","# プロファイルを使って実行","aws s3 ls --profile dev"]} />
 {" "}
 <p>{"プロファイルのAssumeRole設定例（"}<code>{"~/.aws/config"}</code>{"）："}</p>
 {" "}
-<CodeBlock language="ini" lines={["[profile partner]","role_arn = arn:aws:iam::222233334444:role/PartnerReadRole","source_profile = dev","role_session_name = dev-session","region = ap-northeast-1"]} />
+<CodeBlock index={6} language="ini" lines={["[profile partner]","role_arn = arn:aws:iam::222233334444:role/PartnerReadRole","source_profile = dev","role_session_name = dev-session","region = ap-northeast-1"]} />
 {" "}
 <h3>{"4-5 EC2のメタデータ：IMDSv2"}</h3>
 {" "}
 <p>{"EC2上のアプリはインスタンスメタデータサービス（IMDS）から一時認証情報を取得します。SSRF攻撃による認証情報の窃取を防ぐため、"}<strong>{"セッショントークン方式のIMDSv2"}</strong>{"を必須にします。"}</p>
 {" "}
-<CodeBlock language="bash" lines={["# IMDSv2：まずトークンを取得してからメタデータを読む","TOKEN=$(curl -s -X PUT \"http://169.254.169.254/latest/api/token\" \\","  -H \"X-aws-ec2-metadata-token-ttl-seconds: 21600\")","curl -s -H \"X-aws-ec2-metadata-token: $TOKEN\" \\","  http://169.254.169.254/latest/meta-data/iam/security-credentials/"]} />
+<CodeBlock index={7} language="bash" lines={["# IMDSv2：まずトークンを取得してからメタデータを読む","TOKEN=$(curl -s -X PUT \"http://169.254.169.254/latest/api/token\" \\","  -H \"X-aws-ec2-metadata-token-ttl-seconds: 21600\")","curl -s -H \"X-aws-ec2-metadata-token: $TOKEN\" \\","  http://169.254.169.254/latest/meta-data/iam/security-credentials/"]} />
 {" "}
 <h3>{"4-6 AWS外の環境から使う場合"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 18">
 <table>
 
 <thead>
@@ -204,7 +204,7 @@ export function Step4() { return (<section className="section">
 {" "}
 <h3>{"4-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 19">
 <table>
 
 <thead>

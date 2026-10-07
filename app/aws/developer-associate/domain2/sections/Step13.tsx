@@ -11,7 +11,7 @@ export function Step13() { return (<section className="section">
 {" "}
 <p>{"TLS証明書は、"}<strong>{"サーバーが本物であること"}</strong>{"と"}<strong>{"公開鍵"}</strong>{"を、認証局（CA）の署名で保証するデジタル文書です。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 61">
 <table>
 
 <thead>
@@ -75,14 +75,14 @@ export function Step13() { return (<section className="section">
 {" "}
 <h3>{"13-2 AWS Certificate Manager（ACM）と AWS Private CA"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 62">
 <table>
 
 <thead>
 
 <tr>
 
-<th scope="col"></th>
+<th aria-hidden="true" scope="col"></th>
 
 <th scope="col"><strong>{"ACM（パブリック証明書）"}</strong></th>
 
@@ -161,7 +161,7 @@ export function Step13() { return (<section className="section">
 {" "}
 <h3>{"13-3 ACMが使えるサービスと注意点"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 63">
 <table>
 
 <thead>
@@ -229,7 +229,7 @@ export function Step13() { return (<section className="section">
 <Diagram index={18} label="Step 13　証明書管理：ACMとAWS Private CA（Skill 2.2.2）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 64">
 <table>
 
 <thead>
@@ -285,7 +285,7 @@ export function Step13() { return (<section className="section">
 {" "}
 <h3>{"13-6 証明書管理の運用ポイント"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 65">
 <table>
 
 <thead>
@@ -349,7 +349,7 @@ export function Step13() { return (<section className="section">
 {" "}
 <h3>{"13-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 66">
 <table>
 
 <thead>

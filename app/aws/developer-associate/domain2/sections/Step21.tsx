@@ -14,7 +14,7 @@ export function Step21() { return (<section className="section">
 {" "}
 <h3>{"21-2 テナント分離モデル"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 96">
 <table>
 
 <thead>
@@ -86,7 +86,7 @@ export function Step21() { return (<section className="section">
 <Diagram index={30} label="Step 21　マルチテナントのデータアクセスパターン（Skill 2.3.6）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 97">
 <table>
 
 <thead>
@@ -128,7 +128,7 @@ export function Step21() { return (<section className="section">
 {" "}
 <p><strong>{"パーティションキーにテナントIDを含める"}</strong>{"設計と、"}<strong>{"IAMの条件"}</strong>{"で強制する設計を組み合わせます。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 98">
 <table>
 
 <thead>
@@ -168,17 +168,17 @@ export function Step21() { return (<section className="section">
 {" "}
 <p>{"IAMで"}<strong>{"テナントに属するキーのみ"}</strong>{"に限定（STSセッションタグやポリシー変数を活用）："}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"dynamodb:GetItem\", \"dynamodb:Query\", \"dynamodb:PutItem\"],","  \"Resource\": \"arn:aws:dynamodb:ap-northeast-1:111122223333:table/Orders\",","  \"Condition\": {","    \"ForAllValues:StringLike\": {","      \"dynamodb:LeadingKeys\": [\"TENANT#${aws:PrincipalTag/TenantId}*\"]","    }","  }","}"]} />
+<CodeBlock index={36} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"dynamodb:GetItem\", \"dynamodb:Query\", \"dynamodb:PutItem\"],","  \"Resource\": \"arn:aws:dynamodb:ap-northeast-1:111122223333:table/Orders\",","  \"Condition\": {","    \"ForAllValues:StringLike\": {","      \"dynamodb:LeadingKeys\": [\"TENANT#${aws:PrincipalTag/TenantId}*\"]","    }","  }","}"]} />
 {" "}
 <p><strong>{"テナント限定の認証情報を作る（セッションタグ）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","sts = boto3.client(\"sts\")","resp = sts.assume_role(","    RoleArn=\"arn:aws:iam::111122223333:role/TenantAccessRole\",","    RoleSessionName=f\"tenant-{tenant_id}\",","    Tags=[{\"Key\": \"TenantId\", \"Value\": tenant_id}],  # IAM条件で参照できる","    DurationSeconds=900,",")"]} />
+<CodeBlock index={37} language="python" lines={["import boto3","","sts = boto3.client(\"sts\")","resp = sts.assume_role(","    RoleArn=\"arn:aws:iam::111122223333:role/TenantAccessRole\",","    RoleSessionName=f\"tenant-{tenant_id}\",","    Tags=[{\"Key\": \"TenantId\", \"Value\": tenant_id}],  # IAM条件で参照できる","    DurationSeconds=900,",")"]} />
 {" "}
 <blockquote>{" "}<p>{"ロールの信頼ポリシーに"}<code>{"sts:TagSession"}</code>{"の許可が必要です。"}<strong>{"アプリ（Lambda）が信頼できるテナントIDを検証したうえでのみタグを付ける"}</strong>{"ことが前提です。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"21-5 S3・RDSでの分離"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 99">
 <table>
 
 <thead>
@@ -234,7 +234,7 @@ export function Step21() { return (<section className="section">
 {" "}
 <p>{"PostgreSQLのRLSの考え方："}</p>
 {" "}
-<CodeBlock language="sql" lines={["ALTER TABLE orders ENABLE ROW LEVEL SECURITY;","","CREATE POLICY tenant_isolation ON orders","  USING (tenant_id = current_setting('app.tenant_id')::uuid);","","-- 接続ごとにテナントを設定（アプリが検証済みの値で）","SET app.tenant_id = '11111111-1111-1111-1111-111111111111';"]} />
+<CodeBlock index={38} language="sql" lines={["ALTER TABLE orders ENABLE ROW LEVEL SECURITY;","","CREATE POLICY tenant_isolation ON orders","  USING (tenant_id = current_setting('app.tenant_id')::uuid);","","-- 接続ごとにテナントを設定（アプリが検証済みの値で）","SET app.tenant_id = '11111111-1111-1111-1111-111111111111';"]} />
 {" "}
 <h3>{"21-6 分離を「迂回できない」層に置く"}</h3>
 {" "}
@@ -242,7 +242,7 @@ export function Step21() { return (<section className="section">
 <Diagram index={31} label="Step 21　マルチテナントのデータアクセスパターン（Skill 2.3.6）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 100">
 <table>
 
 <thead>
@@ -306,7 +306,7 @@ export function Step21() { return (<section className="section">
 {" "}
 <h3>{"21-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 101">
 <table>
 
 <thead>

@@ -12,7 +12,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <p>{"IAMロールは「"}<strong>{"一時的に着る制服"}</strong>{"」のようなものです。ロールには固定のパスワードやアクセスキーがありません。引き受けると、AWS STS（Security Token Service）が"}<strong>{"有効期限つきの一時認証情報"}</strong>{"を発行します。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 10">
 <table>
 
 <thead>
@@ -68,7 +68,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <h3>{"3-2 ロールの2つのポリシー"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 11">
 <table>
 
 <thead>
@@ -114,7 +114,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <p>{"Lambdaの実行ロール用の信頼ポリシー例："}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Principal\": { \"Service\": \"lambda.amazonaws.com\" },","      \"Action\": \"sts:AssumeRole\"","    }","  ]","}"]} />
+<CodeBlock index={1} language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Principal\": { \"Service\": \"lambda.amazonaws.com\" },","      \"Action\": \"sts:AssumeRole\"","    }","  ]","}"]} />
 {" "}
 <h3>{"3-3 AssumeRoleの流れ"}</h3>
 {" "}
@@ -124,7 +124,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <h3>{"3-4 STSの主なAPI"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 12">
 <table>
 
 <thead>
@@ -212,17 +212,17 @@ export function Step3() { return (<section className="section">
 {" "}
 <p><strong>{"CLIで確認"}</strong></p>
 {" "}
-<CodeBlock language="bash" lines={["# 今のIDを確認（デバッグの基本）","aws sts get-caller-identity","","# 別アカウントのロールを引き受ける","aws sts assume-role \\","  --role-arn arn:aws:iam::222233334444:role/PartnerReadRole \\","  --role-session-name dev-session \\","  --external-id my-external-id"]} />
+<CodeBlock index={2} language="bash" lines={["# 今のIDを確認（デバッグの基本）","aws sts get-caller-identity","","# 別アカウントのロールを引き受ける","aws sts assume-role \\","  --role-arn arn:aws:iam::222233334444:role/PartnerReadRole \\","  --role-session-name dev-session \\","  --external-id my-external-id"]} />
 {" "}
 <p><strong>{"Python（boto3）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","sts = boto3.client(\"sts\")","resp = sts.assume_role(","    RoleArn=\"arn:aws:iam::222233334444:role/PartnerReadRole\",","    RoleSessionName=\"dev-session\",","    ExternalId=\"my-external-id\",","    DurationSeconds=900,",")","c = resp[\"Credentials\"]","","s3 = boto3.client(","    \"s3\",","    aws_access_key_id=c[\"AccessKeyId\"],","    aws_secret_access_key=c[\"SecretAccessKey\"],","    aws_session_token=c[\"SessionToken\"],",")","print(s3.list_buckets()[\"Buckets\"])"]} />
+<CodeBlock index={3} language="python" lines={["import boto3","","sts = boto3.client(\"sts\")","resp = sts.assume_role(","    RoleArn=\"arn:aws:iam::222233334444:role/PartnerReadRole\",","    RoleSessionName=\"dev-session\",","    ExternalId=\"my-external-id\",","    DurationSeconds=900,",")","c = resp[\"Credentials\"]","","s3 = boto3.client(","    \"s3\",","    aws_access_key_id=c[\"AccessKeyId\"],","    aws_secret_access_key=c[\"SecretAccessKey\"],","    aws_session_token=c[\"SessionToken\"],",")","print(s3.list_buckets()[\"Buckets\"])"]} />
 {" "}
 <h3>{"3-7 混乱した代理問題（Confused Deputy）と対策"}</h3>
 {" "}
 <p>{"第三者サービスにロールの引き受けを許可するとき、別の顧客がそのサービスを悪用して"}<strong>{"自分のロールを引き受けさせる"}</strong>{"リスクがあります。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 13">
 <table>
 
 <thead>
@@ -264,11 +264,11 @@ export function Step3() { return (<section className="section">
 {" "}
 <p>{"LambdaやECSのタスクを作る開発者は、"}<strong>{"そのロールをサービスに「渡す」権限"}</strong>{"（"}<code>{"iam:PassRole"}</code>{"）が必要です。この権限は、渡せるロールを"}<strong>{"特定のARNに限定"}</strong>{"するのが鉄則です。"}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": \"iam:PassRole\",","  \"Resource\": \"arn:aws:iam::111122223333:role/MyLambdaExecutionRole\",","  \"Condition\": { \"StringEquals\": { \"iam:PassedToService\": \"lambda.amazonaws.com\" } }","}"]} />
+<CodeBlock index={4} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": \"iam:PassRole\",","  \"Resource\": \"arn:aws:iam::111122223333:role/MyLambdaExecutionRole\",","  \"Condition\": { \"StringEquals\": { \"iam:PassedToService\": \"lambda.amazonaws.com\" } }","}"]} />
 {" "}
 <h3>{"3-9 コンピュートごとの「ロールの付け方」"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 14">
 <table>
 
 <thead>
@@ -332,7 +332,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <h3>{"3-10 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 15">
 <table>
 
 <thead>

@@ -14,7 +14,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-2 KMSキーの種類"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 50">
 <table>
 
 <thead>
@@ -86,7 +86,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-3 KMSキーのタイプ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 51">
 <table>
 
 <thead>
@@ -140,7 +140,7 @@ export function Step11() { return (<section className="section">
 <Diagram index={14} label="Step 11　AWS KMSと鍵の使い方（Skill 2.2.4）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 52">
 <table>
 
 <thead>
@@ -182,7 +182,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-5 主なKMS API"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 53">
 <table>
 
 <thead>
@@ -256,7 +256,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <p>{"暗号化・復号の際に渡す"}<strong>{"追加の認証データ（AAD）"}<strong>{"で、秘密ではないキーと値のペアです。復号時に同じコンテキストが必要になり、"}<strong>{"改ざん・取り違えの検知"}</strong>{"と、CloudTrailでの"}</strong>{"監査"}</strong>{"に役立ちます。"}</p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","kms = boto3.client(\"kms\")","key_id = \"alias/my-app-key\"","","enc = kms.encrypt(","    KeyId=key_id,","    Plaintext=b\"my small secret\",","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},",")","blob = enc[\"CiphertextBlob\"]","","dec = kms.decrypt(","    CiphertextBlob=blob,","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},  # 一致しないと失敗",")","print(dec[\"Plaintext\"])"]} />
+<CodeBlock index={17} language="python" lines={["import boto3","","kms = boto3.client(\"kms\")","key_id = \"alias/my-app-key\"","","enc = kms.encrypt(","    KeyId=key_id,","    Plaintext=b\"my small secret\",","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},",")","blob = enc[\"CiphertextBlob\"]","","dec = kms.decrypt(","    CiphertextBlob=blob,","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},  # 一致しないと失敗",")","print(dec[\"Plaintext\"])"]} />
 {" "}
 <h3>{"11-7 鍵ポリシーとIAMポリシー（KMS独自のルール）"}</h3>
 {" "}
@@ -268,7 +268,7 @@ export function Step11() { return (<section className="section">
 {" "}
 </ul>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 54">
 <table>
 
 <thead>
@@ -324,11 +324,11 @@ export function Step11() { return (<section className="section">
 {" "}
 <p>{"鍵ポリシーの考え方（管理者と利用者を分離）："}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Sid\": \"AllowUseOfTheKey\",","  \"Effect\": \"Allow\",","  \"Principal\": { \"AWS\": \"arn:aws:iam::111122223333:role/OrdersAppRole\" },","  \"Action\": [\"kms:Encrypt\", \"kms:Decrypt\", \"kms:GenerateDataKey\"],","  \"Resource\": \"*\",","  \"Condition\": {","    \"StringEquals\": { \"kms:ViaService\": \"s3.ap-northeast-1.amazonaws.com\" }","  }","}"]} />
+<CodeBlock index={18} language="json" lines={["{","  \"Sid\": \"AllowUseOfTheKey\",","  \"Effect\": \"Allow\",","  \"Principal\": { \"AWS\": \"arn:aws:iam::111122223333:role/OrdersAppRole\" },","  \"Action\": [\"kms:Encrypt\", \"kms:Decrypt\", \"kms:GenerateDataKey\"],","  \"Resource\": \"*\",","  \"Condition\": {","    \"StringEquals\": { \"kms:ViaService\": \"s3.ap-northeast-1.amazonaws.com\" }","  }","}"]} />
 {" "}
 <h3>{"11-8 アプリが使うロールに必要なKMS権限（よくある落とし穴）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 55">
 <table>
 
 <thead>
@@ -394,7 +394,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-10 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 56">
 <table>
 
 <thead>

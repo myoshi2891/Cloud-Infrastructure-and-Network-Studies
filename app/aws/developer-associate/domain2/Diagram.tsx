@@ -6,7 +6,7 @@ import { DIAGRAMS } from './constants';
 export const Diagram = memo(function Diagram({ index, label }: { index: number; label: string }) {
     const chart = DIAGRAMS[index];
     if (!chart) return null;
-    return <div className="diagram-wrap" data-diagram={index} tabIndex={0} role="region" aria-label={label}>
+    return <div className="diagram-wrap" data-diagram={index} tabIndex={0} role="region" aria-label={`${label}（図${index + 1}）`}>
         <MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale={true} />
     </div>;
 });

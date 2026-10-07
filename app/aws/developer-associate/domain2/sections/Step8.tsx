@@ -10,7 +10,7 @@ export function Step8() { return (<section className="section">
 {" "}
 <h3>{"8-1 認可のレイヤー"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 38">
 <table>
 
 <thead>
@@ -68,7 +68,7 @@ export function Step8() { return (<section className="section">
 {" "}
 <h3>{"8-2 RBACとABAC"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 39">
 <table>
 
 <thead>
@@ -128,27 +128,27 @@ export function Step8() { return (<section className="section">
 {" "}
 <h3>{"8-3 Cognitoグループ・スコープによるRBAC"}</h3>
 {" "}
-<CodeBlock language="python" lines={["# Lambda内でトークンのクレームを使って判定する例（API Gateway検証済みクレーム）","def handler(event, context):","    claims = event[\"requestContext\"][\"authorizer\"][\"claims\"]","    groups = claims.get(\"cognito:groups\", \"\")","    if \"admins\" not in groups:","        return {\"statusCode\": 403, \"body\": \"Forbidden\"}","    return {\"statusCode\": 200, \"body\": \"OK\"}"]} />
+<CodeBlock index={11} language="python" lines={["# Lambda内でトークンのクレームを使って判定する例（API Gateway検証済みクレーム）","def handler(event, context):","    claims = event[\"requestContext\"][\"authorizer\"][\"claims\"]","    groups = claims.get(\"cognito:groups\", \"\")","    if \"admins\" not in groups:","        return {\"statusCode\": 403, \"body\": \"Forbidden\"}","    return {\"statusCode\": 200, \"body\": \"OK\"}"]} />
 {" "}
 <blockquote>{" "}<p>{"HTTP APIのJWTオーソライザーでは"}<code>{"event[\"requestContext\"][\"authorizer\"][\"jwt\"][\"claims\"]"}</code>{"に入ります。API種別でイベント構造が違う点に注意してください。"}</p>{" "}</blockquote>
 {" "}
 <p><strong>{"認可のよくある失敗：IDOR（他人のIDを指定して他人のデータを見る）"}</strong></p>
 {" "}
-<CodeBlock language="python" lines={["# 悪い例：リクエストのuserIdを信用している","user_id = event[\"pathParameters\"][\"userId\"]","","# 良い例：検証済みトークンのsubを使う","user_id = event[\"requestContext\"][\"authorizer\"][\"claims\"][\"sub\"]"]} />
+<CodeBlock index={12} language="python" lines={["# 悪い例：リクエストのuserIdを信用している","user_id = event[\"pathParameters\"][\"userId\"]","","# 良い例：検証済みトークンのsubを使う","user_id = event[\"requestContext\"][\"authorizer\"][\"claims\"][\"sub\"]"]} />
 {" "}
 <h3>{"8-4 IAMポリシー変数で「自分のデータだけ」を実現（DynamoDB）"}</h3>
 {" "}
 <p>{"Cognito IDプールで直接DynamoDBにアクセスさせる場合、"}<strong>{"パーティションキー（LeadingKeys）をユーザーIDに限定"}</strong>{"できます。"}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"dynamodb:GetItem\", \"dynamodb:PutItem\", \"dynamodb:Query\"],","  \"Resource\": \"arn:aws:dynamodb:ap-northeast-1:111122223333:table/UserNotes\",","  \"Condition\": {","    \"ForAllValues:StringEquals\": {","      \"dynamodb:LeadingKeys\": [\"${cognito-identity.amazonaws.com:sub}\"]","    }","  }","}"]} />
+<CodeBlock index={13} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"dynamodb:GetItem\", \"dynamodb:PutItem\", \"dynamodb:Query\"],","  \"Resource\": \"arn:aws:dynamodb:ap-northeast-1:111122223333:table/UserNotes\",","  \"Condition\": {","    \"ForAllValues:StringEquals\": {","      \"dynamodb:LeadingKeys\": [\"${cognito-identity.amazonaws.com:sub}\"]","    }","  }","}"]} />
 {" "}
 <p>{"S3でも、ユーザーごとのプレフィックスに限定できます。"}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"s3:GetObject\", \"s3:PutObject\"],","  \"Resource\": \"arn:aws:s3:::my-app-bucket/private/${cognito-identity.amazonaws.com:sub}/*\"","}"]} />
+<CodeBlock index={14} language="json" lines={["{","  \"Effect\": \"Allow\",","  \"Action\": [\"s3:GetObject\", \"s3:PutObject\"],","  \"Resource\": \"arn:aws:s3:::my-app-bucket/private/${cognito-identity.amazonaws.com:sub}/*\"","}"]} />
 {" "}
 <h3>{"8-5 Amazon Verified Permissions（アプリ向けの認可サービス）"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 40">
 <table>
 
 <thead>
@@ -204,7 +204,7 @@ export function Step8() { return (<section className="section">
 {" "}
 <h3>{"8-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 41">
 <table>
 
 <thead>

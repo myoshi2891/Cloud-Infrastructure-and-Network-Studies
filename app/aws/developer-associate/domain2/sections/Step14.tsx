@@ -11,7 +11,7 @@ export function Step14() { return (<section className="section">
 {" "}
 <p>{"SSH鍵は"}<strong>{"公開鍵"}</strong>{"（サーバーに置く）と"}<strong>{"秘密鍵"}</strong>{"（自分だけが持つ）のペアです。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 67">
 <table>
 
 <thead>
@@ -67,21 +67,21 @@ export function Step14() { return (<section className="section">
 {" "}
 <h3>{"14-2 EC2のキーペアを作る2つの方法"}</h3>
 {" "}
-<CodeBlock language="bash" lines={["# 方法1：AWSに作らせる（秘密鍵は作成時に一度だけ取得可能）","aws ec2 create-key-pair \\","  --key-name dev-key \\","  --key-type ed25519 \\","  --query 'KeyMaterial' --output text > dev-key.pem","chmod 400 dev-key.pem","","# 方法2：自分で作って公開鍵だけインポート（秘密鍵は手元から出さない）","ssh-keygen -t ed25519 -f ~/.ssh/dev-key -C \"dev@example.com\"","aws ec2 import-key-pair \\","  --key-name dev-key \\","  --public-key-material fileb://~/.ssh/dev-key.pub","","# 接続","ssh -i ~/.ssh/dev-key ec2-user@<パブリックIPまたはDNS>"]} />
+<CodeBlock index={20} language="bash" lines={["# 方法1：AWSに作らせる（秘密鍵は作成時に一度だけ取得可能）","aws ec2 create-key-pair \\","  --key-name dev-key \\","  --key-type ed25519 \\","  --query 'KeyMaterial' --output text > dev-key.pem","chmod 400 dev-key.pem","","# 方法2：自分で作って公開鍵だけインポート（秘密鍵は手元から出さない）","ssh-keygen -t ed25519 -f ~/.ssh/dev-key -C \"dev@example.com\"","aws ec2 import-key-pair \\","  --key-name dev-key \\","  --public-key-material fileb://~/.ssh/dev-key.pub","","# 接続","ssh -i ~/.ssh/dev-key ec2-user@<パブリックIPまたはDNS>"]} />
 {" "}
 <blockquote>{" "}<p>{"方法2は、"}<strong>{"秘密鍵がAWSを通らない"}</strong>{"ため、より安全です。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"14-3 開発用の自己署名証明書（OpenSSL）"}</h3>
 {" "}
-<CodeBlock language="bash" lines={["# 秘密鍵と自己署名証明書を同時に作る（開発・テスト専用）","openssl req -x509 -newkey rsa:2048 -nodes \\","  -keyout dev.key -out dev.crt -days 30 \\","  -subj \"/CN=localhost\" \\","  -addext \"subjectAltName=DNS:localhost,IP:127.0.0.1\""]} />
+<CodeBlock index={21} language="bash" lines={["# 秘密鍵と自己署名証明書を同時に作る（開発・テスト専用）","openssl req -x509 -newkey rsa:2048 -nodes \\","  -keyout dev.key -out dev.crt -days 30 \\","  -subj \"/CN=localhost\" \\","  -addext \"subjectAltName=DNS:localhost,IP:127.0.0.1\""]} />
 {" "}
 <p>{"CSRを作ってCAに署名してもらう流れ："}</p>
 {" "}
-<CodeBlock language="bash" lines={["openssl genrsa -out server.key 2048","openssl req -new -key server.key -out server.csr -subj \"/CN=dev.internal.example.com\"","# server.csr をCA（例：AWS Private CA）に提出して署名してもらう"]} />
+<CodeBlock index={22} language="bash" lines={["openssl genrsa -out server.key 2048","openssl req -new -key server.key -out server.csr -subj \"/CN=dev.internal.example.com\"","# server.csr をCA（例：AWS Private CA）に提出して署名してもらう"]} />
 {" "}
 <h3>{"14-4 用途の整理"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 68">
 <table>
 
 <thead>
@@ -145,7 +145,7 @@ export function Step14() { return (<section className="section">
 {" "}
 <h3>{"14-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 69">
 <table>
 
 <thead>

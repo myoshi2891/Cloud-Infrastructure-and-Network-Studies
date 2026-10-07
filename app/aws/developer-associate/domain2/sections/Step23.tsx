@@ -24,7 +24,7 @@ export function Step23() { return (<section className="section">
 {" "}
 <h3>{"23-4 サービス別「やること・やってはいけないこと」早見表"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 104">
 <table>
 
 <thead>
@@ -160,7 +160,7 @@ export function Step23() { return (<section className="section">
 {" "}
 <h3>{"23-5 試験頻出の「ひっかけ」総まとめ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 105">
 <table>
 
 <thead>

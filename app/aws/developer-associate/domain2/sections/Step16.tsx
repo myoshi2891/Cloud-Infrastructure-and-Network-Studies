@@ -18,7 +18,7 @@ export function Step16() { return (<section className="section">
 {" "}
 <h3>{"16-2 ローテーションの種類"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 73">
 <table>
 
 <thead>
@@ -94,7 +94,7 @@ export function Step16() { return (<section className="section">
 {" "}
 <h3>{"16-3 自動ローテーションの主な仕様"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 74">
 <table>
 
 <thead>
@@ -166,9 +166,9 @@ export function Step16() { return (<section className="section">
 {" "}
 <h3>{"16-4 有効化・無効化（CLI／API）"}</h3>
 {" "}
-<CodeBlock language="bash" lines={["# 自動ローテーションを有効化（既定は365日）","aws kms enable-key-rotation --key-id alias/my-app-key","","# 周期を指定して有効化","aws kms enable-key-rotation --key-id alias/my-app-key --rotation-period-in-days 180","","# 状態を確認","aws kms get-key-rotation-status --key-id alias/my-app-key","","# 今すぐローテーション（オンデマンド）","aws kms rotate-key-on-demand --key-id alias/my-app-key","","# 自動ローテーションを無効化","aws kms disable-key-rotation --key-id alias/my-app-key"]} />
+<CodeBlock index={25} language="bash" lines={["# 自動ローテーションを有効化（既定は365日）","aws kms enable-key-rotation --key-id alias/my-app-key","","# 周期を指定して有効化","aws kms enable-key-rotation --key-id alias/my-app-key --rotation-period-in-days 180","","# 状態を確認","aws kms get-key-rotation-status --key-id alias/my-app-key","","# 今すぐローテーション（オンデマンド）","aws kms rotate-key-on-demand --key-id alias/my-app-key","","# 自動ローテーションを無効化","aws kms disable-key-rotation --key-id alias/my-app-key"]} />
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 75">
 <table>
 
 <thead>
@@ -246,7 +246,7 @@ export function Step16() { return (<section className="section">
 {" "}
 <h3>{"16-6 他のローテーションとの違い"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 76">
 <table>
 
 <thead>
@@ -302,7 +302,7 @@ export function Step16() { return (<section className="section">
 {" "}
 <h3>{"16-7 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 77">
 <table>
 
 <thead>

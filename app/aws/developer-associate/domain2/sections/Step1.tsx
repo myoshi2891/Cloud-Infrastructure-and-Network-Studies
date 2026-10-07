@@ -7,7 +7,7 @@ export function Step1() { return (<section className="section">
 {" "}
 <p>{"AWSでは、セキュリティの責任をAWSと利用者で分担します。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 3">
 <table>
 
 <thead>
@@ -61,7 +61,7 @@ export function Step1() { return (<section className="section">
 {" "}
 <h3>{"1-3 最重要用語"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 4">
 <table>
 
 <thead>

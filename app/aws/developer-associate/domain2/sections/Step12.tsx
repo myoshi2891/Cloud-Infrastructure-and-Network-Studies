@@ -14,14 +14,14 @@ export function Step12() { return (<section className="section">
 <Diagram index={15} label="Step 12　クライアントサイド暗号化とサーバーサイド暗号化（Skill 2.2.3）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 57">
 <table>
 
 <thead>
 
 <tr>
 
-<th scope="col"></th>
+<th aria-hidden="true" scope="col"></th>
 
 <th scope="col"><strong>{"サーバーサイド暗号化（SSE）"}</strong></th>
 
@@ -100,7 +100,7 @@ export function Step12() { return (<section className="section">
 {" "}
 <h3>{"12-2 S3のサーバーサイド暗号化方式"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 58">
 <table>
 
 <thead>
@@ -166,11 +166,11 @@ export function Step12() { return (<section className="section">
 {" "}
 <p>{"SSE-KMSでの"}<strong>{"S3バケットキー"}</strong>{"を使うと、KMSへのリクエストが減り、コストとスロットリングを抑えられます。"}</p>
 {" "}
-<CodeBlock language="python" lines={["import boto3","","s3 = boto3.client(\"s3\")","","# SSE-KMSでアップロード","s3.put_object(","    Bucket=\"my-app-bucket\",","    Key=\"reports/secret.txt\",","    Body=b\"confidential\",","    ServerSideEncryption=\"aws:kms\",","    SSEKMSKeyId=\"alias/my-app-key\",",")"]} />
+<CodeBlock index={19} language="python" lines={["import boto3","","s3 = boto3.client(\"s3\")","","# SSE-KMSでアップロード","s3.put_object(","    Bucket=\"my-app-bucket\",","    Key=\"reports/secret.txt\",","    Body=b\"confidential\",","    ServerSideEncryption=\"aws:kms\",","    SSEKMSKeyId=\"alias/my-app-key\",",")"]} />
 {" "}
 <h3>{"12-3 クライアントサイド暗号化に使うツール"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 59">
 <table>
 
 <thead>
@@ -224,7 +224,7 @@ export function Step12() { return (<section className="section">
 {" "}
 <h3>{"12-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 60">
 <table>
 
 <thead>

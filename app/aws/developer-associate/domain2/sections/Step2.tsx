@@ -10,7 +10,7 @@ export function Step2() { return (<section className="section">
 {" "}
 <h3>{"2-1 IAMの登場人物"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 5">
 <table>
 
 <thead>
@@ -76,7 +76,7 @@ export function Step2() { return (<section className="section">
 {" "}
 <h3>{"2-2 ポリシーの種類"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 6">
 <table>
 
 <thead>
@@ -162,9 +162,9 @@ export function Step2() { return (<section className="section">
 {" "}
 <h3>{"2-3 ポリシーの構造"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Sid\": \"ReadOnlyOneBucket\",","      \"Effect\": \"Allow\",","      \"Action\": [\"s3:GetObject\", \"s3:ListBucket\"],","      \"Resource\": [","        \"arn:aws:s3:::my-app-bucket\",","        \"arn:aws:s3:::my-app-bucket/*\"","      ],","      \"Condition\": {","        \"Bool\": { \"aws:SecureTransport\": \"true\" }","      }","    }","  ]","}"]} />
+<CodeBlock index={0} language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Sid\": \"ReadOnlyOneBucket\",","      \"Effect\": \"Allow\",","      \"Action\": [\"s3:GetObject\", \"s3:ListBucket\"],","      \"Resource\": [","        \"arn:aws:s3:::my-app-bucket\",","        \"arn:aws:s3:::my-app-bucket/*\"","      ],","      \"Condition\": {","        \"Bool\": { \"aws:SecureTransport\": \"true\" }","      }","    }","  ]","}"]} />
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 7">
 <table>
 
 <thead>
@@ -248,7 +248,7 @@ export function Step2() { return (<section className="section">
 {" "}
 <h3>{"2-5 便利な条件キー"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 8">
 <table>
 
 <thead>
@@ -320,7 +320,7 @@ export function Step2() { return (<section className="section">
 {" "}
 <h3>{"2-6 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 9">
 <table>
 
 <thead>

@@ -13,7 +13,7 @@ export function Step17() { return (<section className="section">
 {" "}
 <h3>{"17-2 代表的なデータ区分"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 78">
 <table>
 
 <thead>
@@ -101,7 +101,7 @@ export function Step17() { return (<section className="section">
 {" "}
 <h3>{"17-3 分類レベルの例と、対応する保護策"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 79">
 <table>
 
 <thead>
@@ -187,7 +187,7 @@ export function Step17() { return (<section className="section">
 {" "}
 <h3>{"17-4 AWSで分類を実装・支援する機能"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 80">
 <table>
 
 <thead>
@@ -263,7 +263,7 @@ export function Step17() { return (<section className="section">
 {" "}
 <h3>{"17-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 81">
 <table>
 
 <thead>

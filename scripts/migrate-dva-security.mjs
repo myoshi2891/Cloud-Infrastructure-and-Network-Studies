@@ -29,7 +29,7 @@ function jsx(node) {
     }
     if (node.matches('.code-block')) {
         const language = node.querySelector('code').className.replace('language-', '');
-        return `<CodeBlock language=${JSON.stringify(language)} lines={${JSON.stringify(codeLines(node))}} />`;
+        return `<CodeBlock index={${[...doc.querySelectorAll('.code-block')].indexOf(node)}} language=${JSON.stringify(language)} lines={${JSON.stringify(codeLines(node))}} />`;
     }
     if (node.matches('li.chk')) return `<ChecklistItem index={${inputs.indexOf(node)}}>${[...node.querySelector('label').childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('')}</ChecklistItem>`;
     const tag = node.tagName.toLowerCase();
@@ -38,6 +38,8 @@ function jsx(node) {
         const name = ({ class: 'className', for: 'htmlFor', colspan: 'colSpan', rowspan: 'rowSpan' })[attr.name] ?? attr.name;
         return `${name}=${JSON.stringify(attr.value)}`;
     });
+    if (node.matches('.table-wrap')) attrs.push('tabIndex={0}', 'role="region"', `aria-label=${JSON.stringify(`セキュリティの表 ${[...doc.querySelectorAll('.table-wrap')].indexOf(node) + 1}`)}`);
+    if (tag === 'th' && !node.textContent.trim()) attrs.push('aria-hidden="true"');
     if (tag === 'th' && node.closest('thead') && !node.hasAttribute('scope')) attrs.push('scope="col"');
     if (node.matches('h2[id]')) attrs.push('tabIndex={-1}');
     const start = `<${tag}${attrs.length ? ' ' + attrs.join(' ') : ''}`;
@@ -69,6 +71,10 @@ if (stage === 'scaffold') {
                 .replace(/"Noto Sans JP",system-ui,sans-serif/g, 'var(--font-body)')
                 .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-display)')
                 .replace(/"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace/g, 'var(--font-mono)');
+            if (d.prop === 'color' && d.value === 'var(--color-dva-fff)') d.value = 'var(--color-primary-foreground)';
+            if (d.prop === 'color' && d.value === 'var(--color-dva-2b2f7a)') d.value = 'var(--color-accent)';
+            if (d.value === 'rgba(250,247,240,.95)') d.value = 'color-mix(in srgb, var(--color-background) 95%, transparent)';
+            if (['th', '.mobile-bar button'].includes(original) && d.prop === 'background') d.value = 'var(--color-dva-3b3f9e)';
             if (original === 'html' && d.prop === 'scroll-padding-top') d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px)';
             if (original === 'body' && d.prop === 'overflow-wrap') d.value = 'anywhere';
             if (original === '.sidebar' && d.prop === 'inset') { d.prop = 'top'; d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))'; }
@@ -87,7 +93,8 @@ if (stage === 'scaffold') {
     let globalCss = readFileSync('app/globals.css', 'utf8');
     if (!globalCss.includes('--color-dva-2b2f7a:')) globalCss = globalCss.replace('@theme {', '@theme {\n    /* Layer 3: DVA Security 原本の固定装飾色 */\n' + [...hexes].map(hex => `    --color-dva-${hex.slice(1)}: ${mappedFixed[hex] ?? hex};`).join('\n') + '\n');
     writeFileSync('app/globals.css', globalCss);
-    write('page.css', css.toString() + `\n.dva-security-page .main ul { list-style-type: disc; list-style-position: outside; }\n.dva-security-page .main ol { list-style-type: decimal; list-style-position: outside; }\n.dva-security-page .main ul ul { list-style-type: circle; }\n.dva-security-page li.chk { list-style-type: none; }\n.dva-security-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }\n.dva-security-page .sidebar li { margin: 0; }\n.dva-security-page .code-line { white-space: pre; min-height: 1.65em; }\n.dva-security-page .code-block { padding: 16px 18px; border: 0; font-family: var(--font-mono); background: var(--color-dva-1f2335); color: var(--color-dva-e6e8f5); line-height: 1.65; overflow-x: auto; }\n.dva-security-page .code-block code { white-space: pre; }\n.dva-security-page h2[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 48px); }\n.dva-security-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 29; background: rgba(0,0,0,.35); border: 0; }\n.dva-security-page :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }\n@media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }\n@media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }\n.dva-security-page .hljs-comment { color: #5c6370; font-style: italic; }\n.dva-security-page .hljs-keyword { color: #c678dd; }\n.dva-security-page .hljs-string { color: #98c379; }\n.dva-security-page .hljs-attr { color: #e06c75; }\n.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: #d19a66; }\n`);
+    write('page.css', css.toString() + `\n.dva-security-page .main ul { list-style-type: disc; list-style-position: outside; }\n.dva-security-page .main ol { list-style-type: decimal; list-style-position: outside; }\n.dva-security-page .main ul ul { list-style-type: circle; }\n.dva-security-page li.chk { list-style-type: none; }\n.dva-security-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }\n.dva-security-page .sidebar li { margin: 0; }\n.dva-security-page .code-line { white-space: pre; min-height: 1.65em; }\n.dva-security-page .code-block { margin: 14px 0; padding: 16px 18px; border: 0; font-family: var(--font-mono); background: var(--color-dva-1f2335); color: var(--color-dva-e6e8f5); line-height: 1.65; overflow-x: auto; }\n.dva-security-page .code-block code { white-space: pre; }\n.dva-security-page h2[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 48px); }\n.dva-security-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 29; background: rgba(0,0,0,.35); border: 0; }\n.dva-security-page :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }\n@media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }\n@media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }\n.dva-security-page .hljs-comment { color: #94a3b8; font-style: italic; }\n.dva-security-page .hljs-keyword { color: #c678dd; }\n.dva-security-page .hljs-string { color: #98c379; }\n.dva-security-page .hljs-attr { color: #e06c75; }\n.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: #d19a66; }\n`);
+    writeFileSync(`${directory}/page.css`, readFileSync(`${directory}/page.css`, 'utf8') + '\n.dva-security-page .diagram-wrap > [role="img"] { overflow: visible; border: 0; background: transparent; padding: 0; margin: 0; }\n');
     console.log(`Scaffold: ${nav.length} anchors, ${inputs.length} checkboxes`);
 } else {
     const ranges = { intro: [0, 1], task1: [2, 9], task2: [10, 16], remainder: [17, 23] };
@@ -109,6 +116,9 @@ if (stage === 'scaffold') {
         write(`sections/${name}.tsx`, `${imports}\n/** 原本の${heading?.textContent.trim() ?? section.textContent.trim()}を省略せず収録。 */\nexport function ${name}() { return (${text}); }`);
     }
     let guide = readFileSync(`${directory}/SecurityGuide.tsx`, 'utf8');
+    for (const name of names) {
+        guide = guide.replace(`import { ${name} } from './sections/${name}';\n`, '').replace(`            <${name} />\n`, '');
+    }
     guide = guide.replace('/** 全本文', names.map(name => `import { ${name} } from './sections/${name}';`).join('\n') + '\n/** 全本文');
     guide = guide.replace('        </main>', names.map(name => `            <${name} />`).join('\n') + '\n        </main>');
     write('SecurityGuide.tsx', guide);

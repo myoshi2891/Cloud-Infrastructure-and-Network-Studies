@@ -14,7 +14,7 @@ export function Step18() { return (<section className="section">
 {" "}
 <h3>{"18-2 Lambda環境変数の暗号化"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 82">
 <table>
 
 <thead>
@@ -80,7 +80,7 @@ export function Step18() { return (<section className="section">
 <Diagram index={25} label="Step 18　機密を含む環境変数の暗号化（Skill 2.3.2）の図解" />
 </div>
 {" "}
-<CodeBlock language="python" lines={["import os","import json","import boto3","","secrets = boto3.client(\"secretsmanager\")","_cache = {}","","def get_db_credentials():","    name = os.environ[\"SECRET_NAME\"]  # 環境変数にあるのは「名前」だけ","    if name not in _cache:","        resp = secrets.get_secret_value(SecretId=name)","        _cache[name] = json.loads(resp[\"SecretString\"])","    return _cache[name]"]} />
+<CodeBlock index={26} language="python" lines={["import os","import json","import boto3","","secrets = boto3.client(\"secretsmanager\")","_cache = {}","","def get_db_credentials():","    name = os.environ[\"SECRET_NAME\"]  # 環境変数にあるのは「名前」だけ","    if name not in _cache:","        resp = secrets.get_secret_value(SecretId=name)","        _cache[name] = json.loads(resp[\"SecretString\"])","    return _cache[name]"]} />
 {" "}
 <ul>
 {" "}
@@ -90,7 +90,7 @@ export function Step18() { return (<section className="section">
 {" "}
 <h3>{"18-4 他の実行環境での機密の渡し方"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 83">
 <table>
 
 <thead>
@@ -154,11 +154,11 @@ export function Step18() { return (<section className="section">
 {" "}
 <p>{"ECSタスク定義の例："}</p>
 {" "}
-<CodeBlock language="json" lines={["{","  \"containerDefinitions\": [","    {","      \"name\": \"app\",","      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/app:latest\",","      \"secrets\": [","        {","          \"name\": \"DB_PASSWORD\",","          \"valueFrom\": \"arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db-AbCdEf:password::\"","        }","      ]","    }","  ]","}"]} />
+<CodeBlock index={27} language="json" lines={["{","  \"containerDefinitions\": [","    {","      \"name\": \"app\",","      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/app:latest\",","      \"secrets\": [","        {","          \"name\": \"DB_PASSWORD\",","          \"valueFrom\": \"arn:aws:secretsmanager:ap-northeast-1:111122223333:secret:prod/db-AbCdEf:password::\"","        }","      ]","    }","  ]","}"]} />
 {" "}
 <h3>{"18-5 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 84">
 <table>
 
 <thead>

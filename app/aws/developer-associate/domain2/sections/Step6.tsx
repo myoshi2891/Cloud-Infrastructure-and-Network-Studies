@@ -12,7 +12,7 @@ export function Step6() { return (<section className="section">
 {" "}
 <p>{"「"}<strong>{"自社でユーザー管理せず、すでに信頼されたIdP（Google、企業のAD、Apple等）の認証結果を借りる"}</strong>{"」仕組みです。ユーザーは、IdPで認証され、その証明（トークン／アサーション）を使ってアプリやAWSにアクセスします。"}</p>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 25">
 <table>
 
 <thead>
@@ -80,7 +80,7 @@ export function Step6() { return (<section className="section">
 <Diagram index={7} label="Step 6　IDプロバイダーによるフェデレーション（Skill 2.1.1）の図解" />
 </div>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 26">
 <table>
 
 <thead>
@@ -136,14 +136,14 @@ export function Step6() { return (<section className="section">
 {" "}
 <h3>{"6-3 Amazon Cognitoの2本柱"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 27">
 <table>
 
 <thead>
 
 <tr>
 
-<th scope="col"></th>
+<th aria-hidden="true" scope="col"></th>
 
 <th scope="col"><strong>{"ユーザープール（User Pools）"}</strong></th>
 
@@ -220,7 +220,7 @@ export function Step6() { return (<section className="section">
 {" "}
 <h3>{"6-5 IDプールが付与するロール"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 28">
 <table>
 
 <thead>
@@ -268,7 +268,7 @@ export function Step6() { return (<section className="section">
 {" "}
 <h3>{"6-6 Cognito ユーザープールの主な機能"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 29">
 <table>
 
 <thead>
@@ -340,13 +340,13 @@ export function Step6() { return (<section className="section">
 {" "}
 <h3>{"6-7 SAML／OIDCとIAMを直接つなぐ場合"}</h3>
 {" "}
-<CodeBlock language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Principal\": { \"Federated\": \"arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com\" },","      \"Action\": \"sts:AssumeRoleWithWebIdentity\",","      \"Condition\": {","        \"StringEquals\": {","          \"token.actions.githubusercontent.com:aud\": \"sts.amazonaws.com\"","        },","        \"StringLike\": {","          \"token.actions.githubusercontent.com:sub\": \"repo:my-org/my-repo:ref:refs/heads/main\"","        }","      }","    }","  ]","}"]} />
+<CodeBlock index={9} language="json" lines={["{","  \"Version\": \"2012-10-17\",","  \"Statement\": [","    {","      \"Effect\": \"Allow\",","      \"Principal\": { \"Federated\": \"arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com\" },","      \"Action\": \"sts:AssumeRoleWithWebIdentity\",","      \"Condition\": {","        \"StringEquals\": {","          \"token.actions.githubusercontent.com:aud\": \"sts.amazonaws.com\"","        },","        \"StringLike\": {","          \"token.actions.githubusercontent.com:sub\": \"repo:my-org/my-repo:ref:refs/heads/main\"","        }","      }","    }","  ]","}"]} />
 {" "}
 <blockquote>{" "}<p>{"信頼ポリシーの"}<code>{"sub"}</code>{"（主体）条件を絞らないと、"}<strong>{"他リポジトリのワークフローにも引き受けを許してしまう"}</strong>{"ため必須です。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"6-8 ベストプラクティス"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 30">
 <table>
 
 <thead>
@@ -418,7 +418,7 @@ export function Step6() { return (<section className="section">
 {" "}
 <h3>{"試験のひっかけ"}</h3>
 {" "}
-<div className="table-wrap">
+<div className="table-wrap" tabIndex={0} role="region" aria-label="セキュリティの表 31">
 <table>
 
 <thead>
