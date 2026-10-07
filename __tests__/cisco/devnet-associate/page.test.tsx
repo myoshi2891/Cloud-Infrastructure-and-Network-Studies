@@ -11,7 +11,7 @@ vi.mock('@/components/MermaidDiagram', async () => {
 });
 
 defineMigrationSuite(
-    'Cisco Certified DevNet Associate (200-901) 初学者向け完全ガイド — 全量移行検証',
+    'Cisco DevNet Associate (200-901) 完全ガイド — 全量移行検証',
     DevNetAssociateGuide,
     inventory,
 );
