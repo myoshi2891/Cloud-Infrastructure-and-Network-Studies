@@ -14,6 +14,58 @@
  */
 
 @theme {
+    /* Layer 3: DVA Domain 1 原本ライト配色・書体 */
+    --color-dva-development-paper: #faf7f0;
+    --color-dva-development-paper-card: #ffffff;
+    --color-dva-development-paper-alt: #f1ece0;
+    --color-dva-development-ink: #1f2430;
+    --color-dva-development-ink-soft: #434958;
+    --color-dva-development-ink-faint: #6b6354;
+    --color-dva-development-indigo: #3b4fa8;
+    --color-dva-development-indigo-deep: #232f7a;
+    --color-dva-development-indigo-soft: #e8ebfa;
+    --color-dva-development-gold: #7d5c14;
+    --color-dva-development-gold-soft: #fbf1d6;
+    --color-dva-development-forest: #2a6446;
+    --color-dva-development-forest-soft: #e1f0e7;
+    --color-dva-development-plum: #7a3b69;
+    --color-dva-development-plum-soft: #f5e6f1;
+    --color-dva-development-border: #ddd5c4;
+    --shadow-dva-development: 0 1px 3px rgba(40,34,20,.08),0 4px 14px rgba(40,34,20,.05);
+    --font-dva-development-body: "Noto Sans JP Variable","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    --font-dva-development-display: "Source Serif 4 Variable","Noto Serif JP","Hiragino Mincho ProN",Georgia,serif;
+    --font-dva-development-mono: ui-monospace,SFMono-Regular,Menlo,Consolas,"Noto Sans Mono",monospace;
+    --color-dva-development-faf7f0: #faf7f0;
+    --color-dva-development-ffffff: #ffffff;
+    --color-dva-development-f1ece0: #f1ece0;
+    --color-dva-development-1f2430: #1f2430;
+    --color-dva-development-434958: #434958;
+    --color-dva-development-6b6354: #6b6354;
+    --color-dva-development-3b4fa8: #3b4fa8;
+    --color-dva-development-232f7a: #232f7a;
+    --color-dva-development-e8ebfa: #e8ebfa;
+    --color-dva-development-7d5c14: #7d5c14;
+    --color-dva-development-fbf1d6: #fbf1d6;
+    --color-dva-development-2a6446: #2a6446;
+    --color-dva-development-e1f0e7: #e1f0e7;
+    --color-dva-development-7a3b69: #7a3b69;
+    --color-dva-development-f5e6f1: #f5e6f1;
+    --color-dva-development-ddd5c4: #ddd5c4;
+    --color-dva-development-1c2760: #1c2760;
+    --color-dva-development-2b3a85: #2b3a85;
+    --color-dva-development-fff: #fff;
+    --color-dva-development-e6e9ff: #e6e9ff;
+    --color-dva-development-12151d: #12151d;
+    --color-dva-development-7a2f4c: #7a2f4c;
+    --color-dva-development-282c34: #282c34;
+    --color-dva-development-21252b: #21252b;
+    --color-dva-development-c9d1e0: #c9d1e0;
+    --color-dva-development-3a3f4b: #3a3f4b;
+    --color-dva-development-abb2bf: #abb2bf;
+    --color-dva-development-9b2c2c: #9b2c2c;
+    --color-dva-development-fdecec: #fdecec;
+    --color-dva-development-f0b8b8: #f0b8b8;
+
     /* Layer 3: DVA Security 原本ライトテーマ・固定装飾色 */
     --color-dva-paper: #faf7f0;
     --color-dva-paper-alt: #f2ede0;
