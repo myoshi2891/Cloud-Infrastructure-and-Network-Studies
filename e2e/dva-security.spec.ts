@@ -12,6 +12,15 @@ for (const width of [1440, 768, 390]) {
         page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
         await page.goto('/aws/developer-associate/domain2');
         const root = page.locator('.dva-security-page');
+        await expect(root).toHaveCSS('background-color', 'rgb(250, 247, 240)');
+        await expect(root).toHaveCSS('color', 'rgb(28, 35, 51)');
+        await expect(root).toHaveCSS('font-size', '17px');
+        await expect(root.locator('.sidebar')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+        await expect(root.locator('main table').first()).toHaveCSS('font-size', '16px');
+        await expect(root.locator('main h2').first()).toHaveCSS('font-size', width <= 900 ? '22.4px' : '28px');
+        await expect(root.locator('main h2').first()).toHaveCSS('font-family', /Source Serif 4 Variable/);
+        await expect.poll(() => page.evaluate(() => document.fonts.check('700 28px "Source Serif 4 Variable"'))).toBe(true);
+
         await expect(root.locator('main h2')).toHaveCount(inventory.h2.length);
         await expect(root.locator('main table')).toHaveCount(inventory.counts.table);
         await expect(root.locator('main li')).toHaveCount(inventory.listItems.length);

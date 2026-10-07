@@ -160,36 +160,45 @@ describe('DVA Security 全量移行', () => {
 });
 
 const cssPath = `${route}/page.css`;
-const tokens: Record<string, string> = {
-    '--paper': '--color-background', '--paper-alt': '--color-card-secondary', '--ink': '--color-foreground',
-    '--ink-soft': '--color-muted-foreground', '--indigo': '--color-accent', '--indigo-soft': '--color-accent-active',
-    '--gold': '--color-accent-amber', '--forest': '--color-google-green', '--plum': '--color-accent-purple', '--border': '--color-border',
-};
+const tokens: Record<string, string> = Object.fromEntries(
+    ['paper','paper-alt','ink','ink-soft','indigo','indigo-soft','gold','forest','plum','border'].map(name => [`--${name}`, `--color-dva-${name}`]),
+);
 const scopedSelector = (selector: string) => [...new Set(selector.split(',').map(part => {
     const s = part.trim();
     return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s.replace(/\.code-block pre code/g, ".code-block code").replace(/\.code-block pre/g, ".code-block")}`;
 }))].join(', ');
-const mappedValue = (value: string, prop: string) => (prop === 'color' && value === '#fff' ? 'var(--color-primary-foreground)' : prop === 'color' && value === '#2b2f7a' ? 'var(--color-accent)' : value)
-    .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-background) 95%, transparent)')
-    .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '280px' : `var(${tokens[name] ?? name})`)
+const mappedValue = (value: string) => value
+    .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-dva-paper) 95%, transparent)')
+    .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '300px' : `var(${tokens[name] ?? name})`)
     .replace(/#[\da-f]{3,6}\b/gi, hex => `var(--color-dva-${hex.slice(1).toLowerCase()})`)
     .replace(/"Noto Sans JP",system-ui,sans-serif/g, 'var(--font-body)')
-    .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-display)')
+    .replace(/"Source Serif 4","Noto Sans JP",serif/g, 'var(--font-dva-serif)')
     .replace(/"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace/g, 'var(--font-mono)');
 
 describe('DVA CSS全宣言・リスト装飾', () => {
+    it('原本のroot配色と固定色を実値で一致させ、見出しフォントと図もライトテーマ', () => {
+        const globals: Record<string, string> = {};
+        postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(d => { if (d.prop.startsWith('--')) globals[d.prop] = d.value; });
+        const root = design.rules.find(rule => rule.selector === ':root')!;
+        for (const decl of root.declarations.filter(d => d.prop !== '--sidebar')) expect(globals[tokens[decl.prop]!], decl.prop).toBe(decl.value);
+        for (const rule of design.rules) for (const decl of rule.declarations) for (const [hex] of decl.value.matchAll(/#[\da-f]{3,6}\b/gi)) expect(globals[`--color-dva-${hex.slice(1).toLowerCase()}`], hex).toBe(hex.toLowerCase());
+        expect(globals['--font-dva-serif']).toContain("'Source Serif 4 Variable'");
+        expect(readFileSync(`${route}/page.tsx`, 'utf8')).toContain("import '@fontsource-variable/source-serif-4/index.css'");
+        expect(readFileSync(`${route}/Diagram.tsx`, 'utf8')).toContain('theme="light"');
+    });
+
     it('原本の全セレクタ・メディア条件・CSS宣言を許可した統合差分以外保持', () => {
         const actual = snapshotCssRules(readFileSync(cssPath, 'utf8'));
         const integrationChanges: Record<string, string[]> = {
             html: ['scroll-padding-top'], body: ['overflow-wrap'],
-            '.sidebar': ['inset','width'], '.progress': ['top'], '.mobile-bar': ['top','z-index'],
+            '.sidebar': ['inset'], '.progress': ['top'], '.mobile-bar': ['top','z-index'],
         };
         for (const rule of design.rules.filter(rule => rule.selector !== ':root')) {
             const candidates = actual.filter(r => r.selector === scopedSelector(rule.selector) && r.media === rule.media);
             expect(candidates.length, rule.selector).toBeGreaterThan(0);
             for (const decl of rule.declarations) {
                 if (integrationChanges[rule.selector]?.includes(decl.prop)) continue;
-                const value = ['th', '.mobile-bar button'].includes(rule.selector) && decl.prop === 'background' ? 'var(--color-dva-3b3f9e)' : mappedValue(decl.value, decl.prop);
+                const value = mappedValue(decl.value);
                 expect(candidates.some(r => r.declarations.some(d => d.prop === decl.prop && d.value === value && d.important === decl.important)), `${rule.selector}: ${decl.prop}: ${value}`).toBe(true);
             }
         }
@@ -225,13 +234,13 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         expect(values.margin).toBe('14px 0');
         expect(values.padding).toBe('16px 18px');
     });
-    it('Header下の固定配置・280px幅・モバイル幅・アンカー余白と自然図倍率', () => {
+    it('Header下の固定配置・300px幅・モバイル幅・アンカー余白と自然図倍率', () => {
         const css = readFileSync(cssPath, 'utf8');
         const rules = snapshotCssRules(css);
         for (const [selector, prop, value] of [
-            ['.dva-security-page .sidebar','width','280px'],
-            ['.dva-security-page .main','width','calc(100% - 280px)'],
-            ['.dva-security-page .main','margin-left','280px'],
+            ['.dva-security-page .sidebar','width','300px'],
+            ['.dva-security-page .main','width','calc(100% - 300px)'],
+            ['.dva-security-page .main','margin-left','300px'],
         ]) expect(rules.some(r => !r.media && r.selector === selector && r.declarations.some(d => d.prop === prop && d.value === value))).toBe(true);
         expect(css).toContain('scroll-margin-top: calc(var(--header-h');
         expect(css).toContain('top: calc(var(--header-h');
