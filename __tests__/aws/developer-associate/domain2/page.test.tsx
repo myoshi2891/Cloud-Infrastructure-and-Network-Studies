@@ -4,6 +4,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import postcss from 'postcss';
 import Page from '@/app/aws/developer-associate/domain2/page';
+import { Step0 } from '@/app/aws/developer-associate/domain2/sections/Step0';
 import { DIAGRAMS, NAV_ITEMS } from '@/app/aws/developer-associate/domain2/constants';
 import inventory from '@/docs/migration-inventory/aws-dva-domain2-security.json';
 import design from '@/docs/migration-inventory/aws-dva-domain2-security.design.json';
@@ -14,6 +15,10 @@ import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
     return { MermaidDiagram: MermaidDiagramMock };
+});
+vi.mock('@/app/aws/developer-associate/domain2/sections/Step0', async importOriginal => {
+    const original = await importOriginal<typeof import('@/app/aws/developer-associate/domain2/sections/Step0')>();
+    return { Step0: vi.fn(original.Step0) };
 });
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
 const mount = () => render(<Page />).container;
@@ -77,6 +82,13 @@ describe('DVA Security 全量移行', () => {
         }
         const labels = [...root.querySelectorAll('[role="region"]')].map(el => el.getAttribute('aria-label'));
         expect(new Set(labels).size).toBe(labels.length);
+    });
+    it('チェック変更で静的な本文を再描画しない', () => {
+        vi.mocked(Step0).mockClear();
+        const root = mount();
+        fireEvent.click(root.querySelector('li.chk input')!);
+        fireEvent.click(root.querySelector('li.chk input')!);
+        expect(Step0).toHaveBeenCalledOnce();
     });
     it('全チェックリストを操作すると件数とdone装飾が連動し、解除できる', () => {
         const root = mount();
