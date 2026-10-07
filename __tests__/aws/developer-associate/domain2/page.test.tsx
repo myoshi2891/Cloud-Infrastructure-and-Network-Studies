@@ -8,6 +8,7 @@ import { Step0 } from '@/app/aws/developer-associate/domain2/sections/Step0';
 import { DIAGRAMS, NAV_ITEMS } from '@/app/aws/developer-associate/domain2/constants';
 import inventory from '@/docs/migration-inventory/aws-dva-domain2-security.json';
 import design from '@/docs/migration-inventory/aws-dva-domain2-security.design.json';
+import mermaidTheme from '@/docs/migration-inventory/aws-dva-domain2-security.mermaid.json';
 import { codeBlockSelector, codeLineCount, extractBodyContent, squash } from '@/__tests__/helpers/migration-test-utils';
 import { snapshotDvaSecurity } from '@/scripts/dva-security-fidelity.mjs';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
@@ -53,7 +54,8 @@ describe('DVA Security 全量移行', () => {
             const chart = el.getAttribute('data-chart')!;
             const init = chart.match(/^%%\{init: (.+)\}%%\n/);
             expect(init, '原本のMermaid設定を注入').not.toBeNull();
-            expect(JSON.parse(init![1]!)).toEqual({ theme: 'base', themeVariables: theme, flowchart: { useMaxWidth: false, htmlLabels: true, subGraphTitleMargin: { top: 10, bottom: 28 } }, sequence: { useMaxWidth: false } });
+            expect(mermaidTheme.source.themeVariables).toEqual(theme);
+            expect(JSON.parse(init![1]!)).toEqual(mermaidTheme.resolved);
             expect(chart.slice(init![0].length)).toBe(design.charts[index]);
         });
         expect(Object.values(DIAGRAMS)).toEqual(design.charts);
