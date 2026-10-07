@@ -329,5 +329,4 @@
 .sourceThemeTarget :global(text),
 .sourceThemeTarget :global(tspan) {
     overflow: visible;
-    font-size: 16px !important;
 }
