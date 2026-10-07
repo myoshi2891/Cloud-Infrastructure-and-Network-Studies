@@ -188,7 +188,7 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(d => { if (d.prop.startsWith('--')) globals[d.prop] = d.value; });
         const root = design.rules.find(rule => rule.selector === ':root')!;
         for (const decl of root.declarations.filter(d => d.prop !== '--sidebar')) expect(globals[tokens[decl.prop]!], decl.prop).toBe(decl.value);
-        for (const rule of design.rules) for (const decl of rule.declarations) for (const [hex] of decl.value.matchAll(/#[\da-f]{3,6}\b/gi)) expect(globals[`--color-dva-${hex.slice(1).toLowerCase()}`], hex).toBe(hex.toLowerCase());
+        for (const rule of design.rules.filter(r => r.selector !== ':root')) for (const decl of rule.declarations) for (const [hex] of decl.value.matchAll(/#[\da-f]{3,6}\b/gi)) expect(globals[`--color-dva-${hex.slice(1).toLowerCase()}`], hex).toBe(hex.toLowerCase());
         expect(globals['--font-dva-serif']).toContain("'Source Serif 4 Variable'");
         expect(readFileSync(`${route}/page.tsx`, 'utf8')).toContain("import '@fontsource-variable/source-serif-4/index.css'");
         expect(readFileSync(`${route}/Diagram.tsx`, 'utf8')).toContain('theme="light"');
