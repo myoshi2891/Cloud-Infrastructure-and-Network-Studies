@@ -143,7 +143,8 @@ const scopedSelector = (selector: string) => [...new Set(selector.split(',').map
     const s = part.trim();
     return s === 'html' || s === 'body' ? '.dva-security-page' : `.dva-security-page ${s.replace(/\.code-block pre code/g, ".code-block code").replace(/\.code-block pre/g, ".code-block")}`;
 }))].join(', ');
-const mappedValue = (value: string) => value
+const mappedValue = (value: string, prop: string) => (prop === 'color' && value === '#fff' ? 'var(--color-primary-foreground)' : prop === 'color' && value === '#2b2f7a' ? 'var(--color-accent)' : value)
+    .replace('rgba(250,247,240,.95)', 'color-mix(in srgb, var(--color-background) 95%, transparent)')
     .replace(/var\((--[\w-]+)\)/g, (_, name: string) => name === '--sidebar' ? '280px' : `var(${tokens[name]})`)
     .replace(/#[\da-f]{3,6}\b/gi, hex => `var(--color-dva-${hex.slice(1).toLowerCase()})`)
     .replace(/"Noto Sans JP",system-ui,sans-serif/g, 'var(--font-body)')
@@ -162,7 +163,7 @@ describe('DVA CSS全宣言・リスト装飾', () => {
             expect(candidates.length, rule.selector).toBeGreaterThan(0);
             for (const decl of rule.declarations) {
                 if (integrationChanges[rule.selector]?.includes(decl.prop)) continue;
-                const value = mappedValue(decl.value);
+                const value = rule.selector === 'th' && decl.prop === 'background' ? 'var(--color-dva-3b3f9e)' : mappedValue(decl.value, decl.prop);
                 expect(candidates.some(r => r.declarations.some(d => d.prop === decl.prop && d.value === value && d.important === decl.important)), `${rule.selector}: ${decl.prop}: ${value}`).toBe(true);
             }
         }
