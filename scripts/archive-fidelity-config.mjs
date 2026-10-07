@@ -30,6 +30,13 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-dva-domain2-security': {
+        source: 'Aws-dva-c02-domain2-security-guide.html',
+        sourceCommit: 'fe948bdc47ca5e8e433b8c917d93d3457d2ba173',
+        textSelector: 'main h1, main h2, main h3, main h4, main p, main li, main th, main td, main summary, main blockquote, main .eyebrow, main .chip',
+        tables: true,
+        inlineCode: true,
+    },
     'computer-networks-tanenbaum': {
         source: 'Computer-networks-tanenbaum.html',
         sourceCommit: '437f4d77',
