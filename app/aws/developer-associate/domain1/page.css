@@ -129,11 +129,12 @@
 .dva-development-page .code-line-content { display: block; padding: 0 16px; white-space: pre; min-height: 1.7em; font-family: var(--font-dva-development-mono); font-size: 0.875rem; line-height: 1.7; color: var(--color-dva-development-abb2bf); background: var(--color-dva-development-282c34); }
 .dva-development-page .code-line:first-child .code-line-content { padding-top: 14px; }
 .dva-development-page .code-line:last-child .code-line-content { padding-bottom: 14px; }
-.dva-development-page .hljs-comment { color: #5c6370; font-style: italic; }
+.dva-development-page .hljs-comment { color: #94a3b8; font-style: italic; }
 .dva-development-page .hljs-keyword { color: #c678dd; }
 .dva-development-page .hljs-string { color: #98c379; }
-.dva-development-page .hljs-attr { color: #e06c75; }
+.dva-development-page .hljs-attr { color: #e88a91; }
+.dva-development-page .hljs-title { color: #61afef; }
+.dva-development-page .hljs-built_in { color: #e6c07b; }
 .dva-development-page .hljs-number, .dva-development-page .hljs-literal { color: #d19a66; }
 .dva-development-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }
 .dva-development-page .diagram-wrap .mermaid-target :is(foreignObject > div, .nodeLabel, .edgeLabel, text, tspan) { font-size: 14px !important; }
-
