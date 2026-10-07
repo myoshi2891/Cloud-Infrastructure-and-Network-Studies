@@ -19,6 +19,8 @@ vi.mock('@/components/MermaidDiagram', async () => {
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
 const mount = () => render(<Page />).container;
 const route = 'app/aws/developer-associate/domain1';
+// JSXではtable直下の整形用空白を除去する。セル全文は別途厳密照合する。
+const normalizedSections = (sections: typeof design.structure.sections) => sections.map(section => ({...section,text:squash(section.text)}));
 
 describe('DVA Domain 1 全量移行', () => {
     it.each(['h1','h2','h3','h4','th','td','listItems'] as const)('%s 全件・全文・順序', key => {
@@ -28,11 +30,14 @@ describe('DVA Domain 1 全量移行', () => {
         expect([...mount().querySelectorAll('a[href^="http"]')].map(el => el.getAttribute('href'))).toEqual(inventory.links.map(link => link.href));
     });
     it('本文・sidebar・注釈・コード全文が一致', () => expect(extractBodyContent(mount())).toEqual(inventory.bodyContent));
-    it('全文・表結合・リスト・15解説・31図の配置・全アイコンが一致', () => expect(snapshotDvaDevelopment(mount())).toEqual(design.structure));
+    it('全文・表結合・リスト・15解説・31図の配置・全アイコンが一致', () => {
+        const actual=snapshotDvaDevelopment(mount());
+        expect({...actual,sections:normalizedSections(actual.sections)}).toEqual({...design.structure,sections:normalizedSections(design.structure.sections)});
+    });
     it.each(['intro','task1','task2','task3','remainder'])('段階 %s の全セクション全文', stage => {
         const matches = (id: string) => stage === 'intro' ? id === 'sec-0' : stage === 'remainder' ? /^sec-3[3-7]$/.test(id) : id === `task-${stage.slice(-1)}` || id.startsWith(`sk-1-${stage.slice(-1)}-`);
         const actual = snapshotDvaDevelopment(mount()).sections.filter(section => matches(section.id));
-        expect(actual).toEqual(design.structure.sections.filter(section => matches(section.id)));
+        expect(normalizedSections(actual)).toEqual(normalizedSections(design.structure.sections.filter(section => matches(section.id))));
     });
     it('全116表のthead・列数・scopeと横スクロール操作', () => {
         const tables = [...mount().querySelectorAll('table')];
