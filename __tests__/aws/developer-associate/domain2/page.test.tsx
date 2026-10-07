@@ -69,7 +69,7 @@ describe('DVA Security 全量移行', () => {
     it('空の列見出し・横スクロール表・図とコードの説明がアクセス可能', () => {
         const root = mount();
         for (const header of root.querySelectorAll('th')) {
-            if (!header.textContent?.trim()) expect(header.getAttribute('aria-label')?.trim()).toBeTruthy();
+            if (!header.textContent?.trim()) expect(header).toHaveAttribute('aria-hidden', 'true');
         }
         for (const wrap of root.querySelectorAll('.table-wrap')) {
             expect(wrap).toHaveAttribute('tabindex', '0');
