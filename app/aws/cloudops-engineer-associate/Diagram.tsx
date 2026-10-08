@@ -54,6 +54,7 @@ export const Diagram = memo(function Diagram({ id }: DiagramProps) {
                     chart={chart}
                     ariaLabel={label}
                     preserveNaturalScale
+                    preserveChartTheme
                     theme="light"
                     className="cloudops-diagram"
                 />
