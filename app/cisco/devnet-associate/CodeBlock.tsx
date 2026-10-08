@@ -147,7 +147,7 @@ function highlightLine(line: string, language?: string): ReactNode {
         // 5) ビルトイン関数: print, len, etc.
         // 6) 数値
         // 7) デコレータ: @...
-        const regex = /(#.*$)|(f?"(\\[\s\S]|[^"\\])*"|f?'(\\[\s\S]|[^'\\])*')|(@[a-zA-Z0-9_]+)|(\b(?:def|class|import|from|as|return|if|elif|else|for|while|in|try|except|finally|raise|with|pass|break|continue|lambda|yield|async|await|not|and|or|is)\b)|(\b(?:True|False|None)\b)|(\b(?:print|len|str|int|dict|list|set|open|range|enumerate|isinstance|type|super)\b)|(-?\b\d+(?:\.\d+)?\b)/g;
+        const regex = /(#.*$)|(f?"(?:\\[\s\S]|[^"\\])*"|f?'(?:\\[\s\S]|[^'\\])*')|(@[a-zA-Z0-9_]+)|(\b(?:def|class|import|from|as|return|if|elif|else|for|while|in|try|except|finally|raise|with|pass|break|continue|lambda|yield|async|await|not|and|or|is)\b)|(\b(?:True|False|None)\b)|(\b(?:print|len|str|int|dict|list|set|open|range|enumerate|isinstance|type|super)\b)|(-?\b\d+(?:\.\d+)?\b)/g;
         let lastIndex = 0;
         let match: RegExpExecArray | null;
         while ((match = regex.exec(line)) !== null) {
@@ -160,15 +160,15 @@ function highlightLine(line: string, language?: string): ReactNode {
                 className = 'hljs-comment';
             } else if (match[2]) {
                 className = 'hljs-string';
-            } else if (match[4]) {
+            } else if (match[3]) {
                 className = 'hljs-meta';
-            } else if (match[5]) {
+            } else if (match[4]) {
                 className = 'hljs-keyword';
-            } else if (match[6]) {
+            } else if (match[5]) {
                 className = 'hljs-literal';
-            } else if (match[7]) {
+            } else if (match[6]) {
                 className = 'hljs-built_in';
-            } else if (match[8]) {
+            } else if (match[7]) {
                 className = 'hljs-number';
             }
             tokens.push({ text: matchedText, className });
