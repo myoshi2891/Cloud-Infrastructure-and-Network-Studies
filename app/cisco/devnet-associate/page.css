@@ -421,7 +421,7 @@
 }
 
 .devnet-associate-page tbody tr:nth-child(even) td {
-    background-color: #fafbfd;
+    background-color: var(--color-devnet-associate-row-alt);
 }
 
 .devnet-associate-page td:first-child {
@@ -468,17 +468,17 @@
 }
 
 .devnet-associate-page .callout.practice {
-    border-color: #e7d3a8;
+    border-color: var(--color-devnet-associate-gold-line);
     border-left-color: var(--color-devnet-associate-gold, #b8802a);
     background-color: var(--color-devnet-associate-gold-50, #faf1df);
 }
 
 .devnet-associate-page .callout.practice > .callout-title {
-    color: #7a5416;
+    color: var(--color-devnet-associate-gold-ink);
 }
 
 .devnet-associate-page .callout.source {
-    border-color: #b9d9d5;
+    border-color: var(--color-devnet-associate-forest-line);
     border-left-color: var(--color-devnet-associate-forest, #1b6e6a);
     background-color: var(--color-devnet-associate-forest-50, #e6f2f0);
 }
@@ -488,7 +488,7 @@
 }
 
 .devnet-associate-page .callout.note {
-    border-color: #e4c4d2;
+    border-color: var(--color-devnet-associate-plum-line);
     border-left-color: var(--color-devnet-associate-plum, #8c3a5c);
     background-color: var(--color-devnet-associate-plum-50, #f7ebf0);
 }
@@ -633,7 +633,7 @@
 
 .devnet-associate-page .check.checked {
     background-color: var(--color-devnet-associate-forest-50, #e6f2f0);
-    border-color: #b9d9d5;
+    border-color: var(--color-devnet-associate-forest-line);
 }
 
 .devnet-associate-page .check.checked .box {

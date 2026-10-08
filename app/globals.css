@@ -567,6 +567,11 @@
     --color-devnet-associate-border: #d9dee8;
     --color-devnet-associate-warning: #b8802a;
     --color-devnet-associate-warning-soft: #faf1df;
+    --color-devnet-associate-row-alt: #fafbfd;
+    --color-devnet-associate-gold-line: #e7d3a8;
+    --color-devnet-associate-gold-ink: #7a5416;
+    --color-devnet-associate-forest-line: #b9d9d5;
+    --color-devnet-associate-plum-line: #e4c4d2;
     --color-devnet-professional-background: #07111e;
     --color-devnet-professional-elevated: #0d1b2e;
     --color-devnet-professional-panel: #101f36;
@@ -676,6 +681,13 @@
     --color-theme-aws-cloudops-plum: #6b3a62;
     --color-theme-aws-cloudops-plum-soft: #f3e6f0;
     --color-theme-aws-cloudops-border: #ddd5c4;
+    --color-theme-aws-cloudops-indigo-deep: #1b2450;
+    --color-theme-aws-cloudops-indigo-bright: #3a4f8c;
+    --color-theme-aws-cloudops-on-indigo: #ffffff;
+    --color-theme-aws-cloudops-on-indigo-muted: #dfe5f7;
+    --color-theme-aws-cloudops-ink-strong: #14110c;
+    --color-theme-aws-cloudops-code-ink: #7a3b12;
+    --color-theme-aws-cloudops-forest-border: #b9d8c5;
 
     --color-theme-cisco-bg: hsl(215 70% 50% / 0.20);
     --color-theme-cisco-fg: hsl(215 95% 70%);
