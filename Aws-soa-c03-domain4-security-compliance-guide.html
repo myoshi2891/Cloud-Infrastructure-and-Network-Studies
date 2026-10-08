@@ -142,6 +142,17 @@ details.answer summary{cursor:pointer;font-weight:700;color:var(--forest);paddin
 .main .quiz-body p{margin:0 0 14px}
 .main>.trap-tools,.main>.trap-group{padding:0}
 
+.main>pre.code{padding:18px 22px}
+pre.code code.hljs{display:block;padding:0;background:none;color:var(--pre-ink)}
+.hljs-comment,.hljs-quote{color:#8f9bb8;font-style:italic}
+.hljs-keyword,.hljs-selector-tag,.hljs-built_in,.hljs-literal{color:#c8a2f2}
+.hljs-attr,.hljs-attribute,.hljs-name,.hljs-property{color:#8cc8ff}
+.hljs-string,.hljs-regexp,.hljs-addition{color:#a6e3a1}
+.hljs-number,.hljs-symbol,.hljs-bullet,.hljs-variable,.hljs-template-variable{color:#ffc58a}
+.hljs-title,.hljs-section,.hljs-function{color:#ffe08a}
+.hljs-meta,.hljs-doctag,.hljs-subst{color:#9fb3e8}
+.hljs-deletion{color:#ff9aa8}
+
 </style>
 </head>
 <body>
@@ -4097,6 +4108,7 @@ aws iam update-account-password-policy \
 </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous"></script>
 <script>
 const DIAGRAMS = {
 'd0': `flowchart TB
@@ -4382,6 +4394,15 @@ const DIAGRAMS = {
     document.documentElement.setAttribute('data-diagrams-done','1');
   }
   renderAll();
+
+  if(typeof hljs!=='undefined'){
+    document.querySelectorAll('pre.code').forEach(function(pre){
+      var c=pre.querySelector('code'), lang=pre.getAttribute('data-lang');
+      if(!c||!lang||!hljs.getLanguage(lang)) return;
+      c.className='language-'+lang;
+      try{hljs.highlightElement(c);}catch(e){console.warn('hljs failed',e);}
+    });
+  }
 
   document.querySelectorAll('.quiz').forEach(function(q){
     var multi=q.getAttribute('data-multi')==='1';
