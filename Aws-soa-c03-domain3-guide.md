@@ -738,7 +738,7 @@ flowchart TD
 |---|---|---|
 | **Elastic Beanstalk** | All at once / Rolling / Rolling with additional batch / **Immutable** / **Traffic splitting**(カナリア的) | 環境の CNAME スワップで Blue/Green も可能 |
 | **Auto Scaling グループ** | **インスタンスリフレッシュ** | `MinHealthyPercentage` で更新中に維持する正常率を指定。ローンチテンプレートの更新を反映 |
-| **ECS** | **ローリング更新**(既定)、CodeDeploy による Blue/Green | `minimumHealthyPercent` / `maximumPercent` でローリングの幅を制御。**デプロイサーキットブレーカー**で失敗時に自動ロールバック |
+| **ECS** | **ローリング更新**(既定)、CodeDeploy による Blue/Green | `minimumHealthyPercent` / `maximumPercent` でローリングの幅を制御。**デプロイサーキットブレーカー**は失敗したローリング更新を検知して停止。**ロールバックを有効化し、かつ完了済みの前回デプロイがある場合のみ**自動で戻す(それ以外はデプロイが失敗するだけで元に戻らない) |
 | **Lambda** | **バージョン + エイリアス**、加重エイリアス | エイリアスで新旧に配分。CodeDeploy で自動化 |
 | **CloudFormation** | スタック更新の `UpdatePolicy`(ASG の `AutoScalingRollingUpdate` など) | 更新時のローリング挙動を宣言 |
 
