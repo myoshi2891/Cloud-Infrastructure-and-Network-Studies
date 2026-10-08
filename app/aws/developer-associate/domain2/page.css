@@ -87,11 +87,11 @@
 .dva-security-page :focus-visible { outline: 2px solid var(--color-dva-indigo); outline-offset: 4px; }
 @media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }
 @media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }
-.dva-security-page .hljs-comment { color: #94a3b8; font-style: italic; }
-.dva-security-page .hljs-keyword { color: #c678dd; }
-.dva-security-page .hljs-string { color: #98c379; }
-.dva-security-page .hljs-attr { color: #e06c75; }
-.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: #d19a66; }
+.dva-security-page .hljs-comment { color: var(--color-dva-94a3b8); font-style: italic; }
+.dva-security-page .hljs-keyword { color: var(--color-dva-c678dd); }
+.dva-security-page .hljs-string { color: var(--color-dva-98c379); }
+.dva-security-page .hljs-attr { color: var(--color-dva-e06c75); }
+.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: var(--color-dva-d19a66); }
 
 .dva-security-page .diagram-wrap > [role="img"] { overflow: visible; border: 0; background: transparent; padding: 0; margin: 0; }
 

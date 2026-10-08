@@ -233,7 +233,7 @@ describe('DVA CSS全宣言・リスト装飾', () => {
         }
         expect(css).not.toMatch(/@layer|fonts.googleapis|word-break: break-word/);
         const rules = snapshotCssRules(css);
-        expect(rules.filter(r => !r.selector.includes('.hljs-')).flatMap(r => r.declarations).filter(d => /#[\da-f]{3,6}\b/i.test(d.value))).toEqual([]);
+        expect(rules.flatMap(r => r.declarations).filter(d => /#[\da-f]{3,6}\b/i.test(d.value))).toEqual([]);
         expect(readFileSync(`${route}/page.tsx`, 'utf8')).toContain("import './page.css'");
     });
     it('ulの点・olの番号・入れ子・チェック項目と目次のマーカーを明示', () => {

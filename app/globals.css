@@ -65,6 +65,13 @@
     --color-dva-development-9b2c2c: #9b2c2c;
     --color-dva-development-fdecec: #fdecec;
     --color-dva-development-f0b8b8: #f0b8b8;
+    --color-dva-development-94a3b8: #94a3b8;
+    --color-dva-development-c678dd: #c678dd;
+    --color-dva-development-98c379: #98c379;
+    --color-dva-development-e88a91: #e88a91;
+    --color-dva-development-61afef: #61afef;
+    --color-dva-development-e6c07b: #e6c07b;
+    --color-dva-development-d19a66: #d19a66;
 
     /* Layer 3: DVA Security 原本ライトテーマ・固定装飾色 */
     --color-dva-paper: #faf7f0;
@@ -87,6 +94,11 @@
     --color-dva-e6e8f5: #e6e8f5;
     --color-dva-fff8e6: #fff8e6;
     --color-dva-4a3b12: #4a3b12;
+    --color-dva-94a3b8: #94a3b8;
+    --color-dva-c678dd: #c678dd;
+    --color-dva-98c379: #98c379;
+    --color-dva-e06c75: #e06c75;
+    --color-dva-d19a66: #d19a66;
 
     /* Layer 1: セマンティックトークン (shadcn/ui 互換) */
     --color-background: #08090f;

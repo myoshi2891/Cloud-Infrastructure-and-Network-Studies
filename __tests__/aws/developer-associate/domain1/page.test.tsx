@@ -140,8 +140,11 @@ const mapValue = (value:string,prop:string) => {
 describe('DVA Domain 1 原本の全CSSとリスト記号',()=>{
     it('14pxコードのコメントと属性色はコントラストを確保',()=>{
         const rules=snapshotCssRules(readFileSync(`${route}/page.css`,'utf8'));
-        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-comment')?.declarations.find(d=>d.prop==='color')?.value).toBe('#94a3b8');
-        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-attr')?.declarations.find(d=>d.prop==='color')?.value).toBe('#e88a91');
+        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-comment')?.declarations.find(d=>d.prop==='color')?.value).toBe('var(--color-dva-development-94a3b8)');
+        expect(rules.find(rule=>rule.selector==='.dva-development-page .hljs-attr')?.declarations.find(d=>d.prop==='color')?.value).toBe('var(--color-dva-development-e88a91)');
+        const globals=readFileSync('app/globals.css','utf8');
+        expect(globals).toContain('--color-dva-development-94a3b8: #94a3b8;');
+        expect(globals).toContain('--color-dva-development-e88a91: #e88a91;');
     });
     it('全CSSセレクタ・メディア条件・宣言・importantを保持',()=>{
         const actual=snapshotCssRules(readFileSync(`${route}/page.css`,'utf8'));
