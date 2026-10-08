@@ -220,3 +220,7 @@ reviews:
         - '!app/aws/cloudops-engineer-associate/sections/SectionDomain4.tsx'
         - '!app/aws/cloudops-engineer-associate/sections/SectionDomain5.tsx'
         - '!app/aws/cloudops-engineer-associate/sections/SectionIntro.tsx'
+        - '!app/aws/developer-associate/domain2/sections/Step0.tsx'
+        - '!app/aws/developer-associate/domain2/sections/Step1.tsx'
+        - '!app/aws/developer-associate/domain2/sections/Step10.tsx'
+        - '!app/aws/developer-associate/domain2/sections/Step11.tsx'
