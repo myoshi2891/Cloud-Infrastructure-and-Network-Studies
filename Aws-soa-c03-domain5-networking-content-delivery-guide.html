@@ -14,7 +14,7 @@
   --indigo:#34459b; --indigo-soft:#e8ebf8; --indigo-line:#c3cbea;
   --gold:#b7791f; --gold-soft:#fbf1dc; --forest:#2f7d5b; --forest-soft:#e5f3ec; --plum:#7b3f7a;
   --line:#e2ddd0; --code-bg:#f0eee6; --pre-bg:#1e2433; --pre-ink:#e8ecf5;
-  --sidebar-w:320px;
+  --sidebar-w:320px;--gutter:40px;
   --font:'Noto Sans JP','Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',Meiryo,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto Sans JP',monospace;
 }
@@ -39,7 +39,8 @@ a:hover{color:#1f2d77}
 
 /* main */
 .main{margin-left:var(--sidebar-w);padding:0 0 96px}
-.main>*{padding-left:max(56px,calc((100% - 1120px)/2));padding-right:max(56px,calc((100% - 1120px)/2))}
+.main>*{padding-left:var(--gutter);padding-right:var(--gutter)}
+.main>details{padding-left:20px;padding-right:20px}
 .hero{padding-top:64px;padding-bottom:40px;background:linear-gradient(180deg,#eef0fa 0%,var(--paper) 100%);border-bottom:1px solid var(--line);margin-bottom:8px}
 .hero h1{font-size:clamp(1.75rem,3.2vw,2.5rem);line-height:1.4;margin:10px 0 20px;font-weight:800;color:var(--ink)}
 .pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
@@ -52,21 +53,21 @@ a:hover{color:#1f2d77}
 .main h2::before{content:"";display:block;width:56px;height:5px;border-radius:3px;background:var(--indigo);margin-bottom:14px}
 .main h3{font-size:1.3125rem;font-weight:700;margin:0;padding-top:30px;padding-bottom:2px;line-height:1.55;color:var(--ink);scroll-margin-top:16px}
 .main h3::before{content:"";display:inline-block;width:6px;height:1.1em;background:var(--gold);border-radius:3px;margin-right:10px;vertical-align:-.15em}
-.main h4{font-size:1.125rem;margin:22px 0 4px;padding-left:56px;padding-right:56px}
+.main h4{font-size:1.125rem;margin:22px 0 4px}
 .main p,.main ul,.main ol{margin-top:0;margin-bottom:18px}
 .main p{margin-top:14px}
 .main ul,.main ol{padding-top:0;margin-top:12px}
 .main li{margin-bottom:6px}
-.main ul,.main ol{padding-left:calc(max(56px,(100% - 1120px)/2) + 1.4em)}
+.main ul,.main ol{padding-left:calc(var(--gutter) + 1.4em)}
 .main hr{border:none;height:0;margin:0;padding:0}
 strong{color:#0f1526}
 code{font-family:var(--mono);font-size:1rem;background:var(--code-bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#8a4b00;overflow-wrap:anywhere}
 blockquote{margin:16px 0;padding:12px 20px;background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:0 10px 10px 0;color:var(--ink)}
-.main blockquote{margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2));padding-left:20px;padding-right:20px}
+.main blockquote{margin-left:var(--gutter);margin-right:var(--gutter);padding-left:20px;padding-right:20px}
 blockquote p{margin:4px 0}
 
 /* tables */
-.table-wrap{overflow-x:auto;margin-top:16px;margin-bottom:26px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+.table-wrap{overflow-x:auto;margin-top:16px;margin-bottom:26px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter)}
 .main>.table-wrap{padding-left:0;padding-right:0}
 table{border-collapse:collapse;width:100%;font-size:1rem;line-height:1.7}
 thead th{background:var(--indigo);color:#fff;font-weight:700;text-align:left;padding:11px 16px;white-space:nowrap}
@@ -76,18 +77,18 @@ tbody tr:hover{background:var(--paper)}
 th,td{overflow-wrap:anywhere}
 
 /* diagrams */
-.diagram-wrap{overflow-x:auto;display:flex;justify-content:safe center;width:auto;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:16px;margin-bottom:28px;padding:24px 16px;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+.diagram-wrap{overflow-x:auto;display:flex;justify-content:safe center;width:auto;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:16px;margin-bottom:28px;padding:24px 16px;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter)}
 .diagram-wrap>*{min-width:0}
 .diagram-canvas svg{flex-shrink:0;max-width:none}
 .diagram-canvas{min-height:40px}
 .mermaidTooltip{font-size:1rem!important}
 
 /* code */
-pre.code{margin-top:14px;margin-bottom:24px;padding:16px 20px;background:var(--pre-bg);color:var(--pre-ink);border-radius:12px;overflow-x:auto;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2));line-height:1.7}
+pre.code{margin-top:14px;margin-bottom:24px;padding:16px 20px;background:var(--pre-bg);color:var(--pre-ink);border-radius:12px;overflow-x:auto;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter);line-height:1.7}
 pre.code code{background:none;border:none;padding:0;color:inherit;font-size:1rem;white-space:pre}
 
 /* quiz */
-details{margin-top:12px;margin-bottom:22px;background:var(--forest-soft);border:1px solid #bfe0cf;border-radius:12px;padding:0 20px;max-width:calc(100% - 2*max(56px,(100% - 1120px)/2));margin-left:max(56px,calc((100% - 1120px)/2));margin-right:max(56px,calc((100% - 1120px)/2))}
+details{margin-top:12px;margin-bottom:22px;background:var(--forest-soft);border:1px solid #bfe0cf;border-radius:12px;padding:0 20px;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter)}
 details summary{cursor:pointer;font-weight:700;color:var(--forest);padding:12px 0;list-style-position:inside}
 details[open] summary{border-bottom:1px solid #bfe0cf;margin-bottom:8px}
 details p,details ul{padding-left:0;padding-right:0;margin-bottom:12px}
@@ -104,13 +105,70 @@ details p,details ul{padding-left:0;padding-right:0;margin-bottom:12px}
   .sidebar.open{transform:none}
   .scrim.show{display:block;position:fixed;inset:0;background:rgba(20,26,45,.35);z-index:35}
   .main{margin-left:0;padding-top:58px}
-  .main>*{padding-left:18px;padding-right:18px}
-  .main ul,.main ol{padding-left:calc(18px + 1.4em)}
-  .main h4{padding-left:18px;padding-right:18px}
+  :root{--gutter:16px}
+  .main>*{padding-left:var(--gutter);padding-right:var(--gutter)}
   .hero{padding-top:36px}
-  .table-wrap,.diagram-wrap,pre.code,details{margin-left:18px;margin-right:18px;max-width:calc(100% - 36px)}
-  .main blockquote{margin-left:18px;margin-right:18px}
 }
+
+/* ---------- practice questions ---------- */
+.quiz{margin:22px var(--gutter) 26px;background:#fff;border:1px solid var(--indigo-line);border-radius:16px;overflow:hidden;box-shadow:0 1px 0 rgba(52,69,155,.06)}
+.main h3.quiz-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0;padding:14px 22px;background:var(--indigo-soft);border-bottom:1px solid var(--indigo-line);font-size:1.125rem}
+.main h3.quiz-head::before{display:none}
+.q-num{display:inline-block;background:var(--indigo);color:#fff;font-weight:800;border-radius:8px;padding:2px 12px;letter-spacing:.02em}
+.q-title{font-weight:700;color:var(--ink)}
+.q-type{margin-left:auto;font-size:1rem;font-weight:700;color:#7a4a00;background:var(--gold-soft);border:1px solid #ecd29b;border-radius:999px;padding:1px 14px}
+.q-type.single{color:var(--indigo);background:#fff;border-color:var(--indigo-line)}
+.quiz-body{padding:18px 22px 6px}
+.quiz-body p{margin:0 0 14px}
+.opts{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:10px}
+.opts li{display:flex;gap:14px;align-items:flex-start;margin:0;padding:11px 16px;border:1px solid var(--line);border-radius:12px;background:var(--paper);transition:background .15s,border-color .15s;cursor:pointer}
+.opts li:hover{background:var(--indigo-soft);border-color:var(--indigo-line)}
+.opts li.picked{background:var(--indigo-soft);border-color:var(--indigo)}
+.opts .key{flex:0 0 2rem;width:2rem;height:2rem;border-radius:50%;background:#fff;border:2px solid var(--indigo-line);color:var(--indigo);font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.opts li.picked .key{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.opts .txt{flex:1;min-width:0;overflow-wrap:anywhere}
+.quiz.revealed .opts li.correct{background:var(--forest-soft);border-color:var(--forest);cursor:default}
+.quiz.revealed .opts li.correct .key{background:var(--forest);border-color:var(--forest);color:#fff}
+.quiz.revealed .opts li.picked:not(.correct){background:#fdeceb;border-color:#d9776f}
+.quiz.revealed .opts li.picked:not(.correct) .key{background:#b3261e;border-color:#b3261e;color:#fff}
+.quiz details.answer{margin:0;max-width:none;border:none;border-top:1px dashed #bfe0cf;border-radius:0;background:var(--forest-soft);padding:0 22px}
+.quiz details.answer summary{padding:13px 0;color:var(--forest)}
+.quiz details.answer[open] summary{border-bottom:none;margin-bottom:0}
+.answer-body{padding:0 0 16px}
+.ans-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:10px;font-weight:700;color:var(--forest)}
+.ans-badge b{background:var(--forest);color:#fff;border-radius:8px;padding:1px 14px;font-size:1.125rem}
+.answer-body p{margin:0 0 10px}
+
+/* ---------- traps ---------- */
+.trap-tools{margin:18px var(--gutter) 6px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip{font-family:var(--font);font-size:1rem;font-weight:700;color:var(--ink-2);background:#fff;border:1px solid var(--indigo-line);border-radius:999px;padding:6px 16px;cursor:pointer}
+.chip:hover{background:var(--indigo-soft)}
+.chip.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.trap-search{font-family:var(--font);font-size:1rem;flex:1 1 220px;min-width:0;padding:8px 14px;border:1px solid var(--indigo-line);border-radius:10px;background:#fff;color:var(--ink)}
+.trap-count{color:var(--ink-3)}
+.trap-group{margin:26px var(--gutter) 4px;font-size:1.125rem;font-weight:800;color:var(--indigo);display:flex;align-items:center;gap:10px}
+.trap-group::after{content:"";flex:1;height:1px;background:var(--indigo-line)}
+.trap-grid{margin:10px var(--gutter) 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:16px}
+.trap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.trap header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--paper-alt);border-bottom:1px solid var(--line)}
+.t-num{font-weight:800;color:#fff;background:var(--plum);border-radius:8px;padding:0 10px;min-width:2.6rem;text-align:center}
+.t-item{font-weight:700;color:var(--ink)}
+.trap p{margin:0;padding:12px 16px;display:flex;gap:10px;align-items:flex-start}
+.trap .lbl{flex:0 0 auto;font-weight:800;font-size:1rem;border-radius:6px;padding:0 10px;white-space:nowrap}
+.t-bad{background:#fff6f5}
+.t-bad .lbl{color:#b3261e;background:#fde3e1}
+.t-ok{background:var(--forest-soft);flex:1}
+.t-ok .lbl{color:#1d5a40;background:#cfe9db}
+.trap .t-txt{min-width:0;overflow-wrap:anywhere}
+.trap.hide,.trap-group.hide{display:none}
+@media (max-width:980px){.quiz{margin-left:var(--gutter);margin-right:var(--gutter)}.q-type{margin-left:0}}
+/* reset inherited gutter padding on self-margined blocks */
+.main>.quiz,.main>.trap-tools,.main>.trap-group,.main>.trap-grid,.main>.table-wrap,.main>pre.code,.main>blockquote{padding-left:0;padding-right:0}
+.main>.diagram-wrap{padding-left:16px;padding-right:16px}
+.main>blockquote{padding:12px 20px}
+.main .opts{padding:0;margin-top:0}
+.main .quiz-body p{margin:0 0 14px}
+.main>.trap-tools,.main>.trap-group{padding:0}
 
     </style>
 </head>
@@ -3704,539 +3762,210 @@ LIMIT 20;
 <p>形式は本試験に合わせた「単一選択」と「複数選択」です。各問の解説に根拠となる考え方を付けています。</p>
 </blockquote>
 <p>練習問題は本試験の形式(単一選択と複数選択)に合わせています。答えを見る前に、自分で選択肢を選び、解説で根拠まで確認してください。間違えた問題は、該当する Step に戻って読み直すのが最も効率の良い復習です。</p>
-<h3 id="q-1">問題 1 (VPC)</h3>
-<p>プライベートサブネットの EC2 が OS アップデートのためインターネットへ出る必要がありますが、外部からの接続は受け付けたくありません。最も適切な構成はどれですか。</p>
-<ul>
-<li>A. プライベートサブネットのルートテーブルに IGW へのルートを追加する</li>
-<li>B. パブリックサブネットに NAT ゲートウェイを作成し、プライベートサブネットのルートテーブルで <code>0.0.0.0/0</code> を NAT に向ける</li>
-<li>C. EC2 に Elastic IP を割り当てる</li>
-<li>D. VPC ピアリングを作成する</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。NAT ゲートウェイは外向き通信だけを許可します。A は外部からも到達可能になり、C も同様です。D は無関係です。</p>
-</details>
-<h3 id="q-2">問題 2 (SG と NACL)</h3>
-<p>Web サーバーのサブネットの NACL で、インバウンド TCP 443 を許可しましたが、クライアントは応答を受け取れません。SG は正しく設定されています。原因として最も可能性が高いものはどれですか。</p>
-<ul>
-<li>A. NACL のアウトバウンドで<strong>エフェメラルポート (1024-65535)</strong> が許可されていない</li>
-<li>B. SG のアウトバウンドが拒否されている</li>
-<li>C. IGW がアタッチされていない</li>
-<li>D. NACL はステートフルなので設定不要</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A</strong>。NACL はステートレスのため、戻りの通信も明示的に許可する必要があります。SG はステートフルなので B は原因になりません。</p>
-</details>
-<h3 id="q-3">問題 3 (IPv6)</h3>
-<p>IPv6 を使う EC2 インスタンスに、インターネットへの外向き通信だけを許可し、インターネットからの新規接続は拒否したい。どれを使いますか。</p>
-<ul>
-<li>A. NAT ゲートウェイ</li>
-<li>B. インターネットゲートウェイのみ</li>
-<li>C. Egress-only インターネットゲートウェイ</li>
-<li>D. VPC エンドポイント</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>C</strong>。NAT ゲートウェイは IPv4 用です。</p>
-</details>
-<h3 id="q-4">問題 4 (エンドポイント / コスト)</h3>
-<p>プライベートサブネットのアプリが S3 に大量のデータを送っており、NAT ゲートウェイのデータ処理料金が高額です。最も費用対効果が高く運用負荷が小さい対策はどれですか。</p>
-<ul>
-<li>A. NAT ゲートウェイを大きいインスタンスタイプに変える</li>
-<li>B. S3 用の<strong>ゲートウェイエンドポイント</strong>を作成し、ルートテーブルに関連付ける</li>
-<li>C. S3 用のインターフェイスエンドポイントを作成する</li>
-<li>D. Direct Connect を契約する</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。ゲートウェイエンドポイントは無料で、NAT 経由のデータ処理料金を回避できます。NAT ゲートウェイにインスタンスタイプはありません (A は誤り)。C は時間課金・処理課金が発生します。</p>
-</details>
-<h3 id="q-5">問題 5 (ピアリング)</h3>
-<p>VPC A と VPC B、VPC B と VPC C にそれぞれピアリングがあります。VPC A のインスタンスから VPC C のインスタンスへ通信したいが失敗します。理由と解決策として正しいものはどれですか。<strong>2 つ選択</strong>してください。</p>
-<ul>
-<li>A. ピアリングは推移的ではないため、A と C は VPC B を経由して通信できない</li>
-<li>B. A と C の間に<strong>新たにピアリングを作成</strong>し、両方のルートテーブルを更新する</li>
-<li>C. VPC B のルートテーブルに A と C の CIDR へのルートを追加すれば、B が中継して解決する</li>
-<li>D. ピアリングを承諾し直すと推移的ルーティングが有効になる</li>
-<li>E. VPC B の SG を全許可にすれば解決する</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A と B</strong>。ピアリングは<strong>推移的ルーティング不可</strong>です。C、D、E のように B 側の設定を変えても中継されません。接続する VPC が多い場合は Transit Gateway も有力な選択肢です。</p>
-</details>
-<h3 id="q-6">問題 6 (DNS Firewall)</h3>
-<p>VPC 内のインスタンスが、既知のマルウェア配布ドメインに名前解決しようとするのを防ぎたい。最も適切なサービスはどれですか。</p>
-<ul>
-<li>A. AWS WAF</li>
-<li>B. Route 53 Resolver DNS Firewall</li>
-<li>C. セキュリティグループ</li>
-<li>D. AWS Shield Advanced</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。DNS 名による制御は DNS Firewall です。WAF は HTTP リクエストの検査です。</p>
-</details>
-<h3 id="q-7">問題 7 (WAF)</h3>
-<p>新しい WAF ルールを本番に追加しますが、正規ユーザーを誤ってブロックしたくありません。最初にとるべき設定はどれですか。</p>
-<ul>
-<li>A. 直ちに Block で適用する</li>
-<li>B. ルールを <strong>Count</strong> モードで適用し、ログとメトリクスで影響を確認する</li>
-<li>C. Shield Advanced を有効化する</li>
-<li>D. NACL でブロックする</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。Count は記録のみで、誤検知を事前に確認できます。</p>
-</details>
-<h3 id="q-8">問題 8 (Route 53 ルーティング)</h3>
-<p>新バージョンのアプリに本番トラフィックの 10% だけを流して様子を見たい。使うルーティングポリシーはどれですか。</p>
-<ul>
-<li>A. シンプル</li>
-<li>B. フェイルオーバー</li>
-<li>C. 加重</li>
-<li>D. 位置情報</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>C (加重)</strong>。比率で振り分けます。</p>
-</details>
-<h3 id="q-9">問題 9 (ヘルスチェック)</h3>
-<p>VPC 内のプライベートなエンドポイントのヘルスチェックで、Route 53 を使ったフェイルオーバーを実現したい。ヘルスチェッカーはプライベートなリソースに到達できません。どうしますか。</p>
-<ul>
-<li>A. エンドポイントヘルスチェックの IP を 10.0.0.0/8 にする</li>
-<li>B. <strong>CloudWatch アラームベースのヘルスチェック</strong>を作成し、それをルーティングに関連付ける</li>
-<li>C. ヘルスチェックを使わない</li>
-<li>D. 計算済みヘルスチェックのみにする</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。リソースのメトリクスでアラームを作り、そのアラームの状態でヘルスを判定します。</p>
-</details>
-<h3 id="q-10">問題 10 (ハイブリッド DNS)</h3>
-<p>オンプレミスのサーバーから、VPC のプライベートホストゾーンにある名前 (<code>db.internal.example.com</code>) を解決したい。必要なものはどれですか。</p>
-<ul>
-<li>A. Route 53 Resolver の<strong>インバウンドエンドポイント</strong>と、オンプレ DNS からそこへの転送設定</li>
-<li>B. アウトバウンドエンドポイント</li>
-<li>C. パブリックホストゾーンの複製</li>
-<li>D. DNS Firewall のルールグループ</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A</strong>。オンプレ → VPC の問い合わせはインバウンド、VPC → オンプレはアウトバウンドです。</p>
-</details>
-<h3 id="q-11">問題 11 (CloudFront の証明書)</h3>
-<p>CloudFront で独自ドメインの HTTPS を使うため、ACM で証明書を作成します。どのリージョンで作成しますか。</p>
-<ul>
-<li>A. ディストリビューションと同じリージョン</li>
-<li>B. オリジンと同じリージョン</li>
-<li>C. 米国東部 (バージニア北部) us-east-1</li>
-<li>D. どこでもよい</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>C</strong>。CloudFront が使う ACM 証明書は us-east-1 で作成します。</p>
-</details>
-<h3 id="q-12">問題 12 (S3 オリジン)</h3>
-<p>S3 バケットを CloudFront 経由でのみ公開し、S3 の URL への直接アクセスは拒否したい。推奨される方法はどれですか。</p>
-<ul>
-<li>A. バケットをパブリックにする</li>
-<li>B. <strong>Origin Access Control (OAC)</strong> を使い、バケットポリシーで CloudFront のみ許可する</li>
-<li>C. 署名付き URL のみ</li>
-<li>D. SG でバケットを守る</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。S3 に SG はありません (D は誤り)。OAC が現在の推奨で、旧 OAI より優先されます。</p>
-</details>
-<h3 id="q-13">問題 13 (Global Accelerator)</h3>
-<p>TCP を使うゲームサーバー (複数リージョン) に対し、固定の IP アドレスを許可リストにしたいと顧客に要求されています。DNS の TTL に依存せず、異常なリージョンから素早く切り替えたい。どれを使いますか。</p>
-<ul>
-<li>A. CloudFront</li>
-<li>B. Route 53 のフェイルオーバー</li>
-<li>C. <strong>AWS Global Accelerator</strong></li>
-<li>D. Elastic IP を各サーバーに付ける</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>C</strong>。静的エニーキャスト IP と、ヘルスチェックに基づく高速フェイルオーバーが特長です。</p>
-</details>
-<h3 id="q-14">問題 14 (CloudFront キャッシュ)</h3>
-<p>CloudFront のキャッシュヒット率が非常に低い。調べると、すべてのリクエストに毎回異なるクエリ文字列 (トラッキング用) が付き、キャッシュキーに含まれている。最適な対処はどれですか。</p>
-<ul>
-<li>A. TTL を最大にする</li>
-<li>B. キャッシュポリシーから<strong>不要なクエリ文字列を除外</strong>し、キャッシュキーを最小化する</li>
-<li>C. Origin Shield を無効にする</li>
-<li>D. 無効化を毎時実行する</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。キャッシュキーが多様だと毎回 Miss になります。TTL を延ばしても同じキーでなければヒットしません。</p>
-</details>
-<h3 id="q-15">問題 15 (ALB のエラー)</h3>
-<p>ALB のアクセスログで <code>elb_status_code</code> が 503 で、<code>target_status_code</code> が <code>-</code> です。最も可能性が高い原因はどれですか。</p>
-<ul>
-<li>A. アプリケーションが 503 を返している</li>
-<li>B. <strong>登録された正常なターゲットが存在しない</strong></li>
-<li>C. クライアントが接続を閉じた</li>
-<li>D. WAF がブロックしている</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。ターゲットのコードが空なら ELB 自身がエラーを返しています。503 は正常なターゲット不在の典型です。</p>
-</details>
-<h3 id="q-16">問題 16 (フローログ)</h3>
-<p>VPC フローログで、あるサーバーへのインバウンド TCP 443 が ACCEPT ですが、その戻り (宛先ポートがエフェメラルポート) のアウトバウンドが REJECT になっています。原因はどれですか。</p>
-<ul>
-<li>A. SG のインバウンド不足</li>
-<li>B. <strong>NACL のアウトバウンドの拒否 / 許可不足</strong></li>
-<li>C. ルートテーブルのミス</li>
-<li>D. WAF のブロック</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>B</strong>。SG はステートフルのため戻りは自動許可されます。戻りが REJECT になるのは NACL です。</p>
-</details>
-<h3 id="q-17">問題 17 (NAT のエラー)</h3>
-<p>NAT ゲートウェイ経由の通信で、特定の外部 API への接続が時々失敗します。CloudWatch の <code>ErrorPortAllocation</code> が 0 より大きい値です。対処はどれですか。</p>
-<ul>
-<li>A. NAT に<strong>セカンダリ EIP を追加</strong>し、可能なら接続の再利用 (Keep-Alive) を行う</li>
-<li>B. SG のインバウンドを開ける</li>
-<li>C. NACL を削除する</li>
-<li>D. IGW を作り直す</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A</strong>。同一宛先に対する同時接続数 (ポート) の枯渇です。EIP を増やすことで利用可能なポートが増えます。</p>
-</details>
-<h3 id="q-18">問題 18 (VPN)</h3>
-<p>Site-to-Site VPN のトンネルは UP ですが、VPC のインスタンスからオンプレへ通信できません。VGW を使用しており、静的ルートは使用していません。最初に確認することはどれですか。</p>
-<ul>
-<li>A. <strong>サブネットのルートテーブルで「ルート伝播」が有効か</strong></li>
-<li>B. EC2 のインスタンスタイプ</li>
-<li>C. CloudFront のキャッシュ</li>
-<li>D. Route 53 のヘルスチェック</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A</strong>。VGW 経由のオンプレ宛てルートは、伝播を有効にすることでルートテーブルに入ります。</p>
-</details>
-<h3 id="q-19">問題 19 (PrivateLink)</h3>
-<p>インターフェイスエンドポイントを作成したが、<code>ssm.ap-northeast-1.amazonaws.com</code> がパブリック IP に解決され、プライベートサブネットから通信が失敗する。確認すべき設定を <strong>2 つ</strong>選んでください。</p>
-<ul>
-<li>A. エンドポイントの<strong>プライベート DNS</strong> が有効か</li>
-<li>B. VPC の <strong><code>enableDnsSupport</code> と <code>enableDnsHostnames</code></strong> が有効か</li>
-<li>C. IGW の数</li>
-<li>D. NAT のタイプ</li>
-<li>E. S3 バケットポリシー</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A と B</strong>。プライベート DNS を使うには VPC の DNS 解決とホスト名の両方が有効である必要があります。</p>
-</details>
-<h3 id="q-20">問題 20 (ネットワーク監視)</h3>
-<p>オンプレミスと AWS 間の接続 (VPN / Direct Connect) の遅延とパケットロスを、<strong>エージェントをインストールせずに</strong>継続的に監視し、劣化時にアラートを受けたい。最適なものはどれですか。</p>
-<ul>
-<li>A. Network Flow Monitor</li>
-<li>B. Internet Monitor</li>
-<li>C. <strong>Network Synthetic Monitor</strong></li>
-<li>D. VPC フローログ</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>C</strong>。AWS 上のリソースからオンプレの宛先 IP へプローブを送り、遅延とパケットロスを測定します。A は EC2 にエージェントを入れて AWS 内のワークロードを受動監視します。</p>
-</details>
-<h3 id="q-21">問題 21 (Reachability Analyzer)</h3>
-<p>EC2 から別のサブネットの RDS に接続できない。どこでブロックされているかを<strong>実際にパケットを送らずに</strong>特定したい。最適なものはどれですか。</p>
-<ul>
-<li>A. VPC Reachability Analyzer</li>
-<li>B. VPC フローログのみ</li>
-<li>C. CloudTrail</li>
-<li>D. AWS Config のみ</li>
-</ul>
-<details>
-<summary>答えと解説</summary>
-<p><strong>A</strong>。構成情報を解析し、ブロックしているコンポーネントを示します。</p>
-</details>
-<hr />
-<h2 id="step-16">Step 16: ひっかけポイント一覧</h2>
+<article class="quiz" data-answer="B" data-multi="0"><h3 id="q-1" class="quiz-head"><span class="q-num">Q1</span><span class="q-title">VPC</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>プライベートサブネットの EC2 が OS アップデートのためインターネットへ出る必要がありますが、外部からの接続は受け付けたくありません。最も適切な構成はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">プライベートサブネットのルートテーブルに IGW へのルートを追加する</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">パブリックサブネットに NAT ゲートウェイを作成し、プライベートサブネットのルートテーブルで <code>0.0.0.0/0</code> を NAT に向ける</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">EC2 に Elastic IP を割り当てる</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">VPC ピアリングを作成する</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>NAT ゲートウェイは外向き通信だけを許可します。A は外部からも到達可能になり、C も同様です。D は無関係です。</p></div></details></article><article class="quiz" data-answer="A" data-multi="0"><h3 id="q-2" class="quiz-head"><span class="q-num">Q2</span><span class="q-title">SG と NACL</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>Web サーバーのサブネットの NACL で、インバウンド TCP 443 を許可しましたが、クライアントは応答を受け取れません。SG は正しく設定されています。原因として最も可能性が高いものはどれですか。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">NACL のアウトバウンドで<strong>エフェメラルポート (1024-65535)</strong> が許可されていない</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">SG のアウトバウンドが拒否されている</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">IGW がアタッチされていない</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">NACL はステートフルなので設定不要</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A</b></div><p>NACL はステートレスのため、戻りの通信も明示的に許可する必要があります。SG はステートフルなので B は原因になりません。</p></div></details></article><article class="quiz" data-answer="C" data-multi="0"><h3 id="q-3" class="quiz-head"><span class="q-num">Q3</span><span class="q-title">IPv6</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>IPv6 を使う EC2 インスタンスに、インターネットへの外向き通信だけを許可し、インターネットからの新規接続は拒否したい。どれを使いますか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">NAT ゲートウェイ</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">インターネットゲートウェイのみ</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt">Egress-only インターネットゲートウェイ</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">VPC エンドポイント</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>NAT ゲートウェイは IPv4 用です。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-4" class="quiz-head"><span class="q-num">Q4</span><span class="q-title">エンドポイント / コスト</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>プライベートサブネットのアプリが S3 に大量のデータを送っており、NAT ゲートウェイのデータ処理料金が高額です。最も費用対効果が高く運用負荷が小さい対策はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">NAT ゲートウェイを大きいインスタンスタイプに変える</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">S3 用の<strong>ゲートウェイエンドポイント</strong>を作成し、ルートテーブルに関連付ける</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">S3 用のインターフェイスエンドポイントを作成する</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Direct Connect を契約する</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>ゲートウェイエンドポイントは無料で、NAT 経由のデータ処理料金を回避できます。NAT ゲートウェイにインスタンスタイプはありません (A は誤り)。C は時間課金・処理課金が発生します。</p></div></details></article><article class="quiz" data-answer="AB" data-multi="1"><h3 id="q-5" class="quiz-head"><span class="q-num">Q5</span><span class="q-title">ピアリング</span><span class="q-type">複数選択</span></h3><div class="quiz-body"><p>VPC A と VPC B、VPC B と VPC C にそれぞれピアリングがあります。VPC A のインスタンスから VPC C のインスタンスへ通信したいが失敗します。理由と解決策として正しいものはどれですか。<strong>2 つ選択</strong>してください。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">ピアリングは推移的ではないため、A と C は VPC B を経由して通信できない</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">A と C の間に<strong>新たにピアリングを作成</strong>し、両方のルートテーブルを更新する</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">VPC B のルートテーブルに A と C の CIDR へのルートを追加すれば、B が中継して解決する</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">ピアリングを承諾し直すと推移的ルーティングが有効になる</span></li>
+<li data-key="E"><span class="key">E</span><span class="txt">VPC B の SG を全許可にすれば解決する</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A・B</b></div><p>ピアリングは<strong>推移的ルーティング不可</strong>です。C、D、E のように B 側の設定を変えても中継されません。接続する VPC が多い場合は Transit Gateway も有力な選択肢です。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-6" class="quiz-head"><span class="q-num">Q6</span><span class="q-title">DNS Firewall</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>VPC 内のインスタンスが、既知のマルウェア配布ドメインに名前解決しようとするのを防ぎたい。最も適切なサービスはどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">AWS WAF</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">Route 53 Resolver DNS Firewall</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">セキュリティグループ</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">AWS Shield Advanced</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>DNS 名による制御は DNS Firewall です。WAF は HTTP リクエストの検査です。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-7" class="quiz-head"><span class="q-num">Q7</span><span class="q-title">WAF</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>新しい WAF ルールを本番に追加しますが、正規ユーザーを誤ってブロックしたくありません。最初にとるべき設定はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">直ちに Block で適用する</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">ルールを <strong>Count</strong> モードで適用し、ログとメトリクスで影響を確認する</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">Shield Advanced を有効化する</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">NACL でブロックする</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>Count は記録のみで、誤検知を事前に確認できます。</p></div></details></article><article class="quiz" data-answer="C" data-multi="0"><h3 id="q-8" class="quiz-head"><span class="q-num">Q8</span><span class="q-title">Route 53 ルーティング</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>新バージョンのアプリに本番トラフィックの 10% だけを流して様子を見たい。使うルーティングポリシーはどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">シンプル</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">フェイルオーバー</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt">加重</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">位置情報</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>比率で振り分けます。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-9" class="quiz-head"><span class="q-num">Q9</span><span class="q-title">ヘルスチェック</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>VPC 内のプライベートなエンドポイントのヘルスチェックで、Route 53 を使ったフェイルオーバーを実現したい。ヘルスチェッカーはプライベートなリソースに到達できません。どうしますか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">エンドポイントヘルスチェックの IP を 10.0.0.0/8 にする</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>CloudWatch アラームベースのヘルスチェック</strong>を作成し、それをルーティングに関連付ける</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">ヘルスチェックを使わない</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">計算済みヘルスチェックのみにする</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>リソースのメトリクスでアラームを作り、そのアラームの状態でヘルスを判定します。</p></div></details></article><article class="quiz" data-answer="A" data-multi="0"><h3 id="q-10" class="quiz-head"><span class="q-num">Q10</span><span class="q-title">ハイブリッド DNS</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>オンプレミスのサーバーから、VPC のプライベートホストゾーンにある名前 (<code>db.internal.example.com</code>) を解決したい。必要なものはどれですか。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">Route 53 Resolver の<strong>インバウンドエンドポイント</strong>と、オンプレ DNS からそこへの転送設定</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">アウトバウンドエンドポイント</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">パブリックホストゾーンの複製</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">DNS Firewall のルールグループ</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A</b></div><p>オンプレ → VPC の問い合わせはインバウンド、VPC → オンプレはアウトバウンドです。</p></div></details></article><article class="quiz" data-answer="C" data-multi="0"><h3 id="q-11" class="quiz-head"><span class="q-num">Q11</span><span class="q-title">CloudFront の証明書</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>CloudFront で独自ドメインの HTTPS を使うため、ACM で証明書を作成します。どのリージョンで作成しますか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">ディストリビューションと同じリージョン</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">オリジンと同じリージョン</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt">米国東部 (バージニア北部) us-east-1</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">どこでもよい</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>CloudFront が使う ACM 証明書は us-east-1 で作成します。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-12" class="quiz-head"><span class="q-num">Q12</span><span class="q-title">S3 オリジン</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>S3 バケットを CloudFront 経由でのみ公開し、S3 の URL への直接アクセスは拒否したい。推奨される方法はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">バケットをパブリックにする</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>Origin Access Control (OAC)</strong> を使い、バケットポリシーで CloudFront のみ許可する</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">署名付き URL のみ</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">SG でバケットを守る</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>S3 に SG はありません (D は誤り)。OAC が現在の推奨で、旧 OAI より優先されます。</p></div></details></article><article class="quiz" data-answer="C" data-multi="0"><h3 id="q-13" class="quiz-head"><span class="q-num">Q13</span><span class="q-title">Global Accelerator</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>TCP を使うゲームサーバー (複数リージョン) に対し、固定の IP アドレスを許可リストにしたいと顧客に要求されています。DNS の TTL に依存せず、異常なリージョンから素早く切り替えたい。どれを使いますか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">CloudFront</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">Route 53 のフェイルオーバー</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt"><strong>AWS Global Accelerator</strong></span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Elastic IP を各サーバーに付ける</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>静的エニーキャスト IP と、ヘルスチェックに基づく高速フェイルオーバーが特長です。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-14" class="quiz-head"><span class="q-num">Q14</span><span class="q-title">CloudFront キャッシュ</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>CloudFront のキャッシュヒット率が非常に低い。調べると、すべてのリクエストに毎回異なるクエリ文字列 (トラッキング用) が付き、キャッシュキーに含まれている。最適な対処はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">TTL を最大にする</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">キャッシュポリシーから<strong>不要なクエリ文字列を除外</strong>し、キャッシュキーを最小化する</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">Origin Shield を無効にする</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">無効化を毎時実行する</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>キャッシュキーが多様だと毎回 Miss になります。TTL を延ばしても同じキーでなければヒットしません。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-15" class="quiz-head"><span class="q-num">Q15</span><span class="q-title">ALB のエラー</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>ALB のアクセスログで <code>elb_status_code</code> が 503 で、<code>target_status_code</code> が <code>-</code> です。最も可能性が高い原因はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">アプリケーションが 503 を返している</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>登録された正常なターゲットが存在しない</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">クライアントが接続を閉じた</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">WAF がブロックしている</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>ターゲットのコードが空なら ELB 自身がエラーを返しています。503 は正常なターゲット不在の典型です。</p></div></details></article><article class="quiz" data-answer="B" data-multi="0"><h3 id="q-16" class="quiz-head"><span class="q-num">Q16</span><span class="q-title">フローログ</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>VPC フローログで、あるサーバーへのインバウンド TCP 443 が ACCEPT ですが、その戻り (宛先ポートがエフェメラルポート) のアウトバウンドが REJECT になっています。原因はどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">SG のインバウンド不足</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>NACL のアウトバウンドの拒否 / 許可不足</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">ルートテーブルのミス</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">WAF のブロック</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>SG はステートフルのため戻りは自動許可されます。戻りが REJECT になるのは NACL です。</p></div></details></article><article class="quiz" data-answer="A" data-multi="0"><h3 id="q-17" class="quiz-head"><span class="q-num">Q17</span><span class="q-title">NAT のエラー</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>NAT ゲートウェイ経由の通信で、特定の外部 API への接続が時々失敗します。CloudWatch の <code>ErrorPortAllocation</code> が 0 より大きい値です。対処はどれですか。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">NAT に<strong>セカンダリ EIP を追加</strong>し、可能なら接続の再利用 (Keep-Alive) を行う</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">SG のインバウンドを開ける</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">NACL を削除する</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">IGW を作り直す</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A</b></div><p>同一宛先に対する同時接続数 (ポート) の枯渇です。EIP を増やすことで利用可能なポートが増えます。</p></div></details></article><article class="quiz" data-answer="A" data-multi="0"><h3 id="q-18" class="quiz-head"><span class="q-num">Q18</span><span class="q-title">VPN</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>Site-to-Site VPN のトンネルは UP ですが、VPC のインスタンスからオンプレへ通信できません。VGW を使用しており、静的ルートは使用していません。最初に確認することはどれですか。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt"><strong>サブネットのルートテーブルで「ルート伝播」が有効か</strong></span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">EC2 のインスタンスタイプ</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">CloudFront のキャッシュ</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Route 53 のヘルスチェック</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A</b></div><p>VGW 経由のオンプレ宛てルートは、伝播を有効にすることでルートテーブルに入ります。</p></div></details></article><article class="quiz" data-answer="AB" data-multi="1"><h3 id="q-19" class="quiz-head"><span class="q-num">Q19</span><span class="q-title">PrivateLink</span><span class="q-type">複数選択</span></h3><div class="quiz-body"><p>インターフェイスエンドポイントを作成したが、<code>ssm.ap-northeast-1.amazonaws.com</code> がパブリック IP に解決され、プライベートサブネットから通信が失敗する。確認すべき設定を <strong>2 つ</strong>選んでください。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">エンドポイントの<strong>プライベート DNS</strong> が有効か</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt">VPC の <strong><code>enableDnsSupport</code> と <code>enableDnsHostnames</code></strong> が有効か</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">IGW の数</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">NAT のタイプ</span></li>
+<li data-key="E"><span class="key">E</span><span class="txt">S3 バケットポリシー</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A・B</b></div><p>プライベート DNS を使うには VPC の DNS 解決とホスト名の両方が有効である必要があります。</p></div></details></article><article class="quiz" data-answer="C" data-multi="0"><h3 id="q-20" class="quiz-head"><span class="q-num">Q20</span><span class="q-title">ネットワーク監視</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>オンプレミスと AWS 間の接続 (VPN / Direct Connect) の遅延とパケットロスを、<strong>エージェントをインストールせずに</strong>継続的に監視し、劣化時にアラートを受けたい。最適なものはどれですか。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">Network Flow Monitor</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">Internet Monitor</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt"><strong>Network Synthetic Monitor</strong></span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">VPC フローログ</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>AWS 上のリソースからオンプレの宛先 IP へプローブを送り、遅延とパケットロスを測定します。A は EC2 にエージェントを入れて AWS 内のワークロードを受動監視します。</p></div></details></article><article class="quiz" data-answer="A" data-multi="0"><h3 id="q-21" class="quiz-head"><span class="q-num">Q21</span><span class="q-title">Reachability Analyzer</span><span class="q-type single">単一選択</span></h3><div class="quiz-body"><p>EC2 から別のサブネットの RDS に接続できない。どこでブロックされているかを<strong>実際にパケットを送らずに</strong>特定したい。最適なものはどれですか。</p>
+<ol class="opts">
+<li class="correct" data-key="A"><span class="key">A</span><span class="txt">VPC Reachability Analyzer</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">VPC フローログのみ</span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">CloudTrail</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">AWS Config のみ</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>A</b></div><p>構成情報を解析し、ブロックしているコンポーネントを示します。</p></div></details></article><h2 id="step-16">Step 16: ひっかけポイント一覧</h2>
 <p>似た選択肢の取り違えは、失点の最大の原因です。ここでは、試験で誤解されやすい点を「ひっかけ」と「正しい理解」の組にして一覧にしました。問題演習の後に、間違えた項目を探す使い方がおすすめです。</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>#</th>
-<th>項目</th>
-<th>ひっかけ</th>
-<th>正しい理解</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>SG vs NACL</td>
-<td>「NACL で戻りは自動許可」</td>
-<td><strong>NACL はステートレス</strong>。SG がステートフル</td>
-</tr>
-<tr>
-<td>2</td>
-<td>SG</td>
-<td>「SG で特定 IP を拒否」</td>
-<td><strong>SG は許可のみ</strong>。拒否は NACL</td>
-</tr>
-<tr>
-<td>3</td>
-<td>NACL</td>
-<td>新規 NACL の初期状態</td>
-<td><strong>自作 NACL は全拒否</strong>、デフォルト NACL は全許可</td>
-</tr>
-<tr>
-<td>4</td>
-<td>サブネット</td>
-<td>使えるアドレス数</td>
-<td><strong>5 つ予約</strong>。/28 は 11 個</td>
-</tr>
-<tr>
-<td>5</td>
-<td>パブリックサブネット</td>
-<td>「設定項目で決まる」</td>
-<td><strong>IGW へのルートの有無</strong>で決まる</td>
-</tr>
-<tr>
-<td>6</td>
-<td>NAT</td>
-<td>NAT を<strong>プライベート</strong>サブネットに置く</td>
-<td><strong>パブリックサブネット</strong>に置く (ゾーナル時)。EIP が必要</td>
-</tr>
-<tr>
-<td>7</td>
-<td>NAT</td>
-<td>IPv6 でも NAT</td>
-<td><strong>IPv6 の外向きは EIGW</strong></td>
-</tr>
-<tr>
-<td>8</td>
-<td>NAT</td>
-<td>1 つの NAT で十分</td>
-<td><strong>AZ 障害に備え AZ ごと</strong>。または<strong>リージョナル NAT</strong></td>
-</tr>
-<tr>
-<td>9</td>
-<td>エンドポイント</td>
-<td>S3 はインターフェイス型で</td>
-<td><strong>ゲートウェイ型が無料</strong>で第一候補</td>
-</tr>
-<tr>
-<td>10</td>
-<td>ゲートウェイ EP</td>
-<td>オンプレから使える</td>
-<td><strong>不可</strong></td>
-</tr>
-<tr>
-<td>11</td>
-<td>ゲートウェイ EP</td>
-<td>SG をアタッチ</td>
-<td><strong>ルートテーブル</strong>に関連付ける。SG はなし</td>
-</tr>
-<tr>
-<td>12</td>
-<td>ピアリング</td>
-<td>A-B-C で A から C</td>
-<td><strong>推移的ルーティング不可</strong></td>
-</tr>
-<tr>
-<td>13</td>
-<td>ピアリング</td>
-<td>片側にルート</td>
-<td><strong>両側のルート</strong>が必要。CIDR 重複不可</td>
-</tr>
-<tr>
-<td>14</td>
-<td>TGW</td>
-<td>TGW のルートだけ</td>
-<td><strong>VPC のルート</strong>も必要</td>
-</tr>
-<tr>
-<td>15</td>
-<td>DNS Firewall</td>
-<td>HTTP をブロックできる</td>
-<td><strong>DNS クエリのみ</strong> (Resolver 経由)</td>
-</tr>
-<tr>
-<td>16</td>
-<td>WAF</td>
-<td>すべてのリソースに</td>
-<td><strong>CloudFront / ALB / API Gateway 等</strong>。NLB や EC2 直接は不可</td>
-</tr>
-<tr>
-<td>17</td>
-<td>WAF (CloudFront)</td>
-<td>任意のリージョン</td>
-<td><strong>CloudFront スコープは us-east-1</strong></td>
-</tr>
-<tr>
-<td>18</td>
-<td>Shield</td>
-<td>Standard は有料</td>
-<td><strong>Standard は無料・自動</strong></td>
-</tr>
-<tr>
-<td>19</td>
-<td>Alias</td>
-<td>頂点に CNAME</td>
-<td><strong>頂点は Alias</strong></td>
-</tr>
-<tr>
-<td>20</td>
-<td>Alias</td>
-<td>Alias は課金される</td>
-<td><strong>AWS リソース宛てのクエリは無料</strong></td>
-</tr>
-<tr>
-<td>21</td>
-<td>プライベートホストゾーン</td>
-<td>VPC の DNS 設定</td>
-<td><strong>enableDnsSupport と enableDnsHostnames の両方 true</strong></td>
-</tr>
-<tr>
-<td>22</td>
-<td>ルーティング</td>
-<td>加重の重み</td>
-<td><strong>比率</strong>で合計 100 不要。<strong>0 は送らない</strong></td>
-</tr>
-<tr>
-<td>23</td>
-<td>位置情報</td>
-<td>デフォルトレコード</td>
-<td><strong>必須級</strong>。なければ該当なしの地域は応答なし</td>
-</tr>
-<tr>
-<td>24</td>
-<td>ヘルスチェック</td>
-<td>プライベートリソース</td>
-<td><strong>CloudWatch アラームベース</strong>で監視</td>
-</tr>
-<tr>
-<td>25</td>
-<td>ヘルスチェック</td>
-<td>失敗する</td>
-<td><strong>ヘルスチェッカー IP の許可</strong>漏れ</td>
-</tr>
-<tr>
-<td>26</td>
-<td>クエリログ (パブリック)</td>
-<td>出力先</td>
-<td><strong>CloudWatch Logs のみ</strong>・<strong>us-east-1</strong></td>
-</tr>
-<tr>
-<td>27</td>
-<td>Resolver クエリログ</td>
-<td>対象</td>
-<td><strong>VPC 内</strong>の問い合わせ。出力先は 3 種類</td>
-</tr>
-<tr>
-<td>28</td>
-<td>Resolver エンドポイント</td>
-<td>方向</td>
-<td><strong>インバウンド = オンプレ→VPC</strong>、<strong>アウトバウンド = VPC→オンプレ</strong></td>
-</tr>
-<tr>
-<td>29</td>
-<td>CloudFront 証明書</td>
-<td>リージョン</td>
-<td><strong>ACM は us-east-1</strong></td>
-</tr>
-<tr>
-<td>30</td>
-<td>CloudFront S3 保護</td>
-<td>OAI を新規採用</td>
-<td><strong>OAC が推奨</strong></td>
-</tr>
-<tr>
-<td>31</td>
-<td>CloudFront</td>
-<td>固定 IP を提供</td>
-<td><strong>Global Accelerator</strong></td>
-</tr>
-<tr>
-<td>32</td>
-<td>Global Accelerator</td>
-<td>キャッシュする</td>
-<td><strong>キャッシュなし</strong>。TCP / UDP</td>
-</tr>
-<tr>
-<td>33</td>
-<td>キャッシュ</td>
-<td>古い内容</td>
-<td><strong>バージョン付きファイル名</strong>が最良。無効化は補助</td>
-</tr>
-<tr>
-<td>34</td>
-<td>キャッシュ</td>
-<td>ヒット率が低い</td>
-<td><strong>キャッシュキーの不要な要素</strong>を削除</td>
-</tr>
-<tr>
-<td>35</td>
-<td>502 / 504 (CloudFront)</td>
-<td>502 と 504</td>
-<td><strong>502 = オリジンの SSL 失敗や接続不可</strong>、<strong>504 = オリジンの応答タイムアウト</strong></td>
-</tr>
-<tr>
-<td>36</td>
-<td>ALB</td>
-<td>503</td>
-<td><strong>正常なターゲットがない</strong></td>
-</tr>
-<tr>
-<td>37</td>
-<td>フローログ</td>
-<td>戻りだけ REJECT</td>
-<td><strong>NACL</strong></td>
-</tr>
-<tr>
-<td>38</td>
-<td>フローログ</td>
-<td>取得されない通信</td>
-<td><strong>Amazon DNS、メタデータ、DHCP、Time Sync</strong> など</td>
-</tr>
-<tr>
-<td>39</td>
-<td>NAT のメトリクス</td>
-<td>ポート枯渇</td>
-<td><strong><code>ErrorPortAllocation</code></strong></td>
-</tr>
-<tr>
-<td>40</td>
-<td>VPN</td>
-<td>トンネル UP でも通信不可</td>
-<td><strong>ルート伝播 / BGP / SG / NACL</strong></td>
-</tr>
-<tr>
-<td>41</td>
-<td>VPN</td>
-<td>1 本で十分</td>
-<td><strong>2 本使う</strong>。<code>TunnelState</code> を監視</td>
-</tr>
-<tr>
-<td>42</td>
-<td>Network Monitoring</td>
-<td>どれがエージェント必要</td>
-<td><strong>Flow Monitor はエージェント要</strong>。Synthetic Monitor は不要</td>
-</tr>
-<tr>
-<td>43</td>
-<td>メトリクスのリージョン</td>
-<td>CloudFront と Route 53 ヘルスチェック</td>
-<td><strong>us-east-1</strong></td>
-</tr>
-<tr>
-<td>44</td>
-<td>Reachability Analyzer</td>
-<td>実際に通信する</td>
-<td><strong>構成の静的解析</strong> (パケット送信なし)</td>
-</tr>
-</tbody>
-</table></div>
+<div class="trap-tools" id="trapTools"><button type="button" class="chip on" data-g="all">すべて</button>
+<button type="button" class="chip" data-g="g0">VPC の基本部品</button>
+<button type="button" class="chip" data-g="g1">プライベート接続</button>
+<button type="button" class="chip" data-g="g2">保護サービス</button>
+<button type="button" class="chip" data-g="g3">DNS と Route 53</button>
+<button type="button" class="chip" data-g="g4">CloudFront と Global Accelerator</button>
+<button type="button" class="chip" data-g="g5">キャッシュとエラー</button>
+<button type="button" class="chip" data-g="g6">ログとメトリクス</button>
+<button type="button" class="chip" data-g="g7">VPN</button>
+<button type="button" class="chip" data-g="g8">監視と解析ツール</button>
+<input class="trap-search" id="trapSearch" type="search" placeholder="キーワードで絞り込み (例: NAT, TTL, us-east-1)" aria-label="ひっかけを検索" />
+<span class="trap-count" id="trapCount"></span></div>
+<div class="trap-group" data-g="g0">VPC の基本部品</div><div class="trap-grid" data-g="g0">
+<article class="trap" data-g="g0"><header><span class="t-num">01</span><span class="t-item">SG vs NACL</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「NACL で戻りは自動許可」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>NACL はステートレス</strong>。SG がステートフル</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">02</span><span class="t-item">SG</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「SG で特定 IP を拒否」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>SG は許可のみ</strong>。拒否は NACL</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">03</span><span class="t-item">NACL</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">新規 NACL の初期状態</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>自作 NACL は全拒否</strong>、デフォルト NACL は全許可</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">04</span><span class="t-item">サブネット</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">使えるアドレス数</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>5 つ予約</strong>。/28 は 11 個</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">05</span><span class="t-item">パブリックサブネット</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「設定項目で決まる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IGW へのルートの有無</strong>で決まる</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">06</span><span class="t-item">NAT</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">NAT を<strong>プライベート</strong>サブネットに置く</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>パブリックサブネット</strong>に置く (ゾーナル時)。EIP が必要</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">07</span><span class="t-item">NAT</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">IPv6 でも NAT</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IPv6 の外向きは EIGW</strong></span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">08</span><span class="t-item">NAT</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">1 つの NAT で十分</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>AZ 障害に備え AZ ごと</strong>。または<strong>リージョナル NAT</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g1">プライベート接続</div><div class="trap-grid" data-g="g1">
+<article class="trap" data-g="g1"><header><span class="t-num">09</span><span class="t-item">エンドポイント</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">S3 はインターフェイス型で</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ゲートウェイ型が無料</strong>で第一候補</span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">10</span><span class="t-item">ゲートウェイ EP</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">オンプレから使える</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>不可</strong></span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">11</span><span class="t-item">ゲートウェイ EP</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">SG をアタッチ</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ルートテーブル</strong>に関連付ける。SG はなし</span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">12</span><span class="t-item">ピアリング</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">A-B-C で A から C</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>推移的ルーティング不可</strong></span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">13</span><span class="t-item">ピアリング</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">片側にルート</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>両側のルート</strong>が必要。CIDR 重複不可</span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">14</span><span class="t-item">TGW</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">TGW のルートだけ</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>VPC のルート</strong>も必要</span></p></article>
+</div>
+<div class="trap-group" data-g="g2">保護サービス</div><div class="trap-grid" data-g="g2">
+<article class="trap" data-g="g2"><header><span class="t-num">15</span><span class="t-item">DNS Firewall</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">HTTP をブロックできる</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>DNS クエリのみ</strong> (Resolver 経由)</span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">16</span><span class="t-item">WAF</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">すべてのリソースに</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>CloudFront / ALB / API Gateway 等</strong>。NLB や EC2 直接は不可</span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">17</span><span class="t-item">WAF (CloudFront)</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">任意のリージョン</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>CloudFront スコープは us-east-1</strong></span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">18</span><span class="t-item">Shield</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">Standard は有料</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Standard は無料・自動</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g3">DNS と Route 53</div><div class="trap-grid" data-g="g3">
+<article class="trap" data-g="g3"><header><span class="t-num">19</span><span class="t-item">Alias</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">頂点に CNAME</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>頂点は Alias</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">20</span><span class="t-item">Alias</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">Alias は課金される</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>AWS リソース宛てのクエリは無料</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">21</span><span class="t-item">プライベートホストゾーン</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">VPC の DNS 設定</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>enableDnsSupport と enableDnsHostnames の両方 true</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">22</span><span class="t-item">ルーティング</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">加重の重み</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>比率</strong>で合計 100 不要。<strong>0 は送らない</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">23</span><span class="t-item">位置情報</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">デフォルトレコード</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>必須級</strong>。なければ該当なしの地域は応答なし</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">24</span><span class="t-item">ヘルスチェック</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">プライベートリソース</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>CloudWatch アラームベース</strong>で監視</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">25</span><span class="t-item">ヘルスチェック</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">失敗する</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ヘルスチェッカー IP の許可</strong>漏れ</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">26</span><span class="t-item">クエリログ (パブリック)</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">出力先</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>CloudWatch Logs のみ</strong>・<strong>us-east-1</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">27</span><span class="t-item">Resolver クエリログ</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">対象</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>VPC 内</strong>の問い合わせ。出力先は 3 種類</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">28</span><span class="t-item">Resolver エンドポイント</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">方向</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>インバウンド = オンプレ→VPC</strong>、<strong>アウトバウンド = VPC→オンプレ</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g4">CloudFront と Global Accelerator</div><div class="trap-grid" data-g="g4">
+<article class="trap" data-g="g4"><header><span class="t-num">29</span><span class="t-item">CloudFront 証明書</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">リージョン</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ACM は us-east-1</strong></span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">30</span><span class="t-item">CloudFront S3 保護</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">OAI を新規採用</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>OAC が推奨</strong></span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">31</span><span class="t-item">CloudFront</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">固定 IP を提供</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Global Accelerator</strong></span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">32</span><span class="t-item">Global Accelerator</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">キャッシュする</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>キャッシュなし</strong>。TCP / UDP</span></p></article>
+</div>
+<div class="trap-group" data-g="g5">キャッシュとエラー</div><div class="trap-grid" data-g="g5">
+<article class="trap" data-g="g5"><header><span class="t-num">33</span><span class="t-item">キャッシュ</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">古い内容</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>バージョン付きファイル名</strong>が最良。無効化は補助</span></p></article>
+<article class="trap" data-g="g5"><header><span class="t-num">34</span><span class="t-item">キャッシュ</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">ヒット率が低い</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>キャッシュキーの不要な要素</strong>を削除</span></p></article>
+<article class="trap" data-g="g5"><header><span class="t-num">35</span><span class="t-item">502 / 504 (CloudFront)</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">502 と 504</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>502 = オリジンの SSL 失敗や接続不可</strong>、<strong>504 = オリジンの応答タイムアウト</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g6">ログとメトリクス</div><div class="trap-grid" data-g="g6">
+<article class="trap" data-g="g6"><header><span class="t-num">36</span><span class="t-item">ALB</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">503</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>正常なターゲットがない</strong></span></p></article>
+<article class="trap" data-g="g6"><header><span class="t-num">37</span><span class="t-item">フローログ</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">戻りだけ REJECT</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>NACL</strong></span></p></article>
+<article class="trap" data-g="g6"><header><span class="t-num">38</span><span class="t-item">フローログ</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">取得されない通信</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Amazon DNS、メタデータ、DHCP、Time Sync</strong> など</span></p></article>
+<article class="trap" data-g="g6"><header><span class="t-num">39</span><span class="t-item">NAT のメトリクス</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">ポート枯渇</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong><code>ErrorPortAllocation</code></strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g7">VPN</div><div class="trap-grid" data-g="g7">
+<article class="trap" data-g="g7"><header><span class="t-num">40</span><span class="t-item">VPN</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">トンネル UP でも通信不可</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ルート伝播 / BGP / SG / NACL</strong></span></p></article>
+<article class="trap" data-g="g7"><header><span class="t-num">41</span><span class="t-item">VPN</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">1 本で十分</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>2 本使う</strong>。<code>TunnelState</code> を監視</span></p></article>
+</div>
+<div class="trap-group" data-g="g8">監視と解析ツール</div><div class="trap-grid" data-g="g8">
+<article class="trap" data-g="g8"><header><span class="t-num">42</span><span class="t-item">Network Monitoring</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">どれがエージェント必要</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Flow Monitor はエージェント要</strong>。Synthetic Monitor は不要</span></p></article>
+<article class="trap" data-g="g8"><header><span class="t-num">43</span><span class="t-item">メトリクスのリージョン</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">CloudFront と Route 53 ヘルスチェック</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>us-east-1</strong></span></p></article>
+<article class="trap" data-g="g8"><header><span class="t-num">44</span><span class="t-item">Reachability Analyzer</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">実際に通信する</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>構成の静的解析</strong> (パケット送信なし)</span></p></article>
+</div>
 <hr />
 <h2 id="step-17">Step 17: 直前チートシート</h2>
 <p>試験の直前に見返すための要約です。各表は、本文で学んだ内容を「キーワードから答えが引ける」形に絞っています。理解できていない行があれば、対応する Step に戻って確認してください。</p>
@@ -5263,6 +4992,46 @@ LIMIT 20;
     document.documentElement.setAttribute('data-diagrams-done','1');
   }
   renderAll();
+
+  /* ---------- Quiz ---------- */
+  document.querySelectorAll('.quiz').forEach(function(q){
+    var multi=q.getAttribute('data-multi')==='1';
+    q.querySelectorAll('.opts li').forEach(function(li){
+      li.addEventListener('click',function(){
+        if(q.classList.contains('revealed')) return;
+        if(!multi) q.querySelectorAll('.opts li.picked').forEach(function(x){x.classList.remove('picked');});
+        li.classList.toggle('picked');
+      });
+    });
+    var d=q.querySelector('details.answer');
+    d.addEventListener('toggle',function(){q.classList.toggle('revealed',d.open);});
+  });
+
+  /* ---------- Trap filter ---------- */
+  var tools=document.getElementById('trapTools');
+  if(tools){
+    var cards=Array.prototype.slice.call(document.querySelectorAll('.trap')), grp='all', inp=document.getElementById('trapSearch'), cnt=document.getElementById('trapCount');
+    function applyFilter(){
+      var k=inp.value.trim().toLowerCase(), n=0;
+      cards.forEach(function(c){
+        var ok=(grp==='all'||c.getAttribute('data-g')===grp)&&(!k||c.textContent.toLowerCase().indexOf(k)>=0);
+        c.classList.toggle('hide',!ok); if(ok) n++;
+      });
+      document.querySelectorAll('.trap-grid').forEach(function(g){
+        var any=g.querySelector('.trap:not(.hide)'), t=g.previousElementSibling;
+        g.style.display=any?'':'none'; if(t) t.classList.toggle('hide',!any);
+      });
+      cnt.textContent=n+' 件を表示';
+    }
+    tools.addEventListener('click',function(e){
+      var b=e.target.closest('.chip'); if(!b) return;
+      grp=b.getAttribute('data-g');
+      tools.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x===b);});
+      applyFilter();
+    });
+    inp.addEventListener('input',applyFilter);
+    applyFilter();
+  }
 
   /* ---------- Sidebar: mobile drawer ---------- */
   var sidebar=document.getElementById('sidebar'), btn=document.getElementById('menuBtn'), scrim=document.getElementById('scrim');
