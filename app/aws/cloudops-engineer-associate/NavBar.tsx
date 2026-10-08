@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, Fragment } from 'react';
+import { useEffect, useState, useCallback, useRef, Fragment } from 'react';
 import { NAV_ITEMS } from './constants';
 
 interface NavBarProps {
@@ -17,6 +17,24 @@ export default function NavBar({ isOpen, onToggle }: NavBarProps) {
     const [activeId, setActiveId] = useState<string>(
         NAV_ITEMS[0]?.href.slice(1) ?? 's-h2-1',
     );
+    // page.css のドロワー化ブレークポイント（max-width: 980px）と一致させる
+    const [isDrawerMode, setIsDrawerMode] = useState(false);
+    const menuBtnRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+        const mql = window.matchMedia('(max-width: 980px)');
+        const sync = () => setIsDrawerMode(mql.matches);
+        sync();
+        mql.addEventListener('change', sync);
+        return () => mql.removeEventListener('change', sync);
+    }, []);
+
+    // メニューボタン（開いている時）とバックドロップ共通の閉じる処理。フォーカスをメニューボタンへ戻す
+    const closeMenu = useCallback(() => {
+        onToggle(false);
+        menuBtnRef.current?.focus();
+    }, [onToggle]);
 
     const handleLinkClick = useCallback(
         (href: string) => {
@@ -71,20 +89,22 @@ export default function NavBar({ isOpen, onToggle }: NavBarProps) {
             <button
                 className="menu-btn"
                 id="menuBtn"
+                ref={menuBtnRef}
                 type="button"
                 aria-label="目次メニューを開閉"
                 aria-controls="sidebar"
                 aria-expanded={isOpen}
-                onClick={() => onToggle(!isOpen)}
+                onClick={isOpen ? closeMenu : () => onToggle(true)}
             >
                 ☰
             </button>
             <div
                 className="backdrop"
                 id="backdrop"
-                onClick={() => onToggle(false)}
+                onClick={closeMenu}
             />
-            <aside className="sidebar" id="sidebar">
+            {/* 閉じたドロワーは画面外のため、モバイル幅でのみ inert にしてフォーカス到達を防ぐ */}
+            <aside className="sidebar" id="sidebar" inert={isDrawerMode && !isOpen}>
                 <div className="sidebar-head">
                     <div className="kicker">AWS CloudOps Engineer</div>
                     <div className="sb-title">SOA-C03 学習ガイド</div>
