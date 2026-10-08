@@ -718,7 +718,7 @@ CodeDeploy は、アプリケーションのデプロイを自動化するマネ
 | **AppSpec ファイル** | 配置するファイルとライフサイクルフックを定義 |
 | **ライフサイクルフック** | **EC2/オンプレミス**の例: `BeforeInstall`、`AfterInstall`、`ApplicationStart`、`ValidateService` など(Lambda / ECS では `BeforeAllowTraffic`、`AfterAllowTraffic` など別のフックを使う) |
 | **デプロイ設定** | **EC2/オンプレミス**: `CodeDeployDefault.AllAtOnce`、`CodeDeployDefault.HalfAtATime`、`CodeDeployDefault.OneAtATime`<br>**Lambda**: `CodeDeployDefault.LambdaAllAtOnce`、`CodeDeployDefault.LambdaCanary10Percent5Minutes`、`CodeDeployDefault.LambdaLinear10PercentEvery1Minute` など |
-| **自動ロールバック** | デプロイ失敗または **CloudWatch アラーム**発報で自動的に戻す |
+| **自動ロールバック** | デプロイ失敗時または **CloudWatch アラーム**発報時に、該当イベントで自動ロールバックを**設定している場合のみ**前のリビジョンへ戻す。未設定ならデプロイは停止するだけで、前のリビジョンは復元されないことがある |
 
 ```mermaid
 flowchart TD
@@ -729,7 +729,9 @@ flowchart TD
     H4 --> H5["ValidateService"]
     H5 --> R{"成功かつアラーム無し"}
     R -- "はい" --> OK["デプロイ完了"]
-    R -- "いいえ" --> RB["自動ロールバック"]
+    R -- "いいえ" --> C{"該当イベントで自動ロールバックを設定済み?"}
+    C -- "はい" --> RB["自動ロールバック(前のリビジョンへ)"]
+    C -- "いいえ" --> ST["デプロイ停止(前のリビジョンは復元されない場合あり)"]
 ```
 
 ### 5-5. サービス別のデプロイ機能
