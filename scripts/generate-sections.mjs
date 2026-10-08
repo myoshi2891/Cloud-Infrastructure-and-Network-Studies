@@ -1,9 +1,14 @@
 // scripts/generate-sections.mjs
+import { execFileSync } from 'node:child_process';
 import { JSDOM } from 'jsdom';
 import fs from 'fs';
 import { nodeToJsx } from './convert-html-section-to-jsx.mjs';
 
-const doc = new JSDOM(fs.readFileSync('Aws-soa-c03-guide.html', 'utf8')).window.document;
+// 移行元は .gitignore 済みの archive/ にあり CI に存在しないため、追跡済みの固定リビジョンから直接読む
+const SOURCE_COMMIT = '8206deff71f84e27ab7c12230d1be3adf0e08e6d';
+const SOURCE_PATH = 'archive/Aws/html/cloudops/Aws-soa-c03-guide.html';
+const html = execFileSync('git', ['show', `${SOURCE_COMMIT}:${SOURCE_PATH}`], { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+const doc = new JSDOM(html).window.document;
 
 function generateSection(start, stopId, outPath, componentName, imports, context = { codeBlockIndex: 0 }) {
     const elements = [];
