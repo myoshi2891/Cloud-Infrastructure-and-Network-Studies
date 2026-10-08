@@ -654,6 +654,14 @@
     border-top: 1px solid var(--color-devnet-associate-line, #d9dee8);
 }
 
+/* ── モーション軽減設定の尊重 ── */
+@media (prefers-reduced-motion: reduce) {
+    .devnet-associate-page .sidebar nav a,
+    .devnet-associate-page .check {
+        transition: none;
+    }
+}
+
 /* ── レスポンシブ ── */
 @media (max-width: 900px) {
     .devnet-associate-page .sidebar {
