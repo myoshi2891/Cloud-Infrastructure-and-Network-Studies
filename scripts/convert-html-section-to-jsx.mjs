@@ -58,6 +58,14 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
             continue;
         }
 
+        // HTML の真偽属性は値に関係なく「存在 = true」なので、空文字ではなく真偽 prop として出力する
+        const booleanProp = BOOLEAN_ATTRS.get(name);
+        if (booleanProp) {
+            // 初期チェック状態の input は非制御のまま保持するため defaultChecked にする
+            attrs.push(tagName === 'input' && name === 'checked' ? 'defaultChecked' : booleanProp);
+            continue;
+        }
+
         attrs.push(`${name}="${escapeAttr(value)}"`);
     }
 
@@ -83,6 +91,31 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
 
     return `<${tagName}${attrStr}>${children.join('')}</${tagName}>`;
 }
+
+/** HTML 真偽属性名 → JSX prop 名 */
+const BOOLEAN_ATTRS = new Map([
+    ['allowfullscreen', 'allowFullScreen'],
+    ['async', 'async'],
+    ['autofocus', 'autoFocus'],
+    ['autoplay', 'autoPlay'],
+    ['checked', 'checked'],
+    ['controls', 'controls'],
+    ['default', 'default'],
+    ['defer', 'defer'],
+    ['disabled', 'disabled'],
+    ['formnovalidate', 'formNoValidate'],
+    ['hidden', 'hidden'],
+    ['loop', 'loop'],
+    ['multiple', 'multiple'],
+    ['muted', 'muted'],
+    ['novalidate', 'noValidate'],
+    ['open', 'open'],
+    ['playsinline', 'playsInline'],
+    ['readonly', 'readOnly'],
+    ['required', 'required'],
+    ['reversed', 'reversed'],
+    ['selected', 'selected'],
+]);
 
 function escapeAttr(val) {
     // & を先にエスケープし、実体参照風の原文（例: &amp;lt;）を JSX で再解釈させない
