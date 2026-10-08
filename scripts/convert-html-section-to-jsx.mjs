@@ -12,8 +12,9 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
     if (node.nodeType === 3) {
         // テキストノード
         const text = node.textContent ?? '';
-        // JSX 中での波括弧および < > エスケープ (単一正規表現で二重置換を防止)
+        // JSX 中での & → 波括弧 → < > の順にエスケープ（& を先に処理し、後段で生成する実体参照の二重置換を防ぐ）
         return text
+            .replace(/&/g, '&amp;')
             .replace(/[{}]/g, (char) => (char === '{' ? '{"{"}' : '{"}"}'))
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
@@ -84,7 +85,8 @@ export function nodeToJsx(node, context = { codeBlockIndex: 0 }) {
 }
 
 function escapeAttr(val) {
-    return val.replace(/"/g, '&quot;');
+    // & を先にエスケープし、実体参照風の原文（例: &amp;lt;）を JSX で再解釈させない
+    return val.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 }
 
 function styleStringToJsx(styleStr) {
