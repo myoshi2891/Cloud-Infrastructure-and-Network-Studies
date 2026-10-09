@@ -3,9 +3,9 @@ import { Diagram } from '../Diagram';
 export function Step7() {
     return (
         <section id="step-7-ai-skill-121">
-            <h1 className="task-heading" id="task-12-ai">
+            <div className="task-heading" id="task-12-ai">
                 Task 1.2 適切な AI ソリューションタイプの選択
-            </h1>
+            </div>
             <blockquote className="note-callout">
                 <p>
                     Task 1.2: Identify and select appropriate AI solution types.<br />{' '}

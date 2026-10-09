@@ -3,9 +3,9 @@ import { Diagram } from '../Diagram';
 export function Step11() {
   return (
     <>
-      <h1 className="task-heading" id="task-13-ai">
+      <div className="task-heading" id="task-13-ai">
         Task 1.3 生成 AI の概念と手法
-      </h1>
+      </div>
       <blockquote className="note-callout">
         <p>
           Task 1.3: Apply GenAI concepts and techniques.<br />{' '}

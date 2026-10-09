@@ -152,7 +152,9 @@ export function Step10() {
                 従業員が使える承認済みの AI (Amazon Quick、Amazon Bedrock など)
                 を、自社の ID 境界の中で提供する
               </td>
-              <td>SSO でログインでき、企業データが自社のアカウントに閉じている</td>
+              <td>
+                SSO でログインでき、自社の ID 境界とアクセス制御のもとで利用できる (推論はサービス側のアカウントで処理されるが、入出力はモデル提供者と共有されず、学習にも使われない)
+              </td>
             </tr>
             <tr className="t-odd">
               <td><strong>技術の層 (ポリシーと根拠付け)</strong></td>
