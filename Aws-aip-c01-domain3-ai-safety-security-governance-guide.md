@@ -367,7 +367,7 @@ flowchart TD
 | 層 | 役割 | サービス例 |
 |---|---|---|
 | 1. 入口（API 層） | 認証・スロットリング・サイズ制限・スキーマ検証 | API Gateway（+ WAF 等） |
-| 2. 前処理 | 毒性・プロンプト安全性・PII の事前判定 | Amazon Comprehend |
+| 2. 前処理 | 毒性・プロンプト安全性・PII の事前判定 | Amazon Comprehend（毒性・プロンプト安全性は英語のみ。日本語や新規顧客は Bedrock Guardrails） |
 | 3. モデルベース保護 | 有害・攻撃・話題逸脱・機密の遮断 | Bedrock Guardrails |
 | 4. 後処理検証 | ビジネスルール、形式、禁止語、数値範囲の最終確認 | Lambda |
 | 5. 出口（API 応答） | 応答の整形・不要フィールド除去・ヘッダ制御 | API Gateway 応答処理 |
@@ -391,6 +391,9 @@ flowchart TD
 ### 6-2. Amazon Comprehend の役割
 Comprehend は **従来型の NLP サービス**で、前処理に向きます。PII 検出、**毒性検出**、**プロンプト安全性の分類**などが使えます。LLM を呼ぶ前に **安価・高速**に一次判定できるのが利点です。
 
+> **注意**: 毒性検出とプロンプト安全性の分類は **英語のみ**対応です。また、プロンプト安全性の分類は **新規顧客には提供されていません**（過去 12 か月以内に利用した既存アカウントは継続利用可）。日本語プロンプトや新規顧客の場合は、**Bedrock Guardrails**（コンテンツフィルター・Prompt Attack 検出）で代替します。
+> 出典: Amazon Comprehend Trust and safety https://docs.aws.amazon.com/comprehend/latest/dg/trust-safety.html
+
 ### 6-3. ベストプラクティス
 - 各層は **異なる検知手法**にする（ルール／分類器／LLM ベース）。同じ弱点を共有しないため。
 - 後処理（Lambda）は **ビジネス固有のルール**を担当し、Guardrails と役割を重複させすぎない。
@@ -398,7 +401,7 @@ Comprehend は **従来型の NLP サービス**で、前処理に向きます�
 - 全層の判定結果を **相関 ID** で追跡できるようにログに残す。
 
 ### 6-4. 試験の着眼点
-「Guardrails だけで十分か？」→ 試験では **多層（前処理＋Guardrails＋後処理＋API 応答）** が正解になりやすい。「モデル呼び出し前に安価に有害・PII 判定」→ **Comprehend**。
+「Guardrails だけで十分か？」→ 試験では **多層（前処理＋Guardrails＋後処理＋API 応答）** が正解になりやすい。「モデル呼び出し前に安価に有害・PII 判定」→ **Comprehend**（英語の場合。日本語・新規顧客のプロンプト安全性判定は **Bedrock Guardrails**）。
 
 **参考 URL**
 - Amazon Comprehend 開発者ガイド（PII）: https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html
@@ -420,7 +423,7 @@ Comprehend は **従来型の NLP サービス**で、前処理に向きます�
 | システムプロンプト漏えい | Prompt Attack の検出 + 出力側チェック | 機密を **プロンプトに埋めない** のが根本策 |
 | 間接 Injection | 取得文書にも同じ検証 | 取得元の許可リスト、信頼レベルの区別 |
 | 入力サニタイズ | 制御文字・過大入力・特殊エンコードの除去／正規化 | Lambda / API 層 |
-| 安全分類器 | Comprehend のプロンプト安全性分類、独自の分類モデル | 前処理として配置 |
+| 安全分類器 | Comprehend のプロンプト安全性分類（英語のみ・新規顧客は利用不可）、Bedrock Guardrails の Prompt Attack 検出、独自の分類モデル | 前処理として配置 |
 
 > **補足（新しい API）**: 本ガイド作成時点の情報として、Bedrock Runtime に `InvokeGuardrailChecks` という API が追加されており、ガードレールを事前作成せずにコンテンツフィルター・Prompt Attack・機密情報の検査を呼び出せるとされています（Prompt Attack のカテゴリに JAILBREAK / PROMPT_INJECTION / PROMPT_LEAKAGE）。試験ガイドには名指しされていませんが、今後の更新で触れられる可能性があるため、公式 API リファレンスで最新仕様を確認してください。
 
@@ -522,11 +525,11 @@ RAG やデータ分析の元データを **Glue Data Catalog 上のテーブル*
 | 4 | データソースの S3 とモデル呼び出しログは **KMS（カスタマー管理キー）** で暗号化、バケットのパブリックアクセスはブロック |
 | 5 | **モデル呼び出しログ**を有効化し、保存先へのアクセスも最小権限にする |
 | 6 | CloudTrail で Bedrock API を記録し、異常なアクセス（深夜・大量・未知の IP）を CloudWatch で検知する |
-| 7 | 機密度の異なるデータは Lake Formation のタグで分け、**RAG の取得範囲を呼び出しユーザーの権限に合わせる** |
+| 7 | 機密度の異なるデータは Lake Formation のタグで分け、**Knowledge Base のサービスロールが読める範囲**を絞る。**呼び出しユーザーごとの取得範囲**は、認証済み ID に基づく `userContext`（ACL 対応データソース）またはサーバー側で生成したメタデータフィルターで制御する（クライアント送信の権限フィルターは信用しない） |
 
 ### 8-6. 試験の着眼点
 - 「トラフィックをインターネットに出さず Bedrock を呼ぶ」→ **VPC インターフェイスエンドポイント（PrivateLink）**
-- 「列・行レベルで RAG のデータを制御」→ **Lake Formation**
+- 「列・行レベルで RAG の元データ（サービスロールが読める範囲）を制御」→ **Lake Formation**。「ユーザーごとに検索結果を変える」→ **認証済み ID に基づく `userContext` / サーバー側メタデータフィルター**
 - 「プロバイダーに自分のデータが見られないか」→ **見られない（Model Deployment Account の分離）**
 
 **参考 URL**
@@ -1086,7 +1089,7 @@ flowchart TD
 | 論理ルールで回答の正確性を検証 | Automated Reasoning checks |
 | 数値・集計を決定的にしたい | text-to-SQL（検証付き・読み取り専用） |
 | 出力形式を固定 | JSON Schema + 検証 |
-| LLM 呼び出し前の安価な毒性・PII 判定 | Amazon Comprehend |
+| LLM 呼び出し前の安価な毒性・PII 判定 | Amazon Comprehend（毒性は英語のみ。日本語は Bedrock Guardrails） |
 | 組織固有の承認フロー付きモデレーション | Step Functions + Lambda |
 | インターネットを経由せず Bedrock を呼ぶ | VPC インターフェイスエンドポイント（PrivateLink） |
 | 列・行単位のデータ権限 | Lake Formation |
