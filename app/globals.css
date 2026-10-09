@@ -14,6 +14,28 @@
  */
 
 @theme {
+    /* Layer 3: AIB-C01 Domain 1 原本ライト配色 */
+    --color-aib-bg: #faf8f3;
+    --color-aib-card: #ffffff;
+    --color-aib-card-2: #f3f0e8;
+    --color-aib-hero: #f1ece0;
+    --color-aib-border: #e4ddc9;
+    --color-aib-border-soft: #ece6d6;
+    --color-aib-text: #2b2620;
+    --color-aib-text-dim: #6b6354;
+    --color-aib-text-faint: #948c78;
+    --color-aib-accent: #4338ca;
+    --color-aib-accent-soft: #c7d2fe;
+    --color-aib-accent-bg: #eef0fd;
+    --color-aib-gold: #b45309;
+    --color-aib-gold-bg: #fef3c7;
+    --color-aib-forest: #15803d;
+    --color-aib-forest-bg: #dcfce7;
+    --color-aib-plum: #86198f;
+    --color-aib-plum-bg: #fae8ff;
+    --color-aib-danger: #b91c1c;
+    --color-aib-danger-bg: #fee2e2;
+
     /* Layer 3: DVA Domain 1 原本ライト配色・書体 */
     --color-dva-development-paper: #faf7f0;
     --color-dva-development-paper-card: #ffffff;

@@ -11,9 +11,10 @@ import {
     squash,
 } from '@/__tests__/helpers/migration-test-utils';
 
-vi.mock('@/components/MermaidDiagram', () => ({
-    MermaidDiagram: MermaidDiagramMock,
-}));
+vi.mock('@/components/MermaidDiagram', async () => {
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
+    return { MermaidDiagram: MermaidDiagramMock };
+});
 
 describe('aws-ai-business-strategist-domain1 — 移行元コンテンツの全量移行', () => {
     const renderPage = () => {
