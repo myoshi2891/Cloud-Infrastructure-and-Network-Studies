@@ -730,7 +730,6 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     background: transparent;
     padding: 0;
     margin: 0;
-    overflow: visible;
     width: 100%;
 }
 
