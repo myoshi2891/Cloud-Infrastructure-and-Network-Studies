@@ -31,6 +31,12 @@ function jsx(node) {
         const language = node.querySelector('code').className.replace('language-', '');
         return `<CodeBlock index={${[...doc.querySelectorAll('.code-block')].indexOf(node)}} language=${JSON.stringify(language)} lines={${JSON.stringify(codeLines(node))}} />`;
     }
+    // 原本の `**A**B**C**` 誤変換で入れ子になった strong を、A・C だけ強調する兄弟へ戻す。
+    if (node.tagName === 'STRONG' && [...node.children].some(child => child.tagName === 'STRONG')) {
+        return [...node.childNodes].map(child => child.nodeName === 'STRONG'
+            ? [...child.childNodes].map(jsx).join('')
+            : `<strong>${jsx(child)}</strong>`).join('');
+    }
     if (node.matches('li.chk')) return `<ChecklistItem index={${inputs.indexOf(node)}}>${[...node.querySelector('label').childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('')}</ChecklistItem>`;
     const tag = node.tagName.toLowerCase();
     const attrs = [...node.attributes].map(attr => {
