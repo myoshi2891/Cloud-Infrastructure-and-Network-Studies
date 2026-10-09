@@ -459,12 +459,16 @@
         width: min(84vw, 320px);
         max-height: none;
         transform: translateX(-102%);
-        transition: transform 0.25s ease;
+        /* 閉じたドロワーをキーボード操作・支援技術から除外（スライドアウト後に非表示化） */
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0s linear 0.25s;
         z-index: 58;
         box-shadow: 2px 0 24px rgba(20, 20, 30, 0.18);
     }
     .aib-guide-page.menu-open .sidebar {
         transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.25s ease, visibility 0s linear 0s;
     }
     .aib-guide-page main {
         margin-left: 0;

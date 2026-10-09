@@ -44,6 +44,10 @@ export const NavBar = ({ onLinkClick }: NavBarProps) => {
         }
         const target = document.getElementById(id);
         if (target) {
+            // 見出し等の非インタラクティブ要素はそのままでは focus() が無視されるため、プログラム的にフォーカス可能にする
+            if (!target.hasAttribute('tabindex')) {
+                target.setAttribute('tabindex', '-1');
+            }
             target.focus();
         }
     };

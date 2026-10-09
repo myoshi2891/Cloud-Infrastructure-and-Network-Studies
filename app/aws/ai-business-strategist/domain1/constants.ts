@@ -162,16 +162,15 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     O --> A1["専門エージェント 調査"]
     O --> A2["専門エージェント 分析"]
     O --> A3["専門エージェント 文書作成"]
-    A1 --> T1["ツール 検索やデータベース"]
-    A2 --> T2["ツール 社内システムAPI"]
-    A3 --> T3["ツール 文書テンプレート"]
-    A1 --> O
-    A2 --> O
-    A3 --> O
-    O --> H{"取り消せない操作か"}:::box
+    A1 --> H{"次のツール呼び出しは取り消せない操作か"}:::box
+    A2 --> H
+    A3 --> H
+    H -->|"いいえ"| T["ツール呼び出し 検索 データベース 社内システムAPI 文書テンプレート"]
     H -->|"はい"| AP["人が承認"]
-    H -->|"いいえ"| R["結果を返す"]:::done
-    AP --> R
+    AP -->|"承認"| T
+    AP -->|"却下"| O
+    T --> O
+    O --> R["結果を返す"]:::done
     classDef hub fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b
     classDef box fill:#fef3c7,stroke:#b45309,color:#451a03
     classDef done fill:#dcfce7,stroke:#15803d,color:#052e16`,
@@ -246,9 +245,11 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     D -->|"いいえ"| E{"専門領域の言語理解が根本的に不足か"}
     E -->|"はい"| E1["継続事前学習や独自モデルは最後の選択肢"]:::box
     E -->|"いいえ"| F["要件やモデル選定を見直す"]:::box
-    C1 --> G{"RAGでも遅延やコストが高いか"}
+    C1 --> G{"本番で遅延やコストが高いか"}
     D1 --> G
-    G -->|"はい"| H["蒸留で小さなモデルへ"]:::done
+    G -->|"はい"| G2{"計測したボトルネックはどこか"}
+    G2 -->|"RAGの検索"| H1["検索を最適化 チャンク 取得件数 インデックス キャッシュ"]:::done
+    G2 -->|"モデル推論"| H["蒸留で小さなモデルへ"]:::done
     classDef hub fill:#e0e7ff,stroke:#4f46e5,color:#1e1b4b
     classDef box fill:#fef3c7,stroke:#b45309,color:#451a03
     classDef done fill:#dcfce7,stroke:#15803d,color:#052e16`,

@@ -19,7 +19,7 @@ export function Step1() {
             <div className="tldr-box">
                 <p>
                     <strong>
-                        AI
+                        機械学習 (ML) ベースの AI
                         は「データから規則性を学び、新しいデータに対して予測や判断や生成を返す仕組み」
                     </strong>
                     です。学ぶ段階が「学習 (training)」、使う段階が「推論 (inference)」です。

@@ -95,13 +95,13 @@ export function AppendixD() {
             <tr className="t-odd">
               <td>データドリフト</td>
               <td>Data drift</td>
-              <td>本番データの性質が学習時から変化すること</td>
+              <td>入力データの分布 (統計的な性質) が学習時から変化すること</td>
             </tr>
             <tr className="t-even">
               <td>コンセプトドリフト</td>
               <td>Concept drift</td>
               <td>
-                入力と正解の関係が変わる、または学習データと推論時データの差による劣化
+                入力と望ましい出力 (正解) の関係そのものが変わること
               </td>
             </tr>
             <tr className="t-odd">
