@@ -391,7 +391,7 @@ flowchart TD
 - 承認ゲートを置き、**評価基準を満たしたバージョンだけ**本番へ進める
 - ロールバック手順を最初から用意する
 - 使われなくなったモデルは**退役の基準と期限**を決めて、コストとリスクを減らす
-- Bedrock のカスタムモデルは、原則として**Provisioned Throughput**で提供する点を、コスト設計で考慮する
+- Bedrock のカスタムモデルの推論には、**Provisioned Throughput**(時間単位の固定課金)と**オンデマンドデプロイ**(トークン単位の従量課金)がある。どちらを使えるかは**モデルとリージョンによって異なる**ため、対応状況を確認してからコストを設計する
 
 > 出典: SageMaker Model Registry https://docs.aws.amazon.com/sagemaker/latest/dg/model-registry.html
 > 出典: SageMaker デプロイガードレール https://docs.aws.amazon.com/sagemaker/latest/dg/deployment-guardrails.html
@@ -636,7 +636,7 @@ flowchart TD
 
 - S3 の文書に対応する **メタデータファイル**(文書名に `.metadata.json` を付けた JSON)を並べて置くと、取り込み時に属性として登録される
 - 検索時に**メタデータフィルター**を指定すると、条件に合う文書だけが対象になる
-- S3 オブジェクトのタグやメタデータで、タイムスタンプや分類を管理できる
+- S3 のオブジェクトタグやユーザー定義メタデータは、**そのままでは Knowledge Bases のフィルター属性にならない**。属性として使うには、`.metadata.json` ファイルに書くか、取り込み処理で文書のメタデータにコピーする
 
 **ベストプラクティス**
 
