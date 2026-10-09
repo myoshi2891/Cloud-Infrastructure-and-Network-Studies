@@ -144,7 +144,7 @@ export default function SectionDomain2() {
 </tr>
 </tbody>
 </table></div>
-<h4>(4) その他のコンピュートのスケーリング</h4>
+<h4>(5) その他のコンピュートのスケーリング</h4>
 <div className="table-wrap"><table>
 <thead>
 <tr>
@@ -171,7 +171,7 @@ export default function SectionDomain2() {
 </tr>
 </tbody>
 </table></div>
-<h4>(5) ベストプラクティス</h4>
+<h4>(6) ベストプラクティス</h4>
 <ul>
 <li><strong>複数 AZ</strong> にまたがる ASG を作る</li>
 <li>最初は <strong>ターゲット追跡</strong> を使い、必要なら他を追加する</li>
@@ -180,7 +180,7 @@ export default function SectionDomain2() {
 <li>起動を速くするため <strong>Golden AMI</strong> や <strong>ウォームプール</strong> を活用する</li>
 <li><strong>最大台数</strong> に必ず上限を設定し、コストの暴走を避ける</li>
 </ul>
-<h4>(6) トラブルシュート</h4>
+<h4>(7) トラブルシュート</h4>
 <div className="table-wrap"><table>
 <thead>
 <tr>
@@ -207,7 +207,7 @@ export default function SectionDomain2() {
 </tr>
 </tbody>
 </table></div>
-<h4>(7) 参考 URL</h4>
+<h4>(8) 参考 URL</h4>
 <ul>
 <li>EC2 Auto Scaling: <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html">https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html</a></li>
 <li>スケーリングポリシー: <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html">https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html</a></li>

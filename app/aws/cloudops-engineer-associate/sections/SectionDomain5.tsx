@@ -580,7 +580,7 @@ export default function SectionDomain5() {
 <blockquote>
 <p>💡 <strong>位置情報 vs レイテンシー</strong>: 「ユーザーの <strong>場所で</strong> 振り分け(規制・言語)」→ 位置情報。「<strong>速さで</strong> 振り分け」→ レイテンシー。</p>
 </blockquote>
-<h4>(3) ヘルスチェックとの組み合わせ</h4>
+<h4>(2) ヘルスチェックとの組み合わせ</h4>
 <div className="table-wrap"><table>
 <thead>
 <tr>
@@ -603,7 +603,7 @@ export default function SectionDomain5() {
 </tr>
 </tbody>
 </table></div>
-<h4>(4) クエリログ</h4>
+<h4>(3) クエリログ</h4>
 <div className="table-wrap"><table>
 <thead>
 <tr>
@@ -625,14 +625,14 @@ export default function SectionDomain5() {
 </tr>
 </tbody>
 </table></div>
-<h4>(5) ベストプラクティス</h4>
+<h4>(4) ベストプラクティス</h4>
 <ul>
 <li><strong>フェイルオーバー・加重などはヘルスチェックと組み合わせ</strong>、<strong>TTL は短め</strong>(切替を速くする)</li>
 <li>本番の DNS 変更は <strong>加重ルーティングで段階的</strong> に行う</li>
 <li><strong>クエリログ</strong> を有効化し、<strong>不審なドメインへのクエリ</strong>・障害時の名前解決を調査できるようにする</li>
 <li>重要なドメインは <strong>登録のロック・DNSSEC</strong> を検討する</li>
 </ul>
-<h4>(6) 参考 URL</h4>
+<h4>(5) 参考 URL</h4>
 <ul>
 <li>ルーティングポリシー: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html</a></li>
 <li>DNS クエリのログ記録: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html</a></li>
@@ -859,7 +859,7 @@ export default function SectionDomain5() {
 </tbody>
 </table></div>
 <blockquote>
-<p>💡 <strong>ハンズオンの鉄則</strong>: SG の問題かどうかは <strong>SG は拒否ログを残さない</strong> ので、<strong>フローログの REJECT</strong> は <strong>主に NACL や SG による拒否</strong> を示す点に注意。<strong>Reachability Analyzer で構成を静的に確認 → フローログで実トラフィックを確認</strong> の順が効率的。</p>
+<p>💡 <strong>ハンズオンの鉄則</strong>: <strong>SG には専用の拒否ログがない</strong>。<strong>VPC フローログの REJECT</strong> には <strong>SG と NACL の両方による拒否</strong> が記録されるが、<strong>フローログだけではどちらが拒否したかを特定できない</strong> 点に注意。<strong>Reachability Analyzer で構成を静的に確認 → フローログで実トラフィックを確認</strong> の順が効率的。</p>
 </blockquote>
 <h4>(4) ベストプラクティス</h4>
 <ul>
