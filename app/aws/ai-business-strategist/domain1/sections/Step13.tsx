@@ -147,7 +147,7 @@ export function Step13() {
             </tr>
             <tr className="t-even">
               <td>更新のしやすさ</td>
-              <td>参照データを更新すれば反映される</td>
+              <td>参照元の文書を改訂し、データソースを同期して更新内容がインデックス化された後に Knowledge Bases へ反映される</td>
               <td>再学習が必要</td>
             </tr>
             <tr className="t-odd">

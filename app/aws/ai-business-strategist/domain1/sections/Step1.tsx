@@ -3,7 +3,7 @@ import { Diagram } from '../Diagram';
 export function Step1() {
     return (
         <section id="step-1-ai-skill-111">
-            <h1 className="task-heading" id="task-11">Task 1.1 コア概念と用語</h1>
+            <div className="task-heading" id="task-11">Task 1.1 コア概念と用語</div>
             <blockquote className="note-callout">
                 <p>
                     Task 1.1: Describe core AI concepts and define terminology.<br />{' '}

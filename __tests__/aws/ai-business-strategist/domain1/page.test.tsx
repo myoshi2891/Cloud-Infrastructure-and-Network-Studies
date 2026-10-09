@@ -22,8 +22,22 @@ describe('aws-ai-business-strategist-domain1 — 移行元コンテンツの全�
         return container;
     };
 
+    // Step 1 の Task ラベルは見出し階層を再開しないよう非見出しへ降格済み（レビュー指摘対応）。
+    // インベントリは移行元の状態を保持し、期待値側でのみ除外する。
+    const demotedTaskLabel = 'Task 1.1 コア概念と用語';
+
+    it('Step 1 の Task ラベルは見出しではなく装飾テキストとして描画される', () => {
+        const container = renderPage();
+        const label = container.querySelector('#step-1-ai-skill-111 > .task-heading');
+        expect(label?.tagName).toBe('DIV');
+        expect(squash(label?.textContent ?? '')).toBe(squash(demotedTaskLabel));
+        expect(container.querySelector('#step-1-ai-skill-111 > h2')?.textContent).toBe(
+            'Step 1: AI の基本概念 (Skill 1.1.1)',
+        );
+    });
+
     it.each([
-        ['h1', inventory.h1],
+        ['h1', inventory.h1.filter((heading) => heading !== demotedTaskLabel)],
         ['h2', inventory.h2],
         ['h3', inventory.h3],
         ['h4', inventory.h4],
