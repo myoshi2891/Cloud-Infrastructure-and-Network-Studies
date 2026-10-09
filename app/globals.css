@@ -988,6 +988,7 @@ body {
 .card-aws-saa { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-dva { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-cloudops { --card-accent: var(--color-theme-aws-cloudops-indigo); }
+.card-aws-aib { --card-accent: var(--color-theme-aws-fg); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
 .card-accelerate { --card-accent: var(--color-theme-accelerate-fg); }
 .card-sre { --card-accent: var(--color-theme-sre-fg); }
@@ -1065,6 +1066,11 @@ body {
 @utility icon-theme-aws-cloudops {
     background: var(--color-theme-aws-cloudops-indigo-soft);
     color: var(--color-theme-aws-cloudops-indigo);
+}
+
+@utility icon-theme-aws-aib {
+    background: var(--color-theme-aws-bg);
+    color: var(--color-theme-aws-fg);
 }
 
 @utility icon-theme-ccna {

@@ -20,6 +20,7 @@ export type ColorKey =
     | 'card-aws-saa'
     | 'card-aws-cloudops'
     | 'card-aws-dva'
+    | 'card-aws-aib'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -70,6 +71,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-aws-saa': 'card-aws-saa',
     'card-aws-cloudops': 'card-aws-cloudops',
     'card-aws-dva': 'card-aws-dva',
+    'card-aws-aib': 'card-aws-aib',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -613,6 +615,29 @@ const ALL_EXAMS: Exam[] = [
         badge: 'SOA-C03',
         icon: '⚙️',
         provider: 'AWS',
+    },
+    {
+        id: 'aws-aib',
+        label: 'AWS Certified AI Business Strategist',
+        abbr: 'AIB',
+        level: 'Standard',
+        score: '85問 / 170分',
+        color: 'card-aws-aib',
+        href: '/aws/ai-business-strategist/domain1',
+        overviewLabel: 'Domain 1: AI Fundamentals and Literacy',
+        description:
+            'AIの能力をビジネス成果に翻訳し、責任あるAIとガバナンスを確立して導入を推進する戦略的意思決定力を認定。Domain 1の基礎とリテラシーを網羅。',
+        domains: [
+            {
+                label: 'Domain 1: AI Fundamentals and Literacy',
+                href: '/aws/ai-business-strategist/domain1',
+                pct: '24%',
+            },
+        ],
+        badge: 'AIB-C01',
+        icon: '💼',
+        provider: 'AWS',
+        status: 'available',
     },
     {
         id: 'ccna',
