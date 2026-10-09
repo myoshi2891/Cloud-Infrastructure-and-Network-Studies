@@ -226,7 +226,7 @@ export function Step2() { return (<section className="section">
 </table>
 </div>
 {" "}
-<blockquote>{" "}<p><code>{"s3:ListBucket"}</code>{" は"}<strong>{"バケットARN"}</strong>{"、"}<code>{"s3:GetObject"}</code>{" は**オブジェクトARN（"}<code>{"/*"}</code>{"付き）**に対する権限です。両方のResourceを書き忘れるのが典型的な失敗です。"}</p>{" "}</blockquote>
+<blockquote>{" "}<p><code>{"s3:ListBucket"}</code>{" は"}<strong>{"バケットARN"}</strong>{"、"}<code>{"s3:GetObject"}</code>{" は"}<strong>{"オブジェクトARN（"}<code>{"/*"}</code>{"付き）"}</strong>{"に対する権限です。両方のResourceを書き忘れるのが典型的な失敗です。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"2-4 ポリシー評価のルール"}</h3>
 {" "}

@@ -151,7 +151,7 @@ export function Step7() { return (<section className="section">
 
 <td>{"6"}</td>
 
-<td>{"**"}<code>{"scope"}</code>{"**やグループが必要な権限を満たすか"}</td>
+<td><strong><code>{"scope"}</code></strong>{"やグループが必要な権限を満たすか"}</td>
 
 <td>{"認可の抜け"}</td>
 

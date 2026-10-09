@@ -373,7 +373,7 @@ export function Step11() { return (<section className="section">
 
 <td>{"「Access Denied」でS3権限は正しい"}</td>
 
-<td>{"**KMS側の権限（鍵ポリシー／IAM）**を疑う"}</td>
+<td><strong>{"KMS側の権限（鍵ポリシー／IAM）"}</strong>{"を疑う"}</td>
 
 </tr>
 

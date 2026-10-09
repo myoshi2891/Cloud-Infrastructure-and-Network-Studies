@@ -457,7 +457,7 @@ export function Step23() { return (<section className="section">
 {" "}
 </details>
 {" "}
-<p><strong>{"問12."}</strong>{" 組織内の複数のマイクロサービス間で、**相互にクライアント証明書で認証（mTLS）**したい。内部用の証明書を発行・管理するのに適したサービスは？"}</p>
+<p><strong>{"問12."}</strong>{" 組織内の複数のマイクロサービス間で、"}<strong>{"相互にクライアント証明書で認証（mTLS）"}</strong>{"したい。内部用の証明書を発行・管理するのに適したサービスは？"}</p>
 {" "}
 <p>{"A. AWS Private CA B. ACMのパブリック証明書のみ C. 自己署名証明書を各チームが自由に作成 D. IAMユーザーのアクセスキー"}</p>
 {" "}

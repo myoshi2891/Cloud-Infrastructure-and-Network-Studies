@@ -100,7 +100,7 @@ export function Step13() { return (<section className="section">
 
 <td>{"インターネット向けTLS証明書"}</td>
 
-<td>{"**組織内（プライベート）**の証明書"}</td>
+<td><strong>{"組織内（プライベート）"}</strong>{"の証明書"}</td>
 
 </tr>
 
@@ -402,7 +402,7 @@ export function Step13() { return (<section className="section">
 
 <td>{"5"}</td>
 
-<td>{"CloudFrontでは**"}<code>{"us-east-1"}</code>{"**に証明書を用意"}</td>
+<td>{"CloudFrontでは"}<strong><code>{"us-east-1"}</code></strong>{"に証明書を用意"}</td>
 
 </tr>
 

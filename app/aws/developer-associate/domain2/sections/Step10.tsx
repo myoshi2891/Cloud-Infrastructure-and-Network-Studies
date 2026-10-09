@@ -324,7 +324,7 @@ export function Step10() { return (<section className="section">
 {" "}
 <li>{"「RDSの既存DBに暗号化をそのままオン」→ できない。"}<strong>{"スナップショットのコピー時に暗号化→復元"}</strong>{"。"}</li>
 {" "}
-<li>{"「S3バケットにHTTPSを強制」→ **"}<code>{"aws:SecureTransport"}</code>{"**のDeny。"}</li>
+<li>{"「S3バケットにHTTPSを強制」→ "}<strong><code>{"aws:SecureTransport"}</code></strong>{"のDeny。"}</li>
 {" "}
 </ul>
 {" "}

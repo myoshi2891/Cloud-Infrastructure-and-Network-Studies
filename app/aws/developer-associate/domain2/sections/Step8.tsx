@@ -169,7 +169,7 @@ export function Step8() { return (<section className="section">
 
 <td>{"概要"}</td>
 
-<td>{"アプリの認可ロジックをコードから**ポリシー（Cedar言語）**に切り出して管理するサービス"}</td>
+<td>{"アプリの認可ロジックをコードから"}<strong>{"ポリシー（Cedar言語）"}</strong>{"に切り出して管理するサービス"}</td>
 
 </tr>
 
