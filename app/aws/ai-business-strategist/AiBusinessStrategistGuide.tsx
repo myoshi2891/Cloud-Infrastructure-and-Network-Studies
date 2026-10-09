@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { NavBar } from './NavBar';
 import { HeroSection } from './sections/HeroSection';
 import { Step0Section } from './sections/Step0Section';
+import { Domain1Section } from './sections/Domain1Section';
 
 interface AiBusinessStrategistGuideProps {
     children?: React.ReactNode;
@@ -36,6 +37,7 @@ export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuid
             <main>
                 <HeroSection />
                 <Step0Section />
+                <Domain1Section />
                 {children}
             </main>
         </div>
