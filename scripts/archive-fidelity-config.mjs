@@ -31,7 +31,7 @@
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
     'aws-ai-business-strategist-domain1': {
-        source: 'archive/Aws/html/ai-business-strategist/domain1/Aib-c01-domain1-ai-fundamentals-and-literacy.html',
+        source: 'Aib-c01-domain1-ai-fundamentals-and-literacy.html',
         sourceCommit: '7d2d35ec',
         textSelector: 'main h1, main h2, main h3, main h4, main p, main li, main th, main td, main .kicker, main .pill',
         tables: true,
