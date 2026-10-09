@@ -17,6 +17,11 @@ import { Step10 } from './sections/Step10';
 import { Step11 } from './sections/Step11';
 import { Step12 } from './sections/Step12';
 import { Step13 } from './sections/Step13';
+import { AppendixA } from './sections/AppendixA';
+import { AppendixB } from './sections/AppendixB';
+import { AppendixC } from './sections/AppendixC';
+import { AppendixD } from './sections/AppendixD';
+import { AppendixE } from './sections/AppendixE';
 
 export function AiBusinessStrategistDomain1Guide() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +49,11 @@ export function AiBusinessStrategistDomain1Guide() {
                 <Step11 />
                 <Step12 />
                 <Step13 />
-                {/* 後続ステップで 付録 A〜E を追加 */}
+                <AppendixA />
+                <AppendixB />
+                <AppendixC />
+                <AppendixD />
+                <AppendixE />
             </main>
         </div>
     );

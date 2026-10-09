@@ -32,8 +32,8 @@ export function Step10() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>リスク</th>
-              <th>内容</th>
+              <th scope="col">リスク</th>
+              <th scope="col">内容</th>
             </tr>
           </thead>
           <tbody>
@@ -89,10 +89,10 @@ export function Step10() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>分類</th>
-              <th>意味</th>
-              <th>典型的な条件</th>
-              <th>従業員への案内</th>
+              <th scope="col">分類</th>
+              <th scope="col">意味</th>
+              <th scope="col">典型的な条件</th>
+              <th scope="col">従業員への案内</th>
             </tr>
           </thead>
           <tbody>
@@ -133,9 +133,9 @@ export function Step10() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>層</th>
-              <th>内容</th>
-              <th>具体例</th>
+              <th scope="col">層</th>
+              <th scope="col">内容</th>
+              <th scope="col">具体例</th>
             </tr>
           </thead>
           <tbody>
@@ -176,8 +176,8 @@ export function Step10() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>期間</th>
-              <th>やること</th>
+              <th scope="col">期間</th>
+              <th scope="col">やること</th>
             </tr>
           </thead>
           <tbody>
@@ -243,8 +243,8 @@ export function Step10() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>誤解</th>
-                <th>正しい理解</th>
+                <th scope="col">誤解</th>
+                <th scope="col">正しい理解</th>
               </tr>
             </thead>
             <tbody>

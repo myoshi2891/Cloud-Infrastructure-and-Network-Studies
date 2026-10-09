@@ -6,7 +6,7 @@ export function Step1() {
             <h1 className="task-heading" id="task-11">Task 1.1 コア概念と用語</h1>
             <blockquote className="note-callout">
                 <p>
-                    Task 1.1: Describe core AI concepts and define terminology.<br />
+                    Task 1.1: Describe core AI concepts and define terminology.<br />{' '}
                     AI の中核概念を説明し、用語を定義できること。
                 </p>
             </blockquote>

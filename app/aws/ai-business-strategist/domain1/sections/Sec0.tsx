@@ -109,8 +109,8 @@ export function Sec0() {
             </div>
             <blockquote className="note-callout">
                 <p>
-                    <strong>注意 (情報の食い違い)</strong>: 試験時間について、試験ガイドのページは
-                    <strong>130 分</strong>、認定ページのベータ試験概要は
+                    <strong>注意 (情報の食い違い)</strong>: 試験時間について、試験ガイドのページは{' '}
+                    <strong>130 分</strong>、認定ページのベータ試験概要は{' '}
                     <strong>170 分・85 問</strong> と記載しています
                     (確認日時点)。ベータ期間の値と標準版の値が異なる可能性があるため、<strong>申し込み画面と公式ページの最新表記を必ず確認してください</strong>。ベータ試験の料金は認定ページ上で
                     50 USD (標準版は 100 USD) と案内されています。

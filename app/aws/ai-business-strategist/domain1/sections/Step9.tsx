@@ -20,7 +20,7 @@ export function Step9() {
       <h3 id="_57">詳しい解説</h3>
       <p>
         AWS の SageMaker Model Monitor の説明は、ML
-        モデルの精度は時間とともに劣化することがあり、これを<strong>モデルドリフト</strong>と呼ぶと述べています。原因は入力特徴の変化など多様で、さらに<strong>コンセプトドリフト</strong>
+        モデルの精度は時間とともに劣化することがあり、これを<strong>モデルドリフト</strong>と呼ぶと述べています。原因は入力特徴の変化など多様で、さらに<strong>コンセプトドリフト</strong>{' '}
         (学習に使ったデータと、推論時のデータの違いによる劣化) も精度に影響します。
       </p>
       <h4 id="_58">ドリフトの種類</h4>
@@ -28,9 +28,9 @@ export function Step9() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>種類</th>
-              <th>何が変わるか</th>
-              <th>例</th>
+              <th scope="col">種類</th>
+              <th scope="col">何が変わるか</th>
+              <th scope="col">例</th>
             </tr>
           </thead>
           <tbody>
@@ -100,8 +100,8 @@ export function Step9() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>観点</th>
-              <th>例</th>
+              <th scope="col">観点</th>
+              <th scope="col">例</th>
             </tr>
           </thead>
           <tbody>
@@ -169,8 +169,8 @@ export function Step9() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>誤解</th>
-                <th>正しい理解</th>
+                <th scope="col">誤解</th>
+                <th scope="col">正しい理解</th>
               </tr>
             </thead>
             <tbody>

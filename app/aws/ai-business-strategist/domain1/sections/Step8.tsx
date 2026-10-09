@@ -33,10 +33,10 @@ export function Step8() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>観点</th>
-              <th>ルールベース自動化</th>
-              <th>生成 AI アシスタント</th>
-              <th>AI エージェント</th>
+              <th scope="col">観点</th>
+              <th scope="col">ルールベース自動化</th>
+              <th scope="col">生成 AI アシスタント</th>
+              <th scope="col">AI エージェント</th>
             </tr>
           </thead>
           <tbody>
@@ -98,9 +98,9 @@ export function Step8() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>中核能力</th>
-              <th>意味</th>
-              <th>ビジネスでの理解</th>
+              <th scope="col">中核能力</th>
+              <th scope="col">意味</th>
+              <th scope="col">ビジネスでの理解</th>
             </tr>
           </thead>
           <tbody>
@@ -143,9 +143,9 @@ export function Step8() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>構成</th>
-              <th>概要</th>
-              <th>向く場面</th>
+              <th scope="col">構成</th>
+              <th scope="col">概要</th>
+              <th scope="col">向く場面</th>
             </tr>
           </thead>
           <tbody>
@@ -208,8 +208,8 @@ export function Step8() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>誤解</th>
-                <th>正しい理解</th>
+                <th scope="col">誤解</th>
+                <th scope="col">正しい理解</th>
               </tr>
             </thead>
             <tbody>

@@ -8,7 +8,7 @@ export function Step7() {
             </h1>
             <blockquote className="note-callout">
                 <p>
-                    Task 1.2: Identify and select appropriate AI solution types.<br />
+                    Task 1.2: Identify and select appropriate AI solution types.<br />{' '}
                     ビジネス要件と制約に応じて、適切な AI ソリューションの種類を見極めて選べること。
                 </p>
             </blockquote>

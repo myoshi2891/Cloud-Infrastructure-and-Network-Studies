@@ -31,8 +31,8 @@ export function Step13() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>弱点</th>
-              <th>例</th>
+              <th scope="col">弱点</th>
+              <th scope="col">例</th>
             </tr>
           </thead>
           <tbody>
@@ -60,11 +60,11 @@ export function Step13() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>手法</th>
-              <th>何をするか</th>
-              <th>モデル本体の変更</th>
-              <th>得意なこと</th>
-              <th>主な留意点</th>
+              <th scope="col">手法</th>
+              <th scope="col">何をするか</th>
+              <th scope="col">モデル本体の変更</th>
+              <th scope="col">得意なこと</th>
+              <th scope="col">主な留意点</th>
             </tr>
           </thead>
           <tbody>
@@ -113,7 +113,7 @@ export function Step13() {
           基盤モデル (通常は LLM)、ガードレール
           (質問・プロンプト・取得した内容・回答が、正確で責任ある内容か)、オーケストレーター
           (全体の流れの管理)、ユーザー体験、ID とユーザー管理 (アクセス制御)
-        </strong>
+        </strong>{' '}
         を挙げています。
       </p>
       <h4 id="rag">RAG の流れ</h4>
@@ -134,9 +134,9 @@ export function Step13() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>観点</th>
-              <th>RAG</th>
-              <th>ファインチューニング</th>
+              <th scope="col">観点</th>
+              <th scope="col">RAG</th>
+              <th scope="col">ファインチューニング</th>
             </tr>
           </thead>
           <tbody>
@@ -208,9 +208,9 @@ export function Step13() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>シナリオ</th>
-              <th>推奨</th>
-              <th>理由</th>
+              <th scope="col">シナリオ</th>
+              <th scope="col">推奨</th>
+              <th scope="col">理由</th>
             </tr>
           </thead>
           <tbody>
@@ -285,8 +285,8 @@ export function Step13() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>誤解</th>
-                <th>正しい理解</th>
+                <th scope="col">誤解</th>
+                <th scope="col">正しい理解</th>
               </tr>
             </thead>
             <tbody>

@@ -26,9 +26,9 @@ export function Step12() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>用語</th>
-              <th>意味</th>
-              <th>ビジネスへの影響</th>
+              <th scope="col">用語</th>
+              <th scope="col">意味</th>
+              <th scope="col">ビジネスへの影響</th>
             </tr>
           </thead>
           <tbody>
@@ -79,9 +79,9 @@ export function Step12() {
         <table>
           <thead>
             <tr className="t-head">
-              <th>場面</th>
-              <th>起きること</th>
-              <th>対策の方向性</th>
+              <th scope="col">場面</th>
+              <th scope="col">起きること</th>
+              <th scope="col">対策の方向性</th>
             </tr>
           </thead>
           <tbody>
@@ -162,8 +162,8 @@ export function Step12() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>誤解</th>
-                <th>正しい理解</th>
+                <th scope="col">誤解</th>
+                <th scope="col">正しい理解</th>
               </tr>
             </thead>
             <tbody>

@@ -11,7 +11,7 @@ export function Step2() {
             <h3 id="_8">ひとことで言うと</h3>
             <div className="tldr-box">
                 <p>
-                    <strong>AI ⊃ ML ⊃ ディープラーニング ⊃ 生成 AI</strong>
+                    <strong>AI ⊃ ML ⊃ ディープラーニング ⊃ 生成 AI</strong>{' '}
                     という入れ子の関係です。広い順に、AI (知的な作業をする機械の総称)、ML
                     (データから学ぶ手法)、ディープラーニング
                     (多層のニューラルネットワークで学ぶ手法)、生成 AI (新しいコンテンツを作る AI)
@@ -87,7 +87,7 @@ export function Step2() {
                 </table>
             </div>
             <p>
-                <strong>基盤モデル (Foundation Model, FM)</strong>
+                <strong>基盤モデル (Foundation Model, FM)</strong>{' '}
                 とは、非常に大規模なデータで事前に学習された大規模モデルのことです。AWS は、生成 AI
                 は他の AI と同じく ML
                 モデルで動くが、そのモデルが極めて大規模で大量データで事前学習されており、FM

@@ -8,7 +8,7 @@ export function Step11() {
       </h1>
       <blockquote className="note-callout">
         <p>
-          Task 1.3: Apply GenAI concepts and techniques.<br />
+          Task 1.3: Apply GenAI concepts and techniques.<br />{' '}
           生成 AI の概念と手法を、ビジネス成果のために適用できること。
         </p>
       </blockquote>
@@ -36,9 +36,9 @@ export function Step11() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>要素</th>
-                <th>内容</th>
-                <th>例</th>
+                <th scope="col">要素</th>
+                <th scope="col">内容</th>
+                <th scope="col">例</th>
               </tr>
             </thead>
             <tbody>
@@ -92,9 +92,9 @@ export function Step11() {
           <table>
             <thead>
               <tr className="t-head">
-                <th>パラメータ</th>
-                <th>役割</th>
-                <th>ビジネス上の使い分け</th>
+                <th scope="col">パラメータ</th>
+                <th scope="col">役割</th>
+                <th scope="col">ビジネス上の使い分け</th>
               </tr>
             </thead>
             <tbody>
@@ -135,9 +135,9 @@ export function Step11() {
           <table>
             <thead>
               <tr className="t-head">
-                <th></th>
-                <th>プロンプト</th>
-                <th>何が問題 / 良い点</th>
+                <th scope="col"></th>
+                <th scope="col">プロンプト</th>
+                <th scope="col">何が問題 / 良い点</th>
               </tr>
             </thead>
             <tbody>
@@ -164,7 +164,7 @@ export function Step11() {
         <h4 id="_76">プロンプトでできることの限界</h4>
         <p>
           プロンプトを工夫しても、<strong>モデルが持っていない最新情報や社内の非公開情報</strong>は出せません。その場合は
-          RAG (Step 13) が必要です。また、生成 AI は<strong>もっともらしい誤り (ハルシネーション)</strong>
+          RAG (Step 13) が必要です。また、生成 AI は<strong>もっともらしい誤り (ハルシネーション)</strong>{' '}
           を出すことがあるため、重要な判断では人の確認が必要です。
         </p>
         <h3 id="_77">ベストプラクティス</h3>
@@ -214,8 +214,8 @@ export function Step11() {
             <table>
               <thead>
                 <tr className="t-head">
-                  <th>誤解</th>
-                  <th>正しい理解</th>
+                  <th scope="col">誤解</th>
+                  <th scope="col">正しい理解</th>
                 </tr>
               </thead>
               <tbody>
