@@ -725,6 +725,11 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
 外側のカード（`.diagram` や `.diagram-wrap`）に対し、MermaidDiagram が描画する外枠 `> [role="img"]`（`.mermaidWrapper`）の暗色背景・枠線・余白をリセットし、親カードの白背景に自然に馴染ませる。
 
 ```css
+/* svg は max-width:none で自然幅を保つため、狭い画面では親カードを横スクロールさせて図を読めるようにする */
+.diagram {
+    overflow-x: auto;
+}
+
 .diagram > [role="img"] {
     border: 0;
     background: transparent;
