@@ -83,7 +83,7 @@ export function NavBar({ children }: { children: ReactNode }) {
             <div className="sidebar-brand"><i className="ti ti-brand-aws" aria-hidden="true" /><div><strong>DVA-C02 Domain 1</strong><span className="badge">Development with AWS Services</span></div></div>{' '}
             <nav aria-label="目次"><ul className="nav-list">{NAV_ITEMS.map(item => <li key={item.id} className={item.group}><a href={`#${item.id}`} className={activeId === item.id ? 'active' : undefined} aria-current={activeId === item.id ? 'location' : undefined} onClick={event => navigate(event, item.id)}>{item.label}</a></li>)}</ul></nav>
         </aside>
-        <button type="button" className="backdrop" id="backdrop" aria-label="目次を閉じる" tabIndex={open ? 0 : -1} aria-hidden={!open} onClick={() => setOpen(false)} />
+        <button type="button" className="backdrop" id="backdrop" aria-label="目次を閉じる" tabIndex={open ? 0 : -1} aria-hidden={!open} onClick={() => { setOpen(false); document.getElementById('menu-btn')?.focus(); }} />
         <main>
             <div className="mobile-bar"><button type="button" id="menu-btn" aria-label="目次を開く" aria-controls="sidebar" aria-expanded={open} onClick={() => setOpen(value => !value)}><i className="ti ti-menu-2" aria-hidden="true" />目次</button><span>DVA-C02 Domain 1</span></div>
             {children}

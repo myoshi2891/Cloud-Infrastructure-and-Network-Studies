@@ -134,7 +134,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-4 エンベロープ暗号化（最重要）"}</h3>
 {" "}
-<p>{"KMSの"}<code>{"Encrypt"}</code>{"APIで直接暗号化できるのは"}<strong>{"最大4KB（4,096バイト）"}<strong>{"です。大きなデータは"}</strong>{"データキーでデータを暗号化し、そのデータキーをKMSキーで暗号化"}</strong>{"する方式（エンベロープ暗号化）で扱います。"}</p>
+<p>{"KMSの"}<code>{"Encrypt"}</code>{"APIで直接暗号化できるのは"}<strong>{"最大4KB（4,096バイト）"}</strong>{"です。大きなデータは"}<strong>{"データキーでデータを暗号化し、そのデータキーをKMSキーで暗号化"}</strong>{"する方式（エンベロープ暗号化）で扱います。"}</p>
 {" "}
 <div className="diagram-card">
 <Diagram index={14} label="Step 11　AWS KMSと鍵の使い方（Skill 2.2.4）の図解" />
@@ -254,7 +254,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <h3>{"11-6 暗号化コンテキスト（Encryption Context）"}</h3>
 {" "}
-<p>{"暗号化・復号の際に渡す"}<strong>{"追加の認証データ（AAD）"}<strong>{"で、秘密ではないキーと値のペアです。復号時に同じコンテキストが必要になり、"}<strong>{"改ざん・取り違えの検知"}</strong>{"と、CloudTrailでの"}</strong>{"監査"}</strong>{"に役立ちます。"}</p>
+<p>{"暗号化・復号の際に渡す"}<strong>{"追加の認証データ（AAD）"}</strong>{"で、秘密ではないキーと値のペアです。復号時に同じコンテキストが必要になり、"}<strong>{"改ざん・取り違えの検知"}</strong>{"と、CloudTrailでの"}<strong>{"監査"}</strong>{"に役立ちます。"}</p>
 {" "}
 <CodeBlock index={17} language="python" lines={["import boto3","","kms = boto3.client(\"kms\")","key_id = \"alias/my-app-key\"","","enc = kms.encrypt(","    KeyId=key_id,","    Plaintext=b\"my small secret\",","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},",")","blob = enc[\"CiphertextBlob\"]","","dec = kms.decrypt(","    CiphertextBlob=blob,","    EncryptionContext={\"app\": \"orders\", \"tenant\": \"t-001\"},  # 一致しないと失敗",")","print(dec[\"Plaintext\"])"]} />
 {" "}
@@ -386,7 +386,7 @@ export function Step11() { return (<section className="section">
 {" "}
 <ul>
 {" "}
-<li>{"KMSキーの削除は"}<strong>{"待機期間（7〜30日）"}<strong>{"を経て実行され、その間は"}</strong>{"キャンセル可能"}</strong>{"です。"}</li>
+<li>{"KMSキーの削除は"}<strong>{"待機期間（7〜30日）"}</strong>{"を経て実行され、その間は"}<strong>{"キャンセル可能"}</strong>{"です。"}</li>
 {" "}
 <li>{"削除すると、そのキーで暗号化されたデータは"}<strong>{"復号できなくなります"}</strong>{"。削除の前に"}<strong>{"無効化"}</strong>{"して影響を確認するのが定石です。"}</li>
 {" "}
