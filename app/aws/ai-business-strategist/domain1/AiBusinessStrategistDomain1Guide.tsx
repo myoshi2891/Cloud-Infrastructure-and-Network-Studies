@@ -14,6 +14,9 @@ import { Step7 } from './sections/Step7';
 import { Step8 } from './sections/Step8';
 import { Step9 } from './sections/Step9';
 import { Step10 } from './sections/Step10';
+import { Step11 } from './sections/Step11';
+import { Step12 } from './sections/Step12';
+import { Step13 } from './sections/Step13';
 
 export function AiBusinessStrategistDomain1Guide() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,7 +41,10 @@ export function AiBusinessStrategistDomain1Guide() {
                 <Step8 />
                 <Step9 />
                 <Step10 />
-                {/* 後続ステップで Step 11〜13 および 付録 A〜E を追加 */}
+                <Step11 />
+                <Step12 />
+                <Step13 />
+                {/* 後続ステップで 付録 A〜E を追加 */}
             </main>
         </div>
     );
