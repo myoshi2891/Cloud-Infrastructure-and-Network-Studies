@@ -1,0 +1,706 @@
+/* app/cisco/devnet-associate/page.css */
+
+.devnet-associate-page {
+    background-color: var(--color-devnet-associate-paper, #f6f7f9);
+    color: var(--color-devnet-associate-ink, #161b26);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+}
+
+.devnet-associate-page a {
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+}
+
+.devnet-associate-page a:hover {
+    color: var(--color-devnet-associate-gold, #b8802a);
+}
+
+/* ── サイドバー契約 (280px 固定) ── */
+.devnet-associate-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    border-right: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    overflow-y: auto;
+    padding: 1.5rem 1rem 2rem;
+    z-index: 40;
+}
+
+.devnet-associate-page .brand {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0 0.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    margin-bottom: 1rem;
+}
+
+.devnet-associate-page .brand svg {
+    flex: none;
+}
+
+.devnet-associate-page .brand-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.35;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+}
+
+.devnet-associate-page .brand-sub {
+    font-size: 13px;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    line-height: 1.45;
+}
+
+.devnet-associate-page .nav-group {
+    font-size: 12.5px;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    font-weight: 600;
+    padding: 0.9rem 0.5rem 0.3rem;
+}
+
+.devnet-associate-page .sidebar nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.devnet-associate-page .sidebar nav li {
+    padding-left: 0;
+    margin: 0;
+}
+
+.devnet-associate-page .sidebar nav li::before {
+    content: none;
+}
+
+.devnet-associate-page .sidebar nav a {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    text-decoration: none;
+    line-height: 1.5;
+    font-size: 13.5px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease-in-out;
+}
+
+.devnet-associate-page .sidebar nav a:hover {
+    background-color: var(--color-devnet-associate-indigo-50, #eef1f8);
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+}
+
+.devnet-associate-page .sidebar nav a.active {
+    background-color: var(--color-devnet-associate-indigo-50, #eef1f8);
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    font-weight: 600;
+    border-left-color: var(--color-devnet-associate-gold, #b8802a);
+}
+
+.devnet-associate-page .sidebar nav .w {
+    flex: none;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+/* ── メインコンテンツ領域（280px サイドバー契約遵守） ── */
+.devnet-associate-page .layout {
+    display: block;
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    max-width: none;
+    box-sizing: border-box;
+}
+
+/* ── ヒーローセクション（左右にゆったりした心地よいパディング） ── */
+.devnet-associate-page .hero {
+    padding: 3.5rem clamp(2.5rem, 6vw, 7rem) 2.5rem;
+    border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+}
+
+.devnet-associate-page .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.devnet-associate-page .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2.25rem;
+    line-height: 1.35;
+    margin: 0 0 1.5rem;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+}
+
+.devnet-associate-page .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+}
+
+.devnet-associate-page .meta-row {
+    border: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-devnet-associate-paper, #f6f7f9);
+    font-size: 1rem;
+}
+
+.devnet-associate-page .meta-row .k {
+    display: block;
+    color: var(--color-devnet-associate-ink-3, #5f687c);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin-bottom: 0.25rem;
+}
+
+/* ── セクション（左右にゆったりした余白パディング） ── */
+.devnet-associate-page .section {
+    padding: 3.5rem clamp(2.5rem, 6vw, 7rem) 2rem;
+    border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px);
+}
+
+.devnet-associate-page .section > h1,
+.devnet-associate-page .section > h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    margin: 0 0 1.5rem;
+    line-height: 1.4;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-devnet-associate-gold, #b8802a);
+}
+
+.devnet-associate-page .section > h1 {
+    font-size: 1.75rem;
+}
+
+.devnet-associate-page .section > h2 {
+    font-size: 1.45rem;
+}
+
+.devnet-associate-page .prose h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    margin: 2.75rem 0 1rem;
+    padding-left: 0.75rem;
+    border-left: 4px solid var(--color-devnet-associate-indigo, #2e3f72);
+    line-height: 1.45;
+}
+
+.devnet-associate-page .prose h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--color-devnet-associate-ink, #161b26);
+    margin: 2rem 0 0.75rem;
+    line-height: 1.5;
+}
+
+.devnet-associate-page .prose p {
+    margin: 0 0 1rem;
+    color: var(--color-devnet-associate-ink, #161b26);
+    font-size: 15px;
+}
+
+.devnet-associate-page .prose strong {
+    font-weight: 600;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+}
+
+/* ── リスト（箇条書き・丸数字番号リスト：15px 基準） ── */
+.devnet-associate-page .prose ul,
+.devnet-associate-page .prose ol {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    font-size: 15px;
+}
+
+.devnet-associate-page .prose ul > li {
+    list-style: none;
+    position: relative;
+    padding-left: 1.4rem;
+    margin: 0.35rem 0;
+    color: var(--color-devnet-associate-ink, #161b26);
+    font-size: 15px;
+}
+
+.devnet-associate-page .prose ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0.3rem;
+    top: 0.8em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--color-devnet-associate-gold, #b8802a);
+}
+
+.devnet-associate-page .prose ol {
+    counter-reset: n;
+    list-style: none;
+}
+
+.devnet-associate-page .prose ol > li {
+    counter-increment: n;
+    position: relative;
+    padding-left: 2.4rem;
+    margin: 0.6rem 0;
+    color: var(--color-devnet-associate-ink, #161b26);
+    font-size: 15px;
+}
+
+.devnet-associate-page .prose ol > li::before {
+    content: counter(n);
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    background-color: var(--color-devnet-associate-indigo, #2e3f72);
+    color: var(--color-devnet-associate-paper, #f6f7f9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1;
+}
+
+/* ── インラインコードとコードブロック（13.5px 基準・ライトモード） ── */
+.devnet-associate-page code {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    background-color: var(--color-devnet-associate-indigo-50, #eef1f8);
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+    overflow-wrap: anywhere;
+}
+
+.devnet-associate-page .code-block {
+    margin: 0 0 1.5rem;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    border: 1px solid var(--color-devnet-associate-line-2, #c2c9d8);
+    border-left: 4px solid var(--color-devnet-associate-indigo, #2e3f72);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    line-height: 1.6;
+}
+
+.devnet-associate-page .code-line {
+    white-space: pre;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--color-devnet-associate-ink, #161b26);
+}
+
+/* highlight.js (github.min.css) スタイル */
+.devnet-associate-page .hljs-keyword {
+    color: #cf222e;
+    font-weight: 600;
+}
+
+.devnet-associate-page .hljs-string {
+    color: #0a3069;
+}
+
+.devnet-associate-page .hljs-attr {
+    color: #0550ae;
+}
+
+.devnet-associate-page .hljs-number {
+    color: #0550ae;
+}
+
+.devnet-associate-page .hljs-literal {
+    color: #0550ae;
+    font-weight: 600;
+}
+
+.devnet-associate-page .hljs-comment {
+    color: #6e7781;
+    font-style: italic;
+}
+
+.devnet-associate-page .hljs-tag {
+    color: #116329;
+}
+
+.devnet-associate-page .hljs-name {
+    color: #116329;
+    font-weight: 600;
+}
+
+.devnet-associate-page .hljs-title {
+    color: #8250df;
+}
+
+.devnet-associate-page .hljs-built_in {
+    color: #8250df;
+}
+
+.devnet-associate-page .hljs-meta {
+    color: #0550ae;
+}
+
+.devnet-associate-page .hljs-variable {
+    color: #953800;
+}
+
+.devnet-associate-page .hljs-addition {
+    color: #116329;
+    background-color: #dafbe1;
+}
+
+.devnet-associate-page .hljs-deletion {
+    color: #82071e;
+    background-color: #ffebe9;
+}
+
+/* ── テーブル（1rem 基準・白ベース＋indigo-50 ヘッダー） ── */
+.devnet-associate-page .table-wrap {
+    overflow-x: auto;
+    margin: 0 0 1.5rem;
+    border: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    border-radius: 12px;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+}
+
+.devnet-associate-page table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+}
+
+.devnet-associate-page th {
+    background-color: var(--color-devnet-associate-indigo-50, #eef1f8);
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+}
+
+.devnet-associate-page th,
+.devnet-associate-page td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    vertical-align: top;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.devnet-associate-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.devnet-associate-page tbody tr:nth-child(even) td {
+    background-color: var(--color-devnet-associate-row-alt);
+}
+
+.devnet-associate-page td:first-child {
+    min-width: 7rem;
+}
+
+/* ── Mermaid ダイアグラム ── */
+.devnet-associate-page .mermaid-wrap {
+    display: block;
+    margin: 1.5rem auto 2rem;
+    width: 100%;
+}
+
+.devnet-associate-page .mermaid-wrap svg {
+    display: block;
+    margin: 0 auto;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* ── コールアウト（パステル背景・14.5px 基準） ── */
+.devnet-associate-page .callout {
+    margin: 1.75rem 0;
+    border-radius: 12px;
+    border: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    border-left-width: 5px;
+    padding: 1rem 1.25rem 0.5rem;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    font-size: 14.5px;
+}
+
+.devnet-associate-page .callout > .callout-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.devnet-associate-page .callout .table-wrap {
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+}
+
+.devnet-associate-page .callout.practice {
+    border-color: var(--color-devnet-associate-gold-line);
+    border-left-color: var(--color-devnet-associate-gold, #b8802a);
+    background-color: var(--color-devnet-associate-gold-50, #faf1df);
+}
+
+.devnet-associate-page .callout.practice > .callout-title {
+    color: var(--color-devnet-associate-gold-ink);
+}
+
+.devnet-associate-page .callout.source {
+    border-color: var(--color-devnet-associate-forest-line);
+    border-left-color: var(--color-devnet-associate-forest, #1b6e6a);
+    background-color: var(--color-devnet-associate-forest-50, #e6f2f0);
+}
+
+.devnet-associate-page .callout.source > .callout-title {
+    color: var(--color-devnet-associate-forest, #1b6e6a);
+}
+
+.devnet-associate-page .callout.note {
+    border-color: var(--color-devnet-associate-plum-line);
+    border-left-color: var(--color-devnet-associate-plum, #8c3a5c);
+    background-color: var(--color-devnet-associate-plum-50, #f7ebf0);
+}
+
+.devnet-associate-page .callout.note > .callout-title {
+    color: var(--color-devnet-associate-plum, #8c3a5c);
+}
+
+/* ── 参考文献リスト ── */
+.devnet-associate-page .refs {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+    font-size: 14px;
+}
+
+.devnet-associate-page .ref {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    border: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-size: 14px;
+}
+
+.devnet-associate-page .ref .badge {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--color-devnet-associate-forest, #1b6e6a);
+    color: var(--color-devnet-associate-paper, #f6f7f9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1;
+}
+
+.devnet-associate-page .ref-title {
+    font-weight: 600;
+    color: var(--color-devnet-associate-ink, #161b26);
+    font-size: 14.5px;
+}
+
+.devnet-associate-page .ref-title .star {
+    color: var(--color-devnet-associate-gold, #b8802a);
+    margin-right: 0.3rem;
+}
+
+.devnet-associate-page .ref-body a {
+    display: block;
+    font-size: 13.5px;
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+}
+
+/* ── 直前チェックリスト ── */
+.devnet-associate-page .checks {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0 0 1.5rem;
+    counter-reset: chk;
+    font-size: 14px;
+}
+
+.devnet-associate-page .check {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    cursor: pointer;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    border: 1px solid var(--color-devnet-associate-line, #d9dee8);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    counter-increment: chk;
+    font-size: 14px;
+    transition: all 0.15s ease-in-out;
+}
+
+.devnet-associate-page .check::before {
+    content: counter(chk);
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--color-devnet-associate-indigo-50, #eef1f8);
+    color: var(--color-devnet-associate-indigo, #2e3f72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1;
+}
+
+.devnet-associate-page .check input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.devnet-associate-page .check .box {
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.15rem;
+    border: 2px solid var(--color-devnet-associate-line-2, #c2c9d8);
+    border-radius: 6px;
+    background-color: var(--color-devnet-associate-surface, #ffffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+}
+
+/* 視覚的に隠した input のキーボードフォーカスを .box に可視化する */
+.devnet-associate-page .check input:focus-visible + .box {
+    outline: 2px solid var(--color-devnet-associate-indigo, #2e3f72);
+    outline-offset: 2px;
+}
+
+.devnet-associate-page .check .box::after {
+    content: '✓';
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.devnet-associate-page .check .txt {
+    flex: 1;
+}
+
+.devnet-associate-page .check .cat {
+    display: block;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.devnet-associate-page .check.checked {
+    background-color: var(--color-devnet-associate-forest-50, #e6f2f0);
+    border-color: var(--color-devnet-associate-forest-line);
+}
+
+.devnet-associate-page .check.checked .box {
+    background-color: var(--color-devnet-associate-forest, #1b6e6a);
+    border-color: var(--color-devnet-associate-forest, #1b6e6a);
+    color: var(--color-devnet-associate-paper, #f6f7f9);
+}
+
+.devnet-associate-page .check.checked .body {
+    text-decoration: line-through;
+    color: var(--color-devnet-associate-ink-3, #5f687c);
+}
+
+.devnet-associate-page .footer {
+    padding: 2.5rem clamp(2.5rem, 5vw, 6rem) 3.5rem;
+    color: var(--color-devnet-associate-ink-2, #4a5367);
+    font-size: 14px;
+    border-top: 1px solid var(--color-devnet-associate-line, #d9dee8);
+}
+
+/* ── モーション軽減設定の尊重 ── */
+@media (prefers-reduced-motion: reduce) {
+    .devnet-associate-page .sidebar nav a,
+    .devnet-associate-page .check {
+        transition: none;
+    }
+}
+
+/* ── レスポンシブ ── */
+@media (max-width: 900px) {
+    .devnet-associate-page .sidebar {
+        position: static;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--color-devnet-associate-line, #d9dee8);
+        padding: 1rem;
+    }
+
+    .devnet-associate-page .sidebar nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .devnet-associate-page .nav-group {
+        width: 100%;
+    }
+
+    .devnet-associate-page .layout {
+        margin-left: 0;
+        width: 100%;
+        max-width: none;
+    }
+
+    .devnet-associate-page .hero {
+        padding: 2rem 1.25rem 1.5rem;
+    }
+
+    .devnet-associate-page .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .devnet-associate-page .section {
+        padding: 2rem 1.25rem 0.5rem;
+    }
+
+    .devnet-associate-page .footer {
+        padding: 1.5rem 1.25rem 2rem;
+    }
+}

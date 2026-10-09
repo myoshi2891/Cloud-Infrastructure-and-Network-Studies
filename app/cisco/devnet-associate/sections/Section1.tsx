@@ -1,0 +1,88 @@
+import React from 'react';
+import { Diagram } from '../Diagram';
+import CodeBlock from '../CodeBlock';
+
+/**
+ * Section1 component.
+ */
+export default function Section1() {
+    return (
+        <>
+<section className="section" id="sec-4" tabIndex={-1}>{' '}<h1>第 1 章　Software Development and Design（配点 15%）</h1>{' '}<div className="prose">{' '}<h2>1.1 データ形式：XML・JSON・YAML</h2>{' '}<h3>これは何か</h3>{' '}<p>{' '}プログラム同士やツール間で「データを受け渡す」ための書式です。API
+                        の応答、設定ファイル、Ansible の Playbook など、あらゆる場面で登場します。{' '}</p>{' '}<h3>同じデータを 3 つの形式で表現する</h3>{' '}<p><strong>JSON</strong></p>{' '}<CodeBlock lang="json" lines={[
+    "{",
+    "  \"hostname\": \"sw01\",",
+    "  \"vlans\": [10, 20, 30],",
+    "  \"enabled\": true",
+    "}"
+]} />{' '}<p><strong>YAML</strong></p>{' '}<CodeBlock lang="yaml" lines={[
+    "hostname: sw01",
+    "vlans:",
+    "  - 10",
+    "  - 20",
+    "  - 30",
+    "enabled: true"
+]} />{' '}<p><strong>XML</strong></p>{' '}<CodeBlock lang="xml" lines={[
+    "<device>",
+    "  <hostname>sw01</hostname>",
+    "  <vlans>",
+    "    <vlan>10</vlan>",
+    "    <vlan>20</vlan>",
+    "    <vlan>30</vlan>",
+    "  </vlans>",
+    "  <enabled>true</enabled>",
+    "</device>"
+]} />{' '}<h3>比較表</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">観点</th><th scope="col">JSON</th><th scope="col">YAML</th><th scope="col">XML</th></tr></thead><tbody><tr><td>主な用途</td><td>REST API のデータ交換</td><td>設定ファイル（Ansible、Docker Compose、CI）</td><td>NETCONF、SOAP、古い API</td></tr><tr><td>可読性</td><td>中</td><td>高</td><td>低（タグが冗長）</td></tr><tr><td>コメント</td><td>不可</td><td><strong>可（<code>#</code>）</strong></td><td>可（<code>&lt;!-- --&gt;</code>）</td></tr><tr><td>ブロックの表現</td><td><code>&#123;&#125;</code>{' '}と{' '}<code>[]</code></td><td><strong>インデント（スペース）</strong></td><td>開始／終了タグ</td></tr><tr><td>属性</td><td>なし</td><td>なし</td><td>あり（<code>&lt;a id=&quot;1&quot;&gt;</code>）</td></tr><tr><td>データ型</td><td>文字列・数値・真偽値・null・配列・オブジェクト</td><td>JSON とほぼ同じ（上位互換に近い）</td><td>基本は文字列（型は別途スキーマで定義）</td></tr></tbody></table>{' '}</div>{' '}<div className="callout note">{' '}<h3 className="callout-title">{' '}<i className="ti ti-info-circle"></i>試験のポイント{' '}</h3>{' '}<ul>{' '}<li>{' '}YAML は{' '}<strong>タブ不可・スペースでインデント</strong>。インデントの誤りは構文エラーになる。{' '}</li>{' '}<li>{' '}JSON は{' '}<strong>末尾カンマ不可</strong>、キーは{' '}<strong>ダブルクォート必須</strong>。{' '}</li>{' '}<li>NETCONF は XML、RESTCONF は JSON／XML の両方が使える。</li>{' '}</ul>{' '}</div>{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<ul>{' '}<li>API とのやり取りは JSON、人が編集する設定は YAML と使い分ける。</li>{' '}<li>{' '}YAML を読み込むときは、Python では{' '}<code>yaml.safe_load()</code>{' '}を使う（<code>yaml.load()</code>{' '}は任意コード実行のリスクがある）。{' '}</li>{' '}<li>文字コードは UTF-8 に統一する。</li>{' '}</ul>{' '}</div>{' '}<h2>1.2 データ形式を Python のデータ構造へ変換する（パース）</h2>{' '}<h3>変換の対応</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">形式</th><th scope="col">使うモジュール</th><th scope="col">読み込み</th><th scope="col">書き出し</th><th scope="col">Python での型</th></tr></thead><tbody><tr><td>JSON</td><td>標準{' '}<code>json</code></td><td><code>json.loads()</code>{' '}/{' '}<code>json.load()</code></td><td><code>json.dumps()</code>{' '}/{' '}<code>json.dump()</code></td><td>dict / list</td></tr><tr><td>YAML</td><td>外部{' '}<code>PyYAML</code></td><td><code>yaml.safe_load()</code></td><td><code>yaml.safe_dump()</code></td><td>dict / list</td></tr><tr><td>XML</td><td>標準{' '}<code>xml.etree.ElementTree</code></td><td><code>ET.fromstring()</code>{' '}/{' '}<code>ET.parse()</code></td><td><code>ET.tostring()</code></td><td>Element ツリー</td></tr></tbody></table>{' '}</div>{' '}<h3>コード例</h3>{' '}<CodeBlock lang="python" lines={[
+    "import json",
+    "import yaml",
+    "import xml.etree.ElementTree as ET",
+    "",
+    "json_text = '{\"hostname\": \"sw01\", \"vlans\": [10, 20, 30]}'",
+    "data = json.loads(json_text)            # 文字列 -> dict",
+    "print(data[\"hostname\"])                 # sw01",
+    "print(json.dumps(data, indent=2))       # dict -> 整形済み JSON 文字列",
+    "",
+    "yaml_text = \"\"\"",
+    "hostname: sw01",
+    "vlans: [10, 20, 30]",
+    "\"\"\"",
+    "data2 = yaml.safe_load(yaml_text)",
+    "print(data2[\"vlans\"][0])                # 10",
+    "",
+    "xml_text = \"<device><hostname>sw01</hostname></device>\"",
+    "root = ET.fromstring(xml_text)",
+    "print(root.find(\"hostname\").text)       # sw01"
+]} />{' '}<h3>よくある混同（試験頻出）</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">関数</th><th scope="col">意味</th></tr></thead><tbody><tr><td><code>json.loads(s)</code></td><td>{' '}<strong>文字列</strong>から Python オブジェクトへ（s =
+                                        string）{' '}</td></tr><tr><td><code>json.load(f)</code></td><td><strong>ファイルオブジェクト</strong>から読む</td></tr><tr><td><code>json.dumps(obj)</code></td><td>オブジェクトを<strong>文字列</strong>へ</td></tr><tr><td><code>json.dump(obj, f)</code></td><td>オブジェクトを<strong>ファイル</strong>へ</td></tr></tbody></table>{' '}</div>{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<ul>{' '}<li>{' '}外部から来たデータは、キーの存在確認をする（<code>data.get(&quot;key&quot;)</code>）。{' '}</li>{' '}<li>{' '}例外（<code>json.JSONDecodeError</code>、<code>KeyError</code>）を想定した処理を書く。{' '}</li>{' '}<li>{' '}信頼できない XML は、XXE 攻撃対策として{' '}<code>defusedxml</code>{' '}の利用を検討する。{' '}</li>{' '}</ul>{' '}</div>{' '}<h2>1.3 テスト駆動開発（TDD）</h2>{' '}<h3>これは何か</h3>{' '}<p>{' '}<strong>先にテストを書き、そのテストを通す最小のコードを書く</strong>開発手法です。{' '}</p>{' '}<Diagram id="dg3" />{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">フェーズ</th><th scope="col">やること</th><th scope="col">状態</th></tr></thead><tbody><tr><td>Red</td><td>期待する動作をテストとして書く</td><td>テストは失敗する</td></tr><tr><td>Green</td><td>テストが通る最小限の実装を書く</td><td>テストは成功する</td></tr><tr><td>Refactor</td><td>重複排除・命名改善（テストは通ったまま）</td><td>テストは成功のまま</td></tr></tbody></table>{' '}</div>{' '}<h3>メリット</h3>{' '}<ul>{' '}<li>仕様がテストとして残る。</li>{' '}<li>変更時に<strong>回帰（デグレ）</strong>を早期に発見できる。</li>{' '}<li>小さな単位で設計する習慣がつく。</li>{' '}</ul>{' '}<h3>テストの種類</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">種類</th><th scope="col">対象</th><th scope="col">例</th></tr></thead><tbody><tr><td>単体テスト（Unit）</td><td>関数・クラス単体</td><td>VLAN ID の検証関数</td></tr><tr><td>結合テスト（Integration）</td><td>複数コンポーネントの連携</td><td>アプリと DB の連携</td></tr><tr><td>エンドツーエンド（E2E）</td><td>システム全体</td><td>画面操作から API まで</td></tr></tbody></table>{' '}</div>{' '}<h2>1.4 ソフトウェア開発手法：Agile・Lean・Waterfall</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">観点</th><th scope="col">Waterfall（ウォーターフォール）</th><th scope="col">Agile（アジャイル）</th><th scope="col">Lean（リーン）</th></tr></thead><tbody><tr><td>進め方</td><td>要件→設計→実装→テスト→運用を順に進める</td><td>短い反復（イテレーション）で少しずつ作る</td><td>ムダを排除し価値の流れを最適化</td></tr><tr><td>変更への強さ</td><td>弱い（後戻りが高コスト）</td><td>強い</td><td>強い</td></tr><tr><td>顧客との関わり</td><td>最初と最後が中心</td><td>継続的にフィードバック</td><td>価値の定義に重点</td></tr><tr><td>向く場面</td><td>要件が固定、規制が厳しい</td><td>要件が変わりやすい</td><td>開発・運用全体の効率化</td></tr><tr><td>代表的な用語</td><td>工程、成果物、レビュー</td><td>スプリント、バックログ、Scrum、Kanban</td><td>ムダ（Waste）、フロー、継続的改善</td></tr></tbody></table>{' '}</div>{' '}<Diagram id="dg4" />{' '}<div className="callout note">{' '}<h3 className="callout-title">{' '}<i className="ti ti-info-circle"></i>試験のポイント{' '}</h3>{' '}<ul>{' '}<li>「変化に対応しやすく、短いサイクルで価値を届ける」→ Agile。</li>{' '}<li>「ムダの削減、価値の流れ」→ Lean。</li>{' '}<li>「工程を順番に完了させる」→ Waterfall。</li>{' '}</ul>{' '}</div>{' '}<h2>1.5 コードの構造化：関数・クラス・モジュール</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">単位</th><th scope="col">役割</th><th scope="col">メリット</th></tr></thead><tbody><tr><td>関数（メソッド）</td><td>処理のまとまり</td><td>再利用、テスト容易性、重複削減</td></tr><tr><td>クラス</td><td>データと処理をまとめる（オブジェクト指向）</td><td>状態管理、拡張しやすさ</td></tr><tr><td>モジュール</td><td>{' '}関連する関数・クラスを 1 つの{' '}<code>.py</code>{' '}にまとめる{' '}</td><td>名前空間の整理、コードの分割</td></tr><tr><td>パッケージ</td><td>モジュールをまとめたディレクトリ</td><td>大規模開発、配布</td></tr></tbody></table>{' '}</div>{' '}<CodeBlock lang="python" lines={[
+    "# device.py（モジュール）",
+    "class Device:",
+    "    def __init__(self, hostname, ip):",
+    "        self.hostname = hostname",
+    "        self.ip = ip",
+    "",
+    "    def describe(self):",
+    "        return f\"{self.hostname} ({self.ip})\"",
+    "",
+    "",
+    "def make_devices(rows):",
+    "    return [Device(r[\"hostname\"], r[\"ip\"]) for r in rows]"
+]} />{' '}<CodeBlock lang="python" lines={[
+    "# main.py",
+    "from device import make_devices",
+    "",
+    "devices = make_devices([{\"hostname\": \"sw01\", \"ip\": \"192.0.2.1\"}])",
+    "for d in devices:",
+    "    print(d.describe())"
+]} />{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<ul>{' '}<li>{' '}1 つの関数は 1 つの責務にする（<strong>単一責任の原則</strong>）。{' '}</li>{' '}<li>{' '}同じコードを 2
+                                回書いたら、関数化を検討する（<strong>DRY</strong>）。{' '}</li>{' '}<li>{' '}命名は「何をするか」が分かる名前にする（<code>get_device_list</code>{' '}など）。{' '}</li>{' '}<li>関数には docstring（説明文）と型ヒントを付ける。</li>{' '}</ul>{' '}</div>{' '}<h2>1.6 設計パターン：MVC と Observer</h2>{' '}<h3>MVC（Model-View-Controller）</h3>{' '}<Diagram id="dg5" />{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">要素</th><th scope="col">役割</th><th scope="col">例（Web アプリ）</th></tr></thead><tbody><tr><td>Model</td><td>データと業務ルール</td><td>DB 上のデバイス情報</td></tr><tr><td>View</td><td>表示</td><td>HTML テンプレート</td></tr><tr><td>Controller</td><td>リクエストの受付とモデル／ビューの仲介</td><td>URL ごとの処理関数</td></tr></tbody></table>{' '}</div>{' '}<p>{' '}<strong>利点</strong>：関心事を分離でき、画面だけ差し替えたり、ロジックだけテストしたりしやすい。{' '}</p>{' '}<h3>Observer パターン</h3>{' '}<p>{' '}<strong>あるオブジェクト（Subject）の状態が変わったとき、登録済みの複数のオブジェクト（Observer）へ自動で通知する</strong>仕組みです。Webhook やイベント駆動処理の考え方に通じます。{' '}</p>{' '}<Diagram id="dg6" />{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">パターン</th><th scope="col">一言で</th><th scope="col">使いどころ</th></tr></thead><tbody><tr><td>MVC</td><td>表示・データ・制御を分ける</td><td>Web アプリ、GUI</td></tr><tr><td>Observer</td><td>変化を購読者へ通知</td><td>イベント通知、監視、Webhook</td></tr></tbody></table>{' '}</div>{' '}<h2>1.7 バージョン管理の利点</h2>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">利点</th><th scope="col">説明</th></tr></thead><tbody><tr><td>変更履歴の追跡</td><td>いつ・誰が・なぜ変更したかが残る</td></tr><tr><td>過去の状態へ戻せる</td><td>不具合が出ても復元できる</td></tr><tr><td>並行開発</td><td>ブランチで独立して作業できる</td></tr><tr><td>共同作業</td><td>変更をマージして統合できる</td></tr><tr><td>バックアップ性</td><td>リモートリポジトリにも履歴が残る</td></tr><tr><td>レビューの基盤</td><td>Pull Request／Merge Request で差分を確認できる</td></tr></tbody></table>{' '}</div>{' '}<p>{' '}ネットワーク自動化では、<strong>設定ファイル・Playbook・スクリプトを Git で管理する</strong>ことが基本です（Infrastructure as Code の土台）。{' '}</p>{' '}<h2>1.8 Git の基本操作</h2>{' '}<h3>4 つの領域とコマンドの流れ</h3>{' '}<Diagram id="dg7" />{' '}<h3>コマンド一覧（試験範囲）</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">操作</th><th scope="col">コマンド</th><th scope="col">説明</th></tr></thead><tbody><tr><td>Clone</td><td><code>git clone &lt;URL&gt;</code></td><td>リモートを丸ごと複製</td></tr><tr><td>Add</td><td><code>git add &lt;file&gt;</code></td><td>変更をステージング</td></tr><tr><td>Remove</td><td><code>git rm &lt;file&gt;</code></td><td>ファイルを削除して記録</td></tr><tr><td>Commit</td><td><code>git commit -m &quot;メッセージ&quot;</code></td><td>ステージ済みの変更を履歴へ記録</td></tr><tr><td>Push</td><td><code>git push origin &lt;branch&gt;</code></td><td>ローカルの履歴をリモートへ送る</td></tr><tr><td>Pull</td><td><code>git pull</code></td><td>リモートの変更を取得して統合（fetch + merge）</td></tr><tr><td>Branch</td><td>{' '}<code>git branch &lt;name&gt;</code>{' '}/{' '}<code>git switch -c &lt;name&gt;</code>{' '}</td><td>ブランチ作成・切り替え</td></tr><tr><td>Merge</td><td><code>git merge &lt;branch&gt;</code></td><td>別ブランチの変更を統合</td></tr><tr><td>diff</td><td><code>git diff</code></td><td>差分を表示</td></tr><tr><td>status / log</td><td>{' '}<code>git status</code>{' '}/{' '}<code>git log --oneline</code>{' '}</td><td>状態・履歴の確認</td></tr></tbody></table>{' '}</div>{' '}<h3>ブランチとマージ</h3>{' '}<Diagram id="dg8" />{' '}<h3>コンフリクト（競合）の解決手順</h3>{' '}<p>{' '}同じファイルの同じ箇所を別々に変更してマージすると、Git
+                        は自動統合できず競合が発生します。{' '}</p>{' '}<Diagram id="dg9" />{' '}<p>競合マーカーの形式：</p>{' '}<CodeBlock lang="text" lines={[
+    "<<<<<<< HEAD",
+    "mtu: 1500",
+    "=======",
+    "mtu: 9000",
+    ">>>>>>> feature-mtu"
+]} />{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">マーカー</th><th scope="col">意味</th></tr></thead><tbody><tr><td>{' '}<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>{' '}から{' '}<code>=======</code>{' '}まで{' '}</td><td>現在のブランチ側の内容</td></tr><tr><td>{' '}<code>=======</code>{' '}から{' '}<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>{' '}まで{' '}</td><td>マージしようとしているブランチ側の内容</td></tr></tbody></table>{' '}</div>{' '}<div className="callout practice">{' '}<h3 className="callout-title"><i className="ti ti-bulb"></i>ベストプラクティス</h3>{' '}<div className="table-wrap">{' '}<table><thead><tr><th scope="col">{' '}項目{' '}</th><th scope="col">{' '}推奨{' '}</th></tr></thead><tbody><tr><td>{' '}コミット単位{' '}</td><td>{' '}1 コミット 1 目的。小さく頻繁に{' '}</td></tr><tr><td>{' '}コミットメッセージ{' '}</td><td>{' '}「何を・なぜ」を簡潔に（例：<code>Add VLAN 30 to access switch template</code>）{' '}</td></tr><tr><td>{' '}ブランチ運用{' '}</td><td>{' '}<code>main</code>{' '}に直接コミットせず、機能ごとにブランチを切る{' '}</td></tr><tr><td>{' '}<code>.gitignore</code>{' '}</td><td>{' '}仮想環境、<code>__pycache__</code>、<code>.env</code>、鍵ファイルを除外{' '}</td></tr><tr><td>{' '}秘密情報{' '}</td><td>{' '}API キー・パスワードをコミットしない（履歴に残ると削除が困難）{' '}</td></tr><tr><td>{' '}プル前{' '}</td><td>{' '}作業開始時に{' '}<code>git pull</code>{' '}で最新化する{' '}</td></tr><tr><td>{' '}レビュー{' '}</td><td>{' '}Pull Request を通してレビューしてからマージ{' '}</td></tr></tbody></table>{' '}</div>{' '}</div>{' '}<h3>確認問題（第 1 章）</h3>{' '}<ol>{' '}<li>YAML でインデントに使ってよいのは、タブとスペースのどちらか。</li>{' '}<li>{' '}<code>json.loads()</code>{' '}と{' '}<code>json.load()</code>{' '}の違いは何か。{' '}</li>{' '}<li>TDD のサイクルの 3 段階を答えよ。</li>{' '}<li>{' '}Git
+                            で「リモートの変更を取得して自分のブランチに統合する」コマンドは何か。{' '}</li>{' '}</ol>{' '}<p>（解答は巻末）</p>{' '}<div className="callout source">{' '}<h3 className="callout-title">{' '}<i className="ti ti-external-link"></i>第 1 章の参考ソース{' '}</h3>{' '}<div className="refs">{' '}<div className="ref">{' '}<span className="badge">1</span>{' '}<div className="ref-body">{' '}<div className="ref-title">Cisco 公式 Exam Topics（200-901）</div>{' '}<a href="https://www.cisco.com/c/dam/en_us/training-events/le31/le46/cln/marketing/exam-topics/200-901-DEVASC.pdf" rel="noopener noreferrer" target="_blank">https://www.cisco.com/c/dam/en_us/training-events/le31/le46/cln/marketing/exam-topics/200-901-DEVASC.pdf</a>{' '}</div>{' '}</div>{' '}<div className="ref">{' '}<span className="badge">2</span>{' '}<div className="ref-body">{' '}<div className="ref-title">Git 公式ドキュメント</div>{' '}<a href="https://git-scm.com/doc" rel="noopener noreferrer" target="_blank">https://git-scm.com/doc</a>{' '}</div>{' '}</div>{' '}<div className="ref">{' '}<span className="badge">3</span>{' '}<div className="ref-body">{' '}<div className="ref-title">Python 公式ドキュメント（json）</div>{' '}<a href="https://docs.python.org/3/library/json.html" rel="noopener noreferrer" target="_blank">https://docs.python.org/3/library/json.html</a>{' '}</div>{' '}</div>{' '}<div className="ref">{' '}<span className="badge">4</span>{' '}<div className="ref-body">{' '}<div className="ref-title">PyYAML ドキュメント</div>{' '}<a href="https://pyyaml.org/wiki/PyYAMLDocumentation" rel="noopener noreferrer" target="_blank">https://pyyaml.org/wiki/PyYAMLDocumentation</a>{' '}</div>{' '}</div>{' '}<div className="ref">{' '}<span className="badge">5</span>{' '}<div className="ref-body">{' '}<div className="ref-title">JSON の仕様（RFC 8259）</div>{' '}<a href="https://www.rfc-editor.org/rfc/rfc8259" rel="noopener noreferrer" target="_blank">https://www.rfc-editor.org/rfc/rfc8259</a>{' '}</div>{' '}</div>{' '}</div>{' '}</div>{' '}</div>{' '}</section>
+        </>
+    );
+}

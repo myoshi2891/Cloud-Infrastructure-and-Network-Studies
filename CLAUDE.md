@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-10-04
+Updated 2026-10-07
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -439,10 +439,12 @@ app/
       page.module.css               # ページ固有スタイル（CSS Modules）
     devnet-associate/
       page.tsx                      # Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド（Server）
-      DevNetAssociateGuide.tsx      # 本文＋インタラクション（client。全12セクション、Mermaid等）
-      NavBar.tsx                    # サイドバーナビ（IntersectionObserver）
-      constants.ts                  # Mermaid 図定義（4図）
-      page.module.css               # ページ固有スタイル（CSS Modules／ガイド固有トークン）
+      DevNetAssociateGuide.tsx      # 本文＋全体ラッパー（Client）
+      NavBar.tsx                    # サイドバー目次ナビ（ScrollSpy、280px）
+      constants.ts                  # 全34図 Mermaid 定義、NAV_ITEMS
+      Diagram.tsx                   # MermaidDiagram メモ化コンポーネント
+      page.css                      # ページ固有スタイル（グローバル3層トークン参照、280pxサイドバー契約）
+      sections/                     # 9コンポーネント分割（HeroSection, SectionIntro, Section1〜7）
     ccde/
       complete-guide/
         page.tsx                    # Cisco CCDE試験 完全ガイド（Server。メタデータ定義）
@@ -548,6 +550,36 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    cloudops-engineer-associate/
+      page.tsx                      # AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド (Server)
+      CloudOpsGuide.tsx             # 本文＋インタラクション (Client)
+      NavBar.tsx                    # サイドバーナビ (IntersectionObserver)
+      Diagram.tsx                   # Mermaid 図レンダラー
+      CodeBlock.tsx                 # シンタックスハイライトコードブロック
+      constants.ts                  # ナビ項目・Mermaid 図・コードブロック定数
+      page.css                      # ウォームペーパーライトテーマ・280pxサイドバー契約
+      sections/                     # 分割セクション (HeroSection, SectionIntro, SectionDomain1~5, SectionAppendix)
+    developer-associate/domain1/
+      page.tsx                      # DVA-C02 AWSサービスを使用した開発 (Server、metadata、自己ホストフォント、CSS)
+      DevelopmentGuide.tsx          # memo化した全本文 (Client)
+      NavBar.tsx                    # 38目次・見出しscroll spy・drawer・hashとfocus
+      constants.ts                  # 原本38目次と31図の単一正本
+      Diagram.tsx                   # 原本ライト配色・14px採寸・自然倍率・memo化
+      mermaid-theme.json            # 原本設定から独立解決したMermaid派生色
+      CodeBlock.tsx                 # 言語見出し付き18コード例・空行・構文色
+      page.css                      # 原本ライト配色・Source Serif 4・本文14px・288px幅・点と番号
+      sections/                     # 導入・Task見出し・29スキル・総まとめ等の38コンポーネント
+    developer-associate/domain2/
+      page.tsx                      # DVA-C02 ドメイン2 セキュリティ (Server、metadata、CSS)
+      SecurityGuide.tsx             # 全本文と20項目のチェック状態 (Client)
+      NavBar.tsx                    # 26目次・scroll spy・モバイル開閉・hashとfocus
+      constants.ts                  # 単一目次正本・原本35図・チェック件数
+      Diagram.tsx                   # memo化・原本ライト配色・自然倍率のMermaid図
+      mermaid-theme.json            # 原本から独立解決したMermaid設定（共通ダーク設定の混入を防ぐ）
+      CodeBlock.tsx                 # 40コード例の空行・インデント・構文色
+      ChecklistItem.tsx             # Context経由のチェック項目
+      page.css                      # 原本ライト配色・Source Serif 4・本文と図14px・300px幅・点と番号の装飾
+      sections/                     # Step 0〜23、Task見出し、付録A/Bの29コンポーネント
   recommended-books/
     accelerate/
       page.tsx                      # 『Accelerate』LeanとDevOpsの科学 完全ガイド (Server)
@@ -718,7 +750,7 @@ archive/                            # 移行済み資料の正規アーカイブ
 - **コードブロック内の改行 (`.code-block`)**: JSX変換時、コード内の改行に `{"\n"}` を使用せず、各行を `<div className="code-line">...</div>` でラップすること。`.code-line` は `white-space: pre` を適用してインデントを保持し、`map` 展開時は安定した `key` を付与すること。
 - **表形式データの構造化**: テキストのスペース揃えで列を表現したデータは、フォント変更による列ズレを防ぐため、必ず `<table>` 要素に変換すること。その際、必ず `<thead>` と `<th scope="col">` を用いたセマンティックな構造にすること。
 - **CSS変数・テーマトークンの適用**: `globals.css` の3層アーキテクチャ CSS 変数（`--color-background`, `--color-foreground`, `--color-border` など）を厳格に使用すること。独自のローカル変数定義や `--color-bg-primary` のような実在しないトークンの使用は避ける。コンポーネントレベルの CSS 内で新たなカスタムプロパティ（`--*`）を定義することは禁止する。
-- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。この契約は `__tests__/guide-content-widths.test.ts` で全24スタイルシートを検証する。
+- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
 - **グローバルメニューの運用（データ駆動）**: ナビゲーションは `app/constants.ts` の `ALL_EXAMS` を正本としている（`EXAMS` はそこから派生する公開値）。新ページ追加時は `ALL_EXAMS` に `Exam` エントリを追加し（`status: 'coming-soon'` → ページ完成後 `'available'` または省略）、`app/navigation.ts` の `toNavTree` が自動でグルーピングするため **`components/Header.tsx` は直接編集しない**。
 - **PCNE セクションページの `metadata.title` 規約**: `PCNE S<n>: <セクション名> | Google Cloud 認定試験対策` に統一する。Next.js の `title.template` は **それを定義したセグメント自身には適用されず、子孫ルートに継承される**。`app/gcl/professional-cloud-network-engineer/layout.tsx` は `title` をプレーン文字列で置いているだけで新しい `template` を定義していないため、ルート `app/layout.tsx` の `template: '%s | Cloud Infrastructure Studies'` は **PCNE サブツリーにもそのまま継承される**（実際の `<title>` は `PCNE S<n>: … | Google Cloud 認定試験対策 | Cloud Infrastructure Studies`）。`| Google Cloud 認定試験対策` はその上に乗せる PCNE 固有の命名規約であり、`__tests__/gcl/professional-cloud-network-engineer/section-title-convention.test.ts` はこの規約への準拠のみを検証する。
 - **移行元ファイルのアーカイブ**: 移行元は削除せず `archive/` 配下へ移動する。Cisco資料の正規保存先は `archive/Cisco/html/` と `archive/Cisco/md/` とし、`Gcl_Archive/Cisco` は作成・使用しない。
@@ -736,3 +768,13 @@ archive/                            # 移行済み資料の正規アーカイブ
 ページCSSの `.mermaid-target { justify-content: center; }` が、共通Mermaidコンポーネントの `safe center` を詳細度で上書きし、横長SVGの左側が負のスクロール領域へはみ出していた。ページの指定を `safe center` に変更し、収まる図は中央寄せ、収まらない図は左寄せへ退避させる。図のDSL・自然倍率・文字サイズは保持。
 
 Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測は未実施、npm・ビルド・Playwrightは実行しない。
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -14,6 +14,92 @@
  */
 
 @theme {
+    /* Layer 3: DVA Domain 1 原本ライト配色・書体 */
+    --color-dva-development-paper: #faf7f0;
+    --color-dva-development-paper-card: #ffffff;
+    --color-dva-development-paper-alt: #f1ece0;
+    --color-dva-development-ink: #1f2430;
+    --color-dva-development-ink-soft: #434958;
+    --color-dva-development-ink-faint: #6b6354;
+    --color-dva-development-indigo: #3b4fa8;
+    --color-dva-development-indigo-deep: #232f7a;
+    --color-dva-development-indigo-soft: #e8ebfa;
+    --color-dva-development-gold: #7d5c14;
+    --color-dva-development-gold-soft: #fbf1d6;
+    --color-dva-development-forest: #2a6446;
+    --color-dva-development-forest-soft: #e1f0e7;
+    --color-dva-development-plum: #7a3b69;
+    --color-dva-development-plum-soft: #f5e6f1;
+    --color-dva-development-border: #ddd5c4;
+    --shadow-dva-development: 0 1px 3px rgba(40,34,20,.08),0 4px 14px rgba(40,34,20,.05);
+    --font-dva-development-body: "Noto Sans JP Variable","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+    --font-dva-development-display: "Source Serif 4 Variable","Noto Serif JP","Hiragino Mincho ProN",Georgia,serif;
+    --font-dva-development-mono: ui-monospace,SFMono-Regular,Menlo,Consolas,"Noto Sans Mono",monospace;
+    --color-dva-development-faf7f0: #faf7f0;
+    --color-dva-development-ffffff: #ffffff;
+    --color-dva-development-f1ece0: #f1ece0;
+    --color-dva-development-1f2430: #1f2430;
+    --color-dva-development-434958: #434958;
+    --color-dva-development-6b6354: #6b6354;
+    --color-dva-development-3b4fa8: #3b4fa8;
+    --color-dva-development-232f7a: #232f7a;
+    --color-dva-development-e8ebfa: #e8ebfa;
+    --color-dva-development-7d5c14: #7d5c14;
+    --color-dva-development-fbf1d6: #fbf1d6;
+    --color-dva-development-2a6446: #2a6446;
+    --color-dva-development-e1f0e7: #e1f0e7;
+    --color-dva-development-7a3b69: #7a3b69;
+    --color-dva-development-f5e6f1: #f5e6f1;
+    --color-dva-development-ddd5c4: #ddd5c4;
+    --color-dva-development-1c2760: #1c2760;
+    --color-dva-development-2b3a85: #2b3a85;
+    --color-dva-development-fff: #fff;
+    --color-dva-development-e6e9ff: #e6e9ff;
+    --color-dva-development-12151d: #12151d;
+    --color-dva-development-7a2f4c: #7a2f4c;
+    --color-dva-development-282c34: #282c34;
+    --color-dva-development-21252b: #21252b;
+    --color-dva-development-c9d1e0: #c9d1e0;
+    --color-dva-development-3a3f4b: #3a3f4b;
+    --color-dva-development-abb2bf: #abb2bf;
+    --color-dva-development-9b2c2c: #9b2c2c;
+    --color-dva-development-fdecec: #fdecec;
+    --color-dva-development-f0b8b8: #f0b8b8;
+    --color-dva-development-94a3b8: #94a3b8;
+    --color-dva-development-c678dd: #c678dd;
+    --color-dva-development-98c379: #98c379;
+    --color-dva-development-e88a91: #e88a91;
+    --color-dva-development-61afef: #61afef;
+    --color-dva-development-e6c07b: #e6c07b;
+    --color-dva-development-d19a66: #d19a66;
+
+    /* Layer 3: DVA Security 原本ライトテーマ・固定装飾色 */
+    --color-dva-paper: #faf7f0;
+    --color-dva-paper-alt: #f2ede0;
+    --color-dva-ink: #1c2333;
+    --color-dva-ink-soft: #4a5266;
+    --color-dva-indigo: #3b3f9e;
+    --color-dva-indigo-soft: #eceefb;
+    --color-dva-gold: #b8892b;
+    --color-dva-forest: #2f6b4f;
+    --color-dva-plum: #6b3a5b;
+    --color-dva-border: #ddd6c4;
+    --color-dva-fff: #fff;
+    --color-dva-2b2f7a: #2b2f7a;
+    --color-dva-3b3f9e: #3b3f9e;
+    --color-dva-5a4a8f: #5a4a8f;
+    --color-dva-f0d9a0: #f0d9a0;
+    --color-dva-e6e8ff: #e6e8ff;
+    --color-dva-1f2335: #1f2335;
+    --color-dva-e6e8f5: #e6e8f5;
+    --color-dva-fff8e6: #fff8e6;
+    --color-dva-4a3b12: #4a3b12;
+    --color-dva-94a3b8: #94a3b8;
+    --color-dva-c678dd: #c678dd;
+    --color-dva-98c379: #98c379;
+    --color-dva-e06c75: #e06c75;
+    --color-dva-d19a66: #d19a66;
+
     /* Layer 1: セマンティックトークン (shadcn/ui 互換) */
     --color-background: #08090f;
     --color-foreground: #e2e8f0;
@@ -469,15 +555,35 @@
     --color-ccna-fundamentals-row-hover: rgba(124, 158, 255, 0.05);
     --color-ccna-fundamentals-code-background: #0a1626;
     --color-ccna-fundamentals-code-foreground: #d7e3fb;
-    --color-devnet-associate-panel: #0d1b2e;
-    --color-devnet-associate-panel-alt: #0f2038;
-    --color-devnet-associate-accent-soft: rgba(124, 158, 255, 0.14);
-    --color-devnet-associate-accent-border: rgba(124, 158, 255, 0.3);
-    --color-devnet-associate-foreground: #e7edf8;
-    --color-devnet-associate-foreground-muted: #93a5c4;
-    --color-devnet-associate-border: rgba(124, 158, 255, 0.16);
-    --color-devnet-associate-warning: #ffb86b;
-    --color-devnet-associate-warning-soft: rgba(255, 184, 107, 0.12);
+    --color-devnet-associate-paper: #f6f7f9;
+    --color-devnet-associate-surface: #ffffff;
+    --color-devnet-associate-ink: #161b26;
+    --color-devnet-associate-ink-2: #4a5367;
+    --color-devnet-associate-ink-3: #5f687c;
+    --color-devnet-associate-indigo: #2e3f72;
+    --color-devnet-associate-indigo-50: #eef1f8;
+    --color-devnet-associate-gold: #b8802a;
+    --color-devnet-associate-gold-50: #faf1df;
+    --color-devnet-associate-forest: #1b6e6a;
+    --color-devnet-associate-forest-50: #e6f2f0;
+    --color-devnet-associate-plum: #8c3a5c;
+    --color-devnet-associate-plum-50: #f7ebf0;
+    --color-devnet-associate-line: #d9dee8;
+    --color-devnet-associate-line-2: #c2c9d8;
+    --color-devnet-associate-panel: #ffffff;
+    --color-devnet-associate-panel-alt: #f6f7f9;
+    --color-devnet-associate-accent-soft: #eef1f8;
+    --color-devnet-associate-accent-border: #d9dee8;
+    --color-devnet-associate-foreground: #161b26;
+    --color-devnet-associate-foreground-muted: #4a5367;
+    --color-devnet-associate-border: #d9dee8;
+    --color-devnet-associate-warning: #b8802a;
+    --color-devnet-associate-warning-soft: #faf1df;
+    --color-devnet-associate-row-alt: #fafbfd;
+    --color-devnet-associate-gold-line: #e7d3a8;
+    --color-devnet-associate-gold-ink: #7a5416;
+    --color-devnet-associate-forest-line: #b9d9d5;
+    --color-devnet-associate-plum-line: #e4c4d2;
     --color-devnet-professional-background: #07111e;
     --color-devnet-professional-elevated: #0d1b2e;
     --color-devnet-professional-panel: #101f36;
@@ -570,6 +676,30 @@
 
     --color-theme-aws-bg: hsl(35 100% 50% / 0.20);
     --color-theme-aws-fg: hsl(35 95% 65%);
+
+    /* AWS CloudOps Engineer - Associate (SOA-C03) Paper Theme */
+    --color-theme-aws-cloudops-paper: #fbf8f1;
+    --color-theme-aws-cloudops-paper-alt: #f3eee3;
+    --color-theme-aws-cloudops-paper-card: #ffffff;
+    --color-theme-aws-cloudops-ink: #2a2620;
+    --color-theme-aws-cloudops-ink-soft: #4a443a;
+    --color-theme-aws-cloudops-ink-faint: #6b6154;
+    --color-theme-aws-cloudops-indigo: #2e3f72;
+    --color-theme-aws-cloudops-indigo-soft: #e9edf8;
+    --color-theme-aws-cloudops-gold: #7d5c14;
+    --color-theme-aws-cloudops-gold-soft: #f6ecd2;
+    --color-theme-aws-cloudops-forest: #2f6b4a;
+    --color-theme-aws-cloudops-forest-soft: #e3f1e8;
+    --color-theme-aws-cloudops-plum: #6b3a62;
+    --color-theme-aws-cloudops-plum-soft: #f3e6f0;
+    --color-theme-aws-cloudops-border: #ddd5c4;
+    --color-theme-aws-cloudops-indigo-deep: #1b2450;
+    --color-theme-aws-cloudops-indigo-bright: #3a4f8c;
+    --color-theme-aws-cloudops-on-indigo: #ffffff;
+    --color-theme-aws-cloudops-on-indigo-muted: #dfe5f7;
+    --color-theme-aws-cloudops-ink-strong: #14110c;
+    --color-theme-aws-cloudops-code-ink: #7a3b12;
+    --color-theme-aws-cloudops-forest-border: #b9d8c5;
 
     --color-theme-cisco-bg: hsl(215 70% 50% / 0.20);
     --color-theme-cisco-fg: hsl(215 95% 70%);
@@ -735,6 +865,7 @@
     --color-surface-subtle: rgba(255, 255, 255, 0.05);
 
     /* @fontsource で自己ホストするフォント。可変フォントのファミリ名は `<Name> Variable` である */
+    --font-dva-serif: 'Source Serif 4 Variable', 'Noto Sans JP Variable', serif;
     --font-display: 'DM Sans Variable', 'DM Sans', sans-serif;
     --font-body: 'Noto Sans JP Variable', 'Noto Sans JP', sans-serif;
     --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
@@ -833,6 +964,8 @@ body {
 .card-professional-agentic-architect { --card-accent: var(--color-theme-professional-agentic-architect-fg); }
 .card-ccna { --card-accent: var(--color-theme-cisco-fg); }
 .card-aws-saa { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-dva { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-cloudops { --card-accent: var(--color-theme-aws-cloudops-indigo); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
 .card-accelerate { --card-accent: var(--color-theme-accelerate-fg); }
 .card-sre { --card-accent: var(--color-theme-sre-fg); }
@@ -900,6 +1033,16 @@ body {
 @utility icon-theme-aws-saa {
     background: var(--color-theme-aws-bg);
     color: var(--color-theme-aws-fg);
+}
+
+@utility icon-theme-aws-dva {
+    background: var(--color-theme-aws-bg);
+    color: var(--color-theme-aws-fg);
+}
+
+@utility icon-theme-aws-cloudops {
+    background: var(--color-theme-aws-cloudops-indigo-soft);
+    color: var(--color-theme-aws-cloudops-indigo);
 }
 
 @utility icon-theme-ccna {

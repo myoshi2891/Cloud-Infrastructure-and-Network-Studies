@@ -1,6 +1,163 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-04)
+(最終更新日: 2026-10-07)
+
+## 2026-10-07: AWS DVA-C02 ドメイン1 開発のNext.js移行（完了）
+
+`Dva-c02-domain1-development-with-aws-services-guide.html` を `/aws/developer-associate/domain1` へ全量移行し、ホーム・AWS Headerに開発32%とセキュリティ26%の両ドメインを登録した。原本ライト配色・Source Serif 4・288pxサイドバーを保持し、前回の文字サイズ指定に合わせて本文・表・コード・目次・図を14pxにした。
+
+原本38セクション・29スキル、h1:1・h2:38・h3:129・h4:108、116表（th287・td1436）、363リスト項目（目次38を含む）、48外部リンク、18コード、31図、193本文ブロックを固定fixtureで全文・順序・構造照合。点・番号・入れ子、言語見出しと全コード行、全アイコン、15解説も保持する。コメント・属性色は14pxでのコントラスト確保のため調整した。
+
+### 段階別コミット
+
+- [x] Inventory: `ee9747c4`、共有抽出器のコード行境界調整 `d664abb8`。
+- [x] Red: `89ee34bd`。全量照合・全CSS宣言・リスト装飾・操作を固定。
+- [x] Scaffold: `a475a45d`。Server/Client分割、目次、図、コード、原本テーマ。
+- [x] 導入: `53369de9`。失敗ログを取り違え先にコミットしたため、表タグ間の整形空白比較を `9dafd4ab` で修正し再検証成功。セル全文・件数は別途厳密照合を維持。
+- [x] Task 1: `b81fa505`（13スキル）。Task 2: `efdf7e3b`（7スキル）。Task 3: `75ccd29c`（9スキル）。各段階の失敗確認・実装後の全文照合を実施。
+- [x] 総まとめ・ひっかけ・15問題・参照・学習法・フッター: `c894e3f6`。
+- [x] 統合Red: `7f6c1dbf`、E2E Red: `cfc5eefd`、目次監視Red: `a2c3d4f6`、Green: `3c94168e`。
+- [x] 構文色・14pxコントラストRed: `5f6b83e5`、Green: `71bd76bf`。
+- [x] 4欠落変異検証: `5cb2b992`。本文・表行・図・リスト点を意図的に削除し、すべて失敗を検出して原状復帰。
+- [x] 原本退避: `7bf60bcc`。HTML/Markdownを `archive/Aws/html/developer-associate/domain1/` と `archive/Aws/md/developer-associate/domain1/` にバイト一致で保存。
+- [x] Spec Sync: `ba0deb6b`。仕様3種・カバレッジ・実行記録・再開プロンプトを同期。
+- [x] 本進捗同期: 本ファイルだけを独立コミット。
+
+### 検証結果
+
+- 関連245件成功。直下とarchive双方の原本を一時的に外したfixture-only実行でも移行・統合28件成功し、退避ファイルは復元済み。
+- 1440px・768px・390pxのE2E 3件成功、各幅axe違反0・コンソールエラー0。全見出し・表セル・リスト全文、全アイコン、14px、31実SVGの原本配色・自然倍率と操作後の倍率不変、目次・hash/focus・Header遮蔽、15解説の開閉を検証。
+- 全体Vitestは214ファイル・2267件中2261成功・既存6失敗。PAA Section 5 td/li、Header SAAのリンク重複、DevNet td、Cisco theme-token-ownershipの旧ファイルパス2件。今回の移行による新規失敗なし。
+- TypeScript・全体ESLint・対象Markdown lint成功。静的集計は867ソース・252対応（29%）・221テストファイル。
+- npm・ビルドはユーザー指示により未実行、目視確認はユーザー担当。未移行HTML17件。詳細は `docs/TEST_COVERAGE_PROGRESS.md` を参照。
+
+## 2026-10-07: DVA本文・表・コード・目次・図を14pxへ調整（完了）
+
+ユーザー指定により、このページの本文・表・コード・目次を0.875rem（14px）、図の文字を14pxへ変更した。見出しも縮小し、h2はデスクトップ24.5px・モバイル19.6px。原本ライト配色・フォント・300pxサイドバーと、全文・リスト装飾・操作を保持する。
+
+- Red `97e839f7`、比率計算の数値正規化 `59e25552`、Green `41d21929`。原本fixtureの変更なし。
+- 関連203件成功（移行・統合28、共通Mermaid23、自己ホストフォント22、幅契約130）。1440px・768px・390pxのE2E 3件成功。文字サイズ・全35図の自然倍率・本文・リスト・目次・チェックを検証し、各幅axe違反0、コンソールエラー0。
+- 対象ESLint・Markdown lint成功。全体Vitestは今回再実行せず、前回結果は下の復元記録に保持。npm・ビルド未実行。
+- 仕様同期 `4e0ff7a7`。前回進捗同期 `83565838`。本ファイルのみ最後に独立コミット。
+
+## 2026-10-07: DVA原本ライトテーマ・文字サイズ・図配色の復元（完了）
+
+原本HTMLを正とするユーザー指定に従い、`/aws/developer-associate/domain2` のライト配色・Source Serif 4・本文17px（1rem=16px）・300pxサイドバーを復元した。原本の全CSS宣言とメディア条件を保持し、リストの点・番号・20チェック・26目次の全量照合も継続する。35図は原本だけを使った独立初期化でMermaid設定を解決し、共通ダーク設定・固定配色の混入を防いだ。図の採寸にも自己ホストNoto Sans JPを使う。
+
+- Red: `7ecced6a`（配色・フォント・幅）、`1d64637b`（図設定）、`fd8f57fc`（共通配色上書き）、`a0c15aa7`（共有ダーク既定値）、`b1d9e0c8`（図の自己ホストフォント）。
+- 原本図設定fixture: `2a5831da`。原本から再生成して差分なしを確認。
+- Green: `f3b6b581`（配色・フォント・幅）、`b3ff3297`（原本図設定保持）、`1e1b0e0b`（図フォント）。
+- 関連216件とPAA Section 1/2の再検証40件、3画面幅E2E 3件成功。実配色・フォント読込・文字サイズ・図の自然倍率・リスト・目次・チェック操作を確認。各幅axe違反0、コンソールエラー0。
+- 全体Vitestは212ファイル・2238件中2230成功・8失敗。既存6失敗と負荷競合によるMermaid解析のタイムアウト2件で、後者は単独再検証40件が成功。TypeScript・全体ESLint・対象Markdown lint成功。
+- npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。詳細は `docs/TEST_COVERAGE_PROGRESS.md` のライトテーマ復元記録を参照。
+
+## 2026-10-07: AWS DVA-C02 ドメイン2 セキュリティのNext.js移行（完了）
+
+`Aws-dva-c02-domain2-security-guide.html` を `/aws/developer-associate/domain2` に全量移行し、ホームのDVAカードとAWS Headerナビへ登録した。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、29分割セクションで構成する。
+
+固定fixtureでh1:4・h2:26・h3:219・h4:0、110表（th:264・td:1348）、234リスト項目、158外部リンク、40コードブロック、35図、177本文ブロックを全文・順序・構造まで照合した。原本の全CSS宣言と装飾、通常リストの点・番号、入れ子、20チェック項目のマーカー非表示、コードの空行・インデント・構文色・内外余白を検証する。26目次、hash/focus、Escape、現在地表示、固定Headerとの位置関係も保持した。
+
+### 段階別コミット
+
+- [x] Inventory: `9b82a835`（本文・忠実性・CSS/図/構造のfixture）。
+- [x] Red: `61dc00dd`（全量テスト）。テストハーネス・構文色の条件修正は実装と分離してコミット。
+- [x] Scaffold: `2fd6b875`（Server/Client構成、目次、図、チェック、コード、CSS）。
+- [x] 導入: `98ff9489`（Step 0〜1）。
+- [x] Task 1: `2ff529aa`（Step 2〜9、認証・認可）。
+- [x] Task 2: `4e41fbf4`（Step 10〜16、暗号化・鍵・証明書）。
+- [x] Task 3・総まとめ・付録: `ee988069`（Step 17〜23・付録A/B、Green）。
+- [x] 統合Red: `e32b8337`。ブラウザで検出した現在地・a11y・コード余白の回帰もRedコミット後に修正。
+- [x] 統合・Refactor: `6675afcd`（ホーム/AWSナビ、文字色、a11y、scroll spy）。
+- [x] 原本退避: `a9108a46`。HTMLとMarkdownはローカル専用の `archive/Aws/html/developer-associate/domain2/` と `archive/Aws/md/developer-associate/domain2/` に保存し、Git固定リビジョンとバイト一致を確認。
+- [x] 再描画抑制Red: `f2c96560`、Green: `0807b644`。20チェック操作で静的本文を再描画しないようmemo化。
+- [x] Spec Sync: `0ee66553`、`ce012eec`（仕様3種・カバレッジ・再開プロンプト）。
+- [x] 本進捗同期: 本ファイルだけを別コミット。
+
+### 検証結果
+
+- 移行・統合26件、幅契約130件、3系統ミラー同期14件を含む関連170件成功。
+- 原本を直下とarchiveの双方から一時的に外したfixture-only実行でも26件成功。本文・表行・図・リスト点の削除をそれぞれ検出する4変異チェックも成功し、原状復元済み。
+- 1440px・768px・390pxのE2E 3件成功、各幅でaxe違反0件。35実SVGの自然倍率と操作後の倍率不変、リスト装飾、モバイル目次、Header遮蔽、コンソールエラー、チェック操作を検証。
+- TypeScript・全体ESLint・対象Markdown lint成功。全体Vitestは212ファイル・2236件中2230成功・移行前からの6失敗（PAA Section 5のtd/li、Header SAAのリンク重複、DevNet td、Cisco theme-token-ownershipの2件）。新規失敗なし。
+- npm・本番ビルドはユーザー指示により未実行。目視確認はユーザー担当。詳細は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-07実行記録を参照。
+
+## 2026-10-07: AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Aws-soa-c03-guide.html`（および `Aws-soa-c03-guide.md`）を、Next.js App Router 構成 (`page.tsx`, `CloudOpsGuide.tsx`, `NavBar.tsx`, `constants.ts`, `Diagram.tsx`, `CodeBlock.tsx`, `page.css` + `sections/`) で `/aws/cloudops-engineer-associate` ルートへ移行。見出し(h1:7, h2:21, h3:89, h4:300)、全206個のテーブル（th:443, td:1095）、全68個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(470件)、全コードブロック(10件・.code-line構造)、全外部リンク(181件)、全本文・注釈ブロック(204件)、練習問題(20問完全収録)を一切の省略・要約なしで100%全量移植。グローバルナビ（`AWS` プロバイダ）および `app/constants.ts` に登録。原本ファイル（`Aws-soa-c03-guide.html` および `Aws-soa-c03-guide.md`）を `archive/Aws/html/cloudops/` および `archive/Aws/md/cloudops/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for aws-cloudops-engineer-associate` (`422357a8`)
+- [x] **Step 1 (Red)**: `test(aws): add failing tests for aws-cloudops-engineer-associate guide migration` (`96bbcd04`)
+- [x] **Step 2-1 (Scaffold & Intro)**: `feat(aws): setup foundation, constants, styles, and intro for aws-cloudops-engineer-associate guide` (`f2e5d0cd`)
+- [x] **Step 2-2 (Domain 1)**: `feat(aws): implement domain 1 for aws-cloudops-engineer-associate guide` (`dc9ffdee`)
+- [x] **Step 2-3 (Domain 2)**: `feat(aws): implement domain 2 for aws-cloudops-engineer-associate guide` (`8d54db11`)
+- [x] **Step 2-4 (Domain 3)**: `feat(aws): implement domain 3 for aws-cloudops-engineer-associate guide` (`26a6ac86`)
+- [x] **Step 2-5 (Domain 4)**: `feat(aws): implement domain 4 for aws-cloudops-engineer-associate guide` (`06ba235f`)
+- [x] **Step 2-6 (Domain 5)**: `feat(aws): implement domain 5 for aws-cloudops-engineer-associate guide` (`bed0e526`)
+- [x] **Step 2-7 (Appendix & Green)**: `feat(aws): implement appendix and pass all tests for aws-cloudops-engineer-associate guide` (`f75515d2`)
+- [x] **Step 3 (Refactor)**: `refactor(aws): integrate aws-cloudops-engineer-associate into routing and update docs` (`23812db8`)
+- [x] **Step 4 (Archive & Sync)**: `chore(docs): update MIGRATION_PROGRESS.md and archive aws-cloudops sources`
+
+### 関連ファイル
+
+- [app/aws/cloudops-engineer-associate/page.tsx](app/aws/cloudops-engineer-associate/page.tsx)
+- [app/aws/cloudops-engineer-associate/CloudOpsGuide.tsx](app/aws/cloudops-engineer-associate/CloudOpsGuide.tsx)
+- [app/aws/cloudops-engineer-associate/NavBar.tsx](app/aws/cloudops-engineer-associate/NavBar.tsx)
+- [app/aws/cloudops-engineer-associate/constants.ts](app/aws/cloudops-engineer-associate/constants.ts)
+- [app/aws/cloudops-engineer-associate/Diagram.tsx](app/aws/cloudops-engineer-associate/Diagram.tsx)
+- [app/aws/cloudops-engineer-associate/CodeBlock.tsx](app/aws/cloudops-engineer-associate/CodeBlock.tsx)
+- [app/aws/cloudops-engineer-associate/page.css](app/aws/cloudops-engineer-associate/page.css)
+- [app/aws/cloudops-engineer-associate/sections/](app/aws/cloudops-engineer-associate/sections/)
+- [本文・全量移行テスト](__tests__/aws/cloudops-engineer-associate/page.test.tsx)
+- [サイドバー幅契約テスト](__tests__/guide-content-widths.test.ts)
+- [docs/migration-inventory/aws-cloudops-engineer-associate.json](docs/migration-inventory/aws-cloudops-engineer-associate.json)
+- [archive/Aws/html/cloudops/Aws-soa-c03-guide.html](archive/Aws/html/cloudops/Aws-soa-c03-guide.html)
+- [archive/Aws/md/cloudops/Aws-soa-c03-guide.md](archive/Aws/md/cloudops/Aws-soa-c03-guide.md)
+- [app/constants.ts](app/constants.ts)
+- [app/globals.css](app/globals.css)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
+
+## 2026-10-07: Cisco Certified DevNet Associate (200-901 / CCNA Automation) 完全対策ガイド 100%全量移行 (完了)
+
+### 目的
+
+`Devnet-associate-guide.html`（および `Devnet-associate-guide.md`）を、Next.js App Router 構成 (`page.tsx`, `DevNetAssociateGuide.tsx`, `NavBar.tsx`, `constants.ts`, `Diagram.tsx`, `page.css` + `sections/`) で `/cisco/devnet-associate` ルートへ移行。見出し(h1:7, h2:40, h3:154, h4:0)、全112個のテーブル（th:242, td:609）、全34個のMermaid図解（preserveNaturalScale・aria-label付き）、全リスト(110件)、全コードブロック(31件・.code-line構造)、全外部リンク(83件)、全本文・注釈ブロック(100件)を一切の省略・要約なしで100%全量移植。原本ファイル（`Devnet-associate-guide.html` および `Devnet-associate-guide.md`）を `archive/Cisco/html/devnet/` および `archive/Cisco/md/devnet/` へ退避。
+
+### 完了済みステップ
+
+- [x] **Step 0 (Inventory)**: `chore(migration): add content inventory for devnet-associate-guide` (`e6bec900`)
+- [x] **Step 1 (Red)**: `test(cisco): add failing tests for devnet-associate guide migration` (`faba9497`)
+- [x] **Step 2 (Green)**: `feat(cisco): implement devnet-associate guide to pass tests` (`4dd3d021`)
+- [x] **Step 3 (Refactor)**: `refactor(cisco): integrate devnet-associate guide and archive sources` (`7440f2d9`)
+- [x] **Step 4 (Docs Sync)**: ドキュメント同期と進捗記録
+
+### 関連ファイル
+
+- [app/cisco/devnet-associate/page.tsx](app/cisco/devnet-associate/page.tsx)
+- [app/cisco/devnet-associate/DevNetAssociateGuide.tsx](app/cisco/devnet-associate/DevNetAssociateGuide.tsx)
+- [app/cisco/devnet-associate/NavBar.tsx](app/cisco/devnet-associate/NavBar.tsx)
+- [app/cisco/devnet-associate/constants.ts](app/cisco/devnet-associate/constants.ts)
+- [app/cisco/devnet-associate/Diagram.tsx](app/cisco/devnet-associate/Diagram.tsx)
+- [app/cisco/devnet-associate/page.css](app/cisco/devnet-associate/page.css)
+- [app/cisco/devnet-associate/sections/](app/cisco/devnet-associate/sections/)
+- [本文・全量移行テスト](__tests__/cisco/devnet-associate/page.test.tsx)
+- [サイドバー幅契約テスト](__tests__/guide-content-widths.test.ts)
+- [docs/migration-inventory/devnet-associate-guide.json](docs/migration-inventory/devnet-associate-guide.json)
+- [archive/Cisco/html/devnet/Devnet-associate-guide.html](archive/Cisco/html/devnet/Devnet-associate-guide.html)
+- [archive/Cisco/md/devnet/Devnet-associate-guide.md](archive/Cisco/md/devnet/Devnet-associate-guide.md)
+- [app/constants.ts](app/constants.ts)
+- [GEMINI.md](GEMINI.md)
+- [CLAUDE.md](CLAUDE.md)
+- [MIGRATION_PROGRESS.md](MIGRATION_PROGRESS.md)
+
+---
 
 ## 2026-10-04: TCP/IP Illustrated, Volume 1: The Protocols（第2版）完全解説ガイド 100%全量移行 (完了)
 
@@ -1368,14 +1525,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** Computer Networks（Tanenbaum）HTML全量移行・Books統合
-- **最終更新日:** 2026-10-04
-- **最新実装 HEAD:** `5eb7ed51`
-- **仕様同期コミット:** `d6620986`
-- **前回進捗同期コミット:** `251fb377`
-- **検証状態:** 移行23件・関連141件・3001番E2E 3件成功、axe違反0件。型チェック・Lint成功。全体Vitestは2121成功/2既知失敗（PAA Section 5の表セル・リスト全文不一致）。
-- **ビルド状態:** npm・ビルドはユーザー指示に従い未実行。目視確認は未実施（自動のDOM検証とPlaywright検証で代替）。
-- **次の作業:** PAA Section 5の表セル・リストの既知不一致を別タスクで調査する。
+- **最新完了タスク:** AWS DVA-C02 ドメイン1 開発のNext.js全量移行
+- **最終更新日:** 2026-10-07
+- **最新実装 HEAD:** `7bf60bcc`
+- **仕様同期コミット:** `ba0deb6b`
+- **前回進捗同期コミット:** `2c4c019d`
+- **検証状態:** 関連245件・3画面幅E2E 3件成功、各幅axe違反0。全体Vitestは2261成功・既存6失敗（214ファイル・2267件）。TypeScript・全体ESLint・Markdown lint成功。原本不在28件・4欠落変異検証も成功。
+- **ビルド状態:** npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。
+- **HTML残数:** 直下18件（移行済みTanenbaum原本1件・未移行17件）。
+- **次の作業:** ユーザーの目視確認。既存6失敗の調査は別タスク。次の移行候補は `Aws-dva-c02-domain3-deployment-guide.html`。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -2714,9 +2872,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-あなたは熟練したフロントエンドエンジニアであり、Next.js (App Router) の移行スペシャリストです。
-最新実装 HEAD は `5eb7ed51`、仕様同期は `d6620986`、前回進捗同期コミットは `251fb377` です。Tanenbaumガイドの移行23件・関連141件、3001番のE2E 3件（axe違反0件）、型チェック、Lintが成功し、全体Vitestは2121成功/既知の2失敗です。npm・ビルドはユーザー指示により未実行、目視確認は未実施です。次の作業はPAA Section 5の既知不一致の調査です。最新の検証記録は `docs/TEST_COVERAGE_PROGRESS.md` の2026-10-04実行記録を参照してください。
-AGWA Section 2〜6 と共通 Mermaid コンポーネントのレビュー指摘は、テスト契約、ナビゲーション、Section 6 CSS Modules、教材修正のカテゴリー別コミットで対応済みです。当該作業の全体テストとESLintの結果は `docs/TEST_COVERAGE_PROGRESS.md` のAGWA実行記録を参照してください。AGWAのE2E・Visualテスト・ビルドは当該作業時点で未実施です。
+最新実装 HEAD は `7bf60bcc`、仕様同期は `ba0deb6b`、前回進捗同期コミットは `2c4c019d` です。AWS DVA-C02 ドメイン1は `/aws/developer-associate/domain1` へ全量移行済み。原本ライト配色・Source Serif 4・288px幅と14pxを保持し、全38セクション・29スキル・116表・31図・18コード・363リスト項目・15問題を照合。関連245件、3画面幅E2E 3件（各幅axe違反0）、原本不在の移行・統合28件、4欠落変異検証が成功。全体Vitestは2261成功・既存6失敗（214ファイル・2267件）。TypeScript・全体ESLint・Markdown lint成功。npm・ビルドは未実行、目視確認はユーザー担当。未移行HTML17件。次はユーザーの目視確認。既存6失敗は別タスク。次の移行候補は `Aws-dva-c02-domain3-deployment-guide.html`。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
 

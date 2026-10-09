@@ -823,6 +823,7 @@ debug radius / debug tacacs                                     ! 本番では�
 **根拠**
 - 【標準】RFC 2865（RADIUS） https://www.rfc-editor.org/rfc/rfc2865
 - 【標準】RFC 8907（TACACS+） https://www.rfc-editor.org/rfc/rfc8907
+- 【標準】RFC 9887（TACACS+ over TLS 1.3） https://www.rfc-editor.org/rfc/rfc9887
 - 【公式】SCOR v2.0 PDF（2.6） https://learningcontent.cisco.com/documents/marketing/exam-topics/350-701-SCOR-v2.0.pdf
 
 ### 2.7 セキュアなネットワーク管理（SNMPv3、NETCONF、RESTCONF、API、セキュア syslog、NTP 認証）

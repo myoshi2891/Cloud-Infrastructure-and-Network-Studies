@@ -1,0 +1,147 @@
+'use client';
+
+import { useEffect, useState, useCallback, useRef, Fragment } from 'react';
+import { NAV_ITEMS } from './constants';
+
+interface NavBarProps {
+    isOpen: boolean;
+    onToggle: (open: boolean) => void;
+}
+
+/**
+ * AWS CloudOps ガイド用サイドバー目次ナビゲーション。
+ * 280px サイドバー契約、アクセシビリティ（nav, button, aria）、
+ * IntersectionObserver によるスクロールスパイおよびモバイルドロワーに対応。
+ */
+export default function NavBar({ isOpen, onToggle }: NavBarProps) {
+    const [activeId, setActiveId] = useState<string>(
+        NAV_ITEMS[0]?.href.slice(1) ?? 's-h2-1',
+    );
+    // page.css のドロワー化ブレークポイント（max-width: 980px）と一致させる
+    const [isDrawerMode, setIsDrawerMode] = useState(false);
+    const menuBtnRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+        const mql = window.matchMedia('(max-width: 980px)');
+        const sync = () => setIsDrawerMode(mql.matches);
+        sync();
+        mql.addEventListener('change', sync);
+        return () => mql.removeEventListener('change', sync);
+    }, []);
+
+    // メニューボタン（開いている時）とバックドロップ共通の閉じる処理。フォーカスをメニューボタンへ戻す
+    const closeMenu = useCallback(() => {
+        onToggle(false);
+        menuBtnRef.current?.focus();
+    }, [onToggle]);
+
+    const handleLinkClick = useCallback(
+        (href: string) => {
+            onToggle(false);
+            const targetId = href.slice(1);
+            setActiveId(targetId);
+            if (typeof window !== 'undefined') {
+                window.history.pushState(null, '', href);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.setAttribute('tabindex', '-1');
+                    targetElement.focus();
+                }
+            }
+        },
+        [onToggle],
+    );
+
+    useEffect(() => {
+        if (typeof IntersectionObserver === 'undefined') return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        setActiveId(entry.target.id);
+                        break;
+                    }
+                }
+            },
+            {
+                rootMargin: '-80px 0px -70% 0px',
+                threshold: 0,
+            },
+        );
+
+        NAV_ITEMS.forEach((item) => {
+            const id = item.href.slice(1);
+            const element = document.getElementById(id);
+            if (element) {
+                observer.observe(element);
+            }
+        });
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
+    return (
+        <>
+            <button
+                className="menu-btn"
+                id="menuBtn"
+                ref={menuBtnRef}
+                type="button"
+                aria-label="目次メニューを開閉"
+                aria-controls="sidebar"
+                aria-expanded={isOpen}
+                onClick={isOpen ? closeMenu : () => onToggle(true)}
+            >
+                ☰
+            </button>
+            <div
+                className="backdrop"
+                id="backdrop"
+                onClick={closeMenu}
+            />
+            {/* 閉じたドロワーは画面外のため、モバイル幅でのみ inert にしてフォーカス到達を防ぐ */}
+            <aside className="sidebar" id="sidebar" inert={isDrawerMode && !isOpen}>
+                <div className="sidebar-head">
+                    <div className="kicker">AWS CloudOps Engineer</div>
+                    <div className="sb-title">SOA-C03 学習ガイド</div>
+                </div>
+                {' '}
+                <nav id="sidebarNav" aria-label="ガイド目次">
+                    {NAV_ITEMS.map((item) => {
+                        const id = item.href.slice(1);
+                        const isActive = activeId === id;
+                        const levelClass =
+                            item.level === 1
+                                ? 'lvl1'
+                                : item.level === 2
+                                  ? 'lvl2'
+                                  : 'lvl3';
+                        return (
+                            <Fragment key={item.href}>
+                                <a
+                                    href={item.href}
+                                    className={`${levelClass} ${isActive ? 'active' : ''}`}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleLinkClick(item.href);
+                                        const el = document.getElementById(id);
+                                        if (el) {
+                                            el.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }}
+                                >
+                                    {item.label}
+                                </a>
+                                {' '}
+                            </Fragment>
+                        );
+                    })}
+                </nav>
+            </aside>
+        </>
+    );
+}

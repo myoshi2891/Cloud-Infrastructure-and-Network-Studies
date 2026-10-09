@@ -233,6 +233,26 @@ describe('MermaidDiagram', () => {
         }
     });
 
+    it('原本テーマ保持時は共通ディレクティブ・固定配色CSSを注入しない', async () => {
+        const prototype = window.SVGElement.prototype as SVGGraphicsElement;
+        const original = prototype.getBBox;
+        prototype.getBBox = vi.fn();
+        try {
+            const mermaid = await import('mermaid');
+            const spy = vi.spyOn(mermaid.default, 'render').mockResolvedValue({ svg: '<svg viewBox="0 0 100 50"><text>原本</text></svg>', diagramType: 'flowchart' });
+            const chart = '%%{init: {"theme":"base","themeVariables":{"primaryColor":"#eceefb"}}}%%\nflowchart TD\nA-->B';
+            const { container } = render(<MermaidDiagram chart={chart} ariaLabel="原本配色" theme="light" {...{ preserveChartTheme: true }} />);
+            await waitFor(() => expect(spy).toHaveBeenCalled());
+            expect(spy.mock.calls[0]?.[1]).toBe(chart);
+            expect(container.firstElementChild?.className).not.toContain('lightWrapper');
+            expect(container.querySelector('.mermaid-target')?.className).toContain('sourceThemeTarget');
+            expect(container.querySelector('.mermaid-target')?.className).not.toContain('mermaidTarget');
+        } finally {
+            prototype.getBBox = original;
+            vi.restoreAllMocks();
+        }
+    });
+
     describe('ライトテーマ (theme="light") サポート契約', () => {
         it('theme="light" 指定時に data-theme="light" が設定され、フォールバック時もライトテーマ属性を保持すること', () => {
             const { container } = render(

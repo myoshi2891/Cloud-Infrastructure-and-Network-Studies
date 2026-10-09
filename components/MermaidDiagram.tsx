@@ -16,6 +16,8 @@ export interface MermaidDiagramProps {
     preserveNaturalScale?: boolean;
     /** テーマ（'dark' | 'light'、デフォルト: 'dark'） */
     theme?: 'dark' | 'light';
+    /** 原本のinit設定とSVG配色を保持し、共通テーマ注入・配色CSSを適用しない */
+    preserveChartTheme?: boolean;
 }
 
 /**
@@ -238,6 +240,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     className,
     preserveNaturalScale = false,
     theme = 'dark',
+    preserveChartTheme = false,
 }) => {
     const reactId = useId();
     const [isMounted, setIsMounted] = useState(false);
@@ -270,7 +273,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
                 }
                 if (cancelled) return;
                 const id = `mermaid-${reactId.replace(/[^a-zA-Z0-9]/g, '')}`;
-                const chartToRender = theme === 'light' ? applyLightThemeDirective(chart) : chart;
+                const chartToRender = theme === 'light' && !preserveChartTheme ? applyLightThemeDirective(chart) : chart;
                 const { svg } = await mermaid.render(id, chartToRender);
                 if (cancelled) return;
                 setSvgStr(svg);
@@ -286,7 +289,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
         return () => {
             cancelled = true;
         };
-    }, [chart, reactId, isMounted, theme]);
+    }, [chart, reactId, isMounted, theme, preserveChartTheme]);
 
     // SVG 注入後（svgStr 反映後）に、実 DOM の SVG へ下部見切れ対策を適用する
     useEffect(() => {
@@ -304,7 +307,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
         <div
             className={cn(
                 styles.mermaidWrapper,
-                theme === 'light' && styles.lightWrapper,
+                theme === 'light' && !preserveChartTheme && styles.lightWrapper,
                 className
             )}
             role="img"
@@ -315,7 +318,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
             {isMounted && rendered && !error && (
                 <div
                     ref={targetRef}
-                    className={cn(styles.mermaidTarget, "mermaid-target")}
+                    className={cn(preserveChartTheme ? styles.sourceThemeTarget : styles.mermaidTarget, "mermaid-target")}
                     dangerouslySetInnerHTML={{ __html: svgStr }}
                 />
             )}

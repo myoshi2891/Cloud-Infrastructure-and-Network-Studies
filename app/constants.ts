@@ -18,6 +18,8 @@ export type ColorKey =
     | 'card-pcne'
     | 'card-pca'
     | 'card-aws-saa'
+    | 'card-aws-cloudops'
+    | 'card-aws-dva'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -66,6 +68,8 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-pca': 'card-pca',
     'card-ccna': 'card-ccna',
     'card-aws-saa': 'card-aws-saa',
+    'card-aws-cloudops': 'card-aws-cloudops',
+    'card-aws-dva': 'card-aws-dva',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -543,6 +547,71 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: 'ソリューションアーキテクト',
         icon: '🏗',
+        provider: 'AWS',
+    },
+    {
+        id: 'aws-dva',
+        label: 'AWS Certified Developer - Associate',
+        abbr: 'DVA',
+        level: 'Associate',
+        score: '65問 / 130分',
+        color: 'card-aws-dva',
+        href: '/aws/developer-associate/domain2',
+        overviewLabel: 'ドメイン2: セキュリティ',
+        description: 'DVA-C02の開発・セキュリティ分野を学習。開発の全29スキル・31図・15問と、IAM、Cognito、KMS、暗号化の24 Steps・35図・12問を収録。',
+        domains: [
+            { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1', pct: '32%' },
+            { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' },
+        ],
+        badge: 'DVA-C02',
+        icon: '🔐',
+        provider: 'AWS',
+        status: 'available',
+    },
+    {
+        id: 'aws-cloudops',
+        label: 'AWS Certified CloudOps Engineer - Associate',
+        abbr: 'SOA',
+        level: 'Associate',
+        score: '~65問 / 130分',
+        color: 'card-aws-cloudops',
+        href: '/aws/cloudops-engineer-associate',
+        description:
+            'AWS 上のワークロードをデプロイ・管理・運用する能力を検証。モニタリング・高可用性・プロビジョニング・セキュリティ・ネットワーク運用を体系的に網羅。',
+        domains: [
+            {
+                label: '完全対策ガイド (SOA-C03)',
+                href: '/aws/cloudops-engineer-associate',
+                pct: '完全解説',
+            },
+            {
+                label: 'Domain 1: モニタリング、ログ、分析、修復、最適化',
+                href: '/aws/cloudops-engineer-associate#s-h1-1',
+                pct: '22%',
+            },
+            {
+                label: 'Domain 2: 信頼性と事業継続',
+                href: '/aws/cloudops-engineer-associate#s-h1-2',
+                pct: '22%',
+            },
+            {
+                label: 'Domain 3: デプロイ、プロビジョニング、自動化',
+                href: '/aws/cloudops-engineer-associate#s-h1-3',
+                pct: '22%',
+            },
+            {
+                label: 'Domain 4: セキュリティとコンプライアンス',
+                href: '/aws/cloudops-engineer-associate#s-h1-4',
+                pct: '16%',
+            },
+            {
+                label: 'Domain 5: ネットワークとコンテンツ配信',
+                href: '/aws/cloudops-engineer-associate#s-h1-5',
+                pct: '18%',
+            },
+        ],
+        badge: 'SOA-C03',
+        icon: '⚙️',
         provider: 'AWS',
     },
     {

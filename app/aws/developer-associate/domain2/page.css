@@ -1,0 +1,99 @@
+
+.dva-security-page *{box-sizing:border-box}
+.dva-security-page{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px)}
+.dva-security-page{margin:0;background:var(--color-dva-paper);color:var(--color-dva-ink);font-family:var(--font-body);font-size:0.875rem;line-height:1.85;overflow-wrap:anywhere}
+.dva-security-page button, .dva-security-page input{font-size:0.875rem}
+.dva-security-page .sidebar{position:fixed;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));width:300px;background:var(--color-dva-fff);border-right:1px solid var(--color-dva-border);overflow-y:auto;padding:24px 14px 40px;z-index:30;left:0;bottom:0}
+.dva-security-page .brand{font-family:var(--font-dva-serif);font-weight:700;font-size:0.984375rem;color:var(--color-dva-indigo);line-height:1.4;padding:0 8px 14px}
+.dva-security-page .nav-group{margin:18px 8px 6px;font-size:0.875rem;font-weight:700;color:var(--color-dva-ink-soft);letter-spacing:.04em}
+.dva-security-page .nav-a{display:block;padding:6px 10px;border-radius:8px;color:var(--color-dva-ink-soft);text-decoration:none;font-size:0.875rem;line-height:1.5;border-left:3px solid transparent}
+.dva-security-page .nav-a:hover{background:var(--color-dva-paper-alt)}
+.dva-security-page .nav-a.active{background:var(--color-dva-indigo-soft);color:var(--color-dva-indigo);font-weight:700;border-left-color:var(--color-dva-indigo)}
+.dva-security-page .main{margin-left:300px;width:calc(100% - 300px);min-width:0}
+.dva-security-page .hero{background:linear-gradient(135deg,var(--color-dva-2b2f7a),var(--color-dva-3b3f9e) 55%,var(--color-dva-5a4a8f));color:var(--color-dva-fff);padding:64px 56px 56px}
+.dva-security-page .hero .eyebrow{font-size:0.875rem;letter-spacing:.12em;color:var(--color-dva-f0d9a0);font-weight:700}
+.dva-security-page .hero h1{font-family:var(--font-dva-serif);font-size:2.1rem;line-height:1.35;margin:10px 0 14px;color:var(--color-dva-fff)}
+.dva-security-page .hero p{margin:0;font-size:0.984375rem;color:var(--color-dva-e6e8ff)}
+.dva-security-page .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.dva-security-page .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 16px;font-size:0.875rem}
+.dva-security-page .section{padding:34px 56px}
+.dva-security-page .section.part-sec{padding-top:46px;padding-bottom:6px}
+.dva-security-page h1.part{font-family:var(--font-dva-serif);font-size:1.6625rem;color:var(--color-dva-plum);margin:0;padding-bottom:10px;border-bottom:3px solid var(--color-dva-gold);display:inline-block}
+.dva-security-page h2{font-family:var(--font-dva-serif);font-size:1.53125rem;line-height:1.4;color:var(--color-dva-indigo);margin:0 0 18px;padding-left:14px;border-left:6px solid var(--color-dva-gold)}
+.dva-security-page h3{font-size:1.1375rem;color:var(--color-dva-forest);margin:32px 0 10px;line-height:1.5}
+.dva-security-page h3::before{content:"";display:inline-block;width:10px;height:10px;background:var(--color-dva-forest);border-radius:2px;margin-right:10px}
+.dva-security-page h4{font-size:0.984375rem;color:var(--color-dva-plum)}
+.dva-security-page p, .dva-security-page li{margin:.6em 0}
+.dva-security-page ul, .dva-security-page ol{padding-left:1.5em}
+.dva-security-page a{color:var(--color-dva-indigo);overflow-wrap:anywhere}
+.dva-security-page code{font-family:var(--font-mono);font-size:0.875rem;background:var(--color-dva-indigo-soft);color:var(--color-dva-2b2f7a);padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+.dva-security-page .code-block{margin:14px 0}
+.dva-security-page .code-block{margin:0;background:var(--color-dva-1f2335);border-radius:12px;padding:16px 18px;overflow-x:auto;line-height:1.65}
+.dva-security-page .code-block code{background:none;color:var(--color-dva-e6e8f5);padding:0;font-size:0.875rem;overflow-wrap:normal;white-space:pre}
+.dva-security-page .code-block code.hljs{background:transparent;padding:0}
+.dva-security-page blockquote{margin:16px 0;padding:10px 18px;background:var(--color-dva-fff8e6);border-left:5px solid var(--color-dva-gold);border-radius:0 10px 10px 0;color:var(--color-dva-4a3b12)}
+.dva-security-page blockquote p{margin:.4em 0}
+.dva-security-page .table-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--color-dva-border);border-radius:12px;background:var(--color-dva-fff);min-width:0}
+.dva-security-page table{border-collapse:collapse;width:100%;font-size:0.875rem;line-height:1.65}
+.dva-security-page th{background:var(--color-dva-indigo);color:var(--color-dva-fff);text-align:left;padding:10px 14px;font-weight:700;white-space:nowrap}
+.dva-security-page td{padding:10px 14px;border-bottom:1px solid var(--color-dva-border);vertical-align:top}
+.dva-security-page th, .dva-security-page td{overflow-wrap:anywhere}
+.dva-security-page th{white-space:normal}
+.dva-security-page tbody tr:last-child td{border-bottom:none}
+.dva-security-page tbody tr:hover{background:var(--color-dva-paper-alt)}
+.dva-security-page .diagram-card{background:var(--color-dva-fff);border:1px solid var(--color-dva-border);border-radius:14px;padding:18px;margin:18px 0;min-width:0}
+.dva-security-page .diagram-wrap{display:flex;justify-content:safe center;overflow-x:auto;width:100%;min-width:0}
+.dva-security-page .diagram-wrap>*{min-width:0}
+.dva-security-page .diagram-wrap svg{flex-shrink:0;max-width:none}
+.dva-security-page .mermaidTooltip{font-size:0.875rem!important}
+.dva-security-page details{margin:14px 0;background:var(--color-dva-fff);border:1px solid var(--color-dva-border);border-radius:12px;padding:4px 18px}
+.dva-security-page summary{cursor:pointer;font-weight:700;color:var(--color-dva-indigo);padding:10px 0}
+.dva-security-page li.chk{list-style:none;margin-left:-1.2em}
+.dva-security-page li.chk label{cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.dva-security-page li.chk input{appearance:none;flex:none;width:1.25rem;height:1.25rem;margin-top:.35em;border:2px solid var(--color-dva-indigo);border-radius:5px;background:var(--color-dva-fff);cursor:pointer;display:grid;place-content:center;font-size:0.875rem}
+.dva-security-page li.chk input:checked{background:var(--color-dva-indigo)}
+.dva-security-page li.chk input:checked::after{content:"✓";color:var(--color-dva-fff);font-size:0.875rem;line-height:1}
+.dva-security-page li.chk.done{color:var(--color-dva-ink-soft);text-decoration:line-through}
+.dva-security-page .progress{position:sticky;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));z-index:20;background:color-mix(in srgb, var(--color-dva-paper) 95%, transparent);border-bottom:1px solid var(--color-dva-border);padding:8px 56px;font-size:0.875rem;color:var(--color-dva-ink-soft)}
+.dva-security-page .progress b{color:var(--color-dva-indigo)}
+.dva-security-page hr{border:none;border-top:1px solid var(--color-dva-border);margin:28px 0}
+.dva-security-page .footer{padding:30px 56px 60px;color:var(--color-dva-ink-soft)}
+.dva-security-page .mobile-bar{display:none}
+.dva-security-page .mobile-bar button{font-size:0.875rem}
+@media (max-width:900px){
+  .dva-security-page .sidebar{transform:translateX(-100%);transition:transform .25s;width:min(86vw,320px)}
+  .dva-security-page .sidebar.open{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.35)}
+  .dva-security-page .main{margin-left:0;width:100%;min-width:0}
+  .dva-security-page .mobile-bar{display:flex;position:sticky;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));z-index:31;background:var(--color-dva-fff);border-bottom:1px solid var(--color-dva-border);padding:8px 14px;align-items:center;gap:12px;font-weight:700;color:var(--color-dva-indigo)}
+  .dva-security-page .mobile-bar button{background:var(--color-dva-indigo);color:var(--color-dva-fff);border:none;border-radius:8px;padding:8px 14px;cursor:pointer}
+  .dva-security-page .hero, .dva-security-page .section, .dva-security-page .footer, .dva-security-page .progress{padding-left:18px;padding-right:18px}
+  .dva-security-page .hero{padding-top:36px}
+  .dva-security-page .hero h1{font-size:1.4875rem}
+  .dva-security-page h2{font-size:1.225rem}
+  .dva-security-page .progress{top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 52px)}
+}
+
+.dva-security-page .main ul { list-style-type: disc; list-style-position: outside; }
+.dva-security-page .main ol { list-style-type: decimal; list-style-position: outside; }
+.dva-security-page .main ul ul { list-style-type: circle; }
+.dva-security-page li.chk { list-style-type: none; }
+.dva-security-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }
+.dva-security-page .sidebar li { margin: 0; }
+.dva-security-page .code-line { white-space: pre; min-height: 1.65em; }
+.dva-security-page .code-block { margin: 14px 0; padding: 16px 18px; border: 0; font-family: var(--font-mono); background: var(--color-dva-1f2335); color: var(--color-dva-e6e8f5); line-height: 1.65; overflow-x: auto; }
+.dva-security-page .code-block code { white-space: pre; }
+.dva-security-page h2[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 48px); }
+.dva-security-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 29; background: rgba(0,0,0,.35); border: 0; }
+.dva-security-page :focus-visible { outline: 2px solid var(--color-dva-indigo); outline-offset: 4px; }
+@media (min-width:901px) { .dva-security-page .sidebar-backdrop { display: none; } }
+@media (max-width:900px) { .dva-security-page .sidebar:not(.open) { visibility: hidden; } }
+.dva-security-page .hljs-comment { color: var(--color-dva-94a3b8); font-style: italic; }
+.dva-security-page .hljs-keyword { color: var(--color-dva-c678dd); }
+.dva-security-page .hljs-string { color: var(--color-dva-98c379); }
+.dva-security-page .hljs-attr { color: var(--color-dva-e06c75); }
+.dva-security-page .hljs-number, .dva-security-page .hljs-literal { color: var(--color-dva-d19a66); }
+
+.dva-security-page .diagram-wrap > [role="img"] { overflow: visible; border: 0; background: transparent; padding: 0; margin: 0; }
+
+/* ユーザー指定の14px: Mermaidの採寸と描画の文字サイズを一致させる。 */
+.dva-security-page .diagram-wrap .mermaid-target :is(foreignObject > div, .nodeLabel, .edgeLabel, text, tspan) { font-size: 14px !important; }

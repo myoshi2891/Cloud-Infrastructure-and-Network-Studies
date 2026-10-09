@@ -1,0 +1,4476 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Content Domain 4: Security and Compliance 完全ガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#fbfaf6; --paper-alt:#f2efe6; --card:#ffffff;
+  --ink:#1c2333; --ink-2:#434c63; --ink-3:#5f6a85;
+  --indigo:#34459b; --indigo-soft:#e8ebf8; --indigo-line:#c3cbea;
+  --gold:#b7791f; --gold-soft:#fbf1dc; --forest:#2f7d5b; --forest-soft:#e5f3ec; --plum:#7b3f7a;
+  --line:#e2ddd0; --code-bg:#f0eee6; --pre-bg:#1e2433; --pre-ink:#e8ecf5;
+  --sidebar-w:320px;--gutter:40px;
+  --font:'Noto Sans JP','Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',Meiryo,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto Sans JP',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.9;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+a{color:var(--indigo);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:#1f2d77}
+.layout{display:block}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:#fff;border-right:1px solid var(--line);overflow-y:auto;padding:26px 0 40px;z-index:40}
+.sidebar-head{padding:0 22px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.kicker{font-size:1rem;font-weight:700;color:var(--indigo);letter-spacing:.02em}
+.side-title{font-size:1.0625rem;font-weight:800;line-height:1.6;margin-top:6px}
+#nav{padding:0 12px}
+#nav a{display:block;padding:7px 12px;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:1rem;line-height:1.55;margin-bottom:2px}
+#nav a.lvl2{font-weight:700;color:var(--ink);margin-top:10px}
+#nav a.lvl3{padding-left:26px}
+#nav a:hover{background:var(--paper-alt)}
+#nav a.active{background:var(--indigo-soft);color:var(--indigo);font-weight:700}
+.main{margin-left:var(--sidebar-w);padding:0 0 96px}
+.main>*{padding-left:var(--gutter);padding-right:var(--gutter)}
+.hero{padding-top:64px;padding-bottom:40px;background:linear-gradient(180deg,#eef0fa 0%,var(--paper) 100%);border-bottom:1px solid var(--line);margin-bottom:8px}
+.hero h1{font-size:clamp(1.75rem,3.2vw,2.5rem);line-height:1.4;margin:10px 0 20px;font-weight:800;color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.pill{display:inline-block;padding:6px 16px;border-radius:999px;background:#fff;border:1px solid var(--indigo-line);color:var(--ink-2);font-size:1rem}
+.pill strong{color:var(--indigo)}
+.hero-notes{margin:0;padding-left:1.4em;color:var(--ink-2)}
+.hero-notes li{margin-bottom:4px}
+.main h2{font-size:1.75rem;font-weight:800;margin:0;padding-top:34px;padding-bottom:6px;line-height:1.5;color:var(--ink);scroll-margin-top:16px}
+.main h2::before{content:"";display:block;width:56px;height:5px;border-radius:3px;background:var(--indigo);margin-bottom:14px}
+.main h3{font-size:1.3125rem;font-weight:700;margin:0;padding-top:30px;padding-bottom:2px;line-height:1.55;color:var(--ink);scroll-margin-top:16px}
+.main h3::before{content:"";display:inline-block;width:6px;height:1.1em;background:var(--gold);border-radius:3px;margin-right:10px;vertical-align:-.15em}
+.main h4{font-size:1.125rem;margin:22px 0 4px}
+.main p,.main ul,.main ol{margin-top:0;margin-bottom:18px}
+.main p{margin-top:14px}
+.main ul,.main ol{padding-top:0;margin-top:12px}
+.main li{margin-bottom:6px}
+.main ul,.main ol{padding-left:calc(var(--gutter) + 1.4em)}
+.main hr{border:none;height:0;margin:0;padding:0}
+strong{color:#0f1526}
+code{font-family:var(--mono);font-size:1rem;background:var(--code-bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#8a4b00;overflow-wrap:anywhere}
+blockquote{margin:16px 0;padding:12px 20px;background:var(--gold-soft);border-left:5px solid var(--gold);border-radius:0 10px 10px 0;color:var(--ink)}
+.main blockquote{margin-left:var(--gutter);margin-right:var(--gutter);padding-left:20px;padding-right:20px}
+blockquote p{margin:4px 0}
+.table-wrap{overflow-x:auto;margin-top:16px;margin-bottom:26px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter)}
+.main>.table-wrap{padding-left:0;padding-right:0}
+table{border-collapse:collapse;width:100%;font-size:1rem;line-height:1.7}
+thead th{background:var(--indigo);color:#fff;font-weight:700;text-align:left;padding:11px 16px;white-space:nowrap}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink);overflow-wrap:anywhere}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--paper)}
+th,td{overflow-wrap:anywhere}
+.diagram-wrap{overflow-x:auto;display:flex;justify-content:safe center;width:auto;min-width:0;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:16px;margin-bottom:28px;padding:24px 16px;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter)}
+.diagram-wrap>*{min-width:0}
+.diagram-canvas svg{flex-shrink:0;max-width:none}
+.diagram-canvas{min-height:40px}
+.mermaidTooltip{font-size:1rem!important}
+pre.code{margin-top:14px;margin-bottom:24px;padding:16px 20px;background:var(--pre-bg);color:var(--pre-ink);border-radius:12px;overflow-x:auto;max-width:calc(100% - 2*var(--gutter));margin-left:var(--gutter);margin-right:var(--gutter);line-height:1.7}
+pre.code code{background:none;border:none;padding:0;color:inherit;font-size:1rem;white-space:pre}
+.endnote{margin-top:48px;color:var(--ink-3)}
+.mobile-bar{display:none}
+.mobile-bar button{font-family:var(--font);font-size:1rem;font-weight:700;color:var(--indigo);background:#fff;border:1px solid var(--indigo-line);border-radius:10px;padding:8px 14px;cursor:pointer}
+.scrim{display:none}
+@media (max-width:980px){
+  .mobile-bar{display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:10px 14px}
+  .mobile-title{font-weight:800;font-size:1rem}
+  .sidebar{transform:translateX(-102%);transition:transform .22s ease;width:min(320px,86vw);box-shadow:0 0 40px rgba(0,0,0,.18)}
+  .sidebar.open{transform:none}
+  .scrim.show{display:block;position:fixed;inset:0;background:rgba(20,26,45,.35);z-index:35}
+  .main{margin-left:0;padding-top:58px}
+  :root{--gutter:16px}
+  .main>*{padding-left:var(--gutter);padding-right:var(--gutter)}
+  .hero{padding-top:36px}
+}
+.quiz{margin:22px var(--gutter) 26px;background:#fff;border:1px solid var(--indigo-line);border-radius:16px;overflow:hidden;box-shadow:0 1px 0 rgba(52,69,155,.06)}
+.main h4.quiz-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0;padding:14px 22px;background:var(--indigo-soft);border-bottom:1px solid var(--indigo-line);font-size:1.125rem}
+.q-num{display:inline-block;background:var(--indigo);color:#fff;font-weight:800;border-radius:8px;padding:2px 12px;letter-spacing:.02em}
+.q-title{font-weight:700;color:var(--ink)}
+.q-type{margin-left:auto;font-size:1rem;font-weight:700;color:var(--indigo);background:#fff;border:1px solid var(--indigo-line);border-radius:999px;padding:1px 14px}
+.quiz-body{padding:18px 22px 6px}
+.quiz-body p{margin:0 0 14px}
+.opts{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:10px}
+.opts li{display:flex;gap:14px;align-items:flex-start;margin:0;padding:11px 16px;border:1px solid var(--line);border-radius:12px;background:var(--paper);transition:background .15s,border-color .15s;cursor:pointer}
+.opts li:hover{background:var(--indigo-soft);border-color:var(--indigo-line)}
+.opts li.picked{background:var(--indigo-soft);border-color:var(--indigo)}
+.opts .key{flex:0 0 2rem;width:2rem;height:2rem;border-radius:50%;background:#fff;border:2px solid var(--indigo-line);color:var(--indigo);font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1}
+.opts li.picked .key{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.opts .txt{flex:1;min-width:0;overflow-wrap:anywhere}
+.quiz.revealed .opts li.correct{background:var(--forest-soft);border-color:var(--forest);cursor:default}
+.quiz.revealed .opts li.correct .key{background:var(--forest);border-color:var(--forest);color:#fff}
+.quiz.revealed .opts li.picked:not(.correct){background:#fdeceb;border-color:#d9776f}
+.quiz.revealed .opts li.picked:not(.correct) .key{background:#b3261e;border-color:#b3261e;color:#fff}
+details.answer{margin:0;border:none;border-top:1px dashed #bfe0cf;border-radius:0;background:var(--forest-soft);padding:0 22px}
+details.answer summary{cursor:pointer;font-weight:700;color:var(--forest);padding:13px 0;list-style-position:inside}
+.answer-body{padding:0 0 16px}
+.ans-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:10px;font-weight:700;color:var(--forest)}
+.ans-badge b{background:var(--forest);color:#fff;border-radius:8px;padding:1px 14px;font-size:1.125rem}
+.answer-body p{margin:0 0 10px}
+.trap-tools{margin:18px var(--gutter) 6px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chip{font-family:var(--font);font-size:1rem;font-weight:700;color:var(--ink-2);background:#fff;border:1px solid var(--indigo-line);border-radius:999px;padding:6px 16px;cursor:pointer}
+.chip:hover{background:var(--indigo-soft)}
+.chip.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.trap-search{font-family:var(--font);font-size:1rem;flex:1 1 220px;min-width:0;padding:8px 14px;border:1px solid var(--indigo-line);border-radius:10px;background:#fff;color:var(--ink)}
+.trap-count{color:var(--ink-3)}
+.trap-group{margin:26px var(--gutter) 4px;font-size:1.125rem;font-weight:800;color:var(--indigo);display:flex;align-items:center;gap:10px}
+.trap-group::after{content:"";flex:1;height:1px;background:var(--indigo-line)}
+.trap-grid{margin:10px var(--gutter) 8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:16px}
+.trap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.trap header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--paper-alt);border-bottom:1px solid var(--line)}
+.t-num{font-weight:800;color:#fff;background:var(--plum);border-radius:8px;padding:0 10px;min-width:2.6rem;text-align:center}
+.t-item{font-weight:700;color:var(--ink)}
+.trap p{margin:0;padding:12px 16px;display:flex;gap:10px;align-items:flex-start}
+.trap .lbl{flex:0 0 auto;font-weight:800;font-size:1rem;border-radius:6px;padding:0 10px;white-space:nowrap}
+.t-bad{background:#fff6f5}
+.t-bad .lbl{color:#b3261e;background:#fde3e1}
+.t-ok{background:var(--forest-soft);flex:1}
+.t-ok .lbl{color:#1d5a40;background:#cfe9db}
+.trap .t-txt{min-width:0;overflow-wrap:anywhere}
+.trap.hide,.trap-group.hide{display:none}
+@media (max-width:980px){.quiz{margin-left:var(--gutter);margin-right:var(--gutter)}.q-type{margin-left:0}}
+.main>.quiz,.main>.trap-tools,.main>.trap-group,.main>.trap-grid,.main>.table-wrap,.main>pre.code,.main>blockquote{padding-left:0;padding-right:0}
+.main>.diagram-wrap{padding-left:16px;padding-right:16px}
+.main>blockquote{padding:12px 20px}
+.main .opts{padding:0;margin-top:0}
+.main .quiz-body p{margin:0 0 14px}
+.main>.trap-tools,.main>.trap-group{padding:0}
+
+.main>pre.code{padding:18px 22px}
+pre.code code.hljs{display:block;padding:0;background:none;color:var(--pre-ink)}
+.hljs-comment,.hljs-quote{color:#8f9bb8;font-style:italic}
+.hljs-keyword,.hljs-selector-tag,.hljs-built_in,.hljs-literal{color:#c8a2f2}
+.hljs-attr,.hljs-attribute,.hljs-name,.hljs-property{color:#8cc8ff}
+.hljs-string,.hljs-regexp,.hljs-addition{color:#a6e3a1}
+.hljs-number,.hljs-symbol,.hljs-bullet,.hljs-variable,.hljs-template-variable{color:#ffc58a}
+.hljs-title,.hljs-section,.hljs-function{color:#ffe08a}
+.hljs-meta,.hljs-doctag,.hljs-subst{color:#9fb3e8}
+.hljs-deletion{color:#ff9aa8}
+
+</style>
+</head>
+<body>
+<div class="layout">
+<header class="mobile-bar">
+<button id="menuBtn" type="button" aria-label="メニューを開く" aria-controls="sidebar" aria-expanded="false">☰ 目次</button>
+<span class="mobile-title">SOA-C03 Domain 4</span>
+</header>
+<div class="scrim" id="scrim"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-head">
+<div class="kicker">AWS CloudOps Engineer Associate</div>
+<div class="side-title">SOA-C03 Domain 4<br />Security and Compliance</div>
+</div>
+<nav id="nav">
+<a href="#step-0" class="lvl2">Step 0. Domain 4 の全体像</a>
+<a href="#sec-0-1" class="lvl3">0-1. この Domain で問われること</a>
+<a href="#sec-0-2" class="lvl3">0-2. 責任共有モデル（すべての前提）</a>
+<a href="#sec-0-3" class="lvl3">0-3. 登場サービスの地図</a>
+<a href="#sec-0-4" class="lvl3">0-4. 学習の進め方</a>
+<a href="#sec-0-5" class="lvl3">0-5. 本ガイドの読み方</a>
+<a href="#step-1" class="lvl2">Step 1. IAM の機能を実装する（Skill 4.1.1）</a>
+<a href="#sec-1-1" class="lvl3">1-1. IAM とは？（超やさしい説明）</a>
+<a href="#sec-1-2" class="lvl3">1-2. IAM の構成要素</a>
+<a href="#sec-1-3" class="lvl3">1-3. ポリシーの種類と評価ロジック</a>
+<a href="#sec-1-4" class="lvl3">1-4. パスワードポリシー</a>
+<a href="#sec-1-5" class="lvl3">1-5. 多要素認証 (MFA)</a>
+<a href="#sec-1-6" class="lvl3">1-6. IAM ロール</a>
+<a href="#sec-1-7" class="lvl3">1-7. フェデレーテッドアイデンティティ</a>
+<a href="#sec-1-8" class="lvl3">1-8. リソースベースポリシー</a>
+<a href="#sec-1-9" class="lvl3">1-9. ポリシー条件 (Condition)</a>
+<a href="#sec-1-10" class="lvl3">1-10. ベストプラクティス（IAM）</a>
+<a href="#sec-1-11" class="lvl3">1-11. 試験で狙われるポイント（Step 1）</a>
+<a href="#step-2" class="lvl2">Step 2. アクセス問題のトラブルシュートと監査（Skill 4.1.2）</a>
+<a href="#sec-2-1" class="lvl3">2-1. 3つのツールの役割分担</a>
+<a href="#sec-2-2" class="lvl3">2-2. AWS CloudTrail</a>
+<a href="#sec-2-3" class="lvl3">2-3. IAM Access Analyzer</a>
+<a href="#sec-2-4" class="lvl3">2-4. IAM ポリシーシミュレーター</a>
+<a href="#sec-2-5" class="lvl3">2-5. 認証情報レポートと最終アクセス情報</a>
+<a href="#sec-2-6" class="lvl3">2-6. 「AccessDenied」の調べ方（実務フロー）</a>
+<a href="#sec-2-7" class="lvl3">2-7. 試験で狙われるポイント（Step 2）</a>
+<a href="#step-3" class="lvl2">Step 3. マルチアカウント戦略（Skill 4.1.3）</a>
+<a href="#sec-3-1" class="lvl3">3-1. なぜアカウントを分けるのか</a>
+<a href="#sec-3-2" class="lvl3">3-2. AWS Organizations</a>
+<a href="#sec-3-3" class="lvl3">3-3. サービスコントロールポリシー (SCP)</a>
+<a href="#sec-3-4" class="lvl3">3-4. 関連ポリシー（名前だけ区別できるように）</a>
+<a href="#sec-3-4b" class="lvl3">3-4b. 全体のレイヤー構造</a>
+<a href="#sec-3-5" class="lvl3">3-5. IAM Identity Center（旧 AWS SSO）</a>
+<a href="#sec-3-6" class="lvl3">3-6. AWS Control Tower（補足）</a>
+<a href="#sec-3-7" class="lvl3">3-7. 安全なマルチアカウント運用のベストプラクティス</a>
+<a href="#sec-3-8" class="lvl3">3-8. 試験で狙われるポイント（Step 3）</a>
+<a href="#step-4" class="lvl2">Step 4. Trusted Advisor のセキュリティチェックと是正（Skill 4.1.4）</a>
+<a href="#sec-4-1" class="lvl3">4-1. Trusted Advisor とは？</a>
+<a href="#sec-4-2" class="lvl3">4-2. 代表的なセキュリティチェック</a>
+<a href="#sec-4-3" class="lvl3">4-3. 是正の流れ</a>
+<a href="#sec-4-4" class="lvl3">4-4. ベストプラクティス</a>
+<a href="#sec-4-5" class="lvl3">4-5. 試験で狙われるポイント（Step 4）</a>
+<a href="#step-5" class="lvl2">Step 5. コンプライアンスの強制と継続的モニタリング（Skill 4.1.5）</a>
+<a href="#sec-5-1" class="lvl3">5-1. 「予防」と「検出」の2本立て</a>
+<a href="#sec-5-2" class="lvl3">5-2. リージョンとサービスの選択（制限）</a>
+<a href="#sec-5-3" class="lvl3">5-3. AWS Config</a>
+<a href="#sec-5-4" class="lvl3">5-4. Config コンフォーマンスパック</a>
+<a href="#sec-5-5" class="lvl3">5-5. ルール・パック・Security Hub の使い分け</a>
+<a href="#sec-5-6" class="lvl3">5-6. ベストプラクティス</a>
+<a href="#sec-5-7" class="lvl3">5-7. 試験で狙われるポイント（Step 5）</a>
+<a href="#step-6" class="lvl2">Step 6. データ分類（Skill 4.2.1）</a>
+<a href="#sec-6-1" class="lvl3">6-1. データ分類とは？</a>
+<a href="#sec-6-2" class="lvl3">6-2. AWS での「実装と強制」の手段</a>
+<a href="#sec-6-3" class="lvl3">6-3. Amazon Macie</a>
+<a href="#sec-6-4" class="lvl3">6-4. タグによる ABAC の例</a>
+<a href="#sec-6-5" class="lvl3">6-5. ベストプラクティス</a>
+<a href="#sec-6-6" class="lvl3">6-6. 試験で狙われるポイント（Step 6）</a>
+<a href="#step-7" class="lvl2">Step 7. 保管時の暗号化 / AWS KMS（Skill 4.2.2）</a>
+<a href="#sec-7-1" class="lvl3">7-1. 暗号化の基本</a>
+<a href="#sec-7-2" class="lvl3">7-2. AWS KMS とは</a>
+<a href="#sec-7-3" class="lvl3">7-3. エンベロープ暗号化</a>
+<a href="#sec-7-4" class="lvl3">7-4. キーポリシーとアクセス制御</a>
+<a href="#sec-7-5" class="lvl3">7-5. キーのローテーション・無効化・削除</a>
+<a href="#sec-7-6" class="lvl3">7-6. 主要サービスの暗号化（試験頻出）</a>
+<a href="#sec-7-7" class="lvl3">7-7. KMS のトラブルシュート</a>
+<a href="#sec-7-8" class="lvl3">7-8. ベストプラクティス（KMS）</a>
+<a href="#sec-7-9" class="lvl3">7-9. 試験で狙われるポイント（Step 7）</a>
+<a href="#step-8" class="lvl2">Step 8. 転送時の暗号化 / ACM（Skill 4.2.3）</a>
+<a href="#sec-8-1" class="lvl3">8-1. 転送時の暗号化とは</a>
+<a href="#sec-8-2" class="lvl3">8-2. AWS Certificate Manager (ACM)</a>
+<a href="#sec-8-3" class="lvl3">8-3. ドメイン検証（DNS 検証 vs メール検証）</a>
+<a href="#sec-8-4" class="lvl3">8-4. 実装パターン</a>
+<a href="#sec-8-5" class="lvl3">8-5. 証明書の期限切れ対策</a>
+<a href="#sec-8-6" class="lvl3">8-6. トラブルシュート</a>
+<a href="#sec-8-7" class="lvl3">8-7. ベストプラクティス（転送時暗号化）</a>
+<a href="#sec-8-8" class="lvl3">8-8. 試験で狙われるポイント（Step 8）</a>
+<a href="#step-9" class="lvl2">Step 9. シークレットの安全な保管（Skill 4.2.4）</a>
+<a href="#sec-9-1" class="lvl3">9-1. シークレットとは？ なぜ問題になるか</a>
+<a href="#sec-9-2" class="lvl3">9-2. AWS Secrets Manager</a>
+<a href="#sec-9-3" class="lvl3">9-3. SSM Parameter Store</a>
+<a href="#sec-9-4" class="lvl3">9-4. Secrets Manager と Parameter Store の使い分け</a>
+<a href="#sec-9-5" class="lvl3">9-5. アプリからの安全な利用パターン</a>
+<a href="#sec-9-6" class="lvl3">9-6. トラブルシュート</a>
+<a href="#sec-9-7" class="lvl3">9-7. ベストプラクティス（シークレット）</a>
+<a href="#sec-9-8" class="lvl3">9-8. 試験で狙われるポイント（Step 9）</a>
+<a href="#step-10" class="lvl2">Step 10. セキュリティサービスの検出結果とレポート・是正（Skill 4.2.5）</a>
+<a href="#sec-10-1" class="lvl3">10-1. サービスの役割分担</a>
+<a href="#sec-10-2" class="lvl3">10-2. Amazon GuardDuty</a>
+<a href="#sec-10-3" class="lvl3">10-3. Amazon Inspector</a>
+<a href="#sec-10-4" class="lvl3">10-4. AWS Security Hub（と Security Hub CSPM）</a>
+<a href="#sec-10-5" class="lvl3">10-5. AWS Config による検出と是正（再掲）</a>
+<a href="#sec-10-6" class="lvl3">10-6. AWS Security Agent</a>
+<a href="#sec-10-7" class="lvl3">10-7. サービス比較表（超重要）</a>
+<a href="#sec-10-8" class="lvl3">10-8. レポートと是正の実践パターン</a>
+<a href="#sec-10-9" class="lvl3">10-9. ベストプラクティス</a>
+<a href="#sec-10-10" class="lvl3">10-10. 試験で狙われるポイント（Step 10）</a>
+<a href="#step-11" class="lvl2">Step 11. 総合演習（ひっかけ一覧・練習問題・チートシート）</a>
+<a href="#sec-11-1" class="lvl3">11-1. ひっかけポイント一覧</a>
+<a href="#sec-11-2" class="lvl3">11-2. 似たサービスの見分け表</a>
+<a href="#sec-11-3" class="lvl3">11-3. 練習問題（10 問）</a>
+<a href="#sec-11-4" class="lvl3">11-4. 最終チートシート</a>
+<a href="#sec-11-5" class="lvl3">11-5. 学習の次のアクション</a>
+<a href="#step-refs" class="lvl2">参考 URL 一覧</a>
+<a href="#h-2" class="lvl3">試験ガイド</a>
+<a href="#h-3" class="lvl3">Task 4.1</a>
+<a href="#h-4" class="lvl3">Task 4.2</a>
+</nav>
+</aside>
+<main class="main" id="main">
+<section class="hero">
+<div class="kicker">AWS Certified CloudOps Engineer - Associate (SOA-C03)</div>
+<h1>Content Domain 4: Security and Compliance 完全ガイド</h1>
+<div class="pills"><span class="pill">試験配点 <strong>16%</strong></span><span class="pill">対象 <strong>Task 4.1 〜 4.2 全 10 スキル</strong></span><span class="pill">図解 <strong>Mermaid 30 点</strong></span><span class="pill">練習問題 <strong>10 問</strong></span><span class="pill">参考 URL <strong>60 件</strong></span></div>
+<ul class="hero-notes">
+<li>対象読者: AWS セキュリティの初学者 / SOA-C03 受験予定者</li>
+<li>試験全体に占める割合: <strong>16%</strong></li>
+<li>根拠となる一次情報: AWS 公式 Exam Guide (SOA-C03) と各サービスの公式ドキュメント</li>
+<li>図解のルール: フローチャートは Mermaid、図表は Markdown の表を使用 (ASCII アートは不使用)</li>
+</ul>
+</section>
+<h2 id="step-0">Step 0. Domain 4 の全体像</h2>
+<h3 id="sec-0-1">0-1. この Domain で問われること</h3>
+<p>公式ガイドでは、Domain 4 は 2 つの Task で構成されています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>内容</th>
+<th>スキル</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>4.1</strong></td>
+<td>セキュリティ・コンプライアンスのツールとポリシーを実装・管理する</td>
+<td>4.1.1 IAM 機能 / 4.1.2 アクセスのトラブルシュートと監査 / 4.1.3 マルチアカウント / 4.1.4 Trusted Advisor / 4.1.5 コンプライアンス強制と継続監視</td>
+</tr>
+<tr>
+<td><strong>4.2</strong></td>
+<td>データとインフラを守る戦略を実装する</td>
+<td>4.2.1 データ分類 / 4.2.2 保管時暗号化 / 4.2.3 転送時暗号化 / 4.2.4 シークレット管理 / 4.2.5 検出結果のレポートと是正</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注意（公式ガイドの「対象外」業務）: 「セキュリティ・コンプライアンス・ガバナンス要件を<strong>定義する</strong>」「ランサムウェア防御戦略を<strong>開発する</strong>」は試験対象外です。
+つまり、この試験で問われるのは「決められた要件を<strong>実装・運用・是正する</strong>側」の知識です。設計思想より「どのサービスのどの機能で、どう設定し、壊れたらどう直すか」を押さえましょう。</p>
+</blockquote>
+<h3 id="sec-0-2">0-2. 責任共有モデル（すべての前提）</h3>
+<p>セキュリティの話は、まず「どこまでが AWS の責任で、どこからが自分の責任か」から始まります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>区分</th>
+<th>担当</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>クラウド「の」セキュリティ</strong></td>
+<td>AWS</td>
+<td>データセンターの物理セキュリティ、ハイパーバイザー、マネージドサービスの基盤</td>
+</tr>
+<tr>
+<td><strong>クラウド「における」セキュリティ</strong></td>
+<td>利用者（あなた）</td>
+<td>IAM 設定、データ暗号化の有効化、セキュリティグループ、OS パッチ（EC2）、シークレット管理</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d0" role="img" aria-label="図解 1"></div></div>
+<p>出典: <a href="https://aws.amazon.com/compliance/shared-responsibility-model/">Shared Responsibility Model</a></p>
+<h3 id="sec-0-3">0-3. 登場サービスの地図</h3>
+<p>Domain 4 に登場するサービスを「何を守るか」で整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>主なサービス・機能</th>
+<th>本ガイドの Step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>誰が何をできるか決める</td>
+<td>IAM（ユーザー・ロール・ポリシー）、IAM Identity Center</td>
+<td>1, 3</td>
+</tr>
+<tr>
+<td>アクセスの原因調査・監査</td>
+<td>CloudTrail、IAM Access Analyzer、IAM ポリシーシミュレーター</td>
+<td>2</td>
+</tr>
+<tr>
+<td>複数アカウントを統制する</td>
+<td>AWS Organizations、SCP、Control Tower</td>
+<td>3</td>
+</tr>
+<tr>
+<td>設定の安全性を点検する</td>
+<td>Trusted Advisor、AWS Config</td>
+<td>4, 5</td>
+</tr>
+<tr>
+<td>データの分類・発見</td>
+<td>Amazon Macie、タグ、タグポリシー</td>
+<td>6</td>
+</tr>
+<tr>
+<td>保管時の暗号化</td>
+<td>AWS KMS</td>
+<td>7</td>
+</tr>
+<tr>
+<td>転送時の暗号化</td>
+<td>AWS Certificate Manager (ACM)、TLS</td>
+<td>8</td>
+</tr>
+<tr>
+<td>シークレット管理</td>
+<td>AWS Secrets Manager、SSM Parameter Store</td>
+<td>9</td>
+</tr>
+<tr>
+<td>脅威検知・脆弱性・集約</td>
+<td>GuardDuty、Inspector、Security Hub、AWS Security Agent</td>
+<td>10</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-0-4">0-4. 学習の進め方</h3>
+<p>Domain 4 は、IAM や Organizations といった「人と権限」の話から、暗号化やシークレットといった「データ」の話、最後に検出と是正の運用へと進みます。下の順に学ぶと、前の Step で学んだ内容を次の Step でそのまま使えます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d1" role="img" aria-label="図解 2"></div></div>
+<h3 id="sec-0-5">0-5. 本ガイドの読み方</h3>
+<p>各 Step は次の順で書かれています。</p>
+<ol>
+<li><strong>何のためのもの？</strong>（やさしい説明）</li>
+<li><strong>仕組み</strong>（図と表）</li>
+<li><strong>設定・操作の手順</strong></li>
+<li><strong>ベストプラクティス</strong></li>
+<li><strong>試験で狙われるポイント</strong></li>
+<li><strong>出典 URL</strong></li>
+</ol>
+<hr />
+<h2 id="step-1">Step 1. IAM の機能を実装する（Skill 4.1.1）</h2>
+<blockquote>
+<p>公式スキル文: IAM features（パスワードポリシー、MFA、ロール、フェデレーテッドID、リソースポリシー、ポリシー条件）を実装する。</p>
+</blockquote>
+<p>IAM は AWS のセキュリティの出発点で、他のすべてのサービスの権限判断に関わります。ここでは、ID の種類とポリシーの評価ルールを理解したうえで、パスワードポリシー、MFA、ロール、フェデレーション、リソースポリシー、条件の順に、どの機能が何を守るのかを学びます。</p>
+<h3 id="sec-1-1">1-1. IAM とは？（超やさしい説明）</h3>
+<p><strong>IAM (AWS Identity and Access Management)</strong> は「<strong>誰が（認証）、どのリソースに対して、何をしてよいか（認可）</strong>」を決める仕組みです。ビルの入退室管理にたとえると次のとおりです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ビルの例え</th>
+<th>IAM の用語</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>社員証・ゲストカード</td>
+<td>IAM ユーザー、IAM ロール</td>
+</tr>
+<tr>
+<td>部署ごとの入室権限リスト</td>
+<td>IAM グループ、IAM ポリシー</td>
+</tr>
+<tr>
+<td>社員証の二重確認（暗証番号 + 指紋）</td>
+<td>MFA</td>
+</tr>
+<tr>
+<td>出張者に貸し出す期限付きカード</td>
+<td>IAM ロール（一時的な認証情報）</td>
+</tr>
+<tr>
+<td>会議室の扉に貼った「入れる人リスト」</td>
+<td>リソースベースポリシー</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-1-2">1-2. IAM の構成要素</h3>
+<p>IAM には 5 つの基本的な部品があります。まず表で、それぞれが何で、どんな場面で使うのかを区別してください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>要素</th>
+<th>説明</th>
+<th>ひとこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ルートユーザー</strong></td>
+<td>アカウント作成時のメールアドレスで作られる全権限ユーザー</td>
+<td>日常利用しない。MFA 必須</td>
+</tr>
+<tr>
+<td><strong>IAM ユーザー</strong></td>
+<td>長期認証情報（パスワード・アクセスキー）を持つ ID</td>
+<td>現在は人間の利用には IAM Identity Center が推奨</td>
+</tr>
+<tr>
+<td><strong>IAM グループ</strong></td>
+<td>ユーザーの集まり。ポリシーをまとめて付与</td>
+<td>グループはプリンシパルにできない</td>
+</tr>
+<tr>
+<td><strong>IAM ロール</strong></td>
+<td>一時的な認証情報で引き受ける ID</td>
+<td>EC2・Lambda・クロスアカウントで多用</td>
+</tr>
+<tr>
+<td><strong>IAM ポリシー</strong></td>
+<td>JSON の権限定義</td>
+<td>明示的 Deny が常に勝つ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-1-3">1-3. ポリシーの種類と評価ロジック</h3>
+<p>AWS は次の種類のポリシーを使い分けます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシーの種類</th>
+<th>付与先</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>アイデンティティベースポリシー</strong></td>
+<td>ユーザー / グループ / ロール</td>
+<td>「この ID は何ができるか」を許可する</td>
+</tr>
+<tr>
+<td><strong>リソースベースポリシー</strong></td>
+<td>S3 バケット、KMS キー、SQS、Lambda など</td>
+<td>「このリソースに誰がアクセスできるか」を定める</td>
+</tr>
+<tr>
+<td><strong>アクセス許可の境界</strong></td>
+<td>ユーザー / ロール</td>
+<td>与えられる権限の<strong>上限</strong>を決める（許可はしない）</td>
+</tr>
+<tr>
+<td><strong>SCP（サービスコントロールポリシー）</strong></td>
+<td>OU / アカウント</td>
+<td>組織単位の<strong>上限</strong>（Step 3）</td>
+</tr>
+<tr>
+<td><strong>セッションポリシー</strong></td>
+<td>一時セッション</td>
+<td>引き受けたロールの権限をさらに絞る</td>
+</tr>
+</tbody>
+</table></div>
+<p>リクエストが来たときの判定の順序は次のとおりです。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d2" role="img" aria-label="図解 3"></div></div>
+<p>覚え方は3行です。</p>
+<ol>
+<li><strong>デフォルトは拒否</strong>（何も書いてなければ拒否）</li>
+<li><strong>明示的な Deny は最強</strong>（どの Allow よりも勝つ）</li>
+<li><strong>SCP・境界は「許可の上限」</strong>（それ自体は権限を与えない）</li>
+</ol>
+<p>同一アカウント内では、アイデンティティベースポリシーとリソースベースポリシーは<strong>和集合</strong>（どちらかが許可すれば OK）で評価されます。一方、<strong>クロスアカウント</strong>では「リソース側の許可」と「呼び出し側 ID の許可」の<strong>両方</strong>が必要です。</p>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">Policy evaluation logic</a> / <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html">Policies and permissions in IAM</a></p>
+<h3 id="sec-1-4">1-4. パスワードポリシー</h3>
+<p><strong>パスワードポリシー</strong>は、アカウント全体の IAM ユーザーのパスワード品質を決める設定です（IAM コンソール → アカウント設定）。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>設定項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最小パスワード長</td>
+<td>長いほど安全</td>
+</tr>
+<tr>
+<td>文字種の要件</td>
+<td>大文字・小文字・数字・記号</td>
+</tr>
+<tr>
+<td>パスワードの有効期限</td>
+<td>一定期間で変更を要求</td>
+</tr>
+<tr>
+<td>再利用の禁止</td>
+<td>過去 N 回分は使えない</td>
+</tr>
+<tr>
+<td>管理者によるリセット要求</td>
+<td>期限切れ後は管理者が解除</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="code" data-lang="bash"><code># パスワードポリシーを設定する CLI の例
+aws iam update-account-password-policy \
+  --minimum-password-length 14 \
+  --require-symbols --require-numbers \
+  --require-uppercase-characters --require-lowercase-characters \
+  --max-password-age 90 \
+  --password-reuse-prevention 24
+</code></pre>
+<blockquote>
+<p>注意: パスワードポリシーは <strong>IAM ユーザーのパスワード</strong>に適用されます。ルートユーザーや、IAM Identity Center・外部 IdP のユーザーには適用されません。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html">Set an account password policy for IAM users</a></p>
+<h3 id="sec-1-5">1-5. 多要素認証 (MFA)</h3>
+<p><strong>MFA</strong> は「知っているもの（パスワード）」に「持っているもの（デバイス）」を足す仕組みです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>MFA の種類</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>パスキー / セキュリティキー（FIDO）</td>
+<td>YubiKey、端末の生体認証パスキー</td>
+</tr>
+<tr>
+<td>仮想認証アプリ（TOTP）</td>
+<td>Google Authenticator 等</td>
+</tr>
+<tr>
+<td>ハードウェア TOTP トークン</td>
+<td>専用の数字表示トークン</td>
+</tr>
+</tbody>
+</table></div>
+<h4>MFA を「強制」する典型パターン</h4>
+<p>「MFA でサインインしていなければ、MFA 設定以外の操作をすべて拒否する」ポリシー例です。</p>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyAllExceptMfaSetupWithoutMFA&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;NotAction&quot;: [
+        &quot;iam:CreateVirtualMFADevice&quot;,
+        &quot;iam:EnableMFADevice&quot;,
+        &quot;iam:ListMFADevices&quot;,
+        &quot;iam:ListVirtualMFADevices&quot;,
+        &quot;iam:ResyncMFADevice&quot;,
+        &quot;sts:GetSessionToken&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;,
+      &quot;Condition&quot;: {
+        &quot;BoolIfExists&quot;: { &quot;aws:MultiFactorAuthPresent&quot;: &quot;false&quot; }
+      }
+    }
+  ]
+}
+</code></pre>
+<p>ポイントは <strong><code>BoolIfExists</code></strong> です。キーが存在しない場合（長期アクセスキーによる呼び出しなど）も Deny の対象にできます。</p>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html">Using multi-factor authentication (MFA) in AWS</a></p>
+<h3 id="sec-1-6">1-6. IAM ロール</h3>
+<p><strong>IAM ロール</strong>は、「パスワードもアクセスキーも持たない、引き受ける（assume）ことで一時的な権限を得る ID」です。</p>
+<p>ロールには 2 種類のポリシーが関わります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシー</th>
+<th>役割</th>
+<th>質問</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>信頼ポリシー（Trust policy）</strong></td>
+<td>ロールを<strong>引き受けられる人</strong>を決める</td>
+<td>「誰が」このロールになれる？</td>
+</tr>
+<tr>
+<td><strong>アクセス許可ポリシー</strong></td>
+<td>ロールが<strong>できること</strong>を決める</td>
+<td>「何が」できる？</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d3" role="img" aria-label="図解 4"></div></div>
+<h4>ロールの主な使いどころ</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>仕組み</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 から S3 にアクセス</td>
+<td><strong>インスタンスプロファイル</strong>でロールを EC2 にアタッチ</td>
+</tr>
+<tr>
+<td>Lambda から DynamoDB にアクセス</td>
+<td>Lambda の<strong>実行ロール</strong></td>
+</tr>
+<tr>
+<td>別アカウントのリソースにアクセス</td>
+<td>クロスアカウントロール（<code>sts:AssumeRole</code>）</td>
+</tr>
+<tr>
+<td>AWS サービス自身が代理操作</td>
+<td><strong>サービスリンクロール</strong></td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>ベストプラクティス</strong>: EC2 などにアクセスキーを埋め込まず、<strong>必ずロール</strong>を使う。これは試験の最頻出テーマの 1 つです。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html">IAM roles</a></p>
+<h3 id="sec-1-7">1-7. フェデレーテッドアイデンティティ</h3>
+<p><strong>フェデレーション</strong>は、「すでに社内にある ID（Active Directory や Okta など）を使って AWS にログインする」仕組みです。IAM ユーザーを人数分作る必要がなくなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>使いどころ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IAM Identity Center</strong>（推奨）</td>
+<td>従業員の SSO。複数アカウントへのアクセスを一元管理（Step 3）</td>
+</tr>
+<tr>
+<td><strong>SAML 2.0 フェデレーション</strong></td>
+<td>既存 IdP と IAM ロールを直接連携</td>
+</tr>
+<tr>
+<td><strong>OIDC フェデレーション</strong></td>
+<td>Web ID・CI/CD（例: GitHub Actions）からロールを引き受ける</td>
+</tr>
+<tr>
+<td><strong>Amazon Cognito</strong></td>
+<td>自社アプリのエンドユーザー向け認証</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d4" role="img" aria-label="図解 5"></div></div>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html">Identity providers and federation</a></p>
+<h3 id="sec-1-8">1-8. リソースベースポリシー</h3>
+<p>リソース側に付ける「入れる人リスト」です。S3 バケットポリシー、KMS キーポリシー、SQS キューポリシー、Lambda リソースポリシーなどが代表例です。<strong><code>Principal</code>（誰が）</strong> を書く点がアイデンティティベースポリシーとの違いです。</p>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;AllowOnlyMyOrganization&quot;,
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:GetObject&quot;,
+      &quot;Resource&quot;: &quot;arn:aws:s3:::example-bucket/*&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringEquals&quot;: { &quot;aws:PrincipalOrgID&quot;: &quot;o-xxxxxxxxxx&quot; }
+      }
+    }
+  ]
+}
+</code></pre>
+<h3 id="sec-1-9">1-9. ポリシー条件 (Condition)</h3>
+<p><code>Condition</code> は「どんな状況なら許可（拒否）するか」を絞り込む機能です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>条件キー</th>
+<th>用途</th>
+<th>例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aws:MultiFactorAuthPresent</code></td>
+<td>MFA 済みか</td>
+<td>MFA なしの操作を拒否</td>
+</tr>
+<tr>
+<td><code>aws:SourceIp</code></td>
+<td>接続元 IP</td>
+<td>社内 IP のみ許可</td>
+</tr>
+<tr>
+<td><code>aws:RequestedRegion</code></td>
+<td>操作対象リージョン</td>
+<td>許可リージョン以外を拒否</td>
+</tr>
+<tr>
+<td><code>aws:PrincipalOrgID</code></td>
+<td>組織 ID</td>
+<td>自組織のアカウントだけ許可</td>
+</tr>
+<tr>
+<td><code>aws:SecureTransport</code></td>
+<td>HTTPS か</td>
+<td>HTTP を拒否</td>
+</tr>
+<tr>
+<td><code>aws:SourceVpce</code></td>
+<td>経由する VPC エンドポイント</td>
+<td>特定の VPC エンドポイント経由のみ</td>
+</tr>
+<tr>
+<td><code>aws:ResourceTag/&lt;キー&gt;</code> / <code>aws:PrincipalTag/&lt;キー&gt;</code></td>
+<td>タグ</td>
+<td>タグ一致でアクセス制御（ABAC）</td>
+</tr>
+<tr>
+<td><code>aws:SourceArn</code> / <code>aws:SourceAccount</code></td>
+<td>呼び出し元サービスの特定</td>
+<td>混乱した代理問題の防止</td>
+</tr>
+</tbody>
+</table></div>
+<h4>混乱した代理（Confused Deputy）問題とは？</h4>
+<p>サービス（代理人）が、別の顧客に騙されて本来と違う顧客のリソースにアクセスしてしまう問題です。対策は次のとおりです。</p>
+<ul>
+<li>サービスプリンシパルに許可を出すときは <strong><code>aws:SourceArn</code> / <code>aws:SourceAccount</code></strong> で呼び出し元を限定する</li>
+<li>サードパーティにクロスアカウントロールを渡すときは <strong>ExternalId</strong> を使う</li>
+</ul>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html">IAM JSON policy elements: Condition</a> / <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html">The confused deputy problem</a></p>
+<h3 id="sec-1-10">1-10. ベストプラクティス（IAM）</h3>
+<p>ここまでの機能を実際の運用でどう使うかを、ベストプラクティスとして整理します。右端の理由を読むと、なぜその運用が推奨されるのかを説明できるようになります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>人間には<strong>一時的な認証情報</strong>（フェデレーション / Identity Center）を使う</td>
+<td>長期キーの漏洩リスクを排除</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ワークロードには<strong>ロール</strong>を使い、アクセスキーを埋め込まない</td>
+<td>キー管理が不要になる</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>最小権限</strong>から始める</td>
+<td>過剰な権限が事故の元</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>ルートユーザーに MFA</strong>、日常は使わず、アクセスキーも作らない</td>
+<td>全権限の乗っ取り防止</td>
+</tr>
+<tr>
+<td>5</td>
+<td>全ユーザーに MFA を要求</td>
+<td>パスワード漏洩への耐性</td>
+</tr>
+<tr>
+<td>6</td>
+<td>不要な認証情報・権限を定期的に<strong>削除</strong></td>
+<td>休眠アカウントの悪用防止</td>
+</tr>
+<tr>
+<td>7</td>
+<td>条件（Condition）で権限をさらに絞る</td>
+<td>状況に応じた防御</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Access Analyzer でポリシーを検証し外部公開をチェック</td>
+<td>意図しない公開の検知</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">Security best practices in IAM</a></p>
+<h3 id="sec-1-11">1-11. 試験で狙われるポイント（Step 1）</h3>
+<p>Step 1 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答えの方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EC2 アプリが S3 にアクセスしたい</td>
+<td><strong>IAM ロール（インスタンスプロファイル）</strong></td>
+</tr>
+<tr>
+<td>MFA なしの操作を拒否したい</td>
+<td><code>aws:MultiFactorAuthPresent</code> を使った Deny + <code>BoolIfExists</code></td>
+</tr>
+<tr>
+<td>他アカウントに権限を与えたい</td>
+<td>クロスアカウントロール（信頼ポリシー + 許可ポリシー）</td>
+</tr>
+<tr>
+<td>社内 AD の社員に AWS を使わせたい</td>
+<td>IAM Identity Center / SAML フェデレーション</td>
+</tr>
+<tr>
+<td>組織内のアカウントだけに S3 を公開</td>
+<td>バケットポリシー + <code>aws:PrincipalOrgID</code></td>
+</tr>
+<tr>
+<td>Allow と Deny が衝突</td>
+<td><strong>Deny が勝つ</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-2">Step 2. アクセス問題のトラブルシュートと監査（Skill 4.1.2）</h2>
+<blockquote>
+<p>公式スキル文: AWS ツール（CloudTrail、IAM Access Analyzer、IAM ポリシーシミュレーターなど）でアクセス問題をトラブルシュート・監査する。</p>
+</blockquote>
+<p>権限の問題は、設定する側よりも、うまくいかないときに原因を調べる側で差がつきます。ここでは、操作の記録を調べる CloudTrail、外部公開を見つける Access Analyzer、変更前に試せるポリシーシミュレーターの 3 つを使い分け、AccessDenied を順にたどって原因を絞る流れを身につけます。</p>
+<h3 id="sec-2-1">2-1. 3つのツールの役割分担</h3>
+<p>3 つのツールは、似た場面で使われますが、見ているものが違います。「何を知りたいか」からどのツールを選ぶかを、表と図で区別します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ツール</th>
+<th>ひとことで言うと</th>
+<th>使う場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS CloudTrail</strong></td>
+<td>「<strong>誰が・いつ・何を</strong>した」の操作記録</td>
+<td>原因調査、監査証跡</td>
+</tr>
+<tr>
+<td><strong>IAM Access Analyzer</strong></td>
+<td>「<strong>外部に公開されていないか</strong>」「使われていない権限」の検出</td>
+<td>意図しない公開の発見、権限の棚卸し</td>
+</tr>
+<tr>
+<td><strong>IAM ポリシーシミュレーター</strong></td>
+<td>「この ID でこの操作はできる？」の<strong>事前テスト</strong></td>
+<td>変更前の動作確認、拒否理由の切り分け</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d5" role="img" aria-label="図解 6"></div></div>
+<h3 id="sec-2-2">2-2. AWS CloudTrail</h3>
+<p><strong>CloudTrail</strong> は AWS アカウント内の API 呼び出しを記録するサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>記録の種類</th>
+<th>内容</th>
+<th>既定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>管理イベント</strong></td>
+<td>リソースの作成・変更・削除（例: <code>RunInstances</code>, <code>CreateUser</code>）</td>
+<td>記録される</td>
+</tr>
+<tr>
+<td><strong>データイベント</strong></td>
+<td>S3 オブジェクト操作、Lambda 呼び出し等の大量イベント</td>
+<td><strong>既定では記録されない</strong>（有効化が必要）</td>
+</tr>
+<tr>
+<td><strong>Insights イベント</strong></td>
+<td>通常と異なる API 活動の検出</td>
+<td>任意で有効化</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>保管の方法</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>イベント履歴</strong></td>
+<td>直近 <strong>90 日</strong>の管理イベントを自動で閲覧可能。設定不要</td>
+</tr>
+<tr>
+<td><strong>証跡（Trail）</strong></td>
+<td>S3 へ長期保存。CloudWatch Logs へも送信可能。<strong>組織の証跡</strong>で全アカウント一括も可</td>
+</tr>
+<tr>
+<td><strong>CloudTrail Lake</strong></td>
+<td>イベントを SQL で分析できるマネージドデータストア</td>
+</tr>
+</tbody>
+</table></div>
+<h4>監査用の設定の基本</h4>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d6" role="img" aria-label="図解 7"></div></div>
+<p><strong>ベストプラクティス</strong></p>
+<ul>
+<li>全リージョンを対象とする<strong>マルチリージョン証跡</strong>を作る</li>
+<li><strong>ログファイルの整合性検証</strong>（ダイジェスト）を有効にし、改ざんを検知できるようにする</li>
+<li>保存先 S3 は<strong>専用の監査アカウント</strong>に置き、バケットポリシーで書き込みを CloudTrail のみに限定、MFA Delete や KMS 暗号化も検討する</li>
+<li>ルートユーザー使用・IAM 変更・コンソールログイン失敗などは<strong>メトリクスフィルター + アラーム</strong>で通知</li>
+</ul>
+<p>出典: <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html">What is AWS CloudTrail?</a></p>
+<h3 id="sec-2-3">2-3. IAM Access Analyzer</h3>
+<p><strong>IAM Access Analyzer</strong> は、ポリシーを数学的に分析して次の問題を見つけます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>外部アクセスの検出</strong></td>
+<td>S3、IAM ロール、KMS キー、SQS などが「ゾーン・オブ・トラスト」（自分のアカウントまたは組織）の<strong>外部</strong>に共有されていないかを検出</td>
+</tr>
+<tr>
+<td><strong>未使用アクセスの検出</strong></td>
+<td>使われていないロール・ユーザー・アクセスキー・権限を検出（有料機能）</td>
+</tr>
+<tr>
+<td><strong>ポリシー検証</strong></td>
+<td>ポリシーの文法エラーやセキュリティ警告をチェック</td>
+</tr>
+<tr>
+<td><strong>カスタムポリシーチェック</strong></td>
+<td>「この変更で新しいアクセスが増えていないか」を検証</td>
+</tr>
+<tr>
+<td><strong>ポリシー生成</strong></td>
+<td><strong>CloudTrail の実績ログ</strong>から最小権限ポリシーを自動生成</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>試験で重要: 「S3 バケットや IAM ロールが<strong>外部に公開されていないか</strong>自動で見つけたい」→ <strong>IAM Access Analyzer</strong>。アナライザーは<strong>リージョンごと</strong>に作成します。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html">What is IAM Access Analyzer?</a></p>
+<h3 id="sec-2-4">2-4. IAM ポリシーシミュレーター</h3>
+<p>実際に変更を加えず、<strong>特定の ID が特定のアクションを実行できるか</strong>をテストするツールです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>使い方</th>
+<th>手順</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>シミュレーター（コンソール）で対象のユーザー / グループ / ロールを選ぶ</td>
+</tr>
+<tr>
+<td>2</td>
+<td>テストしたいサービスとアクションを選ぶ</td>
+</tr>
+<tr>
+<td>3</td>
+<td>必要ならリソース ARN や条件キーを設定して実行</td>
+</tr>
+<tr>
+<td>4</td>
+<td>結果（allowed / denied）と、<strong>どのポリシーのどのステートメント</strong>が効いたかを確認</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>補足: ポリシーシミュレーターは、アイデンティティベースポリシー・アクセス許可の境界・Organizations の SCP などの評価に使えます。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html">Testing IAM policies with the IAM policy simulator</a></p>
+<h3 id="sec-2-5">2-5. 認証情報レポートと最終アクセス情報</h3>
+<p>ポリシーを細かく見直す前に、そもそも誰がどの認証情報をどれくらい使っているのかを確認する機能が 2 つあります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>認証情報レポート</strong></td>
+<td>アカウント内の全ユーザーのパスワード・アクセスキー・MFA の状態を CSV で取得</td>
+</tr>
+<tr>
+<td><strong>最終アクセス情報</strong></td>
+<td>ユーザーやロールが各サービスを<strong>最後に使った時刻</strong>を確認し、不要な権限を削る</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html">Get credential reports for your AWS account</a></p>
+<h3 id="sec-2-6">2-6. 「AccessDenied」の調べ方（実務フロー）</h3>
+<p>AccessDenied は、原因が 1 つとは限りません。エラーメッセージを手がかりに、どの種類のポリシーが拒否したのかを順にたどる流れを、図と表で整理します。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d7" role="img" aria-label="図解 8"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>疑うべきもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>メッセージに「explicit deny in a service control policy」</td>
+<td>SCP</td>
+</tr>
+<tr>
+<td>メッセージに「no identity-based policy allows」</td>
+<td>ID 側に Allow がない（暗黙の Deny）</td>
+</tr>
+<tr>
+<td>クロスアカウントで失敗</td>
+<td><strong>両側</strong>（呼び出し元の ID ポリシーとリソースポリシー）の許可を確認</td>
+</tr>
+<tr>
+<td>一時認証で失敗</td>
+<td>セッションポリシー、ロールの信頼ポリシー、セッション期限切れ</td>
+</tr>
+<tr>
+<td>KMS 暗号化データにだけ失敗</td>
+<td>キーポリシー・<code>kms:Decrypt</code>（Step 7）</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_access-denied.html">Troubleshoot access denied error messages</a></p>
+<h3 id="sec-2-7">2-7. 試験で狙われるポイント（Step 2）</h3>
+<p>Step 2 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「昨日、誰が S3 バケットを削除したか」</td>
+<td><strong>CloudTrail</strong></td>
+</tr>
+<tr>
+<td>「外部アカウントと共有されているリソースを一覧したい」</td>
+<td><strong>IAM Access Analyzer</strong></td>
+</tr>
+<tr>
+<td>「ポリシー変更前にテストしたい」</td>
+<td><strong>IAM ポリシーシミュレーター</strong></td>
+</tr>
+<tr>
+<td>「実際の使用実績から最小権限ポリシーを作りたい」</td>
+<td><strong>Access Analyzer のポリシー生成</strong>（CloudTrail 利用）</td>
+</tr>
+<tr>
+<td>「90 日より前のイベントを調べたい」</td>
+<td><strong>証跡を作成</strong>し S3 に保存（イベント履歴は 90 日まで）</td>
+</tr>
+<tr>
+<td>「S3 オブジェクトの GET を記録したい」</td>
+<td>CloudTrail の<strong>データイベント</strong>を有効化</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-3">Step 3. マルチアカウント戦略（Skill 4.1.3）</h2>
+<blockquote>
+<p>公式スキル文: AWS Organizations、サービスコントロールポリシー（SCP）、IAM Identity Center を使い、マルチアカウント戦略を<strong>安全に</strong>実装する。</p>
+</blockquote>
+<p>アカウントが増えると、1 つずつ設定するやり方では統制できなくなります。ここでは、アカウントを束ねる Organizations、全体に上限をかける SCP、従業員のサインインを一元化する IAM Identity Center の役割を学び、組織として安全に運用するための考え方をつかみます。</p>
+<h3 id="sec-3-1">3-1. なぜアカウントを分けるのか</h3>
+<p>AWS アカウントは<strong>最も強い分離境界</strong>です。本番と開発を別アカウントにすれば、開発側の操作ミスや侵害が本番に及びにくくなります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>分けるメリット</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>被害範囲の限定</td>
+<td>侵害されても影響がアカウント内に収まる</td>
+</tr>
+<tr>
+<td>権限管理の簡素化</td>
+<td>環境ごとに権限を切り分けやすい</td>
+</tr>
+<tr>
+<td>コスト管理</td>
+<td>部署・環境別の請求が見やすい</td>
+</tr>
+<tr>
+<td>コンプライアンス</td>
+<td>規制対象ワークロードを隔離できる</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-3-2">3-2. AWS Organizations</h3>
+<p><strong>AWS Organizations</strong> は、複数のアカウントを<strong>一元管理</strong>するサービスです。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d8" role="img" aria-label="図解 9"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>管理アカウント</strong></td>
+<td>組織を作成・管理するアカウント。<strong>ワークロードは置かない</strong></td>
+</tr>
+<tr>
+<td><strong>メンバーアカウント</strong></td>
+<td>組織に所属する通常のアカウント</td>
+</tr>
+<tr>
+<td><strong>OU（組織単位）</strong></td>
+<td>アカウントをまとめるフォルダ。階層化できる</td>
+</tr>
+<tr>
+<td><strong>ポリシー</strong></td>
+<td>SCP、タグポリシー、バックアップポリシー、RCP など</td>
+</tr>
+<tr>
+<td><strong>委任管理者</strong></td>
+<td>Security Hub・GuardDuty・Config などの管理を管理アカウントから委任できる</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html">What is AWS Organizations?</a></p>
+<h3 id="sec-3-3">3-3. サービスコントロールポリシー (SCP)</h3>
+<p><strong>SCP</strong> は、組織内のアカウントや OU に適用する「<strong>許可の上限（ガードレール）</strong>」です。</p>
+<h4>SCP の重要な性質</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>性質</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>権限を付与しない</strong></td>
+<td>SCP は「許可できる範囲」を絞るだけ。ID に権限を与えるには IAM ポリシーが別途必要</td>
+</tr>
+<tr>
+<td><strong>管理アカウントには効かない</strong></td>
+<td>管理アカウントは SCP の影響を受けない</td>
+</tr>
+<tr>
+<td><strong>メンバーアカウントのルートユーザーにも効く</strong></td>
+<td>ルートユーザーも制限できる</td>
+</tr>
+<tr>
+<td><strong>サービスリンクロールには効かない</strong></td>
+<td>AWS サービスが使うロールは影響を受けない</td>
+</tr>
+<tr>
+<td><strong>継承される</strong></td>
+<td>親 OU の SCP は子 OU・アカウントに継承される。有効な権限は階層全体の<strong>共通部分</strong></td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d9" role="img" aria-label="図解 10"></div></div>
+<h4>代表的な SCP の使い方</h4>
+<p><strong>拒否リスト方式</strong>（ベストプラクティスとして推奨されやすい）: 既定の <code>FullAWSAccess</code> を残し、禁止したいことだけを Deny で追加します。</p>
+<p><strong>例 1: 許可リージョン以外の操作を禁止（Region 制限）</strong></p>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyOutsideAllowedRegions&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;NotAction&quot;: [
+        &quot;iam:*&quot;,
+        &quot;organizations:*&quot;,
+        &quot;route53:*&quot;,
+        &quot;cloudfront:*&quot;,
+        &quot;support:*&quot;,
+        &quot;sts:*&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringNotEquals&quot;: {
+          &quot;aws:RequestedRegion&quot;: [&quot;ap-northeast-1&quot;, &quot;us-east-1&quot;]
+        }
+      }
+    }
+  ]
+}
+</code></pre>
+<blockquote>
+<p><code>NotAction</code> で<strong>グローバルサービス</strong>（IAM、Route 53、CloudFront など）を除外するのがコツです。除外しないと、us-east-1 を許可していない場合にグローバルサービスの操作まで壊れることがあります。</p>
+</blockquote>
+<p><strong>例 2: CloudTrail や Config の停止を禁止</strong></p>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;ProtectAuditServices&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Action&quot;: [
+        &quot;cloudtrail:StopLogging&quot;,
+        &quot;cloudtrail:DeleteTrail&quot;,
+        &quot;config:StopConfigurationRecorder&quot;,
+        &quot;config:DeleteConfigurationRecorder&quot;
+      ],
+      &quot;Resource&quot;: &quot;*&quot;
+    }
+  ]
+}
+</code></pre>
+<p>出典: <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html">Service control policies (SCPs)</a> / <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples_general.html">SCP examples</a></p>
+<h3 id="sec-3-4">3-4. 関連ポリシー（名前だけ区別できるように）</h3>
+<p>SCP 以外にも、Organizations にはいくつかのポリシーがあります。それぞれが何を制御するのかを区別できれば十分です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポリシー</th>
+<th>制御する対象</th>
+<th>ひとこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SCP</strong></td>
+<td><strong>プリンシパル</strong>（ユーザー・ロール）の権限上限</td>
+<td>「組織のメンバーは何ができるか」</td>
+</tr>
+<tr>
+<td><strong>RCP（リソースコントロールポリシー）</strong></td>
+<td><strong>リソース</strong>に対するアクセスの上限</td>
+<td>「組織のリソースに誰がアクセスできるか」（データ境界の実装などに有用）</td>
+</tr>
+<tr>
+<td><strong>タグポリシー</strong></td>
+<td>タグのキー・値の標準化</td>
+<td>命名ルール統一（Step 6）</td>
+</tr>
+<tr>
+<td><strong>宣言型ポリシー</strong></td>
+<td>サービスの基本設定をアカウント全体で強制</td>
+<td>例: 設定の一括固定</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies.html">Managing AWS Organizations policies</a></p>
+<h3 id="sec-3-4b">3-4b. 全体のレイヤー構造</h3>
+<p>ここまでに出てきた SCP、アクセス許可の境界、セッションポリシー、IAM ポリシーは、重ねて評価されます。上から順に許可の上限が絞られ、最後に実際の許可が決まると考えてください。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d10" role="img" aria-label="図解 11"></div></div>
+<h3 id="sec-3-5">3-5. IAM Identity Center（旧 AWS SSO）</h3>
+<p><strong>IAM Identity Center</strong> は、<strong>従業員が複数の AWS アカウントやアプリにシングルサインオン</strong>するための推奨サービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ID ソース</strong></td>
+<td>ユーザーの情報元。Identity Center 内蔵 / Active Directory / 外部 IdP（SAML）</td>
+</tr>
+<tr>
+<td><strong>ユーザー / グループ</strong></td>
+<td>ログインする人。<strong>グループ単位で権限割り当て</strong>するのが基本</td>
+</tr>
+<tr>
+<td><strong>アクセス許可セット (Permission set)</strong></td>
+<td>「どんな権限か」のテンプレート。割り当て先のアカウントに IAM ロールとして自動作成される</td>
+</tr>
+<tr>
+<td><strong>割り当て</strong></td>
+<td>「このグループに、このアカウントで、この許可セットを与える」</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d11" role="img" aria-label="図解 12"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>利点</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>認証情報が<strong>一時的</strong></td>
+<td>アクセスキーを配らずに CLI も使える（<code>aws sso login</code>）</td>
+</tr>
+<tr>
+<td><strong>一元管理</strong></td>
+<td>退職時は ID ソースで無効化すれば全アカウントのアクセスが止まる</td>
+</tr>
+<tr>
+<td>MFA の強制</td>
+<td>サインイン時の MFA を一括設定できる</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html">What is IAM Identity Center?</a></p>
+<h3 id="sec-3-6">3-6. AWS Control Tower（補足）</h3>
+<p><strong>Control Tower</strong> は、Organizations・Identity Center・Config・CloudTrail などを使って、<strong>ベストプラクティスに沿ったマルチアカウント環境（ランディングゾーン）</strong>を自動構築します。<strong>コントロール（ガードレール）</strong>として、予防型（SCP で実現）と検出型（Config ルールで実現）が提供されます。Region deny コントロールも用意されています。</p>
+<p>出典: <a href="https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html">What is AWS Control Tower?</a> / <a href="https://docs.aws.amazon.com/controltower/latest/userguide/region-deny.html">Region deny</a></p>
+<h3 id="sec-3-7">3-7. 安全なマルチアカウント運用のベストプラクティス</h3>
+<p>複数アカウントを安全に運用するための指針です。理由の列は、設問で構成の問題点を指摘するときの根拠になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>管理アカウントには<strong>ワークロードを置かず</strong>、利用者も最小限にする</td>
+<td>SCP が効かない特別なアカウントだから</td>
+</tr>
+<tr>
+<td>2</td>
+<td>OU 構造に沿って SCP を<strong>段階的に</strong>適用し、まず検証用 OU でテスト</td>
+<td>誤った SCP で業務停止を防ぐ</td>
+</tr>
+<tr>
+<td>3</td>
+<td>組織の<strong>CloudTrail 証跡</strong>を専用のログアーカイブアカウントに集約</td>
+<td>改ざん耐性のある監査</td>
+</tr>
+<tr>
+<td>4</td>
+<td>セキュリティサービス（GuardDuty、Security Hub、Config）の<strong>委任管理者</strong>を設定</td>
+<td>管理アカウントの使用を減らす</td>
+</tr>
+<tr>
+<td>5</td>
+<td>従業員のアクセスは <strong>IAM Identity Center</strong> + グループ割り当て</td>
+<td>IAM ユーザー乱立の防止</td>
+</tr>
+<tr>
+<td>6</td>
+<td>組織全体で必要な Deny（監査停止禁止・リージョン制限）を SCP で強制</td>
+<td>ガードレール</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-3-8">3-8. 試験で狙われるポイント（Step 3）</h3>
+<p>Step 3 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「全アカウントで特定のリージョン以外を使えなくしたい」</td>
+<td>SCP（<code>aws:RequestedRegion</code> の Deny）</td>
+</tr>
+<tr>
+<td>「SCP を付けたのに権限が付与されない」</td>
+<td>SCP は<strong>許可しない</strong>。IAM ポリシーも必要</td>
+</tr>
+<tr>
+<td>「管理アカウントを SCP で制限したい」</td>
+<td><strong>不可</strong>（管理アカウントには効かない）</td>
+</tr>
+<tr>
+<td>「社員が複数アカウントに SSO したい」</td>
+<td><strong>IAM Identity Center</strong></td>
+</tr>
+<tr>
+<td>「開発者に本番アカウントを触らせない」</td>
+<td>OU 分離 + SCP + アクセス許可セットの割り当て制御</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-4">Step 4. Trusted Advisor のセキュリティチェックと是正（Skill 4.1.4）</h2>
+<blockquote>
+<p>公式スキル文: AWS Trusted Advisor のセキュリティチェックの結果に基づいて是正を実装する。</p>
+</blockquote>
+<p>Trusted Advisor は、アカウントの設定をベストプラクティスと自動で照らし合わせ、危険な状態を知らせてくれるサービスです。ここでは、代表的なセキュリティチェックの意味と、検出結果を受けて是正まで進める流れを学びます。</p>
+<h3 id="sec-4-1">4-1. Trusted Advisor とは？</h3>
+<p><strong>AWS Trusted Advisor</strong> は、アカウントの設定を自動でチェックし、<strong>ベストプラクティスからのずれ</strong>を教えてくれるサービスです。カテゴリは次の6つです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>カテゴリ</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>コスト最適化</strong></td>
+<td>使われていないリソースの検出など</td>
+</tr>
+<tr>
+<td><strong>パフォーマンス</strong></td>
+<td>性能向上の推奨</td>
+</tr>
+<tr>
+<td><strong>セキュリティ</strong></td>
+<td>公開設定・MFA・権限などの問題</td>
+</tr>
+<tr>
+<td><strong>耐障害性（Fault tolerance）</strong></td>
+<td>冗長化・バックアップの不足</td>
+</tr>
+<tr>
+<td><strong>サービスクォータ</strong></td>
+<td>上限に近いクォータ</td>
+</tr>
+<tr>
+<td><strong>運用上の優秀性</strong></td>
+<td>運用面の推奨</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>使えるチェックの範囲はサポートプランで異なります</strong>。ベーシック / デベロッパーサポートでは、重要なセキュリティチェックとサービスクォータのチェックなど<strong>一部のみ</strong>が使え、ビジネス以上のサポートでは<strong>全チェック</strong>が使えます。最新の対応範囲は公式ドキュメントで確認してください。</p>
+</blockquote>
+<h3 id="sec-4-2">4-2. 代表的なセキュリティチェック</h3>
+<p>Trusted Advisor が検出する代表的なセキュリティ上の問題と、それぞれの是正の方向性をまとめます。どれも、公開範囲や認証の弱さに関する基本的なものです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>チェック</th>
+<th>検出内容</th>
+<th>是正の方向性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3 バケットのアクセス許可</strong></td>
+<td>パブリックアクセスが可能なバケット</td>
+<td>S3 ブロックパブリックアクセスを有効化、バケットポリシー見直し</td>
+</tr>
+<tr>
+<td><strong>セキュリティグループ - 特定ポートの無制限アクセス</strong></td>
+<td>SSH(22)・RDP(3389) 等が <code>0.0.0.0/0</code> に開放</td>
+<td>送信元を限定、Session Manager の利用</td>
+</tr>
+<tr>
+<td><strong>ルートアカウントの MFA</strong></td>
+<td>ルートに MFA がない</td>
+<td>MFA を有効化</td>
+</tr>
+<tr>
+<td><strong>IAM の使用 / アクセスキーのローテーション</strong></td>
+<td>古いアクセスキー</td>
+<td>キーのローテーション・削除、ロールへ移行</td>
+</tr>
+<tr>
+<td><strong>EBS / RDS のパブリックスナップショット</strong></td>
+<td>スナップショットが公開</td>
+<td>非公開に変更</td>
+</tr>
+<tr>
+<td><strong>CloudTrail ログ</strong></td>
+<td>記録が無効</td>
+<td>証跡を作成</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-3">4-3. 是正の流れ</h3>
+<p>検出結果は、見るだけでは何も変わりません。通知を受けて直す流れを、手動と自動の 2 通りで示します。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d12" role="img" aria-label="図解 13"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EventBridge 連携</strong></td>
+<td>チェック結果の変化をイベントとして受け取り、<strong>自動是正</strong>や通知に使える</td>
+</tr>
+<tr>
+<td><strong>組織ビュー</strong></td>
+<td>Organizations と連携して、全アカウントのチェック結果を集約表示できる（対応プランで）</td>
+</tr>
+<tr>
+<td><strong>更新 (Refresh)</strong></td>
+<td>是正後に手動または自動で再チェックし、結果を反映</td>
+</tr>
+<tr>
+<td><strong>除外 (Exclude)</strong></td>
+<td>意図した例外はリソースを除外して<strong>ノイズを減らす</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-4-4">4-4. ベストプラクティス</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>結果は<strong>見るだけで終わらせず</strong>、担当者・期限を決めて是正する</td>
+<td>見るだけでは危険な状態が放置され、検出が意味を持たないため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>EventBridge</strong> で変化を通知し、重大な検出は自動是正も検討</td>
+<td>変化をすぐ知ることができ、重大なものは人手を待たずに直せるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>意図的な例外は理由を記録して<strong>除外</strong>し、本当の問題が埋もれないようにする</td>
+<td>例外を除外しないと同じ警告が出続け、本当に重要な問題が埋もれるため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Trusted Advisor は<strong>簡易診断</strong>。継続的な評価は Config / Security Hub と組み合わせる</td>
+<td>Trusted Advisor は簡易的な診断なので、変更を逐次追う用途や詳細な基準への準拠確認には Config や Security Hub のほうが向いているため。</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html">AWS Trusted Advisor</a> / <a href="https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor-check-reference.html">Trusted Advisor check reference</a></p>
+<h3 id="sec-4-5">4-5. 試験で狙われるポイント（Step 4）</h3>
+<p>Step 4 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「SSH が全世界に開放されている SG を見つけたい」</td>
+<td>Trusted Advisor のセキュリティチェック（または Config ルール）</td>
+</tr>
+<tr>
+<td>「Trusted Advisor の結果に応じて自動で是正したい」</td>
+<td><strong>EventBridge</strong> → Lambda / SSM Automation</td>
+</tr>
+<tr>
+<td>「ルートの MFA 未設定を知りたい」</td>
+<td>Trusted Advisor のセキュリティチェック</td>
+</tr>
+<tr>
+<td>「チェックの全項目が見られない」</td>
+<td>サポートプランの制限</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-5">Step 5. コンプライアンスの強制と継続的モニタリング（Skill 4.1.5）</h2>
+<blockquote>
+<p>公式スキル文: コンプライアンス要件の強制と継続的モニタリング（リージョンやサービスの選択、AWS Config コンフォーマンスパックなど）。</p>
+</blockquote>
+<p>ルールを決めただけでは守られず、違反を防ぎ、見つけ、直す仕組みが必要です。ここでは、予防・検出・是正の役割分担、リージョンやサービスの制限、AWS Config とコンフォーマンスパックによる継続的な監視を学びます。</p>
+<h3 id="sec-5-1">5-1. 「予防」と「検出」の2本立て</h3>
+<p>コンプライアンスは<strong>予防的コントロール</strong>と<strong>検出的コントロール</strong>の組み合わせで実現します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>目的</th>
+<th>代表的な AWS 機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>予防的</strong></td>
+<td>ルール違反を<strong>そもそもできなくする</strong></td>
+<td>SCP、IAM の Deny、リソースポリシー、Control Tower の予防型ガードレール</td>
+</tr>
+<tr>
+<td><strong>検出的</strong></td>
+<td>違反を<strong>見つけて知らせる</strong></td>
+<td><strong>AWS Config</strong>、Security Hub、Trusted Advisor</td>
+</tr>
+<tr>
+<td><strong>是正的</strong></td>
+<td>違反を<strong>自動で直す</strong></td>
+<td>Config の修復アクション、EventBridge + SSM Automation / Lambda</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d13" role="img" aria-label="図解 14"></div></div>
+<h3 id="sec-5-2">5-2. リージョンとサービスの選択（制限）</h3>
+<p><strong>「使ってよいリージョン・サービスを限定する」</strong> のは、コンプライアンス（データ所在地の要件など）で頻出です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SCP + <code>aws:RequestedRegion</code></strong></td>
+<td>許可リージョン以外の操作を Deny（Step 3 の例）</td>
+</tr>
+<tr>
+<td><strong>SCP で特定サービスを Deny</strong></td>
+<td>例えば不要サービスの <code>Action</code> を Deny</td>
+</tr>
+<tr>
+<td><strong>Control Tower の Region deny</strong></td>
+<td>ガードレールとして提供</td>
+</tr>
+<tr>
+<td><strong>IAM ポリシーの Condition</strong></td>
+<td>個別のロール・ユーザー単位で制限</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-5-3">5-3. AWS Config</h3>
+<p><strong>AWS Config</strong> は、リソースの<strong>設定の変更履歴を記録</strong>し、<strong>ルールで評価</strong>して、コンプライアンス状況を継続的に監視するサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>構成レコーダー</strong></td>
+<td>リソースの設定変更を記録（設定項目）</td>
+</tr>
+<tr>
+<td><strong>リソースタイムライン</strong></td>
+<td>ある時点の設定と変更の履歴を確認</td>
+</tr>
+<tr>
+<td><strong>Config ルール</strong></td>
+<td>設定が望ましい状態か<strong>評価</strong>する。マネージドルール（AWS 提供）とカスタムルール（Lambda / Guard）</td>
+</tr>
+<tr>
+<td><strong>評価のトリガー</strong></td>
+<td>設定変更時（Configuration changes）または定期（Periodic）</td>
+</tr>
+<tr>
+<td><strong>アグリゲーター</strong></td>
+<td>複数のアカウント・リージョンの結果を<strong>集約</strong></td>
+</tr>
+<tr>
+<td><strong>修復アクション</strong></td>
+<td>非準拠リソースに対して <strong>SSM Automation ドキュメント</strong>を実行して是正</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d14" role="img" aria-label="図解 15"></div></div>
+<h4>代表的なマネージドルール</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ルール</th>
+<th>チェック内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s3-bucket-public-read-prohibited</code></td>
+<td>S3 の公開読み取りを禁止</td>
+</tr>
+<tr>
+<td><code>encrypted-volumes</code></td>
+<td>EBS ボリュームが暗号化されている</td>
+</tr>
+<tr>
+<td><code>rds-storage-encrypted</code></td>
+<td>RDS が暗号化されている</td>
+</tr>
+<tr>
+<td><code>root-account-mfa-enabled</code></td>
+<td>ルートに MFA が有効</td>
+</tr>
+<tr>
+<td><code>restricted-ssh</code></td>
+<td>SSH が無制限に開放されていない</td>
+</tr>
+<tr>
+<td><code>required-tags</code></td>
+<td>必須タグが付いている</td>
+</tr>
+<tr>
+<td><code>cloudtrail-enabled</code></td>
+<td>CloudTrail が有効</td>
+</tr>
+<tr>
+<td><code>acm-certificate-expiration-check</code></td>
+<td>証明書の期限切れが近づいていないか</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">What is AWS Config?</a> / <a href="https://docs.aws.amazon.com/config/latest/developerguide/remediation.html">Remediating noncompliant resources</a></p>
+<h3 id="sec-5-4">5-4. Config コンフォーマンスパック</h3>
+<p><strong>コンフォーマンスパック</strong>（Conformance Pack）は、<strong>複数の Config ルールと修復アクションを 1 つのテンプレート（YAML）にまとめ、アカウント・リージョン、または組織全体へ一括デプロイ</strong>する仕組みです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ポイント</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>サンプルテンプレート</strong></td>
+<td>CIS、PCI DSS、NIST、AWS Well-Architected Security Pillar などの運用ベストプラクティス用が提供される</td>
+</tr>
+<tr>
+<td><strong>単一のエンティティ</strong></td>
+<td>まとめて展開・更新・削除できる</td>
+</tr>
+<tr>
+<td><strong>組織への展開</strong></td>
+<td>Organizations と連携して<strong>全アカウントに一括デプロイ</strong>できる</td>
+</tr>
+<tr>
+<td><strong>コンプライアンスの一括確認</strong></td>
+<td>パック単位でスコアを確認できる</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d15" role="img" aria-label="図解 16"></div></div>
+<p>出典: <a href="https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html">Conformance Packs</a></p>
+<h3 id="sec-5-5">5-5. ルール・パック・Security Hub の使い分け</h3>
+<p>似た役割を持つ機能が複数あるため、「やりたいこと」から使うものを選べるように整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>やりたいこと</th>
+<th>使う機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 つの設定ルールをチェック</td>
+<td>Config ルール</td>
+</tr>
+<tr>
+<td>業界標準に沿った<strong>ルール一式</strong>を組織に展開</td>
+<td><strong>Config コンフォーマンスパック</strong></td>
+</tr>
+<tr>
+<td>複数のサービスの検出結果を<strong>1 か所で</strong>見る</td>
+<td>Security Hub（Step 10）</td>
+</tr>
+<tr>
+<td>違反を<strong>防ぐ</strong></td>
+<td>SCP / IAM Deny</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-5-6">5-6. ベストプラクティス</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>すべてのアカウント・リージョン</strong>で Config を有効化し、アグリゲーターで集約</td>
+<td>無効な場所があると、そこでの設定変更や違反が記録されず、見えない死角になるため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>重要要件は<strong>予防（SCP）と検出（Config）の両方</strong>で守る</td>
+<td>予防だけでは例外や設定漏れを拾えず、検出だけでは違反が起きてからの対応になるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>修復アクションは<strong>まず手動承認</strong>で試し、安全を確認してから自動化</td>
+<td>自動修復が誤って必要なリソースを変更すると、障害の原因になるため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>組織の Config レコーダーと証跡は<strong>設定変更を禁止</strong>（SCP で保護）</td>
+<td>監視を止められると違反の記録が残らなくなり、不正の隠蔽にも使われるため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>AWS Artifact</strong> で AWS 側のコンプライアンスレポート（SOC・ISO など）を入手し、監査対応に使う</td>
+<td>AWS 側の統制状況の証跡は自分では作れず、監査人に示す公式の資料として必要になるため。</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html">What is AWS Artifact?</a></p>
+<h3 id="sec-5-7">5-7. 試験で狙われるポイント（Step 5）</h3>
+<p>Step 5 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「リソースの設定変更履歴を見たい」</td>
+<td><strong>AWS Config</strong></td>
+</tr>
+<tr>
+<td>「暗号化されていない EBS を検出して自動修復」</td>
+<td>Config ルール <code>encrypted-volumes</code> + 修復アクション</td>
+</tr>
+<tr>
+<td>「業界標準のルール一式を全アカウントへ展開」</td>
+<td><strong>コンフォーマンスパック</strong>（組織デプロイ）</td>
+</tr>
+<tr>
+<td>「特定リージョン以外を禁止」</td>
+<td>SCP の <code>aws:RequestedRegion</code></td>
+</tr>
+<tr>
+<td>「Config は予防できる？」</td>
+<td><strong>できない</strong>（検出と是正）。予防は SCP / IAM</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-6">Step 6. データ分類（Skill 4.2.1）</h2>
+<blockquote>
+<p>公式スキル文: データ分類スキームを実装し、強制する。</p>
+</blockquote>
+<p>データを守るには、まずどのデータがどれだけ重要かを把握する必要があります。ここでは、分類を AWS 上で実装し強制する手段として、Macie による機密データの発見、タグとタグポリシー、ABAC によるアクセス制御を学びます。</p>
+<h3 id="sec-6-1">6-1. データ分類とは？</h3>
+<p><strong>データ分類</strong>は、データを「どれだけ重要・機密か」で<strong>ランク分け</strong>し、ランクに応じた保護策を決めることです。</p>
+<blockquote>
+<p>注意: 分類スキームの<strong>定義そのもの</strong>（どんなランクにするか決める）は組織のガバナンス業務で、試験の対象外です。試験で問われるのは、<strong>決まった分類を AWS 上で実装・強制する</strong>手段です。</p>
+</blockquote>
+<h4>分類レベルの例</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>レベル</th>
+<th>例</th>
+<th>保護の方針の例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>公開</strong></td>
+<td>プレスリリース</td>
+<td>改ざん防止</td>
+</tr>
+<tr>
+<td><strong>社内限定</strong></td>
+<td>社内連絡</td>
+<td>認証必須</td>
+</tr>
+<tr>
+<td><strong>機密</strong></td>
+<td>顧客情報、契約書</td>
+<td>暗号化（CMK）、アクセスログ、最小権限</td>
+</tr>
+<tr>
+<td><strong>極秘</strong></td>
+<td>決済情報、個人番号</td>
+<td>厳格な暗号化、MFA、アクセス承認</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-2">6-2. AWS での「実装と強制」の手段</h3>
+<p>分類を実装して強制するには、データを見つける、ラベルを付ける、ラベルに応じて制御する、の 3 段階があります。下の図と表で、それぞれの段階を担う機能を確認します。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d16" role="img" aria-label="図解 17"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>手段</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon Macie</strong></td>
+<td>S3 内の<strong>機密データを自動発見</strong>（個人情報、認証情報など）。マネージドデータ識別子とカスタム識別子を使う</td>
+</tr>
+<tr>
+<td><strong>リソースタグ</strong></td>
+<td><code>DataClassification=Confidential</code> のように分類を<strong>ラベル付け</strong></td>
+</tr>
+<tr>
+<td><strong>タグポリシー（Organizations）</strong></td>
+<td>タグのキー名・許容値を<strong>標準化</strong>（例: <code>Confidential</code> / <code>Internal</code> / <code>Public</code> のみ）</td>
+</tr>
+<tr>
+<td><strong>ABAC（属性ベースのアクセス制御）</strong></td>
+<td><code>aws:ResourceTag</code> と <code>aws:PrincipalTag</code> が一致するときだけ許可</td>
+</tr>
+<tr>
+<td><strong>Config ルール <code>required-tags</code></strong></td>
+<td>必須タグの付け忘れを<strong>検出</strong></td>
+</tr>
+<tr>
+<td><strong>KMS</strong></td>
+<td>分類ごとに別のキーを使い、キーポリシーでアクセスを絞る</td>
+</tr>
+<tr>
+<td><strong>S3 ブロックパブリックアクセス</strong></td>
+<td>機密データの公開を防ぐ</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-6-3">6-3. Amazon Macie</h3>
+<p><strong>Amazon Macie</strong> は、機械学習とパターンマッチングで <strong>S3 内の機密データを検出</strong>するサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自動機密データ検出</strong></td>
+<td>S3 全体を継続的にサンプリングして機密データの有無を把握</td>
+</tr>
+<tr>
+<td><strong>機密データ検出ジョブ</strong></td>
+<td>指定バケットを詳細にスキャン</td>
+</tr>
+<tr>
+<td><strong>S3 バケットのインベントリ</strong></td>
+<td>暗号化状況・公開状況・共有状況を可視化</td>
+</tr>
+<tr>
+<td><strong>検出結果（Findings）</strong></td>
+<td><strong>EventBridge</strong> や <strong>Security Hub</strong> に連携して通知・集約</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html">What is Amazon Macie?</a></p>
+<h3 id="sec-6-4">6-4. タグによる ABAC の例</h3>
+<p>「自分と同じ <code>Project</code> タグが付いた EC2 だけを操作できる」ポリシー例です。</p>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;ec2:StartInstances&quot;, &quot;ec2:StopInstances&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:ec2:*:*:instance/*&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringEquals&quot;: {
+          &quot;aws:ResourceTag/Project&quot;: &quot;${aws:PrincipalTag/Project}&quot;
+        }
+      }
+    }
+  ]
+}
+</code></pre>
+<h3 id="sec-6-5">6-5. ベストプラクティス</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>分類は<strong>少ない段階数</strong>（3〜4 段階）で明確にする（運用に乗る）</td>
+<td>段階が多いと判断が分かれて運用に乗らず、タグ付けが形骸化するため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>タグ付けを自動化</strong>（IaC のテンプレートで標準付与、タグポリシーで強制）</td>
+<td>手作業のタグ付けは漏れや表記ゆれが起きやすく、分類に基づく制御が効かなくなるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>機密の高いデータほど<strong>強い保護</strong>（CMK、アクセスログ、MFA）を適用</td>
+<td>流出したときの被害が大きいデータほど、複数の防御を重ねる価値が高いため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Macie で<strong>想定外の場所にある機密データ</strong>を定期的に発見</td>
+<td>想定外の場所に置かれた機密データは、分類やタグの対象から漏れやすいため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>分類とアクセス制御を<strong>ひも付ける</strong>（ABAC）</td>
+<td>分類が実際の権限に反映されないと、分類はラベルに過ぎず、機密データが守られないため。</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/whitepapers/latest/data-classification/data-classification.html">Data classification whitepaper</a> / <a href="https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html">Tagging best practices</a></p>
+<h3 id="sec-6-6">6-6. 試験で狙われるポイント（Step 6）</h3>
+<p>Step 6 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「S3 に個人情報が入っていないか自動で探したい」</td>
+<td><strong>Amazon Macie</strong></td>
+</tr>
+<tr>
+<td>「タグの付け忘れを検出したい」</td>
+<td>Config ルール <code>required-tags</code></td>
+</tr>
+<tr>
+<td>「組織全体でタグの値を統一したい」</td>
+<td>Organizations の<strong>タグポリシー</strong></td>
+</tr>
+<tr>
+<td>「タグに応じてアクセスを制御したい」</td>
+<td><strong>ABAC</strong>（<code>aws:ResourceTag</code> / <code>aws:PrincipalTag</code>）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-7">Step 7. 保管時の暗号化 / AWS KMS（Skill 4.2.2）</h2>
+<blockquote>
+<p>公式スキル文: 保管時の暗号化（例: AWS KMS）を実装、構成、トラブルシュートする。</p>
+</blockquote>
+<p>保管中のデータを暗号化しておけば、ディスクやバックアップが漏れても中身を読まれません。ここでは、AWS KMS の仕組み、キーポリシーによるアクセス制御、主要サービスの暗号化、うまく動かないときのトラブルシュートを学びます。</p>
+<h3 id="sec-7-1">7-1. 暗号化の基本</h3>
+<p>暗号化の話に入る前に、用語を整理します。「保管時」と「転送時」の違い、対称鍵と非対称鍵の違いが基礎になります。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>保管時の暗号化（Encryption at rest）</strong></td>
+<td>ディスクや S3 などに<strong>保存されているデータ</strong>を暗号化</td>
+</tr>
+<tr>
+<td><strong>転送時の暗号化（Encryption in transit）</strong></td>
+<td>ネットワークを<strong>流れているデータ</strong>を暗号化（Step 8）</td>
+</tr>
+<tr>
+<td><strong>対称鍵</strong></td>
+<td>暗号化と復号に<strong>同じ鍵</strong>を使う。KMS の標準</td>
+</tr>
+<tr>
+<td><strong>非対称鍵</strong></td>
+<td>公開鍵 / 秘密鍵のペア。署名や外部への暗号化に使う</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-2">7-2. AWS KMS とは</h3>
+<p><strong>AWS Key Management Service (KMS)</strong> は、<strong>暗号鍵の作成・管理・利用</strong>を行うマネージドサービスです。多くの AWS サービス（S3、EBS、RDS、Lambda、Secrets Manager など）と統合され、キーの使用は <strong>CloudTrail に記録</strong>されます。</p>
+<h4>キーの種類</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>種類</th>
+<th>管理者</th>
+<th>特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AWS 所有キー</strong></td>
+<td>AWS</td>
+<td>利用者からは見えない。無料。多くのサービスの既定</td>
+</tr>
+<tr>
+<td><strong>AWS マネージドキー</strong>（<code>aws/s3</code> など）</td>
+<td>AWS（サービスごとに作成）</td>
+<td>自動ローテーション（毎年）。キーポリシーは<strong>変更できない</strong></td>
+</tr>
+<tr>
+<td><strong>カスタマーマネージドキー（CMK）</strong></td>
+<td><strong>利用者</strong></td>
+<td>キーポリシー・ローテーション・無効化・削除を<strong>自分で制御</strong>。有料</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>CMK を選ぶ理由: <strong>キーポリシーを自分で制御したい</strong>、<strong>クロスアカウントで共有したい</strong>、監査・コンプライアンス上キーの制御が必要、などです。</p>
+</blockquote>
+<h3 id="sec-7-3">7-3. エンベロープ暗号化</h3>
+<p>KMS は大量のデータを<strong>直接</strong>暗号化するのではなく、<strong>データキー</strong>を介する「エンベロープ暗号化」を使います。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d17" role="img" aria-label="図解 18"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>利点</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高速</td>
+<td>大きなデータはローカルで暗号化（KMS への転送はキーだけ）</td>
+</tr>
+<tr>
+<td>安全</td>
+<td>KMS のマスターキー（KMS キー）は KMS の外に出ない</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-4">7-4. キーポリシーとアクセス制御</h3>
+<p>KMS のアクセス制御は、他のサービスと<strong>考え方が少し違います</strong>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>重要ポイント</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>キーポリシーが必須</strong></td>
+<td>すべての KMS キーにキーポリシーがある。<strong>キーポリシーが許可しなければ、IAM ポリシーだけでは使えない</strong></td>
+</tr>
+<tr>
+<td><strong>IAM ポリシーを有効にする一文</strong></td>
+<td>既定のキーポリシーには「アカウントの IAM ポリシーで権限管理を許可する」ステートメントがあり、これで IAM ポリシーが効く</td>
+</tr>
+<tr>
+<td><strong>グラント</strong></td>
+<td>一時的・プログラム的にキーの使用権限を委任する仕組み（EBS や RDS が内部で使用）</td>
+</tr>
+<tr>
+<td><strong>クロスアカウント</strong></td>
+<td><strong>キーポリシー（キー側）</strong>と<strong>呼び出し側の IAM ポリシー</strong>の<strong>両方</strong>が必要</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d18" role="img" aria-label="図解 19"></div></div>
+<h4>主な KMS アクション</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>アクション</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kms:Encrypt</code> / <code>kms:Decrypt</code></td>
+<td>暗号化 / 復号</td>
+</tr>
+<tr>
+<td><code>kms:GenerateDataKey</code></td>
+<td>データキー生成（<strong>S3 や EBS への書き込み</strong>で必要）</td>
+</tr>
+<tr>
+<td><code>kms:CreateGrant</code></td>
+<td>グラント作成（EBS 等のサービス連携で必要）</td>
+</tr>
+<tr>
+<td><code>kms:DescribeKey</code></td>
+<td>キー情報の取得</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-5">7-5. キーのローテーション・無効化・削除</h3>
+<p>鍵は、作って終わりではなく、更新や停止、削除までの管理が必要です。操作ごとの意味と注意点を表にまとめます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>自動ローテーション</strong></td>
+<td>CMK では<strong>有効化が必要</strong>（既定は無効）。有効化すると既定で毎年ローテーション（間隔は設定可能）。<strong>キー ID・ARN は変わらず</strong>、過去のデータは古いキー素材で自動復号される</td>
+</tr>
+<tr>
+<td><strong>オンデマンドローテーション</strong></td>
+<td>必要なときに手動で即時ローテーション</td>
+</tr>
+<tr>
+<td><strong>無効化</strong></td>
+<td>一時的に使用不可にする（元に戻せる）</td>
+</tr>
+<tr>
+<td><strong>削除</strong></td>
+<td><strong>7〜30 日の待機期間</strong>を経て完全削除（待機中はキャンセル可能）。<strong>削除すると暗号化データは復号できなくなる</strong></td>
+</tr>
+<tr>
+<td><strong>マルチリージョンキー</strong></td>
+<td>同一キー素材を複数リージョンで使う（DR・グローバル用途）</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>削除は取り返しがつきません。<strong>まず無効化</strong>して影響がないことを確認してから、削除をスケジュールするのが安全です。</p>
+</blockquote>
+<h3 id="sec-7-6">7-6. 主要サービスの暗号化（試験頻出）</h3>
+<p>KMS を使う側の主要サービスごとに、暗号化の既定の挙動と、後から暗号化するときの手順の違いを押さえます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>暗号化の特徴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3</strong></td>
+<td><strong>新規オブジェクトは SSE-S3 で自動暗号化</strong>（既定）。SSE-KMS、DSSE-KMS、SSE-C も選択可。<strong>S3 バケットキー</strong>で KMS のリクエスト数とコストを削減</td>
+</tr>
+<tr>
+<td><strong>EBS</strong></td>
+<td>ボリューム作成時に暗号化。<strong>リージョン単位でデフォルト暗号化</strong>を有効化できる</td>
+</tr>
+<tr>
+<td><strong>RDS</strong></td>
+<td><strong>作成時に暗号化を有効化</strong>。スナップショット・リードレプリカ・バックアップも暗号化される</td>
+</tr>
+<tr>
+<td><strong>DynamoDB</strong></td>
+<td>常に保管時暗号化（AWS 所有キー / AWS マネージドキー / CMK を選択）</td>
+</tr>
+<tr>
+<td><strong>Secrets Manager / SSM SecureString</strong></td>
+<td>KMS で暗号化</td>
+</tr>
+</tbody>
+</table></div>
+<h4>既存の非暗号化リソースを暗号化する手順（頻出）</h4>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d19" role="img" aria-label="図解 20"></div></div>
+<blockquote>
+<p><strong>作成後に「暗号化のスイッチ」を入れることはできません</strong>（EBS・RDS）。<strong>暗号化スナップショットのコピー → 復元</strong>が基本の手順です。</p>
+</blockquote>
+<h4>暗号化したスナップショットの共有</h4>
+<ul>
+<li><strong>AWS マネージドキーで暗号化したスナップショットは、他アカウントと共有できません</strong>。</li>
+<li>共有するには <strong>CMK で暗号化</strong>し、<strong>キーポリシーで相手アカウントを許可</strong>します。</li>
+</ul>
+<h3 id="sec-7-7">7-7. KMS のトラブルシュート</h3>
+<p>暗号化まわりの障害は、エラーの名前から原因を絞れることが多くあります。症状ごとの原因と対処を表にまとめます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状 / エラー</th>
+<th>主な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDeniedException</code></td>
+<td>キーポリシー・IAM ポリシーに必要なアクションがない。クロスアカウントで片側のみ許可</td>
+<td>キーポリシーと IAM の両方を確認</td>
+</tr>
+<tr>
+<td>EC2 が暗号化 EBS を起動できない</td>
+<td>EC2 に関連するロールに <code>kms:CreateGrant</code>、<code>kms:GenerateDataKey*</code>、<code>kms:Decrypt</code> が足りない</td>
+<td>キーポリシーの許可を追加</td>
+</tr>
+<tr>
+<td><code>KMSInvalidStateException</code> / <code>DisabledException</code></td>
+<td>キーが<strong>無効</strong>、または<strong>削除保留中</strong></td>
+<td>キーを有効化、削除をキャンセル</td>
+</tr>
+<tr>
+<td>S3 から SSE-KMS オブジェクトを取得できない</td>
+<td>呼び出し元に <strong><code>kms:Decrypt</code></strong> がない</td>
+<td>キー権限を付与</td>
+</tr>
+<tr>
+<td><code>ThrottlingException</code></td>
+<td>KMS の API リクエストクォータ超過</td>
+<td><strong>S3 バケットキー</strong>の利用、再試行（指数バックオフ）、クォータ引き上げ</td>
+</tr>
+<tr>
+<td>別リージョンで復号できない</td>
+<td>KMS キーは<strong>リージョン固有</strong></td>
+<td>マルチリージョンキー、またはコピー時に再暗号化</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>切り分けのコツ: <strong>CloudTrail</strong> の <code>kms.amazonaws.com</code> イベントで、どのキー・どの ID・どのエラーかを確認します。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/kms/latest/developerguide/overview.html">What is AWS KMS?</a> / <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html">Key policies</a> / <a href="https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html">Rotating KMS keys</a> / <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html">Grants in AWS KMS</a> / <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html">S3 encryption</a> / <a href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html">EBS encryption</a> / <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html">RDS encryption</a></p>
+<h3 id="sec-7-8">7-8. ベストプラクティス（KMS）</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>要件があるデータには<strong>CMK</strong>を使い、<strong>キーポリシーを最小権限</strong>に</td>
+<td>AWS マネージドキーはポリシーを変更できず、アクセスを細かく絞ったり他アカウントと共有したりできないため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>管理者</strong>（キーの管理）と<strong>利用者</strong>（暗号化・復号）の権限を<strong>分離</strong></td>
+<td>権限を分けると、鍵を管理する人がデータを復号できず、1 人の不正や誤操作の影響が限られるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>CMK の<strong>自動ローテーション</strong>を有効化</td>
+<td>同じ鍵を長期間使い続けるリスクを減らせ、ローテーション後も古いデータは復号できるため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>削除する前に<strong>無効化</strong>して影響確認。待機期間は余裕を持つ</td>
+<td>削除すると暗号化データを復元できなくなるため、無効化して問題が出ないことを確認してから進めると取り返しがつくため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td>EBS の<strong>デフォルト暗号化</strong>、S3 のバケットキー等を有効化</td>
+<td>作成時の設定忘れで平文のデータができるのを防げ、S3 のバケットキーは KMS の呼び出し回数と費用を抑えるため。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>キーの使用を <strong>CloudTrail</strong> で監視し、異常な使用をアラート</td>
+<td>鍵が誰によって使われたかは CloudTrail にしか残らず、異常な利用の早期発見につながるため。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>暗号化の設定漏れを <strong>Config ルール</strong>で検出</td>
+<td>暗号化されていないリソースを人の目で探すのは現実的でなく、ルールなら自動で網羅できるため。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-7-9">7-9. 試験で狙われるポイント（Step 7）</h3>
+<p>Step 7 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「稼働中の非暗号化 EBS を暗号化したい」</td>
+<td>スナップショット → <strong>暗号化コピー</strong> → 新ボリューム作成</td>
+</tr>
+<tr>
+<td>「非暗号化 RDS を暗号化したい」</td>
+<td>スナップショット → 暗号化コピー → <strong>復元</strong></td>
+</tr>
+<tr>
+<td>「暗号化 EBS スナップショットを別アカウントに共有」</td>
+<td><strong>CMK</strong> で暗号化し、キーポリシーで相手を許可</td>
+</tr>
+<tr>
+<td>「KMS 利用でスロットリング」</td>
+<td><strong>S3 バケットキー</strong>、リトライ、クォータ緩和</td>
+</tr>
+<tr>
+<td>「ローテーションしたらデータが読めなくなる？」</td>
+<td><strong>読める</strong>（古いキー素材は保持される）</td>
+</tr>
+<tr>
+<td>「誤ってキーを削除予約した」</td>
+<td>待機期間中なら<strong>削除をキャンセル</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-8">Step 8. 転送時の暗号化 / ACM（Skill 4.2.3）</h2>
+<blockquote>
+<p>公式スキル文: 転送時の暗号化（例: AWS Certificate Manager [ACM]）を実装、構成、トラブルシュートする。</p>
+</blockquote>
+<p>ネットワークを流れるデータは、途中で盗み見や改ざんをされるおそれがあります。ここでは、TLS 証明書を発行・更新できる ACM を中心に、ロードバランサー、CloudFront、S3、RDS で通信の暗号化を実装・強制する方法と、証明書まわりの障害対応を学びます。</p>
+<h3 id="sec-8-1">8-1. 転送時の暗号化とは</h3>
+<p>ネットワーク上のデータを盗聴・改ざんされないよう、<strong>TLS（Transport Layer Security）</strong> で通信を暗号化します。HTTPS は「HTTP + TLS」です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>用語</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TLS 証明書</strong></td>
+<td>サーバーの身元を証明する電子証明書。ドメイン名と公開鍵を結び付ける</td>
+</tr>
+<tr>
+<td><strong>CA（認証局）</strong></td>
+<td>証明書を発行する信頼された機関</td>
+</tr>
+<tr>
+<td><strong>TLS 終端</strong></td>
+<td>ロードバランサーなどで TLS を復号する場所</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-2">8-2. AWS Certificate Manager (ACM)</h3>
+<p><strong>ACM</strong> は、TLS 証明書の<strong>発行・管理・更新</strong>を行うサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>パブリック証明書</strong></td>
+<td>ACM から発行。<strong>ACM 統合サービスでは無料で使える</strong></td>
+</tr>
+<tr>
+<td><strong>プライベート証明書</strong></td>
+<td><strong>AWS Private CA</strong> で発行（社内システム用）。別料金</td>
+</tr>
+<tr>
+<td><strong>インポート</strong></td>
+<td>外部で取得した証明書を ACM に取り込む（<strong>自動更新されない</strong>）</td>
+</tr>
+<tr>
+<td><strong>マネージド更新</strong></td>
+<td>ACM 発行の証明書は条件を満たせば<strong>自動で更新</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h4>ACM と統合できる主なサービス</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>ポイント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Elastic Load Balancing（ALB / NLB）</strong></td>
+<td>HTTPS / TLS リスナーに証明書を設定</td>
+</tr>
+<tr>
+<td><strong>Amazon CloudFront</strong></td>
+<td><strong>証明書は米国東部（バージニア北部, us-east-1）で用意する</strong></td>
+</tr>
+<tr>
+<td><strong>Amazon API Gateway</strong></td>
+<td>カスタムドメインに利用</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>EC2 インスタンスへの証明書の直接インストールは、ACM のパブリック証明書では原則できません（ACM 統合サービスで使う前提）。EC2 上で TLS 終端が必要なときは、ロードバランサーで終端する構成を基本に考えます。最新の対応状況は公式ドキュメントで確認してください。</p>
+</blockquote>
+<h3 id="sec-8-3">8-3. ドメイン検証（DNS 検証 vs メール検証）</h3>
+<p>ACM で証明書を発行するときは、そのドメインを自分が管理していることを示す検証が必要です。方法は DNS 検証とメール検証の 2 つで、運用が楽な DNS 検証が推奨されます。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d20" role="img" aria-label="図解 21"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>比較</th>
+<th>DNS 検証</th>
+<th>メール検証</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>手間</td>
+<td><strong>CNAME を一度追加</strong>すれば OK</td>
+<td>承認メール対応が必要</td>
+</tr>
+<tr>
+<td>自動更新</td>
+<td><strong>しやすい</strong>（推奨）</td>
+<td>手間が残りやすい</td>
+</tr>
+<tr>
+<td>Route 53 との相性</td>
+<td><strong>ワンクリックでレコード追加</strong>可能</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-4">8-4. 実装パターン</h3>
+<h4>ALB で HTTPS を使う</h4>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d21" role="img" aria-label="図解 22"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>手順</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ACM で証明書を発行し、DNS 検証を完了（ステータスが <strong>Issued</strong>）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ALB に <strong>HTTPS (443) リスナー</strong>を追加し、証明書を選択</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>セキュリティポリシー</strong>（TLS のバージョンや暗号スイート）を最新・推奨のものにする</td>
+</tr>
+<tr>
+<td>4</td>
+<td>HTTP (80) リスナーは <strong>HTTPS へリダイレクト</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>バックエンドも暗号化したい場合は、ターゲットグループのプロトコルを HTTPS に</td>
+</tr>
+</tbody>
+</table></div>
+<h4>その他の「転送時暗号化」の強制</h4>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>対象</th>
+<th>強制の方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>S3</strong></td>
+<td>バケットポリシーで <code>aws:SecureTransport</code> が <code>false</code> のとき Deny</td>
+</tr>
+<tr>
+<td><strong>CloudFront</strong></td>
+<td>ビューアープロトコルポリシーを「<strong>HTTP を HTTPS にリダイレクト</strong>」または「HTTPS のみ」</td>
+</tr>
+<tr>
+<td><strong>RDS</strong></td>
+<td><strong>SSL/TLS 接続を要求</strong>（エンジンごとのパラメータ。例: PostgreSQL の <code>rds.force_ssl</code>、MySQL の <code>require_secure_transport</code>）</td>
+</tr>
+<tr>
+<td><strong>VPN / Direct Connect</strong></td>
+<td>Site-to-Site VPN は IPsec。Direct Connect は既定で暗号化されないため、必要なら MACsec や VPN を併用</td>
+</tr>
+</tbody>
+</table></div>
+<pre class="code" data-lang="json"><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;DenyInsecureTransport&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: &quot;s3:*&quot;,
+      &quot;Resource&quot;: [
+        &quot;arn:aws:s3:::example-bucket&quot;,
+        &quot;arn:aws:s3:::example-bucket/*&quot;
+      ],
+      &quot;Condition&quot;: {
+        &quot;Bool&quot;: { &quot;aws:SecureTransport&quot;: &quot;false&quot; }
+      }
+    }
+  ]
+}
+</code></pre>
+<h3 id="sec-8-5">8-5. 証明書の期限切れ対策</h3>
+<p>証明書の期限切れは、サービス停止につながる典型的な運用事故です。発行方法ごとに、自動更新と監視の手段を整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ACM 発行 + DNS 検証</strong></td>
+<td>自動更新に任せる（最も運用が楽）</td>
+</tr>
+<tr>
+<td><strong>EventBridge</strong></td>
+<td>「ACM Certificate Approaching Expiration」イベントで通知</td>
+</tr>
+<tr>
+<td><strong>Config ルール</strong></td>
+<td><code>acm-certificate-expiration-check</code> で期限切れ間近を検出</td>
+</tr>
+<tr>
+<td><strong>CloudWatch メトリクス</strong></td>
+<td><code>DaysToExpiry</code> で監視しアラーム</td>
+</tr>
+<tr>
+<td><strong>インポート証明書</strong></td>
+<td>自動更新<strong>されない</strong>ため、<strong>必ず期限を監視</strong>して手動で差し替え</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-6">8-6. トラブルシュート</h3>
+<p>証明書まわりの障害は、検証、リージョン、ドメイン名のどれかに集約されることがほとんどです。症状から原因を引ける形にまとめます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>主な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>証明書が <strong>Pending validation</strong> のまま</td>
+<td>DNS に CNAME が<strong>未登録 / 誤り</strong>、メール未承認</td>
+<td>ACM が示す CNAME を正確に追加</td>
+</tr>
+<tr>
+<td>CloudFront で証明書が<strong>選べない</strong></td>
+<td>証明書が <strong>us-east-1 以外</strong>にある</td>
+<td>us-east-1 で証明書を再発行</td>
+</tr>
+<tr>
+<td>ブラウザで<strong>名前不一致エラー</strong></td>
+<td>証明書の CN / SAN にアクセスするドメインが含まれない</td>
+<td>正しいドメイン（ワイルドカード含む）で再発行</td>
+</tr>
+<tr>
+<td>自動更新されない</td>
+<td>DNS 検証用 CNAME を<strong>削除</strong>した、証明書が<strong>どのリソースにも未使用</strong>、インポート証明書</td>
+<td>CNAME を復元、使用状況を確認</td>
+</tr>
+<tr>
+<td>ALB に証明書を選択できない</td>
+<td>ALB と<strong>別リージョン</strong>の証明書</td>
+<td>ALB と同じリージョンで発行</td>
+</tr>
+<tr>
+<td>古い TLS で接続できる / できない</td>
+<td>セキュリティポリシーが古い / 新しすぎる</td>
+<td>クライアント要件に合わせてポリシーを選択</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html">What is AWS Certificate Manager?</a> / <a href="https://docs.aws.amazon.com/acm/latest/userguide/domain-ownership-validation.html">DNS / email validation</a> / <a href="https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html">Managed renewal</a> / <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html">HTTPS listener for ALB</a> / <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https.html">CloudFront and HTTPS</a></p>
+<h3 id="sec-8-7">8-7. ベストプラクティス（転送時暗号化）</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>すべての通信を TLS で暗号化</strong>し、HTTP は HTTPS へリダイレクト</td>
+<td>平文の通信は盗聴や改ざんのおそれがあり、リダイレクトにしておけば古いリンクからのアクセスも守れるため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ACM の<strong>DNS 検証</strong>を使い、<strong>自動更新</strong>を活用</td>
+<td>DNS 検証なら手動の承認なしに更新され、期限切れによる停止を防げるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>推奨の<strong>セキュリティポリシー</strong>（TLS 1.2 以上）を選択</td>
+<td>古い TLS バージョンや弱い暗号スイートには既知の脆弱性があるため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>S3 は <code>aws:SecureTransport</code> で<strong>HTTP を拒否</strong></td>
+<td>バケットポリシーで強制すれば、クライアントの設定に関係なく HTTP を使えなくできるため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>期限切れ監視</strong>（EventBridge / Config）を必ず設定</td>
+<td>インポート証明書のように自動更新されないものは、気づかないうちに期限が切れるため。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>内部通信（サービス間・DB 接続）も TLS を要求</td>
+<td>内部ネットワークでも、侵入された後の盗聴や、VPC をまたぐ通信での漏えいを防ぐ必要があるため。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-8-8">8-8. 試験で狙われるポイント（Step 8）</h3>
+<p>Step 8 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「証明書を無料で発行・自動更新したい」</td>
+<td><strong>ACM（パブリック証明書）+ DNS 検証</strong></td>
+</tr>
+<tr>
+<td>「CloudFront で使う証明書のリージョン」</td>
+<td><strong>us-east-1</strong></td>
+</tr>
+<tr>
+<td>「S3 への HTTP アクセスを拒否」</td>
+<td><code>aws:SecureTransport</code> を <code>false</code> で Deny</td>
+</tr>
+<tr>
+<td>「インポートした証明書の期限切れ対策」</td>
+<td>自動更新されないため<strong>期限監視 + 手動更新</strong></td>
+</tr>
+<tr>
+<td>「Pending validation のまま」</td>
+<td><strong>CNAME 未登録</strong>を疑う</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-9">Step 9. シークレットの安全な保管（Skill 4.2.4）</h2>
+<blockquote>
+<p>公式スキル文: AWS のサービスを使ってシークレットを安全に保管する。</p>
+</blockquote>
+<p>パスワードや API キーをコードや設定ファイルに書くと、漏れたときの被害が大きくなります。ここでは、シークレット専用の Secrets Manager と Parameter Store の違い、安全な取得方法、自動ローテーション、障害対応を学びます。</p>
+<h3 id="sec-9-1">9-1. シークレットとは？ なぜ問題になるか</h3>
+<p><strong>シークレット</strong>は、データベースのパスワード、API キー、トークンなど「<strong>漏れたら困る認証情報</strong>」です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>やってはいけない</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ソースコードにハードコード</td>
+<td>Git に残る。リポジトリが漏れた瞬間に流出</td>
+</tr>
+<tr>
+<td>環境変数や設定ファイルに平文</td>
+<td>ログ・設定の閲覧で漏れる</td>
+</tr>
+<tr>
+<td>共有ドキュメントに記載</td>
+<td>閲覧者全員が見える</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>対策</strong>: シークレット専用のサービスに保管し、<strong>実行時に取得</strong>する。</p>
+<h3 id="sec-9-2">9-2. AWS Secrets Manager</h3>
+<p><strong>AWS Secrets Manager</strong> は、シークレットを<strong>暗号化して保管</strong>し、<strong>自動ローテーション</strong>ができるサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>暗号化</strong></td>
+<td><strong>KMS</strong> で暗号化（AWS マネージドキー または CMK）</td>
+</tr>
+<tr>
+<td><strong>自動ローテーション</strong></td>
+<td><strong>Lambda 関数</strong>で定期的にパスワードを変更。RDS・Redshift・DocumentDB などは<strong>ローテーション機能が組み込み</strong></td>
+</tr>
+<tr>
+<td><strong>アクセス制御</strong></td>
+<td>IAM ポリシー + <strong>リソースポリシー</strong>で制御</td>
+</tr>
+<tr>
+<td><strong>クロスリージョンレプリケーション</strong></td>
+<td>シークレットを別リージョンに複製（DR 用）</td>
+</tr>
+<tr>
+<td><strong>監査</strong></td>
+<td>取得・変更が <strong>CloudTrail</strong> に記録される</td>
+</tr>
+<tr>
+<td><strong>削除の猶予期間</strong></td>
+<td>削除予約時に <strong>7〜30 日の復旧猶予</strong>（既定 30 日）</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d22" role="img" aria-label="図解 23"></div></div>
+<h4>自動ローテーションの流れ</h4>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d23" role="img" aria-label="図解 24"></div></div>
+<h3 id="sec-9-3">9-3. SSM Parameter Store</h3>
+<p><strong>Parameter Store</strong> は、設定値やシークレットを階層的（<code>/app/prod/db/password</code>）に保管できる Systems Manager の機能です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>型</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>String</strong></td>
+<td>平文の文字列</td>
+</tr>
+<tr>
+<td><strong>StringList</strong></td>
+<td>カンマ区切りのリスト</td>
+</tr>
+<tr>
+<td><strong>SecureString</strong></td>
+<td><strong>KMS で暗号化</strong>された値</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-9-4">9-4. Secrets Manager と Parameter Store の使い分け</h3>
+<p>どちらもシークレットを保管できるため、迷いやすい組み合わせです。必要な機能から選べるよう、違いを表と図で整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>観点</th>
+<th>Secrets Manager</th>
+<th>Parameter Store</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>主な用途</strong></td>
+<td><strong>シークレット</strong>（DB 認証情報、API キー）</td>
+<td>設定値全般（シークレットも可）</td>
+</tr>
+<tr>
+<td><strong>自動ローテーション</strong></td>
+<td><strong>あり</strong>（組み込み）</td>
+<td><strong>なし</strong>（自前で実装）</td>
+</tr>
+<tr>
+<td><strong>コスト</strong></td>
+<td>シークレット数・API 呼び出しで課金</td>
+<td>Standard パラメータは<strong>無料枠が大きい</strong></td>
+</tr>
+<tr>
+<td><strong>クロスリージョン複製</strong></td>
+<td><strong>あり</strong></td>
+<td>なし</td>
+</tr>
+<tr>
+<td><strong>リソースポリシー</strong></td>
+<td>あり</td>
+<td>なし</td>
+</tr>
+<tr>
+<td><strong>暗号化</strong></td>
+<td>常に KMS</td>
+<td>SecureString のみ KMS</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d24" role="img" aria-label="図解 25"></div></div>
+<h3 id="sec-9-5">9-5. アプリからの安全な利用パターン</h3>
+<p>シークレットは、保管するだけでなく、アプリが安全に取り出せて初めて役に立ちます。実行環境ごとの取得方法を確認します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>実行環境</th>
+<th>取得方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2</strong></td>
+<td>インスタンスプロファイルのロールで <code>GetSecretValue</code></td>
+</tr>
+<tr>
+<td><strong>Lambda</strong></td>
+<td>実行ロールで取得し、<strong>キャッシュ</strong>して API 呼び出しを減らす</td>
+</tr>
+<tr>
+<td><strong>ECS / Fargate</strong></td>
+<td>タスク定義の <code>secrets</code> で Secrets Manager / Parameter Store を参照（<strong>タスク実行ロール</strong>に権限）</td>
+</tr>
+<tr>
+<td><strong>CloudFormation</strong></td>
+<td>動的参照（<code>{{resolve:secretsmanager:...}}</code>）でテンプレートに平文を書かない</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-9-6">9-6. トラブルシュート</h3>
+<p>シークレットの障害は、権限、暗号鍵、ネットワーク、リージョンのどれかであることがほとんどです。症状から原因を引ける形にまとめます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>症状</th>
+<th>主な原因</th>
+<th>対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AccessDeniedException</code></td>
+<td>ロールに <code>secretsmanager:GetSecretValue</code> がない、リソースポリシーの拒否</td>
+<td>IAM / リソースポリシーを確認</td>
+</tr>
+<tr>
+<td>取得はできるが復号失敗</td>
+<td>CMK を使っているのに <strong><code>kms:Decrypt</code></strong> がない</td>
+<td>キーポリシー・IAM を修正</td>
+</tr>
+<tr>
+<td>ローテーション失敗</td>
+<td>Lambda が <strong>VPC 内</strong>でインターネット / Secrets Manager に届かない、Lambda から DB に届かない（SG）</td>
+<td><strong>VPC エンドポイント</strong>または NAT、セキュリティグループを確認</td>
+</tr>
+<tr>
+<td>別リージョンで見えない</td>
+<td>シークレットは<strong>リージョン固有</strong></td>
+<td>レプリケーションを設定</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html">What is AWS Secrets Manager?</a> / <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html">Rotate secrets</a> / <a href="https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html">Secrets Manager best practices</a> / <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html">Parameter Store</a></p>
+<h3 id="sec-9-7">9-7. ベストプラクティス（シークレット）</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>ハードコード禁止</strong>。実行時に取得</td>
+<td>コードや設定に書いた値は、リポジトリやログから漏れやすく、後から回収できないため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>自動ローテーション</strong>を有効化し、長期固定のパスワードを避ける</td>
+<td>パスワードを定期的に変えれば、漏れていても悪用できる期間を短くできるため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>シークレットごとに<strong>最小権限</strong>（誰が <code>GetSecretValue</code> できるか）</td>
+<td>権限が広いと、無関係なアプリや人が他のシークレットを読めてしまうため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>CMK</strong> で暗号化し、キーポリシーでも利用者を限定</td>
+<td>暗号鍵側でも利用者を絞ると、シークレットの権限が誤って広くなっても復号できる範囲を限定できるため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>CloudTrail</strong> でシークレット取得を監視</td>
+<td>誰がいつ読んだかが残らないと、漏えいの調査や不正な取得の検知ができないため。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>取得結果を<strong>アプリ内でキャッシュ</strong>し、スロットリングとコストを抑える</td>
+<td>毎回 API を呼ぶと遅くなり、スロットリングや費用の増加につながるため。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>可能なら<strong>IAM 認証</strong>（RDS の IAM DB 認証など）でパスワード自体を不要にする</td>
+<td>パスワードがそもそも存在しなければ、漏れることも、ローテーションの手間もないため。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-9-8">9-8. 試験で狙われるポイント（Step 9）</h3>
+<p>Step 9 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「DB パスワードを自動でローテーションしたい」</td>
+<td><strong>Secrets Manager</strong></td>
+</tr>
+<tr>
+<td>「低コストで設定値と暗号化値を保管」</td>
+<td><strong>Parameter Store（SecureString）</strong></td>
+</tr>
+<tr>
+<td>「ECS のコンテナにシークレットを渡したい」</td>
+<td>タスク定義の <code>secrets</code> + <strong>タスク実行ロール</strong></td>
+</tr>
+<tr>
+<td>「ローテーション Lambda が失敗」</td>
+<td>VPC エンドポイント / NAT / SG を確認</td>
+</tr>
+<tr>
+<td>「リージョン障害に備えてシークレットを複製」</td>
+<td><strong>クロスリージョンレプリケーション</strong></td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-10">Step 10. セキュリティサービスの検出結果とレポート・是正（Skill 4.2.5）</h2>
+<blockquote>
+<p>公式スキル文: AWS サービス（Security Hub、GuardDuty、Config、Inspector、AWS Security Agent など）の検出結果に対してレポートを構成し、是正する。</p>
+</blockquote>
+<p>セキュリティサービスは、検出して終わりではなく、結果を読み、報告し、直すところまでが運用の仕事です。ここでは、GuardDuty、Inspector、Config、Security Hub、AWS Security Agent の役割の違いを整理し、検出結果を通知と自動是正につなげる流れを学びます。</p>
+<h3 id="sec-10-1">10-1. サービスの役割分担</h3>
+<p>5 つのサービスは、見ている対象が異なります。まず表と図で役割を区別し、後の節で 1 つずつ詳しく見ます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>ひとことで言うと</th>
+<th>見るもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon GuardDuty</strong></td>
+<td><strong>脅威検出</strong>（怪しい挙動の発見）</td>
+<td>CloudTrail、VPC フローログ、DNS ログ等の分析</td>
+</tr>
+<tr>
+<td><strong>Amazon Inspector</strong></td>
+<td><strong>脆弱性スキャン</strong></td>
+<td>EC2・ECR コンテナイメージ・Lambda の CVE とネットワーク到達性</td>
+</tr>
+<tr>
+<td><strong>AWS Config</strong></td>
+<td><strong>設定の準拠状況</strong></td>
+<td>リソース構成とルール評価</td>
+</tr>
+<tr>
+<td><strong>Amazon Macie</strong></td>
+<td><strong>機密データ発見</strong></td>
+<td>S3 の中身</td>
+</tr>
+<tr>
+<td><strong>AWS Security Hub</strong></td>
+<td>上記の<strong>結果を集約・優先順位付け</strong></td>
+<td>各サービスの検出結果</td>
+</tr>
+<tr>
+<td><strong>AWS Security Agent</strong></td>
+<td><strong>アプリのセキュリティレビューと侵入テスト（AI）</strong></td>
+<td>設計・コード・稼働中アプリ</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d25" role="img" aria-label="図解 26"></div></div>
+<h3 id="sec-10-2">10-2. Amazon GuardDuty</h3>
+<p><strong>GuardDuty</strong> は、ログを継続的に分析して<strong>脅威を検出</strong>するマネージドサービスです。エージェントのインストールは不要で、有効化するだけで使えます。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>基本のデータソース</strong></td>
+<td>CloudTrail 管理イベント、VPC フローログ、DNS ログ</td>
+</tr>
+<tr>
+<td><strong>保護プラン（オプション）</strong></td>
+<td>S3 保護、EKS 保護、Malware Protection、RDS 保護、Lambda 保護、ランタイムモニタリングなど</td>
+</tr>
+<tr>
+<td><strong>検出結果の例</strong></td>
+<td>認証情報の不正利用、暗号通貨マイニング、既知の悪意ある IP との通信、通常と異なる API 呼び出し</td>
+</tr>
+<tr>
+<td><strong>重大度</strong></td>
+<td>Low / Medium / High / Critical で表示</td>
+</tr>
+<tr>
+<td><strong>抑制ルール</strong></td>
+<td>想定内の検出結果を<strong>自動でアーカイブ</strong>してノイズを減らす</td>
+</tr>
+<tr>
+<td><strong>信頼 IP リスト / 脅威 IP リスト</strong></td>
+<td>許可・拒否する IP を登録</td>
+</tr>
+<tr>
+<td><strong>マルチアカウント</strong></td>
+<td>Organizations と連携し<strong>委任管理者</strong>から全アカウントを一括有効化</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>試験ポイント: 「EC2 が暗号通貨マイニングをしている疑い」「普段と違う場所からの API 呼び出し」→ <strong>GuardDuty</strong>。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html">What is Amazon GuardDuty?</a></p>
+<h3 id="sec-10-3">10-3. Amazon Inspector</h3>
+<p><strong>Inspector</strong> は、ワークロードの<strong>ソフトウェア脆弱性</strong>を<strong>継続的にスキャン</strong>するサービスです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>対象</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EC2</strong></td>
+<td>OS パッケージの脆弱性（CVE）をスキャン。SSM エージェント経由のスキャンが基本で、エージェントレスのスキャンにも対応</td>
+</tr>
+<tr>
+<td><strong>ECR コンテナイメージ</strong></td>
+<td>プッシュ時・継続的にスキャン</td>
+</tr>
+<tr>
+<td><strong>Lambda 関数</strong></td>
+<td>依存ライブラリのコードの脆弱性</td>
+</tr>
+<tr>
+<td><strong>ネットワーク到達性</strong></td>
+<td>EC2 への意図しない到達経路を検出</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>特徴</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inspector スコア</strong></td>
+<td>CVE の深刻度に環境の情報を加味して<strong>優先順位</strong>を付ける</td>
+</tr>
+<tr>
+<td><strong>継続スキャン</strong></td>
+<td>新しい CVE の公開や、新規リソースの追加で<strong>自動で再スキャン</strong></td>
+</tr>
+<tr>
+<td><strong>レポート出力</strong></td>
+<td>検出結果を <strong>CSV / JSON として S3 へエクスポート</strong>でき、SBOM の出力にも対応</td>
+</tr>
+</tbody>
+</table></div>
+<h4>脆弱性を是正する流れ（EC2）</h4>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d26" role="img" aria-label="図解 27"></div></div>
+<blockquote>
+<p>補足: Inspector は<strong>検出</strong>まで。<strong>パッチ適用</strong>は Systems Manager <strong>Patch Manager</strong> で行うのが定番の組み合わせです。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/inspector/latest/user/what-is-inspector.html">What is Amazon Inspector?</a></p>
+<h3 id="sec-10-4">10-4. AWS Security Hub（と Security Hub CSPM）</h3>
+<p>公式ドキュメントでは、<strong>AWS Security Hub</strong> と <strong>AWS Security Hub CSPM</strong> は<strong>互いを補完する別サービス</strong>として説明されています。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>サービス</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Security Hub CSPM</strong></td>
+<td>環境を<strong>業界標準やベストプラクティスに照らして評価</strong>し、<strong>設定ミス（コントロール違反）を検出</strong>する。従来の Security Hub の姿</td>
+</tr>
+<tr>
+<td><strong>Security Hub</strong></td>
+<td>統合された体験で、<strong>重要なセキュリティ問題の優先順位付けと対応</strong>を助ける。CSPM の検出結果は自動で Security Hub に送られ、<strong>Inspector など他サービスの検出結果と相関付け</strong>して「エクスポージャー（露出）」を生成する</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>主な機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>セキュリティ標準</strong></td>
+<td>AWS 基礎セキュリティベストプラクティス、CIS、PCI DSS、NIST などに基づくコントロールで自動チェック</td>
+</tr>
+<tr>
+<td><strong>検出結果の集約</strong></td>
+<td>複数のアカウント・リージョンの結果を<strong>一元表示</strong>（委任管理者 + 集約）</td>
+</tr>
+<tr>
+<td><strong>自動化ルール</strong></td>
+<td>条件に合う検出結果の<strong>重大度変更・抑制</strong>などを自動化</td>
+</tr>
+<tr>
+<td><strong>EventBridge 連携</strong></td>
+<td>検出結果をトリガーに<strong>通知・自動是正</strong></td>
+</tr>
+<tr>
+<td><strong>推奨構成</strong></td>
+<td>公式は、Security Hub と CSPM に加え、<strong>GuardDuty・Inspector・Macie も有効化</strong>することを推奨</td>
+</tr>
+</tbody>
+</table></div>
+<p>出典: <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/what-are-securityhub-services.html">What are Security Hub and Security Hub CSPM?</a> / <a href="https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html">Security Hub CSPM User Guide</a></p>
+<h3 id="sec-10-5">10-5. AWS Config による検出と是正（再掲）</h3>
+<p>Step 5 で学んだ <strong>Config ルール + 修復アクション（SSM Automation）</strong> は、「違反の検出 → 自動修復」の代表です。Security Hub CSPM の多くのコントロールも内部で Config ルールを利用します。</p>
+<h3 id="sec-10-6">10-6. AWS Security Agent</h3>
+<p><strong>AWS Security Agent</strong> は、<strong>開発ライフサイクル全体でアプリケーションを守る、AI のフロンティアエージェント</strong>です。公式ドキュメントによると、組織のセキュリティ要件に沿った<strong>自動セキュリティレビュー</strong>と、<strong>コンテキストを理解した侵入テスト（ペネトレーションテスト）をオンデマンド</strong>で提供します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>機能</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>設計レビュー</strong></td>
+<td>設計ドキュメントを組織のセキュリティ要件に照らして評価</td>
+</tr>
+<tr>
+<td><strong>コードレビュー</strong></td>
+<td>プルリクエストなどのコードを評価</td>
+</tr>
+<tr>
+<td><strong>侵入テスト</strong></td>
+<td>デプロイ済みアプリに対し、<strong>特化した AI エージェント群</strong>が攻撃シナリオを実行し、脆弱性を<strong>発見・検証・報告</strong>。<strong>実際にエクスプロイトして検証</strong>し、再現可能な攻撃経路と影響分析を示す</td>
+</tr>
+<tr>
+<td><strong>修正支援</strong></td>
+<td>修正案のプルリクエストを作成</td>
+</tr>
+<tr>
+<td><strong>対象環境</strong></td>
+<td>AWS、オンプレミス、ハイブリッド、マルチクラウド、SaaS</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>運用のポイント</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>エージェントスペース</strong></td>
+<td>セットアップ時に作成される作業単位（Agent Space）</td>
+</tr>
+<tr>
+<td><strong>ドメイン検証</strong></td>
+<td>侵入テストは<strong>所有を検証したドメイン</strong>に対して実行</td>
+</tr>
+<tr>
+<td><strong>スコープの制御</strong></td>
+<td><strong>対象外 URL を指定</strong>して、テストしてはいけない対象を除外できる</td>
+</tr>
+<tr>
+<td><strong>認証情報の扱い</strong></td>
+<td>侵入テストは実行時に認証できる唯一の機能。認証情報は <strong>Secrets Manager</strong> などから渡せる</td>
+</tr>
+<tr>
+<td><strong>位置づけ</strong></td>
+<td>公式は<strong>プロの侵入テストサービスの代替ではなく</strong>、セキュリティレビューのワークフローに<strong>組み込む</strong>ことを推奨</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d27" role="img" aria-label="図解 28"></div></div>
+<blockquote>
+<p>試験に向けた整理: Security Agent は「<strong>アプリ層の脆弱性を、攻撃者の目線で検証する</strong>」サービスです。インフラの設定ミスは Config / Security Hub、OS・ライブラリの CVE は Inspector、実行時の脅威は GuardDuty、と<strong>役割が分かれています</strong>。比較表で区別しましょう。</p>
+</blockquote>
+<p>出典: <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html">What is AWS Security Agent?</a> / <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart.html">Quickstart: Run a penetration test</a> / <a href="https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html">Security considerations</a> / <a href="https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration">一般提供開始のお知らせ（2026-03-31）</a> / <a href="https://aws.amazon.com/security-agent/faqs/">AWS Security Agent FAQ</a></p>
+<h3 id="sec-10-7">10-7. サービス比較表（超重要）</h3>
+<p>試験で最も混同しやすいのが、検出系サービスの使い分けです。質問の言い回しから、答えるサービスを引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>質問</th>
+<th>答えるサービス</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「怪しい挙動 / 侵害の兆候は？」</td>
+<td><strong>GuardDuty</strong></td>
+</tr>
+<tr>
+<td>「ソフトウェアに既知の脆弱性（CVE）は？」</td>
+<td><strong>Inspector</strong></td>
+</tr>
+<tr>
+<td>「設定がルールに準拠しているか / 変更履歴は？」</td>
+<td><strong>Config</strong></td>
+</tr>
+<tr>
+<td>「S3 に機密データがあるか」</td>
+<td><strong>Macie</strong></td>
+</tr>
+<tr>
+<td>「全部の結果を 1 か所で見て優先順位を付けたい」</td>
+<td><strong>Security Hub</strong></td>
+</tr>
+<tr>
+<td>「アプリを攻撃者の視点でテストしたい」</td>
+<td><strong>AWS Security Agent</strong></td>
+</tr>
+<tr>
+<td>「操作の履歴（誰が何をした）」</td>
+<td><strong>CloudTrail</strong></td>
+</tr>
+<tr>
+<td>「外部公開されているリソースは？」</td>
+<td><strong>IAM Access Analyzer</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-10-8">10-8. レポートと是正の実践パターン</h3>
+<p>検出結果は、集約し、通知し、直し、確認するところまでが運用です。目的ごとに使う機能と、重大度に応じた対応の流れを整理します。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>目的</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>組織横断の集約</strong></td>
+<td>Security Hub の<strong>委任管理者</strong>、集約リージョンの設定、Config <strong>アグリゲーター</strong>、GuardDuty / Inspector の委任管理者</td>
+</tr>
+<tr>
+<td><strong>定期レポート</strong></td>
+<td>Inspector の結果を <strong>S3 にエクスポート</strong>、Config の準拠状況を確認、Security Hub のスコアとコントロール状況を確認</td>
+</tr>
+<tr>
+<td><strong>自動通知</strong></td>
+<td><strong>EventBridge</strong> ルール → <strong>SNS</strong>（メール / Slack 連携）</td>
+</tr>
+<tr>
+<td><strong>自動是正</strong></td>
+<td>EventBridge → <strong>Lambda</strong> / <strong>SSM Automation</strong>。Config の修復アクション</td>
+</tr>
+<tr>
+<td><strong>ノイズ削減</strong></td>
+<td>GuardDuty の<strong>抑制ルール</strong>、Security Hub の<strong>自動化ルール</strong>で想定内の検出を整理</td>
+</tr>
+<tr>
+<td><strong>監査証跡</strong></td>
+<td>是正の実施内容を CloudTrail と Config タイムラインで確認</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d28" role="img" aria-label="図解 29"></div></div>
+<h3 id="sec-10-9">10-9. ベストプラクティス</h3>
+<p>運用の指針と、その理由を整理します。理由の列は、設問で「なぜその構成が正しいのか」を判断するときの根拠になるので、表の内容だけでなく理由まで説明できるようにしてください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>ベストプラクティス</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>GuardDuty、Inspector、Config、Security Hub を<strong>全アカウント・全リージョン</strong>で有効化</td>
+<td>有効化していない場所は検出の死角になり、攻撃者はそこを狙うため。</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>委任管理者</strong>で組織全体を一括管理し、管理アカウントの操作を減らす</td>
+<td>管理アカウントは SCP が効かない特別なアカウントなので、日常の運用を委任して使用を減らすほうが安全なため。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>検出結果は <strong>EventBridge</strong> で自動通知し、<strong>重大度に応じた対応フロー</strong>を決める</td>
+<td>重大度に応じた手順を決めておけば、夜間でも迷わず動け、対応の抜けが減るため。</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>修復の自動化は段階的に</strong>（まず通知、次に承認付き、最後に完全自動）</td>
+<td>いきなり完全自動にすると、誤検知で正常なリソースを止めてしまうおそれがあるため。</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>抑制ルール</strong>で想定内の検出を整理し、本当に重要なものに集中する</td>
+<td>想定内の検出が大量にあると、本当に重要な検出が埋もれるため。</td>
+</tr>
+<tr>
+<td>6</td>
+<td>是正後は<strong>再スキャン</strong>で解消を確認する</td>
+<td>修正したつもりでも反映されていないことがあり、再スキャンで確認しないと解消を証明できないため。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>新しい機能（例: AWS Security Agent）は<strong>既存ツールを置き換えず補完</strong>として組み込む</td>
+<td>新しいサービスは得意な範囲が限られ、既存のサービスが担っている層の検出を代替できないため。</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-10-10">10-10. 試験で狙われるポイント（Step 10）</h3>
+<p>Step 10 で出題されやすいパターンと、その答えの方向性をまとめます。問題文のキーワードから、使うサービスや機能を素早く引けるようにしておきましょう。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>出題パターン</th>
+<th>答え</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「EC2 の脆弱性（CVE）を継続的にスキャン」</td>
+<td><strong>Inspector</strong></td>
+</tr>
+<tr>
+<td>「侵害されたインスタンスの兆候を検出」</td>
+<td><strong>GuardDuty</strong></td>
+</tr>
+<tr>
+<td>「複数サービスの結果を集約し標準に照らして評価」</td>
+<td><strong>Security Hub（CSPM）</strong></td>
+</tr>
+<tr>
+<td>「高重大度の検出に自動で対応」</td>
+<td><strong>EventBridge</strong> → Lambda / SSM Automation</td>
+</tr>
+<tr>
+<td>「検出結果の想定内ノイズを減らす」</td>
+<td>GuardDuty の<strong>抑制ルール</strong> / Security Hub の<strong>自動化ルール</strong></td>
+</tr>
+<tr>
+<td>「パッチ適用の自動化」</td>
+<td><strong>Systems Manager Patch Manager</strong>（検出は Inspector）</td>
+</tr>
+<tr>
+<td>「稼働中 Web アプリを攻撃者視点でテスト」</td>
+<td><strong>AWS Security Agent</strong>（侵入テスト）</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="step-11">Step 11. 総合演習（ひっかけ一覧・練習問題・チートシート）</h2>
+<p>ここまでの知識を、試験の形で確かめる Step です。似た選択肢の見分け方、練習問題、直前チートシートの順に進み、最後に学習の仕上げの進め方を確認します。</p>
+<h3 id="sec-11-1">11-1. ひっかけポイント一覧</h3>
+<p>似た選択肢の取り違えは、失点の最大の原因です。ここでは、試験で誤解されやすい点を「ひっかけ」と「正しい理解」の組にして一覧にしました。問題演習の後に、間違えた項目を探す使い方がおすすめです。</p>
+<div class="trap-tools" id="trapTools"><button type="button" class="chip on" data-g="all">すべて</button>
+<button type="button" class="chip" data-g="g0">IAM とポリシー</button>
+<button type="button" class="chip" data-g="g1">調査と監査</button>
+<button type="button" class="chip" data-g="g2">マルチアカウント</button>
+<button type="button" class="chip" data-g="g3">点検と継続監視</button>
+<button type="button" class="chip" data-g="g4">データの暗号化</button>
+<button type="button" class="chip" data-g="g5">転送時の暗号化</button>
+<button type="button" class="chip" data-g="g6">シークレット</button>
+<button type="button" class="chip" data-g="g7">検出と是正</button>
+<input class="trap-search" id="trapSearch" type="search" placeholder="キーワードで絞り込み (例: SCP, KMS, us-east-1)" aria-label="ひっかけを検索" />
+<span class="trap-count" id="trapCount"></span></div>
+<div class="trap-group" data-g="g0">IAM とポリシー</div><div class="trap-grid" data-g="g0">
+<article class="trap" data-g="g0"><header><span class="t-num">01</span><span class="t-item">評価順</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「Allow があれば Deny は無視される」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>明示的な Deny が常に勝つ</strong></span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">02</span><span class="t-item">EC2 から S3</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「アクセスキーを環境変数に入れる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IAM ロール（インスタンスプロファイル）</strong> を使う</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">03</span><span class="t-item">MFA の強制</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt"><code>Bool</code> で false を指定する</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong><code>BoolIfExists</code></strong>。キーが無い（アクセスキーでの呼び出し）場合も拒否できる</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">04</span><span class="t-item">パスワードポリシー</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ルートや Identity Center のユーザーにも効く」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IAM ユーザーのパスワードだけ</strong>が対象</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">05</span><span class="t-item">クロスアカウント</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「相手側の許可だけで足りる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>呼び出し側の ID ポリシーとリソース側の許可の両方</strong>が必要</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">06</span><span class="t-item">権限の境界</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「境界を付けると権限が付与される」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">付与はされず、<strong>許可の上限</strong>を決めるだけ</span></p></article>
+<article class="trap" data-g="g0"><header><span class="t-num">07</span><span class="t-item">混乱した代理</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「広いプリンシパルに許可して防ぐ」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong><code>aws:SourceArn</code> / <code>aws:SourceAccount</code></strong> や ExternalId で限定する</span></p></article>
+</div>
+<div class="trap-group" data-g="g1">調査と監査</div><div class="trap-grid" data-g="g1">
+<article class="trap" data-g="g1"><header><span class="t-num">08</span><span class="t-item">CloudTrail の履歴</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「イベント履歴で半年前まで遡れる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">イベント履歴は <strong>90 日</strong>まで。長期は<strong>証跡（S3）</strong>か CloudTrail Lake</span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">09</span><span class="t-item">S3 の GET の記録</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「既定で記録される」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>データイベントは既定で無効</strong>。有効化が必要</span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">10</span><span class="t-item">外部公開の検出</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ポリシーシミュレーターで見つける」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IAM Access Analyzer</strong></span></p></article>
+<article class="trap" data-g="g1"><header><span class="t-num">11</span><span class="t-item">最小権限ポリシーの作成</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「手で書き起こす」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">Access Analyzer が <strong>CloudTrail の実績から生成</strong>できる</span></p></article>
+</div>
+<div class="trap-group" data-g="g2">マルチアカウント</div><div class="trap-grid" data-g="g2">
+<article class="trap" data-g="g2"><header><span class="t-num">12</span><span class="t-item">SCP</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「権限を付与する」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>許可の上限</strong>を決めるだけ。IAM ポリシーも必要</span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">13</span><span class="t-item">管理アカウント</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「管理アカウントも SCP で制限できる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">管理アカウントには <strong>SCP が効かない</strong></span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">14</span><span class="t-item">ルートユーザー</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「SCP はルートユーザーに効かない」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>メンバーアカウントのルートにも効く</strong></span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">15</span><span class="t-item">リージョン制限</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「許可リージョンだけを書けば終わり」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">グローバルサービスは <strong><code>NotAction</code> で除外</strong>しないと壊れる</span></p></article>
+<article class="trap" data-g="g2"><header><span class="t-num">16</span><span class="t-item">従業員の SSO</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「IAM ユーザーを人数分作る」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>IAM Identity Center</strong> のグループとアクセス許可セット</span></p></article>
+</div>
+<div class="trap-group" data-g="g3">点検と継続監視</div><div class="trap-grid" data-g="g3">
+<article class="trap" data-g="g3"><header><span class="t-num">17</span><span class="t-item">Trusted Advisor</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「全チェックが誰でも使える」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>サポートプランで範囲が変わる</strong></span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">18</span><span class="t-item">AWS Config</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「違反を防げる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>検出と是正</strong>を担う。予防は SCP や IAM の Deny</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">19</span><span class="t-item">コンフォーマンスパック</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ルール 1 つを設定する機能」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>ルールと修復をまとめて</strong>アカウントや組織へ展開する</span></p></article>
+<article class="trap" data-g="g3"><header><span class="t-num">20</span><span class="t-item">修復アクション</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「Lambda でしか実行できない」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>SSM Automation ドキュメント</strong>を実行する</span></p></article>
+</div>
+<div class="trap-group" data-g="g4">データの暗号化</div><div class="trap-grid" data-g="g4">
+<article class="trap" data-g="g4"><header><span class="t-num">21</span><span class="t-item">稼働中の EBS</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「設定画面で暗号化をオンにする」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">スナップショットを<strong>暗号化コピー</strong>して新しいボリュームを作る</span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">22</span><span class="t-item">既存の RDS</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「作成後に暗号化を有効化する」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>暗号化スナップショットから復元</strong>する</span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">23</span><span class="t-item">スナップショットの共有</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「AWS マネージドキーのまま共有する」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>CMK で暗号化</strong>し、キーポリシーで相手アカウントを許可</span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">24</span><span class="t-item">KMS のアクセス制御</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「IAM ポリシーだけで使える」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>キーポリシーの許可</strong>（または IAM への委任）が必要</span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">25</span><span class="t-item">キーの削除</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「すぐ消える・戻せない」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>7〜30 日の待機</strong>があり、待機中はキャンセルできる。削除後はデータを復号できない</span></p></article>
+<article class="trap" data-g="g4"><header><span class="t-num">26</span><span class="t-item">ローテーション</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ローテーションすると古いデータが読めなくなる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">古いキー素材も保持され、<strong>読める</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g5">転送時の暗号化</div><div class="trap-grid" data-g="g5">
+<article class="trap" data-g="g5"><header><span class="t-num">27</span><span class="t-item">CloudFront の証明書</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ディストリビューションと同じリージョンで作る」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>us-east-1</strong> で作る</span></p></article>
+<article class="trap" data-g="g5"><header><span class="t-num">28</span><span class="t-item">インポート証明書</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「ACM が自動更新する」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>自動更新されない</strong>。期限監視と手動更新が必要</span></p></article>
+<article class="trap" data-g="g5"><header><span class="t-num">29</span><span class="t-item">Pending validation</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「証明書を再発行すれば直る」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>DNS 検証用の CNAME の未登録・誤り</strong>を疑う</span></p></article>
+<article class="trap" data-g="g5"><header><span class="t-num">30</span><span class="t-item">S3 への HTTP</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「許可を削れば拒否できる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><code>aws:SecureTransport</code> が <code>false</code> のとき <strong>Deny</strong></span></p></article>
+</div>
+<div class="trap-group" data-g="g6">シークレット</div><div class="trap-grid" data-g="g6">
+<article class="trap" data-g="g6"><header><span class="t-num">31</span><span class="t-item">自動ローテーション</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「Parameter Store が自動でローテーションする」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Secrets Manager</strong> の機能</span></p></article>
+<article class="trap" data-g="g6"><header><span class="t-num">32</span><span class="t-item">ECS へのシークレット</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「環境変数に平文で渡す」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">タスク定義の <code>secrets</code> と<strong>タスク実行ロール</strong></span></p></article>
+<article class="trap" data-g="g6"><header><span class="t-num">33</span><span class="t-item">ローテーション失敗</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「VPC 内の Lambda でもそのまま届く」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>VPC エンドポイントや NAT</strong>、セキュリティグループを確認</span></p></article>
+</div>
+<div class="trap-group" data-g="g7">検出と是正</div><div class="trap-grid" data-g="g7">
+<article class="trap" data-g="g7"><header><span class="t-num">34</span><span class="t-item">EC2 の CVE</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「GuardDuty でスキャンする」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>Inspector</strong></span></p></article>
+<article class="trap" data-g="g7"><header><span class="t-num">35</span><span class="t-item">暗号通貨マイニングの疑い</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「Inspector で検出する」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>GuardDuty</strong></span></p></article>
+<article class="trap" data-g="g7"><header><span class="t-num">36</span><span class="t-item">パッチ適用</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「Inspector がパッチを当てる」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt">Inspector は検出まで。適用は <strong>Patch Manager</strong></span></p></article>
+<article class="trap" data-g="g7"><header><span class="t-num">37</span><span class="t-item">Security Hub</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「脅威の検出元」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>集約と優先順位付け</strong>を担う</span></p></article>
+<article class="trap" data-g="g7"><header><span class="t-num">38</span><span class="t-item">AWS Security Agent</span></header><p class="t-bad"><span class="lbl">✗ ひっかけ</span><span class="t-txt">「インフラ設定ミスを見つける」</span></p><p class="t-ok"><span class="lbl">✓ 正しい理解</span><span class="t-txt"><strong>アプリ層を攻撃者の視点でテスト</strong>する。設定ミスは Config / Security Hub</span></p></article>
+</div>
+
+<h3 id="sec-11-2">11-2. 似たサービスの見分け表</h3>
+<p>似たサービスは、それぞれ見ている対象が違います。紛らわしい組み合わせを 1 行ずつ区別し、設問の選択肢で迷わないようにします。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>紛らわしい組</th>
+<th>違い</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudTrail と Config</td>
+<td>CloudTrail は「<strong>誰が何をしたか</strong>（API の操作記録）」、Config は「<strong>リソースがどんな設定だったか</strong>（状態の履歴と準拠）」</td>
+</tr>
+<tr>
+<td>GuardDuty と Inspector</td>
+<td>GuardDuty は<strong>実行時の脅威</strong>、Inspector は<strong>ソフトウェアの脆弱性</strong></td>
+</tr>
+<tr>
+<td>Security Hub と GuardDuty</td>
+<td>Security Hub は<strong>集約と評価</strong>、GuardDuty は<strong>脅威の検出元</strong>の 1 つ</td>
+</tr>
+<tr>
+<td>SCP と IAM ポリシー</td>
+<td>SCP は<strong>上限（許可しない）</strong>、IAM ポリシーが<strong>実際の許可</strong></td>
+</tr>
+<tr>
+<td>SCP と 権限の境界</td>
+<td>SCP は<strong>アカウント・OU 単位</strong>、境界は<strong>ユーザー・ロール単位</strong></td>
+</tr>
+<tr>
+<td>Secrets Manager と Parameter Store</td>
+<td>自動ローテーションが要るなら Secrets Manager</td>
+</tr>
+<tr>
+<td>AWS マネージドキーと CMK</td>
+<td>ポリシーを自分で制御・クロスアカウント共有するなら CMK</td>
+</tr>
+<tr>
+<td>Access Analyzer と ポリシーシミュレーター</td>
+<td>前者は<strong>外部公開・未使用の検出</strong>、後者は<strong>権限の事前テスト</strong></td>
+</tr>
+<tr>
+<td>Config ルールと コンフォーマンスパック</td>
+<td>ルール 1 つか、<strong>ルール一式のパッケージ</strong>か</td>
+</tr>
+<tr>
+<td>Macie と GuardDuty の S3 保護</td>
+<td>Macie は<strong>中身の機密データ</strong>、GuardDuty は<strong>不審なアクセス</strong></td>
+</tr>
+<tr>
+<td>Trusted Advisor と Security Hub</td>
+<td>前者は<strong>簡易診断（プランで範囲が変わる）</strong>、後者は<strong>継続的評価と集約</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-11-3">11-3. 練習問題（10 問）</h3>
+<p>練習問題は本試験の形式に合わせています。答えを見る前に自分で選択肢を選び、解説で根拠まで確認してください。間違えた問題は、該当する Step に戻って読み直すのが最も効率の良い復習です。</p>
+<article class="quiz" data-answer="C" data-multi="0"><h4 class="quiz-head" id="q-1"><span class="q-num">Q1</span><span class="q-title">IAM ロール</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>EC2 上のアプリが S3 を読み取る必要があります。最も安全な方法は？</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">アクセスキーをアプリに埋め込む</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">IAM ユーザーを作成しキーを環境変数に</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt"><strong>IAM ロールを EC2 にアタッチ</strong></span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">バケットを公開する</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>ロールは一時的な認証情報を自動で供給するため、キーの管理が不要です（Step 1）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-2"><span class="q-num">Q2</span><span class="q-title">SCP とリージョン</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>組織内のすべてのアカウントで、<code>ap-northeast-1</code> 以外のリージョンの利用を禁止したい。メンバーアカウントのルートユーザーにも適用したい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">IAM ポリシーを各ユーザーに</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>SCP で <code>aws:RequestedRegion</code> を条件に Deny</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">Config ルール</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Trusted Advisor</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>SCP はメンバーアカウントのルートユーザーにも効きます。グローバルサービスは <code>NotAction</code> で除外します（Step 3, 5）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-3"><span class="q-num">Q3</span><span class="q-title">CloudTrail</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>過去 6 か月間に S3 バケットを削除した操作者を調べたい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">CloudTrail イベント履歴</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>S3 に保存した CloudTrail 証跡を Athena 等で検索</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">Config タイムライン</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">GuardDuty</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>イベント履歴は 90 日までです。長期の調査は証跡（S3）や CloudTrail Lake を使います（Step 2）。</p></div></details></article>
+<article class="quiz" data-answer="C" data-multi="0"><h4 class="quiz-head" id="q-4"><span class="q-num">Q4</span><span class="q-title">RDS の暗号化</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>暗号化されていない稼働中の RDS インスタンスを暗号化したい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">設定画面で暗号化をオン</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">KMS キーをアタッチ</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt"><strong>スナップショットを暗号化コピーし、そこから復元</strong></span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">一度停止して再起動</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>作成後に暗号化を有効化はできません（Step 7）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-5"><span class="q-num">Q5</span><span class="q-title">ACM と CloudFront</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>CloudFront のディストリビューションで使う ACM 証明書を選べない。ALB は東京リージョンにある。原因として最も可能性が高いのは？</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">ALB と同じリージョンに作成した</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>証明書が us-east-1 にない</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">DNS 検証をしていない</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">WAF が未設定</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>CloudFront 用の ACM 証明書は us-east-1 で用意します（Step 8）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-6"><span class="q-num">Q6</span><span class="q-title">Secrets Manager</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>DB パスワードを 30 日ごとに自動で変更し、アプリは常に最新を取得したい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">Parameter Store の String</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>Secrets Manager の自動ローテーション</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">S3 に暗号化して保存</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">環境変数</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>（Step 9）。</p></div></details></article>
+<article class="quiz" data-answer="C" data-multi="0"><h4 class="quiz-head" id="q-7"><span class="q-num">Q7</span><span class="q-title">Inspector</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>EC2 上のソフトウェアの既知の脆弱性を継続的に検出し、優先順位付けしたい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">GuardDuty</span></li>
+<li data-key="B"><span class="key">B</span><span class="txt">Macie</span></li>
+<li class="correct" data-key="C"><span class="key">C</span><span class="txt"><strong>Inspector</strong></span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Trusted Advisor</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>C</b></div><p>検出後のパッチ適用は Patch Manager（Step 10）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-8"><span class="q-num">Q8</span><span class="q-title">KMS と共有</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>暗号化された EBS スナップショットを別アカウントと共有したい。現在は AWS マネージドキー（<code>aws/ebs</code>）で暗号化している。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">そのまま共有</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>CMK で暗号化し直し、キーポリシーで相手アカウントを許可</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">パブリックにする</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">キーポリシーを編集</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>AWS マネージドキーのポリシーは変更できず、共有できません（Step 7）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-9"><span class="q-num">Q9</span><span class="q-title">Security Hub</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>複数サービスの検出結果を 1 か所に集約し、業界標準（CIS 等）との準拠も確認したい。</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">CloudTrail</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>Security Hub（CSPM）</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">VPC フローログ</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">Macie</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>（Step 10）。</p></div></details></article>
+<article class="quiz" data-answer="B" data-multi="0"><h4 class="quiz-head" id="q-10"><span class="q-num">Q10</span><span class="q-title">AccessDenied</span><span class="q-type">単一選択</span></h4><div class="quiz-body"><p>あるユーザーが <code>AccessDenied</code>。メッセージに「explicit deny in a service control policy」とある。確認すべきは？</p>
+<ol class="opts">
+<li data-key="A"><span class="key">A</span><span class="txt">ユーザーの IAM ポリシーに Allow を足す</span></li>
+<li class="correct" data-key="B"><span class="key">B</span><span class="txt"><strong>Organizations の SCP を見直す</strong></span></li>
+<li data-key="C"><span class="key">C</span><span class="txt">KMS キーを再作成</span></li>
+<li data-key="D"><span class="key">D</span><span class="txt">パスワードポリシー</span></li>
+</ol></div><details class="answer"><summary>答えと解説を見る</summary><div class="answer-body"><div class="ans-badge">正解 <b>B</b></div><p>明示的 Deny は Allow を足しても覆りません（Step 2）。</p></div></details></article>
+<h3 id="sec-11-4">11-4. 最終チートシート</h3>
+<p>試験の直前に見返せるよう、各スキルを一言にまとめます。分からない行があれば、対応する Step に戻って確認してください。</p>
+<p>試験の直前に見返せるよう、各スキルを一言にまとめます。分からない行があれば、対応する Step に戻って確認してください。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>スキル</th>
+<th>一言まとめ</th>
+<th>キーワード</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.1.1</td>
+<td>ロール・MFA・条件で最小権限</td>
+<td>Deny 優先、信頼ポリシー、<code>BoolIfExists</code>、<code>PrincipalOrgID</code></td>
+</tr>
+<tr>
+<td>4.1.2</td>
+<td>調べる 3 点セット</td>
+<td>CloudTrail、Access Analyzer、シミュレーター</td>
+</tr>
+<tr>
+<td>4.1.3</td>
+<td>複数アカウントを統制</td>
+<td>Organizations、SCP（許可しない）、Identity Center</td>
+</tr>
+<tr>
+<td>4.1.4</td>
+<td>Trusted Advisor は診断</td>
+<td>EventBridge で自動是正、プランで範囲が変わる</td>
+</tr>
+<tr>
+<td>4.1.5</td>
+<td>予防 + 検出 + 是正</td>
+<td>SCP、Config、コンフォーマンスパック、修復アクション</td>
+</tr>
+<tr>
+<td>4.2.1</td>
+<td>発見・タグ・強制</td>
+<td>Macie、タグポリシー、ABAC</td>
+</tr>
+<tr>
+<td>4.2.2</td>
+<td>KMS</td>
+<td>CMK、キーポリシー、エンベロープ、暗号化コピー</td>
+</tr>
+<tr>
+<td>4.2.3</td>
+<td>ACM + TLS</td>
+<td>DNS 検証、us-east-1、<code>aws:SecureTransport</code></td>
+</tr>
+<tr>
+<td>4.2.4</td>
+<td>シークレット</td>
+<td>Secrets Manager（ローテーション）、Parameter Store</td>
+</tr>
+<tr>
+<td>4.2.5</td>
+<td>検出と是正</td>
+<td>GuardDuty、Inspector、Security Hub、Security Agent、EventBridge</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sec-11-5">11-5. 学習の次のアクション</h3>
+<p>学習の仕上げとして、読む、覚える、触る、解く、の順に進めます。実際に手を動かすと、設定項目の意味が定着します。</p>
+<p>学習の仕上げとして、読む、覚える、触る、解く、の順に進めます。実際に手を動かすと、設定項目の意味が定着します。</p>
+<div class="diagram-wrap"><div class="diagram-canvas" data-diagram-id="d29" role="img" aria-label="図解 30"></div></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ハンズオンの提案</th>
+<th>学べること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM ロールを作り、EC2 から S3 を読む</td>
+<td>ロールと信頼ポリシー</td>
+</tr>
+<tr>
+<td>MFA を要求する Deny ポリシーを検証</td>
+<td>条件キー、シミュレーター</td>
+</tr>
+<tr>
+<td>KMS CMK を作り S3 / EBS を暗号化</td>
+<td>キーポリシー、バケットキー</td>
+</tr>
+<tr>
+<td>ACM 証明書を発行して ALB に設定</td>
+<td>DNS 検証、HTTPS リスナー</td>
+</tr>
+<tr>
+<td>Secrets Manager で RDS のローテーション</td>
+<td>Lambda ローテーション</td>
+</tr>
+<tr>
+<td>Config ルール + 修復アクションを作る</td>
+<td>検出と自動是正</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注意: 無料枠の対象外のサービス（KMS CMK、Config、Macie、Security Agent など）は料金が発生します。検証後は<strong>必ずリソースを削除</strong>し、予算アラートを設定しましょう。</p>
+</blockquote>
+<hr />
+<h2 id="step-refs">参考 URL 一覧</h2>
+<blockquote>
+<p>本ガイドは、公式ドキュメントを根拠としています。AWS のサービスは更新が速いため、<strong>試験前に最新の公式ドキュメントを確認</strong>してください。「公式 Domain 4 ページ」「Security Hub / Security Hub CSPM」「AWS Security Agent」は作成時点（2026-10-06）に実際に参照して内容を確認しています。</p>
+</blockquote>
+<p>本ガイドの根拠にした公式ドキュメントです。仕様や料金は更新されるため、疑問が出たらここから最新の記述を確認してください。</p>
+<h3 id="h-2">試験ガイド</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOA-C03 試験ガイド</td>
+<td>https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03.html</td>
+</tr>
+<tr>
+<td>Domain 4: Security and Compliance</td>
+<td>https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/sysops-administrator-associate-03-domain4.html</td>
+</tr>
+<tr>
+<td>試験に登場するサービス（対象範囲）</td>
+<td>https://docs.aws.amazon.com/aws-certification/latest/sysops-administrator-associate-03/soa-03-in-scope-services.html</td>
+</tr>
+<tr>
+<td>責任共有モデル</td>
+<td>https://aws.amazon.com/compliance/shared-responsibility-model/</td>
+</tr>
+<tr>
+<td>Well-Architected: セキュリティの柱</td>
+<td>https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-3">Task 4.1</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IAM のセキュリティベストプラクティス</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</td>
+</tr>
+<tr>
+<td>ポリシーの評価ロジック</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html</td>
+</tr>
+<tr>
+<td>ポリシーとアクセス許可</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html</td>
+</tr>
+<tr>
+<td>パスワードポリシー</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html</td>
+</tr>
+<tr>
+<td>MFA</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html</td>
+</tr>
+<tr>
+<td>IAM ロール</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html</td>
+</tr>
+<tr>
+<td>ID プロバイダーとフェデレーション</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers.html</td>
+</tr>
+<tr>
+<td>条件要素</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html</td>
+</tr>
+<tr>
+<td>混乱した代理問題</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html</td>
+</tr>
+<tr>
+<td>CloudTrail</td>
+<td>https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html</td>
+</tr>
+<tr>
+<td>IAM Access Analyzer</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html</td>
+</tr>
+<tr>
+<td>IAM ポリシーシミュレーター</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html</td>
+</tr>
+<tr>
+<td>認証情報レポート</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html</td>
+</tr>
+<tr>
+<td>アクセス拒否エラーのトラブルシュート</td>
+<td>https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_access-denied.html</td>
+</tr>
+<tr>
+<td>AWS Organizations</td>
+<td>https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html</td>
+</tr>
+<tr>
+<td>SCP</td>
+<td>https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html</td>
+</tr>
+<tr>
+<td>SCP の例</td>
+<td>https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples_general.html</td>
+</tr>
+<tr>
+<td>Organizations のポリシー管理</td>
+<td>https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies.html</td>
+</tr>
+<tr>
+<td>IAM Identity Center</td>
+<td>https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html</td>
+</tr>
+<tr>
+<td>AWS Control Tower</td>
+<td>https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html</td>
+</tr>
+<tr>
+<td>Control Tower の Region deny</td>
+<td>https://docs.aws.amazon.com/controltower/latest/userguide/region-deny.html</td>
+</tr>
+<tr>
+<td>Trusted Advisor</td>
+<td>https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html</td>
+</tr>
+<tr>
+<td>Trusted Advisor チェックリファレンス</td>
+<td>https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor-check-reference.html</td>
+</tr>
+<tr>
+<td>AWS Config</td>
+<td>https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html</td>
+</tr>
+<tr>
+<td>Config コンフォーマンスパック</td>
+<td>https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html</td>
+</tr>
+<tr>
+<td>Config の修復</td>
+<td>https://docs.aws.amazon.com/config/latest/developerguide/remediation.html</td>
+</tr>
+<tr>
+<td>AWS Artifact</td>
+<td>https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h-4">Task 4.2</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>項目</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>データ分類ホワイトペーパー</td>
+<td>https://docs.aws.amazon.com/whitepapers/latest/data-classification/data-classification.html</td>
+</tr>
+<tr>
+<td>タグ付けのベストプラクティス</td>
+<td>https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html</td>
+</tr>
+<tr>
+<td>Amazon Macie</td>
+<td>https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html</td>
+</tr>
+<tr>
+<td>AWS KMS</td>
+<td>https://docs.aws.amazon.com/kms/latest/developerguide/overview.html</td>
+</tr>
+<tr>
+<td>KMS キーポリシー</td>
+<td>https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html</td>
+</tr>
+<tr>
+<td>KMS キーのローテーション</td>
+<td>https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html</td>
+</tr>
+<tr>
+<td>KMS グラント</td>
+<td>https://docs.aws.amazon.com/kms/latest/developerguide/grants.html</td>
+</tr>
+<tr>
+<td>S3 の暗号化</td>
+<td>https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html</td>
+</tr>
+<tr>
+<td>EBS の暗号化</td>
+<td>https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html</td>
+</tr>
+<tr>
+<td>RDS の暗号化</td>
+<td>https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html</td>
+</tr>
+<tr>
+<td>AWS Certificate Manager</td>
+<td>https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html</td>
+</tr>
+<tr>
+<td>ACM のドメイン検証</td>
+<td>https://docs.aws.amazon.com/acm/latest/userguide/domain-ownership-validation.html</td>
+</tr>
+<tr>
+<td>ACM のマネージド更新</td>
+<td>https://docs.aws.amazon.com/acm/latest/userguide/managed-renewal.html</td>
+</tr>
+<tr>
+<td>ALB の HTTPS リスナー</td>
+<td>https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html</td>
+</tr>
+<tr>
+<td>CloudFront と HTTPS</td>
+<td>https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https.html</td>
+</tr>
+<tr>
+<td>Secrets Manager</td>
+<td>https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html</td>
+</tr>
+<tr>
+<td>Secrets Manager のローテーション</td>
+<td>https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html</td>
+</tr>
+<tr>
+<td>Secrets Manager のベストプラクティス</td>
+<td>https://docs.aws.amazon.com/secretsmanager/latest/userguide/best-practices.html</td>
+</tr>
+<tr>
+<td>Parameter Store</td>
+<td>https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html</td>
+</tr>
+<tr>
+<td>Security Hub と Security Hub CSPM</td>
+<td>https://docs.aws.amazon.com/securityhub/latest/userguide/what-are-securityhub-services.html</td>
+</tr>
+<tr>
+<td>Security Hub CSPM ユーザーガイド</td>
+<td>https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html</td>
+</tr>
+<tr>
+<td>Amazon GuardDuty</td>
+<td>https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html</td>
+</tr>
+<tr>
+<td>Amazon Inspector</td>
+<td>https://docs.aws.amazon.com/inspector/latest/user/what-is-inspector.html</td>
+</tr>
+<tr>
+<td>AWS Security Agent とは</td>
+<td>https://docs.aws.amazon.com/securityagent/latest/userguide/what-is.html</td>
+</tr>
+<tr>
+<td>Security Agent クイックスタート</td>
+<td>https://docs.aws.amazon.com/securityagent/latest/userguide/quickstart.html</td>
+</tr>
+<tr>
+<td>Security Agent のセキュリティ上の考慮事項</td>
+<td>https://docs.aws.amazon.com/securityagent/latest/userguide/security-guidance.html</td>
+</tr>
+<tr>
+<td>Security Agent 一般提供開始（2026-03-31）</td>
+<td>https://aws.amazon.com/about-aws/whats-new/2026/03/aws-security-agent-ondemand-penetration</td>
+</tr>
+<tr>
+<td>Security Agent FAQ</td>
+<td>https://aws.amazon.com/security-agent/faqs/</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><em>本ガイドは学習用の解説です。機能・料金・対応範囲は変更されることがあるため、実運用や受験前には必ず最新の公式ドキュメントを確認してください。</em></p>
+<p class="endnote">本ガイドは学習用の解説です。機能・料金・上限値は変更されることがあるため、受験前に必ず公式ドキュメントで最新情報を確認してください。</p>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" integrity="sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js" integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU" crossorigin="anonymous"></script>
+<script>
+const DIAGRAMS = {
+'d0': `flowchart TB
+    subgraph CUST["利用者の責任 : クラウドにおけるセキュリティ"]
+        A1["IAM と アクセス管理"]
+        A2["データの暗号化と分類"]
+        A3["OS とアプリのパッチ適用"]
+        A4["ネットワーク設定 SG と NACL"]
+    end
+    subgraph AWSR["AWS の責任 : クラウドのセキュリティ"]
+        B1["物理施設と ハードウェア"]
+        B2["ハイパーバイザーと ネットワーク基盤"]
+        B3["マネージドサービスの基盤管理"]
+    end
+    CUST --> AWSR`,
+'d1': `flowchart LR
+    S1["Step 1-2 : IAM を理解"] --> S2["Step 3 : 複数アカウントで統制"]
+    S2 --> S3["Step 4-5 : 点検と継続監視"]
+    S3 --> S4["Step 6-9 : データを守る"]
+    S4 --> S5["Step 10 : 検出と是正"]
+    S5 --> S6["Step 11 : 演習で定着"]`,
+'d2': `flowchart TD
+    START["リクエスト受信"] --> D1{"明示的な Deny が<br/>どこかにあるか"}
+    D1 -- "ある" --> DENY["拒否"]
+    D1 -- "ない" --> D2{"SCP や 境界 や<br/>セッションポリシーで<br/>許可の範囲内か"}
+    D2 -- "範囲外" --> DENY
+    D2 -- "範囲内" --> D3{"どこかに 明示的な<br/>Allow があるか"}
+    D3 -- "ある" --> ALLOW["許可"]
+    D3 -- "ない" --> DENY`,
+'d3': `sequenceDiagram
+    participant U as 呼び出し元 EC2 や ユーザー
+    participant STS as AWS STS
+    participant R as IAM ロール
+    participant S3 as 対象サービス
+    U->>STS: AssumeRole を要求
+    STS->>R: 信頼ポリシーで呼び出し元を確認
+    R-->>STS: 信頼 OK
+    STS-->>U: 一時認証情報 キー と トークン を発行
+    U->>S3: 一時認証情報で API を呼び出す
+    S3-->>U: アクセス許可ポリシーに基づき応答`,
+'d4': `flowchart LR
+    U["従業員"] --> IDP["社内 IdP"]
+    IDP -->|"認証成功 と アサーション"| AWS["AWS サインイン"]
+    AWS --> ROLE["IAM ロールを引き受け"]
+    ROLE --> RES["AWS リソース"]`,
+'d5': `flowchart TD
+    Q["アクセスに関する困りごと"] --> A{"何をしたい？"}
+    A -- "過去に何があったか知りたい" --> CT["CloudTrail"]
+    A -- "外部公開や未使用権限を見つけたい" --> AA["IAM Access Analyzer"]
+    A -- "この権限で通るか試したい" --> SIM["IAM ポリシーシミュレーター"]
+    A -- "全ユーザーの認証情報の状態を見たい" --> CR["認証情報レポート"]`,
+'d6': `flowchart LR
+    API["API 呼び出し"] --> CT["CloudTrail"]
+    CT --> S3["S3 バケット<br/>長期保存"]
+    CT --> CWL["CloudWatch Logs"]
+    CWL --> MF["メトリクスフィルター"]
+    MF --> AL["アラーム と SNS 通知"]
+    S3 --> ATH["Athena で調査"]`,
+'d7': `flowchart TD
+    E["AccessDenied が発生"] --> M["エラーメッセージを読む<br/>どのポリシー種別が原因か記載される場合あり"]
+    M --> C1{"明示的 Deny か"}
+    C1 -- "SCP による拒否" --> F1["Organizations の SCP を確認"]
+    C1 -- "境界やセッションポリシー" --> F2["権限の境界 セッションポリシーを確認"]
+    C1 -- "リソースポリシー" --> F3["バケットポリシーなどを確認"]
+    C1 -- "暗黙の Deny" --> F4["アイデンティティポリシーに<br/>Allow が足りない"]
+    F1 --> V["ポリシーシミュレーターで検証"]
+    F2 --> V
+    F3 --> V
+    F4 --> V
+    V --> L["CloudTrail で実際のイベントを確認"]`,
+'d8': `flowchart TB
+    ROOT["組織のルート"] --> MGMT["管理アカウント"]
+    ROOT --> OU1["OU : セキュリティ"]
+    ROOT --> OU2["OU : ワークロード"]
+    ROOT --> OU3["OU : サンドボックス"]
+    OU1 --> LOG["ログアーカイブ用アカウント"]
+    OU1 --> AUD["監査用アカウント"]
+    OU2 --> PROD["本番アカウント"]
+    OU2 --> DEV["開発アカウント"]
+    OU3 --> SB["個人検証アカウント"]`,
+'d9': `flowchart LR
+    A["IAM ポリシーで Allow"] --> X{"SCP でも<br/>許可されているか"}
+    X -- "はい" --> OK["実行可能"]
+    X -- "いいえ" --> NG["実行不可"]`,
+'d10': `flowchart TB
+    L1["SCP と RCP : 組織の上限"] --> L2["権限の境界 : ロールやユーザーの上限"]
+    L2 --> L3["セッションポリシー : 一時セッションの上限"]
+    L3 --> L4["IAM ポリシーとリソースポリシー : 実際の許可"]`,
+'d11': `flowchart LR
+    IDS["ID ソース<br/>AD や 外部 IdP"] --> IC["IAM Identity Center"]
+    IC --> G["グループ"]
+    G --> PS["アクセス許可セット"]
+    PS --> A1["アカウント A"]
+    PS --> A2["アカウント B"]
+    U["ユーザー"] --> PORTAL["AWS アクセスポータル"]
+    PORTAL --> IC`,
+'d12': `flowchart TD
+    TA["Trusted Advisor が<br/>問題を検出"] --> N["通知<br/>EventBridge や メール"]
+    N --> J{"対応方法"}
+    J -- "手動" --> M["担当者が コンソール や CLI で修正"]
+    J -- "自動" --> AUTO["EventBridge ルール<br/>から SSM Automation や Lambda を実行"]
+    M --> R["Trusted Advisor を更新<br/>状態が緑になるか確認"]
+    AUTO --> R`,
+'d13': `flowchart LR
+    P["予防<br/>SCP と IAM Deny"] --> D["検出<br/>Config と Security Hub"]
+    D --> R["是正<br/>SSM Automation"]
+    R --> P`,
+'d14': `flowchart TD
+    RES["リソース設定の変更"] --> REC["Config レコーダーが記録"]
+    REC --> RULE["Config ルールで評価"]
+    RULE --> C{"準拠か"}
+    C -- "準拠" --> OK["COMPLIANT"]
+    C -- "非準拠" --> NC["NON_COMPLIANT"]
+    NC --> EV["EventBridge で通知"]
+    NC --> REM["修復アクション<br/>SSM Automation"]
+    REM --> REC`,
+'d15': `flowchart LR
+    T["コンフォーマンスパックの<br/>テンプレート YAML"] --> DEP["アカウント や 組織に展開"]
+    DEP --> R1["Config ルール 1"]
+    DEP --> R2["Config ルール 2"]
+    DEP --> R3["修復アクション"]
+    R1 --> DASH["コンプライアンス ダッシュボード"]
+    R2 --> DASH`,
+'d16': `flowchart TD
+    D["データ"] --> F["発見 と 分類"]
+    F --> T["タグ付け"]
+    T --> E["強制"]
+    E --> E1["IAM と ABAC<br/>タグでアクセス制御"]
+    E --> E2["暗号化 KMS<br/>分類ごとにキーを分ける"]
+    E --> E3["Config ルール<br/>必須タグ と 暗号化"]
+    E --> E4["Organizations<br/>タグポリシー"]
+    E --> M["継続監視<br/>Macie と Security Hub"]`,
+'d17': `sequenceDiagram
+    participant APP as アプリ や AWS サービス
+    participant KMS as AWS KMS
+    participant ST as ストレージ
+    APP->>KMS: GenerateDataKey を要求
+    KMS-->>APP: 平文のデータキー と 暗号化済みデータキー
+    APP->>APP: 平文データキーでデータを暗号化
+    APP->>ST: 暗号化データ と 暗号化済みデータキーを保存
+    Note over APP: 平文データキーはメモリから破棄
+    APP->>KMS: 復号時は暗号化済みデータキーを Decrypt
+    KMS-->>APP: 平文データキー
+    APP->>APP: データを復号`,
+'d18': `flowchart TD
+    REQ["KMS の API 呼び出し"] --> KP{"キーポリシーが<br/>許可しているか"}
+    KP -- "許可 直接" --> OK["許可"]
+    KP -- "IAM に委任している" --> IAMP{"IAM ポリシーも<br/>許可しているか"}
+    IAMP -- "はい" --> OK
+    IAMP -- "いいえ" --> DENY["拒否"]
+    KP -- "許可なし" --> DENY`,
+'d19': `flowchart TD
+    subgraph EBS["EBS ボリューム"]
+        E1["スナップショットを作成"] --> E2["暗号化を指定して<br/>スナップショットをコピー"]
+        E2 --> E3["コピーから 暗号化ボリュームを作成"]
+        E3 --> E4["EC2 に付け替え"]
+    end
+    subgraph RDS["RDS インスタンス"]
+        R1["スナップショットを作成"] --> R2["暗号化を指定して<br/>スナップショットをコピー"]
+        R2 --> R3["暗号化スナップショットから復元"]
+        R3 --> R4["接続先を切り替え"]
+    end`,
+'d20': `flowchart TD
+    REQ["ACM に証明書をリクエスト"] --> V{"検証方法"}
+    V -- "DNS 検証 推奨" --> D1["ACM が示す CNAME レコードを<br/>DNS に追加"]
+    D1 --> D2["自動で検証完了"]
+    D2 --> D3["更新時も CNAME が残っていれば<br/>自動更新"]
+    V -- "メール検証" --> M1["ドメイン管理者宛のメールを承認"]
+    M1 --> M2["更新のたびに<br/>メール承認が必要な場合あり"]`,
+'d21': `flowchart LR
+    C["クライアント"] -->|"HTTPS 443"| ALB["ALB<br/>ACM 証明書で TLS 終端"]
+    ALB -->|"HTTP または HTTPS"| EC2["ターゲット EC2"]
+    C -.->|"HTTP 80"| ALB
+    ALB -.->|"HTTPS へリダイレクト"| C`,
+'d22': `sequenceDiagram
+    participant APP as アプリ Lambda や ECS
+    participant SM as Secrets Manager
+    participant KMS as KMS
+    participant DB as データベース
+    APP->>SM: GetSecretValue
+    SM->>KMS: シークレットを復号
+    KMS-->>SM: 平文
+    SM-->>APP: DB パスワードを返す
+    APP->>DB: 取得したパスワードで接続`,
+'d23': `flowchart LR
+    SCH["ローテーション周期に到達"] --> LAM["ローテーション用 Lambda を起動"]
+    LAM --> S1["createSecret : 新パスワードを作成"]
+    S1 --> S2["setSecret : DB に新パスワードを設定"]
+    S2 --> S3["testSecret : 新パスワードで接続テスト"]
+    S3 --> S4["finishSecret : 新バージョンを現行に切替"]`,
+'d24': `flowchart TD
+    Q["保管したい値"] --> A{"機密の認証情報か"}
+    A -- "いいえ 設定値のみ" --> PS["Parameter Store String"]
+    A -- "はい" --> B{"自動ローテーションや<br/>クロスリージョン複製が必要か"}
+    B -- "はい" --> SM["Secrets Manager"]
+    B -- "いいえ コスト重視" --> PS2["Parameter Store SecureString"]`,
+'d25': `flowchart TB
+    GD["GuardDuty<br/>脅威検出"] --> SH
+    INS["Inspector<br/>脆弱性"] --> SH
+    CFG["Config と Security Hub CSPM<br/>設定の準拠"] --> SH
+    MAC["Macie<br/>機密データ"] --> SH
+    SH["Security Hub<br/>集約と優先順位付け"] --> EB["EventBridge"]
+    EB --> NOTI["SNS 通知"]
+    EB --> AUTO["Lambda や SSM Automation<br/>で自動是正"]
+    EB --> TICK["チケット や SIEM 連携"]`,
+'d26': `flowchart TD
+    I["Inspector が<br/>EC2 の CVE を検出"] --> P["重大度と Inspector スコアで優先順位付け"]
+    P --> R["Systems Manager Patch Manager で<br/>パッチを適用"]
+    R --> RS["Inspector が自動で再スキャン"]
+    RS --> C{"検出が解消したか"}
+    C -- "はい" --> DONE["クローズ"]
+    C -- "いいえ" --> P`,
+'d27': `flowchart LR
+    DEV["開発"] --> DR["設計レビュー と コードレビュー"]
+    DR --> DEP["デプロイ"]
+    DEP --> PT["オンデマンド侵入テスト"]
+    PT --> FIND["検証済みの検出結果"]
+    FIND --> FIX["修正 PR の作成"]
+    FIX --> DEV`,
+'d28': `flowchart TD
+    F["検出結果の発生"] --> SEV{"重大度"}
+    SEV -- "Critical や High" --> A["即時通知 と 自動是正の検討"]
+    SEV -- "Medium" --> B["チケット化して期限内に対応"]
+    SEV -- "Low" --> C["定期レビューで対応"]
+    A --> FIX["是正の実施"]
+    B --> FIX
+    C --> FIX
+    FIX --> V["再スキャン 再評価で確認"]
+    V --> CLOSE["クローズと記録"]`,
+'d29': `flowchart TD
+    A["本ガイドを通読"] --> B["各 Step の試験ポイントを暗記"]
+    B --> C["無料枠で実際に触る<br/>IAM ロール KMS Config ACM"]
+    C --> D["練習問題 と 公式サンプル問題"]
+    D --> E["間違えた Step を読み直す"]
+    E --> D`
+};
+
+(function(){
+  'use strict';
+  function pad(svg){
+    var vb=svg.getAttribute('viewBox'); if(!vb) return;
+    var p=vb.split(/[ ,]+/).map(parseFloat); if(p.length<4||p.some(isNaN)) return;
+    var isSeq=svg.getAttribute('aria-roledescription')==='sequence';
+    p[3]+= isSeq?110:15;
+    svg.setAttribute('viewBox',p.join(' '));
+    svg.removeAttribute('width'); svg.removeAttribute('height');
+    svg.style.width=p[2]+'px'; svg.style.maxWidth='none'; svg.style.height='auto';
+    svg.style.overflow='visible'; svg.style.flexShrink='0';
+  }
+  async function renderAll(){
+    if(typeof mermaid==='undefined'){console.warn('mermaid not loaded');return;}
+    mermaid.initialize({
+      startOnLoad:false, theme:'base', securityLevel:'loose',
+      fontFamily:getComputedStyle(document.body).fontFamily,
+      themeVariables:{
+        fontSize:'16px', background:'#ffffff',
+        primaryColor:'#eef0fa', primaryTextColor:'#1c2333', primaryBorderColor:'#34459b',
+        lineColor:'#5b6b8f', secondaryColor:'#fbf1dc', tertiaryColor:'#ffffff',
+        edgeLabelBackground:'#ffffff', clusterBkg:'#f7f6f1', clusterBorder:'#c3cbea',
+        actorBkg:'#eef0fa', actorBorder:'#34459b', actorTextColor:'#1c2333', actorLineColor:'#8a96b8',
+        signalColor:'#34459b', signalTextColor:'#1c2333', noteBkgColor:'#fbf1dc', noteTextColor:'#1c2333', noteBorderColor:'#b7791f'
+      },
+      flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis',nodeSpacing:50,rankSpacing:50,subGraphTitleMargin:{top:10,bottom:28}},
+      sequence:{useMaxWidth:false,wrap:false}
+    });
+    try{
+      await document.fonts.load('400 16px "Noto Sans JP"','設計とネットワーク');
+      await document.fonts.load('700 16px "Noto Sans JP"','設計とネットワーク');
+      await document.fonts.ready;
+    }catch(e){}
+    var nodes=document.querySelectorAll('.diagram-canvas');
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i], id=el.getAttribute('data-diagram-id'), src=DIAGRAMS[id];
+      try{
+        var r=await mermaid.render('mm-'+id, src);
+        el.innerHTML=r.svg;
+        var svg=el.querySelector('svg'); if(svg) pad(svg);
+      }catch(err){
+        console.error('mermaid render failed',id,err);
+        el.textContent='図の描画に失敗しました: '+id;
+      }
+    }
+    document.documentElement.setAttribute('data-diagrams-done','1');
+  }
+  renderAll();
+
+  if(typeof hljs!=='undefined'){
+    document.querySelectorAll('pre.code').forEach(function(pre){
+      var c=pre.querySelector('code'), lang=pre.getAttribute('data-lang');
+      if(!c||!lang||!hljs.getLanguage(lang)) return;
+      c.className='language-'+lang;
+      try{hljs.highlightElement(c);}catch(e){console.warn('hljs failed',e);}
+    });
+  }
+
+  document.querySelectorAll('.quiz').forEach(function(q){
+    var multi=q.getAttribute('data-multi')==='1';
+    q.querySelectorAll('.opts li').forEach(function(li){
+      li.addEventListener('click',function(){
+        if(q.classList.contains('revealed')) return;
+        if(!multi) q.querySelectorAll('.opts li.picked').forEach(function(x){x.classList.remove('picked');});
+        li.classList.toggle('picked');
+      });
+    });
+    var d=q.querySelector('details.answer');
+    d.addEventListener('toggle',function(){q.classList.toggle('revealed',d.open);});
+  });
+
+  var tools=document.getElementById('trapTools');
+  if(tools){
+    var cards=Array.prototype.slice.call(document.querySelectorAll('.trap')), grp='all', inp=document.getElementById('trapSearch'), cnt=document.getElementById('trapCount');
+    function applyFilter(){
+      var k=inp.value.trim().toLowerCase(), n=0;
+      cards.forEach(function(c){
+        var ok=(grp==='all'||c.getAttribute('data-g')===grp)&&(!k||c.textContent.toLowerCase().indexOf(k)>=0);
+        c.classList.toggle('hide',!ok); if(ok) n++;
+      });
+      document.querySelectorAll('.trap-grid').forEach(function(g){
+        var any=g.querySelector('.trap:not(.hide)'), t=g.previousElementSibling;
+        g.style.display=any?'':'none'; if(t) t.classList.toggle('hide',!any);
+      });
+      cnt.textContent=n+' 件を表示';
+    }
+    tools.addEventListener('click',function(e){
+      var b=e.target.closest('.chip'); if(!b) return;
+      grp=b.getAttribute('data-g');
+      tools.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',x===b);});
+      applyFilter();
+    });
+    inp.addEventListener('input',applyFilter);
+    applyFilter();
+  }
+
+  var sidebar=document.getElementById('sidebar'), btn=document.getElementById('menuBtn'), scrim=document.getElementById('scrim');
+  function setOpen(o){
+    sidebar.classList.toggle('open',o); scrim.classList.toggle('show',o);
+    btn.setAttribute('aria-expanded',o?'true':'false');
+  }
+  btn.addEventListener('click',function(){setOpen(!sidebar.classList.contains('open'));});
+  scrim.addEventListener('click',function(){setOpen(false);});
+  var links=Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+  links.forEach(function(a){a.addEventListener('click',function(){setOpen(false);});});
+
+  var targets=links.map(function(a){return document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));});
+  var ticking=false;
+  function spy(){
+    ticking=false;
+    var limit=window.innerHeight*0.25, cur=-1;
+    for(var i=0;i<targets.length;i++){
+      if(targets[i] && targets[i].getBoundingClientRect().top<=limit) cur=i; else if(targets[i]) break;
+    }
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur);});
+    if(cur>=0 && window.innerWidth>980){
+      var a=links[cur], sb=sidebar, top=a.offsetTop, h=sb.clientHeight;
+      if(top<sb.scrollTop+40 || top>sb.scrollTop+h-80) sb.scrollTop=top-h/3;
+    }
+  }
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(spy);}},{passive:true});
+  window.addEventListener('resize',spy);
+  spy();
+})();
+
+</script>
+</body>
+</html>

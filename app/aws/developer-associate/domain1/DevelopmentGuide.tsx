@@ -1,0 +1,105 @@
+'use client';
+import { memo } from 'react';
+import { NavBar } from './NavBar';
+import { Sec0 } from './sections/Sec0';
+import { Task1 } from './sections/Task1';
+import { Sk111 } from './sections/Sk111';
+import { Sk112 } from './sections/Sk112';
+import { Sk113 } from './sections/Sk113';
+import { Sk114 } from './sections/Sk114';
+import { Sk115 } from './sections/Sk115';
+import { Sk116 } from './sections/Sk116';
+import { Sk117 } from './sections/Sk117';
+import { Sk118 } from './sections/Sk118';
+import { Sk119 } from './sections/Sk119';
+import { Sk1110 } from './sections/Sk1110';
+import { Sk1111 } from './sections/Sk1111';
+import { Sk1112 } from './sections/Sk1112';
+import { Sk1113 } from './sections/Sk1113';
+import { Task2 } from './sections/Task2';
+import { Sk121 } from './sections/Sk121';
+import { Sk122 } from './sections/Sk122';
+import { Sk123 } from './sections/Sk123';
+import { Sk124 } from './sections/Sk124';
+import { Sk125 } from './sections/Sk125';
+import { Sk126 } from './sections/Sk126';
+import { Sk127 } from './sections/Sk127';
+import { Task3 } from './sections/Task3';
+import { Sk131 } from './sections/Sk131';
+import { Sk132 } from './sections/Sk132';
+import { Sk133 } from './sections/Sk133';
+import { Sk134 } from './sections/Sk134';
+import { Sk135 } from './sections/Sk135';
+import { Sk136 } from './sections/Sk136';
+import { Sk137 } from './sections/Sk137';
+import { Sk138 } from './sections/Sk138';
+import { Sk139 } from './sections/Sk139';
+import { Sec33 } from './sections/Sec33';
+import { Sec34 } from './sections/Sec34';
+import { Sec35 } from './sections/Sec35';
+import { Sec36 } from './sections/Sec36';
+import { Sec37 } from './sections/Sec37';
+/** 状態に依存しない本文をメモ化し、目次操作で図を再描画しない。 */
+const GuideContents=memo(function GuideContents(){return <>
+<header className="hero">{" "}<div className="eyebrow">
+<i className="ti ti-certificate" aria-hidden="true"></i>
+{"AWS Certified Developer - Associate"}
+</div>{" "}<h1>{"Domain 1: Development with AWS Services"}</h1>{" "}<p className="sub">{"完全ガイド(初学者向け・ステップバイステップ)"}</p>{" "}<div className="meta">
+<p>{"対象試験: AWS Certified Developer - Associate (DVA-C02)"}</p>
+<p>{"注意: DVA-C02 の最終受験日は "}<strong>{"2026 年 11 月 30 日"}</strong>{"です。最新情報は "}<a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank" rel="noopener noreferrer">{"AWS Certified Developer - Associate 公式ページ"}</a>{"を確認してください。"}</p>
+<p>{"対象範囲: "}<strong>{"Content Domain 1「Development with AWS Services」（スコア対象問題の 32%）"}</strong></p>
+<p>{"作成日: 2026-10-04"}</p>
+<p>{"根拠: AWS 公式 試験ガイド（DVA-C02）の Domain 1 の全 29 スキル（Skill 1.1.1〜1.3.9）と、各サービスの AWS 公式ドキュメント"}</p>
+</div>{" "}<div className="chips">
+<span className="chip"><i className="ti ti-percentage" aria-hidden="true"></i>{"Domain 1 は配点 32%"}</span>
+<span className="chip"><i className="ti ti-list-check" aria-hidden="true"></i>{"全 29 スキル"}</span>
+<span className="chip"><i className="ti ti-chart-dots-3" aria-hidden="true"></i>{"Mermaid 図 31 点"}</span>
+<span className="chip"><i className="ti ti-help-circle" aria-hidden="true"></i>{"練習問題 15 問"}</span>
+</div>{" "}</header>
+<Sec0 />
+<Task1 />
+<Sk111 />
+<Sk112 />
+<Sk113 />
+<Sk114 />
+<Sk115 />
+<Sk116 />
+<Sk117 />
+<Sk118 />
+<Sk119 />
+<Sk1110 />
+<Sk1111 />
+<Sk1112 />
+<Sk1113 />
+<Task2 />
+<Sk121 />
+<Sk122 />
+<Sk123 />
+<Sk124 />
+<Sk125 />
+<Sk126 />
+<Sk127 />
+<Task3 />
+<Sk131 />
+<Sk132 />
+<Sk133 />
+<Sk134 />
+<Sk135 />
+<Sk136 />
+<Sk137 />
+<Sk138 />
+<Sk139 />
+<Sec33 />
+<Sec34 />
+<Sec35 />
+<Sec36 />
+<Sec37 />
+<footer className="footer"><p>{"本ガイドは AWS 公式ドキュメントに基づいています。数値や提供状況は変更されることがあるため、受験前に最新の公式情報を確認してください。"}</p></footer>
+</>;});
+/** 目次操作と静的本文を分離した学習ガイド。 */
+export function DevelopmentGuide(){return <NavBar><GuideContents /></NavBar>;}
+
+
+
+
+

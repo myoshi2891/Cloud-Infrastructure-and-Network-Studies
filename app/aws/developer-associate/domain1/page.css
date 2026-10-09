@@ -1,0 +1,140 @@
+
+.dva-development-page *{box-sizing:border-box}
+.dva-development-page{scroll-behavior:smooth;color-scheme:light}
+.dva-development-page{margin:0;background:var(--color-dva-development-paper);color:var(--color-dva-development-ink);font-family:var(--font-dva-development-body);font-size:0.875rem;line-height:1.85;-webkit-text-size-adjust:100%}
+.dva-development-page a{color:var(--color-dva-development-indigo);text-underline-offset:3px}
+.dva-development-page a:hover{color:var(--color-dva-development-indigo-deep)}
+.dva-development-page .layout{display:block}
+
+/* sidebar */
+.dva-development-page aside.sidebar{position:fixed;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));left:0;bottom:0;width:288px;background:var(--color-dva-development-paper-card);border-right:1px solid var(--color-dva-development-border);overflow-y:auto;z-index:40;padding:20px 0 28px}
+.dva-development-page .sidebar-brand{display:flex;align-items:center;gap:10px;min-width:0;padding:0 20px 16px;border-bottom:1px solid var(--color-dva-development-border);margin-bottom:10px}
+.dva-development-page .sidebar-brand .ti{font-size:1.4rem;color:var(--color-dva-development-indigo)}
+.dva-development-page .sidebar-brand strong{display:block;font-family:var(--font-dva-development-display);font-size:0.875rem;line-height:1.3}
+.dva-development-page .sidebar-brand .badge{display:inline-block;margin-top:4px;background:var(--color-dva-development-indigo-soft);color:var(--color-dva-development-indigo-deep);border-radius:10px;padding:2px 10px;font-size:0.875rem;line-height:1.4;white-space:normal}
+.dva-development-page .nav-list{list-style:none;margin:0;padding:0}
+.dva-development-page .nav-list a{display:block;padding:6px 20px;color:var(--color-dva-development-ink-soft);text-decoration:none;border-left:3px solid transparent;font-size:0.875rem;line-height:1.5}
+.dva-development-page .nav-list a:hover{background:var(--color-dva-development-paper-alt);color:var(--color-dva-development-ink)}
+.dva-development-page .nav-list a.active{border-left-color:var(--color-dva-development-indigo);background:var(--color-dva-development-indigo-soft);color:var(--color-dva-development-indigo-deep);font-weight:700}
+.dva-development-page .nav-list li.group>a{margin-top:10px;font-weight:700;color:var(--color-dva-development-ink);font-family:var(--font-dva-development-display)}
+.dva-development-page .nav-list li.skill>a{padding-left:34px}
+
+/* mobile bar + drawer */
+.dva-development-page .mobile-bar{display:none}
+.dva-development-page .mobile-bar button{font-size:0.875rem;font-family:var(--font-dva-development-body)}
+.dva-development-page .backdrop{display:none}
+
+/* main */
+.dva-development-page main{margin-left:288px;min-width:0;width:calc(100% - 288px)}
+.dva-development-page .hero{background:linear-gradient(135deg,var(--color-dva-development-1c2760) 0%,var(--color-dva-development-2b3a85) 55%,var(--color-dva-development-3b4fa8) 100%);color:var(--color-dva-development-fff);padding:64px 56px 56px}
+.dva-development-page .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border-radius:999px;padding:3px 14px;font-size:0.875rem;margin-bottom:14px}
+.dva-development-page .hero h1{font-family:var(--font-dva-development-display);font-size:2.0125rem;line-height:1.3;margin:0 0 6px;color:var(--color-dva-development-fff)}
+.dva-development-page .hero .sub{font-size:1.18125rem;color:var(--color-dva-development-e6e9ff);margin:0 0 20px;font-weight:700}
+.dva-development-page .hero .meta{color:var(--color-dva-development-e6e9ff);margin:0 0 22px}
+.dva-development-page .hero .meta p{margin:2px 0}
+.dva-development-page .hero .meta strong{color:var(--color-dva-development-fff)}
+.dva-development-page .chips{display:flex;flex-wrap:wrap;gap:10px}
+.dva-development-page .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 14px;font-size:0.875rem;color:var(--color-dva-development-fff);white-space:nowrap}
+
+.dva-development-page .section{padding:34px 56px;background:transparent}
+.dva-development-page .section>*:first-child{margin-top:0}
+.dva-development-page .section.task-divider{padding-top:48px}
+.dva-development-page .section.task-divider h2{border-left:6px solid var(--color-dva-development-indigo);padding-left:16px;font-size:1.75rem}
+.dva-development-page h2{font-family:var(--font-dva-development-display);font-size:1.4875rem;line-height:1.4;margin:0 0 16px;color:var(--color-dva-development-ink)}
+.dva-development-page h3{font-size:1.09375rem;line-height:1.5;margin:30px 0 12px;color:var(--color-dva-development-ink);padding-left:12px;border-left:5px solid var(--color-dva-development-border)}
+.dva-development-page h3.h-one{border-left-color:var(--color-dva-development-indigo);color:var(--color-dva-development-indigo-deep)}
+.dva-development-page h3.h-bp{border-left-color:var(--color-dva-development-forest);color:var(--color-dva-development-forest)}
+.dva-development-page h3.h-exam{border-left-color:var(--color-dva-development-gold);color:var(--color-dva-development-gold)}
+.dva-development-page h3.h-detail{border-left-color:var(--color-dva-development-plum);color:var(--color-dva-development-plum)}
+.dva-development-page h4{font-size:0.9625rem;margin:24px 0 8px;color:var(--color-dva-development-ink)}
+.dva-development-page p{margin:0 0 14px;overflow-wrap:break-word}
+.dva-development-page ul, .dva-development-page ol{margin:0 0 16px;padding-left:1.5em;overflow-wrap:break-word}
+.dva-development-page li{margin:3px 0}
+.dva-development-page li>ul, .dva-development-page li>ol{margin:4px 0}
+.dva-development-page hr{display:none}
+.dva-development-page strong{color:var(--color-dva-development-12151d)}
+.dva-development-page :not(pre)>code{font-family:var(--font-dva-development-mono);font-size:0.875rem;background:var(--color-dva-development-paper-alt);border:1px solid var(--color-dva-development-border);border-radius:5px;padding:1px 6px;color:var(--color-dva-development-7a2f4c);overflow-wrap:anywhere}
+
+.dva-development-page blockquote{margin:16px 0;background:var(--color-dva-development-indigo-soft);border-left:5px solid var(--color-dva-development-indigo);border-radius:0 10px 10px 0;padding:12px 18px;color:var(--color-dva-development-ink)}
+.dva-development-page blockquote p:last-child{margin-bottom:0}
+
+/* tables */
+.dva-development-page .table-wrap{overflow-x:auto;min-width:0;margin:16px 0 22px;background:var(--color-dva-development-paper-card);border:1px solid var(--color-dva-development-border);border-radius:12px;box-shadow:var(--shadow-dva-development)}
+.dva-development-page table{border-collapse:collapse;width:100%;font-size:0.875rem;line-height:1.65}
+.dva-development-page th{background:var(--color-dva-development-indigo);color:var(--color-dva-development-fff);text-align:left;padding:10px 14px;font-weight:700;white-space:nowrap}
+.dva-development-page td{padding:10px 14px;border-bottom:1px solid var(--color-dva-development-border);vertical-align:top;overflow-wrap:anywhere;background:var(--color-dva-development-paper-card)}
+.dva-development-page th{overflow-wrap:anywhere}
+.dva-development-page tbody tr:last-child td{border-bottom:none}
+.dva-development-page tbody tr:hover td{background:var(--color-dva-development-paper-alt)}
+
+/* code */
+.dva-development-page .code-block{margin:16px 0 22px;border-radius:12px;overflow:hidden;background:var(--color-dva-development-282c34);box-shadow:var(--shadow-dva-development);min-width:0}
+.dva-development-page .cb-head{background:var(--color-dva-development-21252b);color:var(--color-dva-development-c9d1e0);padding:6px 16px;font-size:0.875rem;font-family:var(--font-dva-development-mono);border-bottom:1px solid var(--color-dva-development-3a3f4b);display:flex;align-items:center;gap:8px}
+.dva-development-page .code-block pre{margin:0;overflow-x:auto;background:var(--color-dva-development-282c34)}
+.dva-development-page .code-block pre code{display:block;padding:14px 16px;font-family:var(--font-dva-development-mono);font-size:0.875rem;line-height:1.7;color:var(--color-dva-development-abb2bf);background:var(--color-dva-development-282c34);white-space:pre}
+.dva-development-page .code-block pre code.hljs{padding:14px 16px}
+
+/* diagrams */
+.dva-development-page .diagram-card{margin:20px 0 26px;background:var(--color-dva-development-paper-card);border:1px solid var(--color-dva-development-border);border-radius:14px;box-shadow:var(--shadow-dva-development);padding:18px 16px;min-width:0}
+.dva-development-page .diagram-wrap{display:flex;justify-content:safe center;overflow-x:auto;width:100%;min-width:0}
+.dva-development-page .diagram-wrap>*{min-width:0}
+.dva-development-page .diagram-canvas{min-width:0}
+.dva-development-page .diagram-wrap svg{max-width:none;flex-shrink:0;height:auto;overflow:visible}
+.dva-development-page .diagram-err{color:var(--color-dva-development-9b2c2c);background:var(--color-dva-development-fdecec);border:1px solid var(--color-dva-development-f0b8b8);border-radius:8px;padding:10px 14px}
+.dva-development-page .mermaidTooltip{font-size:0.875rem!important}
+
+/* quiz details */
+.dva-development-page details{background:var(--color-dva-development-paper-card);border:1px solid var(--color-dva-development-border);border-radius:12px;box-shadow:var(--shadow-dva-development);margin:8px 0 22px;padding:0}
+.dva-development-page details summary{cursor:pointer;padding:10px 16px;font-weight:700;color:var(--color-dva-development-forest);list-style:none;display:flex;align-items:center;gap:8px}
+.dva-development-page details summary::-webkit-details-marker{display:none}
+.dva-development-page details summary::before{content:"\25B6";font-size:0.875rem;color:var(--color-dva-development-forest)}
+.dva-development-page details[open] summary::before{content:"\25BC"}
+.dva-development-page details[open] summary{border-bottom:1px solid var(--color-dva-development-border);background:var(--color-dva-development-forest-soft);border-radius:12px 12px 0 0}
+.dva-development-page details>:not(summary){margin:12px 16px}
+.dva-development-page details>p:last-child{margin-bottom:14px}
+
+.dva-development-page .footer{padding:34px 56px 60px;color:var(--color-dva-development-ink-faint)}
+.dva-development-page .footer p{margin:0}
+
+@media(max-width:900px){
+  .dva-development-page aside.sidebar{transform:translateX(-102%);transition:transform .25s ease;box-shadow:none;width:min(86vw,320px)}
+  .dva-development-page.menu-open aside.sidebar{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.25)}
+  .dva-development-page .backdrop{display:block;position:fixed;inset:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0;background:rgba(20,22,32,.45);z-index:35;opacity:0;pointer-events:none;transition:opacity .25s}
+  .dva-development-page.menu-open .backdrop{opacity:1;pointer-events:auto}
+  .dva-development-page main{margin-left:0;width:100%}
+  .dva-development-page .mobile-bar{display:flex;align-items:center;gap:10px;position:sticky;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));z-index:31;background:var(--color-dva-development-paper-card);border-bottom:1px solid var(--color-dva-development-border);padding:8px 14px}
+  .dva-development-page .mobile-bar button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-dva-development-border);background:var(--color-dva-development-paper);border-radius:8px;padding:6px 12px;color:var(--color-dva-development-ink);cursor:pointer}
+  .dva-development-page .mobile-bar span{font-family:var(--font-dva-development-display);font-weight:700}
+  .dva-development-page .hero{padding:40px 20px 36px}
+  .dva-development-page .hero h1{font-size:1.4875rem}
+  .dva-development-page .hero .sub{font-size:1.00625rem}
+  .dva-development-page .section{padding:26px 20px}
+  .dva-development-page .footer{padding:26px 20px 48px}
+  .dva-development-page h2{font-size:1.26875rem}
+  .dva-development-page .section.task-divider h2{font-size:1.4rem}
+  .dva-development-page .chip{white-space:normal}
+}
+
+
+.dva-development-page main ul { list-style-type: disc; list-style-position: outside; }
+.dva-development-page main ol { list-style-type: decimal; list-style-position: outside; }
+.dva-development-page main ul ul { list-style-type: circle; }
+.dva-development-page .nav-list { list-style-type: none; }
+.dva-development-page .nav-list li { margin: 0; }
+.dva-development-page section[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 72px); }
+.dva-development-page :focus-visible { outline: 2px solid var(--color-dva-development-indigo); outline-offset: 4px; }
+@media (max-width:900px) { .dva-development-page:not(.menu-open) aside.sidebar { visibility: hidden; } }
+.dva-development-page .backdrop { border: 0; padding: 0; }
+.dva-development-page .code-block { margin: 16px 0 22px; padding: 0; border: 0; overflow-x: auto; }
+.dva-development-page .code-line-content { display: block; padding: 0 16px; white-space: pre; min-height: 1.7em; font-family: var(--font-dva-development-mono); font-size: 0.875rem; line-height: 1.7; color: var(--color-dva-development-abb2bf); background: var(--color-dva-development-282c34); }
+.dva-development-page .code-line:first-child .code-line-content { padding-top: 14px; }
+.dva-development-page .code-line:last-child .code-line-content { padding-bottom: 14px; }
+.dva-development-page .hljs-comment { color: var(--color-dva-development-94a3b8); font-style: italic; }
+.dva-development-page .hljs-keyword { color: var(--color-dva-development-c678dd); }
+.dva-development-page .hljs-string { color: var(--color-dva-development-98c379); }
+.dva-development-page .hljs-attr { color: var(--color-dva-development-e88a91); }
+.dva-development-page .hljs-title { color: var(--color-dva-development-61afef); }
+.dva-development-page .hljs-built_in { color: var(--color-dva-development-e6c07b); }
+.dva-development-page .hljs-number, .dva-development-page .hljs-literal { color: var(--color-dva-development-d19a66); }
+.dva-development-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }
+.dva-development-page .diagram-wrap .mermaid-target :is(foreignObject > div, .nodeLabel, .edgeLabel, text, tspan) { font-size: 14px !important; }
