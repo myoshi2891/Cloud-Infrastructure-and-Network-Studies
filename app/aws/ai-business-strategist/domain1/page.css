@@ -4,7 +4,6 @@
 
 .aib-domain1-page {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
     margin: 0;
     background: var(--color-aib-bg);
     color: var(--color-aib-text);
@@ -145,6 +144,12 @@
     padding: 54px 60px 120px;
     max-width: none;
     width: calc(100% - 300px);
+}
+
+/* ナビのリンク先（section[id] と main#top）を固定ヘッダー＋免責バナーの下に揃える */
+.aib-domain1-page .main section[id],
+.aib-domain1-page #top {
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
 }
 
 .aib-domain1-page .hero {
@@ -499,6 +504,8 @@
     .aib-domain1-page .hero {
         padding: 26px 22px;
     }
+    .aib-domain1-page .main section[id],
+    .aib-domain1-page #top,
     .aib-domain1-page .main h2,
     .aib-domain1-page .main h3,
     .aib-domain1-page .task-heading {
