@@ -50,7 +50,7 @@ export const NavBar = ({ onLinkClick }: NavBarProps) => {
 
     return (
         <aside className="sidebar">
-            <p className="brand">AIB-C01 完全ガイド</p>
+            <p className="brand">AIB-C01 完全ガイド</p>{' '}
             <nav aria-label="ページ内目次">
                 {NAV_ITEMS.map((item) => {
                     const isActive = activeId === item.id;

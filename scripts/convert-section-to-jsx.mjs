@@ -33,6 +33,10 @@ jsx = jsx.replace(/<input\s+([^>]*[^\/])>/g, '<input $1 />');
 // 6. Fix comments
 jsx = jsx.replace(/<!--([\s\S]*?)-->/g, '{/*$1*/}');
 
+// 7. Preserve spaces across line-break between elements / text
+jsx = jsx.replace(/<\/strong>:\s*\n\s*<strong/g, '</strong>: <strong');
+jsx = jsx.replace(/。\s*\n\s*コストの観点/g, '。 コストの観点');
+
 const output = `import { Diagram } from '../Diagram';
 
 export const ${componentName} = () => {

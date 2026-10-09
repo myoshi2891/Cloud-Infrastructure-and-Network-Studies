@@ -133,8 +133,7 @@ export const Domain3Section = () => {
             </p>
             <Diagram id="dgm-10" />
             <p>
-                <strong>ベストプラクティス</strong>:
-                <strong>プロジェクト計画の最初(要件定義)の時点</strong>で、責任ある AI
+                <strong>ベストプラクティス</strong>: <strong>プロジェクト計画の最初(要件定義)の時点</strong>で、責任ある AI
                 のチェック項目を作業項目に含める。完成間際に審査を追加するのは手戻りが大きい。
             </p>
             <h3 id="s52">7-4 人による監督が必要な場面とセーフガード(Skill 3.1.4)</h3>
