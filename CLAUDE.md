@@ -580,6 +580,13 @@ app/
       ChecklistItem.tsx             # Context経由のチェック項目
       page.css                      # 原本ライト配色・Source Serif 4・本文と図14px・300px幅・点と番号の装飾
       sections/                     # Step 0〜23、Task見出し、付録A/Bの29コンポーネント
+    ai-business-strategist/domain1/
+      page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) Domain 1 (Server)
+      Guide.tsx                     # 本文コンポーネント (Client)
+      NavBar.tsx                    # サイドバーナビ・scroll spy・モバイル対応
+      Diagram.tsx                   # Mermaid 図レンダラー (16図)
+      page.css                      # 原本ライトテーマ・300pxサイドバー
+      sections/                     # Hero, Sec0, Step1~13, AppendixA~E の19分割コンポーネント
   recommended-books/
     accelerate/
       page.tsx                      # 『Accelerate』LeanとDevOpsの科学 完全ガイド (Server)

@@ -1,6 +1,32 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-07)
+(最終更新日: 2026-10-09)
+
+## 2026-10-09: AWS Certified AI Business Strategist (AIB-C01) Domain 1 のNext.js移行（完了）
+
+`Aib-c01-domain1-ai-fundamentals-and-literacy.html` を `/aws/ai-business-strategist/domain1` へ全量移行し、ホーム画面（`app/constants.ts` EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本ライト配色・300pxサイドバーを保持し、全3タスク・13スキル・付録A〜Eの全コンテンツを完全移行。
+
+原本コンテンツのh1:1・h2:4・h3:18・h4:81、55表（th134・td385）、150リスト項目、86外部リンク、16図（Mermaidダイアグラム）、99本文ブロックを全量・順序・構造まで固定インベントリおよびテストで完全検証。すべての表に `<thead>` と `<th scope="col">`、Mermaidダイアグラムに `aria-label` と `data-preserve-natural-scale` を付与。
+
+### 段階別コミット
+
+- [x] Inventory: `62ae07f7` (`chore(migration): add content inventory and fidelity fixture for aws-ai-business-strategist-domain1`)
+- [x] Red (テスト作成): `7f47a9a5` (`test(aws): add failing tests for aws-ai-business-strategist-domain1 migration`)
+- [x] Scaffold & Foundation: `0f4c9e94` (`feat(aws): setup scaffold, foundation, and intro for aws-ai-business-strategist-domain1`)
+- [x] Task 1.1 (Steps 1-6): `24e5c614` (`feat(aws): implement task 1.1 core concepts (steps 1-6) for aib-domain1`)
+- [x] Task 1.2 (Steps 7-10): `042f9748` (`feat(aws): implement task 1.2 solution types (steps 7-10) for aib-domain1`)
+- [x] Task 1.3 (Steps 11-13): `fe10e4c8` (`feat(aws): implement task 1.3 generative ai (steps 11-13) for aib-domain1`)
+- [x] 付録 A〜E 実装 & Green 達成: `ee4ffad0` (`feat(aws): implement appendices A-E and pass all migration tests for aib-domain1`)
+- [x] グローバルナビ & ホーム画面統合: `aedb7d32` (`refactor(aws): integrate aib-domain1 into routing, exams list, and global navigation`)
+- [x] 原本退避: `8c0dfad3` (`chore(archive): archive original aib-c01 domain 1 files`)
+
+### 検証結果
+
+- `__tests__/aws/ai-business-strategist/domain1/page.test.tsx`: 全 13 テスト PASS（h1/h2/h3/h4、th/td、li、リンク、本文・注釈、図、画像・SVG、テーブル、コードブロック）
+- `__tests__/aws/ai-business-strategist/domain1/integration.test.ts`: 全 2 テスト PASS（EXAMS正本およびtoNavTreeグループ生成、重複排除）
+- `__tests__/components/Header.hamburger.test.tsx` 他、関連ナビゲーション・ヘッダーテスト PASS（計189テスト）
+- `__tests__/app/page.test.tsx`: 全 17 テスト PASS（ホーム画面カード・統計）
+- ESLint: エラー 0 件
 
 ## 2026-10-07: AWS DVA-C02 ドメイン1 開発のNext.js移行（完了）
 
