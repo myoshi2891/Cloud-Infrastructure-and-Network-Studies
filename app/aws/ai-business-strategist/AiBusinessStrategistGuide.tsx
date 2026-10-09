@@ -6,6 +6,7 @@ import { HeroSection } from './sections/HeroSection';
 import { Step0Section } from './sections/Step0Section';
 import { Domain1Section } from './sections/Domain1Section';
 import { Domain2Section } from './sections/Domain2Section';
+import { Domain3Section } from './sections/Domain3Section';
 
 interface AiBusinessStrategistGuideProps {
     children?: React.ReactNode;
@@ -40,6 +41,7 @@ export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuid
                 <Step0Section />
                 <Domain1Section />
                 <Domain2Section />
+                <Domain3Section />
                 {children}
             </main>
         </div>
