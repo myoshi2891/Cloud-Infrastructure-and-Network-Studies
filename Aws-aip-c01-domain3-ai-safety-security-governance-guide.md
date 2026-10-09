@@ -138,9 +138,9 @@ Task 3.1 の中心サービスです。ここを理解すると Skill 3.1.1〜3.
 | Content filters | 有害なテキスト・画像を検出しフィルタ | ○ | ○ | 暴言・暴力表現の検問所 |
 | Denied topics | アプリの目的に合わない話題を拒否 | ○ | ○ | 「医療診断の話は禁止」という看板 |
 | Word filters | 特定の語句・不適切語を完全一致で遮断 | ○ | ○ | NG ワード辞書 |
-| Sensitive information filters | PII や正規表現で定義した情報をブロックまたはマスク | ○ | ○ | 個人情報の黒塗り係 |
-| Contextual grounding check | 根拠資料との整合性と質問への関連性でハルシネーションを検出 | - | ○ | 「その答え、資料に書いてある？」と確認する係 |
-| Automated Reasoning checks | 論理ルールに対して回答の正確性を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない） | - | ○ | 論理的な校閲者 |
+| Sensitive information filters | PII や正規表現で定義した情報をブロックまたはマスク（ツール定義・`toolUse.input`・`toolResult` は検査もマスクもしない。ツール引数は実行前に、ツール結果はモデルへ返す前に、アプリ側で別途検査・マスクする） | ○ | ○ | 個人情報の黒塗り係 |
+| Contextual grounding check | 根拠資料との整合性と質問への関連性でハルシネーションを検出（対応言語は英語・フランス語・スペイン語のみ。日本語の回答は埋め込みによる意味的類似度の検証や LLM-as-a-judge で代替する） | - | ○ | 「その答え、資料に書いてある？」と確認する係 |
+| Automated Reasoning checks | 論理ルールに対して回答の正確性を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない。Converse では `guardContent`、InvokeModel では `tagSuffix` 付きの XML タグで検証対象を囲む。タグなしの plain text はエラーにならず、評価対象なしとしてチェックがスキップされる） | - | ○ | 論理的な校閲者 |
 
 > Prompt Attack（プロンプト攻撃検出）は **Content filters の一種**として設定します（`contentPolicyConfig` 内）。**入力側のみ**が対象です。
 
@@ -308,8 +308,8 @@ flowchart TD
 | 対策 | 仕組み | 主なサービス |
 |---|---|---|
 | 根拠付け（Grounding） | 信頼できる社内データを検索して回答の材料にする（RAG） | Bedrock Knowledge Bases |
-| 根拠との照合 | 回答が取得文書に裏付けられているか、質問に関連しているかをスコア化 | Guardrails の Contextual grounding check |
-| 論理ルールでの検証 | ポリシー文書から作った論理ルールで回答を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない） | Guardrails の Automated Reasoning checks |
+| 根拠との照合 | 回答が取得文書に裏付けられているか、質問に関連しているかをスコア化（対応言語は英語・フランス語・スペイン語のみ。日本語の回答は下の「意味的類似度による検証」で代替する） | Guardrails の Contextual grounding check |
+| 論理ルールでの検証 | ポリシー文書から作った論理ルールで回答を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない。Converse では `guardContent`、InvokeModel では `tagSuffix` 付きの XML タグで囲まないと、エラーにならずスキップされる） | Guardrails の Automated Reasoning checks |
 | 意味的類似度による検証 | 回答と根拠文のベクトルの近さを測り、低ければ警告・再生成 | 埋め込みモデル + ベクトル検索 |
 | 信頼度スコアリング | 検証結果をスコア化し閾値で分岐 | Lambda + CloudWatch メトリクス |
 | 構造化出力の強制 | 出力を JSON Schema に従わせ、形式を検証 | ツール利用（スキーマ指定）+ Lambda でスキーマ検証 |
@@ -391,7 +391,7 @@ flowchart TD
 ### 6-2. Amazon Comprehend の役割
 Comprehend は **従来型の NLP サービス**で、前処理に向きます。PII 検出、**毒性検出**、**プロンプト安全性の分類**などが使えます。LLM を呼ぶ前に **安価・高速**に一次判定できるのが利点です。
 
-> **注意**: 毒性検出とプロンプト安全性の分類は **英語のみ**対応です。また、プロンプト安全性の分類は **新規顧客には提供されていません**（過去 12 か月以内に利用した既存アカウントは継続利用可）。日本語プロンプトや新規顧客の場合は、**Bedrock Guardrails**（コンテンツフィルター・Prompt Attack 検出）で代替します。
+> **注意**: 毒性検出とプロンプト安全性の分類は **英語のみ**対応です。また、プロンプト安全性の分類は **新規顧客には提供されていません**（過去 12 か月以内に利用した既存アカウントは継続利用可）。日本語プロンプトや新規顧客の場合は、**Bedrock Guardrails**（コンテンツフィルター・Prompt Attack 検出）で代替します。ただし日本語の Content filters / Prompt Attack は **Standard tier が必要**です（Classic tier は英語・フランス語・スペイン語のみ）。
 > 出典: Amazon Comprehend Trust and safety https://docs.aws.amazon.com/comprehend/latest/dg/trust-safety.html
 
 ### 6-3. ベストプラクティス
