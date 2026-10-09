@@ -623,11 +623,16 @@ const ALL_EXAMS: Exam[] = [
         level: 'Standard',
         score: '85問 / 170分',
         color: 'card-aws-aib',
-        href: '/aws/ai-business-strategist/domain1',
-        overviewLabel: 'Domain 1: AI Fundamentals and Literacy',
+        href: '/aws/ai-business-strategist',
+        overviewLabel: '初学者向け完全ガイド',
         description:
-            'AIの能力をビジネス成果に翻訳し、責任あるAIとガバナンスを確立して導入を推進する戦略的意思決定力を認定。Domain 1の基礎とリテラシーを網羅。',
+            'AIの能力をビジネス成果に翻訳し、責任あるAIとガバナンスを確立して導入を推進する戦略的意思決定力を認定。全4ドメイン・横断編・試験対策を網羅。',
         domains: [
+            {
+                label: '初学者向けステップバイステップ完全ガイド',
+                href: '/aws/ai-business-strategist',
+                pct: '100%',
+            },
             {
                 label: 'Domain 1: AI Fundamentals and Literacy',
                 href: '/aws/ai-business-strategist/domain1',

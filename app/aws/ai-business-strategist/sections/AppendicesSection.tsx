@@ -744,7 +744,7 @@ export const AppendicesSection = () => {
                             </td>
                         </tr>
                         <tr>
-                            <td>新しい Well-Architected Lenses(What's New)</td>
+                            <td>新しい Well-Architected Lenses(What&apos;s New)</td>
                             <td>
                                 <a
                                     target="_blank"
