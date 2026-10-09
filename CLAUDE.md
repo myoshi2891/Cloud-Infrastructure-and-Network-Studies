@@ -590,8 +590,9 @@ app/
       sections/                     # Hero, Step0, Domain1~4, CrossDomain, Appendices の8分割コンポーネント
     ai-business-strategist/domain1/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) Domain 1 (Server)
-      Guide.tsx                     # 本文コンポーネント (Client)
+      AiBusinessStrategistDomain1Guide.tsx # 本文コンポーネント (Client)
       NavBar.tsx                    # サイドバーナビ・scroll spy・モバイル対応
+      constants.ts                  # NAV_ITEMS・DIAGRAMS (16図)
       Diagram.tsx                   # Mermaid 図レンダラー (16図)
       page.css                      # 原本ライトテーマ・300pxサイドバー
       sections/                     # Hero, Sec0, Step1~13, AppendixA~E の19分割コンポーネント
