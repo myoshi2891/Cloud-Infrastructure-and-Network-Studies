@@ -438,8 +438,19 @@
     padding: 26px 18px;
 }
 
+.aib-domain1-page .diagram > [role="img"] {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    width: 100%;
+}
+
 .aib-domain1-page .diagram svg {
     flex-shrink: 0;
+    max-width: none;
+    height: auto;
 }
 
 .aib-domain1-page figcaption {

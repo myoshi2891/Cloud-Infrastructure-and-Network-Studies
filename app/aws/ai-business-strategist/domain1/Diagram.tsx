@@ -1,6 +1,15 @@
 import { memo } from 'react';
 import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { DIAGRAMS, type DiagramId } from './constants';
+import sourceTheme from './mermaid-theme.json';
+
+const SOURCE_THEME_DIRECTIVE = `%%{init: ${JSON.stringify({
+    ...sourceTheme,
+    themeVariables: {
+        ...sourceTheme.themeVariables,
+        fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif',
+    },
+})}}%%\n`;
 
 interface DiagramProps {
     id: DiagramId;
@@ -28,7 +37,7 @@ const DEFAULT_LABELS: Record<DiagramId, string> = {
 
 /**
  * AIB-C01 Domain 1 の Mermaid ダイアグラム表示用コンポーネント。
- * 親コンポーネントのスクロール等による再レンダリングで SVG が縮むのを防ぐため memo 化。
+ * 原本ライト配色（薄紫ノード・インディゴ枠線・白背景）を保持し、再レンダリングによる縮小を防ぐため memo 化。
  */
 export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     const chart = DIAGRAMS[id];
@@ -43,7 +52,13 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
             aria-label={ariaLabel}
             data-preserve-natural-scale="true"
         >
-            <MermaidDiagram chart={chart} ariaLabel={ariaLabel} preserveNaturalScale={true} />
+            <MermaidDiagram
+                chart={SOURCE_THEME_DIRECTIVE + chart}
+                theme="light"
+                preserveChartTheme={true}
+                ariaLabel={ariaLabel}
+                preserveNaturalScale={true}
+            />
         </div>
     );
 });
