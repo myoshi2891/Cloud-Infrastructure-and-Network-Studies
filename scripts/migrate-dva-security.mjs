@@ -22,7 +22,8 @@ function restoreStrayBold(root) {
     const walker = doc.createTreeWalker(root, 4 /* NodeFilter.SHOW_TEXT */);
     const parents = new Set();
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-        if (marker.test(node.data) && !node.parentElement.closest('code, pre')) parents.add(node.parentElement);
+        const parent = node.parentElement;
+        if (parent && marker.test(node.data) && !parent.closest('code, pre')) parents.add(parent);
     }
     for (const parent of parents) {
         for (const node of [...parent.childNodes]) {
