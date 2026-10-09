@@ -19,6 +19,9 @@
 - [x] 付録 A〜E 実装 & Green 達成: `ee4ffad0` (`feat(aws): implement appendices A-E and pass all migration tests for aib-domain1`)
 - [x] グローバルナビ & ホーム画面統合: `aedb7d32` (`refactor(aws): integrate aib-domain1 into routing, exams list, and global navigation`)
 - [x] 原本退避: `8c0dfad3` (`chore(archive): archive original aib-c01 domain 1 files`)
+- [x] Mermaidライトテーマ & ノード配色完全復元: `f3a9dd91` (`fix(aws): explicitly set mainBkg and nodeBkg in mermaid-theme.json to resolve dark node backgrounds in aib-domain1`)
+- [x] 移行済みマークダウン・HTML退避 & 重複削除: `ebbdf275` (`chore(archive): move migrated markdown and html files to archive and clean up root duplicates`)
+
 
 ### 検証結果
 
