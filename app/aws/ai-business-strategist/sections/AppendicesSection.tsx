@@ -1,5 +1,3 @@
-import { Diagram } from '../Diagram';
-
 export const AppendicesSection = () => {
     return (
         <>

@@ -37,7 +37,7 @@ export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuid
             >
                 <span className="bars" />
             </button>
-            <div className="backdrop" onClick={closeMenu} />
+            <div className="backdrop" aria-hidden="true" onClick={closeMenu} />
             <NavBar onLinkClick={closeMenu} />
             <main>
                 <HeroSection />
