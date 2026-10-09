@@ -390,7 +390,7 @@
     "出てきた料理",
     "「来月は 1,200 個売れる見込み」",
     "同じ入力なら同じ出力 (決定的)",
-    "同じ入力でも出力が揺れることがある (確率的)",
+    "サンプリングを伴う生成 AI では同じ入力でも出力が揺れることがある (確率的)。固定の予測モデルは同じ入力に同じ結果を返せる",
     "仕様どおりなら「正しい」",
     "「どれくらい当たるか」を精度で評価する",
     "バグは修正すれば消える",
@@ -694,7 +694,7 @@
     "ハルシネーションによる誤判断",
     "もっともらしい誤りを根拠に意思決定する",
     "規制・コンプライアンス違反",
-    "規制の観点での説明責任を果たせない (EU AI Act は AI システムの一覧の維持を求める)",
+    "規制の観点での説明責任を果たせない (AI システムの社内一覧の維持はガバナンス上の実践であり、一般的な法的義務ではない。EU AI Act 第 49 条の登録義務は、特定の AI システムと所定の役割の事業者に限られる)",
     "信頼できないモデルのサプライチェーン",
     "出所や安全性が確認されていないモデル・ツールの利用",
     "エージェント型のシャドー AI",
@@ -909,7 +909,7 @@
     "最も費用と資源がかかる選択肢。最後の手段",
     "Amazon Bedrock",
     "生成 AI プラットフォーム",
-    "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。自社データは自社のアカウントに閉じ、モデル学習には使われない (AWS ブログの説明)",
+    "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。推論はサービス側が運用するモデルデプロイ用アカウントで処理され、入出力はモデル提供者と共有されず、モデル学習にも使われない。データの保持はモデルや設定 (ログ記録など) によって異なる",
     "Amazon SageMaker AI",
     "カスタム ML",
     "独自の ML モデルを作る・管理する場面。マネージドかカスタムかの選択で、より高い制御が必要なときに使う",
@@ -1231,8 +1231,8 @@
     "Design a prompt (Amazon Bedrock)",
     "https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html",
     "11",
-    "General guidelines for Amazon Bedrock LLM users",
-    "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
+    "Prompt engineering concepts (Amazon Bedrock User Guide)",
+    "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
     "12, 13",
     "Grounding and Retrieval Augmented Generation",
     "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-serverless/grounding-and-rag.html",
@@ -1388,7 +1388,7 @@
     "機密情報を入力しない運用ルールを併せて周知する (Step 10)。",
     "プロンプトは「最初の手段」: モデル適応の階段では最初に試す低コストな手段 (Step 13)。",
     "Design a prompt (Amazon Bedrock User Guide): https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html",
-    "General guidelines for Amazon Bedrock LLM users: https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
+    "Prompt engineering concepts (Amazon Bedrock User Guide): https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
     "試験ガイド「Technologies and concepts」(プロンプトエンジニアリングの基礎): https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html",
     "ユースケース設計の初期に、扱う文書量とトークン量を見積もる: 長文書や大量の履歴を扱う場合は、コンテキスト上限が設計の制約になる。",
     "必要な情報だけを渡す: 何でも詰め込まず、関連性の高い情報を選ぶ (RAG の検索品質が鍵)。",
@@ -1567,8 +1567,8 @@
       "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html"
     },
     {
-      "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
-      "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html"
+      "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
+      "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html"
     },
     {
       "text": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html",
@@ -1715,8 +1715,8 @@
       "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html"
     },
     {
-      "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
-      "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html"
+      "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
+      "href": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html"
     },
     {
       "text": "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-serverless/grounding-and-rag.html",
@@ -1914,7 +1914,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "AWS の Shadow AI に関するブログは、規制面の「守るべき最低ラインの基準」として、EU AI Act (AI システムの一覧管理を求める) と NIST AI Risk Management Framework (と生成 AI プロファイル) を挙げ、AWS Audit Manager が NIST AI RMF や ISO/IEC 42001 などの枠組みに対応づけた証跡の収集を助けると紹介しています。Domain 1 では「代表的な枠組みの名前と役割を知っている」ことを、Domain 3 では「どう運用するか」を学ぶ、と切り分けると整理しやすくなります。"
+      "text": "AWS の Shadow AI に関するブログは、規制面の「守るべき最低ラインの基準」として、EU AI Act (義務は対象となるシステムと役割に該当する場合にのみ適用される) と NIST AI Risk Management Framework (と生成 AI プロファイル。法的義務ではない任意のガバナンス指針) を挙げ、AWS Audit Manager が NIST AI RMF や ISO/IEC 42001 などの枠組みに対応づけた証跡の収集を助けると紹介しています。Domain 1 では「代表的な枠組みの名前と役割を知っている」ことを、Domain 3 では「どう運用するか」を学ぶ、と切り分けると整理しやすくなります。"
     },
     {
       "kind": "annotation",
@@ -1986,7 +1986,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "Amazon SageMaker Model Monitor は、本番の ML モデルを自動で監視し、品質の問題が起きたときに通知するサービスで、ルールでドリフトを検知してアラートを出します。監視の種類として、データ品質、モデル品質 (精度など)、バイアスのドリフト、特徴量寄与のドリフトが挙げられています。基準線 (ベースライン) は学習データから作成し、本番データと継続的に比べる、という考え方です。"
+      "text": "Amazon SageMaker Model Monitor は、本番の ML モデルを自動で監視し、品質の問題が起きたときに通知するサービスで、ルールでドリフトを検知してアラートを出します。監視の種類として、データ品質、モデル品質 (精度など)、バイアスのドリフト、特徴量寄与のドリフトが挙げられています。データ品質 (入力データのドリフト) の監視では、学習データから作った基準線 (ベースライン) と本番の入力データを継続的に比べます。ただし、これは入力の変化を捉えるもので、予測の正確さは測れません。精度などのモデル品質の監視は、予測結果を後から得られる正解ラベル (グラウンドトゥルース) と突き合わせて行う別の仕組みです。"
     },
     {
       "kind": "annotation",

@@ -94,8 +94,8 @@ export function Step6() {
             <p>
                 AWS の Shadow AI
                 に関するブログは、規制面の「守るべき最低ラインの基準」として、<strong>EU AI Act</strong>{' '}
-                (AI システムの一覧管理を求める) と{' '}
-                <strong>NIST AI Risk Management Framework</strong> (と生成 AI プロファイル)
+                (義務は対象となるシステムと役割に該当する場合にのみ適用される) と{' '}
+                <strong>NIST AI Risk Management Framework</strong> (と生成 AI プロファイル。法的義務ではない任意のガバナンス指針)
                 を挙げ、AWS Audit Manager が NIST AI RMF や ISO/IEC 42001
                 などの枠組みに対応づけた証跡の収集を助けると紹介しています。Domain 1
                 では「代表的な枠組みの名前と役割を知っている」ことを、Domain 3

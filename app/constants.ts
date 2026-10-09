@@ -620,7 +620,7 @@ const ALL_EXAMS: Exam[] = [
         id: 'aws-aib',
         label: 'AWS Certified AI Business Strategist',
         abbr: 'AIB',
-        level: 'Standard',
+        level: 'Business',
         score: '85問 / 170分',
         color: 'card-aws-aib',
         href: '/aws/ai-business-strategist',

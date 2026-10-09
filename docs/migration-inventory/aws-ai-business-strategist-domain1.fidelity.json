@@ -135,7 +135,7 @@
     "従来のソフトウェア",
     "AI",
     "同じ入力なら同じ出力 (決定的)",
-    "同じ入力でも出力が揺れることがある (確率的)",
+    "サンプリングを伴う生成 AI では同じ入力でも出力が揺れることがある (確率的)。固定の予測モデルは同じ入力に同じ結果を返せる",
     "仕様どおりなら「正しい」",
     "「どれくらい当たるか」を精度で評価する",
     "バグは修正すれば消える",
@@ -429,7 +429,7 @@
     "42001 は、AI を開発・提供・利用する組織を対象に、AI システムの設計・開発・展開・利用を統治する方針・プロセス・統制の集合を確立し、継続的に改善するための要求事項を示します。",
     "規格は世界的に増え続けています。2025 年にも関連規格の公表が相次ぎました。試験では「代表的な規格の役割を区別できる」ことが目標で、細かな条文の暗記は想定されにくいと考えられます (ベータ試験のため出題範囲は変わり得ます)。",
     "関連する他の枠組みへの接続 (Domain 3 で詳しく扱う)",
-    "AWS の Shadow AI に関するブログは、規制面の「守るべき最低ラインの基準」として、EU AI Act (AI システムの一覧管理を求める) と NIST AI Risk Management Framework (と生成 AI プロファイル) を挙げ、AWS Audit Manager が NIST AI RMF や ISO/IEC 42001 などの枠組みに対応づけた証跡の収集を助けると紹介しています。Domain 1 では「代表的な枠組みの名前と役割を知っている」ことを、Domain 3 では「どう運用するか」を学ぶ、と切り分けると整理しやすくなります。",
+    "AWS の Shadow AI に関するブログは、規制面の「守るべき最低ラインの基準」として、EU AI Act (義務は対象となるシステムと役割に該当する場合にのみ適用される) と NIST AI Risk Management Framework (と生成 AI プロファイル。法的義務ではない任意のガバナンス指針) を挙げ、AWS Audit Manager が NIST AI RMF や ISO/IEC 42001 などの枠組みに対応づけた証跡の収集を助けると紹介しています。Domain 1 では「代表的な枠組みの名前と役割を知っている」ことを、Domain 3 では「どう運用するか」を学ぶ、と切り分けると整理しやすくなります。",
     "ベストプラクティス",
     "社内の AI 用語集を ISO/IEC 22989 に寄せて作る: 部門間・ベンダー間の認識ズレを減らす。",
     "AI ガバナンスを「個別施策」ではなく「マネジメントシステム」として設計する: 42001 の Plan-Do-Check-Act を参考に、方針、役割、リスク評価、監査、改善のサイクルを回す。",
@@ -654,7 +654,7 @@
     "AWS のドキュメントは、本番の ML モデルが受け取るデータは学習用に丁寧に整えられたデータほどきれいではなく、本番データの統計的性質が学習時のベースラインから離れるとモデルの予測精度が落ち始める、と説明しています。バイアスのドリフトについては、学習データと本番のデータが異なるときにバイアスが生じたり拡大したりし得ること、その変化が一時的な場合も恒久的な場合もあることを述べ、住宅価格予測モデルの例 (学習時と現在の住宅ローン金利の差で出力が偏る) を挙げています。",
     "監視と是正のループ",
     "AWS での監視の例 (ビジネスレベルの理解でよい)",
-    "Amazon SageMaker Model Monitor は、本番の ML モデルを自動で監視し、品質の問題が起きたときに通知するサービスで、ルールでドリフトを検知してアラートを出します。監視の種類として、データ品質、モデル品質 (精度など)、バイアスのドリフト、特徴量寄与のドリフトが挙げられています。基準線 (ベースライン) は学習データから作成し、本番データと継続的に比べる、という考え方です。",
+    "Amazon SageMaker Model Monitor は、本番の ML モデルを自動で監視し、品質の問題が起きたときに通知するサービスで、ルールでドリフトを検知してアラートを出します。監視の種類として、データ品質、モデル品質 (精度など)、バイアスのドリフト、特徴量寄与のドリフトが挙げられています。データ品質 (入力データのドリフト) の監視では、学習データから作った基準線 (ベースライン) と本番の入力データを継続的に比べます。ただし、これは入力の変化を捉えるもので、予測の正確さは測れません。精度などのモデル品質の監視は、予測結果を後から得られる正解ラベル (グラウンドトゥルース) と突き合わせて行う別の仕組みです。",
     "最新状況の注意: 確認時点で、SageMaker Model Monitor の公式ページには「新規のお客様には提供されていない」旨の案内があります (既存の顧客は通常どおり利用可能)。試験は「ドリフトを検知して対処する仕組みが必要」という概念を問うものであり、特定のサービス名の暗記が目的ではありません。実際のサービス選定は、その時点の AWS 公式情報で確認してください。",
     "生成 AI の監視は何を見るか",
     "従来型 ML の「精度」に加え、生成 AI では次のような観点が加わります (ビジネス職が把握すべき観点の整理)。",
@@ -715,7 +715,7 @@
     "ハルシネーションによる誤判断",
     "もっともらしい誤りを根拠に意思決定する",
     "規制・コンプライアンス違反",
-    "規制の観点での説明責任を果たせない (EU AI Act は AI システムの一覧の維持を求める)",
+    "規制の観点での説明責任を果たせない (AI システムの社内一覧の維持はガバナンス上の実践であり、一般的な法的義務ではない。EU AI Act 第 49 条の登録義務は、特定の AI システムと所定の役割の事業者に限られる)",
     "信頼できないモデルのサプライチェーン",
     "出所や安全性が確認されていないモデル・ツールの利用",
     "エージェント型のシャドー AI",
@@ -879,7 +879,7 @@
     "温度が高いほど多様で創造的。事実重視なら低くする",
     "根拠となるソース",
     "Design a prompt (Amazon Bedrock User Guide): https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html",
-    "General guidelines for Amazon Bedrock LLM users: https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
+    "Prompt engineering concepts (Amazon Bedrock User Guide): https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
     "試験ガイド「Technologies and concepts」(プロンプトエンジニアリングの基礎): https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html",
     "Step 12: トークン上限とコンテキストウィンドウ (Skill 1.3.2)",
     "試験ガイドの該当スキル: トークン制限やコンテキストウィンドウの制約が、生成 AI システムの性能に影響する場面を特定できる。",
@@ -1091,7 +1091,7 @@
     "ビジネスレベルの理解",
     "Amazon Bedrock",
     "生成 AI プラットフォーム",
-    "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。自社データは自社のアカウントに閉じ、モデル学習には使われない (AWS ブログの説明)",
+    "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。推論はサービス側が運用するモデルデプロイ用アカウントで処理され、入出力はモデル提供者と共有されず、モデル学習にも使われない。データの保持はモデルや設定 (ログ記録など) によって異なる",
     "Amazon SageMaker AI",
     "カスタム ML",
     "独自の ML モデルを作る・管理する場面。マネージドかカスタムかの選択で、より高い制御が必要なときに使う",
@@ -1460,8 +1460,8 @@
     "Design a prompt (Amazon Bedrock)",
     "https://docs.aws.amazon.com/bedrock/latest/userguide/design-a-prompt.html",
     "11",
-    "General guidelines for Amazon Bedrock LLM users",
-    "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
+    "Prompt engineering concepts (Amazon Bedrock User Guide)",
+    "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
     "12, 13",
     "Grounding and Retrieval Augmented Generation",
     "https://docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-serverless/grounding-and-rag.html",
@@ -2157,7 +2157,7 @@
         },
         {
           "tag": "td",
-          "text": "同じ入力でも出力が揺れることがある (確率的)",
+          "text": "サンプリングを伴う生成 AI では同じ入力でも出力が揺れることがある (確率的)。固定の予測モデルは同じ入力に同じ結果を返せる",
           "colspan": null,
           "rowspan": null
         }
@@ -4689,7 +4689,7 @@
         },
         {
           "tag": "td",
-          "text": "規制の観点での説明責任を果たせない (EU AI Act は AI システムの一覧の維持を求める)",
+          "text": "規制の観点での説明責任を果たせない (AI システムの社内一覧の維持はガバナンス上の実践であり、一般的な法的義務ではない。EU AI Act 第 49 条の登録義務は、特定の AI システムと所定の役割の事業者に限られる)",
           "colspan": null,
           "rowspan": null
         }
@@ -6487,7 +6487,7 @@
         },
         {
           "tag": "td",
-          "text": "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。自社データは自社のアカウントに閉じ、モデル学習には使われない (AWS ブログの説明)",
+          "text": "複数の基盤モデルを単一の API で利用し、RAG (Knowledge Bases)、ガードレール (Guardrails)、エージェント、モデルカスタマイズ、料金体系などをマネージドで提供する。推論はサービス側が運用するモデルデプロイ用アカウントで処理され、入出力はモデル提供者と共有されず、モデル学習にも使われない。データの保持はモデルや設定 (ログ記録など) によって異なる",
           "colspan": null,
           "rowspan": null
         }
@@ -8759,13 +8759,13 @@
         },
         {
           "tag": "td",
-          "text": "General guidelines for Amazon Bedrock LLM users",
+          "text": "Prompt engineering concepts (Amazon Bedrock User Guide)",
           "colspan": null,
           "rowspan": null
         },
         {
           "tag": "td",
-          "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html",
+          "text": "https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html",
           "colspan": null,
           "rowspan": null
         }

@@ -349,14 +349,14 @@ export function AppendixE() {
             </tr>
             <tr className="t-odd">
               <td>11</td>
-              <td>General guidelines for Amazon Bedrock LLM users</td>
+              <td>Prompt engineering concepts (Amazon Bedrock User Guide)</td>
               <td>
                 <a
-                  href="https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html"
+                  href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html"
                   rel="noopener"
                   target="_blank"
                 >
-                  https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html
+                  https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html
                 </a>
               </td>
             </tr>

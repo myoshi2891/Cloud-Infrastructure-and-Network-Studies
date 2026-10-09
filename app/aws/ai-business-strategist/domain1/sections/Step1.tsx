@@ -106,7 +106,7 @@ export function Step1() {
                     <tbody>
                         <tr className="t-odd">
                             <td>同じ入力なら同じ出力 (決定的)</td>
-                            <td>同じ入力でも出力が揺れることがある (確率的)</td>
+                            <td>サンプリングを伴う生成 AI では同じ入力でも出力が揺れることがある (確率的)。固定の予測モデルは同じ入力に同じ結果を返せる</td>
                         </tr>
                         <tr className="t-even">
                             <td>仕様どおりなら「正しい」</td>

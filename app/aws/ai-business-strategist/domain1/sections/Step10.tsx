@@ -64,8 +64,7 @@ export function Step10() {
             <tr className="t-odd">
               <td><strong>規制・コンプライアンス違反</strong></td>
               <td>
-                規制の観点での説明責任を果たせない (EU AI Act は AI
-                システムの一覧の維持を求める)
+                規制の観点での説明責任を果たせない (AI システムの社内一覧の維持はガバナンス上の実践であり、一般的な法的義務ではない。EU AI Act 第 49 条の登録義務は、特定の AI システムと所定の役割の事業者に限られる)
               </td>
             </tr>
             <tr className="t-even">

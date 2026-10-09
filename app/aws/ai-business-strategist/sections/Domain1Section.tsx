@@ -554,13 +554,12 @@ export const Domain1Section = () => {
                     </li>
                     <li>
                         <span className="src-label"
-                            >AWS Security Blog(Agentic AI Security Scoping Matrix
-                            の記事カテゴリ)</span
+                            >AWS Security Blog(Agentic AI Security Scoping Matrix)</span
                         ><a
                             target="_blank"
                             rel="noopener"
-                            href="https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai"
-                            >https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai</a
+                            href="https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/"
+                            >https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/</a
                         >
                     </li>
                     <li>
@@ -782,8 +781,7 @@ export const Domain1Section = () => {
                 <li>
                     <strong>モデルのカスタマイズ(ファインチューニング)</strong>:
                     料金ページには、学習(100
-                    万トークンあたり)、カスタムモデルの月額保管料、カスタムモデルでの推論に必要な
-                    Provisioned Throughput の料金が別建てで示されている。<strong
+                    万トークンあたり)、カスタムモデルの月額保管料、カスタムモデルでの推論の料金が別建てで示されている。推論の料金は対応モデルとデプロイ方式によって異なり、対応モデルではオンデマンド推論も選べる (Provisioned Throughput が必須とは限らない)。<strong
                         >RAG に比べてコスト構造が増える</strong
                     >ことを意識する
                 </li>

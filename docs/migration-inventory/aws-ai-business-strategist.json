@@ -751,7 +751,7 @@
     "120 万円",
     "月間の純便益",
     "300 万円 − 120 万円 = 180 万円",
-    "ROI(月次)",
+    "月次の運用 ROI(初期投資 600 万円を含まない)",
     "180 万円 ÷ 120 万円 × 100 = 150%",
     "初期投資 600 万円の回収期間",
     "600 万円 ÷ 180 万円 ≒ 3.3 か月",
@@ -1314,8 +1314,8 @@
     "https://aws.amazon.com/blogs/architecture/architecting-for-ai-excellence-aws-launches-three-well-architected-lenses-at-reinvent-2025",
     "Generative AI Security Scoping Matrix",
     "https://aws.amazon.com/ai/generative-ai/security/scoping-matrix/",
-    "Agentic AI Security Scoping Matrix(Security Blog カテゴリ)",
-    "https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai",
+    "Agentic AI Security Scoping Matrix(AWS Security Blog)",
+    "https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/",
     "Prescriptive Guidance: 生成 AI プラットフォームのセキュリティ",
     "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/security.html",
     "What Is Agentic AI?",
@@ -1402,7 +1402,7 @@
     "AWS の Generative AI Security Scoping Matrix では、一般消費者向けの公開 AI サービスの利用(Scope 1)と、SaaS に組み込まれた生成 AI 機能の利用(Scope 2)で、利用規約・ライセンス・データ主権などの遵守が重要と整理されています",
     "試験ガイド Domain 1https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain1.html",
     "AI Security Scoping Matrixhttps://aws.amazon.com/ai/generative-ai/security/scoping-matrix/",
-    "AWS Security Blog(Agentic AI Security Scoping Matrix の記事カテゴリ)https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai",
+    "AWS Security Blog(Agentic AI Security Scoping Matrix)https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/",
     "What Is Agentic AI?(AWS)https://aws.amazon.com/what-is/agentic-ai/",
     "How Amazon Bedrock Guardrails workshttps://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-how.html",
     "単純・明確・完全な指示を与え、曖昧さを減らす",
@@ -1413,7 +1413,7 @@
     "良いプロンプトはチームの共有資産として管理する",
     "幻覚(事実と異なる出力)の低減には、プロンプトの改善、RAG、別モデルの検討が有効です(AWS ドキュメントの記載)",
     "Knowledge Bases: RAG を管理型で実現する機能。文書を断片化して埋め込みに変換しベクトルインデックスに保存し、実行時に関連情報を取り出して回答を補強する。継続的なモデル再学習なしに自社データを活用でき、取得情報には出典が付くため透明性の向上と幻覚の抑制に役立つ、と AWS は説明している",
-    "モデルのカスタマイズ(ファインチューニング): 料金ページには、学習(100 万トークンあたり)、カスタムモデルの月額保管料、カスタムモデルでの推論に必要な Provisioned Throughput の料金が別建てで示されている。RAG に比べてコスト構造が増えることを意識する",
+    "モデルのカスタマイズ(ファインチューニング): 料金ページには、学習(100 万トークンあたり)、カスタムモデルの月額保管料、カスタムモデルでの推論の料金が別建てで示されている。推論の料金は対応モデルとデプロイ方式によって異なり、対応モデルではオンデマンド推論も選べる (Provisioned Throughput が必須とは限らない)。RAG に比べてコスト構造が増えることを意識する",
     "プロンプト改善 → RAG → ファインチューニングの順に、コストと手間の小さい手段から試す",
     "改善効果は、事前に用意した評価用の質問セットで定量的に確認する",
     "RAG では、参照元文書のアクセス権限と更新運用をセットで設計する(閲覧権限のない人に機密文書の内容が漏れないようにする。一般的な実務ガイダンス)",
@@ -1647,8 +1647,8 @@
       "href": "https://aws.amazon.com/ai/generative-ai/security/scoping-matrix/"
     },
     {
-      "text": "https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai",
-      "href": "https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai"
+      "text": "https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/",
+      "href": "https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/"
     },
     {
       "text": "https://aws.amazon.com/what-is/agentic-ai/",
@@ -1951,8 +1951,8 @@
       "href": "https://aws.amazon.com/ai/generative-ai/security/scoping-matrix/"
     },
     {
-      "text": "https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai",
-      "href": "https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai"
+      "text": "https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/",
+      "href": "https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/"
     },
     {
       "text": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/security.html",

@@ -254,13 +254,13 @@ export function Step11() {
               </a>
             </li>
             <li>
-              General guidelines for Amazon Bedrock LLM users:{' '}
+              Prompt engineering concepts (Amazon Bedrock User Guide):{' '}
               <a
-                href="https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html"
+                href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html"
                 rel="noopener"
                 target="_blank"
               >
-                https://docs.aws.amazon.com/bedrock/latest/userguide/general-guidelines-for-bedrock-users.html
+                https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-engineering-guidelines.html
               </a>
             </li>
             <li>

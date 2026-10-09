@@ -777,13 +777,13 @@ export const AppendicesSection = () => {
                             </td>
                         </tr>
                         <tr>
-                            <td>Agentic AI Security Scoping Matrix(Security Blog カテゴリ)</td>
+                            <td>Agentic AI Security Scoping Matrix(AWS Security Blog)</td>
                             <td>
                                 <a
                                     target="_blank"
                                     rel="noopener"
-                                    href="https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai"
-                                    >https://aws.amazon.com/blogs/security/category/artificial-intelligence/generative-ai</a
+                                    href="https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/"
+                                    >https://aws.amazon.com/blogs/security/the-agentic-ai-security-scoping-matrix-a-framework-for-securing-autonomous-ai-systems/</a
                                 >
                             </td>
                         </tr>

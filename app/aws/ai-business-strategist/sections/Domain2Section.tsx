@@ -471,7 +471,7 @@ export const Domain2Section = () => {
                             <td>300 万円 − 120 万円 = 180 万円</td>
                         </tr>
                         <tr>
-                            <td>ROI(月次)</td>
+                            <td>月次の運用 ROI(初期投資 600 万円を含まない)</td>
                             <td>180 万円 ÷ 120 万円 × 100 = 150%</td>
                         </tr>
                         <tr>
