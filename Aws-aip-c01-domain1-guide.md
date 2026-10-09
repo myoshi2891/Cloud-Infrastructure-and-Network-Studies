@@ -1,4 +1,5 @@
 # AWS Certified Generative AI Developer - Professional (AIP-C01)
+
 ## Content Domain 1: Foundation Model Integration, Data Management, and Compliance 初学者向けステップバイステップ解説
 
 > 対象: 生成AIアプリ開発の初学者(AWSの基本サービスを触ったことがある方)
@@ -244,7 +245,7 @@ flowchart TD
 **ベストプラクティス**
 
 - 「最も高性能なモデル」ではなく「**要件を満たす最も安いモデル**」を選ぶ
-- 難しい質問だけ大型モデルに回す、といった**使い分け**も検討する(Bedrock の Intelligent Prompt Routing は、同じモデルファミリー内でリクエストごとに最適なモデルへ振り分ける機能)
+- 難しい質問だけ大型モデルに回す、といった**使い分け**も検討する(Bedrock の Intelligent Prompt Routing は、同じモデルファミリー内でリクエストごとに最適なモデルへ振り分ける機能。ただしルーティングは英語のプロンプト向けに最適化されており、日本語のプロンプトには最適化されていない)
 
 > 出典: Bedrock モデル評価 https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html
 > 出典: Bedrock 対応モデル一覧 https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html
@@ -408,6 +409,7 @@ flowchart TD
 | 低コストでドメイン特化したい | LoRA などパラメータ効率型の手法 |
 
 ---
+
 ## 5. Task 1.3 FM 向けデータ検証と処理パイプライン
 
 **Task の目的**: 「ゴミを入れればゴミが出る」を防ぐため、FM に渡すデータを検証し、種類ごとに処理し、モデルが求める形式に整え、品質を高める。
@@ -440,7 +442,7 @@ flowchart LR
 | 形式 | 日付、文字コード、スキーマが想定どおりか |
 | 一意性 | 重複した文書や行がないか |
 | 妥当性 | 値の範囲、許容される値の一覧に収まっているか |
-| 機密性 | 個人情報が混入していないか(Comprehend の PII 検出など) |
+| 機密性 | 個人情報が混入していないか(Comprehend の PII 検出は英語とスペイン語のみ対応。日本語の PII 検出には使えないため、別の手段で確認する) |
 
 | サービス | 使いどころ |
 |---|---|
@@ -529,7 +531,7 @@ flowchart TD
 | 手法 | 例 | サービス |
 |---|---|---|
 | 正規化 | 表記ゆれ、全角半角、日付形式の統一 | Lambda |
-| エンティティ抽出 | 人名、組織名、日付、PII の抽出 | Amazon Comprehend |
+| エンティティ抽出 | 人名、組織名、日付、PII の抽出 | Amazon Comprehend(日本語は一般エンティティ認識のみ対応。PII 検出は英語とスペイン語のみ) |
 | 再構成 | 乱れた文章を FM で整えた文章に書き換える | Bedrock |
 | ノイズ除去 | ヘッダー、フッター、定型文の削除 | Lambda、Glue |
 
@@ -737,6 +739,7 @@ flowchart LR
 | 部署別、機密区分別に結果を絞りたい | メタデータとフィルター |
 
 ---
+
 ## 7. Task 1.5 FM 拡張のための検索メカニズム
 
 **Task の目的**: RAG の「検索」部分の精度を上げる。分割、埋め込み、検索方式、再ランク、クエリ改善、FM との接続の 6 要素を押さえます。

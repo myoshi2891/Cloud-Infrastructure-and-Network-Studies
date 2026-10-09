@@ -140,7 +140,7 @@ Task 3.1 の中心サービスです。ここを理解すると Skill 3.1.1〜3.
 | Word filters | 特定の語句・不適切語を完全一致で遮断 | ○ | ○ | NG ワード辞書 |
 | Sensitive information filters | PII や正規表現で定義した情報をブロックまたはマスク | ○ | ○ | 個人情報の黒塗り係 |
 | Contextual grounding check | 根拠資料との整合性と質問への関連性でハルシネーションを検出 | - | ○ | 「その答え、資料に書いてある？」と確認する係 |
-| Automated Reasoning checks | 論理ルールに対して回答の正確性を検証 | - | ○ | 論理的な校閲者 |
+| Automated Reasoning checks | 論理ルールに対して回答の正確性を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない） | - | ○ | 論理的な校閲者 |
 
 > Prompt Attack（プロンプト攻撃検出）は **Content filters の一種**として設定します（`contentPolicyConfig` 内）。**入力側のみ**が対象です。
 
@@ -149,12 +149,12 @@ Task 3.1 の中心サービスです。ここを理解すると Skill 3.1.1〜3.
 | 項目 | 内容 |
 |---|---|
 | フィルター強度 | Content filters は強度（なし／低／中／高）を調整できる |
-| 動作 | 検出時に拒否メッセージを返す（ブロック）。機密情報フィルターは **マスク（匿名化）** も選べる |
+| 動作 | ポリシーごとにブロック（拒否メッセージを返す）を選べ、機密情報フィルターは **マスク（匿名化）** も選べる。ただし検出が常にブロックになるわけではなく、アクションを **NONE** にすると検出結果を返すだけでブロックしない。Automated Reasoning checks も検証結果（findings）を返すだけで自動ブロックはしない。こうした検出結果をどう扱うか（再生成・警告表示・人手確認など）はアプリケーション側で実装する |
 | 入力タグ | `InvokeModel` / `InvokeModelWithResponseStream` で Prompt Attack を使う場合、**ユーザー入力部分をタグで囲む**必要がある。これにより開発者のシステムプロンプトが誤検出されない |
 | バージョン | 作業用の DRAFT と、固定された番号付きバージョンを使い分け、本番は番号付きバージョンを指定する |
 | ApplyGuardrail API | **モデル呼び出しと切り離して** 任意のテキストにガードレールを適用できる（Bedrock 以外のモデルの出力検証にも使える） |
 | ストリーミング | 同期モード（チェック後に配信、安全だが遅延大）と非同期モード（先に配信、低遅延だがチェック前に一部が出る可能性）がある |
-| IAM での強制 | IAM ポリシーに `bedrock:GuardrailIdentifier` 条件キーを入れ、**指定ガードレールなしの推論呼び出しを拒否**できる |
+| IAM での強制 | IAM ポリシーに `bedrock:GuardrailIdentifier` 条件キーを入れ、**指定ガードレールなしの推論呼び出しを拒否**できる。対象は `Converse` / `ConverseStream` / `InvokeModel` / `InvokeModelWithResponseStream` に限られ、すべての Bedrock API に適用できるわけではない。`InvokeAgent` や `RetrieveAndGenerate` を含む構成では内部のモデル呼び出しにガードレール指定がない場合があり、AccessDenied になり得る。また、ガードレールの指定を強制しても入力全体の検査は保証されない（呼び出し側が入力タグで評価範囲を指定できるため、タグの外に置いた部分は評価から外れる） |
 
 ```mermaid
 flowchart TD
@@ -172,7 +172,7 @@ flowchart TD
 |---|---|---|
 | 1 | 最初は検出のみ（detect）モードで誤検出を観察し、後からブロックへ切り替える | 正常な利用を止めないため |
 | 2 | 本番は番号付きバージョンを参照する | DRAFT の変更が本番へ即影響しないように |
-| 3 | `bedrock:GuardrailIdentifier` 条件キーで利用を強制する | 開発者の呼び忘れ・迂回を防ぐ |
+| 3 | `bedrock:GuardrailIdentifier` 条件キーで利用を強制する（対象は Converse / ConverseStream / InvokeModel / InvokeModelWithResponseStream）。入力タグは信頼できるサーバー側コンポーネントで生成し、クライアントに任せない | ガードレールの呼び忘れを防ぐ。ただし入力タグで評価範囲を絞れるため、これだけで迂回を完全には防げない |
 | 4 | Prompt Attack を使う場合は必ず入力タグでユーザー入力を囲む | システムプロンプトの誤検出を避ける |
 | 5 | ガードレール設定は「作って終わり」にせず、本番ログで継続的に調整する | 攻撃手法とデータ分類が変化するため |
 | 6 | Guardrails だけに頼らず多層防御にする（Step 6） | 単一の対策には限界がある |
@@ -180,7 +180,7 @@ flowchart TD
 ### 2-5. 試験の着眼点
 - 「**モデルを問わず**ガードレールを適用したい」→ **ApplyGuardrail API**
 - 「**全開発者に**ガードレール利用を強制したい」→ **IAM 条件キー `bedrock:GuardrailIdentifier`**
-- 「ハルシネーション検出」→ **Contextual grounding check**（根拠資料と照合）／論理ルール検証なら **Automated Reasoning checks**
+- 「ハルシネーション検出」→ **Contextual grounding check**（根拠資料と照合）／論理ルール検証なら **Automated Reasoning checks**（対応言語は英語（米国）のみ。日本語の回答は検証できない）
 - 「PII を伏せて回答を返したい」→ **Sensitive information filters のマスク**
 
 **参考 URL**
@@ -309,7 +309,7 @@ flowchart TD
 |---|---|---|
 | 根拠付け（Grounding） | 信頼できる社内データを検索して回答の材料にする（RAG） | Bedrock Knowledge Bases |
 | 根拠との照合 | 回答が取得文書に裏付けられているか、質問に関連しているかをスコア化 | Guardrails の Contextual grounding check |
-| 論理ルールでの検証 | ポリシー文書から作った論理ルールで回答を検証 | Guardrails の Automated Reasoning checks |
+| 論理ルールでの検証 | ポリシー文書から作った論理ルールで回答を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない） | Guardrails の Automated Reasoning checks |
 | 意味的類似度による検証 | 回答と根拠文のベクトルの近さを測り、低ければ警告・再生成 | 埋め込みモデル + ベクトル検索 |
 | 信頼度スコアリング | 検証結果をスコア化し閾値で分岐 | Lambda + CloudWatch メトリクス |
 | 構造化出力の強制 | 出力を JSON Schema に従わせ、形式を検証 | ツール利用（スキーマ指定）+ Lambda でスキーマ検証 |
@@ -347,7 +347,7 @@ flowchart TD
 - 検証失敗の件数を CloudWatch メトリクスにして、品質劣化を早期検知する。
 
 ### 5-7. 試験の着眼点
-「回答が取得文書に基づいているか自動検証したい」→ **Contextual grounding check**。「社内規則（論理ルール）に照らして検証」→ **Automated Reasoning checks**。「下流システムが形式に依存」→ **JSON Schema**。
+「回答が取得文書に基づいているか自動検証したい」→ **Contextual grounding check**。「社内規則（論理ルール）に照らして検証」→ **Automated Reasoning checks**（対応言語は英語（米国）のみ。日本語の回答は検証できない）。「下流システムが形式に依存」→ **JSON Schema**。
 
 **参考 URL**
 - Contextual grounding check: https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-contextual-grounding-check.html
@@ -840,7 +840,7 @@ flowchart TD
 
 | 機能 | 内容 | 補足 |
 |---|---|---|
-| トークンレベルのレダクション | 出力のうち **機密に該当する部分だけ**を伏せ、他は返す | Guardrails の機密情報フィルターのマスク、ストリーミング時の同期／非同期モードの選択 |
+| トークンレベルのレダクション | 出力のうち **機密に該当する部分だけ**を伏せ、他は返す | Guardrails の機密情報フィルターのマスク。ストリーミングでは **非同期モードは PII マスキングに非対応** のため、マスクが必要なら同期モードを使う |
 | 応答ログ | 応答と判定の証跡を保存 | モデル呼び出しログ + CloudWatch Logs。**ログ側の PII は CloudWatch Logs のデータ保護ポリシーでマスク**可能 |
 | AI 出力ポリシーフィルター | 組織ポリシー（禁止助言、免責の必須挿入など）の出力検査 | Guardrails（Denied topics 等）+ Lambda 後処理 |
 
@@ -878,7 +878,11 @@ flowchart TD
 | 推論トレース | エージェントが何をしたかを追跡 | Bedrock Agent のトレース |
 
 ### 15-2. Bedrock Agent トレース
-エージェントの各応答にはトレースが付き、オーケストレーションの各ステップが分かります。主な要素は次のとおりです。
+
+> **最新状況の注意**: Amazon Bedrock Agents は Amazon Bedrock Agents Classic に名称変更され、2026 年 7 月 30 日以降は新規顧客が利用を開始できません（メンテナンスモード）。本節は試験範囲として解説を残しますが、本番向けに新規実装する場合は Amazon Bedrock AgentCore の最新資料を参照してください。
+> 出典: https://docs.aws.amazon.com/bedrock/latest/userguide/agents-classic-maintenance-mode.html
+
+InvokeAgent のトレースは **既定で無効** です。リクエストで `enableTrace=true` を指定すると、エージェントの応答にトレースが付き、オーケストレーションの各ステップが分かります。運用で記録するには、この指定を有効にしたうえでトレースを保存します。主な要素は次のとおりです。
 
 | 要素 | 意味 |
 |---|---|
@@ -911,7 +915,7 @@ flowchart TD
 ### 15-4. ベストプラクティス
 - 出典は **リンク可能な形**で提示し、ユーザーが原典で確認できるようにする。
 - 推論の表示は **利用者に有用な要約**にとどめ、機密（内部プロンプト・他者の PII）を含めない。
-- トレースは **本番でも保存**し、インシデント調査・監査に使う。ただしトレースにユーザーデータが含まれるため **保存先のアクセス制御と保持期間**を設計する。
+- トレースは `enableTrace=true` で有効化して **本番でも保存**し、インシデント調査・監査に使う。ただしトレースにユーザーデータが含まれるため **保存先のアクセス制御と保持期間**を設計する。
 - 確信度の閾値は評価データで **較正**する（高く見えて間違うことがあるため過信しない）。
 
 ### 15-5. 試験の着眼点
