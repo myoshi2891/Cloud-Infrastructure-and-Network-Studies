@@ -9,11 +9,35 @@ import { codeLines } from './inventory-extraction.mjs';
 const config = FIDELITY_PAGES['aws-dva-domain2-security'];
 const html = execFileSync('git', ['show', `${config.sourceCommit}:${config.source}`], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
 const doc = new JSDOM(html).window.document;
+restoreStrayBold(doc.body);
 const directory = 'app/aws/developer-associate/domain2';
 mkdirSync(`${directory}/sections`, { recursive: true });
 const write = (name, value) => writeFileSync(`${directory}/${name}`, value.replace(/[ \t]+$/gm, '') + '\n');
 const nav = [...doc.querySelectorAll('.sidebar a')].map(el => ({ id: el.getAttribute('href').slice(1), label: el.textContent.trim() }));
 const inputs = [...doc.querySelectorAll('li.chk')];
+
+/** 原本に未変換で残った `**A**` を、同一親要素内で対になる記号ごとに strong へ戻す（`***` 等の連続記号とコードは対象外）。 */
+function restoreStrayBold(root) {
+    const marker = /(?<!\*)\*\*(?!\*)/;
+    const walker = doc.createTreeWalker(root, 4 /* NodeFilter.SHOW_TEXT */);
+    const parents = new Set();
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (marker.test(node.data) && !node.parentElement.closest('code, pre')) parents.add(node.parentElement);
+    }
+    for (const parent of parents) {
+        for (const node of [...parent.childNodes]) {
+            if (node.nodeType !== 3 || !marker.test(node.data)) continue;
+            node.replaceWith(...node.data.split(/((?<!\*)\*\*(?!\*))/).filter(Boolean).map(part => doc.createTextNode(part)));
+        }
+        const markers = [...parent.childNodes].filter(node => node.nodeType === 3 && node.data === '**');
+        for (let i = 0; i + 1 < markers.length; i += 2) {
+            const strong = doc.createElement('strong');
+            while (markers[i].nextSibling !== markers[i + 1]) strong.append(markers[i].nextSibling);
+            markers[i].replaceWith(strong);
+            markers[i + 1].remove();
+        }
+    }
+}
 
 /** タグ・属性・テキストを機械変換し、図とコードだけ既存Reactの契約へ対応付ける。 */
 function jsx(node) {
