@@ -582,7 +582,8 @@ flowchart TD
 | Amazon OpenSearch Service / Serverless | 高機能な検索とベクトル検索を両立。ハイブリッド検索、細かなチューニング | 大規模、高度な検索要件、既存の検索基盤がある |
 | Amazon Aurora PostgreSQL + pgvector | リレーショナルデータとベクトルを同じ DB で扱える | 既存の SQL 資産と結合したい、中規模 |
 | Amazon RDS for PostgreSQL + pgvector | 同上。Aurora ほど拡張性は求めない場合 | 小から中規模 |
-| Amazon DynamoDB との併用 | ベクトル検索は専用ストア、メタデータや原文は DynamoDB | 低遅延のキー参照が必要なメタデータ管理 |
+| Amazon DynamoDB(ベクトルインデックス) | テーブルにベクトルインデックスを定義し、`SearchVectors` API で近似最近傍検索を直接実行。埋め込みは生成しないため Bedrock などで作成する | 既存の DynamoDB テーブルのデータにそのまま意味検索を足したい |
+| Amazon DynamoDB との併用 | ベクトル検索は専用ストア、メタデータや原文は DynamoDB | 高度な検索機能は専用ストアに任せ、低遅延のキー参照でメタデータを管理したい |
 | Amazon S3 Vectors | S3 上にベクトルを保存。コスト重視 | 大量のベクトルを低コストで保持したい |
 
 ```mermaid
@@ -602,6 +603,7 @@ flowchart TD
 
 > 出典: Bedrock Knowledge Bases 前提条件(対応ベクトルストア) https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-prereq.html
 > 出典: Amazon S3 Vectors https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html
+> 出典: Using vector indexes in DynamoDB https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/VectorSearch.html
 
 ### Skill 1.4.1 FM 拡張のための高度なベクトル DB アーキテクチャ
 
@@ -612,6 +614,7 @@ flowchart TD
 | Bedrock Knowledge Bases | 階層チャンク(親と子)など、文書構造に応じた整理ができる |
 | OpenSearch Service と Neural プラグイン | OpenSearch から Bedrock の埋め込みモデルを呼び出し、取り込み時や検索時に自動でベクトル化。トピック別のセグメント化にも向く |
 | RDS または Aurora と S3 | 文書原本は S3、ベクトルとメタデータは DB という分担 |
+| DynamoDB のベクトルインデックス | 項目に埋め込みを保存し、`SearchVectors` で DynamoDB 上を直接検索 |
 | DynamoDB と ベクトル DB | 埋め込みは専用ストア、メタデータや原文管理は DynamoDB |
 
 **ベストプラクティス**
@@ -1285,7 +1288,7 @@ flowchart TD
 - [ ] サーキットブレーカーとフォールバックの役割を説明できる
 - [ ] LoRA の利点と、Model Registry を使った版管理の流れを説明できる
 - [ ] Glue Data Quality、Transcribe、Textract、Comprehend の使い分けができる
-- [ ] ベクトルストアの選択肢(Knowledge Bases、OpenSearch、Aurora pgvector、S3 Vectors)を比較できる
+- [ ] ベクトルストアの選択肢(Knowledge Bases、OpenSearch、Aurora pgvector、S3 Vectors、DynamoDB のベクトルインデックスと `SearchVectors`、専用ストアと DynamoDB の併用)を比較できる
 - [ ] メタデータの設計と、フィルターによるアクセス制御を説明できる
 - [ ] 取り込み後のデータを最新に保つ方法を 3 つ挙げられる
 - [ ] 固定サイズ、階層、セマンティックの各チャンキングの使い分けができる
