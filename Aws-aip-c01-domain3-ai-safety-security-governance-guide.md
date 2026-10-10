@@ -588,7 +588,7 @@ flowchart TD
 - 同意・目的外利用の防止は **アプリ側の設計**（Bedrock が学習に使わないことと、自社内での再利用は別問題）。
 
 ### 9-5. 試験の着眼点
-「S3 の巨大なバケットに PII が含まれるか知りたい」→ **Macie**。「ユーザーが入力した文章中の PII をリアルタイムで検出」→ **Comprehend または Guardrails**。「一定期間後に自動削除」→ **S3 Lifecycle**。
+「S3 の巨大なバケットに PII が含まれるか知りたい」→ **Macie**。「ユーザーが入力した文章中の PII をリアルタイムで検出」→ **Comprehend（PII 検出は英語とスペイン語のみ）または Guardrails**。非対応言語は検証済みの検出器を使い、なければ処理を止める（fail closed）。「一定期間後に自動削除」→ **S3 Lifecycle**。
 
 **参考 URL**
 - Comprehend PII: https://docs.aws.amazon.com/comprehend/latest/dg/how-pii.html
@@ -1190,7 +1190,7 @@ A. 人手のみで全件確認　B. Prompt Management でバージョン管理�
 | 多層防御 | API Gateway → Comprehend 前処理 → Guardrails → Lambda 後処理 → API 応答フィルタ |
 | ネットワーク | VPC インターフェイスエンドポイント（bedrock / bedrock-runtime / bedrock-agent / bedrock-agent-runtime） |
 | データ権限 | Lake Formation（列・行・セル、LF-タグ） |
-| PII | 保存データ=Macie、テキスト=Comprehend/Guardrails、ログ=CloudWatch Logs データ保護 |
+| PII | 保存データ=Macie、テキスト=Comprehend（英語・スペイン語のみ。非対応言語は検証済み検出器か fail closed）/Guardrails、ログ=CloudWatch Logs データ保護 |
 | 保持 | S3 Lifecycle（Expiration / Transition） |
 | ガバナンス文書 | SageMaker モデルカード（API 作成） |
 | 来歴 | Glue Data Catalog・メタデータタグ・CloudTrail |
