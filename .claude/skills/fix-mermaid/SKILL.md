@@ -9,7 +9,7 @@ description: >
 
 # Mermaid 構文・描画修正スキル
 
-(最終更新日: 2026-10-02)
+(最終更新日: 2026-10-10)
 
 ## 前提バージョンと正準実装（推測禁止）
 
@@ -481,7 +481,7 @@ vi.mock('@/components/MermaidDiagram', () => ({
 | ノード文字が**右端**で切れる（emoji を含む図のみ。emoji 無しの図は無傷＝切り分けの目印） | `<foreignObject>` は SVG 仕様上 **`overflow:hidden` がデフォルト**。emoji はラベル採寸時に「豆腐(tofu)」幅で測られ実描画で広がるため `foreignObject 幅 < 実テキスト幅` となりクリップ | CSS で `.mermaidTarget foreignObject { overflow: visible }`（ノード矩形は十分広く、はみ出した文字も枠内に収まる） |
 | 文字色を変えても**全く反映されない** | `mermaid.initialize()` はモジュール最上位で**一度だけ**実行されるため HMR では再実行されず古いテーマのまま。加えて `*.module.css` 変更後の `.next` キャッシュ汚染 | `.next` 削除 + dev サーバー完全再起動 + ブラウザのハードリロード（後述） |
 | 日本語ラベルの幅不足による軽微な切れ | Web フォント（Noto Sans JP）読込前に採寸 | `mermaid.render()` 直前に `await document.fonts.ready`（jsdom 等は型ガードで skip） |
-| 原本が白背景・ライトテーマなのに、移行先で図が真っ黒な背景ボックスになりダークモード描画される | `MermaidDiagram` の既定値が `theme:'dark'` かつ `.mermaidWrapper` が `background: var(--color-background)`（暗色）を持つ。さらに `.mermaidTarget` がノード文字を白に強制 | `theme="light"` + `preserveChartTheme={true}` + 原本の `mermaid-theme.json` をディレクティブで前置し、ページ CSS で `> [role="img"]` を透過リセット（下記） |
+| 原本が白背景・ライトテーマなのに、移行先で図が真っ黒な背景ボックスになりダークモード描画される | `MermaidDiagram` の既定値が `theme:'dark'` かつ `.mermaidWrapper` が `background: var(--color-background)`（暗色）を持つ。さらに `.mermaidTarget` がノード文字を白に強制 | `theme="light"` + `preserveChartTheme={true}` + 原本の `mermaid-theme.json` を config frontmatter で前置し、ページ CSS で `> [role="img"]` を透過リセット（下記） |
 
 ### 正準の `mermaid.initialize` 設定（v11、`apply_render_pipeline.mjs` が踏襲）
 
@@ -686,22 +686,23 @@ const applySvgFixups = (
 }
 ```
 
-#### 2. `Diagram.tsx` でディレクティブ前置と属性指定
+#### 2. `Diagram.tsx` で config frontmatter 前置と属性指定
 
-`Diagram.tsx` で `mermaid-theme.json` を読み込み、`%%{init: ...}%%` ディレクティブとして DSL 先頭へ前置する。さらに `MermaidDiagram` へ **`theme="light"`** と **`preserveChartTheme={true}`** を渡す。
+`Diagram.tsx` で `mermaid-theme.json` を読み込み、Mermaid の config frontmatter（`---\nconfig: ...\n---`）として DSL 先頭へ前置する。`%%{init: ...}%%` ディレクティブは非推奨のため使わない。frontmatter は DSL の**先頭行**にある場合のみ解釈される。さらに `MermaidDiagram` へ **`theme="light"`** と **`preserveChartTheme={true}`** を渡す。
 
 `preserveChartTheme={true}` を指定することで、共通 CSS（`MermaidDiagram.module.css`）の `.mermaidTarget` による強制白文字ルール（`.node .nodeLabel { color: #ffffff !important; }`）が除外され、`.sourceThemeTarget` 経由で原本の淡色ノード・濃色文字がそのまま出力される。
 
 ```tsx
 import sourceTheme from './mermaid-theme.json';
 
-const SOURCE_THEME_DIRECTIVE = `%%{init: ${JSON.stringify({
+// JSON は YAML のフロー形式として有効なので、そのまま config: の値に使える
+const SOURCE_THEME_FRONTMATTER = `---\nconfig: ${JSON.stringify({
     ...sourceTheme,
     themeVariables: {
         ...sourceTheme.themeVariables,
         fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif',
     },
-})}}%%\n`;
+})}\n---\n`;
 
 export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     const chart = DIAGRAMS[id];
@@ -709,7 +710,7 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     return (
         <div className="diagram" data-mermaid-id={id} aria-label={label} data-preserve-natural-scale="true">
             <MermaidDiagram
-                chart={SOURCE_THEME_DIRECTIVE + chart}
+                chart={SOURCE_THEME_FRONTMATTER + chart}
                 theme="light"
                 preserveChartTheme={true}
                 ariaLabel={label}
