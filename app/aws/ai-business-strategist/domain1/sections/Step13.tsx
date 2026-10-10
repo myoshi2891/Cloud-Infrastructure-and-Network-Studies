@@ -55,7 +55,7 @@ export function Step13() {
           </tbody>
         </table>
       </div>
-      <h4 id="4_1">4 つの手法の位置づけ</h4>
+      <h4 id="4_1">5 つの手法の位置づけ</h4>
       <div className="table-wrap">
         <table>
           <thead>
