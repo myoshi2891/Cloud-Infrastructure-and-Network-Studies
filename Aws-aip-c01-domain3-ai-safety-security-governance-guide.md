@@ -425,7 +425,7 @@ Comprehend は **従来型の NLP サービス**で、前処理に向きます�
 | 入力サニタイズ | 制御文字・過大入力・特殊エンコードの除去／正規化 | Lambda / API 層 |
 | 安全分類器 | Comprehend のプロンプト安全性分類（英語のみ・新規顧客は利用不可）、Bedrock Guardrails の Prompt Attack 検出、独自の分類モデル | 前処理として配置 |
 
-> **補足（新しい API）**: 本ガイド作成時点の情報として、Bedrock Runtime に `InvokeGuardrailChecks` という API が追加されており、ガードレールを事前作成せずにコンテンツフィルター・Prompt Attack・機密情報の検査を呼び出せるとされています（Prompt Attack のカテゴリに JAILBREAK / PROMPT_INJECTION / PROMPT_LEAKAGE）。試験ガイドには名指しされていませんが、今後の更新で触れられる可能性があるため、公式 API リファレンスで最新仕様を確認してください。
+> **補足（新しい API）**: 本ガイド作成時点の情報として、Bedrock Runtime に `InvokeGuardrailChecks` という API が追加されており、ガードレールを事前作成せずにコンテンツフィルター・Prompt Attack・機密情報の検査を呼び出せるとされています（Prompt Attack のカテゴリに JAILBREAK / PROMPT_INJECTION / PROMPT_LEAKAGE）。この API は **検出とスコア付けのみ**（カテゴリ別の重大度スコアや機密情報の位置と信頼度を返す）を行い、**コンテンツのブロックやマスキングはしません**。拒否・マスキングは、返された結果に基づいて **アプリケーション側で実装** する必要があります。試験ガイドには名指しされていませんが、今後の更新で触れられる可能性があるため、公式 API リファレンスで最新仕様を確認してください。
 
 ### 7-2. 自動化された敵対的テスト
 
