@@ -655,7 +655,7 @@ flowchart TD
 - 属性の値は**表記を統一**する(例: 「人事部」と「HR」を混ぜない)
 
 > 出典: Bedrock Knowledge Bases メタデータ https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html
-> 出典: Bedrock Knowledge Bases データソース設定 https://docs.aws.amazon.com/bedrock/latest/userguide/kb-data-source-connectors.html
+> 出典: Bedrock Knowledge Bases データソース設定 https://docs.aws.amazon.com/bedrock/latest/userguide/data-source-connectors.html
 
 ### Skill 1.4.3 大規模でも高速な検索のためのアーキテクチャ
 
