@@ -593,14 +593,16 @@ flowchart TD
     A{"早く 少ない運用で RAG を作りたいか"} -->|"はい"| B["Bedrock Knowledge Bases のマネージド構成"]
     A -->|"いいえ"| C{"既存の SQL データと 結合したいか"}
     C -->|"はい"| D["Aurora PostgreSQL と pgvector"]
-    C -->|"いいえ"| E{"高度な検索 ハイブリッド 大規模が必要か"}
+    C -->|"いいえ"| H{"既存の DynamoDB データを そのまま検索したいか"}
+    H -->|"はい"| I["DynamoDB ベクトルインデックス"]
+    H -->|"いいえ"| E{"高度な検索 ハイブリッド 大規模が必要か"}
     E -->|"はい"| F["OpenSearch Service または Serverless"]
     E -->|"いいえ"| G["コスト重視なら S3 Vectors も検討"]
     classDef box fill:#eef2ff,stroke:#4f46e5,color:#1e1b4b
     classDef hub fill:#fef3c7,stroke:#b45309,color:#451a03
     classDef done fill:#ecfdf5,stroke:#047857,color:#064e3b
-    class A,C,E hub
-    class B,D,F,G done
+    class A,C,H,E hub
+    class B,D,I,F,G done
 ```
 
 > 出典: Bedrock Knowledge Bases 前提条件(対応ベクトルストア) https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-prereq.html
