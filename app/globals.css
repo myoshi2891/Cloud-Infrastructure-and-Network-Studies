@@ -35,6 +35,15 @@
     --color-aib-plum-bg: #fae8ff;
     --color-aib-danger: #b91c1c;
     --color-aib-danger-bg: #fee2e2;
+    --color-aib-text-strong: #1a1712;
+    --color-aib-code: #92400e;
+    --color-aib-gold-border: #fde68a;
+    --color-aib-gold-text: #451a03;
+    --color-aib-forest-border: #bbf7d0;
+    --color-aib-forest-text: #052e16;
+    --color-aib-plum-border: #f5d0fe;
+    --color-aib-plum-text: #581c87;
+    --color-aib-drawer-shadow: rgba(0, 0, 0, 0.15);
 
     /* Layer 3: DVA Domain 1 原本ライト配色・書体 */
     --color-dva-development-paper: #faf7f0;
