@@ -391,7 +391,7 @@ flowchart TD
 ### 6-2. Amazon Comprehend の役割
 Comprehend は **従来型の NLP サービス**で、前処理に向きます。PII 検出、**毒性検出**、**プロンプト安全性の分類**などが使えます。LLM を呼ぶ前に **安価・高速**に一次判定できるのが利点です。
 
-> **注意**: 毒性検出とプロンプト安全性の分類は **英語のみ**対応です。また、プロンプト安全性の分類は **新規顧客には提供されていません**（過去 12 か月以内に利用した既存アカウントは継続利用可）。日本語プロンプトや新規顧客の場合は、**Bedrock Guardrails**（コンテンツフィルター・Prompt Attack 検出）で代替します。ただし日本語の Content filters / Prompt Attack は **Standard tier が必要**です（Classic tier は英語・フランス語・スペイン語のみ）。
+> **注意**: 毒性検出とプロンプト安全性の分類は **英語のみ**対応です。また、プロンプト安全性の分類は **新規顧客には提供されていません**（過去 12 か月以内に利用した既存アカウントは継続利用可）。日本語プロンプトや新規顧客の場合は、**Bedrock Guardrails**（コンテンツフィルター・Prompt Attack 検出）で代替します。ただし日本語の Content filters / Prompt Attack は **Standard tier が必要**です（Classic tier は英語・フランス語・スペイン語のみ）。Standard tier は **クロスリージョン推論を必要とする**ため、単一リージョン内での処理が求められる環境ではこの代替策を適用できません。利用する場合は、許可された送信先リージョンに適合する **guardrail profile** を選択してください。
 > 出典: Amazon Comprehend Trust and safety https://docs.aws.amazon.com/comprehend/latest/dg/trust-safety.html
 
 ### 6-3. ベストプラクティス
