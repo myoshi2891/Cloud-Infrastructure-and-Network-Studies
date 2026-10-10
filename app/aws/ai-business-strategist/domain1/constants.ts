@@ -119,7 +119,7 @@ export const DIAGRAMS: Record<DiagramId, string> = {
     L7 -->|"はい"| L8["7 本番で推論に使う"]:::done
     L8 --> L9["8 結果を監視しフィードバックを集める"]
     L9 --> L10["9 最新データで再学習"]
-    L10 --> L6
+    L10 --> L5
     classDef done fill:#dcfce7,stroke:#15803d,color:#052e16`,
 
     d6: `flowchart TD
