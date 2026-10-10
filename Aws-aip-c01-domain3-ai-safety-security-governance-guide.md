@@ -420,7 +420,7 @@ Comprehend は **従来型の NLP サービス**で、前処理に向きます�
 |---|---|---|
 | Prompt Injection | Guardrails の Prompt Attack フィルター | 入力タグでユーザー入力を明示 |
 | Jailbreak | 同上 + 安全分類器 | 役割演技・エンコード回避なども想定 |
-| システムプロンプト漏えい | Prompt Attack の検出 + 出力側チェック | 機密を **プロンプトに埋めない** のが根本策 |
+| システムプロンプト漏えい | Prompt Attack の検出（PROMPT_LEAKAGE 検出は **Standard tier が必須**で、Classic tier では利用不可）+ 出力側チェック | 機密を **プロンプトに埋めない** のが根本策 |
 | 間接 Injection | 取得文書にも同じ検証 | 取得元の許可リスト、信頼レベルの区別 |
 | 入力サニタイズ | 制御文字・過大入力・特殊エンコードの除去／正規化 | Lambda / API 層 |
 | 安全分類器 | Comprehend のプロンプト安全性分類（英語のみ・新規顧客は利用不可）、Bedrock Guardrails の Prompt Attack 検出、独自の分類モデル | 前処理として配置 |
