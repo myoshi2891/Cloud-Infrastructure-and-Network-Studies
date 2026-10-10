@@ -48,10 +48,14 @@ export function NavBar() {
             }
         );
 
-        elements.forEach((el) => observer.observe(el));
+        for (const el of elements) {
+            observer.observe(el);
+        }
 
         return () => {
-            elements.forEach((el) => observer.unobserve(el));
+            for (const el of elements) {
+                observer.unobserve(el);
+            }
             observer.disconnect();
         };
     }, []);

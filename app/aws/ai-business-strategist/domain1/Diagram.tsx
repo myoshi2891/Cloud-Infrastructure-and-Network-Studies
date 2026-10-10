@@ -49,7 +49,6 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
         <div
             className="diagram"
             data-mermaid-id={id}
-            aria-label={ariaLabel}
             data-preserve-natural-scale="true"
         >
             <MermaidDiagram

@@ -95,7 +95,11 @@ describe('aws-ai-business-strategist-domain1 — 移行元コンテンツの全�
         );
         expect(diagrams).toHaveLength(inventory.counts.diagram);
         diagrams.forEach((element) => {
-            const hasLabel = Boolean(element.getAttribute('aria-label')?.trim());
+            // wrapper の div は generic のため aria-label を持たず、内側の Mermaid 図がラベルを担う
+            const labelSource = element.matches('.diagram')
+                ? element.querySelector('[data-testid="mermaid-diagram"]')
+                : element;
+            const hasLabel = Boolean(labelSource?.getAttribute('aria-label')?.trim());
             const isDecorative =
                 element.getAttribute('data-decorative') === 'true' ||
                 element.getAttribute('aria-hidden') === 'true';
