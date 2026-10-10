@@ -308,9 +308,9 @@ flowchart TD
 | 対策 | 仕組み | 主なサービス |
 |---|---|---|
 | 根拠付け（Grounding） | 信頼できる社内データを検索して回答の材料にする（RAG） | Bedrock Knowledge Bases |
-| 根拠との照合 | 回答が取得文書に裏付けられているか、質問に関連しているかをスコア化（対応言語は英語・フランス語・スペイン語のみ。日本語の回答は下の「意味的類似度による検証」で代替する） | Guardrails の Contextual grounding check |
+| 根拠との照合 | 回答が取得文書に裏付けられているか、質問に関連しているかをスコア化（対象は要約・言い換え・通常の QA などのサポート用途に限り、会話型 QA・チャットボットは対象外。対応言語は英語・フランス語・スペイン語のみ。チャット用途や日本語の回答は下の「意味的類似度による検証」の方法で別途検証する） | Guardrails の Contextual grounding check |
 | 論理ルールでの検証 | ポリシー文書から作った論理ルールで回答を検証（対応言語は英語（米国）のみ。日本語の回答は検証できない。Converse では `guardContent`、InvokeModel では `tagSuffix` 付きの XML タグで囲まないと、エラーにならずスキップされる） | Guardrails の Automated Reasoning checks |
-| 意味的類似度による検証 | 回答と根拠文のベクトルの近さを測り、低ければ警告・再生成 | 埋め込みモデル + ベクトル検索 |
+| 意味的類似度による検証 | 回答と根拠文のベクトルの近さを測り、低ければ警告・再生成する補助シグナル（類似度が高くても事実の裏付けにはならない）。根拠に支えられた回答として扱う前に、主張単位の整合性チェックか人によるレビューを必須にする | 埋め込みモデル + ベクトル検索 |
 | 信頼度スコアリング | 検証結果をスコア化し閾値で分岐 | Lambda + CloudWatch メトリクス |
 | 構造化出力の強制 | 出力を JSON Schema に従わせ、形式を検証 | ツール利用（スキーマ指定）+ Lambda でスキーマ検証 |
 
@@ -1097,12 +1097,12 @@ flowchart TD
 | 論理ルールで回答の正確性を検証 | Automated Reasoning checks |
 | 数値・集計を決定的にしたい | text-to-SQL（検証付き・読み取り専用） |
 | 出力形式を固定 | JSON Schema + 検証 |
-| LLM 呼び出し前の安価な毒性・PII 判定 | Amazon Comprehend（毒性は英語のみ。日本語は Bedrock Guardrails） |
+| LLM 呼び出し前の安価な毒性・PII 判定 | Amazon Comprehend（毒性は英語のみ。PII 検出は英語とスペイン語のみで日本語は検出できない。日本語の毒性は Bedrock Guardrails、非対応言語の PII は検証済みの検出器を使い、なければ処理を止める（fail closed）） |
 | 組織固有の承認フロー付きモデレーション | Step Functions + Lambda |
 | インターネットを経由せず Bedrock を呼ぶ | VPC インターフェイスエンドポイント（PrivateLink） |
 | 列・行単位のデータ権限 | Lake Formation |
 | S3 内の PII を発見 | Amazon Macie |
-| 入力・出力中の PII を検出／マスク | Comprehend／Guardrails 機密情報フィルター |
+| 入力・出力中の PII を検出／マスク | Comprehend／Guardrails 機密情報フィルター（Comprehend の PII 検出は英語とスペイン語のみで日本語は検出できない。非対応言語は検証済みの検出器を使い、なければ処理を止める（fail closed）） |
 | 一定期間後に自動削除 | S3 Lifecycle |
 | モデルの用途・制限を文書化（自動更新） | SageMaker モデルカード（プログラマティック） |
 | データの来歴・台帳 | Glue Data Catalog（+ リネージ）・メタデータタグ |
