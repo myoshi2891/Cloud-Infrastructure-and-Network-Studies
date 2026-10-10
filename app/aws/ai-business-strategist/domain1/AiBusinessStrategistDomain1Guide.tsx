@@ -1,6 +1,3 @@
-'use client';
-
-import { useState } from 'react';
 import { NavBar } from './NavBar';
 import { HeroSection } from './sections/HeroSection';
 import { Sec0 } from './sections/Sec0';
@@ -23,16 +20,13 @@ import { AppendixC } from './sections/AppendixC';
 import { AppendixD } from './sections/AppendixD';
 import { AppendixE } from './sections/AppendixE';
 
+/**
+ * Domain 1 ガイド本文（Server Component）。開閉状態を持つナビだけを Client の NavBar に委ねる。
+ */
 export function AiBusinessStrategistDomain1Guide() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     return (
         <div className="aib-domain1-page">
-            <NavBar
-                isOpen={isMenuOpen}
-                onToggle={() => setIsMenuOpen((prev) => !prev)}
-                onClose={() => setIsMenuOpen(false)}
-            />
+            <NavBar />
             <main className="main" id="top">
                 <HeroSection />
                 <Sec0 />

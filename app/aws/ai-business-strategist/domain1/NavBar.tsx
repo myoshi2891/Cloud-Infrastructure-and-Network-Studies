@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useEffect, useCallback, Fragment } from 'react';
+import { useState, useEffect, useCallback, useRef, Fragment } from 'react';
 import { NAV_ITEMS } from './constants';
 
-interface NavBarProps {
-    isOpen: boolean;
-    onToggle: () => void;
-    onClose: () => void;
-}
-
-export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
+/**
+ * サイドバー目次（Client Component）。モバイルの開閉状態と scroll spy を内包する。
+ */
+export function NavBar() {
     const [activeId, setActiveId] = useState<string>('top');
+    const [isOpen, setIsOpen] = useState(false);
+    const menuBtnRef = useRef<HTMLButtonElement>(null);
+
+    const onToggle = useCallback(() => setIsOpen((prev) => !prev), []);
+    const onClose = useCallback(() => setIsOpen(false), []);
 
     const handleLinkClick = useCallback(
         (id: string) => {
@@ -69,6 +71,8 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
                 onClose();
+                // 閉じたサイドバー内にフォーカスが残らないようトグルへ戻す
+                menuBtnRef.current?.focus();
             }
         };
 
@@ -79,6 +83,7 @@ export function NavBar({ isOpen, onToggle, onClose }: NavBarProps) {
     return (
         <>
             <button
+                ref={menuBtnRef}
                 type="button"
                 className="sidebar-toggle"
                 id="menuBtn"
