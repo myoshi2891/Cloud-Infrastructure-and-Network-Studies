@@ -1073,7 +1073,7 @@ flowchart TD
         EVX["EventBridge Lambda 自動修復"]
     end
 
-    FM -.-> VPCE
+    VPCE -.-> FM
     RAG -.-> LFX
     GO -.-> CWL
     CWL --> EVX
