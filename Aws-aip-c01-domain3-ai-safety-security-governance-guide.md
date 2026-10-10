@@ -822,7 +822,7 @@ flowchart TD
 | 誤用 | 異常に多い呼び出し、攻撃的入力の急増、特定ユーザーの集中的なブロック | CloudWatch メトリクス／ログのメトリクスフィルター、アラーム |
 | ドリフト | 入力分布や回答品質の変化 | 定期評価ジョブ、品質メトリクスの推移 |
 | ポリシー違反 | ガードレール発動、禁止話題、機密漏えい | Guardrails のトレース／ログ、モデル呼び出しログ |
-| バイアスドリフト | 属性間で出力の偏りが時間とともに拡大 | 公平性メトリクスの定期計測（SageMaker Clarify 等、CloudWatch へ） |
+| バイアスドリフト | 属性間で出力の偏りが時間とともに拡大 | 公平性メトリクスの定期計測（新規利用は Bedrock Evaluations の Stereotyping 等の指標や、pandas / scikit-learn での標準バイアス指標計算を CloudWatch へ送る。SageMaker Clarify は新規顧客の受付を終了し、既存顧客のみ利用可） |
 | コスト・利用量 | 想定外のトークン増加 | CloudWatch、請求アラーム |
 
 ### 14-2. 自動検知から修復までの流れ
@@ -860,7 +860,8 @@ flowchart TD
 - モデル呼び出しログ: https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html
 - CloudWatch Logs のデータ保護（マスキング）: https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/mask-sensitive-log-data.html
 - Amazon EventBridge: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html
-- SageMaker Clarify（公平性・説明可能性）: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html
+- SageMaker Clarify（公平性・説明可能性、既存顧客のみ）: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html
+- Clarify の提供状況と代替手段: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-availability-change.html
 - Guardrails: https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html
 
 ---
@@ -941,7 +942,7 @@ flowchart TD
 
 | 手法 | 内容 | サービス |
 |---|---|---|
-| 公平性メトリクスの計測 | 属性別の出力差を数値化し、継続的に記録 | CloudWatch（メトリクスとして収集）、SageMaker Clarify など |
+| 公平性メトリクスの計測 | 属性別の出力差を数値化し、継続的に記録 | CloudWatch（メトリクスとして収集）、Bedrock Evaluations（新規利用の代替）。SageMaker Clarify は既存顧客のみ利用可 |
 | 体系的な A/B テスト | プロンプトの版を切り替え、同条件で比較 | Bedrock Prompt Management（版管理）、Prompt Flows（ワークフローで分岐・比較） |
 | LLM-as-a-judge | 別の LLM が評価者となり、自動採点 | Bedrock Evaluations（Stereotyping、Harmfulness などの組み込み指標） |
 
@@ -976,7 +977,8 @@ flowchart TD
 - Bedrock Evaluations: https://aws.amazon.com/bedrock/evaluations/
 - Prompt Management: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html
 - Prompt Flows: https://docs.aws.amazon.com/bedrock/latest/userguide/flows.html
-- SageMaker Clarify: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html
+- SageMaker Clarify（既存顧客のみ）: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html
+- Clarify の提供状況と代替手段: https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-availability-change.html
 
 ---
 
@@ -1265,7 +1267,8 @@ A. 人手のみで全件確認　B. Prompt Management でバージョン管理�
 | ✅ | https://docs.aws.amazon.com/bedrock/latest/userguide/trace-events.html | Agent トレース |
 | 📎 | https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html | Prompt Management |
 | 📎 | https://docs.aws.amazon.com/bedrock/latest/userguide/flows.html | Prompt Flows |
-| 📎 | https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html | SageMaker Clarify |
+| 📎 | https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-fairness-and-explainability.html | SageMaker Clarify（既存顧客のみ） |
+| 📎 | https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-availability-change.html | Clarify の提供状況と代替手段 |
 | 📎 | https://docs.aws.amazon.com/wellarchitected/latest/responsible-ai-lens/responsible-ai-lens.html | Responsible AI Lens |
 | 📎 | https://aws.amazon.com/ai/responsible-ai/ | AWS Responsible AI |
 
