@@ -1,18 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { NavBar } from './NavBar';
-import { HeroSection } from './sections/HeroSection';
-import { Step0Section } from './sections/Step0Section';
-import { Domain1Section } from './sections/Domain1Section';
-import { Domain2Section } from './sections/Domain2Section';
-import { Domain3Section } from './sections/Domain3Section';
-import { Domain4Section } from './sections/Domain4Section';
-import { CrossDomainSection } from './sections/CrossDomainSection';
-import { AppendicesSection } from './sections/AppendicesSection';
 
 interface AiBusinessStrategistGuideProps {
-    children?: React.ReactNode;
+    children: ReactNode;
 }
 
 export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuideProps) => {
@@ -39,17 +32,7 @@ export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuid
             </button>
             <div className="backdrop" aria-hidden="true" onClick={closeMenu} />
             <NavBar onLinkClick={closeMenu} />
-            <main>
-                <HeroSection />
-                <Step0Section />
-                <Domain1Section />
-                <Domain2Section />
-                <Domain3Section />
-                <Domain4Section />
-                <CrossDomainSection />
-                <AppendicesSection />
-                {children}
-            </main>
+            <main>{children}</main>
         </div>
     );
 };
