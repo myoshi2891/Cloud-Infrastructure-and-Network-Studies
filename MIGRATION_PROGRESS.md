@@ -4,7 +4,7 @@
 
 ## 2026-10-09: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイドのNext.js移行（完了）
 
-`Aws-certified-ai-business-strategist-guide.html` を `/aws/ai-business-strategist` へ全量移行し、ホーム画面（`app/constants.ts` EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ完全ガイドおよびドメイン別リンクとして登録した。原本ライト配色・280pxサイドバー契約を保持し、全4ドメイン・横断編・試験対策・付録A〜Cの全コンテンツを完全移行。
+`Aws-certified-ai-business-strategist-guide.html` を `/aws/ai-business-strategist` へ全量移行し、ホーム画面（`app/constants.ts` ALL_EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ完全ガイドおよびドメイン別リンクとして登録した。原本ライト配色・280pxサイドバー契約を保持し、全4ドメイン・横断編・試験対策・付録A〜Cの全コンテンツを完全移行。
 
 原本コンテンツのh1:6・h2:21・h3:80、82表（th206・td1043）、236リスト項目、112外部リンク、16図（Mermaidダイアグラム）、134本文ブロックを全量・順序・構造まで固定インベントリおよびテストで完全検証。すべての表に `<thead>` と `<th scope="col">`、Mermaidダイアグラムに `aria-label` と `data-preserve-natural-scale` を付与。
 
@@ -34,7 +34,7 @@
 
 ## 2026-10-09: AWS Certified AI Business Strategist (AIB-C01) Domain 1 のNext.js移行（完了）
 
-`Aib-c01-domain1-ai-fundamentals-and-literacy.html` を `/aws/ai-business-strategist/domain1` へ全量移行し、ホーム画面（`app/constants.ts` EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本ライト配色・300pxサイドバーを保持し、全3タスク・13スキル・付録A〜Eの全コンテンツを完全移行。
+`Aib-c01-domain1-ai-fundamentals-and-literacy.html` を `/aws/ai-business-strategist/domain1` へ全量移行し、ホーム画面（`app/constants.ts` ALL_EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本ライト配色・300pxサイドバーを保持し、全3タスク・13スキル・付録A〜Eの全コンテンツを完全移行。
 
 原本コンテンツのh1:1・h2:4・h3:18・h4:81、55表（th134・td385）、150リスト項目、86外部リンク、16図（Mermaidダイアグラム）、99本文ブロックを全量・順序・構造まで固定インベントリおよびテストで完全検証。すべての表に `<thead>` と `<th scope="col">`、Mermaidダイアグラムに `aria-label` と `data-preserve-natural-scale` を付与。
 
