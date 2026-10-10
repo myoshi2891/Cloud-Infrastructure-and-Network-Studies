@@ -271,14 +271,14 @@ export function AppendixE() {
             </tr>
             <tr className="t-odd">
               <td>9</td>
-              <td>Amazon SageMaker Model Monitor (製品ページ)</td>
+              <td>AWS Well-Architected Machine Learning Lens: MLSUS06-BP02 Retrain only when necessary</td>
               <td>
                 <a
-                  href="https://www.amazonaws.cn/en/sagemaker/model-monitor/"
+                  href="https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html"
                   rel="noopener"
                   target="_blank"
                 >
-                  https://www.amazonaws.cn/en/sagemaker/model-monitor/
+                  https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html
                 </a>
               </td>
             </tr>

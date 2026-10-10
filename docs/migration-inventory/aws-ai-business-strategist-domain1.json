@@ -1213,8 +1213,8 @@
     "Data and model quality monitoring with Amazon SageMaker Model Monitor",
     "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html",
     "9",
-    "Amazon SageMaker Model Monitor (製品ページ)",
-    "https://www.amazonaws.cn/en/sagemaker/model-monitor/",
+    "AWS Well-Architected Machine Learning Lens: MLSUS06-BP02 Retrain only when necessary",
+    "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html",
     "9",
     "Bias drift for models in production",
     "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html",
@@ -1359,7 +1359,7 @@
     "緊急時の停止・切り戻し手順を用意する: 品質が急に悪化したときに、AI を止めて人手運用に戻せるようにする。",
     "変化が起こりやすい前提を把握する: 季節性、規制変更、新商品、顧客行動の変化、市場ショックなど。",
     "Data and model quality monitoring with Amazon SageMaker Model Monitor (AWS Docs): https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html",
-    "Amazon SageMaker Model Monitor (製品ページ、モデルドリフトとコンセプトドリフトの説明): https://www.amazonaws.cn/en/sagemaker/model-monitor/",
+    "MLSUS06-BP02 Retrain only when necessary (AWS Well-Architected Machine Learning Lens、データドリフトとコンセプトドリフトの区別): https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html",
     "Bias drift for models in production (AWS Docs、住宅価格予測の例): https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html",
     "Feature attribution drift for models in production (AWS Docs): https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-feature-attribution-drift.html",
     "Detecting data drift using Amazon SageMaker (AWS Architecture Blog): https://aws.amazon.com/blogs/architecture/detecting-data-drift-using-amazon-sagemaker/",
@@ -1531,8 +1531,8 @@
       "href": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html"
     },
     {
-      "text": "https://www.amazonaws.cn/en/sagemaker/model-monitor/",
-      "href": "https://www.amazonaws.cn/en/sagemaker/model-monitor/"
+      "text": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html",
+      "href": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html"
     },
     {
       "text": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html",
@@ -1691,8 +1691,8 @@
       "href": "https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor.html"
     },
     {
-      "text": "https://www.amazonaws.cn/en/sagemaker/model-monitor/",
-      "href": "https://www.amazonaws.cn/en/sagemaker/model-monitor/"
+      "text": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html",
+      "href": "https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html"
     },
     {
       "text": "https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html",
@@ -1978,7 +1978,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "AWS の SageMaker Model Monitor の説明は、ML モデルの精度は時間とともに劣化することがあり、これをモデルドリフトと呼ぶと述べています。原因は入力特徴の変化など多様で、さらにコンセプトドリフト (入力と望ましい出力の関係そのものが変わることによる劣化) も精度に影響します。入力データの分布が変わるデータドリフトとは区別します。"
+      "text": "AWS Well-Architected フレームワークの Machine Learning Lens は、本番の ML モデルはデータのパターンやユーザー行動、ビジネス環境の変化によって時間とともに性能が劣化することがあり、これをモデルドリフトと呼ぶと述べています。そのうえで、継続的な監視で検知すべきものとして、入力データの分布が変わるデータドリフトと、入力と出力の関係そのものが変わるコンセプトドリフトを区別しています。"
     },
     {
       "kind": "paragraph",

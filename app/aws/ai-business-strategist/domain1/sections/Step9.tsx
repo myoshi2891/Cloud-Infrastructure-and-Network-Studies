@@ -19,9 +19,8 @@ export function Step9() {
 
       <h3 id="_57">詳しい解説</h3>
       <p>
-        AWS の SageMaker Model Monitor の説明は、ML
-        モデルの精度は時間とともに劣化することがあり、これを<strong>モデルドリフト</strong>と呼ぶと述べています。原因は入力特徴の変化など多様で、さらに<strong>コンセプトドリフト</strong>{' '}
-        (入力と望ましい出力の関係そのものが変わることによる劣化) も精度に影響します。入力データの分布が変わる<strong>データドリフト</strong>とは区別します。
+        AWS Well-Architected フレームワークの Machine Learning Lens は、本番の ML
+        モデルはデータのパターンやユーザー行動、ビジネス環境の変化によって時間とともに性能が劣化することがあり、これを<strong>モデルドリフト</strong>と呼ぶと述べています。そのうえで、継続的な監視で検知すべきものとして、入力データの分布が変わる<strong>データドリフト</strong>と、入力と出力の関係そのものが変わる<strong>コンセプトドリフト</strong>を区別しています。
       </p>
       <h4 id="_58">ドリフトの種類</h4>
       <div className="table-wrap">
@@ -214,14 +213,14 @@ export function Step9() {
             </a>
           </li>
           <li>
-            Amazon SageMaker Model Monitor
-            (製品ページ、モデルドリフトとコンセプトドリフトの説明):{' '}
+            MLSUS06-BP02 Retrain only when necessary (AWS Well-Architected
+            Machine Learning Lens、データドリフトとコンセプトドリフトの区別):{' '}
             <a
-              href="https://www.amazonaws.cn/en/sagemaker/model-monitor/"
+              href="https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html"
               rel="noopener"
               target="_blank"
             >
-              https://www.amazonaws.cn/en/sagemaker/model-monitor/
+              https://docs.aws.amazon.com/wellarchitected/latest/machine-learning-lens/mlsus06-bp02.html
             </a>
           </li>
           <li>
