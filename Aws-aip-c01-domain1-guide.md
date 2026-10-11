@@ -597,12 +597,14 @@ flowchart TD
     H -->|"はい"| I["DynamoDB ベクトルインデックス"]
     H -->|"いいえ"| E{"高度な検索 ハイブリッド 大規模が必要か"}
     E -->|"はい"| F["OpenSearch Service または Serverless"]
-    E -->|"いいえ"| G["コスト重視なら S3 Vectors も検討"]
+    E -->|"いいえ"| G{"検索頻度は低いか"}
+    G -->|"はい"| J["コスト重視なら S3 Vectors も検討"]
+    G -->|"いいえ 高頻度"| K["OpenSearch Serverless など低遅延の専用ストア"]
     classDef box fill:#eef2ff,stroke:#4f46e5,color:#1e1b4b
     classDef hub fill:#fef3c7,stroke:#b45309,color:#451a03
     classDef done fill:#ecfdf5,stroke:#047857,color:#064e3b
-    class A,C,H,E hub
-    class B,D,I,F,G done
+    class A,C,H,E,G hub
+    class B,D,I,F,J,K done
 ```
 
 > 出典: Bedrock Knowledge Bases 前提条件(対応ベクトルストア) https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-prereq.html
