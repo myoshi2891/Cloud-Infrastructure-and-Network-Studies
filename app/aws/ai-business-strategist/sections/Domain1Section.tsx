@@ -3,9 +3,9 @@ import { Diagram } from '../Diagram';
 export const Domain1Section = () => {
     return (
         <>
-            <h1 id="s12">Domain 1 AI Fundamentals and Literacy(配点 24%)</h1>
-            <h2 id="s13">Step 1 AI の基本概念と用語(Task 1.1)</h2>
-            <h3 id="s14">1-1 まず全体像: AI・ML・深層学習・生成 AI の関係(Skill 1.1.1 / 1.1.2)</h3>
+            <h2 className="domain-heading" id="s12">Domain 1 AI Fundamentals and Literacy(配点 24%)</h2>
+            <h3 className="step-heading" id="s13">Step 1 AI の基本概念と用語(Task 1.1)</h3>
+            <h4 id="s14">1-1 まず全体像: AI・ML・深層学習・生成 AI の関係(Skill 1.1.1 / 1.1.2)</h4>
             <p>
                 <strong>やさしい例え</strong>: AI
                 を「新入社員の育成」にたとえると分かりやすくなります。
@@ -90,7 +90,7 @@ export const Domain1Section = () => {
                     が必要か」といった区別が問われます。
                 </p>
             </blockquote>
-            <h3 id="s15">1-2 構造化データと非構造化データ(Skill 1.1.3)</h3>
+            <h4 id="s15">1-2 構造化データと非構造化データ(Skill 1.1.3)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -123,7 +123,7 @@ export const Domain1Section = () => {
                 <strong>補足解説</strong>: 企業データの多くは非構造化データだと言われます。生成 AI
                 の登場で、これまで活用しづらかった文書や会話の価値を引き出せるようになった点が、ビジネスインパクトの源泉です。
             </p>
-            <h3 id="s16">1-3 なぜデータ品質が重要か(Skill 1.1.4)</h3>
+            <h4 id="s16">1-3 なぜデータ品質が重要か(Skill 1.1.4)</h4>
             <p>
                 <strong>原則</strong>: 質の低いデータからは質の低い結果が出ます(Garbage In, Garbage
                 Out)。AI の成果は、モデルの賢さ以前に<strong>データの質</strong>に左右されます。
@@ -170,7 +170,7 @@ export const Domain1Section = () => {
                     「データが整うまで待つ」のではなく、<strong>対象範囲を絞って小さく始め</strong>、データ整備と並行して価値検証を進める
                 </li>
             </ul>
-            <h3 id="s17">1-4 過去データによる学習の考え方(Skill 1.1.5)</h3>
+            <h4 id="s17">1-4 過去データによる学習の考え方(Skill 1.1.5)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -218,7 +218,7 @@ export const Domain1Section = () => {
                 「過去がそのまま未来に続く」という前提が崩れると、精度は落ちます(Step 2
                 のドリフトにつながります)。
             </p>
-            <h3 id="s18">1-5 グローバルな枠組みと共通用語(Skill 1.1.6)</h3>
+            <h4 id="s18">1-5 グローバルな枠組みと共通用語(Skill 1.1.6)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -309,8 +309,8 @@ export const Domain1Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s19">Step 2 AI ソリューションの種類と選び方(Task 1.2)</h2>
-            <h3 id="s20">2-1 ルールベース自動化と AI の使い分け(Skill 1.2.1)</h3>
+            <h3 className="step-heading" id="s19">Step 2 AI ソリューションの種類と選び方(Task 1.2)</h3>
+            <h4 id="s20">2-1 ルールベース自動化と AI の使い分け(Skill 1.2.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -361,7 +361,7 @@ export const Domain1Section = () => {
                     定型部分はルール、例外判断だけ AI)
                 </li>
             </ul>
-            <h3 id="s21">2-2 AI エージェントとその他の AI ソリューションの違い(Skill 1.2.2)</h3>
+            <h4 id="s21">2-2 AI エージェントとその他の AI ソリューションの違い(Skill 1.2.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -437,7 +437,7 @@ export const Domain1Section = () => {
                     Matrix」を公開しており、エージェント導入時のセキュリティ論点整理の参考になります
                 </li>
             </ul>
-            <h3 id="s22">2-3 モデルドリフトと継続的な監視・更新(Skill 1.2.3)</h3>
+            <h4 id="s22">2-3 モデルドリフトと継続的な監視・更新(Skill 1.2.3)</h4>
             <p>
                 AI
                 は「作って終わり」ではありません。<strong>現実が変わると精度が落ちる</strong>ためです。
@@ -485,7 +485,7 @@ export const Domain1Section = () => {
                     により定期的に更新されるため、<strong>継続してテスト・検証することを推奨</strong>しています。マネージドサービスであっても、利用側の検証は必要という好例です
                 </li>
             </ul>
-            <h3 id="s23">2-4 シャドー AI と AI ツールの分類(Skill 1.2.4)</h3>
+            <h4 id="s23">2-4 シャドー AI と AI ツールの分類(Skill 1.2.4)</h4>
             <p>
                 <strong>シャドー AI</strong>とは、IT・セキュリティ部門の承認なしに従業員が使う AI
                 ツールのことです。機密情報の入力や、規約違反、監査不能といったリスクを生みます。
@@ -583,8 +583,8 @@ export const Domain1Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s24">Step 3 生成 AI の基本技法(Task 1.3)</h2>
-            <h3 id="s25">3-1 プロンプトエンジニアリングの基本(Skill 1.3.1)</h3>
+            <h3 className="step-heading" id="s24">Step 3 生成 AI の基本技法(Task 1.3)</h3>
+            <h4 id="s25">3-1 プロンプトエンジニアリングの基本(Skill 1.3.1)</h4>
             <p>
                 <strong>プロンプト</strong>とは、生成 AI に与える指示・入力です。AWS
                 のドキュメントは、指示が一貫していて明確で簡潔であるほど望ましい応答が得られると説明しています。
@@ -663,7 +663,7 @@ export const Domain1Section = () => {
                     ドキュメントの記載)
                 </li>
             </ul>
-            <h3 id="s26">3-2 トークン制限とコンテキストウィンドウ(Skill 1.3.2)</h3>
+            <h4 id="s26">3-2 トークン制限とコンテキストウィンドウ(Skill 1.3.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -727,7 +727,7 @@ export const Domain1Section = () => {
                     万出力トークンあたり」の従量料金が示されています。トークン量がコストに直結することの実例です。
                 </p>
             </blockquote>
-            <h3 id="s27">3-3 モデル適応技法: RAG とファインチューニング(Skill 1.3.3)</h3>
+            <h4 id="s27">3-3 モデル適応技法: RAG とファインチューニング(Skill 1.3.3)</h4>
             <p>
                 <strong>課題</strong>: 汎用の生成 AI
                 は、あなたの会社の最新情報や社内ルールを知りません。

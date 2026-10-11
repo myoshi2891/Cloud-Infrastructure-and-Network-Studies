@@ -22,17 +22,32 @@ describe('aws-ai-business-strategist — 移行元コンテンツの全量移行
         return container;
     };
 
+    // 移行元の見出しレベルは a11y のため 1 段下げている（ページ h1 は Hero のみ）。
+    // 移行元レベルごとの対応セレクタで、インベントリの全見出しを出現順に照合する。
     it.each([
-        ['h1', inventory.h1],
-        ['h2', inventory.h2],
-        ['h3', inventory.h3],
-        ['h4', inventory.h4],
-    ])('%s の件数・順序・テキストが移行元と一致する', (selector, headings) => {
+        ['h1', 'h1, h2.domain-heading', inventory.h1],
+        ['h2', 'h2:not(.domain-heading), h3.step-heading', inventory.h2],
+        ['h3', 'h3:not(.step-heading), h4, h5, h6', inventory.h3],
+    ])('移行元 %s の件数・順序・テキストが移行元と一致する', (_level, selector, headings) => {
         const container = renderPage();
         const rendered = [...container.querySelectorAll(selector)].map((element) =>
             squash(element.textContent ?? ''),
         );
         expect(rendered).toEqual(headings.map(squash));
+    });
+
+    it('ページ h1 は Hero の 1 つだけで、ドメインは h2・Step は h3・小節は h4 に入れ子になる', () => {
+        const container = renderPage();
+        const tagsOf = (selector: string) =>
+            [...container.querySelectorAll(selector)].map((element) => element.tagName);
+        expect(tagsOf('h1')).toHaveLength(1);
+        expect(container.querySelector('.hero h1')).not.toBeNull();
+        expect(tagsOf('.domain-heading')).toEqual(Array(inventory.h1.length - 1).fill('H2'));
+        // Step 1〜15（Step 0 は独立した h2 セクションのまま）
+        expect(tagsOf('.step-heading')).toEqual(Array(15).fill('H3'));
+        // 1-1〜15-3 の小節（0-x と付録 C-x は h3 のまま）
+        const subsections = inventory.h3.filter((text) => /^(?:[1-9]|1[0-5])-\d+ /.test(text));
+        expect(tagsOf('h4')).toHaveLength(subsections.length);
     });
 
     it.each([
