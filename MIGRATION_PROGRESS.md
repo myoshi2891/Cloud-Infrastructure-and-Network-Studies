@@ -24,7 +24,7 @@
 ### 検証結果
 
 - `__tests__/aws/ai-business-strategist/page.test.tsx`: 全 13 テスト PASS（h1/h2/h3、th/td、li、リンク、本文・注釈、図、テーブル、コードブロック）
-- `__tests__/aws/ai-business-strategist/integration.test.ts`: 全 2 テスト PASS（EXAMS正本およびtoNavTreeグループ生成、重複排除）
+- `__tests__/aws/ai-business-strategist/integration.test.ts`: 全 2 テスト PASS（ALL_EXAMS正本およびtoNavTreeグループ生成、重複排除）
 - `__tests__/aws/ai-business-strategist/domain1/integration.test.ts`: 全 2 テスト PASS
 - `__tests__/components/Header.hamburger.test.tsx`: 全 19 テスト PASS
 - `__tests__/app/page.test.tsx`: 全 17 テスト PASS
@@ -56,7 +56,7 @@
 ### 検証結果
 
 - `__tests__/aws/ai-business-strategist/domain1/page.test.tsx`: 全 13 テスト PASS（h1/h2/h3/h4、th/td、li、リンク、本文・注釈、図、画像・SVG、テーブル、コードブロック）
-- `__tests__/aws/ai-business-strategist/domain1/integration.test.ts`: 全 2 テスト PASS（EXAMS正本およびtoNavTreeグループ生成、重複排除）
+- `__tests__/aws/ai-business-strategist/domain1/integration.test.ts`: 全 2 テスト PASS（ALL_EXAMS正本およびtoNavTreeグループ生成、重複排除）
 - `__tests__/components/Header.hamburger.test.tsx` 他、関連ナビゲーション・ヘッダーテスト PASS（計189テスト）
 - `__tests__/app/page.test.tsx`: 全 17 テスト PASS（ホーム画面カード・統計）
 - ESLint: エラー 0 件
