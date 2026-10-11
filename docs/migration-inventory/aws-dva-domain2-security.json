@@ -875,7 +875,7 @@
     "token_use（id／access）が期待どおりか",
     "IDトークンをAPI認可に誤用",
     "6",
-    "**scope**やグループが必要な権限を満たすか",
+    "scopeやグループが必要な権限を満たすか",
     "認可の抜け",
     "IDトークン",
     "ユーザーが誰かを示す（プロフィール属性など）",
@@ -938,7 +938,7 @@
     "スケールしやすい",
     "設計が難しい",
     "概要",
-    "アプリの認可ロジックをコードから**ポリシー（Cedar言語）**に切り出して管理するサービス",
+    "アプリの認可ロジックをコードからポリシー（Cedar言語）に切り出して管理するサービス",
     "利点",
     "認可ルールの一元管理、監査、変更時にアプリ再デプロイ不要",
     "連携",
@@ -985,7 +985,7 @@
     "1",
     "サービスごとに専用ロールを作り、権限を最小化（共有ロールを避ける）",
     "2",
-    "AWS内ではまず**IAM認証（SigV4）**を検討（秘密情報の管理が不要）",
+    "AWS内ではまずIAM認証（SigV4）を検討（秘密情報の管理が不要）",
     "3",
     "共有のシークレットや固定のAPIキーを避ける。使うならSecrets Managerで管理・ローテーション",
     "4",
@@ -1103,7 +1103,7 @@
     "暗号化SQSに送信",
     "kms:GenerateDataKey と kms:Decrypt",
     "「Access Denied」でS3権限は正しい",
-    "**KMS側の権限（鍵ポリシー／IAM）**を疑う",
+    "KMS側の権限（鍵ポリシー／IAM）を疑う",
     "1",
     "4KB超のデータはエンベロープ暗号化（GenerateDataKey）",
     "2",
@@ -1178,7 +1178,7 @@
     "ルートCA→中間CA→サーバー証明書",
     "目的",
     "インターネット向けTLS証明書",
-    "**組織内（プライベート）**の証明書",
+    "組織内（プライベート）の証明書",
     "発行元",
     "ACM（Amazonのパブリック信頼CA）",
     "自分で作るプライベートCA階層",
@@ -1229,7 +1229,7 @@
     "4",
     "証明書の期限を監視・アラートする",
     "5",
-    "CloudFrontでは**us-east-1**に証明書を用意",
+    "CloudFrontではus-east-1に証明書を用意",
     "6",
     "本番で自己署名証明書を使わない（Step 14は開発用のみ）",
     "公開鍵",
@@ -1509,7 +1509,7 @@
     "他アカウントとシークレットを共有",
     "Secrets Managerのリソースポリシー＋カスタマーマネージドキー",
     "最新のシークレットを取得",
-    "ステージングラベル**AWSCURRENT**",
+    "ステージングラベルAWSCURRENT",
     "サニタイズ（sanitize）",
     "不要・危険な部分を取り除く／無害化する。機密のログ出力の除去や、入力の無害化",
     "ログからトークンを除去、入力のエスケープ",
@@ -1520,7 +1520,7 @@
     "機密部分を完全に削除・黒塗り",
     "[REDACTED]",
     "トークン化",
-    "機密値を**無意味な代替値（トークン）**に置換し、本物は別の安全な場所に保管",
+    "機密値を無意味な代替値（トークン）に置換し、本物は別の安全な場所に保管",
     "カード番号→トークン",
     "ハッシュ化",
     "元に戻せない値に変換",
@@ -1903,7 +1903,7 @@
     "ABAC：https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html",
     "AssumeRoleの既定のセッション時間は1時間。最小15分、最大はロールの最大セッション期間（1〜12時間の設定）まで。",
     "ロールチェーン（ロールからさらに別ロールを引き受ける）の場合、セッションは最大1時間に制限される。",
-    "「EC2上のアプリにアクセスキーを配る」→ ほぼ常に誤り。**インスタンスプロファイル（ロール）**が正解。",
+    "「EC2上のアプリにアクセスキーを配る」→ ほぼ常に誤り。インスタンスプロファイル（ロール）が正解。",
     "「ロールにはアクセスキーがある」→ 誤り。引き受け時に一時認証情報が発行される。",
     "「SessionTokenは任意」→ 誤り。一時認証情報では必須。",
     "IAMロール：https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html",
@@ -1967,7 +1967,7 @@
     "Well-Architected（セキュリティの柱）：https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html",
     "「DynamoDBの暗号化を有効にする設定を忘れた」→ 常に暗号化されているため該当しない。",
     "「RDSの既存DBに暗号化をそのままオン」→ できない。スナップショットのコピー時に暗号化→復元。",
-    "「S3バケットにHTTPSを強制」→ **aws:SecureTransport**のDeny。",
+    "「S3バケットにHTTPSを強制」→ aws:SecureTransportのDeny。",
     "S3のデータ保護と暗号化：https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html",
     "DynamoDBの保管時の暗号化：https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html",
     "RDSの暗号化：https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html",
@@ -2047,7 +2047,7 @@
     "CodeBuildの環境変数：https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html",
     "CloudFormationの動的参照：https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html",
     "Elastic Beanstalkでシークレットを使う：https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.secrets.html",
-    "アプリは常に**AWSCURRENT**を取得すれば、最新の値を使えます。",
+    "アプリは常にAWSCURRENTを取得すれば、最新の値を使えます。",
     "ローテーションが有効でも、キャッシュした古い値を使い続けないようにアプリを作ります。",
     "ローテーションLambdaがDBに到達するには、VPC内の接続設定（ネットワーク）が必要な場合があります。",
     "AWS Secrets Managerとは：https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html",
@@ -2785,7 +2785,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "s3:ListBucket はバケットARN、s3:GetObject は**オブジェクトARN（/*付き）**に対する権限です。両方のResourceを書き忘れるのが典型的な失敗です。"
+      "text": "s3:ListBucket はバケットARN、s3:GetObject はオブジェクトARN（/*付き）に対する権限です。両方のResourceを書き忘れるのが典型的な失敗です。"
     },
     {
       "kind": "paragraph",
@@ -3205,7 +3205,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "**暗号化は「鍵があれば元に戻る」、マスキング・ハッシュ化は「元に戻さない／見せない」**という違いが重要です。"
+      "text": "暗号化は「鍵があれば元に戻る」、マスキング・ハッシュ化は「元に戻さない／見せない」という違いが重要です。"
     },
     {
       "kind": "paragraph",
@@ -3425,7 +3425,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "問12. 組織内の複数のマイクロサービス間で、**相互にクライアント証明書で認証（mTLS）**したい。内部用の証明書を発行・管理するのに適したサービスは？"
+      "text": "問12. 組織内の複数のマイクロサービス間で、相互にクライアント証明書で認証（mTLS）したい。内部用の証明書を発行・管理するのに適したサービスは？"
     },
     {
       "kind": "paragraph",

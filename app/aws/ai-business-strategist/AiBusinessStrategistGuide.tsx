@@ -1,0 +1,38 @@
+'use client';
+
+import { useState } from 'react';
+import type { ReactNode } from 'react';
+import { NavBar } from './NavBar';
+
+interface AiBusinessStrategistGuideProps {
+    children: ReactNode;
+}
+
+export const AiBusinessStrategistGuide = ({ children }: AiBusinessStrategistGuideProps) => {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setMenuOpen((prev) => !prev);
+    };
+
+    const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
+    return (
+        <div className={`aib-guide-page ${menuOpen ? 'menu-open' : ''}`}>
+            <button
+                className="menu-btn"
+                type="button"
+                aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
+                aria-expanded={menuOpen}
+                onClick={toggleMenu}
+            >
+                <span className="bars" />
+            </button>
+            <div className="backdrop" aria-hidden="true" onClick={closeMenu} />
+            <NavBar onLinkClick={closeMenu} />
+            <main>{children}</main>
+        </div>
+    );
+};

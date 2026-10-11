@@ -398,7 +398,7 @@ export function Step3() { return (<section className="section">
 {" "}
 <ul>
 {" "}
-<li>{"「EC2上のアプリにアクセスキーを配る」→ ほぼ常に"}<strong>{"誤り"}</strong>{"。**インスタンスプロファイル（ロール）**が正解。"}</li>
+<li>{"「EC2上のアプリにアクセスキーを配る」→ ほぼ常に"}<strong>{"誤り"}</strong>{"。"}<strong>{"インスタンスプロファイル（ロール）"}</strong>{"が正解。"}</li>
 {" "}
 <li>{"「ロールにはアクセスキーがある」→ "}<strong>{"誤り"}</strong>{"。引き受け時に一時認証情報が発行される。"}</li>
 {" "}

@@ -30,6 +30,13 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-ai-business-strategist-domain1': {
+        source: 'Aib-c01-domain1-ai-fundamentals-and-literacy.html',
+        sourceCommit: '7d2d35ec',
+        textSelector: 'main h1, main h2, main h3, main h4, main p, main li, main th, main td, main .kicker, main .pill',
+        tables: true,
+        inlineCode: true,
+    },
     'aws-dva-domain1-development': {
         source: 'Dva-c02-domain1-development-with-aws-services-guide.html',
         sourceCommit: '2c4c019d3fefca3eef92cd0d1d4b470a0de5ad54',
