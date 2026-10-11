@@ -389,11 +389,15 @@ flowchart TD
     B -->|"いいえ"| C["Organizations の SCP が許可しているか"]
     C -->|"いいえ"| X
     C -->|"はい"| D["権限境界やセッションポリシーの範囲内か"]
-    D -->|"いいえ"| X
+    D -->|"いいえ"| F["同一アカウントのリソースベースポリシーが<br/>引き受けたロールのセッション ARN を直接許可しているか"]
+    F -->|"はい (暗黙の Deny を越えて許可。明示的な Deny は B で評価済み)"| Y
+    F -->|"いいえ (ロール ARN への許可など)"| X
     D -->|"はい"| E["ID ベースまたはリソースベースのポリシーが許可しているか"]
     E -->|"いいえ"| X
     E -->|"はい"| Y["許可"]
 ```
+
+補足: 同一アカウント内で、リソースベースポリシーが引き受けたロールのセッション ARN (`arn:aws:sts::<アカウントID>:assumed-role/<ロール名>/<セッション名>`) に直接許可を与えている場合、権限境界による暗黙の Deny では制限されません。ロール ARN に対する許可は、従来どおり権限境界の範囲に制限されます。どちらの場合も明示的な Deny は優先されます。
 
 出典: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html
 
@@ -505,7 +509,7 @@ flowchart TD
 | 対象 | 保存時 | 転送時 |
 |---|---|---|
 | S3 | SSE-S3 (既定), SSE-KMS, DSSE-KMS, SSE-C | HTTPS を必須化 (バケットポリシーで `aws:SecureTransport`) |
-| EBS | KMS による暗号化 (アカウント単位で既定の暗号化を有効化可能) | インスタンス内部で完結 |
+| EBS | KMS による暗号化 (アカウント単位で既定の暗号化を有効化可能) | 暗号化ボリュームでは、インスタンスとボリュームの間を移動するデータも暗号化される |
 | RDS と Aurora | 作成時に KMS による暗号化を指定 (後から変更は不可) | SSL と TLS 接続を強制 |
 | DynamoDB | 既定で暗号化 (キーの種類を選択) | HTTPS |
 | 拠点間通信 | - | VPN (IPsec), MACsec, TLS |
@@ -679,7 +683,7 @@ flowchart LR
 | バックアッププラン | スケジュール、保持期間、ライフサイクル (コールドストレージへの移行) を定義 |
 | タグによる割り当て | タグが付いたリソースを自動的にバックアップ対象にする |
 | クロスリージョンとクロスアカウントコピー | 別リージョンや別アカウントにバックアップを複製して耐障害性を高める |
-| Backup Vault Lock | バックアップの削除や変更を禁止し、ランサムウェアや誤操作から保護 |
+| Backup Vault Lock | ガバナンスモードとコンプライアンスモードがある。ランサムウェア対策にはコンプライアンスモードを使う。猶予期間 (グレースタイム) の終了後に変更不可となり、ルートユーザーや AWS でも解除できない。保持期間が終わるまで復旧ポイントを削除できず、そのストレージコストも払い続ける |
 | Organizations との統合 | バックアップポリシーを組織全体に適用 |
 | 復元テスト | 復元できることを定期的に自動検証 |
 
@@ -707,7 +711,7 @@ flowchart LR
 | RTO が数時間でコストを最小にしたい | ウォームスタンバイやマルチサイト | バックアップと復元 |
 | RPO がほぼゼロでリージョン障害にも備える | 日次スナップショットのコピー | Aurora Global Database や DynamoDB グローバルテーブルなどの継続的レプリケーション |
 | RDS の高可用性 | リードレプリカ | Multi-AZ 配置 (リードレプリカは非同期で自動フェイルオーバーが目的ではない) |
-| ランサムウェア対策 | 同一アカウントの通常バックアップ | 別アカウントへのコピーと Backup Vault Lock |
+| ランサムウェア対策 | 同一アカウントの通常バックアップ | 別アカウントへのコピーと Backup Vault Lock (コンプライアンスモード。猶予期間後に変更不可となり、保持期間中は削除できない) |
 | オンプレミスサーバーの DR を低コストで | 常時フル構成を AWS に用意 | AWS Elastic Disaster Recovery |
 
 ---
@@ -772,7 +776,12 @@ flowchart LR
     {
       "Sid": "DenyOutsideAllowedRegions",
       "Effect": "Deny",
-      "NotAction": ["iam:*", "organizations:*", "support:*", "sts:*"],
+      "NotAction": [
+        "iam:*", "organizations:*", "support:*", "sts:*",
+        "cloudfront:*", "route53:*", "route53domains:*", "waf:*", "wafv2:*",
+        "globalaccelerator:*", "budgets:*", "ce:*", "cur:*", "health:*",
+        "trustedadvisor:*", "s3:ListAllMyBuckets"
+      ],
       "Resource": "*",
       "Condition": {
         "StringNotEquals": {
@@ -783,6 +792,8 @@ flowchart LR
   ]
 }
 ```
+
+注意: `NotAction` の除外リストは代表例です。グローバルサービスのアクションは利用するサービスに応じてサービスごとの例外追加が必要なため、AWS 公式のリージョン制限 SCP の例を参照して網羅性を確認してください。
 
 出典:
 - https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html
@@ -1122,7 +1133,7 @@ flowchart LR
 | 低コストの DR、データは常時複製 | パイロットライト |
 | ほぼ即時の切り替え | マルチサイト Active/Active |
 | オンプレミスサーバーの DR | AWS Elastic Disaster Recovery |
-| バックアップの改ざん防止 | AWS Backup の Vault Lock と別アカウントへのコピー |
+| バックアップの改ざん防止 | AWS Backup の Vault Lock (コンプライアンスモード。猶予期間後に変更不可、保持期間中は削除不可) と別アカウントへのコピー |
 | 標準化したマルチアカウントを素早く構築 | AWS Control Tower |
 | サブネットを複数アカウントで共有 | AWS RAM の VPC 共有 |
 | コストをタグで部門に配賦 | コスト配分タグの有効化、Cost Categories |
