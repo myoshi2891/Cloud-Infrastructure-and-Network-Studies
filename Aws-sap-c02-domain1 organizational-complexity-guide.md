@@ -815,7 +815,8 @@ AWS のホワイトペーパー「Organizing Your AWS Environment Using Multiple
 
 ```mermaid
 flowchart TD
-    R["Root 管理アカウント"] --> S["Security OU"]
+    R["Root (組織の最上位コンテナ)"] --> M["管理アカウント"]
+    R --> S["Security OU"]
     R --> I["Infrastructure OU"]
     R --> W["Workloads OU"]
     R --> X["Sandbox OU"]
