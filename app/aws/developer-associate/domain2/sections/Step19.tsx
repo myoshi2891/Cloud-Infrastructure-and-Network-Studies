@@ -306,7 +306,7 @@ export function Step19() { return (<section className="section">
 {" "}
 <ul>
 {" "}
-<li>{"アプリは常に**"}<code>{"AWSCURRENT"}</code>{"**を取得すれば、最新の値を使えます。"}</li>
+<li>{"アプリは常に"}<strong><code>{"AWSCURRENT"}</code></strong>{"を取得すれば、最新の値を使えます。"}</li>
 {" "}
 <li>{"ローテーションが有効でも、"}<strong>{"キャッシュした古い値を使い続けない"}</strong>{"ようにアプリを作ります。"}</li>
 {" "}
@@ -485,7 +485,7 @@ export function Step19() { return (<section className="section">
 
 <td>{"最新のシークレットを取得"}</td>
 
-<td>{"ステージングラベル**"}<code>{"AWSCURRENT"}</code>{"**"}</td>
+<td>{"ステージングラベル"}<strong><code>{"AWSCURRENT"}</code></strong></td>
 
 </tr>
 

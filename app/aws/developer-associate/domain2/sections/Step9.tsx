@@ -223,7 +223,7 @@ export function Step9() { return (<section className="section">
 
 <td>{"2"}</td>
 
-<td>{"AWS内ではまず**IAM認証（SigV4）**を検討（秘密情報の管理が不要）"}</td>
+<td>{"AWS内ではまず"}<strong>{"IAM認証（SigV4）"}</strong>{"を検討（秘密情報の管理が不要）"}</td>
 
 </tr>
 

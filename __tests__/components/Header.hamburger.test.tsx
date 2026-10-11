@@ -122,12 +122,27 @@ describe('Header ドロワー内 NavTree 描画', () => {
         const awsHeading = within(dialog).getByRole('heading', { name: 'Amazon Web Services' });
         const awsSection = awsHeading.closest('section');
         expect(awsSection).not.toBeNull();
-        const awsScope = within(awsSection as HTMLElement);
-        expect(awsScope.getByRole('link', { name: /概要/ })).toHaveAttribute('href', '/aws/solutions-architect-associate');
-        expect(awsScope.getByRole('link', { name: /ドメイン1: セキュアなアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain1');
-        expect(awsScope.getByRole('link', { name: /ドメイン2: 回復力のあるアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain2');
-        expect(awsScope.getByRole('link', { name: /ドメイン3: 高性能なアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain3');
-        expect(awsScope.getByRole('link', { name: /ドメイン4: コスト最適化アーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain4');
+        const saaSummary = within(awsSection as HTMLElement).getByText('AWS Certified Solutions Architect – Associate');
+        const saaDetails = saaSummary.closest('details');
+        expect(saaDetails).not.toBeNull();
+        const saaScope = within(saaDetails as HTMLElement);
+        expect(saaScope.getByRole('link', { name: /概要/ })).toHaveAttribute('href', '/aws/solutions-architect-associate');
+        expect(saaScope.getByRole('link', { name: /ドメイン1: セキュアなアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain1');
+        expect(saaScope.getByRole('link', { name: /ドメイン2: 回復力のあるアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain2');
+        expect(saaScope.getByRole('link', { name: /ドメイン3: 高性能なアーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain3');
+        expect(saaScope.getByRole('link', { name: /ドメイン4: コスト最適化アーキテクチャの設計/ })).toHaveAttribute('href', '/aws/solutions-architect-associate/domain4');
+    });
+
+    it('AWS AIB アコーディオン内に Domain 1 リンク（/aws/ai-business-strategist/domain1）が存在すること', async () => {
+        const { dialog } = await openDrawer();
+        const awsHeading = within(dialog).getByRole('heading', { name: 'Amazon Web Services' });
+        const awsSection = awsHeading.closest('section');
+        expect(awsSection).not.toBeNull();
+        const aibSummary = within(awsSection as HTMLElement).getByText('AWS Certified AI Business Strategist');
+        const aibDetails = aibSummary.closest('details');
+        expect(aibDetails).not.toBeNull();
+        const aibScope = within(aibDetails as HTMLElement);
+        expect(aibScope.getByRole('link', { name: /Domain 1: AI Fundamentals and Literacy/ })).toHaveAttribute('href', '/aws/ai-business-strategist/domain1');
     });
 
     it('Escape キーで Drawer が閉じること', async () => {

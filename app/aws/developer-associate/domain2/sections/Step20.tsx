@@ -69,7 +69,7 @@ export function Step20() { return (<section className="section">
 
 <td><strong>{"トークン化"}</strong></td>
 
-<td>{"機密値を**無意味な代替値（トークン）**に置換し、本物は別の安全な場所に保管"}</td>
+<td>{"機密値を"}<strong>{"無意味な代替値（トークン）"}</strong>{"に置換し、本物は別の安全な場所に保管"}</td>
 
 <td>{"カード番号→トークン"}</td>
 
@@ -110,7 +110,7 @@ export function Step20() { return (<section className="section">
 </table>
 </div>
 {" "}
-<blockquote>{" "}<p>{"**暗号化は「鍵があれば元に戻る」、マスキング・ハッシュ化は「元に戻さない／見せない」**という違いが重要です。"}</p>{" "}</blockquote>
+<blockquote>{" "}<p><strong>{"暗号化は「鍵があれば元に戻る」、マスキング・ハッシュ化は「元に戻さない／見せない」"}</strong>{"という違いが重要です。"}</p>{" "}</blockquote>
 {" "}
 <h3>{"20-2 機密データが漏れる主な経路"}</h3>
 {" "}

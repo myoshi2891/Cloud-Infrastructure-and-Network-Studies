@@ -9,7 +9,7 @@ description: >
 
 # Mermaid 構文・描画修正スキル
 
-(最終更新日: 2026-10-02)
+(最終更新日: 2026-10-10)
 
 ## 前提バージョンと正準実装（推測禁止）
 
@@ -481,6 +481,7 @@ vi.mock('@/components/MermaidDiagram', () => ({
 | ノード文字が**右端**で切れる（emoji を含む図のみ。emoji 無しの図は無傷＝切り分けの目印） | `<foreignObject>` は SVG 仕様上 **`overflow:hidden` がデフォルト**。emoji はラベル採寸時に「豆腐(tofu)」幅で測られ実描画で広がるため `foreignObject 幅 < 実テキスト幅` となりクリップ | CSS で `.mermaidTarget foreignObject { overflow: visible }`（ノード矩形は十分広く、はみ出した文字も枠内に収まる） |
 | 文字色を変えても**全く反映されない** | `mermaid.initialize()` はモジュール最上位で**一度だけ**実行されるため HMR では再実行されず古いテーマのまま。加えて `*.module.css` 変更後の `.next` キャッシュ汚染 | `.next` 削除 + dev サーバー完全再起動 + ブラウザのハードリロード（後述） |
 | 日本語ラベルの幅不足による軽微な切れ | Web フォント（Noto Sans JP）読込前に採寸 | `mermaid.render()` 直前に `await document.fonts.ready`（jsdom 等は型ガードで skip） |
+| 原本が白背景・ライトテーマなのに、移行先で図が真っ黒な背景ボックスになりダークモード描画される | `MermaidDiagram` の既定値が `theme:'dark'` かつ `.mermaidWrapper` が `background: var(--color-background)`（暗色）を持つ。さらに `.mermaidTarget` がノード文字を白に強制 | `theme="light"` + `preserveChartTheme={true}` + 原本の `mermaid-theme.json` を config frontmatter で前置し、ページ CSS で `> [role="img"]` を透過リセット（下記） |
 
 ### 正準の `mermaid.initialize` 設定（v11、`apply_render_pipeline.mjs` が踏襲）
 
@@ -647,6 +648,103 @@ const applySvgFixups = (
 ```
 
 > `.edgeLabel *` に `fill:#fff` を当てない。エッジラベルの背景 `rect` が白く塗り潰される。色を当てるのは**ラベルテキストのみ・`color` のみ**に留める。
+
+### ライトテーマ・原本配色保持（preserveChartTheme）の完全移行パターン
+
+原本 HTML が白背景・ライトテーマ（例: AWS AIB-C01、DVA-C02、Professional Agentic Architect）の場合、共通コンポーネント `MermaidDiagram` は既定値が `theme: 'dark'`（黒背景・白文字）であり、かつラッパー `.mermaidWrapper` が `background: var(--color-background);`（暗色背景）を持つため、**無指定のまま移行すると白背景のカード内に真っ黒な矩形ボックスが出現し、ノード文字も白に反転して原本デザインが破壊される**。
+
+原本がライトテーマの教材では、以下の**3点セット**を必ず適用して原本配色を100%忠実に復元する：
+
+#### 1. 原本の初期化設定を `mermaid-theme.json` として抽出
+
+原本 HTML の `<script>` に定義されている `mermaid.initialize` の設定値（`theme: 'base'` や `themeVariables`）を抽出し、同一ディレクトリに `mermaid-theme.json` として配置する。
+
+```json
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "15px",
+    "background": "#ffffff",
+    "primaryColor": "#eef0fd",
+    "primaryTextColor": "#2b2620",
+    "primaryBorderColor": "#4338ca",
+    "lineColor": "#9a93c9",
+    "secondaryColor": "#f3f0e8",
+    "tertiaryColor": "#f3f0e8",
+    "edgeLabelBackground": "#ffffff",
+    "clusterBkg": "#f3f0e8",
+    "clusterBorder": "#c7d2fe",
+    "nodeTextColor": "#2b2620"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "nodeSpacing": 55,
+    "rankSpacing": 50,
+    "curve": "basis"
+  }
+}
+```
+
+#### 2. `Diagram.tsx` で config frontmatter 前置と属性指定
+
+`Diagram.tsx` で `mermaid-theme.json` を読み込み、Mermaid の config frontmatter（`---\nconfig: ...\n---`）として DSL 先頭へ前置する。`%%{init: ...}%%` ディレクティブは非推奨のため使わない。frontmatter は DSL の**先頭行**にある場合のみ解釈される。さらに `MermaidDiagram` へ **`theme="light"`** と **`preserveChartTheme={true}`** を渡す。
+
+`preserveChartTheme={true}` を指定することで、共通 CSS（`MermaidDiagram.module.css`）の `.mermaidTarget` による強制白文字ルール（`.node .nodeLabel { color: #ffffff !important; }`）が除外され、`.sourceThemeTarget` 経由で原本の淡色ノード・濃色文字がそのまま出力される。
+
+```tsx
+import sourceTheme from './mermaid-theme.json';
+
+// JSON は YAML のフロー形式として有効なので、そのまま config: の値に使える
+const SOURCE_THEME_FRONTMATTER = `---\nconfig: ${JSON.stringify({
+    ...sourceTheme,
+    themeVariables: {
+        ...sourceTheme.themeVariables,
+        fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif',
+    },
+})}\n---\n`;
+
+export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
+    const chart = DIAGRAMS[id];
+    if (!chart) return null;
+    return (
+        <div className="diagram" data-mermaid-id={id} aria-label={label} data-preserve-natural-scale="true">
+            <MermaidDiagram
+                chart={SOURCE_THEME_FRONTMATTER + chart}
+                theme="light"
+                preserveChartTheme={true}
+                ariaLabel={label}
+                preserveNaturalScale={true}
+            />
+        </div>
+    );
+});
+```
+
+#### 3. ページ CSS で `> [role="img"]` を透過リセット
+
+外側のカード（`.diagram` や `.diagram-wrap`）に対し、MermaidDiagram が描画する外枠 `> [role="img"]`（`.mermaidWrapper`）の暗色背景・枠線・余白をリセットし、親カードの白背景に自然に馴染ませる。
+
+```css
+/* svg は max-width:none で自然幅を保つため、狭い画面では親カードを横スクロールさせて図を読めるようにする */
+.diagram {
+    overflow-x: auto;
+}
+
+.diagram > [role="img"] {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.diagram svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+```
 
 ### 完了確認（自動検証・順序厳守）
 
