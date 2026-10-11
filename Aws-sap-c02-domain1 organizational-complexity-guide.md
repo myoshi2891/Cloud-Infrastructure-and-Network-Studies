@@ -183,7 +183,7 @@ flowchart TD
 
 | 方式 | 特徴 | 向いているケース | 注意点 |
 |---|---|---|---|
-| Site-to-Site VPN | インターネット経由の IPsec。1接続に2本のトンネル | 早く安く始めたい。バックアップ回線 | 帯域はトンネルあたり約1.25 Gbps が上限。インターネット品質に依存 |
+| Site-to-Site VPN | インターネット経由の IPsec。1接続に2本のトンネル | 早く安く始めたい。バックアップ回線 | 標準トンネルの帯域は1本あたり約1.25 Gbps が上限。Transit Gateway または Cloud WAN にアタッチした接続では Large Bandwidth Tunnels により1本あたり最大5 Gbps。インターネット品質に依存 |
 | AWS Direct Connect | 専用線でAWSに接続 | 安定した帯域と低遅延、大容量転送 | 開通に時間がかかる。標準では暗号化されない |
 | Direct Connect + VPN | 専用線上で IPsec を重ねる | 専用線でも暗号化が必須の要件 | 構成が複雑になる。MACsec という選択肢もある |
 | Client VPN | 利用者端末向けの VPN | リモートワーカーの接続 | 拠点間接続ではない |
@@ -855,10 +855,11 @@ AWS Control Tower は、Organizations と関連サービスを使って、ベス
 ```mermaid
 flowchart LR
     A["全メンバーアカウント"] --> B["CloudTrail 組織の証跡"]
-    A --> C["AWS Config アグリゲーター"]
+    A --> C["AWS Config 配信チャネル"]
+    A --> J["AWS Config アグリゲーター<br/>読み取り専用の集約ビュー"]
     A --> D["VPC Flow Logs と CloudWatch Logs"]
     B --> E["ログアーカイブアカウントの S3"]
-    C --> E
+    C -->|"設定履歴とスナップショット"| E
     D --> E
     E --> F["Athena や OpenSearch で分析"]
     A --> G["EventBridge のイベントバス"]
@@ -1027,7 +1028,7 @@ flowchart TD
 |---|---|
 | 1. タグ設計 | 必須タグのキーと値のルールを決める (例: CostCenter, Project, Environment, Owner) |
 | 2. 有効化 | 請求コンソールで「コスト配分タグ」を有効化する。有効化後に反映まで時間がかかり、過去分には遡って適用されない |
-| 3. 強制 | タグポリシーで形式を統一し、SCP や AWS Config ルールで必須タグの付与を強制する |
+| 3. 強制 | タグポリシーで形式を統一する。SCP の条件キーで対応するリソース作成リクエストをタグなしなら拒否し、AWS Config の required-tags ルールで未タグのリソースを検出して修復する |
 | 4. 分析 | Cost Explorer、CUR、Cost Categories でタグ別に集計する |
 | 5. 運用 | 未タグのリソースを定期的に検出して修正する |
 
@@ -1049,7 +1050,7 @@ flowchart LR
 
 重要な注意点:
 
-- タグポリシーは、タグの形式を標準化するもので、タグの付与そのものを自動で必須化するわけではない。必須化には SCP や Config ルールを使う
+- タグポリシーは、タグの形式を標準化するもので、タグの付与そのものを自動で必須化するわけではない。作成時の拒否には SCP の条件キーを使い (対応するリソースのみ)、作成後の検出と修復には Config の required-tags ルールを使う
 - アカウントを事業部門ごとに分ける設計は、タグよりも確実なコスト分離になる (Task 1.4 と連動)
 - タグ付けできないコストや共有コストは、Cost Categories などで按分のルールを設ける
 
@@ -1096,7 +1097,7 @@ flowchart LR
 | 中断できない本番 DB のコスト削減 | スポットインスタンス | RI や Savings Plans |
 | インスタンスファミリーを変える予定がある | EC2 Instance Savings Plans やスタンダード RI | Compute Savings Plans やコンバーティブル RI |
 | タグ別にコストを見たい | タグを付けただけ | コスト配分タグの有効化も必要 (遡及適用はされない) |
-| 全タグの付与を必須にしたい | タグポリシーのみ | SCP や Config ルールで強制 |
+| 全タグの付与を必須にしたい | タグポリシーのみ | SCP で作成時に拒否し、Config ルールで検出と修復 |
 | 予算超過時に自動で停止したい | 通知のみ | Budgets の予算アクション |
 | リソース単位の最も詳細な分析 | Cost Explorer のみ | Cost and Usage Report と Athena |
 
