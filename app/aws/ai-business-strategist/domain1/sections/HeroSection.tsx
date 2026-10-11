@@ -23,7 +23,7 @@ export function HeroSection() {
                     Literacy (AI の基礎とリテラシー)」の全 3 タスク・13 スキル<br />{' '}
                     <strong>情報の確認日</strong>: 2026-09-28
                     (試験はベータ提供中のため、内容や試験時間は変更される可能性があります。受験前に必ず公式ページで最新情報を確認してください)<br />{' '}
-                    <strong>図表のルール</strong>: フローチャートは Mermaid、表は Markdown
+                    <strong>図表のルール</strong>: フローチャートは Mermaid、表は HTML
                     で記述しています
                 </p>
             </blockquote>
