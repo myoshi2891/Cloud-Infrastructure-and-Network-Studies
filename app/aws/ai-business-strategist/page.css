@@ -2,9 +2,13 @@
     box-sizing: border-box;
 }
 
+/* アンカー移動は文書スクロール（html）で発生するため、補正値はスクロールコンテナ側に置く */
+html:has(.aib-guide-page) {
+    scroll-padding-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
 .aib-guide-page {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
     margin: 0;
     background: var(--color-aib-bg);
     color: var(--color-aib-text);
@@ -304,7 +308,6 @@
 .aib-guide-page figure.diagram svg {
     display: inline-block;
     height: auto;
-    max-width: 100%;
 }
 
 /* ---------- quiz cards ---------- */
