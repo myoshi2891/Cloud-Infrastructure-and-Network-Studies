@@ -237,7 +237,7 @@ describe('DVA Deployment CSS全宣言・点・番号', () => {
         expect(values['--font-dva-serif']).toContain('Source Serif 4 Variable');
         expect(readFileSync(`${route}/page.tsx`, 'utf8')).toContain('@fontsource-variable/source-serif-4/index.css');
         const rules = snapshotCssRules(source);
-        expect(rules.every(rule => rule.selector.split(',').every(selector => selector.trim().startsWith('.dva-deployment-page')))).toBe(true);
+        expect(rules.every(rule => postcss.list.comma(rule.selector).every(selector => selector.trim().startsWith('.dva-deployment-page')))).toBe(true);
         expect(rules.flatMap(r => r.declarations).some(d => d.prop.startsWith('--'))).toBe(false);
         expect(rules.find(r => r.selector === '.dva-deployment-page .sidebar' && !r.media)?.declarations).toContainEqual({ prop: 'width', value: '290px', important: false });
         expect(source).not.toContain('@layer');
