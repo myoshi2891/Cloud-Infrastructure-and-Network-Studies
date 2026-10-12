@@ -3,10 +3,22 @@ import { memo } from 'react';
 import { NavBar } from './NavBar';
 import { S1 } from './sections/S1';
 import { S2 } from './sections/S2';
+import { S3 } from './sections/S3';
+import { S4 } from './sections/S4';
+import { S5 } from './sections/S5';
+import { S6 } from './sections/S6';
+import { S7 } from './sections/S7';
+import { S8 } from './sections/S8';
 /** チェック・現在地の更新から独立した静的本文。 */
 const GuideContents = memo(function GuideContents() { return <>
     <S1 />
     <S2 />
+    <S3 />
+    <S4 />
+    <S5 />
+    <S6 />
+    <S7 />
+    <S8 />
 </>; });
 /** 原本のhero・33節・footerを保持するデプロイ教材。 */
 export function DeploymentGuide() { return <div className="dva-deployment-page"><NavBar /><main>
