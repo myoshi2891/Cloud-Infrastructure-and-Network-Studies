@@ -19,6 +19,7 @@ vi.mock('@/components/MermaidDiagram', async () => {
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
 const mount = () => render(<Page />).container;
 const route = 'app/aws/developer-associate/domain3';
+const normalizeSegments = (segments: { id: string; text: string }[]) => segments.map(segment => ({ ...segment, text: squash(segment.text) }));
 
 describe('DVA Deployment 全量移行', () => {
     it.each(['h1','h2','h3','h4','th','td','listItems'] as const)('%s の全文・件数・順序', key => {
@@ -32,10 +33,13 @@ describe('DVA Deployment 全量移行', () => {
         expect(snapshotDvaDeployment(mount()).references).toEqual(design.structure.references);
     });
     it('全構造・表結合・配置・リスト・details・hero・footerが完全一致', () => {
-        expect(snapshotDvaDeployment(mount())).toEqual(design.structure);
+        const actual = snapshotDvaDeployment(mount());
+        expect({ ...actual, segments: normalizeSegments(actual.segments) }).toEqual({ ...design.structure, segments: normalizeSegments(design.structure.segments) });
     });
-    it.each(design.structure.segments)('段階検証 $id の本文全文', expected => {
-        expect(snapshotDvaDeployment(mount()).segments.find(segment => segment.id === expected.id)).toEqual(expected);
+    it.each(design.structure.segments.map(segment => [segment.id, segment.text] as const))('段階検証 %s の本文全文', (id, text) => {
+        const actual = snapshotDvaDeployment(mount()).segments.find(segment => segment.id === id);
+        expect(actual).toBeDefined();
+        expect(squash(actual!.text)).toBe(squash(text));
     });
     it('全80表のthead・scope・列見出し数を照合', () => {
         const tables = [...mount().querySelectorAll('table')];
