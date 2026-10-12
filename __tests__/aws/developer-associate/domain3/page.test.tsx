@@ -83,7 +83,7 @@ describe('DVA Deployment 全量移行', () => {
         for (const language of ['yaml', 'json', 'python', 'bash', 'dockerfile', 'toml']) {
             expect(root.querySelector(`[data-language="${language}"] [class^="hljs-"]`), language).not.toBeNull();
         }
-        root.querySelectorAll('[data-language="text"]').forEach(el => expect(el.querySelector('[class^="hljs-"]')).toBeNull());
+        root.querySelectorAll('[data-language="text"]').forEach(el => { expect(el.querySelector('[class^="hljs-"]')).toBeNull(); });
     });
     it('番号再開 start=4 と入れ子・全リストの種類を保持', () => {
         const root = mount();
@@ -116,7 +116,7 @@ describe('DVA Deployment 全量移行', () => {
         expect(root.querySelector('.cl-done')).not.toHaveAttribute('hidden');
         fireEvent.click(checks[0]!);
         expect(root.querySelector('.cl-done')).toHaveAttribute('hidden');
-        checks.slice(1).forEach(input => fireEvent.click(input));
+        checks.slice(1).forEach(input => { fireEvent.click(input); });
         expect(root.querySelectorAll('li.done')).toHaveLength(0);
         expect(root.querySelector('.cl-count')).toHaveTextContent('0 / 9');
     });
@@ -170,7 +170,7 @@ describe('DVA Deployment 全量移行', () => {
         // 実ブラウザ同様に非同期で積み、明示的に1フレーム進める
         const frames: FrameRequestCallback[] = [];
         vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => frames.push(cb));
-        const flushFrame = () => act(() => { frames.splice(0).forEach(cb => cb(0)); });
+        const flushFrame = () => act(() => { frames.splice(0).forEach(cb => { cb(0); }); });
         vi.stubGlobal('cancelAnimationFrame', vi.fn());
         const { container, unmount } = render(<Page />);
         expect(observe.mock.calls.map(call => (call[0] as HTMLElement).id)).toEqual(design.structure.anchors);
