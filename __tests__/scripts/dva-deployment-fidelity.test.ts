@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { snapshotDvaDeployment, deploymentSegments } from '@/scripts/dva-deployment-fidelity.mjs';
+import { snapshotDvaDeployment, deploymentSegments, extractDeploymentTheme } from '@/scripts/dva-deployment-fidelity.mjs';
 
 const source = `<nav class="sidebar"><a class="nav l1" href="#s1">Task 1</a><a class="nav l2" href="#s2">Step 1</a></nav><main><div class="content"><h1 id="s1">Task 1</h1><p>準備 <strong>必須</strong></p><h2 id="s2">Step 1</h2><ol start="4"><li>四番</li></ol><div class="diagram-wrap"><div class="diagram-canvas" data-id="d0"></div></div><pre><code class="language-yaml">a: 1\n\n  b: 2</code></pre><details><summary>回答</summary><p>説明</p></details><section class="refs"><a class="ref" href="https://example.org">参照</a></section></div></main>`;
 const document = (html: string) => new JSDOM(html).window.document;
 
 describe('DVA Deployment fixture抽出契約', () => {
+    it('初期化設定をJavaScript実行なしで抽出する', () => {
+        expect(extractDeploymentTheme(`<script>mermaid.initialize({theme:'base',startOnLoad:false,flowchart:{htmlLabels:true},themeVariables:{fontSize:'16px'}});</script>`)).toEqual({ theme: 'base', startOnLoad: false, flowchart: { htmlLabels: true }, themeVariables: { fontSize: '16px' } });
+    });
+    it('実行可能な式を含む設定を拒否する', () => {
+        expect(() => extractDeploymentTheme('<script>mermaid.initialize({theme:run()});</script>')).toThrow('Nonliteral');
+    });
     it('h1とh2の区切りを同じ順序で保持する', () => {
         const root = document(source);
         expect(deploymentSegments(root).map(segment => segment.id)).toEqual(['s1', 's2']);
