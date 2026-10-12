@@ -100,7 +100,7 @@ if (stage === 'scaffold') {
                 if (!mapping[key]) throw new Error(`Unmapped ${key}`);
                 return `var(${mapping[key]})`;
             });
-            if (!original.includes('.hljs')) decl.value = decl.value.replace(/#[\da-f]{3,6}\b/gi, hex => `var(${tokenFor(hex)})`);
+            decl.value = decl.value.replace(/#[\da-f]{3,6}\b/gi, hex => `var(${tokenFor(hex)})`);
             if (decl.prop === 'font-family') {
                 if (decl.value.includes('Source Serif 4')) decl.value = 'var(--font-dva-serif)';
                 else if (decl.value.includes('Noto Sans JP')) decl.value = 'var(--font-body)';
