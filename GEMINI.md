@@ -1,6 +1,6 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-07
+Updated 2026-10-12
 
 このプロジェクトは、Google Cloud / AWS / Cisco / CompTIA のクラウド・ネットワーク資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』など）の解説を目的とした学習用 Next.js アプリケーションです。
 試験ガイド、重要ポイントの解説、およびテスト対策コンテンツを提供します。
@@ -26,6 +26,7 @@ Updated 2026-10-07
 - **Security テスト実行:** `bun run test:security` (`bun audit --json` を [scripts/security-audit.mjs](scripts/security-audit.mjs) が集計し、high/critical 検出で exit 1)
 - **Performance 手動レポート:** `bun run build && bun run perf:report` (`@lhci/cli` autorun → `.lighthouseci/` に HTML/JSON 出力)
 - **Lint 実行:** `bun run lint`
+- **DVAデプロイ欠落検出:** `bun scripts/check-dva-deployment-mutations.mjs`（本文・表行・図・点・継続番号の5変異を検出し原状復元）
 - **Markdown lint 実行:** `bun run markdownlint -- path/to/file.md`
 - **Docker 一括リビルド:** `bun run docker:rebuild`（コンテナ停止 → 本番イメージ作成 → 開発コンテナ再構築・起動）
 - **ゾンビプロセス診断:** `bun run test:check-zombies`（`bun test` 誤用・長時間ハングプロセス・`while true` 残骸ループを自動検出。異常を感じたら最初に実行する）
@@ -64,6 +65,7 @@ Updated 2026-10-07
   - `/app/aws/cloudops-engineer-associate`: AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド（全5ドメイン・13タスク・53スキル、Mermaid 68図、テーブル206点、コードブロック10点、練習問題20問完全収録、280pxサイドバー契約）。
   - `/app/aws/developer-associate/domain1`: DVA-C02 AWSサービスを使用した開発。Server `page.tsx`、Client `DevelopmentGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`mermaid-theme.json`、`CodeBlock.tsx`、`page.css`、38分割セクション。29スキル・116表・31図・18コード・363リスト項目（目次38項目を含む）・15練習問題を全文移行。原本ライト配色・Source Serif 4・288px幅を保持し、本文・表・コード・目次・図は14px。自己ホストTablerアイコン、点・番号・入れ子、native detailsを保持。コードのコメント・属性色は14pxでのコントラストを改善。ホーム・Headerに両DVAドメインを登録。
   - `/app/aws/developer-associate/domain2`: DVA-C02 セキュリティ。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、`sections/`。110表・35図・40コード・20チェック・26目次、点と番号の装飾を全量移行。原本のライト配色・Source Serif 4・300pxサイドバーを保持。ユーザー指定で本文・表・コード・目次・図は14px（0.875rem、ルート1rem=16px）、見出しも縮小。`mermaid-theme.json` と `preserveChartTheme` で図の原本配色も保持。
+  - `/app/aws/developer-associate/domain3`: DVA-C02 デプロイ。Server `page.tsx`、Client `DeploymentGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`mermaid-theme.json`、`CodeBlock.tsx`、`Checklist.tsx`、`page.css`、33分割セクション。80表・39図・32コード・63リスト項目・137外部リンク・135本文ブロックを全文移行。原本ライト配色・Source Serif 4・290pxサイドバーを保持し、本文・表・コード・目次・図は14px。点・番号・`ol start=4`、9チェック、10解説を保持。原本の独立解決済み派生色を注入し、共通dark設定による黒塗りを防止。実Mermaidパーサー40件で配色・構文を検証。構文ハイライトはユーザー指定により近似色で実装し、追加依存なし。
   - `/app/aws/ai-business-strategist`: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、8分割セクション。全4ドメイン・横断編・試験対策・付録A〜C（82表・16図・236リスト項目・112外部リンク・134本文ブロック）完全収録、280pxサイドバー契約、ライトテーマデザイン完全再現。
   - `/app/aws/ai-business-strategist/domain1`: AWS Certified AI Business Strategist (AIB-C01) Domain 1: AI Fundamentals and Literacy 完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistDomain1Guide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、19分割セクション。全3タスク・13スキル・付録A〜E（55表・16図・150リスト項目・86外部リンク・99本文ブロック）完全収録、300pxサイドバー、ライトテーマデザイン完全再現。
   - `/app/recommended-books/accelerate`: 『Accelerate』LeanとDevOpsの科学 完全ガイド（DORA 5指標、24の能力、Westrum組織文化モデル、AI支援開発時代の最新知見）。
@@ -83,7 +85,7 @@ Updated 2026-10-07
   - `/app/recommended-books/tcpip-illustrated-vol1`: 『TCP/IP Illustrated, Volume 1: The Protocols（第2版）』完全解説ガイド（W. Richard Stevens, Kevin R. Fall 原著、全20部+付録構成、Mermaid 35図、テーブル22点、コードブロック16点、チェックリスト10点、参考文献15点）。
   - `/app/cli`: CLIコマンド実践ワンライナー集（基礎知識・パイプライン・主要コマンド・シナリオ・ベストプラクティス・リファレンス全15セクション完全解説ガイド、Mermaid 7図）。
 - `/app/constants.ts`: 試験データ正本（`ALL_EXAMS` / `STATS`）。編集対象は `ALL_EXAMS` で、公開値 `EXAMS` は `HANDS_ON_ENABLED` フラグで `ALL_EXAMS` をフィルタした派生値（直接編集しない）。`provider: 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools'` で分類され、`toNavTree` が自動グルーピング。
-- AWS: `app/aws/` 配下（`solutions-architect-associate/page.tsx` 完全対策ガイド、`solutions-architect-associate/domain1/page.tsx` ドメイン1ガイド、`solutions-architect-associate/domain2/page.tsx` ドメイン2ガイド、`solutions-architect-associate/domain3/page.tsx` ドメイン3ガイド、`solutions-architect-associate/domain4/page.tsx` ドメイン4ガイド、`cloudops-engineer-associate/page.tsx` 完全対策ガイド、`developer-associate/domain1/page.tsx` DVA-C02開発、`developer-associate/domain2/page.tsx` DVA-C02セキュリティ、`ai-business-strategist/page.tsx` AIB-C01初学者向け完全ガイド、`ai-business-strategist/domain1/page.tsx` AIB-C01ドメイン1）
+- AWS: `app/aws/` 配下（`solutions-architect-associate/page.tsx` 完全対策ガイド、`solutions-architect-associate/domain1/page.tsx` ドメイン1ガイド、`solutions-architect-associate/domain2/page.tsx` ドメイン2ガイド、`solutions-architect-associate/domain3/page.tsx` ドメイン3ガイド、`solutions-architect-associate/domain4/page.tsx` ドメイン4ガイド、`cloudops-engineer-associate/page.tsx` 完全対策ガイド、`developer-associate/domain1/page.tsx` DVA-C02開発、`developer-associate/domain2/page.tsx` DVA-C02セキュリティ、`developer-associate/domain3/page.tsx` DVA-C02デプロイ、`ai-business-strategist/page.tsx` AIB-C01初学者向け完全ガイド、`ai-business-strategist/domain1/page.tsx` AIB-C01ドメイン1）
 - Cisco: `app/cisco/` 配下（`ccna/beginner-guide/page.tsx` 完全ガイド、`ccna/automation-software-development-design/page.tsx`、`ccna/automation-application-deployment-security/page.tsx`、`ccna/automation-cisco-platforms-and-development/page.tsx`、`ccna/automation-infrastructure-and-automation/page.tsx`、`ccna/ip-connectivity-guide/page.tsx`、`ccna/ip-services-guide/page.tsx`、`ccna/automation-programmability/page.tsx` 含む）
 - `/components`: 共通コンポーネント（Header: ハンバーガー Drawer ナビ、Footer、DisclaimerBanner など）。
 - `/__tests__`: Vitest によるユニットテスト。`restore_diagrams.test.ts` はスキル配下から標準実行へ追加される。
@@ -118,7 +120,7 @@ Updated 2026-10-07
 - **コードブロック内の改行 (`.code-block`)**: JSX変換時、コード内の改行に `{"\n"}` を使用せず、各行を `<div className="code-line">...</div>` でラップしてください。`.code-line` は `white-space: pre` 等でインデントを保持し、`map` での展開時には安定した `key` を付与してください。
 - **表形式データの構造化**: テキストのスペース揃えで列を表現したデータは、フォント変更による列ズレを防ぐため、必ず `<table>` 要素に変換してください。その際、必ず `<thead>` を含め、見出しセルには `<th scope="col">` を使用してください。
 - **CSS変数・テーマトークンの適用**: `app/globals.css` の3層アーキテクチャ CSS 変数（`--color-background`, `--color-foreground`, `--color-card` など）を厳格に使用すること。テーマトークンと新しいテーマカラーはすべて同ファイルの `@theme` に集約し、ページ固有の CSS Modules は既存の `--color-*` トークンのみを参照する。コンポーネントの CSS 内で新しいカスタムプロパティ (`--*`) を定義したり、テーマごとのCSSファイルを追加・インポートしたりしない。
-- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一してください。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使用し、本文全体を再制限する `content-inner` 等の最大幅は設けません。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻します。DVA-C02ドメイン1は288px、ドメイン2は300pxの原本幅をユーザー指定により優先し、専用の移行テストで検証します。この共通契約は `__tests__/guide-content-widths.test.ts` で登録済み43スタイルシートを検証します。
+- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一してください。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使用し、本文全体を再制限する `content-inner` 等の最大幅は設けません。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻します。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証します。この共通契約は `__tests__/guide-content-widths.test.ts` で登録済み43スタイルシートを検証します。
 - **グローバルメニューの運用（データ駆動）**: ナビゲーションは `app/constants.ts` の `ALL_EXAMS` を正本とし（`EXAMS` はそこから派生する公開値）、`app/navigation.ts` の `toNavTree()` が provider 別グループを自動生成するため **`components/Header.tsx` は直接編集しない**。新試験追加時は `ALL_EXAMS` にエントリを追加し（`status: 'coming-soon'` → 完成後に省略）、`app/globals.css` に `icon-theme-<id>` を追加すれば Drawer に自動反映される。
 - ページコンポーネント（`page.tsx`）が巨大化するのを防ぐため、各セクションは必ず `components/sections/` に分割し、スタイリングには CSS Modules (`*.module.css`) を使用してください。セクション間で共通のスタイル（例: `SectionBase.module.css`）を利用する場合は、CSS 内での `@import` を避け、各 TSX ファイルから直接 `import baseStyles from './SectionBase.module.css'` のようにインポートして適用してください。
 - ASCIIダイアグラムの使用を避け、専用の SVG コンポーネント (`DiagramSVG.tsx` 等) に置き換えてください。型の制約（Discriminated Union）により、アクセシビリティを担保するための `ariaLabel="説明文"` または `decorative={true}` の指定が必須となります。
