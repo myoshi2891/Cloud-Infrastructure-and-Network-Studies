@@ -21,6 +21,16 @@ import { S17 } from './sections/S17';
 import { S18 } from './sections/S18';
 import { S19 } from './sections/S19';
 import { S20 } from './sections/S20';
+import { S21 } from './sections/S21';
+import { S22 } from './sections/S22';
+import { S23 } from './sections/S23';
+import { S24 } from './sections/S24';
+import { S25 } from './sections/S25';
+import { S26 } from './sections/S26';
+import { S27 } from './sections/S27';
+import { S28 } from './sections/S28';
+import { S29 } from './sections/S29';
+import { S30 } from './sections/S30';
 /** チェック・現在地の更新から独立した静的本文。 */
 const GuideContents = memo(function GuideContents() { return <>
     <S1 />
@@ -43,6 +53,16 @@ const GuideContents = memo(function GuideContents() { return <>
     <S18 />
     <S19 />
     <S20 />
+    <S21 />
+    <S22 />
+    <S23 />
+    <S24 />
+    <S25 />
+    <S26 />
+    <S27 />
+    <S28 />
+    <S29 />
+    <S30 />
 </>; });
 /** 原本のhero・33節・footerを保持するデプロイ教材。 */
 export function DeploymentGuide() { return <div className="dva-deployment-page"><NavBar /><main>
