@@ -22,7 +22,7 @@ export function S30() { return <>
 {" "}
 <CodeBlock index={30} language="bash" lines={["aws lambda add-permission \\","  --function-name orders:dev \\","  --statement-id apigw-dev \\","  --action lambda:InvokeFunction \\","  --principal apigateway.amazonaws.com \\","  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\""]} />
 {" "}
-<ol start="4">
+<ol start={4}>
 {" "}
 <li>{"Lambda（プロキシ統合）では "}<strong>{"イベントの "}<code>{"stageVariables"}</code></strong>{" から値を読めます。"}</li>
 {" "}

@@ -41,6 +41,10 @@ function jsx(node, checklist = false) {
     const tag = node.tagName.toLowerCase();
     const attrs = [...node.attributes].map(attr => {
         if (attr.name === 'style') throw new Error('Unhandled inline CSS');
+        if (['start','colspan','rowspan'].includes(attr.name)) {
+            const name = ({ start: 'start', colspan: 'colSpan', rowspan: 'rowSpan' })[attr.name];
+            return `${name}={${Number(attr.value)}}`;
+        }
         if (attr.name === 'hidden' && node.matches('.cl-done')) return 'hidden={checked.size !== CHECK_COUNT}';
         if (attr.name === 'class' && node.matches('li.chk')) return `className={checked.has(${inputs.indexOf(node.querySelector('input'))}) ? 'chk done' : 'chk'}`;
         const name = ({ class: 'className', for: 'htmlFor', colspan: 'colSpan', rowspan: 'rowSpan' })[attr.name] ?? attr.name;
