@@ -1,6 +1,42 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-09)
+(最終更新日: 2026-10-12)
+
+## 2026-10-12: AWS DVA-C02 ドメイン3デプロイのNext.js移行（実装完了・目視確認はユーザー担当）
+
+`Aws-dva-c02-domain3-deployment-guide.html` を `/aws/developer-associate/domain3` へ全量移行した。原本のライト配色・Source Serif 4・290pxサイドバーと装飾を保持し、ユーザー選択により本文・表・コード・目次・図は14px。Serverルート、Clientガイド、33分割セクション、目次、図、コード、9チェックの構成とし、ホーム・AWS Headerへデプロイ24%のリンクを追加した。
+
+### 段階別コミット
+
+- [x] 抽出契約Red/Green: `30ecf716` / `e1cfeef1`、設定AST抽出Red/Green: `2f21b681` / `d148f005`。
+- [x] Inventory: `19ad2381`（内容・構造・CSS・図・テーマの固定fixture）。
+- [x] 全量Red: `a6ce595b`。CSSセレクタ解析と表タグ間空白のハーネス修正は独立コミット。
+- [x] 共通構造: `f29b7381`。末尾空行は `df3b3580` で修正。
+- [x] 導入s1〜s2: `c2dcbc45`。
+- [x] Task 1 s3〜s8: `9de07cd3`。
+- [x] Task 2 s9〜s14: `928e615e`。
+- [x] Task 3 s15〜s20: `d5140bf5`。
+- [x] Task 4 s21〜s30: `d1d1c0b2`。継続番号をReactの数値属性にする修正: `6ba1f72c`。
+- [x] 演習・付録s31〜s33、全量Green: `e76304b3`。
+- [x] ホーム・Header統合Red/Green: `51d971b6` / `7a931953`。
+- [x] 5種類の欠落検出: `a74a948f`。
+- [x] 検証処理の負荷削減Red/Green: `2584ddb1` / `e196aac0`（全アサーションを維持）。
+- [x] 原本退避: `b00c7e5f`。HTML/Markdownはローカル専用の `archive/Aws/html/developer-associate/domain3/` と `archive/Aws/md/developer-associate/domain3/` に保存し、Git原本とのバイト一致を確認。
+- [x] 黒塗り回帰Red: `ef263727`、コンポーネント注入Red: `8541fc50`、ハーネス修正: `aa7a2d8a`、配色Green: `e514f283`。
+- [x] Spec Sync: `9f62abec`（仕様書・テスト進捗・ダッシュボードを実装とは別コミットで同期）。
+- [x] 本進捗同期: このファイルだけを最後に独立コミット。
+
+### 検証結果と制約
+
+- h1:5・h2:29・h3:118・h4:0、80表（th216・td1086）、63リスト項目、137外部リンク、39図、32コード、135本文ブロックを全文・順序・構造まで照合。33目次・9チェック・10解説と全CSS宣言も検証した。
+- DOM/CSS/操作57件・統合2件・実Mermaid40件、計99件が成功。直下とarchive双方から原本を外したfixture-only実行でも99件成功。抽出契約11件も成功。
+- 最終全体Vitestは224ファイル・2420件中2413成功・既存7失敗。着手前の7失敗と一致し、DVA移行・図修正の失敗はない。検証対象HEADは `e514f283`。
+- 本文・表行・図・点・`ol start=4` の5種類の欠落をそれぞれ検出し、元へ戻した。
+- 全体テストとfixture-only実行の同時実行時には検証負荷で時間制限に達した。単一節だけを抽出し、テスト内の重複描画を除いて判定を維持した。最終全体検証は `bun run test -- --maxWorkers=2` で順次実行する。
+- 黒塗りは共通dark設定の `mainBkg=#0f2040` が濃色文字 `nodeTextColor=#1f2430` と混在したことが原因。原本だけから独立解決した全派生色を注入し、背景を `#e8ebf8` へ戻した。実Mermaidパーサーで39図の配色・構文と設定持ち越しを確認し、40件がRedからGreenへ変わった。
+- TypeScript・全体ESLint成功。構文ハイライトはユーザー指定により原本に近い色とし、コード全文・空行・インデントは完全保持。パッケージ追加なし。
+- ブラウザテスト3件は作成済みだが、実行ファイル不足とChrome起動制約によりページのアサーションは未実施。ユーザーが目視確認を担当し、追加ブラウザ起動は行わない。専用devサーバーは停止済み。npm・本番ビルドは未実行。
+- 別タスクによるAIPドメイン4・5のHTML作業差分は今回のコミットに含めない。
 
 ## 2026-10-09: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイドのNext.js移行（完了）
 
@@ -51,7 +87,6 @@
 - [x] 原本退避: `8c0dfad3` (`chore(archive): archive original aib-c01 domain 1 files`)
 - [x] Mermaidライトテーマ & ノード配色完全復元: `f3a9dd91` (`fix(aws): explicitly set mainBkg and nodeBkg in mermaid-theme.json to resolve dark node backgrounds in aib-domain1`)
 - [x] 移行済みマークダウン・HTML退避 & 重複削除: `ebbdf275` (`chore(archive): move migrated markdown and html files to archive and clean up root duplicates`)
-
 
 ### 検証結果
 
@@ -1584,15 +1619,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** AWS DVA-C02 ドメイン1 開発のNext.js全量移行
-- **最終更新日:** 2026-10-07
-- **最新実装 HEAD:** `7bf60bcc`
-- **仕様同期コミット:** `ba0deb6b`
-- **前回進捗同期コミット:** `2c4c019d`
-- **検証状態:** 関連245件・3画面幅E2E 3件成功、各幅axe違反0。全体Vitestは2261成功・既存6失敗（214ファイル・2267件）。TypeScript・全体ESLint・Markdown lint成功。原本不在28件・4欠落変異検証も成功。
+- **最新完了タスク:** AWS DVA-C02 ドメイン3デプロイのNext.js全量移行とMermaid黒塗り修正
+- **最終更新日:** 2026-10-12
+- **最新実装 HEAD:** `e514f283`
+- **仕様同期コミット:** `9f62abec`
+- **前回進捗同期コミット:** `73b63f0f`
+- **検証状態:** 移行・統合59件・実Mermaid40件が原本不在でも成功、抽出契約11件成功。5種類の欠落変異を検出。全体Vitestは2413成功・既存7失敗（224ファイル・2420件）。TypeScript・全体ESLint・Markdown lint成功。ブラウザのページ検証は未実施。
 - **ビルド状態:** npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。
-- **HTML残数:** 直下18件（移行済みTanenbaum原本1件・未移行17件）。
-- **次の作業:** ユーザーの目視確認。既存6失敗の調査は別タスク。次の移行候補は `Aws-dva-c02-domain3-deployment-guide.html`。
+- **HTML残数:** 直下17件。DVAドメイン3原本はHTML/Markdownともローカルアーカイブへ退避済み。
+- **次の作業:** ユーザーの目視確認。既存7失敗の調査は別タスク。次の移行候補は `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -2931,7 +2966,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD は `7bf60bcc`、仕様同期は `ba0deb6b`、前回進捗同期コミットは `2c4c019d` です。AWS DVA-C02 ドメイン1は `/aws/developer-associate/domain1` へ全量移行済み。原本ライト配色・Source Serif 4・288px幅と14pxを保持し、全38セクション・29スキル・116表・31図・18コード・363リスト項目・15問題を照合。関連245件、3画面幅E2E 3件（各幅axe違反0）、原本不在の移行・統合28件、4欠落変異検証が成功。全体Vitestは2261成功・既存6失敗（214ファイル・2267件）。TypeScript・全体ESLint・Markdown lint成功。npm・ビルドは未実行、目視確認はユーザー担当。未移行HTML17件。次はユーザーの目視確認。既存6失敗は別タスク。次の移行候補は `Aws-dva-c02-domain3-deployment-guide.html`。
+最新実装 HEAD は `e514f283`、仕様同期は `9f62abec`、前回進捗同期コミットは `73b63f0f` です。AWS DVA-C02 ドメイン3は `/aws/developer-associate/domain3` へ全量移行済み。原本ライト配色・Source Serif 4・290px幅と14pxを保持し、全33節・80表・39図・32コード・63リスト項目・137外部リンク・135本文ブロックを照合。原本不在でも移行・統合59件と実Mermaid40件が成功、抽出契約11件成功、5種類の欠落を検出した。黒塗りは共通dark設定の漏れ込みが原因で、原本だけから独立解決した派生色の注入により修正済み。全体Vitestは2413成功・既存7失敗（224ファイル・2420件）、型チェック・全体ESLint・Markdown lint成功。npm・ビルドは未実行、ブラウザ検証は未実施、目視確認はユーザー担当。直下HTML17件。次はユーザーの目視確認、既存7失敗は別タスク。次の移行候補は `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
 
