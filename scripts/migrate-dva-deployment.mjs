@@ -5,7 +5,7 @@ import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { extractDevelopmentDiagrams } from './dva-development-fidelity.mjs';
-import { deploymentSegments, extractDeploymentTheme } from './dva-deployment-fidelity.mjs';
+import { deploymentSegments } from './dva-deployment-fidelity.mjs';
 import { codeLines } from './inventory-extraction.mjs';
 
 const config = FIDELITY_PAGES['aws-dva-domain3-deployment'];
@@ -66,7 +66,8 @@ function jsx(node, checklist = false) {
 
 if (stage === 'scaffold') {
     write('constants.ts', `/** 全33目次と39図の単一正本。 */\nexport const NAV_ITEMS = ${JSON.stringify(nav, null, 4)} as const;\nexport const DIAGRAMS = ${JSON.stringify(extractDevelopmentDiagrams(html), null, 4)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;\nexport const CHECK_COUNT = ${inputs.length};`);
-    write('mermaid-theme.json', JSON.stringify(extractDeploymentTheme(html), null, 2));
+    const themeFixture = JSON.parse(readFileSync('docs/migration-inventory/aws-dva-domain3-deployment.mermaid.json', 'utf8'));
+    write('mermaid-theme.json', JSON.stringify(themeFixture.resolved, null, 2));
     write('page.tsx', `import type { Metadata } from 'next';\nimport { DeploymentGuide } from './DeploymentGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nexport const metadata: Metadata = { title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 ドメイン3のデプロイを26 Steps・39図で学ぶガイド。アーティファクト準備、テスト、IaC、CI/CD、デプロイ戦略とロールバックを解説。' };\n/** デプロイガイドのServerルート。 */\nexport default function DeploymentPage() { return <DeploymentGuide />; }`);
     write('Diagram.tsx', `'use client';\nimport { memo } from 'react';\nimport { MermaidDiagram } from '@/components/MermaidDiagram';\nimport { DIAGRAMS, type DiagramId } from './constants';\nimport sourceTheme from './mermaid-theme.json';\nconst SOURCE_THEME_FRONTMATTER = \`---\\nconfig: \${JSON.stringify({ ...sourceTheme, themeVariables: { ...sourceTheme.themeVariables, fontFamily: '\\"Noto Sans JP Variable\\",\\"Noto Sans JP\\",sans-serif', fontSize: '14px' } })}\\n---\\n\`;\n/** 原本のDSL・淡色ノード・自然倍率を保持する図。 */\nexport const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: string }) {\n    const chart = DIAGRAMS[id];\n    if (!chart) return null;\n    return <div className="diagram-wrap" data-diagram-id={id} tabIndex={0} role="region" aria-label={label}>\n        <MermaidDiagram chart={SOURCE_THEME_FRONTMATTER + chart} theme="light" preserveChartTheme={true} ariaLabel={label} preserveNaturalScale={true} />\n    </div>;\n});`);
     const referenceNav = readFileSync('app/aws/developer-associate/domain2/NavBar.tsx', 'utf8');

@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
+import mermaid from 'mermaid';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { snapshotCssRules } from './tanenbaum-fidelity.mjs';
 import { extractDevelopmentDiagrams } from './dva-development-fidelity.mjs';
@@ -18,5 +19,10 @@ write('design', {
     navClasses: [...doc.querySelectorAll('.sidebar a')].map(el => el.className),
     languages: [...doc.querySelectorAll('pre code')].map(el => el.className.replace('language-', '')),
 });
-write('mermaid', { source: extractDeploymentTheme(html) });
+const source = extractDeploymentTheme(html);
+// 独立した生成プロセスで原本だけを初期化し、共有dark設定を含めず派生色まで解決する。
+mermaid.initialize(source);
+const independent = mermaid.mermaidAPI.getConfig();
+const resolved = { ...source, themeVariables: independent.themeVariables, flowchart: independent.flowchart };
+write('mermaid', { source, resolved });
 console.log('Deployment design and Mermaid fixtures generated from fixed Git source');
