@@ -1,0 +1,129 @@
+
+.dva-deployment-page *{box-sizing:border-box}
+.dva-deployment-page{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px)}
+.dva-deployment-page{margin:0;background:var(--color-aib-bg);color:var(--color-dva-development-ink);font-family:var(--font-body);font-size:0.875rem;line-height:1.85}
+.dva-deployment-page .sidebar{position:fixed;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));left:0;bottom:0;width:290px;background:var(--color-dva-development-fff);border-right:1px solid var(--color-dva-deployment-ddd6c6);overflow-y:auto;padding:20px 14px 40px;z-index:32}
+.dva-deployment-page .sidebar .brand{font-family:var(--font-dva-serif);font-weight:700;font-size:0.875rem;color:var(--color-dva-deployment-33408f);margin:0 8px 14px;line-height:1.4}
+.dva-deployment-page .nav{display:block;color:var(--color-dva-development-ink);text-decoration:none;font-size:0.875rem;line-height:1.45;padding:6px 10px;border-radius:6px;border-left:3px solid transparent}
+.dva-deployment-page .nav.l1{font-weight:700;color:var(--color-dva-deployment-33408f);margin-top:12px}
+.dva-deployment-page .nav:hover{background:var(--color-dva-deployment-f1ede2)}
+.dva-deployment-page .nav.active{background:var(--color-dva-deployment-e8ebf8);border-left-color:var(--color-dva-deployment-33408f);color:var(--color-dva-deployment-33408f);font-weight:700}
+.dva-deployment-page main{margin-left:290px;display:block;width:calc(100% - 290px);max-width:none;min-width:0}
+.dva-deployment-page .hero{background:linear-gradient(135deg,var(--color-dva-deployment-eef0fb),var(--color-dva-deployment-faf3df));border-bottom:1px solid var(--color-dva-deployment-ddd6c6);padding:48px 36px 40px}
+.dva-deployment-page .hero .eyebrow{font-weight:700;color:var(--color-dva-deployment-b7862b);letter-spacing:.06em}
+.dva-deployment-page .hero h1{background:none;padding:0;border-radius:0;font-family:var(--font-dva-serif);font-size:2.1rem;line-height:1.3;margin:.25em 0 .4em;color:var(--color-dva-development-ink);letter-spacing:.01em}
+.dva-deployment-page .hero h1 .sub{display:block;font-family:var(--font-body);font-size:1.1375rem;font-weight:700;color:var(--color-dva-deployment-33408f);margin-top:.5em;padding-left:14px;border-left:5px solid var(--color-dva-deployment-b7862b)}
+.dva-deployment-page .hero p{margin:.5em 0;color:var(--color-dva-deployment-556070)}
+.dva-deployment-page .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.dva-deployment-page .chip{background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:999px;padding:4px 14px;font-weight:500}
+.dva-deployment-page .content{padding:28px 36px 80px}
+.dva-deployment-page h1{font-family:var(--font-dva-serif);font-size:1.4875rem;color:var(--color-dva-development-fff);background:var(--color-dva-deployment-33408f);padding:14px 20px;border-radius:10px;margin:64px 0 8px}
+.dva-deployment-page h2{font-size:1.3125rem;margin:56px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--color-dva-deployment-33408f);color:var(--color-dva-development-ink)}
+.dva-deployment-page h3{font-size:1.05rem;margin:32px 0 8px;color:var(--color-dva-deployment-33408f)}
+.dva-deployment-page h4{font-size:0.91875rem;margin:24px 0 6px;color:var(--color-dva-forest)}
+.dva-deployment-page p, .dva-deployment-page li{overflow-wrap:break-word}
+.dva-deployment-page a{color:var(--color-dva-deployment-33408f);overflow-wrap:anywhere}
+.dva-deployment-page blockquote{margin:16px 0;padding:10px 18px;background:var(--color-dva-deployment-fbf3de);border-left:4px solid var(--color-dva-deployment-b7862b);border-radius:0 8px 8px 0}
+.dva-deployment-page blockquote p{margin:.4em 0}
+.dva-deployment-page code{font-family:var(--font-mono);font-size:0.875rem;background:var(--color-dva-deployment-f4f0e6);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+.dva-deployment-page .code-block{background:var(--color-dva-deployment-f4f0e6);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:8px;padding:14px 16px;overflow-x:auto;line-height:1.6}
+.dva-deployment-page .code-block code{background:none;padding:0;overflow-wrap:normal}
+.dva-deployment-page .table-wrap{overflow-x:auto;min-width:0;margin:16px 0;border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:8px;background:var(--color-dva-development-fff)}
+.dva-deployment-page table{border-collapse:collapse;width:100%}
+.dva-deployment-page th{background:var(--color-dva-deployment-33408f);color:var(--color-dva-development-fff);text-align:left;font-weight:700}
+.dva-deployment-page th, .dva-deployment-page td{padding:10px 14px;border-bottom:1px solid var(--color-dva-deployment-ddd6c6);vertical-align:top;overflow-wrap:anywhere}
+.dva-deployment-page tr:hover td{background:var(--color-dva-deployment-f1ede2)}
+.dva-deployment-page .diagram-wrap{display:flex;justify-content:safe center;overflow-x:auto;min-width:0;width:100%;margin:20px 0;padding:16px;background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:10px}
+.dva-deployment-page .diagram-wrap>*{min-width:0}
+.dva-deployment-page .diagram-canvas svg{flex-shrink:0;max-width:none;height:auto}
+.dva-deployment-page .mermaidTooltip{font-size:0.875rem!important}
+.dva-deployment-page details{background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:8px;padding:8px 14px;margin:8px 0 18px}
+.dva-deployment-page summary{cursor:pointer;font-weight:700;color:var(--color-dva-forest)}
+.dva-deployment-page hr{border:0;margin:0;height:0}
+.dva-deployment-page .mobile-bar{display:none}
+.dva-deployment-page .mobile-bar button{font-size:0.875rem}
+.dva-deployment-page .footer{padding:24px 36px;border-top:1px solid var(--color-dva-deployment-ddd6c6);color:var(--color-dva-deployment-556070)}
+@media(max-width:900px){
+ .dva-deployment-page .sidebar{transform:translateX(-100%);transition:transform .2s;box-shadow:2px 0 12px rgba(0,0,0,.15)}
+ .dva-deployment-page .sidebar.open{transform:none}
+ .dva-deployment-page main{margin-left:0;width:100%;max-width:none;min-width:0}
+ .dva-deployment-page .mobile-bar{display:flex;position:sticky;top:calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));z-index:31;background:var(--color-dva-development-fff);border-bottom:1px solid var(--color-dva-deployment-ddd6c6);padding:8px 14px;align-items:center;gap:10px}
+ .dva-deployment-page .mobile-bar button{background:var(--color-dva-deployment-33408f);color:var(--color-dva-development-fff);border:0;border-radius:6px;padding:6px 14px;font-family:inherit}
+ .dva-deployment-page .hero{padding:32px 16px}.dva-deployment-page .content{padding:20px 16px 60px}.dva-deployment-page .hero h1{font-size:1.4875rem}.dva-deployment-page .hero h1 .sub{font-size:0.9625rem}.dva-deployment-page h1{font-size:1.18125rem}.dva-deployment-page h2{font-size:1.1375rem}.dva-deployment-page .footer{padding:20px 18px}
+}
+
+.dva-deployment-page .hljs{color:#24292f;background:transparent}
+.dva-deployment-page .hljs-comment, .dva-deployment-page .hljs-quote{color:#6b7684;font-style:italic}
+.dva-deployment-page .hljs-keyword, .dva-deployment-page .hljs-selector-tag, .dva-deployment-page .hljs-literal, .dva-deployment-page .hljs-built_in{color:#8a2f7a;font-weight:600}
+.dva-deployment-page .hljs-string, .dva-deployment-page .hljs-regexp, .dva-deployment-page .hljs-addition{color:#1f6b46}
+.dva-deployment-page .hljs-number, .dva-deployment-page .hljs-symbol, .dva-deployment-page .hljs-bullet{color:#b4540a}
+.dva-deployment-page .hljs-attr, .dva-deployment-page .hljs-attribute, .dva-deployment-page .hljs-property{color:#2b3f9e}
+.dva-deployment-page .hljs-title, .dva-deployment-page .hljs-section, .dva-deployment-page .hljs-name, .dva-deployment-page .hljs-type{color:#0b6e8a;font-weight:600}
+.dva-deployment-page .hljs-variable, .dva-deployment-page .hljs-template-variable, .dva-deployment-page .hljs-params{color:#9a5b00}
+.dva-deployment-page .hljs-meta, .dva-deployment-page .hljs-doctag{color:#6b7684}
+.dva-deployment-page .hljs-deletion{color:#b3261e}
+
+.dva-deployment-page li.chk{list-style:none;margin:0}
+.dva-deployment-page .refs{margin:32px 0 8px;padding:16px 18px 18px;background:linear-gradient(180deg,var(--color-dva-deployment-f3f4fc),var(--color-dva-deployment-fbf9f2));border:1px solid var(--color-dva-deployment-cfd4ee);border-radius:12px}
+.dva-deployment-page .refs-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dva-deployment-page .refs-title{font-weight:700;color:var(--color-dva-deployment-33408f);display:inline-flex;align-items:center;gap:8px}
+.dva-deployment-page .refs-title::before{content:"";width:6px;height:1.2em;background:var(--color-dva-deployment-b7862b);border-radius:3px;display:inline-block}
+.dva-deployment-page .refs-count{margin-left:auto;background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:999px;padding:0 12px;color:var(--color-dva-deployment-556070);font-weight:500}
+.dva-deployment-page .refs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+.dva-deployment-page a.ref{display:flex;flex-direction:column;gap:4px;padding:12px 14px;background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:10px;text-decoration:none;color:var(--color-dva-development-ink);line-height:1.55;min-width:0;transition:transform .12s,box-shadow .12s,border-color .12s}
+.dva-deployment-page a.ref:hover{transform:translateY(-2px);border-color:var(--color-dva-deployment-33408f);box-shadow:0 6px 16px rgba(51,64,143,.14)}
+.dva-deployment-page .ref-top{display:flex;align-items:center;justify-content:space-between}
+.dva-deployment-page .ref-kind{font-weight:700;border-radius:999px;padding:0 10px;border:1px solid}
+.dva-deployment-page .ref-kind.aws{color:var(--color-dva-deployment-33408f);background:var(--color-dva-deployment-e8ebf8);border-color:var(--color-dva-deployment-c5cbee)}
+.dva-deployment-page .ref-kind.oss{color:var(--color-dva-development-plum);background:var(--color-dva-deployment-f6e9f2);border-color:var(--color-dva-deployment-e2c3d8)}
+.dva-deployment-page .ref-kind.ext{color:var(--color-dva-forest);background:var(--color-dva-deployment-e6f2ec);border-color:var(--color-dva-deployment-b9d9c8)}
+.dva-deployment-page .ref-arrow{color:var(--color-dva-deployment-33408f);font-weight:700}
+.dva-deployment-page a.ref:hover .ref-arrow{color:var(--color-dva-deployment-b7862b)}
+.dva-deployment-page .ref-label{font-weight:700}
+.dva-deployment-page .ref-url{color:var(--color-dva-deployment-556070);overflow-wrap:anywhere;word-break:break-all}
+.dva-deployment-page .ref-url b{color:var(--color-dva-deployment-33408f);font-weight:500}
+.dva-deployment-page .checklist{margin:20px 0;padding:18px 20px 20px;background:var(--color-dva-development-fff);border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:14px;box-shadow:0 2px 10px rgba(31,36,48,.05)}
+.dva-deployment-page .cl-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.dva-deployment-page .cl-title{font-weight:700;font-size:1.00625rem;color:var(--color-dva-development-ink)}
+.dva-deployment-page .cl-count{color:var(--color-dva-deployment-556070)}.dva-deployment-page .cl-count b{color:var(--color-dva-forest);font-size:1.225rem}
+.dva-deployment-page .cl-bar{height:10px;background:var(--color-dva-deployment-f1ede2);border-radius:999px;overflow:hidden;margin:10px 0 16px}
+.dva-deployment-page .cl-fill{height:100%;width:0;background:linear-gradient(90deg,var(--color-dva-deployment-33408f),var(--color-dva-forest));border-radius:999px;transition:width .25s}
+.dva-deployment-page .checklist ul{margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:10px}
+.dva-deployment-page .checklist li.chk label{display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:12px 14px;border:1px solid var(--color-dva-deployment-ddd6c6);border-radius:10px;background:var(--color-aib-bg);height:100%;transition:background .15s,border-color .15s}
+.dva-deployment-page .checklist li.chk label:hover{border-color:var(--color-dva-deployment-33408f);background:var(--color-dva-deployment-e8ebf8)}
+.dva-deployment-page .checklist li.chk input{appearance:none;-webkit-appearance:none;flex:none;width:1.5rem;height:1.5rem;margin:2px 0 0;border:2px solid var(--color-dva-deployment-9aa3c4);border-radius:7px;background:var(--color-dva-development-fff);display:grid;place-content:center;cursor:pointer;font-size:0.875rem}
+.dva-deployment-page .checklist li.chk input::after{content:"";width:.7rem;height:.4rem;border-left:3px solid var(--color-dva-development-fff);border-bottom:3px solid var(--color-dva-development-fff);transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.dva-deployment-page .checklist li.chk input:checked{background:var(--color-dva-forest);border-color:var(--color-dva-forest)}
+.dva-deployment-page .checklist li.chk input:checked::after{opacity:1}
+.dva-deployment-page .checklist li.chk.done label{background:var(--color-dva-deployment-eaf5ef);border-color:var(--color-dva-deployment-b9d9c8)}
+.dva-deployment-page .cl-text{min-width:0;overflow-wrap:anywhere}
+.dva-deployment-page .cl-done{margin-top:14px;padding:10px 14px;background:var(--color-dva-deployment-eaf5ef);border:1px solid var(--color-dva-deployment-b9d9c8);border-radius:10px;color:var(--color-dva-forest);font-weight:700}
+@media(max-width:900px){.dva-deployment-page .refs{padding:12px}.dva-deployment-page .checklist{padding:14px}}
+
+/* Tailwind Preflightで消える原本のブラウザ既定装飾を明示する。 */
+.dva-deployment-page .content ul { list-style-type: disc; list-style-position: outside; margin: 1em 0; padding-left: 40px; }
+.dva-deployment-page .content ol { list-style-type: decimal; list-style-position: outside; margin: 1em 0; padding-left: 40px; }
+.dva-deployment-page .content ul ul { list-style-type: circle; }
+.dva-deployment-page .content li.chk { list-style-type: none; }
+.dva-deployment-page .checklist ul { margin: 0; padding: 0; }
+.dva-deployment-page .sidebar ul { list-style-type: none; margin: 0; padding: 0; }
+.dva-deployment-page .sidebar li { margin: 0; }
+.dva-deployment-page .content p { margin: 1em 0; }
+.dva-deployment-page .content blockquote p { margin: .4em 0; }
+.dva-deployment-page h1, .dva-deployment-page h2, .dva-deployment-page h3, .dva-deployment-page h4, .dva-deployment-page strong { font-weight: 700; }
+.dva-deployment-page table { font-size: 0.875rem; }
+.dva-deployment-page .code-line { white-space: pre; min-height: 1.6em; }
+.dva-deployment-page .code-block code { display: block; white-space: pre; }
+.dva-deployment-page .code-block { margin: 1em 0; }
+.dva-deployment-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; min-width: 0; overflow: visible; }
+/* preserveNaturalScaleを維持し、広い図だけカード内でスクロールする。 */
+.dva-deployment-page .diagram-wrap svg { flex-shrink: 0; max-width: none; height: auto; }
+.dva-deployment-page .diagram-wrap .mermaid-target :is(foreignObject > div, .nodeLabel, .edgeLabel, text, tspan) { font-size: 14px !important; }
+.dva-deployment-page .content [id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 64px); }
+.dva-deployment-page .sidebar-backdrop { position: fixed; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; z-index: 31; background: rgba(0,0,0,.35); border: 0; }
+.dva-deployment-page :focus-visible { outline: 2px solid var(--color-dva-deployment-33408f); outline-offset: 4px; }
+.dva-deployment-page [hidden] { display: none !important; }
+@media (min-width:901px) { .dva-deployment-page .sidebar-backdrop { display: none; } }
+@media (max-width:900px) { .dva-deployment-page .sidebar:not(.open) { visibility: hidden; } .dva-deployment-page .sidebar { width: min(290px, 90vw); } }
+@media (prefers-reduced-motion:reduce) { .dva-deployment-page .sidebar, .dva-deployment-page .cl-fill, .dva-deployment-page a.ref { transition: none; } }
+

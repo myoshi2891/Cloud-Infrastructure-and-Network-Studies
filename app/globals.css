@@ -14,6 +14,28 @@
  */
 
 @theme {
+    /* Layer 3: DVA Deployment 原本ライト配色 */
+    --color-dva-deployment-f1ede2: #f1ede2;
+    --color-dva-deployment-556070: #556070;
+    --color-dva-deployment-33408f: #33408f;
+    --color-dva-deployment-e8ebf8: #e8ebf8;
+    --color-dva-deployment-b7862b: #b7862b;
+    --color-dva-deployment-fbf3de: #fbf3de;
+    --color-dva-deployment-ddd6c6: #ddd6c6;
+    --color-dva-deployment-f4f0e6: #f4f0e6;
+    --color-dva-deployment-eef0fb: #eef0fb;
+    --color-dva-deployment-faf3df: #faf3df;
+    --color-dva-deployment-f3f4fc: #f3f4fc;
+    --color-dva-deployment-fbf9f2: #fbf9f2;
+    --color-dva-deployment-cfd4ee: #cfd4ee;
+    --color-dva-deployment-c5cbee: #c5cbee;
+    --color-dva-deployment-f6e9f2: #f6e9f2;
+    --color-dva-deployment-e2c3d8: #e2c3d8;
+    --color-dva-deployment-e6f2ec: #e6f2ec;
+    --color-dva-deployment-b9d9c8: #b9d9c8;
+    --color-dva-deployment-9aa3c4: #9aa3c4;
+    --color-dva-deployment-eaf5ef: #eaf5ef;
+
     /* Layer 3: AIB-C01 Domain 1 原本ライト配色 */
     --color-aib-bg: #faf8f3;
     --color-aib-card: #ffffff;
