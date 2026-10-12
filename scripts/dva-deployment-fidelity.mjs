@@ -62,7 +62,7 @@ export function snapshotDeploymentSegment(root, id) {
 /** 原本・移行先の同じ節を同じ正規化規則で比較する。 */
 function snapshotSegmentNodes(segment, document) {
     const fragment = document.createElement('div');
-    segment.nodes.forEach(node => fragment.append(node.cloneNode(true)));
+    segment.nodes.forEach(node => { fragment.append(node.cloneNode(true)); });
     return { id: segment.id, text: canonicalText(fragment) };
 }
 
