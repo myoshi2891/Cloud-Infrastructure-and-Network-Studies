@@ -1,10 +1,12 @@
 'use client';
 import { memo } from 'react';
 import { NavBar } from './NavBar';
-
+import { S1 } from './sections/S1';
+import { S2 } from './sections/S2';
 /** チェック・現在地の更新から独立した静的本文。 */
 const GuideContents = memo(function GuideContents() { return <>
-
+    <S1 />
+    <S2 />
 </>; });
 /** 原本のhero・33節・footerを保持するデプロイ教材。 */
 export function DeploymentGuide() { return <div className="dva-deployment-page"><NavBar /><main>
