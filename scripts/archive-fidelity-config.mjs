@@ -30,6 +30,14 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-dva-domain3-deployment': {
+        source: 'Aws-dva-c02-domain3-deployment-guide.html',
+        sourceCommit: 'b1412ef1a5d2ebdf136c183a64a34150abf5eccc',
+        textSelector: 'main h1, main h2, main h3, main h4, main p, main li, main th, main td, main summary, main blockquote, main .eyebrow, main .chip',
+        tables: true,
+        codeBlocks: true,
+        refUrls: true,
+    },
     'aws-ai-business-strategist-domain1': {
         source: 'Aib-c01-domain1-ai-fundamentals-and-literacy.html',
         sourceCommit: '7d2d35ec',

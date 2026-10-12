@@ -1,0 +1,23 @@
+{
+  "source": {
+    "startOnLoad": false,
+    "theme": "base",
+    "securityLevel": "loose",
+    "flowchart": {
+      "useMaxWidth": false,
+      "htmlLabels": true,
+      "curve": "basis"
+    },
+    "themeVariables": {
+      "fontSize": "16px",
+      "fontFamily": "\"Noto Sans JP\",sans-serif",
+      "primaryColor": "#e8ebf8",
+      "primaryTextColor": "#1f2430",
+      "primaryBorderColor": "#33408f",
+      "lineColor": "#556070",
+      "secondaryColor": "#fbf3de",
+      "tertiaryColor": "#f1ede2",
+      "background": "#ffffff"
+    }
+  }
+}
