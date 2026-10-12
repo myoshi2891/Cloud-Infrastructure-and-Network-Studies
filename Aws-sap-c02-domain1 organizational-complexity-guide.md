@@ -653,7 +653,7 @@ flowchart LR
 | RDS リードレプリカ | 非同期レプリケーション。リージョンをまたぐ作成と昇格が可能 | 読み取り分散と DR の補助 |
 | Aurora | ストレージは3つの AZ に6つのコピーを保持。Aurora Global Database でリージョン間の低遅延レプリケーション | リージョン障害に備える DR に有効 |
 | DynamoDB | グローバルテーブルでマルチリージョンの Active/Active、PITR | 低 RPO の要件に有効 |
-| S3 | クロスリージョンレプリケーション (CRR)。Replication Time Control で時間保証 | 別リージョンに複製して DR とコンプライアンスに対応 |
+| S3 | クロスリージョンレプリケーション (CRR)。Replication Time Control (RTC) は新規オブジェクトの 99.99% を15分以内に複製することを保証 (全オブジェクトの15分以内の複製を保証するものではない) | 別リージョンに複製して DR とコンプライアンスに対応 |
 | EBS と AMI | スナップショットを別リージョンにコピー | バックアップと復元戦略の基本 |
 | 監視と自動対応 | CloudWatch アラーム、EventBridge、Systems Manager Automation | 検知から復旧操作までを自動化 |
 | インフラ再現 | CloudFormation と StackSets | DR 側の環境をコードで再現 |
@@ -976,7 +976,7 @@ flowchart TD
 |---|---|---|
 | AWS Cost Explorer | コストと使用量を可視化、分析、予測 | サービス、アカウント、タグ、リージョンなどで絞り込みやグループ化。RI と Savings Plans の推奨も確認可能 |
 | AWS Budgets | 予算を設定し、超過や予測超過をアラート | コスト、使用量、RI と Savings Plans の使用率とカバレッジの予算。予算アクションで自動対応も可能 |
-| AWS Cost and Usage Report (CUR) | 最も詳細なコストと使用量データ | S3 に出力し、Athena や QuickSight で分析。リソース単位まで確認可能 |
+| AWS Cost and Usage Report (CUR) | 最も詳細なコストと使用量データ | S3 に出力し、Athena や QuickSight で分析。レポート作成時に「リソース ID を含める (Include resource IDs)」を選択した場合のみリソース単位まで確認可能 |
 | AWS Cost Anomaly Detection | 想定外のコスト急増を機械学習で検知 | 通知先を設定して早期に気づく |
 | AWS Trusted Advisor | コスト、セキュリティ、耐障害性などのベストプラクティスチェック | 利用できるチェックの範囲は AWS サポートプランに依存する |
 | AWS Pricing Calculator | 構築前の料金見積もり | 設計段階でのコスト比較に使う |
@@ -996,7 +996,7 @@ flowchart TD
 |---|---|---|---|---|
 | オンデマンド | なし | 使った分だけ従量課金 | 予測不能、短期、試験的な負荷 | 最も柔軟だが割高 |
 | リザーブドインスタンス (RI) | 最大約72% | 1年または3年の利用を約束。スタンダードとコンバーティブルがある | 安定した特定のインスタンスの利用 | コンバーティブルは変更可能だが割引率はやや低い |
-| Savings Plans | 最大約72% | 1時間あたりの利用額 (ドル) を1年または3年約束 | 構成が変わりうる安定した利用 | Compute Savings Plans は EC2、Fargate、Lambda に適用され柔軟。データベース向けには別途 Database Savings Plans があり、Aurora や RDS などが対象 |
+| Savings Plans | タイプ別: Compute 最大約66%、EC2 Instance 最大約72%、Database 最大約35% | 1時間あたりの利用額 (ドル) を約束。Compute と EC2 Instance は1年または3年、Database は1年 | 構成が変わりうる安定した利用 | Compute Savings Plans は EC2、Fargate、Lambda に適用され柔軟。EC2 Instance Savings Plans は特定リージョンのインスタンスファミリーに限定。Database Savings Plans は Aurora や RDS などが対象 |
 | スポットインスタンス | 最大約90% | 余剰容量を低価格で利用。中断される可能性あり (2分前に通知) | 中断に耐える処理 (バッチ、分析、CI) | 状態保持が必要な処理や中断不可の処理には不向き |
 | Dedicated Hosts | 要件次第 | 物理サーバーを専有 | 既存のサーバーライセンス (BYOL) や規制要件 | コストが高くなりやすい |
 
