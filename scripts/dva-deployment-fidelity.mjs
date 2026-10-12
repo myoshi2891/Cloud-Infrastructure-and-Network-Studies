@@ -1,5 +1,34 @@
 import { normalizeText } from './archive-fidelity-extraction.mjs';
 import { codeBlockSelector, codeLines } from './inventory-extraction.mjs';
+import ts from 'typescript';
+
+/** Mermaid設定のリテラルだけをASTから読み、原本のスクリプトは実行しない。 */
+export function extractDeploymentTheme(html) {
+    const source = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+    if (!source) throw new Error('Mermaid script missing');
+    const ast = ts.createSourceFile('source.js', source, ts.ScriptTarget.Latest, true);
+    let config;
+    function literal(node) {
+        if (ts.isStringLiteral(node) || ts.isNumericLiteral(node)) return ts.isNumericLiteral(node) ? Number(node.text) : node.text;
+        if (node.kind === ts.SyntaxKind.TrueKeyword) return true;
+        if (node.kind === ts.SyntaxKind.FalseKeyword) return false;
+        if (ts.isObjectLiteralExpression(node)) return Object.fromEntries(node.properties.map(property => {
+            if (!ts.isPropertyAssignment(property) || (!ts.isIdentifier(property.name) && !ts.isStringLiteral(property.name))) throw new Error('Nonliteral Mermaid property');
+            return [property.name.text, literal(property.initializer)];
+        }));
+        throw new Error('Nonliteral Mermaid value');
+    }
+    function visit(node) {
+        if (ts.isCallExpression(node) && node.expression.getText(ast) === 'mermaid.initialize') {
+            if (config) throw new Error('Multiple Mermaid configurations');
+            config = literal(node.arguments[0]);
+        }
+        ts.forEachChild(node, visit);
+    }
+    visit(ast);
+    if (!config) throw new Error('Mermaid configuration missing');
+    return config;
+}
 
 /** 原本の平坦な本文を、h1/h2のアンカー間で分割する。DOMは変更しない。 */
 export function deploymentSegments(root) {
