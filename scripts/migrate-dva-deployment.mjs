@@ -16,7 +16,7 @@ const stage = process.argv[2];
 const ranges = { intro: [1, 2], task1: [3, 8], task2: [9, 14], task3: [15, 20], task4: [21, 30], remainder: [31, 33] };
 if (stage !== 'scaffold' && !ranges[stage]) throw new Error('Unknown migration stage');
 mkdirSync(`${directory}/sections`, { recursive: true });
-const write = (name, value) => writeFileSync(`${directory}/${name}`, value.replace(/[ \t]+$/gm, '') + '\n');
+const write = (name, value) => writeFileSync(`${directory}/${name}`, value.replace(/[ \t]+$/gm, '').trimEnd() + '\n');
 const segments = deploymentSegments(doc);
 const tables = [...doc.querySelectorAll('.table-wrap')];
 const codes = [...doc.querySelectorAll('pre')];
