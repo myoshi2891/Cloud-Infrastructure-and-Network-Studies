@@ -13,6 +13,7 @@ describe('DVA Security のホーム・Header統合', () => {
         expect(nav?.items).toEqual([
             { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2' },
             { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1' },
+            { label: 'ドメイン3: デプロイ', href: '/aws/developer-associate/domain3' },
         ]);
     });
     it('DVAカードとHeaderアイコンの色をグローバルトークンへ登録', () => {
