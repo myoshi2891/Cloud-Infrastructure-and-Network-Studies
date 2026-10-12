@@ -160,7 +160,7 @@
       },
       {
         "id": "s31",
-        "text": "Step 26：総合演習（練習問題・チェックリスト） 練習問題 Q1. Lambda の依存ライブラリが解凍後 400MB になった。最も適切な対応は？ 答えを見る**コンテナイメージ**でデプロイする（上限 10GB）。zip（レイヤー込み）は解凍後 250MB まで。 Q2. 本番の Lambda を、まず 10% のトラフィックだけ新バージョンに流し、エラーが出たら自動で戻したい。 答えを見るSAM の **DeploymentPreference（Canary10Percent5Minutes）+ CloudWatch アラーム**（実体は CodeDeploy）。 Q3. API Gateway（REST）でメソッドを追加したが、ステージに反映されない。 答えを見る**API を再デプロイ**していない。変更後はステージへデプロイが必要。 Q4. エッジ最適化 API に独自ドメインを設定したい。証明書はどこに作る？ 答えを見る**us-east-1 の ACM** に証明書を作成する。 Q5. EC2 へ CodeDeploy で配備したら appspec.yml が見つからないと失敗した。 答えを見る`appspec.yml` を**アーカイブのルート**に置く。 Q6. ダウンタイムなし・容量維持・追加コスト小で Beanstalk を更新したい。 答えを見る**Rolling with additional batch**（さらに安全性重視なら Immutable）。 Q7. 再デプロイせずに設定を安全に変更し、異常時は自動で戻したい。 答えを見る**AWS AppConfig**（段階的配信 + CloudWatch アラーム + Validator）。 Q8. 更新前に「どのリソースが置き換えられるか」を確認したい。 答えを見るCloudFormation の**変更セット**。 Q9. API 定義は共通のまま、dev / prod で呼ぶ Lambda を切り替えたい。 答えを見る**ステージ変数**（`${stageVariables.lambdaAlias}`）+ **Lambda エイリアス**。Lambda に呼び出し権限の付与が必要。 Q10. コンテナイメージを確実に固定して本番に出したい。 答えを見る**不変タグまたはダイジェスト**で指定し、`latest` は使わない。 最終チェックリスト 理解度セルフチェック0 / 9Lambda のパッケージ形式と上限（50MB / 250MB / 10GB / レイヤー 5）を言える 環境変数・Parameter Store・Secrets Manager・AppConfig の使い分けを説明できる sam local / sam sync / sam deploy --config-env の違いがわかる API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる Lambda のバージョン／エイリアス／重み付けルーティングを使える CloudFormation の変更セット・更新動作・ロールバック・ドリフトを説明できる buildspec.yml / appspec.yml の役割と置き場所を言える 各サービスで選べるデプロイ戦略と、ロールバック方法を対応づけられる Q Developer の件（後継 Kiro）と Copilot CLI 終了を把握している すべて確認できました。次は練習問題や公式ドキュメントで仕上げましょう。"
+        "text": "Step 26：総合演習（練習問題・チェックリスト） 練習問題 Q1. Lambda の依存ライブラリが解凍後 400MB になった。最も適切な対応は？ 答えを見るコンテナイメージでデプロイする（上限 10GB）。zip（レイヤー込み）は解凍後 250MB まで。 Q2. 本番の Lambda を、まず 10% のトラフィックだけ新バージョンに流し、エラーが出たら自動で戻したい。 答えを見るSAM の DeploymentPreference（Canary10Percent5Minutes）+ CloudWatch アラーム（実体は CodeDeploy）。 Q3. API Gateway（REST）でメソッドを追加したが、ステージに反映されない。 答えを見るAPI を再デプロイしていない。変更後はステージへデプロイが必要。 Q4. エッジ最適化 API に独自ドメインを設定したい。証明書はどこに作る？ 答えを見るus-east-1 の ACM に証明書を作成する。 Q5. EC2 へ CodeDeploy で配備したら appspec.yml が見つからないと失敗した。 答えを見るappspec.yml をアーカイブのルートに置く。 Q6. ダウンタイムなし・容量維持・追加コスト小で Beanstalk を更新したい。 答えを見るRolling with additional batch（さらに安全性重視なら Immutable）。 Q7. 再デプロイせずに設定を安全に変更し、異常時は自動で戻したい。 答えを見るAWS AppConfig（段階的配信 + CloudWatch アラーム + Validator）。 Q8. 更新前に「どのリソースが置き換えられるか」を確認したい。 答えを見るCloudFormation の変更セット。 Q9. API 定義は共通のまま、dev / prod で呼ぶ Lambda を切り替えたい。 答えを見るステージ変数（${stageVariables.lambdaAlias}）+ Lambda エイリアス。Lambda に呼び出し権限の付与が必要。 Q10. コンテナイメージを確実に固定して本番に出したい。 答えを見る不変タグまたはダイジェストで指定し、latest は使わない。 最終チェックリスト 理解度セルフチェック0 / 9Lambda のパッケージ形式と上限（50MB / 250MB / 10GB / レイヤー 5）を言える 環境変数・Parameter Store・Secrets Manager・AppConfig の使い分けを説明できる sam local / sam sync / sam deploy --config-env の違いがわかる API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる Lambda のバージョン／エイリアス／重み付けルーティングを使える CloudFormation の変更セット・更新動作・ロールバック・ドリフトを説明できる buildspec.yml / appspec.yml の役割と置き場所を言える 各サービスで選べるデプロイ戦略と、ロールバック方法を対応づけられる Q Developer の件（後継 Kiro）と Copilot CLI 終了を把握している すべて確認できました。次は練習問題や公式ドキュメントで仕上げましょう。"
       },
       {
         "id": "s32",
@@ -6726,7 +6726,7 @@
       },
       {
         "tag": "li",
-        "text": "API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる"
+        "text": "API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる"
       },
       {
         "tag": "li",
@@ -7300,7 +7300,7 @@
           {
             "className": "chk",
             "value": null,
-            "text": "API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる"
+            "text": "API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる"
           },
           {
             "className": "chk",
@@ -17009,6 +17009,9 @@
       "arn:aws:lambda:ap-northeast-1:123456789012:function:orders:${stageVariables.lambdaAlias}",
       "stageVariables",
       "requestContext.stage",
+      "appspec.yml",
+      "${stageVariables.lambdaAlias}",
+      "latest",
       "sam local",
       "sam sync",
       "sam deploy --config-env"
@@ -18133,7 +18136,7 @@
       "Lambda のパッケージ形式と上限（50MB / 250MB / 10GB / レイヤー 5）を言える",
       "環境変数・Parameter Store・Secrets Manager・AppConfig の使い分けを説明できる",
       "sam local / sam sync / sam deploy --config-env の違いがわかる",
-      "API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる",
+      "API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる",
       "Lambda のバージョン／エイリアス／重み付けルーティングを使える",
       "CloudFormation の変更セット・更新動作・ロールバック・ドリフトを説明できる",
       "buildspec.yml / appspec.yml の役割と置き場所を言える",
@@ -18143,43 +18146,43 @@
     "details": [
       {
         "summary": "答えを見る",
-        "text": "答えを見る**コンテナイメージ**でデプロイする（上限 10GB）。zip（レイヤー込み）は解凍後 250MB まで。"
+        "text": "答えを見るコンテナイメージでデプロイする（上限 10GB）。zip（レイヤー込み）は解凍後 250MB まで。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見るSAM の **DeploymentPreference（Canary10Percent5Minutes）+ CloudWatch アラーム**（実体は CodeDeploy）。"
+        "text": "答えを見るSAM の DeploymentPreference（Canary10Percent5Minutes）+ CloudWatch アラーム（実体は CodeDeploy）。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**API を再デプロイ**していない。変更後はステージへデプロイが必要。"
+        "text": "答えを見るAPI を再デプロイしていない。変更後はステージへデプロイが必要。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**us-east-1 の ACM** に証明書を作成する。"
+        "text": "答えを見るus-east-1 の ACM に証明書を作成する。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る`appspec.yml` を**アーカイブのルート**に置く。"
+        "text": "答えを見るappspec.yml をアーカイブのルートに置く。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**Rolling with additional batch**（さらに安全性重視なら Immutable）。"
+        "text": "答えを見るRolling with additional batch（さらに安全性重視なら Immutable）。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**AWS AppConfig**（段階的配信 + CloudWatch アラーム + Validator）。"
+        "text": "答えを見るAWS AppConfig（段階的配信 + CloudWatch アラーム + Validator）。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見るCloudFormation の**変更セット**。"
+        "text": "答えを見るCloudFormation の変更セット。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**ステージ変数**（`${stageVariables.lambdaAlias}`）+ **Lambda エイリアス**。Lambda に呼び出し権限の付与が必要。"
+        "text": "答えを見るステージ変数（${stageVariables.lambdaAlias}）+ Lambda エイリアス。Lambda に呼び出し権限の付与が必要。"
       },
       {
         "summary": "答えを見る",
-        "text": "答えを見る**不変タグまたはダイジェスト**で指定し、`latest` は使わない。"
+        "text": "答えを見る不変タグまたはダイジェストで指定し、latest は使わない。"
       }
     ],
     "placements": [

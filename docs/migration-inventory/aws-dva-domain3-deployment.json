@@ -1523,7 +1523,7 @@
     "Lambda のパッケージ形式と上限（50MB / 250MB / 10GB / レイヤー 5）を言える",
     "環境変数・Parameter Store・Secrets Manager・AppConfig の使い分けを説明できる",
     "sam local / sam sync / sam deploy --config-env の違いがわかる",
-    "API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる",
+    "API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる",
     "Lambda のバージョン／エイリアス／重み付けルーティングを使える",
     "CloudFormation の変更セット・更新動作・ロールバック・ドリフトを説明できる",
     "buildspec.yml / appspec.yml の役割と置き場所を言える",

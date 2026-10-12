@@ -26,7 +26,7 @@ export function Checklist() {
 {" "}
 <li className={checked.has(2) ? 'chk done' : 'chk'}><label><input type="checkbox" checked={checked.has(2)} onChange={() => toggle(2)} /><span className="cl-text"><code>{"sam local"}</code>{" / "}<code>{"sam sync"}</code>{" / "}<code>{"sam deploy --config-env"}</code>{" の違いがわかる"}</span></label></li>
 {" "}
-<li className={checked.has(3) ? 'chk done' : 'chk'}><label><input type="checkbox" checked={checked.has(3)} onChange={() => toggle(3)} /><span className="cl-text">{"API Gateway のステージ・ステージ変数・カナリア・カスタドメインを説明できる"}</span></label></li>
+<li className={checked.has(3) ? 'chk done' : 'chk'}><label><input type="checkbox" checked={checked.has(3)} onChange={() => toggle(3)} /><span className="cl-text">{"API Gateway のステージ・ステージ変数・カナリア・カスタムドメインを説明できる"}</span></label></li>
 {" "}
 <li className={checked.has(4) ? 'chk done' : 'chk'}><label><input type="checkbox" checked={checked.has(4)} onChange={() => toggle(4)} /><span className="cl-text">{"Lambda のバージョン／エイリアス／重み付けルーティングを使える"}</span></label></li>
 {" "}
