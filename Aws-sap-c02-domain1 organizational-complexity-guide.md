@@ -311,7 +311,7 @@ flowchart TD
 
 - Amazon ECS の awsvpc ネットワークモードでは、タスクごとに ENI が割り当てられ、タスク単位でセキュリティグループを設定できる
 - Amazon EKS の標準 CNI (VPC CNI) は Pod に VPC の IP アドレスを割り当てるため、サブネットの IP 枯渇に注意する
-- プライベートサブネットのコンテナがイメージを取得するには、ECR 用の Interface エンドポイントと S3 の Gateway エンドポイントを用意すると、NAT Gateway 経由を避けられる
+- プライベートサブネットのコンテナがイメージを取得するには、ECR 用の 2 つの Interface エンドポイント (`com.amazonaws.<region>.ecr.api` と `com.amazonaws.<region>.ecr.dkr`) と、イメージレイヤーを取得する S3 の Gateway エンドポイントを用意すると、NAT Gateway 経由を避けられる
 
 ### 2.12 Task 1.1 ベストプラクティスまとめ
 
@@ -557,7 +557,7 @@ flowchart LR
 ベストプラクティス:
 
 - セキュリティツールの管理はセキュリティ専用アカウント (委任管理者) に集約し、管理アカウントでは運用しない
-- ログは専用のログアーカイブアカウントの S3 に保存し、バージョニング、Object Lock (保持期間中は root ユーザーを含め誰も削除・上書きできない Compliance モード。Governance モードを使う場合は `s3:BypassGovernanceRetention` 権限を厳しく制限する)、KMS 暗号化、厳格なバケットポリシーで改ざんを防ぐ
+- ログは専用のログアーカイブアカウントの S3 に保存し、バージョニング、Object Lock (Compliance モードでは、保持期間中のオブジェクトバージョンを root ユーザーを含め誰も削除・上書きできない。ただし新しいバージョンの書き込みや削除マーカーの作成は防げず、保護されたバージョンが最新版として見えなくなる可能性があるため、バケットポリシーで許可されていない `s3:PutObject` と削除マーカーを作成する `s3:DeleteObject` を拒否する。Governance モードを使う場合は `s3:BypassGovernanceRetention` 権限を厳しく制限する)、KMS 暗号化、厳格なバケットポリシーで改ざんを防ぐ
 - 検出結果は EventBridge から通知基盤へ連携し、重要度に応じて自動修復する (例: 公開された S3 バケットを自動で非公開化)
 - Security Hub は名称や機能構成が更新されているため、最新の構成は公式ドキュメントで確認する
 
