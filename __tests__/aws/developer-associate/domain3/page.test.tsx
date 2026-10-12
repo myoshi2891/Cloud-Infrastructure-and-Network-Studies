@@ -59,7 +59,7 @@ describe('DVA Deployment 全量移行', () => {
             const chart = el.getAttribute('data-chart')!;
             const frontmatter = chart.match(/^---\nconfig: (.+)\n---\n/);
             expect(frontmatter).not.toBeNull();
-            expect(JSON.parse(frontmatter![1]!)).toEqual({ ...theme.source, themeVariables: { ...theme.source.themeVariables, fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif', fontSize: '14px' } });
+            expect(JSON.parse(frontmatter![1]!)).toEqual({ ...theme.resolved, themeVariables: { ...theme.resolved.themeVariables, fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif', fontSize: '14px' } });
             expect(chart.slice(frontmatter![0].length)).toBe(charts[index]);
             expect(el.getAttribute('aria-label')?.trim()).toBeTruthy();
             expect(el).toHaveAttribute('data-preserve-natural-scale', 'true');
