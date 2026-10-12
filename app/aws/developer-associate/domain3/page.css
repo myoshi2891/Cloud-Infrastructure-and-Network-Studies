@@ -52,16 +52,16 @@
  .dva-deployment-page .hero{padding:32px 16px}.dva-deployment-page .content{padding:20px 16px 60px}.dva-deployment-page .hero h1{font-size:1.4875rem}.dva-deployment-page .hero h1 .sub{font-size:0.9625rem}.dva-deployment-page h1{font-size:1.18125rem}.dva-deployment-page h2{font-size:1.1375rem}.dva-deployment-page .footer{padding:20px 18px}
 }
 
-.dva-deployment-page .hljs{color:#24292f;background:transparent}
-.dva-deployment-page .hljs-comment, .dva-deployment-page .hljs-quote{color:#6b7684;font-style:italic}
-.dva-deployment-page .hljs-keyword, .dva-deployment-page .hljs-selector-tag, .dva-deployment-page .hljs-literal, .dva-deployment-page .hljs-built_in{color:#8a2f7a;font-weight:600}
-.dva-deployment-page .hljs-string, .dva-deployment-page .hljs-regexp, .dva-deployment-page .hljs-addition{color:#1f6b46}
-.dva-deployment-page .hljs-number, .dva-deployment-page .hljs-symbol, .dva-deployment-page .hljs-bullet{color:#b4540a}
-.dva-deployment-page .hljs-attr, .dva-deployment-page .hljs-attribute, .dva-deployment-page .hljs-property{color:#2b3f9e}
-.dva-deployment-page .hljs-title, .dva-deployment-page .hljs-section, .dva-deployment-page .hljs-name, .dva-deployment-page .hljs-type{color:#0b6e8a;font-weight:600}
-.dva-deployment-page .hljs-variable, .dva-deployment-page .hljs-template-variable, .dva-deployment-page .hljs-params{color:#9a5b00}
-.dva-deployment-page .hljs-meta, .dva-deployment-page .hljs-doctag{color:#6b7684}
-.dva-deployment-page .hljs-deletion{color:#b3261e}
+.dva-deployment-page .hljs{color:var(--color-dva-deployment-hljs-base);background:transparent}
+.dva-deployment-page .hljs-comment, .dva-deployment-page .hljs-quote{color:var(--color-dva-deployment-hljs-comment);font-style:italic}
+.dva-deployment-page .hljs-keyword, .dva-deployment-page .hljs-selector-tag, .dva-deployment-page .hljs-literal, .dva-deployment-page .hljs-built_in{color:var(--color-dva-deployment-hljs-keyword);font-weight:600}
+.dva-deployment-page .hljs-string, .dva-deployment-page .hljs-regexp, .dva-deployment-page .hljs-addition{color:var(--color-dva-deployment-hljs-string)}
+.dva-deployment-page .hljs-number, .dva-deployment-page .hljs-symbol, .dva-deployment-page .hljs-bullet{color:var(--color-dva-deployment-hljs-number)}
+.dva-deployment-page .hljs-attr, .dva-deployment-page .hljs-attribute, .dva-deployment-page .hljs-property{color:var(--color-dva-deployment-hljs-attr)}
+.dva-deployment-page .hljs-title, .dva-deployment-page .hljs-section, .dva-deployment-page .hljs-name, .dva-deployment-page .hljs-type{color:var(--color-dva-deployment-hljs-title);font-weight:600}
+.dva-deployment-page .hljs-variable, .dva-deployment-page .hljs-template-variable, .dva-deployment-page .hljs-params{color:var(--color-dva-deployment-hljs-variable)}
+.dva-deployment-page .hljs-meta, .dva-deployment-page .hljs-doctag{color:var(--color-dva-deployment-hljs-comment)}
+.dva-deployment-page .hljs-deletion{color:var(--color-dva-deployment-hljs-deletion)}
 
 .dva-deployment-page li.chk{list-style:none;margin:0}
 .dva-deployment-page .refs{margin:32px 0 8px;padding:16px 18px 18px;background:linear-gradient(180deg,var(--color-dva-deployment-f3f4fc),var(--color-dva-deployment-fbf9f2));border:1px solid var(--color-dva-deployment-cfd4ee);border-radius:12px}
