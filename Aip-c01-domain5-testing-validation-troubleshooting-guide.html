@@ -13,6 +13,12 @@
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/styles/github-dark.min.css"
+            integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH"
+            crossorigin="anonymous"
+        />
         <style>
             :root {
                 --bg: #f6f8fc;
@@ -277,6 +283,12 @@
                 font-family: var(--font-mono);
                 font-size: 1rem;
                 line-height: 1.7;
+            }
+            .main pre.code code.hljs {
+                background: transparent;
+                padding: 0;
+                display: block;
+                overflow: visible;
             }
             .main pre.code code {
                 font-family: inherit;
@@ -3966,7 +3978,9 @@ flowchart TB
                     Agents、LangChain、LangGraph などのフレームワークにも対応しています。
                 </p>
                 <h4>X-Ray でプロンプトの文脈を残す例(Python)</h4>
-                <pre class="code"><code>from aws_xray_sdk.core import xray_recorder
+                <pre
+                    class="code"
+                ><code class="language-python">from aws_xray_sdk.core import xray_recorder
 
 def invoke_with_trace(client, model_id, prompt_version, messages):
     with xray_recorder.in_subsegment(&quot;bedrock_converse&quot;) as seg:
@@ -3993,7 +4007,7 @@ def invoke_with_trace(client, model_id, prompt_version, messages):
                 </p>
                 <pre
                     class="code"
-                ><code>fields @timestamp, input.inputTokenCount, output.outputTokenCount, modelId
+                ><code class="language-logsinsights">fields @timestamp, input.inputTokenCount, output.outputTokenCount, modelId
 | filter ispresent(output.outputTokenCount)
 | stats avg(output.outputTokenCount) as avg_out, max(output.outputTokenCount) as max_out, count(*) as n by modelId, bin(1h)
 | sort @timestamp desc
@@ -5080,9 +5094,44 @@ flowchart TB
             integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j"
             crossorigin="anonymous"
         ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"
+            integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+            crossorigin="anonymous"
+        ></script>
         <script>
             (function () {
                 'use strict';
+
+                // ---------- Syntax highlighting (highlight.js) ----------
+                if (typeof hljs !== 'undefined') {
+                    hljs.registerLanguage('logsinsights', function (h) {
+                        return {
+                            name: 'CloudWatch Logs Insights',
+                            case_insensitive: true,
+                            keywords: {
+                                keyword:
+                                    'fields filter stats sort limit display parse dedup unnest pattern diff by as in like not and or desc asc',
+                                built_in:
+                                    'ispresent isblank strlen toupper tolower substr replace trim concat ltrim rtrim count count_distinct sum avg min max pct stddev earliest latest sortsFirst sortsLast bin datefloor dateceil abs ceil floor greatest least log sqrt',
+                                literal: 'true false null',
+                            },
+                            contains: [
+                                h.QUOTE_STRING_MODE,
+                                h.APOS_STRING_MODE,
+                                h.C_NUMBER_MODE,
+                                h.HASH_COMMENT_MODE,
+                                { className: 'variable', begin: /@[A-Za-z_]+/ },
+                                { className: 'operator', begin: /\|/ },
+                            ],
+                        };
+                    });
+                    document.querySelectorAll('pre.code code').forEach(function (el) {
+                        hljs.highlightElement(el);
+                    });
+                } else {
+                    console.warn('highlight.js not loaded');
+                }
 
                 // ---------- Mermaid ----------
                 function initMermaid() {
