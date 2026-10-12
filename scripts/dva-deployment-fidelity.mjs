@@ -52,6 +52,20 @@ function canonicalText(root) {
     return normalizeText(clone.textContent);
 }
 
+/** 1節だけを複製し、全量fixtureと同じ規則で本文・コードを抽出する。 */
+export function snapshotDeploymentSegment(root, id) {
+    const segment = deploymentSegments(root).find(candidate => candidate.id === id);
+    if (!segment) return undefined;
+    return snapshotSegmentNodes(segment, root.querySelector('main').ownerDocument);
+}
+
+/** 原本・移行先の同じ節を同じ正規化規則で比較する。 */
+function snapshotSegmentNodes(segment, document) {
+    const fragment = document.createElement('div');
+    segment.nodes.forEach(node => fragment.append(node.cloneNode(true)));
+    return { id: segment.id, text: canonicalText(fragment) };
+}
+
 /** 原本とReact DOMに共用する全文・配置・表・リスト・図・コードの抽出器。 */
 export function snapshotDvaDeployment(root) {
     const main = root.querySelector('main');
@@ -60,11 +74,7 @@ export function snapshotDvaDeployment(root) {
     const headingOf = element => segments.find(segment => segment.nodes.some(node => node === element || node.contains(element)))?.id ?? 'hero';
     return {
         anchors: segments.map(segment => segment.id),
-        segments: segments.map(segment => {
-            const fragment = main.ownerDocument.createElement('div');
-            segment.nodes.forEach(node => fragment.append(node.cloneNode(true)));
-            return { id: segment.id, text: canonicalText(fragment) };
-        }),
+        segments: segments.map(segment => snapshotSegmentNodes(segment, main.ownerDocument)),
         texts: [...main.querySelectorAll('h1,h2,h3,h4,p,li,th,td,summary,blockquote,.eyebrow,.chip')].map(el => ({ tag: el.tagName.toLowerCase(), text: normalizeText(el.textContent) })),
         lists: [...main.querySelectorAll('ul,ol')].map(el => ({
             tag: el.tagName.toLowerCase(), start: el.getAttribute('start'), type: el.getAttribute('type'), reversed: el.hasAttribute('reversed'),
