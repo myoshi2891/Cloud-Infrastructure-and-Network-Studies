@@ -778,7 +778,7 @@ flowchart LR
       "Effect": "Deny",
       "NotAction": [
         "iam:*", "organizations:*", "support:*", "sts:*",
-        "cloudfront:*", "route53:*", "route53domains:*", "waf:*", "wafv2:*",
+        "cloudfront:*", "route53:*", "route53domains:*", "waf:*",
         "globalaccelerator:*", "budgets:*", "ce:*", "cur:*", "health:*",
         "trustedadvisor:*", "s3:ListAllMyBuckets"
       ],
