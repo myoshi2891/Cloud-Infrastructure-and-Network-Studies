@@ -872,7 +872,9 @@ flowchart LR
     A --> D["VPC Flow Logs と CloudWatch Logs"]
     B --> E["ログアーカイブアカウントの S3"]
     C -->|"設定履歴とスナップショット"| E
-    D --> E
+    D -->|"サブスクリプションフィルター (継続配信)"| K["Amazon Data Firehose"]
+    K --> E
+    D -.->|"エクスポートタスク (バッチ)"| E
     E --> F["Athena や OpenSearch で分析"]
     A --> G["EventBridge のイベントバス"]
     G --> H["中央アカウントのイベントバス"]
