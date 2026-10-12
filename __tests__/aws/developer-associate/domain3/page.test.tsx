@@ -9,7 +9,7 @@ import inventory from '@/docs/migration-inventory/aws-dva-domain3-deployment.jso
 import design from '@/docs/migration-inventory/aws-dva-domain3-deployment.design.json';
 import theme from '@/docs/migration-inventory/aws-dva-domain3-deployment.mermaid.json';
 import { codeBlockSelector, codeLineCount, extractBodyContent, squash } from '@/__tests__/helpers/migration-test-utils';
-import { snapshotDvaDeployment } from '@/scripts/dva-deployment-fidelity.mjs';
+import { snapshotDvaDeployment, snapshotDeploymentSegment } from '@/scripts/dva-deployment-fidelity.mjs';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 
 vi.mock('@/components/MermaidDiagram', async () => {
@@ -37,7 +37,7 @@ describe('DVA Deployment 全量移行', () => {
         expect({ ...actual, segments: normalizeSegments(actual.segments) }).toEqual({ ...design.structure, segments: normalizeSegments(design.structure.segments) });
     });
     it.each(design.structure.segments.map(segment => [segment.id, segment.text] as const))('段階検証 %s の本文全文', (id, text) => {
-        const actual = snapshotDvaDeployment(mount()).segments.find(segment => segment.id === id);
+        const actual = snapshotDeploymentSegment(mount(), id);
         expect(actual).toBeDefined();
         expect(squash(actual!.text)).toBe(squash(text));
     });
@@ -86,8 +86,9 @@ describe('DVA Deployment 全量移行', () => {
         root.querySelectorAll('[data-language="text"]').forEach(el => expect(el.querySelector('[class^="hljs-"]')).toBeNull());
     });
     it('番号再開 start=4 と入れ子・全リストの種類を保持', () => {
-        expect(snapshotDvaDeployment(mount()).lists).toEqual(design.structure.lists);
-        expect(mount().querySelector('ol[start="4"]')).not.toBeNull();
+        const root = mount();
+        expect(snapshotDvaDeployment(root).lists).toEqual(design.structure.lists);
+        expect(root.querySelector('ol[start="4"]')).not.toBeNull();
     });
     it('全detailsの解説とネイティブ開閉を保持', () => {
         const root = mount();
@@ -129,14 +130,15 @@ describe('DVA Deployment 全量移行', () => {
     });
     it('33目次は単一正本でh1/h2へhash・focus・現在地を連動', () => {
         const root = mount();
+        const navigation = root.querySelector('nav')!;
         expect(NAV_ITEMS.map(item => item.id)).toEqual(design.structure.anchors);
         expect(root.querySelectorAll('nav ul > li')).toHaveLength(NAV_ITEMS.length);
         NAV_ITEMS.forEach((item, i) => {
-            const link = root.querySelector<HTMLAnchorElement>(`nav a[href="#${item.id}"]`)!;
+            const link = navigation.querySelector<HTMLAnchorElement>(`a[href="#${item.id}"]`)!;
             expect(link).toHaveClass(...design.navClasses[i]!.split(' '));
             fireEvent.click(link);
             expect(window.location.hash).toBe(`#${item.id}`);
-            expect(root.querySelector(`#${item.id}`)).toHaveFocus();
+            expect(document.getElementById(item.id)).toHaveFocus();
             expect(link).toHaveAttribute('aria-current', 'location');
         });
     });

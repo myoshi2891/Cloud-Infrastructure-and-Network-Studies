@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { snapshotDvaDeployment, deploymentSegments, extractDeploymentTheme } from '@/scripts/dva-deployment-fidelity.mjs';
+import { snapshotDvaDeployment, deploymentSegments, extractDeploymentTheme, snapshotDeploymentSegment } from '@/scripts/dva-deployment-fidelity.mjs';
 
 const source = `<nav class="sidebar"><a class="nav l1" href="#s1">Task 1</a><a class="nav l2" href="#s2">Step 1</a></nav><main><div class="content"><h1 id="s1">Task 1</h1><p>準備 <strong>必須</strong></p><h2 id="s2">Step 1</h2><ol start="4"><li>四番</li></ol><div class="diagram-wrap"><div class="diagram-canvas" data-id="d0"></div></div><pre><code class="language-yaml">a: 1\n\n  b: 2</code></pre><details><summary>回答</summary><p>説明</p></details><section class="refs"><a class="ref" href="https://example.org">参照</a></section></div></main>`;
 const document = (html: string) => new JSDOM(html).window.document;
 
 describe('DVA Deployment fixture抽出契約', () => {
+    it('単一節の抽出でも全量抽出と同じ本文・コードを返す', () => {
+        const root = document(source);
+        for (const segment of snapshotDvaDeployment(root).segments) expect(snapshotDeploymentSegment(root, segment.id)).toEqual(segment);
+    });
+    it('存在しない節を別の本文で代用しない', () => {
+        expect(snapshotDeploymentSegment(document(source), 'missing')).toBeUndefined();
+    });
     it('初期化設定をJavaScript実行なしで抽出する', () => {
         expect(extractDeploymentTheme(`<script>mermaid.initialize({theme:'base',startOnLoad:false,flowchart:{htmlLabels:true},themeVariables:{fontSize:'16px'}});</script>`)).toEqual({ theme: 'base', startOnLoad: false, flowchart: { htmlLabels: true }, themeVariables: { fontSize: '16px' } });
     });
