@@ -167,10 +167,35 @@ describe('DVA Deployment 全量移行', () => {
             observe = observe;
             disconnect = disconnect;
         });
+        // 実ブラウザ同様に非同期で積み、明示的に1フレーム進める
+        const frames: FrameRequestCallback[] = [];
+        vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => frames.push(cb));
+        const flushFrame = () => act(() => { frames.splice(0).forEach(cb => cb(0)); });
+        vi.stubGlobal('cancelAnimationFrame', vi.fn());
         const { container, unmount } = render(<Page />);
         expect(observe.mock.calls.map(call => (call[0] as HTMLElement).id)).toEqual(design.structure.anchors);
+        // index 以前の見出しを読書位置より上、以降を下に置く
+        const placeHeadingsAbove = (id: string) => {
+            const index = NAV_ITEMS.findIndex(item => item.id === id);
+            NAV_ITEMS.forEach((item, i) => {
+                const heading = container.querySelector(`#${item.id}`) as HTMLElement;
+                heading.getBoundingClientRect = () => ({ top: i <= index ? -100 : 2000 } as DOMRect);
+            });
+        };
+        placeHeadingsAbove('s15');
         act(() => callback?.([{ isIntersecting: true, target: container.querySelector('#s15')! } as IntersectionObserverEntry], {} as IntersectionObserver));
+        flushFrame();
         expect(container.querySelector('a[href="#s15"]')).toHaveAttribute('aria-current', 'location');
+        // 下方向: 交差イベントがなくても scroll ごとに読書位置より上の最後の見出しへ追従する
+        placeHeadingsAbove('s20');
+        fireEvent.scroll(window);
+        flushFrame();
+        expect(container.querySelector('a[href="#s20"]')).toHaveAttribute('aria-current', 'location');
+        // 上方向: 見出しが読書帯の下へ抜けても直前の見出しへ戻る
+        placeHeadingsAbove('s9');
+        fireEvent.scroll(window);
+        flushFrame();
+        expect(container.querySelector('a[href="#s9"]')).toHaveAttribute('aria-current', 'location');
         window.history.replaceState(null, '', '#s3');
         fireEvent(window, new Event('hashchange'));
         expect(container.querySelector('a[href="#s3"]')).toHaveAttribute('aria-current', 'location');
@@ -179,6 +204,7 @@ describe('DVA Deployment 全量移行', () => {
         expect(container.querySelector('a[href="#s21"]')).toHaveAttribute('aria-current', 'location');
         vi.stubGlobal('scrollY', 1000);
         fireEvent.scroll(window);
+        flushFrame();
         expect(container.querySelector('a[href="#s33"]')).toHaveAttribute('aria-current', 'location');
         unmount();
         expect(disconnect).toHaveBeenCalledOnce();

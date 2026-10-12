@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState, type MouseEvent } from 'react';
 import { NAV_ITEMS } from './constants';
 
+/** ビューポート上端から読書位置までの比率。 */
+const READING_RATIO = 0.35;
+
 /** 単一の目次データから現在地・hash・フォーカス・モバイル開閉を管理する。 */
 export function NavBar() {
     const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0]?.id ?? '');
@@ -14,21 +17,30 @@ export function NavBar() {
             if (!id) setActiveId(NAV_ITEMS[0]?.id ?? '');
             else if (NAV_ITEMS.some(item => item.id === id)) setActiveId(id);
         };
-        const onScroll = () => {
+        let frame = 0;
+        // 読書位置より上にある最後の見出しを現在地とし、上下どちらのスクロールでも同じ規則で判定する。
+        const updateActive = () => {
+            frame = 0;
             if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
                 setActiveId(NAV_ITEMS.at(-1)?.id ?? '');
+                return;
             }
+            const readingLine = window.innerHeight * READING_RATIO;
+            let current: string = NAV_ITEMS[0]?.id ?? '';
+            for (const item of NAV_ITEMS) {
+                const heading = document.getElementById(item.id);
+                if (!heading) continue;
+                if (heading.getBoundingClientRect().top > readingLine) break;
+                current = item.id;
+            }
+            setActiveId(current);
         };
-        const visible = new Set<string>();
-        const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(entries => {
-            for (const entry of entries) {
-                if (entry.isIntersecting) visible.add(entry.target.id);
-                else visible.delete(entry.target.id);
-            }
-            // DOMの順序を保ち、境界で見出しが複数交差しても現在地を安定させる。
-            const first = NAV_ITEMS.find(item => visible.has(item.id));
-            if (first) setActiveId(first.id);
-        }, { rootMargin: `0px 0px -${Math.round(window.innerHeight * 0.65)}px 0px`, threshold: 0 });
+        // 計測は1フレームに1回へまとめる。
+        const scheduleUpdate = () => { if (!frame) frame = window.requestAnimationFrame(updateActive); };
+        const onScroll = scheduleUpdate;
+        // 図の描画などスクロールを伴わない配置変化も、見出しが読書位置を跨いだ時点で再判定する。
+        const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(scheduleUpdate,
+            { rootMargin: `0px 0px -${Math.round(window.innerHeight * (1 - READING_RATIO))}px 0px`, threshold: 0 });
         for (const item of NAV_ITEMS) {
             const heading = document.getElementById(item.id);
             if (heading) observer?.observe(heading);
@@ -39,6 +51,7 @@ export function NavBar() {
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => {
             observer?.disconnect();
+            if (frame) window.cancelAnimationFrame(frame);
             window.removeEventListener('hashchange', fromHash);
             window.removeEventListener('popstate', fromHash);
             window.removeEventListener('scroll', onScroll);
