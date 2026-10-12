@@ -15,6 +15,12 @@ import { S11 } from './sections/S11';
 import { S12 } from './sections/S12';
 import { S13 } from './sections/S13';
 import { S14 } from './sections/S14';
+import { S15 } from './sections/S15';
+import { S16 } from './sections/S16';
+import { S17 } from './sections/S17';
+import { S18 } from './sections/S18';
+import { S19 } from './sections/S19';
+import { S20 } from './sections/S20';
 /** チェック・現在地の更新から独立した静的本文。 */
 const GuideContents = memo(function GuideContents() { return <>
     <S1 />
@@ -31,6 +37,12 @@ const GuideContents = memo(function GuideContents() { return <>
     <S12 />
     <S13 />
     <S14 />
+    <S15 />
+    <S16 />
+    <S17 />
+    <S18 />
+    <S19 />
+    <S20 />
 </>; });
 /** 原本のhero・33節・footerを保持するデプロイ教材。 */
 export function DeploymentGuide() { return <div className="dva-deployment-page"><NavBar /><main>
