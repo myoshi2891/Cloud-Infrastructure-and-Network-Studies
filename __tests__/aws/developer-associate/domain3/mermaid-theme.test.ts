@@ -24,7 +24,8 @@ afterEach(() => mermaid.initialize(darkSite));
 describe('DVA Deployment Mermaid 原本配色の独立性', () => {
     it.each(Object.entries(DIAGRAMS))('%s: 共通dark設定に関係なく淡色ノード・濃色文字・原本の枠線', async (_id, chart) => {
         mermaid.initialize(fixture.source as MermaidConfig);
-        const original = structuredClone(mermaid.mermaidAPI.getConfig());
+        const config = mermaid.mermaidAPI.getConfig();
+        const original = { themeVariables: { ...config.themeVariables }, flowchart: { ...config.flowchart } };
         mermaid.initialize(darkSite);
         await mermaid.parse(chartWithPageTheme(chart));
         const actual = mermaid.mermaidAPI.getConfig();
