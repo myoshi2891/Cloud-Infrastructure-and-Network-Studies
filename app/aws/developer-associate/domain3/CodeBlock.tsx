@@ -18,6 +18,8 @@ function highlight(line: string, language: string): ReactNode {
 
 /** 言語・空行・インデントを保持する横スクロール可能なコード例。 */
 export function CodeBlock({ language, lines, index }: { language: string; lines: string[]; index: number }) {
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: 横スクロール領域をキーボードで操作可能にするため意図的に付与
+    // biome-ignore lint/a11y/useSemanticElements: section ではなく aria-label 付きの横スクロール領域として扱う
     return <div className="code-block hljs" data-language={language} tabIndex={0} role="region" aria-label={`${language} コード例 ${index + 1}`}>
         {lines.map((line, lineIndex) => <div className="code-line" key={lineIndex}><code className={`language-${language}`}>{highlight(line, language)}</code></div>)}
     </div>;
