@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
+import { snapshotGuideDesign, snapshotGuideParts } from './guide-fidelity-extraction.mjs';
 import {
     normalizeMermaid,
     normalizeText,
@@ -88,6 +89,10 @@ function buildFixture(slug, config) {
 
     /** @type {Record<string, unknown>} */
     const fixture = { slug, source: config.source, sourceCommit };
+    if (config.guideBoundaries) {
+        fixture.guideParts = snapshotGuideParts(doc, config.guideBoundaries);
+        fixture.guideDesign = snapshotGuideDesign(doc);
+    }
 
     if (config.textSelector) fixture.texts = snapshotTexts(doc, config.textSelector);
     if (config.tables) fixture.tables = snapshotTables(doc);

@@ -51,7 +51,7 @@ export function snapshotGuideParts(doc, boundaries) {
     let key = Object.keys(boundaries)[0];
     let container = doc.createElement('div');
     for (const node of doc.querySelector('main').childNodes) {
-        const next = Object.entries(boundaries).find(([, id]) => node.nodeType === 1 && node.id === id)?.[0];
+        const next = Object.entries(boundaries).find(([, id]) => id && node.nodeType === 1 && node.id === id)?.[0];
         if (next && next !== key) {
             parts[key] = snapshotGuidePart(container);
             key = next;
