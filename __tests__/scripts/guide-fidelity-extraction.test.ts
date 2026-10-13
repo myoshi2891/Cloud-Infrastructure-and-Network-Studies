@@ -12,8 +12,10 @@ describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
         let fixture;
         try {
             mkdirSync(join(sandbox, 'docs/migration-inventory'), { recursive: true });
+            // worktree では .git がファイルになるため、実際の Git ディレクトリを解決して渡す
+            const gitDir = execFileSync('git', ['rev-parse', '--absolute-git-dir'], { encoding: 'utf8' }).trim();
             execFileSync('bun', [resolve('scripts/gen-fidelity-fixture.mjs'), 'aws-aip-c01-guide'], {
-                cwd: sandbox, env: { ...process.env, GIT_DIR: resolve('.git') },
+                cwd: sandbox, env: { ...process.env, GIT_DIR: gitDir },
             });
             const generated = readFileSync(join(sandbox, 'docs/migration-inventory/aws-aip-c01-guide.fidelity.json'), 'utf8');
             expect(generated).toBe(readFileSync('docs/migration-inventory/aws-aip-c01-guide.fidelity.json', 'utf8'));
