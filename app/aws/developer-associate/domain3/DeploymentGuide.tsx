@@ -1,5 +1,3 @@
-'use client';
-import { memo } from 'react';
 import { NavBar } from './NavBar';
 import { S1 } from './sections/S1';
 import { S2 } from './sections/S2';
@@ -34,8 +32,8 @@ import { S30 } from './sections/S30';
 import { S31 } from './sections/S31';
 import { S32 } from './sections/S32';
 import { S33 } from './sections/S33';
-/** チェック・現在地の更新から独立した静的本文。 */
-const GuideContents = memo(function GuideContents() { return <>
+/** 静的本文（Server Component）。 */
+function GuideContents() { return <>
     <S1 />
     <S2 />
     <S3 />
@@ -69,7 +67,7 @@ const GuideContents = memo(function GuideContents() { return <>
     <S31 />
     <S32 />
     <S33 />
-</>; });
+</>; }
 /** 原本のhero・33節・footerを保持するデプロイ教材。 */
 export function DeploymentGuide() { return <div className="dva-deployment-page"><NavBar /><main>
 <header className="hero">{" "}<div className="eyebrow">

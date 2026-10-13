@@ -104,7 +104,7 @@ export function S16() { return <>
 {" "}
 <Diagram id="d20" label="Step 12：テストイベントの作成（Skill 3.3.1）の図解 d20" />
 {" "}
-<CodeBlock index={21} language="python" lines={["import json, glob, pytest","from app import handler","","@pytest.mark.parametrize(\"path\", glob.glob(\"events/*.json\"))","def test_handler_returns_valid_response(path):","    event = json.load(open(path))","    res = handler(event, None)","    assert res[\"statusCode\"] in (200, 201, 400)"]} />
+<CodeBlock index={21} language="python" lines={["import glob, json, os","import pytest","from app import handler","","# fixture ごとに「期待ステータス」と「レスポンス本文に必要なキー」を明示する","EXPECTED = {","    \"api-post.json\": (200, {\"received\"}),   # 正常系。400 では不合格","}","PATHS = sorted(glob.glob(\"events/*.json\"))","","def test_event_fixtures_are_discovered():","    # 0 件一致のまま全テストが「成功」扱いになるのを防ぐ","    assert PATHS, \"events/*.json に一致する fixture がありません\"","    assert {os.path.basename(p) for p in PATHS} == set(EXPECTED), \"期待値の未定義・欠落 fixture があります\"","","@pytest.mark.parametrize(\"path\", PATHS)","def test_handler_returns_expected_response(path):","    status, body_keys = EXPECTED[os.path.basename(path)]","    with open(path) as f:","        event = json.load(f)","    res = handler(event, None)","    assert res[\"statusCode\"] == status","    assert body_keys <= set(json.loads(res[\"body\"]))"]} />
 {" "}
 <h3>{"12.7 ベストプラクティス"}</h3>
 {" "}

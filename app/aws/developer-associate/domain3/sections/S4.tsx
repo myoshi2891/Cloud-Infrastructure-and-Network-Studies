@@ -106,7 +106,7 @@ export function S4() { return <>
 {" "}
 </ul>
 {" "}
-<CodeBlock index={2} language="yaml" lines={["# SAM の例：環境変数に「テーブル名」と「パラメータ名」を渡す","Resources:","  OrderFunction:","    Type: AWS::Serverless::Function","    Properties:","      Handler: app.handler","      Runtime: python3.13","      Environment:","        Variables:","          TABLE_NAME: !Ref OrdersTable","          DB_PASSWORD_PARAM: /myapp/prod/db_password   # 値ではなく名前を渡す"]} />
+<CodeBlock index={2} language="yaml" lines={["# SAM の例：環境変数に「テーブル名」と「パラメータ名」を渡す","Parameters:","  DbPasswordParamName:","    Type: String                 # デプロイ環境ごとに指定（例: /myapp/dev/db_password）","","Resources:","  OrderFunction:","    Type: AWS::Serverless::Function","    Properties:","      Handler: app.handler","      Runtime: python3.13","      Environment:","        Variables:","          TABLE_NAME: !Ref OrdersTable","          DB_PASSWORD_PARAM: !Ref DbPasswordParamName   # 値ではなく名前を渡す"]} />
 {" "}
 <h3>{"2.5 コンテナイメージの依存関係"}</h3>
 {" "}

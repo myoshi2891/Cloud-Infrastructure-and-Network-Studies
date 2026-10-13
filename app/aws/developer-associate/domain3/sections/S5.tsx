@@ -21,7 +21,7 @@ export function S5() { return <>
 
 <th scope="col">{"ツール"}</th>
 
-<th scope="col">{"必要なファイル"}</th>
+<th scope="col">{"例となるファイル"}</th>
 
 <th scope="col">{"置き場所"}</th>
 
@@ -73,7 +73,7 @@ export function S5() { return <>
 
 <td>{"AWS SAM"}</td>
 
-<td><code>{"template.yaml"}</code>{"、"}<code>{"samconfig.toml"}</code></td>
+<td><code>{"template.yaml"}</code>{"、"}<code>{"samconfig.toml"}</code>{"（任意）"}</td>
 
 <td>{"プロジェクトのルート"}</td>
 
@@ -109,7 +109,7 @@ export function S5() { return <>
 
 <td>{"AWS Amplify Hosting"}</td>
 
-<td><code>{"amplify.yml"}</code></td>
+<td><code>{"amplify.yml"}</code>{"（任意）"}</td>
 
 <td>{"リポジトリのルート"}</td>
 

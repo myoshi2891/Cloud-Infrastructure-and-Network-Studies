@@ -126,7 +126,7 @@ export function S22() { return <>
 
 <td>{"4"}</td>
 
-<td><strong>{"コード署名（Code signing）"}</strong>{" で改ざんを防ぐ"}</td>
+<td>{"ZIP パッケージの関数では "}<strong>{"コード署名（Code signing）"}</strong>{" で改ざんを防ぐ（コンテナイメージ関数には適用されない）"}</td>
 
 <td>{"供給網対策"}</td>
 

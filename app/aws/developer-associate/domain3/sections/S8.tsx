@@ -224,7 +224,7 @@ export function S8() { return <>
 {" "}
 </ul>
 {" "}
-<CodeBlock index={7} language="python" lines={["import urllib.request, json","","def handler(event, context):","    url = (\"http://localhost:2772/applications/myapp\"","           \"/environments/prod/configurations/feature-flags\")","    with urllib.request.urlopen(url) as res:","        config = json.loads(res.read())","    if config.get(\"newCheckout\", {}).get(\"enabled\"):","        return \"new flow\"","    return \"old flow\""]} />
+<CodeBlock index={7} language="python" lines={["import os, urllib.request, json","","def handler(event, context):","    env = os.environ[\"STAGE\"]   # デプロイ環境名（dev / staging / prod）","    url = (\"http://localhost:2772/applications/myapp\"","           f\"/environments/{env}/configurations/feature-flags\")","    with urllib.request.urlopen(url) as res:","        config = json.loads(res.read())","    if config.get(\"newCheckout\", {}).get(\"enabled\"):","        return \"new flow\"","    return \"old flow\""]} />
 {" "}
 <h3>{"6.5 ベストプラクティス"}</h3>
 {" "}

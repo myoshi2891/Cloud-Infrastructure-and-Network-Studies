@@ -20,7 +20,7 @@ export function S30() { return <>
 {" "}
 </ol>
 {" "}
-<CodeBlock index={30} language="bash" lines={["aws lambda add-permission \\","  --function-name orders:dev \\","  --statement-id apigw-dev \\","  --action lambda:InvokeFunction \\","  --principal apigateway.amazonaws.com \\","  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\""]} />
+<CodeBlock index={30} language="bash" lines={["aws lambda add-permission \\","  --function-name orders:dev \\","  --statement-id apigw-dev \\","  --action lambda:InvokeFunction \\","  --principal apigateway.amazonaws.com \\","  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\"","","aws lambda add-permission \\","  --function-name orders:prod \\","  --statement-id apigw-prod \\","  --action lambda:InvokeFunction \\","  --principal apigateway.amazonaws.com \\","  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\""]} />
 {" "}
 <ol start={4}>
 {" "}

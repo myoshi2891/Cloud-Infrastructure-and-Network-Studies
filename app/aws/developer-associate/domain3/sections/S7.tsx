@@ -94,7 +94,7 @@ export function S7() { return <>
 {" "}
 <h3>{"5.4 ECS のタスク定義でのリソース指定（抜粋）"}</h3>
 {" "}
-<CodeBlock index={6} language="json" lines={["{","  \"family\": \"orders-api\",","  \"requiresCompatibilities\": [\"FARGATE\"],","  \"cpu\": \"512\",","  \"memory\": \"1024\",","  \"containerDefinitions\": [","    {","      \"name\": \"app\",","      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/orders:1.4.2\",","      \"memory\": 1024","    }","  ]","}"]} />
+<CodeBlock index={6} language="json" lines={["{","  \"family\": \"orders-api\",","  \"requiresCompatibilities\": [\"FARGATE\"],","  \"networkMode\": \"awsvpc\",","  \"cpu\": \"512\",","  \"memory\": \"1024\",","  \"containerDefinitions\": [","    {","      \"name\": \"app\",","      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/orders:1.4.2\",","      \"memory\": 1024","    }","  ]","}"]} />
 {" "}
 <h3>{"5.5 ベストプラクティス"}</h3>
 {" "}
