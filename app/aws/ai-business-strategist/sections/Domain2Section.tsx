@@ -3,9 +3,9 @@ import { Diagram } from '../Diagram';
 export const Domain2Section = () => {
     return (
         <>
-            <h1 id="s28">Domain 2 AI Strategy and Business Value Creation(配点 28%)</h1>
-            <h2 id="s29">Step 4 AI 戦略を事業目標に合わせる(Task 2.1)</h2>
-            <h3 id="s30">4-1 高インパクトなユースケースの特定と成果への対応づけ(Skill 2.1.1)</h3>
+            <h2 className="domain-heading" id="s28">Domain 2 AI Strategy and Business Value Creation(配点 28%)</h2>
+            <h3 className="step-heading" id="s29">Step 4 AI 戦略を事業目標に合わせる(Task 2.1)</h3>
+            <h4 id="s30">4-1 高インパクトなユースケースの特定と成果への対応づけ(Skill 2.1.1)</h4>
             <p>
                 <strong>考え方</strong>: 「AI で何ができるか」ではなく「<strong
                     >どの事業成果を、どの AI の能力で実現するか</strong
@@ -52,7 +52,7 @@ export const Domain2Section = () => {
                 </li>
                 <li>「成果指標(KPI)を 1 つ言えないユースケース」は、優先度を下げる</li>
             </ul>
-            <h3 id="s31">4-2 Build・Buy・Partner の判断(Skill 2.1.2)</h3>
+            <h4 id="s31">4-2 Build・Buy・Partner の判断(Skill 2.1.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -184,7 +184,7 @@ export const Domain2Section = () => {
                     に移行する、という段階的な進め方も有効(一般的な実務ガイダンス)
                 </li>
             </ul>
-            <h3 id="s32">4-3 AI イニシアチブの優先順位づけ(Skill 2.1.3)</h3>
+            <h4 id="s32">4-3 AI イニシアチブの優先順位づけ(Skill 2.1.3)</h4>
             <p>
                 <strong>4 つの評価軸(試験ガイド記載)</strong>:
                 ビジネス価値、実現可能性、持続可能性、戦略との整合性。
@@ -228,7 +228,7 @@ export const Domain2Section = () => {
                     「終了」は失敗ではなく<strong>学びの獲得</strong>と位置づけ、得られた教訓を共有する(一般的な実務ガイダンス)
                 </li>
             </ul>
-            <h3 id="s33">4-4 AI が適切でない場面の見極め(Skill 2.1.4)</h3>
+            <h4 id="s33">4-4 AI が適切でない場面の見極め(Skill 2.1.4)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -270,7 +270,7 @@ export const Domain2Section = () => {
                 を導入しない」「まず別の手段」という選択肢が<strong>正解になる場合</strong>があります。「AI
                 ありき」で選ばないこと。
             </p>
-            <h3 id="s34">4-5 業務やプラットフォームを AI へ移行する際の考慮点(Skill 2.1.5)</h3>
+            <h4 id="s34">4-5 業務やプラットフォームを AI へ移行する際の考慮点(Skill 2.1.5)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -353,10 +353,10 @@ export const Domain2Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s35">Step 5 AI のビジネス価値を測定・実証する(Task 2.2)</h2>
-            <h3 id="s36">5-1 全体の流れ</h3>
+            <h3 className="step-heading" id="s35">Step 5 AI のビジネス価値を測定・実証する(Task 2.2)</h3>
+            <h4 id="s36">5-1 全体の流れ</h4>
             <Diagram id="dgm-9" />
-            <h3 id="s37">5-2 KPI の設定: 有形の効果と無形の効果(Skill 2.2.1)</h3>
+            <h4 id="s37">5-2 KPI の設定: 有形の効果と無形の効果(Skill 2.2.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -388,7 +388,7 @@ export const Domain2Section = () => {
                 </li>
                 <li>無形の効果も<strong>測る仕組み</strong>(アンケートなど)を最初から用意する</li>
             </ul>
-            <h3 id="s38">5-3 導入前のベースライン(基準値)の設定(Skill 2.2.2)</h3>
+            <h4 id="s38">5-3 導入前のベースライン(基準値)の設定(Skill 2.2.2)</h4>
             <p>
                 <strong>理由</strong>: 導入前の数値がなければ、導入後の改善が AI
                 のおかげかどうかを示せません。
@@ -424,7 +424,7 @@ export const Domain2Section = () => {
                     を使う群と使わない群を比べる(季節要因などの影響を減らす。一般的な実務ガイダンス)
                 </li>
             </ul>
-            <h3 id="s39">5-4 AI の ROI を算出する(Skill 2.2.3)</h3>
+            <h4 id="s39">5-4 AI の ROI を算出する(Skill 2.2.3)</h4>
             <p><strong>基本式</strong>: ROI(%)= (得られた便益 − 総コスト)÷ 総コスト × 100</p>
             <p>
                 <strong>便益の観点(試験ガイド記載の例)</strong>:
@@ -494,7 +494,7 @@ export const Domain2Section = () => {
                 </li>
                 <li>定量化しにくい効果は、ROI とは別に<strong>併記</strong>する</li>
             </ul>
-            <h3 id="s40">5-5 先行指標(リーディングインジケーター)(Skill 2.2.4)</h3>
+            <h4 id="s40">5-5 先行指標(リーディングインジケーター)(Skill 2.2.4)</h4>
             <p>
                 <strong>先行指標</strong>は、最終成果(売上など)が出る前に成功の兆しを示す指標です。
             </p>
@@ -527,7 +527,7 @@ export const Domain2Section = () => {
                 <strong>ベストプラクティス</strong>:
                 先行指標が悪化した時点で、<strong>利用者の声を聞き、改善する</strong>。遅行指標を待つと、手遅れになりがちです。
             </p>
-            <h3 id="s41">5-6 コストの基本管理(Skill 2.2.5)</h3>
+            <h4 id="s41">5-6 コストの基本管理(Skill 2.2.5)</h4>
             <p><strong>AWS の AI サービスの料金体系(試験ガイド記載の例)</strong></p>
             <div className="tbl">
                 <table>
@@ -670,8 +670,8 @@ export const Domain2Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s42">Step 6 競争優位のための AI ポジショニング(Task 2.3)</h2>
-            <h3 id="s43">6-1 競争環境の評価と AI 導入の優位性(Skill 2.3.1)</h3>
+            <h3 className="step-heading" id="s42">Step 6 競争優位のための AI ポジショニング(Task 2.3)</h3>
+            <h4 id="s43">6-1 競争環境の評価と AI 導入の優位性(Skill 2.3.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -700,7 +700,7 @@ export const Domain2Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s44">6-2 ビジネスモデル変革の機会(Skill 2.3.2)</h3>
+            <h4 id="s44">6-2 ビジネスモデル変革の機会(Skill 2.3.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -729,7 +729,7 @@ export const Domain2Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s45">6-3 持続的な競争優位と運用面の改善(Skill 2.3.3)</h3>
+            <h4 id="s45">6-3 持続的な競争優位と運用面の改善(Skill 2.3.3)</h4>
             <p>
                 <strong>考え方(一般的な実務ガイダンス)</strong>: AI
                 モデルそのものは、他社も同じものを利用できることが多いため、<strong>モデルだけでは差別化になりにくい</strong>。持続的な優位は次のような要素から生まれます。
@@ -766,7 +766,7 @@ export const Domain2Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s46">6-4 投資水準の決め方(Skill 2.3.4)</h3>
+            <h4 id="s46">6-4 投資水準の決め方(Skill 2.3.4)</h4>
             <p>
                 <strong>考え方</strong>:
                 投資の大きさは、<strong>業界の成熟度と競争のダイナミクス</strong>で決めます。

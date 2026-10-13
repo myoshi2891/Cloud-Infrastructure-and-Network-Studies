@@ -124,19 +124,21 @@ html:has(.aib-guide-page) {
     color: var(--color-aib-text);
 }
 
-.aib-guide-page h1 {
+.aib-guide-page .domain-heading {
     font-size: 1.7rem;
     color: var(--color-aib-plum);
     margin: 68px 0 8px;
 }
 
-.aib-guide-page h2 {
+.aib-guide-page h2:not(.domain-heading),
+.aib-guide-page .step-heading {
     font-size: 1.4rem;
     color: var(--color-aib-accent);
     margin: 56px 0 12px;
 }
 
-.aib-guide-page h3 {
+.aib-guide-page h3:not(.step-heading),
+.aib-guide-page h4 {
     font-size: 1.12rem;
     margin: 34px 0 8px;
     padding-left: 10px;

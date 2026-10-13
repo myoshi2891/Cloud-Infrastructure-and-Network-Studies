@@ -1,13 +1,13 @@
 export const CrossDomainSection = () => {
     return (
         <>
-            <h1 id="s87">横断編と仕上げ</h1>
-            <h2 id="s88">Step 14 試験範囲の AWS サービス・フレームワーク(戦略レベル)</h2>
+            <h2 className="domain-heading" id="s87">横断編と仕上げ</h2>
+            <h3 className="step-heading" id="s88">Step 14 試験範囲の AWS サービス・フレームワーク(戦略レベル)</h3>
             <p>
                 <strong>重要</strong>: 試験は AWS
                 サービスの<strong>設定・操作を問いません</strong>。「何のためのサービスか」「ビジネス判断にどう関わるか」を押さえます。
             </p>
-            <h3 id="s89">14-1 範囲内のサービス・機能(試験ガイド記載)</h3>
+            <h4 id="s89">14-1 範囲内のサービス・機能(試験ガイド記載)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -44,7 +44,7 @@ export const CrossDomainSection = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s90">14-2 サービス・フレームワーク別の要点とベストプラクティス</h3>
+            <h4 id="s90">14-2 サービス・フレームワーク別の要点とベストプラクティス</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -134,7 +134,7 @@ export const CrossDomainSection = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s91">14-3 範囲外の代表例(試験ガイド記載)</h3>
+            <h4 id="s91">14-3 範囲外の代表例(試験ガイド記載)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -235,8 +235,8 @@ export const CrossDomainSection = () => {
                 </ul>
             </div>
 
-            <h2 id="s92">Step 15 試験対策と練習問題</h2>
-            <h3 id="s93">15-1 問題を解く 6 つの視点(本ガイドの推奨。公式の解法ではありません)</h3>
+            <h3 className="step-heading" id="s92">Step 15 試験対策と練習問題</h3>
+            <h4 id="s93">15-1 問題を解く 6 つの視点(本ガイドの推奨。公式の解法ではありません)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -285,7 +285,7 @@ export const CrossDomainSection = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s94">15-2 よくある落とし穴</h3>
+            <h4 id="s94">15-2 よくある落とし穴</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -326,7 +326,7 @@ export const CrossDomainSection = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s95">15-3 練習問題(本ガイドのオリジナル。実際の試験問題ではありません)</h3>
+            <h4 id="s95">15-3 練習問題(本ガイドのオリジナル。実際の試験問題ではありません)</h4>
             <div className="qcard">
                 <p>
                     <strong>問 1.</strong> ある企業が、社内規程に基づく問い合わせ対応に生成 AI

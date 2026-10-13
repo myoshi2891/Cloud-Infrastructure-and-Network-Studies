@@ -3,11 +3,11 @@ import { Diagram } from '../Diagram';
 export const Domain4Section = () => {
     return (
         <>
-            <h1 id="s63">
+            <h2 className="domain-heading" id="s63">
                 Domain 4 Business Readiness, Leadership, and AI Transformation(配点 24%)
-            </h1>
-            <h2 id="s64">Step 10 AI 活用の準備度と成熟度の評価(Task 4.1)</h2>
-            <h3 id="s65">10-1 準備度(レディネス)を測る観点(Skill 4.1.1)</h3>
+            </h2>
+            <h3 className="step-heading" id="s64">Step 10 AI 活用の準備度と成熟度の評価(Task 4.1)</h3>
+            <h4 id="s65">10-1 準備度(レディネス)を測る観点(Skill 4.1.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -47,7 +47,7 @@ export const Domain4Section = () => {
                 6 つの視点で整理します。AI 向けには AWS CAF-AI があり、AI
                 の旅路で組織能力が成熟するにつれて必要となる基盤的な能力を整理しています。準備度評価で「事業・人・統制・技術」を漏れなく見る際の型として使えます。
             </p>
-            <h3 id="s66">10-2 AI 成熟度モデルで現在地を知る(Skill 4.1.2)</h3>
+            <h4 id="s66">10-2 AI 成熟度モデルで現在地を知る(Skill 4.1.2)</h4>
             <p>
                 試験ガイドは、成熟度の段階の例として「実験(experimentation)」から「全社規模での展開(enterprise-scale
                 deployment)」までを挙げています。以下は<strong>理解を助けるための説明用モデル</strong>で、試験の段階名と完全一致するとは限りません。
@@ -90,7 +90,7 @@ export const Domain4Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s67">10-3 能力ギャップの特定(Skill 4.1.3)</h3>
+            <h4 id="s67">10-3 能力ギャップの特定(Skill 4.1.3)</h4>
             <p><strong>4 つの観点: 人・プロセス・技術・ガバナンス</strong></p>
             <div className="tbl">
                 <table>
@@ -120,7 +120,7 @@ export const Domain4Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s68">10-4 開発投資の優先順位と成長の道筋(Skill 4.1.4)</h3>
+            <h4 id="s68">10-4 開発投資の優先順位と成長の道筋(Skill 4.1.4)</h4>
             <Diagram id="dgm-13" />
             <p><strong>ベストプラクティス(一般的な実務ガイダンス)</strong></p>
             <ul>
@@ -173,8 +173,8 @@ export const Domain4Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s69">Step 11 データとインフラの土台づくり(Task 4.2)</h2>
-            <h3 id="s70">11-1 データ準備度の評価(Skill 4.2.1)</h3>
+            <h3 className="step-heading" id="s69">Step 11 データとインフラの土台づくり(Task 4.2)</h3>
+            <h4 id="s70">11-1 データ準備度の評価(Skill 4.2.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -207,7 +207,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>:
                 ユースケースごとに<strong>必要なデータの棚卸し</strong>(どこにあるか、誰が持つか、品質は、アクセス権は)を行い、ボトルネックを可視化する。
             </p>
-            <h3 id="s71">11-2 データ戦略・所有権・共有の枠組み(Skill 4.2.2)</h3>
+            <h4 id="s71">11-2 データ戦略・所有権・共有の枠組み(Skill 4.2.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -249,7 +249,7 @@ export const Domain4Section = () => {
                     つの重要なデータ機能」というリソースを公開しています
                 </li>
             </ul>
-            <h3 id="s72">11-3 技術・インフラの要件を戦略レベルで評価する(Skill 4.2.3)</h3>
+            <h4 id="s72">11-3 技術・インフラの要件を戦略レベルで評価する(Skill 4.2.3)</h4>
             <p>
                 <strong>ビジネス職に求められるのは、設計ではなく「何が必要かを見極めること」</strong
                 >です。
@@ -326,8 +326,8 @@ export const Domain4Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s73">Step 12 組織変革と AI 人材の育成(Task 4.3)</h2>
-            <h3 id="s74">12-1 経営層のスポンサーシップと AI チャンピオン(Skill 4.3.1)</h3>
+            <h3 className="step-heading" id="s73">Step 12 組織変革と AI 人材の育成(Task 4.3)</h3>
+            <h4 id="s74">12-1 経営層のスポンサーシップと AI チャンピオン(Skill 4.3.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -352,7 +352,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>:
                 スポンサーの関与は<strong>一度きりの宣言ではなく継続的</strong>に(進捗レビューへの参加、成果の発信)。チャンピオンには<strong>時間と裁量</strong>を与える。
             </p>
-            <h3 id="s75">12-2 部門横断チームと明確なアカウンタビリティ(Skill 4.3.2)</h3>
+            <h4 id="s75">12-2 部門横断チームと明確なアカウンタビリティ(Skill 4.3.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -389,7 +389,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>: <strong>誰が意思決定し、誰が結果に責任を持つか</strong>を書面で明確にする(RACI
                 などの責任分担表が有効。一般的な実務ガイダンス)。
             </p>
-            <h3 id="s76">12-3 従業員の不安に応える透明なコミュニケーション(Skill 4.3.3)</h3>
+            <h4 id="s76">12-3 従業員の不安に応える透明なコミュニケーション(Skill 4.3.3)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -418,7 +418,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>: <strong>早く、正直に、繰り返し</strong
                 >伝える。分からないことは「まだ決まっていない」と明示し、決まり次第共有する。双方向の質問窓口を設ける。
             </p>
-            <h3 id="s77">12-4 文化的な障壁とリーダーシップの介入(Skill 4.3.4)</h3>
+            <h4 id="s77">12-4 文化的な障壁とリーダーシップの介入(Skill 4.3.4)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -443,7 +443,7 @@ export const Domain4Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s78">12-5 AI リテラシーを高める人材育成(Skill 4.3.5)</h3>
+            <h4 id="s78">12-5 AI リテラシーを高める人材育成(Skill 4.3.5)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -481,7 +481,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>:
                 役割別(経営層、管理職、実務担当、推進者)に<strong>内容と深さを変える</strong>。学んだ直後に<strong>業務で使う機会</strong>を用意する。
             </p>
-            <h3 id="s79">12-6 人の役割の移行: 手作業から AI との協働・監督へ(Skill 4.3.6)</h3>
+            <h4 id="s79">12-6 人の役割の移行: 手作業から AI との協働・監督へ(Skill 4.3.6)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -530,8 +530,8 @@ export const Domain4Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s80">Step 13 パイロットから全社展開へスケールする(Task 4.4)</h2>
-            <h3 id="s81">13-1 反復型の変革フェーズ(Skill 4.4.1)</h3>
+            <h3 className="step-heading" id="s80">Step 13 パイロットから全社展開へスケールする(Task 4.4)</h3>
+            <h4 id="s81">13-1 反復型の変革フェーズ(Skill 4.4.1)</h4>
             <p>
                 試験ガイドは、フェーズの例として「構想(envision)、実験(experiment)、ローンチ(launch)、スケール(scale)」を挙げています。
             </p>
@@ -577,7 +577,7 @@ export const Domain4Section = () => {
                     scale」です。<strong>名称よりも、反復しながら段階的に進む考え方</strong>が重要です。
                 </p>
             </blockquote>
-            <h3 id="s82">13-2 短期の成功から全社展開へ(Skill 4.4.2)</h3>
+            <h4 id="s82">13-2 短期の成功から全社展開へ(Skill 4.4.2)</h4>
             <p><strong>ベストプラクティス</strong></p>
             <ul>
                 <li>
@@ -589,7 +589,7 @@ export const Domain4Section = () => {
                     再利用できる部品(プロンプト、評価セット、ガイドライン)を蓄積して展開を加速する
                 </li>
             </ul>
-            <h3 id="s83">13-3 AI センター・オブ・エクセレンス(CoE)と部門横断の連携(Skill 4.4.3)</h3>
+            <h4 id="s83">13-3 AI センター・オブ・エクセレンス(CoE)と部門横断の連携(Skill 4.4.3)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -626,7 +626,7 @@ export const Domain4Section = () => {
                 <strong>ベストプラクティス</strong>: CoE
                 が<strong>「承認するだけの関所」にならず、現場を支援する</strong>存在になるようにする。中央と各部門の推進役が連携する体制(ハブ・アンド・スポーク型など)も一つの方法(一般的な実務ガイダンス)。
             </p>
-            <h3 id="s84">13-4 継続的なフィードバックと成功指標(Skill 4.4.4)</h3>
+            <h4 id="s84">13-4 継続的なフィードバックと成功指標(Skill 4.4.4)</h4>
             <ul>
                 <li>利用者フィードバックの窓口(ボタン、アンケート、定期ヒアリング)を設ける</li>
                 <li>
@@ -634,7 +634,7 @@ export const Domain4Section = () => {
                 </li>
                 <li>得られた学びを<strong>ロードマップに反映</strong>する</li>
             </ul>
-            <h3 id="s85">13-5 実験段階から本番グレードへの移行(Skill 4.4.5)</h3>
+            <h4 id="s85">13-5 実験段階から本番グレードへの移行(Skill 4.4.5)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -673,7 +673,7 @@ export const Domain4Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s86">13-6 スケール中の事業継続性と性能の確保(Skill 4.4.6)</h3>
+            <h4 id="s86">13-6 スケール中の事業継続性と性能の確保(Skill 4.4.6)</h4>
             <p>スケールの各段階で、次の要素を確認します。</p>
             <div className="tbl">
                 <table>

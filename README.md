@@ -1,6 +1,6 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-07
+最終更新日: 2026-10-12
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
@@ -13,9 +13,10 @@ Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエン�
 - **詳細な試験ガイド & 名著解説 & 運用ツール:** Associate Cloud Engineer (ACE)、Generative AI Leader、Cloud Digital Leader (CDL)、Associate Google Workspace Administrator (AGWA)、Professional Cloud Network Engineer (PCNE)、Professional Cloud Architect (PCA)、Professional Agentic Architect、CCNA、CCNA Automation、CompTIA Network+、AWS SAA、AWS CloudOps Engineer Associate (SOA-C03)、AWS DVA-C02 ドメイン2（セキュリティ）、名著『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』、『TCP/IP Illustrated, Volume 1』、CLIコマンド実践ワンライナー集の広範なトピックを網羅。
 - **AWS DVA-C02 開発:** `/aws/developer-associate/domain1` に全29スキル・116表・31図・18コード・15練習問題を収録。原本ライト配色・見出し書体・288pxサイドバーを保持し、本文は14px。リストの点・番号、コードの言語見出し、開閉式目次と解説を原本に合わせて移行。
 - **AWS DVA-C02 セキュリティ:** `/aws/developer-associate/domain2` に24 Steps・110表・35図・40コード・12練習問題を収録。原本のライト配色・見出しフォントを保持し、ユーザー指定で本文・表・コード・目次・図を14pxに調整。20項目の自己採点チェックリスト、開閉式目次、番号・点を保持したリストを提供。
+- **AWS DVA-C02 デプロイ:** `/aws/developer-associate/domain3` に4 Task・26 Steps・80表・39図・32コード・9チェック項目を収録。原本のライト配色・Source Serif 4・290pxサイドバーと、リストの点・継続番号を保持し、本文・図は14px。構文ハイライトは原本に近い色で実装。
 - **データ駆動ナビゲーション:** `app/constants.ts` を正本とし、ハンバーガー Drawer が GCP/AWS/Cisco/CompTIA/Books/Tools をプロバイダ別に自動グルーピング。新試験・ガイド追加は ① `app/constants.ts` の `ALL_EXAMS` にエントリ追加 ② `app/globals.css` に `icon-theme-<id>` ユーティリティ追加 ③ ページ作成 の 3 ステップで Header は自動反映（直接編集不要）。
 - **視覚的な学習体験:** セクションごとに最適化されたデザインテーマ（Aurora, Sapphire, Laboratory, Gold）。
-- **統一ガイドレイアウト:** サイドバー付きガイドは左端固定の280pxナビゲーションと、残りの画面幅をすべて使うメインコンテンツへ統一。モバイルでは本文を幅100%へ切り替え。DVA-C02は原本優先の指定によりドメイン1が288px、ドメイン2が300px幅を保持。
+- **統一ガイドレイアウト:** サイドバー付きガイドは左端固定の280pxナビゲーションと、残りの画面幅をすべて使うメインコンテンツへ統一。モバイルでは本文を幅100%へ切り替え。DVA-C02は原本優先の指定によりドメイン1が288px、ドメイン2が300px、ドメイン3が290px幅を保持。
 - **最新の技術解説:** Hypercomputer, SAIF, 責任ある AI 6原則など、試験頻出の高度なトピックを体系化。
 - **テスト済みのコンテンツ:** ユニットテスト（Vitest）と E2E テスト（Playwright）により、正確な情報提供と表示を保証。
 - **モダンな実装:** ホームとガイドのセクション分割、ガイド単位のテーマトークン、CSS Modules、アクセシビリティ対応、専用SVGコンポーネントによる高品質なコードベース。
@@ -129,6 +130,13 @@ bun run markdownlint -- path/to/file.md
 
 ```bash
 bun run test
+```
+
+デプロイガイドの全量テストと、5種類の移行漏れを検出する検証は次のコマンドで実行できます。
+
+```bash
+bun run test -- __tests__/aws/developer-associate/domain3
+bun scripts/check-dva-deployment-mutations.mjs
 ```
 
 ### E2E テスト (Playwright)

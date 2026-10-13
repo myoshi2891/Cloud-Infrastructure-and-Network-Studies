@@ -3,9 +3,9 @@ import { Diagram } from '../Diagram';
 export const Domain3Section = () => {
     return (
         <>
-            <h1 id="s47">Domain 3 AI Governance and Responsible AI Leadership(配点 24%)</h1>
-            <h2 id="s48">Step 7 責任ある AI を意思決定に組み込む(Task 3.1)</h2>
-            <h3 id="s49">7-1 責任ある AI の原則と次元(Skill 3.1.1)</h3>
+            <h2 className="domain-heading" id="s47">Domain 3 AI Governance and Responsible AI Leadership(配点 24%)</h2>
+            <h3 className="step-heading" id="s48">Step 7 責任ある AI を意思決定に組み込む(Task 3.1)</h3>
+            <h4 id="s49">7-1 責任ある AI の原則と次元(Skill 3.1.1)</h4>
             <p>
                 <strong>責任ある AI(Responsible AI)</strong>とは、AI
                 の利益を最大化し、リスクを最小化することを目指して AI
@@ -80,7 +80,7 @@ export const Domain3Section = () => {
                     試験ガイドが例示している次元は「公平性、説明可能性、プライバシー、安全性、透明性、堅牢性」です。試験ではこれらを<strong>ビジネスシナリオに当てはめて</strong>判断する力が問われます。
                 </p>
             </blockquote>
-            <h3 id="s50">7-2 事業目標と責任ある AI が衝突する時のトレードオフ(Skill 3.1.2)</h3>
+            <h4 id="s50">7-2 事業目標と責任ある AI が衝突する時のトレードオフ(Skill 3.1.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -124,7 +124,7 @@ export const Domain3Section = () => {
                     責任」の二択にせず、<strong>範囲を絞る、人の確認を足す</strong>など第三の選択肢を探す
                 </li>
             </ul>
-            <h3 id="s51">7-3 設計段階から統合する「ガバナンス・バイ・デザイン」(Skill 3.1.3)</h3>
+            <h4 id="s51">7-3 設計段階から統合する「ガバナンス・バイ・デザイン」(Skill 3.1.3)</h4>
             <p>
                 AWS の Responsible AI Lens の設計原則には、<strong
                     >設計から運用まで責任ある AI
@@ -136,7 +136,7 @@ export const Domain3Section = () => {
                 <strong>ベストプラクティス</strong>: <strong>プロジェクト計画の最初(要件定義)の時点</strong>で、責任ある AI
                 のチェック項目を作業項目に含める。完成間際に審査を追加するのは手戻りが大きい。
             </p>
-            <h3 id="s52">7-4 人による監督が必要な場面とセーフガード(Skill 3.1.4)</h3>
+            <h4 id="s52">7-4 人による監督が必要な場面とセーフガード(Skill 3.1.4)</h4>
             <p><strong>人の監督(Human oversight)が必要になる場面(補足解説)</strong></p>
             <div className="tbl">
                 <table>
@@ -293,8 +293,8 @@ export const Domain3Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s53">Step 8 AI ガバナンス体制と規制対応(Task 3.2)</h2>
-            <h3 id="s54">8-1 部門横断の AI ガバナンス体制と明確な責任(Skill 3.2.1)</h3>
+            <h3 className="step-heading" id="s53">Step 8 AI ガバナンス体制と規制対応(Task 3.2)</h3>
+            <h4 id="s54">8-1 部門横断の AI ガバナンス体制と明確な責任(Skill 3.2.1)</h4>
             <p>
                 <strong>ガバナンスとは</strong>: 「AI
                 をどう使い、誰が何に責任を持つか」を決めるルールと仕組みです。
@@ -369,7 +369,7 @@ export const Domain3Section = () => {
                 <strong>ベストプラクティス</strong>: ISO/IEC 42001
                 は、リーダーシップの関与、リスク評価、監視・監査、継続的改善といった要素を含むマネジメントシステムの型を示しており、体制設計の参考になります。
             </p>
-            <h3 id="s55">8-2 AI に関する規制コンプライアンスリスクへの対応(Skill 3.2.2)</h3>
+            <h4 id="s55">8-2 AI に関する規制コンプライアンスリスクへの対応(Skill 3.2.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -414,7 +414,7 @@ export const Domain3Section = () => {
                     法規制の適用範囲・時期は国や時期で変わります。<strong>本ガイドは法的助言ではありません。</strong>具体的な適用判断は法務の専門家に確認してください。
                 </p>
             </blockquote>
-            <h3 id="s56">8-3 アクセス制御とデータセキュリティ(Skill 3.2.3)</h3>
+            <h4 id="s56">8-3 アクセス制御とデータセキュリティ(Skill 3.2.3)</h4>
             <p>
                 試験では<strong>実装手順ではなく、ガバナンスとして何を求めるか</strong>が問われます。
             </p>
@@ -498,7 +498,7 @@ export const Domain3Section = () => {
                     </tbody>
                 </table>
             </div>
-            <h3 id="s57">8-4 リスク分類フレームワークによる優先順位づけ(Skill 3.2.4)</h3>
+            <h4 id="s57">8-4 リスク分類フレームワークによる優先順位づけ(Skill 3.2.4)</h4>
             <p>
                 <strong>考え方</strong>: すべての AI
                 に同じ強さの統制をかけるのではなく、<strong>リスクの大きさに応じて統制の強さを変える</strong>(リスクベース)。
@@ -628,8 +628,8 @@ export const Domain3Section = () => {
                 </ul>
             </div>
 
-            <h2 id="s58">Step 9 企業の AI リスクと緩和策(Task 3.3)</h2>
-            <h3 id="s59">9-1 本番運用のリスクコントロールと監視(Skill 3.3.1)</h3>
+            <h3 className="step-heading" id="s58">Step 9 企業の AI リスクと緩和策(Task 3.3)</h3>
+            <h4 id="s59">9-1 本番運用のリスクコントロールと監視(Skill 3.3.1)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -677,7 +677,7 @@ export const Domain3Section = () => {
                 <strong>ベストプラクティス</strong>:
                 導入時に<strong>「何を、誰が、どの頻度で見て、異常時に何をするか」</strong>を決める。インシデント対応の連絡ルートも事前に定める。
             </p>
-            <h3 id="s60">9-2 バイアスはライフサイクルの複数段階で発生する(Skill 3.3.2)</h3>
+            <h4 id="s60">9-2 バイアスはライフサイクルの複数段階で発生する(Skill 3.3.2)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -724,7 +724,7 @@ export const Domain3Section = () => {
                 <li>多様な視点を持つメンバーでレビューする</li>
                 <li>問題を見つけた時の是正手順(停止・修正・再評価)を定義しておく</li>
             </ul>
-            <h3 id="s61">9-3 有害コンテンツと知的財産(IP)のリスク管理(Skill 3.3.3)</h3>
+            <h4 id="s61">9-3 有害コンテンツと知的財産(IP)のリスク管理(Skill 3.3.3)</h4>
             <div className="tbl">
                 <table>
                     <thead>
@@ -775,7 +775,7 @@ export const Domain3Section = () => {
                 NIST の生成 AI プロファイル(NIST AI 600-1)は、生成 AI
                 特有のリスクとして、事実と異なる出力(confabulation)、有害コンテンツ、データ漏えいなどを整理しています。
             </p>
-            <h3 id="s62">9-4 信頼性リスク: 幻覚・データ品質の劣化・モデルドリフト(Skill 3.3.4)</h3>
+            <h4 id="s62">9-4 信頼性リスク: 幻覚・データ品質の劣化・モデルドリフト(Skill 3.3.4)</h4>
             <div className="tbl">
                 <table>
                     <thead>
