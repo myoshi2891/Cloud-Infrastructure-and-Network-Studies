@@ -21,7 +21,9 @@ describe('AIP home and Header integration', () => {
     });
     it('renders an AIP homepage card and the real Header drawer entry', () => {
         const { unmount } = render(<Home />);
-        expect(screen.getByRole('link', { name: /Generative AI Developer/i })).toHaveAttribute('href', route);
+        const card = screen.getByRole('heading', { name: 'AWS Certified Generative AI Developer - Professional' }).closest('article');
+        expect(card?.querySelector('a.home-card-cta')).toHaveAttribute('href', route);
+        expect(card).toHaveClass('card-aws-aip');
         unmount(); render(<Header />);
         fireEvent.click(screen.getByRole('button', { name: 'メニューを開く' }));
         const drawer = screen.getByRole('dialog', { hidden: true });

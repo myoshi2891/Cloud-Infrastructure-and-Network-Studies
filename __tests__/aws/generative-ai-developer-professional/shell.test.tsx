@@ -64,7 +64,7 @@ describe('AIP guide shell', () => {
         const target = document.createElement('h3'); target.id = second.id; document.body.append(target);
         const { unmount } = render(<Guide />);
         expect(observe).toHaveBeenCalledWith(target);
-        act(() => callback?.([{ target, isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
+        act(() => callback?.([{ target, isIntersecting: true, time: 0, intersectionRatio: 1, boundingClientRect: target.getBoundingClientRect(), intersectionRect: target.getBoundingClientRect(), rootBounds: null }], {} as IntersectionObserver));
         expect(screen.getByRole('link', { name: second.label })).toHaveAttribute('aria-current', 'location');
         unmount(); expect(disconnect).toHaveBeenCalledOnce(); target.remove();
     });
