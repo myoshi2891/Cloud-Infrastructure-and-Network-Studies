@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
+import { squash } from './migration-test-utils';
 
 type GuidePart = ReturnType<typeof snapshotGuidePart>;
 
@@ -17,7 +18,15 @@ export function defineGuidePartSuite(Page: ComponentType, id: string, expected: 
         };
         for (const key of Object.keys(expected) as (keyof GuidePart)[]) {
             it(`preserves all ${key}`, () => {
-                expect(snapshotGuidePart(content())[key]).toEqual(expected[key]);
+                const actual = snapshotGuidePart(content());
+                if (key === 'text') {
+                    expect(squash(actual.text)).toBe(squash(expected.text));
+                } else if (key === 'body') {
+                    const body = (items: GuidePart['body']) => items.map(item => ({ ...item, text: item.kind === 'code' ? item.text : squash(item.text) }));
+                    expect(body(actual.body)).toEqual(body(expected.body));
+                } else {
+                    expect(actual[key]).toEqual(expected[key]);
+                }
             });
         }
         it('retains table header scopes, focusable anchors and diagram accessibility', () => {

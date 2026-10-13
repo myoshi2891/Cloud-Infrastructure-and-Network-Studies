@@ -4,10 +4,12 @@ import Guide from '@/app/aws/generative-ai-developer-professional/AipGuide';
 import { metadata } from '@/app/aws/generative-ai-developer-professional/page';
 import { NAV_ITEMS } from '@/app/aws/generative-ai-developer-professional/constants';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-guide.fidelity.json';
-import { MermaidDiagramMock } from '@/__tests__/helpers/migration-test-utils';
 import { readFileSync } from 'node:fs';
 
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
+vi.mock('@/components/MermaidDiagram', async () => {
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
+    return { MermaidDiagram: MermaidDiagramMock };
+});
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
 
 describe('AIP guide shell', () => {
@@ -38,14 +40,15 @@ describe('AIP guide shell', () => {
         expect(button).toHaveAttribute('aria-expanded', 'true');
         const first = NAV_ITEMS[0];
         if (!first) throw new Error('missing first navigation entry');
-        const target = document.createElement('h2');
+        const existing = document.getElementById(first.id);
+        const target = existing ?? document.createElement('h2');
         target.id = first.id; target.tabIndex = -1;
-        target.scrollIntoView = vi.fn(); document.body.append(target);
+        target.scrollIntoView = vi.fn(); if (!existing) document.body.append(target);
         fireEvent.click(screen.getByRole('link', { name: first.label }));
         expect(decodeURIComponent(location.hash)).toBe(`#${first.id}`);
         expect(document.activeElement).toBe(target);
         expect(button).toHaveAttribute('aria-expanded', 'false');
-        target.remove();
+        if (!existing) target.remove();
         fireEvent.click(button); fireEvent.keyDown(document, { key: 'Escape' });
         expect(button).toHaveAttribute('aria-expanded', 'false');
     });
