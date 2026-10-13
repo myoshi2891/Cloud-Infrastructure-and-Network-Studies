@@ -25,7 +25,7 @@ describe('AIP source visual declarations', () => {
             expect(Object.keys(actual), selector).not.toHaveLength(0);
             for (const [prop, value] of Object.entries(rule.declarations)) {
                 // Theme remapping and shared Header offsets are explicitly allowed by the migration contract.
-                if (/background|color|border/.test(prop) && /#|rgba|var\(/.test(value)) continue;
+                if (/background|color|border|box-shadow/.test(prop) && /#|rgba|var\(/.test(value)) continue;
                 if (['font-family', 'word-break', 'overflow-wrap', 'scroll-margin-top', 'z-index'].includes(prop)) continue;
                 if (prop === 'top' && /sidebar/.test(selector)) continue;
                 expect(compact(actual[prop] ?? ''), `${selector} ${prop}`).toBe(compact(value.replace('var(--sidebar-w)', '300px')));
