@@ -5,6 +5,7 @@ import Foundation from './sections/Foundation';
 import Domain1 from './sections/Domain1';
 import Domain2 from './sections/Domain2';
 import Domain3 from './sections/Domain3';
+import Operations from './sections/Operations';
 
 /** 原本のサイドバーと全量本文を配置する。 */
 export default function AipGuide() {
@@ -14,7 +15,8 @@ export default function AipGuide() {
             <main className="main"><Foundation />
 <Domain1 />
 <Domain2 />
-<Domain3 /></main>
+<Domain3 />
+<Operations /></main>
         </div>
     );
 }
