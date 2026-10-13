@@ -191,7 +191,7 @@ flowchart TD
 | CloudWatch アラーム | SNS | 人へ通知、または Lambda を起動 | 管理者へメール通知 |
 | AWS サービスのイベント | EventBridge ルール | Lambda、SSM Automation、Step Functions | EC2 停止イベントで自動起動 |
 | CloudTrail の API 呼び出し | EventBridge ルール | Lambda | セキュリティグループ変更を検知して元に戻す |
-| AWS Config のルール違反 | 修復アクション | SSM Automation ドキュメント | 暗号化なしの S3 バケットを自動で暗号化 |
+| AWS Config のルール違反 | 修復アクション | SSM Automation ドキュメント | 暗号化なしの S3 バケットにデフォルト暗号化を自動設定 (新規アップロードのみ対象。既存オブジェクトは S3 Batch Operations のコピーで別途再暗号化) |
 
 #### EventBridge ルールの例 (EC2 の停止を検知)
 
@@ -302,7 +302,7 @@ AWS Systems Manager は、サーバー群の運用作業をまとめて自動化
 | State Manager | 望ましい構成を定義し、定期的に維持 | 設定のずれ (ドリフト) の自動修正 |
 | Patch Manager | パッチの適用と準拠状況の確認 | OS パッチの自動化 |
 | Automation | 手順書 (ランブック) を自動実行 | 修復作業の自動化 |
-| Session Manager | SSH 不要でインスタンスへ接続 | 踏み台サーバーとキーペアの廃止、操作ログの記録 |
+| Session Manager | SSH 不要でインスタンスへ接続 | 踏み台サーバーとキーペアの廃止。セッションログ (S3/CloudWatch Logs) を設定した場合はコマンドと出力を記録 (デフォルトでは記録されず、SSH・ポートフォワーディングのセッションは対象外) |
 | Parameter Store | 設定値と機密値の保管 | アプリの設定管理 |
 | Inventory | ソフトウェア構成の収集 | 資産管理 |
 | Maintenance Windows | メンテナンス実施時間帯の定義 | パッチ適用の計画 |
