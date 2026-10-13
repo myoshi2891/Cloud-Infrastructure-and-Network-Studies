@@ -84,6 +84,7 @@ test('AIP-C01 homepage card and Header drawer route to implemented content', asy
     await expect(page).toHaveURL(new RegExp(`${route}$`));
     await page.getByRole('button', { name: 'メニューを開く' }).click();
     const drawer = page.getByRole('dialog', { name: 'サイトナビゲーション' });
-    await drawer.locator('summary').filter({ hasText: 'AWS Certified Generative AI Developer' }).click();
+    const summary = drawer.locator('summary').filter({ hasText: 'AWS Certified Generative AI Developer' });
+    if (!(await summary.evaluate(element => element.parentElement?.hasAttribute('open')))) await summary.click();
     await expect(drawer.getByRole('link', { name: 'AIP-C01 初学者向け完全ガイド' })).toHaveAttribute('href', route);
 });
