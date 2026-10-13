@@ -241,3 +241,7 @@ export const NAV_ITEMS = [
         "level": 2
     }
 ] as const;
+
+/** Mermaid DSL。意味と出現順は固定原本と照合する。 */
+export const DIAGRAMS = {"chart-1":"flowchart LR\n    A[\"AIP-C01<br/>全体像\"] --> D1[\"D1 FM統合・データ<br/>31%\"]\n    A --> D2[\"D2 実装と統合<br/>26%\"]\n    A --> D3[\"D3 安全性・ガバナンス<br/>20%\"]\n    A --> D4[\"D4 運用最適化<br/>12%\"]\n    A --> D5[\"D5 テスト・検証<br/>11%\"]\n    D1 --> D1a[\"RAG・ベクトルストア<br/>プロンプト管理\"]\n    D2 --> D2a[\"エージェント<br/>API統合・デプロイ\"]\n    D3 --> D3a[\"Guardrails<br/>プライバシー・責任あるAI\"]\n    D4 --> D4a[\"コスト・性能<br/>監視\"]\n    D5 --> D5a[\"評価<br/>障害切り分け\"]","chart-2":"flowchart TB\n    U[\"ユーザー / 業務システム\"] --> API[\"Amazon API Gateway / ALB\"]\n    API --> APP[\"アプリ層<br/>Lambda / ECS / Step Functions\"]\n    APP --> GR[\"Bedrock Guardrails<br/>入力チェック\"]\n    GR --> ORCH[\"オーケストレーション<br/>Prompt Flows / Agents / Strands\"]\n    ORCH --> RET[\"検索層<br/>Knowledge Bases / OpenSearch\"]\n    RET --> VS[(\"ベクトルストア\")]\n    ORCH --> FM[\"Amazon Bedrock<br/>基盤モデル\"]\n    FM --> GR2[\"Guardrails<br/>出力チェック\"]\n    GR2 --> APP\n    APP --> OBS[\"CloudWatch / X-Ray / CloudTrail<br/>監視・監査\"]\n    DS[(\"S3 等のデータソース\")] --> ING[\"取り込みパイプライン<br/>チャンク化・埋め込み\"]\n    ING --> VS","chart-3":"flowchart TD\n    S[\"推論方式を選ぶ\"] --> Q1{\"リアルタイム応答が必要?\"}\n    Q1 -- いいえ --> B[\"バッチ推論\"]\n    Q1 -- はい --> Q2{\"トラフィックは安定して大量?\"}\n    Q2 -- はい --> P[\"Provisioned Throughput\"]\n    Q2 -- いいえ --> Q3{\"スパイクやリージョン容量が課題?\"}\n    Q3 -- はい --> C[\"クロスリージョン推論\"]\n    Q3 -- いいえ --> O[\"オンデマンド\"]"} as const;
+export type DiagramId = keyof typeof DIAGRAMS;
