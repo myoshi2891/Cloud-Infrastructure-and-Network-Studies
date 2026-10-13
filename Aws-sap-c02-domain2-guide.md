@@ -422,11 +422,11 @@ flowchart TB
 | バックアッププラン | スケジュール、保持期間、コピー先を一元定義 |
 | 対応サービス | EC2/EBS、RDS、Aurora、DynamoDB、EFS、FSx、S3 など多数 |
 | クロスリージョン/クロスアカウントコピー | 遠隔地・別アカウントへ自動コピー(ランサムウェア対策にも有効) |
-| Backup Vault Lock | WORM(書き込み後は削除・変更不可)で改ざん・削除から保護 |
+| Backup Vault Lock | WORM で改ざん・削除から保護。ガバナンスモードは十分な権限を持つユーザーが解除可能、コンプライアンスモードは猶予期間終了後、保持期間中の削除・変更を防止 |
 | リストアテスト | バックアップから復元できるか自動検証 |
 | Organizations 連携 | 組織全体のバックアップポリシーを一括適用 |
 
-**コスト効率の工夫**: ライフサイクルで古いバックアップを低コストのコールドストレージへ移行、タグベースで対象リソースを自動選択、不要になった保持期間を見直す。
+**コスト効率の工夫**: コールドストレージへの移行に対応したリソースタイプでは、ライフサイクルで古いバックアップを低コストのコールドストレージへ移行、タグベースで対象リソースを自動選択、不要になった保持期間を見直す。
 
 ### Step 2-G: DR テストと集中監視
 
@@ -848,7 +848,7 @@ flowchart LR
 |---|---|
 | Amazon CloudWatch | メトリクス、ログ、アラーム、ダッシュボード。Application Signals、Logs Insights など |
 | AWS X-Ray | 分散トレーシング。マイクロサービス間のどこが遅いかを可視化 |
-| RDS / Aurora Performance Insights | データベース負荷と遅いクエリの分析 |
+| CloudWatch Database Insights | データベース負荷と遅いクエリの分析 |
 | AWS Compute Optimizer | 実使用データから EC2、EBS、Lambda などの**最適サイズを推奨** |
 | CloudWatch RUM | 実ユーザー体験の計測 |
 
@@ -912,7 +912,7 @@ flowchart TB
     B --> DDB["Amazon DynamoDB"]
     C --> EC["ElastiCache または MemoryDB"]
     D --> NEP["Amazon Neptune"]
-    E --> TS["Amazon Timestream"]
+    E --> TS["Timestream for InfluxDB<br/>新規 / LiveAnalytics は既存顧客"]
     F --> RS["Amazon Redshift"]
     G --> OS["Amazon OpenSearch Service"]
 ```
@@ -926,7 +926,8 @@ flowchart TB
 | Amazon DocumentDB | ドキュメント(MongoDB 互換) | JSON ドキュメント中心のアプリ |
 | Amazon Neptune | グラフ | SNS、不正検知、ナレッジグラフ |
 | Amazon Keyspaces | ワイドカラム(Cassandra 互換) | Cassandra ワークロードのマネージド化 |
-| Amazon Timestream | 時系列 | IoT センサー、運用メトリクス |
+| Amazon Timestream for InfluxDB | 時系列 | IoT センサー、運用メトリクス。新規顧客向けの現行の選択肢 |
+| Amazon Timestream for LiveAnalytics | 時系列(サーバーレス) | 既存顧客・試験の出題範囲。新規顧客は利用不可 |
 | Amazon Redshift | データウェアハウス(列指向) | 大規模分析(OLAP)、BI |
 | Amazon OpenSearch Service | 検索/分析 | 全文検索、ログ分析 |
 
