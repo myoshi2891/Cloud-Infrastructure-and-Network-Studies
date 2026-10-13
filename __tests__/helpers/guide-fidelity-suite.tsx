@@ -36,7 +36,9 @@ export function defineGuidePartSuite(Page: ComponentType, id: string, expected: 
                 expect(table.querySelector('thead')).not.toBeNull();
                 expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(expected.tables[i]?.[0]?.length ?? -1);
             });
-            root.querySelectorAll('h2[id],h3[id]').forEach(heading => expect(heading).toHaveAttribute('tabindex', '-1'));
+            root.querySelectorAll('h2[id],h3[id]').forEach(heading => {
+                expect(heading).toHaveAttribute('tabindex', '-1');
+            });
             const diagrams = root.querySelectorAll('[data-testid="mermaid-diagram"]');
             expect(diagrams).toHaveLength(expected.diagrams.length);
             diagrams.forEach(diagram => {
@@ -45,7 +47,9 @@ export function defineGuidePartSuite(Page: ComponentType, id: string, expected: 
             });
             [...root.querySelectorAll('.code-block')].forEach((code, index) => {
                 expect(code.children).toHaveLength(expected.codes[index]?.length ?? -1);
-                [...code.children].forEach(line => expect(line).toHaveClass('code-line'));
+                [...code.children].forEach(line => {
+                    expect(line).toHaveClass('code-line');
+                });
             });
         });
     });

@@ -8,7 +8,9 @@ export function snapshotGuidePart(root) {
     const diagrams = [...content.querySelectorAll('pre.mermaid, [data-testid="mermaid-diagram"]')];
     const codes = [...content.querySelectorAll(codeBlockSelector)];
     const clone = content.cloneNode(true);
-    clone.querySelectorAll('pre.mermaid, .mermaid-wrap, .code-block, pre').forEach(element => element.remove());
+    clone.querySelectorAll('pre.mermaid, .mermaid-wrap, .code-block, pre').forEach(element => {
+        element.remove();
+    });
     return {
         text: normalizeText(clone.textContent),
         headings: [...content.querySelectorAll('h1,h2,h3,h4')].map(element => ({ tag: element.tagName.toLowerCase(), id: element.id, text: normalizeText(element.textContent) })),

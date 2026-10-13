@@ -9,7 +9,7 @@ import { snapshotGuidePart, snapshotGuideDesign } from '@/scripts/guide-fidelity
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
     it('generates all six AIP parts, 34 charts and source CSS from a fixed Git revision', () => {
         const sandbox = mkdtempSync(join(tmpdir(), 'aip-fidelity-'));
-        let fixture;
+        let fixture: { guideParts: Record<string, unknown>; guideDesign: { nav: unknown[]; rules: { selector: string; declarations: Record<string, string> }[] }; sourceCommit: string };
         try {
             mkdirSync(join(sandbox, 'docs/migration-inventory'), { recursive: true });
             // worktree では .git がファイルになるため、実際の Git ディレクトリを解決して渡す
