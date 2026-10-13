@@ -8,11 +8,16 @@ export default function NavBar() {
     const [open, setOpen] = useState(false);
     const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0].id);
     const toggleRef = useRef<HTMLButtonElement>(null);
+    // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
     useEffect(() => {
+        if (!open) return;
         const escape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') { setOpen(false); toggleRef.current?.focus(); }
         };
         document.addEventListener('keydown', escape);
+        return () => document.removeEventListener('keydown', escape);
+    }, [open]);
+    useEffect(() => {
         const observer = typeof IntersectionObserver === 'undefined' ? undefined : new IntersectionObserver(entries => {
             for (const entry of entries) if (entry.isIntersecting) setActiveId(entry.target.id);
         }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
@@ -28,7 +33,6 @@ export default function NavBar() {
         window.addEventListener('scroll', endOfPage, { passive: true });
         return () => {
             observer?.disconnect();
-            document.removeEventListener('keydown', escape);
             window.removeEventListener('scroll', endOfPage);
         };
     }, []);
@@ -47,7 +51,8 @@ export default function NavBar() {
                             if (!target) return;
                             event.preventDefault();
                             window.history.pushState(null, '', `#${item.id}`);
-                            target.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+                            const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
+                            target.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
                             target.focus({ preventScroll: true });
                             setActiveId(item.id); setOpen(false);
                         }}>{item.label}</a></li>
