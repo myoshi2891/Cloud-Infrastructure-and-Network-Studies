@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import Foundation from './sections/Foundation';
 import Domain1 from './sections/Domain1';
 import Domain2 from './sections/Domain2';
+import Domain3 from './sections/Domain3';
 
 /** 原本のサイドバーと全量本文を配置する。 */
 export default function AipGuide() {
@@ -12,7 +13,8 @@ export default function AipGuide() {
             <NavBar />
             <main className="main"><Foundation />
 <Domain1 />
-<Domain2 /></main>
+<Domain2 />
+<Domain3 /></main>
         </div>
     );
 }
