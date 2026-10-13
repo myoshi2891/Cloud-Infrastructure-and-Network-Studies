@@ -875,7 +875,7 @@ export default function Section5Guide() {
                 </p>
                 <ul>
                     <li>
-                        <strong>Floor Settings</strong>：組織・フォルダ・プロジェクトレベルで設定する「譲れない最低ライン」のベースライン設定。配下のすべてのテンプレートはこのフロア設定を満たす必要がある。Google管理MCPサーバーとVertex
+                        <strong>Floor Settings</strong>：組織・フォルダ・プロジェクトレベルで設定する「譲れない最低ライン」のベースライン設定。配下のテンプレートは有効な継承済み設定（effective inherited settings）に適合する必要があるが、プロジェクトレベルの Custom 設定が継承設定を上書きでき、Disable を選択すると継承された検出ルールを除去できる。そのため組織全体で共通のベースラインを維持するには、配下テンプレートによる上書きを制御する仕組みが必要となる。Google管理MCPサーバーとVertex
                         AI（Gemini呼び出し）向けのフロア設定は現在プレビュー機能として提供されている。
                     </li>
                     <li>
@@ -1309,13 +1309,15 @@ export default function Section5Guide() {
                             <tr className="odd">
                                 <td>3</td>
                                 <td>
-                                    Agent Gateway をVPC Service
-                                    Controlsの境界内に配置し、境界だけで宛先制御できると想定する
+                                    Agent Gateway API自体はVPC Service
+                                    Controlsで制限できないという制約を考慮せず、VPC-SC境界だけで完全な宛先制御が実現できると想定する
                                 </td>
-                                <td>Agent Gateway は VPC-SC 非対応という既知の制限がある</td>
                                 <td>
-                                    カスタム組織ポリシー制約で「承認済みAgent
-                                    Gatewayとのみバインド可能」に制限する
+                                    Agent Gateway API自体はVPC-SC非対応（公式済みの制限事項）。境界だけでは完全な宛先制御にならない
+                                </td>
+                                <td>
+                                    エージェント接続テンプレート経由のトラフィックはVPC-SC境界ルールで保護し、利用できるゲートウェイを絞り込む場合はカスタム組織ポリシー制約で「承認済みAgent
+                                    Gatewayとしかバインドできない」と制限する。両者を組み合わせて統制する
                                 </td>
                             </tr>
                             <tr className="even">
