@@ -6,5 +6,5 @@ import { DIAGRAMS, type DiagramId } from './constants';
 export const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: string }) {
     const chart = DIAGRAMS[id];
     if (!chart) return null;
-    return <div className="mermaid-wrap" tabIndex={0} aria-label={label}><MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale={true} /></div>;
+    return <div className="mermaid-wrap" role="region" tabIndex={0} aria-label={label}><MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale={true} /></div>;
 });

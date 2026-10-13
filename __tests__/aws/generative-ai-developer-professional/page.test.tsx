@@ -43,4 +43,15 @@ describe('AIP page: independent full source inventory', () => {
             expect(container.querySelector(`.${name === 'mermaid' ? 'mermaid-wrap' : name}`), name).not.toBeNull();
         }
     });
+    it('exposes every focusable diagram wrapper as a labelled region', () => {
+        const { container } = render(<Page />);
+        const wraps = [...container.querySelectorAll('.mermaid-wrap')];
+        expect(wraps).toHaveLength(inventory.counts.diagram);
+        for (const wrap of wraps) {
+            expect(wrap.getAttribute('role')).toBe('region');
+            expect(wrap.getAttribute('tabindex')).toBe('0');
+            expect(wrap.getAttribute('aria-label')?.trim()).toBeTruthy();
+            expect(wrap.querySelector('[data-testid="mermaid-diagram"]')?.getAttribute('aria-label')).toBe(wrap.getAttribute('aria-label'));
+        }
+    });
 });
