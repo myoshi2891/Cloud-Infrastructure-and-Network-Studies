@@ -172,7 +172,7 @@ flowchart LR
 | AWS Elastic Beanstalk | コードを置くだけで環境(EC2、ELB、Auto Scaling)を管理してくれるPaaS的サービス |
 | Amazon ECR | コンテナイメージのレジストリ |
 
-> **補足**: CodeCommit は新規利用の受付が制限されています。試験対策としては「Git ベースのソース」を GitHub などと読み替えて理解して問題ありません。最新の提供状況は公式ドキュメントで確認してください。
+> **補足**: CodeCommit は一時期新規受付を停止していましたが、AWS は 2025 年 11 月 25 日に新規サインアップを再開しており、新規顧客も利用できます。
 
 #### デプロイ方式の比較(最重要)
 
@@ -236,7 +236,7 @@ Resources:
 
 | サービス | 役割 |
 |---|---|
-| AWS Systems Manager Change Manager | 変更リクエストの承認フローと実行履歴を管理 |
+| AWS Systems Manager Change Manager | 変更リクエストの承認フローと実行履歴を管理(2025 年 11 月 7 日に新規顧客の受付を終了。既存顧客は引き続き利用可能) |
 | AWS CloudTrail | 「誰が、いつ、何をしたか」の API 操作ログ |
 | AWS Config | リソース構成の履歴記録と、ルールによる準拠性評価 |
 | AWS Service Catalog | 承認済みテンプレート(製品)のみを利用者に提供し、構成を統制 |
@@ -387,7 +387,7 @@ flowchart LR
 | Amazon S3 | クロスリージョンレプリケーション(CRR)、同一リージョンレプリケーション(SRR) | **バージョニングが必須**。S3 Replication Time Control で複製時間の目標を設定可能。S3 Multi-Region Access Points で複数リージョンへ単一エンドポイント提供 |
 | Amazon RDS | Multi-AZ(同期レプリケーション、自動フェイルオーバー)、クロスリージョンリードレプリカ | **Multi-AZ は可用性(同一リージョン)**、**リードレプリカは読み取り拡張とDR(昇格が必要)** |
 | Amazon Aurora | Aurora レプリカ(最大15)、Aurora Global Database(リージョン間を専用インフラで低遅延複製) | グローバルデータベースは通常1秒未満の遅延が目標。災害時はセカンダリリージョンを昇格 |
-| Amazon DynamoDB | PITR(ポイントインタイムリカバリ)、グローバルテーブル(マルチリージョン・マルチアクティブ) | グローバルテーブルは各リージョンで書き込み可能。競合は最後の書き込み優先 |
+| Amazon DynamoDB | PITR(ポイントインタイムリカバリ)、グローバルテーブル(マルチリージョン・マルチアクティブ) | グローバルテーブルは各リージョンで書き込み可能。MREC(マルチリージョン結果整合性)では競合は最後の書き込み優先、MRSC(マルチリージョン強整合性)では同一項目への同時書き込みが ReplicatedWriteConflictException で失敗し得る |
 | Amazon EBS | スナップショットのリージョン間コピー、Data Lifecycle Manager による自動化 | 増分バックアップ |
 | AWS Elastic Disaster Recovery (DRS) | サーバーのブロックレベル継続レプリケーションで、低コストなステージング領域から復旧 | オンプレミス/他クラウド/AWS から AWS への DR に利用。秒単位の RPO、分単位の RTO を目指せる |
 | Amazon ElastiCache | Global Datastore などクロスリージョン複製 | 対応エンジンと機能を確認 |
@@ -483,6 +483,8 @@ flowchart TB
     style X fill:#ffcdd2,stroke:#c62828,color:#b71c1c
     style OK fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20
 ```
+
+**注意**: この図は権限境界の暗黙的 Deny が効く一般的なケースに限定しています。同一アカウント内で、リソースベースポリシーが IAM ユーザー ARN を直接プリンシパルに指定して Allow する場合、権限境界の暗黙的 Deny はその Allow を制限しません(明示的 Deny と SCP は引き続き適用)。
 
 > **覚え方**: 「明示的 Deny が最優先 → 暗黙的 Deny(何も許可がなければ拒否) → Allow があって初めて許可」。
 
@@ -848,7 +850,7 @@ flowchart LR
 | AWS X-Ray | 分散トレーシング。マイクロサービス間のどこが遅いかを可視化 |
 | RDS / Aurora Performance Insights | データベース負荷と遅いクエリの分析 |
 | AWS Compute Optimizer | 実使用データから EC2、EBS、Lambda などの**最適サイズを推奨** |
-| CloudWatch Evidently / RUM | 実ユーザー体験の計測 |
+| CloudWatch RUM | 実ユーザー体験の計測 |
 
 **ベストプラクティス**: 推測でなく**計測**する。まずボトルネック(CPU、メモリ、I/O、ネットワーク、DB のどこか)を特定し、そこへ手を打つ。メモリ使用率やディスク使用率は標準メトリクスに含まれないため、CloudWatch エージェントで収集する。
 

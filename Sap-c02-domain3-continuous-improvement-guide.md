@@ -114,6 +114,7 @@ SAP-C02 は Well-Architected Framework に基づく設計力を検証する試�
 https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html
 
 ---
+
 ## 3. Task 3.1 運用上の優秀性を改善する
 
 ### 3.1 このタスクで問われること(Exam Guide より)
@@ -373,6 +374,7 @@ flowchart TD
 - https://docs.aws.amazon.com/fis/latest/userguide/what-is.html
 
 ---
+
 ## 4. Task 3.2 セキュリティを改善する
 
 ### 4.1 このタスクで問われること(Exam Guide より)
@@ -616,6 +618,7 @@ flowchart TD
 - https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html
 
 ---
+
 ## 5. Task 3.3 パフォーマンスを改善する
 
 ### 5.1 このタスクで問われること(Exam Guide より)
@@ -674,7 +677,7 @@ flowchart TD
 | 全体 | CloudWatch ダッシュボードとアラーム | 遅延、エラー率、飽和度 |
 | 経路 | AWS X-Ray | サービス間のどこで時間がかかっているか |
 | アプリ | CloudWatch Logs Insights、CloudWatch エージェント | エラー、メモリ、スレッド |
-| データベース | RDS の Performance Insights や CloudWatch Database Insights (現行の名称は公式ドキュメントで確認) | 待機イベント、負荷の高い SQL |
+| データベース | CloudWatch Database Insights (旧称の Performance Insights は API 名などに残る) | 待機イベント、負荷の高い SQL |
 | ネットワーク | VPC フローログ、ELB のメトリクス | 遅延、再送、帯域 |
 | リソース規模 | AWS Compute Optimizer | 過剰または不足の判定 |
 
@@ -930,6 +933,7 @@ flowchart TD
 - https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html
 
 ---
+
 ## 7. Task 3.5 コスト最適化の機会を見つける
 
 ### 7.1 このタスクで問われること(Exam Guide より)
@@ -1201,7 +1205,7 @@ flowchart TD
 |---|---|
 | Exam Guide (SAP-C02) トップ | https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html |
 | Exam Guide (SAP-C02) PDF 版 (Domain 3 を含む全体) | https://docs.aws.amazon.com/pdfs/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.pdf |
-| Content Domain 2 (本依頼で指定されたページ) | https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02-domain2.html |
+| Content Domain 3 (本依頼で指定されたページ) | https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02-domain3.html |
 
 ### 10.2 Well-Architected Framework
 
