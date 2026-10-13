@@ -1,13 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { snapshotGuidePart, snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
 
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
     it('generates all six AIP parts, 34 charts and source CSS from a fixed Git revision', () => {
-        execFileSync('bun', ['scripts/gen-fidelity-fixture.mjs', 'aws-aip-c01-guide']);
-        const fixture = JSON.parse(readFileSync('docs/migration-inventory/aws-aip-c01-guide.fidelity.json', 'utf8'));
+        const sandbox = mkdtempSync(join(tmpdir(), 'aip-fidelity-'));
+        let fixture;
+        try {
+            mkdirSync(join(sandbox, 'docs/migration-inventory'), { recursive: true });
+            execFileSync('bun', [resolve('scripts/gen-fidelity-fixture.mjs'), 'aws-aip-c01-guide'], {
+                cwd: sandbox, env: { ...process.env, GIT_DIR: resolve('.git') },
+            });
+            const generated = readFileSync(join(sandbox, 'docs/migration-inventory/aws-aip-c01-guide.fidelity.json'), 'utf8');
+            expect(generated).toBe(readFileSync('docs/migration-inventory/aws-aip-c01-guide.fidelity.json', 'utf8'));
+            fixture = JSON.parse(generated);
+        } finally { rmSync(sandbox, { recursive: true, force: true }); }
         expect(Object.keys(fixture.guideParts)).toEqual(['foundation', 'domain1', 'domain2', 'domain3', 'operations', 'revision']);
         expect(Object.values(fixture.guideParts).flatMap((part: unknown) => (part as { diagrams: string[] }).diagrams)).toHaveLength(34);
         expect(fixture.guideDesign.nav).toHaveLength(48);
