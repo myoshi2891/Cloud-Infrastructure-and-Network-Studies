@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { snapshotGuidePart, snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
 
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
+    it('generates all six AIP parts, 34 charts and source CSS from a fixed Git revision', () => {
+        execFileSync('bun', ['scripts/gen-fidelity-fixture.mjs', 'aws-aip-c01-guide']);
+        const fixture = JSON.parse(readFileSync('docs/migration-inventory/aws-aip-c01-guide.fidelity.json', 'utf8'));
+        expect(Object.keys(fixture.guideParts)).toEqual(['foundation', 'domain1', 'domain2', 'domain3', 'operations', 'revision']);
+        expect(Object.values(fixture.guideParts).flatMap((part: unknown) => (part as { diagrams: string[] }).diagrams)).toHaveLength(34);
+        expect(fixture.guideDesign.nav).toHaveLength(48);
+        expect(fixture.guideDesign.rules.find((rule: { selector: string }) => rule.selector === '.main ul,\n            .main ol')?.declarations['padding-left']).toBe('1.4em');
+        expect(fixture.sourceCommit).toMatch(/^[a-f0-9]{40}$/);
+    });
     it('distinguishes ordered and unordered lists, nesting, numbering and repeated items', () => {
         const doc = new JSDOM('<main><ul><li>A<ol start="3"><li value="5">B</li></ol></li><li>A</li></ul></main>').window.document;
         expect(snapshotGuidePart(doc).lists).toEqual([
