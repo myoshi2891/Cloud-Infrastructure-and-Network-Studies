@@ -182,7 +182,7 @@
     "問われ方",
     "答えの方向性",
     "ツール",
-    "必要なファイル",
+    "例となるファイル",
     "置き場所",
     "役割",
     "#",
@@ -499,7 +499,7 @@
     "デプロイ時に指定",
     "切り替えるバージョンやタスク定義",
     "AWS SAM",
-    "template.yaml、samconfig.toml",
+    "template.yaml、samconfig.toml（任意）",
     "プロジェクトのルート",
     "アプリ全体の定義・デプロイ設定",
     "AWS CloudFormation",
@@ -511,7 +511,7 @@
     "ソースバンドルのルート",
     "環境設定の拡張",
     "AWS Amplify Hosting",
-    "amplify.yml",
+    "amplify.yml（任意）",
     "リポジトリのルート",
     "ビルド設定",
     "1",
@@ -1279,7 +1279,7 @@
     "イメージは ECR に push し、不変タグまたはダイジェスト で参照",
     "再現性",
     "4",
-    "コード署名（Code signing） で改ざんを防ぐ",
+    "ZIP パッケージの関数では コード署名（Code signing） で改ざんを防ぐ（コンテナイメージ関数には適用されない）",
     "供給網対策",
     "5",
     "ローカルでは Runtime Interface Emulator でコンテナを検証",
@@ -2139,7 +2139,7 @@
     },
     {
       "kind": "code",
-      "text": "# SAM の例：環境変数に「テーブル名」と「パラメータ名」を渡す\nResources:\n  OrderFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      Handler: app.handler\n      Runtime: python3.13\n      Environment:\n        Variables:\n          TABLE_NAME: !Ref OrdersTable\n          DB_PASSWORD_PARAM: /myapp/prod/db_password   # 値ではなく名前を渡す"
+      "text": "# SAM の例：環境変数に「テーブル名」と「パラメータ名」を渡す\nParameters:\n  DbPasswordParamName:\n    Type: String                 # デプロイ環境ごとに指定（例: /myapp/dev/db_password）\n\nResources:\n  OrderFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      Handler: app.handler\n      Runtime: python3.13\n      Environment:\n        Variables:\n          TABLE_NAME: !Ref OrdersTable\n          DB_PASSWORD_PARAM: !Ref DbPasswordParamName   # 値ではなく名前を渡す"
     },
     {
       "kind": "code",
@@ -2183,7 +2183,7 @@
     },
     {
       "kind": "code",
-      "text": "{\n  \"family\": \"orders-api\",\n  \"requiresCompatibilities\": [\"FARGATE\"],\n  \"cpu\": \"512\",\n  \"memory\": \"1024\",\n  \"containerDefinitions\": [\n    {\n      \"name\": \"app\",\n      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/orders:1.4.2\",\n      \"memory\": 1024\n    }\n  ]\n}"
+      "text": "{\n  \"family\": \"orders-api\",\n  \"requiresCompatibilities\": [\"FARGATE\"],\n  \"networkMode\": \"awsvpc\",\n  \"cpu\": \"512\",\n  \"memory\": \"1024\",\n  \"containerDefinitions\": [\n    {\n      \"name\": \"app\",\n      \"image\": \"123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/orders:1.4.2\",\n      \"memory\": 1024\n    }\n  ]\n}"
     },
     {
       "kind": "paragraph",
@@ -2207,7 +2207,7 @@
     },
     {
       "kind": "code",
-      "text": "import urllib.request, json\n\ndef handler(event, context):\n    url = (\"http://localhost:2772/applications/myapp\"\n           \"/environments/prod/configurations/feature-flags\")\n    with urllib.request.urlopen(url) as res:\n        config = json.loads(res.read())\n    if config.get(\"newCheckout\", {}).get(\"enabled\"):\n        return \"new flow\"\n    return \"old flow\""
+      "text": "import os, urllib.request, json\n\ndef handler(event, context):\n    env = os.environ[\"STAGE\"]   # デプロイ環境名（dev / staging / prod）\n    url = (\"http://localhost:2772/applications/myapp\"\n           f\"/environments/{env}/configurations/feature-flags\")\n    with urllib.request.urlopen(url) as res:\n        config = json.loads(res.read())\n    if config.get(\"newCheckout\", {}).get(\"enabled\"):\n        return \"new flow\"\n    return \"old flow\""
     },
     {
       "kind": "paragraph",
@@ -2359,7 +2359,7 @@
     },
     {
       "kind": "code",
-      "text": "import json, glob, pytest\nfrom app import handler\n\n@pytest.mark.parametrize(\"path\", glob.glob(\"events/*.json\"))\ndef test_handler_returns_valid_response(path):\n    event = json.load(open(path))\n    res = handler(event, None)\n    assert res[\"statusCode\"] in (200, 201, 400)"
+      "text": "import glob, json, os\nimport pytest\nfrom app import handler\n\n# fixture ごとに「期待ステータス」と「レスポンス本文に必要なキー」を明示する\nEXPECTED = {\n    \"api-post.json\": (200, {\"received\"}),   # 正常系。400 では不合格\n}\nPATHS = sorted(glob.glob(\"events/*.json\"))\n\ndef test_event_fixtures_are_discovered():\n    # 0 件一致のまま全テストが「成功」扱いになるのを防ぐ\n    assert PATHS, \"events/*.json に一致する fixture がありません\"\n    assert {os.path.basename(p) for p in PATHS} == set(EXPECTED), \"期待値の未定義・欠落 fixture があります\"\n\n@pytest.mark.parametrize(\"path\", PATHS)\ndef test_handler_returns_expected_response(path):\n    status, body_keys = EXPECTED[os.path.basename(path)]\n    with open(path) as f:\n        event = json.load(f)\n    res = handler(event, None)\n    assert res[\"statusCode\"] == status\n    assert body_keys <= set(json.loads(res[\"body\"]))"
     },
     {
       "kind": "paragraph",
@@ -2403,7 +2403,7 @@
     },
     {
       "kind": "code",
-      "text": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: Orders API\n\nParameters:\n  Stage:\n    Type: String\n    Default: dev\n    AllowedValues: [dev, staging, prod]\n\nGlobals:\n  Function:\n    Runtime: python3.13\n    Timeout: 10\n    MemorySize: 256\n\nResources:\n  OrdersTable:\n    Type: AWS::Serverless::SimpleTable\n    DeletionPolicy: Retain              # スタック削除時もテーブルとデータを残す\n    Properties:\n      PrimaryKey:\n        Name: orderId\n        Type: String\n\n  OrderFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      CodeUri: src/orders/\n      Handler: app.handler\n      AutoPublishAlias: live            # デプロイごとにバージョン発行＋エイリアス更新\n      Environment:\n        Variables:\n          TABLE_NAME: !Ref OrdersTable\n          STAGE: !Ref Stage\n      Policies:\n        - DynamoDBCrudPolicy:           # SAM のポリシーテンプレート（最小権限）\n            TableName: !Ref OrdersTable\n      Events:\n        PostOrder:\n          Type: Api\n          Properties:\n            Path: /orders\n            Method: post\n            Auth:\n              Authorizer: AWS_IAM       # SigV4 署名付きリクエストのみ許可\n\nOutputs:\n  ApiUrl:\n    Description: Invoke URL\n    Value: !Sub \"https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/orders\""
+      "text": "AWSTemplateFormatVersion: '2010-09-09'\nTransform: AWS::Serverless-2016-10-31\nDescription: Orders API\n\nParameters:\n  Stage:\n    Type: String\n    Default: dev\n    AllowedValues: [dev, staging, prod]\n\nGlobals:\n  Function:\n    Runtime: python3.13\n    Timeout: 10\n    MemorySize: 256\n\nResources:\n  OrdersTable:\n    Type: AWS::Serverless::SimpleTable\n    DeletionPolicy: Retain              # スタック削除時もテーブルとデータを残す\n    UpdateReplacePolicy: Retain         # 更新でリソースが置換されても旧テーブルとデータを残す\n    Properties:\n      PrimaryKey:\n        Name: orderId\n        Type: String\n\n  OrderFunction:\n    Type: AWS::Serverless::Function\n    Properties:\n      CodeUri: src/orders/\n      Handler: app.handler\n      AutoPublishAlias: live            # デプロイごとにバージョン発行＋エイリアス更新\n      Environment:\n        Variables:\n          TABLE_NAME: !Ref OrdersTable\n          STAGE: !Ref Stage\n      Policies:\n        - DynamoDBCrudPolicy:           # SAM のポリシーテンプレート（最小権限）\n            TableName: !Ref OrdersTable\n      Events:\n        PostOrder:\n          Type: Api\n          Properties:\n            Path: /orders\n            Method: post\n            Auth:\n              Authorizer: AWS_IAM       # SigV4 署名付きリクエストのみ許可\n\nOutputs:\n  ApiUrl:\n    Description: Invoke URL\n    Value: !Sub \"https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/orders\""
     },
     {
       "kind": "paragraph",
@@ -2567,7 +2567,7 @@
     },
     {
       "kind": "code",
-      "text": "aws lambda add-permission \\\n  --function-name orders:dev \\\n  --statement-id apigw-dev \\\n  --action lambda:InvokeFunction \\\n  --principal apigateway.amazonaws.com \\\n  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\""
+      "text": "aws lambda add-permission \\\n  --function-name orders:dev \\\n  --statement-id apigw-dev \\\n  --action lambda:InvokeFunction \\\n  --principal apigateway.amazonaws.com \\\n  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\"\n\naws lambda add-permission \\\n  --function-name orders:prod \\\n  --statement-id apigw-prod \\\n  --action lambda:InvokeFunction \\\n  --principal apigateway.amazonaws.com \\\n  --source-arn \"arn:aws:execute-api:ap-northeast-1:123456789012:abc123/*/*/orders\""
     },
     {
       "kind": "code",
@@ -2714,12 +2714,12 @@
     "codeLines": [
       11,
       2,
-      11,
+      15,
       5,
       18,
       16,
-      13,
-      10,
+      14,
+      11,
       6,
       19,
       1,
@@ -2733,16 +2733,16 @@
       11,
       9,
       8,
-      8,
+      23,
       5,
       8,
       11,
-      51,
+      52,
       10,
       22,
       16,
       15,
-      6,
+      13,
       5
     ]
   }
