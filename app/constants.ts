@@ -21,6 +21,7 @@ export type ColorKey =
     | 'card-aws-cloudops'
     | 'card-aws-dva'
     | 'card-aws-aib'
+    | 'card-aws-aip'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -72,6 +73,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-aws-cloudops': 'card-aws-cloudops',
     'card-aws-dva': 'card-aws-dva',
     'card-aws-aib': 'card-aws-aib',
+    'card-aws-aip': 'card-aws-aip',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -616,6 +618,28 @@ const ALL_EXAMS: Exam[] = [
         badge: 'SOA-C03',
         icon: '⚙️',
         provider: 'AWS',
+    },
+    {
+        id: 'aws-aip',
+        label: 'AWS Certified Generative AI Developer - Professional',
+        abbr: 'AIP',
+        level: 'Professional',
+        score: '合格 750点 / 採点対象65問 + 採点対象外10問',
+        color: 'card-aws-aip',
+        href: '/aws/generative-ai-developer-professional',
+        overviewLabel: 'AIP-C01 初学者向け完全ガイド',
+        description: '全5ドメイン・Step 1〜20を網羅。FM統合、RAG、エージェント、安全性、運用最適化、評価とトラブルシューティングを体系的に学ぶ。',
+        domains: [
+            { label: 'ドメイン1: FM統合・データ管理・コンプライアンス', href: '/aws/generative-ai-developer-professional#2-ドメイン1-fm統合データ管理コンプライアンス31', pct: '31%' },
+            { label: 'ドメイン2: 実装と統合', href: '/aws/generative-ai-developer-professional#3-ドメイン2-実装と統合26', pct: '26%' },
+            { label: 'ドメイン3: AI安全性・セキュリティ・ガバナンス', href: '/aws/generative-ai-developer-professional#4-ドメイン3-ai安全性セキュリティガバナンス20', pct: '20%' },
+            { label: 'ドメイン4: 運用効率と最適化', href: '/aws/generative-ai-developer-professional#5-ドメイン4-運用効率と最適化12', pct: '12%' },
+            { label: 'ドメイン5: テスト・検証・トラブルシューティング', href: '/aws/generative-ai-developer-professional#6-ドメイン5-テスト検証トラブルシューティング11', pct: '11%' },
+        ],
+        badge: 'AIP-C01',
+        icon: '🤖',
+        provider: 'AWS',
+        status: 'available',
     },
     {
         id: 'aws-aib',
