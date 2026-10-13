@@ -1,0 +1,9 @@
+{
+  "source": "Aws-aip-c01-guide.html",
+  "sourceCommit": "2687fb7599f9e46a00747ef2557a2c88e19cc8bd",
+  "archive": "archive/Aws/html/generative-ai-developer-professional/Aws-aip-c01-guide.html",
+  "sha256": "c6b5b18779ac7cdec95a5d3ba3d31251b45b93f71ee72e5a0b0f0d57fd53c42d",
+  "bytes": 217327,
+  "rootRetained": true,
+  "reason": "作業中に検出した原本の整形差分を保護するため直下原本は保持。テストは固定Git原本とfixtureに依存。"
+}
