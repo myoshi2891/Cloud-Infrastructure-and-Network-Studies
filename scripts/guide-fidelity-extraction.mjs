@@ -42,7 +42,7 @@ export function snapshotGuideDesign(doc) {
         rules.push({ selector: rule.selector, media: rule.parent.type === 'atrule' ? rule.parent.params : '', declarations });
     });
     return {
-        nav: [...doc.querySelectorAll('#sidebarNav a')].map(anchor => ({ id: decodeURIComponent(anchor.getAttribute('href').slice(1)), label: normalizeText(anchor.textContent), level: anchor.classList.contains('lvl3') ? 3 : 2 })),
+        nav: [...doc.querySelectorAll('#sidebarNav a[href]')].map(anchor => ({ id: decodeURIComponent(anchor.getAttribute('href').slice(1)), label: normalizeText(anchor.textContent), level: anchor.classList.contains('lvl3') ? 3 : 2 })),
         rules,
     };
 }
