@@ -1357,7 +1357,8 @@ export default function Section5Guide() {
                                 </td>
                                 <td>
                                     組織/フォルダレベルで Floor Settings
-                                    を設定し、プロジェクトのテンプレートがそれを下回れないようにする
+                                    を設定し、プロジェクトレベルのフロア設定を変更できる IAM
+                                    権限を制限して、プロジェクト側の設定で継承ルールを上書き・除去できないようにする
                                 </td>
                             </tr>
                             <tr className="odd">
