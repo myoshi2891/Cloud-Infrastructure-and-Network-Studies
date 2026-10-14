@@ -1,6 +1,6 @@
 # AWS Certified Solutions Architect - Professional (SAP-C02)
 
-# Content Domain 2: Design for New Solutions 初学者向けステップバイステップ解説
+## Content Domain 2: Design for New Solutions 初学者向けステップバイステップ解説
 
 > 対象試験: AWS Certified Solutions Architect - Professional (SAP-C02)
 > 対象範囲: Content Domain 2「新しいソリューションの設計(Design for New Solutions)」の全6タスク
