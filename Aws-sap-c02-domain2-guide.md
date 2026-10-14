@@ -384,7 +384,7 @@ flowchart LR
 
 | サービス | 機能 | 特徴・注意点 |
 |---|---|---|
-| Amazon S3 | クロスリージョンレプリケーション(CRR)、同一リージョンレプリケーション(SRR) | **バージョニングが必須**。S3 Replication Time Control で複製時間の目標を設定可能。S3 Multi-Region Access Points で複数リージョンへ単一エンドポイント提供 |
+| Amazon S3 | クロスリージョンレプリケーション(CRR)、同一リージョンレプリケーション(SRR) | **レプリケーション元とレプリケーション先の両方のバケットでバージョニングが必須**。S3 Replication Time Control で複製時間の目標を設定可能。S3 Multi-Region Access Points で複数リージョンへ単一エンドポイント提供 |
 | Amazon RDS | Multi-AZ DB インスタンス(同期レプリケーション、自動フェイルオーバー)、Multi-AZ DB クラスター(準同期レプリケーション、読み取り可能なスタンバイ2台)、クロスリージョンリードレプリカ | **Multi-AZ は可用性(同一リージョン)**、**リードレプリカは読み取り拡張とDR(昇格が必要)** |
 | Amazon Aurora | Aurora レプリカ(最大15)、Aurora Global Database(リージョン間を専用インフラで低遅延複製) | グローバルデータベースは通常1秒未満の遅延が目標。災害時はセカンダリリージョンを昇格 |
 | Amazon DynamoDB | PITR(ポイントインタイムリカバリ)、グローバルテーブル(マルチリージョン・マルチアクティブ) | グローバルテーブルは各リージョンで書き込み可能。MREC(マルチリージョン結果整合性)では競合は最後の書き込み優先、MRSC(マルチリージョン強整合性)では同一項目への同時書き込みが ReplicatedWriteConflictException で失敗し得る |
@@ -565,7 +565,8 @@ flowchart TB
 | 鍵管理 | **AWS KMS**: AWS 所有キー、AWS マネージドキー、カスタマー管理キー(ローテーション、キーポリシー、監査が可能)。マルチリージョンキーで DR 用に同じキーマテリアルを複数リージョンで利用 |
 | 専用ハードウェア要件 | **AWS CloudHSM**: 専有の HSM が必要な場合(厳格なコンプライアンス) |
 | S3 | SSE-S3、SSE-KMS、DSSE-KMS、クライアント側暗号化。バケットポリシーで暗号化なしのアップロードや HTTP を拒否できる |
-| EBS / RDS / DynamoDB / EFS | 作成時に暗号化を有効化(既存の非暗号化リソースはスナップショット経由などで暗号化版を作成) |
+| EBS / RDS / EFS | 作成時に暗号化を有効化(既存の非暗号化リソースはスナップショット経由などで暗号化版を作成) |
+| DynamoDB | 保存時の暗号化は常に有効(無効化できない)。KMS キー(AWS 所有キー、AWS マネージドキー、カスタマー管理キー)は作成時に選択でき、既存テーブルでも変更可能 |
 | 転送時 | TLS。証明書は **ACM** で発行・自動更新。ALB、CloudFront、API Gateway に適用 |
 | 内部通信 | VPN、Direct Connect + MACsec/IPsec 等で保護 |
 
@@ -920,7 +921,7 @@ flowchart TB
 | データベース | 種類 | 向いているワークロード |
 |---|---|---|
 | Amazon RDS / Aurora | リレーショナル | 業務システム、トランザクション(ACID)、複雑な SQL。Aurora は高性能・高可用性。Aurora Serverless は負荷変動が大きい用途 |
-| Amazon DynamoDB | キーバリュー / ドキュメント(NoSQL) | 大規模で予測可能な低レイテンシー(ミリ秒)、サーバーレス、ゲーム、IoT。DAX でマイクロ秒に |
+| Amazon DynamoDB | キーバリュー / ドキュメント(NoSQL) | 大規模で予測可能な低レイテンシー(ミリ秒)、サーバーレス、ゲーム、IoT。DAX で結果整合性のある読み取りをマイクロ秒に(強力な整合性の読み取りは DynamoDB へパススルーされキャッシュされない) |
 | Amazon ElastiCache | インメモリキャッシュ | セッション、ランキング、DB 負荷軽減(Valkey / Redis OSS、Memcached) |
 | Amazon MemoryDB | 耐久性のあるインメモリ DB | プライマリ DB として使えるインメモリ(Valkey / Redis OSS 互換) |
 | Amazon DocumentDB | ドキュメント(MongoDB 互換) | JSON ドキュメント中心のアプリ |
@@ -973,7 +974,7 @@ flowchart LR
 | 問題文のキーワード | 選ぶべき方向性 |
 |---|---|
 | 「読み取りが多い DB の負荷を軽減」 | ElastiCache、リードレプリカ、DAX(DynamoDB) |
-| 「DynamoDB をマイクロ秒で」 | DAX |
+| 「DynamoDB をマイクロ秒で」 | DAX(結果整合性のある読み取りが対象。強力な整合性の読み取りはキャッシュされず DynamoDB へパススルー) |
 | 「Lambda から DB 接続が枯渇」 | RDS Proxy |
 | 「世界中のユーザーへ静的コンテンツを高速配信」 | CloudFront |
 | 「固定 IP、TCP/UDP、高速フェイルオーバー」 | Global Accelerator |
@@ -1032,7 +1033,7 @@ flowchart LR
 | EC2 Instance Savings Plans | 特定のリージョン・インスタンスファミリーに限定。割引率は高め | 中 | ファミリーが固定されたワークロード |
 | EC2 リザーブドインスタンス (RI) | 1年/3年。EC2 ではスタンダード(割引率が高い)と**コンバーチブル**(ファミリー変更可)の2クラス。リージョン RI/ゾーン RI(容量予約付き) | スタンダード: 低 | 安定した EC2 |
 | RDS リザーブド DB インスタンス / ElastiCache リザーブドノード | 1年/3年。サービスごとの予約オファリング(EC2 のスタンダード/コンバーチブルの区分はない)。特定のエンジン・インスタンスクラス・リージョンに固定。ただしサイズ柔軟性があり、対象エンジンの RDS は同一リージョン・同一インスタンスクラスタイプ内、ElastiCache は同一リージョン・同一ノードファミリー内であればサイズが変わっても割引が継続 | 低 | 構成が固定された安定した DB/キャッシュ |
-| Database Savings Plans | 1年の使用量コミット(時間あたり金額)。**RDS、Aurora、DynamoDB、ElastiCache** などのデータベースサービスに横断適用。エンジン・インスタンスファミリー・サイズ・リージョン・プロビジョンド/サーバーレスの変更後も割引が継続 | 高い | 構成やサービスが変わる可能性がある安定した DB 利用。予約オファリングはサービス単位で構成固定 |
+| Database Savings Plans | 1年の使用量コミット(時間あたり金額)。**RDS、Aurora、DynamoDB、ElastiCache** などのデータベースサービスに横断適用。ただしインスタンスは**第7世代以降**のみ、ElastiCache は **Valkey** のみが対象。エンジン・インスタンスファミリー・サイズ・リージョン・プロビジョンド/サーバーレスの変更後も割引が継続 | 高い | 構成やサービスが変わる可能性がある安定した DB 利用。予約オファリングはサービス単位で構成固定 |
 | スポット | 余剰容量を大幅割引で利用。**2分前通知で中断される可能性** | 低(中断あり) | バッチ、CI、ビッグデータ、ステートレスで中断耐性がある処理 |
 | 専有ホスト/インスタンス | 物理サーバー専有 | 低 | BYOL ライセンス、コンプライアンス要件 |
 
@@ -1067,10 +1068,10 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    A["S3 Standard<br/>作成直後"] -->|"30日後<br/>128 KiB 以上のみ"| B["Standard-IA"]
-    B -->|"90日後"| C["Glacier Flexible Retrieval"]
-    C -->|"365日後"| D["Glacier Deep Archive"]
-    D -->|"7年後"| E["削除"]
+    A["S3 Standard<br/>作成直後"] -->|"作成から30日後<br/>128 KiB 以上のみ"| B["Standard-IA"]
+    B -->|"作成から90日後"| C["Glacier Flexible Retrieval"]
+    C -->|"作成から365日後"| D["Glacier Deep Archive"]
+    D -->|"作成から2,555日後"| E["削除"]
     A -->|"128 KiB 未満は既定で移行せず<br/>Standard のまま7年後"| E
 ```
 
@@ -1164,7 +1165,7 @@ flowchart TB
 | ダウンタイムなしで安全に切替、即時ロールバック | Blue/Green(CodeDeploy、ALB の加重ターゲットグループでリクエスト単位に分散。Route 53 加重は DNS 応答の選択でありリゾルバーの TTL キャッシュにより実際の比率がずれ、切り戻しも遅れうる) | 2.1 |
 | オンプレミスの DR を低コストで | AWS Elastic Disaster Recovery | 2.2 |
 | RTO 分単位、RPO 秒単位、リージョン障害対応 | Aurora Global Database + ウォームスタンバイ + Route 53 | 2.2 / 2.4 |
-| S3 データのリージョン間複製 | S3 CRR(バージョニング必須) | 2.2 |
+| S3 データのリージョン間複製 | S3 CRR(レプリケーション元と先の両バケットでバージョニング必須) | 2.2 |
 | バックアップの削除・改ざん防止 | AWS Backup Vault Lock + クロスアカウントコピー | 2.2 |
 | インターネットを通さず AWS サービスへ接続 | VPC エンドポイント(S3/DynamoDB はゲートウェイ型) | 2.3 / 2.6 |
 | L7 攻撃と DDoS の多層防御 | CloudFront + WAF + Shield(Advanced) + Route 53 | 2.3 |

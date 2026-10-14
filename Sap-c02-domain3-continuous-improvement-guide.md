@@ -191,7 +191,7 @@ flowchart TD
 | CloudWatch アラーム | SNS | 人へ通知、または Lambda を起動 | 管理者へメール通知 |
 | AWS サービスのイベント | EventBridge ルール | Lambda、SSM Automation、Step Functions | EC2 停止イベントで自動起動 |
 | CloudTrail の API 呼び出し | EventBridge ルール | Lambda | セキュリティグループ変更を検知して元に戻す |
-| AWS Config のルール違反 | 修復アクション | SSM Automation ドキュメント | 暗号化なしの S3 バケットにデフォルト暗号化を自動設定 (新規アップロードのみ対象。既存オブジェクトは S3 Batch Operations のコピーで別途再暗号化) |
+| AWS Config のルール違反 | 修復アクション | SSM Automation ドキュメント | デフォルト暗号化が未設定の S3 バケットにデフォルト暗号化を自動設定 (新規アップロードのみ対象。既存オブジェクトは S3 Batch Operations のコピーで別途再暗号化) |
 
 #### EventBridge ルールの例 (EC2 の停止を検知)
 
@@ -537,7 +537,7 @@ flowchart TD
 |---|---|---|
 | だれがどの API を呼んだか | AWS CloudTrail | 管理イベントのイベント履歴は 90 日。長期保管するには証跡を作成して S3 へ保存。証跡が既定で記録するのは管理イベントのみで、S3 オブジェクトレベル操作などのデータイベントは対象リソースを明示的に選択して有効化する |
 | 組織全体の API 履歴 | CloudTrail 組織の証跡 | 管理アカウントから全アカウントへ適用 |
-| 証跡を SQL で調べたい | CloudTrail Lake (既存顧客のみ) / 新規は Amazon CloudWatch | CloudTrail Lake はイベントデータの保管とクエリ。2026 年 5 月 31 日以降は新規顧客に提供されないため、新規利用者は CloudWatch へ |
+| 証跡を SQL で調べたい | CloudTrail Lake (既存顧客のみ) / 新規は Amazon CloudWatch | CloudTrail Lake はイベントデータの保管とクエリ。2026 年 5 月 31 日以降は新規顧客に提供されないため、新規利用者は CloudWatch へ。CloudTrail の証跡の配信先に CloudWatch Logs を設定し、記録するイベント (管理イベント、データイベントなど) を選択する。CloudWatch Logs へ配信されるのは証跡の条件に一致したイベントのみ |
 | 設定の変更履歴 | AWS Config | リソースの設定タイムライン |
 | ネットワーク通信の記録 | VPC フローログ | 許可と拒否の通信を記録 |
 | ログの改ざん検知 | CloudTrail ログファイルの整合性検証 | 検証用のダイジェストで確認 |
@@ -969,7 +969,7 @@ flowchart TD
 | 道具 | 何がわかるか | ポイント |
 |---|---|---|
 | AWS Cost Explorer | サービス別、アカウント別、タグ別のコスト推移。ライトサイジング推奨や RI/Savings Plans の推奨 | 日次と月次で傾向を確認 |
-| AWS Cost and Usage Report (CUR) | 最も詳細な請求データ (行単位) | S3 へ出力し、Athena で SQL 分析。リソース ID 単位まで調べられる |
+| AWS Cost and Usage Report (CUR) | 最も詳細な請求データ (行単位) | S3 へ出力し、Athena で SQL 分析。リソース ID 単位で分析するには、エクスポート作成時に「リソース ID を含める (Include resource IDs)」を選択する |
 | AWS Compute Optimizer | EC2、EBS、Lambda などの過剰と不足を判定 | メモリ指標は CloudWatch エージェントが必要 |
 | AWS Trusted Advisor | コスト最適化チェック (低使用率の EC2、アイドル状態のロードバランサー、未関連付けの Elastic IP など) | すべてのチェックは Business Support+、Enterprise Support、Unified Operations の各プランで利用可能。それ以外のアカウントは一部のコアチェックのみ利用可能 |
 | Amazon S3 Storage Lens | S3 の使用状況とコスト効率の可視化 | ストレージ層の最適化の起点 |

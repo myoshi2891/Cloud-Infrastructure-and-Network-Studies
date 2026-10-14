@@ -546,7 +546,7 @@ flowchart TD
     {
       "Sid": "DenyOutsideAllowedRegions",
       "Effect": "Deny",
-      "NotAction": ["iam:*", "organizations:*", "route53:*", "cloudfront:*", "support:*"],
+      "NotAction": ["iam:*", "organizations:*", "route53:*", "cloudfront:*", "support:*", "budgets:*"],
       "Resource": "*",
       "Condition": {
         "StringNotEquals": {
@@ -630,7 +630,7 @@ flowchart TD
 |---|---|---|
 | **Amazon EC2** | 仮想サーバー。OS を含め最大の自由度。専有ホストやライセンス持ち込みも可能 | Rehost、特殊な OS・ドライバ・ライセンス要件、既存の構成を保つ |
 | **AWS Elastic Beanstalk** | アプリのコードを置くだけで、プロビジョニング・LB・Auto Scaling・監視を自動構成 (内部は EC2 等) | Java、.NET、PHP、Node.js、Python、Ruby、Go、Docker の Web アプリを **コード変更を最小に** Replatform |
-| **AWS App Runner** | コンテナイメージやソースコードから Web アプリ/API を簡単に公開 | インフラ運用をほぼ持たず、コンテナ Web サービスを素早く公開 |
+| **Amazon ECS Express Mode** | コンテナイメージから Web アプリ/API を簡単に公開 (ALB、Auto Scaling などを自動構成) | インフラ運用をほぼ持たず、コンテナ Web サービスを素早く公開する新規デプロイ。**AWS App Runner** は 2026 年 4 月 30 日に新規顧客の受付を終了しており、試験知識や既存顧客の文脈としてのみ扱う |
 | **AWS Lambda** | イベント駆動のサーバーレス。実行時間は最大 15 分、メモリは 128 MB〜10,240 MB | 短時間の処理、イベント駆動、アイドル時コストゼロ |
 
 **ベストプラクティス**
@@ -654,7 +654,7 @@ flowchart TD
   S["コンテナを動かす"] --> Q1{"Kubernetes が必須か"}
   Q1 -->|"はい"| EKS["EKS"]
   Q1 -->|"いいえ"| Q2{"最も簡単に公開したいか"}
-  Q2 -->|"はい"| AR["App Runner"]
+  Q2 -->|"はい"| AR["ECS Express Mode<br/>(App Runner は既存顧客のみ)"]
   Q2 -->|"いいえ"| ECS["ECS"]
   EKS --> Q3{"ノード管理を避けたいか"}
   ECS --> Q3
@@ -855,9 +855,9 @@ flowchart LR
 
 | 項目 | 目安 |
 |---|---|
-| 最大実行時間 | 15 分 |
+| 最大実行時間 | 標準の呼び出しは 15 分。Durable Functions は最大 1 年、Lambda Managed Instances は非同期呼び出しとイベントソースマッピング (Amazon MQ、DocumentDB を除く) で最大 90 分 |
 | メモリ | 128 MB 〜 10,240 MB (CPU はメモリに比例) |
-| 向かない処理 | 15 分を超える長時間処理 (→ Fargate や AWS Batch)、常時接続が必要なもの |
+| 向かない処理 | 15 分を超える長時間処理のうち、Durable Functions や Lambda Managed Instances でも対応できないもの (→ Fargate や AWS Batch)、常時接続が必要なもの |
 
 ### 5.4 専用 DB (Purpose-built databases) の使い分け
 
