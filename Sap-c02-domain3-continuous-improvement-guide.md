@@ -423,7 +423,7 @@ flowchart TD
 | 一定期間は削除も上書きもさせたくない (WORM) | S3 Object Lock | ガバナンスモードとコンプライアンスモードがある。コンプライアンスモードは root でも保持期間中は削除できない |
 | 古いデータを自動で低コストの層へ移し、期限後に削除 | S3 ライフサイクル | 保持期間と削除を自動化 |
 | バックアップを改ざん・削除から守る | AWS Backup Vault Lock | バックアップの保持ルールを強制 |
-| 保管データの暗号化 | AWS KMS | キーポリシーと自動ローテーションで管理 |
+| 保管データの暗号化 | AWS KMS | キーポリシーで管理。自動ローテーションは AWS が生成したキーマテリアルを持つ対称カスタマーマネージドキーのみ対象で、それ以外のキーはローテーションが必要なら手動で行う |
 | コンプライアンス証跡の入手 | AWS Artifact | AWS の監査レポートを取得 |
 | 監査の準備を継続的に自動化 | AWS Audit Manager | 証拠収集を自動化 |
 
@@ -849,7 +849,7 @@ flowchart TD
 
 | サービス | レプリケーション | ポイント |
 |---|---|---|
-| Amazon RDS Multi-AZ | 別 AZ のスタンバイへ同期レプリケーション | 障害時に自動フェイルオーバー。可用性が目的で、読み取りの分散は目的外 |
+| Amazon RDS Multi-AZ | DB インスタンス配置: 別 AZ のスタンバイへ同期レプリケーション。DB クラスター配置: 2つのリーダーインスタンスを持つ3 AZ 構成 | 障害時に自動フェイルオーバー。DB インスタンス配置のスタンバイは読み取りを処理しない。DB クラスター配置はリーダーインスタンスで読み取りも処理できる |
 | Amazon RDS リードレプリカ | 非同期レプリケーション | 読み取りの分散が主目的。リージョンをまたぐことも可能 |
 | Amazon Aurora | ストレージが 3 つの AZ にまたがり 6 つのコピーを保持 | 高い耐久性と可用性。レプリカへの高速フェイルオーバー |
 | Aurora Global Database | リージョン間で低遅延のレプリケーション | DR と、リージョンをまたぐ読み取り |
@@ -1143,7 +1143,7 @@ flowchart TD
 |---|---|
 | Secrets Manager と Parameter Store | 自動ローテーションが必要なら Secrets Manager |
 | CloudFront と Global Accelerator | キャッシュ向けは CloudFront、固定 IP と TCP/UDP は Global Accelerator |
-| Multi-AZ と リードレプリカ | 可用性は Multi-AZ、読み取り分散はリードレプリカ |
+| Multi-AZ と リードレプリカ | 可用性は Multi-AZ。読み取り分散はリードレプリカ、または Multi-AZ DB クラスターのリーダーインスタンス(Multi-AZ DB インスタンスのスタンバイは読み取り不可) |
 | Config と CloudTrail | 設定の状態と履歴は Config、API 操作の履歴は CloudTrail |
 | GuardDuty と Inspector | 不審な動きの検知は GuardDuty、脆弱性のスキャンは Inspector |
 | Security Hub と GuardDuty | 集約と準拠評価は Security Hub、脅威検知は GuardDuty |

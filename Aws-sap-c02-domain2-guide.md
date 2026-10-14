@@ -444,8 +444,8 @@ flowchart TB
 |---|---|
 | 「RTO 数時間、最小コスト」 | バックアップとリストア(AWS Backup のクロスリージョンコピー) |
 | 「データは常時複製、基盤は最小限」 | パイロットライト |
-| 「分単位で復旧、縮小版を常時稼働」 | ウォームスタンバイ |
-| 「ほぼ無停止、リージョン障害でも継続」 | マルチサイト Active/Active(Aurora Global Database、DynamoDB グローバルテーブル、Route 53) |
+| 「分単位で復旧、縮小版を常時稼働」 | ウォームスタンバイ(Aurora Global Database のセカンダリリージョンを昇格する Active/Passive 構成など) |
+| 「ほぼ無停止、リージョン障害でも継続」 | マルチサイト Active/Active(DynamoDB グローバルテーブル、Aurora DSQL のマルチリージョンクラスターなど複数リージョンで書き込めるデータストア、Route 53) |
 | 「オンプレミスサーバーを AWS へ DR」 | AWS Elastic Disaster Recovery |
 | 「リージョン間 DB の低遅延複製」 | Aurora Global Database |
 | 「どのリージョンからも書き込み」 | DynamoDB グローバルテーブル |
@@ -639,7 +639,7 @@ flowchart LR
 
 **DDoS 耐性の基本方針**
 
-1. **攻撃面を減らす**: オリジンを直接公開せず、CloudFront 経由のみ許可する(オリジンアクセスコントロール、マネージドプレフィックスリスト)
+1. **攻撃面を減らす**: オリジンを直接公開せず、CloudFront 経由のみ許可する。S3 オリジンはオリジンアクセスコントロール(OAC)で保護する。ALB オリジンは CloudFront のマネージドプレフィックスリストだけでは他のディストリビューションからの経由を防げないため、CloudFront が付与する秘密のカスタムヘッダーを ALB リスナールールで検証する
 2. **エッジで吸収する**: CloudFront と Route 53(エニーキャスト)を前面に置く
 3. **Layer 7 を守る**: WAF のレートベースルール、マネージドルール、Bot Control
 4. **スケールして耐える**: Auto Scaling と ELB で吸収し、Shield Advanced でコスト保護も受ける
@@ -767,7 +767,7 @@ flowchart LR
 | Amazon SQS | メッセージキュー(バッファ)。標準(ほぼ無制限スループット、順序保証なし、少なくとも1回)、FIFO(順序保証、重複排除) | 可視性タイムアウト、ロングポーリング、**デッドレターキュー**(失敗メッセージの隔離) |
 | Amazon SNS | Pub/Sub(1つのメッセージを多数へ配信) | **SNS + SQS のファンアウト**、フィルターポリシー |
 | Amazon EventBridge | イベントバス。ルールでイベントをターゲットへ振り分け、SaaS/AWS サービスのイベントを連携 | スケジュール実行、イベント駆動 |
-| AWS Step Functions | ワークフローのオーケストレーション。リトライ、エラー処理、並列処理、人の承認待ちを定義 | Standard(長時間、1回のみ実行)と Express(高頻度、短時間) |
+| AWS Step Functions | ワークフローのオーケストレーション。リトライ、エラー処理、並列処理、人の承認待ちを定義 | Standard(長時間。ワークフロー実行は exactly-once だが、`Retry` を定義したタスクは再実行されうる)と Express(高頻度、短時間。非同期は at-least-once、同期は at-most-once) |
 | Amazon Kinesis / MSK | ストリーミングデータの取り込み | 順序付きのリアルタイム処理 |
 | API Gateway | API の公開、スロットリング、キャッシュ | バックエンドの保護 |
 
