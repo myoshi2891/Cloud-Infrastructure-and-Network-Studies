@@ -187,7 +187,7 @@ flowchart TD
 
 | 検知元 | 連携 | 修復の実行 | 例 |
 |---|---|---|---|
-| CloudWatch アラーム | EC2 アクション | インスタンスの再起動や復旧 | ステータスチェック失敗時に自動復旧 |
+| CloudWatch アラーム | EC2 アクション | インスタンスの再起動や復旧 | システムステータスチェック(StatusCheckFailed_System)失敗時に自動復旧(インスタンスステータスチェックの失敗は復旧アクションの対象外) |
 | CloudWatch アラーム | SNS | 人へ通知、または Lambda を起動 | 管理者へメール通知 |
 | AWS サービスのイベント | EventBridge ルール | Lambda、SSM Automation、Step Functions | EC2 停止イベントで自動起動 |
 | CloudTrail の API 呼び出し | EventBridge ルール | Lambda | セキュリティグループ変更を検知して元に戻す |
@@ -859,7 +859,7 @@ flowchart TD
 | Amazon S3 レプリケーション (CRR と SRR) | バケット間で非同期にオブジェクトを複製 | 別リージョンへの保護や、別アカウントへの複製。S3 Replication Time Control で複製時間の目安を保証 |
 | Amazon EBS | スナップショットを別リージョンや別アカウントへコピー | EBS ボリューム自体は 1 つの AZ 内 |
 | Amazon EFS | 複数 AZ に冗長保存。レプリケーションで別リージョンへ | リージョン内の高可用性は標準 |
-| Amazon ElastiCache | Multi-AZ と自動フェイルオーバー、グローバルデータストア | キャッシュの可用性 |
+| Amazon ElastiCache | Multi-AZ と自動フェイルオーバー、グローバルデータストア(いずれも Valkey / Redis OSS が対象。自動フェイルオーバーにはレプリカが必要) | キャッシュの可用性 |
 
 ```mermaid
 flowchart TD
@@ -971,7 +971,7 @@ flowchart TD
 | AWS Cost Explorer | サービス別、アカウント別、タグ別のコスト推移。ライトサイジング推奨や RI/Savings Plans の推奨 | 日次と月次で傾向を確認 |
 | AWS Cost and Usage Report (CUR) | 最も詳細な請求データ (行単位) | S3 へ出力し、Athena で SQL 分析。リソース ID 単位まで調べられる |
 | AWS Compute Optimizer | EC2、EBS、Lambda などの過剰と不足を判定 | メモリ指標は CloudWatch エージェントが必要 |
-| AWS Trusted Advisor | コスト最適化チェック (低使用率の EC2、アイドル状態のロードバランサー、未関連付けの Elastic IP など) | すべてのチェックを使うには Business 以上のサポートプランが必要 |
+| AWS Trusted Advisor | コスト最適化チェック (低使用率の EC2、アイドル状態のロードバランサー、未関連付けの Elastic IP など) | すべてのチェックは Business Support+、Enterprise Support、Unified Operations の各プランで利用可能。それ以外のアカウントは一部のコアチェックのみ利用可能 |
 | Amazon S3 Storage Lens | S3 の使用状況とコスト効率の可視化 | ストレージ層の最適化の起点 |
 
 #### 未使用・低使用リソースの典型例
