@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
-import { squash } from './migration-test-utils';
+import { normalizeSpaces, withBlockBoundarySpaces } from './migration-test-utils';
 
 type GuidePart = ReturnType<typeof snapshotGuidePart>;
 
@@ -18,11 +18,12 @@ export function defineGuidePartSuite(Page: ComponentType, id: string, expected: 
         };
         for (const key of Object.keys(expected) as (keyof GuidePart)[]) {
             it(`preserves all ${key}`, () => {
-                const actual = snapshotGuidePart(content());
+                // 本文テキストはブロック境界の空白を補った複製で比較し、語間の空白を保持したまま照合する
+                const actual = key === 'text' || key === 'body' ? snapshotGuidePart(withBlockBoundarySpaces(content())) : snapshotGuidePart(content());
                 if (key === 'text') {
-                    expect(squash(actual.text)).toBe(squash(expected.text));
+                    expect(normalizeSpaces(actual.text)).toBe(normalizeSpaces(expected.text));
                 } else if (key === 'body') {
-                    const body = (items: GuidePart['body']) => items.map(item => ({ ...item, text: item.kind === 'code' ? item.text : squash(item.text) }));
+                    const body = (items: GuidePart['body']) => items.map(item => ({ ...item, text: item.kind === 'code' ? item.text : normalizeSpaces(item.text) }));
                     expect(body(actual.body)).toEqual(body(expected.body));
                 } else {
                     expect(actual[key]).toEqual(expected[key]);

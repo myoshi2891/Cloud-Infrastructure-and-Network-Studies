@@ -3,7 +3,7 @@ import { Diagram } from '../Diagram';
 export default function Foundation() {
     return <div className="guide-part" data-part="foundation">
 
-    <div className="hero"><div className="kicker">{"\n                        AWS Certified Generative AI Developer · Professional\n                    "}</div><h1>{"\n                        AWS Certified Generative AI Developer - Professional (AIP-C01)\n                        初学者向けステップバイステップ解説ガイド\n                    "}</h1><div className="meta-row"><span className="pill">{"試験 "}<strong>{"AIP-C01 / 合格 750点"}</strong></span><span className="pill">{"対象 "}<strong>{"初学者〜中級者"}</strong></span><span className="pill">{"図解 "}<strong>{"Mermaid 34点"}</strong></span><span className="pill">{"参考URL "}<strong>{"55件"}</strong></span></div></div>
+    <div className="hero"><div className="kicker">{"\n                        AWS Certified Generative AI Developer · Professional\n                    "}</div><h1>{"\n                        AWS Certified Generative AI Developer - Professional (AIP-C01)\n                        初学者向けステップバイステップ解説ガイド\n                    "}</h1><div className="meta-row"><span className="pill">{"試験 "}<strong>{"AIP-C01 / 合格 750点"}</strong></span>{" "}<span className="pill">{"対象 "}<strong>{"初学者〜中級者"}</strong></span>{" "}<span className="pill">{"図解 "}<strong>{"Mermaid 34点"}</strong></span>{" "}<span className="pill">{"参考URL "}<strong>{"55件"}</strong></span></div></div>
 
     <p><strong>{"対象読者"}</strong>{":\n                    生成AI(GenAI)アプリ開発の経験が浅い方、AWSの基礎知識(IAM・S3・Lambda・VPC\n                    など)がある方\n                "}</p>
 

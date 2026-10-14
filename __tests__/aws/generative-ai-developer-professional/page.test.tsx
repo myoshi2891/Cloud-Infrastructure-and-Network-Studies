@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/generative-ai-developer-professional/page';
 import inventory from '@/docs/migration-inventory/aws-aip-c01-guide.json';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-guide.fidelity.json';
-import { squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
+import { normalizeSpaces, extractBodyContent, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -13,20 +13,20 @@ vi.mock('@/components/MermaidDiagram', async () => {
 describe('AIP page: independent full source inventory', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const)('preserves every %s, including sidebar heading', tag => {
         const { container } = render(<Page />);
-        expect([...container.querySelectorAll(tag)].map(el => squash(el.textContent ?? ''))).toEqual(inventory[tag].map(squash));
+        expect([...container.querySelectorAll(tag)].map(el => normalizeSpaces(el.textContent ?? ''))).toEqual(inventory[tag].map(normalizeSpaces));
     });
     it('matches all 60 content list items without counting the new semantic navigation list', () => {
         const { container } = render(<Page />);
-        expect([...container.querySelectorAll('main li')].map(el => squash(el.textContent ?? ''))).toEqual(inventory.listItems.map(squash));
+        expect([...container.querySelectorAll('main li')].map(el => normalizeSpaces(el.textContent ?? ''))).toEqual(inventory.listItems.map(normalizeSpaces));
     });
     it('preserves external link texts, duplicate hrefs and their complete order', () => {
         const { container } = render(<Page />);
-        expect([...container.querySelectorAll('a[href^="http"]')].map(el => ({ href: el.getAttribute('href'), text: squash(el.textContent ?? '') }))).toEqual(inventory.links.map(link => ({ ...link, text: squash(link.text) })));
+        expect([...container.querySelectorAll('a[href^="http"]')].map(el => ({ href: el.getAttribute('href'), text: normalizeSpaces(el.textContent ?? '') }))).toEqual(inventory.links.map(link => ({ ...link, text: normalizeSpaces(link.text) })));
     });
     it('retains all source body blocks, code lines and exact component counts', () => {
         const { container } = render(<Page />);
-        const normalize = (blocks: { kind: string; text: string }[]) => blocks.map(block => ({ ...block, text: block.kind === 'code' ? block.text : squash(block.text) }));
-        expect(normalize(extractBodyContent(container))).toEqual(normalize(inventory.bodyContent));
+        const normalize = (blocks: { kind: string; text: string }[]) => blocks.map(block => ({ ...block, text: block.kind === 'code' ? block.text : normalizeSpaces(block.text) }));
+        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(normalize(inventory.bodyContent));
         expect(container.querySelectorAll('table')).toHaveLength(inventory.counts.table);
         expect(container.querySelectorAll('[data-testid="mermaid-diagram"]')).toHaveLength(inventory.counts.diagram);
         expect(container.querySelectorAll('.code-block')).toHaveLength(inventory.counts.codeBlock);

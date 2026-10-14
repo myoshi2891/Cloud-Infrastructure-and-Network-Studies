@@ -19,7 +19,13 @@ const declarations = (selector: string, media = '') => {
 describe('AIP source visual declarations', () => {
     it('preserves every applicable original dimension, spacing, typography and interaction declaration', () => {
         for (const rule of fixture.guideDesign.rules) {
-            if (/^:root$|^html,|checklist|ref-grid|ref-card|practice-label|aside\.footnotes/.test(rule.selector)) continue;
+            if (/^:root$|^html,/.test(rule.selector)) continue;
+            if (/checklist|ref-grid|ref-card|practice-label|aside\.footnotes/.test(rule.selector)) {
+                // 原本マークアップで未使用のため代替宣言を持たない。原本で使われていれば比較対象に戻すため失敗させる
+                const classes = [...rule.selector.matchAll(/\.([\w-]+)/g)].map(match => match[1] ?? '');
+                expect(classes.filter(name => fixture.styledClasses.includes(name)), rule.selector).toEqual([]);
+                continue;
+            }
             const selector = rule.selector === 'body' ? '.aip-guide-page' : rule.selector.split(',').map(part => `.aip-guide-page ${part.trim().replaceAll('pre.mermaid', '.mermaid-wrap').replace('.main > h2:first-of-type', '.guide-part:first-child > h2:first-of-type')}`).join(', ');
             const actual = declarations(selector, rule.media);
             expect(Object.keys(actual), selector).not.toHaveLength(0);
