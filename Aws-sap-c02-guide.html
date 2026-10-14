@@ -364,6 +364,237 @@
             .callout-practice p:last-child {
                 margin-bottom: 0;
             }
+            .quiz {
+                margin: 0 0 30px;
+            }
+            .quiz-bar {
+                position: sticky;
+                top: 12px;
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 14px 18px;
+                margin: 0 0 22px;
+                box-shadow: 0 6px 20px rgba(27, 42, 65, 0.08);
+            }
+            .qb-info {
+                display: flex;
+                gap: 18px;
+                flex-wrap: wrap;
+                font-size: 14.5px;
+                color: var(--text-dim);
+            }
+            .qb-info strong {
+                color: var(--accent);
+                font-size: 18px;
+            }
+            .qb-track {
+                flex: 1 1 160px;
+                height: 8px;
+                border-radius: 999px;
+                background: var(--accent-bg);
+                overflow: hidden;
+            }
+            .qb-fill {
+                height: 100%;
+                width: 0;
+                background: var(--accent);
+                border-radius: 999px;
+                transition: width 0.3s ease;
+            }
+            .qb-reset {
+                font-family: inherit;
+                font-size: 13.5px;
+                font-weight: 700;
+                color: var(--accent);
+                background: var(--accent-bg);
+                border: 1px solid var(--accent-soft);
+                border-radius: 8px;
+                padding: 7px 14px;
+                cursor: pointer;
+            }
+            .qb-reset:hover {
+                background: var(--accent);
+                color: #ffffff;
+            }
+            .qb-final {
+                background: var(--success-bg);
+                border: 1px solid #b7e0c8;
+                border-left: 4px solid var(--success);
+                border-radius: 12px;
+                padding: 16px 20px;
+                margin: 0 0 22px;
+                color: var(--text);
+                font-weight: 700;
+            }
+            .q-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 22px 24px;
+                margin: 0 0 22px;
+                scroll-margin-top: 90px;
+            }
+            .q-card.is-correct {
+                border-color: #b7e0c8;
+            }
+            .q-card.is-wrong {
+                border-color: #f1c0ca;
+            }
+            .q-head {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 0 0 12px;
+            }
+            .q-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 44px;
+                height: 28px;
+                padding: 0 10px;
+                border-radius: 8px;
+                background: var(--accent);
+                color: #ffffff;
+                font-size: 13px;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+            }
+            .q-tag {
+                font-size: 12.5px;
+                color: var(--text-dim);
+                background: var(--bg-card-2);
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                padding: 2px 12px;
+            }
+            .main .q-text {
+                font-size: 17px;
+                font-weight: 700;
+                line-height: 1.7;
+                margin: 0 0 16px;
+            }
+            .q-options {
+                display: grid;
+                gap: 10px;
+            }
+            .q-opt {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                width: 100%;
+                text-align: left;
+                font-family: inherit;
+                font-size: 15.5px;
+                line-height: 1.6;
+                color: var(--text);
+                background: var(--bg);
+                border: 1.5px solid var(--border);
+                border-radius: 12px;
+                padding: 12px 16px;
+                cursor: pointer;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .q-opt:hover:not(:disabled) {
+                border-color: var(--accent);
+                background: var(--accent-bg);
+            }
+            .q-opt:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+            .q-opt:disabled {
+                cursor: default;
+            }
+            .q-key {
+                flex-shrink: 0;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 800;
+                color: var(--accent);
+                background: var(--accent-bg);
+                border: 1px solid var(--accent-soft);
+            }
+            .q-label {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .q-opt.is-correct {
+                border-color: var(--success);
+                background: var(--success-bg);
+            }
+            .q-opt.is-correct .q-key {
+                background: var(--success);
+                border-color: var(--success);
+                color: #ffffff;
+            }
+            .q-opt.is-wrong {
+                border-color: var(--danger);
+                background: var(--danger-bg);
+            }
+            .q-opt.is-wrong .q-key {
+                background: var(--danger);
+                border-color: var(--danger);
+                color: #ffffff;
+            }
+            .q-opt.is-dim {
+                opacity: 0.55;
+            }
+            .q-result {
+                margin: 16px 0 0;
+                border-top: 1px dashed var(--border);
+                padding-top: 14px;
+            }
+            .q-verdict {
+                font-weight: 800;
+                font-size: 15.5px;
+                margin: 0 0 8px;
+            }
+            .q-card.is-correct .q-verdict {
+                color: var(--success);
+            }
+            .q-card.is-wrong .q-verdict {
+                color: var(--danger);
+            }
+            .q-expl {
+                background: var(--bg-card-2);
+                border-radius: 10px;
+                padding: 12px 16px;
+            }
+            .q-expl-label {
+                display: inline-block;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--accent);
+                margin: 0 0 4px;
+            }
+            .main .q-expl p {
+                margin: 0;
+                font-size: 15px;
+                color: var(--text);
+            }
+            @media (max-width: 980px) {
+                .quiz-bar {
+                    top: 64px;
+                }
+                .q-card {
+                    padding: 18px 16px;
+                }
+            }
             @media (max-width: 980px) {
                 .sidebar {
                     transform: translateX(-100%);
@@ -7816,231 +8047,509 @@ flowchart TD
                         </p>
                     </div>
                 </div>
-                <h4 id="問題-1step-1">問題 1(Step 1)</h4>
-                <p>
-                    多数の VPC(今後さらに増える見込み)とオンプレミスのデータセンターを接続し、本番
-                    VPC と開発 VPC の間は通信できないようにしたい。運用の手間を最小にするには?
-                </p>
-                <ul>
-                    <li>A. すべての VPC を VPC ピアリングで相互に接続する</li>
-                    <li>
-                        B. Transit Gateway を使い、本番用と開発用に別々のルートテーブルを関連付ける
-                    </li>
-                    <li>C. 各 VPC に Site-to-Site VPN を個別に構築する</li>
-                    <li>D. 各 VPC に PrivateLink のエンドポイントを作る</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。Transit Gateway
-                        はハブ型で拡張しやすく、ルートテーブルを分けることで本番と開発を分離できます。A
-                        は数が増えると組み合わせが爆発し、推移的ルーティングもできません。C
-                        は管理が煩雑、D は特定サービスの一方向公開向けです。
-                    </p>
-                </details>
-                <h4 id="問題-2step-1">問題 2(Step 1)</h4>
-                <p>
-                    オンプレミスから AWS
-                    への接続で、<strong>通信の暗号化が必須</strong>で、<strong>安定した帯域</strong>も必要。適切な構成は?
-                </p>
-                <ul>
-                    <li>A. Direct Connect のみ</li>
-                    <li>B. Site-to-Site VPN のみ</li>
-                    <li>C. Direct Connect に Site-to-Site VPN を重ねる</li>
-                    <li>D. インターネット経由の HTTPS のみ</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>C</strong>。Direct Connect
-                        は既定では暗号化されません。安定した帯域は Direct Connect、暗号化は
-                        VPN(または MACsec)で補います。
-                    </p>
-                </details>
-                <h4 id="問題-3step-4">問題 3(Step 4)</h4>
-                <p>
-                    新規アカウントがどの OU に作られても、<strong
-                        >CloudTrail の停止とルートユーザーの利用を禁止</strong
-                    >したい。最も適切な方法は?
-                </p>
-                <ul>
-                    <li>A. 各アカウントの IAM ポリシーで Deny を設定する</li>
-                    <li>B. 組織のルートまたは OU に SCP を適用する</li>
-                    <li>C. Config ルールで定期的に確認して手動で修正する</li>
-                    <li>D. 管理アカウントの管理者が毎日確認する</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。SCP
-                        は組織全体のガードレールとして、アカウント側の管理者でも越えられない上限を設定できます。なお
-                        SCP は管理アカウントには効かない点に注意します。
-                    </p>
-                </details>
-                <h4 id="問題-4step-37">問題 4(Step 3、7)</h4>
-                <p>
-                    RTO は 15 分、RPO は 1
-                    分未満、リージョン障害にも耐える必要がある。コストはなるべく抑えたい。最も適切な戦略は?
-                </p>
-                <ul>
-                    <li>A. バックアップと復元</li>
-                    <li>B. Pilot light</li>
-                    <li>C. Warm standby(Aurora Global Database 等と併用)</li>
-                    <li>D. 1 つのリージョンで Multi-AZ のみ</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>C</strong>。RTO が数分から十数分、RPO が数秒から分の要件には Warm
-                        standby が適しています。A は復旧が遅く、B
-                        は起動に時間がかかる場合があります。D はリージョン障害に耐えられません。
-                    </p>
-                </details>
-                <h4 id="問題-5step-8">問題 5(Step 8)</h4>
-                <p>
-                    大規模 Web アプリが SQL インジェクションと大規模な DDoS
-                    攻撃の両方を受ける懸念がある。最も適切な対策は?
-                </p>
-                <ul>
-                    <li>A. セキュリティグループのみ</li>
-                    <li>B. CloudFront と AWS WAF、AWS Shield Advanced を組み合わせる</li>
-                    <li>C. ネットワーク ACL のみ</li>
-                    <li>D. GuardDuty のみ</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。アプリ層の攻撃は WAF、DDoS は Shield
-                        Advanced、エッジでの吸収は CloudFront で守れます。GuardDuty
-                        は検知であり遮断ではありません。
-                    </p>
-                </details>
-                <h4 id="問題-6step-8">問題 6(Step 8)</h4>
-                <p>
-                    DB
-                    の認証情報を<strong>自動でローテーション</strong>しつつ、アプリから安全に取得したい。適切なサービスは?
-                </p>
-                <ul>
-                    <li>A. Systems Manager Parameter Store の標準パラメータ</li>
-                    <li>B. AWS Secrets Manager</li>
-                    <li>C. S3 バケットに暗号化して保存</li>
-                    <li>D. アプリのソースコード内に埋め込む</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。Secrets Manager は RDS
-                        などの認証情報の自動ローテーションに対応しています。
-                    </p>
-                </details>
-                <h4 id="問題-7step-920">問題 7(Step 9、20)</h4>
-                <p>
-                    注文処理で、バックエンドが一時的に遅くなるとフロントエンドがタイムアウトする。<strong>疎結合</strong>にして耐障害性を高めるには?
-                </p>
-                <ul>
-                    <li>A. フロントエンドの EC2 を増やす</li>
-                    <li>B. SQS キューを間に挟み、非同期で処理する</li>
-                    <li>C. バックエンドのインスタンスを大きくする</li>
-                    <li>D. タイムアウト値を延ばす</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong
-                        >。キューで非同期化すると、バックエンドが遅くなってもフロントは受け付けを続けられ、ピーク負荷も平準化できます。
-                    </p>
-                </details>
-                <h4 id="問題-8step-115">問題 8(Step 11、5)</h4>
-                <p>
-                    アクセスパターンが予測できない大量のデータを S3
-                    に保存している。<strong>運用の手間なく</strong>コストを最適化するには?
-                </p>
-                <ul>
-                    <li>A. すべて S3 Standard-IA に移す</li>
-                    <li>B. S3 Intelligent-Tiering を使う</li>
-                    <li>C. すべて Glacier Deep Archive に移す</li>
-                    <li>D. 手動で毎月アクセス状況を確認して移動する</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。アクセスパターンが不明な場合、自動で階層を移動する
-                        Intelligent-Tiering が適しています。A と C
-                        は頻繁にアクセスされると取り出し料金や遅延で不利になります。
-                    </p>
-                </details>
-                <h4 id="問題-9step-111">問題 9(Step 11、1)</h4>
-                <p>
-                    プライベートサブネットの EC2 が S3 に大量のデータを送っており、NAT
-                    ゲートウェイの費用が高い。最小の変更で費用を下げるには?
-                </p>
-                <ul>
-                    <li>A. NAT ゲートウェイを大きいものに変える</li>
-                    <li>B. S3 のゲートウェイ VPC エンドポイントを作成しルートテーブルに追加する</li>
-                    <li>C. インターネットゲートウェイを使い EC2 をパブリックに置く</li>
-                    <li>D. S3 のインターフェイスエンドポイントを作成する</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。ゲートウェイエンドポイントは無料で、NAT
-                        ゲートウェイのデータ処理料金を避けられます。D
-                        は時間料金とデータ処理料金が発生します(オンプレミスや他リージョンからの利用など特別な要件がある場合のみ有力)。
-                    </p>
-                </details>
-                <h4 id="問題-10step-18">問題 10(Step 18)</h4>
-                <p>
-                    オンプレミスの Oracle DB を Aurora PostgreSQL
-                    へ、<strong>ダウンタイムを最小化</strong>して移行したい。適切な組み合わせは?
-                </p>
-                <ul>
-                    <li>A. DMS のみ</li>
-                    <li>B. SCT でスキーマを変換し、DMS で CDC を使ってデータを移行</li>
-                    <li>C. DataSync でデータファイルをコピー</li>
-                    <li>D. Snow ファミリーでバックアップを送る</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong>。異種 DB の移行には、スキーマ変換の SCT
-                        と、継続的に変更を反映できる DMS(CDC)の組み合わせが定石です。
-                    </p>
-                </details>
-                <h4 id="問題-11step-18">問題 11(Step 18)</h4>
-                <p>
-                    オンプレミスの 200 TB のファイルデータを、回線が 1 Gbps
-                    しかない環境で、できるだけ早く S3 へ移したい。最も適切なのは?
-                </p>
-                <ul>
-                    <li>A. インターネット経由でアップロード</li>
-                    <li>B. DataSync のみで 1 Gbps の回線を使う</li>
-                    <li>C. Snow ファミリーの物理デバイスを利用する</li>
-                    <li>D. Transfer Family を使う</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>C</strong>。1 Gbps の理論値でも約 20
-                        日かかり、実際はさらに長くなります。このような大容量には物理デバイスが有利です(ただし提供状況は最新情報を確認)。
-                    </p>
-                </details>
-                <h4 id="問題-12step-17">問題 12(Step 17)</h4>
-                <p>
-                    利用者がほとんどいない古い社内システムが多数ある。移行計画で最初に行うべきことは?
-                </p>
-                <ul>
-                    <li>A. すべて Rehost する</li>
-                    <li>B. 使われていないものは Retire(廃止)として移行対象から外す</li>
-                    <li>C. すべて Refactor する</li>
-                    <li>D. すべて Retain して何もしない</li>
-                </ul>
-                <details>
-                    <summary>解答と解説</summary>
-                    <p>
-                        <strong>B</strong
-                        >。移行の前に棚卸しで不要なものを廃止すれば、移行の対象と費用を減らせます。
-                    </p>
-                </details>
+                <div class="quiz" id="quiz">
+                    <div class="quiz-bar">
+                        <div class="qb-info">
+                            <span
+                                >正解 <strong id="qScore">0</strong> /
+                                <span id="qTotal">12</span></span
+                            ><span
+                                >回答済み <strong id="qDone">0</strong> /
+                                <span id="qTotal2">12</span></span
+                            >
+                        </div>
+                        <div class="qb-track"><div class="qb-fill" id="qFill"></div></div>
+                        <button type="button" class="qb-reset" id="qReset">リセット</button>
+                    </div>
+                    <div class="qb-final" id="qFinal" hidden></div>
+                    <article class="q-card" id="q1" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q1</span><span class="q-tag">Step 1</span>
+                        </div>
+                        <p class="q-text">
+                            多数の
+                            VPC(今後さらに増える見込み)とオンプレミスのデータセンターを接続し、本番
+                            VPC と開発 VPC
+                            の間は通信できないようにしたい。運用の手間を最小にするには?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 1 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label"
+                                    >すべての VPC を VPC ピアリングで相互に接続する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >Transit Gateway
+                                    を使い、本番用と開発用に別々のルートテーブルを関連付ける</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >各 VPC に Site-to-Site VPN を個別に構築する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label"
+                                    >各 VPC に PrivateLink のエンドポイントを作る</span
+                                >
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    Transit Gateway
+                                    はハブ型で拡張しやすく、ルートテーブルを分けることで本番と開発を分離できます。A
+                                    は数が増えると組み合わせが爆発し、推移的ルーティングもできません。C
+                                    は管理が煩雑、D は特定サービスの一方向公開向けです。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q2" data-answer="C">
+                        <div class="q-head">
+                            <span class="q-badge">Q2</span><span class="q-tag">Step 1</span>
+                        </div>
+                        <p class="q-text">
+                            オンプレミスから AWS
+                            への接続で、<strong>通信の暗号化が必須</strong>で、<strong>安定した帯域</strong>も必要。適切な構成は?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 2 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">Direct Connect のみ</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label">Site-to-Site VPN のみ</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >Direct Connect に Site-to-Site VPN を重ねる</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">インターネット経由の HTTPS のみ</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    Direct Connect は既定では暗号化されません。安定した帯域は Direct
+                                    Connect、暗号化は VPN(または MACsec)で補います。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q3" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q3</span><span class="q-tag">Step 4</span>
+                        </div>
+                        <p class="q-text">
+                            新規アカウントがどの OU に作られても、<strong
+                                >CloudTrail の停止とルートユーザーの利用を禁止</strong
+                            >したい。最も適切な方法は?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 3 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label"
+                                    >各アカウントの IAM ポリシーで Deny を設定する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >組織のルートまたは OU に SCP を適用する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >Config ルールで定期的に確認して手動で修正する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">管理アカウントの管理者が毎日確認する</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    SCP
+                                    は組織全体のガードレールとして、アカウント側の管理者でも越えられない上限を設定できます。なお
+                                    SCP は管理アカウントには効かない点に注意します。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q4" data-answer="C">
+                        <div class="q-head">
+                            <span class="q-badge">Q4</span><span class="q-tag">Step 3、7</span>
+                        </div>
+                        <p class="q-text">
+                            RTO は 15 分、RPO は 1
+                            分未満、リージョン障害にも耐える必要がある。コストはなるべく抑えたい。最も適切な戦略は?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 4 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">バックアップと復元</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span><span class="q-label">Pilot light</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >Warm standby(Aurora Global Database 等と併用)</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">1 つのリージョンで Multi-AZ のみ</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    RTO が数分から十数分、RPO が数秒から分の要件には Warm standby
+                                    が適しています。A は復旧が遅く、B
+                                    は起動に時間がかかる場合があります。D
+                                    はリージョン障害に耐えられません。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q5" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q5</span><span class="q-tag">Step 8</span>
+                        </div>
+                        <p class="q-text">
+                            大規模 Web アプリが SQL インジェクションと大規模な DDoS
+                            攻撃の両方を受ける懸念がある。最も適切な対策は?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 5 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">セキュリティグループのみ</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >CloudFront と AWS WAF、AWS Shield Advanced を組み合わせる</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">ネットワーク ACL のみ</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">GuardDuty のみ</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    アプリ層の攻撃は WAF、DDoS は Shield Advanced、エッジでの吸収は
+                                    CloudFront で守れます。GuardDuty
+                                    は検知であり遮断ではありません。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q6" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q6</span><span class="q-tag">Step 8</span>
+                        </div>
+                        <p class="q-text">
+                            DB
+                            の認証情報を<strong>自動でローテーション</strong>しつつ、アプリから安全に取得したい。適切なサービスは?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 6 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label"
+                                    >Systems Manager Parameter Store の標準パラメータ</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label">AWS Secrets Manager</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">S3 バケットに暗号化して保存</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">アプリのソースコード内に埋め込む</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    Secrets Manager は RDS
+                                    などの認証情報の自動ローテーションに対応しています。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q7" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q7</span><span class="q-tag">Step 9、20</span>
+                        </div>
+                        <p class="q-text">
+                            注文処理で、バックエンドが一時的に遅くなるとフロントエンドがタイムアウトする。<strong>疎結合</strong>にして耐障害性を高めるには?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 7 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">フロントエンドの EC2 を増やす</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label">SQS キューを間に挟み、非同期で処理する</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">バックエンドのインスタンスを大きくする</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">タイムアウト値を延ばす</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    キューで非同期化すると、バックエンドが遅くなってもフロントは受け付けを続けられ、ピーク負荷も平準化できます。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q8" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q8</span><span class="q-tag">Step 11、5</span>
+                        </div>
+                        <p class="q-text">
+                            アクセスパターンが予測できない大量のデータを S3
+                            に保存している。<strong>運用の手間なく</strong>コストを最適化するには?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 8 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">すべて S3 Standard-IA に移す</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label">S3 Intelligent-Tiering を使う</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">すべて Glacier Deep Archive に移す</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label"
+                                    >手動で毎月アクセス状況を確認して移動する</span
+                                >
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    アクセスパターンが不明な場合、自動で階層を移動する
+                                    Intelligent-Tiering が適しています。A と C
+                                    は頻繁にアクセスされると取り出し料金や遅延で不利になります。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q9" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q9</span><span class="q-tag">Step 11、1</span>
+                        </div>
+                        <p class="q-text">
+                            プライベートサブネットの EC2 が S3 に大量のデータを送っており、NAT
+                            ゲートウェイの費用が高い。最小の変更で費用を下げるには?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 9 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">NAT ゲートウェイを大きいものに変える</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >S3 のゲートウェイ VPC
+                                    エンドポイントを作成しルートテーブルに追加する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >インターネットゲートウェイを使い EC2 をパブリックに置く</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label"
+                                    >S3 のインターフェイスエンドポイントを作成する</span
+                                >
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    ゲートウェイエンドポイントは無料で、NAT
+                                    ゲートウェイのデータ処理料金を避けられます。D
+                                    は時間料金とデータ処理料金が発生します(オンプレミスや他リージョンからの利用など特別な要件がある場合のみ有力)。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q10" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q10</span><span class="q-tag">Step 18</span>
+                        </div>
+                        <p class="q-text">
+                            オンプレミスの Oracle DB を Aurora PostgreSQL
+                            へ、<strong>ダウンタイムを最小化</strong>して移行したい。適切な組み合わせは?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 10 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span><span class="q-label">DMS のみ</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >SCT でスキーマを変換し、DMS で CDC を使ってデータを移行</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">DataSync でデータファイルをコピー</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">Snow ファミリーでバックアップを送る</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    異種 DB の移行には、スキーマ変換の SCT
+                                    と、継続的に変更を反映できる DMS(CDC)の組み合わせが定石です。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q11" data-answer="C">
+                        <div class="q-head">
+                            <span class="q-badge">Q11</span><span class="q-tag">Step 18</span>
+                        </div>
+                        <p class="q-text">
+                            オンプレミスの 200 TB のファイルデータを、回線が 1 Gbps
+                            しかない環境で、できるだけ早く S3 へ移したい。最も適切なのは?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 11 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">インターネット経由でアップロード</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label">DataSync のみで 1 Gbps の回線を使う</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label"
+                                    >Snow ファミリーの物理デバイスを利用する</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">Transfer Family を使う</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    1 Gbps の理論値でも約 20
+                                    日かかり、実際はさらに長くなります。このような大容量には物理デバイスが有利です(ただし提供状況は最新情報を確認)。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="q-card" id="q12" data-answer="B">
+                        <div class="q-head">
+                            <span class="q-badge">Q12</span><span class="q-tag">Step 17</span>
+                        </div>
+                        <p class="q-text">
+                            利用者がほとんどいない古い社内システムが多数ある。移行計画で最初に行うべきことは?
+                        </p>
+                        <div class="q-options" role="group" aria-label="問題 12 の選択肢">
+                            <button type="button" class="q-opt" data-key="A">
+                                <span class="q-key">A</span
+                                ><span class="q-label">すべて Rehost する</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="B">
+                                <span class="q-key">B</span
+                                ><span class="q-label"
+                                    >使われていないものは Retire(廃止)として移行対象から外す</span
+                                >
+                            </button>
+                            <button type="button" class="q-opt" data-key="C">
+                                <span class="q-key">C</span
+                                ><span class="q-label">すべて Refactor する</span>
+                            </button>
+                            <button type="button" class="q-opt" data-key="D">
+                                <span class="q-key">D</span
+                                ><span class="q-label">すべて Retain して何もしない</span>
+                            </button>
+                        </div>
+                        <div class="q-result" hidden aria-live="polite">
+                            <div class="q-verdict"></div>
+                            <div class="q-expl">
+                                <span class="q-expl-label">解説</span>
+                                <p>
+                                    移行の前に棚卸しで不要なものを廃止すれば、移行の対象と費用を減らせます。
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
                 <hr />
                 <h2 id="step-22ひっかけパターン一覧">Step 22:ひっかけパターン一覧</h2>
                 <div class="table-scroll">
@@ -8819,6 +9328,98 @@ flowchart LR
                 headings.forEach(function (h) {
                     spyObserver.observe(h);
                 });
+            })();
+        </script>
+        <script>
+            (function () {
+                'use strict';
+                var quiz = document.getElementById('quiz');
+                if (!quiz) return;
+                var cards = Array.from(quiz.querySelectorAll('.q-card'));
+                var total = cards.length;
+                var scoreEl = document.getElementById('qScore');
+                var doneEl = document.getElementById('qDone');
+                var fillEl = document.getElementById('qFill');
+                var finalEl = document.getElementById('qFinal');
+                var state = {};
+
+                function update() {
+                    var done = 0;
+                    var score = 0;
+                    cards.forEach(function (c) {
+                        if (state[c.id]) {
+                            done++;
+                            if (state[c.id] === c.getAttribute('data-answer')) score++;
+                        }
+                    });
+                    scoreEl.textContent = score;
+                    doneEl.textContent = done;
+                    fillEl.style.width = (total ? (done / total) * 100 : 0) + '%';
+                    if (done === total && total > 0) {
+                        var pct = Math.round((score / total) * 100);
+                        var msg =
+                            pct >= 75
+                                ? '合格ラインの目安に到達しています。間違えた問題を解説で復習しましょう。'
+                                : '正答率が 75% 未満です。間違えた問題の Step に戻って復習しましょう。';
+                        finalEl.textContent =
+                            '全 ' +
+                            total +
+                            ' 問終了:' +
+                            score +
+                            ' / ' +
+                            total +
+                            '(' +
+                            pct +
+                            '%) ' +
+                            msg;
+                        finalEl.hidden = false;
+                    } else {
+                        finalEl.hidden = true;
+                    }
+                }
+
+                cards.forEach(function (card) {
+                    var answer = card.getAttribute('data-answer');
+                    var opts = Array.from(card.querySelectorAll('.q-opt'));
+                    var result = card.querySelector('.q-result');
+                    var verdict = card.querySelector('.q-verdict');
+                    opts.forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            if (state[card.id]) return;
+                            var key = btn.getAttribute('data-key');
+                            state[card.id] = key;
+                            var ok = key === answer;
+                            opts.forEach(function (o) {
+                                o.disabled = true;
+                                var k = o.getAttribute('data-key');
+                                if (k === answer) o.classList.add('is-correct');
+                                else if (k === key) o.classList.add('is-wrong');
+                                else o.classList.add('is-dim');
+                            });
+                            card.classList.add(ok ? 'is-correct' : 'is-wrong');
+                            verdict.textContent = ok
+                                ? '✓ 正解です'
+                                : '✗ 不正解です。正解は ' + answer + ' です';
+                            result.hidden = false;
+                            update();
+                        });
+                    });
+                });
+
+                document.getElementById('qReset').addEventListener('click', function () {
+                    state = {};
+                    cards.forEach(function (card) {
+                        card.classList.remove('is-correct', 'is-wrong');
+                        card.querySelector('.q-result').hidden = true;
+                        card.querySelectorAll('.q-opt').forEach(function (o) {
+                            o.disabled = false;
+                            o.classList.remove('is-correct', 'is-wrong', 'is-dim');
+                        });
+                    });
+                    update();
+                    quiz.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+                update();
             })();
         </script>
     </body>
