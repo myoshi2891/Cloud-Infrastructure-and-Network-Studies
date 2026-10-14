@@ -2735,7 +2735,7 @@ flowchart LR
                 <p>
                     クロスリージョン推論には、<strong>地域内に限定する Geographic</strong>
                     と、<strong>全商用リージョンから最適を選ぶ Global</strong>
-                    があります。データ処理場所の制約があるなら Geographic を選びます(出典:
+                    があります。Geographic は選択した地域内の別リージョンへルーティングされ得るため、その地域内のどこで処理されてもよい場合に限り選びます。単一の国・リージョン内での処理が必要なら、リージョン内推論を使い、モデルの提供リージョンを確認します(出典:
                     <a
                         href="https://docs.aws.amazon.com/bedrock/latest/userguide/geographic-cross-region-inference.html"
                         >Geographic cross-Region inference</a

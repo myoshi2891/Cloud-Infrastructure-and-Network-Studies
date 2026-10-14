@@ -92,7 +92,7 @@ export default function Domain2() {
 
     <div className="table-scroll" tabIndex={0}><table><thead><tr className="header"><th scope="col">{"要件"}</th><th scope="col">{"サービス"}</th></tr></thead><tbody><tr className="odd"><td>{"オンプレミスにデータを置きたい/低遅延でクラウドAI"}</td><td><strong>{"AWS Outposts"}</strong></td></tr><tr className="even"><td>{"エッジ(5G等)でAI"}</td><td><strong>{"AWS Wavelength"}</strong></td></tr><tr className="odd"><td>{"安全な接続"}</td><td>{"PrivateLink、VPN/Direct Connect、プライベートルーティング"}</td></tr><tr className="even"><td>{"国をまたぐコンプライアンス"}</td><td>{"\n                                    データの処理場所に配慮(クロスリージョン推論の範囲を地域に限定する等)\n                                "}</td></tr></tbody></table></div>
 
-    <p>{"\n                    クロスリージョン推論には、"}<strong>{"地域内に限定する Geographic"}</strong>{"\n                    と、"}<strong>{"全商用リージョンから最適を選ぶ Global"}</strong>{"\n                    があります。データ処理場所の制約があるなら Geographic を選びます(出典:\n                    "}<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/geographic-cross-region-inference.html">{"Geographic cross-Region inference"}</a>{")。\n                "}</p>
+    <p>{"\n                    クロスリージョン推論には、"}<strong>{"地域内に限定する Geographic"}</strong>{"\n                    と、"}<strong>{"全商用リージョンから最適を選ぶ Global"}</strong>{"\n                    があります。Geographic は選択した地域内の別リージョンへルーティングされ得るため、その地域内のどこで処理されてもよい場合に限り選びます。単一の国・リージョン内での処理が必要なら、リージョン内推論を使い、モデルの提供リージョンを確認します(出典:\n                    "}<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/geographic-cross-region-inference.html">{"Geographic cross-Region inference"}</a>{")。\n                "}</p>
 
     <h4>{"9.4 CI/CD と GenAIゲートウェイ(2.3.5)"}</h4>
 
