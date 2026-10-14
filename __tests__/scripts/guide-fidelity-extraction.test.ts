@@ -6,10 +6,31 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { snapshotGuidePart, snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
 
+const AIP_FIXTURE_PATH = 'docs/migration-inventory/aws-aip-c01-guide.fidelity.json';
+const aipFixture: { guideParts: Record<string, unknown>; guideDesign: { nav: unknown[]; rules: { selector: string; declarations: Record<string, string> }[] }; sourceCommit: string } = JSON.parse(readFileSync(AIP_FIXTURE_PATH, 'utf8'));
+
+/** sourceCommit がローカルの Git オブジェクトに存在するか（shallow checkout では存在しない） */
+const commitExists = (sha: string): boolean => {
+    try {
+        execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], { stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
+    }
+};
+const hasSourceCommit = commitExists(aipFixture.sourceCommit);
+
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
-    it('generates all six AIP parts, 34 charts and source CSS from a fixed Git revision', () => {
+    it('keeps all six AIP parts, 34 charts and source CSS in the committed fixture', () => {
+        expect(Object.keys(aipFixture.guideParts)).toEqual(['foundation', 'domain1', 'domain2', 'domain3', 'operations', 'revision']);
+        expect(Object.values(aipFixture.guideParts).flatMap((part: unknown) => (part as { diagrams: string[] }).diagrams)).toHaveLength(34);
+        expect(aipFixture.guideDesign.nav).toHaveLength(48);
+        expect(aipFixture.guideDesign.rules.find((rule: { selector: string }) => rule.selector === '.main ul,\n            .main ol')?.declarations['padding-left']).toBe('1.4em');
+        expect(aipFixture.sourceCommit).toMatch(/^[a-f0-9]{40}$/);
+    });
+    // 固定リビジョンからの再生成は完全な履歴が必要。shallow checkout では sourceCommit が存在しないため明示的にスキップする
+    it.skipIf(!hasSourceCommit)('regenerates the AIP fixture byte-for-byte from its fixed Git revision (full history only)', () => {
         const sandbox = mkdtempSync(join(tmpdir(), 'aip-fidelity-'));
-        let fixture: { guideParts: Record<string, unknown>; guideDesign: { nav: unknown[]; rules: { selector: string; declarations: Record<string, string> }[] }; sourceCommit: string };
         try {
             mkdirSync(join(sandbox, 'docs/migration-inventory'), { recursive: true });
             // worktree では .git がファイルになるため、実際の Git ディレクトリを解決して渡す
@@ -18,14 +39,8 @@ describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
                 cwd: sandbox, env: { ...process.env, GIT_DIR: gitDir },
             });
             const generated = readFileSync(join(sandbox, 'docs/migration-inventory/aws-aip-c01-guide.fidelity.json'), 'utf8');
-            expect(generated).toBe(readFileSync('docs/migration-inventory/aws-aip-c01-guide.fidelity.json', 'utf8'));
-            fixture = JSON.parse(generated);
+            expect(generated).toBe(readFileSync(AIP_FIXTURE_PATH, 'utf8'));
         } finally { rmSync(sandbox, { recursive: true, force: true }); }
-        expect(Object.keys(fixture.guideParts)).toEqual(['foundation', 'domain1', 'domain2', 'domain3', 'operations', 'revision']);
-        expect(Object.values(fixture.guideParts).flatMap((part: unknown) => (part as { diagrams: string[] }).diagrams)).toHaveLength(34);
-        expect(fixture.guideDesign.nav).toHaveLength(48);
-        expect(fixture.guideDesign.rules.find((rule: { selector: string }) => rule.selector === '.main ul,\n            .main ol')?.declarations['padding-left']).toBe('1.4em');
-        expect(fixture.sourceCommit).toMatch(/^[a-f0-9]{40}$/);
     });
     it('distinguishes ordered and unordered lists, nesting, numbering and repeated items', () => {
         const doc = new JSDOM('<main><ul><li>A<ol start="3"><li value="5">B</li></ol></li><li>A</li></ul></main>').window.document;
