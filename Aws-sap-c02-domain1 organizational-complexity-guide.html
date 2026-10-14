@@ -456,6 +456,180 @@
                 font-weight: 600;
             }
 
+            /* Quiz (確認シナリオ) */
+            .quiz-card {
+                background: var(--bg-card);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 22px 24px 20px;
+                margin: 0 0 28px;
+                box-shadow: 0 1px 0 rgba(29, 36, 51, 0.04);
+            }
+            .quiz-card .quiz-q {
+                margin: 0 0 16px;
+                font-weight: 500;
+                color: var(--text);
+            }
+            .main .quiz-options {
+                list-style: none;
+                margin: 0 0 16px;
+                padding: 0;
+                display: grid;
+                gap: 10px;
+            }
+            .main .quiz-opt {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                margin: 0;
+                padding: 12px 16px;
+                border: 1.5px solid var(--border);
+                border-radius: 12px;
+                background: var(--bg);
+                cursor: pointer;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s,
+                    transform 0.1s;
+            }
+            .quiz-opt:hover {
+                border-color: var(--accent);
+                background: var(--accent-bg);
+            }
+            .quiz-opt:focus-visible {
+                outline: 3px solid var(--accent-soft);
+                outline-offset: 2px;
+            }
+            .quiz-letter {
+                flex-shrink: 0;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--accent-bg);
+                color: var(--accent);
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .quiz-text {
+                min-width: 0;
+                padding-top: 2px;
+                overflow-wrap: anywhere;
+            }
+            .quiz-card.answered .quiz-opt {
+                cursor: default;
+            }
+            .quiz-card.answered .quiz-opt:hover {
+                background: var(--bg);
+                border-color: var(--border);
+            }
+            .quiz-opt.correct,
+            .quiz-card.answered .quiz-opt.correct:hover {
+                border-color: var(--success);
+                background: var(--success-bg);
+            }
+            .quiz-opt.correct .quiz-letter {
+                background: var(--success);
+                color: #ffffff;
+            }
+            .quiz-opt.incorrect,
+            .quiz-card.answered .quiz-opt.incorrect:hover {
+                border-color: var(--danger);
+                background: var(--danger-bg);
+            }
+            .quiz-opt.incorrect .quiz-letter {
+                background: var(--danger);
+                color: #ffffff;
+            }
+            .quiz-opt.correct .quiz-text::after {
+                content: ' ✓ 正解';
+                display: inline-block;
+                white-space: nowrap;
+                margin-left: 6px;
+                color: var(--success);
+                font-weight: 700;
+            }
+            .quiz-opt.incorrect .quiz-text::after {
+                content: ' ✗ あなたの回答';
+                display: inline-block;
+                white-space: nowrap;
+                margin-left: 6px;
+                color: var(--danger);
+                font-weight: 700;
+            }
+            .quiz-answer {
+                border: 1px dashed var(--accent-soft);
+                border-radius: 12px;
+                background: var(--bg-card);
+            }
+            .quiz-answer summary {
+                cursor: pointer;
+                padding: 12px 16px;
+                font-weight: 700;
+                color: var(--accent);
+                list-style: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                border-radius: 12px;
+            }
+            .quiz-answer summary::-webkit-details-marker {
+                display: none;
+            }
+            .quiz-answer summary::before {
+                content: '▸';
+                transition: transform 0.15s;
+            }
+            .quiz-answer[open] summary::before {
+                transform: rotate(90deg);
+            }
+            .quiz-answer summary:focus-visible {
+                outline: 3px solid var(--accent-soft);
+            }
+            .quiz-answer[open] {
+                border-style: solid;
+                border-color: #b5dcc5;
+                background: var(--success-bg);
+            }
+            .quiz-answer[open] summary {
+                color: var(--success);
+            }
+            .quiz-answer-body {
+                padding: 0 18px 8px;
+            }
+            .quiz-answer-body p {
+                margin: 0 0 10px;
+            }
+            .quiz-score {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 12px;
+                margin: 0 0 22px;
+                padding: 12px 18px;
+                background: var(--accent-bg);
+                border: 1px solid var(--accent-soft);
+                border-radius: 12px;
+                font-weight: 700;
+                color: var(--accent);
+            }
+            .quiz-score button {
+                margin-left: auto;
+                font: inherit;
+                font-weight: 700;
+                padding: 6px 14px;
+                border-radius: 8px;
+                border: 1px solid var(--accent);
+                background: var(--bg-card);
+                color: var(--accent);
+                cursor: pointer;
+            }
+            .quiz-score button:hover {
+                background: var(--accent);
+                color: #ffffff;
+            }
+
             /* Responsive */
             @media (max-width: 980px) {
                 .sidebar {
@@ -4186,113 +4360,247 @@ flowchart LR
                 <hr />
                 <h2 id="8-確認シナリオ-答え付き">8. 確認シナリオ (答え付き)</h2>
                 <h3 id="問題-1">問題 1</h3>
-                <p>
-                    数十の VPC を持つ組織で、今後も VPC が増え続ける。VPC
-                    間とオンプレミスの接続を一元管理したい。最も運用負荷が低い構成はどれか。
-                </p>
-                <ul>
-                    <li>A. すべての VPC 同士をピアリングで接続する</li>
-                    <li>
-                        B. Transit Gateway を使い、各 VPC と VPN や Direct Connect をアタッチする
-                    </li>
-                    <li>
-                        C. 各 VPC にインターネットゲートウェイを付け、インターネット経由で通信する
-                    </li>
-                    <li>D. VPC ごとに専用の VPN を作成する</li>
-                </ul>
-                <p>
-                    答え: B。VPC
-                    が多数で増加する場合、ピアリングは接続数が急増し、非推移的で管理困難。Transit
-                    Gateway でハブ・アンド・スポークにする。
-                </p>
+                <div class="quiz-card" data-answer="B">
+                    <p class="quiz-q">
+                        数十の VPC を持つ組織で、今後も VPC が増え続ける。VPC
+                        間とオンプレミスの接続を一元管理したい。最も運用負荷が低い構成はどれか。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text">すべての VPC 同士をピアリングで接続する</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text"
+                                >Transit Gateway を使い、各 VPC と VPN や Direct Connect
+                                をアタッチする</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text"
+                                >各 VPC
+                                にインターネットゲートウェイを付け、インターネット経由で通信する</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text">VPC ごとに専用の VPN を作成する</span>
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: B。</strong>VPC
+                                が多数で増加する場合、ピアリングは接続数が急増し、非推移的で管理困難。Transit
+                                Gateway でハブ・アンド・スポークにする。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <h3 id="問題-2">問題 2</h3>
-                <p>
-                    オンプレミスのアプリケーションから、インターネットを経由せずに Amazon S3
-                    へアクセスしたい。Direct Connect で接続済みである。どの構成が適切か。
-                </p>
-                <ul>
-                    <li>A. S3 の Gateway エンドポイントを作成する</li>
-                    <li>
-                        B. S3 の Interface エンドポイント (PrivateLink) を作成し、Direct Connect
-                        経由でアクセスする
-                    </li>
-                    <li>C. NAT Gateway を作成する</li>
-                    <li>D. VPC ピアリングを作成する</li>
-                </ul>
-                <p>
-                    答え: B。Gateway エンドポイントはオンプレミスからは利用できない。Interface
-                    エンドポイントを使う。
-                </p>
+                <div class="quiz-card" data-answer="B">
+                    <p class="quiz-q">
+                        オンプレミスのアプリケーションから、インターネットを経由せずに Amazon S3
+                        へアクセスしたい。Direct Connect で接続済みである。どの構成が適切か。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text">S3 の Gateway エンドポイントを作成する</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text"
+                                >S3 の Interface エンドポイント (PrivateLink) を作成し、Direct
+                                Connect 経由でアクセスする</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text">NAT Gateway を作成する</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text">VPC ピアリングを作成する</span>
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: B。</strong>Gateway
+                                エンドポイントはオンプレミスからは利用できない。Interface
+                                エンドポイントを使う。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <h3 id="問題-3">問題 3</h3>
-                <p>
-                    管理アカウントのセキュリティ担当者が、組織内のすべてのメンバーアカウントで、CloudTrail
-                    の停止を禁止したい。最も適切な方法はどれか。
-                </p>
-                <ul>
-                    <li>A. 各アカウントの管理者に IAM ポリシーを設定してもらう</li>
-                    <li>
-                        B. Organizations で、CloudTrail の停止を拒否する SCP を組織ルート
-                        (またはメンバーアカウントを含むすべての OU) に適用する
-                    </li>
-                    <li>C. CloudTrail の通知を SNS で受け取る</li>
-                    <li>D. AWS Config ルールで検出する</li>
-                </ul>
-                <p>答え: B。予防型の統制として SCP が適切。D は検出であり、停止自体を防げない。</p>
+                <div class="quiz-card" data-answer="B">
+                    <p class="quiz-q">
+                        管理アカウントのセキュリティ担当者が、組織内のすべてのメンバーアカウントで、CloudTrail
+                        の停止を禁止したい。最も適切な方法はどれか。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text"
+                                >各アカウントの管理者に IAM ポリシーを設定してもらう</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text"
+                                >Organizations で、CloudTrail の停止を拒否する SCP を組織ルート
+                                (またはメンバーアカウントを含むすべての OU) に適用する</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text">CloudTrail の通知を SNS で受け取る</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text">AWS Config ルールで検出する</span>
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: B。</strong>予防型の統制として SCP が適切。D
+                                は検出であり、停止自体を防げない。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <h3 id="問題-4">問題 4</h3>
-                <p>
-                    RTO が15分、RPO が1分未満で、リージョン障害に備える必要がある。データベースは
-                    Amazon Aurora を使用している。コストも考慮したい。適切な構成はどれか。
-                </p>
-                <ul>
-                    <li>A. 日次スナップショットを別リージョンにコピーする</li>
-                    <li>
-                        B. Aurora Global Database
-                        を使い、副リージョンにウォームスタンバイ構成を用意する
-                    </li>
-                    <li>C. 単一リージョンの Multi-AZ のみとする</li>
-                    <li>D. オンデマンドで復旧時にインフラを再構築する</li>
-                </ul>
-                <p>
-                    答え: B。リージョン間の継続的レプリケーションで RPO を短く、ウォームスタンバイで
-                    RTO を短くできる。ただしレプリケーションは非同期のため、RPO
-                    1分未満は保証値ではなく、レプリケーション遅延に依存する一般的な目標値である
-                    (通常の遅延は1秒未満)。上限を明示的に担保したい場合は、Aurora PostgreSQL Global
-                    Database の管理対象 RPO (<code>rds.global_db_rpo</code> パラメータ、秒単位)
-                    で許容遅延の上限を設定し
-                    (すべてのセカンダリクラスターの遅延が目標値を超えると、いずれかが目標値内に戻るまでプライマリでのコミットがブロックされる)、遅延と
-                    CloudWatch の <code>AuroraGlobalDBRPOLag</code> を監視する。A と D は RTO と RPO
-                    を満たせない。C はリージョン障害に備えられない。
-                </p>
+                <div class="quiz-card" data-answer="B">
+                    <p class="quiz-q">
+                        RTO が15分、RPO
+                        が1分未満で、リージョン障害に備える必要がある。データベースは Amazon Aurora
+                        を使用している。コストも考慮したい。適切な構成はどれか。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text"
+                                >日次スナップショットを別リージョンにコピーする</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text"
+                                >Aurora Global Database
+                                を使い、副リージョンにウォームスタンバイ構成を用意する</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text">単一リージョンの Multi-AZ のみとする</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text"
+                                >オンデマンドで復旧時にインフラを再構築する</span
+                            >
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: B。</strong>リージョン間の継続的レプリケーションで RPO
+                                を短く、ウォームスタンバイで RTO
+                                を短くできる。ただしレプリケーションは非同期のため、RPO
+                                1分未満は保証値ではなく、レプリケーション遅延に依存する一般的な目標値である
+                                (通常の遅延は1秒未満)。上限を明示的に担保したい場合は、Aurora
+                                PostgreSQL Global Database の管理対象 RPO (<code
+                                    >rds.global_db_rpo</code
+                                >
+                                パラメータ、秒単位) で許容遅延の上限を設定し
+                                (すべてのセカンダリクラスターの遅延が目標値を超えると、いずれかが目標値内に戻るまでプライマリでのコミットがブロックされる)、遅延と
+                                CloudWatch の <code>AuroraGlobalDBRPOLag</code> を監視する。A と D
+                                は RTO と RPO を満たせない。C はリージョン障害に備えられない。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <h3 id="問題-5">問題 5</h3>
-                <p>
-                    事業部門ごとにコストを把握したい。タグを付けているが、Cost Explorer
-                    でタグ別の集計が表示されない。原因として最も可能性が高いものはどれか。
-                </p>
-                <ul>
-                    <li>A. コスト配分タグを有効化していない</li>
-                    <li>B. タグポリシーを作成していない</li>
-                    <li>C. Savings Plans を購入していない</li>
-                    <li>D. Compute Optimizer を有効にしていない</li>
-                </ul>
-                <p>
-                    答え:
-                    A。タグを付けただけではコスト管理には反映されず、請求コンソールでコスト配分タグを有効化する必要がある。
-                </p>
+                <div class="quiz-card" data-answer="A">
+                    <p class="quiz-q">
+                        事業部門ごとにコストを把握したい。タグを付けているが、Cost Explorer
+                        でタグ別の集計が表示されない。原因として最も可能性が高いものはどれか。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text">コスト配分タグを有効化していない</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text">タグポリシーを作成していない</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text">Savings Plans を購入していない</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text">Compute Optimizer を有効にしていない</span>
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: A。</strong
+                                >タグを付けただけではコスト管理には反映されず、請求コンソールでコスト配分タグを有効化する必要がある。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <h3 id="問題-6">問題 6</h3>
-                <p>
-                    多数の従業員が、既存の外部 ID プロバイダーでサインインして、複数の AWS
-                    アカウントを利用する。IAM ユーザーは作成したくない。最も適切な方法はどれか。
-                </p>
-                <ul>
-                    <li>A. アカウントごとに IAM ユーザーを作成する</li>
-                    <li>B. IAM Identity Center と外部 IdP を連携し、権限セットを割り当てる</li>
-                    <li>C. Amazon Cognito のユーザープールを使う</li>
-                    <li>D. アクセスキーを共有する</li>
-                </ul>
-                <p>
-                    答え: B。従業員のマルチアカウントのシングルサインオンは IAM Identity Center
-                    が標準。Cognito は顧客向けアプリの認証が主目的。
-                </p>
+                <div class="quiz-card" data-answer="B">
+                    <p class="quiz-q">
+                        多数の従業員が、既存の外部 ID プロバイダーでサインインして、複数の AWS
+                        アカウントを利用する。IAM ユーザーは作成したくない。最も適切な方法はどれか。
+                    </p>
+                    <ul class="quiz-options">
+                        <li class="quiz-opt" data-opt="A" role="button" tabindex="0">
+                            <span class="quiz-letter">A</span
+                            ><span class="quiz-text">アカウントごとに IAM ユーザーを作成する</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="B" role="button" tabindex="0">
+                            <span class="quiz-letter">B</span
+                            ><span class="quiz-text"
+                                >IAM Identity Center と外部 IdP
+                                を連携し、権限セットを割り当てる</span
+                            >
+                        </li>
+                        <li class="quiz-opt" data-opt="C" role="button" tabindex="0">
+                            <span class="quiz-letter">C</span
+                            ><span class="quiz-text">Amazon Cognito のユーザープールを使う</span>
+                        </li>
+                        <li class="quiz-opt" data-opt="D" role="button" tabindex="0">
+                            <span class="quiz-letter">D</span
+                            ><span class="quiz-text">アクセスキーを共有する</span>
+                        </li>
+                    </ul>
+                    <details class="quiz-answer">
+                        <summary>答えを見る</summary>
+                        <div class="quiz-answer-body">
+                            <p>
+                                <strong>答え: B。</strong
+                                >従業員のマルチアカウントのシングルサインオンは IAM Identity Center
+                                が標準。Cognito は顧客向けアプリの認証が主目的。
+                            </p>
+                        </div>
+                    </details>
+                </div>
                 <hr />
                 <h2 id="9-参考url一覧-ソース">9. 参考URL一覧 (ソース)</h2>
                 <p>
@@ -5103,6 +5411,69 @@ flowchart LR
                 headings.forEach(function (h) {
                     spyObserver.observe(h);
                 });
+
+                // ---------- Quiz ----------
+                var cards = Array.from(document.querySelectorAll('.quiz-card'));
+                if (cards.length) {
+                    var score = document.createElement('div');
+                    score.className = 'quiz-score';
+                    score.innerHTML =
+                        '<span id="quizStat"></span><button type="button" id="quizReset">やり直す</button>';
+                    var first = cards[0].previousElementSibling;
+                    var anchor = first && /^H3$/.test(first.tagName) ? first : cards[0];
+                    anchor.parentNode.insertBefore(score, anchor);
+                    var stat = score.querySelector('#quizStat');
+                    var refresh = function () {
+                        var done = cards.filter(function (c) {
+                            return c.classList.contains('answered');
+                        }).length;
+                        var ok = cards.filter(function (c) {
+                            return (
+                                c.querySelector('.quiz-opt.incorrect') === null &&
+                                c.classList.contains('answered')
+                            );
+                        }).length;
+                        stat.textContent =
+                            '回答 ' + done + ' / ' + cards.length + '  ・  正解 ' + ok;
+                    };
+                    var answer = function (card, opt) {
+                        if (card.classList.contains('answered')) return;
+                        card.classList.add('answered');
+                        var right = card.getAttribute('data-answer');
+                        card.querySelectorAll('.quiz-opt').forEach(function (o) {
+                            if (o.getAttribute('data-opt') === right) o.classList.add('correct');
+                        });
+                        if (opt.getAttribute('data-opt') !== right) opt.classList.add('incorrect');
+                        var d = card.querySelector('details');
+                        if (d) d.open = true;
+                        refresh();
+                    };
+                    cards.forEach(function (card) {
+                        card.querySelectorAll('.quiz-opt').forEach(function (opt) {
+                            opt.addEventListener('click', function () {
+                                answer(card, opt);
+                            });
+                            opt.addEventListener('keydown', function (e) {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    answer(card, opt);
+                                }
+                            });
+                        });
+                    });
+                    score.querySelector('#quizReset').addEventListener('click', function () {
+                        cards.forEach(function (c) {
+                            c.classList.remove('answered');
+                            c.querySelectorAll('.quiz-opt').forEach(function (o) {
+                                o.classList.remove('correct', 'incorrect');
+                            });
+                            var d = c.querySelector('details');
+                            if (d) d.open = false;
+                        });
+                        refresh();
+                    });
+                    refresh();
+                }
             })();
         </script>
     </body>
