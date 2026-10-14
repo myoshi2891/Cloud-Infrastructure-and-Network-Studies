@@ -593,8 +593,8 @@ app/
       sections/                     # s1〜s33（導入・4 Task・26 Steps・演習・付録）
     generative-ai-developer-professional/
       page.tsx                      # AIP-C01 全5ドメイン・Step 1〜20 (Server、metadata、CSS)
-      AipGuide.tsx                  # 導入・5ドメイン・直前対策・付録・参考資料の本文 (Client)
-      NavBar.tsx                    # 48目次・scroll spy・モバイル開閉・hash/focus・Escape
+      AipGuide.tsx                  # 導入・5ドメイン・直前対策・付録・参考資料の本文 (Server)
+      NavBar.tsx                    # 48目次・scroll spy・モバイル開閉・hash/focus・Escape (Client)
       constants.ts                  # 単一目次正本と34図のMermaid DSL
       Diagram.tsx                   # memo化・説明・自然倍率・キーボードスクロール
       page.css                      # 統一ダークテーマ・原本300px幅・点と番号・全文装飾
