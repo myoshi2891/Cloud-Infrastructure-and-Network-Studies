@@ -695,7 +695,7 @@ export default function Section5Guide() {
                                 <td><strong>Agent Gateway</strong></td>
                                 <td><strong>△ 一部対応</strong>（API自体は対象外）</td>
                                 <td>
-                                    VPC-SCはAgent Gateway API自体へのアクセスを制限しない（公式ドキュメントで明記された既知の制限）。一方、2026年9月8日より後にエージェント接続テンプレート（agent connectivity template、egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイに限り、経由するAgent Gatewayのトラフィックを境界ルールで保護できる。利用できるゲートウェイを承認済みのものに限定するには、<strong>カスタム組織ポリシー制約</strong>でエージェントとゲートウェイのバインディングを制限する運用を組み合わせる
+                                    VPC-SCはAgent Gateway API自体へのアクセスを制限しない（公式ドキュメントで明記された既知の制限）。一方、2026年9月8日より後にエージェント接続テンプレート（agent connectivity template、egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイに限り、経由するAgent Gatewayのトラフィックを境界ルールで保護できる（対象はGoogle APIへのリクエストに限られ、外部SaaSなどGoogle API以外への通信は保護されない。Google APIへの適用には、ドキュメントどおりのDNS構成でrestricted.googleapis.comまたは適切なPrivate Service Connectエンドポイントを経由させる必要がある）。利用できるゲートウェイを承認済みのものに限定するには、<strong>カスタム組織ポリシー制約</strong>でエージェントとゲートウェイのバインディングを制限する運用を組み合わせる
                                 </td>
                             </tr>
                             <tr className="even">
@@ -709,14 +709,14 @@ export default function Section5Guide() {
                     </table>
                 </div>
                 <p>
-                    この「Agent Gateway API自体はVPC-SCで制限できない」という制限は、試験でも狙われやすいポイントです。2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイのトラフィックは境界ルールで保護できる一方、利用できるゲートウェイそのものを絞り込むには、<strong>組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する</strong>方法があります。両者は対象が異なるため、区別して設計することが重要です。
+                    この「Agent Gateway API自体はVPC-SCで制限できない」という制限は、試験でも狙われやすいポイントです。2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイのトラフィックは境界ルールで保護できる（対象はGoogle APIへのリクエストに限られ、外部SaaSなどGoogle API以外への通信は保護されない。Google APIへの適用には、ドキュメントどおりのDNS構成でrestricted.googleapis.comまたは適切なPrivate Service Connectエンドポイントを経由させる必要がある）一方、利用できるゲートウェイそのものを絞り込むには、<strong>組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する</strong>方法があります。両者は対象が異なるため、区別して設計することが重要です。
                 </p>
                 <div className="callout-practice">
                     <div className="icon">✓ </div>
                     <div className="body">
                         <div className="label">ベストプラクティス </div>
                         <p>
-                            Agent Gateway API自体はVPC Service Controlsで制限できない点を前提に設計してください。2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイのトラフィックは境界ルールで保護し、利用できるゲートウェイを絞り込みたい場合は、組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する、というように統制を組み合わせます。
+                            Agent Gateway API自体はVPC Service Controlsで制限できない点を前提に設計してください。2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイのトラフィックは境界ルールで保護し（対象はGoogle APIへのリクエストに限られ、外部SaaSなどGoogle API以外への通信は保護されない。Google APIへの適用には、ドキュメントどおりのDNS構成でrestricted.googleapis.comまたは適切なPrivate Service Connectエンドポイントを経由させる必要がある）、利用できるゲートウェイを絞り込みたい場合は、組織ポリシーのカスタム制約で「承認済みのAgent Gatewayとしかバインドできない」ように制限する、というように統制を組み合わせます。
                         </p>
                     </div>
                 </div>
@@ -1316,7 +1316,7 @@ export default function Section5Guide() {
                                     Agent Gateway API自体はVPC-SC非対応（公式済みの制限事項）。境界だけでは完全な宛先制御にならない
                                 </td>
                                 <td>
-                                    VPC-SC境界ルールによる保護は2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイに限られる点を前提に、対象のトラフィックをVPC-SC境界ルールで保護し、利用できるゲートウェイを絞り込む場合はカスタム組織ポリシー制約で「承認済みAgent
+                                    VPC-SC境界ルールによる保護は2026年9月8日より後にエージェント接続テンプレート（egressモードをALL_TRAFFICに設定）を使って作成したゲートウェイに限られる点を前提に、対象のトラフィックをVPC-SC境界ルールで保護し（対象はGoogle APIへのリクエストに限られ、外部SaaSなどGoogle API以外への通信は保護されない。Google APIへの適用には、ドキュメントどおりのDNS構成でrestricted.googleapis.comまたは適切なPrivate Service Connectエンドポイントを経由させる必要がある）、利用できるゲートウェイを絞り込む場合はカスタム組織ポリシー制約で「承認済みAgent
                                     Gatewayとしかバインドできない」と制限する。両者を組み合わせて統制する
                                 </td>
                             </tr>
