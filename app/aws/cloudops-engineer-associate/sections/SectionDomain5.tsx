@@ -859,7 +859,7 @@ export default function SectionDomain5() {
 </tbody>
 </table></div>
 <blockquote>
-<p>💡 <strong>ハンズオンの鉄則</strong>: <strong>SG には専用の拒否ログがない</strong>。<strong>VPC フローログの REJECT</strong> には <strong>SG と NACL の両方による拒否</strong> が記録されるが、<strong>フローログだけではどちらが拒否したかを特定できない</strong> 点に注意。<strong>Reachability Analyzer で構成を静的に確認 → フローログで実トラフィックを確認</strong> の順が効率的。</p>
+<p>💡 <strong>ハンズオンの鉄則</strong>: <strong>SG には専用の拒否ログがない</strong>。<strong>VPC フローログの REJECT</strong> には <strong>SG と NACL の両方による拒否</strong> が記録されるが、<strong>フローログだけではどちらが拒否したかを特定できない</strong> 点に注意。また、接続終了後に到着したパケットも REJECT として記録され得るため、REJECT のすべてが SG / NACL による拒否とは限らない。<strong>Reachability Analyzer で構成を静的に確認 → フローログで実トラフィックを確認</strong> の順が効率的。</p>
 </blockquote>
 <h4>(4) ベストプラクティス</h4>
 <ul>
