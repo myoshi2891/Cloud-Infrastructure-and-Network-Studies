@@ -2,7 +2,7 @@
 
 Updated 2026-10-16
 
-2026-10-16 AIP-C01ライトテーマ対応: 原本の背景・文字・表・コールアウト・影をグローバルトークンへ移し、全34図をライト設定に変更。関連102件は原本削除後も成功、Chrome E2E 5件成功。訂正済み原本を `archive/Aws/html/generative-ai-developer-professional/Aws-aip-c01-guide.html` へバイト一致で保存し、直下の重複HTMLは削除。訂正前版も別名で保存。最新実装HEADは `87827325`（配色実装 `95a279e1`）。全体Vitestは2560件中2559成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01 Domain 1詳細ガイド: `/aws/generative-ai-developer-professional/domain1` を追加。全6タスク・28スキル、51表・21図・137リスト項目・123外部リンク出現・63目次・16チェックを原本から全文移行。原本ライト配色と図の配置設定を保持し、小さな緑ラベルと完了済みラベルの文字色2箇所のみ可読性を補正。原本削除後の関連221件・Chrome 5件が成功。最新実装HEAD `defc2cb7`（原本整理 `7568c046`）。HTMLはarchiveへバイト一致保存後に直下から削除。全体Vitestは2679件中2678成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -599,8 +599,17 @@ app/
       NavBar.tsx                    # 48目次・scroll spy・モバイル開閉・hash/focus・Escape (Client)
       constants.ts                  # 単一目次正本と34図のMermaid DSL
       Diagram.tsx                   # memo化・説明・自然倍率・キーボードスクロール
-      page.css                      # 統一ダークテーマ・原本300px幅・点と番号・全文装飾
+      page.css                      # 原本ライトテーマ・300px幅・点と番号・全文装飾
       sections/                     # Foundation, Domain1〜3, Operations, Revision の6区間
+      domain1/
+        page.tsx                    # Domain 1詳細版 (Server、metadata、CSS)
+        AipDomain1Guide.tsx          # 導入・6タスク・まとめ・参考資料 (Server)
+        NavBar.tsx                  # 63目次・モバイル開閉・scroll spy・hash/focus (Client)
+        Checklist.tsx               # 16チェックと完了数 (Client、永続化なし)
+        constants.ts                # 原本21図・目次・Mermaidテーマと配置設定
+        Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
+        page.css                    # 原本ライト配色・300px幅・通常/チェックリスト装飾
+        sections/                   # Foundation, Task11〜16, Revision の8区間
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)
