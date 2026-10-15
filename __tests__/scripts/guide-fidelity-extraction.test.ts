@@ -21,6 +21,14 @@ const commitExists = (sha: string): boolean => {
 const hasSourceCommit = commitExists(aipFixture.sourceCommit);
 
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
+    it('compares formatted source and JSX block boundaries without losing spaces within words', () => {
+        const source = new JSDOM('<main><h2>Title</h2>\n<p>Keep <strong>two words</strong></p>\n<table><tbody><tr><td> First </td>\n<td>Second</td></tr></tbody></table></main>').window.document;
+        const target = new JSDOM('<main><h2>Title</h2><p>Keep <strong>two words</strong></p><table><tbody><tr><td>First</td><td>Second</td></tr></tbody></table></main>').window.document;
+        expect(snapshotGuidePart(target).text).toBe(snapshotGuidePart(source).text);
+        expect(snapshotGuidePart(target).text).toContain('two words');
+        target.querySelector('strong')!.textContent = 'twowords';
+        expect(snapshotGuidePart(target).text).not.toBe(snapshotGuidePart(source).text);
+    });
     it('keeps all six AIP parts, 34 charts and source CSS in the committed fixture', () => {
         expect(Object.keys(aipFixture.guideParts)).toEqual(['foundation', 'domain1', 'domain2', 'domain3', 'operations', 'revision']);
         expect(Object.values(aipFixture.guideParts).flatMap((part: unknown) => (part as { diagrams: string[] }).diagrams)).toHaveLength(34);
