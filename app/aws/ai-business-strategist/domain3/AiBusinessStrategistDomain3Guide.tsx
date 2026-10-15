@@ -5,6 +5,7 @@ import { NavBar } from './NavBar';
 import { HeroSection } from './sections/HeroSection';
 import { Sec1 } from './sections/Sec1';
 import { Sec2 } from './sections/Sec2';
+import { Sec3 } from './sections/Sec3';
 
 export function AiBusinessStrategistDomain3Guide() {
     const [navOpen, setNavOpen] = useState(false);
@@ -39,6 +40,7 @@ export function AiBusinessStrategistDomain3Guide() {
                     <div id="content" className="content">
                         <Sec1 />
                         <Sec2 />
+                        <Sec3 />
                     </div>
                 </div>
             </div>
