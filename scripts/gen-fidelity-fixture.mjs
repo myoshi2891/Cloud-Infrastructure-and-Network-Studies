@@ -15,6 +15,7 @@ import path from 'node:path';
 import { JSDOM } from 'jsdom';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { snapshotGuideDesign, snapshotGuideParts } from './guide-fidelity-extraction.mjs';
+import { extractMermaidConfig, snapshotGuideChecks } from './guide-interaction-extraction.mjs';
 import {
     normalizeMermaid,
     normalizeText,
@@ -92,6 +93,12 @@ function buildFixture(slug, config) {
     if (config.guideBoundaries) {
         fixture.guideParts = snapshotGuideParts(doc, config.guideBoundaries);
         fixture.guideDesign = snapshotGuideDesign(doc);
+    }
+    if (config.guideInteractions) {
+        fixture.guideInteractions = {
+            checks: snapshotGuideChecks(doc),
+            mermaidConfig: extractMermaidConfig(doc.documentElement.outerHTML),
+        };
     }
 
     if (config.textSelector) fixture.texts = snapshotTexts(doc, config.textSelector);

@@ -10421,6 +10421,118 @@
       }
     ]
   },
+  "guideInteractions": {
+    "checks": [
+      {
+        "id": "chk1",
+        "label": "Domain 1 の 6 つの Task と、それぞれの目的を説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk2",
+        "label": "RAG の流れ(分割、埋め込み、検索、再ランク、生成)を図で描ける",
+        "checked": false
+      },
+      {
+        "id": "chk3",
+        "label": "Converse API と InvokeModel の違いを説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk4",
+        "label": "AppConfig を使ったモデル切り替えの仕組みを説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk5",
+        "label": "地域プロファイルとグローバルプロファイルの違いを説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk6",
+        "label": "サーキットブレーカーとフォールバックの役割を説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk7",
+        "label": "LoRA の利点と、Model Registry を使った版管理の流れを説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk8",
+        "label": "Glue Data Quality、Transcribe、Textract、Comprehend の使い分けができる",
+        "checked": false
+      },
+      {
+        "id": "chk9",
+        "label": "ベクトルストアの選択肢(Knowledge Bases、OpenSearch、Aurora pgvector、S3 Vectors、DynamoDB のベクトルインデックスと SearchVectors、専用ストアと DynamoDB の併用)を比較できる",
+        "checked": false
+      },
+      {
+        "id": "chk10",
+        "label": "メタデータの設計と、フィルターによるアクセス制御を説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk11",
+        "label": "取り込み後のデータを最新に保つ方法を 3 つ挙げられる",
+        "checked": false
+      },
+      {
+        "id": "chk12",
+        "label": "固定サイズ、階層、セマンティックの各チャンキングの使い分けができる",
+        "checked": false
+      },
+      {
+        "id": "chk13",
+        "label": "ハイブリッド検索とリランカーの効果を説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk14",
+        "label": "クエリ拡張、分解、変換の違いを説明できる",
+        "checked": false
+      },
+      {
+        "id": "chk15",
+        "label": "Prompt Management、Guardrails、Flows の役割を区別できる",
+        "checked": false
+      },
+      {
+        "id": "chk16",
+        "label": "プロンプトの回帰テストの仕組みを説明できる",
+        "checked": false
+      }
+    ],
+    "mermaidConfig": {
+      "theme": "base",
+      "themeVariables": {
+        "fontSize": "16px",
+        "background": "#ffffff",
+        "primaryColor": "#eef2fb",
+        "primaryTextColor": "#1c2a3f",
+        "primaryBorderColor": "#9fb2d6",
+        "lineColor": "#5b6f93",
+        "secondaryColor": "#e8eefc",
+        "tertiaryColor": "#e8eefc",
+        "edgeLabelBackground": "#ffffff",
+        "clusterBkg": "#f3f6fc",
+        "clusterBorder": "#9fb2d6",
+        "nodeTextColor": "#1c2a3f"
+      },
+      "flowchart": {
+        "useMaxWidth": false,
+        "htmlLabels": true,
+        "subGraphTitleMargin": {
+          "top": 12,
+          "bottom": 18
+        },
+        "nodeSpacing": 70,
+        "rankSpacing": 60,
+        "curve": "basis"
+      }
+    }
+  },
   "tables": [
     [
       [

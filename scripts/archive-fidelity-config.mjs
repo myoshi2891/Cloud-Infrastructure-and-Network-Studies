@@ -27,6 +27,7 @@
  * @property {string} [introductionSelector] - 導入文のセレクタ。
  * @property {boolean} [mermaidCharts] - Mermaid 定義を出力するか。
  * @property {Readonly<Record<string, string>>} [guideBoundaries] - ガイドを区切る見出し ID。
+ * @property {boolean} [guideInteractions] - チェック項目とMermaid描画設定を抽出する。
  */
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
@@ -37,6 +38,7 @@ export const FIDELITY_PAGES = {
         tables: true,
         codeBlocks: true,
         styledClasses: true,
+        guideInteractions: true,
         guideBoundaries: {
             foundation: '',
             task11: '3-task-11-要件分析と-genai-ソリューション設計',
