@@ -2,6 +2,23 @@
 
 (最終更新日: 2026-10-16)
 
+## 2026-10-16: AIP-C01 Domain 1詳細ガイドの移行・原本アーカイブ
+
+`/aws/generative-ai-developer-professional/domain1` を新設。全6タスク・28スキル、51表（th121・td693）、21図、137リスト項目、123外部リンク出現、152本文ブロック、63目次、16チェックを原本から全文移行。ライト配色・300px目次・点と番号・入れ子・図の自然倍率を保持。ホームとHeaderのドメイン1リンクは詳細版へ変更し、総合ガイドは維持。
+
+- Inventory `cfea97d5` / Fidelity `e8445329` を実装前に確定。固定原本 `10e0f85f765c2efec07ade99669855fa53ba948d` と作業ツリーのバイト一致を確認。
+- 描画設定・チェック抽出 Red `8902d688` / Green `1adb2336`。原本JavaScriptを実行せずASTで静的設定を取得し、期待値を固定Gitから生成。
+- 骨格 Red `94df0207` / Green `3f7ffdbc`、導入 Red `3f14446b` / Green `bc86fca9`。
+- Task 1.1 Red `035c4b24` / Green `8a75dcd0`、Task 1.2 Red `c6a28218` / 実装 `369b1e0f` / 回復Green `12bc8f25`。
+- **手順逸脱と回復:** Task 1.2は11件中1件失敗を見落とし、`369b1e0f` をGreenとしてコミットした。直ちにユーザーへ報告し、履歴を書き換えず入れ子リスト境界の空白を `12bc8f25` で復元。全11件成功を確認してからTask 1.3へ進んだ。
+- Task 1.3 Red `a48edd4f` / Green `f7b0cb19`、1.4 Red `b55045b7` / Green `a545b130`、1.5 Red `1f294896` / Green `c7c4e3ef`、1.6 Red `b71779fe` / Green `c362e842`。
+- まとめ・参考資料・チェック Red `55a71ca2` / Green `e5ee89ca`。全16ラベル操作、完了数、解除、再表示時の初期化を検証。
+- 全量・サイト統合 Red `1b49aa50` / Green `0f87d45a`。欠落・ブラウザ Red `0fa4da67`、ホームのdetails操作修正 `68995333`、可読性Green `f15fb863`、Observer型修正 `7eda3758`。
+- 原本の小さな緑ラベルと完了済みチェックの文字色は、WCAG AAを満たすためそれぞれ `#176b40` / `#60718c` へ補正。他の使用配色・境界線・影は原本の値と照合。図は原本のテーマ変数と配置設定を保持。
+- 関連29ファイル・221件成功、Chrome E2E 5件成功。1440/768/390px、全21SVG、通常リストとチェックリストの装飾、目次操作、チェック完了前後のaxe違反0・コンソールエラー0を検証。DOM欠落5種・CSS破壊5種を検出。原本・archive不在の一時領域でfixture再生成も成功。
+- 原本183609バイトを `archive/Aws/html/generative-ai-developer-professional/domain1/Aws-aip-c01-domain1-guide.html` へバイト一致で保存後、直下HTMLを削除。SHA-256は `docs/migration-inventory/aws-aip-c01-domain1-guide.archive.json` に記録。archiveはローカル専用で、テストは固定Git由来fixtureのみを使用する。Markdownは対象外。
+- 原本削除後の関連テストと全体Vitestの最終結果は、セッション末尾の進捗同期で確定する。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
+
 ## 2026-10-16: AIP-C01原本ライトテーマの復元・直下HTML整理
 
 ユーザー指定により、既存ダークテーマ対応を撤回し原本のライト配色へ復元。原本の背景・文字・グラデーション・表・コールアウト・影をグローバルテーマトークンへ移し、全34図に `theme="light"` を指定。本文・目次・点と番号・自然倍率を保持した。

@@ -1,0 +1,9 @@
+{
+  "source": "Aws-aip-c01-domain1-guide.html",
+  "sourceCommit": "10e0f85f765c2efec07ade99669855fa53ba948d",
+  "archive": "archive/Aws/html/generative-ai-developer-professional/domain1/Aws-aip-c01-domain1-guide.html",
+  "sha256": "9d0a7b6a0aa8c0841df3c824cb05e364d244733b5495d124d764dcc67da840b4",
+  "bytes": 183609,
+  "rootRetained": false,
+  "reason": "ユーザー指定を引き継ぎ、原本をバイト一致でアーカイブ後に直下HTMLを削除。テストは固定Git由来fixtureを使用。"
+}
