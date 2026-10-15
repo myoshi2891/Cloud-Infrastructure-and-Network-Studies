@@ -10,6 +10,7 @@
 
 - [x] 共有抽出Red/Green: `33d005c4` / `acd60052`。リスト種類・階層・番号、図、コード空行、強調、CSS宣言を抽出。
 - [x] fixture生成Red/Green・Inventory: `ab6a7094` / `2517063d`。固定Git原本から内容・構造・CSSの期待値を生成。
+- [ ] Inventory先行の手順違反: Inventoryコミット `2517063d` より前に `33d005c4` / `acd60052` / `ab6a7094` がコミットされており、Step 0（Inventory先行）に準拠していない。
 - [x] Shell Red/Green: `addb3ee3` / `89261a90`。48目次・scroll spy・開閉・Escape・hash/focus・監視cleanup・リスト装飾。
 - [x] 導入・前提知識Red/Green: `b049c481` / `16347f53`。モック初期化と空白正規化のハーネス修正: `e7ba4938`。
 - [x] Domain1 Red/Green: `bff2f6fc` / `52334702`。
