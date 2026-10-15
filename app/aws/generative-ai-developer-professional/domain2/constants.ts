@@ -1150,3 +1150,77 @@ export const NAV_ITEMS = [
     "level": 3
   }
 ] as const;
+
+export const DIAGRAMS = {
+  "diag-0": "flowchart LR\n    T21[\"Task 2.1<br/>エージェントと<br/>ツール統合\"] --> T22[\"Task 2.2<br/>モデルの<br/>デプロイ\"]\n    T22 --> T23[\"Task 2.3<br/>エンタープライズ<br/>統合\"]\n    T23 --> T24[\"Task 2.4<br/>FM API 統合\"]\n    T24 --> T25[\"Task 2.5<br/>アプリ統合と<br/>開発ツール\"]",
+  "diag-1": "sequenceDiagram\n    participant App as アプリ\n    participant FM as Bedrock FM\n    participant Tool as 外部ツール\n    App->>FM: 質問 と ツール定義 を送る\n    FM-->>App: toolUse（天気ツールを東京で呼んで）\n    App->>Tool: 実際にツールを実行\n    Tool-->>App: 実行結果\n    App->>FM: toolResult として結果を渡す\n    FM-->>App: 最終回答",
+  "diag-2": "flowchart TD\n    A[\"ユーザーの依頼\"] --> B[\"FM が次の行動を判断\"]\n    B --> C{\"ツールが必要か\"}\n    C -->|はい| D[\"ツールを実行\"]\n    D --> E[\"結果を会話履歴に追加\"]\n    E --> B\n    C -->|いいえ| F[\"最終回答を返す\"]",
+  "diag-3": "flowchart TD\n    U[\"ユーザー入力\"] --> CL[\"分類器<br/>どのエージェントが適任か判定\"]\n    CL --> A1[\"請求エージェント\"]\n    CL --> A2[\"技術サポートエージェント\"]\n    CL --> A3[\"一般質問エージェント\"]\n    A1 --> R[\"応答\"]\n    A2 --> R\n    A3 --> R",
+  "diag-4": "flowchart TD\n    S[\"開始\"] --> I[\"カウンタ初期化 step=0\"]\n    I --> R[\"Reason: Bedrock InvokeModel で次の行動を決定\"]\n    R --> C{\"Choice: 最終回答か\"}\n    C -->|最終回答| E[\"終了\"]\n    C -->|ツール実行| G{\"step が上限未満か\"}\n    G -->|はい| A[\"Act: Lambda でツール実行\"]\n    A --> O[\"Observe: 結果を履歴へ追加し step+1\"]\n    O --> R\n    G -->|いいえ| F[\"上限到達: 途中結果を返して終了\"]",
+  "diag-5": "flowchart LR\n    Q[\"質問\"] --> P1[\"Step1: 問題を分解\"]\n    P1 --> P2[\"Step2: 各部分を解く\"]\n    P2 --> P3[\"Step3: 結果を統合\"]\n    P3 --> P4[\"Step4: 検証して最終回答\"]",
+  "diag-6": "flowchart TD\n    REQ[\"リクエスト\"] --> G1[\"入力の検証とガードレール\"]\n    G1 --> SF[\"Step Functions<br/>反復上限と全体タイムアウト\"]\n    SF --> CB{\"サーキットブレーカー<br/>遮断中か\"}\n    CB -->|遮断中| FB[\"フォールバック応答\"]\n    CB -->|通常| L[\"Lambda ツール<br/>個別タイムアウト\"]\n    L --> IAM[\"IAM 最小権限<br/>許可リソースだけ操作可\"]\n    IAM --> OUT[\"結果を返す\"]",
+  "diag-7": "flowchart LR\n    CL[\"Closed<br/>通常通り呼び出す\"] -->|連続失敗が閾値超え| OP[\"Open<br/>呼び出しを遮断\"]\n    OP -->|一定時間経過| HO[\"Half-Open<br/>試験的に少数だけ通す\"]\n    HO -->|成功| CL\n    HO -->|失敗| OP",
+  "diag-8": "flowchart TD\n    Q[\"質問\"] --> P[\"Step Functions Parallel ステート\"]\n    P --> M1[\"モデルA\"]\n    P --> M2[\"モデルB\"]\n    P --> M3[\"モデルC\"]\n    M1 --> AG[\"集約ロジック<br/>多数決 / 重み付け / 統合モデル\"]\n    M2 --> AG\n    M3 --> AG\n    AG --> ANS[\"最終回答\"]",
+  "diag-9": "sequenceDiagram\n    participant SF as Step Functions\n    participant FM as Bedrock\n    participant SNS as 通知 SNS / メール\n    participant H as 人間レビュアー\n    participant API as API Gateway\n    SF->>FM: ドラフトを生成\n    FM-->>SF: ドラフト\n    SF->>SNS: 承認依頼を送信 タスクトークン付き\n    Note over SF: 待機中 返答が来るまで停止\n    SNS-->>H: 通知\n    H->>API: 承認 または 却下 を送信\n    API->>SF: SendTaskSuccess または SendTaskFailure\n    SF->>SF: 結果に応じて後続処理へ分岐",
+  "diag-10": "flowchart TD\n    FM[\"FM が toolUse を返す\"] --> V{\"Lambda: 引数を検証\"}\n    V -->|不正| E1[\"検証エラーを説明付きで返す\"]\n    V -->|正常| X[\"外部API / DB を実行\"]\n    X --> R{\"実行は成功か\"}\n    R -->|成功| OK[\"結果を toolResult で返す\"]\n    R -->|失敗| E2[\"失敗理由を toolResult に status error で返す\"]\n    E1 --> FM2[\"FM が引数を直して再試行\"]\n    E2 --> FM2",
+  "diag-11": "flowchart LR\n    AG1[\"エージェントA<br/>MCP クライアント\"] --> SV[\"MCP サーバー\"]\n    AG2[\"エージェントB<br/>MCP クライアント\"] --> SV\n    SV --> T1[\"ツール 在庫検索\"]\n    SV --> T2[\"ツール 注文作成\"]\n    SV --> D1[\"リソース 製品カタログ\"]",
+  "diag-12": "flowchart TD\n    Q{\"ツールの性質は\"} -->|軽量でステートレス<br/>短時間で終わる| L[\"Lambda MCP サーバー\"]\n    Q -->|重い処理 長時間<br/>状態や接続を保持| E[\"ECS MCP サーバー\"]\n    L --> C[\"MCP クライアントから共通の方法で利用\"]\n    E --> C",
+  "diag-13": "flowchart TD\n    S[\"FMを動かしたい\"] --> Q1{\"独自に学習したモデルや<br/>Bedrockにないモデルか\"}\n    Q1 -->|はい| SM[\"SageMaker AI エンドポイント<br/>または Bedrock カスタムモデルインポート\"]\n    Q1 -->|いいえ| Q2{\"安定した高スループットが必要か<br/>遅延の変動を避けたいか\"}\n    Q2 -->|はい| PT[\"Bedrock Provisioned Throughput\"]\n    Q2 -->|いいえ| Q3{\"リアルタイム性は不要か\"}\n    Q3 -->|はい| BA[\"Bedrock バッチ推論\"]\n    Q3 -->|いいえ| OD[\"Bedrock オンデマンド<br/>Lambda などから呼び出し\"]",
+  "diag-14": "flowchart LR\n    APP[\"アプリ\"] --> GW[\"API Gateway\"]\n    GW --> RT{\"ルーティング\"}\n    RT -->|一般的な質問| BR[\"Bedrock オンデマンド\"]\n    RT -->|ピーク時の安定処理| PT[\"Provisioned Throughput\"]\n    RT -->|社内専用の独自モデル| SMEP[\"SageMaker AI エンドポイント\"]",
+  "diag-15": "flowchart TD\n    LLM[\"LLM デプロイ\"] --> MEM[\"メモリ<br/>重み と KV キャッシュ\"]\n    LLM --> GPU[\"GPU 利用率<br/>バッチ処理で稼働率を上げる\"]\n    LLM --> TOK[\"トークン処理能力<br/>同時リクエスト数 と 出力長\"]\n    LLM --> LOAD[\"モデルロード<br/>起動時間 と ヘルスチェック\"]",
+  "diag-16": "flowchart LR\n    ECR[\"ECR<br/>推論コンテナイメージ\"] --> HOST[\"ECS / EKS / SageMaker<br/>GPU インスタンス\"]\n    S3[\"S3<br/>モデルウェイト\"] --> HOST\n    HOST --> ALB[\"ALB / API Gateway\"]\n    ALB --> CLIENT[\"クライアント\"]\n    HOST --> CW[\"CloudWatch<br/>GPU・遅延・トークン数メトリクス\"]",
+  "diag-17": "flowchart TD\n    Q[\"リクエスト\"] --> S[\"小型モデルで回答生成\"]\n    S --> CK{\"品質チェック<br/>自信度 / 検証ルール / 判定モデル\"}\n    CK -->|合格| OUT[\"小型モデルの回答を採用\"]\n    CK -->|不合格| L[\"大型モデルで再生成\"]\n    L --> OUT2[\"大型モデルの回答を採用\"]",
+  "diag-18": "flowchart LR\n    LEG[\"レガシー基幹システム\"] --> AD[\"アダプタ<br/>Lambda / ECS\"]\n    AD --> GW[\"API Gateway\"]\n    GW --> AG[\"FM / エージェント\"]\n    LEG -->|変更イベント| EB[\"EventBridge / SQS\"]\n    EB --> W[\"Lambda ワーカー\"]\n    W --> AG\n    LEG -->|差分同期| ING[\"取り込み処理\"]\n    ING --> KB[\"ナレッジベース<br/>ベクトルストア\"]\n    AG --> KB",
+  "diag-19": "flowchart TD\n    subgraph P1[\"パターン1 マイクロサービス統合\"]\n        MS[\"既存サービス\"] --> AGW[\"API Gateway\"] --> L1[\"Lambda\"] --> B1[\"Bedrock\"]\n    end\n    subgraph P2[\"パターン2 Webhook\"]\n        SAAS[\"外部SaaS\"] --> WH[\"Lambda Function URL<br/>または API Gateway\"] --> L2[\"Lambda\"] --> B2[\"Bedrock\"]\n    end\n    subgraph P3[\"パターン3 イベント駆動\"]\n        EV[\"業務イベント\"] --> EBR[\"EventBridge ルール\"] --> L3[\"Lambda / Step Functions\"] --> B3[\"Bedrock\"]\n    end",
+  "diag-20": "sequenceDiagram\n    participant S as 外部SaaS\n    participant W as Webhook Lambda\n    participant Q as SQS\n    participant P as 処理 Lambda\n    participant B as Bedrock\n    S->>W: Webhook 通知\n    W->>W: 署名を検証\n    W->>Q: メッセージを投入\n    W-->>S: 即座に 200 を返す\n    Q->>P: メッセージ取り出し\n    P->>B: FM で処理\n    B-->>P: 結果\n    P->>S: 結果を API で書き戻す",
+  "diag-21": "sequenceDiagram\n    participant U as 社員\n    participant IDP as 企業 IdP\n    participant AWS as IAM Identity Center または Cognito\n    participant APP as GenAI アプリ\n    participant BR as Bedrock\n    U->>IDP: ログイン\n    IDP-->>AWS: SAML または OIDC で認証結果\n    AWS-->>U: 一時的な認証情報 または トークン\n    U->>APP: トークン付きでリクエスト\n    APP->>APP: 役割に応じて使えるモデル・データを判定\n    APP->>BR: 許可された範囲だけ InvokeModel\n    BR-->>APP: 応答",
+  "diag-22": "flowchart LR\n    subgraph ONP[\"オンプレミス / Outposts\"]\n        DATA[\"機密データ\"] --> PRE[\"前処理<br/>匿名化 マスキング\"]\n    end\n    PRE -->|Direct Connect または VPN<br/>暗号化された専用経路| VPCE[\"VPC エンドポイント<br/>PrivateLink\"]\n    VPCE --> BR[\"Amazon Bedrock<br/>指定リージョン\"]\n    BR --> VPCE\n    subgraph EDGE[\"エッジ Wavelength\"]\n        MOB[\"モバイル向けアプリ<br/>低遅延処理\"]\n    end\n    MOB --> BR",
+  "diag-23": "flowchart LR\n    SRC[\"ソース<br/>コード プロンプト IaC\"] --> BLD[\"CodeBuild<br/>単体テスト セキュリティスキャン\"]\n    BLD --> EVAL[\"評価テスト<br/>プロンプト回帰 品質閾値\"]\n    EVAL --> STG[\"ステージング環境にデプロイ\"]\n    STG --> APPR[\"承認ゲート\"]\n    APPR --> PRD[\"本番へ段階的デプロイ<br/>カナリア\"]\n    PRD --> MON{\"アラーム 品質低下を検知\"}\n    MON -->|異常あり| RB[\"自動ロールバック\"]\n    MON -->|正常| DONE[\"完了\"]",
+  "diag-24": "flowchart TD\n    A1[\"アプリA\"] --> GW\n    A2[\"アプリB\"] --> GW\n    A3[\"アプリC\"] --> GW\n    subgraph GW[\"GenAI ゲートウェイ\"]\n        AU[\"認証 認可\"] --> RL[\"レート制限 トークン割り当て\"]\n        RL --> GR[\"ガードレール 入出力検査\"]\n        GR --> RT[\"モデルルーティング フォールバック\"]\n        RT --> LG[\"ログ メトリクス コスト按分\"]\n    end\n    RT --> M1[\"Bedrock モデル群\"]\n    RT --> M2[\"SageMaker AI エンドポイント\"]\n    RT --> M3[\"外部のモデルAPI\"]",
+  "diag-25": "flowchart TD\n    REQ[\"クライアントのリクエスト\"] --> Q{\"結果をその場で必要か\"}\n    Q -->|はい 短時間| SYNC[\"同期: Bedrock API を直接呼ぶ<br/>Lambda や コンテナから\"]\n    Q -->|いいえ 時間がかかる| ASYNC[\"非同期: SQS に投入し即座に受付応答\"]\n    ASYNC --> WK[\"ワーカー Lambda が Bedrock を呼ぶ\"]\n    WK --> ST[\"結果を DynamoDB や S3 に保存\"]\n    ST --> NT[\"通知 または クライアントが取得\"]",
+  "diag-26": "sequenceDiagram\n    participant C as クライアント\n    participant G as API Gateway\n    participant Q as SQS\n    participant W as ワーカー Lambda\n    participant B as Bedrock\n    participant D as DynamoDB\n    C->>G: 処理依頼\n    G->>Q: メッセージ投入\n    G-->>C: 202 Accepted と ジョブID\n    Q->>W: メッセージ配信\n    W->>B: InvokeModel\n    B-->>W: 結果\n    W->>D: ジョブIDで結果を保存\n    C->>G: ジョブIDで状況を問い合わせ\n    G->>D: 取得\n    D-->>C: 結果",
+  "diag-27": "sequenceDiagram\n    participant C as ブラウザ\n    participant S as アプリ バックエンド\n    participant B as Bedrock\n    C->>S: 質問\n    S->>B: ConverseStream\n    B-->>S: messageStart\n    B-->>S: contentBlockDelta テキスト断片1\n    S-->>C: 断片1を転送\n    B-->>S: contentBlockDelta テキスト断片2\n    S-->>C: 断片2を転送\n    B-->>S: messageStop\n    B-->>S: metadata トークン使用量\n    S-->>C: 完了を通知",
+  "diag-28": "flowchart TD\n    Q{\"ストリーミング配信の方法は\"} --> A[\"双方向が必要 チャット\"]\n    Q --> B[\"サーバーから一方向で十分\"]\n    Q --> C[\"既存のHTTP構成を活かしたい\"]\n    A --> WS[\"API Gateway WebSocket API\"]\n    B --> SSE[\"SSE または Lambda レスポンスストリーミング\"]\n    C --> RS[\"API Gateway REST のレスポンスストリーミング STREAM モード\"]",
+  "diag-29": "flowchart TD\n    REQ[\"リクエスト\"] --> RL[\"API Gateway レート制限\"]\n    RL --> CALL[\"Bedrock 呼び出し<br/>SDK の指数バックオフ\"]\n    CALL --> OK{\"成功か\"}\n    OK -->|成功| RES[\"応答\"]\n    OK -->|失敗| FB1{\"代替手段があるか\"}\n    FB1 -->|別モデル| M2[\"フォールバックモデルで再試行\"]\n    FB1 -->|別リージョン| R2[\"クロスリージョン推論 / 別リージョン\"]\n    FB1 -->|キャッシュ| CA[\"以前の回答 または 簡易回答\"]\n    FB1 -->|なし| GD[\"グレースフルな縮退<br/>定型メッセージで丁寧に断る\"]\n    M2 --> RES\n    R2 --> RES\n    CA --> RES\n    GD --> RES",
+  "diag-30": "flowchart TD\n    IN[\"ユーザー入力\"] --> CLS[\"安価な分類モデルで<br/>種類と難易度を判定\"]\n    CLS --> CH{\"Step Functions Choice\"}\n    CH -->|簡単な質問| S[\"小型モデル\"]\n    CH -->|複雑な推論| L[\"大型モデル\"]\n    CH -->|画像を含む| V[\"マルチモーダルモデル\"]\n    CH -->|コード生成| C[\"コード向けモデル\"]\n    S --> OUT[\"応答\"]\n    L --> OUT\n    V --> OUT\n    C --> OUT",
+  "diag-31": "flowchart LR\n    CL[\"クライアント\"] --> CF[\"CloudFront / ALB<br/>応答タイムアウト\"]\n    CF --> AGW[\"API Gateway<br/>統合タイムアウト 既定29秒\"]\n    AGW --> LM[\"Lambda<br/>最大15分\"]\n    LM --> BR[\"Bedrock<br/>生成時間\"]",
+  "diag-32": "flowchart TD\n    IN[\"ユーザー入力\"] --> CNT[\"入力トークン数を見積もる\"]\n    CNT --> CK{\"上限に収まるか\"}\n    CK -->|収まる| CALL[\"maxTokens を設定して FM を呼ぶ\"]\n    CK -->|超える| ACT[\"切り詰め または 要約 または チャンク分割\"]\n    ACT --> CALL\n    CALL --> LOG[\"usage を記録して予算管理\"]",
+  "diag-33": "flowchart LR\n    UI[\"Amplify<br/>画面 UI コンポーネント\"] --> API[\"OpenAPI で定義した API<br/>API Gateway\"]\n    API --> FLOW[\"Bedrock Flows<br/>ノーコード ワークフロー\"]\n    FLOW --> FM[\"Bedrock FM / ナレッジベース / エージェント\"]",
+  "diag-34": "flowchart TD\n    SPEC[\"OpenAPI 仕様を先に書く\"] --> IMP[\"API Gateway にインポート\"]\n    SPEC --> DOC[\"ドキュメント自動生成\"]\n    SPEC --> SDK[\"クライアント SDK 生成\"]\n    SPEC --> VAL[\"リクエスト検証ルールに利用\"]\n    IMP --> IMPL[\"バックエンド実装 Lambda など\"]",
+  "diag-35": "sequenceDiagram\n    participant CRM as CRM システム\n    participant L as Lambda\n    participant B as Bedrock\n    CRM->>L: 商談メモ更新イベント Webhook\n    L->>L: 顧客情報を取得 個人情報をマスキング\n    L->>B: 要約と次のアクション案を依頼\n    B-->>L: 要約 提案\n    L->>CRM: 要約フィールドを更新",
+  "diag-36": "flowchart TD\n    UP[\"S3 に文書をアップロード\"] --> EV[\"EventBridge が検知\"]\n    EV --> SF[\"Step Functions 開始\"]\n    SF --> EX[\"内容を抽出 Bedrock Data Automation など\"]\n    EX --> CL[\"分類 要約 Bedrock\"]\n    CL --> VA{\"信頼度は十分か\"}\n    VA -->|はい| ST[\"結果を保存 DynamoDB S3\"]\n    VA -->|いいえ| HR[\"人間のレビュー\"]\n    HR --> ST\n    ST --> NT[\"通知\"]",
+  "diag-37": "flowchart LR\n    DES[\"設計\"] --> GEN[\"Q Developer<br/>コード生成 API 補助\"]\n    GEN --> TST[\"Q Developer<br/>テスト生成\"]\n    TST --> REF[\"Q Developer<br/>リファクタリング 最適化\"]\n    REF --> SEC[\"Q Developer<br/>セキュリティスキャン\"]\n    SEC --> REV[\"人によるレビュー\"]\n    REV --> DEP[\"デプロイ\"]",
+  "diag-38": "flowchart TD\n    subgraph CH[\"プロンプトチェーン\"]\n        C1[\"下書き\"] --> C2[\"校正\"] --> C3[\"要約\"]\n    end\n    subgraph PA[\"並列化\"]\n        P0[\"入力\"] --> P1[\"観点A\"]\n        P0 --> P2[\"観点B\"]\n        P1 --> P3[\"統合\"]\n        P2 --> P3\n    end\n    subgraph EO[\"評価者と最適化\"]\n        E1[\"生成\"] --> E2{\"評価\"}\n        E2 -->|不合格| E3[\"改善\"]\n        E3 --> E1\n        E2 -->|合格| E4[\"完了\"]\n    end",
+  "diag-39": "flowchart TD\n    USER[\"複雑な依頼\"] --> ORC[\"オーケストレーター エージェント<br/>計画を立てて分解\"]\n    ORC --> W1[\"ワーカー: 情報収集\"]\n    ORC --> W2[\"ワーカー: データ分析\"]\n    ORC --> W3[\"ワーカー: 文章作成\"]\n    W1 --> ORC\n    W2 --> ORC\n    W3 --> ORC\n    ORC --> ANS[\"統合して最終回答\"]",
+  "diag-40": "flowchart TD\n    SYM[\"症状 遅い エラー 回答が不適切\"] --> M[\"CloudWatch メトリクス<br/>遅延 スロットル エラー数\"]\n    M --> T[\"X-Ray トレース<br/>どの区間が遅い 失敗するか\"]\n    T --> L[\"Logs Insights<br/>該当リクエストのプロンプトと応答を確認\"]\n    L --> RC{\"原因の分類\"}\n    RC -->|クォータ スロットリング| A1[\"バックオフ クォータ引き上げ\"]\n    RC -->|入力が長すぎる| A2[\"入力短縮 要約 maxTokens見直し\"]\n    RC -->|プロンプトの問題| A3[\"プロンプト改善 評価データで確認\"]\n    RC -->|下流ツールの失敗| A4[\"ツールのエラー処理 タイムアウト見直し\"]",
+  "diag-41": "flowchart TD\n    S[\"問題文を読む\"] --> K1{\"エージェント 反復 承認 上限<br/>のキーワードがあるか\"}\n    K1 -->|はい| A1[\"Step Functions Strands Agent Squad MCP を検討\"]\n    K1 -->|いいえ| K2{\"デプロイ 容量 GPU<br/>のキーワードがあるか\"}\n    K2 -->|はい| A2[\"Lambda か Provisioned Throughput か SageMaker AI か\"]\n    K2 -->|いいえ| K3{\"社内システム 認証 規制 接続<br/>のキーワードがあるか\"}\n    K3 -->|はい| A3[\"イベント駆動 フェデレーション Outposts 閉域接続 ゲートウェイ\"]\n    K3 -->|いいえ| K4{\"ストリーミング 再試行 ルーティング<br/>のキーワードがあるか\"}\n    K4 -->|はい| A4[\"ConverseStream バックオフ Choice Prompt Routing\"]\n    K4 -->|いいえ| A5[\"Flows Amplify Q Developer X-Ray Logs Insights\"]"
+};
+export type DiagramId = keyof typeof DIAGRAMS;
+export const MERMAID_CONFIG = {
+  "theme": "base",
+  "themeVariables": {
+    "fontSize": "16px",
+    "background": "#ffffff",
+    "primaryColor": "#e8eeff",
+    "primaryTextColor": "#1c2a40",
+    "primaryBorderColor": "#9db2ee",
+    "lineColor": "#5b6f94",
+    "secondaryColor": "#f1f5fd",
+    "tertiaryColor": "#f1f5fd",
+    "edgeLabelBackground": "#ffffff",
+    "clusterBkg": "#f6f8fc",
+    "clusterBorder": "#b7c5e4",
+    "nodeTextColor": "#1c2a40"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "subGraphTitleMargin": {
+      "top": 12,
+      "bottom": 18
+    },
+    "nodeSpacing": 70,
+    "rankSpacing": 60,
+    "curve": "basis"
+  }
+};
