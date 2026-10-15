@@ -32,6 +32,23 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    "aws-aip-c01-domain2-guide": {
+    "source": "Aws-aip-c01-domain2-implementation-integration-guide.html",
+    "sourceCommit": "9eb40ce6830575a34214cd0847b65bc9406190e5",
+    "tables": true,
+    "codeBlocks": true,
+    "styledClasses": true,
+    "guideInteractions": true,
+    "guideBoundaries": {
+        "foundation": "",
+        "task1": "task-21-エージェント型aiソリューションとツール統合",
+        "task2": "task-22-モデルのデプロイ戦略",
+        "task3": "task-23-エンタープライズ統合アーキテクチャ",
+        "task4": "task-24-fm-api-統合の実装",
+        "task5": "task-25-アプリケーション統合パターンと開発ツール",
+        "revision": "step-27-練習問題15問"
+    }
+},
     'aws-aip-c01-domain1-guide': {
         source: 'Aws-aip-c01-domain1-guide.html',
         sourceCommit: '10e0f85f765c2efec07ade99669855fa53ba948d',
