@@ -143,9 +143,6 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
             <div
                 className="diagram-canvas"
                 data-diagram-id={id}
-                role="img"
-                aria-label={ariaLabel}
-                aria-describedby={descriptionId}
                 data-preserve-natural-scale="true"
             >
                 <MermaidDiagram
@@ -153,6 +150,7 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
                     theme="light"
                     preserveChartTheme={true}
                     ariaLabel={ariaLabel}
+                    ariaDescribedBy={descriptionId}
                     preserveNaturalScale={true}
                     focusable={true}
                 />

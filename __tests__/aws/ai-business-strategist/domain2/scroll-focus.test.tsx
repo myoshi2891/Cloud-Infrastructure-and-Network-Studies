@@ -57,6 +57,28 @@ describe('aws-ai-business-strategist-domain2 — 横スクロール領域のキ�
         });
     });
 
+    it('外側 canvas は画像セマンティクスを持たず、説明は内側の role="img" に関連付く', () => {
+        // Arrange
+        const { container } = render(<Page />);
+
+        // Act
+        const canvases = [...container.querySelectorAll('.diagram-canvas')];
+
+        // Assert
+        expect(canvases.length).toBeGreaterThan(0);
+        canvases.forEach((canvas) => {
+            expect(canvas.hasAttribute('role')).toBe(false);
+            expect(canvas.hasAttribute('aria-label')).toBe(false);
+            expect(canvas.hasAttribute('aria-describedby')).toBe(false);
+            const diagram = canvas.querySelector('[data-testid="mermaid-diagram"]');
+            expect(diagram?.getAttribute('role')).toBe('img');
+            expect(diagram?.getAttribute('aria-label')?.trim()).toBeTruthy();
+            const descriptionId = diagram?.getAttribute('aria-describedby') ?? '';
+            expect(descriptionId).not.toBe('');
+            expect(container.querySelector(`#${descriptionId}`)?.textContent?.trim()).toBeTruthy();
+        });
+    });
+
     it('.diagram-canvas は冗長な横スクロールを持たない', () => {
         expect(ruleBody('.aib-domain2-page .diagram-canvas')).toBeDefined();
         expect(ruleBody('.aib-domain2-page .diagram-canvas')).not.toMatch(/overflow(-x)?\s*:\s*(auto|scroll)/);
