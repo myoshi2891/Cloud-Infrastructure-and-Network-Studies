@@ -47,7 +47,8 @@ describe('AIP domain1 shell and source diagram settings', () => {
         const { unmount } = render(<><NavBar /><h3 id={second.id}>Target</h3></>);
         const target = document.getElementById(second.id)!;
         expect(observe).toHaveBeenCalledWith(target);
-        act(() => callback?.([{ target, isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
+        const entry: IntersectionObserverEntry = { target, isIntersecting: true, boundingClientRect: target.getBoundingClientRect(), intersectionRect: target.getBoundingClientRect(), intersectionRatio: 1, rootBounds: null, time: 0 };
+        act(() => callback?.([entry], {} as IntersectionObserver));
         expect(screen.getByRole('link', { name: second.label })).toHaveAttribute('aria-current', 'location');
         vi.stubGlobal('scrollY', 1); fireEvent.scroll(window);
         const last = NAV_ITEMS.at(-1); if (!last) throw new Error('No last item');
