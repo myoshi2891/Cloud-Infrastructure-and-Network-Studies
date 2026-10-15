@@ -1,0 +1,21 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "\"Noto Sans JP Variable\",\"Noto Sans JP\",sans-serif",
+    "fontSize": "16px",
+    "primaryColor": "#ffffff",
+    "primaryTextColor": "#1f2430",
+    "primaryBorderColor": "#3949ab",
+    "lineColor": "#4a5160",
+    "textColor": "#1f2430",
+    "edgeLabelBackground": "#ffffff"
+  },
+  "flowchart": {
+    "htmlLabels": true,
+    "useMaxWidth": false,
+    "curve": "basis",
+    "nodeSpacing": 36,
+    "rankSpacing": 46,
+    "padding": 12
+  }
+}
