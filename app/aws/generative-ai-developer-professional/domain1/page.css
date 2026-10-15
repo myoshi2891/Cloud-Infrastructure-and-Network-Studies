@@ -313,7 +313,7 @@
                 font-size: 11.5px;
                 font-weight: 800;
                 letter-spacing: 0.06em;
-                color: var(--color-aip-d1-success);
+                color: var(--color-aip-d1-success-text);
                 text-transform: uppercase;
                 margin-bottom: 6px;
             }
@@ -457,7 +457,7 @@
             }
             .aip-domain1-page .checklist-card li:has(input:checked) label {
                 text-decoration: line-through;
-                color: var(--color-aip-d1-text-faint);
+                color: var(--color-aip-d1-completed-text);
             }
 
             /* Footnotes (pandoc) */ /* replaced entirely by ref-grid */

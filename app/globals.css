@@ -15,6 +15,8 @@
 
 @theme {
     /* Layer 3: AIP-C01 Domain 1 原本ライト配色 */
+    --color-aip-d1-success-text: #176b40;
+    --color-aip-d1-completed-text: #60718c;
     --color-aip-d1-bg: #f6f8fc;
     --color-aip-d1-bg-card: #ffffff;
     --color-aip-d1-bg-card-2: #eef2f9;
