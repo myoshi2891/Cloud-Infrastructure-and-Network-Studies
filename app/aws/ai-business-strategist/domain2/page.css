@@ -1,0 +1,571 @@
+.aib-domain2-page * {
+    box-sizing: border-box;
+}
+
+.aib-domain2-page {
+    scroll-behavior: smooth;
+    margin: 0;
+    background: var(--color-aib-bg);
+    color: var(--color-aib-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+.aib-domain2-page a {
+    color: var(--color-aib-accent);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.aib-domain2-page a:hover {
+    text-decoration: underline;
+}
+
+.aib-domain2-page h1,
+.aib-domain2-page h2,
+.aib-domain2-page h3,
+.aib-domain2-page h4,
+.aib-domain2-page .display {
+    font-family: var(--font-display);
+    color: #2a3568;
+    line-height: 1.4;
+}
+
+/* ---------- Sidebar ---------- */
+.aib-domain2-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 302px;
+    background: var(--color-aib-card);
+    border-right: 1px solid var(--color-aib-border);
+    overflow-y: auto;
+    padding: 24px 18px 48px;
+    z-index: 40;
+    transition: transform 0.25s ease;
+}
+
+.aib-domain2-page .sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #2a3568;
+    padding: 4px 6px 16px;
+    border-bottom: 1px solid var(--color-aib-border);
+    margin-bottom: 14px;
+}
+
+.aib-domain2-page .sidebar .brand .ti {
+    color: #b8891f;
+    font-size: 1.3rem;
+}
+
+.aib-domain2-page .sidebar nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.aib-domain2-page .sidebar nav > ul > li {
+    margin-bottom: 2px;
+}
+
+.aib-domain2-page .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    color: #5a5048;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+}
+
+.aib-domain2-page .nav-link .ti {
+    font-size: 1.05rem;
+    color: #b8891f;
+    flex-shrink: 0;
+}
+
+.aib-domain2-page .nav-link:hover {
+    background: var(--color-aib-card-2);
+    color: var(--color-aib-text);
+}
+
+.aib-domain2-page .nav-link.active {
+    background: #3c4a8f;
+    color: #fff;
+}
+
+.aib-domain2-page .nav-link.active .ti {
+    color: #ffd98a;
+}
+
+.aib-domain2-page .sub-nav {
+    list-style: none;
+    margin: 2px 0 10px 30px;
+    padding-left: 10px;
+    border-left: 2px solid var(--color-aib-border);
+}
+
+.aib-domain2-page .sub-nav li {
+    margin-bottom: 1px;
+}
+
+.aib-domain2-page .sub-nav a {
+    display: block;
+    padding: 5px 8px;
+    font-size: 0.82rem;
+    color: #5a5048;
+    text-decoration: none;
+    border-radius: 6px;
+    overflow-wrap: anywhere;
+}
+
+.aib-domain2-page .sub-nav a:hover {
+    background: var(--color-aib-card-2);
+    color: #2a3568;
+}
+
+.aib-domain2-page .sub-nav a.active {
+    color: #3c4a8f;
+    font-weight: 700;
+}
+
+.aib-domain2-page .menu-btn {
+    display: none;
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+    left: 14px;
+    z-index: 60;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    border: 1px solid var(--color-aib-border);
+    background: var(--color-aib-card);
+    color: #2a3568;
+    font-size: 1.4rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.aib-domain2-page .backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 36, 32, 0.45);
+    z-index: 35;
+}
+
+/* ---------- Main ---------- */
+.aib-domain2-page .main {
+    margin-left: 302px;
+    min-height: 100vh;
+}
+
+.aib-domain2-page .hero {
+    background: linear-gradient(135deg, #2a3568, #3c4a8f 55%, #54629c);
+    color: #fdfaf2;
+    padding: 64px max(56px, calc((100% - 1180px) / 2));
+    border-bottom: 4px solid #b8891f;
+}
+
+.aib-domain2-page .hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.8rem;
+    color: #ffd98a;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.aib-domain2-page .hero h1 {
+    color: #fff;
+    font-size: 2.1rem;
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.aib-domain2-page .hero p {
+    color: #eef0fb;
+    max-width: 70ch;
+    margin: 0 0 22px;
+    font-size: 1.02rem;
+}
+
+.aib-domain2-page .hero .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.aib-domain2-page .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.aib-domain2-page .pill .ti {
+    color: #ffd98a;
+}
+
+.aib-domain2-page .content {
+    padding: 16px max(56px, calc((100% - 1180px) / 2)) 80px;
+}
+
+.aib-domain2-page .section {
+    padding: 34px 0;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px);
+}
+
+.aib-domain2-page .section:first-of-type {
+    padding-top: 40px;
+}
+
+.aib-domain2-page .section h2 {
+    font-size: 1.55rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-aib-border);
+}
+
+.aib-domain2-page .section h2 .ti {
+    color: #b8891f;
+    font-size: 1.4rem;
+}
+
+.aib-domain2-page .section h3 {
+    font-size: 1.18rem;
+    margin: 30px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px);
+}
+
+.aib-domain2-page .section h3 .ti {
+    color: #3c4a8f;
+    font-size: 1.05rem;
+}
+
+.aib-domain2-page .section h4 {
+    font-size: 1.02rem;
+    color: var(--color-aib-text);
+    margin: 20px 0 8px;
+}
+
+.aib-domain2-page .prose {
+    max-width: none;
+}
+
+.aib-domain2-page .prose p,
+.aib-domain2-page .prose li {
+    overflow-wrap: anywhere;
+    color: var(--color-aib-text);
+}
+
+.aib-domain2-page .prose p {
+    margin: 0 0 14px;
+}
+
+.aib-domain2-page .prose strong {
+    color: #2a3568;
+}
+
+.aib-domain2-page .prose ul,
+.aib-domain2-page .prose ol {
+    padding-left: 1.4em;
+    margin: 0 0 14px;
+}
+
+.aib-domain2-page .prose li {
+    margin-bottom: 6px;
+}
+
+.aib-domain2-page .prose code {
+    background: var(--color-aib-card-2);
+    border: 1px solid var(--color-aib-border);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-family: var(--font-mono);
+}
+
+/* ---------- Tables ---------- */
+.aib-domain2-page .table-wrap {
+    overflow-x: auto;
+    margin: 0 0 20px;
+    border: 1px solid var(--color-aib-border);
+    border-radius: 10px;
+    min-width: 0;
+}
+
+.aib-domain2-page table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 460px;
+    background: var(--color-aib-card);
+}
+
+.aib-domain2-page thead th {
+    background: #3c4a8f;
+    color: #fff;
+    text-align: left;
+    padding: 11px 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.aib-domain2-page tbody td,
+.aib-domain2-page tbody th {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-aib-border);
+    font-size: 0.92rem;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.aib-domain2-page tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.aib-domain2-page tbody tr:hover {
+    background: var(--color-aib-card-2);
+}
+
+.aib-domain2-page tbody td strong {
+    color: #2a3568;
+}
+
+/* ---------- Callouts ---------- */
+.aib-domain2-page .callout {
+    background: #fbf2df;
+    border: 1px solid var(--color-aib-border);
+    border-left: 5px solid #b8891f;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 0 0 20px;
+}
+
+.aib-domain2-page .callout p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--color-aib-text);
+}
+
+/* ---------- Diagrams ---------- */
+.aib-domain2-page .diagram-card {
+    background: var(--color-aib-card);
+    border: 1px solid var(--color-aib-border);
+    border-radius: 10px;
+    padding: 22px 18px;
+    margin: 0 0 24px;
+}
+
+.aib-domain2-page .diagram-canvas {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    justify-content: safe center;
+    overflow-x: auto;
+}
+
+.aib-domain2-page .diagram-canvas > * {
+    min-width: 0;
+    flex-shrink: 0;
+}
+
+.aib-domain2-page .diagram-canvas > [role="img"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: safe center !important;
+}
+
+.aib-domain2-page .diagram-canvas svg {
+    height: auto;
+    overflow: visible;
+}
+
+.aib-domain2-page .diagram-canvas .d-fallback {
+    color: #5a5048;
+    font-size: 0.88rem;
+    padding: 20px;
+    text-align: center;
+}
+
+/* ---------- Checklist ---------- */
+.aib-domain2-page .chk-item {
+    list-style: none;
+    margin-left: -1.4em;
+}
+
+.aib-domain2-page .chk-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.aib-domain2-page .chk-label input[type='checkbox'] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 2px solid #3c4a8f;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.aib-domain2-page .chk-label input[type='checkbox']:checked {
+    background: #3a8a52;
+    border-color: #3a8a52;
+}
+
+.aib-domain2-page .chk-label input[type='checkbox']:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 6px;
+    height: 11px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+}
+
+.aib-domain2-page .chk-label span {
+    font-size: 0.94rem;
+}
+
+.aib-domain2-page .chk-label input:checked ~ span {
+    color: #5a5048;
+    text-decoration: line-through;
+}
+
+.aib-domain2-page .chk-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-aib-card-2);
+    border: 1px solid var(--color-aib-border);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #2a3568;
+    margin: 0 0 18px;
+}
+
+/* ---------- Quiz / Details ---------- */
+.aib-domain2-page details {
+    background: var(--color-aib-card);
+    border: 1px solid var(--color-aib-border);
+    border-radius: 10px;
+    padding: 4px 16px;
+    margin: 4px 0 26px;
+}
+
+.aib-domain2-page summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #7a3f6b;
+    padding: 10px 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.aib-domain2-page summary::-webkit-details-marker {
+    display: none;
+}
+
+.aib-domain2-page summary::before {
+    content: '\25B8';
+    color: #7a3f6b;
+    transition: transform 0.15s;
+}
+
+.aib-domain2-page details[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.aib-domain2-page details p {
+    padding-bottom: 10px;
+}
+
+/* ---------- Footer ---------- */
+.aib-domain2-page .footer {
+    padding: 34px max(56px, calc((100% - 1180px) / 2));
+    border-top: 1px solid var(--color-aib-border);
+    color: #5a5048;
+    font-size: 0.86rem;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 900px) {
+    .aib-domain2-page .sidebar {
+        transform: translateX(-102%);
+    }
+
+    .aib-domain2-page.menu-open .sidebar {
+        transform: translateX(0);
+    }
+
+    .aib-domain2-page.menu-open .backdrop {
+        display: block;
+    }
+
+    .aib-domain2-page .menu-btn {
+        display: flex;
+    }
+
+    .aib-domain2-page .main {
+        margin-left: 0;
+    }
+
+    .aib-domain2-page .hero,
+    .aib-domain2-page .content,
+    .aib-domain2-page .footer {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .aib-domain2-page .hero {
+        padding-top: 84px;
+    }
+
+    .aib-domain2-page .hero h1 {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "background": "#ffffff",
+    "primaryColor": "#f1e9d8",
+    "primaryTextColor": "#2b2420",
+    "primaryBorderColor": "#ded2b8",
+    "lineColor": "#5a5048",
+    "fontFamily": "\"Noto Sans JP\",sans-serif",
+    "fontSize": "16px"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "curve": "basis"
+  }
+}
