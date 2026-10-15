@@ -20,6 +20,8 @@ export interface MermaidDiagramProps {
     preserveChartTheme?: boolean;
     /** 横スクロールする wrapper をキーボードでフォーカス・操作可能にする（任意。名前は ariaLabel を流用） */
     focusable?: boolean;
+    /** role="img" の wrapper に関連付ける説明要素の ID（任意。aria-describedby） */
+    ariaDescribedBy?: string;
 }
 
 /**
@@ -244,6 +246,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     theme = 'dark',
     preserveChartTheme = false,
     focusable = false,
+    ariaDescribedBy,
 }) => {
     const reactId = useId();
     const [isMounted, setIsMounted] = useState(false);
@@ -315,6 +318,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
             )}
             role="img"
             aria-label={ariaLabel}
+            aria-describedby={ariaDescribedBy}
             aria-roledescription="diagram"
             tabIndex={focusable ? 0 : undefined}
             data-theme={theme}
