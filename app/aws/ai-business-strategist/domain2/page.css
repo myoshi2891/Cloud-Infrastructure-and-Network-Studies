@@ -534,12 +534,17 @@
 
 /* ---------- Mobile ---------- */
 @media (max-width: 900px) {
+    /* 閉状態ではキーボード操作の対象から外す。visibility はスライドアウト完了後に切り替える */
     .aib-domain2-page .sidebar {
         transform: translateX(-102%);
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0s linear 0.25s;
     }
 
     .aib-domain2-page.menu-open .sidebar {
         transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.25s ease;
     }
 
     .aib-domain2-page.menu-open .backdrop {

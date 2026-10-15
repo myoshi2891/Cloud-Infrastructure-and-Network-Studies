@@ -824,7 +824,7 @@
     "使っていない時間も課金される場合がある",
     "シート課金",
     "利用者 1 人あたりで支払う",
-    "Amazon Quick (利用者の種別とサブスクリプションの種類がある)",
+    "Amazon Quick (利用者の種別とサブスクリプションの種類がある。Professional と Enterprise では、利用者ごとの料金に加えて月額 $250 のアカウント料金や利用量の超過料金がかかる場合がある)",
     "従業員向けのツールを全社展開する",
     "利用者が使わなくても課金される。適正な人数の管理が必要",
     "利用量 (トークン数)",
@@ -1391,7 +1391,80 @@
     "試験ガイドの更新: 試験内容は変更される可能性があります。学習の前に、試験ガイドの最新版を確認してください。",
     "確認日: 本ガイドは 2026-09-28 時点の公開情報に基づいています。"
   ],
-  "links": [],
+  "links": [
+    {
+      "text": "https://aws.amazon.com/certification/certified-ai-business-strategist/",
+      "href": "https://aws.amazon.com/certification/certified-ai-business-strategist/"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html",
+      "href": "https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html",
+      "href": "https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html",
+      "href": "https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/introduction.html",
+      "href": "https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/introduction.html"
+    },
+    {
+      "text": "https://aws.amazon.com/bedrock/pricing/",
+      "href": "https://aws.amazon.com/bedrock/pricing/"
+    },
+    {
+      "text": "https://aws.amazon.com/sagemaker-ai/pricing/",
+      "href": "https://aws.amazon.com/sagemaker-ai/pricing/"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.md",
+      "href": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.md"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/quicksight/latest/user/quickstart.html",
+      "href": "https://docs.aws.amazon.com/quicksight/latest/user/quickstart.html"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/quick/",
+      "href": "https://docs.aws.amazon.com/quick/"
+    },
+    {
+      "text": "https://aws.amazon.com/quick/faqs/",
+      "href": "https://aws.amazon.com/quick/faqs/"
+    },
+    {
+      "text": "https://docs.aws.amazon.com/cost-management/latest/userguide/billing-security-logging.html",
+      "href": "https://docs.aws.amazon.com/cost-management/latest/userguide/billing-security-logging.html"
+    },
+    {
+      "text": "https://calculator.aws/",
+      "href": "https://calculator.aws/"
+    },
+    {
+      "text": "https://aws.amazon.com/marketplace",
+      "href": "https://aws.amazon.com/marketplace"
+    },
+    {
+      "text": "https://aws.amazon.com/blogs/apn/generative-ai-trends-and-opportunities-for-aws-partners-a-conversation-with-mckinsey-and-company/",
+      "href": "https://aws.amazon.com/blogs/apn/generative-ai-trends-and-opportunities-for-aws-partners-a-conversation-with-mckinsey-and-company/"
+    }
+  ],
   "bodyContent": [
     {
       "kind": "annotation",
@@ -1639,7 +1712,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "導入前の現状の数値です。効果は「導入後の値 - ベースライン」で測ります。ダイエットに例えると、始める前の体重の記録です。記録がなければ、いくら減ったか分かりません。"
+      "text": "導入前の現状の数値です。効果は「導入後の値 - ベースライン」で測ります。この差は符号付きの変化量で、処理時間やエラー率のように低いほど良い KPI では、改善幅を「ベースライン - 導入後の値」として報告します。ダイエットに例えると、始める前の体重の記録です。記録がなければ、いくら減ったか分かりません。"
     },
     {
       "kind": "paragraph",
@@ -1735,7 +1808,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "左側 (教育、利用率) が先行指標、右側 (コスト削減、ROI) が遅行指標です。左が伸びていなければ、右も伸びません。"
+      "text": "左側 (教育、利用率) が先行指標、右側 (コスト削減、ROI) が遅行指標です。先行指標は成果を予測する手がかりであり、成果の前提条件ではありません。先行指標が弱いときは、成果が伸び悩む兆候として原因を調べます。"
     },
     {
       "kind": "annotation",

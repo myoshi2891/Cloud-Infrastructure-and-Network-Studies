@@ -24,13 +24,13 @@ export function Sec11_References() {
                                     <tr>
                                         <td>AWS Certified AI Business Strategist 認定ページ</td>
                                         <td>
-                                            https://aws.amazon.com/certification/certified-ai-business-strategist/
+                                            <a href="https://aws.amazon.com/certification/certified-ai-business-strategist/">https://aws.amazon.com/certification/certified-ai-business-strategist/</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>試験ガイド (AIB-C01) 全体</td>
                                         <td>
-                                            https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html
+                                            <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -39,19 +39,19 @@ export function Sec11_References() {
                                             Creation
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html
+                                            <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain2.html</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>試験に登場しうる技術と概念</td>
                                         <td>
-                                            https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html
+                                            <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>対象範囲内の AWS サービスと機能</td>
                                         <td>
-                                            https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html
+                                            <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -78,7 +78,7 @@ export function Sec11_References() {
                                             組織全体で AI を計画、拡大する枠組み (Skill 2.1.1、全般)
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html
+                                            <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -88,7 +88,7 @@ export function Sec11_References() {
                                             2.2.5)
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html
+                                            <a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html">https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -101,7 +101,7 @@ export function Sec11_References() {
                                             2.1.3、2.2.3)
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/introduction.html
+                                            <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/introduction.html">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/introduction.html</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -110,12 +110,12 @@ export function Sec11_References() {
                                             オンデマンド、バッチ、キャッシュ、プロビジョンドスループットなどの区分
                                             (Skill 2.2.5)
                                         </td>
-                                        <td>https://aws.amazon.com/bedrock/pricing/</td>
+                                        <td><a href="https://aws.amazon.com/bedrock/pricing/">https://aws.amazon.com/bedrock/pricing/</a></td>
                                     </tr>
                                     <tr>
                                         <td>Amazon SageMaker AI の料金</td>
                                         <td>オンデマンドと Savings Plans (Skill 2.2.5)</td>
-                                        <td>https://aws.amazon.com/sagemaker-ai/pricing/</td>
+                                        <td><a href="https://aws.amazon.com/sagemaker-ai/pricing/">https://aws.amazon.com/sagemaker-ai/pricing/</a></td>
                                     </tr>
                                     <tr>
                                         <td>What are Savings Plans?</td>
@@ -123,7 +123,7 @@ export function Sec11_References() {
                                             1 年または 3 年のコミットメントによる割引 (Skill 2.2.5)
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.md
+                                            <a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.md">https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.md</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -134,18 +134,18 @@ export function Sec11_References() {
                                             (Skill 2.1.2、2.2.5)
                                         </td>
                                         <td>
-                                            https://docs.aws.amazon.com/quicksight/latest/user/quickstart.html
+                                            <a href="https://docs.aws.amazon.com/quicksight/latest/user/quickstart.html">https://docs.aws.amazon.com/quicksight/latest/user/quickstart.html</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Amazon Quick ドキュメント (トップ)</td>
                                         <td>同上</td>
-                                        <td>https://docs.aws.amazon.com/quick/</td>
+                                        <td><a href="https://docs.aws.amazon.com/quick/">https://docs.aws.amazon.com/quick/</a></td>
                                     </tr>
                                     <tr>
                                         <td>Amazon Quick FAQ</td>
                                         <td>部門別の活用例 (Skill 2.1.1)</td>
-                                        <td>https://aws.amazon.com/quick/faqs/</td>
+                                        <td><a href="https://aws.amazon.com/quick/faqs/">https://aws.amazon.com/quick/faqs/</a></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -154,18 +154,18 @@ export function Sec11_References() {
                                         </td>
                                         <td>事前の費用見積もり (Skill 2.2.5)</td>
                                         <td>
-                                            https://docs.aws.amazon.com/cost-management/latest/userguide/billing-security-logging.html
+                                            <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/billing-security-logging.html">https://docs.aws.amazon.com/cost-management/latest/userguide/billing-security-logging.html</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>AWS Pricing Calculator</td>
                                         <td>費用の見積もりツール</td>
-                                        <td>https://calculator.aws/</td>
+                                        <td><a href="https://calculator.aws/">https://calculator.aws/</a></td>
                                     </tr>
                                     <tr>
                                         <td>AWS Marketplace</td>
                                         <td>サードパーティ製品の探索、調達 (Skill 2.1.2、2.2.5)</td>
-                                        <td>https://aws.amazon.com/marketplace</td>
+                                        <td><a href="https://aws.amazon.com/marketplace">https://aws.amazon.com/marketplace</a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -187,7 +187,7 @@ export function Sec11_References() {
                                             優先順位付けと、PoC、MVP、拡大という進め方 (Skill 2.1.3)
                                         </td>
                                         <td>
-                                            https://aws.amazon.com/blogs/apn/generative-ai-trends-and-opportunities-for-aws-partners-a-conversation-with-mckinsey-and-company/
+                                            <a href="https://aws.amazon.com/blogs/apn/generative-ai-trends-and-opportunities-for-aws-partners-a-conversation-with-mckinsey-and-company/">https://aws.amazon.com/blogs/apn/generative-ai-trends-and-opportunities-for-aws-partners-a-conversation-with-mckinsey-and-company/</a>
                                         </td>
                                     </tr>
                                 </tbody>
