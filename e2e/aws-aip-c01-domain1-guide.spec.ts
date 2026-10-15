@@ -78,7 +78,9 @@ for (const width of [1440, 768, 390]) {
 
 test('AIP domain1 home and real Header navigate to detail route', async ({ page }) => {
     await page.goto('/');
-    await page.locator(`article.card-aws-aip a[href="${route}"]`).click();
+    const card = page.locator('article.card-aws-aip');
+    await card.locator('summary').click();
+    await card.locator(`a[href="${route}"]`).click();
     await expect(page).toHaveURL(new RegExp(`${route}$`));
     await page.getByRole('button', { name: 'メニューを開く' }).click();
     const drawer = page.getByRole('dialog', { name: 'サイトナビゲーション' });
