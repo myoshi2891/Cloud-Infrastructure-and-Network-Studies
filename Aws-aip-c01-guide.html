@@ -2332,9 +2332,9 @@ flowchart TD
                             <tr class="odd">
                                 <td><strong>Amazon Bedrock Agents</strong></td>
                                 <td>
-                                    マネージドのエージェント(アクショングループ、ナレッジベース連携、トレース)
+                                    マネージドのエージェント(アクショングループ、ナレッジベース連携、トレース)。2026年7月30日に新規顧客の受付を終了(Agents Classic、メンテナンスモード)
                                 </td>
-                                <td>ノーコード/ローコードで早く作る</td>
+                                <td>既存顧客向けの選択肢。新規のエージェント開発は AgentCore へ</td>
                             </tr>
                             <tr class="even">
                                 <td><strong>Amazon Bedrock AgentCore</strong></td>
@@ -2501,7 +2501,7 @@ flowchart TD
                     Step Functions で「FM案 → 担当者レビュー → 承認で実行」を組み、<strong
                         >API Gateway</strong
                     >でフィードバック(承認/修正)を収集。低確信度・高リスクのケースだけ人に回す「<strong>例外ベース</strong>」が効率的です(Amazon
-                    Augmented AI(A2I)の人間レビューも選択肢)。
+                    Augmented AI(A2I)は2026年7月30日に新規顧客の受付を終了しており、既存顧客のみの選択肢)。
                 </p>
                 <hr />
                 <h3 id="step-8-タスク22-モデルデプロイ戦略">
@@ -3337,8 +3337,8 @@ flowchart LR
                             <tr class="even">
                                 <td>暗号化</td>
                                 <td>
-                                    <strong>KMS</strong
-                                    >(保存時・転送時)。カスタムモデルやKBのデータにも顧客管理キー
+                                    <strong>TLS</strong>で転送時、<strong>KMS</strong
+                                    >で対応リソースの保存時を暗号化。カスタムモデルやKBのデータにも顧客管理キー
                                 </td>
                             </tr>
                             <tr class="odd">
