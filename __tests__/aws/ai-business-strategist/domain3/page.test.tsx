@@ -84,6 +84,19 @@ describe('aws-ai-business-strategist-domain3 — 移行元コンテンツの全�
         });
     });
 
+    it('図の aria-label が図番号だけでなく関係性を説明し、図ごとに一意である', () => {
+        const container = renderPage();
+        const labels = [...container.querySelectorAll('.diagram-canvas')].map(
+            (element) => element.getAttribute('aria-label') ?? '',
+        );
+        expect(labels).toHaveLength(inventory.counts.diagram);
+        labels.forEach((label, index) => {
+            expect(label.startsWith(`図 ${index + 1}: `)).toBe(true);
+            expect(label).not.toMatch(/^図 \d+$/);
+        });
+        expect(new Set(labels).size).toBe(labels.length);
+    });
+
     it('静的な画像と SVG が移行元の件数と一致する', () => {
         const container = renderPage();
         expect(container.querySelectorAll('img, svg')).toHaveLength(inventory.counts.figure);

@@ -16,7 +16,7 @@ export function Sec5() {
                     AI
                     は従来のルールベースソフトと違い、<strong>出力が毎回変わりうる</strong>うえ、データや環境の変化で性能が変わります。リリース時に合格でも、運用中に劣化・偏り・新しい悪用が起こります。
                 </p>
-                <Diagram id="d7" label="図 8" />
+                <Diagram id="d7" />
                 <div className="table-wrap">
                     <table>
                         <thead>
@@ -80,7 +80,7 @@ export function Sec5() {
                     の継続監視が重要
                 </h3>
                 <h4>Step 1: バイアスが入り込む段階</h4>
-                <Diagram id="d8" label="図 9" />
+                <Diagram id="d8" />
                 <div className="table-wrap">
                     <table>
                         <thead>
@@ -303,7 +303,7 @@ export function Sec5() {
                     </table>
                 </div>
                 <h4>Step 2: 多層の対策</h4>
-                <Diagram id="d9" label="図 10" />
+                <Diagram id="d9" />
                 <div className="table-wrap">
                     <table>
                         <thead>

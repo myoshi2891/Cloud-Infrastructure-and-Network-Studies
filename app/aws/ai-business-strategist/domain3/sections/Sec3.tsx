@@ -268,7 +268,7 @@ export function Sec3() {
                     </table>
                 </div>
                 <h4>Step 2: 判断の進め方(フロー)</h4>
-                <Diagram id="d1" label="図 2" />
+                <Diagram id="d1" />
                 <h4>Step 3: ベストプラクティス</h4>
                 <ul>
                     <li>
@@ -291,7 +291,7 @@ export function Sec3() {
                     AWS の Responsible AI Lens は「Responsible by
                     design」を設計原則として掲げ、設計から運用まで各段階で次元を考慮し、問題をライフサイクルの早期に特定・解決することを重視しています。後工程での手戻りコストを避ける狙いです。
                 </p>
-                <Diagram id="d2" label="図 3" />
+                <Diagram id="d2" />
                 <div className="table-wrap">
                     <table>
                         <thead>
@@ -417,7 +417,7 @@ export function Sec3() {
                     </table>
                 </div>
                 <h4>Step 3: エスカレーション判断フロー</h4>
-                <Diagram id="d3" label="図 4" />
+                <Diagram id="d3" />
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
                     <p>ベストプラクティス(3.1.4)</p>{' '}

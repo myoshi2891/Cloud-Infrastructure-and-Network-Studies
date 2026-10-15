@@ -12,7 +12,7 @@ export function Sec2() {
                     Domain 3 は 3 つの Task、合計 12
                     のスキルで構成されています(試験ガイドの記載どおり)。
                 </p>
-                <Diagram id="d0" label="図 1" />
+                <Diagram id="d0" />
                 <h3 id="s2-1">2.1 3 つの Task を一言でいうと</h3>
                 <div className="table-wrap">
                     <table>

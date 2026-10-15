@@ -21,7 +21,7 @@ export function Sec4() {
                     機能も、責任構造(誰が責任を持ち、権限を与えられ、訓練されているか)を組織内に整備することを求めています。
                 </p>
                 <h4>Step 2: 体制のイメージ</h4>
-                <Diagram id="d4" label="図 5" />
+                <Diagram id="d4" />
                 <h4>Step 3: 役割と責任の例(RACI の考え方)</h4>
                 <div className="table-wrap">
                     <table>
@@ -233,7 +233,7 @@ export function Sec4() {
                     </p>
                 </div>
                 <h4>Step 4: 規制遵守の進め方</h4>
-                <Diagram id="d5" label="図 6" />
+                <Diagram id="d5" />
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
                     <p>ベストプラクティス(3.2.2)</p>{' '}
@@ -457,7 +457,7 @@ export function Sec4() {
                     </table>
                 </div>
                 <h4>Step 3: 分類→統制の流れ</h4>
-                <Diagram id="d6" label="図 7" />
+                <Diagram id="d6" />
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
                     <p>ベストプラクティス(3.2.4)</p>{' '}
