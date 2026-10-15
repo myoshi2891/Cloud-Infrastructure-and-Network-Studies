@@ -14,6 +14,31 @@
  */
 
 @theme {
+    /* Layer 3: AIP-C01 Domain 1 原本ライト配色 */
+    --color-aip-d1-bg: #f6f8fc;
+    --color-aip-d1-bg-card: #ffffff;
+    --color-aip-d1-bg-card-2: #eef2f9;
+    --color-aip-d1-border: #d5deec;
+    --color-aip-d1-border-soft: #e3e9f3;
+    --color-aip-d1-text: #1c2a3f;
+    --color-aip-d1-text-dim: #4d5f7a;
+    --color-aip-d1-text-faint: #7a8aa3;
+    --color-aip-d1-accent: #2f55d4;
+    --color-aip-d1-accent-soft: #a9bbee;
+    --color-aip-d1-accent-bg: #e8eefc;
+    --color-aip-d1-danger: #c62b46;
+    --color-aip-d1-danger-bg: #fde8ec;
+    --color-aip-d1-warn: #b86a00;
+    --color-aip-d1-warn-bg: #fff1dc;
+    --color-aip-d1-success: #1c8a52;
+    --color-aip-d1-success-bg: #e6f6ec;
+    --color-aip-d1-extra-17: #0f1b2e;
+    --color-aip-d1-extra-18: #b4410a;
+    --color-aip-d1-extra-19: rgba(47, 85, 212, 0.05);
+    --color-aip-d1-extra-20: #b7e2c7;
+    --color-aip-d1-extra-21: rgba(47, 85, 212, 0.06);
+    --color-aip-d1-extra-22: rgba(20, 40, 90, 0.18);
+
     /* Layer 3: AIP-C01 原本ライト配色 */
     --color-aip-bg: #f6f8fc;
     --color-aip-bg-card: #ffffff;
