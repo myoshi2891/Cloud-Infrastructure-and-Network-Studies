@@ -1,6 +1,28 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-13)
+(最終更新日: 2026-10-15)
+
+## 2026-10-15: AWS Certified AI Business Strategist (AIB-C01) Domain 2 のNext.js移行（完了）
+
+`Aib-c01-domain2-ai-strategy-guide.html` を `/aws/ai-business-strategist/domain2` へ全量移行し、ホーム画面（`app/constants.ts` ALL_EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本のライトテーマ（ペーパー背景・インディゴ見出し・ゴールドアクセント）および302pxサイドバー契約を保持し、全3タスク・14スキル・練習問題10問・直前チェックリスト（18項目）の全コンテンツを完全移行。
+
+原本コンテンツのh1:1・h2:11・h3:33・h4:70、67表（th180・td845）、237リスト項目、20図（Mermaidダイアグラム）、153本文ブロックを全量・順序・構造まで固定インベントリおよびテストで完全検証。すべての表に `<thead>` と `<th scope="col">`、Mermaidダイアグラムに `aria-label` と `data-preserve-natural-scale` を付与。
+
+### 段階別コミット
+
+- [x] Inventory: `bdbba91f` (`chore(migration): add content inventory for aws-ai-business-strategist-domain2`)
+- [x] Red (テスト作成): `01f60568` (`test(aws): add failing tests for aib-domain2`)
+- [x] Green (全セクション実装・テスト成功): `9bc52785` (`feat(aws): implement aib-domain2 to pass tests`)
+- [x] グローバルナビ & ルーティング統合: （本コミット） (`refactor(aws): integrate aib-domain2 into routing and update docs`)
+- [x] 原本退避 (HTML & Markdown): （次コミット） (`chore(archive): move migrated markdown and html files to archive`)
+
+### 検証結果
+
+- `__tests__/aws/ai-business-strategist/domain2/page.test.tsx`: 全 13 テスト PASS（h1/h2/h3/h4、th/td、li、リンク、本文・注釈、図、画像・SVG、テーブル、コードブロック）
+- `__tests__/aws/ai-business-strategist/domain2/diagram-theme.test.ts`: 全 2 テスト PASS（ライトテーマ定義およびd0〜d19の全20図）
+- `__tests__/aws/ai-business-strategist/domain1/page.test.tsx`: 全 17 テスト PASS（リグレッションなし）
+- ESLint: エラー 0 件
+
 
 ## 2026-10-13: AWS AIP-C01総合ガイドのNext.js移行（実装・自動検証完了、目視確認はユーザー担当）
 
