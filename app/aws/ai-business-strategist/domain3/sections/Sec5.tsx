@@ -59,15 +59,15 @@ export function Sec5() {
                 </div>
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
-                    <p>ベストプラクティス(3.3.1)</p>
+                    <p>ベストプラクティス(3.3.1)</p>{' '}
                     <ol>
                         <li>
-                            <strong>リリース前に「監視指標としきい値、担当者、対応手順」を決める</strong>(後付けにしない)
+                            <strong>リリース前に「監視指標としきい値、担当者、対応手順」を決める</strong>(後付けにしない){' '}
                         </li>
                         <li>
-                            監視は一度きりでなく<strong>継続</strong>。変更管理(モデル更新・プロンプト変更)にも承認プロセスを設ける
+                            監視は一度きりでなく<strong>継続</strong>。変更管理(モデル更新・プロンプト変更)にも承認プロセスを設ける{' '}
                         </li>
-                        <li>インシデント対応(停止・切り戻し・通知)を訓練しておく</li>
+                        <li>インシデント対応(停止・切り戻し・通知)を訓練しておく{' '}</li>
                         <li>
                             監視ツールの選定は、SageMaker Model Monitor
                             が新規顧客に閉じている点を踏まえ、CloudWatch や OSS
@@ -96,6 +96,7 @@ export function Sec5() {
                                 <td>
                                     特定グループのデータが少ない・過去の判断が偏っている
                                 </td>
+                                <td>データの代表性の確認、不足の補完</td>
                             </tr>
                             <tr>
                                 <td>設計・学習</td>
@@ -123,7 +124,7 @@ export function Sec5() {
                 <div className="callout info">
                     <i className="ti ti-bulb c-icon"></i>
                     <p>
-                        大切な考え方:
+                        大切な考え方:{' '}
                         <strong>バイアスは「1 回チェックして終わり」ではない</strong>。試験ガイドも、複数の段階で起こりうることと、Bias Drift
                         の継続監視の重要性を挙げています。
                     </p>{' '}

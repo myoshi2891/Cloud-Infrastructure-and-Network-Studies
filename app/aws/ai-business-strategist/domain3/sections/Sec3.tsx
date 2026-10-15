@@ -209,14 +209,14 @@ export function Sec3() {
                 </div>
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
-                    <p>ベストプラクティス(3.1.1)</p>
+                    <p>ベストプラクティス(3.1.1)</p>{' '}
                     <ol>
                         <li>
                             対象ユースケースを<strong>狭く</strong>定義する(範囲が狭いほどリスクの洗い出しとテストが容易。Responsible
-                            AI Lens の設計原則)
+                            AI Lens の設計原則){' '}
                         </li>
                         <li>
-                            次元ごとに「誰が・何で・どの基準で」確認するかを決めてから開発に入る
+                            次元ごとに「誰が・何で・どの基準で」確認するかを決めてから開発に入る{' '}
                         </li>
                         <li>
                             1 つのツール(例:
@@ -420,16 +420,16 @@ export function Sec3() {
                 <Diagram id="d3" label="図 4" />
                 <div className="callout best">
                     <i className="ti ti-star c-icon"></i>
-                    <p>ベストプラクティス(3.1.4)</p>
+                    <p>ベストプラクティス(3.1.4)</p>{' '}
                     <ol>
                         <li>
-                            <strong>リスクに比例</strong>して人間の関与を強める(全件レビューは非現実的。高リスクは全件、低リスクはサンプリング)
+                            <strong>リスクに比例</strong>して人間の関与を強める(全件レビューは非現実的。高リスクは全件、低リスクはサンプリング){' '}
                         </li>
                         <li>
-                            エスカレーション基準を<strong>事前に文書化</strong>し、担当者と対応時間を決める
+                            エスカレーション基準を<strong>事前に文書化</strong>し、担当者と対応時間を決める{' '}
                         </li>
                         <li>
-                            ガードレールは「万能」ではない。ガードレール＋根拠づけ＋人間レビューの<strong>多層防御</strong>にする
+                            ガードレールは「万能」ではない。ガードレール＋根拠づけ＋人間レビューの<strong>多層防御</strong>にする{' '}
                         </li>
                         <li>
                             人間レビュー基盤の選定では、Amazon Augmented
