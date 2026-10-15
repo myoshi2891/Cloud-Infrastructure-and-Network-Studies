@@ -52,6 +52,7 @@ describe('AIP page: independent full source inventory', () => {
             expect(wrap.getAttribute('tabindex')).toBe('0');
             expect(wrap.getAttribute('aria-label')?.trim()).toBeTruthy();
             expect(wrap.querySelector('[data-testid="mermaid-diagram"]')?.getAttribute('aria-label')).toBe(wrap.getAttribute('aria-label'));
+            expect(wrap.querySelector('[data-testid="mermaid-diagram"]')).toHaveAttribute('data-theme', 'light');
         }
     });
 });

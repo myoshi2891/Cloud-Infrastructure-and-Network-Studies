@@ -17,6 +17,24 @@ const declarations = (selector: string, media = '') => {
 };
 
 describe('AIP source visual declarations', () => {
+    it('preserves every used source color, gradient, border and shadow in light mode', () => {
+        const tokens: Record<string, string> = {};
+        postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(decl => {
+            if (decl.prop.startsWith('--')) tokens[decl.prop] = decl.value;
+        });
+        const sourceTokens = fixture.guideDesign.rules.find(rule => rule.selector === ':root')?.declarations ?? {};
+        const resolve = (value: string, vars: Record<string, string>): string => value.replace(/var\((--[\w-]+)\)/g, (_, name: string) => vars[name] ?? `MISSING:${name}`).replace(/\s+/g, '').toLowerCase();
+        for (const rule of fixture.guideDesign.rules) {
+            if (rule.selector === ':root' || /checklist|ref-grid|ref-card|practice-label|aside\.footnotes/.test(rule.selector)) continue;
+            const selector = rule.selector === 'body' ? '.aip-guide-page' : rule.selector.split(',').map(part => `.aip-guide-page ${part.trim().replaceAll('pre.mermaid', '.mermaid-wrap').replace('.main > h2:first-of-type', '.guide-part:first-child > h2:first-of-type')}`).join(', ');
+            const actual = declarations(selector, rule.media);
+            for (const [prop, value] of Object.entries(rule.declarations)) {
+                if (!/background|color|border|box-shadow/.test(prop) || !/#|rgba|var\(/.test(value)) continue;
+                expect(resolve(actual[prop] ?? '', tokens), `${selector}: ${prop}`).toBe(resolve(value, sourceTokens));
+            }
+        }
+        expect(declarations('.aip-guide-page')['color-scheme']).toBe('light');
+    });
     it('preserves every applicable original dimension, spacing, typography and interaction declaration', () => {
         for (const rule of fixture.guideDesign.rules) {
             if (/^:root$|^html,/.test(rule.selector)) continue;
@@ -56,8 +74,8 @@ describe('AIP source visual declarations', () => {
             if (name === '--disclaimer-height') continue;
             expect(globals, name).toContain(`${name}:`);
         }
-        expect(declarations('.aip-guide-page .hero h1').background).toBe('linear-gradient(135deg, var(--color-foreground) 0%, var(--color-accent) 100%)');
-        expect(declarations('.aip-guide-page .callout-practice')['border-left']).toBe('4px solid var(--color-pcd-success)');
+        expect(declarations('.aip-guide-page .hero h1').background).toBe('linear-gradient(135deg, var(--color-aip-text) 0%, var(--color-aip-accent) 100%)');
+        expect(declarations('.aip-guide-page .callout-practice')['border-left']).toBe('4px solid var(--color-aip-success)');
         expect(declarations('.aip-guide-page .pill')['border-radius']).toBe('999px');
     });
 });

@@ -39,6 +39,13 @@ for (const width of [1440, 768, 390]) {
         await page.goto(route);
         const root = page.locator('.aip-guide-page');
         await expect(root).toBeVisible();
+        await expect(root).toHaveCSS('color-scheme', 'light');
+        await expect(root).toHaveCSS('background-color', 'rgb(246, 248, 252)');
+        await expect(root).toHaveCSS('color', 'rgb(27, 39, 64)');
+        await expect(root.locator('.sidebar')).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+        await expect(root.locator('thead th').first()).toHaveCSS('background-color', 'rgb(232, 238, 252)');
+        await expect(root.locator('.callout-practice').first()).toHaveCSS('background-color', 'rgb(230, 246, 238)');
+        await expect(root.locator('.mermaid-wrap [data-theme="light"]')).toHaveCount(inventory.counts.diagram);
         for (const tag of ['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const) {
             await expect(root.locator(tag)).toHaveCount(inventory[tag].length);
         }
