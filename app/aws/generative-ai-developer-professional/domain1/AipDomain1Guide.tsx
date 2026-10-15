@@ -1,4 +1,5 @@
 import NavBar from './NavBar';
+import Revision from './sections/Revision';
 import Task16 from './sections/Task16';
 import Task15 from './sections/Task15';
 import Task14 from './sections/Task14';
@@ -9,5 +10,5 @@ import Foundation from './sections/Foundation';
 
 /** 原本ライトテーマの目次と本文を配置する。状態は操作用コンポーネント内に閉じる。 */
 export default function AipDomain1Guide() {
-    return <div className="aip-domain1-page layout"><NavBar /><main className="main"><Foundation /><Task11 /><Task12 /><Task13 /><Task14 /><Task15 /><Task16 /></main></div>;
+    return <div className="aip-domain1-page layout"><NavBar /><main className="main"><Foundation /><Task11 /><Task12 /><Task13 /><Task14 /><Task15 /><Task16 /><Revision /></main></div>;
 }
