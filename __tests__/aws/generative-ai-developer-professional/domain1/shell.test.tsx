@@ -1,0 +1,67 @@
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import NavBar from '@/app/aws/generative-ai-developer-professional/domain1/NavBar';
+import { metadata } from '@/app/aws/generative-ai-developer-professional/domain1/page';
+import { DIAGRAMS, MERMAID_CONFIG, NAV_ITEMS } from '@/app/aws/generative-ai-developer-professional/domain1/constants';
+import { Diagram } from '@/app/aws/generative-ai-developer-professional/domain1/Diagram';
+import fixture from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
+import { normalizeMermaid } from '@/scripts/archive-fidelity-extraction.mjs';
+
+vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
+afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
+
+describe('AIP domain1 shell and source diagram settings', () => {
+    it('retains metadata, all 63 navigation items and all 21 chart sources', () => {
+        expect(metadata.title).toContain('Domain 1');
+        expect(metadata.description).toContain('AIP-C01');
+        expect(NAV_ITEMS).toEqual(fixture.guideDesign.nav);
+        expect(MERMAID_CONFIG).toEqual(fixture.guideInteractions.mermaidConfig);
+        expect(Object.values(DIAGRAMS).map(normalizeMermaid)).toEqual(Object.values(fixture.guideParts).flatMap(part => part.diagrams));
+        const { container } = render(<NavBar />);
+        expect([...container.querySelectorAll('nav ul > li > a')].map(a => ({ href: a.getAttribute('href'), text: a.textContent }))).toEqual(NAV_ITEMS.map(item => ({ href: `#${item.id}`, text: item.label })));
+        expect(container.querySelector('[aria-current="location"]')).toHaveAttribute('href', `#${NAV_ITEMS[0]?.id}`);
+    });
+    it('opens and closes, updates hash and focuses the identical target; Escape restores toggle focus', () => {
+        const first = fixture.guideDesign.nav[0];
+        if (!first) throw new Error('No navigation target');
+        render(<><NavBar /><h2 id={first.id} tabIndex={-1}>Target</h2></>);
+        const toggle = screen.getByRole('button', { name: 'メニュー' });
+        const target = document.getElementById(first.id)!;
+        target.scrollIntoView = vi.fn();
+        expect(toggle).toHaveAttribute('type', 'button');
+        expect(document.getElementById(toggle.getAttribute('aria-controls') ?? '')).not.toBeNull();
+        fireEvent.click(toggle); expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        fireEvent.click(screen.getByRole('link', { name: first.label }));
+        expect(decodeURIComponent(location.hash)).toBe(`#${first.id}`);
+        expect(document.activeElement).toBe(target);
+        expect(target.scrollIntoView).toHaveBeenCalled();
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        fireEvent.click(toggle); fireEvent.keyDown(document, { key: 'Escape' });
+        expect(toggle).toHaveAttribute('aria-expanded', 'false'); expect(document.activeElement).toBe(toggle);
+    });
+    it('observes targets, follows intersections and document end and disconnects', () => {
+        let callback: IntersectionObserverCallback | undefined;
+        const observe = vi.fn(); const disconnect = vi.fn();
+        vi.stubGlobal('IntersectionObserver', class { constructor(cb: IntersectionObserverCallback) { callback = cb; } observe = observe; disconnect = disconnect; });
+        const second = NAV_ITEMS[1]; if (!second) throw new Error('No second item');
+        const { unmount } = render(<><NavBar /><h3 id={second.id}>Target</h3></>);
+        const target = document.getElementById(second.id)!;
+        expect(observe).toHaveBeenCalledWith(target);
+        act(() => callback?.([{ target, isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
+        expect(screen.getByRole('link', { name: second.label })).toHaveAttribute('aria-current', 'location');
+        vi.stubGlobal('scrollY', 1); fireEvent.scroll(window);
+        const last = NAV_ITEMS.at(-1); if (!last) throw new Error('No last item');
+        expect(screen.getByRole('link', { name: last.label })).toHaveAttribute('aria-current', 'location');
+        unmount(); expect(disconnect).toHaveBeenCalledOnce();
+    });
+    it('passes the exact source light config and natural scale to each labelled diagram', () => {
+        const { container } = render(<Diagram id="diag-0" label="ロードマップ" />);
+        const diagram = container.querySelector('[data-testid="mermaid-diagram"]');
+        expect(diagram).toHaveAttribute('data-theme', 'light');
+        expect(diagram).toHaveAttribute('data-preserve-natural-scale', 'true');
+        expect(diagram).toHaveAttribute('aria-label', 'ロードマップ');
+        expect(diagram?.getAttribute('data-chart')).toContain(`%%{init: ${JSON.stringify(fixture.guideInteractions.mermaidConfig)}}%%`);
+        expect(diagram?.getAttribute('data-chart')).toContain(DIAGRAMS['diag-0']);
+        expect(diagram?.closest('.mermaid-wrap')).toHaveAttribute('tabindex', '0');
+    });
+});
