@@ -14,6 +14,7 @@ type MermaidDiagramMockProps = {
     decorative?: boolean;
     preserveNaturalScale?: boolean;
     theme?: string;
+    focusable?: boolean;
 };
 
 /**
@@ -27,6 +28,7 @@ export const MermaidDiagramMock = ({
     decorative,
     preserveNaturalScale = false,
     theme,
+    focusable = false,
 }: MermaidDiagramMockProps) => (
     <div
         role="img"
@@ -38,6 +40,7 @@ export const MermaidDiagramMock = ({
         data-theme={theme}
         aria-label={ariaLabel}
         aria-hidden={decorative || undefined}
+        tabIndex={focusable ? 0 : undefined}
     />
 );
 
