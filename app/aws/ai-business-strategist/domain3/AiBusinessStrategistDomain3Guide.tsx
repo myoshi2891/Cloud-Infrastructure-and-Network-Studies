@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { NavBar } from './NavBar';
+import { HeroSection } from './sections/HeroSection';
+import { Sec1 } from './sections/Sec1';
+import { Sec2 } from './sections/Sec2';
 
 export function AiBusinessStrategistDomain3Guide() {
     const [navOpen, setNavOpen] = useState(false);
@@ -31,8 +34,11 @@ export function AiBusinessStrategistDomain3Guide() {
                         <div className="mb-title">AIB-C01 Domain 3</div>
                     </div>
 
-                    <div id="content">
-                        {/* セクションは Step 3 で段階的に実装 */}
+                    <HeroSection />
+
+                    <div id="content" className="content">
+                        <Sec1 />
+                        <Sec2 />
                     </div>
                 </div>
             </div>
