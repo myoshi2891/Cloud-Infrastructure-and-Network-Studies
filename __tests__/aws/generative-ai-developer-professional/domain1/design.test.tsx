@@ -17,6 +17,12 @@ const declarations = (selector: string, media = '') => {
 };
 
 describe('AIP domain1 source visual declarations', () => {
+    it.each([
+        ['.aip-domain1-page .callout-practice .label', 'var(--color-aip-d1-success-text)'],
+        ['.aip-domain1-page .checklist-card li:has(input:checked) label', 'var(--color-aip-d1-completed-text)'],
+    ])('uses readable small text in %s', (selector, color) => {
+        expect(declarations(selector).color).toBe(color);
+    });
     it('preserves every used source color, gradient, border and shadow in light mode', () => {
         const tokens: Record<string, string> = {};
         postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(decl => {
@@ -30,6 +36,15 @@ describe('AIP domain1 source visual declarations', () => {
             const actual = declarations(selector, rule.media);
             for (const [prop, value] of Object.entries(rule.declarations)) {
                 if (!/background|color|border|box-shadow/.test(prop) || !/#|rgba|var\(/.test(value)) continue;
+                // 原本の小さな緑ラベルと完了済みラベルだけはWCAG AAを満たす文字色へ補正する。
+                if (prop === 'color' && rule.selector === '.callout-practice .label') {
+                    expect(resolve(actual[prop] ?? '', tokens)).toBe('#176b40');
+                    continue;
+                }
+                if (prop === 'color' && rule.selector === '.checklist-card li:has(input:checked) label') {
+                    expect(resolve(actual[prop] ?? '', tokens)).toBe('#60718c');
+                    continue;
+                }
                 expect(resolve(actual[prop] ?? '', tokens), `${selector}: ${prop}`).toBe(resolve(value, sourceTokens));
             }
         }
