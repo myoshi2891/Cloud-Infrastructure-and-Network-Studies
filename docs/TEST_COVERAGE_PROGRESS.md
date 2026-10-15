@@ -2,7 +2,7 @@
 
 最終更新日: 2026-10-16
 
-2026-10-16 AIP-C01再監査: 原本のAWSサービス受付条件・TLS/KMS説明の4箇所を公式資料に基づき訂正し、固定Git原本からインベントリとfixtureを再生成。本文・構造・装飾の追加欠落は検出されなかった。関連Vitest 101件、Chrome E2E 5件（点・番号・インデント・li表示の4変異検出を含む）が成功。最新実装HEADは `92fb6966`。全体Vitestは2559件中2558成功・既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01ライトテーマ対応: 原本の背景・文字・表・コールアウト・影をグローバルトークンへ移し、全34図をライト設定に変更。関連102件は原本削除後も成功、Chrome E2E 5件成功。訂正済み原本を `archive/Aws/html/generative-ai-developer-professional/Aws-aip-c01-guide.html` へバイト一致で保存し、直下の重複HTMLは削除。訂正前版も別名で保存。最新実装HEADは `87827325`（配色実装 `95a279e1`）。全体Vitestは2560件中2559成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
 
 [coverage-dashboard.html](coverage-dashboard.html)（2026年10月16日JSTに `bun scripts/generate-coverage-dashboard.mjs` で再生成）の静的スキャン結果です。テストファイルの存在と対応付けを集計し、実行成功や行カバレッジを保証する指標ではありません。AWS DVA-C02 ドメイン1〜3とAIP-C01の全量・CSS・操作・ナビ検証を反映しています。前回（2026-10-13）はAIPのDOM/CSS/操作/統合/欠落検出91件・共有抽出4件と、ポート3002での実Chromeブラウザ4件が成功。今回の結果は冒頭の再監査記録を参照。DVAドメイン3の過去のブラウザ検証未実施とは区別します。
 
@@ -213,7 +213,7 @@ bun run dashboard
 
 ## 7. 次回セッションでのテスト追加再開プロンプト
 
-2026-10-16 AIP-C01再監査: 原本のAWSサービス受付条件・TLS/KMS説明の4箇所を公式資料に基づき訂正し、固定Git原本からインベントリとfixtureを再生成。本文・構造・装飾の追加欠落は検出されなかった。関連Vitest 101件、Chrome E2E 5件（点・番号・インデント・li表示の4変異検出を含む）が成功。最新実装HEADは `92fb6966`。全体Vitestは2559件中2558成功・既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01ライトテーマ対応: 原本の背景・文字・表・コールアウト・影をグローバルトークンへ移し、全34図をライト設定に変更。関連102件は原本削除後も成功、Chrome E2E 5件成功。訂正済み原本を `archive/Aws/html/generative-ai-developer-professional/Aws-aip-c01-guide.html` へバイト一致で保存し、直下の重複HTMLは削除。訂正前版も別名で保存。最新実装HEADは `87827325`（配色実装 `95a279e1`）。全体Vitestは2560件中2559成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
 
 あなたは熟練したテストエンジニアであり、Next.js (App Router) / TypeScript / Vitest / Playwright のテストスペシャリストです。
 現在、[docs/TEST_COVERAGE_PROGRESS.md](TEST_COVERAGE_PROGRESS.md) の既存 **🔴 P0 / 🟡 P1 / 🔵 P2** は完了済みですが、CCNA / DevNetの独立集計によりCisco向けP1 E2Eが新たに未完了として可視化されています。登録済み43スタイルシートの横断レイアウト契約は `guide-content-widths.test.ts` の130ケースで保護されています。DVAの幅・固定配置は専用の移行テストで保護されています。次フェーズではCisco E2Eを優先し、以下の候補もステップバイステップで進めてください。

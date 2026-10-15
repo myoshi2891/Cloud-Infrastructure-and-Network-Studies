@@ -2,13 +2,13 @@
 
 最終更新日: 2026-10-16
 
-2026-10-16 AIP-C01再監査: 原本のAWSサービス受付条件・TLS/KMS説明の4箇所を公式資料に基づき訂正し、固定Git原本からインベントリとfixtureを再生成。本文・構造・装飾の追加欠落は検出されなかった。関連Vitest 101件、Chrome E2E 5件（点・番号・インデント・li表示の4変異検出を含む）が成功。最新実装HEADは `92fb6966`。全体Vitestは2559件中2558成功・既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01ライトテーマ対応: 原本の背景・文字・表・コールアウト・影をグローバルトークンへ移し、全34図をライト設定に変更。関連102件は原本削除後も成功、Chrome E2E 5件成功。訂正済み原本を `archive/Aws/html/generative-ai-developer-professional/Aws-aip-c01-guide.html` へバイト一致で保存し、直下の重複HTMLは削除。訂正前版も別名で保存。最新実装HEADは `87827325`（配色実装 `95a279e1`）。全体Vitestは2560件中2559成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
 ## 🚀 特徴
 
-- **AWS AIP-C01 生成AI開発:** `/aws/generative-ai-developer-professional` に全5ドメイン・Step 1〜20・直前対策・ロードマップ・付録・参考資料を収録。76表・34図・60本文リスト項目・64外部リンク出現を保持し、原本300px目次と点・番号を統一ダークテーマで提供。ホームとHeaderから各ドメインへ移動でき、横スクロール図・表・コードはキーボードでも操作可能。
+- **AWS AIP-C01 生成AI開発:** `/aws/generative-ai-developer-professional` に全5ドメイン・Step 1〜20・直前対策・ロードマップ・付録・参考資料を収録。76表・34図・60本文リスト項目・64外部リンク出現を保持し、原本300px目次と点・番号を原本のライトテーマで提供。ホームとHeaderから各ドメインへ移動でき、横スクロール図・表・コードはキーボードでも操作可能。
 
 - **ネットワークを下位層から学ぶ:** [Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド](app/recommended-books/computer-networks-tanenbaum/page.tsx)をBooksに追加。全10ステップ、21図、12表、10チェック項目を掲載。原本の全文・CSS宣言・リストの点と番号を固定fixtureとブラウザで検証。
 
