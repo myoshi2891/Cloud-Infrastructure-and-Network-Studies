@@ -496,15 +496,19 @@
 
 /* mobile responsive */
 @media (max-width: 900px) {
+    /* 閉状態ではリンクをキーボード操作の対象から外す。visibility はスライドアウト完了後に切り替える */
     .aib-domain3-page .sidebar {
         transform: translateX(-100%);
-        transition: transform 0.25s ease;
+        visibility: hidden;
+        transition: transform 0.25s ease, visibility 0s linear 0.25s;
         box-shadow: none;
         width: min(86vw, 320px);
     }
 
     .aib-domain3-page.nav-open .sidebar {
         transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.25s ease;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
     }
 

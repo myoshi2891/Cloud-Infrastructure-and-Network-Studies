@@ -64,6 +64,10 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
         if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
             window.history.pushState(null, '', `#${id}`);
+            // section / 見出しは既定でフォーカス不可のため、プログラムからのみフォーカス可能にする
+            if (!target.hasAttribute('tabindex')) {
+                target.setAttribute('tabindex', '-1');
+            }
             target.focus({ preventScroll: true });
         }
         onClose();
