@@ -14,7 +14,7 @@ export function Skill2_3_3() {
                         </p><h4>初学者向けの解説</h4><p><strong>すぐに真似される優位と、続く優位</strong></p><p>
                             生成 AI
                             のモデルやツールは、多くの企業が同じものを利用できます。同じ道具を全員が持つなら、道具そのものは差別化になりません。
-                        </p><div className="table-wrap">
+                        </p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.3 すぐに真似される優位と、続く優位">
                             <table>
                                 <thead>
                                     <tr>
@@ -41,7 +41,7 @@ export function Skill2_3_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>持続的な優位の源泉</strong></p><div className="table-wrap">
+                        </div><p><strong>持続的な優位の源泉</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.3 持続的な優位の源泉">
                             <table>
                                 <thead>
                                     <tr>
@@ -83,7 +83,7 @@ export function Skill2_3_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>改善のループ (優位が積み上がる仕組み)</strong></p><Diagram id="d17" /><p><strong>業務改善につながる領域</strong></p><div className="table-wrap">
+                        </div><p><strong>改善のループ (優位が積み上がる仕組み)</strong></p><Diagram id="d17" /><p><strong>業務改善につながる領域</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.3 業務改善につながる領域">
                             <table>
                                 <thead>
                                     <tr>
@@ -139,7 +139,7 @@ export function Skill2_3_3() {
                                 <strong>信頼を差別化要素にする。</strong> ガバナンスと責任ある AI
                                 の実践を、競争力として位置づける (Domain 3)。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.3 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

@@ -15,7 +15,7 @@ export function Skill2_2_2() {
                             導入前の現状の数値です。効果は「導入後の値 -
                             ベースライン」で測ります。この差は符号付きの変化量で、処理時間やエラー率のように低いほど良い
                             KPI では、改善幅を「ベースライン - 導入後の値」として報告します。ダイエットに例えると、始める前の体重の記録です。記録がなければ、いくら減ったか分かりません。
-                        </p><p><strong>ベースラインがないとどうなるか</strong></p><div className="table-wrap">
+                        </p><p><strong>ベースラインがないとどうなるか</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.2 ベースラインがないとどうなるか">
                             <table>
                                 <thead>
                                     <tr>
@@ -38,7 +38,7 @@ export function Skill2_2_2() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>ベースラインを取る手順</strong></p><Diagram id="d10" /><p><strong>測る対象の例</strong></p><div className="table-wrap">
+                        </div><p><strong>ベースラインを取る手順</strong></p><Diagram id="d10" /><p><strong>測る対象の例</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.2 測る対象の例">
                             <table>
                                 <thead>
                                     <tr>
@@ -73,7 +73,7 @@ export function Skill2_2_2() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>より確かな比較のための工夫</strong></p><div className="table-wrap">
+                        </div><p><strong>より確かな比較のための工夫</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.2 より確かな比較のための工夫">
                             <table>
                                 <thead>
                                     <tr>
@@ -115,7 +115,7 @@ export function Skill2_2_2() {
                                 <strong>ベースラインを共有する。</strong>
                                 関係者が同じ出発点を認識できるようにする。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.2 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

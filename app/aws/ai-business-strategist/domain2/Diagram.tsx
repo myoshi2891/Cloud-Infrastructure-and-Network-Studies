@@ -154,6 +154,7 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
                     preserveChartTheme={true}
                     ariaLabel={ariaLabel}
                     preserveNaturalScale={true}
+                    focusable={true}
                 />
             </div>
             {/* 図の関係を支援技術へ伝える説明。本文抽出の対象外にするため p ではなく span を使う */}

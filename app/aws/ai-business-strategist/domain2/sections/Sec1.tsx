@@ -12,7 +12,7 @@ export function Sec1() {
                             の能力をビジネス成果に結びつけ、責任ある AI
                             を整え、大規模な導入を進められるかを確かめる試験です。試験ガイドは「技術的な実装よりも戦略的な意思決定を優先する」と明記しています。コードを書く力ではなく、投資判断、ビジネスケース、ガバナンス、拡大の判断力が問われます。
                         </p>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 1.1 試験の概要">
                             <table>
                                 <thead>
                                     <tr>
@@ -75,7 +75,7 @@ export function Sec1() {
                             </p>
                         </div>
                         <h3 id="s1-h2">1.2 4 つのドメインと配点</h3>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 1.2 4 つのドメインと配点">
                             <table>
                                 <thead>
                                     <tr>
@@ -128,7 +128,7 @@ export function Sec1() {
                             プロジェクトの「入口から出口まで」をビジネスの目で見る領域です。
                         </p>
                         <Diagram id="d1" />
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 1.4 Domain 2 を一言でいうと">
                             <table>
                                 <thead>
                                     <tr>

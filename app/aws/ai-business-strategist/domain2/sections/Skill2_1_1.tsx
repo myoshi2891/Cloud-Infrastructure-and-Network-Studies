@@ -24,7 +24,7 @@ export function Skill2_1_1() {
                             <li>その問題を解けたら、どの指標が動くのか</li>
                         </ul><p><strong>ステップ 2: AI の能力を「カテゴリ」で捉える</strong></p><p>
                             試験ガイドは、対象者が次のようなカテゴリを認識できることを求めています。構築や設定は不要です。
-                        </p><div className="table-wrap">
+                        </p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.1 ステップ 2: AI の能力を「カテゴリ」で捉える">
                             <table>
                                 <thead>
                                     <tr>
@@ -71,7 +71,7 @@ export function Skill2_1_1() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>ステップ 3: 部門ごとにユースケースの候補を洗い出す</strong></p><div className="table-wrap">
+                        </div><p><strong>ステップ 3: 部門ごとにユースケースの候補を洗い出す</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.1 ステップ 3: 部門ごとにユースケースの候補を洗い出す">
                             <table>
                                 <thead>
                                     <tr>
@@ -143,7 +143,7 @@ export function Skill2_1_1() {
                                 <strong>既存事例を参考にする。</strong> AWS は生成 AI
                                 の活用事例を業界別に紹介しています (参考文献を参照)。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.1 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

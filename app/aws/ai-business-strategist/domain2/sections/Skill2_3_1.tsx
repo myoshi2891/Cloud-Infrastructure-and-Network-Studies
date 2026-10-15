@@ -11,7 +11,7 @@ export function Skill2_3_1() {
                         </div><h4>何を問われるか</h4><p>
                             「競合や市場は AI をどう使っているか」「自社が AI
                             で優位に立てるのはどこか」を分析できるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>分析の視点</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>分析の視点</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.1 分析の視点">
                             <table>
                                 <thead>
                                     <tr>
@@ -58,7 +58,7 @@ export function Skill2_3_1() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>AI で優位性が生まれる典型的な場面</strong></p><div className="table-wrap">
+                        </div><p><strong>AI で優位性が生まれる典型的な場面</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.1 AI で優位性が生まれる典型的な場面">
                             <table>
                                 <thead>
                                     <tr>
@@ -115,7 +115,7 @@ export function Skill2_3_1() {
                                 <strong>外部の知見を活用する。</strong> パートナーや AWS
                                 の事例、支援プログラムを参考にする。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.1 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

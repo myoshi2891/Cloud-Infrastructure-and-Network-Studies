@@ -11,7 +11,7 @@ export function Skill2_2_4() {
                         </div><h4>何を問われるか</h4><p>
                             成果 (売上やコスト削減)
                             が出るまで待たずに、<strong>早い段階で「うまくいきそうか」を判断できる指標</strong>を選べるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>先行指標と遅行指標</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>先行指標と遅行指標</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.4 先行指標と遅行指標">
                             <table>
                                 <thead>
                                     <tr>
@@ -39,7 +39,7 @@ export function Skill2_2_4() {
                             </table>
                         </div><p>
                             天気に例えると、先行指標は「雲行き」、遅行指標は「その日に降った雨量」です。雲行きを見れば、傘の準備ができます。
-                        </p><p><strong>AI プロジェクトで使える先行指標の例</strong></p><div className="table-wrap">
+                        </p><p><strong>AI プロジェクトで使える先行指標の例</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.4 AI プロジェクトで使える先行指標の例">
                             <table>
                                 <thead>
                                     <tr>
@@ -112,7 +112,7 @@ export function Skill2_2_4() {
                                 <strong>先行と遅行を組み合わせる。</strong>
                                 先行指標だけでは価値を証明できない。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.4 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

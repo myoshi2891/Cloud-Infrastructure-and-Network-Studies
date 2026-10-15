@@ -15,7 +15,7 @@ export function Skill2_2_5() {
                         </div><h4>何を問われるか</h4><p>
                             AI
                             のコストが何で決まり、どう見積もり、どう見張り、どう抑えるかの<strong>基本</strong>が問われます。技術的な最適化の実装ではなく、<strong>計画と管理の考え方</strong>です。
-                        </p><h4>初学者向けの解説</h4><p><strong>ステップ 1: 料金体系の 3 つの型を理解する</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>ステップ 1: 料金体系の 3 つの型を理解する</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.5 ステップ 1: 料金体系の 3 つの型を理解する">
                             <table>
                                 <thead>
                                     <tr>
@@ -68,7 +68,7 @@ export function Skill2_2_5() {
                                 Amazon Bedrock
                                 の料金ページには、オンデマンドに加えて、バッチ処理の料金、プロンプトキャッシュの料金、プロビジョンドスループット、リザーブド層、レイテンシー最適化推論などの区分があります。モデルごとに価格が異なるため、最新の価格は必ず公式ページで確認してください。
                             </p>
-                        </div><p><strong>ステップ 2: 生成 AI のコストが増える要因を知る</strong></p><div className="table-wrap">
+                        </div><p><strong>ステップ 2: 生成 AI のコストが増える要因を知る</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.5 ステップ 2: 生成 AI のコストが増える要因を知る">
                             <table>
                                 <thead>
                                     <tr>
@@ -126,7 +126,7 @@ export function Skill2_2_5() {
                             <li>
                                 コスト配分タグを付けて、プロジェクトや部門ごとの費用を追えるようにする。
                             </li>
-                        </ul><p><strong>ステップ 5: 最適化する (減らす、賢く使う)</strong></p><div className="table-wrap">
+                        </ul><p><strong>ステップ 5: 最適化する (減らす、賢く使う)</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.5 ステップ 5: 最適化する (減らす、賢く使う)">
                             <table>
                                 <thead>
                                     <tr>
@@ -177,7 +177,7 @@ export function Skill2_2_5() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>コスト管理のサイクル</strong></p><Diagram id="d13" /><p><strong>AWS のコスト管理ツールの使い分け</strong></p><div className="table-wrap">
+                        </div><p><strong>コスト管理のサイクル</strong></p><Diagram id="d13" /><p><strong>AWS のコスト管理ツールの使い分け</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.5 AWS のコスト管理ツールの使い分け">
                             <table>
                                 <thead>
                                     <tr>
@@ -252,7 +252,7 @@ export function Skill2_2_5() {
                                 <strong>コスト最適化を ROI とつなげる。</strong>
                                 コスト削減が目的ではなく、価値あたりのコストを下げることが目的。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.5 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

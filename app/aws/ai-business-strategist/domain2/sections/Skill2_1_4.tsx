@@ -13,7 +13,7 @@ export function Skill2_1_4() {
                             「AI
                             を使わない」という判断ができるかが問われます。戦略家にとって重要な力です。AI
                             は万能ではなく、費用も、リスクも、運用の手間もかかります。
-                        </p><h4>初学者向けの解説</h4><p><strong>まず、3 つの手段の違いを理解する</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>まず、3 つの手段の違いを理解する</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.4 まず、3 つの手段の違いを理解する">
                             <table>
                                 <thead>
                                     <tr>
@@ -46,7 +46,7 @@ export function Skill2_1_4() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>AI が向かない典型パターン</strong></p><div className="table-wrap">
+                        </div><p><strong>AI が向かない典型パターン</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.4 AI が向かない典型パターン">
                             <table>
                                 <thead>
                                     <tr>
@@ -121,7 +121,7 @@ export function Skill2_1_4() {
                                 <strong>課題の根本原因を確認する。</strong> 症状に AI
                                 を当てはめても、原因が別にあれば効果は出ない。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.4 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

@@ -358,6 +358,13 @@
     color: #2a3568;
 }
 
+/* 横スクロール領域（表 wrapper・図の overflow 所有者）のキーボードフォーカス表示 */
+.aib-domain2-page .table-wrap:focus-visible,
+.aib-domain2-page .diagram-canvas > [role="img"]:focus-visible {
+    outline: 3px solid var(--color-aib-accent);
+    outline-offset: 2px;
+}
+
 /* ---------- Callouts ---------- */
 .aib-domain2-page .callout {
     background: #fbf2df;
@@ -388,7 +395,6 @@
     min-width: 0;
     display: flex;
     justify-content: safe center;
-    overflow-x: auto;
 }
 
 .aib-domain2-page .diagram-canvas > * {

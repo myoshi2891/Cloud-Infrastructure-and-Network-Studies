@@ -4,7 +4,7 @@ export function Sec10_Glossary() {
 
                         <h2>10. 用語集</h2>
 
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 10. 用語集">
                             <table>
                                 <thead>
                                     <tr>

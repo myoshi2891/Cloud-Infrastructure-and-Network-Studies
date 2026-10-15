@@ -11,7 +11,7 @@ export function Skill2_3_2() {
                         </div><h4>何を問われるか</h4><p>
                             AI
                             を「今の仕事を速くする」だけでなく、<strong>「事業の稼ぎ方そのものを変える」ために使えるか</strong>を発想できるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>AI 活用の 4 つのレベル</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>AI 活用の 4 つのレベル</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.2 AI 活用の 4 つのレベル">
                             <table>
                                 <thead>
                                     <tr>
@@ -50,7 +50,7 @@ export function Skill2_3_2() {
                             </table>
                         </div><p>
                             レベルが上がるほど価値も大きくなりますが、リスクも不確実性も大きくなります。
-                        </p><p><strong>ビジネスモデル変革の視点</strong></p><div className="table-wrap">
+                        </p><p><strong>ビジネスモデル変革の視点</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.2 ビジネスモデル変革の視点">
                             <table>
                                 <thead>
                                     <tr>
@@ -112,7 +112,7 @@ export function Skill2_3_2() {
                                 <strong>段階的に進める。</strong>
                                 効率化で成功体験と学びを得てから、より大きな変革に進む。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.2 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

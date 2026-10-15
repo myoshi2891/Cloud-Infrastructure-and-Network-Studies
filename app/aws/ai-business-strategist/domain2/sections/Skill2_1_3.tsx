@@ -14,7 +14,7 @@ export function Skill2_1_3() {
                             </p>
                         </div><h4>何を問われるか</h4><p>
                             候補が多いときに、限られた予算と人材をどこに配分するかを決める力と、<strong>始めた後にも「続ける、止める」を冷静に判断する力</strong>が問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>4 つの評価軸</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>4 つの評価軸</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.3 4 つの評価軸">
                             <table>
                                 <thead>
                                     <tr>
@@ -55,7 +55,7 @@ export function Skill2_1_3() {
                             <li>軸ごとの重み (重要度) を経営と合意する。</li>
                             <li>合計点で並べ、価値が高く実現しやすいものから着手する。</li>
                             <li>結果を関係者に共有し、納得感を得る。</li>
-                        </ol><p>以下は採点の例です (点数は説明用の架空の値です)。</p><div className="table-wrap">
+                        </ol><p>以下は採点の例です (点数は説明用の架空の値です)。</p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.3 スコアリングの進め方">
                             <table>
                                 <thead>
                                     <tr>
@@ -102,7 +102,7 @@ export function Skill2_1_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>価値と実現可能性の 2 軸マップ</strong></p><div className="table-wrap">
+                        </div><p><strong>価値と実現可能性の 2 軸マップ</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.3 価値と実現可能性の 2 軸マップ">
                             <table>
                                 <thead>
                                     <tr>
@@ -127,7 +127,7 @@ export function Skill2_1_3() {
                         </div><p><strong>拡大、一時停止、終了の判断 (ステージゲート)</strong></p><p>
                             AI
                             の取り組みは、始めて終わりではありません。節目ごとに、次のように判断します。
-                        </p><Diagram id="d5" /><div className="table-wrap">
+                        </p><Diagram id="d5" /><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.3 拡大、一時停止、終了の判断 (ステージゲート)">
                             <table>
                                 <thead>
                                     <tr>
@@ -184,7 +184,7 @@ export function Skill2_1_3() {
                                 <strong>ポートフォリオで管理する。</strong>
                                 個々の案件だけでなく、全体の投資バランスを定期的に見直す。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.3 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

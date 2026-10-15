@@ -7,7 +7,7 @@ export function Sec6_Services() {
                         <p>
                             試験ガイドは、これらを「戦略レベル」で理解することを求めています。設定や運用の手順は範囲外です。
                         </p>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 6. Domain 2 に登場する AWS のサービス、フレームワーク、ツール">
                             <table>
                                 <thead>
                                     <tr>

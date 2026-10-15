@@ -8,7 +8,7 @@ export function Sec2() {
                             Domain 2
                             の解説で何度も出てくる用語を先に整理します。ここで一度読んでおけば、以降がぐっと読みやすくなります。
                         </p>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 2. Step 0: 最初に覚える用語">
                             <table>
                                 <thead>
                                     <tr>

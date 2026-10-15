@@ -11,7 +11,7 @@ export function Skill2_1_2() {
                             </p>
                         </div><h4>何を問われるか</h4><p>
                             同じ目的でも、「自社で作る」「既製の製品やサービスを買う」「パートナーと組む」のどれが最適かを、制約条件から選べるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>3 つの選択肢</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>3 つの選択肢</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.2 3 つの選択肢">
                             <table>
                                 <thead>
                                     <tr>
@@ -44,7 +44,7 @@ export function Skill2_1_2() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>判断の 5 つの観点</strong> (試験ガイドが挙げる要素)</p><div className="table-wrap">
+                        </div><p><strong>判断の 5 つの観点</strong> (試験ガイドが挙げる要素)</p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.2 判断の 5 つの観点">
                             <table>
                                 <thead>
                                     <tr>
@@ -88,7 +88,7 @@ export function Skill2_1_2() {
                             試験ガイドは Amazon Bedrock、Amazon SageMaker AI、Amazon Quick
                             を戦略レベルで理解することを求め、AWS Marketplace を Build-Buy-Partner
                             の評価に使えるツールとして挙げています。
-                        </p><div className="table-wrap">
+                        </p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.2 意思決定の流れ (簡易版)">
                             <table>
                                 <thead>
                                     <tr>
@@ -135,7 +135,7 @@ export function Skill2_1_2() {
                                 注意:
                                 試験ガイドは、これらのサービスを<strong>設定、管理できることは求めていません</strong>。「どの状況で何を選ぶか」の判断が問われます。
                             </p>
-                        </div><p><strong>ベンダー提案を評価するときのチェックリスト</strong></p><div className="table-wrap">
+                        </div><p><strong>ベンダー提案を評価するときのチェックリスト</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.2 ベンダー提案を評価するときのチェックリスト">
                             <table>
                                 <thead>
                                     <tr>
@@ -201,7 +201,7 @@ export function Skill2_1_2() {
                                 <strong>出口を設計する。</strong>
                                 データの持ち出しやモデルの入れ替えを契約時点で考える。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.2 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

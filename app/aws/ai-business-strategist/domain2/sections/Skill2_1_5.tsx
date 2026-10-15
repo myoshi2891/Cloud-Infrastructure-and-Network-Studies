@@ -12,7 +12,7 @@ export function Skill2_1_5() {
                         </div><h4>何を問われるか</h4><p>
                             「AI に切り替える」「別の AI
                             基盤に乗り換える」ときに、<strong>事業を止めず、想定外の費用を出さず、品質を落とさない</strong>ための検討事項を押さえているかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>2 種類の移行</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>2 種類の移行</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.5 2 種類の移行">
                             <table>
                                 <thead>
                                     <tr>
@@ -39,7 +39,7 @@ export function Skill2_1_5() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>4 つの検討観点</strong></p><div className="table-wrap">
+                        </div><p><strong>4 つの検討観点</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.5 4 つの検討観点">
                             <table>
                                 <thead>
                                     <tr>
@@ -95,7 +95,7 @@ export function Skill2_1_5() {
                             <li>
                                 <strong>データの持ち出し。</strong> 蓄積したデータや設定を移せるか。
                             </li>
-                        </ul><p><strong>移行前のチェックリスト</strong></p><div className="table-wrap">
+                        </ul><p><strong>移行前のチェックリスト</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.5 移行前のチェックリスト">
                             <table>
                                 <thead>
                                     <tr>
@@ -160,7 +160,7 @@ export function Skill2_1_5() {
                                 <strong>利用者の教育と周知を計画に含める。</strong>
                                 技術が正しくても、使われなければ成果は出ない。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.1.5 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

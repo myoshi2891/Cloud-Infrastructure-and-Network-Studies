@@ -11,7 +11,7 @@ export function Skill2_2_3() {
                             </p>
                         </div><h4>何を問われるか</h4><p>
                             「投資に対して、どれだけ価値が戻るか」を、便益とコストの両面から<strong>漏れなく</strong>計算できるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>基本の式</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>基本の式</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 基本の式">
                             <table>
                                 <thead>
                                     <tr>
@@ -38,7 +38,7 @@ export function Skill2_2_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>便益の種類 (試験ガイドが挙げる要素)</strong></p><div className="table-wrap">
+                        </div><p><strong>便益の種類 (試験ガイドが挙げる要素)</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 便益の種類 (試験ガイドが挙げる要素)">
                             <table>
                                 <thead>
                                     <tr>
@@ -75,7 +75,7 @@ export function Skill2_2_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>コストの種類 (見落としやすい部分)</strong></p><div className="table-wrap">
+                        </div><p><strong>コストの種類 (見落としやすい部分)</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 コストの種類 (見落としやすい部分)">
                             <table>
                                 <thead>
                                     <tr>
@@ -122,7 +122,7 @@ export function Skill2_2_3() {
                                 削減した時間がすべて価値に変わるわけではないため、<strong>実現率を 50%</strong>
                                 と見積もる
                             </li>
-                        </ul><p>便益の計算:</p><div className="table-wrap">
+                        </ul><p>便益の計算:</p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 計算例 (数値は説明用の架空の値です) (1)">
                             <table>
                                 <thead>
                                     <tr>
@@ -144,7 +144,7 @@ export function Skill2_2_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p>コストの計算:</p><div className="table-wrap">
+                        </div><p>コストの計算:</p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 計算例 (数値は説明用の架空の値です) (2)">
                             <table>
                                 <thead>
                                     <tr>
@@ -181,7 +181,7 @@ export function Skill2_2_3() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p>ROI の計算:</p><div className="table-wrap">
+                        </div><p>ROI の計算:</p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 計算例 (数値は説明用の架空の値です) (3)">
                             <table>
                                 <thead>
                                     <tr>
@@ -265,7 +265,7 @@ export function Skill2_2_3() {
                                 <strong>無形の効果は別枠で示す。</strong>
                                 金額に換算する場合も、根拠と前提を明記する。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.3 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

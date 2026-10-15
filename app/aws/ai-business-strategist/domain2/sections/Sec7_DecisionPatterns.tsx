@@ -7,7 +7,7 @@ export function Sec7_DecisionPatterns() {
                         <h2>7. Domain 2 全体を貫く判断の型</h2>
 
                         <p>問題に迷ったときは、次の 8 つの型に当てはめて考えてください。</p>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 7. Domain 2 全体を貫く判断の型">
                             <table>
                                 <thead>
                                     <tr>

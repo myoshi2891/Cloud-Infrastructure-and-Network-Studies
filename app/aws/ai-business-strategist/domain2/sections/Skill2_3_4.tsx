@@ -13,7 +13,7 @@ export function Skill2_3_4() {
                         </div><h4>何を問われるか</h4><p>
                             「どれくらい AI
                             に投資すべきか」に<strong>唯一の正解はなく、業界や競合の状況で変わる</strong>ことを理解し、状況に応じた水準を選べるかが問われます。
-                        </p><h4>初学者向けの解説</h4><p><strong>2 つの軸で状況を見る</strong></p><div className="table-wrap">
+                        </p><h4>初学者向けの解説</h4><p><strong>2 つの軸で状況を見る</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.4 2 つの軸で状況を見る">
                             <table>
                                 <thead>
                                     <tr>
@@ -39,7 +39,7 @@ export function Skill2_3_4() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>状況別の投資姿勢の目安</strong></p><div className="table-wrap">
+                        </div><p><strong>状況別の投資姿勢の目安</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.4 状況別の投資姿勢の目安">
                             <table>
                                 <thead>
                                     <tr>
@@ -65,7 +65,7 @@ export function Skill2_3_4() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>投資の考え方</strong></p><Diagram id="d18" /><p><strong>投資の 3 つの過不足</strong></p><div className="table-wrap">
+                        </div><p><strong>投資の考え方</strong></p><Diagram id="d18" /><p><strong>投資の 3 つの過不足</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.4 投資の 3 つの過不足">
                             <table>
                                 <thead>
                                     <tr>
@@ -113,7 +113,7 @@ export function Skill2_3_4() {
                                 <strong>競合の投資を盲目的に追わない。</strong>
                                 自社の戦略と競争上の位置づけで判断する。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.3.4 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

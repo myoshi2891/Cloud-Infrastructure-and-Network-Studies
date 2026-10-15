@@ -15,7 +15,7 @@ export function Skill2_2_1() {
                             目標に対して、どれだけ進んだかを表す数値です。「AI
                             を導入した」は活動であり、成果ではありません。「顧客の待ち時間が短くなった」が成果で、それを数字にしたものが
                             KPI です。
-                        </p><p><strong>有形の効果と無形の効果</strong></p><div className="table-wrap">
+                        </p><p><strong>有形の効果と無形の効果</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.1 有形の効果と無形の効果">
                             <table>
                                 <thead>
                                     <tr>
@@ -42,7 +42,7 @@ export function Skill2_2_1() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </div><p><strong>部門別の KPI の例</strong></p><div className="table-wrap">
+                        </div><p><strong>部門別の KPI の例</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.1 部門別の KPI の例">
                             <table>
                                 <thead>
                                     <tr>
@@ -88,7 +88,7 @@ export function Skill2_2_1() {
                                 可能なら、金額への換算ルールを事前に決める
                                 (ただし過度に楽観的にしない)。
                             </li>
-                        </ul><p><strong>良い KPI の条件 (SMART)</strong></p><div className="table-wrap">
+                        </ul><p><strong>良い KPI の条件 (SMART)</strong></p><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.1 良い KPI の条件 (SMART)">
                             <table>
                                 <thead>
                                     <tr>
@@ -144,7 +144,7 @@ export function Skill2_2_1() {
                                 <strong>関係者と合意する。</strong>
                                 経営、事業部門、技術部門が同じ定義を共有する。
                             </li>
-                        </ul><h4>よくある落とし穴</h4><div className="table-wrap">
+                        </ul><h4>よくある落とし穴</h4><div className="table-wrap" role="region" tabIndex={0} aria-label="表: Skill 2.2.1 よくある落とし穴">
                             <table>
                                 <thead>
                                     <tr>

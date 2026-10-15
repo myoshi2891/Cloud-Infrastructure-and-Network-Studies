@@ -12,7 +12,7 @@ export function Sec11_References() {
                             文書に固有のものではなく、広く使われている実務の考え方を試験の文脈に合わせて整理したものです。
                         </p>
                         <h3 id="s11-h1">11.1 試験の公式情報 (一次情報)</h3>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 11.1 試験の公式情報 (一次情報)">
                             <table>
                                 <thead>
                                     <tr>
@@ -60,7 +60,7 @@ export function Sec11_References() {
                         <h3 id="s11-h2">
                             11.2 AWS の公式ドキュメント (サービス、フレームワーク、料金)
                         </h3>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 11.2 AWS の公式ドキュメント (サービス、フレームワーク、料金)">
                             <table>
                                 <thead>
                                     <tr>
@@ -171,7 +171,7 @@ export function Sec11_References() {
                             </table>
                         </div>
                         <h3 id="s11-h3">11.3 補助的な情報源 (参考)</h3>
-                        <div className="table-wrap">
+                        <div className="table-wrap" role="region" tabIndex={0} aria-label="表: 11.3 補助的な情報源 (参考)">
                             <table>
                                 <thead>
                                     <tr>
