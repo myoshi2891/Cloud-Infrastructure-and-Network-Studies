@@ -33,7 +33,7 @@
 export const FIDELITY_PAGES = {
     'aws-aip-c01-guide': {
         source: 'Aws-aip-c01-guide.html',
-        sourceCommit: '2687fb7599f9e46a00747ef2557a2c88e19cc8bd',
+        sourceCommit: 'c4cc32a7',
         tables: true,
         codeBlocks: true,
         styledClasses: true,
