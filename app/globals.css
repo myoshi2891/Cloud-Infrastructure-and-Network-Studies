@@ -14,6 +14,22 @@
  */
 
 @theme {
+    --color-aip-d2-text: #1c2a40;
+    --color-aip-d2-text-dim: #4a5b78;
+    --color-aip-d2-accent: #3558d6;
+    --color-aip-d2-accent-soft: #9db2ee;
+    --color-aip-d2-accent-bg: #e8eeff;
+    --color-aip-d2-danger: #c2304f;
+    --color-aip-d2-danger-bg: #fdecef;
+    --color-aip-d2-warn-bg: #fff3e0;
+    --color-aip-d2-success: #1f8a52;
+    --color-aip-d2-success-bg: #e8f7ee;
+    --color-aip-d2-extra-1: #0f1b30;
+    --color-aip-d2-extra-2: #a1480b;
+    --color-aip-d2-extra-3: rgba(53, 88, 214, 0.05);
+    --color-aip-d2-extra-4: #b7e3c8;
+    --color-aip-d2-extra-5: rgba(53, 88, 214, 0.06);
+    --color-aip-d2-extra-6: rgba(20, 35, 70, 0.18);
     /* Layer 3: AIP-C01 Domain 1 原本ライト配色 */
     --color-aip-d1-success-text: #176b40;
     --color-aip-d1-completed-text: #60718c;

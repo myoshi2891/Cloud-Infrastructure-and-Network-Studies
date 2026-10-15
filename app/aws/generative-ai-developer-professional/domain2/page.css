@@ -1,1 +1,560 @@
-/* 原本の装飾は次の設計検証フェーズで移行する。 */
+
+            .aip-domain2-page * {
+                box-sizing: border-box;
+            }
+            .aip-domain2-page {
+                margin: 0;
+                background: var(--color-aip-d1-bg);
+                color: var(--color-aip-d2-text);
+                font-family: var(--font-body);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+            }
+            .aip-domain2-page a {
+                color: var(--color-aip-d2-accent);
+                text-decoration: none;
+            }
+            .aip-domain2-page a:hover {
+                text-decoration: underline;
+            }
+
+            /* ---------- layout ---------- */
+            .aip-domain2-page .layout {
+                display: block;
+            }
+
+            /* Sidebar */
+            .aip-domain2-page .sidebar {
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0px);
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                background: var(--color-aip-d1-bg-card);
+                border-right: 1px solid var(--color-aip-d1-border-soft);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 30;
+            }
+            .aip-domain2-page .sidebar-header {
+                padding: 0 24px 20px;
+                border-bottom: 1px solid var(--color-aip-d1-border-soft);
+                margin-bottom: 16px;
+            }
+            .aip-domain2-page .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--color-aip-d2-accent);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .aip-domain2-page .sidebar-header h2 {
+                font-size: 16px;
+                margin: 6px 0 0;
+                color: var(--color-aip-d2-text);
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .aip-domain2-page .sidebar nav {
+                padding: 0 12px;
+            }
+            .aip-domain2-page .sidebar nav a {
+                display: block;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--color-aip-d2-text-dim);
+                line-height: 1.5;
+                margin-bottom: 2px;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .aip-domain2-page .sidebar nav a:hover {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-aip-d2-text);
+                text-decoration: none;
+            }
+            .aip-domain2-page .sidebar nav a.active {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-aip-d2-accent);
+                font-weight: 700;
+            }
+            .aip-domain2-page .sidebar nav a.lvl3 {
+                padding-left: 28px;
+                font-size: 12.5px;
+            }
+            .aip-domain2-page .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+                left: 14px;
+                z-index: 30;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                color: var(--color-aip-d2-text);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            /* Main content */
+            .aip-domain2-page .main {
+                margin-left: 300px;
+                padding: 56px 64px 120px;
+            }
+            .aip-domain2-page .hero {
+                margin-bottom: 8px;
+            }
+            .aip-domain2-page .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--color-aip-d2-accent);
+                margin-bottom: 14px;
+            }
+            .aip-domain2-page .hero h1 {
+                font-size: clamp(28px, 3.6vw, 42px);
+                line-height: 1.35;
+                margin: 0 0 18px;
+                background: linear-gradient(135deg, var(--color-aip-d2-text) 0%, var(--color-aip-d2-accent) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 800;
+            }
+            .aip-domain2-page .hero .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .aip-domain2-page .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                font-size: 12.5px;
+                color: var(--color-aip-d2-text-dim);
+            }
+            .aip-domain2-page .pill strong {
+                color: var(--color-aip-d2-text);
+            }
+
+            .aip-domain2-page .main h2 {
+                font-size: 26px;
+                margin: 56px 0 20px;
+                padding-top: 8px;
+                border-top: 1px solid var(--color-aip-d1-border-soft);
+                color: var(--color-aip-d2-text);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .aip-domain2-page .guide-part:first-child > h2:first-of-type {
+                border-top: none;
+                padding-top: 0;
+                margin-top: 8px;
+            }
+            .aip-domain2-page .main h3 {
+                font-size: 20px;
+                margin: 38px 0 16px;
+                color: var(--color-aip-d2-text);
+                font-weight: 700;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .aip-domain2-page .main h3::before {
+                content: '';
+                display: inline-block;
+                width: 5px;
+                height: 18px;
+                background: var(--color-aip-d2-accent);
+                border-radius: 3px;
+                margin-right: 10px;
+                vertical-align: -2px;
+            }
+            .aip-domain2-page .main p {
+                margin: 0 0 18px;
+                color: var(--color-aip-d2-text);
+            }
+            .aip-domain2-page .main ul, .aip-domain2-page .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.4em;
+                color: var(--color-aip-d2-text);
+            }
+            .aip-domain2-page .main li {
+                margin-bottom: 8px;
+            }
+            .aip-domain2-page .main hr {
+                border: none;
+                border-top: 1px solid var(--color-aip-d1-border-soft);
+                margin: 44px 0;
+            }
+            .aip-domain2-page .main strong {
+                color: var(--color-aip-d2-extra-1);
+                font-weight: 700;
+            }
+            .aip-domain2-page .footnote-ref {
+                margin-left: 2px;
+            }
+            .aip-domain2-page .footnote-ref sup {
+                font-size: 11px;
+                color: var(--color-aip-d2-accent);
+                font-weight: 700;
+            }
+            .aip-domain2-page .main code:not(pre code) {
+                background: var(--color-aip-d1-bg-card-2);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+                color: var(--color-aip-d2-extra-2);
+                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+
+            /* Tables */
+            .aip-domain2-page .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                background: var(--color-aip-d1-bg-card);
+            }
+            .aip-domain2-page table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            .aip-domain2-page thead th {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-aip-d2-text);
+                text-align: left;
+                padding: 12px 16px;
+                font-weight: 700;
+                border-bottom: 1px solid var(--color-aip-d1-border);
+                white-space: nowrap;
+            }
+            .aip-domain2-page tbody td {
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--color-aip-d1-border-soft);
+                color: var(--color-aip-d2-text-dim);
+                vertical-align: top;
+            }
+            .aip-domain2-page tbody tr:last-child td {
+                border-bottom: none;
+            }
+            .aip-domain2-page tbody tr:hover td {
+                background: var(--color-aip-d2-extra-3);
+            }
+
+            /* Mermaid */
+            .aip-domain2-page .mermaid-wrap {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 28px 20px;
+                margin: 0 0 30px;
+            }
+            .aip-domain2-page .mermaid-wrap svg {
+                flex-shrink: 0;
+            }
+            .aip-domain2-page .mermaid-wrap p {
+                color: inherit;
+                margin: 0;
+            }
+
+            /* Callouts */
+            .aip-domain2-page .callout-practice {
+                display: flex;
+                gap: 14px;
+                background: var(--color-aip-d2-success-bg);
+                border: 1px solid var(--color-aip-d2-extra-4);
+                border-left: 4px solid var(--color-aip-d2-success);
+                border-radius: 12px;
+                padding: 20px 22px;
+                margin: 0 0 26px;
+            }
+            .aip-domain2-page .callout-practice .icon {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--color-aip-d2-success);
+                color: var(--color-aip-d1-bg-card);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 900;
+            }
+            .aip-domain2-page .callout-practice .body {
+                color: var(--color-aip-d2-text);
+            }
+            .aip-domain2-page .callout-practice .label {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-aip-d2-success);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .aip-domain2-page .callout-practice p {
+                margin: 0;
+                color: var(--color-aip-d2-text);
+            }
+
+            .aip-domain2-page .practice-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-aip-d2-success);
+                text-transform: uppercase;
+                margin: 0 0 10px;
+            }
+            .aip-domain2-page .practice-label::before {
+                content: '✓';
+                font-size: 13px;
+            }
+
+            /* Reference grid */
+            .aip-domain2-page .ref-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                margin: 0 0 30px;
+            }
+            .aip-domain2-page .ref-card {
+                display: flex;
+                gap: 12px;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                min-width: 0;
+            }
+            .aip-domain2-page .ref-card .num {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-aip-d2-accent);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 800;
+            }
+            .aip-domain2-page .ref-card .txt {
+                font-size: 13px;
+                color: var(--color-aip-d2-text-dim);
+                min-width: 0;
+                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+            .aip-domain2-page .ref-card .txt a {
+                color: var(--color-aip-d2-accent);
+                font-weight: 600;
+            }
+
+            /* Checklist */
+            .aip-domain2-page .checklist-card {
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 8px 22px 12px;
+                margin: 0 0 30px;
+            }
+            .aip-domain2-page .checklist-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 0;
+                border-bottom: 1px solid var(--color-aip-d1-border-soft);
+                margin-bottom: 6px;
+            }
+            .aip-domain2-page .checklist-header .title {
+                font-weight: 700;
+                color: var(--color-aip-d2-text);
+                font-size: 14.5px;
+            }
+            .aip-domain2-page .checklist-header .count {
+                font-size: 13px;
+                color: var(--color-aip-d2-accent);
+                font-weight: 700;
+            }
+            .aip-domain2-page .checklist-card ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .aip-domain2-page .checklist-card li {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 11px 4px;
+                border-radius: 8px;
+                margin: 0;
+                transition: background 0.15s;
+            }
+            .aip-domain2-page .checklist-card li:hover {
+                background: var(--color-aip-d2-extra-5);
+            }
+            .aip-domain2-page .checklist-card input[type='checkbox'] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 19px;
+                height: 19px;
+                flex-shrink: 0;
+                margin-top: 2px;
+                border: 1.5px solid var(--color-aip-d1-border);
+                border-radius: 5px;
+                background: var(--color-aip-d1-bg-card-2);
+                cursor: pointer;
+                position: relative;
+            }
+            .aip-domain2-page .checklist-card input[type='checkbox']:checked {
+                background: var(--color-aip-d2-accent);
+                border-color: var(--color-aip-d2-accent);
+            }
+            .aip-domain2-page .checklist-card input[type='checkbox']:checked::after {
+                content: '';
+                position: absolute;
+                left: 5px;
+                top: 1px;
+                width: 5px;
+                height: 10px;
+                border: solid var(--color-aip-d1-bg-card);
+                border-width: 0 2px 2px 0;
+                transform: rotate(40deg);
+            }
+            .aip-domain2-page .checklist-card label {
+                color: var(--color-aip-d2-text);
+                font-size: 14.5px;
+                cursor: pointer;
+                line-height: 1.6;
+            }
+            .aip-domain2-page .checklist-card li:has(input:checked) label {
+                text-decoration: line-through;
+                color: var(--color-aip-d1-text-faint);
+            }
+
+            /* Footnotes (pandoc) */
+            .aip-domain2-page aside.footnotes {
+                display: none;
+            } /* replaced entirely by ref-grid */
+
+            /* Responsive */
+            @media (max-width: 980px) {
+                .aip-domain2-page .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px var(--color-aip-d2-extra-6);
+                }
+                .aip-domain2-page .sidebar.open {
+                    transform: translateX(0);
+                }
+                .aip-domain2-page .main {
+                    margin-left: 0;
+                    padding: 80px 20px 100px;
+                }
+                .aip-domain2-page .sidebar-toggle {
+                    display: flex;
+                }
+                .aip-domain2-page .ref-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        
+
+            /* additions for content shapes the base design does not cover */
+            .aip-domain2-page .main .code-block {
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                padding: 18px 20px;
+                margin: 0 0 26px;
+                overflow-x: auto;
+                font-size: 13.5px;
+                line-height: 1.7;
+                color: var(--color-aip-d2-text);
+            }
+            .aip-domain2-page .main .code-block code {
+                font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+                white-space: pre;
+                background: none;
+                border: none;
+                padding: 0;
+            }
+            .aip-domain2-page .main blockquote {
+                margin: 0 0 22px;
+                padding: 14px 20px;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-left: 4px solid var(--color-aip-d2-accent-soft);
+                border-radius: 10px;
+            }
+            .aip-domain2-page .main blockquote > :last-child {
+                margin-bottom: 0;
+            }
+            .aip-domain2-page .main details {
+                margin: 0 0 22px;
+                background: var(--color-aip-d1-bg-card);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 10px;
+                padding: 4px 18px;
+            }
+            .aip-domain2-page .main details summary {
+                cursor: pointer;
+                font-weight: 700;
+                color: var(--color-aip-d2-accent);
+                padding: 10px 0;
+            }
+            .aip-domain2-page .main details[open] summary {
+                border-bottom: 1px solid var(--color-aip-d1-border-soft);
+                margin-bottom: 12px;
+            }
+            .aip-domain2-page .main p, .aip-domain2-page .main li {
+                overflow-wrap: break-word;
+            }
+            .aip-domain2-page .main a {
+                overflow-wrap: anywhere;
+                word-break: break-all;
+            }
+        
+.aip-domain2-page { color-scheme: light; }
+.aip-domain2-page .main { width: calc(100% - 300px); min-width: 0; overflow-wrap: anywhere; }
+.aip-domain2-page .main ul { list-style-type: disc; }
+.aip-domain2-page .main ol { list-style-type: decimal; }
+.aip-domain2-page .main ul, .aip-domain2-page .main ol { list-style-position: outside; }
+.aip-domain2-page .main li { display: list-item; }
+.aip-domain2-page .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+.aip-domain2-page .sidebar nav li { margin: 0; padding: 0; }
+.aip-domain2-page .main h4 { font-size: 1em; font-weight: 700; margin: 1.33em 0; }
+.aip-domain2-page .main em { font-style: italic; }
+.aip-domain2-page .main strong { font-weight: 700; }
+.aip-domain2-page .main blockquote { font-style: normal; }
+.aip-domain2-page .main .code-block { white-space: normal; }
+.aip-domain2-page .main .code-block .code-line { white-space: pre; min-height: 1.7em; font-family: var(--font-mono); background: none; border: none; padding: 0; }
+.aip-domain2-page .mermaid-wrap { min-width: 0; }
+.aip-domain2-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; overflow: visible; }
+.aip-domain2-page .mermaid-wrap p { color: inherit; margin: 0; }
+@media (max-width: 980px) { .aip-domain2-page .main { width: 100%; max-width: none; min-width: 0; } .aip-domain2-page .sidebar:not(.open) { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .aip-domain2-page * { transition: none !important; scroll-behavior: auto !important; } }
