@@ -1,6 +1,20 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-15)
+(最終更新日: 2026-10-16)
+
+## 2026-10-16: AIP-C01既存移行の全量再監査
+
+`/aws/generative-ai-developer-professional` を現在のHTMLと再照合。本文・構造・CSS・目次の追加欠落は検出されなかった。原本に残っていたAgents Classic・A2I受付条件とTLS/KMSの説明4箇所を訂正し、既存実装の正しい説明を維持した。
+
+- Red `e0b7946d`: 原本由来期待値の更新漏れ3件の失敗を確認。
+- 原本・Inventory訂正 `c4cc32a7`: [AWS受付条件の公式告知](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/)と[Bedrock暗号化の公式説明](https://docs.aws.amazon.com/bedrock/latest/userguide/data-encryption.html)を根拠に修正。
+- 抽出Red `87344a72` / Green `74595bac`: HTML整形とJSXのブロック・表セル境界を正規化。inlineの語間は保持し、語間欠落を検出する。訂正済み固定Git原本からfixtureを再生成。
+- 検証強化 `92fb6966`: 点・番号・インデント・li表示を消す4変異をChromeで検出し、毎回復元。既存の本文・表・リスト・図・コード欠落5変異も成功。
+- 関連Vitest 13ファイル・101件成功。現在のHTMLからのInventory再生成はバイト一致、全6本文区分とCSS・目次もfixtureと一致。原本・archiveのない一時領域での固定Git再生成も成功。
+- Chrome E2E 5件成功。1440/768/390pxで全34図・76表・リスト点と番号・22.4pxインデント・目次操作・図倍率・横幅・axe・コンソールを検証。既存開発サーバー3001を使用し、停止していない。
+- 全体Vitest（並列2）: 242ファイル・2559件中2558成功、既存AIBナビ期待値1件失敗。AIBのDomain 2/3追加に期待値が未追従しており、単独実行でも再現。対象外のため変更しない。初回の高並列実行では再生成・DVA操作のタイムアウトも出たが、並列2で再現しなかった。
+- TypeScript・全体ESLint・対象Markdown lint成功。静的ダッシュボードは1009ソース・265対応（26%）・248テストファイル。
+- 最新実装HEAD `92fb6966`、仕様同期 `4745b2e2`。npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。既存の原本アーカイブは変更せず、訂正前の履歴として保持。
 
 ## 2026-10-15: AWS Certified AI Business Strategist (AIB-C01) Domain 3 のNext.js移行（完了）
 
@@ -48,7 +62,6 @@
 - `__tests__/aws/ai-business-strategist/domain2/diagram-theme.test.ts`: 全 2 テスト PASS（ライトテーマ定義およびd0〜d19の全20図）
 - `__tests__/aws/ai-business-strategist/domain1/page.test.tsx`: 全 17 テスト PASS（リグレッションなし）
 - ESLint: エラー 0 件
-
 
 ## 2026-10-13: AWS AIP-C01総合ガイドのNext.js移行（実装・自動検証完了、目視確認はユーザー担当）
 
@@ -1701,15 +1714,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** AWS AIP-C01総合ガイドのNext.js全量移行・サイト統合・ブラウザ検証
-- **最終更新日:** 2026-10-13
-- **最新実装 HEAD:** `564f1615`（最終コード `4a368bb1`、原本保存を含む）
-- **仕様同期コミット:** `32c7b971`
-- **前回進捗同期コミット:** `39d201b9`
-- **検証状態:** AIP専用91件・共有抽出4件、Chrome E2E 4件成功。5種類の欠落変異を検出。全体Vitestは236ファイル・2515件すべて成功。TypeScript・全体ESLint・Markdown lint成功。1440/768/390pxでaxe違反0・コンソールエラー0。
+- **最新完了タスク:** AIP-C01総合ガイドの全量再監査・期待値修復・リスト装飾変異検証
+- **最終更新日:** 2026-10-16
+- **最新実装 HEAD:** `92fb6966`（抽出Green `74595bac`、原本訂正 `c4cc32a7`）
+- **仕様同期コミット:** `4745b2e2`
+- **前回進捗同期コミット:** `369b34e3`
+- **検証状態:** 関連101件・Chrome 5件成功。全体2559件中2558成功、既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint・対象Markdown lint成功。
 - **ビルド状態:** npm・ビルドはユーザー指示により未実行。目視確認はユーザー担当。
-- **HTML残数:** 直下19件、移行済みAIP原本を除く未移行候補18件（無関係な未追跡HTMLを含む）。AIP原本は固定Git版をローカルarchiveへ保存し、整形差分のある直下版は保持。
-- **次の作業:** ユーザーのAIP-C01目視確認。次の移行候補は従来の `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。AIPドメイン別の別資料は未移行。
+- **HTML残数:** 直下HTML20件。移行済み原本を含むため未移行件数とは区別し、今回は未移行候補を再分類していない。
+- **次の作業:** ユーザーのAIP-C01目視確認。既存AIBナビ期待値の追従は別タスク。従来の次の移行候補は `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3048,7 +3061,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD は `564f1615`（最終コード `4a368bb1`、原本保存を含む）、仕様同期は `32c7b971`、前回進捗同期コミットは `39d201b9` です。AIP-C01総合ガイドは `/aws/generative-ai-developer-professional` へ全量移行済み。全5ドメイン・Step 1〜20・76表・34図・60本文リスト項目・64外部リンク出現・8行JSON・付録を保持し、点・番号を含め統一ダークテーマへ対応付けた。95件の関連Vitestとポート3002での実Chrome E2E 4件成功、5種類の欠落変異を検出。全体Vitestは236ファイル・2515件すべて成功、型検査・全体ESLint・Markdown lint成功。npm・ビルドは未実行、目視確認はユーザー担当。直下HTML19件のうち移行済みAIP原本を除く候補は18件（未追跡HTMLを含む）。固定Git原本はarchiveへバイト一致で保存し、作業中に検出した直下原本の整形差分は保持した。AIPドメイン別の別資料は今回移行していない。次はユーザーの目視確認。従来の次の移行候補は `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。
+最新実装 HEAD は `92fb6966`、仕様同期は `4745b2e2`、前回進捗同期コミットは `369b34e3` です。AIP-C01総合ガイド `/aws/generative-ai-developer-professional` の再監査完了。原本4箇所の事実訂正と固定Git fixture再生成、ブロック境界比較修復、点・番号・インデント・li表示の4変異検出を実施。関連101件・Chrome E2E 5件成功。全体Vitestは2559件中2558成功、既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint・対象Markdown lint成功。npm・ビルド未実行、目視確認はユーザー担当。直下HTML20件は移行済み原本を含み、未移行候補の再分類は未実施。次はユーザーの目視確認。既存AIBナビ期待値の追従は別タスクとし、従来の次の移行候補は `Aws-dva-c02-domain4-troubleshooting-optimization-guide.html`。
 
 標準ワークフローの正準は `.agents/rules/tdd-commit-workflow.md` で、`.claude` / `.gemini` は同期ミラーです。次回は次の4ステップを維持してください。
 
