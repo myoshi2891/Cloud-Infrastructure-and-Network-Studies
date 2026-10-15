@@ -1,0 +1,120 @@
+'use client';
+
+import { useEffect, useState, useTransition } from 'react';
+import { NAV_ITEMS, type NavItem } from './constants';
+
+interface NavBarProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+/**
+ * AIB-C01 Domain 2 サイドバーナビゲーションコンポーネント。
+ * スクロール位置に応じたアクティブ項目のハイライト、URLハッシュ同期、キーボードフォーカス管理を提供。
+ */
+export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
+    const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0]?.id ?? '');
+    const [, startTransition] = useTransition();
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
+            return;
+        }
+
+        // 監視対象のセクションID一覧を導出
+        const sectionIds = NAV_ITEMS.flatMap((item) => {
+            const ids = [item.id];
+            if (item.subItems) {
+                ids.push(...item.subItems.map((s) => s.id));
+            }
+            return ids;
+        });
+
+        const elements = sectionIds
+            .map((id) => document.getElementById(id))
+            .filter((el): el is HTMLElement => el !== null);
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const intersecting = entries.filter((e) => e.isIntersecting);
+                if (intersecting.length > 0) {
+                    const topEntry = intersecting[0];
+                    if (topEntry?.target.id) {
+                        startTransition(() => {
+                            setActiveId(topEntry.target.id);
+                        });
+                    }
+                }
+            },
+            {
+                rootMargin: '-20% 0px -70% 0px',
+            },
+        );
+
+        elements.forEach((el) => observer.observe(el));
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+        e.preventDefault();
+        const target = document.getElementById(id);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState(null, '', `#${id}`);
+            // section / 見出しは既定でフォーカス不可のため、プログラムからのみフォーカス可能にする
+            if (!target.hasAttribute('tabindex')) {
+                target.setAttribute('tabindex', '-1');
+            }
+            target.focus({ preventScroll: true });
+        }
+        onClose();
+    };
+
+    return (
+        <aside className="sidebar" aria-label="ページ内目次">
+            <div className="brand">
+                <i className="ti ti-compass"></i><span>AIB-C01 Domain 2 ガイド</span>
+            </div>{' '}
+            <nav aria-label="メインナビゲーション">
+                <ul>
+                    {NAV_ITEMS.map((item: NavItem) => {
+                        const isParentActive =
+                            activeId === item.id ||
+                            (item.subItems?.some((sub) => sub.id === activeId) ?? false);
+
+                        return (
+                            <li key={item.id}>
+                                <a
+                                    className={`nav-link ${isParentActive ? 'active' : ''}`}
+                                    href={`#${item.id}`}
+                                    onClick={(e) => handleClick(e, item.id)}
+                                >
+                                    <i className={`ti ${item.icon}`}></i>
+                                    <span>{item.label}</span>
+                                </a>{' '}
+                                {item.subItems && item.subItems.length > 0 && (
+                                    <ul className="sub-nav">
+                                        {item.subItems.map((sub) => (
+                                            <li key={sub.id}>
+                                                <a
+                                                    className={activeId === sub.id ? 'active' : ''}
+                                                    href={`#${sub.id}`}
+                                                    onClick={(e) => handleClick(e, sub.id)}
+                                                >
+                                                    {sub.label}
+                                                </a>{' '}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
+        </aside>
+    );
+}

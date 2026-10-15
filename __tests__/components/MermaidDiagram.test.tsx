@@ -36,6 +36,18 @@ describe('MermaidDiagram', () => {
         expect(wrapper).toHaveAttribute('aria-roledescription', 'diagram');
     });
 
+    it('focusable 指定時のみ overflow 所有者の wrapper が tabIndex=0 を持ち、名前を追加しないこと', () => {
+        const { container: focusable } = render(
+            <MermaidDiagram chart={sampleChart} ariaLabel="フォーカス図" focusable />
+        );
+        const { container: plain } = render(<MermaidDiagram chart={sampleChart} ariaLabel="通常図" />);
+        const wrapper = focusable.firstChild as HTMLElement;
+        expect(wrapper).toHaveAttribute('tabindex', '0');
+        expect(wrapper).toHaveAttribute('aria-label', 'フォーカス図');
+        expect(wrapper).not.toHaveAttribute('aria-labelledby');
+        expect(plain.firstChild as HTMLElement).not.toHaveAttribute('tabindex');
+    });
+
     it('jsdom 環境ではフォールバックの DSL <pre> を表示すること', () => {
         const { container } = render(
             <MermaidDiagram chart={sampleChart} ariaLabel="サンプルフロー図" />
