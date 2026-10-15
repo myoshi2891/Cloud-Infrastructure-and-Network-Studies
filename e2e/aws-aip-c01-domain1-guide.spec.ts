@@ -26,10 +26,11 @@ for (const width of [1440, 768, 390]) {
         await expect(root.locator('main li')).toHaveCount(137);
         await expect(root.locator('table')).toHaveCount(51);
         expect(await root.locator('main a[href^="http"]').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(inventory.links.map(link => link.href));
-        const lists = await root.locator('main ul,main ol').evaluateAll(elements => elements.map(element => ({ tag: element.tagName.toLowerCase(), start: element.getAttribute('start'), reversed: element.hasAttribute('reversed'), type: getComputedStyle(element).listStyleType, padding: parseFloat(getComputedStyle(element).paddingLeft), checklist: Boolean(element.closest('.checklist-card')) })));
+        const lists = await root.locator('main ul,main ol').evaluateAll(elements => elements.map(element => ({ tag: element.tagName.toLowerCase(), start: element.getAttribute('start'), reversed: element.hasAttribute('reversed'), type: getComputedStyle(element).listStyleType, position: getComputedStyle(element).listStylePosition, padding: parseFloat(getComputedStyle(element).paddingLeft), checklist: Boolean(element.closest('.checklist-card')) })));
         expect(lists.map(({ tag, start, reversed }) => ({ tag, start, reversed }))).toEqual(Object.values(fixture.guideParts).flatMap(part => part.lists).map(({ tag, start, reversed }) => ({ tag, start, reversed })));
         for (const list of lists) {
             expect(list.type).toBe(list.checklist ? 'none' : list.tag === 'ol' ? 'decimal' : 'disc');
+            expect(list.position).toBe('outside');
             expect(list.padding).toBeCloseTo(list.checklist ? 0 : 22.4, 1);
         }
         await expect(root.locator('nav ul')).toHaveCSS('list-style-type', 'none');
@@ -40,8 +41,15 @@ for (const width of [1440, 768, 390]) {
         await expect(root).not.toContainText('Syntax error');
         const sizes = await diagrams.evaluateAll(elements => elements.map(element => ({ natural: (element as SVGSVGElement).viewBox.baseVal.width, width: element.getBoundingClientRect().width })));
         for (const size of sizes) expect(size.width).toBeGreaterThanOrEqual(size.natural - 2);
-        const labels = await diagrams.locator('.nodeLabel').evaluateAll(elements => elements.map(element => ({ text: element.textContent?.trim(), color: getComputedStyle(element).color })));
-        expect(labels.every(label => Boolean(label.text) && label.color !== 'rgb(255, 255, 255)')).toBe(true);
+        const labels = await diagrams.locator('.nodeLabel').evaluateAll(elements => elements.map(element => ({ text: element.textContent?.trim(), color: getComputedStyle(element).color, fontSize: getComputedStyle(element).fontSize })));
+        const sourceColors = [fixture.guideInteractions.mermaidConfig.themeVariables.primaryTextColor, ...Object.values(fixture.guideParts).flatMap(part => part.diagrams).flatMap(chart => [...chart.matchAll(/color:\s*(#[\da-f]{6})/gi)].map(match => match[1]!))];
+        const palette = new Set(sourceColors.map(hex => `rgb(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)})`));
+        expect(labels).not.toHaveLength(0);
+        for (const label of labels) {
+            expect(label.text).toBeTruthy();
+            expect(palette.has(label.color), `${label.text}: ${label.color}`).toBe(true);
+            expect(label.fontSize).toBe(fixture.guideInteractions.mermaidConfig.themeVariables.fontSize);
+        }
         const target = fixture.guideDesign.nav.find(item => item.id.startsWith('skill-144-'));
         if (!target) throw new Error('Missing original navigation item');
         const toggle = root.getByRole('button', { name: 'メニュー' });
