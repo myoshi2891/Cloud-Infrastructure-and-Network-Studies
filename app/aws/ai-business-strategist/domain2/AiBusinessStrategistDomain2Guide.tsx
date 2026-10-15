@@ -1,37 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { NavBar } from './NavBar';
-import { HeroSection } from './sections/HeroSection';
-import { Sec1 } from './sections/Sec1';
-import { Sec2 } from './sections/Sec2';
-import { Sec3 } from './sections/Sec3';
-import { Sec4 } from './sections/Sec4';
-import { Sec5 } from './sections/Sec5';
-import { Sec6_Services } from './sections/Sec6_Services';
-import { Sec7_DecisionPatterns } from './sections/Sec7_DecisionPatterns';
-import { Sec8_PracticeQuestions } from './sections/Sec8_PracticeQuestions';
-import { Sec9_Checklist } from './sections/Sec9_Checklist';
-import { Sec10_Glossary } from './sections/Sec10_Glossary';
-import { Sec11_References } from './sections/Sec11_References';
 
-export function AiBusinessStrategistDomain2Guide() {
+interface AiBusinessStrategistDomain2GuideProps {
+    /** Server 側で描画済みのヒーロー */
+    hero: ReactNode;
+    /** Server 側で描画済みの本文セクション */
+    children: ReactNode;
+}
+
+/**
+ * Domain 2 ガイドの Client シェル。メニュー開閉状態のみを持ち、
+ * 静的な本文は Server ページから受け取ってクライアントバンドルに含めない。
+ */
+export function AiBusinessStrategistDomain2Guide({ hero, children }: AiBusinessStrategistDomain2GuideProps) {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
-
-    const handleToggleCheck = (index: number) => {
-        setCheckedItems((prev) => ({
-            ...prev,
-            [index]: !prev[index],
-        }));
-    };
 
     return (
         <div className={`aib-domain2-page ${menuOpen ? 'menu-open' : ''}`}>
             <button
                 type="button"
                 className="menu-btn"
-                aria-label="メニューを開く"
+                aria-label={menuOpen ? 'メニューを閉じる' : 'メニューを開く'}
                 aria-expanded={menuOpen}
                 onClick={() => setMenuOpen((prev) => !prev)}
             >
@@ -47,24 +38,9 @@ export function AiBusinessStrategistDomain2Guide() {
                 <NavBar isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
                 <div className="main">
-                    <HeroSection />
+                    {hero}
 
-                    <main className="content prose">
-                        <Sec1 />
-                        <Sec2 />
-                        <Sec3 />
-                        <Sec4 />
-                        <Sec5 />
-                        <Sec6_Services />
-                        <Sec7_DecisionPatterns />
-                        <Sec8_PracticeQuestions />
-                        <Sec9_Checklist
-                            checkedItems={checkedItems}
-                            onToggle={handleToggleCheck}
-                        />
-                        <Sec10_Glossary />
-                        <Sec11_References />
-                    </main>
+                    <main className="content prose">{children}</main>
 
                     <footer className="footer">
                         <p>

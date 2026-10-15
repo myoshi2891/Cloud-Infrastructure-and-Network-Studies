@@ -1,9 +1,16 @@
-interface Sec9Props {
-    checkedItems: Record<number, boolean>;
-    onToggle: (index: number) => void;
-}
+'use client';
 
-export function Sec9_Checklist({ checkedItems, onToggle }: Sec9Props) {
+import { useState } from 'react';
+
+/**
+ * 直前チェックリスト。チェック状態をこのコンポーネント内に閉じ込め、
+ * 他の静的セクションを Client 境界の外に保つ。
+ */
+export function Sec9_Checklist() {
+    const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
+    const onToggle = (index: number) => {
+        setCheckedItems((prev) => ({ ...prev, [index]: !prev[index] }));
+    };
     const totalCount = 18;
     const completedCount = Object.values(checkedItems).filter(Boolean).length;
 
