@@ -1,6 +1,6 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-12
+Updated 2026-10-13
 
 このプロジェクトは、Google Cloud / AWS / Cisco / CompTIA のクラウド・ネットワーク資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』など）の解説を目的とした学習用 Next.js アプリケーションです。
 試験ガイド、重要ポイントの解説、およびテスト対策コンテンツを提供します。
@@ -66,6 +66,7 @@ Updated 2026-10-12
   - `/app/aws/developer-associate/domain1`: DVA-C02 AWSサービスを使用した開発。Server `page.tsx`、Client `DevelopmentGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`mermaid-theme.json`、`CodeBlock.tsx`、`page.css`、38分割セクション。29スキル・116表・31図・18コード・363リスト項目（目次38項目を含む）・15練習問題を全文移行。原本ライト配色・Source Serif 4・288px幅を保持し、本文・表・コード・目次・図は14px。自己ホストTablerアイコン、点・番号・入れ子、native detailsを保持。コードのコメント・属性色は14pxでのコントラストを改善。ホーム・Headerに両DVAドメインを登録。
   - `/app/aws/developer-associate/domain2`: DVA-C02 セキュリティ。Server `page.tsx`、Client `SecurityGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`CodeBlock.tsx`、`ChecklistItem.tsx`、`page.css`、`sections/`。110表・35図・40コード・20チェック・26目次、点と番号の装飾を全量移行。原本のライト配色・Source Serif 4・300pxサイドバーを保持。ユーザー指定で本文・表・コード・目次・図は14px（0.875rem、ルート1rem=16px）、見出しも縮小。`mermaid-theme.json` と `preserveChartTheme` で図の原本配色も保持。
   - `/app/aws/developer-associate/domain3`: DVA-C02 デプロイ。Server `page.tsx`、Client `DeploymentGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`mermaid-theme.json`、`CodeBlock.tsx`、`Checklist.tsx`、`page.css`、33分割セクション。80表・39図・32コード・63リスト項目・137外部リンク・135本文ブロックを全文移行。原本ライト配色・Source Serif 4・290pxサイドバーを保持し、本文・表・コード・目次・図は14px。点・番号・`ol start=4`、9チェック、10解説を保持。原本の独立解決済み派生色を注入し、共通dark設定による黒塗りを防止。実Mermaidパーサー40件で配色・構文を検証。構文ハイライトはユーザー指定により近似色で実装し、追加依存なし。
+  - `/app/aws/generative-ai-developer-professional`: AIP-C01全5ドメイン・Step 1〜20・付録・参考資料。Server `page.tsx` / `AipGuide.tsx`、Client `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、6分割セクション。76表・34図・60本文リスト項目・64外部リンク出現・8行JSONを全文移行。統一ダークテーマへ対応付け、原本300px幅・48目次・点と番号・hash/focus・自然倍率を保持。横スクロール図・表・コードはキーボード操作可能。
   - `/app/aws/ai-business-strategist`: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、8分割セクション。全4ドメイン・横断編・試験対策・付録A〜C（82表・16図・236リスト項目・112外部リンク・134本文ブロック）完全収録、280pxサイドバー契約、ライトテーマデザイン完全再現。
   - `/app/aws/ai-business-strategist/domain1`: AWS Certified AI Business Strategist (AIB-C01) Domain 1: AI Fundamentals and Literacy 完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistDomain1Guide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、19分割セクション。全3タスク・13スキル・付録A〜E（55表・16図・150リスト項目・86外部リンク・99本文ブロック）完全収録、300pxサイドバー、ライトテーマデザイン完全再現。
   - `/app/recommended-books/accelerate`: 『Accelerate』LeanとDevOpsの科学 完全ガイド（DORA 5指標、24の能力、Westrum組織文化モデル、AI支援開発時代の最新知見）。

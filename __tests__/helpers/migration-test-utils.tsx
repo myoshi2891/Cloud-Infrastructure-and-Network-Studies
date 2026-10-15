@@ -5,6 +5,7 @@ import {
     codeBlockSelector,
     codeLineCount,
     extractBodyContent,
+    normalize,
 } from '@/scripts/inventory-extraction.mjs';
 
 type MermaidDiagramMockProps = {
@@ -42,6 +43,40 @@ export const MermaidDiagramMock = ({
 
 /** 文字列から連続する空白文字をすべて除去する。 */
 export const squash = (value: string): string => value.replace(/\s+/g, '');
+
+/** 書式由来の空白を1個に畳み前後を除去する。語間の空白は保持する。 */
+export const normalizeSpaces = (value: string): string => normalize(value);
+
+const blockSelector = 'address, article, aside, blockquote, dd, div, dl, dt, figcaption, figure, footer, h1, h2, h3, h4, h5, h6, header, li, nav, ol, p, section, table, tr, ul';
+const preservedSelector = `${codeBlockSelector}, pre`;
+
+/**
+ * 描画結果を変えずに、ブロック要素の境界へ原本 HTML の整形改行に相当する空白を補った複製を返す。
+ * JSX は兄弟ブロック間の空白テキストを持たないため、`textContent` で語が連結されるのを防ぐ。
+ * 表セル内の先頭・末尾の空白は描画されない整形空白のため除去する（原本のセルは空白なしで隣接する）。
+ * コードブロック内部は行テキストを保つため対象外とする。
+ */
+export function withBlockBoundarySpaces(root: Element): Element {
+    const clone = root.cloneNode(true);
+    if (!(clone instanceof Element)) throw new Error('cloned root is not an Element');
+    clone.querySelectorAll(blockSelector).forEach(element => {
+        if (element.parentElement?.closest(preservedSelector)) return;
+        element.before(' ');
+        element.after(' ');
+    });
+    clone.querySelectorAll('td, th').forEach(cell => {
+        const walker = cell.ownerDocument.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
+        const texts: Text[] = [];
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (node instanceof Text) texts.push(node);
+        }
+        const first = texts[0];
+        const last = texts[texts.length - 1];
+        if (first) first.data = first.data.trimStart();
+        if (last) last.data = last.data.trimEnd();
+    });
+    return clone;
+}
 
 export { codeBlockSelector, codeLineCount, extractBodyContent };
 

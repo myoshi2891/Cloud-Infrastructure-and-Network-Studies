@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Updated 2026-10-12
+Updated 2026-10-13
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -591,6 +591,14 @@ app/
       Checklist.tsx                 # 9チェックの件数・進捗・全完了表示（ローカル状態）
       page.css                      # 原本ライト配色・Source Serif 4・14px・290px幅・点と番号
       sections/                     # s1〜s33（導入・4 Task・26 Steps・演習・付録）
+    generative-ai-developer-professional/
+      page.tsx                      # AIP-C01 全5ドメイン・Step 1〜20 (Server、metadata、CSS)
+      AipGuide.tsx                  # 導入・5ドメイン・直前対策・付録・参考資料の本文 (Server)
+      NavBar.tsx                    # 48目次・scroll spy・モバイル開閉・hash/focus・Escape (Client)
+      constants.ts                  # 単一目次正本と34図のMermaid DSL
+      Diagram.tsx                   # memo化・説明・自然倍率・キーボードスクロール
+      page.css                      # 統一ダークテーマ・原本300px幅・点と番号・全文装飾
+      sections/                     # Foundation, Domain1〜3, Operations, Revision の6区間
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)

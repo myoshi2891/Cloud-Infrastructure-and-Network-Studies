@@ -775,7 +775,7 @@ flowchart LR
 | 安全な接続 | PrivateLink、VPN/Direct Connect、プライベートルーティング |
 | 国をまたぐコンプライアンス | データの処理場所に配慮(クロスリージョン推論の範囲を地域に限定する等) |
 
-> クロスリージョン推論には、**地域内に限定する Geographic** と、**全商用リージョンから最適を選ぶ Global** があります。データ処理場所の制約があるなら Geographic を選びます(出典: [Geographic cross-Region inference](https://docs.aws.amazon.com/bedrock/latest/userguide/geographic-cross-region-inference.html))。
+> クロスリージョン推論には、**地域内に限定する Geographic** と、**全商用リージョンから最適を選ぶ Global** があります。Geographic は選択した地域内の別リージョンへルーティングされ得るため、その地域内のどこで処理されてもよい場合に限り選びます。単一の国・リージョン内での処理が必要なら、リージョン内推論を使い、モデルの提供リージョンを確認します(出典: [Geographic cross-Region inference](https://docs.aws.amazon.com/bedrock/latest/userguide/geographic-cross-region-inference.html))。
 
 #### 9.4 CI/CD と GenAIゲートウェイ(2.3.5)
 

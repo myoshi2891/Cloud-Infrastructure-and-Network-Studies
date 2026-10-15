@@ -1,10 +1,12 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-12
+最終更新日: 2026-10-13
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
 ## 🚀 特徴
+
+- **AWS AIP-C01 生成AI開発:** `/aws/generative-ai-developer-professional` に全5ドメイン・Step 1〜20・直前対策・ロードマップ・付録・参考資料を収録。76表・34図・60本文リスト項目・64外部リンク出現を保持し、原本300px目次と点・番号を統一ダークテーマで提供。ホームとHeaderから各ドメインへ移動でき、横スクロール図・表・コードはキーボードでも操作可能。
 
 - **ネットワークを下位層から学ぶ:** [Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド](app/recommended-books/computer-networks-tanenbaum/page.tsx)をBooksに追加。全10ステップ、21図、12表、10チェック項目を掲載。原本の全文・CSS宣言・リストの点と番号を固定fixtureとブラウザで検証。
 

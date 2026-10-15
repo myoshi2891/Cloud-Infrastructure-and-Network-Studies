@@ -8,12 +8,12 @@ describe('Cisco guide theme token ownership', () => {
         const globals = read('app/globals.css');
         const stylesheets = [
             read('app/cisco/ccna/network-fundamentals-guide/page.css'),
-            read('app/cisco/devnet-associate/page.module.css'),
+            read('app/cisco/devnet-associate/page.css'),
             read('app/cisco/devnet-professional/page.module.css'),
         ];
 
         expect(globals).toContain('--color-ccna-fundamentals-elevated: #0d1a2e');
-        expect(globals).toContain('--color-devnet-associate-panel: #0d1b2e');
+        expect(globals).toContain('--color-devnet-associate-panel: #ffffff');
         expect(globals).toContain('--color-devnet-professional-background: #07111e');
         for (const css of stylesheets) {
             expect(css).not.toMatch(/^\s*--[\w-]+\s*:/m);
@@ -22,7 +22,7 @@ describe('Cisco guide theme token ownership', () => {
 
     it('affected guide declarations reference theme tokens instead of raw colors', () => {
         const ccnaCss = read('app/cisco/ccna/network-fundamentals-guide/page.css');
-        const associateCss = read('app/cisco/devnet-associate/page.module.css');
+        const associateCss = read('app/cisco/devnet-associate/page.css');
         const professionalCss = read('app/cisco/devnet-professional/page.module.css');
         const homeCss = read('app/page.module.css');
 

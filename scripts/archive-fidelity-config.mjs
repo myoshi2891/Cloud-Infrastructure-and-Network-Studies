@@ -26,10 +26,26 @@
  * @property {string} [jsonCodeSelector] - JSON コードブロックのセレクタ。
  * @property {string} [introductionSelector] - 導入文のセレクタ。
  * @property {boolean} [mermaidCharts] - Mermaid 定義を出力するか。
+ * @property {Readonly<Record<string, string>>} [guideBoundaries] - ガイドを区切る見出し ID。
  */
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-guide': {
+        source: 'Aws-aip-c01-guide.html',
+        sourceCommit: '2687fb7599f9e46a00747ef2557a2c88e19cc8bd',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: '2-ドメイン1-fm統合データ管理コンプライアンス31',
+            domain2: '3-ドメイン2-実装と統合26',
+            domain3: '4-ドメイン3-ai安全性セキュリティガバナンス20',
+            operations: '5-ドメイン4-運用効率と最適化12',
+            revision: '7-試験直前チェック-シナリオ別この要件ならこれ早見表',
+        },
+    },
     'aws-dva-domain3-deployment': {
         source: 'Aws-dva-c02-domain3-deployment-guide.html',
         sourceCommit: 'b1412ef1a5d2ebdf136c183a64a34150abf5eccc',

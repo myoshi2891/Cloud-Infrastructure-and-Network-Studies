@@ -1,6 +1,6 @@
 # リポジトリ内ファイルへの絶対パス記載禁止ルール
 
-(最終更新日: 2026-08-09)
+(最終更新日: 2026-10-13)
 
 ## ルール
 
@@ -77,7 +77,9 @@ if ! git diff --cached > "$staged_diff"; then
   echo 'ステージ差分を取得できません。コミットを中止します。' >&2
   exit 1
 fi
-if ! sed -E 's#/Users/<username>/##g; s#/home/<username>/##g; s#C:\\Users\\<username>\\##g' \
+# プレースホルダー `<username>` は実ユーザー名ではないため、直後が区切り文字か行末の場合だけ除去する
+# （例: `pwd` の出力例 `/home/<username>` は末尾スラッシュを持たない。直後にハイフンを含むユーザー名文字が続く場合は除去しない）
+if ! sed -E 's#/Users/<username>([^a-zA-Z0-9_.-]|$)##g; s#/home/<username>([^a-zA-Z0-9_.-]|$)##g; s#C:\\Users\\<username>([^a-zA-Z0-9_.-]|$)##g' \
   "$staged_diff" > "$sanitized_diff"; then
   echo '絶対パス検出用の差分処理に失敗しました。コミットを中止します。' >&2
   exit 1
