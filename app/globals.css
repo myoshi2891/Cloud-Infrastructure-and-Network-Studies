@@ -14,6 +14,30 @@
  */
 
 @theme {
+    /* Layer 3: AIP-C01 原本ライト配色 */
+    --color-aip-bg: #f6f8fc;
+    --color-aip-bg-card: #ffffff;
+    --color-aip-bg-card-2: #eef2f9;
+    --color-aip-border: #d5deec;
+    --color-aip-border-soft: #e4eaf4;
+    --color-aip-text: #1b2740;
+    --color-aip-text-dim: #4f607f;
+    --color-aip-text-faint: #7a89a6;
+    --color-aip-accent: #2f5bd9;
+    --color-aip-accent-soft: #a9bcf0;
+    --color-aip-accent-bg: #e8eefc;
+    --color-aip-danger: #c62a47;
+    --color-aip-danger-bg: #fde8ec;
+    --color-aip-warn: #a8620a;
+    --color-aip-warn-bg: #fdf1df;
+    --color-aip-success: #1c7a4a;
+    --color-aip-success-bg: #e6f6ee;
+    --color-aip-strong: #0f1a30;
+    --color-aip-code: #a3480f;
+    --color-aip-success-border: #b7e0c8;
+    --color-aip-hover: rgba(47, 91, 217, 0.05);
+    --color-aip-drawer-shadow: rgba(15, 26, 48, 0.18);
+
     /* Layer 3: DVA Deployment 原本ライト配色 */
     --color-dva-deployment-f1ede2: #f1ede2;
     --color-dva-deployment-556070: #556070;
