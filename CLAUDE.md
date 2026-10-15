@@ -625,6 +625,15 @@ app/
       mermaid-theme.json            # ライトテーマ Mermaid 設定
       page.css                      # 原本ライトテーマ・302pxサイドバー
       sections/                     # Hero, Sec1, Sec2, Skill2_1_1~5, Skill2_2_1~5, Skill2_3_1~4, Sec6~11 の26分割コンポーネント
+    ai-business-strategist/domain3/
+      page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) Domain 3 (Server)
+      AiBusinessStrategistDomain3Guide.tsx # 本文コンポーネント (Client)
+      NavBar.tsx                    # サイドバーナビ・scroll spy・モバイル対応
+      constants.ts                  # NAV_ITEMS・DIAGRAMS (10図)
+      Diagram.tsx                   # Mermaid 図レンダラー (10図、ライトテーマ、自然倍率)
+      mermaid-theme.json            # ライトテーマ Mermaid 設定
+      page.css                      # 原本ライトテーマ・302pxサイドバー
+      sections/                     # Hero, Sec1~Sec5, Sec6~Sec10 の8分割コンポーネント
   recommended-books/
     accelerate/
       page.tsx                      # 『Accelerate』LeanとDevOpsの科学 完全ガイド (Server)

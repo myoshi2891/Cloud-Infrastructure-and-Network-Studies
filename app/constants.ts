@@ -668,6 +668,11 @@ const ALL_EXAMS: Exam[] = [
                 href: '/aws/ai-business-strategist/domain2',
                 pct: '28%',
             },
+            {
+                label: 'Domain 3: AI Governance and Responsible AI',
+                href: '/aws/ai-business-strategist/domain3',
+                pct: '24%',
+            },
         ],
         badge: 'AIB-C01',
         icon: '💼',

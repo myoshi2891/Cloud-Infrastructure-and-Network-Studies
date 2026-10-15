@@ -2,6 +2,32 @@
 
 (最終更新日: 2026-10-15)
 
+## 2026-10-15: AWS Certified AI Business Strategist (AIB-C01) Domain 3 のNext.js移行（完了）
+
+`Aib-c01-domain3-ai-governance-responsible-ai-guide.html` を `/aws/ai-business-strategist/domain3` へ全量移行し、ホーム画面（`app/constants.ts` ALL_EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本のライトテーマ（ペーパー背景・インディゴ見出し・ゴールドアクセント）および302pxサイドバー契約を保持し、全3タスク・10スキル・確認問題5問・参考URLの全コンテンツを完全移行。
+
+原本コンテンツのh1:1・h2:10・h3:24・h4:29、32表（th89・td504）、81リスト項目、32外部リンク、10図（Mermaidダイアグラム）、40本文ブロックを全量・順序・構造まで固定インベントリおよびテストで完全検証。すべての表に `<thead>` と `<th scope="col">`、Mermaidダイアグラムに `aria-label` と `data-preserve-natural-scale` を付与。
+
+### 段階別コミット
+
+- [x] Inventory: `eabb1967` (`chore(migration): add content inventory for aws-ai-business-strategist-domain3`)
+- [x] Red (テスト作成): `7bf6f3af` (`test(aws): add failing tests for aib-domain3`)
+- [x] Scaffold & Foundation: `c9cb91ed` (`feat(aws): scaffold aib-domain3 page structure and navigation`)
+- [x] Hero, Sec1, Sec2: `9ee191b6` (`feat(aws): implement aib-domain3 hero, sec1, and sec2`)
+- [x] Sec3 (Task 3.1): `3f44bd76` (`feat(aws): implement aib-domain3 sec3 (task 3.1)`)
+- [x] Sec4 (Task 3.2): `ec9830ef` (`feat(aws): implement aib-domain3 sec4 (task 3.2)`)
+- [x] Sec5 (Task 3.3): `26aab8d1` (`feat(aws): implement aib-domain3 sec5 (task 3.3)`)
+- [x] Sec6〜Sec10 & Green 達成: `ed6d299a` (`feat(aws): implement aib-domain3 sec6 through sec10`)
+- [x] グローバルナビ & ルーティング統合: （本コミット） (`refactor(aws): integrate aib-domain3 into routing and update docs`)
+- [x] 原本退避 (HTML & Markdown): （次コミット） (`chore(archive): move aib-domain3 html and md to archive`)
+
+### 検証結果
+
+- `__tests__/aws/ai-business-strategist/domain3/page.test.tsx`: 全 13 テスト PASS（h1/h2/h3/h4、th/td、li、リンク、本文・注釈、図、画像・SVG、テーブル、コードブロック）
+- `__tests__/aws/ai-business-strategist/domain2/page.test.tsx`: 全 13 テスト PASS（リグレッションなし）
+- `__tests__/aws/ai-business-strategist/domain1/page.test.tsx`: 全 17 テスト PASS（リグレッションなし）
+- ESLint: エラー 0 件
+
 ## 2026-10-15: AWS Certified AI Business Strategist (AIB-C01) Domain 2 のNext.js移行（完了）
 
 `Aib-c01-domain2-ai-strategy-guide.html` を `/aws/ai-business-strategist/domain2` へ全量移行し、ホーム画面（`app/constants.ts` ALL_EXAMS正本）およびグローバルナビゲーション（Header Drawer）へ登録した。原本のライトテーマ（ペーパー背景・インディゴ見出し・ゴールドアクセント）および302pxサイドバー契約を保持し、全3タスク・14スキル・練習問題10問・直前チェックリスト（18項目）の全コンテンツを完全移行。

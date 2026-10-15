@@ -119,7 +119,7 @@ export const Sec9_References: React.FC = () => {
                                 </td>
                             </tr>
                             <tr>
-                                <td>新しい Well-Architected Lenses(What's New)</td>
+                                <td>新しい Well-Architected Lenses(What&apos;s New)</td>
                                 <td>
                                     <a
                                         href="https://aws.amazon.com/about-aws/whats-new/2025/11/new-aws-well-architected-lenses-ai-ml-workloads"
