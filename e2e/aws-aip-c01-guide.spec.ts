@@ -4,6 +4,30 @@ import inventory from '../docs/migration-inventory/aws-aip-c01-guide.json';
 import fixture from '../docs/migration-inventory/aws-aip-c01-guide.fidelity.json';
 
 const route = '/aws/generative-ai-developer-professional';
+
+test('AIP-C01 list style gates reject missing dots, numbers, indentation and list-item display', async ({ page }) => {
+    await page.goto(route);
+    const cases = [
+        ['main ul', 'list-style-type', 'disc', 'none'],
+        ['main ol', 'list-style-type', 'decimal', 'none'],
+        ['main ul', 'padding-left', '22.4px', '0px'],
+        ['main li', 'display', 'list-item', 'block'],
+    ] as const;
+    for (const [selector, property, expected, broken] of cases) {
+        const element = page.locator(`.aip-guide-page ${selector}`).first();
+        await expect(element).toHaveCSS(property, expected);
+        await element.evaluate((node, mutation) => (node as HTMLElement).style.setProperty(mutation.property, mutation.broken), { property, broken });
+        try {
+            await expect(async () => {
+                await expect(element).toHaveCSS(property, expected, { timeout: 100 });
+            }).rejects.toThrow();
+        } finally {
+            await element.evaluate((node, name) => (node as HTMLElement).style.removeProperty(name), property);
+        }
+        await expect(element).toHaveCSS(property, expected);
+    }
+});
+
 for (const width of [1440, 768, 390]) {
     test(`AIP-C01 ${width}px: full content, list markers, diagrams and navigation`, async ({ page }) => {
         test.setTimeout(180_000);
