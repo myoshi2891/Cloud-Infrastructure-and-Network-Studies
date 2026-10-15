@@ -31,6 +31,23 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-domain1-guide': {
+        source: 'Aws-aip-c01-domain1-guide.html',
+        sourceCommit: '10e0f85f765c2efec07ade99669855fa53ba948d',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideBoundaries: {
+            foundation: '',
+            task11: '3-task-11-要件分析と-genai-ソリューション設計',
+            task12: '4-task-12-fm-の選定と構成',
+            task13: '5-task-13-fm-向けデータ検証と処理パイプライン',
+            task14: '6-task-14-ベクトルストア設計と実装',
+            task15: '7-task-15-fm-拡張のための検索メカニズム',
+            task16: '8-task-16-プロンプトエンジニアリングとガバナンス',
+            revision: '9-試験で問われる判断軸まとめ',
+        },
+    },
     'aws-aip-c01-guide': {
         source: 'Aws-aip-c01-guide.html',
         sourceCommit: 'c4cc32a7',
