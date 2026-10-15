@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Updated 2026-10-13
+Updated 2026-10-16
+
+2026-10-16 AIP-C01再監査: 原本のAWSサービス受付条件・TLS/KMS説明の4箇所を公式資料に基づき訂正し、固定Git原本からインベントリとfixtureを再生成。本文・構造・装飾の追加欠落は検出されなかった。関連Vitest 101件、Chrome E2E 5件（点・番号・インデント・li表示の4変異検出を含む）が成功。最新実装HEADは `92fb6966`。全体Vitestは2559件中2558成功・既存AIBナビ期待値1件失敗（単独再現）。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
