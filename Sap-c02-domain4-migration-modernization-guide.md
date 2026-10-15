@@ -45,7 +45,7 @@ flowchart LR
 
 - **AWS Migration Hub は 2025 年 11 月 7 日以降、新規顧客の受付を停止**しています。既存顧客は継続利用でき、AWS が推奨する後継は **AWS Transform** です (出典は第 7 章)。
 - ただし公式 Exam Guide (Version 1.2) には Migration Hub が引き続き記載されています。**試験対策としては Migration Hub の役割 (発見・評価・追跡の一元管理) を理解しつつ、実務では AWS Transform も確認する**という姿勢が安全です。
-- Snow Family の一部デバイスなどは提供状況が変わることがあります。最新状況は必ず公式ドキュメントで確認してください。
+- **AWS Snow Family (Snowball Edge を含む) は新規顧客に提供されていません**。既存顧客は継続利用できます。本ガイドの Snow Family に関する推奨は、試験対策と利用資格のある既存顧客向けの文脈として扱ってください。新規顧客は、オンライン転送なら **AWS DataSync**、物理的な搬入なら **AWS Data Transfer Terminal** などの現行の代替手段を検討します。最新状況は必ず公式ドキュメントで確認してください。
 
 ---
 
@@ -975,7 +975,7 @@ flowchart LR
 | 資料 | URL |
 |---|---|
 | SAP-C02 公式 Exam Guide (PDF、Version 1.2) | https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf |
-| AWS 認定資格 SAP-C02 ページ (Domain 2、ご提示の URL) | https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02-domain2.html |
+| AWS 認定資格 SAP-C02 ページ (Domain 4 のタスク概要) | https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02-domain4.html |
 | AWS Well-Architected Framework | https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html |
 
 ### 7.2 移行の計画と評価 (Task 4.1)
