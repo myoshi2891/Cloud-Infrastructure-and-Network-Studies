@@ -23,22 +23,22 @@ it.each(questions.map((q,index)=>({title:q.text,index})))('$title judges an inco
  expect(ui.getByRole('status')).toHaveTextContent('正解は '+keys.join('・')+' です。');
  if(type==='checkbox')await user.click(inputs[wrong.charCodeAt(0)-65]!);
  for(const key of keys)await user.click(inputs[key.charCodeAt(0)-65]!);
- await waitFor(()=>expect(ui.getByRole('status')).toHaveTextContent('正解です。'));
+ await waitFor(()=>expect(ui.getByRole('status')).toHaveTextContent(/^正解です。$/));
  for(let i=0;i<4;i++)expect((inputs[i] as HTMLInputElement).checked).toBe(keys.includes(String.fromCharCode(65+i)));
 });
 it('shows unanswered guidance, retains choices on close, and updates verdict after reopening',async()=>{
  const user=userEvent.setup();const{container}=render(<Revision/>);const ui=within(cardFor(container,0));const summary=ui.getByText('答えと解説',{selector:'summary'});
  await user.click(summary);await waitFor(()=>expect(ui.getByRole('status')).toHaveTextContent('未回答です。'));
- await user.click(ui.getAllByRole('radio')[1]!);expect(ui.getByRole('status')).toHaveTextContent('正解です。');await user.click(summary);await waitFor(()=>expect(ui.queryByRole('status')).toBeNull());
+ await user.click(ui.getAllByRole('radio')[1]!);expect(ui.getByRole('status')).toHaveTextContent(/^正解です。$/);await user.click(summary);await waitFor(()=>expect(ui.queryByRole('status')).toBeNull());
  expect(ui.getAllByRole('radio')[1]).toBeChecked();await user.click(ui.getAllByRole('radio')[0]!);await user.click(summary);await waitFor(()=>expect(ui.getByRole('status')).toHaveTextContent('不正解です。'));
 });
 it.each([2,7,11,14])('multi-answer question %i rejects partial and extra selections and accepts reversed order',async(index)=>{
  const user=userEvent.setup();const{container}=render(<Revision/>);const ui=within(cardFor(container,index));const inputs=ui.getAllByRole('checkbox');const keys=correct[index]!;
  await user.click(inputs[keys[1]!.charCodeAt(0)-65]!);await user.click(ui.getByText('答えと解説',{selector:'summary'}));await waitFor(()=>expect(ui.getByRole('status')).toHaveTextContent('不正解です。'));
- await user.click(inputs[keys[0]!.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent('正解です。');const wrong=['A','B','C','D'].find(k=>!keys.includes(k))!;
- await user.click(inputs[wrong.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent('不正解です。');await user.click(inputs[wrong.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent('正解です。');
+ await user.click(inputs[keys[0]!.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent(/^正解です。$/);const wrong=['A','B','C','D'].find(k=>!keys.includes(k))!;
+ await user.click(inputs[wrong.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent('不正解です。');await user.click(inputs[wrong.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent(/^正解です。$/);
  for(const key of keys)await user.click(inputs[key.charCodeAt(0)-65]!);expect(ui.getByRole('status')).toHaveTextContent('未回答です。');
 });
 it('keeps selections and answer visibility independent between questions and resets on remount',async()=>{
- const user=userEvent.setup();const{container,unmount}=render(<Revision/>);const first=within(cardFor(container,0)),second=within(cardFor(container,1));await user.click(first.getAllByRole('radio')[1]!);await user.click(first.getByText('答えと解説',{selector:'summary'}));await waitFor(()=>expect(first.getByRole('status')).toHaveTextContent('正解です。'));expect(second.queryByRole('status')).toBeNull();second.getAllByRole('radio').forEach(i=>expect(i).not.toBeChecked());unmount();const next=render(<Revision/>);within(cardFor(next.container,0)).getAllByRole('radio').forEach(i=>expect(i).not.toBeChecked());
+ const user=userEvent.setup();const{container,unmount}=render(<Revision/>);const first=within(cardFor(container,0)),second=within(cardFor(container,1));await user.click(first.getAllByRole('radio')[1]!);await user.click(first.getByText('答えと解説',{selector:'summary'}));await waitFor(()=>expect(first.getByRole('status')).toHaveTextContent(/^正解です。$/));expect(second.queryByRole('status')).toBeNull();second.getAllByRole('radio').forEach(i=>expect(i).not.toBeChecked());unmount();const next=render(<Revision/>);within(cardFor(next.container,0)).getAllByRole('radio').forEach(i=>expect(i).not.toBeChecked());
 });
