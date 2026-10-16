@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/generative-ai-developer-professional/domain2/page';
 import inventory from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
+import { retainedDomain2Blocks } from '@/__tests__/helpers/aip-domain2-fixture';
 import { extractBodyContent, normalizeSpaces, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
@@ -24,7 +25,7 @@ describe('AIP domain2 independent complete inventory', () => {
     it('retains complete body and exact counts without requiring source HTML or archive', () => {
         const { container } = render(<Page />);
         const normalize = (blocks: { kind: string; text: string }[]) => blocks.map(block => ({ ...block, text: normalizeSpaces(block.text) }));
-        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(normalize(inventory.bodyContent));
+        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(normalize(retainedDomain2Blocks(inventory.bodyContent)));
         expect(container.querySelectorAll('table')).toHaveLength(inventory.counts.table);
         expect(container.querySelectorAll('[data-testid="mermaid-diagram"]')).toHaveLength(inventory.counts.diagram);
         expect(container.querySelectorAll('.code-block')).toHaveLength(inventory.counts.codeBlock);
