@@ -2,7 +2,7 @@
 
 Updated 2026-10-16
 
-2026-10-16 AIP-C01 Domain 1詳細ガイド: `/aws/generative-ai-developer-professional/domain1` を追加。全6タスク・28スキル、51表・21図・137リスト項目・123外部リンク出現・63目次・16チェックを原本から全文移行。原本ライト配色と図の配置設定を保持し、小さな緑ラベルと完了済みラベルの文字色2箇所のみ可読性を補正。原本削除後の関連221件・Chrome 5件が成功。最新実装HEAD `defc2cb7`（原本整理 `7568c046`）。HTMLはarchiveへバイト一致保存後に直下から削除。全体Vitestは2679件中2678成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01 Domain 2詳細ガイド: `/aws/generative-ai-developer-professional/domain2` を追加。全5タスク・25スキル、96表（th221・td1308）、42図、9コード、296リスト項目、230外部リンク出現、145本文ブロック、230目次、解答開閉15問を原本から全文移行。原本ライト配色・300px幅・点と番号・Mermaid設定を保持。小さな緑ラベル、参照リンクの識別性、図のグループ見出し色、コードのキーボードスクロールを補正。原本削除後の関連17ファイル・247件成功。Chrome 5件と全42SVGの見切れ検証1件が成功。最新実装HEAD `90dce54d`（原本整理 `6299deb5`、可読性Green `2c964fd4`）。HTMLは285714バイトをarchiveへ完全一致で保存後に直下から削除し、Markdownは保持。型検査・全体ESLint・対象Markdown lint成功。全体Vitestの最終結果はMIGRATION_PROGRESS.md参照。npm・ビルド未実行、目視確認はユーザー担当。
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -610,6 +610,14 @@ app/
         Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
         page.css                    # 原本ライト配色・300px幅・通常/チェックリスト装飾
         sections/                   # Foundation, Task11〜16, Revision の8区間
+      domain2/
+        page.tsx                    # Domain 2詳細版 (Server、metadata、CSS)
+        AipDomain2Guide.tsx          # 導入・5タスク・復習の7区分 (Server)
+        NavBar.tsx                  # 原本230目次・開閉・scroll spy・hash/focus (Client)
+        constants.ts                # 原本42図・単一目次・Mermaid配色と配置設定
+        Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
+        page.css                    # 原本ライト配色・300px幅・点と番号・コード行
+        sections/                   # Foundation, Task21〜25, Revision
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)

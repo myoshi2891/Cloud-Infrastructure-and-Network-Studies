@@ -2,7 +2,7 @@
 
 最終更新日: 2026-10-16
 
-2026-10-16 AIP-C01 Domain 1詳細ガイド: `/aws/generative-ai-developer-professional/domain1` を追加。全6タスク・28スキル、51表・21図・137リスト項目・123外部リンク出現・63目次・16チェックを原本から全文移行。原本ライト配色と図の配置設定を保持し、小さな緑ラベルと完了済みラベルの文字色2箇所のみ可読性を補正。原本削除後の関連221件・Chrome 5件が成功。最新実装HEAD `defc2cb7`（原本整理 `7568c046`）。HTMLはarchiveへバイト一致保存後に直下から削除。全体Vitestは2679件中2678成功・既存AIBナビ期待値1件失敗。型検査・全体ESLint成功。npm・ビルド未実行、目視確認はユーザー担当。
+2026-10-16 AIP-C01 Domain 2詳細ガイド: `/aws/generative-ai-developer-professional/domain2` を追加。全5タスク・25スキル、96表（th221・td1308）、42図、9コード、296リスト項目、230外部リンク出現、145本文ブロック、230目次、解答開閉15問を原本から全文移行。原本ライト配色・300px幅・点と番号・Mermaid設定を保持。小さな緑ラベル、参照リンクの識別性、図のグループ見出し色、コードのキーボードスクロールを補正。原本削除後の関連17ファイル・247件成功。Chrome 5件と全42SVGの見切れ検証1件が成功。最新実装HEAD `90dce54d`（原本整理 `6299deb5`、可読性Green `2c964fd4`）。HTMLは285714バイトをarchiveへ完全一致で保存後に直下から削除し、Markdownは保持。型検査・全体ESLint・対象Markdown lint成功。全体Vitestの最終結果はMIGRATION_PROGRESS.md参照。npm・ビルド未実行、目視確認はユーザー担当。
 
 Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエンジニアリング・DevOps名著（『Accelerate』、『Site Reliability Engineering』、『The DevOps Handbook』、『Release It!』、『Infrastructure as Code』など）の学習を目的とした、インタラクティブな学習用 Next.js アプリケーションです。
 
@@ -10,6 +10,7 @@ Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエン�
 
 - **AWS AIP-C01 生成AI開発:** `/aws/generative-ai-developer-professional` に全5ドメイン・Step 1〜20・直前対策・ロードマップ・付録・参考資料を収録。76表・34図・60本文リスト項目・64外部リンク出現を保持し、原本300px目次と点・番号を原本のライトテーマで提供。ホームとHeaderから各ドメインへ移動でき、横スクロール図・表・コードはキーボードでも操作可能。
 
+- **AIP-C01 ドメイン2詳細:** `/aws/generative-ai-developer-professional/domain2` に全5タスク・25スキル・96表・42図・9コード・練習問題15問を収録。原本ライト配色、点と番号、230項目の目次、解答の開閉を保持し、ホームとHeaderから移動できます。
 - **AIP-C01 ドメイン1詳細:** `/aws/generative-ai-developer-professional/domain1` に全6タスク・28スキル・51表・21図を収録。原本のライト配色、点と番号、63項目の目次、16項目の学習チェックリストを保持し、ホームとHeaderから移動できます。
 
 - **ネットワークを下位層から学ぶ:** [Tanenbaum & Wetherall『Computer Networks』着想の入門ガイド](app/recommended-books/computer-networks-tanenbaum/page.tsx)をBooksに追加。全10ステップ、21図、12表、10チェック項目を掲載。原本の全文・CSS宣言・リストの点と番号を固定fixtureとブラウザで検証。
