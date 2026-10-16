@@ -113,3 +113,22 @@ test('AIP domain2 gates reject missing dots, numbers, indent and source light pa
         await expect(element).toHaveCSS(property!, expected!);
     }
 });
+
+test('AIP domain2 all 42 diagrams keep their drawn content inside the SVG viewBox', async ({ page }) => {
+    await page.goto(route);
+    const diagrams = page.locator('.aip-domain2-page .mermaid-wrap svg');
+    await expect(diagrams).toHaveCount(inventory.counts.diagram, { timeout: 120_000 });
+    const boxes = await diagrams.evaluateAll(elements => elements.map(element => {
+        const svg = element as SVGSVGElement;
+        const box = svg.getBBox();
+        const view = svg.viewBox.baseVal;
+        return { id: svg.id, x: box.x, y: box.y, right: box.x + box.width, bottom: box.y + box.height,
+            left: view.x, top: view.y, viewRight: view.x + view.width, viewBottom: view.y + view.height };
+    }));
+    for (const box of boxes) {
+        expect(box.x, box.id).toBeGreaterThanOrEqual(box.left - 2);
+        expect(box.y, box.id).toBeGreaterThanOrEqual(box.top - 2);
+        expect(box.right, box.id).toBeLessThanOrEqual(box.viewRight + 2);
+        expect(box.bottom, box.id).toBeLessThanOrEqual(box.viewBottom + 2);
+    }
+});
