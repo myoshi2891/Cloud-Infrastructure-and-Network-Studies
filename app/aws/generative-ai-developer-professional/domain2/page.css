@@ -603,11 +603,12 @@
     border-radius: 3px;
 }
 .aip-domain2-page .practice-question > p { font-weight: 500; }
-.aip-domain2-page .practice-question > ul {
-    padding: 0 0 0 1.4em;
+.aip-domain2-page .practice-question .practice-options {
+    padding: 0;
+    list-style-type: none;
     margin: 20px 0;
 }
-.aip-domain2-page .practice-question > ul > li {
+.aip-domain2-page .practice-question .practice-option {
     padding: 12px 16px;
     margin: 8px 0;
     border: 1px solid var(--color-aip-d1-border-soft);
@@ -615,7 +616,7 @@
     background: var(--color-aip-d1-bg-card-2);
     line-height: 1.75;
 }
-.aip-domain2-page .practice-question > ul > li::marker { color: var(--color-aip-d2-accent); }
+
 .aip-domain2-page .practice-question details {
     padding: 0;
     margin: 24px 0 0;
@@ -649,7 +650,22 @@
 @media (max-width: 640px) {
     .aip-domain2-page .practice-question { padding: 20px 16px; }
     .aip-domain2-page .practice-question h3 { font-size: 17px; }
-    .aip-domain2-page .practice-question > ul > li { padding: 10px 12px; }
+    .aip-domain2-page .practice-question .practice-option { padding: 10px 12px; }
 }
 /* Task見出しの前後に原本hrがある場合は前側の1本だけを残す。 */
 .aip-domain2-page .main h2 + hr { display: none; }
+
+/* 採点付き選択肢。通常の本文リストの点・番号は保持する。 */
+.aip-domain2-page .practice-choices { border: 0; padding: 0; margin: 0; min-width: 0; min-inline-size: 0; }
+.aip-domain2-page .practice-question .practice-options > li { display: block; margin: 8px 0; }
+.aip-domain2-page .practice-question .practice-option { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.aip-domain2-page .practice-option-text { min-width: 0; flex: 1; }
+.aip-domain2-page .practice-option input { appearance: auto; flex: none; width: 18px; height: 18px; margin: 4px 0 0; accent-color: var(--color-aip-d2-accent); cursor: pointer; }
+.aip-domain2-page .practice-option:focus-within { outline: 2px solid var(--color-aip-d2-accent); outline-offset: 2px; }
+.aip-domain2-page .practice-question .practice-option[data-selected="true"] { border-color: var(--color-aip-d2-accent); background: var(--color-aip-d2-accent-bg); }
+.aip-domain2-page .practice-question .practice-option[data-result="correct"] { border-color: var(--color-aip-d1-success-text); background: var(--color-aip-d2-success-bg); }
+.aip-domain2-page .practice-question .practice-option[data-result="incorrect"] { border-color: var(--color-aip-d2-danger); background: var(--color-aip-d2-danger-bg); }
+.aip-domain2-page .practice-question .practice-feedback { margin: 0; padding: 14px 18px; font-weight: 700; }
+.aip-domain2-page .practice-feedback[data-verdict="correct"] { color: var(--color-aip-d1-success-text); background: var(--color-aip-d2-success-bg); }
+.aip-domain2-page .practice-feedback[data-verdict="incorrect"] { color: var(--color-aip-d2-danger); background: var(--color-aip-d2-danger-bg); }
+.aip-domain2-page .practice-feedback[data-verdict="unanswered"] { color: var(--color-aip-d2-text-dim); background: var(--color-aip-d1-bg-card-2); }
