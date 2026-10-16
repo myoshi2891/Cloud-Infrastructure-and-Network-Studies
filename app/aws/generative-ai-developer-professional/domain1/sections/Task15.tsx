@@ -36,7 +36,7 @@ export default function Task15() { return <div className="guide-part" data-part=
 
 <p>{"出典: Bedrock 埋め込みモデル "}<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html">{"https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html"}</a></p>
 
-<p>{"出典: Bedrock Embeddings の考え方 "}<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/embeddings.html">{"https://docs.aws.amazon.com/bedrock/latest/userguide/embeddings.html"}</a></p>
+<p>{"出典: Bedrock Embeddings の考え方 "}<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-it-works.html">{"https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-it-works.html"}</a></p>
 
 <h3 id="skill-153-ベクトル検索ソリューションの構成" tabIndex={-1}>{"Skill 1.5.3 ベクトル検索ソリューションの構成"}</h3>
 
