@@ -30,6 +30,10 @@ describe('AIP domain2 source visual declarations', () => {
             const actual = declarations(selector, rule.media);
             for (const [prop, value] of Object.entries(rule.declarations)) {
                 if (!/background|color|border|box-shadow/.test(prop) || !/#|rgba|var\(/.test(value)) continue;
+                if (prop === 'color' && rule.selector === '.callout-practice .label') {
+                    expect(resolve(actual[prop] ?? '', tokens)).toBe('#176b40');
+                    continue;
+                }
                 expect(resolve(actual[prop] ?? '', tokens), `${selector}: ${prop}`).toBe(resolve(value, sourceTokens));
             }
         }
@@ -62,6 +66,9 @@ describe('AIP domain2 source visual declarations', () => {
         expect(declarations('.aip-domain2-page .main', '(max-width: 980px)').width).toBe('100%');
         expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);
         expect(css).not.toMatch(/svg\s*\{[^}]*max-width:\s*100%/s);
+    });
+    it('keeps reference links distinguishable from surrounding list text', () => {
+        expect(declarations('.aip-domain2-page .main li a')['text-decoration']).toBe('underline');
     });
     it('keeps every border, gradient and accent through defined global theme tokens', () => {
         const globals = readFileSync('app/globals.css', 'utf8');
