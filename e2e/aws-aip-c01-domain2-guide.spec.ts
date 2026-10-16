@@ -132,3 +132,39 @@ test('AIP domain2 all 42 diagrams keep their drawn content inside the SVG viewBo
         expect(box.bottom, box.id).toBeLessThanOrEqual(box.viewBottom + 2);
     }
 });
+
+test('AIP domain2 node backgrounds remain light across flowcharts, states and sequence actors', async ({ page }) => {
+    await page.goto(route);
+    const diagrams = page.locator('.aip-domain2-page .mermaid-wrap svg');
+    await expect(diagrams).toHaveCount(42, { timeout: 120_000 });
+    const shapes = await diagrams.locator('.node rect, .node polygon, rect.actor').evaluateAll(elements => elements.map(element => getComputedStyle(element).fill));
+    expect(shapes.length).toBeGreaterThan(42);
+    for (const fill of shapes) expect(fill).toBe('rgb(232, 238, 255)');
+});
+
+test('AIP domain2 uses one section divider, highlighted code and 15 polished accessible practice cards', async ({ page }) => {
+    for (const width of [1440, 768, 390]) {
+        await page.setViewportSize({ width, height: 1000 });
+        await page.goto(route);
+        const root = page.locator('.aip-domain2-page');
+        const headings = await root.locator('main h2').evaluateAll(elements => elements.map(e => getComputedStyle(e).borderTopWidth));
+        expect(headings.every(width => width === '0px')).toBe(true);
+        const code = root.locator('.code-block');
+        await expect(code).toHaveCount(9);
+        for (const block of await code.all()) {
+            if(await block.getAttribute('data-language')==='logs-insights') await expect(block.locator('.hljs-keyword').first()).toHaveCSS('color','rgb(122, 62, 157)');
+            else await expect(block.locator('.hljs-string').first()).toHaveCSS('color', 'rgb(31, 105, 55)');
+            expect(await block.locator('.code-line').evaluateAll(lines=>lines.every(l=>getComputedStyle(l).whiteSpace==='pre'))).toBe(true);
+        }
+        const cards = root.locator('.practice-question');
+        await expect(cards).toHaveCount(15);
+        for (const card of await cards.all()) {
+            await expect(card).toHaveCSS('border-radius', '16px');
+            await card.locator('summary').click();
+            await expect(card.locator('details')).toHaveAttribute('open', '');
+            await card.locator('summary').click();
+        }
+        expect((await new AxeBuilder({page}).include('.aip-domain2-page').analyze()).violations).toEqual([]);
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+    }
+});

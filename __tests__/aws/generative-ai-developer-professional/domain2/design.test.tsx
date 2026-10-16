@@ -30,6 +30,7 @@ describe('AIP domain2 source visual declarations', () => {
             const actual = declarations(selector, rule.media);
             for (const [prop, value] of Object.entries(rule.declarations)) {
                 if (!/background|color|border|box-shadow/.test(prop) || !/#|rgba|var\(/.test(value)) continue;
+                if(prop === 'border-top' && rule.selector === '.main h2'){expect(actual[prop]).toBe('none');continue;}
                 if (prop === 'color' && rule.selector === '.callout-practice .label') {
                     expect(resolve(actual[prop] ?? '', tokens)).toBe('#176b40');
                     continue;

@@ -5,6 +5,7 @@ import { metadata } from '@/app/aws/generative-ai-developer-professional/domain2
 import { DIAGRAMS, MERMAID_CONFIG, NAV_ITEMS } from '@/app/aws/generative-ai-developer-professional/domain2/constants';
 import { Diagram } from '@/app/aws/generative-ai-developer-professional/domain2/Diagram';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
+import { aipDomain2Part } from '@/__tests__/helpers/aip-domain2-fixture';
 import { normalizeMermaid } from '@/scripts/archive-fidelity-extraction.mjs';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
@@ -61,7 +62,7 @@ describe('AIP domain2 shell and source diagram settings', () => {
         expect(diagram).toHaveAttribute('data-theme', 'light');
         expect(diagram).toHaveAttribute('data-preserve-natural-scale', 'true');
         expect(diagram).toHaveAttribute('aria-label', 'ロードマップ');
-        expect(diagram?.getAttribute('data-chart')).toContain(`%%{init: ${JSON.stringify(fixture.guideInteractions.mermaidConfig)}}%%`);
+        expect(diagram?.getAttribute('data-chart')).toBe(aipDomain2Part('foundation').diagrams[0]);
         expect(diagram?.getAttribute('data-chart')).toContain(DIAGRAMS['diag-0']);
         expect(diagram?.closest('.mermaid-wrap')).toHaveAttribute('tabindex', '0');
     });
