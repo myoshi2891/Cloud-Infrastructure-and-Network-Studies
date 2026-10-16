@@ -558,3 +558,8 @@
 .aip-domain2-page .mermaid-wrap p { color: inherit; margin: 0; }
 @media (max-width: 980px) { .aip-domain2-page .main { width: 100%; max-width: none; min-width: 0; } .aip-domain2-page .sidebar:not(.open) { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .aip-domain2-page * { transition: none !important; scroll-behavior: auto !important; } }
+/* baseテーマのsubgraph見出しにも原本の濃紺を適用する。 */
+.aip-domain2-page .mermaid-wrap .cluster-label .nodeLabel { color: var(--color-aip-d2-text) !important; }
+/* 小さなラベルと本文リンクの識別性のみWCAG AAに合わせる。 */
+.aip-domain2-page .callout-practice .label { color: var(--color-aip-d1-success-text); }
+.aip-domain2-page .main li a { text-decoration: underline; text-underline-offset: .15em; }
