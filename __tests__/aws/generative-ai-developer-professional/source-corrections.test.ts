@@ -59,6 +59,15 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(corrected.td.find(cell => cell.startsWith('ナレッジベースのウェブクローラーを利用'))).toContain('2026年9月30日以降');
     });
 
+    it('domain1: Task 1.5の埋め込みの出典を、ナレッジベースが埋め込みを作成・検索する仕組みのページへ差し替える', () => {
+        const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
+        const hrefs = corrected.links.map(link => link.href);
+        expect(hrefs).not.toContain('https://docs.aws.amazon.com/bedrock/latest/userguide/embeddings.html');
+        expect(hrefs).toContain('https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-it-works.html');
+        const citation = corrected.bodyContent.find(block => block.text.startsWith('出典: Bedrock Embeddings の考え方'))?.text ?? '';
+        expect(citation).toBe('出典: Bedrock Embeddings の考え方 https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-it-works.html');
+    });
+
     it('domain1: PIIのガードレールはモデル入力をマスクするが呼び出しログはサニタイズしないことを明記する', () => {
         const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
         expect(corrected.listItems.join('\n')).not.toContain('マスキングするか、ガードレールで保護する');
