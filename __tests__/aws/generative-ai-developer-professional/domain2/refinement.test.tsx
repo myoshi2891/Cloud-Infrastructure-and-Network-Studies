@@ -3,6 +3,7 @@ import {expect,it,vi} from 'vitest';
 import Guide from '@/app/aws/generative-ai-developer-professional/domain2/AipDomain2Guide';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import {codeLines} from '@/scripts/inventory-extraction.mjs';
+import {AIP_DOMAIN2_CORRECTIONS,withSourceCorrections} from '@/__tests__/helpers/aip-source-corrections';
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 it('isolates every diagram from inherited dark node, actor and state backgrounds',()=>{
  const {container}=render(<Guide/>);const diagrams=container.querySelectorAll('[data-chart]');expect(diagrams).toHaveLength(42);
@@ -12,7 +13,7 @@ it('isolates every diagram from inherited dark node, actor and state backgrounds
 });
 it('highlights every source code block while retaining every line and whitespace',()=>{
  const {container}=render(<Guide/>);const blocks=[...container.querySelectorAll('.code-block')];
- expect(blocks).toHaveLength(9);expect(blocks.map(codeLines)).toEqual(Object.values(fixture.guideParts).flatMap(p=>p.codes));
+ expect(blocks).toHaveLength(9);expect(blocks.map(codeLines)).toEqual(Object.values(withSourceCorrections(fixture.guideParts,AIP_DOMAIN2_CORRECTIONS)).flatMap(p=>p.codes));
  for(const block of blocks){expect(block.getAttribute('data-language')).toMatch(/^(python|json|logs-insights)$/);if(block.getAttribute('data-language')!=='logs-insights')expect(block.querySelector('.hljs-string')).not.toBeNull();expect(block.querySelector('.hljs-keyword,.hljs-attr')).not.toBeNull();expect(block).toHaveAttribute('tabindex','0');}
 });
 it('groups all 15 unchanged questions and answers into labelled practice cards',()=>{

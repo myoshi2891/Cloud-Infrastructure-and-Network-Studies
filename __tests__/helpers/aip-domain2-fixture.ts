@@ -1,4 +1,5 @@
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
+import {AIP_DOMAIN2_CORRECTIONS,withSourceCorrections} from './aip-source-corrections';
 
 // ユーザー指定で削除した原本末尾の案内文は、表示内容の期待値に含めない。
 const removedClosingNote = fixture.guideParts.revision.body.at(-1)?.text;
@@ -16,7 +17,7 @@ export function aipDomain2Part(id:keyof typeof fixture.guideParts){
  actorLineColor:'#5b6f94',signalColor:'#5b6f94',labelBoxBkgColor:'#ffffff',labelBoxBorderColor:'#9db2ee',
  noteBkgColor:'#f1f5fd',noteTextColor:'#1c2a40',noteBorderColor:'#9db2ee'}};
  const prefix=`---\nconfig: ${JSON.stringify(config)}\n---\n`;
- const part=fixture.guideParts[id];
+ const part=withSourceCorrections(fixture.guideParts[id],AIP_DOMAIN2_CORRECTIONS);
  return {...part,
  text:id==='revision'&&removedClosingNote ? part.text.replace(` ${removedClosingNote}`, '') : part.text,
  body:retainedDomain2Blocks(part.body),inline:retainedDomain2Blocks(part.inline),
