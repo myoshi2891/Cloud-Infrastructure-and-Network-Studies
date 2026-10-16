@@ -1,0 +1,9 @@
+{
+  "source": "Aws-aip-c01-domain2-implementation-integration-guide.html",
+  "sourceCommit": "9eb40ce6830575a34214cd0847b65bc9406190e5",
+  "archive": "archive/Aws/html/generative-ai-developer-professional/domain2/Aws-aip-c01-domain2-implementation-integration-guide.html",
+  "sha256": "e0934ffd608fca12e6d85ea67fb9f8c73ae4f98d3e867d5c391c830561112fc7",
+  "bytes": 285714,
+  "rootRetained": false,
+  "reason": "移行計画に従い原本をバイト一致でアーカイブ後に直下HTMLを削除。テストは固定Git由来fixtureを使用。"
+}
