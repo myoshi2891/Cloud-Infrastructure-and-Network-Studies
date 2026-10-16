@@ -90,7 +90,7 @@
                 position: fixed;
                 top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
                 left: 14px;
-                z-index: 30;
+                z-index: 31;
                 width: 42px;
                 height: 42px;
                 border-radius: 10px;

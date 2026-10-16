@@ -68,6 +68,12 @@ describe('AIP domain2 source visual declarations', () => {
         expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);
         expect(css).not.toMatch(/svg\s*\{[^}]*max-width:\s*100%/s);
     });
+    it('stacks the mobile menu toggle above the open sidebar', () => {
+        // トグルはDOM上でサイドバーより前にあるため、同値では開いたサイドバーに覆われる
+        const toggle = Number(declarations('.aip-domain2-page .sidebar-toggle')['z-index']);
+        const sidebar = Number(declarations('.aip-domain2-page .sidebar')['z-index']);
+        expect(toggle).toBeGreaterThan(sidebar);
+    });
     it('keeps reference links distinguishable from surrounding list text', () => {
         expect(declarations('.aip-domain2-page .main li a')['text-decoration']).toBe('underline');
     });
