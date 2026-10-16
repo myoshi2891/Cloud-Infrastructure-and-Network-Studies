@@ -77,6 +77,18 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(item).toContain('呼び出しログを別途保護');
     });
 
+    it('domain1: Task 1.4はKnowledge BasesをマネージドRAGとして区別し、userContextはACL対応ソースに限定する', () => {
+        const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
+        const kbCell = corrected.td.find(cell => cell.startsWith('Bedrock Knowledge Bases(マネージド')) ?? '';
+        expect(kbCell).toContain('マネージド RAG');
+        expect(kbCell).toContain('ベクトルストアではなく');
+        for (const store of ['Amazon OpenSearch Service / Serverless', 'Amazon Aurora PostgreSQL + pgvector', 'Amazon DynamoDB(ベクトルインデックス)', 'Amazon S3 Vectors']) expect(corrected.td).toContain(store);
+        const item = corrected.listItems.find(text => text.startsWith('権限属性を持たせ')) ?? '';
+        expect(item).toContain('制限のあるすべてのデータソースが ACL に対応している場合に限る');
+        expect(item).toContain('ACL 非対応のデータソースでは認証済み ID からサーバー側で生成したメタデータフィルター');
+        expect(item).toContain('クライアントが送ってきた権限フィルターをそのまま使ってはならない');
+    });
+
     it('domain2: 検証パターンがtoolSpecと一致し、A123/ のような不正IDを拒否する', () => {
         const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
         const code = corrected.bodyContent.find(block => block.text.includes('def handler(event, context):'))?.text ?? '';
