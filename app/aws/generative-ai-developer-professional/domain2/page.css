@@ -651,3 +651,5 @@
     .aip-domain2-page .practice-question h3 { font-size: 17px; }
     .aip-domain2-page .practice-question > ul > li { padding: 10px 12px; }
 }
+/* Task見出しの前後に原本hrがある場合は前側の1本だけを残す。 */
+.aip-domain2-page .main h2 + hr { display: none; }
