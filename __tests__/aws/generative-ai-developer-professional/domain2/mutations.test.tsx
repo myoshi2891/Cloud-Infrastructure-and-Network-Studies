@@ -2,7 +2,6 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Guide from '@/app/aws/generative-ai-developer-professional/domain2/AipDomain2Guide';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
-import { aipDomain1Part } from '@/__tests__/helpers/aip-domain2-fixture';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import { squash } from '@/__tests__/helpers/migration-test-utils';
 
