@@ -9,6 +9,8 @@ export const AIP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
     ['/userguide/kb-data-source-connectors.html', '/userguide/data-source-connectors.html'],
     ['ナレッジベースのコネクタを利用', 'ナレッジベースのコネクタを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降これらのコネクタを新規作成できない(既存のコネクタは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base は Confluence と SharePoint のネイティブコネクタを提供するが、Salesforce は含まれない'],
     ['ナレッジベースのウェブクローラーを利用', 'ナレッジベースのウェブクローラーを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降ウェブクローラーを新規作成できない(既存のクローラーは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base はウェブクローラーのネイティブコネクタを提供する'],
+    // ガードレールのPIIマスクはAPIの入出力にだけ効き、モデル呼び出しログには元の内容が残る
+    ['PII は、FM に渡す前にマスキングするか、ガードレールで保護する', 'PII は、FM に渡す前（Bedrock へのリクエスト前にマスキング）に取り除く。ガードレールはモデルの入出力をマスクできるが、モデル呼び出しログはサニタイズしないため、生の PII を残してはならない場合は呼び出しログを別途保護する(ログの無効化、KMS 暗号化、アクセス制限など)'],
 ];
 
 /** Domain 2: 検証をtoolSpecのpatternと一致させ、errorCodeを持たない呼び出しログではなくアプリのエラーログを集計する。 */

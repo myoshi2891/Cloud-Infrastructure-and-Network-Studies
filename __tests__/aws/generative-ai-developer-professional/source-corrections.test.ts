@@ -59,6 +59,15 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(corrected.td.find(cell => cell.startsWith('ナレッジベースのウェブクローラーを利用'))).toContain('2026年9月30日以降');
     });
 
+    it('domain1: PIIのガードレールはモデル入力をマスクするが呼び出しログはサニタイズしないことを明記する', () => {
+        const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
+        expect(corrected.listItems.join('\n')).not.toContain('マスキングするか、ガードレールで保護する');
+        const item = corrected.listItems.find(text => text.startsWith('PII は')) ?? '';
+        expect(item).toContain('Bedrock へのリクエスト前にマスキング');
+        expect(item).toContain('モデル呼び出しログはサニタイズしない');
+        expect(item).toContain('呼び出しログを別途保護');
+    });
+
     it('domain2: 検証パターンがtoolSpecと一致し、A123/ のような不正IDを拒否する', () => {
         const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
         const code = corrected.bodyContent.find(block => block.text.includes('def handler(event, context):'))?.text ?? '';
