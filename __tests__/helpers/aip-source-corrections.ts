@@ -41,6 +41,8 @@ export const AIP_DOMAIN2_CORRECTIONS: readonly Correction[] = [
     // Direct Connect はプライベート接続だが既定では暗号化しないため、暗号化手段を明示する
     ['オンプレミスとAWSの閉域・暗号化接続', 'オンプレミスとAWSのプライベート接続（Direct Connect は既定では暗号化されないため、暗号化が必要なら TLS、MACsec、または Direct Connect 上の Site-to-Site VPN（IPsec）を使う）'],
     ['|Direct Connect または VPN<br/>暗号化された専用経路|', '|Direct Connect または VPN<br/>プライベート経路<br/>暗号化は TLS MACsec VPN で行う|'],
+    // 推論プロファイルはプロファイルARNだけでなく、関連する全リージョンの基盤モデルARNも許可が必要
+    ['推論プロファイルを使う場合は、そのARNも含めて指定します。', '推論プロファイルを使う場合は、プロファイルの ARN に加えて、プロファイルに関連付けられたすべてのリージョンの基盤モデル ARN も許可します（プロファイル ARN だけでは、別リージョンへルーティングされた呼び出しが AccessDeniedException で失敗します）。プロファイル経由の呼び出しに限定して基盤モデルの直接呼び出しを防ぐには、基盤モデルを許可するステートメントに bedrock:InferenceProfileArn 条件キーを付けます。'],
 ];
 
 const correctText = (text: string, corrections: readonly Correction[]): string =>

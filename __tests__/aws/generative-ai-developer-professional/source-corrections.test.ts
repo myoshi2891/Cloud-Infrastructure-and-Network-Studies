@@ -102,6 +102,16 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(count(chart, 'ACC["')).toBe(1);
     });
 
+    it('domain2: 推論プロファイルは全リージョンの基盤モデル許可が必要で、直接呼び出し防止にInferenceProfileArn条件を勧める', () => {
+        const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
+        const note = corrected.bodyContent.find(block => block.text.startsWith('Resource を * にしない'))?.text ?? '';
+        expect(note).not.toContain('そのARNも含めて指定します');
+        expect(note).toContain('プロファイルに関連付けられたすべてのリージョンの基盤モデル ARN も許可');
+        expect(note).toContain('AccessDeniedException');
+        expect(note).toContain('bedrock:InferenceProfileArn');
+        expect(note).toContain('基盤モデルの直接呼び出しを防ぐ');
+    });
+
     it('domain2: 検証パターンがtoolSpecと一致し、A123/ のような不正IDを拒否する', () => {
         const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
         const code = corrected.bodyContent.find(block => block.text.includes('def handler(event, context):'))?.text ?? '';
