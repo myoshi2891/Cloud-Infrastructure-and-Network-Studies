@@ -56,6 +56,22 @@ describe('AIP domain2 shell and source diagram settings', () => {
         expect(screen.getByRole('link', { name: last.label })).toHaveAttribute('aria-current', 'location');
         unmount(); expect(disconnect).toHaveBeenCalledOnce();
     });
+    it('keeps the first visible heading active when a following heading enters the observer later', () => {
+        let callback: IntersectionObserverCallback | undefined;
+        vi.stubGlobal('IntersectionObserver', class { constructor(cb: IntersectionObserverCallback) { callback = cb; } observe() {} disconnect() {} });
+        const first = NAV_ITEMS[0], second = NAV_ITEMS[1];
+        if (!second) throw new Error('Missing navigation items');
+        render(<><NavBar /><h2 id={first.id}>First</h2><h3 id={second.id}>Second</h3></>);
+        const entry = (id: string, isIntersecting: boolean): IntersectionObserverEntry => {
+            const target = document.getElementById(id)!;
+            return { target, isIntersecting, boundingClientRect: target.getBoundingClientRect(), intersectionRect: target.getBoundingClientRect(), intersectionRatio: isIntersecting ? 1 : 0, rootBounds: null, time: 0 };
+        };
+        act(() => callback?.([entry(first.id, true)], {} as IntersectionObserver));
+        act(() => callback?.([entry(second.id, true)], {} as IntersectionObserver));
+        expect(screen.getByRole('link', { name: first.label })).toHaveAttribute('aria-current', 'location');
+        act(() => callback?.([entry(first.id, false)], {} as IntersectionObserver));
+        expect(screen.getByRole('link', { name: second.label })).toHaveAttribute('aria-current', 'location');
+    });
     it('passes the exact source light config and natural scale to each labelled diagram', () => {
         const { container } = render(<Diagram id="diag-0" label="ロードマップ" />);
         const diagram = container.querySelector('[data-testid="mermaid-diagram"]');
