@@ -18,8 +18,15 @@ export default function NavBar() {
         return () => document.removeEventListener('keydown', escape);
     }, [open]);
     useEffect(() => {
+        // 交差中の見出しを保持し、報告順ではなく目次順で先頭の見出しを選ぶ
+        const intersecting = new Set<string>();
         const observer = typeof IntersectionObserver === 'undefined' ? undefined : new IntersectionObserver(entries => {
-            for (const entry of entries) if (entry.isIntersecting) setActiveId(entry.target.id);
+            for (const entry of entries) {
+                if (entry.isIntersecting) intersecting.add(entry.target.id);
+                else intersecting.delete(entry.target.id);
+            }
+            const first = NAV_ITEMS.find(item => intersecting.has(item.id));
+            if (first) setActiveId(first.id);
         }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
         for (const item of NAV_ITEMS) {
             const target = document.getElementById(item.id);
