@@ -158,6 +158,9 @@ test('AIP domain2 uses one section divider, highlighted code and 15 polished acc
         const root = page.locator('.aip-domain2-page');
         const headings = await root.locator('main h2').evaluateAll(elements => elements.map(e => getComputedStyle(e).borderTopWidth));
         expect(headings.every(width => width === '0px')).toBe(true);
+        const redundantRules = root.locator('main h2 + hr');
+        await expect(redundantRules).toHaveCount(5);
+        for (const rule of await redundantRules.all()) await expect(rule).toBeHidden();
         const code = root.locator('.code-block');
         await expect(code).toHaveCount(9);
         for (const block of await code.all()) {

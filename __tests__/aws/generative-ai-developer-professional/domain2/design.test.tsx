@@ -71,6 +71,9 @@ describe('AIP domain2 source visual declarations', () => {
     it('keeps reference links distinguishable from surrounding list text', () => {
         expect(declarations('.aip-domain2-page .main li a')['text-decoration']).toBe('underline');
     });
+    it('does not frame task headings between two horizontal rules', () => {
+        expect(declarations('.aip-domain2-page .main h2 + hr').display).toBe('none');
+    });
     it('keeps every border, gradient and accent through defined global theme tokens', () => {
         const globals = readFileSync('app/globals.css', 'utf8');
         for (const [, name] of css.matchAll(/var\((--[\w-]+)/g)) {
