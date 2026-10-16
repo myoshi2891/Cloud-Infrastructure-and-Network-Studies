@@ -26,15 +26,15 @@ for (const width of [1440, 768, 390]) {
         await expect(root.locator('main li')).toHaveCount(296);
         await expect(root.locator('table')).toHaveCount(96);
         expect(await root.locator('main a[href^="http"]').evaluateAll(links => links.map(link => link.getAttribute('href')))).toEqual(inventory.links.map(link => link.href));
-        const lists = await root.locator('main ul,main ol').evaluateAll(elements => elements.map(element => ({ tag: element.tagName.toLowerCase(), start: element.getAttribute('start'), reversed: element.hasAttribute('reversed'), type: getComputedStyle(element).listStyleType, position: getComputedStyle(element).listStylePosition, padding: parseFloat(getComputedStyle(element).paddingLeft), checklist: Boolean(element.closest('.checklist-card')) })));
+        const lists = await root.locator('main ul,main ol').evaluateAll(elements => elements.map(element => ({ tag: element.tagName.toLowerCase(), start: element.getAttribute('start'), reversed: element.hasAttribute('reversed'), type: getComputedStyle(element).listStyleType, position: getComputedStyle(element).listStylePosition, padding: parseFloat(getComputedStyle(element).paddingLeft), checklist: Boolean(element.closest('.checklist-card')), practice:element.classList.contains('practice-options') })));
         expect(lists.map(({ tag, start, reversed }) => ({ tag, start, reversed }))).toEqual(Object.values(fixture.guideParts).flatMap(part => part.lists).map(({ tag, start, reversed }) => ({ tag, start, reversed })));
         for (const list of lists) {
-            expect(list.type).toBe(list.checklist ? 'none' : list.tag === 'ol' ? 'decimal' : 'disc');
+            expect(list.type).toBe(list.checklist || list.practice ? 'none' : list.tag === 'ol' ? 'decimal' : 'disc');
             expect(list.position).toBe('outside');
-            expect(list.padding).toBeCloseTo(list.checklist ? 0 : 22.4, 1);
+            expect(list.padding).toBeCloseTo(list.checklist || list.practice ? 0 : 22.4, 1);
         }
         await expect(root.locator('nav ul')).toHaveCSS('list-style-type', 'none');
-        expect(await root.locator('main li').evaluateAll(items => items.map(item => getComputedStyle(item).display))).toEqual(await root.locator('main li').evaluateAll(items => items.map(item => item.closest('.checklist-card') ? 'flex' : 'list-item')));
+        expect(await root.locator('main li').evaluateAll(items => items.map(item => getComputedStyle(item).display))).toEqual(await root.locator('main li').evaluateAll(items => items.map(item => item.closest('.practice-options') ? 'block' : item.closest('.checklist-card') ? 'flex' : 'list-item')));
         const diagrams = root.locator('.mermaid-wrap svg');
         await expect(diagrams).toHaveCount(42, { timeout: 120_000 });
         await expect(root.locator('.mermaid-wrap [data-theme="light"]')).toHaveCount(42);
@@ -179,4 +179,14 @@ test('AIP domain2 uses one section divider, highlighted code and 15 polished acc
         expect((await new AxeBuilder({page}).include('.aip-domain2-page').analyze()).violations).toEqual([]);
         expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
     }
+});
+
+test('AIP domain2 practice choices hide bullets and judge exact answers accessibly',async({page})=>{
+ await page.setViewportSize({width:390,height:1000});await page.goto(route);const cards=page.locator('.practice-question');await expect(cards).toHaveCount(15);
+ for(const list of await cards.locator('.practice-options').all()){await expect(list).toHaveCSS('list-style-type','none');await expect(list).toHaveCSS('padding-left','0px');}
+ const first=cards.nth(0);await first.getByRole('radio').nth(0).check();await expect(first.getByRole('status')).toHaveCount(0);await first.locator('summary').click();await expect(first.getByRole('status')).toContainText('不正解です。');await first.getByRole('radio').nth(1).check();await expect(first.getByRole('status')).toContainText('正解です。');
+ const multi=cards.nth(2);await multi.getByRole('checkbox').nth(0).check();await multi.locator('summary').click();await expect(multi.getByRole('status')).toContainText('不正解です。');await multi.getByRole('checkbox').nth(3).check();await expect(multi.getByRole('status')).toContainText('正解です。');await multi.getByRole('checkbox').nth(1).check();await expect(multi.getByRole('status')).toContainText('不正解です。');
+ const empty=cards.nth(1);await empty.locator('summary').click();await expect(empty.getByRole('status')).toContainText('未回答です。');
+ await first.getByRole('radio').nth(0).focus();await page.keyboard.press('ArrowDown');await expect(first.getByRole('radio').nth(1)).toBeFocused();await expect(first.getByRole('radio').nth(1)).toBeChecked();
+ expect((await new AxeBuilder({page}).include('.aip-domain2-page').analyze()).violations).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
 });

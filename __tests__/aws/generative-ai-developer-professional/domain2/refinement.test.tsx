@@ -18,5 +18,5 @@ it('highlights every source code block while retaining every line and whitespace
 it('groups all 15 unchanged questions and answers into labelled practice cards',()=>{
  const {container}=render(<Guide/>);const cards=[...container.querySelectorAll('.practice-question')];expect(cards).toHaveLength(15);
  const source=fixture.guideParts.revision;expect(cards.map(c=>c.querySelector('h3')?.id)).toEqual(source.headings.filter(h=>h.id.startsWith('問題-')).map(h=>h.id));
- for(const c of cards){const h=c.querySelector('h3')!;expect(c).toHaveAttribute('aria-labelledby',h.id);expect(c.querySelectorAll(':scope > ul > li')).toHaveLength(4);expect(c.querySelectorAll('details > summary')).toHaveLength(1);expect(c.querySelector('details')).not.toHaveAttribute('open');}
+ for(const c of cards){const h=c.querySelector('h3')!;expect(c).toHaveAttribute('aria-labelledby',h.id);expect(c.querySelectorAll('.practice-options > li')).toHaveLength(4);expect(c.querySelectorAll('details > summary')).toHaveLength(1);expect(c.querySelector('details')).not.toHaveAttribute('open');}
 });
