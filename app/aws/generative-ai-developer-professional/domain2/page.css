@@ -563,3 +563,23 @@
 /* 小さなラベルと本文リンクの識別性のみWCAG AAに合わせる。 */
 .aip-domain2-page .callout-practice .label { color: var(--color-aip-d1-success-text); }
 .aip-domain2-page .main li a { text-decoration: underline; text-underline-offset: .15em; }
+
+/* 原文を保った構文ハイライト。色は白背景での可読性を優先する。 */
+.aip-domain2-page .main .code-block::before {
+    content: attr(data-language);
+    display: block;
+    margin-bottom: 12px;
+    color: var(--color-aip-d2-text-dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+.aip-domain2-page .code-block .hljs-keyword,
+.aip-domain2-page .code-block .hljs-literal { color: #7a3e9d; }
+.aip-domain2-page .code-block .hljs-string { color: #1f6937; }
+.aip-domain2-page .code-block .hljs-attr { color: #0969a6; }
+.aip-domain2-page .code-block .hljs-comment { color: #596779; font-style: italic; }
+.aip-domain2-page .code-block .hljs-number { color: #995b00; }
+.aip-domain2-page .code-block .hljs-title { color: #055c91; }
