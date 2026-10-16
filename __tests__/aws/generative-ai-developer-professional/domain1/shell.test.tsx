@@ -55,6 +55,28 @@ describe('AIP domain1 shell and source diagram settings', () => {
         expect(screen.getByRole('link', { name: last.label })).toHaveAttribute('aria-current', 'location');
         unmount(); expect(disconnect).toHaveBeenCalledOnce();
     });
+    it('selects the first intersecting heading in NAV_ITEMS order regardless of report order, and keeps it when none intersect', () => {
+        let callback: IntersectionObserverCallback | undefined;
+        vi.stubGlobal('IntersectionObserver', class { constructor(cb: IntersectionObserverCallback) { callback = cb; } observe = vi.fn(); disconnect = vi.fn(); });
+        const [, second, third] = NAV_ITEMS; if (!second || !third) throw new Error('Need three items');
+        render(<><NavBar /><h3 id={second.id}>Second</h3><h3 id={third.id}>Third</h3></>);
+        const entryOf = (id: string, isIntersecting: boolean) => {
+            const target = document.getElementById(id)!;
+            const rect = target.getBoundingClientRect();
+            const entry: IntersectionObserverEntry = { target, isIntersecting, boundingClientRect: rect, intersectionRect: rect, intersectionRatio: isIntersecting ? 1 : 0, rootBounds: null, time: 0 };
+            return entry;
+        };
+        const current = () => document.querySelector('[aria-current="location"]')?.getAttribute('href');
+        // 後の見出しが最後に報告されても、目次順で先の見出しを選ぶ
+        act(() => callback?.([entryOf(second.id, true), entryOf(third.id, true)], {} as IntersectionObserver));
+        expect(current()).toBe(`#${second.id}`);
+        // 先の見出しが外れると、まだ交差している次の見出しへ移る
+        act(() => callback?.([entryOf(second.id, false)], {} as IntersectionObserver));
+        expect(current()).toBe(`#${third.id}`);
+        // 交差する見出しがなくなっても、直前の選択を保つ
+        act(() => callback?.([entryOf(third.id, false)], {} as IntersectionObserver));
+        expect(current()).toBe(`#${third.id}`);
+    });
     it('passes the exact source light config and natural scale to each labelled diagram', () => {
         const { container } = render(<Diagram id="diag-0" label="ロードマップ" />);
         const diagram = container.querySelector('[data-testid="mermaid-diagram"]');
