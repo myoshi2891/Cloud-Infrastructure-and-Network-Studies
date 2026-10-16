@@ -6,6 +6,7 @@ import { DIAGRAMS, MERMAID_CONFIG, NAV_ITEMS } from '@/app/aws/generative-ai-dev
 import { Diagram } from '@/app/aws/generative-ai-developer-professional/domain1/Diagram';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import { normalizeMermaid } from '@/scripts/archive-fidelity-extraction.mjs';
+import { AIP_DOMAIN1_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 afterEach(() => { vi.unstubAllGlobals(); window.history.replaceState(null, '', '/'); });
@@ -16,7 +17,7 @@ describe('AIP domain1 shell and source diagram settings', () => {
         expect(metadata.description).toContain('AIP-C01');
         expect(NAV_ITEMS).toEqual(fixture.guideDesign.nav);
         expect(MERMAID_CONFIG).toEqual(fixture.guideInteractions.mermaidConfig);
-        expect(Object.values(DIAGRAMS).map(normalizeMermaid)).toEqual(Object.values(fixture.guideParts).flatMap(part => part.diagrams));
+        expect(Object.values(DIAGRAMS).map(normalizeMermaid)).toEqual(withSourceCorrections(Object.values(fixture.guideParts).flatMap(part => part.diagrams), AIP_DOMAIN1_CORRECTIONS));
         const { container } = render(<NavBar />);
         expect([...container.querySelectorAll('nav ul > li > a')].map(a => ({ href: a.getAttribute('href'), text: a.textContent }))).toEqual(NAV_ITEMS.map(item => ({ href: `#${item.id}`, text: item.label })));
         expect(container.querySelector('[aria-current="location"]')).toHaveAttribute('href', `#${NAV_ITEMS[0]?.id}`);

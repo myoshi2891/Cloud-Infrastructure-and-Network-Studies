@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import domain1 from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
 import domain2 from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
+import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
@@ -13,7 +14,8 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
     ] as const)('%s: 各訂正が原本inventoryの対象箇所に一致する（空振りしない）', (_name, inventory, corrections) => {
         const body = inventory.bodyContent.map(block => block.text).join('\n');
         // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
-        const diagrams = inventory === domain2 ? Object.values(domain2Fidelity.guideParts).flatMap(part => part.diagrams).join('\n') : '';
+        const fidelity = inventory === domain2 ? domain2Fidelity : domain1Fidelity;
+        const diagrams = Object.values(fidelity.guideParts).flatMap(part => part.diagrams).join('\n');
         const target = [body, inventory.td.join('\n'), inventory.listItems.join('\n'), diagrams].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
     });
@@ -87,6 +89,17 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(item).toContain('制限のあるすべてのデータソースが ACL に対応している場合に限る');
         expect(item).toContain('ACL 非対応のデータソースでは認証済み ID からサーバー側で生成したメタデータフィルター');
         expect(item).toContain('クライアントが送ってきた権限フィルターをそのまま使ってはならない');
+    });
+
+    it('domain1: 図diag-11は関数呼び出し・MCPの検索ツールを回答生成より前に置き、その結果を回答に渡す', () => {
+        const charts = withSourceCorrections(Object.values(domain1Fidelity.guideParts).flatMap(part => part.diagrams), AIP_DOMAIN1_CORRECTIONS);
+        const chart = charts.find(item => item.includes('1.5.6 関数呼び出しや MCP')) ?? '';
+        expect(chart).not.toContain('FM --> ACC');
+        expect(chart).not.toContain('CTX --> FM');
+        expect(chart).toContain('CTX --> ACC["1.5.6 関数呼び出しや MCP で FM から検索を利用"]');
+        expect(chart).toContain('ACC -->|"検索結果をツール結果として FM へ返す"| FM["FM が回答を生成"]');
+        // ACC の定義は1回だけ（ノードの重複定義を残さない）
+        expect(count(chart, 'ACC["')).toBe(1);
     });
 
     it('domain2: 検証パターンがtoolSpecと一致し、A123/ のような不正IDを拒否する', () => {
