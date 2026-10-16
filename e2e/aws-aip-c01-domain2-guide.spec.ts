@@ -140,6 +140,15 @@ test('AIP domain2 node backgrounds remain light across flowcharts, states and se
     const shapes = await diagrams.locator('.node rect, .node polygon, rect.actor').evaluateAll(elements => elements.map(element => getComputedStyle(element).fill));
     expect(shapes.length).toBeGreaterThan(42);
     for (const fill of shapes) expect(fill).toBe('rgb(232, 238, 255)');
+    const labels = await diagrams.locator('.nodeLabel, text.actor tspan, .noteText, .messageText').evaluateAll(elements => elements.map(element => {
+        const css = getComputedStyle(element);
+        return element.namespaceURI === 'http://www.w3.org/2000/svg' ? css.fill : css.color;
+    }));
+    expect(labels.length).toBeGreaterThan(42);
+    for (const color of labels) expect(color).toBe('rgb(28, 42, 64)');
+    // 固定した背景・文字の組はWCAGの相対輝度式でも検証し、文字色だけの検査に戻さない。
+    const luminance = (rgb: number[]) => rgb.map(value => value / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4).reduce((sum, value, index) => sum + value * [ .2126, .7152, .0722 ][index]!, 0);
+    expect((luminance([232,238,255]) + .05) / (luminance([28,42,64]) + .05)).toBeGreaterThanOrEqual(4.5);
 });
 
 test('AIP domain2 uses one section divider, highlighted code and 15 polished accessible practice cards', async ({ page }) => {
