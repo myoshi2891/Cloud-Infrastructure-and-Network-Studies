@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import domain1 from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
 import domain2 from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
+import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 const count = (text: string, part: string) => text.split(part).length - 1;
@@ -11,7 +12,41 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         ['domain2', domain2, AIP_DOMAIN2_CORRECTIONS],
     ] as const)('%s: 各訂正が原本inventoryの対象箇所に一致する（空振りしない）', (_name, inventory, corrections) => {
         const body = inventory.bodyContent.map(block => block.text).join('\n');
-        for (const [from] of corrections) expect(count(body + inventory.td.join('\n'), from), from).toBeGreaterThanOrEqual(1);
+        // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
+        const diagrams = inventory === domain2 ? Object.values(domain2Fidelity.guideParts).flatMap(part => part.diagrams).join('\n') : '';
+        const target = [body, inventory.td.join('\n'), inventory.listItems.join('\n'), diagrams].join('\n');
+        for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
+    });
+
+    it('domain2: カスタムモデルのProvisioned Throughputを条件付きにし、オンデマンドデプロイに触れ、問題5の正解は保持する', () => {
+        const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
+        const all = [...corrected.bodyContent.map(block => block.text), ...corrected.td, ...corrected.listItems].join('\n');
+        expect(all).not.toContain('Bedrock で使うときは Provisioned Throughput が必要');
+        expect(all).not.toContain('Bedrock のカスタムモデル推論には Provisioned Throughput が必要');
+        expect(all).not.toContain('カスタムモデルを推論に使うには Provisioned Throughput が必要です');
+        const step9 = corrected.listItems.find(item => item.includes('（試験の定番）'));
+        expect(step9).toContain('すべてのカスタムモデルで Provisioned Throughput が必須ではなく');
+        expect(step9).toContain('オンデマンドデプロイ');
+        expect(corrected.td).toContain('カスタムモデルを安定したスループットで本番推論（Bedrock）');
+        const misconception = corrected.td.indexOf('カスタムモデルはオンデマンドでも処理能力が確保される');
+        expect(misconception).toBeGreaterThanOrEqual(0);
+        expect(corrected.td[misconception + 1]).toContain('オンデマンドデプロイも可能');
+        // 問題5は「安定したスループット」が前提のため、正解Bの説明として Provisioned Throughput を保持する
+        const answer5 = corrected.bodyContent.find(block => block.text.includes('C は Lambda の機能で'))?.text ?? '';
+        expect(answer5).toMatch(/^B。問題文は安定したスループットを求めているため/);
+        expect(answer5).toContain('Provisioned Throughput');
+        expect(answer5).toContain('オンデマンドデプロイ');
+    });
+
+    it('domain2: Step 15はDirect Connectのプライベート接続と暗号化を区別し、図diag-22も同じ区別にする', () => {
+        const corrected = withSourceCorrections(domain2, AIP_DOMAIN2_CORRECTIONS);
+        const cell = corrected.td.find(item => item.startsWith('オンプレミスとAWSのプライベート接続')) ?? '';
+        expect(cell).toContain('Direct Connect は既定では暗号化されない');
+        for (const method of ['TLS', 'MACsec', 'Site-to-Site VPN']) expect(cell).toContain(method);
+        expect(corrected.td.join('\n')).not.toContain('閉域・暗号化接続');
+        const chart = withSourceCorrections(domain2Fidelity.guideParts.task3.diagrams, AIP_DOMAIN2_CORRECTIONS).find(item => item.includes('Direct Connect または VPN')) ?? '';
+        expect(chart).not.toContain('暗号化された専用経路');
+        expect(chart).toContain('|Direct Connect または VPN<br/>プライベート経路<br/>暗号化は TLS MACsec VPN で行う|');
     });
 
     it('domain1: 旧コネクタURLを残さず、廃止日と既存コネクタの継続、Salesforceの対象外を明記する', () => {

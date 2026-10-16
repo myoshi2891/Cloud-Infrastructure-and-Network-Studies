@@ -17,6 +17,19 @@ export const AIP_DOMAIN2_CORRECTIONS: readonly Correction[] = [
     ['order_id.startswith("A") and len(order_id) >= 5', 'ORDER_ID_PATTERN.fullmatch(order_id)'],
     ['order_id は A で始まる5文字以上の英数字です。', 'order_id は A の後に英大文字または数字が4文字以上続く形式です。'],
     ['fields @timestamp, modelId, input.inputTokenCount, output.outputTokenCount', '# アプリが出力する構造化エラーログが対象（モデル呼び出しログには errorCode がない）\nfields @timestamp, requestId, modelId, errorCode'],
+    // カスタムモデルは対応モデルならオンデマンドデプロイでき、Provisioned Throughput は安定したスループットが必要な場合の選択肢
+    ['ファインチューニング済みのカスタムモデルを Bedrock で使うときは Provisioned Throughput が必要', 'ファインチューニング済みのカスタムモデルを Bedrock で安定したスループットで提供するときは Provisioned Throughput を使う'],
+    ['（試験の定番）。', '（試験の定番）。ただし、すべてのカスタムモデルで Provisioned Throughput が必須ではなく、対応モデルではカスタムモデルのオンデマンドデプロイ（トークン従量課金）も選べます。'],
+    ['ファインチューニングしたカスタムモデルを本番運用', 'ファインチューニングしたカスタムモデルを安定したスループットで本番運用'],
+    ['「カスタムモデル（ファインチューニング）をBedrockで推論」', '「カスタムモデル（ファインチューニング）をBedrockで安定したスループットで推論」'],
+    ['カスタムモデルもオンデマンドで使える', 'カスタムモデルはオンデマンドでも処理能力が確保される'],
+    ['Bedrock のカスタムモデル推論には ', '対応するカスタムモデルはオンデマンドデプロイも可能だが、処理能力を確保して安定したスループットで推論するには '],
+    ['カスタムモデルの本番推論（Bedrock）', 'カスタムモデルを安定したスループットで本番推論（Bedrock）'],
+    // 問題5は「安定したスループット」が前提のため、正解Bは変えず理由だけを条件付きにする
+    ['Bedrock のカスタムモデルを推論に使うには Provisioned Throughput が必要です。', '問題文は安定したスループットを求めているため、モデルユニットで処理能力を確保する Provisioned Throughput を使います（対応モデルではカスタムモデルのオンデマンドデプロイも可能ですが、処理能力は確保されません）。'],
+    // Direct Connect はプライベート接続だが既定では暗号化しないため、暗号化手段を明示する
+    ['オンプレミスとAWSの閉域・暗号化接続', 'オンプレミスとAWSのプライベート接続（Direct Connect は既定では暗号化されないため、暗号化が必要なら TLS、MACsec、または Direct Connect 上の Site-to-Site VPN（IPsec）を使う）'],
+    ['|Direct Connect または VPN<br/>暗号化された専用経路|', '|Direct Connect または VPN<br/>プライベート経路<br/>暗号化は TLS MACsec VPN で行う|'],
 ];
 
 const correctText = (text: string, corrections: readonly Correction[]): string =>
