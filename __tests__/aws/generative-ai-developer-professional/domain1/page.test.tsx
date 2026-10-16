@@ -1,11 +1,15 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/generative-ai-developer-professional/domain1/page';
-import inventory from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
+import sourceInventory from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
+import { AIP_DOMAIN1_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import { extractBodyContent, normalizeSpaces, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
+
+// AWS公式ドキュメントにもとづく訂正を、原本inventoryの複製へ適用した表示期待値
+const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN1_CORRECTIONS);
 
 describe('AIP domain1 independent complete inventory', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const)('retains every %s text in source order', tag => {

@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import inventory from '../docs/migration-inventory/aws-aip-c01-domain1-guide.json';
+import sourceInventory from '../docs/migration-inventory/aws-aip-c01-domain1-guide.json';
+import { AIP_DOMAIN1_CORRECTIONS, withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
 import fixture from '../docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 
+const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN1_CORRECTIONS);
 const route = '/aws/generative-ai-developer-professional/domain1';
 for (const width of [1440, 768, 390]) {
     test(`AIP domain1 ${width}px: complete light content, source diagrams, navigation and checklist`, async ({ page }) => {
