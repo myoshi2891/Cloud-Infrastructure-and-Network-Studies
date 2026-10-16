@@ -62,7 +62,7 @@ describe('AIP domain2 shell and source diagram settings', () => {
         expect(diagram).toHaveAttribute('data-theme', 'light');
         expect(diagram).toHaveAttribute('data-preserve-natural-scale', 'true');
         expect(diagram).toHaveAttribute('aria-label', 'ロードマップ');
-        expect(diagram?.getAttribute('data-chart')).toBe(aipDomain2Part('foundation').diagrams[0]);
+        expect(normalizeMermaid(diagram?.getAttribute('data-chart') ?? '')).toBe(aipDomain2Part('foundation').diagrams[0]);
         expect(diagram?.getAttribute('data-chart')).toContain(DIAGRAMS['diag-0']);
         expect(diagram?.closest('.mermaid-wrap')).toHaveAttribute('tabindex', '0');
     });
