@@ -14,6 +14,21 @@
  */
 
 @theme {
+    /* Layer 3: AIP-C01 Domain 3 原本ライト配色 */
+    --color-aip-d3-1: #2f5bd6;
+    --color-aip-d3-2: #e3e9f4;
+    --color-aip-d3-3: #d3dcec;
+    --color-aip-d3-4: #a14f00;
+    --color-aip-d3-5: rgba(47, 91, 214, 0.05);
+    --color-aip-d3-6: #e7f6ee;
+    --color-aip-d3-7: #a9dcc0;
+    --color-aip-d3-8: #1f8a55;
+    --color-aip-d3-9: #7a8aa5;
+    --color-aip-d3-10: #a9bbea;
+    --color-aip-d3-11: #dbe5fb;
+    --color-aip-d3-12: #c0314f;
+    --color-aip-d3-13: #fde8ed;
+    --color-aip-d3-14: rgba(27, 39, 64, 0.18);
     --color-aip-d2-text: #1c2a40;
     --color-aip-d2-text-dim: #4a5b78;
     --color-aip-d2-accent: #3558d6;
