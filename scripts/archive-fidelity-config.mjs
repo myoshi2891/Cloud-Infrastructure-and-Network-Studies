@@ -32,6 +32,21 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-domain4-guide': {
+        source: 'Aip-c01-domain4-operational-efficiency-guide.html',
+        sourceCommit: '0af9544e9f5439bd4522bce6bb5f20aca2bb710f',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: 'task-41-コスト最適化とリソース効率',
+            task2: 'task-42-アプリケーション性能の最適化',
+            task3: 'task-43-genai-アプリのモニタリング',
+            revision: 'step-18-症状から解決策を選ぶ早見表',
+        },
+    },
     'aws-aip-c01-domain3-guide': {
         source: 'Aws-aip-c01-domain3-ai-safety-security-governance-guide.html',
         sourceCommit: 'd08571d893cd2007e312fcf4d4e161639ec69c17',
