@@ -14,6 +14,52 @@
  */
 
 @theme {
+    /* Layer 3: AIP-C01 Domain 4 原本ライト配色 */
+    --color-aip-d4-1: #1b2540;
+    --color-aip-d4-2: #3454d1;
+    --color-aip-d4-3: #e3e8f4;
+    --color-aip-d4-4: #44526f;
+    --color-aip-d4-5: #e6ebff;
+    --color-aip-d4-6: #d3dbed;
+    --color-aip-d4-7: #0d1530;
+    --color-aip-d4-8: #f0f3fa;
+    --color-aip-d4-9: #9a4a00;
+    --color-aip-d4-10: #101a33;
+    --color-aip-d4-11: #e4ebfb;
+    --color-aip-d4-12: #8b949e;
+    --color-aip-d4-13: #f85149;
+    --color-aip-d4-14: #e6edf3;
+    --color-aip-d4-15: #ffa198;
+    --color-aip-d4-16: #490202;
+    --color-aip-d4-17: #79c0ff;
+    --color-aip-d4-18: #56d364;
+    --color-aip-d4-19: #0f5323;
+    --color-aip-d4-20: #f0883e;
+    --color-aip-d4-21: #ffa657;
+    --color-aip-d4-22: #6e7681;
+    --color-aip-d4-23: #9fb0d0;
+    --color-aip-d4-24: rgba(52, 84, 209, 0.04);
+    --color-aip-d4-25: #2a44ad;
+    --color-aip-d4-26: #66748f;
+    --color-aip-d4-27: #1b7a47;
+    --color-aip-d4-28: #b4233f;
+    --color-aip-d4-29: rgba(20, 30, 70, 0.25);
+
+    /* Layer 3: AIP-C01 Domain 3 原本ライト配色 */
+    --color-aip-d3-1: #2f5bd6;
+    --color-aip-d3-2: #e3e9f4;
+    --color-aip-d3-3: #d3dcec;
+    --color-aip-d3-4: #a14f00;
+    --color-aip-d3-5: rgba(47, 91, 214, 0.05);
+    --color-aip-d3-6: #e7f6ee;
+    --color-aip-d3-7: #a9dcc0;
+    --color-aip-d3-8: #1f8a55;
+    --color-aip-d3-9: #7a8aa5;
+    --color-aip-d3-10: #a9bbea;
+    --color-aip-d3-11: #dbe5fb;
+    --color-aip-d3-12: #c0314f;
+    --color-aip-d3-13: #fde8ed;
+    --color-aip-d3-14: rgba(27, 39, 64, 0.18);
     --color-aip-d2-text: #1c2a40;
     --color-aip-d2-text-dim: #4a5b78;
     --color-aip-d2-accent: #3558d6;
