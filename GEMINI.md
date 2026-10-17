@@ -1,6 +1,8 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-16
+Updated 2026-10-17
+
+2026-10-17 AIP-C01 Domain 3移行: `/aws/generative-ai-developer-professional/domain3` に全4タスク・15スキル、44表・19図・189リスト項目・125外部リンク出現・練習問題10問を全文移行。ライト配色、点・番号・入れ子、300px目次、クイズの回答・正誤・解答表示・集計・リセットを保持。ホーム・Headerから詳細版へ移動可能。原本削除後のDomain 3検証105件、AIP関連回帰450件、1440/768/390pxを含むChrome 6件が成功。全図の自然倍率とviewBox内包、CSS破壊5種、DOM欠落5種、axe違反0を検証。図・表のキーボード横スクロールと閉じたモバイル目次の非表示を補完。原本306478バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。実装 `75a38b02`、原本保存 `e9cbf3f3`。npm・ビルド未実行、目視確認はユーザー担当。最終全体テスト・型検査・lintの結果は移行進捗の現在地を参照。
 
 2026-10-16 Domain 2練習問題の選択・採点: 全15問の選択肢の点を除き、11問をラジオボタン、4問をチェックボックスにした。選択後に「答えと解説」を開くと正誤を表示し、開いた後の選択変更にも追従。複数選択は正解集合の完全一致、未回答は案内表示。選択・開閉状態は問題ごとに独立し、原本の問題文・選択肢・解説は保持。採点22件と目次通知順の回帰を含む関連141件が成功。全体2808件中2807成功、既存AIBナビ期待値1件のみ失敗。ブラウザ9シナリオを検証し、1440pxで見つけた目次上書きは通知順に依存しない選択へ修正して3画面幅を再確認。最新実装HEAD `fa93bb13`（採点 `d11350ad`）。型検査・ESLint・Markdown lint成功。npm・ビルド未実行。
 
@@ -74,6 +76,7 @@ Updated 2026-10-16
   - `/app/aws/developer-associate/domain3`: DVA-C02 デプロイ。Server `page.tsx`、Client `DeploymentGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`mermaid-theme.json`、`CodeBlock.tsx`、`Checklist.tsx`、`page.css`、33分割セクション。80表・39図・32コード・63リスト項目・137外部リンク・135本文ブロックを全文移行。原本ライト配色・Source Serif 4・290pxサイドバーを保持し、本文・表・コード・目次・図は14px。点・番号・`ol start=4`、9チェック、10解説を保持。原本の独立解決済み派生色を注入し、共通dark設定による黒塗りを防止。実Mermaidパーサー40件で配色・構文を検証。構文ハイライトはユーザー指定により近似色で実装し、追加依存なし。
   - `/app/aws/generative-ai-developer-professional`: AIP-C01全5ドメイン・Step 1〜20・付録・参考資料。Server `page.tsx` / `AipGuide.tsx`、Client `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、6分割セクション。76表・34図・60本文リスト項目・64外部リンク出現・8行JSONを全文移行。原本のライトテーマを保持し、300px幅・48目次・点と番号・hash/focus・自然倍率を保持。横スクロール図・表・コードはキーボード操作可能。
   - `/app/aws/generative-ai-developer-professional/domain2`: Domain 2詳細版。Server `page.tsx` / `AipDomain2Guide.tsx` と7区分の本文、Client `NavBar.tsx` / `PracticeQuestion.tsx`、`constants.ts` / `Diagram.tsx` / `CodeBlock.tsx` / `page.css`。15問は点なしの選択肢と解説開閉時の完全一致採点に対応。描画frontmatterで共通dark値の継承を遮断し、9コードの構文色、罫線最大1本、15問題カードを実装。原本ライト配色・300px幅、全5タスク・25スキル・96表・42図・9コード・296リスト項目・230リンク出現・230目次・15問の解答開閉を保持。全文・装飾・自然倍率・SVG見切れ・操作・a11yを検証し、ホームとHeaderから詳細版へ移動可能。
+  - `/app/aws/generative-ai-developer-professional/domain3`: Domain 3詳細版。Server `page.tsx` / `AipDomain3Guide.tsx` と6区分の本文、Client `NavBar.tsx` / `PracticeQuestion.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。全4タスク・15スキル、44表・19図・189リスト項目・125外部リンク出現・10問を原本のライト配色・300px目次で保持。点・番号・入れ子・全量照合・自然倍率・SVG見切れ・クイズ操作・表と図のキーボード操作・a11y・ホーム/Header導線を検証。
   - `/app/aws/generative-ai-developer-professional/domain1`: Domain 1詳細版。Server `page.tsx` / `AipDomain1Guide.tsx` と8区分の本文、Client `NavBar.tsx` / `Checklist.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。原本ライト配色・300px幅、全6タスク・28スキル・51表・21図・137リスト項目・123リンク出現・63目次・16チェックを保持。原本のMermaid描画設定を使用し、チェック完了前後のa11yと点・番号を検証。ホームとHeaderから詳細版へ移動可能。
   - `/app/aws/ai-business-strategist`: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、8分割セクション。全4ドメイン・横断編・試験対策・付録A〜C（82表・16図・236リスト項目・112外部リンク・134本文ブロック）完全収録、280pxサイドバー契約、ライトテーマデザイン完全再現。
   - `/app/aws/ai-business-strategist/domain1`: AWS Certified AI Business Strategist (AIB-C01) Domain 1: AI Fundamentals and Literacy 完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistDomain1Guide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、19分割セクション。全3タスク・13スキル・付録A〜E（55表・16図・150リスト項目・86外部リンク・99本文ブロック）完全収録、300pxサイドバー、ライトテーマデザイン完全再現。

@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Updated 2026-10-16
+Updated 2026-10-17
+
+2026-10-17 AIP-C01 Domain 3移行: `/aws/generative-ai-developer-professional/domain3` に全4タスク・15スキル、44表・19図・189リスト項目・125外部リンク出現・練習問題10問を全文移行。ライト配色、点・番号・入れ子、300px目次、クイズの回答・正誤・解答表示・集計・リセットを保持。ホーム・Headerから詳細版へ移動可能。原本削除後のDomain 3検証105件、AIP関連回帰450件、1440/768/390pxを含むChrome 6件が成功。全図の自然倍率とviewBox内包、CSS破壊5種、DOM欠落5種、axe違反0を検証。図・表のキーボード横スクロールと閉じたモバイル目次の非表示を補完。原本306478バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。実装 `75a38b02`、原本保存 `e9cbf3f3`。npm・ビルド未実行、目視確認はユーザー担当。最終全体テスト・型検査・lintの結果は移行進捗の現在地を参照。
 
 2026-10-16 Domain 2練習問題の選択・採点: 全15問の選択肢の点を除き、11問をラジオボタン、4問をチェックボックスにした。選択後に「答えと解説」を開くと正誤を表示し、開いた後の選択変更にも追従。複数選択は正解集合の完全一致、未回答は案内表示。選択・開閉状態は問題ごとに独立し、原本の問題文・選択肢・解説は保持。採点22件と目次通知順の回帰を含む関連141件が成功。全体2808件中2807成功、既存AIBナビ期待値1件のみ失敗。ブラウザ9シナリオを検証し、1440pxで見つけた目次上書きは通知順に依存しない選択へ修正して3画面幅を再確認。最新実装HEAD `fa93bb13`（採点 `d11350ad`）。型検査・ESLint・Markdown lint成功。npm・ビルド未実行。
 
@@ -624,6 +626,15 @@ app/
         Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
         page.css                    # 原本ライト配色・300px幅・点と番号・コード行
         sections/                   # Foundation, Task21〜25, Revision
+      domain3/
+        page.tsx                    # Domain 3詳細版 (Server、metadata、CSS)
+        AipDomain3Guide.tsx          # 導入・4タスク・復習の6区分 (Server)
+        NavBar.tsx                  # 原本目次・開閉・scroll spy・hash/focus (Client)
+        PracticeQuestion.tsx        # 全10問の回答・正誤・解答表示・集計・リセット (Client)
+        constants.ts                # 原本19図・目次・Mermaidライト設定
+        Diagram.tsx                 # memo・自然倍率・キーボード横スクロール
+        page.css                    # 原本ライト配色・300px幅・点と番号・入れ子
+        sections/                   # Foundation, Task31〜34, Revision
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)
