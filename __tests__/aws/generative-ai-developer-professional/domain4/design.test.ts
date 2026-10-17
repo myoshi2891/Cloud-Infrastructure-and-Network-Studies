@@ -35,6 +35,7 @@ describe('Domain 4 source design declaration fidelity', () => {
     if (prop === 'overflow-wrap' && rule.declarations['word-break']) { expect(actual[prop]).toBe('anywhere'); continue; }
     if (prop === 'word-break') { expect(actual['overflow-wrap']).toBe('anywhere'); continue; }
     if (prop === 'scroll-margin-top') { expect(actual[prop]).toContain('var(--header-h, 60px)'); continue; }
+    if (prop === 'overflow-x' && selector.split(',').every(part => part.trim() === '.aip-domain4-page')) { expect(actual[prop]).toBe('clip'); continue; } // hiddenはスクロールコンテナになり.quiz-barのstickyを妨げる。
     if (prop === 'z-index') { expect(Number(actual[prop])).toBeLessThan(40); continue; }
     if (prop === 'top' && (selector.includes('sidebar') || selector.includes('quiz-bar'))) { expect(actual[prop]).toContain('var(--header-h, 60px)'); continue; }
     expect(resolve(actual[prop] ?? '', tokens), `${selector} ${prop}`).toBe(resolve(value.replace('var(--sidebar-w)', '300px'), sourceTokens));

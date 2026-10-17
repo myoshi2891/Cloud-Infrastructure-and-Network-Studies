@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 .aip-domain4-page, .aip-domain4-page {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 .aip-domain4-page {
   margin: 0;

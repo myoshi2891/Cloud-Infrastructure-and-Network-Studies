@@ -88,7 +88,7 @@ export default function Task43() { return <div className="guide-part" data-part=
 {" "}
 <h3 id="14-2-誰が何をしたかと中身は何かは別のログ" tabIndex={-1}>{" 14-2. 「誰が何をしたか」と「中身は何か」は別のログ "}</h3>
 {" "}
-<div className="table-scroll" tabIndex={0} role="region" aria-label="14-2. 「誰が何をしたか」と「中身は何か」は別のログの表 60">{" "}<table><thead><tr className="header"><th scope="col">{"問い"}</th><th scope="col">{"主な情報源"}</th></tr></thead><tbody><tr className="odd"><td>{"誰が、いつ、どの API を呼んだか (操作の監査)"}</td><td>{"AWS CloudTrail"}</td></tr><tr className="even"><td>{"入力と出力の中身は何か"}</td><td>{"Bedrock モデル呼び出しログ、アプリのログ"}</td></tr><tr className="odd"><td>{"設定が規定どおりか"}</td><td>{"AWS Config"}</td></tr><tr className="even"><td>{"どの回答がどのユーザー、どのセッションで発生したか"}</td><td>{"相関 ID (リクエスト ID、セッション ID) をアプリのログに記録"}</td></tr><tr className="odd"><td>{"ガードレールが何を止めたか"}</td><td>{"Bedrock Guardrails のメトリクスと介入ログ"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label="14-2. 「誰が何をしたか」と「中身は何か」は別のログの表 60">{" "}<table><thead><tr className="header"><th scope="col">{"問い"}</th><th scope="col">{"主な情報源"}</th></tr></thead><tbody><tr className="odd"><td>{"誰が、いつ、どの API を呼んだか (操作の監査)"}</td><td>{"AWS CloudTrail (InvokeAgent やナレッジベースの Retrieve / RetrieveAndGenerate はデータイベントで既定では記録されないため、データイベントセレクターの設定が必要)"}</td></tr><tr className="even"><td>{"入力と出力の中身は何か"}</td><td>{"Bedrock モデル呼び出しログ、アプリのログ"}</td></tr><tr className="odd"><td>{"設定が規定どおりか"}</td><td>{"AWS Config"}</td></tr><tr className="even"><td>{"どの回答がどのユーザー、どのセッションで発生したか"}</td><td>{"相関 ID (リクエスト ID、セッション ID) をアプリのログに記録"}</td></tr><tr className="odd"><td>{"ガードレールが何を止めたか"}</td><td>{"Bedrock Guardrails のメトリクスと介入ログ"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <Diagram id="diag-19" label="14-2. 「誰が何をしたか」と「中身は何か」は別のログ" />
 {" "}

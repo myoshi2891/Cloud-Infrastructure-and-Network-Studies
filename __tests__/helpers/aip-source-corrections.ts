@@ -2,7 +2,8 @@
  * AWS公式ドキュメント（2026-10-16確認）にもとづく原本からの訂正。
  * 原本fixtureは固定Gitの証跡として改変せず、表示内容の期待値にだけ適用する。
  */
-type Correction = readonly [from: string, to: string];
+/** after 指定時は、直前の表セル（結合テキストでは直前の語句）が after と一致する from だけを訂正する。 */
+type Correction = readonly [from: string, to: string, after?: string];
 
 /** Domain 1: 旧URLはユーザーガイドのトップへ302転送されるため、データソース接続の現行ページへ差し替える。 */
 export const AIP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
@@ -56,16 +57,31 @@ export const AIP_DOMAIN4_CORRECTIONS: readonly Correction[] = [
     ['最も遅いステップ', '各ステップの所要時間の合計'],
     ['InputTokenCount / OutputTokenCount', 'InputTokenCount / OutputTokenCount / CacheReadInputTokenCount / CacheWriteInputTokenCount'],
     ['コストの監視、トークンバーストの検知', 'コストの監視、トークンバーストの検知。キャッシュ読み取りは通常の入力より割安、書き込みは割高になるモデルがあるため、InputTokenCount と分けて集計する。クォータへの算入方法もモデルごとに異なるため、最新の料金表とクォータの説明で確認する'],
+    // InvokeAgent とナレッジベース検索は CloudTrail のデータイベントで既定では記録されない。参考URL表の同名セルは訂正しない
+    ['AWS CloudTrail', 'AWS CloudTrail (InvokeAgent やナレッジベースの Retrieve / RetrieveAndGenerate はデータイベントで既定では記録されないため、データイベントセレクターの設定が必要)', '誰が、いつ、どの API を呼んだか (操作の監査)'],
 ];
 
 const correctText = (text: string, corrections: readonly Correction[]): string =>
-    corrections.reduce((current, [from, to]) => current.replaceAll(from, to), text);
+    corrections.reduce((current, [from, to, after]) =>
+        after === undefined ? current.replaceAll(from, to) : current.replaceAll(`${after} ${from}`, `${after} ${to}`), text);
+
+const cellText = (item: unknown): string | undefined => {
+    if (typeof item === 'string') return item;
+    if (typeof item !== 'object' || item === null || !('text' in item)) return undefined;
+    return typeof item.text === 'string' ? item.text : undefined;
+};
+
+/** 直前の要素が after と一致するセルにだけ文脈付き訂正を適用する。 */
+const contextualTarget = (items: readonly unknown[], index: number, corrections: readonly Correction[]): string | undefined =>
+    corrections.find(([from, , after]) => after !== undefined && cellText(items[index]) === from && cellText(items[index - 1]) === after)?.[1];
 
 function correctValue(value: unknown, corrections: readonly Correction[]): unknown {
     if (typeof value === 'string') return correctText(value, corrections);
     if (Array.isArray(value)) {
         // コード行の配列では、訂正で増えた行を独立した行として展開する
-        return value.flatMap(item => {
+        return value.flatMap((item, index) => {
+            const contextual = contextualTarget(value, index, corrections);
+            if (contextual !== undefined) return [typeof item === 'string' ? contextual : { ...(correctValue(item, corrections) as object), text: contextual }];
             if (typeof item !== 'string') return [correctValue(item, corrections)];
             const corrected = correctText(item, corrections);
             return !item.includes('\n') && corrected.includes('\n') ? corrected.split('\n') : [corrected];
