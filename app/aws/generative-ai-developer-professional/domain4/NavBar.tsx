@@ -53,7 +53,7 @@ export default function NavBar() {
                 </div>
                 <nav id="sidebarNav" aria-label="AIP-C01 Domain 4 学習ガイド目次">
                     <ul>{NAV_ITEMS.map(item => (
-                        <li key={item.id}><a href={`#${item.id}`} className={`${item.level === 3 ? 'lvl3' : ''}${activeId === item.id ? ' active' : ''}`} aria-current={activeId === item.id ? 'location' : undefined} onClick={event => {
+                        <li key={item.id}><a href={`#${item.id}`} className={`${item.level === 3 ? 'lvl3' : item.id.startsWith('task-') ? 'part' : ''}${activeId === item.id ? ' active' : ''}`} aria-current={activeId === item.id ? 'location' : undefined} onClick={event => {
                             const target = document.getElementById(item.id);
                             if (!target) return;
                             event.preventDefault();
