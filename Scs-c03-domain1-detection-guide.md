@@ -320,7 +320,9 @@ AWS が管理する脅威検出サービスです。ログの収集や解析の�
 | Malware Protection for S3 | S3 にアップロードされたオブジェクトのスキャン | ユーザーアップロードを受ける環境 |
 | Malware Protection for AWS Backup | バックアップのマルウェアスキャン | バックアップの感染確認 |
 
-- 初めて GuardDuty を有効にすると、Runtime Monitoring 以外の保護プランが自動で有効になり、30 日間の無料トライアルに含まれると公式ドキュメントに記載されています。
+- 公式ドキュメントによると、初めて GuardDuty を有効にすると、S3 Protection、EKS Protection、RDS Protection、Lambda Protection、Malware Protection for EC2 (GuardDuty が開始するマルウェアスキャン) が自動で有効になり、GuardDuty 本体の 30 日間の無料トライアルに含まれます。
+- Runtime Monitoring は既定では有効にならず、有効化すると個別の 30 日間の無料トライアルがあります。
+- Malware Protection for S3、Malware Protection for AWS Backup、Malware Protection for EC2 のオンデマンドスキャンは既定では有効にならず、30 日間の無料トライアルの対象外です (Malware Protection for S3 には別途 Free Tier があります)。
 - Malware Protection for S3 は、GuardDuty サービス本体を有効化しなくても単体で使えます。
 - 公式ブログは、環境の特性 (EC2 と S3 中心、コンテナ中心、データベース中心) に応じて有効化すべきプランの組み合わせを示しており、適用可能なプランを広く有効化することを勧めています。
 
@@ -372,7 +374,7 @@ AWS が管理する脅威検出サービスです。ログの収集や解析の�
 | 機能 | 説明 |
 |---|---|
 | 検出結果の集約 | GuardDuty、Inspector、Macie、Security Hub CSPM などの結果を集める |
-| エクスポージャー検出結果 | 複数サービスの結果を相関させ、攻撃経路になりうる露出を優先度付きで提示 (EC2 と Lambda が対象) |
+| エクスポージャー検出結果 | 複数サービスの結果を相関させ、攻撃経路になりうる露出を優先度付きで提示 (対象は EC2 インスタンスや Lambda 関数など。対応リソースタイプは公式ドキュメントで確認) |
 | セキュリティ標準とコントロール (CSPM) | AWS 基礎セキュリティのベストプラクティス、CIS、PCI DSS、NIST などの標準に基づく自動チェック |
 | 自動化ルール | 検出結果の条件に応じて、重大度の変更や抑制などを自動適用 |
 | EventBridge 連携 | 検出結果を Lambda、SSM Automation などへ送る |
