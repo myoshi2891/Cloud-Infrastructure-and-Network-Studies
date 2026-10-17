@@ -129,7 +129,7 @@ flowchart TD
 
 | 手段 | 通信経路 | 帯域 | 暗号化 | 開通までの時間 | 主な用途 |
 |---|---|---|---|---|---|
-| Site-to-Site VPN | インターネット経由(IPsec) | 標準トンネルは1トンネルあたり最大1.25 Gbps。Large Bandwidth Tunnel(Transit Gateway / Cloud WAN接続時のみ)は1トンネルあたり最大5 Gbps | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
+| Site-to-Site VPN | インターネット経由(IPsec) | 標準トンネルは1トンネルあたり最大1.25 Gbps。Large Bandwidth Tunnel(Transit Gateway / Cloud WAN接続時のみ)は1トンネルあたり最大5 Gbps。Large Bandwidth TunnelはAccelerated VPNと併用不可 | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
 | Direct Connect | 専用線(AWSバックボーン) | 1/10/100/400 Gbps(専有)など | 既定は暗号化なし(MACsec/VPN併用で暗号化) | 数週間〜数か月 | 大容量、低遅延、安定した品質 |
 | Direct Connect + VPN | 専用線の上にIPsec | VPN側の上限に依存 | 暗号化あり | Direct Connect次第 | 専用線で暗号化も必須の場合 |
 
@@ -167,7 +167,7 @@ Site-to-Site VPN は、AWS側の終端(ゲートウェイ)とオンプレ側の�
 |---|---|---|
 | 接続できるVPC | 1つのVPC | 多数のVPC(アタッチメント) |
 | ECMP(複数トンネルの同時利用) | 不可 | **可能**(BGP動的VPNのみ。帯域を束ねられる) |
-| 帯域の考え方 | 1トンネル最大1.25 Gbps、2本のうち通常1本を使用 | ECMPで複数トンネル合算が可能 |
+| 帯域の考え方 | 1トンネル最大1.25 Gbps。オンプレ→AWSは2本とも使えるが、AWS→オンプレは通常1本を優先して使う | ECMPで複数トンネル合算が可能 |
 | Accelerated VPN | 不可 | **可能** |
 | 向く構成 | 小規模・単一VPC | ハブ&スポーク、大規模、帯域拡張 |
 
