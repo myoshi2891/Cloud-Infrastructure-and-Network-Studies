@@ -2,6 +2,8 @@
 # Content Domain 2: Network Implementation(ネットワークの実装)初学者向けステップバイステップ解説
 
 > 対象試験: AWS Certified Advanced Networking - Specialty (ANS-C01)
+> 想定受験: Pearson VUE(テストセンターまたはオンライン)での受験。受験言語は英語・日本語・韓国語・中国語(簡体字)から選択でき、本ガイドは日本国内から**日本語または英語**で受験する読者を想定
+> 受験可能期間(2026年10月17日確認): 英語版の公式認定ページは「最終受験日 2026年12月31日」と記載しており、この時点では予約・受験が可能です。一方、日本語版の公式ページは「最終受験日 2026年8月25日」のままで、記載が食い違っています。本ガイドは更新が新しい英語版ページの **2026年12月31日** を適用日として扱います。言語・地域ごとの予約枠は、予約前に Pearson VUE の予約画面で必ず確認してください(出典: [英語版](https://aws.amazon.com/certification/certified-advanced-networking-specialty/) / [日本語版](https://aws.amazon.com/jp/certification/certified-advanced-networking-specialty/))
 > 対象ドメイン: **Content Domain 2: Network Implementation(出題比率 26%)**
 > 想定読者: ネットワークの基礎(IPアドレス、サブネット、ルーティング)をざっくり知っている初学者〜中級者
 > 根拠(アンカー): [ANS-C01 試験ガイド Domain 2](https://docs.aws.amazon.com/aws-certification/latest/advanced-networking-specialty-01/advanced-networking-specialty-01-domain2.html)
@@ -305,7 +307,7 @@ flowchart LR
 注意点(試験頻出):
 
 - DXGWに関連付けた**VPC同士は、DXGW経由では通信できません**(DXGWは「オンプレ ↔ VPC」の中継であり、VPC間ルーターではない)。VPC間はPeeringやTGWで繋ぎます。
-- Transit VIF 経由の場合、TGWとDXGWの関連付け時に**許可するプレフィックス(Allowed prefixes)**を指定します。これがTGW側から広告される経路です。
+- Transit VIF 経由の場合、TGWとDXGWの関連付け時に**許可するプレフィックス(Allowed prefixes)**を指定します。これはDXGWからオンプレミスへ広告されるプレフィックスです(TGWが広告する経路ではありません)。
 - DXGWは**リージョンをまたいで**使えます。VGW向けでもTGW向けでも、ロケーションの場所とVPCのリージョンは一致している必要はありません。
 
 #### 2.3.4 冗長性モデル(Resiliency)
@@ -361,7 +363,7 @@ AWS → オンプレ方向、オンプレ → AWS方向のどちらも制御で�
 | オンプレ → AWS(AWS宛て通信で顧客側が選ぶ経路) | オンプレ側ルーターで、AWSから受信した経路に **Local Preference** などを設定して送信経路を選ぶ。これは顧客側の経路選択であり、AWS側の経路選択には影響しない |
 | Public VIF の広告範囲 | スコープコミュニティで制御: `7224:9100` 同一リージョン / `7224:9200` 同一大陸 / `7224:9300` グローバル |
 
-> AWSの経路選択の基本: ①**最長プレフィックス一致**が最優先。②同じプレフィックスなら、ルートテーブルへ伝播した経路のうち**Direct Connect(BGP) > 静的VPN > BGP VPN** の順(VGWの場合)。TGWでは、静的ルート > VPC伝播 > DXGW伝播 > TGW Connect > VPN(BGP)の順です。試験では「VPNをDXのバックアップにしたい → DXの方が優先されるので特別な設定は不要、ただし**同じプレフィックス**を広告すること」と問われることがあります。
+> AWSの経路選択の基本: ①**最長プレフィックス一致**が最優先。②同じプレフィックスなら、ルートテーブルへ伝播した経路のうち**Direct Connect(BGP) > 静的VPN > BGP VPN** の順(VGWの場合)。TGWでは、同じCIDRの経路が複数あるとき、静的ルート > VPC伝播 > DXGW伝播 > TGW Connect > プライベートDirect Connect上のSite-to-Site VPN > Site-to-Site VPN(BGP)の順で選ばれます。試験では「VPNをDXのバックアップにしたい → DXの方が優先されるので特別な設定は不要、ただし**同じプレフィックス**を広告すること」と問われることがあります。
 
 #### 2.3.6 Direct Connect の設定例
 
@@ -637,7 +639,7 @@ flowchart TD
 |---|---|
 | 方向性 | **一方向**(利用者 → 提供者)。提供者から利用者VPCへの開始はできない |
 | DNS | Interface Endpoint の**プライベートDNS**を有効にすると、サービスの標準DNS名がエンドポイントのプライベートIPに解決される(VPCの `enableDnsSupport` と `enableDnsHostnames` が必須) |
-| エンドポイントポリシー | エンドポイント単位で、アクセス可能なプリンシパル/リソースをIAMポリシーで制限 |
+| エンドポイントポリシー | エンドポイントポリシーに対応するAWSサービスのエンドポイントに限り、アクセス可能なプリンシパル/リソースをIAMポリシー形式で制限できる。AWS以外の提供者によるエンドポイントサービス(PrivateLink経由のSaaS等)では利用者側のエンドポイントポリシーは非対応で、エンドポイントはフルアクセスとなる(提供者側で制御する) |
 | 可用性 | 複数AZにエンドポイントを置く |
 | オンプレからの利用 | Direct Connect/VPN経由でオンプレからエンドポイントのプライベートIPに到達できる(DNS解決は§4のResolverで) |
 
@@ -1230,18 +1232,32 @@ def handler(event, context):
     detail = event["detail"]
     group_id = detail["requestParameters"]["groupId"]
     for perm in detail["requestParameters"]["ipPermissions"]["items"]:
+        if not exposes_ssh(perm):
+            continue
         for rng in perm.get("ipRanges", {}).get("items", []):
-            if rng.get("cidrIp") == "0.0.0.0/0" and perm.get("fromPort") == 22:
-                # 全開放のSSHルールを取り消す
-                ec2.revoke_security_group_ingress(
-                    GroupId=group_id,
-                    IpPermissions=[{
-                        "IpProtocol": perm["ipProtocol"],
-                        "FromPort": 22,
-                        "ToPort": 22,
-                        "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-                    }],
-                )
+            if rng.get("cidrIp") != "0.0.0.0/0":
+                continue
+            # 既存ルールと一致させるため、元のプロトコルとポート範囲のまま取り消す
+            ip_permission = {
+                "IpProtocol": perm["ipProtocol"],
+                "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
+            }
+            if "fromPort" in perm:
+                ip_permission["FromPort"] = perm["fromPort"]
+                ip_permission["ToPort"] = perm["toPort"]
+            ec2.revoke_security_group_ingress(
+                GroupId=group_id,
+                IpPermissions=[ip_permission],
+            )
+
+def exposes_ssh(perm):
+    """TCPの22番を含むルール(0-65535 などの範囲指定、全プロトコル -1 を含む)か判定する"""
+    protocol = str(perm.get("ipProtocol"))
+    if protocol == "-1":
+        return True
+    if protocol not in ("tcp", "6"):
+        return False
+    return perm.get("fromPort", 0) <= 22 <= perm.get("toPort", 65535)
 ```
 
 ### 5.6 ハイブリッドネットワーク自動化とAWSネイティブIaCの統合
@@ -1351,7 +1367,7 @@ flowchart TD
 
 実際の試験は難易度が高く、複数選択が中心です。ここでは理解確認用です。折りたたみの中に解答があります。
 
-**問1.** オンプレミスの拠点から東京リージョンの10個のVPCへ、1つのVPNでアクセスしたい。帯域も増やしたい。最も適切な構成を2つ選べ。
+**問1.** オンプレミスの拠点から東京リージョンの10個のVPCへ、VPCごとにVPNを張らずに集約した経路でアクセスしたい。複数のVPN接続を束ねて帯域も増やしたい。最も適切な構成を2つ選べ。
 - A. 各VPCにVGWを作成し、10本のVPN
 - B. Transit Gatewayを作成し、VPCをアタッチ
 - C. BGPを使う動的VPNを複数作成し、TGWでECMPを有効にする
