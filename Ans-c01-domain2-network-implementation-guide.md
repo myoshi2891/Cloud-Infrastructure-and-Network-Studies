@@ -127,7 +127,7 @@ flowchart TD
 
 | 手段 | 通信経路 | 帯域 | 暗号化 | 開通までの時間 | 主な用途 |
 |---|---|---|---|---|---|
-| Site-to-Site VPN | インターネット経由(IPsec) | 1トンネルあたり最大1.25 Gbps | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
+| Site-to-Site VPN | インターネット経由(IPsec) | 標準トンネルは1トンネルあたり最大1.25 Gbps。Large Bandwidth Tunnel(Transit Gateway / Cloud WAN接続時のみ)は1トンネルあたり最大5 Gbps | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
 | Direct Connect | 専用線(AWSバックボーン) | 1/10/100/400 Gbps(専有)など | 既定は暗号化なし(MACsec/VPN併用で暗号化) | 数週間〜数か月 | 大容量、低遅延、安定した品質 |
 | Direct Connect + VPN | 専用線の上にIPsec | VPN側の上限に依存 | 暗号化あり | Direct Connect次第 | 専用線で暗号化も必須の場合 |
 
@@ -199,7 +199,7 @@ Accelerated Site-to-Site VPN は、通信を**AWS Global Acceleratorのエッジ
 | NAT-T(NATトラバーサル) | UDP 4500。オンプレ側がNAT配下の場合に必要 |
 | 事前共有キー(PSK) | 既定は自動生成。Secrets Manager連携や証明書認証(ACM Private CA)も選択可能 |
 | トンネル内アドレス | `169.254.0.0/16` のリンクローカル `/30` |
-| 外側/内側のIPバージョン | IPv4/IPv6の組合せが可能(外側と内側を別々に指定) |
+| 外側/内側のIPバージョン | VGWではIPv6トラフィック非対応。外側トンネルアドレスにIPv6を使うにはTransit GatewayまたはCloud WANが必要。1つのVPN接続でIPv4とIPv6のパケットを同時には運べない(両方必要ならVPN接続を分ける) |
 | DPD(Dead Peer Detection) | トンネル死活検知。タイムアウト時のアクション(clear / restart / none)を設定 |
 | MTU | IPsecのオーバーヘッドで実効MTUが小さくなる。**MSS clamping** と PMTUD の考慮が必要 |
 
@@ -357,8 +357,8 @@ AWS → オンプレ方向、オンプレ → AWS方向のどちらも制御で�
 
 | 方向 | 制御手段 |
 |---|---|
-| オンプレ → AWS(AWSが受信するときの優先度) | **BGPコミュニティ(Local Preference)**: `7224:7100` 低 / `7224:7200` 中 / `7224:7300` 高。同じ優先度なら AS_PATH の短い方が選ばれる |
-| AWS → オンプレ(AWSからの送信の優先度) | オンプレ側で **AS_PATH プリペンド**、Local Preference、MEDなどを調整。どの接続から広告するかも制御する |
+| AWS → オンプレ(オンプレ宛て通信でAWSが選ぶ経路の優先度) | オンプレからAWSへ広告する経路に **BGPコミュニティ(Local Preference)** を付与: `7224:7100` 低 / `7224:7200` 中 / `7224:7300` 高。同じ優先度なら AS_PATH の短い方が選ばれる(AS_PATH プリペンドで調整可能) |
+| オンプレ → AWS(AWS宛て通信で顧客側が選ぶ経路) | オンプレ側ルーターで、AWSから受信した経路に **Local Preference** などを設定して送信経路を選ぶ。これは顧客側の経路選択であり、AWS側の経路選択には影響しない |
 | Public VIF の広告範囲 | スコープコミュニティで制御: `7224:9100` 同一リージョン / `7224:9200` 同一大陸 / `7224:9300` グローバル |
 
 > AWSの経路選択の基本: ①**最長プレフィックス一致**が最優先。②同じプレフィックスなら、ルートテーブルへ伝播した経路のうち**Direct Connect(BGP) > 静的VPN > BGP VPN** の順(VGWの場合)。TGWでは、静的ルート > VPC伝播 > DXGW伝播 > TGW Connect > VPN(BGP)の順です。試験では「VPNをDXのバックアップにしたい → DXの方が優先されるので特別な設定は不要、ただし**同じプレフィックス**を広告すること」と問われることがあります。
@@ -416,7 +416,7 @@ flowchart LR
 |---|---|
 | 通信方式 | GRE(トンネル)+ BGP(経路交換)。IPsecではない |
 | トランスポート | 既存の**VPCアタッチメント**または**Direct Connectアタッチメント**を土台にする |
-| 帯域 | Connect アタッチメントあたり複数のピア(GREトンネル)を持てる。VPN(1.25 Gbps/トンネル)より高帯域 |
+| 帯域 | GREピアあたり最大5 Gbps。Connect アタッチメントあたり複数のピア(GREトンネル)を持てる。標準VPNトンネル(最大1.25 Gbps)よりは高帯域だが、Large Bandwidth VPNトンネル(最大5 Gbps)とは1本あたりの上限が同等 |
 | 向く用途 | サードパーティSD-WANとの統合、VPNでは足りない帯域の実現 |
 
 ### 2.5 ロードバランシング(L3/L4/L7)
@@ -706,6 +706,8 @@ flowchart LR
 
 ```yaml
 # CloudFormation: TGW とVPCアタッチメントの基本(ルートテーブル分離の準備)
+# 抜粋(フラグメント): ProdVpc と ProdAttachSubnetIds は省略したテンプレート部分で
+# 定義する前提(例: 同テンプレート内の AWS::EC2::VPC リソースと List<AWS::EC2::Subnet::Id> 型のパラメータ)
 Resources:
   Tgw:
     Type: AWS::EC2::TransitGateway
