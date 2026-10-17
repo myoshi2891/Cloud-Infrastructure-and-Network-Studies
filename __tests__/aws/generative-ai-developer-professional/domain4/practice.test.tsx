@@ -24,17 +24,18 @@ it.each(quiz)('$id grades the complete correct answer, locks options, reveals ex
  expect(card.querySelector('.verdict')).toHaveTextContent('正解です。 '+source.answerText);
  for(const button of card.querySelectorAll('.q-opt')){expect(button).toBeDisabled();expect(button.classList.contains('correct')).toBe(source.answer.includes(button.getAttribute('data-key')!));}
  expect(container.querySelector('.score span')).toHaveTextContent('1');
- expect(container.querySelector('.fill')).toHaveStyle({width:`${100/quiz.length}%`});
+ expect(parseFloat(container.querySelector<HTMLElement>('.fill')!.style.width)).toBeCloseTo(100/quiz.length,10);
 });
 it('rejects wrong single answers, incomplete multi answers and extra selections, and supports deselection',()=>{
  const {container}=render(<Guide/>);
- const single=quiz.find(q=>!q.multi)!;const multi=quiz.filter(q=>q.multi);expect(multi.length).toBeGreaterThan(1);
+ const single=quiz.find(q=>!q.multi)!;const multi=quiz.filter(q=>q.multi);expect(multi).toHaveLength(1);
  const card=cardFor(container,single.id);const wrong=single.options.find(o=>!single.answer.includes(o.key))!;
  fireEvent.click(card.querySelector(`[data-key="${wrong.key}"]`)!);expect(card.querySelector('.q-explain')).toHaveClass('ng');expect(card.querySelector(`[data-key="${wrong.key}"]`)).toHaveClass('wrong');
  const incomplete=cardFor(container,multi[0]!.id);const key=multi[0]!.answer[0]!;const option=incomplete.querySelector(`[data-key="${key}"]`)!;
  fireEvent.click(option);expect(option).toHaveAttribute('aria-pressed','true');fireEvent.click(option);expect(option).toHaveAttribute('aria-pressed','false');expect(incomplete.querySelector('.q-check')).toBeDisabled();
  fireEvent.click(option);fireEvent.click(incomplete.querySelector('.q-check')!);expect(incomplete.querySelector('.q-explain')).toHaveClass('ng');
- const extra=cardFor(container,multi[1]!.id);for(const b of extra.querySelectorAll('.q-opt'))fireEvent.click(b);fireEvent.click(extra.querySelector('.q-check')!);expect(extra.querySelector('.q-explain')).toHaveClass('ng');
+ fireEvent.click(within(container).getByRole('button',{name:'やり直す'}));
+ const extra=cardFor(container,multi[0]!.id);for(const b of extra.querySelectorAll('.q-opt'))fireEvent.click(b);fireEvent.click(extra.querySelector('.q-check')!);expect(extra.querySelector('.q-explain')).toHaveClass('ng');
  expect(container.querySelector('.score span')).toHaveTextContent('0');
 });
 it('scores all 12 questions once and resets score, progress, selections, explanations and disabled states',()=>{
