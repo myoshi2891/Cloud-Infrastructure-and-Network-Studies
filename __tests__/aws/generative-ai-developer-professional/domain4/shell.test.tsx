@@ -18,3 +18,7 @@ it('opens, closes with Escape, and cleans up its observer',()=>{
  fireEvent.keyDown(document,{key:'Escape'});expect(button).toHaveAttribute('aria-expanded','false');
  expect(button).toHaveFocus();unmount();expect(disconnect).toHaveBeenCalled();vi.unstubAllGlobals();
 });
+it('preserves source task group navigation decorations',()=>{
+ const {container}=render(<NavBar/>);
+ expect([...container.querySelectorAll('nav a.part')].map(a=>a.getAttribute('href')?.slice(1))).toEqual(fixture.guideDesign.nav.filter(item=>item.id.startsWith('task-')).map(item=>item.id));
+});
