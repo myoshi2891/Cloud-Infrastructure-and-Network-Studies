@@ -37,6 +37,15 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(skill).toContain('アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行');
     });
 
+    it('domain3: Q2はGuardrailIdentifier条件キーが効く4つの推論APIに要件を限定し、解説も同じ範囲にする', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const texts = corrected.bodyContent.map(block => block.text);
+        const apis = 'Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream';
+        expect(texts).toContain(`社内の全開発者が Bedrock の推論 API（${apis}）を呼ぶ際、必ず特定のガードレールを使わせたい。`);
+        expect(texts).toContain('答え: B。条件キーで、これら 4 つの推論 API でガードレールなしの呼び出しを拒否できる。');
+        expect(texts).not.toContain('社内の全開発者が Bedrock を呼ぶ際、必ず特定のガードレールを使わせたい。');
+    });
+
     it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {
         const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
         const workflow = corrected.bodyContent.find(block => block.text.includes('複数ステップの連鎖です'))?.text ?? '';
@@ -89,6 +98,14 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(connectorCell).toContain('既存のコネクタは取り込みと検索を引き続き利用可能');
         expect(connectorCell).toContain('Confluence、SharePoint、Salesforce のネイティブコネクタを提供する');
         expect(corrected.td.find(cell => cell.startsWith('ナレッジベースのウェブクローラーを利用'))).toContain('2026年9月30日以降');
+    });
+
+    it('domain1: Salesforceコネクタは文書単位のACLに対応せず、保護が必要な内容はサーバー側で別途認可すると明記する', () => {
+        const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
+        const connectorCell = corrected.td.find(cell => cell.startsWith('ナレッジベースのコネクタを利用')) ?? '';
+        expect(connectorCell).toContain('Salesforce コネクタは文書単位の ACL に対応しない');
+        expect(connectorCell).toContain('クロールした Salesforce のコンテンツはナレッジベースの利用者全員が取得できる');
+        expect(connectorCell).toContain('保護が必要な内容はサーバー側で別途認可を行う');
     });
 
     it('domain1: Task 1.5の埋め込みの出典を、ナレッジベースが埋め込みを作成・検索する仕組みのページへ差し替える', () => {

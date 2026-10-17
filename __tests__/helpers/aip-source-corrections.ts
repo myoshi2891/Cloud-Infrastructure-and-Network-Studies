@@ -10,7 +10,7 @@ export const AIP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
     ['/userguide/kb-data-source-connectors.html', '/userguide/data-source-connectors.html'],
     // embeddings.html もユーザーガイドのトップへ302転送されるため、ナレッジベースが埋め込みを作成・検索する仕組みのページへ差し替える
     ['/userguide/embeddings.html', '/userguide/kb-how-it-works.html'],
-    ['ナレッジベースのコネクタを利用', 'ナレッジベースのコネクタを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降これらのコネクタを新規作成できない(既存のコネクタは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base は Confluence、SharePoint、Salesforce のネイティブコネクタを提供する'],
+    ['ナレッジベースのコネクタを利用', 'ナレッジベースのコネクタを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降これらのコネクタを新規作成できない(既存のコネクタは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base は Confluence、SharePoint、Salesforce のネイティブコネクタを提供する。Salesforce コネクタは文書単位の ACL に対応しないため、クロールした Salesforce のコンテンツはナレッジベースの利用者全員が取得できる(Salesforce 側のレコード権限は引き継がれない)。保護が必要な内容はサーバー側で別途認可を行う'],
     ['ナレッジベースのウェブクローラーを利用', 'ナレッジベースのウェブクローラーを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降ウェブクローラーを新規作成できない(既存のクローラーは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base はウェブクローラーのネイティブコネクタを提供する'],
     // ガードレールのPIIマスクはAPIの入出力にだけ効き、モデル呼び出しログには元の内容が残る
     // Knowledge Bases はベクトルストアではなく、下記のストアを保存先に使うマネージド RAG
@@ -49,6 +49,9 @@ export const AIP_DOMAIN2_CORRECTIONS: readonly Correction[] = [
 /** Domain 3: CloudWatch に事前定義の公平性メトリクスはないため、アプリが算出して発行する形にする。 */
 export const AIP_DOMAIN3_CORRECTIONS: readonly Correction[] = [
     ['CloudWatch の事前定義された公平性メトリクス、', 'アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行、'],
+    // bedrock:GuardrailIdentifier による強制は4つの推論APIだけに効くため、Q2の要件と解説をその範囲に限定する
+    ['社内の全開発者が Bedrock を呼ぶ際、', '社内の全開発者が Bedrock の推論 API（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream）を呼ぶ際、'],
+    ['条件キーでガードレールなしの推論を拒否できる。', '条件キーで、これら 4 つの推論 API でガードレールなしの呼び出しを拒否できる。'],
 ];
 
 /** Domain 4: 直列ステップの所要時間は合計され、最も遅い経路が効くのは並列時だけ。キャッシュのトークン数は別メトリクスで扱う。 */
