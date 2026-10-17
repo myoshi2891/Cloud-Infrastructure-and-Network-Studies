@@ -616,7 +616,7 @@
   padding: 14px 20px;
   margin: 0 0 24px;
   position: sticky;
-  top: 8px;
+  top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 8px);
   z-index: 30;
 }
 .aip-domain4-page .quiz-bar .score {

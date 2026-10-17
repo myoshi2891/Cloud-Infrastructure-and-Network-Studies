@@ -36,7 +36,7 @@ describe('Domain 4 source design declaration fidelity', () => {
     if (prop === 'word-break') { expect(actual['overflow-wrap']).toBe('anywhere'); continue; }
     if (prop === 'scroll-margin-top') { expect(actual[prop]).toContain('var(--header-h, 60px)'); continue; }
     if (prop === 'z-index') { expect(Number(actual[prop])).toBeLessThan(40); continue; }
-    if (prop === 'top' && selector.includes('sidebar')) { expect(actual[prop]).toContain('var(--header-h, 60px)'); continue; }
+    if (prop === 'top' && (selector.includes('sidebar') || selector.includes('quiz-bar'))) { expect(actual[prop]).toContain('var(--header-h, 60px)'); continue; }
     expect(resolve(actual[prop] ?? '', tokens), `${selector} ${prop}`).toBe(resolve(value.replace('var(--sidebar-w)', '300px'), sourceTokens));
    }
   }
