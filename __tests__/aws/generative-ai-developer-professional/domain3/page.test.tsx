@@ -38,6 +38,6 @@ describe('AIP domain3 independent complete inventory', () => {
         const ids = [...container.querySelectorAll('[id]')].map(el => el.id);
         expect(new Set(ids).size).toBe(ids.length);
         [...container.querySelectorAll('table')].forEach((table, index) => expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[index] ?? -1));
-        
+
     });
 });

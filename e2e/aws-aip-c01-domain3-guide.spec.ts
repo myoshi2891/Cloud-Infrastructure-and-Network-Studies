@@ -139,4 +139,3 @@ test('AIP domain3 all 19 diagrams keep their drawn content inside the SVG viewBo
         expect(box.bottom, box.id).toBeLessThanOrEqual(box.viewBottom + 2);
     }
 });
-

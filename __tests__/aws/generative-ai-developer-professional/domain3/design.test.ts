@@ -41,9 +41,11 @@ describe('Domain 3 full source design',()=>{
  expect(declarations('.aip-domain3-page .main','(max-width: 980px)').width).toBe('100%');
  expect(declarations('.aip-domain3-page .sidebar').top).toContain('var(--header-h, 60px)');
  expect(Number(declarations('.aip-domain3-page .sidebar-toggle')['z-index'])).toBeGreaterThan(Number(declarations('.aip-domain3-page .sidebar')['z-index']));
- expect(declarations('.aip-domain3-page .mermaid-wrap > [role="img"]')).toMatchObject({background:'transparent',border:'none',padding:'0'});
+ expect(declarations('.aip-domain3-page .mermaid-wrap > [role="img"]')).toMatchObject({background:'transparent',border:'none',padding:'0',overflow:'visible'});
  expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);
  expect(css).not.toMatch(/#[\da-fA-F]{3,8}\b|word-break:\s*break-word/);
  for(const [,name] of css.matchAll(/var\((--[\w-]+)/g))if(name!=='--disclaimer-height')expect(tokens,name).toHaveProperty(name!);
  });
 });
+
+it('removes closed mobile navigation from focus and accessibility trees',()=>{expect(declarations('.aip-domain3-page .sidebar:not(.open)','(max-width: 980px)').visibility).toBe('hidden');});
