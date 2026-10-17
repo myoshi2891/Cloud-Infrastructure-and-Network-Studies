@@ -182,7 +182,7 @@ flowchart TD
     D --> F["ルート変更は手作業<br/>ECMP不可"]
 ```
 
-> 試験の定番: 「BGPに対応していない古いオンプレ装置」→ 静的VPN、「帯域を増やしたい」→ TGW + BGP動的VPN + ECMP。
+> 試験の定番: 「BGPに対応していない古いオンプレ装置」→ 静的VPN、「1トンネルあたり最大5 Gbpsまで帯域を増やしたい」→ Transit Gateway または Cloud WAN に終端する Large Bandwidth Tunnel、「複数トンネルを束ねて合計帯域を増やしたい」→ TGW + BGP動的VPN + ECMP。
 
 #### 2.2.4 Accelerated VPN(高速化VPN)
 
@@ -203,7 +203,7 @@ Accelerated Site-to-Site VPN は、通信を**AWS Global Acceleratorのエッジ
 | トンネル内アドレス | `169.254.0.0/16` のリンクローカル `/30` |
 | 外側/内側のIPバージョン | VGWではIPv6トラフィック非対応。外側トンネルアドレスにIPv6を使うにはTransit GatewayまたはCloud WANが必要。1つのVPN接続でIPv4とIPv6のパケットを同時には運べない(両方必要ならVPN接続を分ける) |
 | DPD(Dead Peer Detection) | トンネル死活検知。タイムアウト時のアクション(clear / restart / none)を設定 |
-| MTU | IPsecのオーバーヘッドで実効MTUが小さくなる。**MSS clamping** と PMTUD の考慮が必要 |
+| MTU | IPsecのオーバーヘッドで実効MTUが小さくなる。Site-to-Site VPN は **PMTUD(Path MTU Discovery)に対応しない**ため、使用する暗号スイートに合わせてオンプレ側の MTU / MSS を調整し、**MSS clamping** を検討する |
 
 構成の設定例(CLIでトンネルオプションを指定)です。
 
@@ -1337,7 +1337,8 @@ flowchart TD
 | 「1 Gbps以上が安定して」「低遅延」 | Direct Connect |
 | 「専用線 + 暗号化(L2)」 | MACsec(専有接続) |
 | 「専用線 + 暗号化(IPsec)」 | DX上のVPN(Public VIF または Private IP VPN) |
-| 「VPNの帯域を増やしたい」 | TGW + BGP + ECMP(複数VPN接続) |
+| 「VPNの1トンネルあたりの帯域を最大5 Gbpsまで増やしたい」 | Large Bandwidth Tunnel(Transit Gateway / Cloud WAN終端) |
+| 「複数のVPNトンネルを束ねて合計帯域を増やしたい」 | TGW + BGP + ECMP(複数VPN接続) |
 | 「VPNの遅延・ジッターを減らしたい」 | Accelerated VPN(TGW終端) |
 | 「古いオンプレ装置がBGP非対応」 | 静的ルーティングVPN |
 | 「複数リージョンのVPCにDirect Connectで」 | Direct Connect Gateway(Private VIF または Transit VIF) |
