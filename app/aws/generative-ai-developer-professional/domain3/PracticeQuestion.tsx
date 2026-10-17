@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useSyncExternalStore, type ReactNode } from 'react';
 
 type Result = { picked: string | null; correct: boolean };
 type QuizState = {
@@ -42,11 +42,19 @@ export function QuizBar() {
     </div>;
 }
 
-/** 原本の問題・選択肢・解説を保持し、回答済み状態を描画する。 */
+const subscribeNothing = () => () => {};
+
+/** サーバー描画では false、クライアントのハイドレーション後に true を返す。 */
+function useHydrated() {
+    return useSyncExternalStore(subscribeNothing, () => true, () => false);
+}
+
+/** 原本の問題・選択肢・解説を保持し、回答済み状態を描画する。JS無効時は .quiz:not(.js) で解説を表示したままにする。 */
 export function PracticeQuestion({ id, answer, children }: { id: string; answer: string; children: ReactNode }) {
     const result = useQuiz().results[id];
+    const hydrated = useHydrated();
     return <QuestionContext.Provider value={{ id, answer }}>
-        <div className={`quiz js${result ? ' answered' : ''}`} data-answer={answer} data-result={result ? result.correct ? 'ok' : 'ng' : undefined} id={id}>{children}</div>
+        <div className={`quiz${hydrated ? ' js' : ''}${result ? ' answered' : ''}`} data-answer={answer} data-result={result ? result.correct ? 'ok' : 'ng' : undefined} id={id}>{children}</div>
     </QuestionContext.Provider>;
 }
 

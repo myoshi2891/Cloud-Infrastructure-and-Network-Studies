@@ -5,12 +5,13 @@ import sourceInventory from '@/docs/migration-inventory/aws-aip-c01-domain3-guid
 
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.fidelity.json';
 
+import { AIP_DOMAIN3_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 import { extractBodyContent, normalizeSpaces, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 
 // AWS公式ドキュメントにもとづく訂正を、原本inventoryの複製へ適用した表示期待値
-const inventory = sourceInventory;
+const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN3_CORRECTIONS);
 
 describe('AIP domain3 independent complete inventory', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const)('retains every %s text in source order', tag => {

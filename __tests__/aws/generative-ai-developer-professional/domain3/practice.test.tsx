@@ -1,9 +1,15 @@
 import {render,fireEvent,within} from '@testing-library/react';
 import {describe,it,expect,vi} from 'vitest';
+import {renderToString} from 'react-dom/server';
 import Guide from '@/app/aws/generative-ai-developer-professional/domain3/AipDomain3Guide';
 import questions from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.quiz.json';
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 describe('Domain 3 all ten interactive quizzes',()=>{
+ it('keeps js off server markup so explanations stay visible without JavaScript, and adds it after hydration',()=>{
+ const doc=new DOMParser().parseFromString(renderToString(<Guide/>),'text/html');
+ expect(doc.querySelectorAll('.quiz')).toHaveLength(10);expect(doc.querySelectorAll('.quiz.js')).toHaveLength(0);
+ const {container}=render(<Guide/>);expect(container.querySelectorAll('.quiz.js')).toHaveLength(10);
+ });
  it('preserves every question key, answer and full explanation',()=>{
  const {container}=render(<Guide/>);expect(container.querySelectorAll('.quiz')).toHaveLength(10);
  for(const q of questions){const card=container.querySelector('#'+q.id)!;expect(card).not.toBeNull();expect(card).toHaveAttribute('data-answer',q.answer);

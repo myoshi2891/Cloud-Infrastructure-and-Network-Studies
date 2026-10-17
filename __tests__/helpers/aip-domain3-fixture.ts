@@ -1,4 +1,5 @@
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.fidelity.json';
+import {AIP_DOMAIN3_CORRECTIONS,withSourceCorrections} from './aip-source-corrections';
 /** 原本の配色を補完し、暗いグローバル設定を継承しない描画契約。 */
 export function aipDomain3Part(id:keyof typeof fixture.guideParts){
  const source=fixture.guideInteractions.mermaidConfig;
@@ -9,6 +10,6 @@ export function aipDomain3Part(id:keyof typeof fixture.guideParts){
  actorLineColor:'#5b6f95',signalColor:'#5b6f95',labelBoxBkgColor:'#ffffff',labelBoxBorderColor:'#8fa7e3',
  noteBkgColor:'#eef2f9',noteTextColor:'#1b2740',noteBorderColor:'#8fa7e3'}};
  const prefix=`---\nconfig: ${JSON.stringify(config)}\n---\n`;
- const part=fixture.guideParts[id];
+ const part=withSourceCorrections(fixture.guideParts[id],AIP_DOMAIN3_CORRECTIONS);
  return {...part,diagrams:part.diagrams.map(chart=>prefix+chart)};
 }

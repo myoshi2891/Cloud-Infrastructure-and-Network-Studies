@@ -40,7 +40,7 @@ export default function Task34() { return <div className="guide-part" data-part=
 {" "}
 <h2 id="step-16" tabIndex={-1}>{"Step 16. 公平性評価（Skill 3.4.2）"}</h2>
 {" "}
-<p>{" "}<strong>{"Skill 3.4.2"}</strong>{": バイアスのない FM 出力を確保する公平性評価を適用する（CloudWatch の事前定義された公平性メトリクス、Bedrock Prompt Management と Prompt Flows による体系的な A/B テスト、LLM-as-a-judge による自動モデル評価）。 "}</p>
+<p>{" "}<strong>{"Skill 3.4.2"}</strong>{": バイアスのない FM 出力を確保する公平性評価を適用する（アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行、Bedrock Prompt Management と Prompt Flows による体系的な A/B テスト、LLM-as-a-judge による自動モデル評価）。 "}</p>
 {" "}
 <h3 id="sec-16-1" tabIndex={-1}>{"16-1. 公平性とは"}</h3>
 {" "}
