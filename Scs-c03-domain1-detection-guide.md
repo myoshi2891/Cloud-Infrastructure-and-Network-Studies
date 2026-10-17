@@ -316,6 +316,7 @@ AWS が管理する脅威検出サービスです。ログの収集や解析の�
 | Runtime Monitoring | EKS、EC2、ECS (Fargate 含む) の OS レベルのイベント | コンテナ・インスタンスの実行時の脅威検出 |
 | RDS Protection | RDS (Aurora を含む) のログイン活動 | データベースへの不審なログイン検出 |
 | Lambda Protection | Lambda のネットワークアクティビティ | Lambda を使う環境 |
+| AI Protection | Amazon Bedrock、Amazon Bedrock AgentCore、Amazon SageMaker AI の CloudTrail データイベント | これらの AI サービスを利用する環境 |
 | Malware Protection for EC2 | EBS ボリュームのマルウェアスキャン | EC2 を使う環境 |
 | Malware Protection for S3 | S3 にアップロードされたオブジェクトのスキャン | ユーザーアップロードを受ける環境 |
 | Malware Protection for AWS Backup | バックアップのマルウェアスキャン | バックアップの感染確認 |
