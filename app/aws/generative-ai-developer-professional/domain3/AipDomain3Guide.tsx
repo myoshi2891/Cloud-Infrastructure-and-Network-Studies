@@ -4,5 +4,6 @@ import Task31 from './sections/Task31';
 import Task32 from './sections/Task32';
 import Task33 from './sections/Task33';
 import Task34 from './sections/Task34';
+import Revision from './sections/Revision';
 /** 全区分を原本の順序で配置するガイド。 */
-export default function AipDomain3Guide() { return <div className="aip-domain3-page layout"><NavBar /><main className="main"><Foundation /><Task31 /><Task32 /><Task33 /><Task34 /></main></div>; }
+export default function AipDomain3Guide() { return <div className="aip-domain3-page layout"><NavBar /><main className="main"><Foundation /><Task31 /><Task32 /><Task33 /><Task34 /><Revision /></main></div>; }
