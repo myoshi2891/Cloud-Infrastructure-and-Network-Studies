@@ -29,7 +29,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         setResults(current => current[id] ? current : { ...current, [id]: { picked, correct } });
     };
     return <QuizContext.Provider value={{ results, answer, reset: () => setResults({}) }}>
-        <div data-part="revision">{children}</div>
+        <div className="guide-part" data-part="revision">{children}</div>
     </QuizContext.Provider>;
 }
 

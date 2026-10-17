@@ -1,6 +1,6 @@
 import { Diagram } from '../Diagram';
 /** 原本のtask4区分を全文・順序どおり保持する。 */
-export default function Task34() { return <div data-part="task4"><h2 id="task-3-4" tabIndex={-1}>{"Task 3.4 責任ある AI の実装"}</h2>
+export default function Task34() { return <div className="guide-part" data-part="task4"><h2 id="task-3-4" tabIndex={-1}>{"Task 3.4 責任ある AI の実装"}</h2>
 {" "}
 <h2 id="step-15" tabIndex={-1}>{"Step 15. 透明性（Skill 3.4.1）"}</h2>
 {" "}
@@ -8,7 +8,7 @@ export default function Task34() { return <div data-part="task4"><h2 id="task-3-
 {" "}
 <h3 id="sec-15-1" tabIndex={-1}>{"15-1. 透明性の 4 つの形"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"形"}</th><th scope="col">{"内容"}</th><th scope="col">{"実装手段"}</th></tr></thead><tbody><tr className="odd"><td>{"推論の表示"}</td><td>{"なぜその回答になったかをユーザーに分かる形で示す"}</td><td>{" 回答に判断理由の要約を添える（内部の生の思考ではなく、要点を整理した説明） "}</td></tr><tr className="even"><td>{"不確実性の定量化"}</td><td>{"どのくらい自信があるかを数値で扱う"}</td><td>{" 検証スコア（grounding 等）を CloudWatch にメトリクスとして記録し、閾値で表示や分岐を変える "}</td></tr><tr className="odd"><td>{"根拠提示（出典帰属）"}</td><td>{"回答がどの資料に基づくかを示す"}</td><td>{"Knowledge Bases の引用情報、出典メタデータ"}</td></tr><tr className="even"><td>{"推論トレース"}</td><td>{"エージェントが何をしたかを追跡"}</td><td>{"Bedrock Agent のトレース"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"15-1. 透明性の 4 つの形の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"形"}</th><th scope="col">{"内容"}</th><th scope="col">{"実装手段"}</th></tr></thead><tbody><tr className="odd"><td>{"推論の表示"}</td><td>{"なぜその回答になったかをユーザーに分かる形で示す"}</td><td>{" 回答に判断理由の要約を添える（内部の生の思考ではなく、要点を整理した説明） "}</td></tr><tr className="even"><td>{"不確実性の定量化"}</td><td>{"どのくらい自信があるかを数値で扱う"}</td><td>{" 検証スコア（grounding 等）を CloudWatch にメトリクスとして記録し、閾値で表示や分岐を変える "}</td></tr><tr className="odd"><td>{"根拠提示（出典帰属）"}</td><td>{"回答がどの資料に基づくかを示す"}</td><td>{"Knowledge Bases の引用情報、出典メタデータ"}</td></tr><tr className="even"><td>{"推論トレース"}</td><td>{"エージェントが何をしたかを追跡"}</td><td>{"Bedrock Agent のトレース"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-15-2" tabIndex={-1}>{"15-2. Bedrock Agent トレース"}</h3>
 {" "}
@@ -16,13 +16,13 @@ export default function Task34() { return <div data-part="task4"><h2 id="task-3-
 {" "}
 <p>{" InvokeAgent のトレースは "}<strong>{"既定で無効"}</strong>{" です。リクエストで "}<code>{"enableTrace=true"}</code>{" を指定すると、エージェントの応答にトレースが付き、オーケストレーションの各ステップが分かります。運用で記録するには、この指定を有効にしたうえでトレースを保存します。主な要素は次のとおりです。 "}</p>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"要素"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"Rationale"}</td><td>{"次の行動に関するエージェントの推論"}</td></tr><tr className="even"><td>{"InvocationInput"}</td><td>{"呼び出したアクショングループ／KB と渡した入力"}</td></tr><tr className="odd"><td>{"Observation"}</td><td>{"実行結果（ツール出力、KB 検索結果）"}</td></tr><tr className="even"><td>{"失敗時の理由"}</td><td>{"ステップが失敗した場合にその理由が返る"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"15-2. Bedrock Agent トレースの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"要素"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"Rationale"}</td><td>{"次の行動に関するエージェントの推論"}</td></tr><tr className="even"><td>{"InvocationInput"}</td><td>{"呼び出したアクショングループ／KB と渡した入力"}</td></tr><tr className="odd"><td>{"Observation"}</td><td>{"実行結果（ツール出力、KB 検索結果）"}</td></tr><tr className="even"><td>{"失敗時の理由"}</td><td>{"ステップが失敗した場合にその理由が返る"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <Diagram id="diag-16" label="15-2. Bedrock Agent トレース" />
 {" "}
 <h3 id="sec-15-3" tabIndex={-1}>{"15-3. 不確実性の扱い（確信度の見せ方）"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"スコア状態"}</th><th scope="col">{"推奨する UI／動作"}</th></tr></thead><tbody><tr className="odd"><td>{"高"}</td><td>{"回答と出典を通常表示"}</td></tr><tr className="even"><td>{"中"}</td><td>{" 「この回答は資料で十分に確認できていません」と注意書きを付ける "}</td></tr><tr className="odd"><td>{"低"}</td><td>{"回答せず「分かりません」または人手エスカレーション"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"15-3. 不確実性の扱い（確信度の見せ方）の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"スコア状態"}</th><th scope="col">{"推奨する UI／動作"}</th></tr></thead><tbody><tr className="odd"><td>{"高"}</td><td>{"回答と出典を通常表示"}</td></tr><tr className="even"><td>{"中"}</td><td>{" 「この回答は資料で十分に確認できていません」と注意書きを付ける "}</td></tr><tr className="odd"><td>{"低"}</td><td>{"回答せず「分かりません」または人手エスカレーション"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-15-4" tabIndex={-1}>{"15-4. ベストプラクティス"}</h3>
 {" "}
@@ -48,7 +48,7 @@ export default function Task34() { return <div data-part="task4"><h2 id="task-3-
 {" "}
 <h3 id="sec-16-2" tabIndex={-1}>{"16-2. 3 つの手法"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"手法"}</th><th scope="col">{"内容"}</th><th scope="col">{"サービス"}</th></tr></thead><tbody><tr className="odd"><td>{"公平性メトリクスの計測"}</td><td>{"属性別の出力差を数値化し、継続的に記録"}</td><td>{" CloudWatch（メトリクスとして収集）、Bedrock Evaluations（新規利用の代替）。SageMaker Clarify は既存顧客のみ利用可 "}</td></tr><tr className="even"><td>{"体系的な A/B テスト"}</td><td>{"プロンプトの版を切り替え、同条件で比較"}</td><td>{" Bedrock Prompt Management（版管理）、Prompt Flows（ワークフローで分岐・比較） "}</td></tr><tr className="odd"><td>{"LLM-as-a-judge"}</td><td>{"別の LLM が評価者となり、自動採点"}</td><td>{" Bedrock Evaluations（Stereotyping、Harmfulness などの組み込み指標） "}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"16-2. 3 つの手法の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"手法"}</th><th scope="col">{"内容"}</th><th scope="col">{"サービス"}</th></tr></thead><tbody><tr className="odd"><td>{"公平性メトリクスの計測"}</td><td>{"属性別の出力差を数値化し、継続的に記録"}</td><td>{" CloudWatch（メトリクスとして収集）、Bedrock Evaluations（新規利用の代替）。SageMaker Clarify は既存顧客のみ利用可 "}</td></tr><tr className="even"><td>{"体系的な A/B テスト"}</td><td>{"プロンプトの版を切り替え、同条件で比較"}</td><td>{" Bedrock Prompt Management（版管理）、Prompt Flows（ワークフローで分岐・比較） "}</td></tr><tr className="odd"><td>{"LLM-as-a-judge"}</td><td>{"別の LLM が評価者となり、自動採点"}</td><td>{" Bedrock Evaluations（Stereotyping、Harmfulness などの組み込み指標） "}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-16-3" tabIndex={-1}>{"16-3. 評価サイクル"}</h3>
 {" "}
@@ -74,7 +74,7 @@ export default function Task34() { return <div data-part="task4"><h2 id="task-3-
 {" "}
 <h3 id="sec-17-1" tabIndex={-1}>{"17-1. 「ポリシー → 実装 → 証明」の対応"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"ポリシー要件の例"}</th><th scope="col">{"実装"}</th><th scope="col">{"証明"}</th></tr></thead><tbody><tr className="odd"><td>{"医療診断・投資助言をしない"}</td><td>{"Guardrails の Denied topics"}</td><td>{"ガードレールのバージョンとテスト結果"}</td></tr><tr className="even"><td>{"個人情報を出力しない"}</td><td>{"機密情報フィルター"}</td><td>{"ブロック／マスクのログ"}</td></tr><tr className="odd"><td>{"差別的表現を出さない"}</td><td>{"Content filters"}</td><td>{"Harmfulness／Stereotyping 評価結果"}</td></tr><tr className="even"><td>{"回答に免責文を必ず付ける"}</td><td>{"Lambda 後処理"}</td><td>{"自動チェックのログ"}</td></tr><tr className="odd"><td>{"モデルの制限・用途を明示"}</td><td>{"モデルカード"}</td><td>{"カードの版履歴"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"17-1. 「ポリシー → 実装 → 証明」の対応の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"ポリシー要件の例"}</th><th scope="col">{"実装"}</th><th scope="col">{"証明"}</th></tr></thead><tbody><tr className="odd"><td>{"医療診断・投資助言をしない"}</td><td>{"Guardrails の Denied topics"}</td><td>{"ガードレールのバージョンとテスト結果"}</td></tr><tr className="even"><td>{"個人情報を出力しない"}</td><td>{"機密情報フィルター"}</td><td>{"ブロック／マスクのログ"}</td></tr><tr className="odd"><td>{"差別的表現を出さない"}</td><td>{"Content filters"}</td><td>{"Harmfulness／Stereotyping 評価結果"}</td></tr><tr className="even"><td>{"回答に免責文を必ず付ける"}</td><td>{"Lambda 後処理"}</td><td>{"自動チェックのログ"}</td></tr><tr className="odd"><td>{"モデルの制限・用途を明示"}</td><td>{"モデルカード"}</td><td>{"カードの版履歴"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-17-2" tabIndex={-1}>{"17-2. 自動コンプライアンスチェックの流れ"}</h3>
 {" "}
@@ -100,7 +100,7 @@ export default function Task34() { return <div data-part="task4"><h2 id="task-3-
 {" "}
 <h2 id="step-18" tabIndex={-1}>{"Step 18. Task 3.4 のまとめ"}</h2>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"Skill"}</th><th scope="col">{"キーワード"}</th><th scope="col">{"代表サービス・機能"}</th></tr></thead><tbody><tr className="odd"><td>{"3.4.1 透明性"}</td><td>{"説明・不確実性・出典・トレース"}</td><td>{"Agent トレース、KB 引用、CloudWatch 信頼度メトリクス"}</td></tr><tr className="even"><td>{"3.4.2 公平性"}</td><td>{"属性間の差・A/B・自動評価"}</td><td>{"Prompt Management / Flows、LLM-as-a-judge、公平性メトリクス"}</td></tr><tr className="odd"><td>{"3.4.3 ポリシー準拠"}</td><td>{"要件を技術へ・限界の文書化"}</td><td>{"Guardrails、モデルカード、Lambda チェック"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"Step 18. Task 3.4 のまとめの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"Skill"}</th><th scope="col">{"キーワード"}</th><th scope="col">{"代表サービス・機能"}</th></tr></thead><tbody><tr className="odd"><td>{"3.4.1 透明性"}</td><td>{"説明・不確実性・出典・トレース"}</td><td>{"Agent トレース、KB 引用、CloudWatch 信頼度メトリクス"}</td></tr><tr className="even"><td>{"3.4.2 公平性"}</td><td>{"属性間の差・A/B・自動評価"}</td><td>{"Prompt Management / Flows、LLM-as-a-judge、公平性メトリクス"}</td></tr><tr className="odd"><td>{"3.4.3 ポリシー準拠"}</td><td>{"要件を技術へ・限界の文書化"}</td><td>{"Guardrails、モデルカード、Lambda チェック"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <hr  />
 {" "}</div>; }

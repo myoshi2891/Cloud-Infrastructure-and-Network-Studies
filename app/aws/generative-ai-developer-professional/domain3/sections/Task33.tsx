@@ -1,6 +1,6 @@
 import { Diagram } from '../Diagram';
 /** 原本のtask3区分を全文・順序どおり保持する。 */
-export default function Task33() { return <div data-part="task3"><h2 id="task-3-3" tabIndex={-1}>{"Task 3.3 ガバナンスとコンプライアンス"}</h2>
+export default function Task33() { return <div className="guide-part" data-part="task3"><h2 id="task-3-3" tabIndex={-1}>{"Task 3.3 ガバナンスとコンプライアンス"}</h2>
 {" "}
 <h2 id="step-11" tabIndex={-1}>{"Step 11. コンプライアンスフレームワーク（Skill 3.3.1）"}</h2>
 {" "}
@@ -8,7 +8,7 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-11-1" tabIndex={-1}>{"11-1. 4 つの部品"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"部品"}</th><th scope="col">{"サービス／手法"}</th><th scope="col">{"何を残すか"}</th></tr></thead><tbody><tr className="odd"><td>{"モデルの説明書"}</td><td>{"SageMaker モデルカード（API で自動作成）"}</td><td>{"目的、想定用途、制限事項、評価結果、リスク評価"}</td></tr><tr className="even"><td>{"データの来歴"}</td><td>{"AWS Glue（Data Catalog・ジョブ情報）によるリネージ"}</td><td>{"どのデータがどこから来て、どう変換されたか"}</td></tr><tr className="odd"><td>{"帰属情報"}</td><td>{"メタデータタグ"}</td><td>{"データソース名・所有者・機密度・取得日"}</td></tr><tr className="even"><td>{"意思決定ログ"}</td><td>{"CloudWatch Logs"}</td><td>{"入力概要・使用モデル・ガードレール判定・出力概要"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"11-1. 4 つの部品の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"部品"}</th><th scope="col">{"サービス／手法"}</th><th scope="col">{"何を残すか"}</th></tr></thead><tbody><tr className="odd"><td>{"モデルの説明書"}</td><td>{"SageMaker モデルカード（API で自動作成）"}</td><td>{"目的、想定用途、制限事項、評価結果、リスク評価"}</td></tr><tr className="even"><td>{"データの来歴"}</td><td>{"AWS Glue（Data Catalog・ジョブ情報）によるリネージ"}</td><td>{"どのデータがどこから来て、どう変換されたか"}</td></tr><tr className="odd"><td>{"帰属情報"}</td><td>{"メタデータタグ"}</td><td>{"データソース名・所有者・機密度・取得日"}</td></tr><tr className="even"><td>{"意思決定ログ"}</td><td>{"CloudWatch Logs"}</td><td>{"入力概要・使用モデル・ガードレール判定・出力概要"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <Diagram id="diag-12" label="11-1. 4 つの部品" />
 {" "}
@@ -18,7 +18,7 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-11-3" tabIndex={-1}>{"11-3. 意思決定ログ設計のコツ"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"記録する"}</th><th scope="col">{"記録しない／伏せる"}</th></tr></thead><tbody><tr className="odd"><td>{" リクエスト ID、時刻、ユーザー識別子（仮名）、モデル ID、ガードレール ID とバージョン、判定結果、参照した文書 ID、トークン数 "}</td><td>{"生の PII、認証情報、不要な全文"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"11-3. 意思決定ログ設計のコツの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"記録する"}</th><th scope="col">{"記録しない／伏せる"}</th></tr></thead><tbody><tr className="odd"><td>{" リクエスト ID、時刻、ユーザー識別子（仮名）、モデル ID、ガードレール ID とバージョン、判定結果、参照した文書 ID、トークン数 "}</td><td>{"生の PII、認証情報、不要な全文"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-11-4" tabIndex={-1}>{"11-4. ベストプラクティス"}</h3>
 {" "}
@@ -40,11 +40,11 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-12-1" tabIndex={-1}>{"12-1. 追跡したい問い"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"問い"}</th><th scope="col">{"答えの出どころ"}</th></tr></thead><tbody><tr className="odd"><td>{"この回答の根拠文書はどれか"}</td><td>{"引用情報（出典メタデータ）、KB のチャンクメタデータ"}</td></tr><tr className="even"><td>{"その文書の所有者・機密度・更新日は"}</td><td>{"Glue Data Catalog、メタデータタグ"}</td></tr><tr className="odd"><td>{"誰がいつ Bedrock API を呼んだか"}</td><td>{"CloudTrail"}</td></tr><tr className="even"><td>{"誰がデータソースを変更したか"}</td><td>{"CloudTrail（管理イベント／データイベント）"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"12-1. 追跡したい問いの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"問い"}</th><th scope="col">{"答えの出どころ"}</th></tr></thead><tbody><tr className="odd"><td>{"この回答の根拠文書はどれか"}</td><td>{"引用情報（出典メタデータ）、KB のチャンクメタデータ"}</td></tr><tr className="even"><td>{"その文書の所有者・機密度・更新日は"}</td><td>{"Glue Data Catalog、メタデータタグ"}</td></tr><tr className="odd"><td>{"誰がいつ Bedrock API を呼んだか"}</td><td>{"CloudTrail"}</td></tr><tr className="even"><td>{"誰がデータソースを変更したか"}</td><td>{"CloudTrail（管理イベント／データイベント）"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-12-2" tabIndex={-1}>{"12-2. 3 つの仕組みの役割分担"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"仕組み"}</th><th scope="col">{"役割"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr className="odd"><td>{"Glue Data Catalog"}</td><td>{"データソースの "}<strong>{"登録台帳"}</strong></td><td>{"テーブル／パーティションの定義、所有者・分類のプロパティ"}</td></tr><tr className="even"><td>{"メタデータタグ"}</td><td>{"生成コンテンツに "}<strong>{"出典を紐づける"}</strong></td><td>{" ドキュメントごとに source、owner、classification、version を付与 "}</td></tr><tr className="odd"><td>{"CloudTrail"}</td><td><strong>{"操作の監査証跡"}</strong></td><td>{" Bedrock の API 呼び出し、IAM ロール引き受け、S3 データイベント "}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"12-2. 3 つの仕組みの役割分担の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"仕組み"}</th><th scope="col">{"役割"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr className="odd"><td>{"Glue Data Catalog"}</td><td>{"データソースの "}<strong>{"登録台帳"}</strong></td><td>{"テーブル／パーティションの定義、所有者・分類のプロパティ"}</td></tr><tr className="even"><td>{"メタデータタグ"}</td><td>{"生成コンテンツに "}<strong>{"出典を紐づける"}</strong></td><td>{" ドキュメントごとに source、owner、classification、version を付与 "}</td></tr><tr className="odd"><td>{"CloudTrail"}</td><td><strong>{"操作の監査証跡"}</strong></td><td>{" Bedrock の API 呼び出し、IAM ロール引き受け、S3 データイベント "}</td></tr></tbody></table>{" "}</div>
 {" "}
 <Diagram id="diag-13" label="12-2. 3 つの仕組みの役割分担" />
 {" "}
@@ -72,13 +72,13 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-13-2" tabIndex={-1}>{"13-2. 3 つのレイヤー"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"レイヤー"}</th><th scope="col">{"内容"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr className="odd"><td>{"ポリシー（方針）"}</td><td>{"許可するモデル・用途・データ分類、禁止事項、責任の分担"}</td><td>{" AI 利用ポリシー、データ分類基準、承認プロセス（レビュー委員会） "}</td></tr><tr className="even"><td>{"強制（ガードレール）"}</td><td>{"ルールを技術で守らせる"}</td><td>{" IAM ポリシー条件、SCP（組織単位の権限上限）、"}<code>{"bedrock:GuardrailIdentifier"}</code>{" の強制、タグポリシー "}</td></tr><tr className="odd"><td>{"証跡（監査）"}</td><td>{"守られている証拠"}</td><td>{"CloudTrail、AWS Config、モデルカード、意思決定ログ"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"13-2. 3 つのレイヤーの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"レイヤー"}</th><th scope="col">{"内容"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr className="odd"><td>{"ポリシー（方針）"}</td><td>{"許可するモデル・用途・データ分類、禁止事項、責任の分担"}</td><td>{" AI 利用ポリシー、データ分類基準、承認プロセス（レビュー委員会） "}</td></tr><tr className="even"><td>{"強制（ガードレール）"}</td><td>{"ルールを技術で守らせる"}</td><td>{" IAM ポリシー条件、SCP（組織単位の権限上限）、"}<code>{"bedrock:GuardrailIdentifier"}</code>{" の強制、タグポリシー "}</td></tr><tr className="odd"><td>{"証跡（監査）"}</td><td>{"守られている証拠"}</td><td>{"CloudTrail、AWS Config、モデルカード、意思決定ログ"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <Diagram id="diag-14" label="13-2. 3 つのレイヤー" />
 {" "}
 <h3 id="sec-13-3" tabIndex={-1}>{"13-3. 役割分担の例"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"役割"}</th><th scope="col">{"責任"}</th></tr></thead><tbody><tr className="odd"><td>{"AI ガバナンス委員会"}</td><td>{"方針の策定、高リスク用途の承認"}</td></tr><tr className="even"><td>{"プラットフォームチーム"}</td><td>{"ガードレール・SCP・共通基盤の提供"}</td></tr><tr className="odd"><td>{"アプリ開発チーム"}</td><td>{"方針に沿った実装、モデルカード更新"}</td></tr><tr className="even"><td>{"セキュリティ／監査"}</td><td>{"証跡の検証、インシデント対応"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"13-3. 役割分担の例の表"}>{" "}<table><thead><tr className="header"><th scope="col">{"役割"}</th><th scope="col">{"責任"}</th></tr></thead><tbody><tr className="odd"><td>{"AI ガバナンス委員会"}</td><td>{"方針の策定、高リスク用途の承認"}</td></tr><tr className="even"><td>{"プラットフォームチーム"}</td><td>{"ガードレール・SCP・共通基盤の提供"}</td></tr><tr className="odd"><td>{"アプリ開発チーム"}</td><td>{"方針に沿った実装、モデルカード更新"}</td></tr><tr className="even"><td>{"セキュリティ／監査"}</td><td>{"証跡の検証、インシデント対応"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-13-4" tabIndex={-1}>{"13-4. ベストプラクティス"}</h3>
 {" "}
@@ -100,7 +100,7 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-14-1" tabIndex={-1}>{"14-1. 何を監視するか"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"監視対象"}</th><th scope="col">{"内容"}</th><th scope="col">{"手段"}</th></tr></thead><tbody><tr className="odd"><td>{"誤用"}</td><td>{" 異常に多い呼び出し、攻撃的入力の急増、特定ユーザーの集中的なブロック "}</td><td>{"CloudWatch メトリクス／ログのメトリクスフィルター、アラーム"}</td></tr><tr className="even"><td>{"ドリフト"}</td><td>{"入力分布や回答品質の変化"}</td><td>{"定期評価ジョブ、品質メトリクスの推移"}</td></tr><tr className="odd"><td>{"ポリシー違反"}</td><td>{"ガードレール発動、禁止話題、機密漏えい"}</td><td>{"Guardrails のトレース／ログ、モデル呼び出しログ"}</td></tr><tr className="even"><td>{"バイアスドリフト"}</td><td>{"属性間で出力の偏りが時間とともに拡大"}</td><td>{" 公平性メトリクスの定期計測（新規利用は Bedrock Evaluations の Stereotyping 等の指標や、pandas / scikit-learn での標準バイアス指標計算を CloudWatch へ送る。SageMaker Clarify は新規顧客の受付を終了し、既存顧客のみ利用可） "}</td></tr><tr className="odd"><td>{"コスト・利用量"}</td><td>{"想定外のトークン増加"}</td><td>{"CloudWatch、請求アラーム"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"14-1. 何を監視するかの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"監視対象"}</th><th scope="col">{"内容"}</th><th scope="col">{"手段"}</th></tr></thead><tbody><tr className="odd"><td>{"誤用"}</td><td>{" 異常に多い呼び出し、攻撃的入力の急増、特定ユーザーの集中的なブロック "}</td><td>{"CloudWatch メトリクス／ログのメトリクスフィルター、アラーム"}</td></tr><tr className="even"><td>{"ドリフト"}</td><td>{"入力分布や回答品質の変化"}</td><td>{"定期評価ジョブ、品質メトリクスの推移"}</td></tr><tr className="odd"><td>{"ポリシー違反"}</td><td>{"ガードレール発動、禁止話題、機密漏えい"}</td><td>{"Guardrails のトレース／ログ、モデル呼び出しログ"}</td></tr><tr className="even"><td>{"バイアスドリフト"}</td><td>{"属性間で出力の偏りが時間とともに拡大"}</td><td>{" 公平性メトリクスの定期計測（新規利用は Bedrock Evaluations の Stereotyping 等の指標や、pandas / scikit-learn での標準バイアス指標計算を CloudWatch へ送る。SageMaker Clarify は新規顧客の受付を終了し、既存顧客のみ利用可） "}</td></tr><tr className="odd"><td>{"コスト・利用量"}</td><td>{"想定外のトークン増加"}</td><td>{"CloudWatch、請求アラーム"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-14-2" tabIndex={-1}>{"14-2. 自動検知から修復までの流れ"}</h3>
 {" "}
@@ -108,7 +108,7 @@ export default function Task33() { return <div data-part="task3"><h2 id="task-3-
 {" "}
 <h3 id="sec-14-3" tabIndex={-1}>{"14-3. トークンレベルのレダクションと出力ポリシーフィルター"}</h3>
 {" "}
-<div className="table-scroll">{" "}<table><thead><tr className="header"><th scope="col">{"機能"}</th><th scope="col">{"内容"}</th><th scope="col">{"補足"}</th></tr></thead><tbody><tr className="odd"><td>{"トークンレベルのレダクション"}</td><td>{" 出力のうち "}<strong>{"機密に該当する部分だけ"}</strong>{"を伏せ、他は返す "}</td><td>{" Guardrails の機密情報フィルターのマスク。ストリーミングでは "}<strong>{"非同期モードは PII マスキングに非対応"}</strong>{" のため、マスクが必要なら同期モードを使う "}</td></tr><tr className="even"><td>{"応答ログ"}</td><td>{"応答と判定の証跡を保存"}</td><td>{" モデル呼び出しログ + CloudWatch Logs。CloudWatch Logs のデータ保護ポリシーは"}<strong>{"閲覧時のマスク"}</strong>{"で、生値は保存され "}<code>{"logs:Unmask"}</code>{" 権限で確認できる。アプリ側の除去が効くのは"}<strong>{"アプリ管理ログのみ"}</strong>{"で、Bedrock 管理のモデル呼び出しログは書き換えられない。生の PII を残さないなら"}<strong>{"入力は呼び出し前にサニタイズ"}</strong>{"し、出力対策として"}<strong>{"呼び出しログのコンテンツ出力を無効化"}</strong>{"してマスク済みのアプリ管理ログを使う "}</td></tr><tr className="odd"><td>{"AI 出力ポリシーフィルター"}</td><td>{"組織ポリシー（禁止助言、免責の必須挿入など）の出力検査"}</td><td>{"Guardrails（Denied topics 等）+ Lambda 後処理"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"14-3. トークンレベルのレダクションと出力ポリシーフィルターの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"機能"}</th><th scope="col">{"内容"}</th><th scope="col">{"補足"}</th></tr></thead><tbody><tr className="odd"><td>{"トークンレベルのレダクション"}</td><td>{" 出力のうち "}<strong>{"機密に該当する部分だけ"}</strong>{"を伏せ、他は返す "}</td><td>{" Guardrails の機密情報フィルターのマスク。ストリーミングでは "}<strong>{"非同期モードは PII マスキングに非対応"}</strong>{" のため、マスクが必要なら同期モードを使う "}</td></tr><tr className="even"><td>{"応答ログ"}</td><td>{"応答と判定の証跡を保存"}</td><td>{" モデル呼び出しログ + CloudWatch Logs。CloudWatch Logs のデータ保護ポリシーは"}<strong>{"閲覧時のマスク"}</strong>{"で、生値は保存され "}<code>{"logs:Unmask"}</code>{" 権限で確認できる。アプリ側の除去が効くのは"}<strong>{"アプリ管理ログのみ"}</strong>{"で、Bedrock 管理のモデル呼び出しログは書き換えられない。生の PII を残さないなら"}<strong>{"入力は呼び出し前にサニタイズ"}</strong>{"し、出力対策として"}<strong>{"呼び出しログのコンテンツ出力を無効化"}</strong>{"してマスク済みのアプリ管理ログを使う "}</td></tr><tr className="odd"><td>{"AI 出力ポリシーフィルター"}</td><td>{"組織ポリシー（禁止助言、免責の必須挿入など）の出力検査"}</td><td>{"Guardrails（Denied topics 等）+ Lambda 後処理"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-14-4" tabIndex={-1}>{"14-4. ベストプラクティス"}</h3>
 {" "}

@@ -160,7 +160,7 @@
                 letter-spacing: -0.01em;
                 scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 28px) + 20px);
             }
-            .aip-domain3-page .main > h2:first-of-type {
+            .aip-domain3-page .guide-part:first-child > h2:first-of-type {
                 border-top: none;
                 padding-top: 0;
                 margin-top: 8px;
@@ -589,7 +589,7 @@
                     grid-template-columns: 1fr;
                 }
             }
-        
+
 .aip-domain3-page { color-scheme: light; min-height: 100vh; }
 .aip-domain3-page .main { width: calc(100% - 300px); min-width: 0; }
 .aip-domain3-page .main ul { list-style-type: disc; }
@@ -602,7 +602,9 @@
 .aip-domain3-page .main .quiz-opts { list-style: none; padding: 0; }
 .aip-domain3-page .main .quiz-opts li { display: block; }
 .aip-domain3-page strong { font-weight: 700; }
-.aip-domain3-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; }
+.aip-domain3-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; overflow: visible; }
 .aip-domain3-page .main li a { text-decoration: underline; }
 @media (max-width: 980px) { .aip-domain3-page .main { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .aip-domain3-page *, .aip-domain3-page *::before, .aip-domain3-page *::after { transition: none !important; scroll-behavior: auto !important; } }
+
+@media (max-width: 980px) { .aip-domain3-page .sidebar:not(.open) { visibility: hidden; } }
