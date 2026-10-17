@@ -1,0 +1,112 @@
+[
+  {
+    "id": "quiz-q1",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。Prompt Attack はユーザー入力をタグで囲んで評価する。"
+  },
+  {
+    "id": "quiz-q2",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。条件キーでガードレールなしの推論を拒否できる。"
+  },
+  {
+    "id": "quiz-q3",
+    "answer": "A",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: A。Grounding と Relevance をスコア化して閾値で遮断。"
+  },
+  {
+    "id": "quiz-q4",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。SQL は検証、実行は最小権限（読み取り専用）。"
+  },
+  {
+    "id": "quiz-q5",
+    "answer": "C",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: C。"
+  },
+  {
+    "id": "quiz-q6",
+    "answer": "A",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: A。S3 内の機密データ検出は Macie。"
+  },
+  {
+    "id": "quiz-q7",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。"
+  },
+  {
+    "id": "quiz-q8",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。プログラマティックに作成できる。"
+  },
+  {
+    "id": "quiz-q9",
+    "answer": "A",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: A。Rationale・InvocationInput・Observation が記録される。"
+  },
+  {
+    "id": "quiz-q10",
+    "answer": "B",
+    "keys": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "explanation": "答え: B。"
+  }
+]
