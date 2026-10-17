@@ -20,6 +20,8 @@ describe('Domain 3 full source design',()=>{
   const actual=declarations(selector,rule.media);expect(Object.keys(actual),selector).not.toHaveLength(0);
   for(const [prop,value] of Object.entries(rule.declarations)){
    if(['font-family','word-break','overflow-wrap','scroll-margin-top','z-index'].includes(prop))continue;
+   // ユーザー指定: 見出しの上罫線を除き、原本のhrだけを区切りとして残す。
+   if(rule.selector==='.main h2'&&prop==='border-top'){expect(actual[prop]).toBe('none');continue;}
    if(prop==='top'&&selector.includes('sidebar'))continue;
    expect(resolve(actual[prop]??'',tokens),`${selector} ${prop}`).toBe(resolve(value.replace('var(--sidebar-w)','300px'),sourceTokens));
   }
@@ -49,3 +51,5 @@ describe('Domain 3 full source design',()=>{
 });
 
 it('removes closed mobile navigation from focus and accessibility trees',()=>{expect(declarations('.aip-domain3-page .sidebar:not(.open)','(max-width: 980px)').visibility).toBe('hidden');});
+
+it('uses only source horizontal rules as step and task dividers',()=>{expect(declarations('.aip-domain3-page .main h2')['border-top']).toBe('none');expect(declarations('.aip-domain3-page .main hr')['border-top']).toBe('1px solid var(--color-aip-d3-2)');});

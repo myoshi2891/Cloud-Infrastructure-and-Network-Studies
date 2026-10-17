@@ -139,3 +139,15 @@ test('AIP domain3 all 19 diagrams keep their drawn content inside the SVG viewBo
         expect(box.bottom, box.id).toBeLessThanOrEqual(box.viewBottom + 2);
     }
 });
+
+test('AIP domain3 step and task dividers render as a single rule at every viewport',async({page})=>{
+ for(const width of [1440,768,390]){
+  await page.setViewportSize({width,height:1000});await page.goto(route);
+  const headings=page.locator('.aip-domain3-page main h2');
+  await expect(headings).toHaveCount(inventory.h2.length-1);
+  for(const heading of await headings.all())await expect(heading).toHaveCSS('border-top-width','0px');
+  const rules=page.locator('.aip-domain3-page main hr');
+  await expect(rules).toHaveCount(27);
+  for(const rule of await rules.all())await expect(rule).toHaveCSS('border-top-width','1px');
+ }
+});
