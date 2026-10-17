@@ -9,7 +9,7 @@ export const AIP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
     ['/userguide/kb-data-source-connectors.html', '/userguide/data-source-connectors.html'],
     // embeddings.html もユーザーガイドのトップへ302転送されるため、ナレッジベースが埋め込みを作成・検索する仕組みのページへ差し替える
     ['/userguide/embeddings.html', '/userguide/kb-how-it-works.html'],
-    ['ナレッジベースのコネクタを利用', 'ナレッジベースのコネクタを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降これらのコネクタを新規作成できない(既存のコネクタは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base は Confluence と SharePoint のネイティブコネクタを提供するが、Salesforce は含まれない'],
+    ['ナレッジベースのコネクタを利用', 'ナレッジベースのコネクタを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降これらのコネクタを新規作成できない(既存のコネクタは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base は Confluence、SharePoint、Salesforce のネイティブコネクタを提供する'],
     ['ナレッジベースのウェブクローラーを利用', 'ナレッジベースのウェブクローラーを利用。カスタマーマネージドのナレッジベースでは2026年9月30日以降ウェブクローラーを新規作成できない(既存のクローラーは取り込みと検索を引き続き利用可能)。Bedrock Managed Knowledge Base はウェブクローラーのネイティブコネクタを提供する'],
     // ガードレールのPIIマスクはAPIの入出力にだけ効き、モデル呼び出しログには元の内容が残る
     // Knowledge Bases はベクトルストアではなく、下記のストアを保存先に使うマネージド RAG

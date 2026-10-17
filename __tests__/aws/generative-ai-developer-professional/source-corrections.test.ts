@@ -51,13 +51,13 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(chart).toContain('|Direct Connect または VPN<br/>プライベート経路<br/>暗号化は TLS MACsec VPN で行う|');
     });
 
-    it('domain1: 旧コネクタURLを残さず、廃止日と既存コネクタの継続、Salesforceの対象外を明記する', () => {
+    it('domain1: 旧コネクタURLを残さず、廃止日と既存コネクタの継続、Managed Knowledge BaseのSalesforce対応を明記する', () => {
         const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
         expect(corrected.links.map(link => link.href)).not.toContain('https://docs.aws.amazon.com/bedrock/latest/userguide/kb-data-source-connectors.html');
         const connectorCell = corrected.td.find(cell => cell.startsWith('ナレッジベースのコネクタを利用'));
         expect(connectorCell).toContain('2026年9月30日以降');
         expect(connectorCell).toContain('既存のコネクタは取り込みと検索を引き続き利用可能');
-        expect(connectorCell).toContain('Salesforce は含まれない');
+        expect(connectorCell).toContain('Confluence、SharePoint、Salesforce のネイティブコネクタを提供する');
         expect(corrected.td.find(cell => cell.startsWith('ナレッジベースのウェブクローラーを利用'))).toContain('2026年9月30日以降');
     });
 
