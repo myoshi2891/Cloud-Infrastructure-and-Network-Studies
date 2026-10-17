@@ -1,6 +1,12 @@
 # CLAUDE.md
 
-Updated 2026-10-13
+Updated 2026-10-16
+
+2026-10-16 Domain 2練習問題の選択・採点: 全15問の選択肢の点を除き、11問をラジオボタン、4問をチェックボックスにした。選択後に「答えと解説」を開くと正誤を表示し、開いた後の選択変更にも追従。複数選択は正解集合の完全一致、未回答は案内表示。選択・開閉状態は問題ごとに独立し、原本の問題文・選択肢・解説は保持。採点22件と目次通知順の回帰を含む関連141件が成功。全体2808件中2807成功、既存AIBナビ期待値1件のみ失敗。ブラウザ9シナリオを検証し、1440pxで見つけた目次上書きは通知順に依存しない選択へ修正して3画面幅を再確認。最新実装HEAD `fa93bb13`（採点 `d11350ad`）。型検査・ESLint・Markdown lint成功。npm・ビルド未実行。
+
+2026-10-16 Domain 2末尾案内文の削除: ユーザー指定により末尾の完了案内文を表示とテスト期待値から除外。原本監査fixtureは固定Gitの証跡として保持し、表示の期待値から対象段落と強調要素だけを除く。関連16ファイル・118件、1440pxブラウザ1件、対象ESLint成功。末尾文削除実装 `4d52589e`（Red `b0e57c77`）。npm・ビルド未実行。
+
+2026-10-16 AIP-C01 Domain 2表示の再精査: 共通Mermaidのdark初期化から継承されていたmainBkg等をページ内のライト描画設定で明示的に置換し、非推奨initからconfig frontmatterへ移行。全42図のノード・状態図・シーケンス図の背景と実際の文字の色、およびコントラスト比を検証。Python・JSON・CloudWatch Logs Insightsの全9コードを原文・空行・インデントを保持してハイライトし、セクション境界と5つのTask見出しの横線を最大1本へ整理。15問は選択肢と解説を保持したカード形式へ改善。全文fixtureは改変せず、関連251件・ブラウザ8件と追加コントラスト検証が成功。表示改善実装 `aefa7b6e`。型検査・全体ESLint・対象Markdown lint成功。全体Vitestの最終結果はMIGRATION_PROGRESS.md参照。npm・ビルド未実行、目視確認はユーザー担当。
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -597,8 +603,27 @@ app/
       NavBar.tsx                    # 48目次・scroll spy・モバイル開閉・hash/focus・Escape (Client)
       constants.ts                  # 単一目次正本と34図のMermaid DSL
       Diagram.tsx                   # memo化・説明・自然倍率・キーボードスクロール
-      page.css                      # 統一ダークテーマ・原本300px幅・点と番号・全文装飾
+      page.css                      # 原本ライトテーマ・300px幅・点と番号・全文装飾
       sections/                     # Foundation, Domain1〜3, Operations, Revision の6区間
+      domain1/
+        page.tsx                    # Domain 1詳細版 (Server、metadata、CSS)
+        AipDomain1Guide.tsx          # 導入・6タスク・まとめ・参考資料 (Server)
+        NavBar.tsx                  # 63目次・モバイル開閉・scroll spy・hash/focus (Client)
+        Checklist.tsx               # 16チェックと完了数 (Client、永続化なし)
+        constants.ts                # 原本21図・目次・Mermaidテーマと配置設定
+        Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
+        page.css                    # 原本ライト配色・300px幅・通常/チェックリスト装飾
+        sections/                   # Foundation, Task11〜16, Revision の8区間
+      domain2/
+        page.tsx                    # Domain 2詳細版 (Server、metadata、CSS)
+        AipDomain2Guide.tsx          # 導入・5タスク・復習の7区分 (Server)
+        NavBar.tsx                  # 原本230目次・開閉・scroll spy・hash/focus (Client)
+        PracticeQuestion.tsx        # 15問の単一/複数選択・解説開閉時の正誤判定 (Client)
+        CodeBlock.tsx               # 原文保持のPython/JSON/Logs Insights構文ハイライト
+        constants.ts                # 原本42図・単一目次・Mermaid配色と配置設定
+        Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
+        page.css                    # 原本ライト配色・300px幅・点と番号・コード行
+        sections/                   # Foundation, Task21〜25, Revision
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)

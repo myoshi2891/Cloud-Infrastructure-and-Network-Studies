@@ -11,6 +11,12 @@ export function snapshotGuidePart(root) {
     clone.querySelectorAll('pre.mermaid, .mermaid-wrap, .code-block, pre').forEach(element => {
         element.remove();
     });
+    // ブロック境界と表セル境界を明示し、HTMLの整形空白とJSXの隣接要素を同じ規則で読む。
+    // inline要素内の語間は保持する。空白を全削除する比較にはしない。
+    clone.querySelectorAll('address,article,aside,blockquote,dd,div,dl,dt,figcaption,figure,footer,h1,h2,h3,h4,h5,h6,header,li,nav,ol,p,section,table,tr,ul,td,th').forEach(element => {
+        element.before(' ');
+        element.after(' ');
+    });
     return {
         text: normalizeText(clone.textContent),
         headings: [...content.querySelectorAll('h1,h2,h3,h4')].map(element => ({ tag: element.tagName.toLowerCase(), id: element.id, text: normalizeText(element.textContent) })),

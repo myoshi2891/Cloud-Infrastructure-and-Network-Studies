@@ -630,8 +630,8 @@ const ALL_EXAMS: Exam[] = [
         overviewLabel: 'AIP-C01 初学者向け完全ガイド',
         description: '全5ドメイン・Step 1〜20を網羅。FM統合、RAG、エージェント、安全性、運用最適化、評価とトラブルシューティングを体系的に学ぶ。',
         domains: [
-            { label: 'ドメイン1: FM統合・データ管理・コンプライアンス', href: '/aws/generative-ai-developer-professional#2-ドメイン1-fm統合データ管理コンプライアンス31', pct: '31%' },
-            { label: 'ドメイン2: 実装と統合', href: '/aws/generative-ai-developer-professional#3-ドメイン2-実装と統合26', pct: '26%' },
+            { label: 'ドメイン1: FM統合・データ管理・コンプライアンス', href: '/aws/generative-ai-developer-professional/domain1', pct: '31%' },
+            { label: 'ドメイン2: 実装と統合', href: '/aws/generative-ai-developer-professional/domain2', pct: '26%' },
             { label: 'ドメイン3: AI安全性・セキュリティ・ガバナンス', href: '/aws/generative-ai-developer-professional#4-ドメイン3-ai安全性セキュリティガバナンス20', pct: '20%' },
             { label: 'ドメイン4: 運用効率と最適化', href: '/aws/generative-ai-developer-professional#5-ドメイン4-運用効率と最適化12', pct: '12%' },
             { label: 'ドメイン5: テスト・検証・トラブルシューティング', href: '/aws/generative-ai-developer-professional#6-ドメイン5-テスト検証トラブルシューティング11', pct: '11%' },

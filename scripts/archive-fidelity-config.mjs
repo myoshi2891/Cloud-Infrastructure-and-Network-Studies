@@ -27,13 +27,49 @@
  * @property {string} [introductionSelector] - 導入文のセレクタ。
  * @property {boolean} [mermaidCharts] - Mermaid 定義を出力するか。
  * @property {Readonly<Record<string, string>>} [guideBoundaries] - ガイドを区切る見出し ID。
+ * @property {boolean} [guideInteractions] - チェック項目とMermaid描画設定を抽出する。
  */
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    "aws-aip-c01-domain2-guide": {
+    "source": "Aws-aip-c01-domain2-implementation-integration-guide.html",
+    "sourceCommit": "9eb40ce6830575a34214cd0847b65bc9406190e5",
+    "tables": true,
+    "codeBlocks": true,
+    "styledClasses": true,
+    "guideInteractions": true,
+    "guideBoundaries": {
+        "foundation": "",
+        "task1": "task-21-エージェント型aiソリューションとツール統合",
+        "task2": "task-22-モデルのデプロイ戦略",
+        "task3": "task-23-エンタープライズ統合アーキテクチャ",
+        "task4": "task-24-fm-api-統合の実装",
+        "task5": "task-25-アプリケーション統合パターンと開発ツール",
+        "revision": "step-27-練習問題15問"
+    }
+},
+    'aws-aip-c01-domain1-guide': {
+        source: 'Aws-aip-c01-domain1-guide.html',
+        sourceCommit: '10e0f85f765c2efec07ade99669855fa53ba948d',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task11: '3-task-11-要件分析と-genai-ソリューション設計',
+            task12: '4-task-12-fm-の選定と構成',
+            task13: '5-task-13-fm-向けデータ検証と処理パイプライン',
+            task14: '6-task-14-ベクトルストア設計と実装',
+            task15: '7-task-15-fm-拡張のための検索メカニズム',
+            task16: '8-task-16-プロンプトエンジニアリングとガバナンス',
+            revision: '9-試験で問われる判断軸まとめ',
+        },
+    },
     'aws-aip-c01-guide': {
         source: 'Aws-aip-c01-guide.html',
-        sourceCommit: '2687fb7599f9e46a00747ef2557a2c88e19cc8bd',
+        sourceCommit: 'c4cc32a7a4180d2af4db79b50a3eddd72e517be3',
         tables: true,
         codeBlocks: true,
         styledClasses: true,
