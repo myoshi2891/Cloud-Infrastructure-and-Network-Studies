@@ -32,6 +32,22 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-domain3-guide': {
+        source: 'Aws-aip-c01-domain3-ai-safety-security-governance-guide.html',
+        sourceCommit: 'd08571d893cd2007e312fcf4d4e161639ec69c17',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: 'task-3-1',
+            task2: 'task-3-2',
+            task3: 'task-3-3',
+            task4: 'task-3-4',
+            revision: 'integration',
+        },
+    },
     "aws-aip-c01-domain2-guide": {
     "source": "Aws-aip-c01-domain2-implementation-integration-guide.html",
     "sourceCommit": "9eb40ce6830575a34214cd0847b65bc9406190e5",
