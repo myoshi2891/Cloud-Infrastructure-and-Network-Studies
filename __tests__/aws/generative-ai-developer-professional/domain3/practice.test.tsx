@@ -2,7 +2,10 @@ import {render,fireEvent,within} from '@testing-library/react';
 import {describe,it,expect,vi} from 'vitest';
 import {renderToString} from 'react-dom/server';
 import Guide from '@/app/aws/generative-ai-developer-professional/domain3/AipDomain3Guide';
-import questions from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.quiz.json';
+import rawQuestions from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.quiz.json';
+import {AIP_DOMAIN3_CORRECTIONS,withSourceCorrections} from '@/__tests__/helpers/aip-source-corrections';
+// 原本fixtureは改変せず、表示の期待値にだけ公式ドキュメントにもとづく訂正を適用する
+const questions=withSourceCorrections(rawQuestions,AIP_DOMAIN3_CORRECTIONS);
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 describe('Domain 3 all ten interactive quizzes',()=>{
  it('keeps js off server markup so explanations stay visible without JavaScript, and adds it after hydration',()=>{

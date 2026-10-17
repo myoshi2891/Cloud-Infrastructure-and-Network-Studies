@@ -4,6 +4,7 @@ import domain2 from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
 import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
+import domain3Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.fidelity.json';
 import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
 import domain4Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
 import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
@@ -24,7 +25,8 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
     });
 
     it.each([
-        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, []],
+        // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
+        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, Object.values(domain3Fidelity.guideParts).flatMap(part => part.diagrams)],
         // 冒頭の件数表示はinventoryに含まれないため、domain4はfidelity fixtureの全文も照合対象にする
         ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, Object.values(domain4Fidelity.guideParts).map(part => part.text)],
     ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections, extra) => {
@@ -46,6 +48,25 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(texts).toContain(`社内の全開発者が Bedrock の推論 API（${apis}）を呼ぶ際、必ず特定のガードレールを使わせたい。`);
         expect(texts).toContain('答え: B。条件キーで、これら 4 つの推論 API でガードレールなしの呼び出しを拒否できる。');
         expect(texts).not.toContain('社内の全開発者が Bedrock を呼ぶ際、必ず特定のガードレールを使わせたい。');
+    });
+
+
+    it('domain3: text-to-SQLの同一結果は同じSQLを同じデータに実行した場合に限り、Q4の解説も固定クエリを示す', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const reliability = corrected.td[corrected.td.indexOf('結果の信頼性') + 1] ?? '';
+        expect(reliability).toContain('生成される SQL はリクエストごとに変わりうる');
+        expect(reliability).toContain('同じ SQL を同じデータに実行した場合に限る');
+        expect(reliability).toContain('検証済みの固定クエリやパラメータ化テンプレート');
+        const answer = corrected.bodyContent.map(block => block.text).find(text => text.includes('答え: B。SQL は検証')) ?? '';
+        expect(answer).toContain('検証済みの固定クエリやパラメータ化テンプレートを同じデータに対して実行する');
+    });
+
+    it('domain3: 図diag-11は対応表をFMへの経路に置かず、権限のある復元だけにつなぐ', () => {
+        const corrected = withSourceCorrections(domain3Fidelity, AIP_DOMAIN3_CORRECTIONS);
+        const chart = Object.values(corrected.guideParts).flatMap(part => part.diagrams).find(dsl => dsl.includes('NAME_001 ADDR_001')) ?? '';
+        const edges = chart.split('\n').filter(line => /^\w+\b.*(-->|-\.->)/.test(line));
+        expect(edges).toContain('TOK --> FM["FM 推論 PII を含まない入力"]');
+        expect(edges.filter(line => /\bMAP\b/.test(line))).toEqual(['MAP["対応表を暗号化して別保管 DynamoDB KMS"] -.->|"権限確認後のみ参照"| RES']);
     });
 
     it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {

@@ -84,7 +84,7 @@ export default function Task31() { return <div className="guide-part" data-part=
 {" "}
 <Diagram id="diag-5" label="4-3. text-to-SQL で「決定的な結果」を得る" />
 {" "}
-<div className="table-scroll" tabIndex={0} role="region" aria-label={"4-3. text-to-SQL で「決定的な結果」を得るの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"設計ポイント"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"生成 SQL の検証"}</td><td>{" SELECT のみ許可、対象テーブル・列の許可リスト、禁止構文のチェック "}</td></tr><tr className="even"><td>{"実行権限"}</td><td>{" "}<strong>{"読み取り専用"}</strong>{"の最小権限ロール（更新・削除は不可） "}</td></tr><tr className="odd"><td>{"結果の信頼性"}</td><td>{" 数値は DB から取得するため、同じデータなら同じ結果になる（決定的） "}</td></tr><tr className="even"><td>{"追加の安全策"}</td><td>{" スキーマ情報は必要最小限だけモデルに渡す／結果行数の上限を設ける "}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label={"4-3. text-to-SQL で「決定的な結果」を得るの表"}>{" "}<table><thead><tr className="header"><th scope="col">{"設計ポイント"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"生成 SQL の検証"}</td><td>{" SELECT のみ許可、対象テーブル・列の許可リスト、禁止構文のチェック "}</td></tr><tr className="even"><td>{"実行権限"}</td><td>{" "}<strong>{"読み取り専用"}</strong>{"の最小権限ロール（更新・削除は不可） "}</td></tr><tr className="odd"><td>{"結果の信頼性"}</td><td>{" 数値は LLM ではなく DB が計算するため推測によるぶれはない。ただし生成される SQL はリクエストごとに変わりうるため、同じ結果になるのは同じ SQL を同じデータに実行した場合に限る。毎回同じ数値が必要な集計は、検証済みの固定クエリやパラメータ化テンプレートを使う "}</td></tr><tr className="even"><td>{"追加の安全策"}</td><td>{" スキーマ情報は必要最小限だけモデルに渡す／結果行数の上限を設ける "}</td></tr></tbody></table>{" "}</div>
 {" "}
 <h3 id="sec-4-4" tabIndex={-1}>{"4-4. ベストプラクティス"}</h3>
 {" "}
