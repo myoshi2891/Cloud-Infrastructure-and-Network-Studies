@@ -52,3 +52,10 @@ it('makes every source table horizontally scrollable by keyboard with an accessi
         expect(wrapper.getAttribute('aria-label')?.trim()).toBeTruthy();
     });
 });
+
+it('gives both code scroll regions unique accessible names derived from their headings', () => {
+ const {container}=render(<Page/>);const blocks=[...container.querySelectorAll('.code-block')];
+ const labels=blocks.map(block=>block.getAttribute('aria-label'));
+ expect(labels.every(label=>Boolean(label?.trim()))).toBe(true);
+ expect(new Set(labels).size).toBe(inventory.counts.codeBlock);
+});
