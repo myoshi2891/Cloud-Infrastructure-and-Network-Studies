@@ -16,8 +16,9 @@ const themeFrontmatter=`---\nconfig: ${JSON.stringify(renderConfig)}\n---\n`;
 /** 原本のライト配色・配置設定と自然倍率を保持する図。 */
 export const Diagram = memo(function Diagram({ id, label }: { id: DiagramId; label: string }) {
     const chart = DIAGRAMS[id];
+    const accessibleLabel = `${label}（図${id.slice(5)}）`;
     if (!chart) return null;
-    return <div className="mermaid-wrap" role="region" tabIndex={0} aria-label={label}>
-        <MermaidDiagram chart={themeFrontmatter+chart} ariaLabel={label} theme="light" preserveChartTheme preserveNaturalScale={true} />
+    return <div className="mermaid-wrap" role="region" tabIndex={0} aria-label={accessibleLabel}>
+        <MermaidDiagram chart={themeFrontmatter+chart} ariaLabel={accessibleLabel} theme="light" preserveChartTheme preserveNaturalScale={true} />
     </div>;
 });

@@ -27,7 +27,7 @@ function checkLists(text: string) {
 describe('Domain 4 source design declaration fidelity', () => {
  it('retains every effective source declaration including responsive layout and syntax colors', () => {
   const effective = new Map<string, { selector: string; media: string; declarations: Record<string, string> }>();
-  for (const rule of fixture.guideDesign.rules) { if (rule.selector === ':root') continue; const key = rule.selector + '\0' + rule.media; const previous = effective.get(key); effective.set(key, { ...rule, declarations: { ...previous?.declarations, ...rule.declarations } }); }
+  for (const rule of fixture.guideDesign.rules) { if (rule.selector === ':root') continue; const key = rule.selector + '\0' + rule.media; const previous = effective.get(key); const sourceDeclarations: Record<string,string> = {...previous?.declarations}; for(const [prop,value] of Object.entries(rule.declarations))if(typeof value==='string')sourceDeclarations[prop]=value; effective.set(key, { selector:rule.selector,media:rule.media,declarations:sourceDeclarations }); }
   for (const rule of effective.values()) {
    const selector = mapSelector(rule.selector); const actual = declarations(css, selector, rule.media); expect(Object.keys(actual), selector).not.toHaveLength(0);
    for (const [prop, value] of Object.entries(rule.declarations)) {
