@@ -59,3 +59,11 @@ it('gives both code scroll regions unique accessible names derived from their he
  expect(labels.every(label=>Boolean(label?.trim()))).toBe(true);
  expect(new Set(labels).size).toBe(inventory.counts.codeBlock);
 });
+
+it('gives every table, diagram and code scroll region a unique accessible name',()=>{
+ const {container}=render(<Page/>);const regions=[...container.querySelectorAll('[role="region"]')];
+ expect(regions).toHaveLength(inventory.counts.table+inventory.counts.diagram+inventory.counts.codeBlock);
+ const labels=regions.map(region=>region.getAttribute('aria-label'));
+ expect(labels.every(label=>Boolean(label?.trim()))).toBe(true);
+ expect(new Set(labels).size).toBe(regions.length);
+});
