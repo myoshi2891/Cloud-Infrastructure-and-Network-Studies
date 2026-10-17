@@ -33,6 +33,8 @@
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
     'aws-aip-c01-domain4-guide': {
+        syntaxSelectors: {"kn":".hl .kn","w":".hl .w","nn":".hl .nn","o":".hl .o","n":".hl .n","p":".hl .p","s2":".hl .s2","k":".hl .k","nf":".hl .nf","nb":".hl .nb","mi":".hl .mi","mf":".hl .mf","c1":".hl .c1"},
+
         source: 'Aip-c01-domain4-operational-efficiency-guide.html',
         sourceCommit: '0af9544e9f5439bd4522bce6bb5f20aca2bb710f',
         tables: true,
