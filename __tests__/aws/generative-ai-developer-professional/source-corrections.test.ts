@@ -28,7 +28,7 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
         ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, Object.values(domain3Fidelity.guideParts).flatMap(part => part.diagrams)],
         // 冒頭の件数表示はinventoryに含まれないため、domain4はfidelity fixtureの全文も照合対象にする
-        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, Object.values(domain4Fidelity.guideParts).map(part => part.text)],
+        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, Object.values(domain4Fidelity.guideParts).flatMap(part => [part.text, ...part.diagrams])],
     ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections, extra) => {
         const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems, ...extra].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
@@ -50,7 +50,6 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(texts).not.toContain('社内の全開発者が Bedrock を呼ぶ際、必ず特定のガードレールを使わせたい。');
     });
 
-
     it('domain3: text-to-SQLの同一結果は同じSQLを同じデータに実行した場合に限り、Q4の解説も固定クエリを示す', () => {
         const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
         const reliability = corrected.td[corrected.td.indexOf('結果の信頼性') + 1] ?? '';
@@ -67,6 +66,17 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         const edges = chart.split('\n').filter(line => /^\w+\b.*(-->|-\.->)/.test(line));
         expect(edges).toContain('TOK --> FM["FM 推論 PII を含まない入力"]');
         expect(edges.filter(line => /\bMAP\b/.test(line))).toEqual(['MAP["対応表を暗号化して別保管 DynamoDB KMS"] -.->|"権限確認後のみ参照"| RES']);
+    });
+
+    it('domain4: 使用量を記録するだけのヘルパー名を記録専用にし、図diag-8は両キャッシュでテナントと権限を確認してからヒットを返す', () => {
+        const corrected = withSourceCorrections(domain4Fidelity, AIP_DOMAIN4_CORRECTIONS);
+        const all = JSON.stringify(corrected);
+        expect(all).not.toContain('invoke_with_budget');
+        expect(all).toContain('invoke_and_log_usage');
+        const chart = Object.values(corrected.guideParts).flatMap(part => part.diagrams).find(dsl => dsl.includes('完全一致キャッシュに存在するか')) ?? '';
+        const lines = chart.split('\n');
+        expect(lines.filter(line => line.endsWith('| HIT'))).toEqual(['TEX -->|"はい"| HIT', 'TSEM -->|"はい"| HIT']);
+        expect(lines).toEqual(expect.arrayContaining(['TEX -->|"いいえ"| EMB', 'TSEM -->|"いいえ"| FM', 'SEM -->|"いいえ"| FM', 'FM --> STORE', 'STORE --> HIT']));
     });
 
     it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {
