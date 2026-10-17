@@ -5,7 +5,7 @@ import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guid
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
 import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
-import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 const count = (text: string, part: string) => text.split(part).length - 1;
 
@@ -25,8 +25,8 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
     it.each([
         ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS],
         ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS],
-    ] as const)('%s: 各訂正が原本inventoryの本文・表セルに一致する（空振りしない）', (_name, inventory, corrections) => {
-        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td].join('\n');
+    ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections) => {
+        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
     });
 
@@ -57,6 +57,20 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(corrected.td[metric + 1]).toBe('入出力トークン数');
         expect(corrected.td[metric + 2]).toContain('読み取りは通常の入力より割安、書き込みは割高');
         expect(corrected.td[metric + 2]).toContain('クォータ');
+    });
+
+    it('domain4: HYBRIDの対応ストアをOpenSearch Serverless・RDS (Aurora PostgreSQL)・MongoDB Atlasとし、Step 22に根拠ページを足す', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS);
+        const hybrid = corrected.listItems.find(item => item.includes('HYBRID または SEMANTIC')) ?? '';
+        expect(hybrid).toContain('Amazon OpenSearch Serverless、Amazon RDS (Aurora PostgreSQL)、MongoDB Atlas');
+        expect(hybrid).toContain('フィルタ可能なテキストフィールドを持たない構成では SEMANTIC');
+        expect(hybrid).not.toContain('(他の構成では SEMANTIC のみ)');
+        const kbTestConfig = 'https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html';
+        const standardApi = domain4.td.indexOf('https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_KnowledgeBaseVectorSearchConfiguration.html');
+        expect(corrected.td.slice(standardApi + 1, standardApi + 5)).toEqual(['確認済み', '4.2.2', expect.stringContaining('HYBRID の対応ベクトルストア'), kbTestConfig]);
+        expect(corrected.td).toHaveLength(domain4.td.length + 4);
+        expect(corrected.links.map(link => link.href).filter(href => href === kbTestConfig)).toHaveLength(1);
+        expect(corrected.links).toHaveLength(domain4.links.length + 1);
     });
 
     it('domain2: カスタムモデルのProvisioned Throughputを条件付きにし、オンデマンドデプロイに触れ、問題5の正解は保持する', () => {

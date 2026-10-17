@@ -3,9 +3,9 @@ import AxeBuilder from '@axe-core/playwright';
 import sourceInventory from '../docs/migration-inventory/aws-aip-c01-domain4-guide.json';
 
 import fixture from '../docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
-import { AIP_DOMAIN4_CORRECTIONS, withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
+import { AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
 
-const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN4_CORRECTIONS);
+const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS);
 const route = '/aws/generative-ai-developer-professional/domain4';
 for (const width of [1440, 768, 390]) {
     test(`AIP domain4 ${width}px: complete light content, source diagrams, navigation and answers`, async ({ page }) => {

@@ -70,7 +70,7 @@ export default function Task42() { return <div className="guide-part" data-part=
 {" "}
 <p>{" ハイブリッド検索では、ベクトルとキーワードのスコアは "}<strong>{"尺度が異なる"}</strong>{" ため、正規化したうえで重み付けして統合します (これが「カスタムスコアリング」)。 "}</p>
 {" "}
-<ul>{" "}<li>{" Amazon Bedrock Knowledge Bases の取得設定には、検索タイプを "}<code>{"HYBRID"}</code>{" または "}<code>{"SEMANTIC"}</code>{" に上書きする項目があります。"}<strong>{"ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless のベクトルストアで利用できる"}</strong>{" と説明されています (他の構成では SEMANTIC のみ)。 "}</li>{" "}<li>{" 取得結果には "}<strong>{"リランカーモデルによる再ランキング"}</strong>{" を設定できます。 "}</li>{" "}<li>{"取得件数 ("}<code>{"numberOfResults"}</code>{") も調整項目です。"}</li>{" "}<li>{" 自分で OpenSearch を運用する場合は、ハイブリッドクエリと検索パイプラインの正規化処理 (最小最大正規化など) や重み設定で、キーワードとベクトルの比率を調整できます。 "}</li>{" "}</ul>
+<ul>{" "}<li>{" Amazon Bedrock Knowledge Bases の取得設定には、検索タイプを "}<code>{"HYBRID"}</code>{" または "}<code>{"SEMANTIC"}</code>{" に上書きする項目があります。"}<strong>{"ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless、Amazon RDS (Aurora PostgreSQL)、MongoDB Atlas のベクトルストアで利用できる"}</strong>{" と説明されています (これら以外のベクトルストアや、フィルタ可能なテキストフィールドを持たない構成では SEMANTIC のみ)。 "}</li>{" "}<li>{" 取得結果には "}<strong>{"リランカーモデルによる再ランキング"}</strong>{" を設定できます。 "}</li>{" "}<li>{"取得件数 ("}<code>{"numberOfResults"}</code>{") も調整項目です。"}</li>{" "}<li>{" 自分で OpenSearch を運用する場合は、ハイブリッドクエリと検索パイプラインの正規化処理 (最小最大正規化など) や重み設定で、キーワードとベクトルの比率を調整できます。 "}</li>{" "}</ul>
 {" "}
 <h3 id="7-4-ベストプラクティス" tabIndex={-1}>{"7-4. ベストプラクティス"}</h3>
 {" "}

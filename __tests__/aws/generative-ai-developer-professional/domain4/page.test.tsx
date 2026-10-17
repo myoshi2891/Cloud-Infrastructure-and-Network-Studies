@@ -5,13 +5,13 @@ import sourceInventory from '@/docs/migration-inventory/aws-aip-c01-domain4-guid
 
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
 
-import { AIP_DOMAIN4_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 import { extractBodyContent, normalizeSpaces, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 
 // AWS公式ドキュメントにもとづく訂正を、原本inventoryの複製へ適用した表示期待値
-const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN4_CORRECTIONS);
+const inventory = withSourceCorrections(sourceInventory, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS);
 
 describe('AIP domain4 independent complete inventory', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const)('retains every %s text in source order', tag => {
@@ -26,6 +26,22 @@ describe('AIP domain4 independent complete inventory', () => {
     it('retains all duplicate external links with text and original order', () => {
         const { container } = render(<Page />);
         expect([...container.querySelectorAll('a[href^="http"]')].map(a => ({ href: a.getAttribute('href'), text: normalizeSpaces(a.textContent ?? '') }))).toEqual(inventory.links.map(link => ({ ...link, text: normalizeSpaces(link.text) })));
+    });
+    it('applies the contextual CloudTrail correction only to the audit row, not the reference table', () => {
+        const { container } = render(<Page />);
+        const cells = [...container.querySelectorAll('td')].filter(td => normalizeSpaces(td.textContent ?? '').startsWith('AWS CloudTrail'));
+        expect(cells.map(td => normalizeSpaces(td.textContent ?? ''))).toEqual([
+            'AWS CloudTrail (InvokeAgent やナレッジベースの Retrieve / RetrieveAndGenerate はデータイベントで既定では記録されないため、データイベントセレクターの設定が必要)',
+            'AWS CloudTrail',
+        ]);
+        expect(normalizeSpaces(cells[0]?.previousElementSibling?.textContent ?? '')).toBe('誰が、いつ、どの API を呼んだか (操作の監査)');
+    });
+    it('adds the knowledge base search-type reference right after the standard API reference row in Step 22', () => {
+        const { container } = render(<Page />);
+        const anchor = [...container.querySelectorAll('a')].find(a => a.getAttribute('href') === 'https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html');
+        const row = anchor?.closest('tr');
+        expect([...(row?.querySelectorAll('td') ?? [])].map(td => normalizeSpaces(td.textContent ?? ''))).toEqual(['確認済み', '4.2.2', 'Knowledge Bases の検索タイプ (HYBRID の対応ベクトルストア) と取得設定', 'https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html']);
+        expect(row?.previousElementSibling?.querySelector('a')?.getAttribute('href')).toBe('https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_KnowledgeBaseVectorSearchConfiguration.html');
     });
     it('retains complete body and exact counts without requiring source HTML or archive', () => {
         const { container } = render(<Page />);

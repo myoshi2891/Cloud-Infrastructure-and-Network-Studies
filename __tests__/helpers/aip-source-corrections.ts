@@ -62,6 +62,18 @@ export const AIP_DOMAIN4_CORRECTIONS: readonly Correction[] = [
     ['コストの監視、トークンバーストの検知', 'コストの監視、トークンバーストの検知。キャッシュ読み取りは通常の入力より割安、書き込みは割高になるモデルがあるため、InputTokenCount と分けて集計する。クォータへの算入方法もモデルごとに異なるため、最新の料金表とクォータの説明で確認する'],
     // InvokeAgent とナレッジベース検索は CloudTrail のデータイベントで既定では記録されない。参考URL表の同名セルは訂正しない
     ['AWS CloudTrail', 'AWS CloudTrail (InvokeAgent やナレッジベースの Retrieve / RetrieveAndGenerate はデータイベントで既定では記録されないため、データイベントセレクターの設定が必要)', '誰が、いつ、どの API を呼んだか (操作の監査)'],
+    // HYBRID は OpenSearch Serverless だけでなく、フィルタ可能なテキストフィールドを持つ RDS・MongoDB のベクトルストアでも使える
+    ['ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless のベクトルストアで利用できる', 'ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless、Amazon RDS (Aurora PostgreSQL)、MongoDB Atlas のベクトルストアで利用できる'],
+    ['(他の構成では SEMANTIC のみ)', '(これら以外のベクトルストアや、フィルタ可能なテキストフィールドを持たない構成では SEMANTIC のみ)'],
+];
+
+/** 原本の参照表へ追加する行。after は直前行の URL セルと一致させ、cells の末尾を URL とする。 */
+type ReferenceRow = readonly [after: string, cells: readonly string[]];
+
+/** Domain 4 Step 22: HYBRID の対応ベクトルストアを記載したユーザーガイドを、API リファレンス標準版の直後に追加する。 */
+export const AIP_DOMAIN4_REFERENCE_ROWS: readonly ReferenceRow[] = [
+    ['https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_KnowledgeBaseVectorSearchConfiguration.html',
+        ['確認済み', '4.2.2', 'Knowledge Bases の検索タイプ (HYBRID の対応ベクトルストア) と取得設定', 'https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html']],
 ];
 
 const correctText = (text: string, corrections: readonly Correction[]): string =>
@@ -96,7 +108,29 @@ function correctValue(value: unknown, corrections: readonly Correction[]): unkno
     return value;
 }
 
-/** fixtureの全文字列へ訂正を適用した複製を返す。構造とキーは変えない。 */
-export function withSourceCorrections<T>(value: T, corrections: readonly Correction[]): T {
-    return correctValue(value, corrections) as T;
+const hrefOf = (item: unknown): string | undefined =>
+    typeof item === 'object' && item !== null && 'href' in item && typeof item.href === 'string' ? item.href : undefined;
+
+/** 配列要素が after の行（表セル列・リンク・表の行）に当たる場合、同じ形の追加行を返す。 */
+function addedItem(item: unknown, [after, cells]: ReferenceRow): unknown[] {
+    const url = cells.at(-1);
+    if (item === after) return [...cells];
+    if (hrefOf(item) === after) return [{ ...(item as object), href: url, text: url }];
+    if (Array.isArray(item) && cellText(item.at(-1)) === after) return [item.map((cell: unknown, index) => ({ ...(cell as object), text: cells[index] }))];
+    return [];
+}
+
+function insertRows(value: unknown, rows: readonly ReferenceRow[]): unknown {
+    // 結合テキストでは直前行の URL の後ろへ追加行の語句を続ける。URL セル自身（完全一致）は変えない
+    if (typeof value === 'string') return rows.reduce((current, [after, cells]) => current === after ? current : current.replaceAll(after, `${after} ${cells.join(' ')}`), value);
+    if (Array.isArray(value)) return value.flatMap(item => [insertRows(item, rows), ...rows.flatMap(row => addedItem(item, row))]);
+    if (typeof value === 'object' && value !== null) {
+        return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, insertRows(item, rows)]));
+    }
+    return value;
+}
+
+/** fixtureの全文字列へ訂正を適用した複製を返す。rows を渡した場合だけ参照表へ行を追加する。 */
+export function withSourceCorrections<T>(value: T, corrections: readonly Correction[], rows: readonly ReferenceRow[] = []): T {
+    return insertRows(correctValue(value, corrections), rows) as T;
 }
