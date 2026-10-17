@@ -1,0 +1,166 @@
+import { Diagram } from '../Diagram';
+/** 原本のtask1区分を全文・順序どおり保持する。 */
+export default function Task41() { return <div className="guide-part" data-part="task1"><h2 id="task-41-コスト最適化とリソース効率" className="part" tabIndex={-1}>{" Task 4.1 コスト最適化とリソース効率 "}</h2>
+{" "}
+<h2 id="step-2-skill-411-トークン効率化" tabIndex={-1}>{"Step 2: Skill 4.1.1 トークン効率化"}</h2>
+{" "}
+<blockquote>{" "}<p>{" 公式 Skill: トークン効率システムを開発し、有効性を維持しながら FM のコストを下げる (トークン推定と追跡、コンテキストウィンドウ最適化、レスポンスサイズ制御、プロンプト圧縮、コンテキストの剪定、レスポンスの制限)。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="2-1-何をする-skill-か" tabIndex={-1}>{"2-1. 何をする Skill か"}</h3>
+{" "}
+<p>{" 「"}<strong>{"必要な情報だけを、必要な量だけ"}</strong>{"」モデルに渡し、返してもらう仕組みを作ります。コストは基本的に "}<code>{"入力トークン × 入力単価 + 出力トークン × 出力単価"}</code>{" なので、トークンを減らすことがもっとも直接的な節約です。 "}</p>
+{" "}
+<h3 id="2-2-6-つの手法" tabIndex={-1}>{"2-2. 6 つの手法"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="2-2. 6 つの手法の表">{" "}<table><thead><tr className="header"><th scope="col">{"手法"}</th><th scope="col">{"内容"}</th><th scope="col">{"具体例"}</th></tr></thead><tbody><tr className="odd"><td>{"トークン推定"}</td><td>{"送る前に概算し、予算を超える場合は削減処理に回す"}</td><td>{" Bedrock のトークン数カウント API の利用、または過去ログの実測から日本語の係数を算出 "}</td></tr><tr className="even"><td>{"トークン追跡"}</td><td>{"呼び出しごとの実績を記録し、機能別、テナント別に集計する"}</td><td>{" Converse API の応答に含まれる使用量をカスタムメトリクスとして記録 "}</td></tr><tr className="odd"><td>{"コンテキストウィンドウ最適化"}</td><td>{"履歴と検索結果の量を上限内で最適化する"}</td><td>{"会話履歴の要約、スライディングウィンドウ、RAG の top-k 削減"}</td></tr><tr className="even"><td>{"レスポンスサイズ制御"}</td><td>{"出力の最大長を制限し、冗長な回答を防ぐ"}</td><td>{" "}<code>{"maxTokens"}</code>{"、"}<code>{"stopSequences"}</code>{"、「3 文以内で」の指示、構造化出力 "}</td></tr><tr className="odd"><td>{"プロンプト圧縮"}</td><td>{"同じ意味を短い表現で伝える"}</td><td>{" 冗長な前置きの削除、few-shot 例の厳選、小型モデルによる事前要約 "}</td></tr><tr className="even"><td>{"コンテキスト剪定"}</td><td>{"関連度の低い情報を取り除く"}</td><td>{"再ランキング後に閾値未満を捨てる、重複チャンクの除去"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="2-3-仕組みの流れ" tabIndex={-1}>{"2-3. 仕組みの流れ"}</h3>
+{" "}
+<Diagram id="diag-4" label="2-3. 仕組みの流れ" />
+{" "}
+<h3 id="2-4-コード例-使用量の記録" tabIndex={-1}>{"2-4. コード例 (使用量の記録)"}</h3>
+{" "}
+<div className="code-block" tabIndex={0} role="region" aria-label="コード例"><div className="code-line">{"import boto3, json, time"}</div><div className="code-line">{""}</div><div className="code-line">{"bedrock = boto3.client(\"bedrock-runtime\", region_name=\"us-east-1\")"}</div><div className="code-line">{""}</div><div className="code-line">{"def invoke_with_budget(model_id: str, system: str, user_text: str, max_out: int = 400):"}</div><div className="code-line">{"    resp = bedrock.converse("}</div><div className="code-line">{"        modelId=model_id,"}</div><div className="code-line">{"        system=[{\"text\": system}],"}</div><div className="code-line">{"        messages=[{\"role\": \"user\", \"content\": [{\"text\": user_text}]}],"}</div><div className="code-line">{"        inferenceConfig={\"maxTokens\": max_out, \"temperature\": 0.2, \"stopSequences\": [\"###END\"]},"}</div><div className="code-line">{"    )"}</div><div className="code-line">{"    usage = resp[\"usage\"]  # inputTokens, outputTokens, totalTokens (キャッシュ利用時は追加項目あり)"}</div><div className="code-line">{"    latency_ms = resp[\"metrics\"][\"latencyMs\"]"}</div><div className="code-line">{"    # EMF 形式で標準出力 -> CloudWatch Logs -> カスタムメトリクス化"}</div><div className="code-line">{"    print(json.dumps({"}</div><div className="code-line">{"        \"_aws\": {"}</div><div className="code-line">{"            \"Timestamp\": int(time.time() * 1000),"}</div><div className="code-line">{"            \"CloudWatchMetrics\": [{"}</div><div className="code-line">{"                \"Namespace\": \"GenAIApp\","}</div><div className="code-line">{"                \"Dimensions\": [[\"Feature\", \"ModelId\"]],"}</div><div className="code-line">{"                \"Metrics\": ["}</div><div className="code-line">{"                    {\"Name\": \"InputTokens\", \"Unit\": \"Count\"},"}</div><div className="code-line">{"                    {\"Name\": \"OutputTokens\", \"Unit\": \"Count\"},"}</div><div className="code-line">{"                    {\"Name\": \"LatencyMs\", \"Unit\": \"Milliseconds\"},"}</div><div className="code-line">{"                ],"}</div><div className="code-line">{"            }],"}</div><div className="code-line">{"        },"}</div><div className="code-line">{"        \"Feature\": \"faq-bot\", \"ModelId\": model_id,"}</div><div className="code-line">{"        \"InputTokens\": usage[\"inputTokens\"], \"OutputTokens\": usage[\"outputTokens\"],"}</div><div className="code-line">{"        \"LatencyMs\": latency_ms,"}</div><div className="code-line">{"    }))"}</div><div className="code-line">{"    return resp[\"output\"][\"message\"][\"content\"][0][\"text\"]"}</div></div>
+{" "}
+<blockquote>{" "}<p>{" ポイント: "}<strong>{"機能別、テナント別のディメンション"}</strong>{" を付けておくと、「どの機能がコストを食っているか」を後で特定できます。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="2-5-ベストプラクティス" tabIndex={-1}>{"2-5. ベストプラクティス"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="2-5. ベストプラクティスの表">{" "}<table><thead><tr className="header"><th scope="col">{"#"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr className="odd"><td>{"1"}</td><td><code>{"maxTokens"}</code>{" を用途に合わせて小さめに設定する"}</td><td>{" 出力の暴走を防ぐ。また、スループットのクォータ計算にも影響する (Step 8 を参照) "}</td></tr><tr className="even"><td>{"2"}</td><td>{"システムプロンプトは「短く・静的に」保つ"}</td><td>{"短縮でコスト減、静的化でプロンプトキャッシュが効く"}</td></tr><tr className="odd"><td>{"3"}</td><td>{"会話履歴は全文を送らず、古い部分を要約する"}</td><td>{"履歴は 1 ターンごとに入力トークンを雪だるま式に増やす"}</td></tr><tr className="even"><td>{"4"}</td><td>{"RAG の top-k とチャンクサイズを評価で決める"}</td><td>{"多すぎるとコストと雑音が増え、少なすぎると回答漏れになる"}</td></tr><tr className="odd"><td>{"5"}</td><td>{"再ランキングしてから上位だけを渡す"}</td><td>{"関連度の低い文脈は、コストを増やすうえに精度も下げうる"}</td></tr><tr className="even"><td>{"6"}</td><td>{"出力形式を JSON スキーマや箇条書きで指定する"}</td><td>{"冗長な前置きを避けられ、後処理もしやすい"}</td></tr><tr className="odd"><td>{"7"}</td><td>{" 「トークン数 × 単価」を機能別に集計して予算アラームを設定する "}</td><td>{"想定外の増加を早く検知する"}</td></tr><tr className="even"><td>{"8"}</td><td>{" 圧縮後も "}<strong>{"品質評価"}</strong>{" (ゴールデンデータセット) を必ず回す "}</td><td>{"削りすぎによる品質低下を防ぐ"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="2-6-よくある失敗" tabIndex={-1}>{"2-6. よくある失敗"}</h3>
+{" "}
+<ul>{" "}<li>{"品質評価なしでプロンプトを削り、回答精度が落ちる。"}</li>{" "}<li>{" "}<code>{"maxTokens"}</code>{" を極端に大きく設定したまま運用し、クォータ消費とコストが増える。 "}</li>{" "}<li>{"履歴を全部送り続け、長い会話で急にコストが跳ね上がる。"}</li>{" "}</ul>
+{" "}
+<h3 id="2-7-試験の狙われどころ" tabIndex={-1}>{"2-7. 試験の狙われどころ"}</h3>
+{" "}
+<ul>{" "}<li>{" 「コストを下げたいが品質は維持したい」→ "}<strong>{"プロンプト圧縮、コンテキスト剪定、maxTokens 制御"}</strong>{" の組み合わせ。 "}</li>{" "}<li>{" 「どの機能がコストを使っているか知りたい」→ "}<strong>{"使用量を機能別ディメンションでカスタムメトリクス化"}</strong>{"。 "}</li>{" "}<li>{" 「長い会話でコストが増える」→ "}<strong>{"履歴の要約 / スライディングウィンドウ"}</strong>{"。 "}</li>{" "}</ul>
+{" "}
+<p>{" 出典: Amazon Bedrock Converse API / Inference parameters / CloudWatch Embedded Metric Format (Step 22 を参照) "}</p>
+{" "}
+<h2 id="step-3-skill-412-コスト効率のよいモデル選択" tabIndex={-1}>{" Step 3: Skill 4.1.2 コスト効率のよいモデル選択 "}</h2>
+{" "}
+<blockquote>{" "}<p>{" 公式 Skill: コスト効率のよいモデル選択フレームワークを作る (コストと能力のトレードオフ評価、クエリ複雑度に応じた FM の階層利用、応答品質に対する推論コストのバランス、価格性能比の測定、効率的な推論パターン)。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="3-1-基本の考え方" tabIndex={-1}>{"3-1. 基本の考え方"}</h3>
+{" "}
+<p>{" 「すべてのリクエストを最高性能のモデルで処理する」のは、近所への買い物にトラックを使うようなものです。"}<strong>{"簡単な質問は小さく安いモデル、難しい質問だけ大きいモデル"}</strong>{" に振り分けると、品質をほぼ保ちつつコストを大きく下げられます。 "}</p>
+{" "}
+<h3 id="3-2-階層化-ティアリング-の例" tabIndex={-1}>{"3-2. 階層化 (ティアリング) の例"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-2. 階層化 (ティアリング) の例の表">{" "}<table><thead><tr className="header"><th scope="col">{"ティア"}</th><th scope="col">{"想定タスク"}</th><th scope="col">{"モデルの方向性"}</th><th scope="col">{"特徴"}</th></tr></thead><tbody><tr className="odd"><td>{"ティア 1"}</td><td>{"分類、抽出、定型 FAQ、短い要約"}</td><td>{"小型 / 高速 / 低価格"}</td><td>{"件数が多く、コスト削減効果が大きい"}</td></tr><tr className="even"><td>{"ティア 2"}</td><td>{"一般的な文章生成、RAG 回答"}</td><td>{"中型"}</td><td>{"品質とコストのバランス"}</td></tr><tr className="odd"><td>{"ティア 3"}</td><td>{"複雑な推論、長文分析、難しいコード"}</td><td>{"大型 / 高性能"}</td><td>{"件数は少ないが品質が重要"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="3-3-ルーティング方式の比較" tabIndex={-1}>{"3-3. ルーティング方式の比較"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-3. ルーティング方式の比較の表">{" "}<table><thead><tr className="header"><th scope="col">{"方式"}</th><th scope="col">{"しくみ"}</th><th scope="col">{"長所"}</th><th scope="col">{"短所"}</th></tr></thead><tbody><tr className="odd"><td>{"Bedrock Intelligent Prompt Routing"}</td><td>{" Bedrock が各リクエストの難易度を予測し、"}<strong>{"同じモデルファミリー内"}</strong>{" の候補モデルへ自動で振り分ける。既定のルーターを使うか、自分で設定する "}</td><td>{" 実装が少ない。API のモデル ID にルーターの ARN を指定するだけ "}</td><td>{"同一ファミリー内に限られる。自分のタスクでの効果は要検証"}</td></tr><tr className="even"><td>{"自作ルーター"}</td><td>{" 軽量な分類器 (小型モデルや簡易ルール) が難易度を判定して振り分ける "}</td><td>{" 複数ファミリーやプロバイダをまたげる。ルールを細かく制御できる "}</td><td>{"実装と保守が必要。ルーター自体のコストと遅延が増える"}</td></tr><tr className="odd"><td>{"カスケード"}</td><td>{"小型モデルで試し、信頼度が低ければ大型モデルで再実行"}</td><td>{"品質を担保しやすい"}</td><td>{"失敗時は 2 回呼ぶため遅くなりコストも二重にかかる"}</td></tr><tr className="even"><td>{"モデル蒸留"}</td><td>{"大型モデルの出力で小型モデルを特化させる"}</td><td>{"特定用途で小型でも高精度になりうる"}</td><td>{"準備と評価の手間がかかる"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<blockquote>{" "}<p>{" Intelligent Prompt Routing について AWS は、コストを最大 30% 削減できる (精度を損なわずに) と説明しています。ただし結果はタスクや分野で変わるため、"}<strong>{"自分のデータで評価すること"}</strong>{" が推奨されています。 "}</p>{" "}</blockquote>
+{" "}
+<Diagram id="diag-5" label="3-3. ルーティング方式の比較" />
+{" "}
+<h3 id="3-4-価格性能比の測り方" tabIndex={-1}>{"3-4. 価格性能比の測り方"}</h3>
+{" "}
+<p>{" 「モデルの単価」だけで比べるのは危険です。"}<strong>{"1 タスクを成功させる総コスト"}</strong>{" で比べます。 "}</p>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-4. 価格性能比の測り方の表">{" "}<table><thead><tr className="header"><th scope="col">{"指標"}</th><th scope="col">{"計算"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"リクエスト単価"}</td><td>{"入力トークン × 入力単価 + 出力トークン × 出力単価"}</td><td>{"基本コスト"}</td></tr><tr className="even"><td>{"成功あたりコスト"}</td><td>{"総コスト ÷ 成功タスク数"}</td><td>{"失敗や再試行を含めた実質コスト"}</td></tr><tr className="odd"><td>{"品質スコア"}</td><td>{"ゴールデンデータセットでの正答率や評価スコア"}</td><td>{"品質の定量化"}</td></tr><tr className="even"><td>{"価格性能比"}</td><td>{"品質スコア ÷ 成功あたりコスト"}</td><td>{"高いほど効率的"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<p><strong>{"仮想の計算例"}</strong>{" (数字は説明用の架空値です)"}</p>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-4. 価格性能比の測り方の表">{" "}<table><thead><tr className="header"><th scope="col">{"モデル"}</th><th scope="col">{"1,000 件の総コスト"}</th><th scope="col">{"正答率"}</th><th scope="col">{"成功あたりコスト"}</th></tr></thead><tbody><tr className="odd"><td>{"小型"}</td><td>{"2 ドル"}</td><td>{"80%"}</td><td>{"2 ÷ 800 = 0.0025 ドル"}</td></tr><tr className="even"><td>{"大型"}</td><td>{"20 ドル"}</td><td>{"92%"}</td><td>{"20 ÷ 920 = 約 0.0217 ドル"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<p>{" 小型は成功あたりコストが約 9 分の 1 です。正答率 80% で要件を満たすなら小型を選び、足りない 20% だけを大型に回す設計 (カスケード) が合理的です。 "}</p>
+{" "}
+<h3 id="3-5-ベストプラクティス" tabIndex={-1}>{"3-5. ベストプラクティス"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-5. ベストプラクティスの表">{" "}<table><thead><tr className="header"><th scope="col">{"#"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr className="odd"><td>{"1"}</td><td>{" モデル選択を "}<strong>{"評価データに基づいて"}</strong>{" 決める (Amazon Bedrock の評価機能やゴールデンデータセット) "}</td><td>{"感覚での選定は過剰スペックになりやすい"}</td></tr><tr className="even"><td>{"2"}</td><td>{"ワークロードをタスク種別で分け、タスクごとにモデルを選ぶ"}</td><td>{"1 つのモデルですべてを処理しない"}</td></tr><tr className="odd"><td>{"3"}</td><td>{"ルーターには「フォールバック先モデル」を必ず用意する"}</td><td>{"判定失敗時の品質を守る"}</td></tr><tr className="even"><td>{"4"}</td><td>{"モデル ID は設定として外出しし、差し替え可能にする"}</td><td>{"新モデルへの移行や A/B 比較が容易"}</td></tr><tr className="odd"><td>{"5"}</td><td>{"継続的に再評価する (新モデルや価格改定のたび)"}</td><td>{"価格性能比は時間とともに変わる"}</td></tr><tr className="even"><td>{"6"}</td><td>{"大量・固定の用途は蒸留や特化を検討する"}</td><td>{"小型で必要精度に届けば最も安い"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="3-6-試験の狙われどころ" tabIndex={-1}>{"3-6. 試験の狙われどころ"}</h3>
+{" "}
+<ul>{" "}<li>{" 「問い合わせの複雑さがばらばらでコストを下げたい」→ "}<strong>{"Intelligent Prompt Routing または階層化ルーティング"}</strong>{"。 "}</li>{" "}<li>{" 「品質を落とさず」→ 評価データで確認し、"}<strong>{"フォールバック"}</strong>{" を設ける。 "}</li>{" "}<li>{" 「単価が最も安いモデルを選ぶ」は多くの場合 "}<strong>{"不正解"}</strong>{" (成功あたりコストや品質を見ていない)。 "}</li>{" "}</ul>
+{" "}
+<p>{" 出典: Amazon Bedrock Intelligent Prompt Routing / Bedrock cost optimization (Step 22 を参照) "}</p>
+{" "}
+<h2 id="step-4-skill-413-高性能な-fm-システム-バッチ容量スケーリング" tabIndex={-1}>{" Step 4: Skill 4.1.3 高性能な FM システム (バッチ・容量・スケーリング) "}</h2>
+{" "}
+<blockquote>{" "}<p>{" 公式 Skill: GenAI ワークロードのリソース使用率とスループットを最大化する高性能 FM システムを開発する (バッチ戦略、容量計画、使用率モニタリング、オートスケーリング構成、Provisioned Throughput の最適化)。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="4-1-4-つの柱" tabIndex={-1}>{"4-1. 4 つの柱"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="4-1. 4 つの柱の表">{" "}<table><thead><tr className="header"><th scope="col">{"柱"}</th><th scope="col">{"目的"}</th><th scope="col">{"主な手段"}</th></tr></thead><tbody><tr className="odd"><td>{"バッチ戦略"}</td><td>{"急がない処理を安く、まとめて処理する"}</td><td>{"Bedrock バッチ推論 (S3 入出力)、SQS による平準化"}</td></tr><tr className="even"><td>{"容量計画"}</td><td>{"ピーク時に必要な処理量を事前に見積もる"}</td><td>{" ピークの 1 秒あたりリクエスト数と平均トークン数から TPM を算出 "}</td></tr><tr className="odd"><td>{"使用率モニタリング"}</td><td>{"買った容量や割り当てを使い切れているか確認する"}</td><td>{"CloudWatch の呼び出し数、トークン数、スロットリング数"}</td></tr><tr className="even"><td>{"オートスケーリング"}</td><td>{"アプリ側の処理能力を需要に追従させる"}</td><td>{"Lambda の同時実行、ECS のスケーリング、キュー長ベース"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="4-2-容量計画の考え方" tabIndex={-1}>{"4-2. 容量計画の考え方"}</h3>
+{" "}
+<div className="code-block" tabIndex={0} role="region" aria-label="コード例"><div className="code-line">{"必要な TPM ≒ ピーク時の毎分リクエスト数 × (平均入力トークン + 平均出力トークン)"}</div></div>
+{" "}
+<p><strong>{"仮想の計算例"}</strong></p>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="4-2. 容量計画の考え方の表">{" "}<table><thead><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"値"}</th></tr></thead><tbody><tr className="odd"><td>{"ピーク時のリクエスト"}</td><td>{"毎秒 10 件 = 毎分 600 件"}</td></tr><tr className="even"><td>{"平均入力トークン"}</td><td>{"2,000"}</td></tr><tr className="odd"><td>{"平均出力トークン"}</td><td>{"400"}</td></tr><tr className="even"><td>{"必要な TPM の目安"}</td><td>{"600 × 2,400 = 1,440,000"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<blockquote>{" "}<p>{" "}<strong>{"落とし穴"}</strong>{": モデルによっては、クォータ上で出力トークンが入力より重く数えられる (burndown rate) 場合があります。また、リクエスト開始時には "}<code>{"maxTokens"}</code>{" を基準にクォータが予約される動作があるため、"}<code>{"maxTokens"}</code>{" を不必要に大きくすると実際より早く上限に達します。対象モデルの最新のクォータ説明を確認してください。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="4-3-provisioned-throughput-の最適化" tabIndex={-1}>{" 4-3. Provisioned Throughput の最適化 "}</h3>
+{" "}
+<p>{" Provisioned Throughput は、一定の推論容量をモデルユニット単位で確保する方式です。 "}</p>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="4-3. Provisioned Throughput の最適化の表">{" "}<table><thead><tr className="header"><th scope="col">{"判断軸"}</th><th scope="col">{"オンデマンド"}</th><th scope="col">{"Provisioned Throughput"}</th></tr></thead><tbody><tr className="odd"><td>{"課金"}</td><td>{"使った分"}</td><td>{"確保した時間分 (使わなくても発生)"}</td></tr><tr className="even"><td>{"性能の安定性"}</td><td>{"クォータと混雑の影響を受ける"}</td><td>{"専用容量で予測しやすい"}</td></tr><tr className="odd"><td>{"向いている負荷"}</td><td>{"変動が大きい、試験的"}</td><td>{"安定して高い、レイテンシ要件が厳しい"}</td></tr><tr className="even"><td>{"カスタム / 追加学習モデル"}</td><td>{"利用できない場合がある"}</td><td>{"必要になることがある"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<p><strong>{"最適化のコツ"}</strong></p>
+{" "}
+<ol>{" "}<li>{"最初はオンデマンドで実測し、ベースライン需要を把握する。"}</li>{" "}<li>{" "}<strong>{"ベースライン分だけ"}</strong>{" Provisioned Throughput を確保し、超過分はオンデマンドへ逃がす (後述の構成)。 "}</li>{" "}<li>{" 使用率が低ければモデルユニットを見直す。コミットメント期間は、需要が読めてから長期にする。 "}</li>{" "}</ol>
+{" "}
+<Diagram id="diag-6" label="4-3. Provisioned Throughput の最適化" />
+{" "}
+<h3 id="4-4-バッチ処理の使い分け" tabIndex={-1}>{"4-4. バッチ処理の使い分け"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="4-4. バッチ処理の使い分けの表">{" "}<table><thead><tr className="header"><th scope="col">{"方式"}</th><th scope="col">{"使いどころ"}</th><th scope="col">{"補足"}</th></tr></thead><tbody><tr className="odd"><td>{"Bedrock バッチ推論"}</td><td>{"大量の文書要約、分類、評価データ生成など、数時間待てる処理"}</td><td>{" 入力は S3 上の JSONL、結果は S3 に出力。対象モデルでオンデマンドより低価格で提供されることが多い (最新の料金を確認) "}</td></tr><tr className="even"><td>{"SQS + ワーカー"}</td><td>{"リアルタイムに近いが、スパイクを平準化したい処理"}</td><td>{"キューの深さを見てワーカー数を調整"}</td></tr><tr className="odd"><td>{"Step Functions (Map)"}</td><td>{"多数のアイテムを並列に処理し、同時実行数を制御"}</td><td>{"最大同時実行数でクォータを守る"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="4-5-ベストプラクティス" tabIndex={-1}>{"4-5. ベストプラクティス"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="4-5. ベストプラクティスの表">{" "}<table><thead><tr className="header"><th scope="col">{"#"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr className="odd"><td>{"1"}</td><td>{"リアルタイムでない処理は "}<strong>{"バッチ推論"}</strong>{" に回す"}</td><td>{"コスト削減とクォータ競合の回避"}</td></tr><tr className="even"><td>{"2"}</td><td>{" 容量計画は "}<strong>{"トークン量"}</strong>{" (リクエスト数ではなく) で行う "}</td><td>{"制約は TPM であることが多い"}</td></tr><tr className="odd"><td>{"3"}</td><td>{"ピーク値だけでなく、平均値と分布も見る"}</td><td>{"ピーク用に買いすぎない"}</td></tr><tr className="even"><td>{"4"}</td><td>{" Provisioned Throughput は "}<strong>{"ベースライン分のみ"}</strong>{" にし、超過をオンデマンドへ "}</td><td>{"常時課金の無駄を減らす"}</td></tr><tr className="odd"><td>{"5"}</td><td>{"スロットリング数と使用率を CloudWatch で継続監視"}</td><td>{"容量不足と過剰の両方を早期発見"}</td></tr><tr className="even"><td>{"6"}</td><td>{"開発、検証環境では Provisioned Throughput を常時確保しない"}</td><td>{"不要な固定費を避ける"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="4-6-試験の狙われどころ" tabIndex={-1}>{"4-6. 試験の狙われどころ"}</h3>
+{" "}
+<ul>{" "}<li>{"「夜間に大量の文書を安く処理」→ "}<strong>{"バッチ推論"}</strong>{"。"}</li>{" "}<li>{" 「負荷が安定して高く、性能を一定にしたい」→ "}<strong>{"Provisioned Throughput"}</strong>{"。 "}</li>{" "}<li>{" 「スパイク時だけ 429 が出る」→ "}<strong>{"クロスリージョン推論 / 再試行 / キューで平準化"}</strong>{"。常時確保は過剰なことが多い。 "}</li>{" "}</ul>
+{" "}
+<p>{" 出典: Amazon Bedrock Scaling and throughput best practices / Provisioned Throughput / Batch inference (Step 22 を参照) "}</p>
+{" "}
+<h2 id="step-5-skill-414-インテリジェントなキャッシュ" tabIndex={-1}>{" Step 5: Skill 4.1.4 インテリジェントなキャッシュ "}</h2>
+{" "}
+<blockquote>{" "}<p>{" 公式 Skill: 不要な FM 呼び出しを避けてコスト削減と応答時間改善を実現するキャッシュを作る (セマンティックキャッシュ、結果のフィンガープリント、エッジキャッシュ、決定的リクエストハッシュ、プロンプトキャッシュ)。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="5-1-キャッシュの-5-つの層" tabIndex={-1}>{"5-1. キャッシュの 5 つの層"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="5-1. キャッシュの 5 つの層の表">{" "}<table><thead><tr className="header"><th scope="col">{"層"}</th><th scope="col">{"しくみ"}</th><th scope="col">{"効果"}</th><th scope="col">{"向いている場面"}</th></tr></thead><tbody><tr className="odd"><td>{"エッジキャッシュ"}</td><td>{" CloudFront などで、同一の公開リクエストへの結果をエッジに保存 "}</td><td>{"FM 呼び出し自体と通信を省く"}</td><td>{"全ユーザーに共通で、頻繁に同じ内容を返す API"}</td></tr><tr className="even"><td>{"決定的リクエストハッシュ (完全一致)"}</td><td>{" プロンプトとパラメータを正規化してハッシュ化し、キーにして結果を保存 "}</td><td>{"FM 呼び出しを省く。高速で正確"}</td><td>{"同じ入力が繰り返される (定型質問、バッチ再実行)"}</td></tr><tr className="odd"><td>{"セマンティックキャッシュ"}</td><td>{" 質問を埋め込みベクトルにし、類似度が閾値以上の過去質問の回答を返す "}</td><td>{"言い換えにも対応して FM 呼び出しを省く"}</td><td>{"FAQ 的な問い合わせ。表現が揺れる"}</td></tr><tr className="even"><td>{"結果フィンガープリント"}</td><td>{"入力の指紋 (ハッシュ) と結果を対応付け、重複処理を検出"}</td><td>{"同じ文書や同じリクエストの再処理を避ける"}</td><td>{"文書処理パイプラインの冪等性確保"}</td></tr><tr className="odd"><td>{"プロンプトキャッシュ (Bedrock の機能)"}</td><td>{"長い共通プレフィックスの処理結果を再利用"}</td><td>{" FM 呼び出しは行うが、"}<strong>{"入力処理のコストと遅延を削減"}</strong>{" "}</td><td>{"長いシステムプロンプト、文書を前提にした連続質問"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<blockquote>{" "}<p>{" "}<strong>{"最重要の区別"}</strong>{": 上の 4 つは「FM を呼ばない」ためのキャッシュ。"}<strong>{"プロンプトキャッシュは FM を呼ぶが、共通部分の処理を使い回す"}</strong>{" キャッシュです。 "}</p>{" "}</blockquote>
+{" "}
+<h3 id="5-2-プロンプトキャッシュの要点" tabIndex={-1}>{"5-2. プロンプトキャッシュの要点"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="5-2. プロンプトキャッシュの要点の表">{" "}<table><thead><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"目的"}</td><td>{"推論の応答遅延と入力トークンのコストを削減する"}</td></tr><tr className="even"><td>{"仕組み"}</td><td>{" プロンプト内に "}<strong>{"キャッシュチェックポイント"}</strong>{" を設定し、そこまでの連続した部分 (プレフィックス) をキャッシュする "}</td></tr><tr className="odd"><td>{"課金"}</td><td>{" キャッシュからの読み取りは割引料金。書き込み (キャッシュ作成) は通常入力より高い場合がある "}</td></tr><tr className="even"><td>{"効果の目安"}</td><td>{" AWS は、遅延を最大 85%、コストを最大 90% 削減できると説明している "}</td></tr><tr className="odd"><td>{"TTL"}</td><td>{" 指定しない場合は 5 分が既定。モデルによって延長できる場合がある "}</td></tr><tr className="even"><td>{"配置の原則"}</td><td>{" "}<strong>{"静的な内容を先頭に、動的な内容 (ユーザー固有情報、質問) を末尾に"}</strong>{" 置く "}</td></tr><tr className="odd"><td>{"対応"}</td><td>{" 対応モデルは限定的。Amazon Nova は自動で提供、Claude は簡素化された管理方式。クロスリージョン推論と併用できる "}</td></tr><tr className="even"><td>{"注意"}</td><td>{" モデルごとに最小トークン数やキャッシュ可能なフィールドの条件がある。ドキュメントで確認する "}</td></tr></tbody></table>{" "}</div>
+{" "}
+<Diagram id="diag-7" label="5-2. プロンプトキャッシュの要点" />
+{" "}
+<h3 id="5-3-多層キャッシュの検索フロー" tabIndex={-1}>{"5-3. 多層キャッシュの検索フロー"}</h3>
+{" "}
+<Diagram id="diag-8" label="5-3. 多層キャッシュの検索フロー" />
+{" "}
+<h3 id="5-4-実装に使うサービス" tabIndex={-1}>{"5-4. 実装に使うサービス"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="5-4. 実装に使うサービスの表">{" "}<table><thead><tr className="header"><th scope="col">{"用途"}</th><th scope="col">{"候補サービス"}</th></tr></thead><tbody><tr className="odd"><td>{"完全一致キャッシュ"}</td><td>{"Amazon DynamoDB (TTL 付き)、Amazon ElastiCache"}</td></tr><tr className="even"><td>{"セマンティックキャッシュ"}</td><td>{" ベクトル検索に対応した ElastiCache、Amazon MemoryDB、Amazon OpenSearch Service など "}</td></tr><tr className="odd"><td>{"エッジキャッシュ"}</td><td>{"Amazon CloudFront、API Gateway のキャッシュ"}</td></tr><tr className="even"><td>{"プロンプトキャッシュ"}</td><td>{"Amazon Bedrock の機能 (対応モデルのみ)"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="5-5-決定的リクエストハッシュの設計" tabIndex={-1}>{"5-5. 決定的リクエストハッシュの設計"}</h3>
+{" "}
+<p>{"ハッシュのキーには、"}<strong>{"回答に影響するすべての要素"}</strong>{" を含めます。"}</p>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="5-5. 決定的リクエストハッシュの設計の表">{" "}<table><thead><tr className="header"><th scope="col">{"含めるもの"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr className="odd"><td>{"モデル ID とバージョン"}</td><td>{"モデルが変われば回答も変わる"}</td></tr><tr className="even"><td>{"推論パラメータ (temperature、maxTokens など)"}</td><td>{"出力が変わる"}</td></tr><tr className="odd"><td>{"システムプロンプトのバージョン"}</td><td>{"プロンプト変更後に古い回答を返さないため"}</td></tr><tr className="even"><td>{"正規化済みのユーザー入力"}</td><td>{"空白や大文字小文字の揺れを吸収する"}</td></tr><tr className="odd"><td>{"テナント ID / 権限スコープ"}</td><td><strong>{"他ユーザーの情報が漏れるのを防ぐ"}</strong></td></tr><tr className="even"><td>{"参照データのバージョン (RAG の場合)"}</td><td>{"知識が更新されたら無効化する"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="5-6-ベストプラクティス" tabIndex={-1}>{"5-6. ベストプラクティス"}</h3>
+{" "}
+<div className="table-scroll" tabIndex={0} role="region" aria-label="5-6. ベストプラクティスの表">{" "}<table><thead><tr className="header"><th scope="col">{"#"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr className="odd"><td>{"1"}</td><td>{"キャッシュキーにテナントや権限情報を含める"}</td><td><strong>{"データ漏えい防止"}</strong>{" (最重要)"}</td></tr><tr className="even"><td>{"2"}</td><td>{"TTL を設定し、参照データやプロンプトの更新時に無効化する"}</td><td>{"古い回答の提供を防ぐ"}</td></tr><tr className="odd"><td>{"3"}</td><td>{"セマンティックキャッシュの類似度閾値は評価データで調整する"}</td><td>{"低すぎると誤った回答を返し、高すぎるとヒット率が下がる"}</td></tr><tr className="even"><td>{"4"}</td><td>{" 個人情報を含む回答やパーソナライズ回答はキャッシュしない (または分離する) "}</td><td>{"プライバシー保護"}</td></tr><tr className="odd"><td>{"5"}</td><td>{"ヒット率、節約額、誤ヒットを監視する"}</td><td>{"キャッシュの費用対効果を確認する"}</td></tr><tr className="even"><td>{"6"}</td><td>{"創造性や毎回異なる出力が必要な用途ではキャッシュしない"}</td><td>{"多様性の要件と矛盾する"}</td></tr><tr className="odd"><td>{"7"}</td><td>{" 長いプロンプトは "}<strong>{"静的部分を先頭に"}</strong>{" 置いてプロンプトキャッシュを使う "}</td><td>{"プレフィックス一致が条件"}</td></tr></tbody></table>{" "}</div>
+{" "}
+<h3 id="5-7-試験の狙われどころ" tabIndex={-1}>{"5-7. 試験の狙われどころ"}</h3>
+{" "}
+<ul>{" "}<li>{" 「言い換えの質問でも同じ回答を再利用したい」→ "}<strong>{"セマンティックキャッシュ"}</strong>{"。 "}</li>{" "}<li>{" 「完全に同じリクエストが繰り返される」→ "}<strong>{"決定的ハッシュによる完全一致キャッシュ"}</strong>{"。 "}</li>{" "}<li>{" 「長いシステムプロンプトのコストと遅延を減らしたい」→ "}<strong>{"プロンプトキャッシュ"}</strong>{" (静的部分を先頭に)。 "}</li>{" "}<li>{" 「全ユーザー共通の公開情報を世界中に低遅延で配信」→ "}<strong>{"エッジキャッシュ (CloudFront)"}</strong>{"。 "}</li>{" "}</ul>
+{" "}
+<p>{" 出典: Amazon Bedrock Prompt caching / AWS Machine Learning Blog (Step 22 を参照) "}</p>
+{" "}</div>; }
