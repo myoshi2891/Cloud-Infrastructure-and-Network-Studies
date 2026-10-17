@@ -45,6 +45,19 @@ export const AIP_DOMAIN2_CORRECTIONS: readonly Correction[] = [
     ['推論プロファイルを使う場合は、そのARNも含めて指定します。', '推論プロファイルを使う場合は、プロファイルの ARN に加えて、プロファイルに関連付けられたすべてのリージョンの基盤モデル ARN も許可します（プロファイル ARN だけでは、別リージョンへルーティングされた呼び出しが AccessDeniedException で失敗します）。プロファイル経由の呼び出しに限定して基盤モデルの直接呼び出しを防ぐには、基盤モデルを許可するステートメントに bedrock:InferenceProfileArn 条件キーを付けます。'],
 ];
 
+/** Domain 3: CloudWatch に事前定義の公平性メトリクスはないため、アプリが算出して発行する形にする。 */
+export const AIP_DOMAIN3_CORRECTIONS: readonly Correction[] = [
+    ['CloudWatch の事前定義された公平性メトリクス、', 'アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行、'],
+];
+
+/** Domain 4: 直列ステップの所要時間は合計され、最も遅い経路が効くのは並列時だけ。キャッシュのトークン数は別メトリクスで扱う。 */
+export const AIP_DOMAIN4_CORRECTIONS: readonly Correction[] = [
+    ['全体の時間とコストは 最も遅いステップ と ステップ間の無駄 で決まります。', '直列に実行するステップでは、全体の時間は 各ステップの所要時間の合計 と ステップ間の無駄 で決まります。最も遅い経路がレイテンシを決めるのは、独立したステップを並列実行している場合だけです。'],
+    ['最も遅いステップ', '各ステップの所要時間の合計'],
+    ['InputTokenCount / OutputTokenCount', 'InputTokenCount / OutputTokenCount / CacheReadInputTokenCount / CacheWriteInputTokenCount'],
+    ['コストの監視、トークンバーストの検知', 'コストの監視、トークンバーストの検知。キャッシュ読み取りは通常の入力より割安、書き込みは割高になるモデルがあるため、InputTokenCount と分けて集計する。クォータへの算入方法もモデルごとに異なるため、最新の料金表とクォータの説明で確認する'],
+];
+
 const correctText = (text: string, corrections: readonly Correction[]): string =>
     corrections.reduce((current, [from, to]) => current.replaceAll(from, to), text);
 

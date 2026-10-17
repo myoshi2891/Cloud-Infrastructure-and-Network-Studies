@@ -3,7 +3,9 @@ import domain1 from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
 import domain2 from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
 import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
-import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
+import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
+import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 const count = (text: string, part: string) => text.split(part).length - 1;
 
@@ -18,6 +20,34 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         const diagrams = Object.values(fidelity.guideParts).flatMap(part => part.diagrams).join('\n');
         const target = [body, inventory.td.join('\n'), inventory.listItems.join('\n'), diagrams].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
+    });
+
+    it.each([
+        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS],
+        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS],
+    ] as const)('%s: 各訂正が原本inventoryの本文・表セルに一致する（空振りしない）', (_name, inventory, corrections) => {
+        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td].join('\n');
+        for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
+    });
+
+    it('domain3: 公平性メトリクスはアプリが算出してCloudWatchへ発行し、事前定義の指標とは書かない', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const skill = corrected.bodyContent.find(block => block.text.includes('Skill 3.4.2:'))?.text ?? '';
+        expect(skill).not.toContain('事前定義');
+        expect(skill).toContain('アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行');
+    });
+
+    it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
+        const workflow = corrected.bodyContent.find(block => block.text.includes('複数ステップの連鎖です'))?.text ?? '';
+        expect(workflow).toContain('各ステップの所要時間の合計');
+        expect(workflow).toContain('並列実行している場合だけ');
+        expect(workflow).not.toContain('最も遅いステップ');
+        const metric = corrected.td.indexOf('InputTokenCount / OutputTokenCount / CacheReadInputTokenCount / CacheWriteInputTokenCount');
+        expect(metric).toBeGreaterThanOrEqual(0);
+        expect(corrected.td[metric + 1]).toBe('入出力トークン数');
+        expect(corrected.td[metric + 2]).toContain('読み取りは通常の入力より割安、書き込みは割高');
+        expect(corrected.td[metric + 2]).toContain('クォータ');
     });
 
     it('domain2: カスタムモデルのProvisioned Throughputを条件付きにし、オンデマンドデプロイに触れ、問題5の正解は保持する', () => {
