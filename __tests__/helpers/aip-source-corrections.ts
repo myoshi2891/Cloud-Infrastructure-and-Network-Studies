@@ -65,6 +65,8 @@ export const AIP_DOMAIN4_CORRECTIONS: readonly Correction[] = [
     // HYBRID は OpenSearch Serverless だけでなく、フィルタ可能なテキストフィールドを持つ RDS・MongoDB のベクトルストアでも使える
     ['ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless のベクトルストアで利用できる', 'ハイブリッドは、フィルタ可能なテキストフィールドを持つ Amazon OpenSearch Serverless、Amazon RDS (Aurora PostgreSQL)、MongoDB Atlas のベクトルストアで利用できる'],
     ['(他の構成では SEMANTIC のみ)', '(これら以外のベクトルストアや、フィルタ可能なテキストフィールドを持たない構成では SEMANTIC のみ)'],
+    // 参考文献は AIP_DOMAIN4_REFERENCE_ROWS で1行追加するため、冒頭の件数表示も合わせる（原本で「36件」はこの1箇所のみ）
+    ['36件', '37件'],
 ];
 
 /** 原本の参照表へ追加する行。after は直前行の URL セルと一致させ、cells の末尾を URL とする。 */

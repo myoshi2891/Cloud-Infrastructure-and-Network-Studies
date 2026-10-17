@@ -5,6 +5,7 @@ import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guid
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
 import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
 import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
+import domain4Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
 import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 const count = (text: string, part: string) => text.split(part).length - 1;
@@ -23,10 +24,11 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
     });
 
     it.each([
-        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS],
-        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS],
-    ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections) => {
-        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems].join('\n');
+        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, []],
+        // 冒頭の件数表示はinventoryに含まれないため、domain4はfidelity fixtureの全文も照合対象にする
+        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, Object.values(domain4Fidelity.guideParts).map(part => part.text)],
+    ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections, extra) => {
+        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems, ...extra].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
     });
 
