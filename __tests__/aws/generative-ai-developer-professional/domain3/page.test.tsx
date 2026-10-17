@@ -41,3 +41,14 @@ describe('AIP domain3 independent complete inventory', () => {
 
     });
 });
+
+it('makes every source table horizontally scrollable by keyboard with an accessible label', () => {
+    const { container } = render(<Page />);
+    const wrappers = container.querySelectorAll('.table-scroll');
+    expect(wrappers).toHaveLength(44);
+    wrappers.forEach(wrapper => {
+        expect(wrapper).toHaveAttribute('tabindex', '0');
+        expect(wrapper).toHaveAttribute('role', 'region');
+        expect(wrapper.getAttribute('aria-label')?.trim()).toBeTruthy();
+    });
+});
