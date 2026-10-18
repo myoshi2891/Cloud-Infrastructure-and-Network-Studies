@@ -1,4 +1,5 @@
 # AWS Certified Advanced Networking - Specialty (ANS-C01)
+
 # Content Domain 2: Network Implementation(ネットワークの実装)初学者向けステップバイステップ解説
 
 > 対象試験: AWS Certified Advanced Networking - Specialty (ANS-C01)
@@ -1229,9 +1230,9 @@ import boto3
 ec2 = boto3.client("ec2")
 
 def handler(event, context):
-    detail = event["detail"]
-    group_id = detail["requestParameters"]["groupId"]
-    for perm in detail["requestParameters"]["ipPermissions"]["items"]:
+    params = event["detail"]["requestParameters"]
+    group_id = params["groupId"]
+    for perm in normalize_permissions(params):
         if not exposes_ssh(perm):
             continue
         for rng in perm.get("ipRanges", {}).get("items", []):
@@ -1249,6 +1250,24 @@ def handler(event, context):
                 GroupId=group_id,
                 IpPermissions=[ip_permission],
             )
+
+def normalize_permissions(params):
+    """ipPermissions.items 形式と、トップレベルの IpProtocol/FromPort/ToPort/CidrIp 形式を同じ形にそろえる"""
+    if "ipPermissions" in params:
+        return params["ipPermissions"].get("items", [])
+    # CloudTrail はキャメルケースで記録するため、両方の表記を受け付ける
+    def get(name):
+        return params.get(name[0].lower() + name[1:], params.get(name))
+    protocol = get("IpProtocol")
+    if protocol is None:
+        return []
+    perm = {"ipProtocol": protocol}
+    if get("FromPort") is not None:
+        perm["fromPort"] = get("FromPort")
+        perm["toPort"] = get("ToPort")
+    cidr = get("CidrIp")
+    perm["ipRanges"] = {"items": [{"cidrIp": cidr}] if cidr else []}
+    return [perm]
 
 def exposes_ssh(perm):
     """TCPの22番を含むルール(0-65535 などの範囲指定、全プロトコル -1 を含む)か判定する"""
