@@ -25,6 +25,11 @@ function checkLists(text: string) {
  expect(declarations(text, '.aip-domain4-page #sidebarNav ul')['list-style']).toBe('none');
 }
 describe('Domain 4 source design declaration fidelity', () => {
+ it('stacks the open mobile sidebar above the sticky quiz bar and keeps the menu button above the sidebar', () => {
+  const z = (selector: string) => Number(declarations(css, selector)['z-index']);
+  expect(z('.aip-domain4-page .sidebar')).toBeGreaterThan(z('.aip-domain4-page .quiz-bar'));
+  expect(z('.aip-domain4-page .sidebar-toggle')).toBeGreaterThan(z('.aip-domain4-page .sidebar'));
+ });
  it('retains every effective source declaration including responsive layout and syntax colors', () => {
   const effective = new Map<string, { selector: string; media: string; declarations: Record<string, string> }>();
   for (const rule of fixture.guideDesign.rules) { if (rule.selector === ':root') continue; const key = rule.selector + '\0' + rule.media; const previous = effective.get(key); const sourceDeclarations: Record<string,string> = {...previous?.declarations}; for(const [prop,value] of Object.entries(rule.declarations))if(typeof value==='string')sourceDeclarations[prop]=value; effective.set(key, { selector:rule.selector,media:rule.media,declarations:sourceDeclarations }); }
