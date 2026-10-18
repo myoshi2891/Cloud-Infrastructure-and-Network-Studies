@@ -536,7 +536,7 @@ aws ram create-resource-share \
 | ルートテーブル | サブネットごとに1つ関連付け。最長プレフィックス一致で転送先を決定 | `local` ルートは削除できない。サブネットは明示関連付けがなければメインルートテーブルを使う |
 | インターネットゲートウェイ(IGW) | パブリック通信の出入口 | パブリックサブネット = IGWへのルートがあるサブネット |
 | NATゲートウェイ | プライベートサブネットから外部への**送信のみ**を許可 | AZごとに配置して冗長化。AZ間通信を避ける |
-| Egress-only IGW | **IPv6**のプライベート送信用(NATのIPv6版の位置づけ) | IPv6は「NATではなくEgress-only IGW」 |
+| Egress-only IGW | **IPv6**の送信専用ゲートウェイ。VPC内から外部への送信と、その戻り通信だけを許可する(アドレス変換は行わない) | IPv6の送信専用通信は「NATではなくEgress-only IGW」 |
 | DHCPオプションセット | DNSサーバー、ドメイン名、NTPなどをVPC内に配布 | 1VPCに1つ関連付け。変更不可で、新規作成して差し替える |
 | VPCのDNS属性 | `enableDnsSupport`(Amazon提供DNSの有効化)、`enableDnsHostnames` | **プライベートホストゾーンとInterface Endpointのプライベート DNS には両方が `true`** が必要 |
 | セキュリティグループ(SG) | インスタンス(ENI)単位の**ステートフル**フィルタ。許可ルールのみ | SG同士を参照できる(同一リージョンのPeering先でも参照可) |
