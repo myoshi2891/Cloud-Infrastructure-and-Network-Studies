@@ -481,7 +481,8 @@ AWS Resource Access Manager(RAM)は、**リソースを他のアカウントやO
 | Transit Gateway | 中央のTGWに他アカウントのVPCをアタッチ |
 | VPC サブネット(共有VPC) | 複数アカウントが同じVPCのサブネットにリソースを配置 |
 | Route 53 Resolver ルール | 転送ルールを全アカウントで利用 |
-| Direct Connect Gateway(関連付けの許可) | アカウントを跨いだDXGW運用(許可モデル) |
+
+Direct Connect Gateway は AWS RAM の共有対象ではありません。別アカウントの VGW や Transit Gateway を関連付けるときは、そのアカウントが**関連付けの提案(association proposal)**を作成し、DXGW の所有者アカウントが承認します。
 
 実装手順(Organizations有効 → RAMで組織共有を有効化 → リソース共有を作成)です。
 
@@ -614,9 +615,14 @@ PrivateLink は、**VPCのプライベートIPアドレス(ENI)経由で、サ�
 | エンドポイントの種類 | 説明 | 主な用途 |
 |---|---|---|
 | Interface Endpoint | サブネットにENIを作成し、プライベートIPでサービスへ接続 | AWSサービス、他アカウントのサービス、SaaS |
-| Gateway Endpoint | **ルートテーブルのエントリ**で到達(**S3とDynamoDBのみ**)。無料 | S3/DynamoDBへのプライベート接続 |
 | Gateway Load Balancer Endpoint | GWLBへトラフィックを透過的に送る | 検査VPCへの挿入 |
 | Resource / Service Network Endpoint | VPC Lattice のリソースやサービスネットワークへ接続 | 新しいアプリ接続パターン |
+
+Gateway VPC Endpoint は **PrivateLink を使わない**別方式です。ENIを作らず、ルートテーブルのエントリで到達します。
+
+| エンドポイントの種類(PrivateLink 以外) | 説明 | 主な用途 |
+|---|---|---|
+| Gateway Endpoint | **ルートテーブルのエントリ**で到達(**S3とDynamoDBのみ**)。無料 | S3/DynamoDBへのプライベート接続 |
 
 自分のサービスを他アカウントに公開する(エンドポイントサービス)流れです。
 
@@ -1231,7 +1237,7 @@ ec2 = boto3.client("ec2")
 
 def handler(event, context):
     params = event["detail"]["requestParameters"]
-    group_id = params["groupId"]
+    group_id = resolve_group_id(params)
     for perm in normalize_permissions(params):
         if not exposes_ssh(perm):
             continue
@@ -1250,6 +1256,16 @@ def handler(event, context):
                 GroupId=group_id,
                 IpPermissions=[ip_permission],
             )
+
+def resolve_group_id(params):
+    """groupId がなく groupName だけのイベントでは、名前からセキュリティグループIDを引く"""
+    if params.get("groupId"):
+        return params["groupId"]
+    group_name = params.get("groupName")
+    if not group_name:
+        raise ValueError("requestParameters に groupId も groupName もありません")
+    groups = ec2.describe_security_groups(GroupNames=[group_name])["SecurityGroups"]
+    return groups[0]["GroupId"]
 
 def normalize_permissions(params):
     """ipPermissions.items 形式と、トップレベルの IpProtocol/FromPort/ToPort/CidrIp 形式を同じ形にそろえる"""
