@@ -52,6 +52,9 @@ export const AIP_DOMAIN3_CORRECTIONS: readonly Correction[] = [
     // bedrock:GuardrailIdentifier による強制は4つの推論APIだけに効くため、Q2の要件と解説をその範囲に限定する
     ['社内の全開発者が Bedrock を呼ぶ際、', '社内の全開発者が Bedrock の推論 API（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream）を呼ぶ際、'],
     ['条件キーでガードレールなしの推論を拒否できる。', '条件キーで、これら 4 つの推論 API でガードレールなしの呼び出しを拒否できる。'],
+    // Step 20-1・Step 22 の要約セルも、条件キーが効く4つの推論APIに範囲を限定する
+    ['IAM 条件キー bedrock:GuardrailIdentifier', 'IAM 条件キー bedrock:GuardrailIdentifier（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream にのみ適用）', 'ガードレール利用を全員に強制'],
+    ['bedrock:GuardrailIdentifier', 'bedrock:GuardrailIdentifier（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream にのみ適用）', 'ガードレール強制'],
     // 生成SQLはリクエストごとに変わりうるため、同じ数値になるのは同じSQLを同じデータに実行した場合だけ
     ['数値は DB から取得するため、同じデータなら同じ結果になる（決定的）', '数値は LLM ではなく DB が計算するため推測によるぶれはない。ただし生成される SQL はリクエストごとに変わりうるため、同じ結果になるのは同じ SQL を同じデータに実行した場合に限る。毎回同じ数値が必要な集計は、検証済みの固定クエリやパラメータ化テンプレートを使う'],
     // Contextual grounding check は英語・フランス語・スペイン語のみ対応のため、Q3の前提を対応言語の RAG に限定する（Task31 と整合）
