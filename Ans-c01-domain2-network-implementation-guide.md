@@ -201,7 +201,7 @@ Accelerated Site-to-Site VPN は、通信を**AWS Global Acceleratorのエッジ
 | 暗号化・認証・DHグループ | 既定は複数許可。**トンネルオプションで厳格に制限可能**(例: AES256、SHA2-256以上、DHグループ14以上) |
 | NAT-T(NATトラバーサル) | UDP 4500。オンプレ側がNAT配下の場合に必要 |
 | 事前共有キー(PSK) | 既定は自動生成。Secrets Manager連携や証明書認証(ACM Private CA)も選択可能 |
-| トンネル内アドレス | `169.254.0.0/16` のリンクローカル `/30` |
+| トンネル内アドレス | IPv4: `169.254.0.0/16` から割り当てるリンクローカル `/30`。IPv6: `fd00::/8` から割り当てる `/126`(IPv6 の内側アドレスを指定しない場合、AWS は既定で `/128` を割り当てる) |
 | 外側/内側のIPバージョン | VGWではIPv6トラフィック非対応。外側トンネルアドレスにIPv6を使うにはTransit GatewayまたはCloud WANが必要。1つのVPN接続でIPv4とIPv6のパケットを同時には運べない(両方必要ならVPN接続を分ける) |
 | DPD(Dead Peer Detection) | トンネル死活検知。タイムアウト時のアクション(clear / restart / none)を設定 |
 | MTU | IPsecのオーバーヘッドで実効MTUが小さくなる。Site-to-Site VPN は **PMTUD(Path MTU Discovery)に対応しない**ため、使用する暗号スイートに合わせてオンプレ側の MTU / MSS を調整し、**MSS clamping** を検討する |
@@ -905,7 +905,7 @@ flowchart TD
 
 #### 4.5.1 VPCの標準リゾルバー(`.2` アドレス)
 
-各VPCには、VPC CIDRのベースアドレス+2(例: `10.0.0.2`)と `169.254.169.253` で**Route 53 Resolver**が提供されます。VPC内のリソースはこれで、PHZ・VPC内部DNS名・パブリックDNSを解決できます。**VPCの外(オンプレなど)からは、このアドレスにはそのままでは問い合わせできません**。
+各VPCには、IPv4ではVPC CIDRのベースアドレス+2(例: `10.0.0.2`)と `169.254.169.253`、IPv6(Nitro ベースのインスタンス)では `fd00:ec2::253` で**Route 53 Resolver**が提供されます。VPC内のリソースはこれで、PHZ・VPC内部DNS名・パブリックDNSを解決できます。**VPCの外(オンプレなど)からは、このアドレスにはそのままでは問い合わせできません**。
 
 #### 4.5.2 インバウンドエンドポイントとアウトバウンドエンドポイント
 
@@ -1216,7 +1216,7 @@ flowchart LR
 | CloudWatch アラーム | メトリクス(VPNトンネル状態、DX接続状態)をトリガーに |
 | Route 53 ヘルスチェック + Failover | DNSレベルの自動切替(アプリの死活監視) |
 
-EventBridgeルールの例(SGに `0.0.0.0/0` のSSH許可を追加した操作を検知):
+EventBridgeルールの例(すべての `AuthorizeSecurityGroupIngress` イベントを受信する。このルール自体は SSH や `0.0.0.0/0` で絞り込まず、追加されたインバウンドルールが `0.0.0.0/0` からの SSH を許可しているかは後段の Lambda が判定する):
 
 ```json
 {
