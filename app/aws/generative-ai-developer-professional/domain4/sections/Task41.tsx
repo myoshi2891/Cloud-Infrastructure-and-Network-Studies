@@ -62,7 +62,7 @@ export default function Task41() { return <div className="guide-part" data-part=
 {" "}
 <p>{" 「モデルの単価」だけで比べるのは危険です。"}<strong>{"1 タスクを成功させる総コスト"}</strong>{" で比べます。 "}</p>
 {" "}
-<div className="table-scroll" tabIndex={0} role="region" aria-label="3-4. 価格性能比の測り方の表 11">{" "}<table><thead><tr className="header"><th scope="col">{"指標"}</th><th scope="col">{"計算"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"リクエスト単価"}</td><td>{"入力トークン × 入力単価 + 出力トークン × 出力単価"}</td><td>{"基本コスト"}</td></tr><tr className="even"><td>{"成功あたりコスト"}</td><td>{"総コスト ÷ 成功タスク数"}</td><td>{"失敗や再試行を含めた実質コスト"}</td></tr><tr className="odd"><td>{"品質スコア"}</td><td>{"ゴールデンデータセットでの正答率や評価スコア"}</td><td>{"品質の定量化"}</td></tr><tr className="even"><td>{"価格性能比"}</td><td>{"品質スコア ÷ 成功あたりコスト"}</td><td>{"高いほど効率的"}</td></tr></tbody></table>{" "}</div>
+<div className="table-scroll" tabIndex={0} role="region" aria-label="3-4. 価格性能比の測り方の表 11">{" "}<table><thead><tr className="header"><th scope="col">{"指標"}</th><th scope="col">{"計算"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"リクエスト単価"}</td><td>{"入力トークン × 入力単価 + 出力トークン × 出力単価"}</td><td>{"基本コスト"}</td></tr><tr className="even"><td>{"成功あたりコスト"}</td><td>{"総コスト ÷ 成功タスク数"}</td><td>{"失敗や再試行を含めた実質コスト"}</td></tr><tr className="odd"><td>{"品質スコア"}</td><td>{"ゴールデンデータセットでの正答率や評価スコア"}</td><td>{"品質の定量化"}</td></tr><tr className="even"><td>{"価格性能比"}</td><td>{"品質スコア ÷ リクエスト単価 (成功率は品質スコアに含まれるため、成功あたりコストでは割らない)"}</td><td>{"高いほど効率的"}</td></tr></tbody></table>{" "}</div>
 {" "}
 <p><strong>{"仮想の計算例"}</strong>{" (数字は説明用の架空値です)"}</p>
 {" "}

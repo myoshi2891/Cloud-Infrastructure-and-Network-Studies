@@ -31,7 +31,7 @@ export default function Foundation() { return <div className="guide-part" data-p
 {" "}
 <h3 id="1-1-トークンとは" tabIndex={-1}>{"1-1. トークンとは"}</h3>
 {" "}
-<p>{" LLM は文字ではなく "}<strong>{"トークン"}</strong>{" という単位でテキストを処理します。課金、速度、上限 (コンテキストウィンドウ)、クォータのすべてがトークンを基準にします。 "}</p>
+<p>{" LLM は文字ではなく "}<strong>{"トークン"}</strong>{" という単位でテキストを処理します。トークン数は多くの推論の課金、速度、上限 (コンテキストウィンドウ)、TPM クォータに影響します。ただし RPM クォータはリクエスト数で数え、Provisioned Throughput は確保した推論容量に課金されるため、すべての課金とクォータがトークン基準ではありません。 "}</p>
 {" "}
 <div className="table-scroll" tabIndex={0} role="region" aria-label="1-1. トークンとはの表 4">{" "}<table><thead><tr className="header"><th scope="col">{"用語"}</th><th scope="col">{"意味"}</th><th scope="col">{"運用上のポイント"}</th></tr></thead><tbody><tr className="odd"><td>{"入力トークン"}</td><td>{"プロンプト (システムプロンプト、履歴、検索結果、質問)"}</td><td>{"長いほど高く、遅くなる"}</td></tr><tr className="even"><td>{"出力トークン"}</td><td>{"モデルが生成する回答"}</td><td>{"一般に入力より単価が高く、生成時間の大半を占める"}</td></tr><tr className="odd"><td>{"コンテキストウィンドウ"}</td><td>{"1 回の呼び出しで扱える入出力の合計上限"}</td><td>{"超えるとエラーか切り捨てになる"}</td></tr><tr className="even"><td>{"TTFT"}</td><td>{"Time To First Token。最初のトークンが届くまでの時間"}</td><td>{"体感速度を決める"}</td></tr><tr className="odd"><td>{"TPOT / 生成速度"}</td><td>{"1 トークンあたりの生成時間"}</td><td>{"長い回答ほど合計時間が伸びる"}</td></tr><tr className="even"><td>{"TPM / RPM"}</td><td>{"1 分あたりのトークン数 / リクエスト数のクォータ"}</td><td>{"超えるとスロットリング (429)"}</td></tr></tbody></table>{" "}</div>
 {" "}
