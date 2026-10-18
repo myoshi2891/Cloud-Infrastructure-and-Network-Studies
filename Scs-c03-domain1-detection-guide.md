@@ -347,7 +347,8 @@ AWS が管理する脅威検出サービスです。ログの収集や解析の�
 ##### ベストプラクティス
 
 - すべてのリージョン、すべてのアカウントで有効化し、新規アカウントは自動有効化にする。
-- ワークロードに合わせた保護プランを有効化する (S3、EKS、Runtime、RDS、Lambda、マルウェア)。
+- ワークロードに合わせた保護プランを有効化する (S3、EKS、Runtime、RDS、Lambda、AI Protection、マルウェア)。
+- AI Protection は、GuardDuty を新たに有効化したときにだけ自動で有効になる。すでに GuardDuty を有効化済みのアカウントで既存の Amazon Bedrock、Amazon SageMaker AI 環境を保護するには、AI Protection を明示的に有効化する。
 - 検出結果は EventBridge + Security Hub で集約し、自動対応へつなぐ。
 - 抑制ルールは、必要以上に広くすると本物の脅威を見逃すため、条件を絞る。
 
