@@ -287,7 +287,7 @@ flowchart TD
 |---|---|---|---|
 | Private VIF | VGW または Direct Connect Gateway | VPCのプライベートIPへ到達 | 1 VIFで複数VPC(DXGW経由)に接続可能 |
 | Public VIF | AWSのパブリックIP(S3など) | AWSパブリックサービスへの到達 | AWSが広告するパブリックプレフィックスを受信。オンプレ側は**自分が所有するパブリックIP**を広告 |
-| Transit VIF | Direct Connect Gateway 経由で Transit Gateway | 多数のVPCをTGW経由で束ねる | 専有接続または一部のホスト接続で利用。1接続につきTransit VIFは1つが基本 |
+| Transit VIF | Direct Connect Gateway 経由で Transit Gateway | 多数のVPCをTGW経由で束ねる | 専有接続とホスト接続の両方で利用可能。上限は専有接続あたり4つ、ホスト接続あたり1つ(上限であり、一般的な構成で1接続1つに限られるわけではない) |
 
 #### 2.3.3 Direct Connect Gateway(DXGW)
 
