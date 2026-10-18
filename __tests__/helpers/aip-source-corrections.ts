@@ -62,6 +62,10 @@ export const AIP_DOMAIN3_CORRECTIONS: readonly Correction[] = [
     ['数値は DB から取得するため、同じデータなら同じ結果になる（決定的）', '数値は LLM ではなく DB が計算するため推測によるぶれはない。ただし生成される SQL はリクエストごとに変わりうるため、同じ結果になるのは同じ SQL を同じデータに実行した場合に限る。毎回同じ数値が必要な集計は、検証済みの固定クエリやパラメータ化テンプレートを使う'],
     // Contextual grounding check は英語・フランス語・スペイン語のみ対応で会話型 QA・チャットボットも対象外のため、Q3の前提を対応言語の非会話型 QA に限定する（Task31 と整合）
     ['RAG の回答が取得文書に基づいているかを', '英語・フランス語・スペイン語（Contextual grounding check の対応言語）で回答する、会話型ではない単発の質問応答 RAG（会話型の RAG チャットボットは対象外）について、回答が取得文書に基づいているかを'],
+    // Step 20-1・Step 22 の要約にも、Contextual grounding check と Automated Reasoning checks の言語・用途の制約を明記する
+    ['Contextual grounding check', 'Contextual grounding check（対応言語は英語・フランス語・スペイン語のみ。要約・言い換え・通常の QA が対象で、会話型 QA・チャットボットは対象外）', '回答が取得文書に裏付けられているか検証'],
+    ['Automated Reasoning checks', 'Automated Reasoning checks（対応言語は英語（米国）のみ。日本語の回答は検証できない）', '論理ルールで回答の正確性を検証'],
+    ['KB 根拠付け → Contextual grounding → Automated Reasoning → JSON Schema 検証', 'KB 根拠付け → Contextual grounding（英語・フランス語・スペイン語の非会話型 QA のみ） → Automated Reasoning → JSON Schema 検証'],
     // Word filters は英語・フランス語・スペイン語のみ対応のため、日本語の禁止語は別の手段で照合する
     ['特定の語句・不適切語を完全一致で遮断', '特定の語句・不適切語を完全一致で遮断（対応言語は英語・フランス語・スペイン語で、日本語は非対応。日本語の禁止語は Lambda の前処理・後処理で、検証済みの日本語辞書による照合を行う）'],
     // Macie が検出できるのは対応ファイル形式とデータ識別子で定義した PII 種別だけのため、検査範囲を確認してから取り込む
