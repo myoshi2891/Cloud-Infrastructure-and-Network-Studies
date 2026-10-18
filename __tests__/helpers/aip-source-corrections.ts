@@ -55,6 +55,9 @@ export const AIP_DOMAIN3_CORRECTIONS: readonly Correction[] = [
     // Step 20-1・Step 22 の要約セルも、条件キーが効く4つの推論APIに範囲を限定する
     ['IAM 条件キー bedrock:GuardrailIdentifier', 'IAM 条件キー bedrock:GuardrailIdentifier（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream にのみ適用）', 'ガードレール利用を全員に強制'],
     ['bedrock:GuardrailIdentifier', 'bedrock:GuardrailIdentifier（Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream にのみ適用）', 'ガードレール強制'],
+    // CloudWatch Logs のデータ保護は表示時のマスクで、保存値は残り logs:Unmask で参照できるため、要約2行に範囲を明記する
+    ['CloudWatch Logs データ保護ポリシー', 'CloudWatch Logs データ保護ポリシー（表示時にマスクするだけで、保存されたログは元の値のまま。logs:Unmask 権限を持つプリンシパルは元の値を参照できる）', 'ログ中の機密を自動マスク'],
+    ['ログ=CloudWatch Logs データ保護', 'ログ=CloudWatch Logs データ保護（表示時にマスクするだけで、保存されたログは元の値のまま。logs:Unmask 権限を持つプリンシパルは元の値を参照できる）'],
     // 生成SQLはリクエストごとに変わりうるため、同じ数値になるのは同じSQLを同じデータに実行した場合だけ
     ['数値は DB から取得するため、同じデータなら同じ結果になる（決定的）', '数値は LLM ではなく DB が計算するため推測によるぶれはない。ただし生成される SQL はリクエストごとに変わりうるため、同じ結果になるのは同じ SQL を同じデータに実行した場合に限る。毎回同じ数値が必要な集計は、検証済みの固定クエリやパラメータ化テンプレートを使う'],
     // Contextual grounding check は英語・フランス語・スペイン語のみ対応のため、Q3の前提を対応言語の RAG に限定する（Task31 と整合）
