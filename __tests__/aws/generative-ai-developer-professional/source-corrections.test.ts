@@ -88,6 +88,8 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(q3?.stem).not.toContain('配送状況はどうなっていますか');
         expect(q3?.explanation).toContain('全ユーザー共通で変化の少ない FAQ はセマンティックキャッシュに向きます');
         expect(q3?.explanation).toContain('キャッシュせず都度取得');
+        // クイズfixture自体が表示内容と一致し、訂正による差分の吸収に頼らない
+        expect(rawQuiz4.find(question => question.id === 'q3')).toEqual(q3);
     });
 
     it('domain4: 使用量記録の例が機能・モデル別だけを記録することと、テナント別に集計する方法を明記する', () => {
