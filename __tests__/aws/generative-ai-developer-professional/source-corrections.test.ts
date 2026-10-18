@@ -6,6 +6,7 @@ import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guid
 import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
 import domain3Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.fidelity.json';
 import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
+import rawQuiz4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.quiz.json';
 import domain4Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
 import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
@@ -28,7 +29,7 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
         ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, Object.values(domain3Fidelity.guideParts).flatMap(part => part.diagrams)],
         // 冒頭の件数表示はinventoryに含まれないため、domain4はfidelity fixtureの全文も照合対象にする
-        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, Object.values(domain4Fidelity.guideParts).flatMap(part => [part.text, ...part.diagrams])],
+        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, [...Object.values(domain4Fidelity.guideParts).flatMap(part => [part.text, ...part.diagrams]), JSON.stringify(rawQuiz4)]],
     ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections, extra) => {
         const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems, ...extra].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
@@ -77,6 +78,23 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         const lines = chart.split('\n');
         expect(lines.filter(line => line.endsWith('| HIT'))).toEqual(['TEX -->|"はい"| HIT', 'TSEM -->|"はい"| HIT']);
         expect(lines).toEqual(expect.arrayContaining(['TEX -->|"いいえ"| EMB', 'TSEM -->|"いいえ"| FM', 'SEM -->|"いいえ"| FM', 'FM --> STORE', 'STORE --> HIT']));
+    });
+
+    it('domain4: Q3のセマンティックキャッシュ例を公開済みの送料FAQにし、解説も同じ前提にする', () => {
+        const corrected = withSourceCorrections(rawQuiz4, AIP_DOMAIN4_CORRECTIONS);
+        const q3 = corrected.find(question => question.id === 'q3');
+        expect(q3?.answer).toEqual(['B']);
+        expect(q3?.stem).toContain('「送料はいくらですか」「配送料金を教えてください」');
+        expect(q3?.stem).not.toContain('配送状況はどうなっていますか');
+        expect(q3?.explanation).toContain('全ユーザー共通で変化の少ない FAQ はセマンティックキャッシュに向きます');
+        expect(q3?.explanation).toContain('キャッシュせず都度取得');
+    });
+
+    it('domain4: 使用量記録の例が機能・モデル別だけを記録することと、テナント別に集計する方法を明記する', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
+        const point = corrected.bodyContent.find(block => block.text.includes('「どの機能がコストを食っているか」'))?.text ?? '';
+        expect(point).toContain('この例は機能 (Feature) とモデル別のメトリクスだけを記録します');
+        expect(point).toContain('Dimensions とイベントのルートの両方に TenantId を加えます');
     });
 
     it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {

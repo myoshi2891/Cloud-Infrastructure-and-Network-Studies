@@ -1,7 +1,10 @@
 import { render, fireEvent, within } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import Guide from '@/app/aws/generative-ai-developer-professional/domain4/AipDomain4Guide';
-import quiz from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.quiz.json';
+import rawQuiz from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.quiz.json';
+import { AIP_DOMAIN4_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+// 原本fixtureは改変せず、表示の期待値にだけ訂正を適用する
+const quiz = withSourceCorrections(rawQuiz, AIP_DOMAIN4_CORRECTIONS);
 import { normalizeSpaces } from '@/__tests__/helpers/migration-test-utils';
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 const cardFor=(container:HTMLElement,id:string)=>{const card=container.querySelector<HTMLElement>(`#${id}`);expect(card).not.toBeNull();if(!card)throw Error(`Missing ${id}`);return card;};
