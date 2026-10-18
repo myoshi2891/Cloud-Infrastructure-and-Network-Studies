@@ -11,11 +11,11 @@ export default function NavBar() {
     // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
     useEffect(() => {
         if (!open) return;
-        const escape = (event: KeyboardEvent) => {
+        const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') { setOpen(false); toggleRef.current?.focus(); }
         };
-        document.addEventListener('keydown', escape);
-        return () => document.removeEventListener('keydown', escape);
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
     }, [open]);
     useEffect(() => {
         const visibleIds = new Set<string>();
