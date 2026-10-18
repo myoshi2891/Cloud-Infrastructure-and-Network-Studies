@@ -10,7 +10,9 @@ const declarations=(selector:string,media='')=>{const result:Record<string,strin
  if(compact(rule.selector)===compact(selector)&&context===media)rule.walkDecls(decl=>{result[decl.prop]=decl.value;});
 });return result;};
 const tokens:Record<string,string>={};postcss.parse(readFileSync('app/globals.css','utf8')).walkDecls(d=>{if(d.prop.startsWith('--'))tokens[d.prop]=d.value;});
-const sourceTokens=fixture.guideDesign.rules.find(r=>r.selector===':root')?.declarations??{};
+// 原本fixtureは改変せず、--successだけWCAG AA（白・--color-aip-d3-6の両方に4.5:1以上）を満たす濃い緑へ訂正する
+const rootTokens=Object.entries(fixture.guideDesign.rules.find(r=>r.selector===':root')?.declarations??{}).filter((entry):entry is [string,string]=>typeof entry[1]==='string');
+const sourceTokens:Record<string,string>={...Object.fromEntries(rootTokens),'--success':'#18794a'};
 const resolve=(v:string,vars:Record<string,string>)=>v.replace(/var\((--[\w-]+)\)/g,(_,n:string)=>vars[n]??`MISSING:${n}`).replace(/\s+/g,'').toLowerCase();
 describe('Domain 3 full source design',()=>{
  it('preserves every applicable source declaration, including responsive and quiz styling',()=>{
