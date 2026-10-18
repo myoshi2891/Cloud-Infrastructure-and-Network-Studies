@@ -48,7 +48,7 @@ it('scores all 12 questions once and resets score, progress, selections, explana
  fireEvent.click(within(container).getByRole('button',{name:'やり直す'}));
  expect(container.querySelector('.score')).toHaveTextContent('正解数 0 / 12');expect(container.querySelector('.fill')).toHaveStyle({width:'0%'});
  expect(container.querySelectorAll('.selected,.correct,.wrong')).toHaveLength(0);
- container.querySelectorAll('.q-explain').forEach(el=>expect(el).toHaveAttribute('hidden'));
- container.querySelectorAll('.q-opt').forEach(el=>expect(el).not.toBeDisabled());
- container.querySelectorAll('.q-check').forEach(el=>expect(el).toBeDisabled());
+ container.querySelectorAll('.q-explain').forEach(el=>{expect(el).toHaveAttribute('hidden');});
+ container.querySelectorAll('.q-opt').forEach(el=>{expect(el).not.toBeDisabled();});
+ container.querySelectorAll('.q-check').forEach(el=>{expect(el).toBeDisabled();});
 });
