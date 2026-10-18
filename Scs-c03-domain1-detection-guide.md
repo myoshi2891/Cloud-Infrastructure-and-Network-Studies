@@ -321,7 +321,7 @@ AWS が管理する脅威検出サービスです。ログの収集や解析の�
 | Malware Protection for S3 | S3 にアップロードされたオブジェクトのスキャン | ユーザーアップロードを受ける環境 |
 | Malware Protection for AWS Backup | バックアップのマルウェアスキャン | バックアップの感染確認 |
 
-- 公式ドキュメントによると、初めて GuardDuty を有効にすると、S3 Protection、EKS Protection、RDS Protection、Lambda Protection、Malware Protection for EC2 (GuardDuty が開始するマルウェアスキャン) が自動で有効になり、GuardDuty 本体の 30 日間の無料トライアルに含まれます。
+- 公式ドキュメントによると、初めて GuardDuty を有効にすると、S3 Protection、EKS Protection、RDS Protection、Lambda Protection、AI Protection、Malware Protection for EC2 (GuardDuty が開始するマルウェアスキャン) が自動で有効になり、GuardDuty 本体の 30 日間の無料トライアルに含まれます。
 - Runtime Monitoring は既定では有効にならず、有効化すると個別の 30 日間の無料トライアルがあります。
 - Malware Protection for S3、Malware Protection for AWS Backup、Malware Protection for EC2 のオンデマンドスキャンは既定では有効にならず、30 日間の無料トライアルの対象外です (Malware Protection for S3 には別途 Free Tier があります)。
 - Malware Protection for S3 は、GuardDuty サービス本体を有効化しなくても単体で使えます。
@@ -1184,14 +1184,14 @@ API Gateway (REST API) のステージで実行ログを有効にしたのに、
 
 ### 問題 6
 
-Security Hub CSPM のコントロールの評価結果が表示されない。最も可能性の高い原因は何か。
+Security Hub CSPM のコントロールの評価結果が不正確になる (実際の設定と合わない WARNING や FAILED が表示される)。最も可能性の高い原因は何か。
 
 <details>
 <summary>答えを見る</summary>
 
-答え: AWS Config の構成レコーダーが有効になっていない (リソースの記録がされていない)。
+答え: AWS Config の構成レコーダーが、該当する Security Hub CSPM コントロールが必要とするリソースタイプを記録していない (レコーダーが無効、または記録対象のリソースタイプが不足している)。
 
-解説: Security Hub CSPM の多くのコントロールは、Config のルールを基に評価されます。
+解説: Security Hub CSPM の多くのコントロールは、Config のルールを基に評価されます。そのため、有効にしたコントロールが評価に使うリソースタイプを Config の構成レコーダーで記録する必要があります。記録されていないと、評価結果が WARNING や FAILED などの不正確な値になります。
 
 </details>
 
