@@ -129,7 +129,7 @@ flowchart TD
 
 | 手段 | 通信経路 | 帯域 | 暗号化 | 開通までの時間 | 主な用途 |
 |---|---|---|---|---|---|
-| Site-to-Site VPN | インターネット経由(IPsec) | 標準トンネルは1トンネルあたり最大1.25 Gbps。Large Bandwidth Tunnel(Transit Gateway / Cloud WAN接続時のみ)は1トンネルあたり最大5 Gbps。Large Bandwidth TunnelはAccelerated VPNと併用不可 | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
+| Site-to-Site VPN | インターネット経由(IPsec) | 標準トンネルは1トンネルあたり最大1.25 Gbps。Large Bandwidth Tunnel(Transit Gateway / Cloud WAN接続時のみ)は1トンネルあたり最大5 Gbps。Large Bandwidth TunnelはAccelerated VPNと併用不可。1つのVPN接続の2トンネルは同じ帯域設定(両方標準、または両方Large Bandwidth)にする必要がある | IPsecで暗号化 | 数分〜数時間 | 素早い開通、バックアップ回線 |
 | Direct Connect | 専用線(AWSバックボーン) | 1/10/100/400 Gbps(専有)など | 既定は暗号化なし(MACsec/VPN併用で暗号化) | 数週間〜数か月 | 大容量、低遅延、安定した品質 |
 | Direct Connect + VPN | 専用線の上にIPsec | VPN側の上限に依存 | 暗号化あり | Direct Connect次第 | 専用線で暗号化も必須の場合 |
 
@@ -942,7 +942,7 @@ flowchart TD
 
 | 項目 | 内容 |
 |---|---|
-| IPアドレス | **最低2つ(別AZ推奨)**。1つあたり**秒間約10,000クエリ**が目安 |
+| IPアドレス | **最低2つ(別AZ推奨)**。1つあたり**UDPで秒間最大約10,000クエリ**が目安(プロトコルを問わない上限ではなく、クエリの種類・応答サイズなどで実際の処理量は変動) |
 | セキュリティグループ | インバウンド: オンプレのDNSからの TCP/UDP 53。アウトバウンド: オンプレDNSへの TCP/UDP 53 |
 | 通信経路 | Direct Connect または VPN(プライベート経路) |
 | ルールの種類 | **Forward**(指定先へ転送)、**System**(転送しない例外を作る:より具体的なドメインで標準解決へ戻す)、Autodefined(AWS内部名用の自動ルール) |
