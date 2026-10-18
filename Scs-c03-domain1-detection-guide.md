@@ -545,7 +545,7 @@ aws configservice put-organization-conformance-pack \
 | ELB (ALB/NLB) アクセスログ | ロードバランサーへのリクエスト | S3 | アクセス分析 |
 | AWS WAF ログ | WAF が検査したリクエスト | CloudWatch Logs、S3、Firehose | 攻撃パターンの分析 |
 | CloudFront ログ | CDN のリクエスト | S3、CloudWatch Logs、Firehose など | 配信・攻撃の分析 |
-| API Gateway ログ | アクセスログと実行ログ | CloudWatch Logs、Firehose | API の利用・エラー分析 |
+| API Gateway ログ | アクセスログと実行ログ (実行ログは REST API・WebSocket API のみ) | CloudWatch Logs、Firehose | API の利用・エラー分析 |
 | Lambda ログ | 関数の標準出力 | CloudWatch Logs | アプリケーション解析 |
 | S3 サーバーアクセスログ | バケットへのリクエスト | S3 | アクセス分析 (網羅性や即時性は CloudTrail データイベントの方が高い) |
 | Config | リソースの構成履歴 | S3、Config コンソール | 構成の変更追跡 |
@@ -704,7 +704,7 @@ flowchart LR
 | サービス | 設定の要点 |
 |---|---|
 | Lambda | 実行ロールにログ書き込み権限 (`logs:CreateLogGroup`、`logs:CreateLogStream`、`logs:PutLogEvents`) が必要。AWS 管理ポリシー `AWSLambdaBasicExecutionRole` が使える |
-| API Gateway | ステージごとにアクセスログと実行ログを有効化。アカウントレベルで CloudWatch Logs 用の IAM ロールの ARN を設定する必要がある |
+| API Gateway | REST API・WebSocket API はステージごとに実行ログ (必要に応じてアクセスログも) を有効化し、アカウントレベルで CloudWatch Logs 用の IAM ロールの ARN を設定する必要がある。HTTP API は実行ログがなく、ステージのアクセスログを有効化して出力先のロググループを設定する (アカウントレベルの IAM ロールは不要) |
 | CloudFront | 標準ログの出力先 (S3、CloudWatch Logs、Firehose) を設定する。出力先のバケットや権限の設定が必要 |
 | S3 | セキュリティ監査には CloudTrail データイベントを使う。S3 サーバーアクセスログは補助的 |
 | ALB/NLB | アクセスログを S3 に出力。バケットポリシーで配信を許可する |
@@ -987,7 +987,7 @@ flowchart TD
 |---|---|---|---|
 | Lambda | CloudWatch に「ロググループが存在しない」と出る | 実行ロールにログ書き込み権限がない。または、まだ一度も実行されていない | 実行ロールに `logs:CreateLogGroup`、`logs:CreateLogStream`、`logs:PutLogEvents` を許可 (`AWSLambdaBasicExecutionRole`)。リソース ARN のリージョンと関数名も確認 |
 | Lambda (VPC 内) | ログが出ない | 主因は実行ロールにログ書き込み権限がないこと。標準の関数ログは Lambda サービスが送信するため VPC 経路は不要。関数コードや拡張機能が CloudWatch Logs API を直接呼ぶ場合に限り、VPC エンドポイントや NAT 経路の欠如も原因になる | まず実行ロールの `logs:CreateLogStream`、`logs:PutLogEvents` などを確認 (VPC 接続には `AWSLambdaVPCAccessExecutionRole` が必要)。コードや拡張機能が API を直接呼ぶ場合のみ、CloudWatch Logs 用 VPC エンドポイントやルートを確認 |
-| API Gateway | ログが一切出ない | 既定ではログは出力されない。ステージのログ設定が無効、またはアカウントレベルの CloudWatch Logs 用ロール ARN が未設定 | ステージでアクセスログと実行ログを有効化し、アカウントの設定に IAM ロール ARN を登録 |
+| API Gateway | ログが一切出ない | 既定ではログは出力されない。REST API・WebSocket API はステージの実行ログ設定が無効、またはアカウントレベルの CloudWatch Logs 用ロール ARN が未設定。HTTP API はステージのアクセスログが無効、または出力先ロググループが未設定 | REST API・WebSocket API はステージで実行ログを有効化し、アカウントの設定に IAM ロール ARN を登録。HTTP API はステージでアクセスログを有効化し、出力先ロググループを設定 |
 | CloudFront | ログが S3 に出ない | 出力先バケットの権限や設定の不備 | 標準ログの出力先と、バケットポリシー (または必要な設定) を確認 |
 | ヘルスチェック (Route 53、ELB) | 正常なのに不健全と判定される | セキュリティグループや NACL がヘルスチェック元を許可していない。ヘルスチェックのパス・ポートが誤り | チェック元からの通信を許可し、パス・ポート・期待する応答コードを確認 |
 | VPC フローログ | レコードが出ない | IAM ロール (CloudWatch Logs 宛て) や S3 バケットポリシーの不備、対象トラフィックがない | 出力先と権限を確認 |
@@ -1077,7 +1077,7 @@ sudo systemctl restart amazon-cloudwatch-agent
 | 複数アカウントの CloudWatch データを横断して見たい | クロスアカウント オブザーバビリティ |
 | 複数アカウント・リージョンのログを 1 か所にコピーしたい | CloudWatch Logs のログ集約 (centralization) |
 | Lambda のログが出ない | 実行ロールの権限 (`AWSLambdaBasicExecutionRole`) を確認 |
-| API Gateway のログが出ない | ステージのログ設定とアカウントの CloudWatch Logs 用 IAM ロールを確認 |
+| API Gateway のログが出ない | REST API・WebSocket API はステージの実行ログ設定とアカウントの CloudWatch Logs 用 IAM ロール、HTTP API はステージのアクセスログ設定と出力先ロググループを確認 |
 | ヘルスチェックが失敗する | セキュリティグループ・NACL でチェック元を許可しているか確認 |
 
 ---
@@ -1173,12 +1173,12 @@ Lambda 関数を実行したが、CloudWatch Logs にロググループが作ら
 
 ### 問題 5
 
-API Gateway のステージでログを有効にしたのに、ログが出力されない。見落としがちな設定は何か。
+API Gateway (REST API) のステージで実行ログを有効にしたのに、ログが出力されない。見落としがちな設定は何か。
 
 <details>
 <summary>答えを見る</summary>
 
-答え: アカウントレベルで、API Gateway が CloudWatch Logs に書き込むための IAM ロールの ARN を設定していない可能性がある。
+答え: アカウントレベルで、API Gateway が CloudWatch Logs に書き込むための IAM ロールの ARN を設定していない可能性がある (REST API・WebSocket API の場合)。HTTP API は実行ログを持たず、ステージのアクセスログと出力先ロググループの設定を確認する。
 
 </details>
 
