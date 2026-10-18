@@ -3,6 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from './constants';
 
+/** URL fragment が目次項目に一致すればその ID、なければ先頭項目の ID を返す。 */
+const idFromHash = (): string => {
+    const raw = window.location.hash.slice(1);
+    let hash = raw;
+    try {
+        hash = decodeURIComponent(raw);
+    } catch (error) {
+        // 不正なパーセント符号化は目次項目に一致しないため、先頭項目へ戻す
+        if (!(error instanceof URIError)) throw error;
+        return NAV_ITEMS[0].id;
+    }
+    return NAV_ITEMS.some(item => item.id === hash) ? hash : NAV_ITEMS[0].id;
+};
+
 /** モバイル開閉と見出しに連動する目次。 */
 export default function NavBar() {
     const [open, setOpen] = useState(false);
@@ -17,6 +31,17 @@ export default function NavBar() {
         document.addEventListener('keydown', escape);
         return () => document.removeEventListener('keydown', escape);
     }, [open]);
+    // サーバー描画と一致させるため初期値は先頭項目とし、マウント後と履歴移動時に fragment から同期する
+    useEffect(() => {
+        const syncFromHash = () => setActiveId(idFromHash());
+        syncFromHash();
+        window.addEventListener('hashchange', syncFromHash);
+        window.addEventListener('popstate', syncFromHash);
+        return () => {
+            window.removeEventListener('hashchange', syncFromHash);
+            window.removeEventListener('popstate', syncFromHash);
+        };
+    }, []);
     useEffect(() => {
         const visibleIds = new Set<string>();
         const observer = typeof IntersectionObserver === 'undefined' ? undefined : new IntersectionObserver(entries => {

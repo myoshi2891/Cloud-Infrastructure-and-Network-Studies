@@ -1,4 +1,4 @@
-import {render,fireEvent} from '@testing-library/react';
+import {act,render,fireEvent} from '@testing-library/react';
 import {afterEach,expect,it,vi} from 'vitest';
 import NavBar from '@/app/aws/generative-ai-developer-professional/domain4/NavBar';
 import {NAV_ITEMS} from '@/app/aws/generative-ai-developer-professional/domain4/constants';
@@ -22,4 +22,16 @@ it('opens, closes with Escape, and cleans up its observer',()=>{
 it('preserves source task group navigation decorations',()=>{
  const {container}=render(<NavBar/>);
  expect([...container.querySelectorAll('nav a.part')].map(a=>a.getAttribute('href')?.slice(1))).toEqual(fixture.guideDesign.nav.filter(item=>item.id.startsWith('task-')).map(item=>item.id));
+});
+it('syncs aria-current from a valid fragment and history navigation, falling back to the first item',()=>{
+ const current=(container:HTMLElement)=>container.querySelector('nav a[aria-current="location"]')?.getAttribute('href');
+ const target=NAV_ITEMS[2]!.id;
+ window.history.replaceState(null,'',`#${target}`);
+ const {container,unmount}=render(<NavBar/>);
+ expect(current(container)).toBe(`#${target}`);
+ act(()=>{window.history.replaceState(null,'','#unknown-section');window.dispatchEvent(new PopStateEvent('popstate'));});
+ expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
+ act(()=>{window.history.replaceState(null,'','#%E0%A4%A');window.dispatchEvent(new HashChangeEvent('hashchange'));});
+ expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
+ unmount();window.history.replaceState(null,'',window.location.pathname);
 });
