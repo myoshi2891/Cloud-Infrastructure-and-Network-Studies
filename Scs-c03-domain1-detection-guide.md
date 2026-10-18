@@ -986,7 +986,7 @@ flowchart TD
 | 対象 | よくある症状 | 原因 | 対処 |
 |---|---|---|---|
 | Lambda | CloudWatch に「ロググループが存在しない」と出る | 実行ロールにログ書き込み権限がない。または、まだ一度も実行されていない | 実行ロールに `logs:CreateLogGroup`、`logs:CreateLogStream`、`logs:PutLogEvents` を許可 (`AWSLambdaBasicExecutionRole`)。リソース ARN のリージョンと関数名も確認 |
-| Lambda (VPC 内) | ログが出ない | CloudWatch Logs への経路がない、またはコードや拡張が直接 API を呼ぶ場合にエンドポイントがない | VPC エンドポイント (CloudWatch Logs) やルートを確認 |
+| Lambda (VPC 内) | ログが出ない | 主因は実行ロールにログ書き込み権限がないこと。標準の関数ログは Lambda サービスが送信するため VPC 経路は不要。関数コードや拡張機能が CloudWatch Logs API を直接呼ぶ場合に限り、VPC エンドポイントや NAT 経路の欠如も原因になる | まず実行ロールの `logs:CreateLogStream`、`logs:PutLogEvents` などを確認 (VPC 接続には `AWSLambdaVPCAccessExecutionRole` が必要)。コードや拡張機能が API を直接呼ぶ場合のみ、CloudWatch Logs 用 VPC エンドポイントやルートを確認 |
 | API Gateway | ログが一切出ない | 既定ではログは出力されない。ステージのログ設定が無効、またはアカウントレベルの CloudWatch Logs 用ロール ARN が未設定 | ステージでアクセスログと実行ログを有効化し、アカウントの設定に IAM ロール ARN を登録 |
 | CloudFront | ログが S3 に出ない | 出力先バケットの権限や設定の不備 | 標準ログの出力先と、バケットポリシー (または必要な設定) を確認 |
 | ヘルスチェック (Route 53、ELB) | 正常なのに不健全と判定される | セキュリティグループや NACL がヘルスチェック元を許可していない。ヘルスチェックのパス・ポートが誤り | チェック元からの通信を許可し、パス・ポート・期待する応答コードを確認 |
