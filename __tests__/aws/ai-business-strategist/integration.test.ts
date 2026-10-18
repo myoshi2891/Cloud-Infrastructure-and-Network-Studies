@@ -37,6 +37,14 @@ describe('AWS AIB 完全ガイド ホーム・Header統合', () => {
                 label: 'Domain 1: AI Fundamentals and Literacy',
                 href: '/aws/ai-business-strategist/domain1',
             },
+            {
+                label: 'Domain 2: AI Strategy and Business Value Creation',
+                href: '/aws/ai-business-strategist/domain2',
+            },
+            {
+                label: 'Domain 3: AI Governance and Responsible AI',
+                href: '/aws/ai-business-strategist/domain3',
+            },
         ]);
     });
 });
