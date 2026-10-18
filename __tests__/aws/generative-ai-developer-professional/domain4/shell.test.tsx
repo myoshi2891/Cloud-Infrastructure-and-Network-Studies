@@ -1,8 +1,9 @@
 import {render,fireEvent} from '@testing-library/react';
-import {expect,it,vi} from 'vitest';
+import {afterEach,expect,it,vi} from 'vitest';
 import NavBar from '@/app/aws/generative-ai-developer-professional/domain4/NavBar';
 import {NAV_ITEMS} from '@/app/aws/generative-ai-developer-professional/domain4/constants';
 import fixture from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
+afterEach(()=>{vi.unstubAllGlobals();});
 it('retains every source navigation label and target in order',()=>{
  const {container}=render(<NavBar/>);
  expect(NAV_ITEMS).toEqual(fixture.guideDesign.nav);
@@ -16,7 +17,7 @@ it('opens, closes with Escape, and cleans up its observer',()=>{
  const button=container.querySelector('button')!;
  fireEvent.click(button);expect(button).toHaveAttribute('aria-expanded','true');
  fireEvent.keyDown(document,{key:'Escape'});expect(button).toHaveAttribute('aria-expanded','false');
- expect(button).toHaveFocus();unmount();expect(disconnect).toHaveBeenCalled();vi.unstubAllGlobals();
+ expect(button).toHaveFocus();unmount();expect(disconnect).toHaveBeenCalled();
 });
 it('preserves source task group navigation decorations',()=>{
  const {container}=render(<NavBar/>);
