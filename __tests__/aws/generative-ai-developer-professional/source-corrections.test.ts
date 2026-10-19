@@ -92,6 +92,18 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(rawQuiz4.find(question => question.id === 'q3')).toEqual(q3);
     });
 
+    it('domain4: Q9はテナント別のトークン使用量監視と異常検知アラームを必須とし、解説も任意扱いにしない', () => {
+        const corrected = withSourceCorrections(rawQuiz4, AIP_DOMAIN4_CORRECTIONS);
+        const q9 = corrected.find(question => question.id === 'q9');
+        expect(q9?.answer).toEqual(['B']);
+        expect(q9?.options.find(option => option.key === 'B')?.text).toContain('テナント ID をディメンションに持つカスタムメトリクス');
+        expect(q9?.options.find(option => option.key === 'B')?.text).toContain('テナントごとの CloudWatch 異常検知アラーム');
+        expect(q9?.explanation).toContain('テナントごとに異常検知アラームを設定する必要があります');
+        expect(q9?.explanation).not.toContain('があるとさらに原因特定が早くなります');
+        // クイズfixture自体が表示内容と一致し、訂正による差分の吸収に頼らない
+        expect(rawQuiz4.find(question => question.id === 'q9')).toEqual(q9);
+    });
+
     it('domain4: 使用量記録の例が機能・モデル別だけを記録することと、テナント別に集計する方法を明記する', () => {
         const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
         const point = corrected.bodyContent.find(block => block.text.includes('「どの機能がコストを食っているか」'))?.text ?? '';
