@@ -307,7 +307,7 @@ flowchart LR
 
 注意点(試験頻出):
 
-- DXGWに関連付けた**VPC同士は、DXGW経由では通信できません**(DXGWは「オンプレ ↔ VPC」の中継であり、VPC間ルーターではない)。VPC間はPeeringやTGWで繋ぎます。
+- DXGWに関連付けた**VPC同士は、原則としてDXGW経由では通信できません**(DXGWは「オンプレ ↔ VPC」の中継であり、VPC間ルーターではない)。例外として、同じDXGWかつ同じVIFに関連付けたVPCは、各VGWがスーパーネットを広告している場合に限り相互に通信できます。VPC間の接続には、一般にPeeringやTGWを使います。
 - Transit VIF 経由の場合、TGWとDXGWの関連付け時に**許可するプレフィックス(Allowed prefixes)**を指定します。これはDXGWからオンプレミスへ広告されるプレフィックスです(TGWが広告する経路ではありません)。
 - DXGWは**リージョンをまたいで**使えます。VGW向けでもTGW向けでも、ロケーションの場所とVPCのリージョンは一致している必要はありません。
 
@@ -1216,7 +1216,7 @@ flowchart LR
 | CloudWatch アラーム | メトリクス(VPNトンネル状態、DX接続状態)をトリガーに |
 | Route 53 ヘルスチェック + Failover | DNSレベルの自動切替(アプリの死活監視) |
 
-EventBridgeルールの例(すべての `AuthorizeSecurityGroupIngress` イベントを受信する。このルール自体は SSH や `0.0.0.0/0` で絞り込まず、追加されたインバウンドルールが `0.0.0.0/0` からの SSH を許可しているかは後段の Lambda が判定する):
+EventBridgeルールの例(成功した `AuthorizeSecurityGroupIngress` イベントをすべて受信する。`detail.errorCode` を持つイベント、つまり失敗したAPI呼び出しは除外し、自動対処へ送らない。このルール自体は SSH や `0.0.0.0/0` で絞り込まず、追加されたインバウンドルールが `0.0.0.0/0` からの SSH を許可しているかは後段の Lambda が判定する):
 
 ```json
 {
@@ -1224,10 +1224,13 @@ EventBridgeルールの例(すべての `AuthorizeSecurityGroupIngress` イベ�
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
     "eventSource": ["ec2.amazonaws.com"],
-    "eventName": ["AuthorizeSecurityGroupIngress"]
+    "eventName": ["AuthorizeSecurityGroupIngress"],
+    "errorCode": [{ "exists": false }]
   }
 }
 ```
+
+EventBridgeはLambdaを非同期で呼び出します。Lambdaが呼び出しを受け付けた後の関数エラー時の再試行は、EventBridgeではなく**Lambdaの非同期呼び出しキュー**が扱います(再試行回数やイベントの最大有効期間、失敗時の送信先はLambda側で設定する)。
 
 Lambdaでの自動対処の例(違反したルールの取り消し):
 
