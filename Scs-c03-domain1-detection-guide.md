@@ -580,7 +580,7 @@ aws configservice put-organization-conformance-pack \
 |---|---|---|---|
 | 管理イベント | リソースの作成・変更など、コントロールプレーンの操作 | 記録される (イベント履歴で確認可能) | 読み取りと書き込みを区別できる |
 | データイベント | S3 オブジェクトの取得、Lambda の実行など、データプレーンの操作 | 記録されない (有効化が必要) | 量が多く、コストに影響。高度なイベントセレクターで対象を絞れる |
-| Insights イベント | API 呼び出しの異常なパターン (急増など) を自動検出 | 無効 (有効化が必要) | 管理イベントの異常検出に加え、データイベントの異常検出にも対応 |
+| Insights イベント | API 呼び出しの異常なパターン (急増など) を自動検出 | 無効 (有効化が必要) | 管理イベントの異常検出に加え、データイベントの異常検出にも対応。ただしデータイベントの Insights は証跡でのみ利用でき、イベントデータストアでは非対応 |
 | ネットワークアクティビティイベント | VPC エンドポイント経由の API アクティビティ | 無効 (有効化が必要) | データ境界 (data perimeter) の強化に使える |
 
 ##### 組織トレイルの設計
@@ -1229,7 +1229,7 @@ ELB のヘルスチェックが失敗し続けるが、アプリケーション�
 | Security Hub の名称と位置づけ | 従来の Security Hub は「AWS Security Hub CSPM」となり、新しい「AWS Security Hub」は、GuardDuty、Inspector、Macie、CSPM の結果を集約・相関する統合ソリューションになった。検出結果は OCSF 形式 | 「Security Hub」と「Security Hub CSPM」を区別して理解する。ASFF と OCSF の違いも意識する |
 | CloudTrail Lake の新規受付終了 | 2026 年 5 月 31 日以降、新規顧客には提供されない。CloudTrail の証跡、Insights、集計イベントは影響を受けない。公式は CloudWatch に類似機能があると案内している | 新規設計では、S3 + Athena、Security Lake、CloudWatch を軸に考える。既存の環境が出題される場合に備えて概念は理解しておく |
 | CloudTrail ネットワークアクティビティイベントの拡充 | 対象サービスが増え、VPC エンドポイント経由の API アクティビティの記録が一般提供されている | データ境界の監視に使えることを覚える |
-| CloudTrail Insights のデータイベント対応 | 管理イベントに加え、データイベントの異常検出にも対応 | Insights の対象範囲が広がったことを理解する |
+| CloudTrail Insights のデータイベント対応 | 管理イベントに加え、データイベントの異常検出にも対応。データイベントの Insights は証跡でのみ利用でき、イベントデータストアでは非対応 | Insights の対象範囲が広がったことを理解する |
 | CloudWatch Logs のログ集約 | Organizations と連携したクロスアカウント・クロスリージョンのログ集約が 2025 年 9 月に登場 | OAM (横断的に見る) との違いを整理する |
 | GuardDuty の機能拡張 | Extended Threat Detection、カスタム検出ルール、AI 向けの保護、Malware Protection for AWS Backup など | 保護プランの種類と、各プランが見るデータソースを整理する |
 
