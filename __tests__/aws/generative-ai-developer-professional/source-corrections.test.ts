@@ -3,7 +3,12 @@ import domain1 from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.json';
 import domain2 from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.json';
 import domain1Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain1-guide.fidelity.json';
 import domain2Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain2-guide.fidelity.json';
-import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import domain3 from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.json';
+import domain3Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain3-guide.fidelity.json';
+import domain4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.json';
+import rawQuiz4 from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.quiz.json';
+import domain4Fidelity from '@/docs/migration-inventory/aws-aip-c01-domain4-guide.fidelity.json';
+import { AIP_DOMAIN1_CORRECTIONS, AIP_DOMAIN2_CORRECTIONS, AIP_DOMAIN3_CORRECTIONS, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS, withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
 
 const count = (text: string, part: string) => text.split(part).length - 1;
 
@@ -18,6 +23,119 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         const diagrams = Object.values(fidelity.guideParts).flatMap(part => part.diagrams).join('\n');
         const target = [body, inventory.td.join('\n'), inventory.listItems.join('\n'), diagrams].join('\n');
         for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
+    });
+
+    it.each([
+        // 図の定義はinventoryに含まれないため、fidelity fixtureの図も照合対象にする
+        ['domain3', domain3, AIP_DOMAIN3_CORRECTIONS, Object.values(domain3Fidelity.guideParts).flatMap(part => part.diagrams)],
+        // 冒頭の件数表示はinventoryに含まれないため、domain4はfidelity fixtureの全文も照合対象にする
+        ['domain4', domain4, AIP_DOMAIN4_CORRECTIONS, [...Object.values(domain4Fidelity.guideParts).flatMap(part => [part.text, ...part.diagrams]), JSON.stringify(rawQuiz4)]],
+    ] as const)('%s: 各訂正が原本inventoryの本文・表セル・リスト項目に一致する（空振りしない）', (_name, inventory, corrections, extra) => {
+        const target = [...inventory.bodyContent.map(block => block.text), ...inventory.td, ...inventory.listItems, ...extra].join('\n');
+        for (const [from] of corrections) expect(count(target, from), from).toBeGreaterThanOrEqual(1);
+    });
+
+    it('domain3: 公平性メトリクスはアプリが算出してCloudWatchへ発行し、事前定義の指標とは書かない', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const skill = corrected.bodyContent.find(block => block.text.includes('Skill 3.4.2:'))?.text ?? '';
+        expect(skill).not.toContain('事前定義');
+        expect(skill).toContain('アプリケーション側で公平性メトリクスを算出して CloudWatch にカスタムメトリクスとして発行');
+    });
+
+    it('domain3: Q2はGuardrailIdentifier条件キーが効く4つの推論APIに要件を限定し、解説も同じ範囲にする', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const texts = corrected.bodyContent.map(block => block.text);
+        const apis = 'Converse、ConverseStream、InvokeModel、InvokeModelWithResponseStream';
+        expect(texts).toContain(`社内の全開発者が Bedrock の推論 API（${apis}）を呼ぶ際、必ず特定のガードレールを使わせたい。`);
+        expect(texts).toContain('答え: B。条件キーで、これら 4 つの推論 API でガードレールなしの呼び出しを拒否できる。');
+        expect(texts).not.toContain('社内の全開発者が Bedrock を呼ぶ際、必ず特定のガードレールを使わせたい。');
+    });
+
+    it('domain3: text-to-SQLの同一結果は同じSQLを同じデータに実行した場合に限り、Q4の解説も固定クエリを示す', () => {
+        const corrected = withSourceCorrections(domain3, AIP_DOMAIN3_CORRECTIONS);
+        const reliability = corrected.td[corrected.td.indexOf('結果の信頼性') + 1] ?? '';
+        expect(reliability).toContain('生成される SQL はリクエストごとに変わりうる');
+        expect(reliability).toContain('同じ SQL を同じデータに実行した場合に限る');
+        expect(reliability).toContain('検証済みの固定クエリやパラメータ化テンプレート');
+        const answer = corrected.bodyContent.map(block => block.text).find(text => text.includes('答え: B。SQL は検証')) ?? '';
+        expect(answer).toContain('検証済みの固定クエリやパラメータ化テンプレートを同じデータに対して実行する');
+    });
+
+    it('domain3: 図diag-11は対応表をFMへの経路に置かず、権限のある復元だけにつなぐ', () => {
+        const corrected = withSourceCorrections(domain3Fidelity, AIP_DOMAIN3_CORRECTIONS);
+        const chart = Object.values(corrected.guideParts).flatMap(part => part.diagrams).find(dsl => dsl.includes('NAME_001 ADDR_001')) ?? '';
+        const edges = chart.split('\n').filter(line => /^\w+\b.*(-->|-\.->)/.test(line));
+        expect(edges).toContain('TOK --> FM["FM 推論 PII を含まない入力"]');
+        expect(edges.filter(line => /\bMAP\b/.test(line))).toEqual(['MAP["対応表を暗号化して別保管 DynamoDB KMS"] -.->|"権限確認後のみ参照"| RES']);
+    });
+
+    it('domain4: 使用量を記録するだけのヘルパー名を記録専用にし、図diag-8は両キャッシュでテナントと権限を確認してからヒットを返す', () => {
+        const corrected = withSourceCorrections(domain4Fidelity, AIP_DOMAIN4_CORRECTIONS);
+        const all = JSON.stringify(corrected);
+        expect(all).not.toContain('invoke_with_budget');
+        expect(all).toContain('invoke_and_log_usage');
+        const chart = Object.values(corrected.guideParts).flatMap(part => part.diagrams).find(dsl => dsl.includes('完全一致キャッシュに存在するか')) ?? '';
+        const lines = chart.split('\n');
+        expect(lines.filter(line => line.endsWith('| HIT'))).toEqual(['TEX -->|"はい"| HIT', 'TSEM -->|"はい"| HIT']);
+        expect(lines).toEqual(expect.arrayContaining(['TEX -->|"いいえ"| EMB', 'TSEM -->|"いいえ"| FM', 'SEM -->|"いいえ"| FM', 'FM --> STORE', 'STORE --> HIT']));
+    });
+
+    it('domain4: Q3のセマンティックキャッシュ例を公開済みの送料FAQにし、解説も同じ前提にする', () => {
+        const corrected = withSourceCorrections(rawQuiz4, AIP_DOMAIN4_CORRECTIONS);
+        const q3 = corrected.find(question => question.id === 'q3');
+        expect(q3?.answer).toEqual(['B']);
+        expect(q3?.stem).toContain('「送料はいくらですか」「配送料金を教えてください」');
+        expect(q3?.stem).not.toContain('配送状況はどうなっていますか');
+        expect(q3?.explanation).toContain('全ユーザー共通で変化の少ない FAQ はセマンティックキャッシュに向きます');
+        expect(q3?.explanation).toContain('キャッシュせず都度取得');
+        // クイズfixture自体が表示内容と一致し、訂正による差分の吸収に頼らない
+        expect(rawQuiz4.find(question => question.id === 'q3')).toEqual(q3);
+    });
+
+    it('domain4: Q9はテナント別のトークン使用量監視と異常検知アラームを必須とし、解説も任意扱いにしない', () => {
+        const corrected = withSourceCorrections(rawQuiz4, AIP_DOMAIN4_CORRECTIONS);
+        const q9 = corrected.find(question => question.id === 'q9');
+        expect(q9?.answer).toEqual(['B']);
+        expect(q9?.options.find(option => option.key === 'B')?.text).toContain('テナント ID をディメンションに持つカスタムメトリクス');
+        expect(q9?.options.find(option => option.key === 'B')?.text).toContain('テナントごとの CloudWatch 異常検知アラーム');
+        expect(q9?.explanation).toContain('テナントごとに異常検知アラームを設定する必要があります');
+        expect(q9?.explanation).not.toContain('があるとさらに原因特定が早くなります');
+        // クイズfixture自体が表示内容と一致し、訂正による差分の吸収に頼らない
+        expect(rawQuiz4.find(question => question.id === 'q9')).toEqual(q9);
+    });
+
+    it('domain4: 使用量記録の例が機能・モデル別だけを記録することと、テナント別に集計する方法を明記する', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
+        const point = corrected.bodyContent.find(block => block.text.includes('「どの機能がコストを食っているか」'))?.text ?? '';
+        expect(point).toContain('この例は機能 (Feature) とモデル別のメトリクスだけを記録します');
+        expect(point).toContain('Dimensions とイベントのルートの両方に TenantId を加えます');
+    });
+
+    it('domain4: 直列ステップは所要時間の合計、最も遅い経路は並列時だけとし、キャッシュのトークン数を別に扱う', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS);
+        const workflow = corrected.bodyContent.find(block => block.text.includes('複数ステップの連鎖です'))?.text ?? '';
+        expect(workflow).toContain('各ステップの所要時間の合計');
+        expect(workflow).toContain('並列実行している場合だけ');
+        expect(workflow).not.toContain('最も遅いステップ');
+        const metric = corrected.td.indexOf('InputTokenCount / OutputTokenCount / CacheReadInputTokenCount / CacheWriteInputTokenCount');
+        expect(metric).toBeGreaterThanOrEqual(0);
+        expect(corrected.td[metric + 1]).toBe('入出力トークン数');
+        expect(corrected.td[metric + 2]).toContain('読み取りは通常の入力より割安、書き込みは割高');
+        expect(corrected.td[metric + 2]).toContain('クォータ');
+    });
+
+    it('domain4: HYBRIDの対応ストアをOpenSearch Serverless・RDS (Aurora PostgreSQL)・MongoDB Atlasとし、Step 22に根拠ページを足す', () => {
+        const corrected = withSourceCorrections(domain4, AIP_DOMAIN4_CORRECTIONS, AIP_DOMAIN4_REFERENCE_ROWS);
+        const hybrid = corrected.listItems.find(item => item.includes('HYBRID または SEMANTIC')) ?? '';
+        expect(hybrid).toContain('Amazon OpenSearch Serverless、Amazon RDS (Aurora PostgreSQL)、MongoDB Atlas');
+        expect(hybrid).toContain('フィルタ可能なテキストフィールドを持たない構成では SEMANTIC');
+        expect(hybrid).not.toContain('(他の構成では SEMANTIC のみ)');
+        const kbTestConfig = 'https://docs.aws.amazon.com/bedrock/latest/userguide/kb-test-config.html';
+        const standardApi = domain4.td.indexOf('https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent-runtime_KnowledgeBaseVectorSearchConfiguration.html');
+        expect(corrected.td.slice(standardApi + 1, standardApi + 5)).toEqual(['確認済み', '4.2.2', expect.stringContaining('HYBRID の対応ベクトルストア'), kbTestConfig]);
+        expect(corrected.td).toHaveLength(domain4.td.length + 4);
+        expect(corrected.links.map(link => link.href).filter(href => href === kbTestConfig)).toHaveLength(1);
+        expect(corrected.links).toHaveLength(domain4.links.length + 1);
     });
 
     it('domain2: カスタムモデルのProvisioned Throughputを条件付きにし、オンデマンドデプロイに触れ、問題5の正解は保持する', () => {
@@ -51,14 +169,22 @@ describe('AIP domain1/2 AWS公式ドキュメントにもとづく訂正', () =>
         expect(chart).toContain('|Direct Connect または VPN<br/>プライベート経路<br/>暗号化は TLS MACsec VPN で行う|');
     });
 
-    it('domain1: 旧コネクタURLを残さず、廃止日と既存コネクタの継続、Salesforceの対象外を明記する', () => {
+    it('domain1: 旧コネクタURLを残さず、廃止日と既存コネクタの継続、Managed Knowledge BaseのSalesforce対応を明記する', () => {
         const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
         expect(corrected.links.map(link => link.href)).not.toContain('https://docs.aws.amazon.com/bedrock/latest/userguide/kb-data-source-connectors.html');
         const connectorCell = corrected.td.find(cell => cell.startsWith('ナレッジベースのコネクタを利用'));
         expect(connectorCell).toContain('2026年9月30日以降');
         expect(connectorCell).toContain('既存のコネクタは取り込みと検索を引き続き利用可能');
-        expect(connectorCell).toContain('Salesforce は含まれない');
+        expect(connectorCell).toContain('Confluence、SharePoint、Salesforce のネイティブコネクタを提供する');
         expect(corrected.td.find(cell => cell.startsWith('ナレッジベースのウェブクローラーを利用'))).toContain('2026年9月30日以降');
+    });
+
+    it('domain1: Salesforceコネクタは文書単位のACLに対応せず、保護が必要な内容はサーバー側で別途認可すると明記する', () => {
+        const corrected = withSourceCorrections(domain1, AIP_DOMAIN1_CORRECTIONS);
+        const connectorCell = corrected.td.find(cell => cell.startsWith('ナレッジベースのコネクタを利用')) ?? '';
+        expect(connectorCell).toContain('Salesforce コネクタは文書単位の ACL に対応しない');
+        expect(connectorCell).toContain('クロールした Salesforce のコンテンツはナレッジベースの利用者全員が取得できる');
+        expect(connectorCell).toContain('保護が必要な内容はサーバー側で別途認可を行う');
     });
 
     it('domain1: Task 1.5の埋め込みの出典を、ナレッジベースが埋め込みを作成・検索する仕組みのページへ差し替える', () => {

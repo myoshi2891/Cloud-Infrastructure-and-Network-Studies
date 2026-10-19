@@ -1,6 +1,12 @@
 # CLAUDE.md
 
-Updated 2026-10-16
+Updated 2026-10-17
+
+2026-10-17 AIP-C01 Domain 4移行: `/aws/generative-ai-developer-professional/domain4` に全3タスク・16スキル、84表（th234・td1388）、22図、140リスト項目、36外部リンク出現、2コード、26目次、練習問題12問を全文移行。原本の明色テーマ、点・番号・入れ子・インデント、シンタックスハイライト、単一/複数選択の採点・正誤・解説・得点・回答進捗・リセットを保持。全108横スクロール領域に固有の読み上げ名を付与。Domain 4は原本削除後103件、Chromeは1440/768/390px・全22SVGの自然倍率とviewBox内包・全問・導線・CSS破壊検出を含む6件成功。axe違反0・コンソールエラー0。原本400008バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。全体Vitestは301ファイル・3021件中3020成功、失敗1件は作業前からのAIBナビ期待値。型検査・全体ESLint・対象Markdown lint成功。`bun run build`・`bun run lint` は2026-10-17の進捗同期で成功。npm・目視確認は未実施（Playwrightによる3画面幅の自動レイアウト検証は上記のとおり成功）。
+
+2026-10-17 Domain 3の横線整理: 各Step・Task見出しの上罫線をなくし、原本の区切り線27本だけを保持。本文・表・図・リスト装飾は維持。Red `6b2bb8cf`、Green `74d8461a`。関連106件、1440/768/390pxの追加ブラウザ1件、対象ESLint成功。npm・ビルド未実行。
+
+2026-10-17 AIP-C01 Domain 3移行: `/aws/generative-ai-developer-professional/domain3` に全4タスク・15スキル、44表・19図・189リスト項目・125外部リンク出現・練習問題10問を全文移行。ライト配色、点・番号・入れ子、300px目次、クイズの回答・正誤・解答表示・集計・リセットを保持。ホーム・Headerから詳細版へ移動可能。原本削除後のDomain 3検証105件、AIP関連回帰450件、1440/768/390pxを含むChrome 6件が成功。全図の自然倍率とviewBox内包、CSS破壊5種、DOM欠落5種、axe違反0を検証。図・表のキーボード横スクロールと閉じたモバイル目次の非表示を補完。原本306478バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。実装 `75a38b02`、原本保存 `e9cbf3f3`。npm・ビルド未実行、目視確認はユーザー担当。最終全体テスト・型検査・lintの結果は移行進捗の現在地を参照。
 
 2026-10-16 Domain 2練習問題の選択・採点: 全15問の選択肢の点を除き、11問をラジオボタン、4問をチェックボックスにした。選択後に「答えと解説」を開くと正誤を表示し、開いた後の選択変更にも追従。複数選択は正解集合の完全一致、未回答は案内表示。選択・開閉状態は問題ごとに独立し、原本の問題文・選択肢・解説は保持。採点22件と目次通知順の回帰を含む関連141件が成功。全体2808件中2807成功、既存AIBナビ期待値1件のみ失敗。ブラウザ9シナリオを検証し、1440pxで見つけた目次上書きは通知順に依存しない選択へ修正して3画面幅を再確認。最新実装HEAD `fa93bb13`（採点 `d11350ad`）。型検査・ESLint・Markdown lint成功。npm・ビルド未実行。
 
@@ -624,6 +630,24 @@ app/
         Diagram.tsx                 # memo・原本ライト設定・自然倍率・説明
         page.css                    # 原本ライト配色・300px幅・点と番号・コード行
         sections/                   # Foundation, Task21〜25, Revision
+      domain3/
+        page.tsx                    # Domain 3詳細版 (Server、metadata、CSS)
+        AipDomain3Guide.tsx          # 導入・4タスク・復習の6区分 (Server)
+        NavBar.tsx                  # 原本目次・開閉・scroll spy・hash/focus (Client)
+        PracticeQuestion.tsx        # 全10問の回答・正誤・解答表示・集計・リセット (Client)
+        constants.ts                # 原本19図・目次・Mermaidライト設定
+        Diagram.tsx                 # memo・自然倍率・キーボード横スクロール
+        page.css                    # 原本ライト配色・300px幅・点と番号・入れ子
+        sections/                   # Foundation, Task31〜34, Revision
+      domain4/
+        page.tsx                    # Domain 4詳細版 (Server、metadata、CSS)
+        AipDomain4Guide.tsx          # 導入・3タスク・復習の5区分 (Server)
+        NavBar.tsx                  # 26目次・モバイル開閉・scroll spy・hash/focus
+        Quiz.tsx                    # 全12問の単一/複数選択・採点・解説・集計・リセット
+        constants.ts                # 原本22図・26目次・Mermaid明色設定
+        Diagram.tsx                 # 自然倍率・キーボード横スクロール・固有名
+        page.css                    # 原本明色・300px目次・点と番号・入れ子・色分け
+        sections/                   # Foundation, Task41〜43, Revision
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)
@@ -829,7 +853,7 @@ archive/                            # 移行済み資料の正規アーカイブ
 - **コードブロック内の改行 (`.code-block`)**: JSX変換時、コード内の改行に `{"\n"}` を使用せず、各行を `<div className="code-line">...</div>` でラップすること。`.code-line` は `white-space: pre` を適用してインデントを保持し、`map` 展開時は安定した `key` を付与すること。
 - **表形式データの構造化**: テキストのスペース揃えで列を表現したデータは、フォント変更による列ズレを防ぐため、必ず `<table>` 要素に変換すること。その際、必ず `<thead>` と `<th scope="col">` を用いたセマンティックな構造にすること。
 - **CSS変数・テーマトークンの適用**: `globals.css` の3層アーキテクチャ CSS 変数（`--color-background`, `--color-foreground`, `--color-border` など）を厳格に使用すること。独自のローカル変数定義や `--color-bg-primary` のような実在しないトークンの使用は避ける。コンポーネントレベルの CSS 内で新たなカスタムプロパティ（`--*`）を定義することは禁止する。
-- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
+- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。AIP-C01（総合ガイドとDomain 1〜4）も原本の300pxを例外として優先し、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)` を揃え、各ドメインの専用デザインテストとE2Eで検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
 - **グローバルメニューの運用（データ駆動）**: ナビゲーションは `app/constants.ts` の `ALL_EXAMS` を正本としている（`EXAMS` はそこから派生する公開値）。新ページ追加時は `ALL_EXAMS` に `Exam` エントリを追加し（`status: 'coming-soon'` → ページ完成後 `'available'` または省略）、`app/navigation.ts` の `toNavTree` が自動でグルーピングするため **`components/Header.tsx` は直接編集しない**。
 - **PCNE セクションページの `metadata.title` 規約**: `PCNE S<n>: <セクション名> | Google Cloud 認定試験対策` に統一する。Next.js の `title.template` は **それを定義したセグメント自身には適用されず、子孫ルートに継承される**。`app/gcl/professional-cloud-network-engineer/layout.tsx` は `title` をプレーン文字列で置いているだけで新しい `template` を定義していないため、ルート `app/layout.tsx` の `template: '%s | Cloud Infrastructure Studies'` は **PCNE サブツリーにもそのまま継承される**（実際の `<title>` は `PCNE S<n>: … | Google Cloud 認定試験対策 | Cloud Infrastructure Studies`）。`| Google Cloud 認定試験対策` はその上に乗せる PCNE 固有の命名規約であり、`__tests__/gcl/professional-cloud-network-engineer/section-title-convention.test.ts` はこの規約への準拠のみを検証する。
 - **移行元ファイルのアーカイブ**: 移行元は削除せず `archive/` 配下へ移動する。Cisco資料の正規保存先は `archive/Cisco/html/` と `archive/Cisco/md/` とし、`Gcl_Archive/Cisco` は作成・使用しない。

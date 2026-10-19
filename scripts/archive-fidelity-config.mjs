@@ -32,6 +32,39 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-domain4-guide': {
+        syntaxSelectors: {"kn":".hl .kn","w":".hl .w","nn":".hl .nn","o":".hl .o","n":".hl .n","p":".hl .p","s2":".hl .s2","k":".hl .k","nf":".hl .nf","nb":".hl .nb","mi":".hl .mi","mf":".hl .mf","c1":".hl .c1"},
+
+        source: 'Aip-c01-domain4-operational-efficiency-guide.html',
+        sourceCommit: '0af9544e9f5439bd4522bce6bb5f20aca2bb710f',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: 'task-41-コスト最適化とリソース効率',
+            task2: 'task-42-アプリケーション性能の最適化',
+            task3: 'task-43-genai-アプリのモニタリング',
+            revision: 'step-18-症状から解決策を選ぶ早見表',
+        },
+    },
+    'aws-aip-c01-domain3-guide': {
+        source: 'Aws-aip-c01-domain3-ai-safety-security-governance-guide.html',
+        sourceCommit: 'd08571d893cd2007e312fcf4d4e161639ec69c17',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: 'task-3-1',
+            task2: 'task-3-2',
+            task3: 'task-3-3',
+            task4: 'task-3-4',
+            revision: 'integration',
+        },
+    },
     "aws-aip-c01-domain2-guide": {
     "source": "Aws-aip-c01-domain2-implementation-integration-guide.html",
     "sourceCommit": "9eb40ce6830575a34214cd0847b65bc9406190e5",

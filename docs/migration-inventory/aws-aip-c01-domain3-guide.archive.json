@@ -1,0 +1,9 @@
+{
+  "source": "Aws-aip-c01-domain3-ai-safety-security-governance-guide.html",
+  "sourceCommit": "d08571d893cd2007e312fcf4d4e161639ec69c17",
+  "archive": "archive/Aws/html/generative-ai-developer-professional/domain3/Aws-aip-c01-domain3-ai-safety-security-governance-guide.html",
+  "sha256": "6119aa625c9a37ff053c8a6c0471e03ee9a8989833147f2f857a39089e39d476",
+  "bytes": 306478,
+  "rootRetained": false,
+  "reason": "原本をバイト一致でアーカイブ後、移行済みの直下HTMLを整理。テストは固定Git由来fixtureを使用し、ローカルarchiveに依存しない。"
+}
