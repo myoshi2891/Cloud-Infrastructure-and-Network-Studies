@@ -22,12 +22,13 @@ it('supports single and multiple choices with independently expandable explanati
     const cards = container.querySelectorAll('.quiz-card');
     expect(cards).toHaveLength(8);
     for (const [index, card] of [...cards].entries()) {
-        const choices = within(card as HTMLElement).getAllByRole(index === 0 || index === 4 ? 'checkbox' : 'radio');
-        fireEvent.click(choices[0]);
-        fireEvent.click(choices[1]);
-        expect(choices[1]).toBeChecked();
-        if (index === 0 || index === 4) expect(choices[0]).toBeChecked();
-        else expect(choices[0]).not.toBeChecked();
+        const [first, second] = within(card as HTMLElement).getAllByRole(index === 0 || index === 4 ? 'checkbox' : 'radio');
+        if (!first || !second) throw new Error(`quiz ${index + 1} has fewer than 2 choices`);
+        fireEvent.click(first);
+        fireEvent.click(second);
+        expect(second).toBeChecked();
+        if (index === 0 || index === 4) expect(first).toBeChecked();
+        else expect(first).not.toBeChecked();
         expect(card.querySelector('fieldset legend')).toHaveAttribute('id', `quiz-title-${index + 1}`);
         expect(card.querySelector('details')).not.toHaveAttribute('open');
         expect(card.querySelector('summary')).toHaveTextContent('正解・解説を見る');
