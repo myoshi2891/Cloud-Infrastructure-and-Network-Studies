@@ -7,9 +7,9 @@ it('retains eight independently expandable answer explanations and all question 
  const {container}=render(<Revision/>);const details=container.querySelectorAll<HTMLDetailsElement>('details.qa');
  expect(details).toHaveLength(8);
  const expected=ansDomain2Part('revision');
- expect([...container.querySelectorAll('li')]).toHaveLength(expected.lists.reduce((n,list)=>n+list.items.length,0));
+ expect([...container.querySelectorAll('li, .quiz-option')]).toHaveLength(expected.lists.reduce((n,list)=>n+list.items.length,0));
  for(const panel of details){
-  expect(panel.open).toBe(false);expect(panel.querySelector('summary')).toHaveTextContent('解答と解説');
+  expect(panel.open).toBe(false);expect(panel.querySelector('summary')).toHaveTextContent('正解・解説を見る');
   expect(panel.querySelector('.qa-body p')?.textContent?.trim()).toBeTruthy();
   fireEvent.click(panel.querySelector('summary')!);expect(panel.open).toBe(true);
   fireEvent.click(panel.querySelector('summary')!);expect(panel.open).toBe(false);

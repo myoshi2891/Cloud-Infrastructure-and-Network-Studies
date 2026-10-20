@@ -11,55 +11,59 @@ export default function Revision(){return <div className="guide-part" data-part=
 
 <h2 id={"8-確認問題"} tabIndex={-1}>{"8. 確認問題"}</h2>
 
-<p>{" 実際の試験は難易度が高く、複数選択が中心です。ここでは理解確認用です。折りたたみの中に解答があります。 "}</p>
-
-<p>{" "}<strong>{"問1."}</strong>{" オンプレミスの拠点から東京リージョンの10個のVPCへ、VPCごとにVPNを張らずに集約した経路でアクセスしたい。複数のVPN接続を束ねて帯域も増やしたい。最も適切な構成を2つ選べ。 "}</p>
-
-<ul>{" "}<li>{"A. 各VPCにVGWを作成し、10本のVPN"}</li>{" "}<li>{"B. Transit Gatewayを作成し、VPCをアタッチ"}</li>{" "}<li>{"C. BGPを使う動的VPNを複数作成し、TGWでECMPを有効にする"}</li>{" "}<li>{"D. 静的ルーティングのVPNを複数作成し、ECMPを有効にする"}</li>{" "}<li>{"E. VPC Peeringでメッシュ構成"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B、C。"}</strong>{" 多数のVPCはTGWで集約します。ECMPによる帯域の拡張は"}<strong>{"BGP動的VPN"}</strong>{"かつ"}<strong>{"TGW終端"}</strong>{"のときのみ可能です(Dは不可)。Aは運用が煩雑で、EのPeeringはEdge to Edge(VPN経由)ができません。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問2."}</strong>{" プライベートサブネットのEC2が、NATゲートウェイを使わずに、無料でS3にアクセスするには? "}</p>
-
-<ul>{" "}<li>{"A. Interface Endpoint"}</li>{" "}<li>{"B. Gateway Endpoint"}</li>{" "}<li>{"C. Transit Gateway"}</li>{" "}<li>{"D. Egress-only IGW"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" S3とDynamoDBはGateway Endpoint(ルートテーブルのエントリ、無料)が使えます。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問3."}</strong>{" 検査VPC(Network Firewall)を通すため、全スポークの通信をTGW経由にした。ところがステートフル検査で一部のセッションが切断される。原因として最も適切なものは? "}</p>
-
-<ul>{" "}<li>{"A. TGWのECMPが無効"}</li>{" "}<li>{"B. 検査VPCのアタッチメントで appliance mode が無効"}</li>{" "}<li>{"C. DXGWの許可プレフィックス不足"}</li>{" "}<li>{"D. NACLのエフェメラルポート不足"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" appliance mode が無効だと、往路と復路が別AZのファイアウォールを通ることがあり、ステートフル検査が破綻します。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問4."}</strong>{" "}<code>{"example.com"}</code>{" のゾーン頂点を、ALBに向けたい。正しい方法は? "}</p>
-
-<ul>{" "}<li>{"A. CNAMEレコード"}</li>{" "}<li>{"B. Aliasレコード"}</li>{" "}<li>{"C. TXTレコード"}</li>{" "}<li>{"D. PTRレコード"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" ゾーン頂点にはCNAMEは作れません。AliasはAWSリソース(ALB等)を頂点に指定でき、クエリ料金も無料です。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問5."}</strong>{" オンプレのDNSサーバーから、AWSのプライベートホストゾーンの名前を解決したい。必要な構成を2つ選べ。 "}</p>
-
-<ul>{" "}<li>{"A. Route 53 Resolverのインバウンドエンドポイント"}</li>{" "}<li>{"B. Route 53 Resolverのアウトバウンドエンドポイント"}</li>{" "}<li>{"C. オンプレDNSでの条件付き転送(転送先はインバウンドエンドポイントのIP)"}</li>{" "}<li>{"D. パブリックホストゾーンへの全レコード複製"}</li>{" "}<li>{"E. オンプレDNSからVPCの"}<code>{".2"}</code>{"アドレスへ直接問い合わせ"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"A、C。"}</strong>{" オンプレ→AWSの解決は、インバウンドエンドポイントと条件付き転送です。Bは逆方向(AWS→オンプレ)、Eは"}<code>{".2"}</code>{"アドレスはVPC外から到達できません。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問6."}</strong>{" 複数アカウントで、同じオンプレドメイン向けのResolver転送ルールを使いたい。運用負荷を最小にする方法は? "}</p>
-
-<ul>{" "}<li>{"A. アカウントごとにルールを手動作成"}</li>{" "}<li>{"B. ルールをAWS RAMで共有し、各VPCに関連付ける"}</li>{" "}<li>{"C. ルールをSlack経由で配布"}</li>{" "}<li>{"D. PHZをRAMで共有"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" Resolverルールは"}<strong>{"RAMで共有"}</strong>{"できます。PHZ自体はRAMで共有せず、VPC関連付け(認可方式)やProfilesで扱います(Dは誤り)。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問7."}</strong>{" CloudFormationテンプレートが別リージョンへのデプロイで、AMI IDとAZ名の不一致により失敗する。最も適切な修正は? "}</p>
-
-<ul>{" "}<li>{"A. リージョンごとにテンプレートを複製する"}</li>{" "}<li>{"B. AMIはSSMパラメータ参照、AZは"}<code>{"Fn::GetAZs"}</code>{"で動的に取得する"}</li>{" "}<li>{"C. AZ名とAMI IDをテンプレート内で変更する"}</li>{" "}<li>{"D. スタックを手動で作成する"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" ハードコードを排除し、パラメータ/SSM/組込み関数で動的に決めるのがIaCの基本です。 "}</p>{" "}</div>{" "}</details>
-
-<p>{" "}<strong>{"問8."}</strong>{" DNSSECをRoute 53のパブリックホストゾーンで有効にする。KSKに使うKMSキーとして正しいものは? "}</p>
-
-<ul>{" "}<li>{"A. 対称キー(任意のリージョン)"}</li>{" "}<li>{"B. 非対称キー(ECC_NIST_P256、us-east-1)"}</li>{" "}<li>{"C. RSA 4096の対称キー"}</li>{" "}<li>{"D. Secrets Managerのシークレット"}</li>{" "}</ul>
-
-<details className={"qa"}>{" "}<summary>{"解答と解説"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" 署名/検証用の非対称キー(ECC_NIST_P256)をus-east-1に作成します。 "}</p>{" "}</div>{" "}</details>
+<section className="review-quiz" aria-labelledby="8-確認問題">
+<div className="quiz-intro"><div><span className="quiz-eyebrow">KNOWLEDGE CHECK</span><p>学んだ知識を、8 問で確認。</p><span>選択肢を選び、各問題の「正解・解説を見る」で理解を確かめましょう。</span></div><span className="quiz-count">全 8 問<span>単一選択 6 問 · 複数選択 2 問</span></span></div>
+<article className="quiz-card" aria-labelledby="quiz-title-1"><div className="quiz-card-meta"><span className="quiz-number">Q01</span><span>VPN の集約と帯域拡張</span><span className="quiz-type">2 つ選択</span></div><fieldset><legend id="quiz-title-1"><span className="quiz-question-number">{"問1."}</span>{" オンプレミスの拠点から東京リージョンの10個のVPCへ、VPCごとにVPNを張らずに集約した経路でアクセスしたい。複数のVPN接続を束ねて帯域も増やしたい。最も適切な構成を2つ選べ。 "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="checkbox" name="review-q1" value="A"/><span className="quiz-letter">A</span><span>{"各VPCにVGWを作成し、10本のVPN"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q1" value="B"/><span className="quiz-letter">B</span><span>{"Transit Gatewayを作成し、VPCをアタッチ"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q1" value="C"/><span className="quiz-letter">C</span><span>{"BGPを使う動的VPNを複数作成し、TGWでECMPを有効にする"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q1" value="D"/><span className="quiz-letter">D</span><span>{"静的ルーティングのVPNを複数作成し、ECMPを有効にする"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q1" value="E"/><span className="quiz-letter">E</span><span>{"VPC Peeringでメッシュ構成"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B、C。"}</strong>{" 多数のVPCはTGWで集約します。ECMPによる帯域の拡張は"}<strong>{"BGP動的VPN"}</strong>{"かつ"}<strong>{"TGW終端"}</strong>{"のときのみ可能です(Dは不可)。Aは運用が煩雑で、EのPeeringはEdge to Edge(VPN経由)ができません。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-2"><div className="quiz-card-meta"><span className="quiz-number">Q02</span><span>VPC エンドポイント</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-2"><span className="quiz-question-number">{"問2."}</span>{" プライベートサブネットのEC2が、NATゲートウェイを使わずに、無料でS3にアクセスするには? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q2" value="A"/><span className="quiz-letter">A</span><span>{"Interface Endpoint"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q2" value="B"/><span className="quiz-letter">B</span><span>{"Gateway Endpoint"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q2" value="C"/><span className="quiz-letter">C</span><span>{"Transit Gateway"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q2" value="D"/><span className="quiz-letter">D</span><span>{"Egress-only IGW"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" S3とDynamoDBはGateway Endpoint(ルートテーブルのエントリ、無料)が使えます。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-3"><div className="quiz-card-meta"><span className="quiz-number">Q03</span><span>対称ルーティング</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-3"><span className="quiz-question-number">{"問3."}</span>{" 検査VPC(Network Firewall)を通すため、全スポークの通信をTGW経由にした。ところがステートフル検査で一部のセッションが切断される。原因として最も適切なものは? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q3" value="A"/><span className="quiz-letter">A</span><span>{"TGWのECMPが無効"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q3" value="B"/><span className="quiz-letter">B</span><span>{"検査VPCのアタッチメントで appliance mode が無効"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q3" value="C"/><span className="quiz-letter">C</span><span>{"DXGWの許可プレフィックス不足"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q3" value="D"/><span className="quiz-letter">D</span><span>{"NACLのエフェメラルポート不足"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" appliance mode が無効だと、往路と復路が別AZのファイアウォールを通ることがあり、ステートフル検査が破綻します。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-4"><div className="quiz-card-meta"><span className="quiz-number">Q04</span><span>Route 53 レコード</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-4"><span className="quiz-question-number">{"問4."}</span>{" "}<code>{"example.com"}</code>{" のゾーン頂点を、ALBに向けたい。正しい方法は? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q4" value="A"/><span className="quiz-letter">A</span><span>{"CNAMEレコード"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q4" value="B"/><span className="quiz-letter">B</span><span>{"Aliasレコード"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q4" value="C"/><span className="quiz-letter">C</span><span>{"TXTレコード"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q4" value="D"/><span className="quiz-letter">D</span><span>{"PTRレコード"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" ゾーン頂点にはCNAMEは作れません。AliasはAWSリソース(ALB等)を頂点に指定でき、クエリ料金も無料です。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-5"><div className="quiz-card-meta"><span className="quiz-number">Q05</span><span>ハイブリッド DNS</span><span className="quiz-type">2 つ選択</span></div><fieldset><legend id="quiz-title-5"><span className="quiz-question-number">{"問5."}</span>{" オンプレのDNSサーバーから、AWSのプライベートホストゾーンの名前を解決したい。必要な構成を2つ選べ。 "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="checkbox" name="review-q5" value="A"/><span className="quiz-letter">A</span><span>{"Route 53 Resolverのインバウンドエンドポイント"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q5" value="B"/><span className="quiz-letter">B</span><span>{"Route 53 Resolverのアウトバウンドエンドポイント"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q5" value="C"/><span className="quiz-letter">C</span><span>{"オンプレDNSでの条件付き転送(転送先はインバウンドエンドポイントのIP)"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q5" value="D"/><span className="quiz-letter">D</span><span>{"パブリックホストゾーンへの全レコード複製"}</span></label>
+<label className="quiz-option"><input type="checkbox" name="review-q5" value="E"/><span className="quiz-letter">E</span><span>{"オンプレDNSからVPCの"}<code>{".2"}</code>{"アドレスへ直接問い合わせ"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"A、C。"}</strong>{" オンプレ→AWSの解決は、インバウンドエンドポイントと条件付き転送です。Bは逆方向(AWS→オンプレ)、Eは"}<code>{".2"}</code>{"アドレスはVPC外から到達できません。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-6"><div className="quiz-card-meta"><span className="quiz-number">Q06</span><span>Resolver ルールの共有</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-6"><span className="quiz-question-number">{"問6."}</span>{" 複数アカウントで、同じオンプレドメイン向けのResolver転送ルールを使いたい。運用負荷を最小にする方法は? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q6" value="A"/><span className="quiz-letter">A</span><span>{"アカウントごとにルールを手動作成"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q6" value="B"/><span className="quiz-letter">B</span><span>{"ルールをAWS RAMで共有し、各VPCに関連付ける"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q6" value="C"/><span className="quiz-letter">C</span><span>{"ルールをSlack経由で配布"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q6" value="D"/><span className="quiz-letter">D</span><span>{"PHZをRAMで共有"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" Resolverルールは"}<strong>{"RAMで共有"}</strong>{"できます。PHZ自体はRAMで共有せず、VPC関連付け(認可方式)やProfilesで扱います(Dは誤り)。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-7"><div className="quiz-card-meta"><span className="quiz-number">Q07</span><span>IaC の可搬性</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-7"><span className="quiz-question-number">{"問7."}</span>{" CloudFormationテンプレートが別リージョンへのデプロイで、AMI IDとAZ名の不一致により失敗する。最も適切な修正は? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q7" value="A"/><span className="quiz-letter">A</span><span>{"リージョンごとにテンプレートを複製する"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q7" value="B"/><span className="quiz-letter">B</span><span>{"AMIはSSMパラメータ参照、AZは"}<code>{"Fn::GetAZs"}</code>{"で動的に取得する"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q7" value="C"/><span className="quiz-letter">C</span><span>{"AZ名とAMI IDをテンプレート内で変更する"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q7" value="D"/><span className="quiz-letter">D</span><span>{"スタックを手動で作成する"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" ハードコードを排除し、パラメータ/SSM/組込み関数で動的に決めるのがIaCの基本です。 "}</p>{" "}</div>{" "}</details></article>
+<article className="quiz-card" aria-labelledby="quiz-title-8"><div className="quiz-card-meta"><span className="quiz-number">Q08</span><span>DNSSEC の設定</span><span className="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-8"><span className="quiz-question-number">{"問8."}</span>{" DNSSECをRoute 53のパブリックホストゾーンで有効にする。KSKに使うKMSキーとして正しいものは? "}</legend><div className="quiz-options">
+<label className="quiz-option"><input type="radio" name="review-q8" value="A"/><span className="quiz-letter">A</span><span>{"対称キー(任意のリージョン)"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q8" value="B"/><span className="quiz-letter">B</span><span>{"非対称キー(ECC_NIST_P256、us-east-1)"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q8" value="C"/><span className="quiz-letter">C</span><span>{"RSA 4096の対称キー"}</span></label>
+<label className="quiz-option"><input type="radio" name="review-q8" value="D"/><span className="quiz-letter">D</span><span>{"Secrets Managerのシークレット"}</span></label>
+</div></fieldset><details className="qa quiz-answer">{" "}<summary>{"正解・解説を見る"}</summary>{" "}<div className={"qa-body"}>{" "}<p>{" "}<strong>{"B。"}</strong>{" 署名/検証用の非対称キー(ECC_NIST_P256)をus-east-1に作成します。 "}</p>{" "}</div>{" "}</details></article>
+</section>
 
 <h2 id={"9-参考url根拠ソース一覧"} tabIndex={-1}>{"9. 参考URL(根拠ソース一覧)"}</h2>
 

@@ -1,3 +1,4 @@
+import { normalizeAnsDomain2Quiz } from '@/__tests__/helpers/ans-domain2-quiz';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/advanced-networking-specialty/domain2/page';
@@ -21,7 +22,7 @@ describe('ANS domain2 independent complete inventory', () => {
     it('retains all 86 source list items, including nested lists and checklist', () => {
         const { container } = render(<Page />);
         const main = container.querySelector('main')!;
-        expect([...withBlockBoundarySpaces(main).querySelectorAll('li')].map(el => normalizeSpaces(el.textContent ?? ''))).toEqual(inventory.listItems.map(normalizeSpaces));
+        expect([...withBlockBoundarySpaces(normalizeAnsDomain2Quiz(main)).querySelectorAll('li')].map(el => normalizeSpaces(el.textContent ?? ''))).toEqual(inventory.listItems.map(normalizeSpaces));
     });
     it('retains all duplicate external links with text and original order', () => {
         const { container } = render(<Page />);
@@ -30,7 +31,7 @@ describe('ANS domain2 independent complete inventory', () => {
     it('retains complete body and exact counts without requiring source HTML or archive', () => {
         const { container } = render(<Page />);
         const normalize = (blocks: { kind: string; text: string }[]) => blocks.map(block => ({ ...block, text: normalizeSpaces(block.text) }));
-        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(normalize(inventory.bodyContent));
+        expect(normalize(extractBodyContent(withBlockBoundarySpaces(normalizeAnsDomain2Quiz(container))))).toEqual(normalize(inventory.bodyContent));
         expect(container.querySelectorAll('table')).toHaveLength(inventory.counts.table);
         expect(container.querySelectorAll('[data-testid="mermaid-diagram"]')).toHaveLength(inventory.counts.diagram);
         expect(container.querySelectorAll('.code-block')).toHaveLength(inventory.counts.codeBlock);
