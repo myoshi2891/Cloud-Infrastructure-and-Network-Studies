@@ -11,7 +11,7 @@ const declarations = (text: string, selector: string, media = '') => {
 };
 const tokens: Record<string, string> = {};
 postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(decl => { if (decl.prop.startsWith('--')) tokens[decl.prop] = decl.value; });
-const sourceTokens = fixture.guideDesign.rules.find(rule => rule.selector === ':root')?.declarations ?? {};
+const sourceTokens: Record<string, string> = Object.fromEntries(Object.entries(fixture.guideDesign.rules.find(rule => rule.selector === ':root')?.declarations ?? {}).filter((entry): entry is [string, string] => typeof entry[1] === 'string'));
 const resolve = (value: string, vars: Record<string, string>) => value.replace(/var\((--[\w-]+)\)/g, (_, name: string) => vars[name] ?? `MISSING:${name}`).replace(/\s+/g, '').toLowerCase();
 const mapSelector = (selector: string) => selector === 'body' ? '.aip-domain5-page' : selector.split(',').map(s => ['html', 'body'].includes(s.trim()) ? '.aip-domain5-page' : '.aip-domain5-page ' + s.trim().replaceAll('pre.mermaid', '.mermaid-wrap').replace('.main pre.code code', '.main .code-block .code-line').replace('.main pre.code', '.main .code-block').replace('.main > h2:first-of-type', '.guide-part:first-child > h2:first-of-type')).join(', ');
 function checkLists(text: string) {
