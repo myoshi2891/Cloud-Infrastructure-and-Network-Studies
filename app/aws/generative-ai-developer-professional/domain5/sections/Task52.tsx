@@ -180,19 +180,19 @@ export default function Task52(){return <section data-part="task2" className="gu
 {" "}
 <h4 >{"X-Ray でプロンプトの文脈を残す例(Python)"}</h4>
 {" "}
-<div className="code-block" role="region" tabIndex={0} aria-label={"X-Ray でプロンプトの文脈を残す例(Python)（コード1）"}><div className="code-line">{"from aws_xray_sdk.core import xray_recorder"}</div>
-<div className="code-line">{""}</div>
-<div className="code-line">{"def invoke_with_trace(client, model_id, prompt_version, messages):"}</div>
-<div className="code-line">{"    with xray_recorder.in_subsegment(\"bedrock_converse\") as seg:"}</div>
-<div className="code-line">{"        # 注釈はフィルタ検索できる。キーは英数字とアンダースコア"}</div>
-<div className="code-line">{"        seg.put_annotation(\"prompt_version\", prompt_version)"}</div>
-<div className="code-line">{"        seg.put_annotation(\"model_id\", model_id)"}</div>
-<div className="code-line">{"        resp = client.converse(modelId=model_id, messages=messages)"}</div>
-<div className="code-line">{"        usage = resp.get(\"usage\", {})"}</div>
-<div className="code-line">{"        seg.put_annotation(\"stop_reason\", resp.get(\"stopReason\", \"unknown\"))"}</div>
-<div className="code-line">{"        seg.put_annotation(\"input_tokens\", usage.get(\"inputTokens\", 0))"}</div>
-<div className="code-line">{"        seg.put_annotation(\"output_tokens\", usage.get(\"outputTokens\", 0))"}</div>
-<div className="code-line">{"        return resp"}</div></div>
+<div className="code-block" role="region" tabIndex={0} aria-label={"X-Ray でプロンプトの文脈を残す例(Python)（コード1）"}><div className="code-line hljs"><span className="hljs-keyword">{"from"}</span>{" aws_xray_sdk.core "}<span className="hljs-keyword">{"import"}</span>{" xray_recorder"}</div>
+<div className="code-line hljs"></div>
+<div className="code-line hljs"><span className="hljs-keyword">{"def"}</span>{" "}<span className="hljs-title function_">{"invoke_with_trace"}</span>{"("}<span className="hljs-params">{"client, model_id, prompt_version, messages"}</span>{"):"}</div>
+<div className="code-line hljs">{"    "}<span className="hljs-keyword">{"with"}</span>{" xray_recorder.in_subsegment("}<span className="hljs-string">{"\"bedrock_converse\""}</span>{") "}<span className="hljs-keyword">{"as"}</span>{" seg:"}</div>
+<div className="code-line hljs">{"        "}<span className="hljs-comment">{"# 注釈はフィルタ検索できる。キーは英数字とアンダースコア"}</span></div>
+<div className="code-line hljs">{"        seg.put_annotation("}<span className="hljs-string">{"\"prompt_version\""}</span>{", prompt_version)"}</div>
+<div className="code-line hljs">{"        seg.put_annotation("}<span className="hljs-string">{"\"model_id\""}</span>{", model_id)"}</div>
+<div className="code-line hljs">{"        resp = client.converse(modelId=model_id, messages=messages)"}</div>
+<div className="code-line hljs">{"        usage = resp.get("}<span className="hljs-string">{"\"usage\""}</span>{", {})"}</div>
+<div className="code-line hljs">{"        seg.put_annotation("}<span className="hljs-string">{"\"stop_reason\""}</span>{", resp.get("}<span className="hljs-string">{"\"stopReason\""}</span>{", "}<span className="hljs-string">{"\"unknown\""}</span>{"))"}</div>
+<div className="code-line hljs">{"        seg.put_annotation("}<span className="hljs-string">{"\"input_tokens\""}</span>{", usage.get("}<span className="hljs-string">{"\"inputTokens\""}</span>{", "}<span className="hljs-number">{"0"}</span>{"))"}</div>
+<div className="code-line hljs">{"        seg.put_annotation("}<span className="hljs-string">{"\"output_tokens\""}</span>{", usage.get("}<span className="hljs-string">{"\"outputTokens\""}</span>{", "}<span className="hljs-number">{"0"}</span>{"))"}</div>
+<div className="code-line hljs">{"        "}<span className="hljs-keyword">{"return"}</span>{" resp"}</div></div>
 {" "}
 <blockquote >{" "}<p >{" 注意: 注釈に利用者の入力そのもの(個人情報)を入れないでください。バージョン・ID・件数などのメタデータに留めます。 "}</p>{" "}</blockquote>
 {" "}
@@ -200,10 +200,10 @@ export default function Task52(){return <section data-part="task2" className="gu
 {" "}
 <p >{" 呼び出しログを CloudWatch Logs に出力している前提で、プロンプトバージョンごとの失敗傾向を集計する例です(フィールド名は実際のログ構造に合わせて調整してください)。 "}</p>
 {" "}
-<div className="code-block" role="region" tabIndex={0} aria-label={"CloudWatch Logs Insights でプロンプト問題を調べる例（コード2）"}><div className="code-line">{"fields @timestamp, input.inputTokenCount, output.outputTokenCount, modelId"}</div>
-<div className="code-line">{"| filter ispresent(output.outputTokenCount)"}</div>
-<div className="code-line">{"| stats avg(output.outputTokenCount) as avg_out, max(output.outputTokenCount) as max_out, count(*) as n by modelId, bin(1h)"}</div>
-<div className="code-line">{"| sort @timestamp desc"}</div></div>
+<div className="code-block" role="region" tabIndex={0} aria-label={"CloudWatch Logs Insights でプロンプト問題を調べる例（コード2）"}><div className="code-line hljs"><span className="hljs-keyword">{"fields"}</span>{" "}<span className="hljs-variable">{"@timestamp"}</span>{", input.inputTokenCount, output.outputTokenCount, modelId"}</div>
+<div className="code-line hljs"><span className="hljs-operator">{"|"}</span>{" "}<span className="hljs-keyword">{"filter"}</span>{" "}<span className="hljs-built_in">{"ispresent"}</span>{"(output.outputTokenCount)"}</div>
+<div className="code-line hljs"><span className="hljs-operator">{"|"}</span>{" "}<span className="hljs-keyword">{"stats"}</span>{" "}<span className="hljs-built_in">{"avg"}</span>{"(output.outputTokenCount) "}<span className="hljs-keyword">{"as"}</span>{" avg_out, "}<span className="hljs-built_in">{"max"}</span>{"(output.outputTokenCount) "}<span className="hljs-keyword">{"as"}</span>{" max_out, "}<span className="hljs-built_in">{"count"}</span>{"(*) "}<span className="hljs-keyword">{"as"}</span>{" n "}<span className="hljs-keyword">{"by"}</span>{" modelId, "}<span className="hljs-built_in">{"bin"}</span>{"("}<span className="hljs-number">{"1"}</span>{"h)"}</div>
+<div className="code-line hljs"><span className="hljs-operator">{"|"}</span>{" "}<span className="hljs-keyword">{"sort"}</span>{" "}<span className="hljs-variable">{"@timestamp"}</span>{" "}<span className="hljs-keyword">{"desc"}</span></div></div>
 {" "}
 <div className={"table-scroll"} role="region" tabIndex={0} aria-label={"CloudWatch Logs Insights でプロンプト問題を調べる例（表40）"}>{" "}<table >{" "}<thead >{" "}<tr className={"header"}>{" "}<th scope="col">{"見るポイント"}</th>{" "}<th scope="col">{"示唆"}</th>{" "}</tr>{" "}</thead>{" "}<tbody >{" "}<tr className={"odd"}>{" "}<td >{"出力トークンが急に増減した"}</td>{" "}<td >{"プロンプト変更の副作用、冗長化、または途中切れ"}</td>{" "}</tr>{" "}<tr className={"even"}>{" "}<td >{"特定のプロンプト版だけエラー・低評価が多い"}</td>{" "}<td >{"直近の変更が原因"}</td>{" "}</tr>{" "}<tr className={"odd"}>{" "}<td >{"入力トークンが上限に近い"}</td>{" "}<td >{"5.2.1 のコンテンツ溢れの予兆"}</td>{" "}</tr>{" "}</tbody>{" "}</table>{" "}</div>
 {" "}
