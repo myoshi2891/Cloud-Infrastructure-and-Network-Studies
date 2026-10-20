@@ -45,5 +45,5 @@ test('AIP Domain 5 browser detects removed list markers and indentation',async({
  await expect(list).toHaveCSS('list-style-type','disc');
  const mutation=await page.addStyleTag({content:'.aip-domain5-page .main ul {list-style-type:none!important;padding-left:0!important}'});
  expect(await list.evaluate(el=>getComputedStyle(el).listStyleType)).toBe('none');expect(await list.evaluate(el=>parseFloat(getComputedStyle(el).paddingLeft))).toBe(0);
- await mutation.evaluate(el=>el.remove());await expect(list).toHaveCSS('list-style-type','disc');
+ await mutation.evaluate(el=>el.parentNode?.removeChild(el));await expect(list).toHaveCSS('list-style-type','disc');
 });

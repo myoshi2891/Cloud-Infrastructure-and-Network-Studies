@@ -68,3 +68,10 @@ it('gives every table, diagram and code scroll region a unique accessible name',
  expect(labels.every(label=>Boolean(label?.trim()))).toBe(true);
  expect(new Set(labels).size).toBe(regions.length);
 });
+
+it('avoids hydration-invalid whitespace children in every table structural element',()=>{
+ const {container}=render(<Page/>);
+ container.querySelectorAll('table,thead,tbody,tfoot,tr,colgroup').forEach(element=>{
+  expect([...element.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE),element.tagName).toHaveLength(0);
+ });
+});
