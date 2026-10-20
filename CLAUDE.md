@@ -810,7 +810,7 @@ app/
 
 components/
   Header.tsx                        # ハンバーガー Drawer ナビ。toNavTree(EXAMS) の結果を描画するため直接編集不要。検索フィルタ・active リンク判定 (usePathname)・最近見たページ表示を内包
-  Footer.tsx                        # シンプルなフッター（サイト名のみ）
+  Footer.tsx                        # ライト／ダーク配色に追従する共通フッター・免責事項
   DisclaimerBanner.tsx              # 免責事項バナー。Header 直下に sticky で貼り付き（top: var(--header-h)）、scroll 中も Header→Disclaimer→本文 の順序を保つ
   DiagramSVG.tsx                    # SVG ダイアグラム共通コンポーネント（ariaLabel または decorative 必須）
   RecentPageRecorder.tsx            # 'use client'、DOM レス。usePathname 監視で lib/recentPages.pushRecent を呼ぶ。layout.tsx に 1 度だけ配置
@@ -905,3 +905,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## 共通フッター（2026-10-20）
+
+`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートを `body:has()` で判定するため、クライアント遷移にも追従する。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。

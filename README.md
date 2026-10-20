@@ -233,3 +233,7 @@ gemini skills install infra-md-to-nextjs-migration.skill --scope workspace
 ※ インストール後、Gemini CLI の対話セッションで `/skills reload` を実行して有効化してください。
 
 セキュアCI/CDガイドの横長図（図3・図4）は、左端がスクロール不能にならない安全な中央寄せへ修正済み（2026-10-02）。
+
+### 共通フッター
+
+各学習ページのライト／ダーク配色に合わせたフッターに、免責事項を掲載しています。スマートフォンではサイト名と免責事項を縦に並べます。
