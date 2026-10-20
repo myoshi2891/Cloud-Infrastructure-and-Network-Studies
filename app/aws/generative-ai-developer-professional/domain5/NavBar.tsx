@@ -68,6 +68,16 @@ export default function NavBar() {
             window.removeEventListener('scroll', endOfPage);
         };
     }, []);
+    // 原本と同じく、現在地のリンクが目次の表示範囲から外れたときだけ目次内をスクロールする。
+    useEffect(() => {
+        const sidebar = document.getElementById('aip-domain5-sidebar');
+        const link = sidebar?.querySelector<HTMLElement>('a[aria-current="location"]');
+        if (!sidebar || !link) return;
+        const top = link.offsetTop;
+        if (top < sidebar.scrollTop + 80 || top > sidebar.scrollTop + sidebar.clientHeight - 80) {
+            sidebar.scrollTop = Math.max(0, top - sidebar.clientHeight / 3);
+        }
+    }, [activeId]);
     return (
         <>
             <button ref={toggleRef} className="sidebar-toggle" type="button" aria-label="メニュー" aria-controls="aip-domain5-sidebar" aria-expanded={open} onClick={() => setOpen(value => !value)}>☰</button>
