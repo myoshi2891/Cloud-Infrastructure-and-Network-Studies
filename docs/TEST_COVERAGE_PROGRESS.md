@@ -4,7 +4,7 @@
 
 ANS Domain 2の最終検証: 全体Vitest344ファイル・3381件、対象と共有抽出15ファイル・115件、Chrome5件（1440/768/390px、原本リストCSS比較、全26SVG、8問、目次・導線、axe違反0・コンソールエラー0）が成功。型検査・全体/対象ESLint・Markdown lint成功。原本コード色2系統のコントラストと本文リンクの下線のみa11y補正。
 
-2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは直下に保持し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行、目視確認はユーザー担当。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へバイト一致で保存後に直下から削除（`fd574555`、HTML SHA-256 `c1842b2f…`）し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証（1440/768/390px・導線を含む5件成功）で代替。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
 
 共通フッターの重なり順を修正。前面レイヤーを解除して全画面の固定サイドバーを優先する。共通CSSの回帰テストとAIP総合・ANS Domain 1・DVA Domain 2の末尾でのヒットテストを追加。関連Vitest3ファイル・7件成功。ChromeでPC・モバイルの配色と3画面の重なり順を検証。モバイル遷移は初回5秒の制限を超えたため30秒へ調整。全体テストは今回再実行せず、以下の全体結果は前回記録。
 
