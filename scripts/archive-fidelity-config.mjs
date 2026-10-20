@@ -32,6 +32,33 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-ans-c01-domain1-guide': {
+    "source": "Ans-c01-domain1-network-design-guide.html",
+    "sourceCommit": "f687755c9dbcd242e5eae9468ded5e37524f045b",
+    "tables": true,
+    "codeBlocks": true,
+    "styledClasses": true,
+    "guideInteractions": true,
+    "syntaxSelectors": {
+        "ans-code-token-0": "pre.code span[style=\"color: #3D7B7B; font-style: italic\"]",
+        "ans-code-token-1": "pre.code span[style=\"color: #BBB\"]",
+        "ans-code-token-2": "pre.code span[style=\"color: #AA5D1F; font-weight: bold\"]",
+        "ans-code-token-3": "pre.code span[style=\"color: #BA2121\"]",
+        "ans-code-token-4": "pre.code span[style=\"color: #19177C\"]",
+        "ans-code-token-5": "pre.code span[style=\"color: #666\"]",
+        "ans-code-token-6": "pre.code span[style=\"color: #008000; font-weight: bold\"]"
+    },
+    "guideBoundaries": {
+        "foundation": "",
+        "task1": "task-11-エッジネットワークサービス",
+        "task2": "task-12-dns-設計",
+        "task3": "task-13-ロードバランシング設計",
+        "task4": "task-14-ログとモニタリング要件の定義",
+        "task5": "task-15-ハイブリッド接続とルーティング",
+        "task6": "task-16-複数アカウント複数リージョン複数-vpc-の接続設計",
+        "revision": "ドメイン-1-横断チートシート"
+    }
+},
     'aws-aip-c01-domain5-guide': {
         source: 'Aip-c01-domain5-testing-validation-troubleshooting-guide.html',
         sourceCommit: 'cb46fb6dc39604b936f3c413f953b6abd4469441',
