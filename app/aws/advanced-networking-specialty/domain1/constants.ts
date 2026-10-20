@@ -1,4 +1,5 @@
-export const NAV_ITEMS = [
+export type NavItem = {id:string;label:string;level:2|3};
+export const NAV_ITEMS: readonly [NavItem, ...NavItem[]] = [
   {
     "id": "0-このガイドの使い方",
     "label": "0. このガイドの使い方",
@@ -59,7 +60,7 @@ export const NAV_ITEMS = [
     "label": "参考 URL 一覧",
     "level": 2
   }
-] as const;
+];
 export const DIAGRAMS = {
   "diag-1": "flowchart TD\nD[\"Domain 1 Network Design 配点 30 パーセント\"]\nD --> T1[\"Task 1.1 エッジサービス\"]\nD --> T2[\"Task 1.2 DNS\"]\nD --> T3[\"Task 1.3 ロードバランシング\"]\nD --> T4[\"Task 1.4 ログとモニタリング\"]\nD --> T5[\"Task 1.5 ハイブリッド接続\"]\nD --> T6[\"Task 1.6 マルチ VPC 接続\"]\n\nclassDef highlightFill fill:#dbe6ff,stroke:#2d52d0,color:#10215c;\nclass D highlightFill",
   "diag-2": "flowchart TD\nV[\"Viewer\"] -->|\"1 最寄りのエッジに到達\"| E[\"Edge location\"]\nE -->|\"2 キャッシュにあれば即応答\"| V\nE -->|\"3 なければ中間層へ\"| R[\"Regional edge cache\"]\nR -->|\"4 なければ集約層へ\"| S[\"Origin Shield\"]\nS -->|\"5 それでもなければ\"| O[\"Origin\"]\n\nclassDef highlightFill fill:#dbe6ff,stroke:#2d52d0,color:#10215c;\nclass O highlightFill",
