@@ -58,6 +58,9 @@ describe('ANS Domain 1 source design declaration fidelity', () => {
    }
   }
  });
+ it('preserves the original card focus ring when the nested checkbox receives keyboard focus',()=>{
+  expect(declarations(css,'.ans-domain1-page .q-options li:has(> [role="checkbox"]:focus-visible)')).toEqual(declarations(css,'.ans-domain1-page .q-options li:focus-visible'));
+ });
  it('restores every browser list marker and isolates quiz and navigation lists', () => checkLists(css));
  it.each([
  ['list-style-type: disc', 'list-style-type: none'], ['list-style-type: decimal', 'list-style-type: none'], ['padding-left: 1.4em', 'padding-left: 0'], ['display: list-item', 'display: block'], ['list-style-type: circle', 'list-style-type: none'],

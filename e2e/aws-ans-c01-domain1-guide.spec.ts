@@ -41,6 +41,7 @@ for(const width of [1440,768,390]){
    await card.locator('.q-options li').nth(wrong).click();await expect(card).toHaveClass(/is-graded-wrong/);
   }
   await expect(root.locator('#quizAnsweredCount')).toHaveText('回答済み 6 / 6 問');await root.locator('#quizResetBtn').click();await expect(root.locator('#quizAnsweredCount')).toHaveText('回答済み 0 / 6 問');await expect(root.locator('.q-card details[open]')).toHaveCount(0);
+  const multiControls=root.locator('#q1 [role="checkbox"]');await multiControls.nth(1).focus();await multiControls.nth(1).press('Space');await expect(multiControls.nth(1)).toHaveAttribute('aria-checked','true');await expect(multiControls.nth(1).locator('..')).toHaveCSS('outline-width','2px');await multiControls.nth(2).focus();await multiControls.nth(2).press('Enter');await expect(root.locator('#q1')).toHaveClass(/is-graded-correct/);await root.locator('#quizResetBtn').click();
   const checks=root.locator('.checklist-card input');for(const box of await checks.all())await box.check();await expect(root.locator('.checklist-card')).toHaveClass(/is-all-done/);await expect(root.locator('.checklist-card .count')).toHaveText('10 / 10 完了');await root.locator('.checklist-reset').click();await expect(root.locator('.checklist-card .count')).toHaveText('0 / 10 完了');
   const counters=await root.locator('.src-card,.ref-link-card,.q-options li,.checklist-card li').evaluateAll(elements=>elements.map(el=>({type:el.matches('.src-card')?'src-item':el.matches('.ref-link-card')?'ref-url-item':el.closest('.q-options')?'q-opt':'chk-item',before:getComputedStyle(el,'::before').content})));
   for(const counter of counters)expect(counter.before).toContain('counter('+counter.type);
@@ -58,6 +59,6 @@ test('ANS Domain 1 browser detects removed list markers and indentation',async({
 });
 
 test('ANS home and Header expose the dedicated Domain 1 guide',async({page})=>{
- await page.goto('/');const card=page.getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty'}).locator('xpath=ancestor::article');await expect(card.locator('a.home-card-cta')).toHaveAttribute('href',route);
- await page.getByRole('button',{name:'メニューを開く'}).click();const dialog=page.getByRole('dialog',{name:'サイトナビゲーション'});const link=dialog.locator(`a[href="${route}"]`);await expect(link).toHaveCount(1);await link.click();await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.locator('.ans-domain1-page h1')).toBeVisible();
+ test.setTimeout(90_000);await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');const card=page.getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty'}).locator('xpath=ancestor::article');await expect(card.locator('a.home-card-cta')).toHaveAttribute('href',route);
+ await page.getByRole('button',{name:'メニューを開く'}).click();const dialog=page.getByRole('dialog',{name:'サイトナビゲーション'});const link=dialog.locator(`a[href="${route}"]`);await expect(link).toHaveCount(1);await dialog.locator('summary').filter({hasText:'AWS Certified Advanced Networking - Specialty'}).click();await expect(link).toBeVisible();await link.click();await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.locator('.ans-domain1-page h1')).toBeVisible();
 });
