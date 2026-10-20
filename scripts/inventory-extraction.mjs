@@ -1,5 +1,12 @@
 export const codeBlockSelector = 'pre:not(.mermaid), .code-block';
 
+/** Keep language labels outside the canonical code block for highlighted HTML. */
+export function normalizeCodeContainers(root) {
+    root.querySelectorAll('.code-block').forEach(element => {
+        if (element.querySelector('pre')) element.classList.replace('code-block', 'code-sample');
+    });
+}
+
 export const diagramSelector =
     '[data-testid="mermaid-diagram"], .mermaid, [id^="diag-"], .diagram-container, .diagram-wrapper, .diagram-wrap, .mermaid-target, .diagram, .diagram-canvas, [data-diagram-id]';
 

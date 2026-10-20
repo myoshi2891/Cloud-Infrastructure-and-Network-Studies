@@ -8,6 +8,7 @@ import {
     diagramSelector,
     extractBodyContent,
     normalize,
+    normalizeCodeContainers,
 } from './inventory-extraction.mjs';
 
 const [, , htmlPath] = process.argv;
@@ -32,6 +33,7 @@ if (
     throw new Error('source.html must resolve inside the repository');
 }
 const doc = new JSDOM(fs.readFileSync(htmlRealPath, 'utf8')).window.document;
+normalizeCodeContainers(doc);
 function dedent(text) {
     if (!text) return '';
     const lines = text.split('\n');

@@ -21,6 +21,12 @@ const commitExists = (sha: string): boolean => {
 const hasSourceCommit = commitExists(aipFixture.sourceCommit);
 
 describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
+    it('compares highlighted code containers once while retaining language labels and blank lines', () => {
+        const source = new JSDOM('<main><div class="code-block"><div class="code-lang">bash</div><pre class="highlight"><code><span class="k">echo</span> x\n\n  tail\n</code></pre></div></main>').window.document;
+        const target = new JSDOM('<main><div class="code-sample"><div class="code-lang">bash</div><div class="code-block highlight"><div class="code-line"><span class="k">echo</span> x</div><div class="code-line"></div><div class="code-line">  tail</div></div></div></main>').window.document;
+        expect(snapshotGuidePart(source).codes).toEqual([['echo x', '', '  tail']]);
+        expect(snapshotGuidePart(target)).toEqual(snapshotGuidePart(source));
+    });
     it('compares formatted source and JSX block boundaries without losing spaces within words', () => {
         const source = new JSDOM('<main><h2>Title</h2>\n<p>Keep <strong>two words</strong></p>\n<table><tbody><tr><td> First </td>\n<td>Second</td></tr></tbody></table></main>').window.document;
         const target = new JSDOM('<main><h2>Title</h2><p>Keep <strong>two words</strong></p><table><tbody><tr><td>First</td><td>Second</td></tr></tbody></table></main>').window.document;
