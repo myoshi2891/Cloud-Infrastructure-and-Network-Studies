@@ -10,7 +10,7 @@ for(const width of [1440,768,390]){
   await page.goto(route);const root=page.locator('.ans-domain2-page');
   await expect(root).toHaveCSS('background-color','rgb(247, 249, 252)');await expect(root).toHaveCSS('color','rgb(28, 42, 63)');
   for(const tag of ['h1','h2','h3','h4','th','td'] as const)expect((await root.locator(tag).allTextContents()).map(t=>t.replace(/\s+/g,' ').trim())).toEqual(inventory[tag].map(t=>t.replace(/\s+/g,' ').trim()));
-  await expect(root.locator('main li')).toHaveCount(86);await expect(root.locator('table')).toHaveCount(57);
+  await expect(root.locator('main li, main .quiz-option')).toHaveCount(86);await expect(root.locator('main .quiz-option')).toHaveCount(34);await expect(root.locator('table')).toHaveCount(57);
   expect(await root.locator('main a[href^="http"]').evaluateAll(links=>links.map(a=>a.getAttribute('href')))).toEqual(inventory.links.map(a=>a.href));
   const sourceListStyles=await root.locator('main').evaluate((main,rules)=>{
    const frame=document.createElement('iframe');frame.style.cssText='position:fixed;left:-10000px;width:'+window.innerWidth+'px;height:1000px';document.body.append(frame);
@@ -26,7 +26,7 @@ for(const width of [1440,768,390]){
    let depth=0;for(let p=el.parentElement;p&&!p.matches('main');p=p.parentElement)if(p.matches('ul,ol'))depth++;
    const css=getComputedStyle(el);return {tag:el.tagName.toLowerCase(),start:el.getAttribute('start'),reversed:el.hasAttribute('reversed'),depth,type:css.listStyleType,position:css.listStylePosition,padding:parseFloat(css.paddingLeft),special:Boolean(el.closest('.checklist-card,.q-options,.source-grid,.ref-url-grid')),checklist:Boolean(el.closest('.checklist-card'))};
   }));
-  expect(lists.map(({tag,start,reversed,depth})=>({tag,start,reversed,depth}))).toEqual(Object.values(fixture.guideParts).flatMap(part=>part.lists).map(({tag,start,reversed,depth})=>({tag,start,reversed,depth})));
+  expect(lists.map(({tag,start,reversed,depth})=>({tag,start,reversed,depth}))).toEqual(Object.values(fixture.guideParts).flatMap(part=>part.lists).filter(list=>!list.items.every(item=>/^[A-E]\. /.test(item.text))).map(({tag,start,reversed,depth})=>({tag,start,reversed,depth})));
   for(const list of lists){expect(list.type).toBe(list.special?'none':list.tag==='ol'?'decimal':list.depth>1?'square':list.depth===1?'circle':'disc');expect(list.position).toBe('outside');expect(list.padding).toBeCloseTo(list.checklist?0:22.4,1);}
   expect(await root.locator('main li').evaluateAll(items=>items.map(li=>getComputedStyle(li).display))).toEqual(await root.locator('main li').evaluateAll(items=>items.map(li=>li.closest('.checklist-card')?'flex':'list-item')));
   await expect(root.locator('nav ul')).toHaveCSS('list-style-type','none');
