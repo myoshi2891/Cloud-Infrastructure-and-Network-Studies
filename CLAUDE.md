@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Updated 2026-10-17
+Updated 2026-10-20
+
+2026-10-20 AIP-C01 Domain 5移行: `/aws/generative-ai-developer-professional/domain5` に全2タスク・14スキル、47表（th119・td713）、18図、206リスト項目、92外部リンク出現、2コード、41目次、練習問題5問、チェック23項目を全文移行。原本のライト配色・300px目次・点と番号・入れ子・インデント・Python/Logs Insightsの色分けを保持。全問の提出・採点・正誤・解説・進捗・リセットとタスク別チェック数を検証。原本Git由来fixtureで全文・順序・構造・全CSSを照合し、本文等7種の欠落とCSS破壊5種を検出。対象12ファイル・88件とChromeの1440/768/390pxを含む4件が成功し、全18SVGの自然倍率・viewBox内包・axe違反0・コンソールエラー0を確認。原本由来の問題補助文のコントラスト不足だけを既存の濃い補助文字色へ補正。HTML・Markdown原本は保持し、テストはarchiveに依存しない。npm・ビルドは依頼に従い未実行。目視確認はユーザー担当。最新実装HEAD `efa67cc5`（最終表示修正 `ce42e381`）。
 
 2026-10-17 AIP-C01 Domain 4移行: `/aws/generative-ai-developer-professional/domain4` に全3タスク・16スキル、84表（th234・td1388）、22図、140リスト項目、36外部リンク出現、2コード、26目次、練習問題12問を全文移行。原本の明色テーマ、点・番号・入れ子・インデント、シンタックスハイライト、単一/複数選択の採点・正誤・解説・得点・回答進捗・リセットを保持。全108横スクロール領域に固有の読み上げ名を付与。Domain 4は原本削除後103件、Chromeは1440/768/390px・全22SVGの自然倍率とviewBox内包・全問・導線・CSS破壊検出を含む6件成功。axe違反0・コンソールエラー0。原本400008バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。全体Vitestは301ファイル・3021件中3020成功、失敗1件は作業前からのAIBナビ期待値。型検査・全体ESLint・対象Markdown lint成功。`bun run build`・`bun run lint` は2026-10-17の進捗同期で成功。npm・目視確認は未実施（Playwrightによる3画面幅の自動レイアウト検証は上記のとおり成功）。
 
@@ -648,6 +650,16 @@ app/
         Diagram.tsx                 # 自然倍率・キーボード横スクロール・固有名
         page.css                    # 原本明色・300px目次・点と番号・入れ子・色分け
         sections/                   # Foundation, Task41〜43, Revision
+      domain5/
+        page.tsx                    # Domain 5詳細版 (Server、metadata、CSS)
+        AipDomain5Guide.tsx          # 導入・Task 5.1/5.2・復習の4区分 (Server)
+        NavBar.tsx                  # 41目次・開閉・scroll spy・hash/focus・目次内追従
+        Quiz.tsx                    # 全5問の選択・提出・採点・解説・集計・リセット
+        Checklist.tsx               # タスク別23チェックと完了数 (Client)
+        constants.ts                # 原本18図・41目次・Mermaidライト設定
+        Diagram.tsx                 # memo・自然倍率・固有名・横スクロール
+        page.css                    # 原本ライト配色・300px目次・点と番号・コード色分け
+        sections/                   # Foundation, Task51, Task52, Revision
     ai-business-strategist/
       page.tsx                      # AWS Certified AI Business Strategist (AIB-C01) 初学者向け完全ガイド (Server)
       AiBusinessStrategistGuide.tsx # 本文・レイアウトコンポーネント (Client)
