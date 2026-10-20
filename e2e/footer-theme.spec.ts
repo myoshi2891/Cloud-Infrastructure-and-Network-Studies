@@ -43,3 +43,29 @@ for (const width of [1440, 390]) {
         await expect(page.getByRole('contentinfo')).toHaveCSS('color-scheme', 'dark');
     });
 }
+
+test('ページ末尾でも固定サイドバーがフッターより手前に表示される', async ({ page }) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    for (const route of [
+        { path: '/aws/generative-ai-developer-professional/', sidebar: '.aip-guide-page .sidebar' },
+        { path: '/aws/advanced-networking-specialty/domain1', sidebar: '.ans-domain1-page .sidebar' },
+        { path: '/aws/developer-associate/domain2', sidebar: '.dva-security-page .sidebar' },
+    ]) {
+    await page.goto(route.path);
+    const footer = page.getByRole('contentinfo');
+    await footer.scrollIntoViewIfNeeded();
+    await expect(footer).toBeInViewport();
+    const sidebar = page.locator(route.sidebar);
+    await expect(sidebar).toBeVisible();
+    const frontmost = await sidebar.evaluate(el => {
+        const sidebarRect = el.getBoundingClientRect();
+        const footerRect = document.querySelector('footer')!.getBoundingClientRect();
+        const x = sidebarRect.left + sidebarRect.width / 2;
+        const y = (Math.max(sidebarRect.top, footerRect.top) + Math.min(sidebarRect.bottom, footerRect.bottom)) / 2;
+        if (y < footerRect.top || y > footerRect.bottom) throw new Error('重なり領域がないため重なり順を検証できません');
+        return el.contains(document.elementFromPoint(x, y));
+    });
+    expect(frontmost, route.path).toBe(true);
+    }
+});
