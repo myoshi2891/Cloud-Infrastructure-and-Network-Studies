@@ -28,7 +28,7 @@
             /* Sidebar */
             .aip-domain5-page .sidebar {
                 position: fixed;
-                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0);
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
                 left: 0;
                 bottom: 0;
                 width: 300px;
