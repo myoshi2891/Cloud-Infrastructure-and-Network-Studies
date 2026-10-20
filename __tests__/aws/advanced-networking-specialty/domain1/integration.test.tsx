@@ -6,11 +6,11 @@ import {toNavTree} from '@/app/navigation';
 import Home from '@/app/page';
 import {Header} from '@/components/Header';
 const route='/aws/advanced-networking-specialty/domain1';
-it('registers an available ANS Specialty with only the implemented Domain 1 route',()=>{
+it('registers an available ANS Specialty with both implemented domain routes',()=>{
  const exam=EXAMS.find(e=>e.id==='aws-ans');
  expect(exam).toMatchObject({label:'AWS Certified Advanced Networking - Specialty',abbr:'ANS',level:'Specialty',provider:'AWS',status:'available',href:route,badge:'ANS-C01',color:'card-aws-ans',overviewLabel:'ドメイン1: ネットワーク設計'});
- expect(exam?.domains).toEqual([{label:'ドメイン1: ネットワーク設計',href:route,pct:'30%'}]);
- expect(toNavTree(EXAMS).find(g=>g.provider==='AWS')?.exams.find(e=>e.id==='aws-ans')?.items).toEqual([{label:'ドメイン1: ネットワーク設計',href:route}]);
+ expect(exam?.domains).toEqual([{label:'ドメイン1: ネットワーク設計',href:route,pct:'30%'},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2',pct:'26%'}]);
+ expect(toNavTree(EXAMS).find(g=>g.provider==='AWS')?.exams.find(e=>e.id==='aws-ans')?.items).toEqual([{label:'ドメイン1: ネットワーク設計',href:route},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2'}]);
  expect(cardColorMap).toHaveProperty('card-aws-ans','card-aws-ans');
 });
 it('exposes the real homepage card and exactly one Header link to Domain 1',()=>{
