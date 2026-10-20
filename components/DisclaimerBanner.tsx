@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { DISCLAIMER } from './disclaimer';
 
 /**
  * Renders a sticky disclaimer banner and publishes its rendered height to a CSS custom property.
@@ -55,10 +56,10 @@ export function DisclaimerBanner() {
             }}
         >
             <span style={{ display: 'block' }}>
-                ⚠️ 本サイトは個人学習を目的として作成したものです。掲載内容の正確性・完全性は保証されておらず、試験の合否を含むいかなる結果に対しても責任を負いません。
+                ⚠️ {DISCLAIMER.purpose}
             </span>
             <span style={{ display: 'block' }}>
-                最新の公式情報は各試験プロバイダーの公式サイトをご確認ください。
+                {DISCLAIMER.official}
             </span>
         </aside>
     );

@@ -14,6 +14,13 @@
  */
 
 @theme {
+    /* Shared footer palettes: selected by the displayed page theme. */
+    --color-footer-dark-bg: #10131e;
+    --color-footer-dark-text: #b6bfd0;
+    --color-footer-dark-border: #2d3547;
+    --color-footer-light-bg: #f1f4f9;
+    --color-footer-light-text: #4b5870;
+    --color-footer-light-border: #d3dce9;
     /* ANS-C01 Domain 1: source light palette */
     --color-ans-d1-1: #1c2433;
     --color-ans-d1-2: #2d52d0;
