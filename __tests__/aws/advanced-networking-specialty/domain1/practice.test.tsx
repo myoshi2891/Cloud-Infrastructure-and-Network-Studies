@@ -19,7 +19,7 @@ it('retains all original question attributes, options, hints, explanations and i
   expect(options(card).map(li=>normalizeSpaces(li.textContent??''))).toEqual(source.options);
   expect(normalizeSpaces(card.querySelector('details p')?.textContent??'')).toBe(source.explanation);
   expect(card.querySelector('summary')).toHaveTextContent(source.summary);expect(card.querySelector('details')).not.toHaveAttribute('open');
-  for(const option of options(card)){expect(option).toHaveAttribute('role',source.multi?'checkbox':'radio');expect(option).toHaveAttribute('aria-checked','false');expect(option).toHaveAttribute('tabindex','0');}
+  for(const option of options(card)){const control=source.multi?option.querySelector('[role="checkbox"]'):option;expect(control).not.toBeNull();expect(control).toHaveAttribute('role',source.multi?'checkbox':'radio');expect(control).toHaveAttribute('aria-checked','false');expect(control).toHaveAttribute('tabindex','0');if(source.multi)expect(option).toHaveAttribute('role','none');}
  }
 });
 it.each(quiz)('$id grades exact source answer automatically, opens explanations and regrades changes',source=>{
@@ -42,7 +42,7 @@ it.each(quiz.filter(q=>q.multi))('$id handles incomplete, extra, deselected and 
 });
 it('supports Enter and Space, exact progress and a complete reset independently of checklist',()=>{
  const {container}=render(<Page/>);
- for(const source of quiz){const card=cardFor(container,source.id);for(const [index,answer] of source.answer.entries())fireEvent.keyDown(options(card)[answer-1]!,{key:index%2?' ':'Enter'});expect(card).toHaveClass('is-graded-correct');}
+ for(const source of quiz){const card=cardFor(container,source.id);for(const [index,answer] of source.answer.entries())fireEvent.keyDown(options(card)[answer-1]!.querySelector('[role="checkbox"]')??options(card)[answer-1]!,{key:index%2?' ':'Enter'});expect(card).toHaveClass('is-graded-correct');}
  expect(container.querySelector('#quizCorrectCount')).toHaveTextContent('正解 6 / 6 問');expect(container.querySelector('#quizProgressFill')).toHaveStyle({width:'100%'});
  const check=container.querySelector<HTMLInputElement>('.checklist-card input')!;fireEvent.click(check);fireEvent.click(container.querySelector('#quizResetBtn')!);
  expect(container.querySelector('#quizCorrectCount')).toHaveTextContent('正解 0 / 6 問');expect(container.querySelector('#quizProgressFill')).toHaveStyle({width:'0%'});

@@ -12,7 +12,9 @@ it('retains every original highlighted span, including whitespace, bold and ital
  const selectors=Object.fromEntries(Object.keys(fixture.syntaxTokens).map(key=>[key,'.code-block .'+key]));
  expect(snapshotTokens(container,selectors)).toEqual(fixture.syntaxTokens);
  const css=postcss.parse(readFileSync('app/aws/advanced-networking-specialty/domain1/page.css','utf8'));
- for(const [name,selector] of Object.entries(FIDELITY_PAGES['aws-ans-c01-domain1-guide'].syntaxSelectors)){
+ const config=FIDELITY_PAGES['aws-ans-c01-domain1-guide'];
+ if(!config?.syntaxSelectors)throw new Error('Missing source syntax selectors');
+ for(const [name,selector] of Object.entries(config.syntaxSelectors)){
   const raw=selector.match(/\[style=(".*")\]$/)?.[1];expect(raw).toBeDefined();
   const expected:Record<string,string>={};postcss.parse('x{'+JSON.parse(raw!)+'}').walkDecls(d=>{expected[d.prop]=d.value;});
   const actual:Record<string,string>={};css.walkRules(rule=>{if(rule.selector==='.ans-domain1-page .'+name)rule.walkDecls(d=>{actual[d.prop]=d.value;});});
