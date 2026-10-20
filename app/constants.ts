@@ -22,6 +22,7 @@ export type ColorKey =
     | 'card-aws-dva'
     | 'card-aws-aib'
     | 'card-aws-aip'
+    | 'card-aws-ans'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -74,6 +75,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-aws-dva': 'card-aws-dva',
     'card-aws-aib': 'card-aws-aib',
     'card-aws-aip': 'card-aws-aip',
+    'card-aws-ans': 'card-aws-ans',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -618,6 +620,22 @@ const ALL_EXAMS: Exam[] = [
         badge: 'SOA-C03',
         icon: '⚙️',
         provider: 'AWS',
+    },
+    {
+        id: 'aws-ans',
+        label: 'AWS Certified Advanced Networking - Specialty',
+        abbr: 'ANS',
+        level: 'Specialty',
+        score: '合格 750点 / 採点対象50問 + 採点対象外15問',
+        color: 'card-aws-ans',
+        href: '/aws/advanced-networking-specialty/domain1',
+        overviewLabel: 'ドメイン1: ネットワーク設計',
+        description: 'ANS-C01ネットワーク設計の全6タスクを収録。エッジ、DNS、負荷分散、監視、ハイブリッド、複数VPC接続を75表・15図・7コード・6問で学ぶ。',
+        domains: [{ label: 'ドメイン1: ネットワーク設計', href: '/aws/advanced-networking-specialty/domain1', pct: '30%' }],
+        badge: 'ANS-C01',
+        icon: '🌐',
+        provider: 'AWS',
+        status: 'available',
     },
     {
         id: 'aws-aip',
