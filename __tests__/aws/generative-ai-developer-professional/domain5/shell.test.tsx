@@ -35,3 +35,14 @@ it('syncs aria-current from a valid fragment and history navigation, falling bac
  expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
  unmount();window.history.replaceState(null,'',window.location.pathname);
 });
+it('scroll spy keeps its active item visible inside the sidebar without moving page focus',()=>{
+ let notify: IntersectionObserverCallback | undefined;
+ vi.stubGlobal('IntersectionObserver',class{constructor(callback:IntersectionObserverCallback){notify=callback;}observe=vi.fn();disconnect=vi.fn();});
+ const {container}=render(<NavBar/>);const sidebar=container.querySelector<HTMLElement>('.sidebar')!;
+ const target=NAV_ITEMS[20]!;const anchor=container.querySelector<HTMLAnchorElement>(`a[href="#${target.id}"]`)!;
+ Object.defineProperty(sidebar,'clientHeight',{value:400});Object.defineProperty(anchor,'offsetTop',{value:1000});
+ const previousFocus=document.activeElement;
+ act(()=>notify?.([{isIntersecting:true,target:{id:target.id}} as IntersectionObserverEntry],{} as IntersectionObserver));
+ expect(anchor).toHaveAttribute('aria-current','location');expect(sidebar.scrollTop).toBeCloseTo(1000-400/3);
+ expect(document.activeElement).toBe(previousFocus);
+});
