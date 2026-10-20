@@ -2,7 +2,7 @@
 
 最終更新日: 2026-10-20
 
-ANS Domain 2の最終検証: 全体Vitest344ファイル・3381件、対象と共有抽出15ファイル・115件、Chrome5件（1440/768/390px、原本リストCSS比較、全26SVG、8問、目次・導線、axe違反0・コンソールエラー0）が成功。型検査・全体/対象ESLint・Markdown lint成功。原本コード色2系統のコントラストと本文リンクの下線のみa11y補正。
+ANS Domain 2の最終検証: レビュー対応後（`46f6032c`）は全体Vitest344ファイル・3382件、`bun run build`・`bun run lint` が成功。修正前の移行時は全体Vitest344ファイル・3381件、対象と共有抽出15ファイル・115件、Chrome5件（1440/768/390px、原本リストCSS比較、全26SVG、8問、目次・導線、axe違反0・コンソールエラー0）が成功。型検査・全体/対象ESLint・Markdown lint成功。原本コード色2系統のコントラストと本文リンクの下線のみa11y補正。
 
 2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へバイト一致で保存後に直下から削除（`fd574555`、HTML SHA-256 `c1842b2f…`）し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証（1440/768/390px・導線を含む5件成功）で代替。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
 
@@ -267,7 +267,7 @@ bun run dashboard
 
 ## 7. 次回セッションでのテスト追加再開プロンプト
 
-ANS-C01 Domain 2は実装済み・未コミット。再移行は不要。59目次・57表・26図・11コード・86リスト・43リンク出現・8問を固定Git原本のfixtureで照合する。最新の検証結果はMIGRATION_PROGRESS.mdを参照。次の移行対象はユーザー指定待ち。
+ANS-C01 Domain 2は実装済み・コミット済み（レビュー対応の最新実装 `46f6032c`、進捗同期 `b189d5eb`）。再移行は不要。59目次・57表・26図・11コード・86リスト・43リンク出現・8問を固定Git原本のfixtureで照合する。最新の検証結果はMIGRATION_PROGRESS.mdを参照。次の移行対象はユーザー指定待ち。
 
 共通フッターのライト／ダーク対応と免責事項掲載は完了。`Footer.module.css` の明色ルート一覧は新規ライトページ追加時に更新し、`e2e/footer-theme.spec.ts` で配色・コントラスト・横はみ出しを確認する。
 
