@@ -14,6 +14,18 @@
  */
 
 @theme {
+    --color-aip-d5-1: #e2e8f4;
+    --color-aip-d5-2: #44577a;
+    --color-aip-d5-3: #e6edfc;
+    --color-aip-d5-4: #d3dcee;
+    --color-aip-d5-5: #eef2fa;
+    --color-aip-d5-6: #a8520b;
+    --color-aip-d5-7: #14213d;
+    --color-aip-d5-8: #b6e2c9;
+    --color-aip-d5-9: #17794a;
+    --color-aip-d5-10: #9db4f0;
+    --color-aip-d5-11: #6b7d9c;
+    --color-aip-d5-12: #b3263f;
     /* Layer 3: AIP-C01 Domain 4 原本ライト配色 */
     --color-aip-d4-1: #1b2540;
     --color-aip-d4-2: #3454d1;
