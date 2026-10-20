@@ -634,7 +634,7 @@ const ALL_EXAMS: Exam[] = [
             { label: 'ドメイン2: 実装と統合', href: '/aws/generative-ai-developer-professional/domain2', pct: '26%' },
             { label: 'ドメイン3: AI安全性・セキュリティ・ガバナンス', href: '/aws/generative-ai-developer-professional/domain3', pct: '20%' },
             { label: 'ドメイン4: 運用効率と最適化', href: '/aws/generative-ai-developer-professional/domain4', pct: '12%' },
-            { label: 'ドメイン5: テスト・検証・トラブルシューティング', href: '/aws/generative-ai-developer-professional#6-ドメイン5-テスト検証トラブルシューティング11', pct: '11%' },
+            { label: 'ドメイン5: テスト・検証・トラブルシューティング', href: '/aws/generative-ai-developer-professional/domain5', pct: '11%' },
         ],
         badge: 'AIP-C01',
         icon: '🤖',
