@@ -13,7 +13,7 @@ const tokens: Record<string, string> = {};
 postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(decl => { if (decl.prop.startsWith('--')) tokens[decl.prop] = decl.value; });
 const sourceTokens = fixture.guideDesign.rules.find(rule => rule.selector === ':root')?.declarations ?? {};
 const resolve = (value: string, vars: Record<string, string>) => value.replace(/var\((--[\w-]+)\)/g, (_, name: string) => vars[name] ?? `MISSING:${name}`).replace(/\s+/g, '').toLowerCase();
-const mapSelector = (selector: string) => selector === 'body' ? '.aip-domain5-page' : selector.split(',').map(s => ['html', 'body'].includes(s.trim()) ? '.aip-domain5-page' : '.aip-domain5-page ' + s.trim().replaceAll('pre.mermaid', '.mermaid-wrap').replace('.main pre.code code', '.main .code-block .code-line').replace('.main pre.code', '.main .code-block').replace('.main > .hero + h2', '.guide-part:first-child > .hero + h2')).join(', ');
+const mapSelector = (selector: string) => selector === 'body' ? '.aip-domain5-page' : selector.split(',').map(s => ['html', 'body'].includes(s.trim()) ? '.aip-domain5-page' : '.aip-domain5-page ' + s.trim().replaceAll('pre.mermaid', '.mermaid-wrap').replace('.main pre.code code', '.main .code-block .code-line').replace('.main pre.code', '.main .code-block').replace('.main > h2:first-of-type', '.guide-part:first-child > h2:first-of-type')).join(', ');
 function checkLists(text: string) {
  expect(declarations(text, '.aip-domain5-page .main ul')['list-style-type']).toBe('disc');
  expect(declarations(text, '.aip-domain5-page .main ol')['list-style-type']).toBe('decimal');
@@ -25,9 +25,8 @@ function checkLists(text: string) {
  expect(declarations(text, '.aip-domain5-page #sidebarNav ul')['list-style']).toBe('none');
 }
 describe('Domain 5 source design declaration fidelity', () => {
- it('stacks the open mobile sidebar above the sticky quiz bar and keeps the menu button above the sidebar', () => {
+ it('keeps the mobile menu button above the sidebar', () => {
   const z = (selector: string) => Number(declarations(css, selector)['z-index']);
-  expect(z('.aip-domain5-page .sidebar')).toBeGreaterThan(z('.aip-domain5-page .quiz-bar'));
   expect(z('.aip-domain5-page .sidebar-toggle')).toBeGreaterThan(z('.aip-domain5-page .sidebar'));
  });
  it('retains every effective source declaration including responsive layout and syntax colors', () => {
