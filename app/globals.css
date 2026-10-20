@@ -14,6 +14,32 @@
  */
 
 @theme {
+    /* ANS-C01 Domain 1: source light palette */
+    --color-ans-d1-1: #1c2433;
+    --color-ans-d1-2: #2d52d0;
+    --color-ans-d1-3: #4a5876;
+    --color-ans-d1-4: #0f1626;
+    --color-ans-d1-5: #9a4700;
+    --color-ans-d1-6: #a5dbbf;
+    --color-ans-d1-7: #1f7a4d;
+    --color-ans-d1-8: #f7f9fe;
+    --color-ans-d1-9: #6b7894;
+    --color-ans-d1-10: #a9bbf0;
+    --color-ans-d1-11: #f8faff;
+    --color-ans-d1-12: #4c74f5;
+    --color-ans-d1-13: #84d1a8;
+    --color-ans-d1-14: #eb99a8;
+    --color-ans-d1-15: #f3c878;
+    --color-ans-d1-16: #fafbfe;
+    --color-ans-d1-17: #162b72;
+    --color-ans-d1-18: #114b2f;
+    --color-ans-d1-19: #c62f4b;
+    --color-ans-d1-20: #7c182b;
+    --color-ans-d1-21: #f1fbf6;
+    --color-ans-d1-22: #f5f8ff;
+    --color-ans-d1-23: #f2fbf6;
+    --color-ans-d1-24: #b7e4cb;
+    --color-ans-d1-25: #f6f9ff;
     --color-aip-d5-1: #e2e8f4;
     --color-aip-d5-2: #44577a;
     --color-aip-d5-3: #e6edfc;
