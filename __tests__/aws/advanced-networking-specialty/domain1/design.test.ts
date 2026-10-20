@@ -32,7 +32,7 @@ function checkLists(text: string) {
 }
 describe('ANS Domain 1 source design declaration fidelity', () => {
  it('keeps the mobile menu button above the sidebar', () => {
-  const z = (selector: string) => Number(declarations(css, selector)['z-index']);
+  const z = (selector: string) => Number(declarations(css, selector)['z-index'] ?? 0);
   expect(z('.ans-domain1-page .sidebar-toggle')).toBeGreaterThan(z('.ans-domain1-page .sidebar'));
   expect(z('.ans-domain1-page .sidebar')).toBeGreaterThan(z('.ans-domain1-page .quiz-bar'));
  });
