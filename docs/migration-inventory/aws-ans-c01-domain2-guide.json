@@ -1437,7 +1437,7 @@
     },
     {
       "kind": "code",
-      "text": "# 1) 仮想インターフェイス(Private VIF)の作成\naws directconnect create-private-virtual-interface \\\n  --connection-id dxcon-xxxxxxxx \\\n  --new-private-virtual-interface '{\n    \"virtualInterfaceName\": \"prod-private-vif\",\n    \"vlan\": 101,\n    \"asn\": 65001,\n    \"authKey\": \"your-bgp-md5-key\",\n    \"mtu\": 9001,\n    \"addressFamily\": \"ipv4\",\n    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"\n  }'\n\n# 2) DXGW と TGW を関連付け(許可プレフィックスを指定)\naws directconnect create-direct-connect-gateway-association \\\n  --direct-connect-gateway-id 11111111-2222-3333-4444-555555555555 \\\n  --gateway-id tgw-0123456789abcdef0 \\\n  --add-allowed-prefixes-to-direct-connect-gateway cidr=10.0.0.0/16"
+      "text": "# 1) 仮想インターフェイス(Transit VIF)の作成\naws directconnect create-transit-virtual-interface \\\n  --connection-id dxcon-xxxxxxxx \\\n  --new-transit-virtual-interface '{\n    \"virtualInterfaceName\": \"prod-transit-vif\",\n    \"vlan\": 101,\n    \"asn\": 65001,\n    \"authKey\": \"your-bgp-md5-key\",\n    \"mtu\": 8500,\n    \"addressFamily\": \"ipv4\",\n    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"\n  }'\n\n# 2) DXGW と TGW を関連付け(許可プレフィックスを指定)\naws directconnect create-direct-connect-gateway-association \\\n  --direct-connect-gateway-id 11111111-2222-3333-4444-555555555555 \\\n  --gateway-id tgw-0123456789abcdef0 \\\n  --add-allowed-prefixes-to-direct-connect-gateway cidr=10.0.0.0/16"
     },
     {
       "kind": "annotation",

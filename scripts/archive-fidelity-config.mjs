@@ -35,7 +35,7 @@ export const FIDELITY_PAGES = {
     'aws-ans-c01-domain2-guide': {
         source: 'Ans-c01-domain2-network-implementation-guide.html',
         syntaxSelectors: {"c1":"pre.highlight span.c1","w":"pre.highlight span.w","se":"pre.highlight span.se","s1":"pre.highlight span.s1","m":"pre.highlight span.m","nv":"pre.highlight span.nv","o":"pre.highlight span.o","nt":"pre.highlight span.nt","p":"pre.highlight span.p","l":"pre.highlight span.l","l-Scalar":"pre.highlight span.l-Scalar","l-Scalar-Plain":"pre.highlight span.l-Scalar-Plain","p-Indicator":"pre.highlight span.p-Indicator","kt":"pre.highlight span.kt","s":"pre.highlight span.s","k":"pre.highlight span.k","kr":"pre.highlight span.kr","nx":"pre.highlight span.nx","s2":"pre.highlight span.s2","kd":"pre.highlight span.kd","ow":"pre.highlight span.ow","kn":"pre.highlight span.kn","nn":"pre.highlight span.nn","n":"pre.highlight span.n","nf":"pre.highlight span.nf","sd":"pre.highlight span.sd","mi":"pre.highlight span.mi","kc":"pre.highlight span.kc","nb":"pre.highlight span.nb"},
-        sourceCommit: 'cb46fb6dc39604b936f3c413f953b6abd4469441',
+        sourceCommit: 'c5c1000ffaa0ad1b2ad0b6ae96fcc4b1f0011b8f',
         tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
         guideBoundaries: {
             foundation: '',

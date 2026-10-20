@@ -1,7 +1,7 @@
 {
   "slug": "aws-ans-c01-domain2-guide",
   "source": "Ans-c01-domain2-network-implementation-guide.html",
-  "sourceCommit": "cb46fb6dc39604b936f3c413f953b6abd4469441",
+  "sourceCommit": "c5c1000ffaa0ad1b2ad0b6ae96fcc4b1f0011b8f",
   "guideParts": {
     "foundation": {
       "text": "AWS Certified Advanced Networking - Specialty · Domain 2 AWS Certified Advanced Networking - Specialty (ANS-C01) Content Domain 2: Network Implementation(ネットワークの実装)初学者向けステップバイステップ解説 配点 約26% 対象 初学者〜中級者 図解 Mermaid 26点 参考文献 40件 対象試験: AWS Certified Advanced Networking - Specialty (ANS-C01) 想定受験: Pearson VUE(テストセンターまたはオンライン)での受験。受験言語は英語・日本語・韓国語・中国語(簡体字)から選択でき、本ガイドは日本国内から日本語または英語で受験する読者を想定 受験可能期間(2026年10月17日確認): 英語版の公式認定ページは「最終受験日 2026年12月31日」と記載しており、この時点では予約・受験が可能です。一方、日本語版の公式ページは「最終受験日 2026年8月25日」のままで、記載が食い違っています。本ガイドは更新が新しい英語版ページの 2026年12月31日 を適用日として扱います。言語・地域ごとの予約枠は、予約前に Pearson VUE の予約画面で必ず確認してください(出典: 英語版 / 日本語版) 対象ドメイン: Content Domain 2: Network Implementation(出題比率 26%) 想定読者: ネットワークの基礎(IPアドレス、サブネット、ルーティング)をざっくり知っている初学者〜中級者 根拠(アンカー): ANS-C01 試験ガイド Domain 2 0. このガイドの使い方 0.1 Domain 2 の位置づけ ANS-C01 は4つのドメインで構成されます。Domain 2 は「設計(Domain 1)で決めた構成を実際に作って繋ぐ」領域で、出題比率は26%です。 ドメイン 内容 比率 Domain 1 Network Design(設計) 30% Domain 2 Network Implementation(実装) 26% Domain 3 Network Management and Operation(運用) 20% Domain 4 Network Security, Compliance, and Governance(セキュリティ) 24% 試験形式の要点(試験ガイドより): 出題形式は複数選択(Multiple response)とマッチング(Matching)のみで、スコア対象は50問(別途、採点対象外の問題が15問)。合格はスケールスコア750以上(100〜1,000)、合否は試験全体で判定される補償型スコアリングです。 0.2 4つのタスクと学習の順番 この順番は「物理回線 → 論理的なネットワーク → 名前 → 自動化」と、下から上へ積み上げる順序です。初学者はこの順で読むと理解しやすくなります。 0.3 各タスクの「知識」と「スキル」(試験ガイドの要約) タスク 主な知識 主なスキル 2.1 ルーティングプロトコル、VPN、L1(LOA、コロケーション、Direct Connect)、L2/L3、Transit Gateway Connect、DNS、ファイアウォール、L4/L7ロードバランシング、AWS Organizations/RAM、Reachability Analyzer 物理要件の構成、静的/動的ルーティング、既存オンプレとの接続、名前解決、LB構成、監視とログ、接続性テスト 2.2 VPC Peering、Transit Gateway、VPN、SD-WAN、MPLS、PrivateLink、SAML/AD、SG/NACL/Network Firewall 単一/複数VPC設計、サードパーティ連携、ハブ&スポーク、DNS、境界のセキュリティ、監視 2.3 プライベート/パブリックホストゾーン、ルーティングポリシー、委任と転送、レコードタイプ、DNSSEC、RAM共有、インバウンド/アウトバウンドエンドポイント ゾーンと条件付き転送、トラフィック管理、ハイブリッドDNS、DNSSEC、集中/分散DNS、監視 2.4 IaC(CDK/CloudFormation/CLI/SDK)、イベント駆動自動化、ハードコードの問題点 再利用可能な構成、イベント連携、ハイブリッド自動化、コスト最適化 試験ガイド自体が「網羅的な一覧ではない」と明記しています。本ガイドは各項目を実務レベルまで掘り下げ、関連する周辺知識も補っています。 0.4 表記ルール 図は Mermaid(フローチャート) と Markdownの表 のみ使用しています(ASCII図は使いません)。 数値(クォータ、帯域など)は変更されることがあります。必ず最新の公式ドキュメントで確認してください(§9にURLあり)。 ベストプラクティスは各節の末尾に「✅ ベストプラクティス」として整理しています。 1. 前提知識の整理(L1/L2/L3・BGP・CIDR) 1.1 OSI参照モデルとAWSサービスの対応 層 名前 主な概念 試験で登場するAWSの要素 L1 物理層 光ファイバー、ポート、クロスコネクト Direct Connect ロケーション、LOA-CFA、コロケーション L2 データリンク層 VLAN、MACアドレス、スイッチング Direct Connect の VIF(802.1Q VLAN ID) L3 ネットワーク層 IPアドレス、ルーティング VPC ルートテーブル、BGP、Transit Gateway、GWLB(L3) L4 トランスポート層 TCP/UDP、ポート NLB、セキュリティグループ、NACL L7 アプリケーション層 HTTP、DNS ALB、Route 53、AWS WAF 1.2 ルーティングの基本 ルーターは「宛先IPアドレス → 次に渡す相手(ネクストホップ)」の対応表(ルーティングテーブル)で転送先を決めます。 方式 説明 長所 短所 静的ルーティング 管理者が手動で経路を書く 単純、BGP不要 障害時の自動切替ができない、変更が手作業 動的ルーティング(BGP) ルーター同士が経路情報を交換する 自動で経路を学習・切替できる BGPの設定と理解が必要 AWSで使う動的ルーティングはBGP(Border Gateway Protocol)です。BGPの最低限の用語は次の通りです。 用語 意味 ASN(自律システム番号) ネットワーク運営者を識別する番号。プライベートASNの範囲は 64512〜65534(2バイト)と 4200000000〜4294967294(4バイト) eBGP 異なるASN同士のBGP。AWSとオンプレのピアリングはeBGP AS_PATH 経路が通過したASNの列。短いほど優先される MED / Local Preference 経路の優先度を調整する属性 BGPコミュニティ 経路に付けるタグ。Direct Connectでは優先度制御に使う BFD 高速な障害検知プロトコル。BGP単独のタイムアウトより早く切り替えられる 1.3 CIDRと重複の問題 CIDR(例: 10.0.0.0/16)で表すアドレス範囲が、接続したい相手と重複すると多くの接続方式が使えません(VPC Peering は重複不可、Transit Gateway も同一ルートテーブル内で曖昧になる)。実装前に必ずIPアドレス計画(IPAM)を確認します。 PrivateLink は「サービス単位で一方向に」公開する仕組みなので、CIDRが重複していても使える、というのが試験の定番ポイントです(§3.4)。",
@@ -3026,7 +3026,7 @@
         },
         {
           "kind": "code",
-          "text": "# 1) 仮想インターフェイス(Private VIF)の作成\naws directconnect create-private-virtual-interface \\\n  --connection-id dxcon-xxxxxxxx \\\n  --new-private-virtual-interface '{\n    \"virtualInterfaceName\": \"prod-private-vif\",\n    \"vlan\": 101,\n    \"asn\": 65001,\n    \"authKey\": \"your-bgp-md5-key\",\n    \"mtu\": 9001,\n    \"addressFamily\": \"ipv4\",\n    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"\n  }'\n\n# 2) DXGW と TGW を関連付け(許可プレフィックスを指定)\naws directconnect create-direct-connect-gateway-association \\\n  --direct-connect-gateway-id 11111111-2222-3333-4444-555555555555 \\\n  --gateway-id tgw-0123456789abcdef0 \\\n  --add-allowed-prefixes-to-direct-connect-gateway cidr=10.0.0.0/16"
+          "text": "# 1) 仮想インターフェイス(Transit VIF)の作成\naws directconnect create-transit-virtual-interface \\\n  --connection-id dxcon-xxxxxxxx \\\n  --new-transit-virtual-interface '{\n    \"virtualInterfaceName\": \"prod-transit-vif\",\n    \"vlan\": 101,\n    \"asn\": 65001,\n    \"authKey\": \"your-bgp-md5-key\",\n    \"mtu\": 8500,\n    \"addressFamily\": \"ipv4\",\n    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"\n  }'\n\n# 2) DXGW と TGW を関連付け(許可プレフィックスを指定)\naws directconnect create-direct-connect-gateway-association \\\n  --direct-connect-gateway-id 11111111-2222-3333-4444-555555555555 \\\n  --gateway-id tgw-0123456789abcdef0 \\\n  --add-allowed-prefixes-to-direct-connect-gateway cidr=10.0.0.0/16"
         },
         {
           "kind": "annotation",
@@ -3112,15 +3112,15 @@
           "  }'"
         ],
         [
-          "# 1) 仮想インターフェイス(Private VIF)の作成",
-          "aws directconnect create-private-virtual-interface \\",
+          "# 1) 仮想インターフェイス(Transit VIF)の作成",
+          "aws directconnect create-transit-virtual-interface \\",
           "  --connection-id dxcon-xxxxxxxx \\",
-          "  --new-private-virtual-interface '{",
-          "    \"virtualInterfaceName\": \"prod-private-vif\",",
+          "  --new-transit-virtual-interface '{",
+          "    \"virtualInterfaceName\": \"prod-transit-vif\",",
           "    \"vlan\": 101,",
           "    \"asn\": 65001,",
           "    \"authKey\": \"your-bgp-md5-key\",",
-          "    \"mtu\": 9001,",
+          "    \"mtu\": 8500,",
           "    \"addressFamily\": \"ipv4\",",
           "    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"",
           "  }'",
@@ -18340,15 +18340,15 @@
       "  }'"
     ],
     [
-      "# 1) 仮想インターフェイス(Private VIF)の作成",
-      "aws directconnect create-private-virtual-interface \\",
+      "# 1) 仮想インターフェイス(Transit VIF)の作成",
+      "aws directconnect create-transit-virtual-interface \\",
       "  --connection-id dxcon-xxxxxxxx \\",
-      "  --new-private-virtual-interface '{",
-      "    \"virtualInterfaceName\": \"prod-private-vif\",",
+      "  --new-transit-virtual-interface '{",
+      "    \"virtualInterfaceName\": \"prod-transit-vif\",",
       "    \"vlan\": 101,",
       "    \"asn\": 65001,",
       "    \"authKey\": \"your-bgp-md5-key\",",
-      "    \"mtu\": 9001,",
+      "    \"mtu\": 8500,",
       "    \"addressFamily\": \"ipv4\",",
       "    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"",
       "  }'",
@@ -18584,7 +18584,7 @@
   "syntaxTokens": {
     "c1": [
       "# BGP動的VPN接続をTGW終端で作成(トンネルオプションで暗号スイートを制限)",
-      "# 1) 仮想インターフェイス(Private VIF)の作成",
+      "# 1) 仮想インターフェイス(Transit VIF)の作成",
       "# 2) DXGW と TGW を関連付け(許可プレフィックスを指定)",
       "# Organizationsとの共有を有効化(管理アカウントで1回)",
       "# TGWを組織全体に共有するリソース共有を作成",
@@ -19022,11 +19022,11 @@
       "]",
       "}'",
       "'{",
-      "\"virtualInterfaceName\": \"prod-private-vif\",",
+      "\"virtualInterfaceName\": \"prod-transit-vif\",",
       "\"vlan\": 101,",
       "\"asn\": 65001,",
       "\"authKey\": \"your-bgp-md5-key\",",
-      "\"mtu\": 9001,",
+      "\"mtu\": 8500,",
       "\"addressFamily\": \"ipv4\",",
       "\"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\"",
       "}'"
