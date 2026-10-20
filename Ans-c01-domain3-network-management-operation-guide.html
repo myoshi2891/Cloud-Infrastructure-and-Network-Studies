@@ -871,6 +871,175 @@
             .main details p:last-child {
                 margin-bottom: 0;
             }
+
+            /* D-3: scenario questions — native disclosure, no grading state. */
+            .main .scenario-set {
+                display: grid;
+                gap: 24px;
+                margin: 24px 0 48px;
+            }
+            .main .scenario-card {
+                min-width: 0;
+                padding: 28px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                box-shadow: 0 4px 18px rgba(27, 38, 56, 0.035);
+            }
+            .main .scenario-heading {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+            .main .scenario-heading h4 {
+                margin: 0;
+                padding: 6px 14px;
+                color: var(--accent);
+                background: var(--accent-bg);
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 800;
+                line-height: 1.6;
+            }
+            .main .scenario-type {
+                color: var(--text-dim);
+                font-size: 0.8125rem;
+                font-weight: 500;
+                letter-spacing: 0.02em;
+            }
+            .main .scenario-question {
+                margin: 0 0 22px;
+                color: var(--text);
+                font-size: 1rem;
+                line-height: 1.95;
+                overflow-wrap: anywhere;
+            }
+            .main .scenario-options {
+                display: grid;
+                gap: 10px;
+                margin: 0 0 22px;
+                padding: 0;
+                list-style: none;
+            }
+            .main .scenario-options > li {
+                display: grid;
+                grid-template-columns: 2.125rem minmax(0, 1fr);
+                align-items: start;
+                gap: 12px;
+                margin: 0;
+                padding: 13px 16px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-soft);
+                border-radius: 10px;
+                color: var(--text);
+                line-height: 1.8;
+            }
+            .main .scenario-option-letter {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 2.125rem;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                color: var(--text-dim);
+                font-size: 0.875rem;
+                font-weight: 800;
+                line-height: 1;
+            }
+            .main .scenario-option-copy {
+                min-width: 0;
+                padding-top: 2px;
+                overflow-wrap: anywhere;
+            }
+            .main details.scenario-answer {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background: var(--bg);
+                border: 1px solid var(--border-soft);
+                border-radius: 10px;
+            }
+            .main details.scenario-answer summary {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                min-height: 52px;
+                padding: 13px 16px;
+                list-style: none;
+                font-size: 0.9375rem;
+                line-height: 1.6;
+            }
+            .main details.scenario-answer summary::-webkit-details-marker {
+                display: none;
+            }
+            .main details.scenario-answer summary:hover {
+                background: var(--accent-bg);
+            }
+            .main details.scenario-answer summary:focus-visible {
+                outline: 3px solid var(--accent);
+                outline-offset: -3px;
+                border-radius: 9px;
+            }
+            .main .scenario-disclosure {
+                position: relative;
+                flex: 0 0 20px;
+                width: 20px;
+                height: 20px;
+            }
+            .main .scenario-disclosure::before,
+            .main .scenario-disclosure::after {
+                content: '';
+                position: absolute;
+                top: 9px;
+                left: 4px;
+                width: 12px;
+                height: 2px;
+                background: currentColor;
+                border-radius: 1px;
+            }
+            .main .scenario-disclosure::after {
+                transform: rotate(90deg);
+            }
+            .main details.scenario-answer[open] {
+                border-color: var(--accent-soft);
+            }
+            .main details.scenario-answer[open] summary {
+                margin-bottom: 0;
+                background: var(--accent-bg);
+                border-bottom: 1px solid var(--border-soft);
+            }
+            .main details.scenario-answer[open] .scenario-disclosure::after {
+                transform: rotate(0deg);
+            }
+            .main details.scenario-answer > p {
+                margin: 0;
+                padding: 18px 20px 20px;
+                color: var(--text-dim);
+                font-size: 0.9375rem;
+                line-height: 1.95;
+                overflow-wrap: anywhere;
+            }
+            .main details.scenario-answer > p > strong:first-child {
+                color: var(--text);
+                font-weight: 800;
+            }
+            @media (max-width: 640px) {
+                .main .scenario-set { gap: 18px; }
+                .main .scenario-card { padding: 18px 16px; border-radius: 14px; }
+                .main .scenario-options > li {
+                    grid-template-columns: 1.875rem minmax(0, 1fr);
+                    gap: 10px;
+                    padding: 12px;
+                    font-size: 0.9375rem;
+                }
+                .main .scenario-option-letter { min-height: 1.875rem; }
+                .main details.scenario-answer > p { padding: 16px; }
+            }
         </style>
     </head>
     <body>
@@ -5666,20 +5835,25 @@ flowchart LR
                     </table>
                 </div>
                 <h3 id="d-3-確認問題シナリオ形式">D-3. 確認問題（シナリオ形式）</h3>
-                <h4>問題 1</h4>
-                <p>
+                <div class="scenario-set">
+                <article class="scenario-card" aria-labelledby="scenario-question-1">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-1">問題 1</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     オンプレミスのルーターから Direct Connect のプライベート VIF 経由で、IPv4
                     のルートを 150 件広告したところ、BGP
                     セッションがダウンしました。最も適切な対処はどれですか。
                 </p>
-                <ul>
-                    <li>A. ルートを集約して 100 件以内にする</li>
-                    <li>B. Service Quotas で上限の引き上げを申請する</li>
-                    <li>C. VIF の種類をパブリック VIF に変更する</li>
-                    <li>D. VIF の MTU を 9001 に変更する</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> ルートを集約して 100 件以内にする</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Service Quotas で上限の引き上げを申請する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VIF の種類をパブリック VIF に変更する</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VIF の MTU を 9001 に変更する</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>A</strong>。プライベート/トランジット VIF の BGP
                         セッションあたりの広告ルート数（100）は引き上げできず、超過するとセッションが
@@ -5687,108 +5861,133 @@ flowchart LR
                         はサービスの対象が変わるため不適切です。D は無関係です。
                     </p>
                 </details>
-                <h4>問題 2</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-2">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-2">問題 2</h4>
+                        <span class="scenario-type">複数選択 · 2つ選択</span>
+                    </div>
+                <p class="scenario-question">
                     Transit Gateway にアタッチしたサイト間 VPN の帯域が不足しています。ルーターは
                     BGP に対応しています。<strong>追加の接続を増やさずに</strong>
                     帯域を増やす方法はどれですか。（2つ選択）
                 </p>
-                <ul>
-                    <li>A. 動的ルーティングで複数トンネルに ECMP を有効にする</li>
-                    <li>B. 大容量帯域トンネルを使う</li>
-                    <li>C. VPN の MTU を 9001 にする</li>
-                    <li>D. 静的ルーティングに切り替える</li>
-                    <li>E. VPC ピアリングを追加する</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> 動的ルーティングで複数トンネルに ECMP を有効にする</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> 大容量帯域トンネルを使う</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN の MTU を 9001 にする</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> 静的ルーティングに切り替える</div></li>
+                    <li><span class="scenario-option-letter">E.</span><div class="scenario-option-copy"> VPC ピアリングを追加する</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>A と B</strong>。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準
                         1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN の MTU
                         上限が 1500 のため不可。D は ECMP が使えなくなります。
                     </p>
                 </details>
-                <h4>問題 3</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-3">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-3">問題 3</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     VPC A（<code>10.0.0.0/16</code>）と VPC B（<code>10.0.0.0/16</code>）で CIDR
                     が重複しています。A の アプリケーションから、B にある
                     <strong>1つの API サービス</strong>
                     だけを、プライベートに利用したい場合、最も適切なのはどれですか。
                 </p>
-                <ul>
-                    <li>A. VPC ピアリング</li>
-                    <li>B. Transit Gateway</li>
-                    <li>C. PrivateLink（B 側で NLB 経由のエンドポイントサービスを公開）</li>
-                    <li>D. インターネットゲートウェイ</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> VPC ピアリング</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Transit Gateway</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> PrivateLink（B 側で NLB 経由のエンドポイントサービスを公開）</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> インターネットゲートウェイ</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>C</strong>。PrivateLink は CIDR
                         が重複していても、特定サービスを一方向で公開できます。ピアリングは重複 CIDR
                         では作成できません。TGW でも重複する CIDR の経路は伝播されません。
                     </p>
                 </details>
-                <h4>問題 4</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-4">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-4">問題 4</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     新しく構築した VPC のインスタンスから、別 VPC のデータベース（ポート
                     5432）に接続できません。ネットワークの設定変更が直前に行われました。<strong
                         >最初に</strong
                     >
                     実施すべき調査はどれですか。
                 </p>
-                <ul>
-                    <li>A. Traffic Mirroring を有効にして、パケットを取得する</li>
-                    <li>B. Reachability Analyzer で、送信元と宛先の経路を分析する</li>
-                    <li>C. Direct Connect の光レベルを確認する</li>
-                    <li>D. インスタンスタイプを大きくする</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> Traffic Mirroring を有効にして、パケットを取得する</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Reachability Analyzer で、送信元と宛先の経路を分析する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> Direct Connect の光レベルを確認する</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> インスタンスタイプを大きくする</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>B</strong>。設定変更が疑われる場合、まず設定を静的に分析する
                         Reachability Analyzer
                         で、ブロックしている構成要素と説明コードを確認します。パケット取得は、設定に問題がないときの次の手段です。
                     </p>
                 </details>
-                <h4>問題 5</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-5">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-5">問題 5</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     VPC Flow Logs を確認すると、あるサブネットのインスタンスへの
                     <strong>往路は ACCEPT、戻りの通信が REJECT</strong>
                     になっています。原因として最も可能性が高いものはどれですか。
                 </p>
-                <ul>
-                    <li>A. セキュリティグループのアウトバウンドが全許可になっている</li>
-                    <li>
-                        B. ネットワーク ACL で、戻りの通信（エフェメラルポート）が許可されていない
-                    </li>
-                    <li>C. ルートテーブルに TGW 宛のルートがない</li>
-                    <li>D. DNS の設定誤り</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> セキュリティグループのアウトバウンドが全許可になっている</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy">
+                         ネットワーク ACL で、戻りの通信（エフェメラルポート）が許可されていない
+                    </div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> ルートテーブルに TGW 宛のルートがない</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> DNS の設定誤り</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>B</strong
                         >。セキュリティグループはステートフルで戻りが自動許可されますが、ネットワーク
                         ACL はステートレスのため、戻りの通信を明示的に許可する必要があります。
                     </p>
                 </details>
-                <h4>問題 6</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-6">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-6">問題 6</h4>
+                        <span class="scenario-type">複数選択 · 2つ選択</span>
+                    </div>
+                <p class="scenario-question">
                     オンプレミスから AWS へのファイル転送で、ping と SSH
                     は成功しますが、大きなファイルの転送が途中で止まります。経路には Site-to-Site
                     VPN が含まれ、サーバーはジャンボフレーム（MTU
                     9001）で構成されています。最も適切な対処はどれですか。（2つ選択）
                 </p>
-                <ul>
-                    <li>A. セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する</li>
-                    <li>B. 経路を Direct Connect のトランジット VIF に変更するだけで解決する</li>
-                    <li>C. VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する</li>
-                    <li>D. VPN トンネルの数を増やす</li>
-                    <li>E. ENA Express を有効にする</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> 経路を Direct Connect のトランジット VIF に変更するだけで解決する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VPN トンネルの数を増やす</div></li>
+                    <li><span class="scenario-option-letter">E.</span><div class="scenario-option-copy"> ENA Express を有効にする</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>A と C</strong>。VPN 経由の MTU は 1500 のため、9001
                         の大きなパケットは断片化されるか、DF ビット付きで ICMP
@@ -5796,49 +5995,61 @@ flowchart LR
                         クランプで断片化を避けます。
                     </p>
                 </details>
-                <h4>問題 7</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-7">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-7">問題 7</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     グローバルに展開するゲームサービスが、TCP/UDP
                     の両方を使います。クライアントは固定 IP
                     を許可リストに登録しており、リージョン障害時には DNS
                     キャッシュに依存せず素早く別リージョンへ切り替えたい要件です。最も適切なサービスはどれですか。
                 </p>
-                <ul>
-                    <li>A. Amazon CloudFront</li>
-                    <li>B. Route 53 のフェイルオーバーレコード</li>
-                    <li>C. AWS Global Accelerator</li>
-                    <li>D. Application Load Balancer のみ</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> Amazon CloudFront</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Route 53 のフェイルオーバーレコード</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> AWS Global Accelerator</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> Application Load Balancer のみ</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>C</strong>。Global Accelerator は静的エニーキャスト IP
                         を提供し、TCP/UDP に対応し、IP が変わらないため DNS
                         キャッシュに左右されずヘルスチェックで素早くフェイルオーバーできます。
                     </p>
                 </details>
-                <h4>問題 8</h4>
-                <p>
+                </article>
+                <article class="scenario-card" aria-labelledby="scenario-question-8">
+                    <div class="scenario-heading">
+                        <h4 id="scenario-question-8">問題 8</h4>
+                        <span class="scenario-type">単一選択</span>
+                    </div>
+                <p class="scenario-question">
                     既存 VPC の <code>10.0.0.0/24</code> のサブネットで、Auto Scaling により IP
                     が不足しそうです。VPC 全体の CIDR にも空きがありません。<strong
                         >既存環境を作り直さず</strong
                     >
                     に対処する方法はどれですか。
                 </p>
-                <ul>
-                    <li>A. VPC のプライマリ CIDR を <code>/16</code> に変更する</li>
-                    <li>B. セカンダリ CIDR を VPC に追加し、新しいサブネットを作成する</li>
-                    <li>C. サブネットのマスクを広げる</li>
-                    <li>D. 新しい VPC を作り、ピアリングする以外に方法はない</li>
+                <ul class="scenario-options" role="list">
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> VPC のプライマリ CIDR を <code>/16</code> に変更する</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> セカンダリ CIDR を VPC に追加し、新しいサブネットを作成する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> サブネットのマスクを広げる</div></li>
+                    <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> 新しい VPC を作り、ピアリングする以外に方法はない</div></li>
                 </ul>
-                <details>
-                    <summary>解答と解説</summary>
+                <details class="scenario-answer">
+                    <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>B</strong>。既存のプライマリ CIDR
                         やサブネットの範囲は変更できません。セカンダリ CIDR
                         を追加して新しいサブネットを作り、ワークロードを移します。
                     </p>
                 </details>
+                </article>
+                </div>
 
                 <h2 id="part-e-参考url一覧根拠となるソース">
                     Part E. 参考URL一覧（根拠となるソース）
