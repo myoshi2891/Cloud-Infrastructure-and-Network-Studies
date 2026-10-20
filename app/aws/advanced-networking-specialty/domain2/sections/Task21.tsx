@@ -124,15 +124,15 @@ export default function Task21(){return <div className="guide-part" data-part="t
 
 <h4>{"2.3.6 Direct Connect の設定例"}</h4>
 
-<div className={"code-sample"}>{" "}<div className={"code-lang"}>{"bash"}</div>{" "}<div className="code-block highlight" role="region" tabIndex={0} aria-label={"2.3.6 Direct Connect の設定例（コード2）"}><div className="code-line"><span className={"c1"}>{"# 1) 仮想インターフェイス(Private VIF)の作成"}</span></div>
-<div className="code-line">{"aws"}<span className={"w"}>{" "}</span>{"directconnect"}<span className={"w"}>{" "}</span>{"create-private-virtual-interface"}<span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
+<div className={"code-sample"}>{" "}<div className={"code-lang"}>{"bash"}</div>{" "}<div className="code-block highlight" role="region" tabIndex={0} aria-label={"2.3.6 Direct Connect の設定例（コード2）"}><div className="code-line"><span className={"c1"}>{"# 1) 仮想インターフェイス(Transit VIF)の作成"}</span></div>
+<div className="code-line">{"aws"}<span className={"w"}>{" "}</span>{"directconnect"}<span className={"w"}>{" "}</span>{"create-transit-virtual-interface"}<span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
 <div className="code-line"><span className={"w"}>{"  "}</span>{"--connection-id"}<span className={"w"}>{" "}</span>{"dxcon-xxxxxxxx"}<span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
-<div className="code-line"><span className={"w"}>{"  "}</span>{"--new-private-virtual-interface"}<span className={"w"}>{" "}</span><span className={"s1"}>{"'{"}</span></div>
-<div className="code-line"><span className={"s1"}>{"    \"virtualInterfaceName\": \"prod-private-vif\","}</span></div>
+<div className="code-line"><span className={"w"}>{"  "}</span>{"--new-transit-virtual-interface"}<span className={"w"}>{" "}</span><span className={"s1"}>{"'{"}</span></div>
+<div className="code-line"><span className={"s1"}>{"    \"virtualInterfaceName\": \"prod-transit-vif\","}</span></div>
 <div className="code-line"><span className={"s1"}>{"    \"vlan\": 101,"}</span></div>
 <div className="code-line"><span className={"s1"}>{"    \"asn\": 65001,"}</span></div>
 <div className="code-line"><span className={"s1"}>{"    \"authKey\": \"your-bgp-md5-key\","}</span></div>
-<div className="code-line"><span className={"s1"}>{"    \"mtu\": 9001,"}</span></div>
+<div className="code-line"><span className={"s1"}>{"    \"mtu\": 8500,"}</span></div>
 <div className="code-line"><span className={"s1"}>{"    \"addressFamily\": \"ipv4\","}</span></div>
 <div className="code-line"><span className={"s1"}>{"    \"directConnectGatewayId\": \"11111111-2222-3333-4444-555555555555\""}</span></div>
 <div className="code-line"><span className={"s1"}>{"  }'"}</span></div>
