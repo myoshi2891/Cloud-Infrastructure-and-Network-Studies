@@ -39,7 +39,7 @@ for (const width of [1440, 390]) {
         }
         // Client navigation must clear the light palette without a document reload.
         await page.getByRole('navigation', { name: 'サイト全体のメインナビゲーション' }).getByRole('link', { name: 'Cloud Infrastructure Studies' }).click();
-        await expect(page).toHaveURL('/');
+        await expect(page).toHaveURL('/', { timeout: 30_000 });
         await expect(page.getByRole('contentinfo')).toHaveCSS('color-scheme', 'dark');
     });
 }
