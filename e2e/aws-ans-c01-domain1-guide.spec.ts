@@ -13,13 +13,23 @@ for(const width of [1440,768,390]){
   for(const tag of ['h1','h2','h3','h4','th','td'] as const)expect((await root.locator(tag).allTextContents()).map(t=>t.replace(/\s+/g,' ').trim())).toEqual(inventory[tag].map(t=>t.replace(/\s+/g,' ').trim()));
   await expect(root.locator('main li')).toHaveCount(301);await expect(root.locator('table')).toHaveCount(75);
   expect(await root.locator('main a[href^="http"]').evaluateAll(links=>links.map(a=>a.getAttribute('href')))).toEqual(inventory.links.map(a=>a.href));
+  const sourceListStyles=await root.locator('main').evaluate((main,rules)=>{
+   const frame=document.createElement('iframe');frame.style.cssText='position:fixed;left:-10000px;width:'+window.innerWidth+'px;height:1000px';document.body.append(frame);
+   try{
+    const doc=frame.contentDocument!;const css=rules.map(rule=>{const body=rule.selector+'{'+Object.entries(rule.declarations).filter(([,value])=>typeof value==='string').map(([prop,value])=>prop+':'+value).join(';')+'}';return rule.media?'@media '+rule.media+'{'+body+'}':body;}).join('\n');
+    doc.open();doc.write('<!doctype html><html><head><style>'+css+'</style></head><body>'+main.outerHTML+'</body></html>');doc.close();
+    const read=(root:Element,view:Window)=>[...root.querySelectorAll('ul,ol,li')].map(el=>{const style=view.getComputedStyle(el);return {tag:el.tagName,type:style.listStyleType,position:style.listStylePosition,padding:style.paddingLeft,marginBottom:style.marginBottom,display:style.display,counterReset:style.counterReset,counterIncrement:style.counterIncrement};});
+    return {actual:read(main,window),source:read(doc.querySelector('main')!,frame.contentWindow!)};
+   }finally{frame.remove();}
+  },fixture.guideDesign.rules);
+  expect(sourceListStyles.actual).toEqual(sourceListStyles.source);
   const lists=await root.locator('main ul,main ol').evaluateAll(elements=>elements.map(el=>{
    let depth=0;for(let p=el.parentElement;p&&!p.matches('main');p=p.parentElement)if(p.matches('ul,ol'))depth++;
-   const css=getComputedStyle(el);return {tag:el.tagName.toLowerCase(),start:el.getAttribute('start'),reversed:el.hasAttribute('reversed'),depth,type:css.listStyleType,position:css.listStylePosition,padding:parseFloat(css.paddingLeft),checklist:Boolean(el.closest('.checklist-card,.q-options,.source-grid,.ref-url-grid'))};
+   const css=getComputedStyle(el);return {tag:el.tagName.toLowerCase(),start:el.getAttribute('start'),reversed:el.hasAttribute('reversed'),depth,type:css.listStyleType,position:css.listStylePosition,padding:parseFloat(css.paddingLeft),special:Boolean(el.closest('.checklist-card,.q-options,.source-grid,.ref-url-grid')),checklist:Boolean(el.closest('.checklist-card'))};
   }));
   expect(lists.map(({tag,start,reversed,depth})=>({tag,start,reversed,depth}))).toEqual(Object.values(fixture.guideParts).flatMap(part=>part.lists).map(({tag,start,reversed,depth})=>({tag,start,reversed,depth})));
-  for(const list of lists){expect(list.type).toBe(list.checklist?'none':list.tag==='ol'?'decimal':list.depth>1?'square':list.depth===1?'circle':'disc');expect(list.position).toBe('outside');expect(list.padding).toBeCloseTo(list.checklist?0:22.4,1);}
-  expect(await root.locator('main li').evaluateAll(items=>items.map(li=>getComputedStyle(li).display))).toEqual(await root.locator('main li').evaluateAll(items=>items.map(li=>li.closest('.checklist-card')?'flex':li.closest('.q-options')?'block':'list-item')));
+  for(const list of lists){expect(list.type).toBe(list.special?'none':list.tag==='ol'?'decimal':list.depth>1?'square':list.depth===1?'circle':'disc');expect(list.position).toBe('outside');expect(list.padding).toBeCloseTo(list.checklist?0:22.4,1);}
+  expect(await root.locator('main li').evaluateAll(items=>items.map(li=>getComputedStyle(li).display))).toEqual(await root.locator('main li').evaluateAll(items=>items.map(li=>li.closest('.checklist-card')?'flex':'list-item')));
   await expect(root.locator('nav ul')).toHaveCSS('list-style-type','none');
   const svgs=root.locator('.mermaid-wrap svg');await expect(svgs).toHaveCount(15,{timeout:120_000});await expect(root.locator('.mermaid-wrap [data-theme="light"]')).toHaveCount(15);
   await expect(root).not.toContainText('Syntax error');

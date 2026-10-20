@@ -20,11 +20,13 @@ function checkLists(text: string) {
  expect(declarations(text, '.ans-domain1-page .main ul, .ans-domain1-page .main ol')).toMatchObject({ 'padding-left': '1.4em', 'list-style-position': 'outside' });
  expect(declarations(text, '.ans-domain1-page .main li').display).toBe('list-item');
  expect(declarations(text, '.ans-domain1-page .main ul ul')['list-style-type']).toBe('circle');
- expect(declarations(text, '.ans-domain1-page .main .q-options')).toMatchObject({ 'list-style': 'none', padding: '0' });
+ expect(declarations(text, '.ans-domain1-page .main .q-options')).toMatchObject({ 'list-style': 'none' });
+ expect(declarations(text, '.ans-domain1-page .main .q-options').padding).toBeUndefined();
  expect(declarations(text, '.ans-domain1-page .main .checklist-card li').display).toBe('flex');
  expect(declarations(text, '.ans-domain1-page #sidebarNav ul')['list-style']).toBe('none');
  for(const name of ['source-grid','ref-url-grid']){
-  expect(declarations(text, '.ans-domain1-page .main .'+name)).toMatchObject({'list-style':'none',padding:'0'});
+  expect(declarations(text, '.ans-domain1-page .main .'+name)).toMatchObject({'list-style':'none'});
+  expect(declarations(text, '.ans-domain1-page .main .'+name).padding).toBeUndefined();
  }
  expect(declarations(text, '.ans-domain1-page .source-grid li a.src-card::before').content).toBe('counter(src-item, decimal-leading-zero)');
  expect(declarations(text, '.ans-domain1-page .ref-url-grid li a.ref-link-card::before').content).toBe('counter(ref-url-item, decimal-leading-zero)');
