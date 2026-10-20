@@ -6,5 +6,6 @@ import Task13 from './sections/Task13';
 import Task14 from './sections/Task14';
 import Task15 from './sections/Task15';
 import Task16 from './sections/Task16';
+import Revision from './sections/Revision';
 /** 全区分を原本の掲載順で構成する。 */
-export default function AnsDomain1Guide(){return <div className="ans-domain1-page layout"><NavBar /><main className="main"><Foundation /><Task11 /><Task12 /><Task13 /><Task14 /><Task15 /><Task16 /></main></div>;}
+export default function AnsDomain1Guide(){return <div className="ans-domain1-page layout"><NavBar /><main className="main"><Foundation /><Task11 /><Task12 /><Task13 /><Task14 /><Task15 /><Task16 /><Revision /></main></div>;}
