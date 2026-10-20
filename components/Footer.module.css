@@ -1,0 +1,51 @@
+.footer {
+    color-scheme: dark;
+    background: var(--color-footer-dark-bg);
+    color: var(--color-footer-dark-text);
+    border-top: 1px solid var(--color-footer-dark-border);
+    padding: 3rem 1.5rem;
+    position: relative;
+    /* Keep every page's fixed sidebar above the shared footer. */
+    z-index: auto;
+}
+
+/* Page roots, rather than OS preferences, determine the displayed guide palette.
+   :has also updates immediately after client navigation without hydration flicker. */
+:global(body:has(:is(
+    .aib-guide-page, .aib-domain1-page, .aib-domain2-page, .aib-domain3-page,
+    .aip-guide-page, .aip-domain1-page, .aip-domain2-page, .aip-domain3-page,
+    .aip-domain4-page, .aip-domain5-page, .ans-domain1-page,
+    .dva-development-page, .dva-security-page, .dva-deployment-page,
+    .tcpip-page, .agentic-guide-page, .agentic-section1-page,
+    .agentic-section2-page, .agentic-section3-page, .agentic-section4-page,
+    .agentic-section5-page
+))) .footer {
+    color-scheme: light;
+    background: var(--color-footer-light-bg);
+    color: var(--color-footer-light-text);
+    border-top-color: var(--color-footer-light-border);
+}
+
+.inner {
+    max-width: 72rem;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 2.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+}
+
+.brand p, .disclaimer p { margin: 0; }
+.name { font-size: 1rem; font-weight: 700; letter-spacing: 0.015em; }
+.description { padding-top: 0.5rem; }
+.disclaimer { border-inline-start: 1px solid currentColor; padding-inline-start: 2rem; }
+.heading { margin: 0 0 0.625rem; font-size: 0.875rem; font-weight: 700; }
+.disclaimer p + p { margin-top: 0.5rem; }
+
+@media (max-width: 640px) {
+    .footer { padding: 2rem 1.25rem; }
+    .inner { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .disclaimer { border-inline-start: 0; border-top: 1px solid currentColor; padding-inline-start: 0; padding-top: 1.5rem; }
+}

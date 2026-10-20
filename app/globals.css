@@ -14,6 +14,51 @@
  */
 
 @theme {
+    /* Shared footer palettes: selected by the displayed page theme. */
+    --color-footer-dark-bg: #10131e;
+    --color-footer-dark-text: #b6bfd0;
+    --color-footer-dark-border: #2d3547;
+    --color-footer-light-bg: #f1f4f9;
+    --color-footer-light-text: #4b5870;
+    --color-footer-light-border: #d3dce9;
+    /* ANS-C01 Domain 1: source light palette */
+    --color-ans-d1-1: #1c2433;
+    --color-ans-d1-2: #2d52d0;
+    --color-ans-d1-3: #4a5876;
+    --color-ans-d1-4: #0f1626;
+    --color-ans-d1-5: #9a4700;
+    --color-ans-d1-6: #a5dbbf;
+    --color-ans-d1-7: #1f7a4d;
+    --color-ans-d1-8: #f7f9fe;
+    --color-ans-d1-9: #6b7894;
+    --color-ans-d1-10: #a9bbf0;
+    --color-ans-d1-11: #f8faff;
+    --color-ans-d1-12: #4c74f5;
+    --color-ans-d1-13: #84d1a8;
+    --color-ans-d1-14: #eb99a8;
+    --color-ans-d1-15: #f3c878;
+    --color-ans-d1-16: #fafbfe;
+    --color-ans-d1-17: #162b72;
+    --color-ans-d1-18: #114b2f;
+    --color-ans-d1-19: #c62f4b;
+    --color-ans-d1-20: #7c182b;
+    --color-ans-d1-21: #f1fbf6;
+    --color-ans-d1-22: #f5f8ff;
+    --color-ans-d1-23: #f2fbf6;
+    --color-ans-d1-24: #b7e4cb;
+    --color-ans-d1-25: #f6f9ff;
+    --color-aip-d5-1: #e2e8f4;
+    --color-aip-d5-2: #44577a;
+    --color-aip-d5-3: #e6edfc;
+    --color-aip-d5-4: #d3dcee;
+    --color-aip-d5-5: #eef2fa;
+    --color-aip-d5-6: #a8520b;
+    --color-aip-d5-7: #14213d;
+    --color-aip-d5-8: #b6e2c9;
+    --color-aip-d5-9: #17794a;
+    --color-aip-d5-10: #9db4f0;
+    --color-aip-d5-11: #6b7d9c;
+    --color-aip-d5-12: #b3263f;
     /* Layer 3: AIP-C01 Domain 4 原本ライト配色 */
     --color-aip-d4-1: #1b2540;
     --color-aip-d4-2: #3454d1;
@@ -1143,6 +1188,7 @@ body {
 .card-aws-cloudops { --card-accent: var(--color-theme-aws-cloudops-indigo); }
 .card-aws-aib { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-aip { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-ans { --card-accent: var(--color-theme-aws-fg); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
 .card-accelerate { --card-accent: var(--color-theme-accelerate-fg); }
 .card-sre { --card-accent: var(--color-theme-sre-fg); }
@@ -1223,6 +1269,11 @@ body {
 }
 
 @utility icon-theme-aws-aib {
+    background: var(--color-theme-aws-bg);
+    color: var(--color-theme-aws-fg);
+}
+
+@utility icon-theme-aws-ans {
     background: var(--color-theme-aws-bg);
     color: var(--color-theme-aws-fg);
 }

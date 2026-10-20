@@ -1,6 +1,10 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-17
+Updated 2026-10-20
+
+2026-10-20 ANS-C01 Domain 1移行: `/aws/advanced-networking-specialty/domain1` に全6タスク、75表（th189・td1016）、15図、7コード、301リスト項目、94外部リンク出現、12目次、練習問題6問、チェック10項目を全文移行。原本のライト配色・300px目次・点と番号・独自カウンター・インデント・コードの色/太字/斜体を保持。単一選択4問・複数選択2問の即時採点、選択変更、解説開閉、集計・リセットとチェック完了数・進捗・クリアに対応。ANSをホームとHeaderへ登録し、Domain 1へ直接接続。対象16ファイル・140件、Chromeの1440/768/390pxを含む5件が成功。全リストの計算済みCSSを原本CSSの隔離iframeと全量照合し、全15SVGの自然倍率・viewBox内包、独自番号、キーボード操作、axe違反0・コンソールエラー0を確認。全体Vitestは329ファイル・3269件すべて成功。型検査・全体ESLint・最終変更箇所のESLint・対象Markdown lint成功。原本HTML・Markdownは保持し、テストは固定Git由来fixtureを使用。npm・ビルドは依頼に従い未実行、目視確認はユーザー担当。最新実装HEAD `d9195d44`。
+
+2026-10-20 AIP-C01 Domain 5移行: `/aws/generative-ai-developer-professional/domain5` に全2タスク・14スキル、47表（th119・td713）、18図、206リスト項目、92外部リンク出現、2コード、41目次、練習問題5問、チェック23項目を全文移行。原本のライト配色・300px目次・点と番号・入れ子・インデント・Python/Logs Insightsの色分けを保持。全問の提出・採点・正誤・解説・進捗・リセットとタスク別チェック数を検証。原本Git由来fixtureで全文・順序・構造・全CSSを照合し、本文等7種の欠落とCSS破壊5種を検出。対象12ファイル・88件とChromeの1440/768/390pxを含む4件が成功し、全18SVGの自然倍率・viewBox内包・axe違反0・コンソールエラー0を確認。原本由来の問題補助文のコントラスト不足だけを既存の濃い補助文字色へ補正。HTML・Markdown原本は保持し、テストはarchiveに依存しない。npm・ビルドは依頼に従い未実行。目視確認はユーザー担当。全体Vitestは313ファイル・3128件すべて成功。型検査・全体ESLint・最終変更箇所のESLint・対象Markdown lint成功。最新実装HEAD `efa67cc5`（最終表示修正 `ce42e381`）。
 
 2026-10-17 AIP-C01 Domain 4移行: `/aws/generative-ai-developer-professional/domain4` に全3タスク・16スキル、84表（th234・td1388）、22図、140リスト項目、36外部リンク出現、2コード、26目次、練習問題12問を全文移行。原本の明色テーマ、点・番号・入れ子・インデント、シンタックスハイライト、単一/複数選択の採点・正誤・解説・得点・回答進捗・リセットを保持。全108横スクロール領域に固有の読み上げ名を付与。Domain 4は原本削除後103件、Chromeは1440/768/390px・全22SVGの自然倍率とviewBox内包・全問・導線・CSS破壊検出を含む6件成功。axe違反0・コンソールエラー0。原本400008バイトをバイト一致・SHA-256付きでローカルarchiveへ保存し、テストは固定Git由来fixtureのみを使用。全体Vitestは301ファイル・3021件中3020成功、失敗1件は作業前からのAIBナビ期待値。型検査・全体ESLint・対象Markdown lint成功。`bun run build`・`bun run lint` は2026-10-17の進捗同期で成功。npm・目視確認は未実施（Playwrightによる3画面幅の自動レイアウト検証は上記のとおり成功）。
 
@@ -45,6 +49,8 @@ Updated 2026-10-17
 
 ## プロジェクト構造
 
+- `/app/aws/advanced-networking-specialty/domain1`: ANS-C01ネットワーク設計。Server `page.tsx` / `AnsDomain1Guide.tsx` / 8区分、Client `NavBar.tsx` / `Quiz.tsx` / `Checklist.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。75表・15図・7コード・6問・10チェック・12目次を原本どおり保持し、ホーム・Headerから接続。
+
 - `/app`: Next.js App Router のページコンポーネント。
   - `/app/gcl/hands-on`: GCP ハンズオン実践ガイド群（`cloud-load-balancing-guide`, `develop-your-gcp-network`, `build-a-secure-google-cloud-network`, `set-up-an-app-dev-environment-on-google-cloud`, `gcp-security-fundamentals-guide`, `gke-private-cluster-security-guide`, `iap-tcp-forwarding-best-practices-guide`, `terraform-gcp-challenge-lab-guide`, `griffin-wordpress-gke-guide`, `secure-cicd-pipeline-guide`）。
   - `/app/gcl/genai-leader`: Generative AI Leader 試験対策ページ（Section 1〜4、section1/2 はコンポーネント分割済み）。
@@ -81,6 +87,7 @@ Updated 2026-10-17
   - `/app/aws/generative-ai-developer-professional`: AIP-C01全5ドメイン・Step 1〜20・付録・参考資料。Server `page.tsx` / `AipGuide.tsx`、Client `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、6分割セクション。76表・34図・60本文リスト項目・64外部リンク出現・8行JSONを全文移行。原本のライトテーマを保持し、300px幅・48目次・点と番号・hash/focus・自然倍率を保持。横スクロール図・表・コードはキーボード操作可能。
   - `/app/aws/generative-ai-developer-professional/domain2`: Domain 2詳細版。Server `page.tsx` / `AipDomain2Guide.tsx` と7区分の本文、Client `NavBar.tsx` / `PracticeQuestion.tsx`、`constants.ts` / `Diagram.tsx` / `CodeBlock.tsx` / `page.css`。15問は点なしの選択肢と解説開閉時の完全一致採点に対応。描画frontmatterで共通dark値の継承を遮断し、9コードの構文色、罫線最大1本、15問題カードを実装。原本ライト配色・300px幅、全5タスク・25スキル・96表・42図・9コード・296リスト項目・230リンク出現・230目次・15問の解答開閉を保持。全文・装飾・自然倍率・SVG見切れ・操作・a11yを検証し、ホームとHeaderから詳細版へ移動可能。
   - `/app/aws/generative-ai-developer-professional/domain3`: Domain 3詳細版。Server `page.tsx` / `AipDomain3Guide.tsx` と6区分の本文、Client `NavBar.tsx` / `PracticeQuestion.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。全4タスク・15スキル、44表・19図・189リスト項目・125外部リンク出現・10問を原本のライト配色・300px目次で保持。点・番号・入れ子・全量照合・自然倍率・SVG見切れ・クイズ操作・表と図のキーボード操作・a11y・ホーム/Header導線を検証。
+  - `/app/aws/generative-ai-developer-professional/domain5`: Domain 5詳細版。Server `page.tsx` / `AipDomain5Guide.tsx` / 4区分の本文、Client `NavBar.tsx` / `Quiz.tsx` / `Checklist.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。47表・18図・5問・23チェック・41目次を原本どおり保持。全文・装飾・操作・3画面幅を検証。ホームとHeaderから接続。
   - `/app/aws/generative-ai-developer-professional/domain4`: Domain 4詳細版。Server `page.tsx` / `AipDomain4Guide.tsx` と5区分の本文、Client `NavBar.tsx` / `Quiz.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。全3タスク・16スキル・84表・22図・2コード・140リスト項目・36外部リンク出現・26目次・12問を原本の明色・300px目次で保持。全CSS宣言、点・番号・入れ子、コード色分け、単一/複数選択の採点・集計・リセットを検証。108スクロール領域の固有名、自然倍率、SVG見切れ、3画面幅、axe違反0を確認。ホームとHeaderから詳細版へ接続。
   - `/app/aws/generative-ai-developer-professional/domain1`: Domain 1詳細版。Server `page.tsx` / `AipDomain1Guide.tsx` と8区分の本文、Client `NavBar.tsx` / `Checklist.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。原本ライト配色・300px幅、全6タスク・28スキル・51表・21図・137リスト項目・123リンク出現・63目次・16チェックを保持。原本のMermaid描画設定を使用し、チェック完了前後のa11yと点・番号を検証。ホームとHeaderから詳細版へ移動可能。
   - `/app/aws/ai-business-strategist`: AWS Certified AI Business Strategist (AIB-C01) 初学者向けステップバイステップ完全ガイド。Server `page.tsx`、Client `AiBusinessStrategistGuide.tsx` / `NavBar.tsx`、`constants.ts`、`Diagram.tsx`、`page.css`、8分割セクション。全4ドメイン・横断編・試験対策・付録A〜C（82表・16図・236リスト項目・112外部リンク・134本文ブロック）完全収録、280pxサイドバー契約、ライトテーマデザイン完全再現。
@@ -184,3 +191,7 @@ gemini skills install infra-md-to-nextjs-migration.skill --scope workspace
 ページCSSの `.mermaid-target { justify-content: center; }` が、共通Mermaidコンポーネントの `safe center` を詳細度で上書きし、横長SVGの左側が負のスクロール領域へはみ出していた。ページの指定を `safe center` に変更し、収まる図は中央寄せ、収まらない図は左寄せへ退避させる。図のDSL・自然倍率・文字サイズは保持。
 
 Red: `39af7f41`、Green: `1b2c58d0`。図3・図4の内外ラッパーのCSSカスケードを再現する回帰テストを追加。`bun run test -- secure-cicd-pipeline-guide MermaidDiagram guide-content-widths` は156件成功（ガイドは19件）。ブラウザの描画・スクロール位置の実測は未実施、npm・ビルド・Playwrightは実行しない。
+
+## 共通フッター（2026-10-20）
+
+`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートを `body:has()` で判定するため、クライアント遷移にも追従する。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。共通フッターの `z-index` は `auto` を維持し、固定サイドバーより手前へ配置しない。

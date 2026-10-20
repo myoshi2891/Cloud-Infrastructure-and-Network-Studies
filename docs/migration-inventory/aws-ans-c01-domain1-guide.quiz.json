@@ -1,0 +1,103 @@
+[
+  {
+    "id": "q1",
+    "answer": [
+      2,
+      3
+    ],
+    "multi": true,
+    "badge": "複数選択 (2つ選択)",
+    "stem": "グローバルなユーザー向けの、UDP を使うゲームのサーバーが、複数のリージョンにあります。取引先のファイアウォールで、許可する IP を固定する必要があります。最も適切な 2 つの組み合わせはどれですか。",
+    "options": [
+      "Amazon CloudFront",
+      "AWS Global Accelerator",
+      "NLB をエンドポイントにする",
+      "ALB をエンドポイントにする",
+      "Route 53 の加重ルーティング"
+    ],
+    "explanation": "答え: 2 と 3。UDP と静的 IP が必要なため、Global Accelerator を使い、UDP に対応する NLB をエンドポイントにします。CloudFront は HTTP と HTTPS が対象で、ALB は UDP を扱えません。",
+    "summary": "答えと解説"
+  },
+  {
+    "id": "q2",
+    "answer": [
+      1
+    ],
+    "multi": false,
+    "badge": "単一選択 (1つ選択)",
+    "stem": "オンプレミスのサーバーが、VPC のプライベートホストゾーンの名前を解決する必要があります。必要な構成はどれですか。",
+    "options": [
+      "Resolver のインバウンドエンドポイントを作り、オンプレミスの DNS から条件付きフォワーダーで転送する",
+      "Resolver のアウトバウンドエンドポイントを作る",
+      "パブリックホストゾーンに同じレコードを作る"
+    ],
+    "explanation": "答え: 1。オンプレミスから AWS への問い合わせはインバウンドエンドポイントです。アウトバウンドは逆方向 (AWS からオンプレミス) です。",
+    "summary": "答えと解説"
+  },
+  {
+    "id": "q3",
+    "answer": [
+      1
+    ],
+    "multi": false,
+    "badge": "単一選択 (1つ選択)",
+    "stem": "Direct Connect を、プライマリの接続として使います。障害時に、自動で、VPN に切り替わるようにしたいです。トラフィックを、通常は DX に流すには、どのように設計しますか。",
+    "options": [
+      "DX と VPN の両方で BGP を使い、同じプレフィックスを広告する (AWS は既定で DX を優先する)",
+      "VPN のみ静的ルートにする",
+      "DX を静的ルートにする"
+    ],
+    "explanation": "答え: 1。BGP を使うことで、障害時に自動で経路が切り替わります。同じプレフィックスの場合、AWS は一般に DX を優先します。オンプレミス側から AWS へ出る経路は、ローカルプリファレンスで DX を優先させます。",
+    "summary": "答えと解説"
+  },
+  {
+    "id": "q4",
+    "answer": [
+      3
+    ],
+    "multi": false,
+    "badge": "単一選択 (1つ選択)",
+    "stem": "IP アドレスが重複している 2 つの VPC があり、一方のアプリケーションの API だけを、もう一方の VPC から利用したいです。最も適切なものはどれですか。",
+    "options": [
+      "VPC ピアリング",
+      "Transit Gateway",
+      "AWS PrivateLink"
+    ],
+    "explanation": "答え: 3。PrivateLink は、サービス単位で一方向に公開でき、CIDR の重複の影響を受けません。ピアリングと通常の Transit Gateway の接続は、重複する CIDR では使えません。",
+    "summary": "答えと解説"
+  },
+  {
+    "id": "q5",
+    "answer": [
+      1,
+      2
+    ],
+    "multi": true,
+    "badge": "複数選択 (2つ選択)",
+    "stem": "ファイアウォールアプライアンスを、すべての VPC のトラフィックの経路に、透過的に挿入し、往復のトラフィックを同じアプライアンスへ通したいです。必要なものを 2 つ選んでください。",
+    "options": [
+      "Gateway Load Balancer",
+      "Transit Gateway のアプライアンスモード",
+      "Application Load Balancer",
+      "VPC ピアリング"
+    ],
+    "explanation": "答え: 1 と 2。GWLB でアプライアンスを透過的に挿入し、Transit Gateway のアプライアンスモードで、往復のフローを同じ AZ のアプライアンスへ通します。",
+    "summary": "答えと解説"
+  },
+  {
+    "id": "q6",
+    "answer": [
+      2
+    ],
+    "multi": false,
+    "badge": "単一選択 (1つ選択)",
+    "stem": "VPC 内の特定のサブネットで、拒否された通信を調べたいです。パケットの内容までは不要です。使うものはどれですか。",
+    "options": [
+      "Traffic Mirroring",
+      "VPC Flow Logs と CloudWatch Logs Insights",
+      "Reachability Analyzer"
+    ],
+    "explanation": "答え: 2。フローログは、ACCEPT と REJECT を含む通信のメタデータを記録します。Logs Insights で、拒否された通信を集計できます。",
+    "summary": "答えと解説"
+  }
+]
