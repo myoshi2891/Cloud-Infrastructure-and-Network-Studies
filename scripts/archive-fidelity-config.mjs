@@ -32,6 +32,20 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-aip-c01-domain5-guide': {
+        source: 'Aip-c01-domain5-testing-validation-troubleshooting-guide.html',
+        sourceCommit: 'cb46fb6dc39604b936f3c413f953b6abd4469441',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: '3-task-51-生成aiの評価システムを実装する',
+            task2: '4-task-52-生成aiアプリをトラブルシュートする',
+            revision: '5-横断まとめ',
+        },
+    },
     'aws-aip-c01-domain4-guide': {
         syntaxSelectors: {"kn":".hl .kn","w":".hl .w","nn":".hl .nn","o":".hl .o","n":".hl .n","p":".hl .p","s2":".hl .s2","k":".hl .k","nf":".hl .nf","nb":".hl .nb","mi":".hl .mi","mf":".hl .mf","c1":".hl .c1"},
 
