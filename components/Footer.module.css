@@ -5,7 +5,8 @@
     border-top: 1px solid var(--color-footer-dark-border);
     padding: 3rem 1.5rem;
     position: relative;
-    z-index: 35;
+    /* Keep every page's fixed sidebar above the shared footer. */
+    z-index: auto;
 }
 
 /* Page roots, rather than OS preferences, determine the displayed guide palette.
