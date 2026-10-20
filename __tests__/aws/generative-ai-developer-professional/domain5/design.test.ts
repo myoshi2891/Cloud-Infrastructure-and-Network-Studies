@@ -29,6 +29,11 @@ describe('Domain 5 source design declaration fidelity', () => {
   const z = (selector: string) => Number(declarations(css, selector)['z-index']);
   expect(z('.aip-domain5-page .sidebar-toggle')).toBeGreaterThan(z('.aip-domain5-page .sidebar'));
  });
+ it('offsets the fixed sidebar by a valid header and disclaimer calc without a unitless addend', () => {
+  // 長さと単位なし数値の加算は calc 全体を無効にし、top が auto へ戻る。
+  expect(declarations(css, '.aip-domain5-page .sidebar').top).toBe('calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))');
+  postcss.parse(css).walkDecls(decl => expect(decl.value, `${decl.prop}: ${decl.value}`).not.toMatch(/\+\s*0\s*\)/));
+ });
  it('retains every effective source declaration including responsive layout and syntax colors', () => {
   const effective = new Map<string, { selector: string; media: string; declarations: Record<string, string> }>();
   for (const rule of fixture.guideDesign.rules) { if (rule.selector === ':root') continue; const key = rule.selector + '\0' + rule.media; const previous = effective.get(key); const sourceDeclarations: Record<string,string> = {...previous?.declarations}; for(const [prop,value] of Object.entries(rule.declarations))if(typeof value==='string')sourceDeclarations[prop]=value; effective.set(key, { selector:rule.selector,media:rule.media,declarations:sourceDeclarations }); }
