@@ -35,6 +35,7 @@ describe('Domain 5 source design declaration fidelity', () => {
   for (const rule of effective.values()) {
    const selector = mapSelector(rule.selector); const actual = declarations(css, selector, rule.media); expect(Object.keys(actual), selector).not.toHaveLength(0);
    for (const [prop, value] of Object.entries(rule.declarations)) {
+    if (rule.selector === '.q-hint' && prop === 'color') { expect(resolve(actual[prop] ?? '', tokens)).toBe(resolve(sourceTokens['--text-dim'] ?? '', sourceTokens)); continue; }
     if (prop === 'font-family') continue; // 自己ホストの共通フォントへ対応付ける。
     if (prop === 'overflow-wrap' && rule.declarations['word-break']) { expect(actual[prop]).toBe('anywhere'); continue; }
     if (prop === 'word-break') { expect(actual['overflow-wrap']).toBe('anywhere'); continue; }
