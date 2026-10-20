@@ -1,0 +1,179 @@
+{
+  "library": "highlight.js 11.11.1",
+  "scriptSha256": "c4a399dd6f488bc97a3546e3476747b3e714c99c57b9473154c6fb8d259b9381",
+  "tokens": [
+    [
+      {
+        "class": "hljs-keyword",
+        "text": "from"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "import"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "def"
+      },
+      {
+        "class": "hljs-title function_",
+        "text": "invoke_with_trace"
+      },
+      {
+        "class": "hljs-params",
+        "text": "client, model_id, prompt_version, messages"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "with"
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"bedrock_converse\""
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "as"
+      },
+      {
+        "class": "hljs-comment",
+        "text": "# 注釈はフィルタ検索できる。キーは英数字とアンダースコア"
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"prompt_version\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"model_id\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"usage\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"stop_reason\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"stopReason\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"unknown\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"input_tokens\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"inputTokens\""
+      },
+      {
+        "class": "hljs-number",
+        "text": "0"
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"output_tokens\""
+      },
+      {
+        "class": "hljs-string",
+        "text": "\"outputTokens\""
+      },
+      {
+        "class": "hljs-number",
+        "text": "0"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "return"
+      }
+    ],
+    [
+      {
+        "class": "hljs-keyword",
+        "text": "fields"
+      },
+      {
+        "class": "hljs-variable",
+        "text": "@timestamp"
+      },
+      {
+        "class": "hljs-operator",
+        "text": "|"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "filter"
+      },
+      {
+        "class": "hljs-built_in",
+        "text": "ispresent"
+      },
+      {
+        "class": "hljs-operator",
+        "text": "|"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "stats"
+      },
+      {
+        "class": "hljs-built_in",
+        "text": "avg"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "as"
+      },
+      {
+        "class": "hljs-built_in",
+        "text": "max"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "as"
+      },
+      {
+        "class": "hljs-built_in",
+        "text": "count"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "as"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "by"
+      },
+      {
+        "class": "hljs-built_in",
+        "text": "bin"
+      },
+      {
+        "class": "hljs-number",
+        "text": "1"
+      },
+      {
+        "class": "hljs-operator",
+        "text": "|"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "sort"
+      },
+      {
+        "class": "hljs-variable",
+        "text": "@timestamp"
+      },
+      {
+        "class": "hljs-keyword",
+        "text": "desc"
+      }
+    ]
+  ],
+  "css": "pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}/*!\n  Theme: GitHub Dark\n  Description: Dark theme as seen on github.com\n  Author: github.com\n  Maintainer: @Hirse\n  Updated: 2021-05-15\n\n  Outdated base version: https://github.com/primer/github-syntax-dark\n  Current colors taken from GitHub's CSS\n*/.hljs{color:#c9d1d9;background:#0d1117}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#ff7b72}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#d2a8ff}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#79c0ff}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#a5d6ff}.hljs-built_in,.hljs-symbol{color:#ffa657}.hljs-code,.hljs-comment,.hljs-formula{color:#8b949e}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#7ee787}.hljs-subst{color:#c9d1d9}.hljs-section{color:#1f6feb;font-weight:700}.hljs-bullet{color:#f2cc60}.hljs-emphasis{color:#c9d1d9;font-style:italic}.hljs-strong{color:#c9d1d9;font-weight:700}.hljs-addition{color:#aff5b4;background-color:#033a16}.hljs-deletion{color:#ffdcd7;background-color:#67060c}"
+}

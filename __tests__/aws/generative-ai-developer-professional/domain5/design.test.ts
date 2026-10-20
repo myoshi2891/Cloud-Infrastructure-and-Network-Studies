@@ -56,7 +56,8 @@ describe('Domain 5 source design declaration fidelity', () => {
  expect(declarations(css, '.aip-domain5-page .main', '(max-width: 980px)').width).toBe('100%');
  expect(declarations(css, '.aip-domain5-page .sidebar:not(.open)', '(max-width: 980px)').visibility).toBe('hidden');
  expect(declarations(css, '.aip-domain5-page .mermaid-wrap > [role="img"]')).toMatchObject({ background: 'transparent', border: 'none', padding: '0', overflow: 'visible' });
- expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);expect(css).not.toMatch(/#[\da-fA-F]{3,8}\b|word-break:\s*break-word/);
+ expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);expect(css).not.toMatch(/word-break:\s*break-word/);
+ postcss.parse(css).walkRules(rule=>{if(!rule.selector.includes('hljs'))rule.walkDecls(decl=>expect(decl.value).not.toMatch(/#[\da-fA-F]{3,8}\b/));});
  for (const [, name] of css.matchAll(/var\((--[\w-]+)/g)) if (name !== '--disclaimer-height') expect(tokens, name).toHaveProperty(name!);
  });
 });
