@@ -1,6 +1,6 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-20)
+(最終更新日: 2026-10-21)
 
 ## 2026-10-20: ANS-C01 Domain 2レビュー指摘対応
 
@@ -14,7 +14,7 @@
 
 `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。Server入口と本文6区分、ClientのNavBarに分離し、ホーム/HeaderへDomain 1を保持したままDomain 2を追加。共通フッターもライト配色へ対応。
 
-- 原本と固定Git `cb46fb6dc39604b936f3c413f953b6abd4469441` の一致を確認してInventory・Fidelity・構文トークンを抽出。期待値は実装から生成していない。原本HTML312295バイト（SHA-256 `c1842b2f5c63776405ec9adb34d3445ac70e87f86a53775c7e41bd585f7a5d75`）とMarkdown（SHA-256 `e77a987c945a7bbd4b22ebb7859a0356d3238188f7c306863bee3c457ea64ec8`）を `archive/Aws/html/advanced-networking-specialty/domain2/` と `archive/Aws/md/advanced-networking-specialty/domain2/` へバイト一致で保存後、直下から削除（`fd574555`。削除直前のGit版とSHA-256一致）。
+- 原本と固定Git `cb46fb6dc39604b936f3c413f953b6abd4469441` の一致を確認してInventory・Fidelity・構文トークンを抽出。期待値は実装から生成していない。原本HTML312295バイト（SHA-256 `c1842b2f5c63776405ec9adb34d3445ac70e87f86a53775c7e41bd585f7a5d75`）とMarkdown（SHA-256 `e77a987c945a7bbd4b22ebb7859a0356d3238188f7c306863bee3c457ea64ec8`）は修正前の旧版で廃止（現在のarchive原本は固定Git `c5c1000f` とバイト一致するHTML SHA-256 `aa28eb6d…`・Markdown SHA-256 `3f9abe2e…` で、再生成fixtureの元。冒頭のレビュー指摘対応を参照）。旧版を `archive/Aws/html/advanced-networking-specialty/domain2/` と `archive/Aws/md/advanced-networking-specialty/domain2/` へバイト一致で保存後、直下から削除（`fd574555`。削除直前のGit版とSHA-256一致）。
 - 共有抽出の重複検出Red→Green、目次Red→Green、導入→Task 2.1→2.2→2.3→2.4→復習の各区分Red→Green、全量・導線・フッターのRed→Greenを順に実施。ユーザー指定により全変更は未コミット。
 - 固定fixtureで全文・全見出し・表セルと結合属性・リスト階層と属性・重複込みリンク順・強調・図DSL・コード全行・全有効CSS宣言を照合。本文・表行・リスト・リンク・図・コード行・解説の欠落7種と、点・番号・インデント等のCSS破壊5種を注入して検出。原本・archive不在の一時領域でも固定Gitからfixtureを再生成できる。
 - 原本のコードは外側ラッパーと内側preが重複抽出されるため、共有のラッパー正規化を追加。言語ラベル・空行・インデントを保持し、既存AIP fixtureのバイト一致再生成も回帰テストで確認。
@@ -3303,7 +3303,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `46f6032c`。前回進捗同期コミット: `63e93ff4`。前回仕様同期 `7e5d968d`。ANS-C01 Domain 2のレビュー指摘（Transit VIF設定例、固定原本 `c5c1000f`・fixture再生成）に対応済みで、`bun run build`・`bun run lint`・全体Vitest344ファイル・3382件が成功。以下は移行時の記録。Domain 2は全4タスク・57表・26図・11コード・86リスト・43外部リンク出現・59目次・確認問題8問を移行済み。全体Vitest344ファイル・3381件、型検査・全体ESLint成功。最終対象検証は冒頭記録を参照。静的集計1106ソース・318対応（29%）・357テストファイル。原本HTML・Markdownは `archive/Aws/` へバイト一致で保存済み（`fd574555`）。直下HTMLは17件で、移行済み原本を含む。npm・ビルドは未実行。手動の目視確認は未実施で、Chrome自動検証（5件成功）で代替。次はユーザーの目視確認と対象指定。前作業のDomain 5アーカイブ関連差分も保持する。
+最新実装 HEAD: `46f6032c`。前回進捗同期コミット: `63e93ff4`。前回仕様同期 `7e5d968d`。ANS-C01 Domain 2のレビュー指摘（Transit VIF設定例、固定原本 `c5c1000f`・fixture再生成）に対応済みで、`bun run build`・`bun run lint`・全体Vitest344ファイル・3382件が成功。以下は移行時の記録。Domain 2は全4タスク・57表・26図・11コード・86リスト・43外部リンク出現・59目次・確認問題8問を移行済み。全体Vitest344ファイル・3381件、型検査・全体ESLint成功。最終対象検証は冒頭記録を参照。静的集計1106ソース・318対応（29%）・357テストファイル。原本HTML・Markdownは `archive/Aws/` へバイト一致で保存済み（`fd574555`）。移行時点では直下HTMLは17件で移行済み原本を含み、npm・ビルドは未実行、手動の目視確認は未実施でChrome自動検証（5件成功）で代替していた（ビルドはその後 `46f6032c` 時点で成功）。次の作業: `.next` を削除して開発サーバーを再起動し、Domain 2のChrome検証5件を再実行したうえで、次の移行対象を指定する。前作業のDomain 5アーカイブ関連差分も保持する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
