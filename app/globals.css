@@ -14,6 +14,25 @@
  */
 
 @theme {
+    /* ANS-C01 Domain 2: original light palette. */
+    --color-ans-d2-1: #f1f5fb;
+    --color-ans-d2-2: #4a5b75;
+    --color-ans-d2-3: #7385a0;
+    --color-ans-d2-4: #2457d6;
+    --color-ans-d2-5: #a9bfee;
+    --color-ans-d2-6: #c62f4f;
+    --color-ans-d2-7: #a85d00;
+    --color-ans-d2-8: #fff1de;
+    --color-ans-d2-9: #17743f;
+    --color-ans-d2-10: #e8f6ee;
+    --color-ans-d2-12: #14264a;
+    --color-ans-d2-13: #0f1c33;
+    --color-ans-d2-14: #b3470f;
+    --color-ans-d2-15: rgba(36, 87, 214, 0.05);
+    --color-ans-d2-16: #a8dcc0;
+    --color-ans-d2-17: rgba(36, 87, 214, 0.06);
+    --color-ans-d2-18: rgba(15, 28, 51, 0.18);
+    --color-ans-d2-19: #24292e;
     /* Shared footer palettes: selected by the displayed page theme. */
     --color-footer-dark-bg: #10131e;
     --color-footer-dark-text: #b6bfd0;

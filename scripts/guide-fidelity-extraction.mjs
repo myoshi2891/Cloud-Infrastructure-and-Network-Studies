@@ -1,9 +1,13 @@
 import postcss from 'postcss';
-import { codeBlockSelector, codeLines, extractBodyContent } from './inventory-extraction.mjs';
+import { codeBlockSelector, codeLines, extractBodyContent, normalizeCodeContainers } from './inventory-extraction.mjs';
 import { normalizeText, normalizeMermaid, snapshotTables } from './archive-fidelity-extraction.mjs';
 
 /** Source and migrated guide blocks share this extraction; no archive is needed at test time. */
 export function snapshotGuidePart(root) {
+    // Highlighted HTML wraps pre in .code-block; JSX keeps its label in .code-sample.
+    // Normalize only the wrapper, preserving every language label and code token.
+    root = root.cloneNode(true);
+    normalizeCodeContainers(root);
     const content = root.querySelector('main') ?? root;
     const diagrams = [...content.querySelectorAll('pre.mermaid, [data-testid="mermaid-diagram"]')];
     const codes = [...content.querySelectorAll(codeBlockSelector)];

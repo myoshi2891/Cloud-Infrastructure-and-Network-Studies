@@ -1,5 +1,14 @@
 export const codeBlockSelector = 'pre:not(.mermaid), .code-block';
 
+/** Keep language labels outside the canonical code block for highlighted HTML. */
+export function normalizeCodeContainers(root) {
+    root.querySelectorAll('.code-block').forEach(element => {
+        // .cb-head 付き（DVA Domain 1）はラベル込みの .code-block が正本のため変換しない
+        if (!element.querySelector('pre') || element.querySelector('.cb-head')) return;
+        element.classList.replace('code-block', 'code-sample');
+    });
+}
+
 export const diagramSelector =
     '[data-testid="mermaid-diagram"], .mermaid, [id^="diag-"], .diagram-container, .diagram-wrapper, .diagram-wrap, .mermaid-target, .diagram, .diagram-canvas, [data-diagram-id]';
 

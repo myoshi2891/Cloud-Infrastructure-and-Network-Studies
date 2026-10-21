@@ -630,8 +630,11 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-ans',
         href: '/aws/advanced-networking-specialty/domain1',
         overviewLabel: 'ドメイン1: ネットワーク設計',
-        description: 'ANS-C01ネットワーク設計の全6タスクを収録。エッジ、DNS、負荷分散、監視、ハイブリッド、複数VPC接続を75表・15図・7コード・6問で学ぶ。',
-        domains: [{ label: 'ドメイン1: ネットワーク設計', href: '/aws/advanced-networking-specialty/domain1', pct: '30%' }],
+        description: 'ANS-C01のネットワーク設計・実装を収録。Domain 1の全6タスクとDomain 2の全4タスクを、132表・41図・18コード・確認問題14問で学ぶ。',
+        domains: [
+            { label: 'ドメイン1: ネットワーク設計', href: '/aws/advanced-networking-specialty/domain1', pct: '30%' },
+            { label: 'ドメイン2: ネットワーク実装', href: '/aws/advanced-networking-specialty/domain2', pct: '26%' },
+        ],
         badge: 'ANS-C01',
         icon: '🌐',
         provider: 'AWS',
