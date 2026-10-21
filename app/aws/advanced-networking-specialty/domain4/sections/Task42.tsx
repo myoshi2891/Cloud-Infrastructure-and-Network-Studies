@@ -1,0 +1,274 @@
+import { Diagram } from '../Diagram';
+/** 原本のtask2区画を全文保持。 */
+export default function Task42(){return <div className="guide-part" data-part="task2">
+<h2 id="task-4-2" tabIndex={-1}>{"Task 4.2 ネットワーク監視・ログによる検証と監査"}</h2>
+{"\n"}
+<p><a id="p8"></a></p>
+{"\n"}
+<h2 id="sec-38" tabIndex={-1}>{"8. 監視・ログサービスの全体像"}</h2>
+{"\n"}
+<p>{"セキュリティは「設定したら終わり」ではなく、"}<strong>{"ログで実際の通信を確認して初めて検証できます"}</strong>{"。Task 4.2 では「どのサービスで何が見えるか」を整理することが第一歩です。"}</p>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"8. 監視・ログサービスの全体像（表23）"}><table><thead><tr className="header"><th scope="col">{"サービス"}</th><th scope="col">{"見えるもの"}</th><th scope="col">{"主な用途"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"VPC Flow Logs"}</strong></td><td>{"IP トラフィックのメタデータ(5-tuple、バイト数、ACCEPT/REJECT)"}</td><td>{"通信の可視化、拒否原因調査、異常検知"}</td></tr><tr className="even"><td><strong>{"VPC Traffic Mirroring"}</strong></td><td><strong>{"パケットの中身(ペイロード含む)"}</strong></td><td>{"IDS/IPS、深いパケット検査、トラブルシュート"}</td></tr><tr className="odd"><td><strong>{"CloudWatch"}</strong>{"(メトリクス / アラーム / Logs)"}</td><td>{"数値指標、ログの検索・集計"}</td><td>{"監視・アラート・可視化"}</td></tr><tr className="even"><td><strong>{"CloudTrail"}</strong></td><td><strong>{"API 呼び出し"}</strong>{"(誰がいつ何を変更したか)"}</td><td>{"構成変更の監査"}</td></tr><tr className="odd"><td><strong>{"ELB / CloudFront / WAF / Network Firewall / Resolver のログ"}</strong></td><td>{"各サービスのリクエスト単位の記録"}</td><td>{"アプリ・攻撃の分析"}</td></tr><tr className="even"><td><strong>{"Transit Gateway Network Manager"}</strong></td><td>{"グローバルネットワークのトポロジ、イベント、メトリクス"}</td><td>{"ハイブリッド/マルチリージョンの監視"}</td></tr><tr className="odd"><td><strong>{"Firewall Manager / Config / Trusted Advisor"}</strong></td><td>{"構成の準拠状況"}</td><td>{"監査・コンプライアンス"}</td></tr></tbody></table></div>
+{"\n"}
+<Diagram id="diag-18" label={"8. 監視・ログサービスの全体像"} />
+{"\n"}
+<p><a id="p9"></a></p>
+{"\n"}
+<h2 id="sec-39" tabIndex={-1}>{"9. VPC Flow Logs"}</h2>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"Skills"}</strong>{": Creating and analyzing a VPC flow log (including base and extended fields of flow logs)"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s9-1" tabIndex={-1}>{"9-1. 基本"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"9-1. 基本（表24）"}><table><thead><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"取得範囲"}</td><td><strong>{"VPC / サブネット / ENI"}</strong>{" のいずれか(上位を指定すると配下の ENI すべて)。"}<strong>{"Transit Gateway(アタッチメント)"}</strong>{" にも Flow Logs あり"}</td></tr><tr className="even"><td>{"取得内容"}</td><td>{"トラフィックの "}<strong>{"メタデータのみ"}</strong>{"(ペイロードは含まない)"}</td></tr><tr className="odd"><td>{"配信先"}</td><td><strong>{"CloudWatch Logs / S3 / Kinesis Data Firehose"}</strong></td></tr><tr className="even"><td>{"トラフィック種別"}</td><td>{"ACCEPT / REJECT / ALL から選択"}</td></tr><tr className="odd"><td>{"集約間隔"}</td><td>{"既定 "}<strong>{"10 分"}</strong>{"。"}<strong>{"1 分"}</strong>{" を指定可能(Nitro ベースのインスタンスの ENI は常に 1 分以内)"}</td></tr><tr className="even"><td>{"配信遅延"}</td><td>{"CloudWatch Logs へは通常およそ 5 分、S3 へはおよそ 10 分"}</td></tr><tr className="odd"><td>{"パフォーマンス影響"}</td><td>{"ネットワークのスループットやレイテンシには影響しない"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s9-2" tabIndex={-1}>{"9-2. 基本フィールド(バージョン 2・既定フォーマット)"}</h3>
+{"\n"}
+<p>{"既定フォーマットは次の "}<strong>{"14 フィールド"}</strong>{" です。"}</p>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"9-2. 基本フィールド(バージョン 2・既定フォーマット)（表25）"}><table><thead><tr className="header"><th scope="col">{"#"}</th><th scope="col">{"フィールド"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr className="odd"><td>{"1"}</td><td><code>{"version"}</code></td><td>{"Flow Logs のバージョン"}</td></tr><tr className="even"><td>{"2"}</td><td><code>{"account-id"}</code></td><td>{"アカウント ID"}</td></tr><tr className="odd"><td>{"3"}</td><td><code>{"interface-id"}</code></td><td>{"ENI の ID"}</td></tr><tr className="even"><td>{"4"}</td><td><code>{"srcaddr"}</code></td><td>{"送信元アドレス"}</td></tr><tr className="odd"><td>{"5"}</td><td><code>{"dstaddr"}</code></td><td>{"宛先アドレス"}</td></tr><tr className="even"><td>{"6"}</td><td><code>{"srcport"}</code></td><td>{"送信元ポート"}</td></tr><tr className="odd"><td>{"7"}</td><td><code>{"dstport"}</code></td><td>{"宛先ポート"}</td></tr><tr className="even"><td>{"8"}</td><td><code>{"protocol"}</code></td><td>{"IANA プロトコル番号(6=TCP、17=UDP、1=ICMP)"}</td></tr><tr className="odd"><td>{"9"}</td><td><code>{"packets"}</code></td><td>{"パケット数"}</td></tr><tr className="even"><td>{"10"}</td><td><code>{"bytes"}</code></td><td>{"バイト数"}</td></tr><tr className="odd"><td>{"11"}</td><td><code>{"start"}</code></td><td>{"開始時刻(Unix 秒)"}</td></tr><tr className="even"><td>{"12"}</td><td><code>{"end"}</code></td><td>{"終了時刻(Unix 秒)"}</td></tr><tr className="odd"><td>{"13"}</td><td><code>{"action"}</code></td><td><strong>{"ACCEPT"}</strong>{" または "}<strong>{"REJECT"}</strong></td></tr><tr className="even"><td>{"14"}</td><td><code>{"log-status"}</code></td><td>{"OK / NODATA / SKIPDATA"}</td></tr></tbody></table></div>
+{"\n"}
+<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-2. 基本フィールド(バージョン 2・既定フォーマット)（コード7）"}>
+<div className="code-line"><span className="c1">{"# 既定フォーマットのレコード例(SSH が REJECT された例)"}</span></div>
+<div className="code-line"><span className="m">{"2"}</span><span className="w">{" "}</span><span className="m">{"123456789010"}</span><span className="w">{" "}</span>{"eni-1235b8ca123456789"}<span className="w">{" "}</span><span className="m">{"203"}</span>{".0.113.12"}<span className="w">{" "}</span><span className="m">{"10"}</span>{".0.1.5"}<span className="w">{" "}</span><span className="m">{"44844"}</span><span className="w">{" "}</span><span className="m">{"22"}</span><span className="w">{" "}</span><span className="m">{"6"}</span><span className="w">{" "}</span><span className="m">{"20"}</span><span className="w">{" "}</span><span className="m">{"4249"}</span><span className="w">{" "}</span><span className="m">{"1418530010"}</span><span className="w">{" "}</span><span className="m">{"1418530070"}</span><span className="w">{" "}</span>{"REJECT"}<span className="w">{" "}</span>{"OK"}</div>
+</div></div>{"\n"}</div>
+{"\n"}
+<h3 id="s9-3" tabIndex={-1}>{"9-3. 拡張フィールド(カスタムフォーマットで追加)"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"9-3. 拡張フィールド(カスタムフォーマットで追加)（表26）"}><table><thead><tr className="header"><th scope="col">{"追加されたバージョン"}</th><th scope="col">{"主なフィールド"}</th><th scope="col">{"用途"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"v3"}</strong></td><td><code>{"vpc-id"}</code>{", "}<code>{"subnet-id"}</code>{", "}<code>{"instance-id"}</code>{", "}<code>{"tcp-flags"}</code>{", "}<code>{"type"}</code>{", "}<code>{"pkt-srcaddr"}</code>{", "}<code>{"pkt-dstaddr"}</code></td><td>{"所属の特定、TCP フラグ(SYN/FIN/RST)、"}<strong>{"NAT 前後の実アドレス"}</strong></td></tr><tr className="even"><td><strong>{"v4"}</strong></td><td><code>{"region"}</code>{", "}<code>{"az-id"}</code>{", "}<code>{"sublocation-type"}</code>{", "}<code>{"sublocation-id"}</code></td><td>{"リージョン・AZ ごとの分析(Outposts 等)"}</td></tr><tr className="odd"><td><strong>{"v5"}</strong></td><td><code>{"pkt-src-aws-service"}</code>{", "}<code>{"pkt-dst-aws-service"}</code>{", "}<code>{"flow-direction"}</code>{", "}<code>{"traffic-path"}</code></td><td>{"AWS サービス宛の識別、"}<strong>{"ingress / egress の方向"}</strong>{"、"}<strong>{"通信経路(IGW・VGW・ピアリング等)"}</strong></td></tr><tr className="even"><td><strong>{"v7 以降"}</strong></td><td>{"ECS 関連フィールド、"}<code>{"reject-reason"}</code>{" など"}</td><td>{"コンテナの可視化、拒否理由の識別"}</td></tr></tbody></table></div>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"試験ポイント"}</strong></p>{"\n"}<ul>{"\n"}<li><strong><code>{"srcaddr"}</code>{" / "}<code>{"dstaddr"}</code></strong>{" は ENI 上のアドレス、"}<strong><code>{"pkt-srcaddr"}</code>{" / "}<code>{"pkt-dstaddr"}</code></strong>{" は "}<strong>{"パケット自体の元のアドレス"}</strong>{"。"}<strong>{"NAT ゲートウェイ、TGW、ロードバランサー経由"}</strong>{" では両者が異なるため、"}<code>{"pkt-*"}</code>{" を併用して実際の送信元を調べる。"}</li>{"\n"}<li><code>{"tcp-flags"}</code>{" で "}<strong>{"SYN だけが大量に来ていないか"}</strong>{"(SYN フラッド)などを分析できる。"}</li>{"\n"}<li><code>{"flow-direction"}</code>{" と "}<code>{"traffic-path"}</code>{" で、"}<strong>{"どの経路(インターネット、VPN、ピアリング)から来たか"}</strong>{"を確認できる。"}</li>{"\n"}<li>{"新しいフィールドは "}<strong>{"新しいバージョン番号のカスタムフォーマット"}</strong>{" でのみ利用可能。最新のフィールド一覧は公式ドキュメントで確認。"}</li>{"\n"}</ul>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s9-4" tabIndex={-1}>{"9-4. Flow Logs に記録されないトラフィック(試験頻出)"}</h3>
+{"\n"}
+<ul>{"\n"}<li><strong>{"Amazon DNS サーバー"}</strong>{"(VPC の +2 アドレス)への通信(独自の DNS サーバーを使う場合は記録される)"}</li>{"\n"}<li>{"Windows ライセンス認証用の通信"}</li>{"\n"}<li><strong>{"インスタンスメタデータ"}</strong>{"(169.254.169.254)への通信"}</li>{"\n"}<li><strong>{"Amazon Time Sync Service"}</strong>{"(169.254.169.123)への通信"}</li>{"\n"}<li>{"DHCP の通信"}</li>{"\n"}<li><strong>{"VPC ルーターの予約 IP アドレス"}</strong>{"への通信"}</li>{"\n"}<li><strong>{"Traffic Mirroring"}</strong>{" のミラーされた通信"}</li>{"\n"}<li><strong>{"PrivateLink のエンドポイント ENI と NLB の ENI の間"}</strong>{" の通信"}</li>{"\n"}</ul>
+{"\n"}
+<p>{"→ DNS の可視化には "}<strong>{"Route 53 Resolver クエリログ"}</strong>{" を使います。"}</p>
+{"\n"}
+<h3 id="s9-5" tabIndex={-1}>{"9-5. 作成と分析の流れ"}</h3>
+{"\n"}
+<Diagram id="diag-19" label={"9-5. 作成と分析の流れ"} />
+{"\n"}
+<p><strong>{"CLI での作成例(S3 へ、カスタムフォーマット、1 分間隔)"}</strong></p>
+{"\n"}
+<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード8）"}>
+<div className="code-line">{"aws"}<span className="w">{" "}</span>{"ec2"}<span className="w">{" "}</span>{"create-flow-logs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--resource-type"}<span className="w">{" "}</span>{"VPC"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--resource-ids"}<span className="w">{" "}</span>{"vpc-0123456789abcdef0"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--traffic-type"}<span className="w">{" "}</span>{"ALL"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-destination-type"}<span className="w">{" "}</span>{"s3"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-destination"}<span className="w">{" "}</span>{"arn:aws:s3:::my-flowlogs-bucket/vpc/"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--max-aggregation-interval"}<span className="w">{" "}</span><span className="m">{"60"}</span><span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-format"}<span className="w">{" "}</span><span className="s1">{"'${version} ${account-id} ${vpc-id} ${subnet-id} ${interface-id} ${srcaddr} ${dstaddr} ${pkt-srcaddr} ${pkt-dstaddr} ${srcport} ${dstport} ${protocol} ${tcp-flags} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${flow-direction} ${traffic-path}'"}</span></div>
+</div></div>{"\n"}</div>
+{"\n"}
+<p><strong>{"CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)"}</strong></p>
+{"\n"}
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード9）"}>
+<div className="code-line"><span className="n">{"fields"}</span><span className="w">{" "}</span><span className="o">{"@"}</span><span className="k">{"timestamp"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"srcAddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstAddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstPort"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"action"}</span></div>
+<div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="n">{"filter"}</span><span className="w">{" "}</span><span className="n">{"action"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="ss">{"\"REJECT\""}</span></div>
+<div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="n">{"stats"}</span><span className="w">{" "}</span><span className="k">{"count"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"as"}</span><span className="w">{" "}</span><span className="n">{"rejectCount"}</span><span className="w">{" "}</span><span className="k">{"by"}</span><span className="w">{" "}</span><span className="n">{"srcAddr"}</span></div>
+<div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="n">{"sort"}</span><span className="w">{" "}</span><span className="n">{"rejectCount"}</span><span className="w">{" "}</span><span className="k">{"desc"}</span></div>
+<div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="k">{"limit"}</span><span className="w">{" "}</span><span className="mi">{"10"}</span></div>
+</div></div>{"\n"}</div>
+{"\n"}
+<p><strong>{"Athena での分析(S3 に保存した Flow Logs で、ポート 22 への拒否を集計)"}</strong></p>
+{"\n"}
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード10）"}>
+<div className="code-line"><span className="k">{"SELECT"}</span><span className="w">{" "}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="k">{"COUNT"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"AS"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span></div>
+<div className="code-line"><span className="k">{"FROM"}</span><span className="w">{" "}</span><span className="n">{"vpc_flow_logs"}</span></div>
+<div className="code-line"><span className="k">{"WHERE"}</span><span className="w">{" "}</span><span className="n">{"action"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="s1">{"'REJECT'"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span><span className="k">{"AND"}</span><span className="w">{" "}</span><span className="n">{"dstport"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="mi">{"22"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span><span className="k">{"AND"}</span><span className="w">{" "}</span><span className="k">{"day"}</span><span className="w">{" "}</span><span className="o">{">="}</span><span className="w">{" "}</span><span className="s1">{"'2026/10/01'"}</span></div>
+<div className="code-line"><span className="k">{"GROUP"}</span><span className="w">{" "}</span><span className="k">{"BY"}</span><span className="w">{" "}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstport"}</span></div>
+<div className="code-line"><span className="k">{"ORDER"}</span><span className="w">{" "}</span><span className="k">{"BY"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span><span className="w">{" "}</span><span className="k">{"DESC"}</span></div>
+<div className="code-line"><span className="k">{"LIMIT"}</span><span className="w">{" "}</span><span className="mi">{"20"}</span><span className="p">{";"}</span></div>
+</div></div>{"\n"}</div>
+{"\n"}
+<h3 id="s9-6" tabIndex={-1}>{"9-6. ACCEPT / REJECT の読み方"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"9-6. ACCEPT / REJECT の読み方（表27）"}><table><thead><tr className="header"><th scope="col">{"観測"}</th><th scope="col">{"考えられる原因"}</th></tr></thead><tbody><tr className="odd"><td>{"インバウンドが "}<strong>{"REJECT"}</strong></td><td>{"SG で許可されていない、または NACL で拒否"}</td></tr><tr className="even"><td>{"インバウンドは "}<strong>{"ACCEPT"}</strong>{" なのに応答が "}<strong>{"REJECT"}</strong></td><td><strong>{"NACL(ステートレス)"}</strong>{" で戻り通信のエフェメラルポートが拒否されている"}</td></tr><tr className="odd"><td>{"ACCEPT だが接続できない"}</td><td>{"OS のファイアウォール、アプリが待ち受けていない、ルート不備"}</td></tr><tr className="even"><td>{"同一 5-tuple の REJECT が大量"}</td><td>{"スキャンや攻撃の可能性 → GuardDuty と併せて確認"}</td></tr></tbody></table></div>
+{"\n"}
+<blockquote>{"\n"}<p>{"SG は許可ルールのみなので、「SG が拒否した」というログは出ません。"}<strong>{"許可ルールに一致しなかった通信が REJECT"}</strong>{" と記録されます。"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s9-7" tabIndex={-1}>{"9-7. ベストプラクティス"}</h3>
+{"\n"}
+<ol>{"\n"}<li><strong>{"すべての VPC で Flow Logs を有効化"}</strong>{"(Config ルール "}<code>{"vpc-flow-logs-enabled"}</code>{" で検査、Firewall Manager や宣言型ポリシーで強制も可能)。"}</li>{"\n"}<li>{"長期保管と大規模分析は "}<strong>{"S3(Parquet + Hive 形式のパーティション)+ Athena"}</strong>{"、リアルタイムの検知は "}<strong>{"CloudWatch Logs + メトリクスフィルタ"}</strong>{"。"}</li>{"\n"}<li>{"必要なフィールドだけを選ぶ "}<strong>{"カスタムフォーマット"}</strong>{" でコストとデータ量を抑える。"}</li>{"\n"}<li><strong>{"S3 のライフサイクルポリシー"}</strong>{" でストレージクラスを移行し、保存期間をコンプライアンス要件に合わせる。"}</li>{"\n"}<li>{"配信先バケットは "}<strong>{"暗号化(SSE-KMS)・パブリックアクセスブロック・バケットポリシー("}<code>{"delivery.logs.amazonaws.com"}</code>{" に限定)"}</strong>{" を設定する。"}</li>{"\n"}<li>{"調査を速くするため、"}<strong>{"1 分間隔"}</strong>{" は重要な VPC/サブネットに絞って利用する(データ量が増えるため)。"}</li>{"\n"}</ol>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"VPC Flow Logs: "}<a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html">{"https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"}</a></li>{"\n"}<li>{"Flow Logs レコード(フィールド一覧): "}<a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html">{"https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html"}</a></li>{"\n"}<li>{"Flow Logs の制限事項(記録されないトラフィック): "}<a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-limitations.html">{"https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-limitations.html"}</a></li>{"\n"}<li>{"Athena での Flow Logs 分析: "}<a href="https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html">{"https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html"}</a></li>{"\n"}<li>{"Transit Gateway Flow Logs: "}<a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html">{"https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html"}</a></li>{"\n"}</ul>
+{"\n"}
+<p><a id="p10"></a></p>
+{"\n"}
+<h2 id="sec-47" tabIndex={-1}>{"10. VPC Traffic Mirroring"}</h2>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"Skills"}</strong>{": Creating and analyzing network traffic mirroring (for example, using VPC Traffic Mirroring)"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s10-1" tabIndex={-1}>{"10-1. 何ができるか"}</h3>
+{"\n"}
+<p>{"EC2 インスタンス等の "}<strong>{"ENI を通るパケットを複製"}</strong>{" し、"}<strong>{"検査用の宛先に送る"}</strong>{" 機能です。Flow Logs が「メタデータ」なのに対し、こちらは "}<strong>{"ペイロードを含むパケット全体"}</strong>{" を取得できます。"}</p>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"10-1. 何ができるか（表28）"}><table><thead><tr className="header"><th scope="col">{"構成要素"}</th><th scope="col">{"説明"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"ミラーソース"}</strong></td><td>{"ミラー対象の "}<strong>{"ENI"}</strong>{"(対応する Nitro ベースのインスタンス等)"}</td></tr><tr className="even"><td><strong>{"ミラーターゲット"}</strong></td><td>{"複製したパケットの送信先。"}<strong>{"ENI / Network Load Balancer / Gateway Load Balancer エンドポイント"}</strong></td></tr><tr className="odd"><td><strong>{"ミラーフィルタ"}</strong></td><td>{"対象トラフィックを絞るルール(ACCEPT/REJECT、方向、プロトコル、ポート範囲、CIDR)"}</td></tr><tr className="even"><td><strong>{"ミラーセッション"}</strong></td><td>{"ソース・ターゲット・フィルタを結び付ける。"}<strong>{"セッション番号"}</strong>{"(優先順位)、"}<strong>{"パケット長の切り詰め"}</strong>{"、"}<strong>{"VNI"}</strong>{" を指定"}</td></tr></tbody></table></div>
+{"\n"}
+<Diagram id="diag-20" label={"10-1. 何ができるか"} />
+{"\n"}
+<h3 id="s10-2" tabIndex={-1}>{"10-2. 重要な仕様"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"10-2. 重要な仕様（表29）"}><table><thead><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"カプセル化"}</td><td><strong>{"VXLAN(UDP 4789)"}</strong>{"。ターゲットの SG・NACL で "}<strong>{"UDP 4789 のインバウンドを許可"}</strong>{" する必要あり"}</td></tr><tr className="even"><td>{"ソースとターゲットの場所"}</td><td><strong>{"同じ VPC に限らず"}</strong>{"、VPC ピアリングや Transit Gateway で接続された別 VPC にも送れる"}</td></tr><tr className="odd"><td>{"帯域"}</td><td>{"ミラーされたトラフィックは "}<strong>{"ソース ENI の帯域を消費"}</strong>{" する"}</td></tr><tr className="even"><td>{"切り詰め"}</td><td><strong>{"パケット長(Packet Length)"}</strong>{" を指定すると、ヘッダーだけなど一部だけ送れる"}</td></tr><tr className="odd"><td>{"Flow Logs との関係"}</td><td><strong>{"ミラーされたトラフィックは Flow Logs に記録されない"}</strong></td></tr><tr className="even"><td>{"検査アプライアンス"}</td><td>{"自前または Marketplace の IDS/IPS、Suricata、Zeek、Wireshark など"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s10-3" tabIndex={-1}>{"10-3. Flow Logs と Traffic Mirroring の使い分け"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"10-3. Flow Logs と Traffic Mirroring の使い分け（表30）"}><table><thead><tr className="header"><th scope="col">{"観点"}</th><th scope="col">{"Flow Logs"}</th><th scope="col">{"Traffic Mirroring"}</th></tr></thead><tbody><tr className="odd"><td>{"取得内容"}</td><td>{"メタデータ(誰から誰へ、量、許可/拒否)"}</td><td>{"パケット全体(ペイロード含む)"}</td></tr><tr className="even"><td>{"用途"}</td><td>{"広範囲の可視化・監査・コスト効率の良い常時監視"}</td><td><strong>{"深いパケット解析"}</strong>{"、IDS、フォレンジック、アプリ障害の原因調査"}</td></tr><tr className="odd"><td>{"コスト"}</td><td>{"比較的低い"}</td><td>{"ミラー分の帯域 + 検査基盤のコスト"}</td></tr><tr className="even"><td>{"導入負荷"}</td><td>{"設定のみ"}</td><td>{"ターゲット(NLB・検査基盤)の構築が必要"}</td></tr></tbody></table></div>
+{"\n"}
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ol>{"\n"}<li>{"常時ミラーせず、"}<strong>{"フィルタで対象を絞る"}</strong>{"(特定ポート・特定サブネット)。"}</li>{"\n"}<li>{"ターゲットは "}<strong>{"NLB の背後に Auto Scaling グループ"}</strong>{" を置き、検査基盤の冗長性と拡張性を確保する。"}</li>{"\n"}<li>{"通常は "}<strong>{"Flow Logs で異常を検知 → 該当 ENI だけ Traffic Mirroring で深掘り"}</strong>{" する運用にする。"}</li>{"\n"}<li><strong>{"暗号化された通信(TLS)"}</strong>{" の中身は復号しないと見えない。必要ならターゲット側で復号方法を検討する。"}</li>{"\n"}</ol>{"\n"}</div></div>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"Traffic Mirroring: "}<a href="https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html">{"https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html"}</a></li>{"\n"}<li>{"ミラーターゲット/フィルタ/セッション: "}<a href="https://docs.aws.amazon.com/vpc/latest/mirroring/traffic-mirroring-targets.html">{"https://docs.aws.amazon.com/vpc/latest/mirroring/traffic-mirroring-targets.html"}</a></li>{"\n"}</ul>
+{"\n"}
+<p><a id="p11"></a></p>
+{"\n"}
+<h2 id="sec-51" tabIndex={-1}>{"11. Amazon CloudWatch(アラーム・カスタムメトリクス・Logs Insights)"}</h2>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"Skills"}</strong>{": Implementing automated alarms by using CloudWatch / Implementing customized metrics by using CloudWatch"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s11-1" tabIndex={-1}>{"11-1. セキュリティ/ネットワーク監視でよく使う標準メトリクス"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"11-1. セキュリティ/ネットワーク監視でよく使う標準メトリクス（表31）"}><table><thead><tr className="header"><th scope="col">{"サービス"}</th><th scope="col">{"代表的なメトリクス(名前空間)"}</th><th scope="col">{"見るポイント"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"WAF"}</strong>{"(AWS/WAFV2)"}</td><td><code>{"BlockedRequests"}</code>{", "}<code>{"AllowedRequests"}</code>{", "}<code>{"CountedRequests"}</code></td><td>{"ブロック急増 = 攻撃の兆候"}</td></tr><tr className="even"><td><strong>{"Network Firewall"}</strong>{"(AWS/NetworkFirewall)"}</td><td><code>{"DroppedPackets"}</code>{", "}<code>{"PassedPackets"}</code>{", "}<code>{"ReceivedPackets"}</code></td><td>{"ドロップ急増"}</td></tr><tr className="odd"><td><strong>{"Shield Advanced"}</strong>{"(AWS/DDoSProtection)"}</td><td><code>{"DDoSDetected"}</code>{", "}<code>{"DDoSAttackBitsPerSecond"}</code>{" 等"}</td><td>{"DDoS 検知"}</td></tr><tr className="even"><td><strong>{"NAT ゲートウェイ"}</strong>{"(AWS/NATGateway)"}</td><td><code>{"ErrorPortAllocation"}</code>{", "}<code>{"PacketsDropCount"}</code></td><td>{"ポート枯渇・ドロップ"}</td></tr><tr className="odd"><td><strong>{"Transit Gateway"}</strong>{"(AWS/TransitGateway)"}</td><td><code>{"PacketDropCountBlackhole"}</code>{", "}<code>{"PacketDropCountNoRoute"}</code></td><td>{"ルート不備・ブラックホール"}</td></tr><tr className="even"><td><strong>{"Site-to-Site VPN"}</strong>{"(AWS/VPN)"}</td><td><code>{"TunnelState"}</code>{", "}<code>{"TunnelDataIn/Out"}</code></td><td>{"トンネルのダウン"}</td></tr><tr className="odd"><td><strong>{"Direct Connect"}</strong>{"(AWS/DX)"}</td><td><code>{"ConnectionState"}</code>{", "}<code>{"ConnectionLightLevelTx/Rx"}</code></td><td>{"接続断・光レベル"}</td></tr><tr className="even"><td><strong>{"ELB"}</strong>{"(AWS/ApplicationELB 等)"}</td><td><code>{"HTTPCode_ELB_5XX_Count"}</code>{", "}<code>{"TargetResponseTime"}</code></td><td>{"エラー・遅延"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s11-2" tabIndex={-1}>{"11-2. アラームの種類"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"11-2. アラームの種類（表32）"}><table><thead><tr className="header"><th scope="col">{"種類"}</th><th scope="col">{"説明"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"静的しきい値アラーム"}</strong></td><td>{"固定値を超えたら ALARM"}</td></tr><tr className="even"><td><strong>{"異常検知アラーム"}</strong></td><td>{"機械学習で期待範囲を学習し、外れたら ALARM"}</td></tr><tr className="odd"><td><strong>{"複合アラーム"}</strong></td><td>{"複数アラームを AND/OR で組み合わせ、ノイズを削減"}</td></tr><tr className="even"><td><strong>{"メトリクス数式"}</strong></td><td>{"複数メトリクスを計算した結果で判定"}</td></tr></tbody></table></div>
+{"\n"}
+<p>{"アクション先は "}<strong>{"SNS"}</strong>{"、EC2 アクション、Auto Scaling、Systems Manager(OpsItem/Incident)などです。"}</p>
+{"\n"}
+<h3 id="s11-3" tabIndex={-1}>{"11-3. ログからカスタムメトリクスを作る(メトリクスフィルタ)"}</h3>
+{"\n"}
+<p><strong>{"例: Flow Logs の REJECT をメトリクス化してアラーム"}</strong></p>
+{"\n"}
+<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"11-3. ログからカスタムメトリクスを作る(メトリクスフィルタ)（コード11）"}>
+<div className="code-line"><span className="c1">{"# 1. メトリクスフィルタを作成(Flow Logs の CloudWatch Logs ロググループ)"}</span></div>
+<div className="code-line">{"aws"}<span className="w">{" "}</span>{"logs"}<span className="w">{" "}</span>{"put-metric-filter"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-group-name"}<span className="w">{" "}</span>{"/vpc/flowlogs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--filter-name"}<span className="w">{" "}</span>{"RejectedSshConnections"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--filter-pattern"}<span className="w">{" "}</span><span className="s1">{"'[version, account, eni, source, destination, srcport, destport=\"22\", protocol=\"6\", packets, bytes, windowstart, windowend, action=\"REJECT\", flowlogstatus]'"}</span><span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--metric-transformations"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"      "}</span><span className="nv">{"metricName"}</span><span className="o">{"="}</span>{"RejectedSsh,metricNamespace"}<span className="o">{"="}</span>{"NetworkSecurity,metricValue"}<span className="o">{"="}</span><span className="m">{"1"}</span>{",defaultValue"}<span className="o">{"="}</span><span className="m">{"0"}</span></div>
+<div className="code-line">{""}</div>
+<div className="code-line"><span className="c1">{"# 2. アラームを作成"}</span></div>
+<div className="code-line">{"aws"}<span className="w">{" "}</span>{"cloudwatch"}<span className="w">{" "}</span>{"put-metric-alarm"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--alarm-name"}<span className="w">{" "}</span>{"High-Rejected-SSH"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--namespace"}<span className="w">{" "}</span>{"NetworkSecurity"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--metric-name"}<span className="w">{" "}</span>{"RejectedSsh"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--statistic"}<span className="w">{" "}</span>{"Sum"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--period"}<span className="w">{" "}</span><span className="m">{"300"}</span><span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--evaluation-periods"}<span className="w">{" "}</span><span className="m">{"1"}</span><span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--threshold"}<span className="w">{" "}</span><span className="m">{"100"}</span><span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--comparison-operator"}<span className="w">{" "}</span>{"GreaterThanThreshold"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--alarm-actions"}<span className="w">{" "}</span>{"arn:aws:sns:ap-northeast-1:111122223333:security-alerts"}</div>
+</div></div>{"\n"}</div>
+{"\n"}
+<p><strong>{"カスタムメトリクスの送り方は 3 種類"}</strong></p>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"11-3. ログからカスタムメトリクスを作る(メトリクスフィルタ)（表33）"}><table><thead><tr className="header"><th scope="col">{"方法"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"PutMetricData API"}</strong></td><td>{"アプリや Lambda から直接送信"}</td></tr><tr className="even"><td><strong>{"メトリクスフィルタ"}</strong></td><td>{"ログのパターンに一致した件数・値をメトリクス化"}</td></tr><tr className="odd"><td><strong>{"Embedded Metric Format(EMF)"}</strong></td><td>{"構造化ログに埋め込んで、ログとメトリクスを同時生成"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s11-4" tabIndex={-1}>{"11-4. その他の便利機能"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"11-4. その他の便利機能（表34）"}><table><thead><tr className="header"><th scope="col">{"機能"}</th><th scope="col">{"用途"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"Logs Insights"}</strong></td><td>{"ログのアドホックなクエリ(例: REJECT の Top 送信元)"}</td></tr><tr className="even"><td><strong>{"Contributor Insights"}</strong></td><td>{"「Top N の貢献者」(送信元 IP 別のトラフィック量など)をリアルタイムに可視化"}</td></tr><tr className="odd"><td><strong>{"サブスクリプションフィルタ"}</strong></td><td>{"ログをリアルタイムに Kinesis / Firehose / Lambda に転送"}</td></tr><tr className="even"><td><strong>{"CloudWatch Internet Monitor / Network Monitor"}</strong></td><td>{"インターネット経由・ハイブリッド接続の遅延・可用性の監視"}</td></tr><tr className="odd"><td><strong>{"クロスアカウント・クロスリージョン"}</strong>{" オブザーバビリティ"}</td><td>{"複数アカウントのメトリクス・ログを 1 つのモニタリングアカウントで閲覧"}</td></tr></tbody></table></div>
+{"\n"}
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ul>{"\n"}<li>{"アラームは "}<strong>{"「実際に人が対応する事象」"}</strong>{" に絞り、複合アラームでノイズを減らす。"}</li>{"\n"}<li><strong>{"ロググループの保持期間"}</strong>{" を設定し(無期限は費用増)、長期保管は S3 へエクスポート/配信。"}</li>{"\n"}<li>{"重要なアラームの "}<strong>{"通知先は SNS の別系統(複数経路)"}</strong>{" にし、通知の単一障害点を避ける。"}</li>{"\n"}</ul>{"\n"}</div></div>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"CloudWatch アラーム: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html"}</a></li>{"\n"}<li>{"メトリクスフィルタ: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html"}</a></li>{"\n"}<li>{"カスタムメトリクス(PutMetricData / EMF): "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html"}</a></li>{"\n"}<li>{"Logs Insights: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html"}</a></li>{"\n"}</ul>
+{"\n"}
+<p><a id="p12"></a></p>
+{"\n"}
+<h2 id="sec-56" tabIndex={-1}>{"12. CloudTrail と各サービスのログ"}</h2>
+{"\n"}
+<h3 id="s12-1" tabIndex={-1}>{"12-1. AWS CloudTrail(誰が何を変えたか)"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"12-1. AWS CloudTrail(誰が何を変えたか)（表35）"}><table><thead><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"管理イベント"}</td><td>{"ネットワーク設定変更の API("}<code>{"AuthorizeSecurityGroupIngress"}</code>{"、"}<code>{"CreateNetworkAclEntry"}</code>{"、"}<code>{"ReplaceRoute"}</code>{"、"}<code>{"CreateVpcEndpoint"}</code>{"、"}<code>{"ModifyVpcEndpoint"}</code>{" など)。"}<strong>{"既定で記録(直近 90 日はイベント履歴で閲覧可)"}</strong></td></tr><tr className="even"><td>{"データイベント"}</td><td>{"S3 オブジェクトレベルなど。"}<strong>{"既定では無効"}</strong>{"(有効化が必要)"}</td></tr><tr className="odd"><td>{"Insights イベント"}</td><td>{"通常と異なる API 呼び出しパターンの検出"}</td></tr><tr className="even"><td>{"組織の証跡"}</td><td><strong>{"Organizations 全アカウントを 1 つの証跡で集約"}</strong></td></tr><tr className="odd"><td>{"ログ整合性検証"}</td><td><strong>{"SHA-256 ハッシュ + 電子署名"}</strong>{" のダイジェストファイルで改ざんを検出"}</td></tr><tr className="even"><td>{"CloudTrail Lake"}</td><td>{"証跡データを SQL で長期保存・分析"}</td></tr></tbody></table></div>
+{"\n"}
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ul>{"\n"}<li><strong>{"全リージョン・組織全体の証跡"}</strong>{" を作成し、"}<strong>{"管理アカウントとは別のログアーカイブアカウントの S3"}</strong>{" に集約。"}</li>{"\n"}<li><strong>{"ログファイル整合性検証を有効化"}</strong>{"、バケットは "}<strong>{"SSE-KMS・MFA Delete/オブジェクトロック・パブリックアクセスブロック"}</strong>{"。"}</li>{"\n"}<li>{"ネットワークの変更(SG・NACL・ルート・IGW)を "}<strong>{"EventBridge で検知して通知"}</strong>{" する。"}</li>{"\n"}</ul>{"\n"}</div></div>
+{"\n"}
+<h3 id="s12-2" tabIndex={-1}>{"12-2. サービス別アクセスログ一覧(試験頻出)"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"12-2. サービス別アクセスログ一覧(試験頻出)（表36）"}><table><thead><tr className="header"><th scope="col">{"ログ"}</th><th scope="col">{"取得できる内容"}</th><th scope="col">{"有効化"}</th><th scope="col">{"配信先"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"ALB アクセスログ"}</strong></td><td>{"リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報)"}</td><td><strong>{"既定は無効"}</strong></td><td><strong>{"S3"}</strong></td></tr><tr className="even"><td><strong>{"NLB アクセスログ"}</strong></td><td><strong>{"TLS リスナー"}</strong>{" の接続情報"}</td><td>{"既定は無効"}</td><td><strong>{"S3"}</strong></td></tr><tr className="odd"><td><strong>{"CloudFront 標準ログ"}</strong></td><td>{"ビューワーリクエスト"}</td><td>{"既定は無効"}</td><td>{"S3(最新では CloudWatch Logs / Firehose も選択可)"}</td></tr><tr className="even"><td><strong>{"CloudFront リアルタイムログ"}</strong></td><td>{"ほぼリアルタイムのリクエスト(サンプリング率を指定)"}</td><td>{"既定は無効"}</td><td><strong>{"Kinesis Data Streams"}</strong></td></tr><tr className="odd"><td><strong>{"WAF ログ"}</strong></td><td>{"Web ACL で評価されたリクエストの詳細(一致ルール・アクション)"}</td><td>{"既定は無効"}</td><td>{"CloudWatch Logs / S3 / Firehose("}<strong><code>{"aws-waf-logs-"}</code>{" で始まる名前"}</strong>{")"}</td></tr><tr className="even"><td><strong>{"Network Firewall ログ"}</strong></td><td>{"alert / flow / TLS"}</td><td>{"既定は無効"}</td><td>{"S3 / CloudWatch Logs / Firehose"}</td></tr><tr className="odd"><td><strong>{"Route 53 Resolver クエリログ"}</strong></td><td>{"VPC 内からの DNS クエリ"}</td><td>{"既定は無効"}</td><td>{"CloudWatch Logs / S3 / Firehose"}</td></tr><tr className="even"><td><strong>{"Route 53 パブリック DNS クエリログ"}</strong></td><td>{"パブリックホストゾーンへのクエリ"}</td><td>{"既定は無効"}</td><td><strong>{"CloudWatch Logs のみ(ロググループは米国東部バージニア北部)"}</strong></td></tr><tr className="odd"><td><strong>{"VPC Flow Logs / TGW Flow Logs"}</strong></td><td>{"前章参照"}</td><td>{"既定は無効"}</td><td>{"CloudWatch Logs / S3 / Firehose"}</td></tr><tr className="even"><td><strong>{"Site-to-Site VPN トンネルログ"}</strong></td><td>{"IKE・DPD などの接続状態"}</td><td>{"既定は無効"}</td><td>{"CloudWatch Logs"}</td></tr><tr className="odd"><td><strong>{"Global Accelerator フローログ"}</strong></td><td>{"アクセラレーター経由のトラフィック"}</td><td>{"既定は無効"}</td><td>{"S3"}</td></tr><tr className="even"><td><strong>{"S3 サーバーアクセスログ / API Gateway アクセスログ"}</strong></td><td>{"リクエスト記録"}</td><td>{"既定は無効"}</td><td>{"S3 / CloudWatch Logs"}</td></tr></tbody></table></div>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"試験ポイント"}</strong>{": 「"}<strong>{"ALB のログは S3 のみ"}</strong>{"」「"}<strong>{"パブリック DNS クエリログは CloudWatch Logs のみ"}</strong>{"」「"}<strong>{"CloudFront リアルタイムログは Kinesis Data Streams"}</strong>{"」など、"}<strong>{"「サービス ↔ 配信先」の組み合わせ"}</strong>{" がよく出ます。"}</p>{"\n"}</blockquote>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"CloudTrail: "}<a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html">{"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"}</a></li>{"\n"}<li>{"ALB アクセスログ: "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html"}</a></li>{"\n"}<li>{"NLB アクセスログ: "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html"}</a></li>{"\n"}<li>{"CloudFront ログ: "}<a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/logging.html">{"https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/logging.html"}</a></li>{"\n"}<li>{"WAF ログ: "}<a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html">{"https://docs.aws.amazon.com/waf/latest/developerguide/logging.html"}</a></li>{"\n"}<li>{"Network Firewall ログ: "}<a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html">{"https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html"}</a></li>{"\n"}<li>{"Resolver クエリログ: "}<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html">{"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html"}</a></li>{"\n"}<li>{"Route 53 パブリックホストゾーンのクエリログ: "}<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html">{"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html"}</a></li>{"\n"}<li>{"VPN ログ: "}<a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-logs.html">{"https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-logs.html"}</a></li>{"\n"}</ul>
+{"\n"}
+<p><a id="p13"></a></p>
+{"\n"}
+<h2 id="sec-59" tabIndex={-1}>{"13. ログ配信と複数ソースの相関分析"}</h2>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"Skills"}</strong>{": Implementing log delivery solutions / Correlating and analyzing information across single or multiple AWS log sources"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s13-1" tabIndex={-1}>{"13-1. 配信メカニズムの選び方"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"13-1. 配信メカニズムの選び方（表37）"}><table><thead><tr className="header"><th scope="col">{"配信先"}</th><th scope="col">{"特徴"}</th><th scope="col">{"向いている用途"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"CloudWatch Logs"}</strong></td><td>{"即時検索、メトリクスフィルタ、サブスクリプション"}</td><td>{"リアルタイム監視・アラーム"}</td></tr><tr className="even"><td><strong>{"Amazon S3"}</strong></td><td>{"低コスト・長期保管・Athena で分析"}</td><td>{"監査用の長期保存、大規模分析"}</td></tr><tr className="odd"><td><strong>{"Kinesis Data Firehose"}</strong></td><td>{"バッファリングして S3 / OpenSearch / Splunk / HTTP エンドポイントへ配信、形式変換"}</td><td>{"SIEM や外部分析基盤への連携"}</td></tr><tr className="even"><td><strong>{"Kinesis Data Streams"}</strong></td><td>{"低遅延・複数コンシューマ"}</td><td>{"リアルタイム処理(CloudFront リアルタイムログ等)"}</td></tr><tr className="odd"><td><strong>{"Amazon Security Lake"}</strong></td><td>{"OCSF 形式でセキュリティログを正規化・集約"}</td><td>{"マルチソース・マルチアカウントの統合分析"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s13-2" tabIndex={-1}>{"13-2. マルチアカウントの集約ログ構成"}</h3>
+{"\n"}
+<Diagram id="diag-21" label={"13-2. マルチアカウントの集約ログ構成"} />
+{"\n"}
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ul>{"\n"}<li><strong>{"ログ専用アカウント"}</strong>{" にログを集約し、ワークロードアカウントからは "}<strong>{"書き込みのみ"}</strong>{" にして削除・改ざんを防ぐ(バケットポリシー + SCP)。"}</li>{"\n"}<li>{"S3 は "}<strong>{"バージョニング・オブジェクトロック・ライフサイクル"}</strong>{" を設定。"}</li>{"\n"}<li><strong>{"共通のタイムスタンプ(UTC)・アカウント ID・リソース ID"}</strong>{" をキーにして相関できるようにする。"}</li>{"\n"}</ul>{"\n"}</div></div>
+{"\n"}
+<h3 id="s13-3" tabIndex={-1}>{"13-3. 相関分析の考え方(例: 不審な外部通信の調査)"}</h3>
+{"\n"}
+<Diagram id="diag-22" label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)"} />
+{"\n"}
+<p>{"Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):"}</p>
+{"\n"}
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)（コード12）"}>
+<div className="code-line"><span className="k">{"SELECT"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"query_name"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="k">{"COUNT"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"AS"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span></div>
+<div className="code-line"><span className="k">{"FROM"}</span><span className="w">{" "}</span><span className="n">{"vpc_flow_logs"}</span><span className="w">{" "}</span><span className="n">{"f"}</span></div>
+<div className="code-line"><span className="k">{"JOIN"}</span><span className="w">{" "}</span><span className="n">{"resolver_query_logs"}</span><span className="w">{" "}</span><span className="n">{"d"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span><span className="k">{"ON"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span></div>
+<div className="code-line"><span className="w">{" "}</span><span className="k">{"AND"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstaddr"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"answer_address"}</span></div>
+<div className="code-line"><span className="k">{"WHERE"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"action"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="s1">{"'ACCEPT'"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span><span className="k">{"AND"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="k">{"day"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="s1">{"'2026/10/16'"}</span></div>
+<div className="code-line"><span className="k">{"GROUP"}</span><span className="w">{" "}</span><span className="k">{"BY"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"query_name"}</span></div>
+<div className="code-line"><span className="k">{"ORDER"}</span><span className="w">{" "}</span><span className="k">{"BY"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span><span className="w">{" "}</span><span className="k">{"DESC"}</span></div>
+<div className="code-line"><span className="k">{"LIMIT"}</span><span className="w">{" "}</span><span className="mi">{"50"}</span><span className="p">{";"}</span></div>
+</div></div>{"\n"}</div>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"Kinesis Data Firehose: "}<a href="https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html">{"https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html"}</a></li>{"\n"}<li>{"CloudWatch Logs サブスクリプションフィルタ: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Subscriptions.html">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Subscriptions.html"}</a></li>{"\n"}<li>{"Amazon Security Lake: "}<a href="https://docs.aws.amazon.com/security-lake/latest/userguide/what-is-security-lake.html">{"https://docs.aws.amazon.com/security-lake/latest/userguide/what-is-security-lake.html"}</a></li>{"\n"}<li>{"AWS のログ集約のガイダンス: "}<a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/log-archive.html">{"https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/log-archive.html"}</a></li>{"\n"}</ul>
+{"\n"}
+<p><a id="p14"></a></p>
+{"\n"}
+<h2 id="sec-63" tabIndex={-1}>{"14. ネットワーク監査戦略"}</h2>
+{"\n"}
+<blockquote>{"\n"}<p><strong>{"Skills"}</strong>{": Implementing a network audit strategy across single or multiple AWS network services and accounts (for example, Firewall Manager, security groups, network ACLs)"}</p>{"\n"}</blockquote>
+{"\n"}
+<h3 id="s14-1" tabIndex={-1}>{"14-1. 監査ツールの役割分担"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"14-1. 監査ツールの役割分担（表38）"}><table><thead><tr className="header"><th scope="col">{"ツール"}</th><th scope="col">{"監査できること"}</th><th scope="col">{"範囲"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"AWS Firewall Manager"}</strong></td><td>{"SG・NACL・WAF・Shield・Network Firewall・DNS Firewall のポリシー準拠("}<strong>{"SG のコンテンツ監査 / 使用状況監査"}</strong>{")"}</td><td>{"Organizations 全体"}</td></tr><tr className="even"><td><strong>{"AWS Config"}</strong></td><td>{"設定履歴、ルールによる準拠評価、"}<strong>{"コンフォーマンスパック"}</strong>{"、"}<strong>{"アグリゲーター"}</strong>{"(複数アカウント・リージョン集約)"}</td><td>{"単一〜組織"}</td></tr><tr className="odd"><td><strong>{"AWS Trusted Advisor"}</strong></td><td>{"セキュリティチェック("}<strong>{"SG の特定ポートが無制限に開いている"}</strong>{"、公開 IP など)"}</td><td>{"アカウント単位(全チェックは Business / Enterprise サポート)"}</td></tr><tr className="even"><td><strong>{"Network Access Analyzer"}</strong></td><td>{"「意図しないネットワークアクセス」の検出"}</td><td>{"VPC"}</td></tr><tr className="odd"><td><strong>{"Reachability Analyzer"}</strong></td><td>{"2 点間の到達可否と、どこで止まるかの分析"}</td><td>{"VPC"}</td></tr><tr className="even"><td><strong>{"Security Hub"}</strong></td><td>{"セキュリティ標準(AWS Foundational Security Best Practices、CIS、PCI DSS)の自動チェック"}</td><td>{"組織"}</td></tr><tr className="odd"><td><strong>{"Transit Gateway Network Manager"}</strong></td><td>{"ハイブリッドネットワークのトポロジ・イベント・メトリクス、ルートアナライザー"}</td><td>{"グローバル"}</td></tr><tr className="even"><td><strong>{"IAM Access Analyzer"}</strong></td><td>{"リソースの外部公開(ネットワーク起点の条件を含む)の検出"}</td><td>{"アカウント/組織"}</td></tr><tr className="odd"><td><strong>{"CloudTrail"}</strong></td><td>{"構成変更の履歴"}</td><td>{"組織"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s14-2" tabIndex={-1}>{"14-2. Firewall Manager の SG ポリシー 3 種類"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"14-2. Firewall Manager の SG ポリシー 3 種類（表39）"}><table><thead><tr className="header"><th scope="col">{"ポリシー種別"}</th><th scope="col">{"内容"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr className="odd"><td><strong>{"共通セキュリティグループ"}</strong></td><td>{"指定した SG を全対象リソースに "}<strong>{"自動適用"}</strong></td><td>{"全 EC2 に管理用 SG を付与"}</td></tr><tr className="even"><td><strong>{"コンテンツ監査"}</strong></td><td>{"SG ルールの内容を "}<strong>{"ポリシー"}</strong>{" で評価し、違反を検出/是正"}</td><td>{"0.0.0.0/0 の SSH、許可していないポート範囲"}</td></tr><tr className="odd"><td><strong>{"使用状況監査"}</strong></td><td><strong>{"未使用・冗長な SG"}</strong>{" を検出して削除"}</td><td>{"SG の肥大化防止"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s14-3" tabIndex={-1}>{"14-3. Transit Gateway Network Manager"}</h3>
+{"\n"}
+<div className="table-scroll" role="region" tabIndex={0} aria-label={"14-3. Transit Gateway Network Manager（表40）"}><table><thead><tr className="header"><th scope="col">{"機能"}</th><th scope="col">{"説明"}</th></tr></thead><tbody><tr className="odd"><td>{"グローバルネットワーク"}</td><td>{"TGW・Cloud WAN・オンプレ拠点・VPN/DX を "}<strong>{"1 つのビュー"}</strong>{" で管理"}</td></tr><tr className="even"><td>{"トポロジ / イベント"}</td><td>{"接続状態の変化(VPN トンネルダウン、ルート変更など)を "}<strong>{"EventBridge/CloudWatch Logs"}</strong>{" に通知"}</td></tr><tr className="odd"><td>{"ルートアナライザー"}</td><td>{"TGW ルートテーブル間の "}<strong>{"経路を分析"}</strong></td></tr><tr className="even"><td>{"メトリクス"}</td><td>{"CloudWatch に接続やトラフィックの指標を提供"}</td></tr></tbody></table></div>
+{"\n"}
+<h3 id="s14-4" tabIndex={-1}>{"14-4. 複数アカウントでの監査戦略"}</h3>
+{"\n"}
+<Diagram id="diag-23" label={"14-4. 複数アカウントでの監査戦略"} />
+{"\n"}
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ol>{"\n"}<li><strong>{"「予防(SCP・Firewall Manager)」「検知(Config・GuardDuty)」「是正(自動修復)」"}</strong>{" の 3 点で設計する。"}</li>{"\n"}<li><strong>{"SCP"}</strong>{" で「Flow Logs の削除禁止」「ログ設定の変更禁止」「特定リージョン以外の利用禁止」などのガードレールを敷く。"}</li>{"\n"}<li>{"監査人に "}<strong>{"読み取り専用の証跡"}</strong>{"(Audit Manager、Config、CloudTrail Lake)を提供。"}</li>{"\n"}<li>{"定期的に "}<strong>{"Trusted Advisor / Config で「0.0.0.0/0 を許可している SG」"}</strong>{" を棚卸しする。"}</li>{"\n"}<li><strong>{"CloudFormation / Terraform で SG・NACL をコード管理"}</strong>{" し、手動変更はドリフト検出で検知する。"}</li>{"\n"}</ol>{"\n"}</div></div>
+{"\n"}
+<p><strong>{"根拠 URL"}</strong></p>
+{"\n"}
+<ul>{"\n"}<li>{"Firewall Manager のセキュリティグループポリシー: "}<a href="https://docs.aws.amazon.com/waf/latest/developerguide/security-group-policies.html">{"https://docs.aws.amazon.com/waf/latest/developerguide/security-group-policies.html"}</a></li>{"\n"}<li>{"AWS Config: "}<a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">{"https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html"}</a></li>{"\n"}<li>{"Trusted Advisor のチェック: "}<a href="https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor-check-reference.html">{"https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor-check-reference.html"}</a></li>{"\n"}<li>{"Transit Gateway Network Manager: "}<a href="https://docs.aws.amazon.com/network-manager/latest/tgwnm/what-are-global-networks.html">{"https://docs.aws.amazon.com/network-manager/latest/tgwnm/what-are-global-networks.html"}</a></li>{"\n"}<li>{"Audit Manager: "}<a href="https://docs.aws.amazon.com/audit-manager/latest/userguide/what-is.html">{"https://docs.aws.amazon.com/audit-manager/latest/userguide/what-is.html"}</a></li>{"\n"}</ul>
+{"\n"}
+</div>;}
