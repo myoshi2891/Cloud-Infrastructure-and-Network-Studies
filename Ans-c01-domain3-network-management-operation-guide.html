@@ -1924,7 +1924,7 @@ flowchart TD
                             <tr class="odd">
                                 <td>5</td>
                                 <td>
-                                    広告するルートを <strong>集約</strong> して 100 件以内に収める
+                                    広告するルートを <strong>集約</strong> し、VIF のプレフィックス割り当て（既定 100）以内に収める
                                 </td>
                                 <td>
                                     プライベート/トランジット VIF の上限を超えると BGP
@@ -2292,7 +2292,7 @@ flowchart TD
                                     プライベート/トランジット VIF で お客様 → AWS
                                     に広告できるルート数（BGP セッションあたり）
                                 </td>
-                                <td><strong>100</strong>（IPv4・IPv6 それぞれ）</td>
+                                <td>既定 <strong>100</strong>（IPv4・IPv6 それぞれ）。プレフィックス割り当てで最大 1,000 まで設定可能</td>
                                 <td><strong>BGP セッションが Idle になり、切断される</strong></td>
                             </tr>
                             <tr class="even">
@@ -2336,9 +2336,10 @@ flowchart TD
                 <blockquote>
                     <p>
                         <strong>試験ポイント</strong>: 「オンプレミスから 100
-                        を超えるルートを広告したら BGP が切れた」→ 答えは
+                        を超えるルートを広告したら BGP が切れた」→ まず VIF の
+                        <strong>プレフィックス割り当て</strong> を必要数まで増やします（CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に
                         <strong>ルート集約</strong
-                        >（またはデフォルトルートの広告）です。上限の引き上げではありません。
+                        >（またはデフォルトルートの広告）を使います。
                     </p>
                 </blockquote>
                 <h4>上限に備える運用の流れ</h4>
@@ -2987,7 +2988,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td>オンプレミスから 100 を超えるルートを広告したい</td>
-                                <td><strong>ルート集約</strong> またはデフォルトルート</td>
+                                <td><strong>プレフィックス割り当て</strong> の引き上げ（最大 1,000）。増やせない場合はルート集約またはデフォルトルート</td>
                             </tr>
                             <tr class="even">
                                 <td>VPN の帯域が足りない（TGW 利用）</td>
@@ -5638,7 +5639,7 @@ flowchart LR
                                     プライベート/トランジット VIF の BGP 広告ルート数（お客様 →
                                     AWS）
                                 </td>
-                                <td>100（IPv4・IPv6 各）。超過で <strong>BGP 切断</strong></td>
+                                <td>既定 100（IPv4・IPv6 各、最大 1,000 まで割り当て可能）。超過で <strong>BGP 切断</strong></td>
                             </tr>
                             <tr class="even">
                                 <td></td>
@@ -5682,8 +5683,8 @@ flowchart LR
                             </tr>
                             <tr class="even">
                                 <td></td>
-                                <td>VPN の MTU</td>
-                                <td>1500</td>
+                                <td>VPN の MTU（トンネル上限 / 実効パケット MTU）</td>
+                                <td>1500 / 1446（MSS 1406）</td>
                             </tr>
                             <tr class="odd">
                                 <td></td>
@@ -5765,7 +5766,7 @@ flowchart LR
                         <tbody>
                             <tr class="odd">
                                 <td>BGP セッションが突然切れた／100 ルート</td>
-                                <td>ルート集約</td>
+                                <td>プレフィックス割り当ての引き上げ／ルート集約</td>
                             </tr>
                             <tr class="even">
                                 <td>障害検知を速くしたい（DX）</td>
@@ -5848,16 +5849,17 @@ flowchart LR
                 </p>
                 <ul class="scenario-options" role="list">
                     <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> ルートを集約して 100 件以内にする</div></li>
-                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Service Quotas で上限の引き上げを申請する</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> VIF の IPv4 プレフィックス割り当てを 150 以上に設定する</div></li>
                     <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VIF の種類をパブリック VIF に変更する</div></li>
                     <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VIF の MTU を 9001 に変更する</div></li>
                 </ul>
                 <details class="scenario-answer">
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
-                        <strong>A</strong>。プライベート/トランジット VIF の BGP
-                        セッションあたりの広告ルート数（100）は引き上げできず、超過するとセッションが
-                        Idle になります。ルート集約（またはデフォルトルート）が正解です。C
+                        <strong>B</strong>。プライベート/トランジット VIF で受信できるプレフィックス数は既定で
+                        IPv4・IPv6 各 100 で、超過するとセッションが Idle になります。割り当ては
+                        CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000
+                        まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。C
                         はサービスの対象が変わるため不適切です。D は無関係です。
                     </p>
                 </details>
@@ -5883,8 +5885,8 @@ flowchart LR
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>A と B</strong>。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準
-                        1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN の MTU
-                        上限が 1500 のため不可。D は ECMP が使えなくなります。
+                        1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN トンネルの MTU
+                        上限が 1500（実効パケット MTU は 1446）のため不可。D は ECMP が使えなくなります。
                     </p>
                 </details>
                 </article>
@@ -5982,17 +5984,18 @@ flowchart LR
                 <ul class="scenario-options" role="list">
                     <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する</div></li>
                     <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> 経路を Direct Connect のトランジット VIF に変更するだけで解決する</div></li>
-                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1446 以下に設定）する</div></li>
                     <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VPN トンネルの数を増やす</div></li>
                     <li><span class="scenario-option-letter">E.</span><div class="scenario-option-copy"> ENA Express を有効にする</div></li>
                 </ul>
                 <details class="scenario-answer">
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
-                        <strong>A と C</strong>。VPN 経由の MTU は 1500 のため、9001
+                        <strong>A と C</strong>。VPN トンネルの MTU 上限は 1500 ですが、IPsec
+                        のオーバーヘッドにより実効パケット MTU は 1446（MSS 1406）のため、9001
                         の大きなパケットは断片化されるか、DF ビット付きで ICMP
                         が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS
-                        クランプで断片化を避けます。
+                        クランプ（1406 以下）で断片化を避けます。
                     </p>
                 </details>
                 </article>
