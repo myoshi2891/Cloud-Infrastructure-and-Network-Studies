@@ -9,6 +9,7 @@ it('retains highlighted text for every source token class, with code whitespace 
  const selectors=Object.fromEntries(Object.keys(syntaxTokens).map(key=>[key,'.code-block span.'+key]));
  const actual=snapshotTokens(container,selectors);
  for(const [key,tokens] of Object.entries(syntaxTokens)){
+  expect(actual[key],key).toHaveLength(tokens.length);
   expect(actual[key]?.join('').replace(/\s/g,''),key).toBe(tokens.join('').replace(/\s/g,''));
  }
 });

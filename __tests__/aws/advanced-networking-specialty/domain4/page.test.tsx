@@ -34,11 +34,11 @@ describe('ANS domain4 independent complete inventory', () => {
         expect(container.querySelectorAll('table')).toHaveLength(inventory.counts.table);
         expect(container.querySelectorAll('[data-testid="mermaid-diagram"]')).toHaveLength(inventory.counts.diagram);
         expect(container.querySelectorAll('.code-block')).toHaveLength(inventory.counts.codeBlock);
-        container.querySelectorAll('.code-block').forEach(block => expect(block).toHaveAttribute('tabindex', '0'));
+        container.querySelectorAll('.code-block').forEach(block => { expect(block).toHaveAttribute('tabindex', '0'); });
         expect([...container.querySelectorAll('[data-part]')].map(el => el.getAttribute('data-part'))).toEqual(Object.keys(fixture.guideParts));
         const ids = [...container.querySelectorAll('[id]')].map(el => el.id);
         expect(new Set(ids).size).toBe(ids.length);
-        [...container.querySelectorAll('table')].forEach((table, index) => expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[index] ?? -1));
+        [...container.querySelectorAll('table')].forEach((table, index) => { expect(table.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[index] ?? -1); });
 
     });
 });
