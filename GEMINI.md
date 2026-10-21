@@ -2,6 +2,10 @@
 
 Updated 2026-10-21
 
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは変更せず保持し、固定Git `24fd796e` 由来fixtureで原本・archiveに依存せず検証する。npm・ビルド未実行、目視確認はユーザー担当。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+
+最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
+
 2026-10-21 ANS-C01 Domain 3移行: `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。白背景・300px目次・リストの点と階層・インデント・構文ハイライト・解答開閉を保持。本文はServer Component、目次操作はClientのNavBarへ分離。原本HTML・Markdownは保持し、固定Git `e035a60f` 由来fixtureで原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。ホームとHeaderへDomain 3（20%）を追加し、Domain 1・2の導線を保持。原本由来のコード色2系統だけを同系色でAA補正し、本文リンクに下線を追加。原本にチェックボックス実体はなく、追加していない。npm・ビルドは依頼に従い未実行、目視確認はユーザー担当。検証結果と段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へバイト一致で保存後に直下から削除（`fd574555`。保存時のHTML SHA-256 `c1842b2f…` は修正前の旧版で廃止。現在のarchive原本は固定Git `c5c1000f` とバイト一致するHTML SHA-256 `aa28eb6d…` で、再生成fixtureの元）し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証（1440/768/390px・導線を含む5件成功）で代替。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
@@ -53,6 +57,7 @@ Updated 2026-10-21
 
 ## プロジェクト構造
 
+- `/app/aws/advanced-networking-specialty/domain4`: ANS-C01セキュリティ。Server `page.tsx` / `AnsDomain4Guide.tsx` / 5分割sections、Client `NavBar.tsx`、31図と99目次の`constants.ts`、`Diagram.tsx`、原本ライト配色・300px目次・リスト装飾の`page.css`。全33選択肢と8解答開閉。
 - `/app/aws/advanced-networking-specialty/domain3`: ANS-C01ネットワーク管理・運用。Server `page.tsx` / `AnsDomain3Guide.tsx` / 5区分、Client `NavBar.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。91表・26図・7コード・シナリオ8問・52目次を保持。
 - `/app/aws/advanced-networking-specialty/domain2`: ANS-C01ネットワーク実装。Server `page.tsx` / `AnsDomain2Guide.tsx` / 6区分、Client `NavBar.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。57表・26図・11コード・確認問題8問・59目次を保持し、ホーム・Headerから接続。
 - `/app/aws/advanced-networking-specialty/domain1`: ANS-C01ネットワーク設計。Server `page.tsx` / `AnsDomain1Guide.tsx` / 8区分、Client `NavBar.tsx` / `Quiz.tsx` / `Checklist.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。75表・15図・7コード・6問・10チェック・12目次を原本どおり保持し、ホーム・Headerから接続。
