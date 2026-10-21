@@ -1,36 +1,18 @@
-import { normalizeAnsDomain3Quiz } from '@/__tests__/helpers/ans-domain3-quiz';
 import { expect, it, vi } from 'vitest';
-import { fireEvent, render, within } from '@testing-library/react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { render } from '@testing-library/react';
 import Guide from '@/app/aws/advanced-networking-specialty/domain3/sections/Revision';
 import { ansDomain3Part } from '@/__tests__/helpers/ans-domain3-fixture';
 import { defineGuidePartSuite } from '@/__tests__/helpers/guide-fidelity-suite';
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
-
-// Normalize the intentionally redesigned quiz presentation back to the source
-// structure so the full original content and surrounding sections stay audited.
-function ContentWithoutQuizPresentation() {
-    const root = document.createElement('div');
-    root.innerHTML = renderToStaticMarkup(<Guide />);
-    const normalized = normalizeAnsDomain3Quiz(root);
-    return <div dangerouslySetInnerHTML={{__html: normalized.innerHTML}} />;
-}
-defineGuidePartSuite(ContentWithoutQuizPresentation,'revision',ansDomain3Part('revision'));
-
-it('supports single and multiple choices with independently expandable explanations', () => {
-    const { container } = render(<Guide />);
-    const cards = container.querySelectorAll('.quiz-card');
-    expect(cards).toHaveLength(8);
-    for (const [index, card] of [...cards].entries()) {
-        const [first, second] = within(card as HTMLElement).getAllByRole(index === 0 || index === 4 ? 'checkbox' : 'radio');
-        if (!first || !second) throw new Error(`quiz ${index + 1} has fewer than 2 choices`);
-        fireEvent.click(first);
-        fireEvent.click(second);
-        expect(second).toBeChecked();
-        if (index === 0 || index === 4) expect(first).toBeChecked();
-        else expect(first).not.toBeChecked();
-        expect(card.querySelector('fieldset legend')).toHaveAttribute('id', `quiz-title-${index + 1}`);
-        expect(card.querySelector('details')).not.toHaveAttribute('open');
-        expect(card.querySelector('summary')).toHaveTextContent('正解・解説を見る');
-    }
+defineGuidePartSuite(Guide,'revision',ansDomain3Part('revision'));
+it('retains all eight native scenario disclosures and their source choices without adding answer state',()=>{
+ const {container}=render(<Guide/>);
+ expect(container.querySelectorAll('article.scenario-card')).toHaveLength(8);
+ expect(container.querySelectorAll('details.scenario-answer')).toHaveLength(8);
+ container.querySelectorAll('details').forEach(panel=>{
+  expect(panel).not.toHaveAttribute('open');
+  expect(panel.querySelector('summary')).toHaveTextContent('解答と解説');
+  expect(panel.querySelector('p')?.textContent?.trim()).toBeTruthy();
+ });
+ expect(container.querySelectorAll('input')).toHaveLength(0);
 });
