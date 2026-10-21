@@ -32,6 +32,21 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    "aws-ans-c01-domain4-guide": {
+    "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
+    "sourceCommit": "24fd796ebe9716d96498c89505bdddb2352cc266",
+    "tables": true,
+    "codeBlocks": true,
+    "styledClasses": true,
+    "guideInteractions": true,
+    "guideBoundaries": {
+        "foundation": "",
+        "task1": "task-4-1",
+        "task2": "task-4-2",
+        "task3": "task-4-3",
+        "revision": "sec-90"
+    }
+},
     'aws-ans-c01-domain3-guide': {
         source: 'Ans-c01-domain3-network-management-operation-guide.html',
         syntaxSelectors: {"mi":"pre:not(.mermaid) span.mi","w":"pre:not(.mermaid) span.w","nv":"pre:not(.mermaid) span.nv","mf":"pre:not(.mermaid) span.mf","gi":"pre:not(.mermaid) span.gi","kc":"pre:not(.mermaid) span.kc","gd":"pre:not(.mermaid) span.gd","k":"pre:not(.mermaid) span.k","n":"pre:not(.mermaid) span.n","p":"pre:not(.mermaid) span.p","o":"pre:not(.mermaid) span.o","s1":"pre:not(.mermaid) span.s1","se":"pre:not(.mermaid) span.se","m":"pre:not(.mermaid) span.m","c1":"pre:not(.mermaid) span.c1","nb":"pre:not(.mermaid) span.nb"},
