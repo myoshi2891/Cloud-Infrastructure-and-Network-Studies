@@ -519,7 +519,7 @@
                 background: var(--color-ans-d3-17);
             }
             .ans-domain3-page .code-block.highlight .c {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment */
             .ans-domain3-page .code-block.highlight .err {
@@ -533,26 +533,26 @@
                 color: #666;
             } /* Operator */
             .ans-domain3-page .code-block.highlight .ch {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment.Hashbang */
             .ans-domain3-page .code-block.highlight .cm {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment.Multiline */
             .ans-domain3-page .code-block.highlight .cp {
                 color: #9c6500;
             } /* Comment.Preproc */
             .ans-domain3-page .code-block.highlight .cpf {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment.PreprocFile */
             .ans-domain3-page .code-block.highlight .c1 {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment.Single */
             .ans-domain3-page .code-block.highlight .cs {
-                color: #3d7b7b;
+                color: #3b7777;
                 font-style: italic;
             } /* Comment.Special */
             .ans-domain3-page .code-block.highlight .gd {
@@ -573,7 +573,7 @@
                 font-weight: bold;
             } /* Generic.Heading */
             .ans-domain3-page .code-block.highlight .gi {
-                color: #008400;
+                color: #008000;
             } /* Generic.Inserted */
             .ans-domain3-page .code-block.highlight .go {
                 color: #717171;
@@ -1018,3 +1018,6 @@
  .ans-domain3-page .main { width: 100%; }
  .ans-domain3-page .sidebar:not(.open) { visibility: hidden; }
 }
+
+/* 原本の色相を保ったAA補正と、色だけに依存しない本文リンク。 */
+.ans-domain3-page .main p a { text-decoration: underline; }
