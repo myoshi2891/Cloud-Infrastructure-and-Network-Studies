@@ -7,7 +7,7 @@ import { normalizeSpaces, withBlockBoundarySpaces } from './migration-test-utils
 type GuidePart = ReturnType<typeof snapshotGuidePart>;
 
 /** Compare every field against a source fixture, never against an implementation snapshot. */
-export function defineGuidePartSuite(Page: ComponentType, id: string, expected: GuidePart): void {
+export function defineGuidePartSuite(Page: ComponentType, id: string, expected: GuidePart, preserveSourceWhitespace = false): void {
     describe(`AIP ${id} 全量・順序・構造`, () => {
         const content = () => {
             const { container } = render(<Page />);
@@ -19,7 +19,7 @@ export function defineGuidePartSuite(Page: ComponentType, id: string, expected: 
         for (const key of Object.keys(expected) as (keyof GuidePart)[]) {
             it(`preserves all ${key}`, () => {
                 // 本文テキストはブロック境界の空白を補った複製で比較し、語間の空白を保持したまま照合する
-                const actual = key === 'text' || key === 'body' ? snapshotGuidePart(withBlockBoundarySpaces(content())) : snapshotGuidePart(content());
+                const actual = !preserveSourceWhitespace && (key === 'text' || key === 'body') ? snapshotGuidePart(withBlockBoundarySpaces(content())) : snapshotGuidePart(content());
                 if (key === 'text') {
                     expect(normalizeSpaces(actual.text)).toBe(normalizeSpaces(expected.text));
                 } else if (key === 'body') {
