@@ -630,11 +630,12 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-ans',
         href: '/aws/advanced-networking-specialty/domain1',
         overviewLabel: 'ドメイン1: ネットワーク設計',
-        description: 'ANS-C01のネットワーク設計・実装・管理運用を収録。Domain 1〜3の全13タスクを、223表・67図・25コード・確認問題22問で学ぶ。',
+        description: 'ANS-C01の設計・実装・管理運用・セキュリティを全4ドメイン収録。全16タスクを、281表・98図・39コード・確認問題30問で学ぶ。',
         domains: [
             { label: 'ドメイン1: ネットワーク設計', href: '/aws/advanced-networking-specialty/domain1', pct: '30%' },
             { label: 'ドメイン2: ネットワーク実装', href: '/aws/advanced-networking-specialty/domain2', pct: '26%' },
             { label: 'ドメイン3: ネットワーク管理と運用', href: '/aws/advanced-networking-specialty/domain3', pct: '20%' },
+            { label: 'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス', href: '/aws/advanced-networking-specialty/domain4', pct: '24%' },
         ],
         badge: 'ANS-C01',
         icon: '🌐',

@@ -83,8 +83,8 @@ export default function NavBar() {
             <button ref={toggleRef} className="sidebar-toggle" type="button" aria-label="メニュー" aria-controls="ans-domain4-sidebar" aria-expanded={open} onClick={() => setOpen(value => !value)}>☰</button>
             <aside className={`sidebar${open ? ' open' : ''}`} id="ans-domain4-sidebar">
                 <div className="sidebar-header">
-                    <div className="kicker">AWS ANS-C01</div>
-                    <h2>Domain 4: Network Security, Compliance, and Governance</h2>
+                    <div className="kicker">AWS ANS-C01</div>{' '}
+                    <h2>Domain 4: Network Security, Compliance, and Governance</h2>{' '}
                 </div>
                 <nav id="sidebarNav" aria-label="ANS-C01 Domain 4 学習ガイド目次">
                     <ul>{NAV_ITEMS.map(item => (
@@ -97,7 +97,7 @@ export default function NavBar() {
                             target.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
                             target.focus({ preventScroll: true });
                             setActiveId(item.id); setOpen(false);
-                        }}>{item.label}</a></li>
+                        }}>{item.label}</a>{' '}</li>
                     ))}</ul>
                 </nav>
             </aside>
