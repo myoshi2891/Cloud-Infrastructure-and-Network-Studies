@@ -5,6 +5,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { snapshotGuidePart, snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
+import { normalizeCodeContainers } from '@/scripts/inventory-extraction.mjs';
 
 const AIP_FIXTURE_PATH = 'docs/migration-inventory/aws-aip-c01-guide.fidelity.json';
 const aipFixture: { guideParts: Record<string, unknown>; guideDesign: { nav: unknown[]; rules: { selector: string; declarations: Record<string, string> }[] }; sourceCommit: string } = JSON.parse(readFileSync(AIP_FIXTURE_PATH, 'utf8'));
@@ -26,6 +27,14 @@ describe('guide fidelity: lists, diagrams, inline semantics and CSS', () => {
         const target = new JSDOM('<main><div class="code-sample"><div class="code-lang">bash</div><div class="code-block highlight"><div class="code-line"><span class="k">echo</span> x</div><div class="code-line"></div><div class="code-line">  tail</div></div></div></main>').window.document;
         expect(snapshotGuidePart(source).codes).toEqual([['echo x', '', '  tail']]);
         expect(snapshotGuidePart(target)).toEqual(snapshotGuidePart(source));
+    });
+    it('keeps .cb-head labeled code blocks as one canonical block while normalizing .code-lang wrappers', () => {
+        // DVA Domain 1 はラベル込みの .code-block を正本とし、DVA Domain 2・ANS Domain 2 は外枠を正規化する
+        const doc = new JSDOM('<main><div class="code-block" id="labeled"><div class="cb-head">python</div><pre><code>x = 1</code></pre></div><div class="code-block" id="plain"><pre><code>{}</code></pre></div><div class="code-block" id="lang"><div class="code-lang">bash</div><pre><code>ls</code></pre></div></main>').window.document;
+        normalizeCodeContainers(doc);
+        expect(doc.getElementById('labeled')?.className).toBe('code-block');
+        expect(doc.getElementById('plain')?.className).toBe('code-sample');
+        expect(doc.getElementById('lang')?.className).toBe('code-sample');
     });
     it('compares formatted source and JSX block boundaries without losing spaces within words', () => {
         const source = new JSDOM('<main><h2>Title</h2>\n<p>Keep <strong>two words</strong></p>\n<table><tbody><tr><td> First </td>\n<td>Second</td></tr></tbody></table></main>').window.document;

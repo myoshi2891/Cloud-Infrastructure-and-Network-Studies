@@ -3,7 +3,9 @@ export const codeBlockSelector = 'pre:not(.mermaid), .code-block';
 /** Keep language labels outside the canonical code block for highlighted HTML. */
 export function normalizeCodeContainers(root) {
     root.querySelectorAll('.code-block').forEach(element => {
-        if (element.querySelector('pre')) element.classList.replace('code-block', 'code-sample');
+        // .cb-head 付き（DVA Domain 1）はラベル込みの .code-block が正本のため変換しない
+        if (!element.querySelector('pre') || element.querySelector('.cb-head')) return;
+        element.classList.replace('code-block', 'code-sample');
     });
 }
 
