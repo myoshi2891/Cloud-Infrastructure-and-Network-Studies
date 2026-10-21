@@ -14,6 +14,22 @@
  */
 
 @theme {
+    --color-ans-d4-1: #f7f8fc;
+    --color-ans-d4-2: #1f2a44;
+    --color-ans-d4-3: #3b5bdb;
+    --color-ans-d4-4: #e3e8f3;
+    --color-ans-d4-5: #4b5a7a;
+    --color-ans-d4-6: #e8edff;
+    --color-ans-d4-7: #d5dcec;
+    --color-ans-d4-8: #0f1a33;
+    --color-ans-d4-9: rgba(59, 91, 219, 0.05);
+    --color-ans-d4-10: #b7e0c6;
+    --color-ans-d4-11: #1b7f4b;
+    --color-ans-d4-12: rgba(59, 91, 219, 0.06);
+    --color-ans-d4-13: #7a879f;
+    --color-ans-d4-14: rgba(31, 42, 68, 0.18);
+    --color-ans-d4-15: #a9b8ee;
+    --color-ans-d4-16: #1f2a4405;
     /* ANS-C01 Domain 3: original light palette. */
     --color-ans-d3-1: #f7f9fd;
     --color-ans-d3-2: #d5deee;
