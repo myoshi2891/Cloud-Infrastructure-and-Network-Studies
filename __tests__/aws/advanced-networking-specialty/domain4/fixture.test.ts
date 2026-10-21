@@ -6,7 +6,10 @@ import { describe, expect, it } from 'vitest';
 import fixture from '@/docs/migration-inventory/aws-ans-c01-domain4-guide.fidelity.json';
 
 let hasSource = false;
-try { execFileSync('git', ['cat-file', '-e', `${fixture.sourceCommit}^{commit}`], { stdio: 'ignore' }); hasSource = true; } catch { /* Shallow CI history can omit the source commit. */ }
+try { execFileSync('git', ['cat-file', '-e', `${fixture.sourceCommit}^{commit}`], { stdio: 'ignore' }); hasSource = true; } catch (error) {
+    // ローカルの浅い履歴では skip し、CI では検証の黙殺を防ぐため失敗させる。
+    if (process.env.CI) throw new Error(`fixture.sourceCommit ${fixture.sourceCommit} が見つかりません。CI では完全な Git 履歴を取得してください。`, { cause: error });
+}
 
 describe('ANS domain4 source-independent fixture', () => {
     it.skipIf(!hasSource)('regenerates byte-for-byte with neither root HTML nor archive in the working directory', () => {
