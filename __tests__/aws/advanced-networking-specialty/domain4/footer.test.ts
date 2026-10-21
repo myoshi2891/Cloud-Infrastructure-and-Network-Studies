@@ -1,0 +1,1 @@
+import {readFileSync} from 'node:fs';import {expect,it} from 'vitest';it('registers Domain 4 light page for the shared footer',()=>{expect(readFileSync('components/Footer.module.css','utf8')).toContain('.ans-domain4-page');});
