@@ -1,6 +1,6 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-20
+最終更新日: 2026-10-21
 
 2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へ保存し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行、目視確認は未実施（自動検証で代替）。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
 
@@ -24,6 +24,7 @@ Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエン�
 
 ## 🚀 特徴
 
+- **AWS ANS-C01 ネットワーク管理・運用:** `/aws/advanced-networking-specialty/domain3` に全3タスク・91表・26図・7コード・シナリオ8問を収録。原本の白背景・リスト装飾・解答解説の開閉を保持し、ホームとHeaderから移動できます。
 - **AWS ANS-C01 ネットワーク実装:** `/aws/advanced-networking-specialty/domain2` に全4タスク・57表・26図・11コード・確認問題8問を収録。ライト配色、リストの点・番号と解答解説の折りたたみを保持。ホームとHeaderから移動できます。
 - **AWS ANS-C01 ネットワーク設計:** `/aws/advanced-networking-specialty/domain1` に全6タスク、75表・15図・7コード・練習問題6問・チェック10項目を収録。原本の点・番号・参考資料カードの独自番号を保持し、選択式問題の採点・解説・リセットと学習進捗に対応。ホームとHeaderから移動できます。
 
