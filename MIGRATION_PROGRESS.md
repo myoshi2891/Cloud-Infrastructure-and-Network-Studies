@@ -2018,7 +2018,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **最新完了タスク:** ANS-C01 Domain 4ネットワークセキュリティ・コンプライアンス・ガバナンス移行
 - **最終更新日:** 2026-10-21
 - **最新実装 HEAD:** `3947ff78`（Domain 3のDXプレフィックス・VPN MTU訂正。Domain 4のコントラスト補正 `fe5027ee`、導線統合 `46f7a909`）
-- **仕様同期コミット:** 本コミット
+- **仕様同期コミット:** 未記録（`bun run build`・`bun run lint` の成功確認後に記録）
 - **前回進捗同期コミット:** `d293d877`
 - **検証状態:** Domain 4は15ファイル・97件、全体Vitest373ファイル・3579件（再試行なし）、Chrome5件、型検査、全体ESLint、対象Markdown lint成功。
 - **今回の検証条件:** npm・ビルド未実行。手動の目視確認は未実施で、CSSキャッシュ削除・新規devサーバーでのChrome自動検証で代替。
@@ -3364,7 +3364,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `3947ff78`（Domain 3のDXプレフィックス・VPN MTU訂正。原本訂正 `e901f80e`）。前回進捗同期コミット: `d293d877`。仕様同期は本コミット。ANS-C01 Domain 4の全文移行と段階別コミットは完了。58表・31図・14コード・181リスト項目・176リンク出現・99目次・確認問題8問を固定Git `24fd796e` 由来fixtureで照合する。原本HTML・Markdownは保持。全体Vitest373ファイル・3579件（再試行なし）、Domain 4対象15ファイル・97件、Chrome5件、型検査・全体ESLint・対象Markdown lint成功。静的集計1128ソース・338対応（30%）・387テストファイル。npm・ビルド未実行で、`bun run build`・`bun run lint` の成功が未確認のため進捗同期は未完了。手動の目視確認は未実施で、Chrome自動検証で代替。次の作業は `bun run build` と `bun run lint` を実行し、両方の成功を確認して進捗同期を完了すること。Domain 1〜4の再移行は不要。
+最新実装 HEAD: `3947ff78`（Domain 3のDXプレフィックス・VPN MTU訂正。原本訂正 `e901f80e`）。前回進捗同期コミット: `d293d877`。仕様同期コミットは未記録（build・lint成功確認後に記録）。ANS-C01 Domain 4の全文移行と段階別コミットは完了。58表・31図・14コード・181リスト項目・176リンク出現・99目次・確認問題8問を固定Git `24fd796e` 由来fixtureで照合する。原本HTML・Markdownは保持。全体Vitest373ファイル・3579件（再試行なし）、Domain 4対象15ファイル・97件、Chrome5件、型検査・全体ESLint・対象Markdown lint成功。静的集計1128ソース・338対応（30%）・387テストファイル。npm・ビルド未実行で、`bun run build`・`bun run lint` の成功が未確認のため進捗同期は未完了。手動の目視確認は未実施で、Chrome自動検証で代替。次の作業は `bun run build` と `bun run lint` を実行し、両方の成功を確認して進捗同期を完了すること。Domain 1〜4の再移行は不要。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
