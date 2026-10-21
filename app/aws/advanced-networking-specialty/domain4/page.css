@@ -157,7 +157,7 @@
                 border-radius: 5px;
                 padding: 1px 6px;
                 font-size: 0.9em;
-                color: var(--color-dva-deployment-hljs-number);
+                color: var(--color-ans-d4-code-readable);
                 overflow-wrap: break-word;
                 overflow-wrap: anywhere;
             }
@@ -349,10 +349,10 @@
                 font-size: 15px;
                 font-weight: 800;
                 letter-spacing: 0.02em;
-                color: var(--color-ans-d4-11);
+                color: var(--color-ans-d4-success-readable);
                 margin-bottom: 8px;
             }
-            .ans-domain4-page .callout-practice .label strong { color: var(--color-ans-d4-11); font-size: 15px; }
+            .ans-domain4-page .callout-practice .label strong { color: var(--color-ans-d4-success-readable); font-size: 15px; }
             .ans-domain4-page td code, .ans-domain4-page th code { font-size: 0.95em; }
             .ans-domain4-page .callout-practice p { margin: 0; color: var(--color-ans-d4-2); }
             .ans-domain4-page .callout-practice ul, .ans-domain4-page .callout-practice ol { margin: 0; }
@@ -364,7 +364,7 @@
                 font-size: 12px;
                 font-weight: 800;
                 letter-spacing: 0.06em;
-                color: var(--color-ans-d4-11);
+                color: var(--color-ans-d4-success-readable);
                 text-transform: uppercase;
                 margin: 0 0 10px;
             }
@@ -432,8 +432,8 @@
             .ans-domain4-page .quiz-card .quiz-answer summary { padding: 16px 0 0; color: var(--color-ans-d4-3); font-size: 13px; font-weight: 700; cursor: pointer; }
             .ans-domain4-page .quiz-answer summary:focus-visible { outline: 3px solid var(--color-ans-d4-3); outline-offset: 4px; }
             .ans-domain4-page .quiz-explanation { margin-top: 16px; padding: 18px 20px; background: var(--color-aip-d1-success-bg); border-left: 3px solid var(--color-ans-d4-11); border-radius: 0 8px 8px 0; }
-            .ans-domain4-page .quiz-answer-label { color: var(--color-ans-d4-11); font-size: 13px; font-weight: 700; }
-            .ans-domain4-page .main .quiz-answer-label strong { margin-left: 8px; color: var(--color-ans-d4-11); font-size: 18px; }
+            .ans-domain4-page .quiz-answer-label { color: var(--color-ans-d4-success-readable); font-size: 13px; font-weight: 700; }
+            .ans-domain4-page .main .quiz-answer-label strong { margin-left: 8px; color: var(--color-ans-d4-success-readable); font-size: 18px; }
             .ans-domain4-page .main .quiz-explanation p { margin: 8px 0 0; font-size: 14px; line-height: 1.9; }
             @media (max-width: 640px) {
                 .ans-domain4-page .quiz-intro { align-items: flex-start; flex-direction: column; gap: 16px; padding: 20px; }
