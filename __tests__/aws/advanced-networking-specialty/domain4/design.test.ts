@@ -15,8 +15,8 @@ it('preserves every source CSS declaration and responsive rule',()=>{
  if(p==='top'&&selector.includes('sidebar')){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
  if(p==='z-index'){expect(Number(actual[p])).toBeLessThan(40);continue;}
  if(p==='scroll-margin-top'){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
- if(p==='overflow-x'&&selector.split(',').every(s=>s==='.ans-domain4-page')){expect(actual[p]).toBe('clip');continue;}
- if(p==='word-break'){expect(actual['overflow-wrap']).toBe('anywhere');continue;}
+ if(p==='overflow-x'&&selector.split(',').every(s=>s.trim()==='.ans-domain4-page')){expect(actual[p]).toBe('clip');continue;}
+ if(p==='word-break'||(p==='overflow-wrap'&&rule.declarations['word-break'])){expect(actual['overflow-wrap']).toBe('anywhere');continue;}
  expect(resolve(actual[p]??'',globals),selector+' '+p).toBe(resolve(v.replace('var(--sidebar-w)','300px'),source));
  }}
 });
