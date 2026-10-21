@@ -5,7 +5,9 @@ import { normalizeText } from './archive-fidelity-extraction.mjs';
 /** 原本とReact DOMで同じ規則を使い、チェック項目の識別子・全文・初期状態を抽出する。 */
 export function snapshotGuideChecks(root) {
     return [...root.querySelectorAll('input[type="checkbox"]')].map(input => {
-        const label = [...root.querySelectorAll('label')].find(element => element.htmlFor === input.id);
+        const label = input.closest('label') ?? (input.id
+            ? [...root.querySelectorAll('label')].find(element => element.htmlFor === input.id)
+            : undefined);
         if (!label) throw new Error(`Missing checkbox label: ${input.id}`);
         return { id: input.id, label: normalizeText(label.textContent), checked: input.checked };
     });
