@@ -1,7 +1,7 @@
 {
   "slug": "aws-ans-c01-domain3-guide",
   "source": "Ans-c01-domain3-network-management-operation-guide.html",
-  "sourceCommit": "e035a60ffd79a585051fdf206e13c866d880bc15",
+  "sourceCommit": "e901f80e5ce40252b2aa8f6ea755731831a67aca",
   "guideParts": {
     "foundation": {
       "text": "Advanced Networking - Specialty · Domain 3 AWS Certified Advanced Networking - Specialty (ANS-C01) Content Domain 3: Network Management and Operation 初学者向けステップバイステップ解説ガイド 配点 試験全体の20% 対象 初学者〜中級者 図解 Mermaid 26点 参考文献 30件 対象試験: AWS Certified Advanced Networking - Specialty (ANS-C01) 対象範囲: Content Domain 3（試験全体の 20%） 最終確認日: 2026-10-16（上限値・仕様は変更されることがあるため、受験前に必ず公式ドキュメントで再確認してください） アンカー情報源: ANS-C01 Exam Guide – Domain 3 0. このガイドの使い方 このガイドは、試験ガイドが示す Domain 3 の 3つのタスク を、次の順番で学べるように構成しています。 ステップ 何をするか 目的 ① 全体像を知る Domain 3 が何を問うているかを地図で把握する 迷子にならない ② 用語を揃える BGP・VIF・MTU などの言葉を先に理解する 後の説明を読みやすくする ③ タスクごとに学ぶ 「なぜ必要か → 仕組み → 設定 → ベストプラクティス」の順 暗記ではなく理解で覚える ④ 確認問題を解く シナリオ問題で判断力を確認する 本番形式に慣れる ⑤ 根拠URLを読む 公式ドキュメントで裏付けを取る 正確な知識にする 表記ルール 図解は Mermaid（フローチャート） と Markdown の表 のみを使用しています。 数値（上限値など）は 2026-10-16 時点で公式ドキュメントを確認したものです。 「試験ポイント」と書かれた囲みは、問われやすい判断基準です。 コマンド例は構文ハイライト付きのコードブロックで示します。 1. Domain 3 の全体像 Domain 3 は「作った（Domain 2）ネットワークを 運用し続ける ための知識」を問います。構築後に起きる、経路の変更・障害・性能劣化・コスト増加にどう対処するかが中心です。 1.1 3つのタスク タスク 一言でいうと 主なサービス・機能 3.1 ルーティングと接続性の維持 「正しい道を通っているか」を保つ Direct Connect, Site-to-Site VPN, Transit Gateway, BGP, ルートテーブル, PrivateLink, VPC ピアリング 3.2 監視・分析・トラブルシューティング 「なぜ通じないか・遅いか」を調べる CloudWatch, VPC Flow Logs, Traffic Mirroring, Reachability Analyzer, Network Manager 3.3 最適化 「速く・止まらず・安く」する Route 53, Global Accelerator, ENA/EFA, ジャンボフレーム, マルチキャスト, サブネット設計 1.2 タスク間の関係 運用は 「維持する → 観測する → 改善する → また維持する」 の循環です。試験でも「障害を調べて（3.2）、設定を直し（3.1）、再発しにくい構成にする（3.3）」のように、複数タスクをまたぐシナリオが出ます。 1.3 試験形式の基本情報（公式 Exam Guide より） 項目 内容 出題形式 複数選択（正解が2つ以上）と マッチング 採点対象の問題数 50 問（ほかに採点対象外の 15 問が混在） 合格スコア 100〜1,000 のスケールスコアで 750 以上 採点方式 補償型（ドメインごとの合格点はなく、全体で合格すればよい） Domain 3 の比重 20% 2. 前提知識：まず押さえる用語集 初学者がつまずきやすい用語を先に整理します。以降の章で何度も登場します。 用語 意味 初学者向けの例え BGP 組織間（AS 間）で経路情報を交換するプロトコル 郵便局同士が「この住所はうちが届けます」と教え合う仕組み ASN BGP で使う自律システム番号 組織の識別番号 VIF（仮想インターフェイス） Direct Connect 上の論理的な接続口 1本の専用線を用途別に区切った出入口 Direct Connect Gateway (DXGW) 複数の VPC/TGW を専用線につなぐグローバルなゲートウェイ 専用線の「ハブ駅」 Transit Gateway (TGW) 多数の VPC やオンプレミスをつなぐ中継ルーター ネットワークの「ターミナル駅」 VGW / CGW VPN の AWS 側 / お客様側の終端 橋の両端の橋台 ECMP 同じコストの複数経路に負荷を分散する方式 同じ距離の道を複数車線で使う BFD 経路障害を高速に検知する仕組み 生存確認を1秒単位で行う MTU 一度に送れる最大パケットサイズ 荷物の最大サイズ MSS TCP で1パケットに載せられるデータ量 箱の中身の最大量 PMTUD 経路上の最小 MTU を自動で調べる仕組み 道の一番狭い所を測る CIDR IP アドレス範囲の表記（例: 10.0.0.0/16） 住所の「市区町村」の範囲 ENI / ENA / EFA 仮想NIC / 高性能NIC / HPC 向け NIC 普通の玄関 / 広い玄関 / 専用搬入口 試験ポイント: Specialty 試験は用語の意味ではなく「この状況でどれを選ぶか」を問います。用語は、判断の材料として使えるようにしておきます。",
@@ -853,7 +853,7 @@
       ]
     },
     "task1": {
-      "text": "Part A. Task 3.1 ルーティングと接続性の維持 公式のタスク文: Maintain routing and connectivity on AWS and hybrid networks A-0. このタスクで問われること 区分 内容（Exam Guide の要旨） 知識 ハイブリッド網で使うルーティングプロトコル（例: Direct Connect 上の BGP）／接続方式（DXGW、TGW、VIF）／上限と クォータ（帯域、ルート数）／カスタムサービスへのプライベート・パブリックなアクセス手段（PrivateLink、VPC ピアリング）／リージョン間・リージョン内の通信パターン スキル ルーティングプロトコルの管理／カスタムサービスへのプライベートアクセスの維持／ルートテーブルによるトラフィック制御（自動伝播・BGP）／AWS サービスへのプライベート/パブリックアクセスの設定／静的・動的ルーティングの最適化（ルート集約、CIDR 重複） A-1. Step 1：ルートテーブルの基本ルールを理解する なぜ必要か 通信が「どこへ流れるか」を決めるのはルートテーブルです。トラブルの大半は ルートの優先順位を誤解している ことから起きます。 仕組み：判断の順番 ルーターは、宛先 IP に対し次の順番で行き先を決めます。 最長プレフィックス一致とは、より細かい範囲（例: /24）を、広い範囲（例: /16）より優先する規則です。10.10.2.15/32 は 10.10.2.0/24 より優先されます。 VPC ルートテーブルでの優先順位（同じ宛先の場合） 優先度 ルートの種類 1 静的ルート（VPC ピアリング、インターネットゲートウェイ、TGW、ゲートウェイ型 VPC エンドポイントなど） 2 プレフィックスリストを参照するルート 3 伝播されたルート：Direct Connect の BGP ルート → VPN の静的ルート → VPN の BGP ルート の順 補足: 宛先が 完全に同じ ときの順位です。範囲の広さが違えば、常に最長プレフィックス一致が先に適用されます。 注意: VPC 自身の CIDR に対する ローカルルートは最優先 で、より具体的な伝播ルートでも上書きできません。 Transit Gateway ルートテーブルでの優先順位（同じ宛先の場合） 優先度 ルートの種類 1 静的ルート 2 プレフィックスリスト参照ルート 3 VPC アタッチメントの伝播ルート 4 Direct Connect ゲートウェイの伝播ルート 5 Transit Gateway Connect の伝播ルート 6 Site-to-Site VPN の伝播ルート 7 ピアリングアタッチメントのルート 試験ポイント: 「静的ルートと伝播ルートが同じ宛先なら 静的が勝つ」は頻出です。意図せず静的ルートが残っていて、BGP で学習した経路が使われない、というトラブルがよく出題されます。 ベストプラクティス # ベストプラクティス 理由 1 可能な限り 動的ルーティング（BGP） を使う 障害時に自動で経路が切り替わり、運用負荷が下がる 2 静的ルートは「意図が明確なもの」だけに限定し、説明をタグに残す 古い静的ルートが動的経路を隠すのを防ぐ 3 ルートの変更前に Reachability Analyzer で影響を確認する（→ Part B） 本番での誤設定を防ぐ A-2. Step 2：Direct Connect と BGP を管理する なぜ必要か Direct Connect (DX) は、オンプレミスと AWS を 専用線 で結ぶ接続です。経路の交換には BGP を使うため、BGP の動きを理解していないと、遠回りの経路・片方向だけ通らない通信・突然のセッション切断といった問題を調べられません。 仕組み①：3種類の VIF VIF の種類 つなぐ先 典型的な用途 プライベート VIF VPC（VGW 経由）または Direct Connect ゲートウェイ 1つまたは少数の VPC との接続 トランジット VIF Direct Connect ゲートウェイ経由で Transit Gateway または Cloud WAN 多数の VPC との接続 パブリック VIF AWS のパブリックエンドポイント（S3 など VPC 外のサービス） S3 や DynamoDB への専用線経由アクセス 仕組み②：BGP による経路制御 BGP では、オンプレミスと AWS がお互いに「自分の持つ経路」を広告します。次の3つを使い分けて経路を操作します。 手段 向き 効果 ローカルプリファレンス用 BGP コミュニティ AWS から オンプレミスへ向かう通信 お客様が広告する経路に付けて、AWS 側の優先度を指定する AS_PATH プリペンド 同上 経路を「遠く」見せて優先度を下げる より具体的なプレフィックスの広告 同上 最長プレフィックス一致で必ず優先させる AWS が複数経路から1つを選ぶ順番は、おおむね次のとおりです。 ローカルプリファレンス用コミュニティ（Direct Connect） コミュニティ 意味 7224:7100 低い優先度 7224:7200 中程度の優先度 7224:7300 高い優先度 重要: 「AWS →オンプレミス」の戻り経路は上の方法で制御しますが、「オンプレミス → AWS」の経路は お客様のルーターのポリシーが決めます。往路と復路は別々に設計する必要があります。 仕組み③：障害検知を速くする（BFD） BGP 単体の障害検知は、既定のホールドタイマーに依存し、数十秒〜数分かかります。BFD (Bidirectional Forwarding Detection) を有効にすると、秒単位で障害を検知してフェイルオーバーできます。AWS 側は BFD に対応していますが、お客様のルーター側でも有効化が必要 です。 仕組み④：Direct Connect ゲートウェイ（DXGW） 項目 内容 役割 1つの専用線から、複数リージョンの VPC / TGW に到達できるようにする TGW との関連付け DXGW に TGW を関連付ける。DXGW と TGW の ASN は異なる値 にする必要がある（同じだと関連付けに失敗する） 許可プレフィックス TGW 関連付け時に「AWS からオンプレミスへ広告するプレフィックス」を指定する 注意 トランジット VIF を使う DXGW では、プライベート VIF を併用できない ステップ手順：新しい拠点を DX で接続する流れ ベストプラクティス # ベストプラクティス 理由 1 重要な通信は 複数ロケーションに別々の DX 接続 を用意する（最大の回復性モデル） 1か所の障害・メンテナンスでも通信が継続する 2 DX の バックアップとして Site-to-Site VPN を用意する 専用線が落ちても、インターネット経由で継続できる 3 BFD を有効化 する 障害検知を秒単位に短縮する 4 BGP セッションに MD5 認証 を設定する 不正なピアからの経路注入を防ぐ 5 広告するルートを 集約 して 100 件以内に収める プライベート/トランジット VIF の上限を超えると BGP セッションが切れる（A-5 参照） 6 経路制御は コミュニティ・AS_PATH・具体的プレフィックス を組み合わせ、設計書に残す 属人化を防ぎ、障害調査を速くする A-3. Step 3：Site-to-Site VPN を管理する 仕組み Site-to-Site VPN は、インターネット（または DX 上）に IPsec トンネルを作る接続です。1つの VPN 接続には 2本のトンネル（異なる AZ のエンドポイント）が含まれます。 項目 内容 ルーティング 動的（BGP） または 静的 AWS 側の終端 VGW、または Transit Gateway 帯域 標準トンネルで最大 1.25 Gbps。大容量帯域トンネル（Large Bandwidth Tunnel）なら最大 5 Gbps 帯域を増やす方法 Transit Gateway にアタッチした VPN は ECMP で複数トンネルを束ねる MTU VPN 経由のトラフィックは 1500 バイト が上限（ジャンボフレーム不可） 動的 と 静的 の選び方 比較 動的 (BGP) 静的 障害時の自動切替 できる できない（手動対応や別の仕組みが必要） ルート変更の反映 自動 手動 TGW での ECMP 使える 使えない 向いている場面 基本はこちら BGP 非対応の機器を使う場合 試験ポイント: 「VPN の帯域を超えてしまう → TGW + 動的ルーティング + ECMP」「1トンネルが 1.25 Gbps を超える → 大容量帯域トンネル」が定番の答えです。 ベストプラクティス # ベストプラクティス 理由 1 2本のトンネルを両方有効 にし、お客様側でも両方を設定する 片方のトンネルのメンテナンス中も通信が続く 2 動的ルーティング（BGP）を使う 切替が自動になる 3 大容量が必要なら TGW で ECMP を使う 帯域を水平に拡張できる 4 VPN 経路の MSS を適切に設定（クランプ）する IPsec のオーバーヘッドによる断片化・欠落を防ぐ（→ Part B） 5 DX と VPN を併用する場合、優先する経路を BGP 属性で明示する 意図しない経路への切替を防ぐ A-4. Step 4：Transit Gateway で多数の接続をまとめる なぜ必要か VPC やオンプレミス拠点が増えると、1対1でつなぐ方式は管理できなくなります。Transit Gateway (TGW) は ハブ&スポーク の中継点です。 仕組み 概念 説明 アタッチメント TGW への接続口（VPC、VPN、DXGW、ピアリング、Connect） 関連付け (Association) アタッチメントが どのルートテーブルで経路を引くか を決める 伝播 (Propagation) アタッチメントの経路を どのルートテーブルに広告するか を決める ポイント: 「関連付け」は 出ていく方向の引き先、「伝播」は 入ってくる経路の広告先 です。この2つを分けて考えると、ルートテーブルを分離した設計（本番と開発の分離など）が理解できます。 重要な上限値（2026-10-16 時点の公式値） 項目 値 1つの TGW あたりのアタッチメント数 5,000 1つの TGW あたりのルートテーブル数 20 1つの TGW の全ルートテーブル合計ルート数（動的+静的） 10,000 VPC アタッチメントの帯域（AZ あたり） 最大 100 Gbps VPC アタッチメントの PPS（AZ あたり） 最大 7,500,000 Connect ピア（GRE トンネル）の帯域 最大 5 Gbps／1アタッチメントあたり最大 4 ピア（合計 20 Gbps） VPN で TGW → お客様機器へ広告するルート数 5,000 VPN で お客様機器 → TGW へ広告できる動的ルート数 1,000 TGW 間ピアリングのアタッチメント数 50 マルチキャストドメイン数 20 注意: 上限の中には引き上げ申請ができるものとできないものがあります。必ず Transit Gateway クォータ の「調整可能」列を確認してください。 ベストプラクティス # ベストプラクティス 理由 1 VPC アタッチメントには AZ ごとに1つのサブネット を指定する（専用の小さなサブネット推奨） 各 AZ から TGW に到達できるようにし、管理しやすくする 2 環境（本番／開発）の分離は ルートテーブルを分けて 実現する 関連付けと伝播で通信可否を制御できる 3 ルート数を監視 し、上限の手前でアラートを出す 上限超過時はルートが取り込まれず障害になる 4 オンプレミス経路は集約して広告する ルート数と BGP の負荷を減らす 5 アプライアンス（検査用）を経由する構成では アプライアンスモード を有効にする 往復で同じ AZ を通し、ステートフルな検査が崩れるのを防ぐ A-5. Step 5：クォータ（上限）が運用に与える影響 なぜ必要か 構成が正しくても、上限に達すると突然つながらなくなります。運用では「どの上限に近づいているか」を常に把握します。 Direct Connect の主な上限（公式値） 項目 値 上限に達すると プライベート/トランジット VIF で お客様 → AWS に広告できるルート数（BGP セッションあたり） 100（IPv4・IPv6 それぞれ） BGP セッションが Idle になり、切断される パブリック VIF で広告できるルート数 1,000（引き上げ不可） 同様にセッション異常 ホスト型接続あたりの VIF 数 1 追加不可 専用接続あたりの VIF 数 プライベート/パブリック 50 + トランジット 1 追加不可 DXGW あたりの VIF 数（プライベート/トランジット） 30 追加不可 DXGW あたりの TGW 数 6 追加不可 DXGW あたりの VGW 数 20 追加不可 TGW あたりの AWS → オンプレミスへ広告するプレフィックス数 200 超過分は広告されない 試験ポイント: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ 答えは ルート集約（またはデフォルトルートの広告）です。上限の引き上げではありません。 上限に備える運用の流れ ベストプラクティス # ベストプラクティス 理由 1 Service Quotas で使用率アラームを設定する 上限到達の前に気づける 2 引き上げ不可の上限は 設計段階 で回避する（集約、構成分割） 後から変えられない 3 新しい拠点・VPC を追加する前に、ルート数への影響を試算する 追加が原因の障害を防ぐ A-6. Step 6：カスタムサービスへのプライベートアクセスを維持する（PrivateLink と VPC ピアリング） なぜ必要か 別の VPC やアカウントにあるサービスに、インターネットを経由せず安全にアクセスしたい場面は多くあります。主な手段は PrivateLink と VPC ピアリング です。 仕組みの違い 比較 AWS PrivateLink VPC ピアリング つなぐ範囲 特定のサービス だけを公開 VPC 全体どうしを接続 方向 利用者 → サービス提供者（一方向） 双方向 CIDR の重複 重複していても利用可能 重複していると 作成できない 推移的ルーティング 該当しない できない（A↔B、B↔C でも A↔C は不可） 構成要素 サービス提供側: NLB または GWLB／利用側: インターフェイス VPC エンドポイント ルートテーブルにピアリング接続を追加 規模の拡大 多数の利用者でも管理しやすい 接続数が増えると管理が煩雑 向いている場面 SaaS 的な提供、CIDR 重複、公開範囲を絞りたい 少数の VPC を広く接続したい 選択フロー PrivateLink の運用ポイント 項目 内容 可用性 インターフェイスエンドポイントは 使用する AZ ごと にサブネットを指定する。複数 AZ に配置して冗長化する 承認 サービス提供側で、接続リクエストの 承認 を必須にできる DNS プライベート DNS を有効にすると、既定のサービス名で エンドポイントに解決できる セキュリティ エンドポイントにセキュリティグループを関連付け、エンドポイントポリシーで操作範囲を絞る 補足: PrivateLink は リージョンをまたいだ接続 にも対応しています（クロスリージョン PrivateLink）。詳細・対応状況は公式ドキュメントで確認してください。 ベストプラクティス # ベストプラクティス 理由 1 サービス提供は PrivateLink を優先 する 公開範囲が最小で、CIDR 重複も問題にならない 2 ピアリング使用時は、CIDR 計画を最初に行う 後から重複が見つかると作り直しになる 3 ピアリングのルートテーブル更新を 自動化（IaC） する 追加漏れによる片方向通信を防ぐ 4 エンドポイントは 複数 AZ に作成する AZ 障害に備える A-7. Step 7：ルートテーブルで通信を正しく向ける（伝播・BGP・集約・CIDR 重複） 7.1 ルート伝播（Route Propagation） VGW または TGW を使う場合、オンプレミスから学習した経路を VPC ルートテーブルに自動で追加（伝播） できます。 項目 内容 設定場所 VPC のルートテーブルで「ルート伝播」を有効化 伝播されるもの VPN（静的/動的）や Direct Connect の経路 手動のルート 同じ宛先に手動ルートがあると 手動（静的）が優先 TGW の場合 VPC ルートテーブルには 手動で TGW 宛のルートを追加 が必要（TGW 側のルートが VPC に自動伝播されることはない） 試験ポイント: TGW を使う場合、VPC のサブネットルートテーブルに TGW 宛のルートを追加し忘れる のが典型的な原因です。 7.2 ルート集約（Summarization） 複数の細かい経路を、1つの広い経路にまとめます。 集約前 集約後 10.1.0.0/24, 10.1.1.0/24, 10.1.2.0/24, 10.1.3.0/24 10.1.0.0/22 メリット 注意点 ルート数が減る（上限回避） 集約範囲に 存在しない宛先 が含まれると、通信が吸い込まれる（ブラックホール）可能性がある BGP の更新が安定する 集約後も、より具体的な経路で例外制御 できるよう設計する 7.3 CIDR 重複への対処 手段 向いている場面 注意点 PrivateLink 一方向のサービス利用 双方向通信には不向き プライベート NAT ゲートウェイ IP の変更が難しい既存環境 設計と運用が複雑になる CIDR の再設計 長期的に最善 移行作業が必要 TGW のルートテーブル分離 重複する VPC を互いに隔離する 重複 CIDR の VPC 間通信はできない 補足: TGW に重複する CIDR の VPC をアタッチした場合、後からアタッチした VPC のルートは 伝播されません。 7.4 ベストプラクティス # ベストプラクティス 理由 1 組織全体で IP アドレス計画 を管理する（Amazon VPC IPAM の活用） 重複を設計段階で防げる 2 オンプレミス側と AWS 側の 経路広告の方針 を文書化する 変更時の影響範囲が分かる 3 集約は「広い範囲を広告し、特別な通信だけ具体的に広告」の方針にする ルート数と制御性を両立できる A-8. Step 8：AWS サービスへのプライベート／パブリックアクセスを設定する 選択肢の比較 アクセス方法 経路 主な対象 特徴 ゲートウェイ型 VPC エンドポイント VPC 内のルート（AWS ネットワーク内） S3、DynamoDB 無料。ルートテーブルにエントリを追加して使う インターフェイス型 VPC エンドポイント VPC 内の ENI（PrivateLink） 多くの AWS サービス 時間と処理量で課金。オンプレミスからも DX/VPN 経由で到達可能 パブリック VIF（DX） 専用線 → AWS パブリックエンドポイント S3 など インターネットを通さず専用線で到達 インターネット経由（IGW/NAT） インターネット パブリックエンドポイント 追加の保護（暗号化・認証）が必要 VPN（パブリック） インターネット上の IPsec パブリックエンドポイント／VPC 暗号化。帯域に上限あり 試験ポイント: 「オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず」は、一般に パブリック VIF、または プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。 ベストプラクティス # ベストプラクティス 理由 1 S3/DynamoDB へは ゲートウェイ型エンドポイント を第一候補にする 無料で、NAT ゲートウェイのデータ処理料金も削減できる 2 エンドポイントポリシーで アクセス先を絞る 意図しないバケットへの流出を防ぐ 3 パブリック VIF では 広告するプレフィックスを必要最小限 にする 不要な経路の流入を防ぐ A-9. Step 9：リージョン間・リージョン内の通信パターン リージョン内（Intra-Region） 方式 特徴 VPC ピアリング 低コスト・低遅延。推移的ルーティング不可 Transit Gateway ハブ&スポーク。多数の VPC に適する PrivateLink サービス単位の公開 VPC 共有（AWS RAM） 同一サブネットを複数アカウントで共有 リージョン間（Inter-Region） 方式 特徴 注意点 リージョン間 VPC ピアリング AWS のバックボーン上で暗号化される ルートは手動、推移的ルーティング不可 TGW ピアリング TGW どうしを接続 ルートは 静的のみ（動的伝播なし） AWS Cloud WAN ポリシーで広域ネットワークを管理 大規模・多リージョン向け PrivateLink（クロスリージョン） サービス単位の公開 対応状況を要確認 Global Accelerator / CloudFront ユーザーとリージョン間の最適化 用途がユーザー向けトラフィック中心 ベストプラクティス # ベストプラクティス 理由 1 リージョン間は TGW ピアリング か Cloud WAN で一元管理する VPC ピアリングを網目状に増やすと管理が破綻する 2 TGW ピアリングの静的ルートは IaC で管理 する 変更漏れによる片方向通信を防ぐ 3 帯域・遅延要件を事前に測定する 想定外の遅延による性能劣化を防ぐ A-10. Task 3.1 まとめ：判断早見表 シナリオ 推奨する対応 専用線の障害検知を速くしたい BFD を有効化 専用線が落ちたら自動でバックアップへ切り替えたい DX + VPN の併用（BGP 動的） オンプレミスから 100 を超えるルートを広告したい ルート集約 またはデフォルトルート VPN の帯域が足りない（TGW 利用） ECMP で複数トンネルを束ねる／大容量帯域トンネル 静的ルートと BGP の経路が競合する 静的ルートが優先 される点を確認し、不要な静的ルートを削除 CIDR が重複した VPC のサービスを使いたい PrivateLink 多数の VPC とオンプレミスを接続したい Transit Gateway（DXGW + トランジット VIF） TGW 経由でも VPC 側から通じない VPC のルートテーブルに TGW 宛のルート があるか確認 異なるリージョンの TGW を接続したい TGW ピアリング（静的ルート）",
+      "text": "Part A. Task 3.1 ルーティングと接続性の維持 公式のタスク文: Maintain routing and connectivity on AWS and hybrid networks A-0. このタスクで問われること 区分 内容（Exam Guide の要旨） 知識 ハイブリッド網で使うルーティングプロトコル（例: Direct Connect 上の BGP）／接続方式（DXGW、TGW、VIF）／上限と クォータ（帯域、ルート数）／カスタムサービスへのプライベート・パブリックなアクセス手段（PrivateLink、VPC ピアリング）／リージョン間・リージョン内の通信パターン スキル ルーティングプロトコルの管理／カスタムサービスへのプライベートアクセスの維持／ルートテーブルによるトラフィック制御（自動伝播・BGP）／AWS サービスへのプライベート/パブリックアクセスの設定／静的・動的ルーティングの最適化（ルート集約、CIDR 重複） A-1. Step 1：ルートテーブルの基本ルールを理解する なぜ必要か 通信が「どこへ流れるか」を決めるのはルートテーブルです。トラブルの大半は ルートの優先順位を誤解している ことから起きます。 仕組み：判断の順番 ルーターは、宛先 IP に対し次の順番で行き先を決めます。 最長プレフィックス一致とは、より細かい範囲（例: /24）を、広い範囲（例: /16）より優先する規則です。10.10.2.15/32 は 10.10.2.0/24 より優先されます。 VPC ルートテーブルでの優先順位（同じ宛先の場合） 優先度 ルートの種類 1 静的ルート（VPC ピアリング、インターネットゲートウェイ、TGW、ゲートウェイ型 VPC エンドポイントなど） 2 プレフィックスリストを参照するルート 3 伝播されたルート：Direct Connect の BGP ルート → VPN の静的ルート → VPN の BGP ルート の順 補足: 宛先が 完全に同じ ときの順位です。範囲の広さが違えば、常に最長プレフィックス一致が先に適用されます。 注意: VPC 自身の CIDR に対する ローカルルートは最優先 で、より具体的な伝播ルートでも上書きできません。 Transit Gateway ルートテーブルでの優先順位（同じ宛先の場合） 優先度 ルートの種類 1 静的ルート 2 プレフィックスリスト参照ルート 3 VPC アタッチメントの伝播ルート 4 Direct Connect ゲートウェイの伝播ルート 5 Transit Gateway Connect の伝播ルート 6 Site-to-Site VPN の伝播ルート 7 ピアリングアタッチメントのルート 試験ポイント: 「静的ルートと伝播ルートが同じ宛先なら 静的が勝つ」は頻出です。意図せず静的ルートが残っていて、BGP で学習した経路が使われない、というトラブルがよく出題されます。 ベストプラクティス # ベストプラクティス 理由 1 可能な限り 動的ルーティング（BGP） を使う 障害時に自動で経路が切り替わり、運用負荷が下がる 2 静的ルートは「意図が明確なもの」だけに限定し、説明をタグに残す 古い静的ルートが動的経路を隠すのを防ぐ 3 ルートの変更前に Reachability Analyzer で影響を確認する（→ Part B） 本番での誤設定を防ぐ A-2. Step 2：Direct Connect と BGP を管理する なぜ必要か Direct Connect (DX) は、オンプレミスと AWS を 専用線 で結ぶ接続です。経路の交換には BGP を使うため、BGP の動きを理解していないと、遠回りの経路・片方向だけ通らない通信・突然のセッション切断といった問題を調べられません。 仕組み①：3種類の VIF VIF の種類 つなぐ先 典型的な用途 プライベート VIF VPC（VGW 経由）または Direct Connect ゲートウェイ 1つまたは少数の VPC との接続 トランジット VIF Direct Connect ゲートウェイ経由で Transit Gateway または Cloud WAN 多数の VPC との接続 パブリック VIF AWS のパブリックエンドポイント（S3 など VPC 外のサービス） S3 や DynamoDB への専用線経由アクセス 仕組み②：BGP による経路制御 BGP では、オンプレミスと AWS がお互いに「自分の持つ経路」を広告します。次の3つを使い分けて経路を操作します。 手段 向き 効果 ローカルプリファレンス用 BGP コミュニティ AWS から オンプレミスへ向かう通信 お客様が広告する経路に付けて、AWS 側の優先度を指定する AS_PATH プリペンド 同上 経路を「遠く」見せて優先度を下げる より具体的なプレフィックスの広告 同上 最長プレフィックス一致で必ず優先させる AWS が複数経路から1つを選ぶ順番は、おおむね次のとおりです。 ローカルプリファレンス用コミュニティ（Direct Connect） コミュニティ 意味 7224:7100 低い優先度 7224:7200 中程度の優先度 7224:7300 高い優先度 重要: 「AWS →オンプレミス」の戻り経路は上の方法で制御しますが、「オンプレミス → AWS」の経路は お客様のルーターのポリシーが決めます。往路と復路は別々に設計する必要があります。 仕組み③：障害検知を速くする（BFD） BGP 単体の障害検知は、既定のホールドタイマーに依存し、数十秒〜数分かかります。BFD (Bidirectional Forwarding Detection) を有効にすると、秒単位で障害を検知してフェイルオーバーできます。AWS 側は BFD に対応していますが、お客様のルーター側でも有効化が必要 です。 仕組み④：Direct Connect ゲートウェイ（DXGW） 項目 内容 役割 1つの専用線から、複数リージョンの VPC / TGW に到達できるようにする TGW との関連付け DXGW に TGW を関連付ける。DXGW と TGW の ASN は異なる値 にする必要がある（同じだと関連付けに失敗する） 許可プレフィックス TGW 関連付け時に「AWS からオンプレミスへ広告するプレフィックス」を指定する 注意 トランジット VIF を使う DXGW では、プライベート VIF を併用できない ステップ手順：新しい拠点を DX で接続する流れ ベストプラクティス # ベストプラクティス 理由 1 重要な通信は 複数ロケーションに別々の DX 接続 を用意する（最大の回復性モデル） 1か所の障害・メンテナンスでも通信が継続する 2 DX の バックアップとして Site-to-Site VPN を用意する 専用線が落ちても、インターネット経由で継続できる 3 BFD を有効化 する 障害検知を秒単位に短縮する 4 BGP セッションに MD5 認証 を設定する 不正なピアからの経路注入を防ぐ 5 広告するルートを 集約 し、VIF のプレフィックス割り当て（既定 100）以内に収める プライベート/トランジット VIF の上限を超えると BGP セッションが切れる（A-5 参照） 6 経路制御は コミュニティ・AS_PATH・具体的プレフィックス を組み合わせ、設計書に残す 属人化を防ぎ、障害調査を速くする A-3. Step 3：Site-to-Site VPN を管理する 仕組み Site-to-Site VPN は、インターネット（または DX 上）に IPsec トンネルを作る接続です。1つの VPN 接続には 2本のトンネル（異なる AZ のエンドポイント）が含まれます。 項目 内容 ルーティング 動的（BGP） または 静的 AWS 側の終端 VGW、または Transit Gateway 帯域 標準トンネルで最大 1.25 Gbps。大容量帯域トンネル（Large Bandwidth Tunnel）なら最大 5 Gbps 帯域を増やす方法 Transit Gateway にアタッチした VPN は ECMP で複数トンネルを束ねる MTU VPN 経由のトラフィックは 1500 バイト が上限（ジャンボフレーム不可） 動的 と 静的 の選び方 比較 動的 (BGP) 静的 障害時の自動切替 できる できない（手動対応や別の仕組みが必要） ルート変更の反映 自動 手動 TGW での ECMP 使える 使えない 向いている場面 基本はこちら BGP 非対応の機器を使う場合 試験ポイント: 「VPN の帯域を超えてしまう → TGW + 動的ルーティング + ECMP」「1トンネルが 1.25 Gbps を超える → 大容量帯域トンネル」が定番の答えです。 ベストプラクティス # ベストプラクティス 理由 1 2本のトンネルを両方有効 にし、お客様側でも両方を設定する 片方のトンネルのメンテナンス中も通信が続く 2 動的ルーティング（BGP）を使う 切替が自動になる 3 大容量が必要なら TGW で ECMP を使う 帯域を水平に拡張できる 4 VPN 経路の MSS を適切に設定（クランプ）する IPsec のオーバーヘッドによる断片化・欠落を防ぐ（→ Part B） 5 DX と VPN を併用する場合、優先する経路を BGP 属性で明示する 意図しない経路への切替を防ぐ A-4. Step 4：Transit Gateway で多数の接続をまとめる なぜ必要か VPC やオンプレミス拠点が増えると、1対1でつなぐ方式は管理できなくなります。Transit Gateway (TGW) は ハブ&スポーク の中継点です。 仕組み 概念 説明 アタッチメント TGW への接続口（VPC、VPN、DXGW、ピアリング、Connect） 関連付け (Association) アタッチメントが どのルートテーブルで経路を引くか を決める 伝播 (Propagation) アタッチメントの経路を どのルートテーブルに広告するか を決める ポイント: 「関連付け」は 出ていく方向の引き先、「伝播」は 入ってくる経路の広告先 です。この2つを分けて考えると、ルートテーブルを分離した設計（本番と開発の分離など）が理解できます。 重要な上限値（2026-10-16 時点の公式値） 項目 値 1つの TGW あたりのアタッチメント数 5,000 1つの TGW あたりのルートテーブル数 20 1つの TGW の全ルートテーブル合計ルート数（動的+静的） 10,000 VPC アタッチメントの帯域（AZ あたり） 最大 100 Gbps VPC アタッチメントの PPS（AZ あたり） 最大 7,500,000 Connect ピア（GRE トンネル）の帯域 最大 5 Gbps／1アタッチメントあたり最大 4 ピア（合計 20 Gbps） VPN で TGW → お客様機器へ広告するルート数 5,000 VPN で お客様機器 → TGW へ広告できる動的ルート数 1,000 TGW 間ピアリングのアタッチメント数 50 マルチキャストドメイン数 20 注意: 上限の中には引き上げ申請ができるものとできないものがあります。必ず Transit Gateway クォータ の「調整可能」列を確認してください。 ベストプラクティス # ベストプラクティス 理由 1 VPC アタッチメントには AZ ごとに1つのサブネット を指定する（専用の小さなサブネット推奨） 各 AZ から TGW に到達できるようにし、管理しやすくする 2 環境（本番／開発）の分離は ルートテーブルを分けて 実現する 関連付けと伝播で通信可否を制御できる 3 ルート数を監視 し、上限の手前でアラートを出す 上限超過時はルートが取り込まれず障害になる 4 オンプレミス経路は集約して広告する ルート数と BGP の負荷を減らす 5 アプライアンス（検査用）を経由する構成では アプライアンスモード を有効にする 往復で同じ AZ を通し、ステートフルな検査が崩れるのを防ぐ A-5. Step 5：クォータ（上限）が運用に与える影響 なぜ必要か 構成が正しくても、上限に達すると突然つながらなくなります。運用では「どの上限に近づいているか」を常に把握します。 Direct Connect の主な上限（公式値） 項目 値 上限に達すると プライベート/トランジット VIF で お客様 → AWS に広告できるルート数（BGP セッションあたり） 既定 100（IPv4・IPv6 それぞれ）。プレフィックス割り当てで最大 1,000 まで設定可能 BGP セッションが Idle になり、切断される パブリック VIF で広告できるルート数 1,000（引き上げ不可） 同様にセッション異常 ホスト型接続あたりの VIF 数 1 追加不可 専用接続あたりの VIF 数 プライベート/パブリック 50 + トランジット 1 追加不可 DXGW あたりの VIF 数（プライベート/トランジット） 30 追加不可 DXGW あたりの TGW 数 6 追加不可 DXGW あたりの VGW 数 20 追加不可 TGW あたりの AWS → オンプレミスへ広告するプレフィックス数 200 超過分は広告されない 試験ポイント: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ まず VIF の プレフィックス割り当て を必要数まで増やします（CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に ルート集約（またはデフォルトルートの広告）を使います。 上限に備える運用の流れ ベストプラクティス # ベストプラクティス 理由 1 Service Quotas で使用率アラームを設定する 上限到達の前に気づける 2 引き上げ不可の上限は 設計段階 で回避する（集約、構成分割） 後から変えられない 3 新しい拠点・VPC を追加する前に、ルート数への影響を試算する 追加が原因の障害を防ぐ A-6. Step 6：カスタムサービスへのプライベートアクセスを維持する（PrivateLink と VPC ピアリング） なぜ必要か 別の VPC やアカウントにあるサービスに、インターネットを経由せず安全にアクセスしたい場面は多くあります。主な手段は PrivateLink と VPC ピアリング です。 仕組みの違い 比較 AWS PrivateLink VPC ピアリング つなぐ範囲 特定のサービス だけを公開 VPC 全体どうしを接続 方向 利用者 → サービス提供者（一方向） 双方向 CIDR の重複 重複していても利用可能 重複していると 作成できない 推移的ルーティング 該当しない できない（A↔B、B↔C でも A↔C は不可） 構成要素 サービス提供側: NLB または GWLB／利用側: インターフェイス VPC エンドポイント ルートテーブルにピアリング接続を追加 規模の拡大 多数の利用者でも管理しやすい 接続数が増えると管理が煩雑 向いている場面 SaaS 的な提供、CIDR 重複、公開範囲を絞りたい 少数の VPC を広く接続したい 選択フロー PrivateLink の運用ポイント 項目 内容 可用性 インターフェイスエンドポイントは 使用する AZ ごと にサブネットを指定する。複数 AZ に配置して冗長化する 承認 サービス提供側で、接続リクエストの 承認 を必須にできる DNS プライベート DNS を有効にすると、既定のサービス名で エンドポイントに解決できる セキュリティ エンドポイントにセキュリティグループを関連付け、エンドポイントポリシーで操作範囲を絞る 補足: PrivateLink は リージョンをまたいだ接続 にも対応しています（クロスリージョン PrivateLink）。詳細・対応状況は公式ドキュメントで確認してください。 ベストプラクティス # ベストプラクティス 理由 1 サービス提供は PrivateLink を優先 する 公開範囲が最小で、CIDR 重複も問題にならない 2 ピアリング使用時は、CIDR 計画を最初に行う 後から重複が見つかると作り直しになる 3 ピアリングのルートテーブル更新を 自動化（IaC） する 追加漏れによる片方向通信を防ぐ 4 エンドポイントは 複数 AZ に作成する AZ 障害に備える A-7. Step 7：ルートテーブルで通信を正しく向ける（伝播・BGP・集約・CIDR 重複） 7.1 ルート伝播（Route Propagation） VGW または TGW を使う場合、オンプレミスから学習した経路を VPC ルートテーブルに自動で追加（伝播） できます。 項目 内容 設定場所 VPC のルートテーブルで「ルート伝播」を有効化 伝播されるもの VPN（静的/動的）や Direct Connect の経路 手動のルート 同じ宛先に手動ルートがあると 手動（静的）が優先 TGW の場合 VPC ルートテーブルには 手動で TGW 宛のルートを追加 が必要（TGW 側のルートが VPC に自動伝播されることはない） 試験ポイント: TGW を使う場合、VPC のサブネットルートテーブルに TGW 宛のルートを追加し忘れる のが典型的な原因です。 7.2 ルート集約（Summarization） 複数の細かい経路を、1つの広い経路にまとめます。 集約前 集約後 10.1.0.0/24, 10.1.1.0/24, 10.1.2.0/24, 10.1.3.0/24 10.1.0.0/22 メリット 注意点 ルート数が減る（上限回避） 集約範囲に 存在しない宛先 が含まれると、通信が吸い込まれる（ブラックホール）可能性がある BGP の更新が安定する 集約後も、より具体的な経路で例外制御 できるよう設計する 7.3 CIDR 重複への対処 手段 向いている場面 注意点 PrivateLink 一方向のサービス利用 双方向通信には不向き プライベート NAT ゲートウェイ IP の変更が難しい既存環境 設計と運用が複雑になる CIDR の再設計 長期的に最善 移行作業が必要 TGW のルートテーブル分離 重複する VPC を互いに隔離する 重複 CIDR の VPC 間通信はできない 補足: TGW に重複する CIDR の VPC をアタッチした場合、後からアタッチした VPC のルートは 伝播されません。 7.4 ベストプラクティス # ベストプラクティス 理由 1 組織全体で IP アドレス計画 を管理する（Amazon VPC IPAM の活用） 重複を設計段階で防げる 2 オンプレミス側と AWS 側の 経路広告の方針 を文書化する 変更時の影響範囲が分かる 3 集約は「広い範囲を広告し、特別な通信だけ具体的に広告」の方針にする ルート数と制御性を両立できる A-8. Step 8：AWS サービスへのプライベート／パブリックアクセスを設定する 選択肢の比較 アクセス方法 経路 主な対象 特徴 ゲートウェイ型 VPC エンドポイント VPC 内のルート（AWS ネットワーク内） S3、DynamoDB 無料。ルートテーブルにエントリを追加して使う インターフェイス型 VPC エンドポイント VPC 内の ENI（PrivateLink） 多くの AWS サービス 時間と処理量で課金。オンプレミスからも DX/VPN 経由で到達可能 パブリック VIF（DX） 専用線 → AWS パブリックエンドポイント S3 など インターネットを通さず専用線で到達 インターネット経由（IGW/NAT） インターネット パブリックエンドポイント 追加の保護（暗号化・認証）が必要 VPN（パブリック） インターネット上の IPsec パブリックエンドポイント／VPC 暗号化。帯域に上限あり 試験ポイント: 「オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず」は、一般に パブリック VIF、または プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。 ベストプラクティス # ベストプラクティス 理由 1 S3/DynamoDB へは ゲートウェイ型エンドポイント を第一候補にする 無料で、NAT ゲートウェイのデータ処理料金も削減できる 2 エンドポイントポリシーで アクセス先を絞る 意図しないバケットへの流出を防ぐ 3 パブリック VIF では 広告するプレフィックスを必要最小限 にする 不要な経路の流入を防ぐ A-9. Step 9：リージョン間・リージョン内の通信パターン リージョン内（Intra-Region） 方式 特徴 VPC ピアリング 低コスト・低遅延。推移的ルーティング不可 Transit Gateway ハブ&スポーク。多数の VPC に適する PrivateLink サービス単位の公開 VPC 共有（AWS RAM） 同一サブネットを複数アカウントで共有 リージョン間（Inter-Region） 方式 特徴 注意点 リージョン間 VPC ピアリング AWS のバックボーン上で暗号化される ルートは手動、推移的ルーティング不可 TGW ピアリング TGW どうしを接続 ルートは 静的のみ（動的伝播なし） AWS Cloud WAN ポリシーで広域ネットワークを管理 大規模・多リージョン向け PrivateLink（クロスリージョン） サービス単位の公開 対応状況を要確認 Global Accelerator / CloudFront ユーザーとリージョン間の最適化 用途がユーザー向けトラフィック中心 ベストプラクティス # ベストプラクティス 理由 1 リージョン間は TGW ピアリング か Cloud WAN で一元管理する VPC ピアリングを網目状に増やすと管理が破綻する 2 TGW ピアリングの静的ルートは IaC で管理 する 変更漏れによる片方向通信を防ぐ 3 帯域・遅延要件を事前に測定する 想定外の遅延による性能劣化を防ぐ A-10. Task 3.1 まとめ：判断早見表 シナリオ 推奨する対応 専用線の障害検知を速くしたい BFD を有効化 専用線が落ちたら自動でバックアップへ切り替えたい DX + VPN の併用（BGP 動的） オンプレミスから 100 を超えるルートを広告したい プレフィックス割り当て の引き上げ（最大 1,000）。増やせない場合はルート集約またはデフォルトルート VPN の帯域が足りない（TGW 利用） ECMP で複数トンネルを束ねる／大容量帯域トンネル 静的ルートと BGP の経路が競合する 静的ルートが優先 される点を確認し、不要な静的ルートを削除 CIDR が重複した VPC のサービスを使いたい PrivateLink 多数の VPC とオンプレミスを接続したい Transit Gateway（DXGW + トランジット VIF） TGW 経由でも VPC 側から通じない VPC のルートテーブルに TGW 宛のルート があるか確認 異なるリージョンの TGW を接続したい TGW ピアリング（静的ルート）",
       "headings": [
         {
           "tag": "h2",
@@ -1804,7 +1804,7 @@
             },
             {
               "tag": "td",
-              "text": "広告するルートを 集約 して 100 件以内に収める",
+              "text": "広告するルートを 集約 し、VIF のプレフィックス割り当て（既定 100）以内に収める",
               "colspan": null,
               "rowspan": null
             },
@@ -2512,7 +2512,7 @@
             },
             {
               "tag": "td",
-              "text": "100（IPv4・IPv6 それぞれ）",
+              "text": "既定 100（IPv4・IPv6 それぞれ）。プレフィックス割り当てで最大 1,000 まで設定可能",
               "colspan": null,
               "rowspan": null
             },
@@ -3980,7 +3980,7 @@
             },
             {
               "tag": "td",
-              "text": "ルート集約 またはデフォルトルート",
+              "text": "プレフィックス割り当て の引き上げ（最大 1,000）。増やせない場合はルート集約またはデフォルトルート",
               "colspan": null,
               "rowspan": null
             }
@@ -4327,6 +4327,10 @@
         },
         {
           "tag": "strong",
+          "text": "プレフィックス割り当て"
+        },
+        {
+          "tag": "strong",
           "text": "ルート集約"
         },
         {
@@ -4575,7 +4579,7 @@
         },
         {
           "tag": "strong",
-          "text": "ルート集約"
+          "text": "プレフィックス割り当て"
         },
         {
           "tag": "strong",
@@ -4733,7 +4737,7 @@
         },
         {
           "kind": "paragraph",
-          "text": "試験ポイント: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ 答えは ルート集約（またはデフォルトルートの広告）です。上限の引き上げではありません。"
+          "text": "試験ポイント: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ まず VIF の プレフィックス割り当て を必要数まで増やします（CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に ルート集約（またはデフォルトルートの広告）を使います。"
         },
         {
           "kind": "paragraph",
@@ -12052,7 +12056,7 @@
       ]
     },
     "revision": {
-      "text": "Part D. 横断チートシートと確認問題 D-1. 数値チートシート（2026-10-16 時点・公式値） カテゴリ 項目 値 Direct Connect プライベート/トランジット VIF の BGP 広告ルート数（お客様 → AWS） 100（IPv4・IPv6 各）。超過で BGP 切断 パブリック VIF の BGP 広告ルート数 1,000 DXGW あたりの TGW 数 / VGW 数 / VIF 数 6 / 20 / 30 ホスト型接続の VIF 数 1 プライベート VIF の MTU 1500 または 9001 トランジット VIF の MTU 1500 または 8500 TGW あたり AWS → オンプレミスの広告プレフィックス数 200 Site-to-Site VPN 標準トンネルの最大帯域 1.25 Gbps 大容量帯域トンネルの最大帯域 5 Gbps VPN の MTU 1500 TGW 上で お客様機器 → AWS の動的ルート数 1,000 TGW 上で AWS → お客様機器のルート数 5,000 Transit Gateway アタッチメント数 5,000 ルートテーブル数 20 全ルートテーブル合計のルート数 10,000 VPC アタッチメントの帯域（AZ あたり） 最大 100 Gbps Connect ピアの帯域 最大 5 Gbps（1アタッチメントあたり最大4ピア、合計 20 Gbps） TGW の MTU 最大 8500 VPC / EC2 インターネットゲートウェイ経由の MTU 1500 同一 VPC 内のジャンボフレーム MTU 9001 サブネットで予約される IP 数 5（先頭4 + 末尾1） 注意: 上限値は変更されることがあります。受験直前に必ず公式のクォータページを再確認 してください（Part E を参照）。 D-2. 「何を使う？」超早見表（試験の決まり文句） キーワード 答えの候補 BGP セッションが突然切れた／100 ルート ルート集約 障害検知を速くしたい（DX） BFD 静的と動的の経路が競合 静的が優先 VPN の帯域不足 TGW + ECMP／大容量帯域トンネル CIDR 重複 PrivateLink／プライベート NAT ゲートウェイ 小さい通信は通るが大きい通信が止まる MTU/MSS、ICMP の許可 設定上通るか知りたい Reachability Analyzer 拒否された通信を探したい VPC Flow Logs パケットの中身を見たい Traffic Mirroring 全体のトポロジーを見たい Transit Gateway Network Manager オンプレミス回線の遅延・ロスを継続監視 Network Synthetic Monitor 原因が アプリか AWS 基盤か切り分けたい Network Flow Monitor 固定 IP・TCP/UDP の高速化・高速フェイルオーバー Global Accelerator 静的コンテンツの配信と転送量の削減 CloudFront IP 枯渇 セカンダリ CIDR HPC・分散学習 EFA 多数受信者への同報 TGW マルチキャスト D-3. 確認問題（シナリオ形式） 問題 1 単一選択 オンプレミスのルーターから Direct Connect のプライベート VIF 経由で、IPv4 のルートを 150 件広告したところ、BGP セッションがダウンしました。最も適切な対処はどれですか。 A. ルートを集約して 100 件以内にする B. Service Quotas で上限の引き上げを申請する C. VIF の種類をパブリック VIF に変更する D. VIF の MTU を 9001 に変更する 解答と解説 A。プライベート/トランジット VIF の BGP セッションあたりの広告ルート数（100）は引き上げできず、超過するとセッションが Idle になります。ルート集約（またはデフォルトルート）が正解です。C はサービスの対象が変わるため不適切です。D は無関係です。 問題 2 複数選択 · 2つ選択 Transit Gateway にアタッチしたサイト間 VPN の帯域が不足しています。ルーターは BGP に対応しています。追加の接続を増やさずに 帯域を増やす方法はどれですか。（2つ選択） A. 動的ルーティングで複数トンネルに ECMP を有効にする B. 大容量帯域トンネルを使う C. VPN の MTU を 9001 にする D. 静的ルーティングに切り替える E. VPC ピアリングを追加する 解答と解説 A と B。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準 1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN の MTU 上限が 1500 のため不可。D は ECMP が使えなくなります。 問題 3 単一選択 VPC A（10.0.0.0/16）と VPC B（10.0.0.0/16）で CIDR が重複しています。A の アプリケーションから、B にある 1つの API サービス だけを、プライベートに利用したい場合、最も適切なのはどれですか。 A. VPC ピアリング B. Transit Gateway C. PrivateLink（B 側で NLB 経由のエンドポイントサービスを公開） D. インターネットゲートウェイ 解答と解説 C。PrivateLink は CIDR が重複していても、特定サービスを一方向で公開できます。ピアリングは重複 CIDR では作成できません。TGW でも重複する CIDR の経路は伝播されません。 問題 4 単一選択 新しく構築した VPC のインスタンスから、別 VPC のデータベース（ポート 5432）に接続できません。ネットワークの設定変更が直前に行われました。最初に 実施すべき調査はどれですか。 A. Traffic Mirroring を有効にして、パケットを取得する B. Reachability Analyzer で、送信元と宛先の経路を分析する C. Direct Connect の光レベルを確認する D. インスタンスタイプを大きくする 解答と解説 B。設定変更が疑われる場合、まず設定を静的に分析する Reachability Analyzer で、ブロックしている構成要素と説明コードを確認します。パケット取得は、設定に問題がないときの次の手段です。 問題 5 単一選択 VPC Flow Logs を確認すると、あるサブネットのインスタンスへの 往路は ACCEPT、戻りの通信が REJECT になっています。原因として最も可能性が高いものはどれですか。 A. セキュリティグループのアウトバウンドが全許可になっている B. ネットワーク ACL で、戻りの通信（エフェメラルポート）が許可されていない C. ルートテーブルに TGW 宛のルートがない D. DNS の設定誤り 解答と解説 B。セキュリティグループはステートフルで戻りが自動許可されますが、ネットワーク ACL はステートレスのため、戻りの通信を明示的に許可する必要があります。 問題 6 複数選択 · 2つ選択 オンプレミスから AWS へのファイル転送で、ping と SSH は成功しますが、大きなファイルの転送が途中で止まります。経路には Site-to-Site VPN が含まれ、サーバーはジャンボフレーム（MTU 9001）で構成されています。最も適切な対処はどれですか。（2つ選択） A. セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する B. 経路を Direct Connect のトランジット VIF に変更するだけで解決する C. VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する D. VPN トンネルの数を増やす E. ENA Express を有効にする 解答と解説 A と C。VPN 経由の MTU は 1500 のため、9001 の大きなパケットは断片化されるか、DF ビット付きで ICMP が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS クランプで断片化を避けます。 問題 7 単一選択 グローバルに展開するゲームサービスが、TCP/UDP の両方を使います。クライアントは固定 IP を許可リストに登録しており、リージョン障害時には DNS キャッシュに依存せず素早く別リージョンへ切り替えたい要件です。最も適切なサービスはどれですか。 A. Amazon CloudFront B. Route 53 のフェイルオーバーレコード C. AWS Global Accelerator D. Application Load Balancer のみ 解答と解説 C。Global Accelerator は静的エニーキャスト IP を提供し、TCP/UDP に対応し、IP が変わらないため DNS キャッシュに左右されずヘルスチェックで素早くフェイルオーバーできます。 問題 8 単一選択 既存 VPC の 10.0.0.0/24 のサブネットで、Auto Scaling により IP が不足しそうです。VPC 全体の CIDR にも空きがありません。既存環境を作り直さず に対処する方法はどれですか。 A. VPC のプライマリ CIDR を /16 に変更する B. セカンダリ CIDR を VPC に追加し、新しいサブネットを作成する C. サブネットのマスクを広げる D. 新しい VPC を作り、ピアリングする以外に方法はない 解答と解説 B。既存のプライマリ CIDR やサブネットの範囲は変更できません。セカンダリ CIDR を追加して新しいサブネットを作り、ワークロードを移します。 Part E. 参考URL一覧（根拠となるソース） 凡例: ✔ = 2026-10-16 の作成時に内容を確認した公式ページ。その他は AWS 公式ドキュメントの安定したページですが、受験前にあわせて最新の記載を確認してください。 E-1. 試験ガイド 内容 URL ✔ ANS-C01 Exam Guide（トップ） https://docs.aws.amazon.com/aws-certification/latest/advanced-networking-specialty-01/advanced-networking-specialty-01.html ✔ Content Domain 3: Network Management and Operation https://docs.aws.amazon.com/aws-certification/latest/advanced-networking-specialty-01/advanced-networking-specialty-01-domain3.html E-2. Task 3.1 関連 内容 URL ✔ VPC ルート優先順位 https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html ✔ Transit Gateway の仕組みとルート評価順 https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html ✔ Transit Gateway クォータ https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html ✔ Direct Connect クォータ https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html ✔ Direct Connect エンドポイントとクォータ（General Reference） https://docs.aws.amazon.com/general/latest/gr/dc.html ✔ Direct Connect VIF の作成（MTU・DXGW の ASN） https://docs.aws.amazon.com/directconnect/latest/UserGuide/create-vif.html ✔ プライベート VIF の作成（MTU） https://docs.aws.amazon.com/directconnect/latest/UserGuide/create-private-vif.html ✔ Site-to-Site VPN クォータ https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html Direct Connect のルーティングと BGP https://docs.aws.amazon.com/directconnect/latest/UserGuide/routing-and-bgp.html AWS PrivateLink https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html VPC ピアリング https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html ✔ TGW のルート上限を監視する（ブログ） https://aws.amazon.com/blogs/networking-and-content-delivery/monitoring-aws-transit-gateway-route-limits-using-a-serverless-architecture E-3. Task 3.2 関連 内容 URL ✔ Reachability Analyzer の CLI 手順 https://docs.aws.amazon.com/vpc/latest/reachability/getting-started-cli.html ✔ Reachability Analyzer の説明コード https://docs.aws.amazon.com/vpc/latest/reachability/explanation-codes.html ✔ CloudWatch Network Monitoring（Flow / Synthetic / Internet） https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Network-Monitoring-Sections.html ✔ CloudWatch Network Monitoring の発表（2024-12） https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-cloudwatch-network-monitoring-workloads-monitors ✔ EC2 のネットワーク MTU https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/network_mtu.html VPC Flow Logs https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html VPC Traffic Mirroring https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html Transit Gateway Network Manager https://docs.aws.amazon.com/network-manager/latest/tgwnm/what-are-global-networks.html E-4. Task 3.3 関連 内容 URL Route 53 ルーティングポリシー https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html AWS Global Accelerator https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html ENA Express https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-express.html Elastic Fabric Adapter（EFA） https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html Transit Gateway マルチキャスト https://docs.aws.amazon.com/vpc/latest/tgw/tgw-multicast-overview.html VPC の CIDR ブロック（セカンダリ CIDR） https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html Elastic Load Balancing https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html Transit Gateway の料金 https://aws.amazon.com/transit-gateway/pricing/ 付録：学習の進め方（目安） 順番 学習内容 目安 1 2章の用語集と Task 3.1（ルーティング・DX・VPN・TGW） 2〜3 日 2 Task 3.2（ツールの使い分け・MTU） 2 日 3 Task 3.3（最適化・Route 53・Global Accelerator） 2 日 4 チートシートと確認問題の反復 1〜2 日 5 実際に AWS 上で Reachability Analyzer / Flow Logs / TGW を触る 随時 最後に: Specialty 試験は暗記ではなく「要件から最適な構成を選ぶ」力を問います。各ステップの「試験ポイント」を、自分の言葉で説明できるようになれば合格に近づきます。",
+      "text": "Part D. 横断チートシートと確認問題 D-1. 数値チートシート（2026-10-16 時点・公式値） カテゴリ 項目 値 Direct Connect プライベート/トランジット VIF の BGP 広告ルート数（お客様 → AWS） 既定 100（IPv4・IPv6 各、最大 1,000 まで割り当て可能）。超過で BGP 切断 パブリック VIF の BGP 広告ルート数 1,000 DXGW あたりの TGW 数 / VGW 数 / VIF 数 6 / 20 / 30 ホスト型接続の VIF 数 1 プライベート VIF の MTU 1500 または 9001 トランジット VIF の MTU 1500 または 8500 TGW あたり AWS → オンプレミスの広告プレフィックス数 200 Site-to-Site VPN 標準トンネルの最大帯域 1.25 Gbps 大容量帯域トンネルの最大帯域 5 Gbps VPN の MTU（トンネル上限 / 実効パケット MTU） 1500 / 1446（MSS 1406） TGW 上で お客様機器 → AWS の動的ルート数 1,000 TGW 上で AWS → お客様機器のルート数 5,000 Transit Gateway アタッチメント数 5,000 ルートテーブル数 20 全ルートテーブル合計のルート数 10,000 VPC アタッチメントの帯域（AZ あたり） 最大 100 Gbps Connect ピアの帯域 最大 5 Gbps（1アタッチメントあたり最大4ピア、合計 20 Gbps） TGW の MTU 最大 8500 VPC / EC2 インターネットゲートウェイ経由の MTU 1500 同一 VPC 内のジャンボフレーム MTU 9001 サブネットで予約される IP 数 5（先頭4 + 末尾1） 注意: 上限値は変更されることがあります。受験直前に必ず公式のクォータページを再確認 してください（Part E を参照）。 D-2. 「何を使う？」超早見表（試験の決まり文句） キーワード 答えの候補 BGP セッションが突然切れた／100 ルート プレフィックス割り当ての引き上げ／ルート集約 障害検知を速くしたい（DX） BFD 静的と動的の経路が競合 静的が優先 VPN の帯域不足 TGW + ECMP／大容量帯域トンネル CIDR 重複 PrivateLink／プライベート NAT ゲートウェイ 小さい通信は通るが大きい通信が止まる MTU/MSS、ICMP の許可 設定上通るか知りたい Reachability Analyzer 拒否された通信を探したい VPC Flow Logs パケットの中身を見たい Traffic Mirroring 全体のトポロジーを見たい Transit Gateway Network Manager オンプレミス回線の遅延・ロスを継続監視 Network Synthetic Monitor 原因が アプリか AWS 基盤か切り分けたい Network Flow Monitor 固定 IP・TCP/UDP の高速化・高速フェイルオーバー Global Accelerator 静的コンテンツの配信と転送量の削減 CloudFront IP 枯渇 セカンダリ CIDR HPC・分散学習 EFA 多数受信者への同報 TGW マルチキャスト D-3. 確認問題（シナリオ形式） 問題 1 単一選択 オンプレミスのルーターから Direct Connect のプライベート VIF 経由で、IPv4 のルートを 150 件広告したところ、BGP セッションがダウンしました。最も適切な対処はどれですか。 A. ルートを集約して 100 件以内にする B. VIF の IPv4 プレフィックス割り当てを 150 以上に設定する C. VIF の種類をパブリック VIF に変更する D. VIF の MTU を 9001 に変更する 解答と解説 B。プライベート/トランジット VIF で受信できるプレフィックス数は既定で IPv4・IPv6 各 100 で、超過するとセッションが Idle になります。割り当ては CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000 まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。C はサービスの対象が変わるため不適切です。D は無関係です。 問題 2 複数選択 · 2つ選択 Transit Gateway にアタッチしたサイト間 VPN の帯域が不足しています。ルーターは BGP に対応しています。追加の接続を増やさずに 帯域を増やす方法はどれですか。（2つ選択） A. 動的ルーティングで複数トンネルに ECMP を有効にする B. 大容量帯域トンネルを使う C. VPN の MTU を 9001 にする D. 静的ルーティングに切り替える E. VPC ピアリングを追加する 解答と解説 A と B。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準 1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN トンネルの MTU 上限が 1500（実効パケット MTU は 1446）のため不可。D は ECMP が使えなくなります。 問題 3 単一選択 VPC A（10.0.0.0/16）と VPC B（10.0.0.0/16）で CIDR が重複しています。A の アプリケーションから、B にある 1つの API サービス だけを、プライベートに利用したい場合、最も適切なのはどれですか。 A. VPC ピアリング B. Transit Gateway C. PrivateLink（B 側で NLB 経由のエンドポイントサービスを公開） D. インターネットゲートウェイ 解答と解説 C。PrivateLink は CIDR が重複していても、特定サービスを一方向で公開できます。ピアリングは重複 CIDR では作成できません。TGW でも重複する CIDR の経路は伝播されません。 問題 4 単一選択 新しく構築した VPC のインスタンスから、別 VPC のデータベース（ポート 5432）に接続できません。ネットワークの設定変更が直前に行われました。最初に 実施すべき調査はどれですか。 A. Traffic Mirroring を有効にして、パケットを取得する B. Reachability Analyzer で、送信元と宛先の経路を分析する C. Direct Connect の光レベルを確認する D. インスタンスタイプを大きくする 解答と解説 B。設定変更が疑われる場合、まず設定を静的に分析する Reachability Analyzer で、ブロックしている構成要素と説明コードを確認します。パケット取得は、設定に問題がないときの次の手段です。 問題 5 単一選択 VPC Flow Logs を確認すると、あるサブネットのインスタンスへの 往路は ACCEPT、戻りの通信が REJECT になっています。原因として最も可能性が高いものはどれですか。 A. セキュリティグループのアウトバウンドが全許可になっている B. ネットワーク ACL で、戻りの通信（エフェメラルポート）が許可されていない C. ルートテーブルに TGW 宛のルートがない D. DNS の設定誤り 解答と解説 B。セキュリティグループはステートフルで戻りが自動許可されますが、ネットワーク ACL はステートレスのため、戻りの通信を明示的に許可する必要があります。 問題 6 複数選択 · 2つ選択 オンプレミスから AWS へのファイル転送で、ping と SSH は成功しますが、大きなファイルの転送が途中で止まります。経路には Site-to-Site VPN が含まれ、サーバーはジャンボフレーム（MTU 9001）で構成されています。最も適切な対処はどれですか。（2つ選択） A. セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する B. 経路を Direct Connect のトランジット VIF に変更するだけで解決する C. VPN 経路向けに TCP MSS をクランプ（または MTU を 1446 以下に設定）する D. VPN トンネルの数を増やす E. ENA Express を有効にする 解答と解説 A と C。VPN トンネルの MTU 上限は 1500 ですが、IPsec のオーバーヘッドにより実効パケット MTU は 1446（MSS 1406）のため、9001 の大きなパケットは断片化されるか、DF ビット付きで ICMP が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS クランプ（1406 以下）で断片化を避けます。 問題 7 単一選択 グローバルに展開するゲームサービスが、TCP/UDP の両方を使います。クライアントは固定 IP を許可リストに登録しており、リージョン障害時には DNS キャッシュに依存せず素早く別リージョンへ切り替えたい要件です。最も適切なサービスはどれですか。 A. Amazon CloudFront B. Route 53 のフェイルオーバーレコード C. AWS Global Accelerator D. Application Load Balancer のみ 解答と解説 C。Global Accelerator は静的エニーキャスト IP を提供し、TCP/UDP に対応し、IP が変わらないため DNS キャッシュに左右されずヘルスチェックで素早くフェイルオーバーできます。 問題 8 単一選択 既存 VPC の 10.0.0.0/24 のサブネットで、Auto Scaling により IP が不足しそうです。VPC 全体の CIDR にも空きがありません。既存環境を作り直さず に対処する方法はどれですか。 A. VPC のプライマリ CIDR を /16 に変更する B. セカンダリ CIDR を VPC に追加し、新しいサブネットを作成する C. サブネットのマスクを広げる D. 新しい VPC を作り、ピアリングする以外に方法はない 解答と解説 B。既存のプライマリ CIDR やサブネットの範囲は変更できません。セカンダリ CIDR を追加して新しいサブネットを作り、ワークロードを移します。 Part E. 参考URL一覧（根拠となるソース） 凡例: ✔ = 2026-10-16 の作成時に内容を確認した公式ページ。その他は AWS 公式ドキュメントの安定したページですが、受験前にあわせて最新の記載を確認してください。 E-1. 試験ガイド 内容 URL ✔ ANS-C01 Exam Guide（トップ） https://docs.aws.amazon.com/aws-certification/latest/advanced-networking-specialty-01/advanced-networking-specialty-01.html ✔ Content Domain 3: Network Management and Operation https://docs.aws.amazon.com/aws-certification/latest/advanced-networking-specialty-01/advanced-networking-specialty-01-domain3.html E-2. Task 3.1 関連 内容 URL ✔ VPC ルート優先順位 https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html ✔ Transit Gateway の仕組みとルート評価順 https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html ✔ Transit Gateway クォータ https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html ✔ Direct Connect クォータ https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html ✔ Direct Connect エンドポイントとクォータ（General Reference） https://docs.aws.amazon.com/general/latest/gr/dc.html ✔ Direct Connect VIF の作成（MTU・DXGW の ASN） https://docs.aws.amazon.com/directconnect/latest/UserGuide/create-vif.html ✔ プライベート VIF の作成（MTU） https://docs.aws.amazon.com/directconnect/latest/UserGuide/create-private-vif.html ✔ Site-to-Site VPN クォータ https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html Direct Connect のルーティングと BGP https://docs.aws.amazon.com/directconnect/latest/UserGuide/routing-and-bgp.html AWS PrivateLink https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html VPC ピアリング https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html ✔ TGW のルート上限を監視する（ブログ） https://aws.amazon.com/blogs/networking-and-content-delivery/monitoring-aws-transit-gateway-route-limits-using-a-serverless-architecture E-3. Task 3.2 関連 内容 URL ✔ Reachability Analyzer の CLI 手順 https://docs.aws.amazon.com/vpc/latest/reachability/getting-started-cli.html ✔ Reachability Analyzer の説明コード https://docs.aws.amazon.com/vpc/latest/reachability/explanation-codes.html ✔ CloudWatch Network Monitoring（Flow / Synthetic / Internet） https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Network-Monitoring-Sections.html ✔ CloudWatch Network Monitoring の発表（2024-12） https://aws.amazon.com/about-aws/whats-new/2024/12/amazon-cloudwatch-network-monitoring-workloads-monitors ✔ EC2 のネットワーク MTU https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/network_mtu.html VPC Flow Logs https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html VPC Traffic Mirroring https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html Transit Gateway Network Manager https://docs.aws.amazon.com/network-manager/latest/tgwnm/what-are-global-networks.html E-4. Task 3.3 関連 内容 URL Route 53 ルーティングポリシー https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html AWS Global Accelerator https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html ENA Express https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-express.html Elastic Fabric Adapter（EFA） https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html Transit Gateway マルチキャスト https://docs.aws.amazon.com/vpc/latest/tgw/tgw-multicast-overview.html VPC の CIDR ブロック（セカンダリ CIDR） https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html Elastic Load Balancing https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html Transit Gateway の料金 https://aws.amazon.com/transit-gateway/pricing/ 付録：学習の進め方（目安） 順番 学習内容 目安 1 2章の用語集と Task 3.1（ルーティング・DX・VPN・TGW） 2〜3 日 2 Task 3.2（ツールの使い分け・MTU） 2 日 3 Task 3.3（最適化・Route 53・Global Accelerator） 2 日 4 チートシートと確認問題の反復 1〜2 日 5 実際に AWS 上で Reachability Analyzer / Flow Logs / TGW を触る 随時 最後に: Specialty 試験は暗記ではなく「要件から最適な構成を選ぶ」力を問います。各ステップの「試験ポイント」を、自分の言葉で説明できるようになれば合格に近づきます。",
       "headings": [
         {
           "tag": "h2",
@@ -12182,7 +12186,7 @@
             },
             {
               "tag": "td",
-              "text": "100（IPv4・IPv6 各）。超過で BGP 切断",
+              "text": "既定 100（IPv4・IPv6 各、最大 1,000 まで割り当て可能）。超過で BGP 切断",
               "colspan": null,
               "rowspan": null
             }
@@ -12356,13 +12360,13 @@
             },
             {
               "tag": "td",
-              "text": "VPN の MTU",
+              "text": "VPN の MTU（トンネル上限 / 実効パケット MTU）",
               "colspan": null,
               "rowspan": null
             },
             {
               "tag": "td",
-              "text": "1500",
+              "text": "1500 / 1446（MSS 1406）",
               "colspan": null,
               "rowspan": null
             }
@@ -12612,7 +12616,7 @@
             },
             {
               "tag": "td",
-              "text": "ルート集約",
+              "text": "プレフィックス割り当ての引き上げ／ルート集約",
               "colspan": null,
               "rowspan": null
             }
@@ -13461,7 +13465,7 @@
               "value": null
             },
             {
-              "text": "B. Service Quotas で上限の引き上げを申請する",
+              "text": "B. VIF の IPv4 プレフィックス割り当てを 150 以上に設定する",
               "value": null
             },
             {
@@ -13589,7 +13593,7 @@
               "value": null
             },
             {
-              "text": "C. VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する",
+              "text": "C. VPN 経路向けに TCP MSS をクランプ（または MTU を 1446 以下に設定）する",
               "value": null
             },
             {
@@ -13864,7 +13868,7 @@
         },
         {
           "tag": "strong",
-          "text": "A"
+          "text": "B"
         },
         {
           "tag": "strong",
@@ -13946,7 +13950,7 @@
         },
         {
           "kind": "paragraph",
-          "text": "A。プライベート/トランジット VIF の BGP セッションあたりの広告ルート数（100）は引き上げできず、超過するとセッションが Idle になります。ルート集約（またはデフォルトルート）が正解です。C はサービスの対象が変わるため不適切です。D は無関係です。"
+          "text": "B。プライベート/トランジット VIF で受信できるプレフィックス数は既定で IPv4・IPv6 各 100 で、超過するとセッションが Idle になります。割り当ては CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000 まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。C はサービスの対象が変わるため不適切です。D は無関係です。"
         },
         {
           "kind": "paragraph",
@@ -13954,7 +13958,7 @@
         },
         {
           "kind": "paragraph",
-          "text": "A と B。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準 1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN の MTU 上限が 1500 のため不可。D は ECMP が使えなくなります。"
+          "text": "A と B。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準 1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN トンネルの MTU 上限が 1500（実効パケット MTU は 1446）のため不可。D は ECMP が使えなくなります。"
         },
         {
           "kind": "paragraph",
@@ -13986,7 +13990,7 @@
         },
         {
           "kind": "paragraph",
-          "text": "A と C。VPN 経由の MTU は 1500 のため、9001 の大きなパケットは断片化されるか、DF ビット付きで ICMP が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS クランプで断片化を避けます。"
+          "text": "A と C。VPN トンネルの MTU 上限は 1500 ですが、IPsec のオーバーヘッドにより実効パケット MTU は 1446（MSS 1406）のため、9001 の大きなパケットは断片化されるか、DF ビット付きで ICMP が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS クランプ（1406 以下）で断片化を避けます。"
         },
         {
           "kind": "paragraph",
@@ -17394,7 +17398,7 @@
         },
         {
           "tag": "td",
-          "text": "広告するルートを 集約 して 100 件以内に収める",
+          "text": "広告するルートを 集約 し、VIF のプレフィックス割り当て（既定 100）以内に収める",
           "colspan": null,
           "rowspan": null
         },
@@ -18102,7 +18106,7 @@
         },
         {
           "tag": "td",
-          "text": "100（IPv4・IPv6 それぞれ）",
+          "text": "既定 100（IPv4・IPv6 それぞれ）。プレフィックス割り当てで最大 1,000 まで設定可能",
           "colspan": null,
           "rowspan": null
         },
@@ -19570,7 +19574,7 @@
         },
         {
           "tag": "td",
-          "text": "ルート集約 またはデフォルトルート",
+          "text": "プレフィックス割り当て の引き上げ（最大 1,000）。増やせない場合はルート集約またはデフォルトルート",
           "colspan": null,
           "rowspan": null
         }
@@ -24694,7 +24698,7 @@
         },
         {
           "tag": "td",
-          "text": "100（IPv4・IPv6 各）。超過で BGP 切断",
+          "text": "既定 100（IPv4・IPv6 各、最大 1,000 まで割り当て可能）。超過で BGP 切断",
           "colspan": null,
           "rowspan": null
         }
@@ -24868,13 +24872,13 @@
         },
         {
           "tag": "td",
-          "text": "VPN の MTU",
+          "text": "VPN の MTU（トンネル上限 / 実効パケット MTU）",
           "colspan": null,
           "rowspan": null
         },
         {
           "tag": "td",
-          "text": "1500",
+          "text": "1500 / 1446（MSS 1406）",
           "colspan": null,
           "rowspan": null
         }
@@ -25124,7 +25128,7 @@
         },
         {
           "tag": "td",
-          "text": "ルート集約",
+          "text": "プレフィックス割り当ての引き上げ／ルート集約",
           "colspan": null,
           "rowspan": null
         }
