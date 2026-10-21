@@ -4813,7 +4813,7 @@ flowchart TD
                             <tr class="odd">
                                 <td>Site-to-Site VPN</td>
                                 <td>使えない</td>
-                                <td>1500</td>
+                                <td>トンネル上限 1500／実効パケット MTU 1446（MSS 1406）</td>
                             </tr>
                         </tbody>
                     </table>
@@ -4867,10 +4867,10 @@ ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><
                             <tr class="even">
                                 <td>2</td>
                                 <td>
-                                    インターネット・VPN 宛の通信は
-                                    <strong>1500</strong> のままにする
+                                    インターネット宛の通信は
+                                    <strong>1500</strong>、VPN 宛の通信は <strong>1446</strong>（MSS <strong>1406</strong>）以下にする
                                 </td>
-                                <td>経路上限が 1500</td>
+                                <td>インターネットの経路上限は 1500、VPN は IPsec のオーバーヘッドで実効 1446</td>
                             </tr>
                             <tr class="odd">
                                 <td>3</td>
@@ -5609,8 +5609,8 @@ flowchart LR
                             <tr class="odd">
                                 <td>ジャンボフレームを使いたい</td>
                                 <td>
-                                    <strong>DX・VPC・TGW 内のみ</strong>（インターネット・VPN は
-                                    1500）
+                                    <strong>DX・VPC・TGW 内のみ</strong>（インターネットは
+                                    1500、VPN は実効 1446）
                                 </td>
                             </tr>
                         </tbody>
