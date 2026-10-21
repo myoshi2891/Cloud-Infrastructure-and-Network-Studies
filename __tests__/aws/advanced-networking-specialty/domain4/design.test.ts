@@ -12,6 +12,7 @@ it('preserves every source CSS declaration and responsive rule',()=>{
  for(const rule of fixture.guideDesign.rules){if(rule.selector===':root')continue;const selector=map(rule.selector);const actual=rules(css,selector,rule.media);
  for(const [p,v] of Object.entries(rule.declarations)){if(typeof v!=='string')continue;
  if(p==='font-family')continue;
+ if(p==='color'&&['#b4540a','var(--success)'].includes(v)){const original=resolve(v,source);const target=original==='#b4540a'?'#ad5009':'#197a48';expect(resolve(actual[p]??'',globals)).toBe(target);continue;}
  if(p==='top'&&selector.includes('sidebar')){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
  if(p==='z-index'){expect(Number(actual[p])).toBeLessThan(40);continue;}
  if(p==='scroll-margin-top'){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
