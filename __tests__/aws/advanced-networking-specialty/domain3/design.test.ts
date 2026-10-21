@@ -69,16 +69,13 @@ describe('ANS Domain 3 source design declaration fidelity', () => {
  postcss.parse(css).walkRules(rule=>{if(!rule.selector.includes('.highlight ')&&!rule.selector.includes('linenos'))rule.walkDecls(decl=>expect(decl.value).not.toMatch(/#[\da-fA-F]{3,8}\b/));});
  for (const [, name] of css.matchAll(/var\((--[\w-]+)/g)) if (name !== '--disclaimer-height') expect(tokens, name).toHaveProperty(name!);
  });
-});
-
-it('registers the original light palette for the shared footer',()=>{
- const footer=readFileSync('components/Footer.module.css','utf8');
- expect(footer).toContain('.ans-domain3-page');
-});
-
-
-it('keeps source code hues readable and identifies prose links without color alone',()=>{
- expect(declarations(css,'.ans-domain3-page .code-block.highlight .c1').color).toBe('#3b7777');
- expect(declarations(css,'.ans-domain3-page .code-block.highlight .gi').color).toBe('#008000');
- expect(declarations(css,'.ans-domain3-page .main p a')['text-decoration']).toBe('underline');
+ it('registers the original light palette for the shared footer',()=>{
+  const footer=readFileSync('components/Footer.module.css','utf8');
+  expect(footer).toContain('.ans-domain3-page');
+ });
+ it('keeps source code hues readable and identifies prose links without color alone',()=>{
+  expect(declarations(css,'.ans-domain3-page .code-block.highlight .c1').color).toBe('#3b7777');
+  expect(declarations(css,'.ans-domain3-page .code-block.highlight .gi').color).toBe('#008000');
+  expect(declarations(css,'.ans-domain3-page .main p a')['text-decoration']).toBe('underline');
+ });
 });

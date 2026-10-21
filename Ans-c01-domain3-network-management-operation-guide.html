@@ -3933,7 +3933,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td><strong>Site-to-Site VPN</strong> 経由</td>
-                                <td><strong>1500</strong></td>
+                                <td>トンネル上限 <strong>1500</strong>／実効パケット MTU <strong>1446</strong>（MSS <strong>1406</strong>）</td>
                             </tr>
                             <tr class="even">
                                 <td><strong>Direct Connect プライベート VIF</strong></td>
@@ -3992,7 +3992,7 @@ flowchart TD
                                 <td>IPsec のオーバーヘッドで実効 MTU が下がる</td>
                                 <td>
                                     お客様ルーターで
-                                    <strong>TCP MSS クランプ</strong> を設定、または MTU を下げる
+                                    <strong>TCP MSS クランプ（1406 以下）</strong> を設定、または MTU を <strong>1446</strong> 以下に下げる
                                 </td>
                             </tr>
                             <tr class="odd">
@@ -4000,8 +4000,8 @@ flowchart TD
                                 <td>経路上に 1500 の区間がある</td>
                                 <td>
                                     経路上の
-                                    <strong>全ホップで MTU を揃える</strong>、インターネット・VPN
-                                    向け通信は 1500 に
+                                    <strong>全ホップで MTU を揃える</strong>、インターネット向け通信は 1500、VPN
+                                    向け通信は 1446（MSS 1406）に
                                 </td>
                             </tr>
                         </tbody>
@@ -4049,10 +4049,8 @@ sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </spa
                             <tr class="even">
                                 <td>2</td>
                                 <td>
-                                    インターネット・VPN 方向を含む通信では、<strong
-                                        >MTU 1500 を前提</strong
-                                    >
-                                    にする
+                                    インターネット方向を含む通信では <strong>MTU 1500</strong>、VPN 方向では
+                                    <strong>MTU 1446（MSS 1406）</strong> を前提にする
                                 </td>
                                 <td>経路上の最小値に合わせる</td>
                             </tr>
@@ -4068,7 +4066,7 @@ sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </spa
                             </tr>
                             <tr class="even">
                                 <td>4</td>
-                                <td>VPN の MSS をクランプする</td>
+                                <td>VPN の MSS を 1406 以下にクランプする</td>
                                 <td>断片化を避ける定番の対処</td>
                             </tr>
                         </tbody>
