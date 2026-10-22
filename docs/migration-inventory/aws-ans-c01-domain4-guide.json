@@ -302,7 +302,7 @@
     "一元管理",
     "AWS Organizations + Firewall Manager + Security Hub で複数アカウントを統制",
     "すべて暗号化",
-    "TLS 1.2 以上、IPsec、MACsec、DNSSEC、KMS",
+    "TLS 1.2 以上、IPsec、MACsec、KMS",
     "Spoofing(なりすまし)",
     "偽の DNS 応答、偽サーバ",
     "DNSSEC、ACM 証明書、mTLS、IAM 認証",
