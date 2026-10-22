@@ -1174,7 +1174,7 @@ flowchart TD
     CT --> ACT["対応: 隔離 SG の適用 / ルール追加<br/>→ DNS Firewall・FW ルールで恒久対策"]
 ```
 
-Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):
+Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:
 
 ```sql
 SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt

@@ -2685,7 +2685,7 @@ flowchart TD
     NFW --&gt; CT["CloudTrail&lt;br/&gt;直前の SG / ルート / 認証情報の変更"]
     CT --&gt; ACT["対応: 隔離 SG の適用 / ルール追加&lt;br/&gt;→ DNS Firewall・FW ルールで恒久対策"]
 </pre>
-<p>Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):</p>
+<p>Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:</p>
 <div class="code-block" data-lang="sql"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">srcaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstport</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">query_name</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cnt</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">vpc_flow_logs</span><span class="w"> </span><span class="n">f</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">resolver_query_logs</span><span class="w"> </span><span class="n">d</span>
