@@ -42,8 +42,8 @@ describe('ANS Domain 3 source design declaration fidelity', () => {
     // 原本の低コントラスト2系統だけを、同色相のAA適合色へ補正する。
     
     
-    if (prop === 'color' && value === '#3d7b7b') { expect(actual[prop]).toBe('#3b7777'); continue; }
-    if (prop === 'color' && value === '#008400') { expect(actual[prop]).toBe('#008000'); continue; }
+    if (prop === 'color' && value === '#3d7b7b') { expect(actual[prop]).toBe('var(--color-ans-d3-code-comment)'); continue; }
+    if (prop === 'color' && value === '#008400') { expect(actual[prop]).toBe('var(--color-ans-d3-code-keyword)'); continue; }
     if (prop === 'font-family') continue; // 自己ホストの共通フォントへ対応付ける。
     if (prop === 'overflow-wrap' && rule.declarations['word-break']) { expect(actual[prop]).toBe('anywhere'); continue; }
     if (prop === 'word-break') { expect(actual['overflow-wrap']).toBe('anywhere'); continue; }
@@ -74,8 +74,15 @@ describe('ANS Domain 3 source design declaration fidelity', () => {
   expect(footer).toContain('.ans-domain3-page');
  });
  it('keeps source code hues readable and identifies prose links without color alone',()=>{
-  expect(declarations(css,'.ans-domain3-page .code-block.highlight .c1').color).toBe('#3b7777');
-  expect(declarations(css,'.ans-domain3-page .code-block.highlight .gi').color).toBe('#008000');
+  expect(tokens['--color-ans-d3-code-comment']).toBe('#3b7777');
+  expect(tokens['--color-ans-d3-code-keyword']).toBe('#008000');
+  expect(declarations(css,'.ans-domain3-page .code-block.highlight .c1').color).toBe('var(--color-ans-d3-code-comment)');
+  expect(declarations(css,'.ans-domain3-page .code-block.highlight .gi').color).toBe('var(--color-ans-d3-code-keyword)');
+  for (const selector of ['.ans-domain3-page td.linenos .special', '.ans-domain3-page span.linenos.special']) {
+   expect(declarations(css,selector)).toMatchObject({ color: 'var(--color-ans-d3-code-lineno-special-fg)', 'background-color': 'var(--color-ans-d3-code-lineno-special-bg)' });
+  }
+  expect(tokens['--color-ans-d3-code-lineno-special-fg']).toBe('#000000');
+  expect(tokens['--color-ans-d3-code-lineno-special-bg']).toBe('#ffffc0');
   expect(declarations(css,'.ans-domain3-page .main p a')['text-decoration']).toBe('underline');
  });
 });

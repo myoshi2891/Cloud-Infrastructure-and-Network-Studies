@@ -62,6 +62,10 @@
     --color-ans-d3-22: #eef2fa;
     --color-ans-d3-23: #e6f6ec;
     --color-ans-d3-24: rgba(20, 40, 90, 0.18);
+    --color-ans-d3-code-comment: #3b7777;
+    --color-ans-d3-code-keyword: #008000;
+    --color-ans-d3-code-lineno-special-fg: #000000;
+    --color-ans-d3-code-lineno-special-bg: #ffffc0;
     /* ANS-C01 Domain 2: original light palette. */
     --color-ans-d2-1: #f1f5fb;
     --color-ans-d2-2: #4a5b75;

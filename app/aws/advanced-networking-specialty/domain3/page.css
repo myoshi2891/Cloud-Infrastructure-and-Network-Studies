@@ -501,14 +501,14 @@
                 padding-right: 5px;
             }
             .ans-domain3-page td.linenos .special {
-                color: #000000;
-                background-color: #ffffc0;
+                color: var(--color-ans-d3-code-lineno-special-fg);
+                background-color: var(--color-ans-d3-code-lineno-special-bg);
                 padding-left: 5px;
                 padding-right: 5px;
             }
             .ans-domain3-page span.linenos.special {
-                color: #000000;
-                background-color: #ffffc0;
+                color: var(--color-ans-d3-code-lineno-special-fg);
+                background-color: var(--color-ans-d3-code-lineno-special-bg);
                 padding-left: 5px;
                 padding-right: 5px;
             }
@@ -519,40 +519,40 @@
                 background: var(--color-ans-d3-17);
             }
             .ans-domain3-page .code-block.highlight .c {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment */
             .ans-domain3-page .code-block.highlight .err {
                 border: 1px solid #f00;
             } /* Error */
             .ans-domain3-page .code-block.highlight .k {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Keyword */
             .ans-domain3-page .code-block.highlight .o {
                 color: #666;
             } /* Operator */
             .ans-domain3-page .code-block.highlight .ch {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment.Hashbang */
             .ans-domain3-page .code-block.highlight .cm {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment.Multiline */
             .ans-domain3-page .code-block.highlight .cp {
                 color: #9c6500;
             } /* Comment.Preproc */
             .ans-domain3-page .code-block.highlight .cpf {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment.PreprocFile */
             .ans-domain3-page .code-block.highlight .c1 {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment.Single */
             .ans-domain3-page .code-block.highlight .cs {
-                color: #3b7777;
+                color: var(--color-ans-d3-code-comment);
                 font-style: italic;
             } /* Comment.Special */
             .ans-domain3-page .code-block.highlight .gd {
@@ -573,7 +573,7 @@
                 font-weight: bold;
             } /* Generic.Heading */
             .ans-domain3-page .code-block.highlight .gi {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
             } /* Generic.Inserted */
             .ans-domain3-page .code-block.highlight .go {
                 color: #717171;
@@ -593,22 +593,22 @@
                 color: #04d;
             } /* Generic.Traceback */
             .ans-domain3-page .code-block.highlight .kc {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Keyword.Constant */
             .ans-domain3-page .code-block.highlight .kd {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Keyword.Declaration */
             .ans-domain3-page .code-block.highlight .kn {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Keyword.Namespace */
             .ans-domain3-page .code-block.highlight .kp {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
             } /* Keyword.Pseudo */
             .ans-domain3-page .code-block.highlight .kr {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Keyword.Reserved */
             .ans-domain3-page .code-block.highlight .kt {
@@ -624,7 +624,7 @@
                 color: #687822;
             } /* Name.Attribute */
             .ans-domain3-page .code-block.highlight .nb {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
             } /* Name.Builtin */
             .ans-domain3-page .code-block.highlight .nc {
                 color: #00f;
@@ -655,7 +655,7 @@
                 font-weight: bold;
             } /* Name.Namespace */
             .ans-domain3-page .code-block.highlight .nt {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
                 font-weight: bold;
             } /* Name.Tag */
             .ans-domain3-page .code-block.highlight .nv {
@@ -714,7 +714,7 @@
                 font-weight: bold;
             } /* Literal.String.Interpol */
             .ans-domain3-page .code-block.highlight .sx {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
             } /* Literal.String.Other */
             .ans-domain3-page .code-block.highlight .sr {
                 color: #a45a77;
@@ -726,7 +726,7 @@
                 color: #19177c;
             } /* Literal.String.Symbol */
             .ans-domain3-page .code-block.highlight .bp {
-                color: #008000;
+                color: var(--color-ans-d3-code-keyword);
             } /* Name.Builtin.Pseudo */
             .ans-domain3-page .code-block.highlight .fm {
                 color: #00f;
