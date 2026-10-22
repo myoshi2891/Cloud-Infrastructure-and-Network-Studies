@@ -1287,7 +1287,7 @@
     "Gateway Load Balancer: https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html",
     "AZ ごとに ファイアウォールエンドポイントと NAT ゲートウェイを置き、AZ をまたぐ通信を避ける(コストと可用性)。",
     "TGW の VPC アタッチメントで アプライアンスモード(Appliance Mode)を有効化 し、行きと戻りを同じ AZ のファイアウォールに通す(対称ルーティング)。",
-    "ファイアウォールポリシーは 「許可ドメインのみ」+ 既定 drop。",
+    "ファイアウォールポリシーは 「許可ドメインのみ」+ ステートフル既定アクション「Drop established」。",
     "出口の許可ドメインは ログ(alert/flow)で実際の利用を把握してから 絞り込む。",
     "Network Firewall の導入パターン(AWS ブログ): https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/",
     "Route 53 Resolver DNS Firewall: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html",
@@ -2251,7 +2251,7 @@
     },
     {
       "kind": "annotation",
-      "text": "✓ベストプラクティス AZ ごとに ファイアウォールエンドポイントと NAT ゲートウェイを置き、AZ をまたぐ通信を避ける(コストと可用性)。 TGW の VPC アタッチメントで アプライアンスモード(Appliance Mode)を有効化 し、行きと戻りを同じ AZ のファイアウォールに通す(対称ルーティング)。 ファイアウォールポリシーは 「許可ドメインのみ」+ 既定 drop。 出口の許可ドメインは ログ(alert/flow)で実際の利用を把握してから 絞り込む。"
+      "text": "✓ベストプラクティス AZ ごとに ファイアウォールエンドポイントと NAT ゲートウェイを置き、AZ をまたぐ通信を避ける(コストと可用性)。 TGW の VPC アタッチメントで アプライアンスモード(Appliance Mode)を有効化 し、行きと戻りを同じ AZ のファイアウォールに通す(対称ルーティング)。 ファイアウォールポリシーは 「許可ドメインのみ」+ ステートフル既定アクション「Drop established」。 出口の許可ドメインは ログ(alert/flow)で実際の利用を把握してから 絞り込む。"
     },
     {
       "kind": "paragraph",

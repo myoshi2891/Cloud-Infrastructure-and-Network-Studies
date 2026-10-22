@@ -128,7 +128,7 @@ export default function Task41(){return <div className="guide-part" data-part="t
 {"\n"}
 <Diagram id="diag-8" label={"4-3. 集中型の出口(Centralized egress)"} />
 {"\n"}
-<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ul>{"\n"}<li><strong>{"AZ ごとに"}</strong>{" ファイアウォールエンドポイントと NAT ゲートウェイを置き、"}<strong>{"AZ をまたぐ通信を避ける"}</strong>{"(コストと可用性)。"}</li>{"\n"}<li>{"TGW の VPC アタッチメントで "}<strong>{"アプライアンスモード(Appliance Mode)を有効化"}</strong>{" し、行きと戻りを同じ AZ のファイアウォールに通す("}<strong>{"対称ルーティング"}</strong>{")。"}</li>{"\n"}<li>{"ファイアウォールポリシーは "}<strong>{"「許可ドメインのみ」+ 既定 drop"}</strong>{"。"}</li>{"\n"}<li>{"出口の許可ドメインは "}<strong>{"ログ(alert/flow)で実際の利用を把握してから"}</strong>{" 絞り込む。"}</li>{"\n"}</ul>{"\n"}</div></div>
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ul>{"\n"}<li><strong>{"AZ ごとに"}</strong>{" ファイアウォールエンドポイントと NAT ゲートウェイを置き、"}<strong>{"AZ をまたぐ通信を避ける"}</strong>{"(コストと可用性)。"}</li>{"\n"}<li>{"TGW の VPC アタッチメントで "}<strong>{"アプライアンスモード(Appliance Mode)を有効化"}</strong>{" し、行きと戻りを同じ AZ のファイアウォールに通す("}<strong>{"対称ルーティング"}</strong>{")。"}</li>{"\n"}<li>{"ファイアウォールポリシーは "}<strong>{"「許可ドメインのみ」+ ステートフル既定アクション「Drop established」"}</strong>{"。"}</li>{"\n"}<li>{"出口の許可ドメインは "}<strong>{"ログ(alert/flow)で実際の利用を把握してから"}</strong>{" 絞り込む。"}</li>{"\n"}</ul>{"\n"}</div></div>
 {"\n"}
 <h3 id="s4-4" tabIndex={-1}>{"4-4. DNS による持ち出しを防ぐ"}</h3>
 {"\n"}

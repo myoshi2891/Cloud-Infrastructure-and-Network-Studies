@@ -1252,7 +1252,7 @@ flowchart TD
 <ul>
 <li><strong>AZ ごとに</strong> ファイアウォールエンドポイントと NAT ゲートウェイを置き、<strong>AZ をまたぐ通信を避ける</strong>(コストと可用性)。</li>
 <li>TGW の VPC アタッチメントで <strong>アプライアンスモード(Appliance Mode)を有効化</strong> し、行きと戻りを同じ AZ のファイアウォールに通す(<strong>対称ルーティング</strong>)。</li>
-<li>ファイアウォールポリシーは <strong>「許可ドメインのみ」+ 既定 drop</strong>。</li>
+<li>ファイアウォールポリシーは <strong>「許可ドメインのみ」+ ステートフル既定アクション「Drop established」</strong>。</li>
 <li>出口の許可ドメインは <strong>ログ(alert/flow)で実際の利用を把握してから</strong> 絞り込む。</li>
 </ul>
 </div></div>
