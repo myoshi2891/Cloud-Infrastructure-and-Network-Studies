@@ -284,7 +284,7 @@ bun run dashboard
 
 ANS-C01 Domain 4の全文移行と段階別コミットを実施済み。58表・31図・14コード・181リスト項目・33選択肢を固定fixtureで照合し、欠落7種・リストCSS破壊5種を検出する。最新の検証結果はMIGRATION_PROGRESS.mdの現在地を参照。Domain 1〜4の再移行は不要。手動の目視確認は未実施でChrome自動検証で代替済み。次の作業は `bun run build`・`bun run lint` の成功確認による進捗同期の完了。以下は過去の記録。
 
-ANS-C01 Domain 3の移行・段階別コミットは完了。91表・26図・7コード・38リスト項目・34リンク出現・52目次・シナリオ8問を固定Git由来fixtureで照合する。最新の全体検証・Chrome検証・実装HEADはMIGRATION_PROGRESS.mdの現在地を参照。npm・ビルド未実行、目視確認はユーザー担当。Domain 1〜3の再移行は不要。当時の次候補Domain 4は本セッションで実装済み。以下のDomain 2検証記録は履歴。
+ANS-C01 Domain 3の移行・段階別コミットは完了。91表・26図・7コード・38リスト項目・34リンク出現・52目次・シナリオ8問を固定Git由来fixtureで照合する。最新の全体検証・Chrome検証・実装HEADはMIGRATION_PROGRESS.mdの現在地を参照。npm・ビルド未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。Domain 1〜3の再移行は不要。当時の次候補Domain 4は本セッションで実装済み。以下のDomain 2検証記録は履歴。
 
 共通フッターのライト／ダーク対応と免責事項掲載は完了。`Footer.module.css` の明色ルート一覧は新規ライトページ追加時に更新し、`e2e/footer-theme.spec.ts` で配色・コントラスト・横はみ出しを確認する。
 
