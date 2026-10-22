@@ -1988,8 +1988,9 @@ flowchart TD
                             <tr class="odd">
                                 <td>MTU</td>
                                 <td>
-                                    VPN 経由のトラフィックは
-                                    <strong>1500 バイト</strong> が上限（ジャンボフレーム不可）
+                                    VPN トンネルの上限は
+                                    <strong>1500 バイト</strong>。IPsec のオーバーヘッドで実効パケット MTU は
+                                    <strong>1446 バイト</strong>（TCP MSS <strong>1406</strong>）。ジャンボフレーム不可
                                 </td>
                             </tr>
                         </tbody>

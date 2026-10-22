@@ -282,7 +282,7 @@ Site-to-Site VPN は、インターネット（または DX 上）に IPsec ト�
 | AWS 側の終端 | VGW、または Transit Gateway |
 | 帯域 | 標準トンネルで最大 **1.25 Gbps**。大容量帯域トンネル（Large Bandwidth Tunnel）なら最大 **5 Gbps** |
 | 帯域を増やす方法 | Transit Gateway にアタッチした VPN は **ECMP** で複数トンネルを束ねる |
-| MTU | VPN 経由のトラフィックは **1500 バイト** が上限（ジャンボフレーム不可） |
+| MTU | VPN トンネルの上限は **1500 バイト**。IPsec のオーバーヘッドで実効パケット MTU は **1446 バイト**（TCP MSS **1406**）。ジャンボフレーム不可 |
 
 ```mermaid
 flowchart LR
