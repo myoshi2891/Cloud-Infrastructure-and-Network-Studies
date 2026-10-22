@@ -705,21 +705,28 @@ import boto3
 
 ec2 = boto3.client("ec2")
 
+def is_admin_rule(perm):
+    protocol = perm.get("ipProtocol")
+    tcp_admin = protocol in ("tcp", "6") and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389))
+    return protocol == "-1" or tcp_admin
+
 def handler(event, context):
     detail = event["detail"]
     group_id = detail["requestParameters"]["groupId"]
     for perm in detail["requestParameters"]["ipPermissions"]["items"]:
+        if not is_admin_rule(perm):
+            continue
         for rng in perm.get("ipRanges", {}).get("items", []):
-            if rng.get("cidrIp") == "0.0.0.0/0" and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389)):
-                ec2.revoke_security_group_ingress(
-                    GroupId=group_id,
-                    IpPermissions=[{
-                        "IpProtocol": perm["ipProtocol"],
-                        "FromPort": perm["fromPort"],
-                        "ToPort": perm["toPort"],
-                        "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-                    }],
-                )
+            if rng.get("cidrIp") != "0.0.0.0/0":
+                continue
+            revoked = {
+                "IpProtocol": perm["ipProtocol"],
+                "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
+            }
+            if perm["ipProtocol"] != "-1":
+                revoked["FromPort"] = perm["fromPort"]
+                revoked["ToPort"] = perm["toPort"]
+            ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[revoked])
 ```
 
 **ベストプラクティス**
