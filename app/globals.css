@@ -414,6 +414,21 @@
     --color-brand-end: hsl(270 80% 60%);
     --color-brand-text-start: hsl(220 100% 72%);
     --color-brand-text-end: hsl(270 70% 65%);
+    /* Header ドロワーと試験カタログの操作色（両者で共有する値は nav に集約） */
+    --color-nav-accent: #8fb6ff;
+    --color-nav-hover-bg: rgb(143 182 255 / 8%);
+    --color-catalog-focus-ring: rgb(143 182 255 / 15%);
+    --color-catalog-hover-border: #657997;
+    --color-catalog-pressed-bg: rgb(143 182 255 / 12%);
+    --color-catalog-pressed-text: #dce9ff;
+    --color-header-bar-bg: rgb(8 9 15 / 92%);
+    --color-header-panel-bg: #0d111b;
+    --color-header-panel-shadow: #0008;
+    --color-header-panel-header-bg: rgb(13 17 27 / 97%);
+    --color-header-home-link: #b5c9ec;
+    --color-header-count-bg: rgb(143 182 255 / 7%);
+    --color-header-accordion-bg: rgb(255 255 255 / 2%);
+    --color-header-accordion-open-bg: rgb(143 182 255 / 4%);
 
     --color-theme-genai-bg: hsl(270 60% 55% / 0.25);
     --color-theme-genai-fg: hsl(270 80% 75%);
