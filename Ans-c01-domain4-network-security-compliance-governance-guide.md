@@ -118,7 +118,7 @@ flowchart TD
 | **すべてログを残す** | Flow Logs・ALB ログ・WAF ログ・Network Firewall ログ・Resolver ログ・CloudTrail |
 | **自動化** | Config ルール・EventBridge・Lambda・Systems Manager Automation による自動是正 |
 | **一元管理** | AWS Organizations + Firewall Manager + Security Hub で複数アカウントを統制 |
-| **すべて暗号化** | TLS 1.2 以上、IPsec、MACsec、DNSSEC、KMS |
+| **すべて暗号化** | TLS 1.2 以上、IPsec、MACsec、KMS |
 
 **根拠 URL**
 - 共有責任モデル: https://aws.amazon.com/compliance/shared-responsibility-model/
