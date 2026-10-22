@@ -224,7 +224,7 @@ export default function Task42(){return <div className="guide-part" data-part="t
 {"\n"}
 <Diagram id="diag-22" label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)"} />
 {"\n"}
-<p>{"Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):"}</p>
+<p>{"Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:"}</p>
 {"\n"}
 <div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)（コード12）"}>
 <div className="code-line"><span className="k">{"SELECT"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"query_name"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="k">{"COUNT"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"AS"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span></div>
