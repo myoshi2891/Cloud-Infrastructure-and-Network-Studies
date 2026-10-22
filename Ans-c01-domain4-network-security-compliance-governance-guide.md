@@ -1347,7 +1347,7 @@ flowchart TD
 
 **ベストプラクティス**
 - **強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2)** のみに制限する。
-- 2 本のトンネルを **別々の顧客ゲートウェイ(別の機器)** に接続し、機器障害にも耐える。
+- 顧客ゲートウェイ(機器)の冗長化には、**顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続** を作成し、各接続で **2 本のトンネルをどちらも設定** する(機器障害にも耐える)。
 - 証明書認証を使うと **PSK の管理負担が減る**(ACM Private CA と連携)。
 - CloudWatch の `TunnelState` でトンネルダウンを監視する。
 
@@ -1429,7 +1429,7 @@ flowchart TD
 | **S3** | **HTTPS のみ許可するバケットポリシー**(`aws:SecureTransport`)、エンドポイント経由 | `Deny` + `aws:SecureTransport = false` |
 | **RDS / Aurora** | 接続の **SSL/TLS 必須化**(PostgreSQL: `rds.force_ssl`、MySQL: `require_secure_transport`)、CA 証明書の更新管理 | アプリ側でも **CA 検証** を有効にする |
 | **Redshift / DynamoDB 等** | Redshift: `require_ssl` パラメータ。DynamoDB は常に HTTPS | パラメータグループで強制 |
-| **Transit Gateway** | **TGW 自体はデータプレーンを暗号化しない**。VPN アタッチメントは IPsec。VPC アタッチメント間は対応 Nitro の自動暗号化 / アプリ層 TLS / VPC Encryption Controls | 暗号化要件がある場合は上記で担保 |
+| **Transit Gateway** | VPN アタッチメントは IPsec。VPC アタッチメント間で **VPC Encryption Controls** を使う場合は、**TGW 側で暗号化サポートを明示的に有効化** する必要があり、アタッチした VPC 間の通信が暗号化されるかは **公式ドキュメントのエンフォースモードの条件** に依存する。これとは別の手段として **アプリ層 TLS** で暗号化する | 暗号化要件がある場合は上記で担保 |
 | **EC2 上の独自アプリ** | アプリの TLS(nginx 等)、**ACM for Nitro Enclaves**、Private CA 発行の証明書 | 証明書の自動更新を設計に組み込む |
 
 ```json

@@ -955,7 +955,7 @@
     "Redshift: require_ssl パラメータ。DynamoDB は常に HTTPS",
     "パラメータグループで強制",
     "Transit Gateway",
-    "TGW 自体はデータプレーンを暗号化しない。VPN アタッチメントは IPsec。VPC アタッチメント間は対応 Nitro の自動暗号化 / アプリ層 TLS / VPC Encryption Controls",
+    "VPN アタッチメントは IPsec。VPC アタッチメント間で VPC Encryption Controls を使う場合は、TGW 側で暗号化サポートを明示的に有効化 する必要があり、アタッチした VPC 間の通信が暗号化されるかは 公式ドキュメントのエンフォースモードの条件 に依存する。これとは別の手段として アプリ層 TLS で暗号化する",
     "暗号化要件がある場合は上記で担保",
     "EC2 上の独自アプリ",
     "アプリの TLS(nginx 等)、ACM for Nitro Enclaves、Private CA 発行の証明書",
@@ -1395,7 +1395,7 @@
     "宣言型ポリシーへの対応(2026-07): https://aws.amazon.com/about-aws/whats-new/2026/07/vpc-encryption-controls-declarative-controls/",
     "AWS 上の転送中暗号化のホワイトペーパー: https://docs.aws.amazon.com/whitepapers/latest/logical-separation/encrypting-data-at-rest-and-in-transit.html",
     "強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2) のみに制限する。",
-    "2 本のトンネルを 別々の顧客ゲートウェイ(別の機器) に接続し、機器障害にも耐える。",
+    "顧客ゲートウェイ(機器)の冗長化には、顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続 を作成し、各接続で 2 本のトンネルをどちらも設定 する(機器障害にも耐える)。",
     "証明書認証を使うと PSK の管理負担が減る(ACM Private CA と連携)。",
     "CloudWatch の TunnelState でトンネルダウンを監視する。",
     "DX は 冗長構成(複数ロケーション・複数接続) にし、VPN を DX のバックアップ として併用(暗号化が必要な場合は VPN 自体の暗号化も確認)。",
@@ -2511,7 +2511,7 @@
     },
     {
       "kind": "annotation",
-      "text": "✓ベストプラクティス 強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2) のみに制限する。 2 本のトンネルを 別々の顧客ゲートウェイ(別の機器) に接続し、機器障害にも耐える。 証明書認証を使うと PSK の管理負担が減る(ACM Private CA と連携)。 CloudWatch の TunnelState でトンネルダウンを監視する。"
+      "text": "✓ベストプラクティス 強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2) のみに制限する。 顧客ゲートウェイ(機器)の冗長化には、顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続 を作成し、各接続で 2 本のトンネルをどちらも設定 する(機器障害にも耐える)。 証明書認証を使うと PSK の管理負担が減る(ACM Private CA と連携)。 CloudWatch の TunnelState でトンネルダウンを監視する。"
     },
     {
       "kind": "paragraph",

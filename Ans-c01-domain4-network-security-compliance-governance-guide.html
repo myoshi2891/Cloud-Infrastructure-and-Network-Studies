@@ -3050,7 +3050,7 @@ flowchart TD
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
 <ul>
 <li><strong>強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2)</strong> のみに制限する。</li>
-<li>2 本のトンネルを <strong>別々の顧客ゲートウェイ(別の機器)</strong> に接続し、機器障害にも耐える。</li>
+<li>顧客ゲートウェイ(機器)の冗長化には、<strong>顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続</strong> を作成し、各接続で <strong>2 本のトンネルをどちらも設定</strong> する(機器障害にも耐える)。</li>
 <li>証明書認証を使うと <strong>PSK の管理負担が減る</strong>(ACM Private CA と連携)。</li>
 <li>CloudWatch の <code>TunnelState</code> でトンネルダウンを監視する。</li>
 </ul>
@@ -3224,7 +3224,7 @@ flowchart TD
 </tr>
 <tr class="odd">
 <td><strong>Transit Gateway</strong></td>
-<td><strong>TGW 自体はデータプレーンを暗号化しない</strong>。VPN アタッチメントは IPsec。VPC アタッチメント間は対応 Nitro の自動暗号化 / アプリ層 TLS / VPC Encryption Controls</td>
+<td>VPN アタッチメントは IPsec。VPC アタッチメント間で <strong>VPC Encryption Controls</strong> を使う場合は、<strong>TGW 側で暗号化サポートを明示的に有効化</strong> する必要があり、アタッチした VPC 間の通信が暗号化されるかは <strong>公式ドキュメントのエンフォースモードの条件</strong> に依存する。これとは別の手段として <strong>アプリ層 TLS</strong> で暗号化する</td>
 <td>暗号化要件がある場合は上記で担保</td>
 </tr>
 <tr class="even">
