@@ -5,7 +5,7 @@
 ## 2026-10-21: ANS-C01 Domain 3レビュー指摘対応（DXプレフィックス・VPN MTU）
 
 - 公式クォータに合わせ、プライベート/トランジット VIF の受信プレフィックスを「既定100・CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大1,000」へ訂正した（Task 3.1の表・試験ポイント・判断早見表、D-1/D-2、問題1）。問題1の正解はBに変え、ルート集約とデフォルトルートは割り当てを増やせない場合の代替策とした。
-- Site-to-Site VPN はトンネル上限1500と実効パケットMTU 1446（MSS 1406）を区別した（D-1、問題2・6）。Task 3.2/3.3 の「VPN 経由 1500」は今回の指摘範囲外のため未変更。
+- Site-to-Site VPN はトンネル上限1500と実効パケットMTU 1446（MSS 1406）を区別した（D-1、問題2・6）。Task 3.2/3.3 の MTU 表と関連ガイドも実効 MTU 1446（MSS 1406）へ更新済み（Task 3.2 は `97567188`、Task 3.3 は `4b658bcf`、補足は `07350336`）。
 - Domain 2の前例どおり、原本HTML・Markdownを訂正（`e901f80e`）してから `sourceCommit` を更新し、fixtureを再生成した（Red `86aea0f8`、Green `3947ff78`）。構文トークンのテストに件数の一致確認を追加した（`c547fa6b`）。
 - 検証: Domain 3は13ファイル・98件、ANS・fidelity関連は62ファイル・476件、対象ESLintがすべて成功。`bun run build`・`bun run lint` は未実行のため、進捗同期は未完了。
 

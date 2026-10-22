@@ -6,7 +6,7 @@
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
-2026-10-21 ANS-C01 Domain 3移行: `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。白背景・300px目次・リストの点と階層・インデント・構文ハイライト・解答開閉を保持。本文はServer Component、目次操作はClientのNavBarへ分離。原本HTML・Markdownは保持し、固定Git `e035a60f` 由来fixtureで原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。ホームとHeaderへDomain 3（20%）を追加し、Domain 1・2の導線を保持。原本由来のコード色2系統だけを同系色でAA補正し、本文リンクに下線を追加。原本にチェックボックス実体はなく、追加していない。npm・ビルドは依頼に従い未実行、目視確認はユーザー担当。検証結果と段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-21 ANS-C01 Domain 3移行: `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。白背景・300px目次・リストの点と階層・インデント・構文ハイライト・解答開閉を保持。本文はServer Component、目次操作はClientのNavBarへ分離。原本HTML・Markdownは保持し、固定Git `e035a60f` 由来fixtureで原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。ホームとHeaderへDomain 3（20%）を追加し、Domain 1・2の導線を保持。原本由来のコード色2系統だけを同系色でAA補正し、本文リンクに下線を追加。原本にチェックボックス実体はなく、追加していない。npm・ビルドは依頼に従い未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果と段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 ANS Domain 2の最終検証: レビュー対応後（`46f6032c`）は全体Vitest344ファイル・3382件、`bun run build`・`bun run lint` が成功。修正前の移行時は全体Vitest344ファイル・3381件、対象と共有抽出15ファイル・115件、Chrome5件（1440/768/390px、原本リストCSS比較、全26SVG、8問、目次・導線、axe違反0・コンソールエラー0）が成功。型検査・全体/対象ESLint・Markdown lint成功。原本コード色2系統のコントラストと本文リンクの下線のみa11y補正。
 
