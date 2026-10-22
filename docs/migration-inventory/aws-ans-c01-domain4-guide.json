@@ -867,7 +867,7 @@
     "目的",
     "VPC 内および VPC 間の 転送中暗号化を監査・強制 する",
     "モニターモード",
-    "各トラフィックの 暗号化状況を可視化(Flow Logs に記録)し、平文を許す資源を特定",
+    "各トラフィックの 暗号化状況を可視化し、平文を許す資源を特定。監視には ${encryption-status} を明示的に含むカスタム形式の Flow Log を新規作成する(既存の Flow Log にはこのフィールドが自動追加されない)",
     "エンフォースモード",
     "暗号化に対応しないリソースの作成などを 防止 し、暗号化を強制",
     "進め方",
@@ -1274,7 +1274,7 @@
     "CloudFront に使う Web ACL は スコープ CLOUDFRONT(米国東部バージニア北部リージョンで作成)。ALB 用は REGIONAL(ALB と同じリージョン)。",
     "複数アカウントは Firewall Manager の WAF ポリシーで一括適用。",
     "ステートレスの既定アクションは「Forward to stateful rule groups」 にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。",
-    "Strict rule order を使い、ステートフル既定アクションは drop_strict / drop_established などで「許可リスト方式」にする。",
+    "Strict rule order を使い、ドメイン許可リスト方式では ステートフル既定アクションを Drop established にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。",
     "出口制御は ドメインリスト(許可リスト) で HTTPS の SNI を検査。",
     "一般的な脆弱性対策に AWS マネージドルールグループ(脅威シグネチャ)を併用。",
     "AZ ごとに 1 つ以上のエンドポイント を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。",
@@ -2215,7 +2215,7 @@
     },
     {
       "kind": "annotation",
-      "text": "✓ベストプラクティス(AWS 公式ベストプラクティスガイドの要旨) ステートレスの既定アクションは「Forward to stateful rule groups」 にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。 Strict rule order を使い、ステートフル既定アクションは drop_strict / drop_established などで「許可リスト方式」にする。 出口制御は ドメインリスト(許可リスト) で HTTPS の SNI を検査。 一般的な脆弱性対策に AWS マネージドルールグループ(脅威シグネチャ)を併用。 AZ ごとに 1 つ以上のエンドポイント を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。 ログ(alert / flow)を必ず有効化する。"
+      "text": "✓ベストプラクティス(AWS 公式ベストプラクティスガイドの要旨) ステートレスの既定アクションは「Forward to stateful rule groups」 にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。 Strict rule order を使い、ドメイン許可リスト方式では ステートフル既定アクションを Drop established にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。 出口制御は ドメインリスト(許可リスト) で HTTPS の SNI を検査。 一般的な脆弱性対策に AWS マネージドルールグループ(脅威シグネチャ)を併用。 AZ ごとに 1 つ以上のエンドポイント を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。 ログ(alert / flow)を必ず有効化する。"
     },
     {
       "kind": "code",
@@ -2339,7 +2339,7 @@
     },
     {
       "kind": "code",
-      "text": "import boto3\n\nec2 = boto3.client(\"ec2\")\n\ndef handler(event, context):\n    detail = event[\"detail\"]\n    group_id = detail[\"requestParameters\"][\"groupId\"]\n    for perm in detail[\"requestParameters\"][\"ipPermissions\"][\"items\"]:\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") == \"0.0.0.0/0\" and perm.get(\"fromPort\") in (22, 3389):\n                ec2.revoke_security_group_ingress(\n                    GroupId=group_id,\n                    IpPermissions=[{\n                        \"IpProtocol\": perm[\"ipProtocol\"],\n                        \"FromPort\": perm[\"fromPort\"],\n                        \"ToPort\": perm[\"toPort\"],\n                        \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}],\n                    }],\n                )"
+      "text": "import boto3\n\nec2 = boto3.client(\"ec2\")\n\ndef handler(event, context):\n    detail = event[\"detail\"]\n    group_id = detail[\"requestParameters\"][\"groupId\"]\n    for perm in detail[\"requestParameters\"][\"ipPermissions\"][\"items\"]:\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") == \"0.0.0.0/0\" and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389)):\n                ec2.revoke_security_group_ingress(\n                    GroupId=group_id,\n                    IpPermissions=[{\n                        \"IpProtocol\": perm[\"ipProtocol\"],\n                        \"FromPort\": perm[\"fromPort\"],\n                        \"ToPort\": perm[\"toPort\"],\n                        \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}],\n                    }],\n                )"
     },
     {
       "kind": "annotation",
@@ -2475,7 +2475,7 @@
     },
     {
       "kind": "code",
-      "text": "SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt\nFROM vpc_flow_logs f\nJOIN resolver_query_logs d\n  ON f.srcaddr = d.srcaddr\n AND f.dstaddr = d.answer_address\nWHERE f.action = 'ACCEPT'\n  AND f.day = '2026/10/16'\nGROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name\nORDER BY cnt DESC\nLIMIT 50;"
+      "text": "SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt\nFROM vpc_flow_logs f\nJOIN resolver_query_logs d\n  ON f.srcaddr = d.srcaddr\nCROSS JOIN UNNEST(d.answers) AS a (answer)\nWHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'\n  AND f.day = '2026/10/16'\nGROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name\nORDER BY cnt DESC\nLIMIT 50;"
     },
     {
       "kind": "paragraph",
@@ -2587,7 +2587,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "SG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定 drop が正解。"
+      "text": "SG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。"
     },
     {
       "kind": "paragraph",

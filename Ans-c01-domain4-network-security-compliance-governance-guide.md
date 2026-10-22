@@ -275,7 +275,7 @@ flowchart TD
 
 **ベストプラクティス**(AWS 公式ベストプラクティスガイドの要旨)
 - **ステートレスの既定アクションは「Forward to stateful rule groups」** にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。
-- **Strict rule order** を使い、**ステートフル既定アクションは drop_strict / drop_established** などで「許可リスト方式」にする。
+- **Strict rule order** を使い、ドメイン許可リスト方式では **ステートフル既定アクションを Drop established** にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。
 - 出口制御は **ドメインリスト(許可リスト)** で HTTPS の SNI を検査。
 - 一般的な脆弱性対策に **AWS マネージドルールグループ**(脅威シグネチャ)を併用。
 - **AZ ごとに 1 つ以上のエンドポイント** を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。
@@ -710,7 +710,7 @@ def handler(event, context):
     group_id = detail["requestParameters"]["groupId"]
     for perm in detail["requestParameters"]["ipPermissions"]["items"]:
         for rng in perm.get("ipRanges", {}).get("items", []):
-            if rng.get("cidrIp") == "0.0.0.0/0" and perm.get("fromPort") in (22, 3389):
+            if rng.get("cidrIp") == "0.0.0.0/0" and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389)):
                 ec2.revoke_security_group_ingress(
                     GroupId=group_id,
                     IpPermissions=[{
@@ -1174,8 +1174,8 @@ SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt
 FROM vpc_flow_logs f
 JOIN resolver_query_logs d
   ON f.srcaddr = d.srcaddr
- AND f.dstaddr = d.answer_address
-WHERE f.action = 'ACCEPT'
+CROSS JOIN UNNEST(d.answers) AS a (answer)
+WHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'
   AND f.day = '2026/10/16'
 GROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name
 ORDER BY cnt DESC
@@ -1291,7 +1291,7 @@ flowchart TD
 | 項目 | 内容 |
 |---|---|
 | 目的 | VPC 内および VPC 間の **転送中暗号化を監査・強制** する |
-| **モニターモード** | 各トラフィックの **暗号化状況を可視化**(Flow Logs に記録)し、平文を許す資源を特定 |
+| **モニターモード** | 各トラフィックの **暗号化状況を可視化**し、平文を許す資源を特定。監視には `${encryption-status}` を明示的に含むカスタム形式の Flow Log を新規作成する(**既存の Flow Log にはこのフィールドが自動追加されない**) |
 | **エンフォースモード** | 暗号化に対応しないリソースの作成などを **防止** し、暗号化を強制 |
 | 進め方 | **既存 VPC はまずモニターモードで開始**、平文のリソースを移行してからエンフォースへ切り替える |
 | 組織管理 | **宣言型ポリシー(Organizations)** でアカウント/OU 単位に一括適用が可能 |
@@ -1697,7 +1697,7 @@ flowchart TD
 
 **Q1.** 会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。
 - A. NAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する
-- B. Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを drop にする
+- B. Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする
 - C. セキュリティグループで許可ドメインのホスト名を指定する
 - D. ネットワーク ACL で許可ドメインの FQDN を指定する
 
@@ -1749,7 +1749,7 @@ flowchart TD
 
 | 問 | 答え | 解説 |
 |---|---|---|
-| Q1 | **B** | SG/NACL/NAT GW は FQDN での制御ができない。**Network Firewall のドメインリスト + strict order + 既定 drop** が正解。 |
+| Q1 | **B** | SG/NACL/NAT GW は FQDN での制御ができない。**Network Firewall のドメインリスト + strict order + 既定アクション Drop established** が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。 |
 | Q2 | **B** | 非対称ルーティングの典型。**アプライアンスモード** で行きと戻りを同じ AZ のアプライアンスに通す。 |
 | Q3 | **B** | NACL はステートレス。**戻りのエフェメラルポート(1024–65535)のアウトバウンド許可** が必要。SG はステートフル。 |
 | Q4 | **B** | ペイロードの検査は **Traffic Mirroring**。Flow Logs はメタデータのみ。 |

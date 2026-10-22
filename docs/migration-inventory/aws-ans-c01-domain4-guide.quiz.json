@@ -1,6 +1,6 @@
 [
   {
-    "text": "Q01外部通信の制御1 つ選択会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。 ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを drop にする Cセキュリティグループで許可ドメインのホスト名を指定する Dネットワーク ACL で許可ドメインの FQDN を指定する 正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定 drop が正解。",
+    "text": "Q01外部通信の制御1 つ選択会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。 ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする Cセキュリティグループで許可ドメインのホスト名を指定する Dネットワーク ACL で許可ドメインの FQDN を指定する 正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。",
     "options": [
       {
         "type": "radio",
@@ -13,7 +13,7 @@
         "type": "radio",
         "name": "review-q1",
         "value": "B",
-        "label": "BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを drop にする",
+        "label": "BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする",
         "checked": false
       },
       {
@@ -31,7 +31,7 @@
         "checked": false
       }
     ],
-    "answer": "正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定 drop が正解。"
+    "answer": "正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。"
   },
   {
     "text": "Q02対称ルーティング1 つ選択集中型の検査 VPC で、Transit Gateway 経由の通信が断続的に失敗します。Network Firewall はステートフル検査を行っており、行きと戻りのパケットが異なる AZ のエンドポイントを通っているようです。最も適切な対処はどれですか。 ANACL のルールを追加する BTGW の VPC アタッチメントでアプライアンスモードを有効にする CFlow Logs の集約間隔を短くする DWAF のレートベースルールを調整する 正解・解説を見る正解 B非対称ルーティングの典型。アプライアンスモード で行きと戻りを同じ AZ のアプライアンスに通す。",
