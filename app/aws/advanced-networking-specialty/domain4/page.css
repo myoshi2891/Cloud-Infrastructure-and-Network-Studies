@@ -388,7 +388,7 @@
             .ans-domain4-page .checklist-card input[type='checkbox']:checked { background: var(--color-ans-d4-3); border-color: var(--color-ans-d4-3); }
             .ans-domain4-page .checklist-card input[type='checkbox']:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid var(--color-ans-d4-17); border-width: 0 2px 2px 0; transform: rotate(40deg); }
             .ans-domain4-page .checklist-card label { color: var(--color-ans-d4-2); font-size: 14.5px; cursor: pointer; line-height: 1.6; }
-            .ans-domain4-page .checklist-card li:has(input:checked) label { text-decoration: line-through; color: var(--color-ans-d4-13); }
+            .ans-domain4-page .checklist-card li:has(input:checked) label { text-decoration: line-through; color: var(--color-ans-d4-5); }
 
             .ans-domain4-page aside.footnotes { display: none; }
 
