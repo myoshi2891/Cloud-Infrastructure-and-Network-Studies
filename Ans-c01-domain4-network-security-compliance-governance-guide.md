@@ -1181,6 +1181,8 @@ SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt
 FROM vpc_flow_logs f
 JOIN resolver_query_logs d
   ON f.srcaddr = d.srcaddr
+  AND from_iso8601_timestamp(d.query_timestamp)
+    BETWEEN from_unixtime(f.start) - INTERVAL '5' MINUTE AND from_unixtime(f.start)
 CROSS JOIN UNNEST(d.answers) AS a (answer)
 WHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'
   AND f.day = '2026/10/16'

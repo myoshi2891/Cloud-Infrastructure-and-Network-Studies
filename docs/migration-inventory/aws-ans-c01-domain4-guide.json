@@ -2475,7 +2475,7 @@
     },
     {
       "kind": "code",
-      "text": "SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt\nFROM vpc_flow_logs f\nJOIN resolver_query_logs d\n  ON f.srcaddr = d.srcaddr\nCROSS JOIN UNNEST(d.answers) AS a (answer)\nWHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'\n  AND f.day = '2026/10/16'\nGROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name\nORDER BY cnt DESC\nLIMIT 50;"
+      "text": "SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt\nFROM vpc_flow_logs f\nJOIN resolver_query_logs d\n  ON f.srcaddr = d.srcaddr\n  AND from_iso8601_timestamp(d.query_timestamp)\n    BETWEEN from_unixtime(f.start) - INTERVAL '5' MINUTE AND from_unixtime(f.start)\nCROSS JOIN UNNEST(d.answers) AS a (answer)\nWHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'\n  AND f.day = '2026/10/16'\nGROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name\nORDER BY cnt DESC\nLIMIT 50;"
     },
     {
       "kind": "paragraph",
