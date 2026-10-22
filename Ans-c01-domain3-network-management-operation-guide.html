@@ -2308,7 +2308,7 @@ flowchart TD
                             </tr>
                             <tr class="even">
                                 <td>専用接続あたりの VIF 数</td>
-                                <td>プライベート/パブリック 50 + トランジット 4（合計 51）</td>
+                                <td>プライベート/パブリック VIF は最大 50、トランジット VIF は最大 4。すべての VIF の合計は最大 51</td>
                                 <td>合計 51 は引き上げ不可。トランジット VIF は SA/TAM に相談可能</td>
                             </tr>
                             <tr class="odd">
@@ -3993,7 +3993,7 @@ flowchart TD
                                 <td>IPsec のオーバーヘッドで実効 MTU が下がる</td>
                                 <td>
                                     お客様ルーターで
-                                    <strong>TCP MSS クランプ（1406 以下）</strong> を設定、または MTU を <strong>1446</strong> 以下に下げる
+                                    <strong>TCP MSS クランプ（最大 1406）</strong> を設定、または MTU を最大値 <strong>1446</strong> 以下に下げる。暗号化・ハッシュアルゴリズム、NAT トラバーサル、IP ファミリー（IPv4/IPv6）の設定に応じて、さらに低い値を選ぶ
                                 </td>
                             </tr>
                             <tr class="odd">
@@ -4869,7 +4869,7 @@ ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><
                                 <td>2</td>
                                 <td>
                                     インターネット宛の通信は
-                                    <strong>1500</strong>、VPN 宛の通信は <strong>1446</strong>（MSS <strong>1406</strong>）以下にする
+                                    <strong>1500</strong>、VPN 宛の通信は最大 <strong>1446</strong>（MSS 最大 <strong>1406</strong>）とし、暗号化・ハッシュアルゴリズム、NAT トラバーサル、IP ファミリー（IPv4/IPv6）の設定に応じてさらに低い値にする
                                 </td>
                                 <td>インターネットの経路上限は 1500、VPN は IPsec のオーバーヘッドで実効 1446</td>
                             </tr>
