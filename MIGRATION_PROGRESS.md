@@ -11,7 +11,7 @@
 
 ## 2026-10-21: ANS-C01 Domain 4ネットワークセキュリティ移行
 
-2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは変更せず保持し、固定Git `24fd796e` 由来fixtureで原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。`bun run build`・`bun run lint` の成功が未確認のため検証は未完了。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは変更せず保持し、固定Git `bc3999a1` 由来fixture（移行時の `24fd796e` は旧版）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。`bun run build`・`bun run lint` の成功が未確認のため検証は未完了。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
@@ -40,7 +40,7 @@ CSS変更後は既存3000番のサーバーがないことを確認し、生成�
 
 `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。原本の白背景・300px目次・リストの点と階層・インデント・コードの全行と構文色・解答解説の開閉を保持。本文はServer Component、目次操作はClientのNavBarに分離し、ホーム・Headerに20%のDomain 3導線を追加。チェックボックスは原本に実体がないため追加していない。
 
-原本HTML・Markdownは変更せず直下に保持。固定Git `e035a60f` 由来inventory/fidelity fixtureをコミットし、原本・archiveが作業ツリーにない状態でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
+原本HTML・Markdownは変更せず直下に保持。固定Git `670b47ec` 由来（移行時の `e035a60f` は旧版）inventory/fidelity fixtureをコミットし、原本・archiveが作業ツリーにない状態でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
 
 対象Vitest13ファイル・98件成功。Chromeは1440/768/390px・リストCSS破壊検出・ホーム/Header導線の計5件成功。全26SVGの自然倍率・viewBox内包、目次とhash/focus、モバイル開閉、8解答のクリック/Enter開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。初回1440pxで検出した原本由来のコード色2系統のみを同色相でAA補正し、本文リンクに下線を追加した。型検査・全体ESLint・対象Markdown lint成功。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。
 
@@ -3364,7 +3364,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `3947ff78`（Domain 3のDXプレフィックス・VPN MTU訂正。原本訂正 `e901f80e`）。前回進捗同期コミット: `d293d877`。仕様同期コミットは未記録（build・lint成功確認後に記録）。ANS-C01 Domain 4の全文移行と段階別コミットは完了。58表・31図・14コード・181リスト項目・176リンク出現・99目次・確認問題8問を固定Git `24fd796e` 由来fixtureで照合する。原本HTML・Markdownは保持。全体Vitest373ファイル・3579件（再試行なし）、Domain 4対象15ファイル・97件、Chrome5件、型検査・全体ESLint・対象Markdown lint成功。静的集計1128ソース・338対応（30%）・387テストファイル。npm・ビルド未実行で、`bun run build`・`bun run lint` の成功が未確認のため進捗同期は未完了。手動の目視確認は未実施で、Chrome自動検証で代替。次の作業は `bun run build` と `bun run lint` を実行し、両方の成功を確認して進捗同期を完了すること。Domain 1〜4の再移行は不要。
+最新実装 HEAD: `3947ff78`（Domain 3のDXプレフィックス・VPN MTU訂正。原本訂正 `e901f80e`）。前回進捗同期コミット: `d293d877`。仕様同期コミットは未記録（build・lint成功確認後に記録）。ANS-C01 Domain 4の全文移行と段階別コミットは完了。58表・31図・14コード・181リスト項目・176リンク出現・99目次・確認問題8問を固定Git `bc3999a1` 由来fixture（移行時の `24fd796e` は旧版）で照合する。原本HTML・Markdownは保持。全体Vitest373ファイル・3579件（再試行なし）、Domain 4対象15ファイル・97件、Chrome5件、型検査・全体ESLint・対象Markdown lint成功。静的集計1128ソース・338対応（30%）・387テストファイル。npm・ビルド未実行で、`bun run build`・`bun run lint` の成功が未確認のため進捗同期は未完了。手動の目視確認は未実施で、Chrome自動検証で代替。次の作業は `bun run build` と `bun run lint` を実行し、両方の成功を確認して進捗同期を完了すること。Domain 1〜4の再移行は不要。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
