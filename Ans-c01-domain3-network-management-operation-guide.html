@@ -3957,13 +3957,16 @@ flowchart LR
                 <h4>典型的な障害の流れ</h4>
                 <pre class="mermaid">
 flowchart TD
-    A["送信側が 9001 の大きなパケットを送る"] --&gt; B["経路途中に MTU 1500 の区間&lt;br/&gt;例: インターネットや VPN"]
+    A["送信側が 9001 の大きなパケットを送る"] --&gt; B["経路途中に MTU 1500 の区間&lt;br/&gt;例: インターネット"]
     B --&gt; C{"DF ビットが設定され&lt;br/&gt;断片化が禁止されているか"}
     C -- "いいえ" --&gt; D["断片化して通過（遅くなる）"]
     C -- "はい" --&gt; E["ルーターが ICMP&lt;br/&gt;Fragmentation Needed を返す"]
     E --&gt; F{"ICMP が セキュリティグループ&lt;br/&gt;NACL で許可されているか"}
     F -- "はい" --&gt; G["PMTUD により送信側が&lt;br/&gt;パケットを小さくする"]
     F -- "いいえ" --&gt; H["ICMP が届かず、大きなパケットが&lt;br/&gt;黙って捨てられる（ブラックホール）"]
+    A --&gt; V["経路途中に Site-to-Site VPN&lt;br/&gt;実効パケット MTU 1446（MSS 1406）"]
+    V --&gt; V1["Site-to-Site VPN は PMTUD に非対応&lt;br/&gt;PMTUD に頼らない"]
+    V1 --&gt; V2["お客様ルーターで TCP MSS クランプ（最大 1406）&lt;br/&gt;または DF をクリアし暗号化前に断片化"]
 </pre
                 >
                 <h4>症状と対処</h4>
@@ -4336,7 +4339,9 @@ flowchart TD
     C -- "いいえ" --&gt; PEER["VPC ピアリング&lt;br/&gt;低コスト・高帯域"]
     C -- "はい" --&gt; TGW["Transit Gateway"]
     B -- "いいえ" --&gt; D{"CIDR が重複しているか"}
-    D -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
+    D -- "はい" --&gt; E{"公開したいのは&lt;br/&gt;特定のサービスだけか"}
+    E -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
+    E -- "いいえ（VPC全体の通信が必要）" --&gt; RE["CIDR を再設計する&lt;br/&gt;または プライベート NAT ゲートウェイで変換する"]
     D -- "いいえ" --&gt; TGW
 </pre
                 >
