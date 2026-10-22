@@ -1175,6 +1175,9 @@
     --font-ccna-app-mono: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
+    /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
+    --site-content-width: 1180px;
+
     /* サイトヘッダーの高さ */
     --header-h: 48px;
     /* DisclaimerBanner の高さ（JS から動的に更新される） */

@@ -3,7 +3,7 @@
  * Header は本関数の戻り値だけを参照して描画する。
  */
 
-import type { Provider } from '@/app/constants';
+import { providerMeta, providerOrder, type Provider } from '@/app/constants';
 
 export type { Provider };
 
@@ -41,17 +41,6 @@ type NavExamInput = {
     overviewLabel?: string;
 };
 
-const PROVIDER_LABEL: Record<Provider, string> = {
-    GCP: 'Google Cloud',
-    AWS: 'Amazon Web Services',
-    Cisco: 'Cisco',
-    CompTIA: 'CompTIA',
-    Books: 'Recommended Books',
-    Tools: '運用ツール資格学習共通ガイド',
-};
-
-const PROVIDER_ORDER: readonly Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools'];
-
 /**
  * Converts exam inputs into a navigation tree grouped by provider.
  *
@@ -87,11 +76,11 @@ export function toNavTree(exams: ReadonlyArray<NavExamInput>): NavGroup[] {
         buckets.set(provider, arr);
     }
 
-    return PROVIDER_ORDER
+    return providerOrder
         .filter((p) => buckets.has(p))
         .map((provider) => ({
             provider,
-            label: PROVIDER_LABEL[provider],
+            label: providerMeta[provider].label,
             exams: buckets.get(provider) ?? [],
         }));
 }
