@@ -2457,7 +2457,7 @@ flowchart TD
 flowchart TD
     Q1{"公開したいのは&lt;br/&gt;特定のサービスだけか"} -- "はい" --&gt; PL["PrivateLink を選ぶ"]
     Q1 -- "いいえ（VPC全体の通信が必要）" --&gt; Q2{"CIDR が重複しているか"}
-    Q2 -- "はい" --&gt; PL
+    Q2 -- "はい" --&gt; RE["CIDR を再設計する&lt;br/&gt;または プライベート NAT ゲートウェイで変換する"]
     Q2 -- "いいえ" --&gt; Q3{"接続したい VPC は&lt;br/&gt;少数か"}
     Q3 -- "はい" --&gt; PEER["VPC ピアリングを選ぶ"]
     Q3 -- "いいえ（多数・オンプレミスも）" --&gt; TGW["Transit Gateway を選ぶ"]
@@ -2498,7 +2498,7 @@ flowchart TD
                             <tr class="even">
                                 <td>セキュリティ</td>
                                 <td>
-                                    エンドポイントにセキュリティグループを関連付け、エンドポイントポリシーで操作範囲を絞る
+                                    エンドポイントのセキュリティグループで送信元を絞り、サービス提供側でも認可（許可するプリンシパルの指定やアプリケーション側の認証）を行う。エンドポイントポリシーはカスタムサービスではなく、エンドポイントポリシーに対応する AWS サービスで使う
                                 </td>
                             </tr>
                         </tbody>
@@ -2782,7 +2782,7 @@ flowchart TD
                             <tr class="odd">
                                 <td><strong>VPN（パブリック）</strong></td>
                                 <td>インターネット上の IPsec</td>
-                                <td>パブリックエンドポイント／VPC</td>
+                                <td>VPC 内のリソース（S3 へはインターフェイス型 S3 エンドポイントと、そこへ向けるルーティング / DNS が別途必要）</td>
                                 <td>暗号化。帯域に上限あり</td>
                             </tr>
                         </tbody>
@@ -2797,7 +2797,7 @@ flowchart TD
     A -- "オンプレミス" --&gt; C{"専用線があるか"}
     C -- "はい（VPC内のサービス）" --&gt; PV["プライベート/トランジット VIF&lt;br/&gt;＋ インターフェイス型エンドポイント"]
     C -- "はい（パブリックサービス）" --&gt; PB["パブリック VIF"]
-    C -- "いいえ" --&gt; VP["Site-to-Site VPN"]
+    C -- "いいえ" --&gt; VP["Site-to-Site VPN で VPC 内へ接続&lt;br/&gt;S3 へはインターフェイス型 S3 エンドポイント&lt;br/&gt;＋ そこへ向けるルーティング / DNS"]
 </pre
                 >
                 <blockquote>
@@ -5981,7 +5981,7 @@ flowchart LR
                     9001）で構成されています。最も適切な対処はどれですか。（2つ選択）
                 </p>
                 <ul class="scenario-options" role="list">
-                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する</div></li>
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> カスタマーゲートウェイで DF フラグをクリアし、暗号化前に IP パケットを断片化する</div></li>
                     <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> 経路を Direct Connect のトランジット VIF に変更するだけで解決する</div></li>
                     <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1446 以下に設定）する</div></li>
                     <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VPN トンネルの数を増やす</div></li>
@@ -5992,9 +5992,10 @@ flowchart LR
                     <p>
                         <strong>A と C</strong>。VPN トンネルの MTU 上限は 1500 ですが、IPsec
                         のオーバーヘッドにより実効パケット MTU は 1446（MSS 1406）のため、9001
-                        の大きなパケットは断片化されるか、DF ビット付きで ICMP
-                        が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS
-                        クランプ（1406 以下）で断片化を避けます。
+                        の大きなパケットはそのままでは通りません。Site-to-Site VPN では ICMP
+                        を許可しても PMTUD を前提にできないため、トンネル向けに MSS をクランプ（1406
+                        以下）または MTU を 1446 以下に設定し、カスタマーゲートウェイでは DF
+                        フラグをクリアして暗号化前に断片化します。
                     </p>
                 </details>
                 </article>
