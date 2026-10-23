@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { EXAMS } from '@/app/constants';
-import { ExamCatalog } from '@/components/sections/home';
+import { ExamCatalog, Hero } from '@/components/sections/home';
 import { Header } from '@/components/Header';
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/' }));
@@ -20,6 +20,31 @@ describe('カタログの検索とカテゴリ選択', () => {
         await user.click(screen.getByRole('button', { name: '検索条件をリセット' }));
         expect(screen.getAllByRole('article')).toHaveLength(originalCount);
         expect(screen.getByRole('searchbox')).toHaveValue('');
+    });
+
+    it('ヒーローのプロバイダ導線は絞り込みを解除し、リンク先のセクションへ移動する', async () => {
+        const user = userEvent.setup();
+        const scrollIntoView = vi.fn();
+        Element.prototype.scrollIntoView = scrollIntoView;
+        render(<><Hero exams={exams} /><ExamCatalog exams={exams} /></>);
+        await user.click(screen.getByRole('button', { name: /^Google Cloud/ }));
+        await user.type(screen.getByRole('searchbox'), 'ACE');
+        expect(document.getElementById('provider-aws')).toBeNull();
+
+        const awsRailLink = document.querySelector<HTMLAnchorElement>('a[href="#provider-aws"]');
+        expect(awsRailLink).not.toBeNull();
+        await user.click(awsRailLink as HTMLAnchorElement);
+
+        const awsSection = document.getElementById('provider-aws');
+        expect(awsSection).not.toBeNull();
+        expect(screen.getByRole('searchbox')).toHaveValue('');
+        expect(screen.getAllByRole('article')).toHaveLength(exams.length);
+        expect(scrollIntoView.mock.contexts.at(-1)).toBe(awsSection);
+
+        // 同じリンクの再クリック（hashchange が発火しない）でも絞り込みを解除する
+        await user.type(screen.getByRole('searchbox'), '存在しない教材');
+        await user.click(awsRailLink as HTMLAnchorElement);
+        expect(document.getElementById('provider-aws')).not.toBeNull();
     });
 
     it('略称とドメイン名でも教材を発見できる', async () => {
