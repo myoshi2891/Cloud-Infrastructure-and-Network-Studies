@@ -5851,7 +5851,7 @@ flowchart LR
                         <span class="scenario-type">単一選択</span>
                     </div>
                 <p class="scenario-question">
-                    オンプレミスのルーターから Direct Connect のプライベート VIF 経由で、IPv4
+                    オンプレミスのルーターから Direct Connect のトランジット VIF（Direct Connect ゲートウェイ経由で Transit Gateway に接続）で、IPv4
                     のルートを 150 件広告したところ、BGP
                     セッションがダウンしました。最も適切な対処はどれですか。
                 </p>
@@ -5866,8 +5866,8 @@ flowchart LR
                     <p>
                         <strong>B</strong>。プライベート/トランジット VIF で受信できるプレフィックス数は既定で
                         IPv4・IPv6 各 100 で、超過するとセッションが Idle になります。割り当ては
-                        CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000
-                        まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。C
+                        VIF の作成時や UpdateVirtualInterfaceAttributes で最大 1,000
+                        まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。なお、プライベート VIF を仮想プライベートゲートウェイ（VGW）に接続する構成では、VPC ルートテーブルに伝播できるルートが 100 件までのため、割り当てを増やしてもルート集約またはデフォルトルートが必要です。C
                         はサービスの対象が変わるため不適切です。D は無関係です。
                     </p>
                 </details>
