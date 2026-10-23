@@ -229,6 +229,7 @@ flowchart TD
     P1 -- "Yes: Count" --> P2
     P1 -- "No" --> P2{"優先度2のルールに一致?"}
     P2 -- "Yes: Allow / Block" --> END1
+    P2 -- "Yes: Count" --> DEF
     P2 -- "No" --> DEF["Web ACL の既定アクション<br/>Allow または Block"]
 ```
 
@@ -284,6 +285,7 @@ flowchart TD
 ```bash
 # 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)
 # 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)
+# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える
 aws network-firewall create-rule-group \
   --rule-group-name allow-approved-domains \
   --type STATEFUL \
@@ -709,6 +711,7 @@ flowchart TD
 
 ```python
 import boto3
+from botocore.exceptions import ClientError
 
 ec2 = boto3.client("ec2")
 
@@ -736,23 +739,31 @@ def ingress_permissions(params):
         })
     return perms
 
+
+def revoke(group_id, permission):
+    try:
+        ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[permission])
+    except ClientError as error:
+        # 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける
+        if error.response["Error"]["Code"] != "InvalidPermission.NotFound":
+            raise
+
 def handler(event, context):
     params = event["detail"]["requestParameters"]
     group_id = resolve_group_id(params)
     for perm in ingress_permissions(params):
         if not is_admin_rule(perm):
             continue
+        base = {"IpProtocol": perm["ipProtocol"]}
+        if perm["ipProtocol"] != "-1":
+            base["FromPort"] = perm["fromPort"]
+            base["ToPort"] = perm["toPort"]
         for rng in perm.get("ipRanges", {}).get("items", []):
-            if rng.get("cidrIp") != "0.0.0.0/0":
-                continue
-            revoked = {
-                "IpProtocol": perm["ipProtocol"],
-                "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-            }
-            if perm["ipProtocol"] != "-1":
-                revoked["FromPort"] = perm["fromPort"]
-                revoked["ToPort"] = perm["toPort"]
-            ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[revoked])
+            if rng.get("cidrIp") == "0.0.0.0/0":
+                revoke(group_id, {**base, "IpRanges": [{"CidrIp": "0.0.0.0/0"}]})
+        for rng in perm.get("ipv6Ranges", {}).get("items", []):
+            if rng.get("cidrIpv6") == "::/0":
+                revoke(group_id, {**base, "Ipv6Ranges": [{"CidrIpv6": "::/0"}]})
 ```
 
 **ベストプラクティス**
@@ -1135,8 +1146,8 @@ aws cloudwatch put-metric-alarm \
 
 | ログ | 取得できる内容 | 有効化 | 配信先 |
 |---|---|---|---|
-| **ALB アクセスログ** | リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報) | **既定は無効** | **S3** |
-| **NLB アクセスログ** | **TLS リスナー** の接続情報 | 既定は無効 | **S3** |
+| **ALB アクセスログ** | リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報) | **既定は無効** | **S3**(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3 |
+| **NLB アクセスログ** | **TLS リスナー** の接続情報 | 既定は無効 | **S3**(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3 |
 | **CloudFront 標準ログ** | ビューワーリクエスト | 既定は無効 | S3(最新では CloudWatch Logs / Firehose も選択可) |
 | **CloudFront リアルタイムログ** | ほぼリアルタイムのリクエスト(サンプリング率を指定) | 既定は無効 | **Kinesis Data Streams** |
 | **WAF ログ** | Web ACL で評価されたリクエストの詳細(一致ルール・アクション) | 既定は無効 | CloudWatch Logs / S3 / Firehose(**`aws-waf-logs-` で始まる名前**) |
@@ -1148,7 +1159,7 @@ aws cloudwatch put-metric-alarm \
 | **Global Accelerator フローログ** | アクセラレーター経由のトラフィック | 既定は無効 | S3 |
 | **S3 サーバーアクセスログ / API Gateway アクセスログ** | リクエスト記録 | 既定は無効 | S3 / CloudWatch Logs |
 
-> **試験ポイント**: 「**ALB のログは S3 のみ**」「**パブリック DNS クエリログは CloudWatch Logs のみ**」「**CloudFront リアルタイムログは Kinesis Data Streams**」など、**「サービス ↔ 配信先」の組み合わせ** がよく出ます。
+> **試験ポイント**: 「**ALB / NLB の従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3 も可)**」「**パブリック DNS クエリログは CloudWatch Logs のみ**」「**CloudFront リアルタイムログは Kinesis Data Streams**」など、**「サービス ↔ 配信先」の組み合わせ** がよく出ます。
 
 **根拠 URL**
 - CloudTrail: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html
@@ -1576,7 +1587,7 @@ flowchart TD
 **ベストプラクティス**
 1. **DNS 検証 + Route 53 の CNAME 自動作成** で、更新を完全自動化する。
 2. **ルート CA はオフライン運用に近い扱い**(使う頻度を最小化)、**下位 CA で発行**。
-3. 内部通信の mTLS・VPN 証明書は **Private CA で一元化** し、短期証明書で失効管理を簡素化する。
+3. 内部通信の mTLS・VPN 証明書は **Private CA で一元化** する。ACM で発行・自動更新するマネージド証明書には **汎用モードの CA** が必要。**短期証明書モードの CA** で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。
 4. **証明書の期限切れ監視** を EventBridge / Config で必ず設定する。
 5. 組織全体で使う場合は **RAM で Private CA を共有**。
 
@@ -1703,7 +1714,7 @@ flowchart TD
 | ログの攻撃パターンからアラーム | **メトリクスフィルタ → CloudWatch アラーム → SNS** |
 | 誰が SG を変更したか | **CloudTrail**(EventBridge で通知) |
 | 脅威の自動検出(C2・ポートスキャン) | **GuardDuty** → EventBridge → 自動対応 |
-| ALB のアクセスログの保存先 | **S3 のみ** |
+| ALB のアクセスログの保存先 | 従来のアクセスログは **S3 のみ**(拡張アクセスログは CloudWatch Logs / Firehose / S3) |
 | 転送中データ暗号化の強制と監査(VPC 内) | **VPC Encryption Controls**(モニター → エンフォース) |
 | DX 上の通信を暗号化(L2・ライン速度) | **MACsec**(専用接続) |
 | DX 上でインターネットを経由せず IPsec | **Private IP VPN(トランジット VIF + TGW)** |
@@ -1768,9 +1779,9 @@ flowchart TD
 - C. CloudTrail
 - D. Trusted Advisor
 
-**Q5.** NAT ゲートウェイ経由の通信を Flow Logs で分析する際、NAT 前の実際の送信元 IP アドレスを知るために使用するフィールドはどれですか。
-- A. `srcaddr`
-- B. `pkt-srcaddr`
+**Q5.** インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。
+- A. `dstaddr`
+- B. `pkt-dstaddr`
 - C. `interface-id`
 - D. `log-status`
 
@@ -1802,7 +1813,7 @@ flowchart TD
 | Q2 | **B** | 非対称ルーティングの典型。**アプライアンスモード** で行きと戻りを同じ AZ のアプライアンスに通す。 |
 | Q3 | **B** | NACL はステートレス。**戻りのエフェメラルポート(1024–65535)のアウトバウンド許可** が必要。SG はステートフル。 |
 | Q4 | **B** | ペイロードの検査は **Traffic Mirroring**。Flow Logs はメタデータのみ。 |
-| Q5 | **B** | **`pkt-srcaddr`**(v3 以降)がパケット自体の送信元。`srcaddr` は NAT 後の ENI のアドレスになりうる。 |
+| Q5 | **B** | このレコードでは `dstaddr` が NAT ゲートウェイの ENI のプライベート IP、**`pkt-dstaddr`**(v3 以降)がインターネット上の最終宛先になる。`pkt-*` の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、`srcaddr`・`flow-direction`・時刻で他のレコードと相関させて特定する。 |
 | Q6 | **B** | インターネットを経由しない IPsec は **Private IP VPN**(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。 |
 | Q7 | **A, D** | DNSSEC は **us-east-1 の ECC_NIST_P256 KMS キー**、キーポリシーで Route 53 を許可。**DS レコードの登録が必要**、プライベートゾーンは非対応、暗号化ではなく署名。 |
 | Q8 | **B** | **Firewall Manager のコンテンツ監査ポリシー** で組織全体を継続的に評価・自動是正できる。 |

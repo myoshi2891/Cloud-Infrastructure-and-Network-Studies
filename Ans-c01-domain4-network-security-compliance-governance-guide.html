@@ -999,6 +999,7 @@ flowchart TD
     P1 -- "Yes: Count" --&gt; P2
     P1 -- "No" --&gt; P2{"優先度2のルールに一致?"}
     P2 -- "Yes: Allow / Block" --&gt; END1
+    P2 -- "Yes: Count" --&gt; DEF
     P2 -- "No" --&gt; DEF["Web ACL の既定アクション&lt;br/&gt;Allow または Block"]
 </pre>
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
@@ -1080,6 +1081,7 @@ flowchart TD
 </div></div>
 <div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span><span class="c1"># 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)</span>
 <span class="c1"># 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)</span>
+<span class="c1"># EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える</span>
 aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-group<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group-name<span class="w"> </span>allow-approved-domains<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>STATEFUL<span class="w"> </span><span class="se">\</span>
@@ -1793,6 +1795,7 @@ flowchart TD
 </div>
 <p>上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば <code>RevokeSecurityGroupIngress</code> を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。</p>
 <div class="code-block" data-lang="python"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">botocore.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientError</span>
 
 <span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">)</span>
 
@@ -1820,23 +1823,31 @@ flowchart TD
         <span class="p">})</span>
     <span class="k">return</span> <span class="n">perms</span>
 
+
+<span class="k">def</span><span class="w"> </span><span class="nf">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ec2</span><span class="o">.</span><span class="n">revoke_security_group_ingress</span><span class="p">(</span><span class="n">GroupId</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">IpPermissions</span><span class="o">=</span><span class="p">[</span><span class="n">permission</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける</span>
+        <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;InvalidPermission.NotFound&quot;</span><span class="p">:</span>
+            <span class="k">raise</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">][</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">]</span>
     <span class="n">group_id</span> <span class="o">=</span> <span class="n">resolve_group_id</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">ingress_permissions</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
             <span class="k">continue</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]}</span>
+        <span class="k">if</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;FromPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;fromPort&quot;</span><span class="p">]</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ToPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;toPort&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipRanges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">revoked</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">}],</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
-                <span class="n">revoked</span><span class="p">[</span><span class="s2">&quot;FromPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;fromPort&quot;</span><span class="p">]</span>
-                <span class="n">revoked</span><span class="p">[</span><span class="s2">&quot;ToPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;toPort&quot;</span><span class="p">]</span>
-            <span class="n">ec2</span><span class="o">.</span><span class="n">revoke_security_group_ingress</span><span class="p">(</span><span class="n">GroupId</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">IpPermissions</span><span class="o">=</span><span class="p">[</span><span class="n">revoked</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">:</span>
+                <span class="n">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">}]})</span>
+        <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipv6Ranges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIpv6&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;::/0&quot;</span><span class="p">:</span>
+                <span class="n">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;Ipv6Ranges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIpv6&quot;</span><span class="p">:</span> <span class="s2">&quot;::/0&quot;</span><span class="p">}]})</span>
 </pre></div>
 </div>
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
@@ -2561,13 +2572,13 @@ aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<sp
 <td><strong>ALB アクセスログ</strong></td>
 <td>リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報)</td>
 <td><strong>既定は無効</strong></td>
-<td><strong>S3</strong></td>
+<td><strong>S3</strong>(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3</td>
 </tr>
 <tr class="even">
 <td><strong>NLB アクセスログ</strong></td>
 <td><strong>TLS リスナー</strong> の接続情報</td>
 <td>既定は無効</td>
-<td><strong>S3</strong></td>
+<td><strong>S3</strong>(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3</td>
 </tr>
 <tr class="odd">
 <td><strong>CloudFront 標準ログ</strong></td>
@@ -2632,7 +2643,7 @@ aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<sp
 </tbody>
 </table></div>
 <blockquote>
-<p><strong>試験ポイント</strong>: 「<strong>ALB のログは S3 のみ</strong>」「<strong>パブリック DNS クエリログは CloudWatch Logs のみ</strong>」「<strong>CloudFront リアルタイムログは Kinesis Data Streams</strong>」など、<strong>「サービス ↔ 配信先」の組み合わせ</strong> がよく出ます。</p>
+<p><strong>試験ポイント</strong>: 「<strong>ALB / NLB の従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3 も可)</strong>」「<strong>パブリック DNS クエリログは CloudWatch Logs のみ</strong>」「<strong>CloudFront リアルタイムログは Kinesis Data Streams</strong>」など、<strong>「サービス ↔ 配信先」の組み合わせ</strong> がよく出ます。</p>
 </blockquote>
 <p><strong>根拠 URL</strong></p>
 <ul>
@@ -3435,7 +3446,7 @@ flowchart TD
 <ol>
 <li><strong>DNS 検証 + Route 53 の CNAME 自動作成</strong> で、更新を完全自動化する。</li>
 <li><strong>ルート CA はオフライン運用に近い扱い</strong>(使う頻度を最小化)、<strong>下位 CA で発行</strong>。</li>
-<li>内部通信の mTLS・VPN 証明書は <strong>Private CA で一元化</strong> し、短期証明書で失効管理を簡素化する。</li>
+<li>内部通信の mTLS・VPN 証明書は <strong>Private CA で一元化</strong> する。ACM で発行・自動更新するマネージド証明書には <strong>汎用モードの CA</strong> が必要。<strong>短期証明書モードの CA</strong> で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。</li>
 <li><strong>証明書の期限切れ監視</strong> を EventBridge / Config で必ず設定する。</li>
 <li>組織全体で使う場合は <strong>RAM で Private CA を共有</strong>。</li>
 </ol>
@@ -3678,7 +3689,7 @@ flowchart TD
 </tr>
 <tr class="odd">
 <td>ALB のアクセスログの保存先</td>
-<td><strong>S3 のみ</strong></td>
+<td>従来のアクセスログは <strong>S3 のみ</strong>(拡張アクセスログは CloudWatch Logs / Firehose / S3)</td>
 </tr>
 <tr class="even">
 <td>転送中データ暗号化の強制と監査(VPC 内)</td>
@@ -3771,12 +3782,12 @@ flowchart TD
 <label class="quiz-option"><input type="radio" name="review-q4" value="C"><span class="quiz-letter">C</span><span>CloudTrail</span></label>
 <label class="quiz-option"><input type="radio" name="review-q4" value="D"><span class="quiz-letter">D</span><span>Trusted Advisor</span></label>
 </div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>ペイロードの検査は <strong>Traffic Mirroring</strong>。Flow Logs はメタデータのみ。</p></div></details></article>
-<article class="quiz-card" aria-labelledby="quiz-title-5"><div class="quiz-card-meta"><span class="quiz-number">Q05</span><span>Flow Logs の読み方</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-5">NAT ゲートウェイ経由の通信を Flow Logs で分析する際、NAT 前の実際の送信元 IP アドレスを知るために使用するフィールドはどれですか。</legend><div class="quiz-options">
-<label class="quiz-option"><input type="radio" name="review-q5" value="A"><span class="quiz-letter">A</span><span><code>srcaddr</code></span></label>
-<label class="quiz-option"><input type="radio" name="review-q5" value="B"><span class="quiz-letter">B</span><span><code>pkt-srcaddr</code></span></label>
+<article class="quiz-card" aria-labelledby="quiz-title-5"><div class="quiz-card-meta"><span class="quiz-number">Q05</span><span>Flow Logs の読み方</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-5">インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。</legend><div class="quiz-options">
+<label class="quiz-option"><input type="radio" name="review-q5" value="A"><span class="quiz-letter">A</span><span><code>dstaddr</code></span></label>
+<label class="quiz-option"><input type="radio" name="review-q5" value="B"><span class="quiz-letter">B</span><span><code>pkt-dstaddr</code></span></label>
 <label class="quiz-option"><input type="radio" name="review-q5" value="C"><span class="quiz-letter">C</span><span><code>interface-id</code></span></label>
 <label class="quiz-option"><input type="radio" name="review-q5" value="D"><span class="quiz-letter">D</span><span><code>log-status</code></span></label>
-</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p><strong><code>pkt-srcaddr</code></strong>(v3 以降)がパケット自体の送信元。<code>srcaddr</code> は NAT 後の ENI のアドレスになりうる。</p></div></details></article>
+</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>このレコードでは <code>dstaddr</code> が NAT ゲートウェイの ENI のプライベート IP、<strong><code>pkt-dstaddr</code></strong>(v3 以降)がインターネット上の最終宛先になる。<code>pkt-*</code> の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、<code>srcaddr</code>・<code>flow-direction</code>・時刻で他のレコードと相関させて特定する。</p></div></details></article>
 <article class="quiz-card" aria-labelledby="quiz-title-6"><div class="quiz-card-meta"><span class="quiz-number">Q06</span><span>ハイブリッド接続の暗号化</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-6">企業はオンプレミスと AWS を Direct Connect で接続しており、<strong>インターネットに通信を出さずに</strong>、かつ VPN の両端のエンドポイントに <strong>プライベート IP アドレス</strong> を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="radio" name="review-q6" value="A"><span class="quiz-letter">A</span><span>パブリック VIF 上の VPN</span></label>
 <label class="quiz-option"><input type="radio" name="review-q6" value="B"><span class="quiz-letter">B</span><span>トランジット VIF 上の Private IP VPN(Transit Gateway)</span></label>

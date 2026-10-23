@@ -1882,7 +1882,9 @@ flowchart TD
 flowchart TD
     A["1. DX 接続を確保&lt;br/&gt;専用または ホスト型"] --&gt; B["2. VIF を作成&lt;br/&gt;プライベート / トランジット / パブリック"]
     B --&gt; C["3. BGP を設定&lt;br/&gt;ASN とピア IP と MD5 認証"]
-    C --&gt; D["4. DXGW を作成して&lt;br/&gt;VGW または TGW を関連付け"]
+    C --&gt; Q{"VIF の種類"}
+    Q -- "プライベート / トランジット" --&gt; D["4. DXGW を作成して&lt;br/&gt;VGW または TGW を関連付け"]
+    Q -- "パブリック: 手順 4 は不要" --&gt; E
     D --&gt; E["5. 広告する経路を確認&lt;br/&gt;許可プレフィックスとルート数"]
     E --&gt; F["6. BFD を有効化"]
     F --&gt; G["7. フェイルオーバー試験"]
@@ -2811,9 +2813,9 @@ flowchart TD
                             へ、コストを抑え、かつインターネットを経由せず</strong
                         >」は、一般に <strong>パブリック VIF</strong>、または
                         <strong
-                            >プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント</strong
+                            >プライベート VIF（または DX トランジット VIF 上の Private IP VPN）＋ インターフェイス型 S3 エンドポイント</strong
                         >
-                        が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。
+                        が答えになります。インターネット経由の Site-to-Site VPN はこの要件を満たしません。要件（帯域・コスト・VPC 内の制御）を見て選びます。
                     </p>
                 </blockquote>
                 <h4>ベストプラクティス</h4>
@@ -3502,7 +3504,8 @@ flowchart TD
                             <tr class="odd">
                                 <td>ログに <strong>そもそも出ない</strong></td>
                                 <td>
-                                    ルーティングの問題（パケットが届いていない）、または記録対象外の通信
+                                    ルーティングの問題（パケットが届いていない）、または記録対象外の通信。<code>log-status</code> が
+                                    <code>SKIPDATA</code> のレコードは、集約間隔中に記録がスキップされた（容量超過や内部エラー）ことを示す
                                 </td>
                             </tr>
                         </tbody>
@@ -3531,7 +3534,7 @@ flowchart TD
 <span class="w">  </span>--log-destination-type<span class="w"> </span>s3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--log-destination<span class="w"> </span>arn:aws:s3:::my-flow-logs-bucket/vpc/<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--max-aggregation-interval<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction}&#39;</span></code></pre>
+<span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction} ${log-status}&#39;</span></code></pre>
                 </div>
                 <h4>ベストプラクティス</h4>
                 <div class="table-scroll">
@@ -4578,8 +4581,8 @@ flowchart TD
                             <tr class="even">
                                 <td>対象</td>
                                 <td>
-                                    VPC
-                                    内のマルチキャスト。オンプレミスとの間は、構成要件を公式ドキュメントで確認する
+                                    VPC アタッチメント間のマルチキャストのみ。Direct Connect・Site-to-Site VPN・ピアリング・Connect
+                                    アタッチメントは非対応のため、オンプレミスへはマルチキャストを届けられない
                                 </td>
                             </tr>
                         </tbody>
@@ -4661,8 +4664,9 @@ flowchart LR
                         <strong>試験ポイント</strong>:
                         「<strong>同じ静的コンテンツを世界中の多数のユーザーへ配る、オリジンの負荷と転送量を下げたい</strong>」→
                         CloudFront。「<strong
-                            >TCP/UDP の非 HTTP トラフィックを高速化したい／固定 IP が必要</strong
-                        >」→ Global Accelerator（C-9 参照）。
+                            >TCP/UDP の非 HTTP トラフィックを高速化したい／非 HTTP 通信で固定 IP が必要</strong
+                        >」→ Global Accelerator（C-9 参照）。HTTP/HTTPS 配信で許可リスト用の固定 IP が必要なだけなら、CloudFront の
+                        Anycast 静的 IP リストも選択肢になります。
                     </p>
                 </blockquote>
 
@@ -5448,7 +5452,7 @@ flowchart LR
                             <tr class="odd">
                                 <td>固定 IP</td>
                                 <td><strong>あり</strong>（静的エニーキャスト IP）</td>
-                                <td>なし（ドメイン名で利用）</td>
+                                <td>通常はドメイン名で利用。オプションの Anycast 静的 IP リスト（申請制）で固定 IP も利用可能</td>
                             </tr>
                             <tr class="even">
                                 <td>キャッシュ</td>
@@ -5594,7 +5598,7 @@ flowchart LR
                                 <td><strong>CloudFront</strong></td>
                             </tr>
                             <tr class="even">
-                                <td>TCP/UDP の高速化 + 固定 IP + 高速切替</td>
+                                <td>TCP/UDP（非 HTTP を含む）の高速化 + 固定 IP + 高速切替</td>
                                 <td><strong>Global Accelerator</strong></td>
                             </tr>
                             <tr class="odd">
