@@ -434,19 +434,6 @@
     --color-catalog-card-shadow: rgb(0 0 0 / 22%);
     --color-catalog-toolbar-bg: rgb(143 182 255 / 3%);
     --color-catalog-open-bg: rgb(143 182 255 / 4%);
-    /* ホームの試験カタログ（見出し・カード・ドメイン一覧）の配色 */
-    --color-catalog-kicker: #719cf0;
-    --color-catalog-index: #91a2bd;
-    --color-catalog-meta: #a4b1c7;
-    --color-catalog-level: #a0aec2;
-    --color-catalog-tag-bg: rgb(255 255 255 / 4%);
-    --color-catalog-tag-text: #aebad0;
-    --color-catalog-summary: #9eabc0;
-    --color-catalog-link-hover-bg: rgb(255 255 255 / 4.5%);
-    --color-catalog-cta: #cdd7e8;
-    --color-catalog-card-shadow: rgb(0 0 0 / 22%);
-    --color-catalog-toolbar-bg: rgb(143 182 255 / 3%);
-    --color-catalog-open-bg: rgb(143 182 255 / 4%);
     /* ホームのヒーローパネル上部メタ情報の文字色 */
     --color-hero-panel-meta: #99aac2;
     --color-header-bar-bg: rgb(8 9 15 / 92%);
