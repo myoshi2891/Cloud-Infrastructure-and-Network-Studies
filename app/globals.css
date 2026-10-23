@@ -421,6 +421,8 @@
     --color-catalog-hover-border: #657997;
     --color-catalog-pressed-bg: rgb(143 182 255 / 12%);
     --color-catalog-pressed-text: #dce9ff;
+    /* ホームのヒーローパネル上部メタ情報の文字色 */
+    --color-hero-panel-meta: #99aac2;
     --color-header-bar-bg: rgb(8 9 15 / 92%);
     --color-header-panel-bg: #0d111b;
     --color-header-panel-shadow: #0008;

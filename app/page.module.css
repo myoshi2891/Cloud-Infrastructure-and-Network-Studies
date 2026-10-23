@@ -125,7 +125,7 @@
     content: '';
 }
 
-.panelTopline { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; color: #99aac2; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; }
+.panelTopline { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; color: var(--color-hero-panel-meta); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; }
 .panelNumber { margin-top: 24px; color: var(--color-foreground); font-family: var(--font-mono); font-size: 74px; font-weight: 700; letter-spacing: -0.08em; line-height: 1; }
 .panelLabel { margin-top: 8px; color: #7c9eff; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; }
 .providerRail { display: flex; flex-direction: column; margin-top: 24px; border-top: 1px solid var(--color-border); }
