@@ -283,11 +283,17 @@ flowchart TD
 
 ```bash
 # 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)
+# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)
 aws network-firewall create-rule-group \
   --rule-group-name allow-approved-domains \
   --type STATEFUL \
   --capacity 100 \
   --rule-group '{
+    "RuleVariables": {
+      "IPSets": {
+        "HOME_NET": { "Definition": ["192.0.2.0/24", "10.0.0.0/16", "10.1.0.0/16"] }
+      }
+    },
     "RulesSource": {
       "RulesSourceList": {
         "Targets": [".amazonaws.com", ".example.com"],
@@ -710,10 +716,29 @@ def is_admin_rule(perm):
     tcp_admin = protocol in ("tcp", "6") and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389))
     return protocol == "-1" or tcp_admin
 
+def resolve_group_id(params):
+    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する
+    if params.get("groupId"):
+        return params["groupId"]
+    groups = ec2.describe_security_groups(GroupNames=[params["groupName"]])
+    return groups["SecurityGroups"][0]["GroupId"]
+
+def ingress_permissions(params):
+    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる
+    perms = list(params.get("ipPermissions", {}).get("items", []))
+    if params.get("ipProtocol"):
+        perms.append({
+            "ipProtocol": params["ipProtocol"],
+            "fromPort": params.get("fromPort", -1),
+            "toPort": params.get("toPort", -1),
+            "ipRanges": {"items": [{"cidrIp": params.get("cidrIp")}]},
+        })
+    return perms
+
 def handler(event, context):
-    detail = event["detail"]
-    group_id = detail["requestParameters"]["groupId"]
-    for perm in detail["requestParameters"]["ipPermissions"]["items"]:
+    params = event["detail"]["requestParameters"]
+    group_id = resolve_group_id(params)
+    for perm in ingress_permissions(params):
         if not is_admin_rule(perm):
             continue
         for rng in perm.get("ipRanges", {}).get("items", []):

@@ -1079,11 +1079,17 @@ flowchart TD
 </ul>
 </div></div>
 <div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span><span class="c1"># 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)</span>
+<span class="c1"># 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)</span>
 aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-group<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group-name<span class="w"> </span>allow-approved-domains<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>STATEFUL<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--capacity<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;RuleVariables&quot;: {</span>
+<span class="s1">      &quot;IPSets&quot;: {</span>
+<span class="s1">        &quot;HOME_NET&quot;: { &quot;Definition&quot;: [&quot;192.0.2.0/24&quot;, &quot;10.0.0.0/16&quot;, &quot;10.1.0.0/16&quot;] }</span>
+<span class="s1">      }</span>
+<span class="s1">    },</span>
 <span class="s1">    &quot;RulesSource&quot;: {</span>
 <span class="s1">      &quot;RulesSourceList&quot;: {</span>
 <span class="s1">        &quot;Targets&quot;: [&quot;.amazonaws.com&quot;, &quot;.example.com&quot;],</span>
@@ -1794,10 +1800,29 @@ flowchart TD
     <span class="n">tcp_admin</span> <span class="o">=</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">port</span> <span class="o">&lt;=</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3389</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">protocol</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span> <span class="ow">or</span> <span class="n">tcp_admin</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_group_id</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;groupId&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;groupId&quot;</span><span class="p">]</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_security_groups</span><span class="p">(</span><span class="n">GroupNames</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;groupName&quot;</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">groups</span><span class="p">[</span><span class="s2">&quot;SecurityGroups&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;GroupId&quot;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ingress_permissions</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる</span>
+    <span class="n">perms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipPermissions&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">):</span>
+        <span class="n">perms</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;ipProtocol&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;fromPort&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;toPort&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;ipRanges&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)}]},</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">perms</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">detail</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">]</span>
-    <span class="n">group_id</span> <span class="o">=</span> <span class="n">detail</span><span class="p">[</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">][</span><span class="s2">&quot;groupId&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">detail</span><span class="p">[</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">][</span><span class="s2">&quot;ipPermissions&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">]:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">][</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">]</span>
+    <span class="n">group_id</span> <span class="o">=</span> <span class="n">resolve_group_id</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">ingress_permissions</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
             <span class="k">continue</span>
         <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipRanges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>

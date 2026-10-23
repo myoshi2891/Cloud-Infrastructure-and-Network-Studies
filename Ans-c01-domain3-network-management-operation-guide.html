@@ -2462,7 +2462,7 @@ flowchart TD
 flowchart TD
     Q1{"公開したいのは&lt;br/&gt;特定のサービスだけか"} -- "はい" --&gt; PL["PrivateLink を選ぶ"]
     Q1 -- "いいえ（VPC全体の通信が必要）" --&gt; Q2{"CIDR が重複しているか"}
-    Q2 -- "はい" --&gt; RE["CIDR を再設計する&lt;br/&gt;または プライベート NAT ゲートウェイで変換する"]
+    Q2 -- "はい" --&gt; RE["双方向のフル接続には CIDR を再設計する&lt;br/&gt;重複 VPC から特定宛先への送信方向だけなら&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
     Q2 -- "いいえ" --&gt; Q3{"接続したい VPC は&lt;br/&gt;少数か"}
     Q3 -- "はい" --&gt; PEER["VPC ピアリングを選ぶ"]
     Q3 -- "いいえ（多数・オンプレミスも）" --&gt; TGW["Transit Gateway を選ぶ"]
@@ -2559,8 +2559,8 @@ flowchart TD
                 </h3>
                 <h4>7.1 ルート伝播（Route Propagation）</h4>
                 <p>
-                    VGW または TGW を使う場合、オンプレミスから学習した経路を
-                    <strong>VPC ルートテーブルに自動で追加（伝播）</strong> できます。
+                    VGW を使う場合、オンプレミスから学習した経路を
+                    <strong>VPC ルートテーブルに自動で追加（伝播）</strong> できます。TGW を使う場合は伝播されないため、VPC ルートテーブルに TGW 宛のルートを手動で追加します。
                 </p>
                 <div class="table-scroll">
                     <table>
@@ -2659,7 +2659,7 @@ flowchart TD
     B -- "いいえ（一方向のサービス利用）" --&gt; PL["PrivateLink で公開する"]
     B -- "はい" --&gt; C{"IP を変更できるか"}
     C -- "はい" --&gt; RE["片方の CIDR を再設計&lt;br/&gt;（新しい範囲へ移行）"]
-    C -- "いいえ" --&gt; NAT["プライベート NAT ゲートウェイで&lt;br/&gt;重複しない範囲に変換する"]
+    C -- "いいえ" --&gt; NAT["フル接続は実現できない&lt;br/&gt;重複 VPC から特定宛先への送信方向だけを&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
 </pre
                 >
                 <div class="table-scroll">
@@ -2679,12 +2679,12 @@ flowchart TD
                             </tr>
                             <tr class="even">
                                 <td><strong>プライベート NAT ゲートウェイ</strong></td>
-                                <td>IP の変更が難しい既存環境</td>
-                                <td>設計と運用が複雑になる</td>
+                                <td>IP の変更が難しい既存環境で、重複 VPC から特定の宛先へ送信方向の通信だけを通す</td>
+                                <td>送信元アドレスを変換するだけで、任意の双方向通信には使えない（受信方向は ALB/NLB などが別途必要）。設計と運用が複雑になる</td>
                             </tr>
                             <tr class="odd">
                                 <td><strong>CIDR の再設計</strong></td>
-                                <td>長期的に最善</td>
+                                <td>長期的に最善。双方向のフル接続が必要な場合はこれ</td>
                                 <td>移行作業が必要</td>
                             </tr>
                             <tr class="even">
@@ -4345,7 +4345,7 @@ flowchart TD
     B -- "いいえ" --&gt; D{"CIDR が重複しているか"}
     D -- "はい" --&gt; E{"公開したいのは&lt;br/&gt;特定のサービスだけか"}
     E -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
-    E -- "いいえ（VPC全体の通信が必要）" --&gt; RE["CIDR を再設計する&lt;br/&gt;または プライベート NAT ゲートウェイで変換する"]
+    E -- "いいえ（VPC全体の通信が必要）" --&gt; RE["双方向のフル接続には CIDR を再設計する&lt;br/&gt;重複 VPC から特定宛先への送信方向だけなら&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
     D -- "いいえ" --&gt; TGW
 </pre
                 >
@@ -5790,7 +5790,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td>CIDR 重複</td>
-                                <td>PrivateLink／プライベート NAT ゲートウェイ</td>
+                                <td>PrivateLink／プライベート NAT ゲートウェイ（送信方向のみ）／フル接続は CIDR 再設計</td>
                             </tr>
                             <tr class="even">
                                 <td>小さい通信は通るが大きい通信が止まる</td>
