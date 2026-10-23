@@ -876,6 +876,20 @@ aws ec2 create-flow-logs \
   --log-format '${version} ${account-id} ${vpc-id} ${subnet-id} ${interface-id} ${srcaddr} ${dstaddr} ${pkt-srcaddr} ${pkt-dstaddr} ${srcport} ${dstport} ${protocol} ${tcp-flags} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${flow-direction} ${traffic-path}'
 ```
 
+**CLI での作成例(CloudWatch Logs へ、デフォルトフォーマット)**
+
+下の Logs Insights クエリと 11-3 のメトリクスフィルタは、CloudWatch Logs のロググループ `/vpc/flowlogs` にデフォルトフォーマットで配信されたレコードを前提とします。上の S3 向け Flow Log とは別に、CloudWatch Logs 向けの Flow Log を作成します。
+
+```bash
+aws ec2 create-flow-logs \
+  --resource-type VPC \
+  --resource-ids vpc-0123456789abcdef0 \
+  --traffic-type ALL \
+  --log-destination-type cloud-watch-logs \
+  --log-group-name /vpc/flowlogs \
+  --deliver-logs-permission-arn arn:aws:iam::111122223333:role/flowlogs-delivery-role
+```
+
 **CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)**
 
 ```sql
@@ -1615,7 +1629,7 @@ flowchart TD
 | **DNS Firewall** | 悪性/不許可ドメインの名前解決を遮断、DGA・トンネリング検出 |
 | **クエリログ** | 不審な問い合わせの調査・GuardDuty との連携 |
 | **Resolver エンドポイントの SG** | インバウンド/アウトバウンドエンドポイントの ENI に SG を設定し、**DNS(UDP/TCP 53)のみを許可元に限定** |
-| **外部リゾルバーの禁止** | NACL / Network Firewall で外部 DNS への 53 番ポートを遮断 |
+| **外部リゾルバーの禁止** | NACL / Network Firewall で外部 DNS への 53 番ポートを遮断。ただし対象は従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)は防げない。Route 53 Resolver に一本化するには、外部 DoH サーバーへの通信を遮断する追加の送信(egress)制御(Network Firewall のドメイン/SNI フィルタリングなど)が必要 |
 | **プライベートホストゾーン** | 内部名をインターネットに露出しない(スプリットホライズン) |
 | **Resolver ルールの共有(RAM)** | 転送ルールを組織で一元管理し、設定ミスを防ぐ |
 

@@ -1603,8 +1603,12 @@ flowchart TD
                     </p>
                     <p>
                         <strong>注意</strong>: VPC 自身の CIDR に対する
-                        <strong>ローカルルートは最優先</strong>
-                        で、より具体的な伝播ルートでも上書きできません。
+                        <strong>ローカルルート</strong>
+                        は、より具体的な
+                        <strong>伝播ルート</strong>
+                        でも上書きできません。ただし、ミドルボックス（ENI や Gateway Load Balancer エンドポイントなど）を宛先とする
+                        <strong>より具体的な静的ルート</strong>
+                        は、ローカルルートより優先されます。
                     </p>
                 </blockquote>
                 <h4>Transit Gateway ルートテーブルでの優先順位（同じ宛先の場合）</h4>
