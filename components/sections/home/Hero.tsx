@@ -20,7 +20,7 @@ export function Hero({ exams }: { exams: Exam[] }) {
                         <span>確かな実力へ。</span>
                     </h1>
                     <p className={styles.sub}>
-                        Google Cloud・AWS・Ciscoを横断。資格取得だけで終わらない、
+                        Google Cloud・AWS・Ciscoから技術書まで。資格取得だけで終わらない、
                         現場につながる日本語学習ガイドを集約しています。
                     </p>
                     <div className={styles.heroActions}>
@@ -36,12 +36,12 @@ export function Hero({ exams }: { exams: Exam[] }) {
                 <div className={styles.heroPanel} aria-label="収録コンテンツ概要">
                     <div className={styles.panelTopline}>
                         <span>LEARNING INDEX</span>
-                        <span>2026 / UPDATED</span>
+                        <span>EXPLORE / LEARN / BUILD</span>
                     </div>
                     <div className={styles.panelNumber}>{guideCount}</div>
                     <p className={styles.panelLabel}>GUIDES &amp; LEARNING PATHS</p>
                     <div className={styles.providerRail}>
-                        {providerOrder.map((provider) => {
+                        {providerOrder.filter((provider) => exams.some((exam) => exam.provider === provider)).map((provider) => {
                             const count = exams.filter((exam) => exam.provider === provider).length;
                             return (
                                 <a key={provider} href={`#provider-${provider.toLowerCase()}`}>

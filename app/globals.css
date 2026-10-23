@@ -14,6 +14,58 @@
  */
 
 @theme {
+    --color-ans-d4-code-readable: #ad5009;
+    --color-ans-d4-success-readable: #197a48;
+    --color-ans-d4-1: #f7f8fc;
+    --color-ans-d4-2: #1f2a44;
+    --color-ans-d4-3: #3b5bdb;
+    --color-ans-d4-4: #e3e8f3;
+    --color-ans-d4-5: #4b5a7a;
+    --color-ans-d4-6: #e8edff;
+    --color-ans-d4-7: #d5dcec;
+    --color-ans-d4-8: #0f1a33;
+    --color-ans-d4-9: rgba(59, 91, 219, 0.05);
+    --color-ans-d4-10: #b7e0c6;
+    --color-ans-d4-11: #1b7f4b;
+    --color-ans-d4-12: rgba(59, 91, 219, 0.06);
+    --color-ans-d4-13: #7a879f;
+    --color-ans-d4-14: rgba(31, 42, 68, 0.18);
+    --color-ans-d4-15: #a9b8ee;
+    --color-ans-d4-16: #1f2a4405;
+    --color-ans-d4-17: #ffffff;
+    --color-ans-d4-18: #f0f3fa;
+    --color-ans-d4-19: #f6f8fc;
+    --color-ans-d4-20: #f8f8f8;
+    --color-ans-d4-21: #e6f6ec;
+    /* ANS-C01 Domain 3: original light palette. */
+    --color-ans-d3-1: #f7f9fd;
+    --color-ans-d3-2: #d5deee;
+    --color-ans-d3-3: #1b2638;
+    --color-ans-d3-4: #4b5b78;
+    --color-ans-d3-5: #7a8aa6;
+    --color-ans-d3-6: #2f5fd0;
+    --color-ans-d3-7: #9db4ea;
+    --color-ans-d3-8: #c0304d;
+    --color-ans-d3-9: #b8660a;
+    --color-ans-d3-10: #1f8a4c;
+    --color-ans-d3-11: #f4f7fc;
+    --color-ans-d3-12: #0f1a2e;
+    --color-ans-d3-13: #a3480b;
+    --color-ans-d3-14: rgba(47, 95, 208, 0.06);
+    --color-ans-d3-15: #a6dcbc;
+    --color-ans-d3-16: rgba(47, 95, 208, 0.07);
+    --color-ans-d3-17: #f8f8f8;
+    --color-ans-d3-18: rgba(27, 38, 56, 0.035);
+    --color-ans-d3-19: #e3e9f4;
+    --color-ans-d3-20: #ffffff;
+    --color-ans-d3-21: #e8eefc;
+    --color-ans-d3-22: #eef2fa;
+    --color-ans-d3-23: #e6f6ec;
+    --color-ans-d3-24: rgba(20, 40, 90, 0.18);
+    --color-ans-d3-code-comment: #3b7777;
+    --color-ans-d3-code-keyword: #008000;
+    --color-ans-d3-code-lineno-special-fg: #000000;
+    --color-ans-d3-code-lineno-special-bg: #ffffc0;
     /* ANS-C01 Domain 2: original light palette. */
     --color-ans-d2-1: #f1f5fb;
     --color-ans-d2-2: #4a5b75;
@@ -362,6 +414,36 @@
     --color-brand-end: hsl(270 80% 60%);
     --color-brand-text-start: hsl(220 100% 72%);
     --color-brand-text-end: hsl(270 70% 65%);
+    /* Header ドロワーと試験カタログの操作色（両者で共有する値は nav に集約） */
+    --color-nav-accent: #8fb6ff;
+    --color-nav-hover-bg: rgb(143 182 255 / 8%);
+    --color-catalog-focus-ring: rgb(143 182 255 / 15%);
+    --color-catalog-hover-border: #657997;
+    --color-catalog-pressed-bg: rgb(143 182 255 / 12%);
+    --color-catalog-pressed-text: #dce9ff;
+    /* ホームのカタログ（ツールバー・プロバイダ見出し・カード）の配色 */
+    --color-catalog-kicker: #719cf0;
+    --color-catalog-index: #91a2bd;
+    --color-catalog-meta: #a4b1c7;
+    --color-catalog-level: #a0aec2;
+    --color-catalog-tag-bg: rgb(255 255 255 / 4%);
+    --color-catalog-tag-text: #aebad0;
+    --color-catalog-summary: #9eabc0;
+    --color-catalog-link-hover-bg: rgb(255 255 255 / 4.5%);
+    --color-catalog-cta: #cdd7e8;
+    --color-catalog-card-shadow: rgb(0 0 0 / 22%);
+    --color-catalog-toolbar-bg: rgb(143 182 255 / 3%);
+    --color-catalog-open-bg: rgb(143 182 255 / 4%);
+    /* ホームのヒーローパネル上部メタ情報の文字色 */
+    --color-hero-panel-meta: #99aac2;
+    --color-header-bar-bg: rgb(8 9 15 / 92%);
+    --color-header-panel-bg: #0d111b;
+    --color-header-panel-shadow: #0008;
+    --color-header-panel-header-bg: rgb(13 17 27 / 97%);
+    --color-header-home-link: #b5c9ec;
+    --color-header-count-bg: rgb(143 182 255 / 7%);
+    --color-header-accordion-bg: rgb(255 255 255 / 2%);
+    --color-header-accordion-open-bg: rgb(143 182 255 / 4%);
 
     --color-theme-genai-bg: hsl(270 60% 55% / 0.25);
     --color-theme-genai-fg: hsl(270 80% 75%);
@@ -1122,6 +1204,9 @@
     --font-ccna-automation-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
     --font-ccna-app-mono: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+
+    /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
+    --site-content-width: 1180px;
 
     /* サイトヘッダーの高さ */
     --header-h: 48px;

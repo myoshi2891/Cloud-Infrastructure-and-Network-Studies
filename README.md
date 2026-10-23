@@ -1,6 +1,10 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-20
+最終更新日: 2026-10-21
+
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+
+最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
 2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へ保存し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行、目視確認は未実施（自動検証で代替）。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
 
@@ -24,6 +28,7 @@ Google Cloud (GCP)、AWS、Cisco、CompTIA の資格試験対策およびエン�
 
 ## 🚀 特徴
 
+- **AWS ANS-C01 ネットワーク管理・運用:** `/aws/advanced-networking-specialty/domain3` に全3タスク・91表・26図・7コード・シナリオ8問を収録。原本の白背景・リスト装飾・解答解説の開閉を保持し、ホームとHeaderから移動できます。
 - **AWS ANS-C01 ネットワーク実装:** `/aws/advanced-networking-specialty/domain2` に全4タスク・57表・26図・11コード・確認問題8問を収録。ライト配色、リストの点・番号と解答解説の折りたたみを保持。ホームとHeaderから移動できます。
 - **AWS ANS-C01 ネットワーク設計:** `/aws/advanced-networking-specialty/domain1` に全6タスク、75表・15図・7コード・練習問題6問・チェック10項目を収録。原本の点・番号・参考資料カードの独自番号を保持し、選択式問題の採点・解説・リセットと学習進捗に対応。ホームとHeaderから移動できます。
 

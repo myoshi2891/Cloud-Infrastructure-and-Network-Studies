@@ -32,6 +32,35 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    "aws-ans-c01-domain4-guide": {
+    "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
+    "sourceCommit": "ead3ccbc77b05f1e80bef5d64042a2704c2bf238",
+    "tables": true,
+    "codeBlocks": true,
+    "styledClasses": true,
+    "guideInteractions": true,
+    "guideBoundaries": {
+        "foundation": "",
+        "task1": "task-4-1",
+        "task2": "task-4-2",
+        "task3": "task-4-3",
+        "revision": "sec-90"
+    }
+},
+    'aws-ans-c01-domain3-guide': {
+        source: 'Ans-c01-domain3-network-management-operation-guide.html',
+        syntaxSelectors: {"mi":"pre:not(.mermaid) span.mi","w":"pre:not(.mermaid) span.w","nv":"pre:not(.mermaid) span.nv","mf":"pre:not(.mermaid) span.mf","gi":"pre:not(.mermaid) span.gi","kc":"pre:not(.mermaid) span.kc","gd":"pre:not(.mermaid) span.gd","k":"pre:not(.mermaid) span.k","n":"pre:not(.mermaid) span.n","p":"pre:not(.mermaid) span.p","o":"pre:not(.mermaid) span.o","s1":"pre:not(.mermaid) span.s1","se":"pre:not(.mermaid) span.se","m":"pre:not(.mermaid) span.m","c1":"pre:not(.mermaid) span.c1","nb":"pre:not(.mermaid) span.nb"},
+        sourceCommit: 'ead3ccbc77b05f1e80bef5d64042a2704c2bf238',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task1: 'part-a-task-31-ルーティングと接続性の維持',
+            task2: 'part-b-task-32-トラフィックの監視分析とトラブルシューティング',
+            task3: 'part-c-task-33-性能信頼性コストの最適化',
+            revision: 'part-d-横断チートシートと確認問題',
+        },
+    },
+
     'aws-ans-c01-domain2-guide': {
         source: 'Ans-c01-domain2-network-implementation-guide.html',
         syntaxSelectors: {"c1":"pre.highlight span.c1","w":"pre.highlight span.w","se":"pre.highlight span.se","s1":"pre.highlight span.s1","m":"pre.highlight span.m","nv":"pre.highlight span.nv","o":"pre.highlight span.o","nt":"pre.highlight span.nt","p":"pre.highlight span.p","l":"pre.highlight span.l","l-Scalar":"pre.highlight span.l-Scalar","l-Scalar-Plain":"pre.highlight span.l-Scalar-Plain","p-Indicator":"pre.highlight span.p-Indicator","kt":"pre.highlight span.kt","s":"pre.highlight span.s","k":"pre.highlight span.k","kr":"pre.highlight span.kr","nx":"pre.highlight span.nx","s2":"pre.highlight span.s2","kd":"pre.highlight span.kd","ow":"pre.highlight span.ow","kn":"pre.highlight span.kn","nn":"pre.highlight span.nn","n":"pre.highlight span.n","nf":"pre.highlight span.nf","sd":"pre.highlight span.sd","mi":"pre.highlight span.mi","kc":"pre.highlight span.kc","nb":"pre.highlight span.nb"},

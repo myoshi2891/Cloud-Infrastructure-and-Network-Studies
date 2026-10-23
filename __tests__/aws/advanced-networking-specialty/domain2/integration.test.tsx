@@ -8,7 +8,7 @@ const route='/aws/advanced-networking-specialty/domain2';
 it('retains Domain 1 and exposes Domain 2 from EXAMS and derived navigation',()=>{
  const exam=EXAMS.find(e=>e.id==='aws-ans')!;
  expect(exam.href).toBe('/aws/advanced-networking-specialty/domain1');
- expect(exam.domains).toEqual([{label:'ドメイン1: ネットワーク設計',href:'/aws/advanced-networking-specialty/domain1',pct:'30%'},{label:'ドメイン2: ネットワーク実装',href:route,pct:'26%'}]);
+ expect(exam.domains).toEqual([{label:'ドメイン1: ネットワーク設計',href:'/aws/advanced-networking-specialty/domain1',pct:'30%'},{label:'ドメイン2: ネットワーク実装',href:route,pct:'26%'},{label:'ドメイン3: ネットワーク管理と運用',href:'/aws/advanced-networking-specialty/domain3',pct:'20%'},{label:'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス',href:'/aws/advanced-networking-specialty/domain4',pct:'24%'}]);
  expect(JSON.stringify(toNavTree(EXAMS))).toContain(route);
 });
 it('exposes Domain 2 from the home card and Header',()=>{

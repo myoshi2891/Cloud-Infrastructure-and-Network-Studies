@@ -1,0 +1,281 @@
+[
+  {
+    "text": "Q01外部通信の制御1 つ選択会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。TLS の復号は行わず、SNI のホスト名に基づくドメイン単位のフィルタリングで制御します。運用負担を最小限にしながらこの要件を満たす構成はどれですか。 ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする Cセキュリティグループで許可ドメインのホスト名を指定する Dネットワーク ACL で許可ドメインの FQDN を指定する 正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q1",
+        "value": "A",
+        "label": "ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q1",
+        "value": "B",
+        "label": "BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q1",
+        "value": "C",
+        "label": "Cセキュリティグループで許可ドメインのホスト名を指定する",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q1",
+        "value": "D",
+        "label": "Dネットワーク ACL で許可ドメインの FQDN を指定する",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。"
+  },
+  {
+    "text": "Q02対称ルーティング1 つ選択集中型の検査 VPC で、Transit Gateway 経由の通信が断続的に失敗します。Network Firewall はステートフル検査を行っており、行きと戻りのパケットが異なる AZ のエンドポイントを通っているようです。最も適切な対処はどれですか。 ANACL のルールを追加する BTGW の VPC アタッチメントでアプライアンスモードを有効にする CFlow Logs の集約間隔を短くする DWAF のレートベースルールを調整する 正解・解説を見る正解 B非対称ルーティングの典型。アプライアンスモード で行きと戻りを同じ AZ のアプライアンスに通す。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q2",
+        "value": "A",
+        "label": "ANACL のルールを追加する",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q2",
+        "value": "B",
+        "label": "BTGW の VPC アタッチメントでアプライアンスモードを有効にする",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q2",
+        "value": "C",
+        "label": "CFlow Logs の集約間隔を短くする",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q2",
+        "value": "D",
+        "label": "DWAF のレートベースルールを調整する",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 B非対称ルーティングの典型。アプライアンスモード で行きと戻りを同じ AZ のアプライアンスに通す。"
+  },
+  {
+    "text": "Q03NACL と戻り通信1 つ選択あるサブネットの NACL でインバウンド 443 を許可しましたが、クライアントが応答を受け取れません。SG は 443 を許可済みです。原因として最も可能性が高いものはどれですか。 ASG はステートレスなので戻り通信の許可が必要 BNACL はステートレスで、戻り通信のエフェメラルポートのアウトバウンドが許可されていない CFlow Logs が無効になっている DWAF が NLB に関連付けられていない 正解・解説を見る正解 BNACL はステートレス。戻りのエフェメラルポート(1024–65535)のアウトバウンド許可 が必要。SG はステートフル。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q3",
+        "value": "A",
+        "label": "ASG はステートレスなので戻り通信の許可が必要",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q3",
+        "value": "B",
+        "label": "BNACL はステートレスで、戻り通信のエフェメラルポートのアウトバウンドが許可されていない",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q3",
+        "value": "C",
+        "label": "CFlow Logs が無効になっている",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q3",
+        "value": "D",
+        "label": "DWAF が NLB に関連付けられていない",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 BNACL はステートレス。戻りのエフェメラルポート(1024–65535)のアウトバウンド許可 が必要。SG はステートフル。"
+  },
+  {
+    "text": "Q04パケットの検査1 つ選択セキュリティチームは、VPC 内の EC2 から送信される不審な通信を パケットの内容まで 分析して IDS で検査したいと考えています。最も適切なサービスはどれですか。 AVPC Flow Logs BVPC Traffic Mirroring(NLB を介した検査アプライアンス) CCloudTrail DTrusted Advisor 正解・解説を見る正解 Bペイロードの検査は Traffic Mirroring。Flow Logs はメタデータのみ。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q4",
+        "value": "A",
+        "label": "AVPC Flow Logs",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q4",
+        "value": "B",
+        "label": "BVPC Traffic Mirroring(NLB を介した検査アプライアンス)",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q4",
+        "value": "C",
+        "label": "CCloudTrail",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q4",
+        "value": "D",
+        "label": "DTrusted Advisor",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 Bペイロードの検査は Traffic Mirroring。Flow Logs はメタデータのみ。"
+  },
+  {
+    "text": "Q05Flow Logs の読み方1 つ選択インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。 Adstaddr Bpkt-dstaddr Cinterface-id Dlog-status 正解・解説を見る正解 Bこのレコードでは dstaddr が NAT ゲートウェイの ENI のプライベート IP、pkt-dstaddr(v3 以降)がインターネット上の最終宛先になる。pkt-* の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、srcaddr・flow-direction・時刻で他のレコードと相関させて特定する。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q5",
+        "value": "A",
+        "label": "Adstaddr",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q5",
+        "value": "B",
+        "label": "Bpkt-dstaddr",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q5",
+        "value": "C",
+        "label": "Cinterface-id",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q5",
+        "value": "D",
+        "label": "Dlog-status",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 Bこのレコードでは dstaddr が NAT ゲートウェイの ENI のプライベート IP、pkt-dstaddr(v3 以降)がインターネット上の最終宛先になる。pkt-* の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、srcaddr・flow-direction・時刻で他のレコードと相関させて特定する。"
+  },
+  {
+    "text": "Q06ハイブリッド接続の暗号化1 つ選択企業はオンプレミスと AWS を Direct Connect で接続しており、インターネットに通信を出さずに、かつ VPN の両端のエンドポイントに プライベート IP アドレス を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。 Aパブリック VIF 上の VPN Bトランジット VIF 上の Private IP VPN(Transit Gateway) Cインターネット VPN への切り替え DNACL による暗号化 正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q6",
+        "value": "A",
+        "label": "Aパブリック VIF 上の VPN",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q6",
+        "value": "B",
+        "label": "Bトランジット VIF 上の Private IP VPN(Transit Gateway)",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q6",
+        "value": "C",
+        "label": "Cインターネット VPN への切り替え",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q6",
+        "value": "D",
+        "label": "DNACL による暗号化",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。"
+  },
+  {
+    "text": "Q07DNSSEC の設定2 つ選択Route 53 のパブリックホストゾーンで DNSSEC 署名を有効にする際の説明として正しいものはどれですか(2 つ選択)。 AKMS の非対称キー(ECC_NIST_P256)を us-east-1 で作成する B親ゾーンに DS レコードを登録する必要はない Cプライベートホストゾーンにも DNSSEC 署名を設定できる DKMS キーポリシーで Route 53 のサービスプリンシパルに利用を許可する EDNSSEC は DNS クエリの内容を暗号化する 正解・解説を見る正解 A, DDNSSEC は us-east-1 の ECC_NIST_P256 KMS キー、キーポリシーで Route 53 を許可。DS レコードの登録が必要、プライベートゾーンは非対応、暗号化ではなく署名。",
+    "options": [
+      {
+        "type": "checkbox",
+        "name": "review-q7",
+        "value": "A",
+        "label": "AKMS の非対称キー(ECC_NIST_P256)を us-east-1 で作成する",
+        "checked": false
+      },
+      {
+        "type": "checkbox",
+        "name": "review-q7",
+        "value": "B",
+        "label": "B親ゾーンに DS レコードを登録する必要はない",
+        "checked": false
+      },
+      {
+        "type": "checkbox",
+        "name": "review-q7",
+        "value": "C",
+        "label": "Cプライベートホストゾーンにも DNSSEC 署名を設定できる",
+        "checked": false
+      },
+      {
+        "type": "checkbox",
+        "name": "review-q7",
+        "value": "D",
+        "label": "DKMS キーポリシーで Route 53 のサービスプリンシパルに利用を許可する",
+        "checked": false
+      },
+      {
+        "type": "checkbox",
+        "name": "review-q7",
+        "value": "E",
+        "label": "EDNSSEC は DNS クエリの内容を暗号化する",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 A, DDNSSEC は us-east-1 の ECC_NIST_P256 KMS キー、キーポリシーで Route 53 を許可。DS レコードの登録が必要、プライベートゾーンは非対応、暗号化ではなく署名。"
+  },
+  {
+    "text": "Q08組織全体の統制1 つ選択組織の全アカウントで、0.0.0.0/0 からの SSH を許可するセキュリティグループを自動で検出・是正したいと考えています。最も適切な管理方法はどれですか。 A各アカウントで手動の Trusted Advisor 確認 BFirewall Manager の SG コンテンツ監査ポリシー(自動修復) CVPC Flow Logs で 22 番ポートの ACCEPT を検索 DCloudFront のカスタムヘッダー 正解・解説を見る正解 BFirewall Manager のコンテンツ監査ポリシー で組織全体を継続的に評価・自動是正できる。",
+    "options": [
+      {
+        "type": "radio",
+        "name": "review-q8",
+        "value": "A",
+        "label": "A各アカウントで手動の Trusted Advisor 確認",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q8",
+        "value": "B",
+        "label": "BFirewall Manager の SG コンテンツ監査ポリシー(自動修復)",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q8",
+        "value": "C",
+        "label": "CVPC Flow Logs で 22 番ポートの ACCEPT を検索",
+        "checked": false
+      },
+      {
+        "type": "radio",
+        "name": "review-q8",
+        "value": "D",
+        "label": "DCloudFront のカスタムヘッダー",
+        "checked": false
+      }
+    ],
+    "answer": "正解・解説を見る正解 BFirewall Manager のコンテンツ監査ポリシー で組織全体を継続的に評価・自動是正できる。"
+  }
+]

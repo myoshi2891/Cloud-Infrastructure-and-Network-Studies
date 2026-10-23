@@ -1546,11 +1546,12 @@ flowchart LR
                 <p>ルーターは、宛先 IP に対し次の順番で行き先を決めます。</p>
                 <pre class="mermaid">
 flowchart TD
-    S["パケットの宛先IPを確認"] --&gt; L{"ローカルルート&lt;br/&gt;VPC内の宛先か"}
-    L -- "はい" --&gt; LR["VPC内に配送"]
-    L -- "いいえ" --&gt; P["一致するルートを全て抽出"]
+    S["パケットの宛先IPを確認"] --&gt; P["一致するルートを全て抽出&lt;br/&gt;ローカルルートも候補の1つ"]
     P --&gt; M["最長プレフィックス一致で最も具体的なルートを選ぶ"]
-    M --&gt; T{"同じ長さのルートが複数あるか"}
+    M --&gt; X{"VPC CIDR 内で ローカルルートより&lt;br/&gt;具体的なルートが一致したか"}
+    X -- "はい: ミドルボックス宛の静的ルート" --&gt; MB["ローカルルートより優先し&lt;br/&gt;ENI / GWLB エンドポイントなどへ転送"]
+    X -- "はい: 伝播ルート" --&gt; LR["伝播ルートはローカルルートを上書きできない&lt;br/&gt;ローカルルートで VPC 内に配送"]
+    X -- "いいえ" --&gt; T{"同じ長さのルートが複数あるか"}
     T -- "いいえ" --&gt; OK["そのルートの宛先へ転送"]
     T -- "はい" --&gt; PR["ルート種別の優先順位で決定"]
     PR --&gt; OK
@@ -1602,8 +1603,12 @@ flowchart TD
                     </p>
                     <p>
                         <strong>注意</strong>: VPC 自身の CIDR に対する
-                        <strong>ローカルルートは最優先</strong>
-                        で、より具体的な伝播ルートでも上書きできません。
+                        <strong>ローカルルート</strong>
+                        は、より具体的な
+                        <strong>伝播ルート</strong>
+                        でも上書きできません。ただし、ミドルボックス（ENI や Gateway Load Balancer エンドポイントなど）を宛先とする
+                        <strong>より具体的な静的ルート</strong>
+                        は、ローカルルートより優先されます。
                     </p>
                 </blockquote>
                 <h4>Transit Gateway ルートテーブルでの優先順位（同じ宛先の場合）</h4>
@@ -1877,7 +1882,9 @@ flowchart TD
 flowchart TD
     A["1. DX 接続を確保&lt;br/&gt;専用または ホスト型"] --&gt; B["2. VIF を作成&lt;br/&gt;プライベート / トランジット / パブリック"]
     B --&gt; C["3. BGP を設定&lt;br/&gt;ASN とピア IP と MD5 認証"]
-    C --&gt; D["4. DXGW を作成して&lt;br/&gt;VGW または TGW を関連付け"]
+    C --&gt; Q{"VIF の種類"}
+    Q -- "プライベート / トランジット" --&gt; D["4. DXGW を作成して&lt;br/&gt;VGW または TGW を関連付け"]
+    Q -- "パブリック: 手順 4 は不要" --&gt; E
     D --&gt; E["5. 広告する経路を確認&lt;br/&gt;許可プレフィックスとルート数"]
     E --&gt; F["6. BFD を有効化"]
     F --&gt; G["7. フェイルオーバー試験"]
@@ -1924,7 +1931,7 @@ flowchart TD
                             <tr class="odd">
                                 <td>5</td>
                                 <td>
-                                    広告するルートを <strong>集約</strong> して 100 件以内に収める
+                                    広告するルートを <strong>集約</strong> し、VIF のプレフィックス割り当て（既定 100）以内に収める
                                 </td>
                                 <td>
                                     プライベート/トランジット VIF の上限を超えると BGP
@@ -1988,8 +1995,9 @@ flowchart TD
                             <tr class="odd">
                                 <td>MTU</td>
                                 <td>
-                                    VPN 経由のトラフィックは
-                                    <strong>1500 バイト</strong> が上限（ジャンボフレーム不可）
+                                    VPN トンネルの上限は
+                                    <strong>1500 バイト</strong>。IPsec のオーバーヘッドで実効パケット MTU は
+                                    <strong>1446 バイト</strong>（TCP MSS <strong>1406</strong>）。ジャンボフレーム不可
                                 </td>
                             </tr>
                         </tbody>
@@ -2292,7 +2300,7 @@ flowchart TD
                                     プライベート/トランジット VIF で お客様 → AWS
                                     に広告できるルート数（BGP セッションあたり）
                                 </td>
-                                <td><strong>100</strong>（IPv4・IPv6 それぞれ）</td>
+                                <td>既定 <strong>100</strong>（IPv4・IPv6 それぞれ）。プレフィックス割り当てで最大 1,000 まで設定可能</td>
                                 <td><strong>BGP セッションが Idle になり、切断される</strong></td>
                             </tr>
                             <tr class="even">
@@ -2307,8 +2315,8 @@ flowchart TD
                             </tr>
                             <tr class="even">
                                 <td>専用接続あたりの VIF 数</td>
-                                <td>プライベート/パブリック 50 + トランジット 1</td>
-                                <td>追加不可</td>
+                                <td>プライベート/パブリック VIF は最大 50、トランジット VIF は最大 4。すべての VIF の合計は最大 51</td>
+                                <td>合計 51 は引き上げ不可。トランジット VIF は SA/TAM に相談可能</td>
                             </tr>
                             <tr class="odd">
                                 <td>DXGW あたりの VIF 数（プライベート/トランジット）</td>
@@ -2336,9 +2344,10 @@ flowchart TD
                 <blockquote>
                     <p>
                         <strong>試験ポイント</strong>: 「オンプレミスから 100
-                        を超えるルートを広告したら BGP が切れた」→ 答えは
+                        を超えるルートを広告したら BGP が切れた」→ まず VIF の
+                        <strong>プレフィックス割り当て</strong> を必要数まで増やします（新規作成時はプライベート VIF なら CreatePrivateVirtualInterface、トランジット VIF なら CreateTransitVirtualInterface で指定し、既存 VIF の割り当ては UpdateVirtualInterfaceAttributes で引き上げます。最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に
                         <strong>ルート集約</strong
-                        >（またはデフォルトルートの広告）です。上限の引き上げではありません。
+                        >（またはデフォルトルートの広告）を使います。
                     </p>
                 </blockquote>
                 <h4>上限に備える運用の流れ</h4>
@@ -2455,7 +2464,7 @@ flowchart TD
 flowchart TD
     Q1{"公開したいのは&lt;br/&gt;特定のサービスだけか"} -- "はい" --&gt; PL["PrivateLink を選ぶ"]
     Q1 -- "いいえ（VPC全体の通信が必要）" --&gt; Q2{"CIDR が重複しているか"}
-    Q2 -- "はい" --&gt; PL
+    Q2 -- "はい" --&gt; RE["双方向のフル接続には CIDR を再設計する&lt;br/&gt;重複 VPC から特定宛先への送信方向だけなら&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
     Q2 -- "いいえ" --&gt; Q3{"接続したい VPC は&lt;br/&gt;少数か"}
     Q3 -- "はい" --&gt; PEER["VPC ピアリングを選ぶ"]
     Q3 -- "いいえ（多数・オンプレミスも）" --&gt; TGW["Transit Gateway を選ぶ"]
@@ -2489,14 +2498,13 @@ flowchart TD
                             <tr class="odd">
                                 <td>DNS</td>
                                 <td>
-                                    プライベート DNS を有効にすると、既定のサービス名で
-                                    エンドポイントに解決できる
+                                    カスタムサービス（エンドポイントサービス）では、サービス提供側がプライベート DNS 名を設定し、そのドメインの所有権を検証した場合に限り、利用側でプライベート DNS を有効にしてその名前でエンドポイントに解決できる。これらの前提がない場合、利用側はエンドポイント固有の DNS 名を使う
                                 </td>
                             </tr>
                             <tr class="even">
                                 <td>セキュリティ</td>
                                 <td>
-                                    エンドポイントにセキュリティグループを関連付け、エンドポイントポリシーで操作範囲を絞る
+                                    エンドポイントのセキュリティグループで送信元を絞り、サービス提供側でも認可（許可するプリンシパルの指定やアプリケーション側の認証）を行う。エンドポイントポリシーはカスタムサービスではなく、エンドポイントポリシーに対応する AWS サービスで使う
                                 </td>
                             </tr>
                         </tbody>
@@ -2553,8 +2561,8 @@ flowchart TD
                 </h3>
                 <h4>7.1 ルート伝播（Route Propagation）</h4>
                 <p>
-                    VGW または TGW を使う場合、オンプレミスから学習した経路を
-                    <strong>VPC ルートテーブルに自動で追加（伝播）</strong> できます。
+                    VGW を使う場合、オンプレミスから学習した経路を
+                    <strong>VPC ルートテーブルに自動で追加（伝播）</strong> できます。TGW を使う場合は伝播されないため、VPC ルートテーブルに TGW 宛のルートを手動で追加します。
                 </p>
                 <div class="table-scroll">
                     <table>
@@ -2653,7 +2661,7 @@ flowchart TD
     B -- "いいえ（一方向のサービス利用）" --&gt; PL["PrivateLink で公開する"]
     B -- "はい" --&gt; C{"IP を変更できるか"}
     C -- "はい" --&gt; RE["片方の CIDR を再設計&lt;br/&gt;（新しい範囲へ移行）"]
-    C -- "いいえ" --&gt; NAT["プライベート NAT ゲートウェイで&lt;br/&gt;重複しない範囲に変換する"]
+    C -- "いいえ" --&gt; NAT["フル接続は実現できない&lt;br/&gt;重複 VPC から特定宛先への送信方向だけを&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
 </pre
                 >
                 <div class="table-scroll">
@@ -2673,12 +2681,12 @@ flowchart TD
                             </tr>
                             <tr class="even">
                                 <td><strong>プライベート NAT ゲートウェイ</strong></td>
-                                <td>IP の変更が難しい既存環境</td>
-                                <td>設計と運用が複雑になる</td>
+                                <td>IP の変更が難しい既存環境で、重複 VPC から特定の宛先へ送信方向の通信だけを通す</td>
+                                <td>送信元アドレスを変換するだけで、任意の双方向通信には使えない（受信方向は ALB/NLB などが別途必要）。設計と運用が複雑になる</td>
                             </tr>
                             <tr class="odd">
                                 <td><strong>CIDR の再設計</strong></td>
-                                <td>長期的に最善</td>
+                                <td>長期的に最善。双方向のフル接続が必要な場合はこれ</td>
                                 <td>移行作業が必要</td>
                             </tr>
                             <tr class="even">
@@ -2780,7 +2788,7 @@ flowchart TD
                             <tr class="odd">
                                 <td><strong>VPN（パブリック）</strong></td>
                                 <td>インターネット上の IPsec</td>
-                                <td>パブリックエンドポイント／VPC</td>
+                                <td>VPC 内のリソース（S3 へはインターフェイス型 S3 エンドポイントと、そこへ向けるルーティング / DNS が別途必要）</td>
                                 <td>暗号化。帯域に上限あり</td>
                             </tr>
                         </tbody>
@@ -2795,7 +2803,7 @@ flowchart TD
     A -- "オンプレミス" --&gt; C{"専用線があるか"}
     C -- "はい（VPC内のサービス）" --&gt; PV["プライベート/トランジット VIF&lt;br/&gt;＋ インターフェイス型エンドポイント"]
     C -- "はい（パブリックサービス）" --&gt; PB["パブリック VIF"]
-    C -- "いいえ" --&gt; VP["Site-to-Site VPN"]
+    C -- "いいえ" --&gt; VP["Site-to-Site VPN で VPC 内へ接続&lt;br/&gt;S3 へはインターフェイス型 S3 エンドポイント&lt;br/&gt;＋ そこへ向けるルーティング / DNS"]
 </pre
                 >
                 <blockquote>
@@ -2805,9 +2813,9 @@ flowchart TD
                             へ、コストを抑え、かつインターネットを経由せず</strong
                         >」は、一般に <strong>パブリック VIF</strong>、または
                         <strong
-                            >プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント</strong
+                            >プライベート VIF（または DX トランジット VIF 上の Private IP VPN）＋ インターフェイス型 S3 エンドポイント</strong
                         >
-                        が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。
+                        が答えになります。インターネット経由の Site-to-Site VPN はこの要件を満たしません。要件（帯域・コスト・VPC 内の制御）を見て選びます。
                     </p>
                 </blockquote>
                 <h4>ベストプラクティス</h4>
@@ -2987,7 +2995,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td>オンプレミスから 100 を超えるルートを広告したい</td>
-                                <td><strong>ルート集約</strong> またはデフォルトルート</td>
+                                <td><strong>プレフィックス割り当て</strong> の引き上げ（最大 1,000）。増やせない場合はルート集約またはデフォルトルート</td>
                             </tr>
                             <tr class="even">
                                 <td>VPN の帯域が足りない（TGW 利用）</td>
@@ -3309,7 +3317,7 @@ flowchart TD
                                     <code>bw_in_allowance_exceeded</code
                                     >、<code>bw_out_allowance_exceeded</code>、<code>pps_allowance_exceeded</code>、<code>conntrack_allowance_exceeded</code>、<code
                                         >linklocal_allowance_exceeded</code
-                                    >
+                                    >（CloudWatch へは自動送信されない。<code>ethtool -S</code> で確認するか、CloudWatch エージェントの <code>ethtool</code> 収集を設定する。取り込んだメトリクス名には <code>ethtool_</code> 接頭辞が付く）
                                 </td>
                                 <td>
                                     <strong
@@ -3496,7 +3504,8 @@ flowchart TD
                             <tr class="odd">
                                 <td>ログに <strong>そもそも出ない</strong></td>
                                 <td>
-                                    ルーティングの問題（パケットが届いていない）、または記録対象外の通信
+                                    ルーティングの問題（パケットが届いていない）、または記録対象外の通信。<code>log-status</code> が
+                                    <code>SKIPDATA</code> のレコードは、集約間隔中に記録がスキップされた（容量超過や内部エラー）ことを示す
                                 </td>
                             </tr>
                         </tbody>
@@ -3525,7 +3534,7 @@ flowchart TD
 <span class="w">  </span>--log-destination-type<span class="w"> </span>s3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--log-destination<span class="w"> </span>arn:aws:s3:::my-flow-logs-bucket/vpc/<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--max-aggregation-interval<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction}&#39;</span></code></pre>
+<span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction} ${log-status}&#39;</span></code></pre>
                 </div>
                 <h4>ベストプラクティス</h4>
                 <div class="table-scroll">
@@ -3932,7 +3941,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td><strong>Site-to-Site VPN</strong> 経由</td>
-                                <td><strong>1500</strong></td>
+                                <td>トンネル上限 <strong>1500</strong>／実効パケット MTU <strong>1446</strong>（MSS <strong>1406</strong>）</td>
                             </tr>
                             <tr class="even">
                                 <td><strong>Direct Connect プライベート VIF</strong></td>
@@ -3955,13 +3964,16 @@ flowchart LR
                 <h4>典型的な障害の流れ</h4>
                 <pre class="mermaid">
 flowchart TD
-    A["送信側が 9001 の大きなパケットを送る"] --&gt; B["経路途中に MTU 1500 の区間&lt;br/&gt;例: インターネットや VPN"]
+    A["送信側が 9001 の大きなパケットを送る"] --&gt; B["経路途中に MTU 1500 の区間&lt;br/&gt;例: インターネット"]
     B --&gt; C{"DF ビットが設定され&lt;br/&gt;断片化が禁止されているか"}
     C -- "いいえ" --&gt; D["断片化して通過（遅くなる）"]
     C -- "はい" --&gt; E["ルーターが ICMP&lt;br/&gt;Fragmentation Needed を返す"]
     E --&gt; F{"ICMP が セキュリティグループ&lt;br/&gt;NACL で許可されているか"}
     F -- "はい" --&gt; G["PMTUD により送信側が&lt;br/&gt;パケットを小さくする"]
     F -- "いいえ" --&gt; H["ICMP が届かず、大きなパケットが&lt;br/&gt;黙って捨てられる（ブラックホール）"]
+    A --&gt; V["経路途中に Site-to-Site VPN&lt;br/&gt;実効パケット MTU 1446（MSS 1406）"]
+    V --&gt; V1["Site-to-Site VPN は PMTUD に非対応&lt;br/&gt;PMTUD に頼らない"]
+    V1 --&gt; V2["お客様ルーターで TCP MSS クランプ（最大 1406）&lt;br/&gt;または DF をクリアし暗号化前に断片化"]
 </pre
                 >
                 <h4>症状と対処</h4>
@@ -3991,7 +4003,7 @@ flowchart TD
                                 <td>IPsec のオーバーヘッドで実効 MTU が下がる</td>
                                 <td>
                                     お客様ルーターで
-                                    <strong>TCP MSS クランプ</strong> を設定、または MTU を下げる
+                                    <strong>TCP MSS クランプ（最大 1406）</strong> を設定、または MTU を最大値 <strong>1446</strong> 以下に下げる。暗号化・ハッシュアルゴリズム、NAT トラバーサル、IP ファミリー（IPv4/IPv6）の設定に応じて、さらに低い値を選ぶ
                                 </td>
                             </tr>
                             <tr class="odd">
@@ -3999,8 +4011,8 @@ flowchart TD
                                 <td>経路上に 1500 の区間がある</td>
                                 <td>
                                     経路上の
-                                    <strong>全ホップで MTU を揃える</strong>、インターネット・VPN
-                                    向け通信は 1500 に
+                                    <strong>全ホップで MTU を揃える</strong>、インターネット向け通信は 1500、VPN
+                                    向け通信は 1446（MSS 1406）に
                                 </td>
                             </tr>
                         </tbody>
@@ -4048,10 +4060,8 @@ sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </spa
                             <tr class="even">
                                 <td>2</td>
                                 <td>
-                                    インターネット・VPN 方向を含む通信では、<strong
-                                        >MTU 1500 を前提</strong
-                                    >
-                                    にする
+                                    インターネット方向を含む通信では <strong>MTU 1500</strong>、VPN 方向では
+                                    <strong>MTU 1446（MSS 1406）</strong> を前提にする
                                 </td>
                                 <td>経路上の最小値に合わせる</td>
                             </tr>
@@ -4067,7 +4077,7 @@ sudo<span class="w"> </span>ip<span class="w"> </span>link<span class="w"> </spa
                             </tr>
                             <tr class="even">
                                 <td>4</td>
-                                <td>VPN の MSS をクランプする</td>
+                                <td>VPN の MSS を 1406 以下にクランプする</td>
                                 <td>断片化を避ける定番の対処</td>
                             </tr>
                         </tbody>
@@ -4331,13 +4341,15 @@ flowchart TD
                 <h4>選択フロー</h4>
                 <pre class="mermaid">
 flowchart TD
-    A["VPC どうしを接続したい"] --&gt; B{"VPC の数は&lt;br/&gt;少ないか（目安：数個）"}
+    A["VPC どうしを接続したい"] --&gt; D{"CIDR が重複しているか"}
+    D -- "はい" --&gt; E{"公開したいのは&lt;br/&gt;特定のサービスだけか"}
+    E -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
+    E -- "いいえ（VPC全体の通信が必要）" --&gt; RE["双方向のフル接続には CIDR を再設計する&lt;br/&gt;重複 VPC から特定宛先への送信方向だけなら&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
+    D -- "いいえ" --&gt; B{"VPC の数は&lt;br/&gt;少ないか（目安：数個）"}
     B -- "はい" --&gt; C{"オンプレミス接続を&lt;br/&gt;共有する必要があるか"}
     C -- "いいえ" --&gt; PEER["VPC ピアリング&lt;br/&gt;低コスト・高帯域"]
     C -- "はい" --&gt; TGW["Transit Gateway"]
-    B -- "いいえ" --&gt; D{"CIDR が重複しているか"}
-    D -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
-    D -- "いいえ" --&gt; TGW
+    B -- "いいえ" --&gt; TGW
 </pre
                 >
                 <blockquote>
@@ -4569,8 +4581,8 @@ flowchart TD
                             <tr class="even">
                                 <td>対象</td>
                                 <td>
-                                    VPC
-                                    内のマルチキャスト。オンプレミスとの間は、構成要件を公式ドキュメントで確認する
+                                    VPC アタッチメント間のマルチキャストのみ。Direct Connect・Site-to-Site VPN・ピアリング・Connect
+                                    アタッチメントは非対応のため、オンプレミスへはマルチキャストを届けられない
                                 </td>
                             </tr>
                         </tbody>
@@ -4652,8 +4664,9 @@ flowchart LR
                         <strong>試験ポイント</strong>:
                         「<strong>同じ静的コンテンツを世界中の多数のユーザーへ配る、オリジンの負荷と転送量を下げたい</strong>」→
                         CloudFront。「<strong
-                            >TCP/UDP の非 HTTP トラフィックを高速化したい／固定 IP が必要</strong
-                        >」→ Global Accelerator（C-9 参照）。
+                            >TCP/UDP の非 HTTP トラフィックを高速化したい／非 HTTP 通信で固定 IP が必要</strong
+                        >」→ Global Accelerator（C-9 参照）。HTTP/HTTPS 配信で許可リスト用の固定 IP が必要なだけなら、CloudFront の
+                        Anycast 静的 IP リストも選択肢になります。
                     </p>
                 </blockquote>
 
@@ -4814,7 +4827,7 @@ flowchart TD
                             <tr class="odd">
                                 <td>Site-to-Site VPN</td>
                                 <td>使えない</td>
-                                <td>1500</td>
+                                <td>トンネル上限 1500／実効パケット MTU 1446（MSS 1406）</td>
                             </tr>
                         </tbody>
                     </table>
@@ -4868,10 +4881,10 @@ ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><
                             <tr class="even">
                                 <td>2</td>
                                 <td>
-                                    インターネット・VPN 宛の通信は
-                                    <strong>1500</strong> のままにする
+                                    インターネット宛の通信は
+                                    <strong>1500</strong>、VPN 宛の通信は最大 <strong>1446</strong>（MSS 最大 <strong>1406</strong>）とし、暗号化・ハッシュアルゴリズム、NAT トラバーサル、IP ファミリー（IPv4/IPv6）の設定に応じてさらに低い値にする
                                 </td>
-                                <td>経路上限が 1500</td>
+                                <td>インターネットの経路上限は 1500、VPN は IPsec のオーバーヘッドで実効 1446</td>
                             </tr>
                             <tr class="odd">
                                 <td>3</td>
@@ -5439,7 +5452,7 @@ flowchart LR
                             <tr class="odd">
                                 <td>固定 IP</td>
                                 <td><strong>あり</strong>（静的エニーキャスト IP）</td>
-                                <td>なし（ドメイン名で利用）</td>
+                                <td>通常はドメイン名で利用。オプションの Anycast 静的 IP リスト（申請制）で固定 IP も利用可能</td>
                             </tr>
                             <tr class="even">
                                 <td>キャッシュ</td>
@@ -5492,7 +5505,7 @@ flowchart LR
                         <strong>試験ポイント</strong>: 「<strong
                             >DNS キャッシュのせいでフェイルオーバーが遅い／クライアントが IP
                             を固定で許可リストに登録している</strong
-                        >」→ <strong>Global Accelerator</strong>。
+                        >」→ <strong>Global Accelerator</strong>。ただし HTTP/HTTPS 配信で許可リスト用の固定 IP だけが必要なら、CloudFront の Anycast 静的 IP リストも選択肢になります。
                     </p>
                 </blockquote>
                 <h4>ベストプラクティス</h4>
@@ -5585,7 +5598,7 @@ flowchart LR
                                 <td><strong>CloudFront</strong></td>
                             </tr>
                             <tr class="even">
-                                <td>TCP/UDP の高速化 + 固定 IP + 高速切替</td>
+                                <td>TCP/UDP（非 HTTP を含む）の高速化 + 固定 IP + 高速切替</td>
                                 <td><strong>Global Accelerator</strong></td>
                             </tr>
                             <tr class="odd">
@@ -5610,8 +5623,8 @@ flowchart LR
                             <tr class="odd">
                                 <td>ジャンボフレームを使いたい</td>
                                 <td>
-                                    <strong>DX・VPC・TGW 内のみ</strong>（インターネット・VPN は
-                                    1500）
+                                    <strong>DX・VPC・TGW 内のみ</strong>（インターネットは
+                                    1500、VPN は実効 1446）
                                 </td>
                             </tr>
                         </tbody>
@@ -5638,7 +5651,7 @@ flowchart LR
                                     プライベート/トランジット VIF の BGP 広告ルート数（お客様 →
                                     AWS）
                                 </td>
-                                <td>100（IPv4・IPv6 各）。超過で <strong>BGP 切断</strong></td>
+                                <td>既定 100（IPv4・IPv6 各、最大 1,000 まで割り当て可能）。超過で <strong>BGP 切断</strong></td>
                             </tr>
                             <tr class="even">
                                 <td></td>
@@ -5682,8 +5695,8 @@ flowchart LR
                             </tr>
                             <tr class="even">
                                 <td></td>
-                                <td>VPN の MTU</td>
-                                <td>1500</td>
+                                <td>VPN の MTU（トンネル上限 / 実効パケット MTU）</td>
+                                <td>1500 / 1446（MSS 1406）</td>
                             </tr>
                             <tr class="odd">
                                 <td></td>
@@ -5765,7 +5778,7 @@ flowchart LR
                         <tbody>
                             <tr class="odd">
                                 <td>BGP セッションが突然切れた／100 ルート</td>
-                                <td>ルート集約</td>
+                                <td>プレフィックス割り当ての引き上げ／ルート集約</td>
                             </tr>
                             <tr class="even">
                                 <td>障害検知を速くしたい（DX）</td>
@@ -5781,7 +5794,7 @@ flowchart LR
                             </tr>
                             <tr class="odd">
                                 <td>CIDR 重複</td>
-                                <td>PrivateLink／プライベート NAT ゲートウェイ</td>
+                                <td>PrivateLink／プライベート NAT ゲートウェイ（送信方向のみ）／フル接続は CIDR 再設計</td>
                             </tr>
                             <tr class="even">
                                 <td>小さい通信は通るが大きい通信が止まる</td>
@@ -5842,22 +5855,23 @@ flowchart LR
                         <span class="scenario-type">単一選択</span>
                     </div>
                 <p class="scenario-question">
-                    オンプレミスのルーターから Direct Connect のプライベート VIF 経由で、IPv4
+                    オンプレミスのルーターから Direct Connect のトランジット VIF（Direct Connect ゲートウェイ経由で Transit Gateway に接続）で、IPv4
                     のルートを 150 件広告したところ、BGP
                     セッションがダウンしました。最も適切な対処はどれですか。
                 </p>
                 <ul class="scenario-options" role="list">
                     <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> ルートを集約して 100 件以内にする</div></li>
-                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> Service Quotas で上限の引き上げを申請する</div></li>
+                    <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> VIF の IPv4 プレフィックス割り当てを 150 以上に設定する</div></li>
                     <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VIF の種類をパブリック VIF に変更する</div></li>
                     <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VIF の MTU を 9001 に変更する</div></li>
                 </ul>
                 <details class="scenario-answer">
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
-                        <strong>A</strong>。プライベート/トランジット VIF の BGP
-                        セッションあたりの広告ルート数（100）は引き上げできず、超過するとセッションが
-                        Idle になります。ルート集約（またはデフォルトルート）が正解です。C
+                        <strong>B</strong>。プライベート/トランジット VIF で受信できるプレフィックス数は既定で
+                        IPv4・IPv6 各 100 で、超過するとセッションが Idle になります。割り当ては
+                        VIF の作成時や UpdateVirtualInterfaceAttributes で最大 1,000
+                        まで設定でき、Service Quotas の申請は不要です。A のルート集約（またはデフォルトルート）は、割り当てを増やせない場合の代替策です。なお、プライベート VIF を仮想プライベートゲートウェイ（VGW）に接続する構成では、VPC ルートテーブルに伝播できるルートが 100 件までのため、割り当てを増やしてもルート集約またはデフォルトルートが必要です。C
                         はサービスの対象が変わるため不適切です。D は無関係です。
                     </p>
                 </details>
@@ -5883,8 +5897,8 @@ flowchart LR
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
                         <strong>A と B</strong>。TGW 上の VPN は ECMP で複数トンネルを束ねられ、標準
-                        1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN の MTU
-                        上限が 1500 のため不可。D は ECMP が使えなくなります。
+                        1.25 Gbps のところ、大容量帯域トンネルは最大 5 Gbps です。C は VPN トンネルの MTU
+                        上限が 1500（実効パケット MTU は 1446）のため不可。D は ECMP が使えなくなります。
                     </p>
                 </details>
                 </article>
@@ -5980,19 +5994,21 @@ flowchart LR
                     9001）で構成されています。最も適切な対処はどれですか。（2つ選択）
                 </p>
                 <ul class="scenario-options" role="list">
-                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> セキュリティグループ/NACL で ICMP の Fragmentation Needed を許可する</div></li>
+                    <li><span class="scenario-option-letter">A.</span><div class="scenario-option-copy"> カスタマーゲートウェイで DF フラグをクリアし、暗号化前に IP パケットを断片化する</div></li>
                     <li><span class="scenario-option-letter">B.</span><div class="scenario-option-copy"> 経路を Direct Connect のトランジット VIF に変更するだけで解決する</div></li>
-                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1500 に設定）する</div></li>
+                    <li><span class="scenario-option-letter">C.</span><div class="scenario-option-copy"> VPN 経路向けに TCP MSS をクランプ（または MTU を 1446 以下に設定）する</div></li>
                     <li><span class="scenario-option-letter">D.</span><div class="scenario-option-copy"> VPN トンネルの数を増やす</div></li>
                     <li><span class="scenario-option-letter">E.</span><div class="scenario-option-copy"> ENA Express を有効にする</div></li>
                 </ul>
                 <details class="scenario-answer">
                     <summary>解答と解説<span class="scenario-disclosure" aria-hidden="true"></span></summary>
                     <p>
-                        <strong>A と C</strong>。VPN 経由の MTU は 1500 のため、9001
-                        の大きなパケットは断片化されるか、DF ビット付きで ICMP
-                        が遮断されると黙って破棄されます。ICMP の許可で PMTUD を機能させ、MSS
-                        クランプで断片化を避けます。
+                        <strong>A と C</strong>。VPN トンネルの MTU 上限は 1500 ですが、IPsec
+                        のオーバーヘッドにより実効パケット MTU は 1446（MSS 1406）のため、9001
+                        の大きなパケットはそのままでは通りません。Site-to-Site VPN では ICMP
+                        を許可しても PMTUD を前提にできないため、トンネル向けに MSS をクランプ（1406
+                        以下）または MTU を 1446 以下に設定し、カスタマーゲートウェイでは DF
+                        フラグをクリアして暗号化前に断片化します。
                     </p>
                 </details>
                 </article>

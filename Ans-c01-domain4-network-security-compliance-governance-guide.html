@@ -773,7 +773,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td><strong>すべて暗号化</strong></td>
-<td>TLS 1.2 以上、IPsec、MACsec、DNSSEC、KMS</td>
+<td>TLS 1.2 以上、IPsec、MACsec、KMS</td>
 </tr>
 </tbody>
 </table></div>
@@ -999,6 +999,7 @@ flowchart TD
     P1 -- "Yes: Count" --&gt; P2
     P1 -- "No" --&gt; P2{"優先度2のルールに一致?"}
     P2 -- "Yes: Allow / Block" --&gt; END1
+    P2 -- "Yes: Count" --&gt; DEF
     P2 -- "No" --&gt; DEF["Web ACL の既定アクション&lt;br/&gt;Allow または Block"]
 </pre>
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
@@ -1071,19 +1072,26 @@ flowchart TD
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong>(AWS 公式ベストプラクティスガイドの要旨)</div>
 <ul>
 <li><strong>ステートレスの既定アクションは「Forward to stateful rule groups」</strong> にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。</li>
-<li><strong>Strict rule order</strong> を使い、<strong>ステートフル既定アクションは drop_strict / drop_established</strong> などで「許可リスト方式」にする。</li>
-<li>出口制御は <strong>ドメインリスト(許可リスト)</strong> で HTTPS の SNI を検査。</li>
+<li><strong>Strict rule order</strong> を使い、ドメイン許可リスト方式では <strong>ステートフル既定アクションを Drop established</strong> にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。</li>
+<li>出口制御は <strong>ドメインリスト(許可リスト)</strong> で HTTPS の SNI を検査。ただし SNI はクライアントが申告する値のため、未承認の IP アドレスへ接続しながら承認済みドメインの SNI を提示すれば通過でき、SNI フィルタリングだけでは承認ドメインへの接続を保証できない。保証が必要な場合は TLS インスペクションでサーバー証明書が SNI と一致することを検証する。</li>
 <li>一般的な脆弱性対策に <strong>AWS マネージドルールグループ</strong>(脅威シグネチャ)を併用。</li>
 <li><strong>AZ ごとに 1 つ以上のエンドポイント</strong> を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。</li>
 <li>ログ(alert / flow)を必ず有効化する。</li>
 </ul>
 </div></div>
 <div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span><span class="c1"># 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)</span>
+<span class="c1"># 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)</span>
+<span class="c1"># EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える</span>
 aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-group<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group-name<span class="w"> </span>allow-approved-domains<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>STATEFUL<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--capacity<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;RuleVariables&quot;: {</span>
+<span class="s1">      &quot;IPSets&quot;: {</span>
+<span class="s1">        &quot;HOME_NET&quot;: { &quot;Definition&quot;: [&quot;192.0.2.0/24&quot;, &quot;10.0.0.0/16&quot;, &quot;10.1.0.0/16&quot;] }</span>
+<span class="s1">      }</span>
+<span class="s1">    },</span>
 <span class="s1">    &quot;RulesSource&quot;: {</span>
 <span class="s1">      &quot;RulesSourceList&quot;: {</span>
 <span class="s1">        &quot;Targets&quot;: [&quot;.amazonaws.com&quot;, &quot;.example.com&quot;],</span>
@@ -1252,7 +1260,7 @@ flowchart TD
 <ul>
 <li><strong>AZ ごとに</strong> ファイアウォールエンドポイントと NAT ゲートウェイを置き、<strong>AZ をまたぐ通信を避ける</strong>(コストと可用性)。</li>
 <li>TGW の VPC アタッチメントで <strong>アプライアンスモード(Appliance Mode)を有効化</strong> し、行きと戻りを同じ AZ のファイアウォールに通す(<strong>対称ルーティング</strong>)。</li>
-<li>ファイアウォールポリシーは <strong>「許可ドメインのみ」+ 既定 drop</strong>。</li>
+<li>ファイアウォールポリシーは <strong>「許可ドメインのみ」+ ステートフル既定アクション「Drop established」</strong>。</li>
 <li>出口の許可ドメインは <strong>ログ(alert/flow)で実際の利用を把握してから</strong> 絞り込む。</li>
 </ul>
 </div></div>
@@ -1296,7 +1304,7 @@ flowchart TD
 </tr>
 </tbody>
 </table></div>
-<p><strong>ベストプラクティス</strong>: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を <strong>ネットワーク ACL や Network Firewall で拒否</strong> し、必ず Route 53 Resolver を経由させる。そうしないと DNS Firewall をすり抜けられます。</p>
+<p><strong>ベストプラクティス</strong>: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を <strong>ネットワーク ACL や Network Firewall で拒否</strong> し、必ず Route 53 Resolver を経由させる。DNS Firewall がフィルタできるのは VPC の Resolver を通過したクエリだけなので、そうしないと DNS Firewall をすり抜けられます。ただし 53 番ポートの遮断で制限できるのは従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)の通信は Route 53 Resolver を経由させられません。DoH を防ぐ追加の送信(egress)制御は 19-4 を参照。</p>
 <p><strong>根拠 URL</strong></p>
 <ul>
 <li>Network Firewall の導入パターン(AWS ブログ): <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/">https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/</a></li>
@@ -1438,7 +1446,8 @@ flowchart TD
 <span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:s3:::my-company-data&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::my-company-data/*&quot;</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;StringNotEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:SourceVpce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpce-0123456789abcdef0&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;StringNotEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:SourceVpce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpce-0123456789abcdef0&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;BoolIfExists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:PrincipalIsAWSService&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -1448,7 +1457,7 @@ flowchart TD
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス(データ境界: Data Perimeter)</strong></div>
 <ul>
 <li><strong>ID 境界</strong>: <code>aws:PrincipalOrgID</code> で「自組織の ID のみ」。</li>
-<li><strong>リソース境界</strong>: <code>aws:ResourceOrgID</code> で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。</li>
+<li><strong>リソース境界</strong>: <code>aws:ResourceOrgID</code> で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。S3 のエンドポイントポリシーで指定した場合に強制されるのは、そのエンドポイントを経由するリクエストだけ。エンドポイントを経由しない経路も含めて他組織のリソースへのアクセスを防ぐには、SCP などの ID・組織レベルのリソース境界と、適切な出口制御も必要。</li>
 <li><strong>ネットワーク境界</strong>: <code>aws:SourceVpce</code> / <code>aws:SourceVpc</code> で「自社の VPC エンドポイント経由のみ」。</li>
 <li>PrivateLink の <strong>インターフェイスエンドポイントにも SG を付与</strong>し、アクセス元を限定する。</li>
 </ul>
@@ -1784,26 +1793,61 @@ flowchart TD
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば <code>RevokeSecurityGroupIngress</code> を実行して SNS で通知します。</p>
+<p>上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば <code>RevokeSecurityGroupIngress</code> を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。</p>
 <div class="code-block" data-lang="python"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">botocore.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientError</span>
 
 <span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">)</span>
 
+<span class="k">def</span><span class="w"> </span><span class="nf">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">)</span>
+    <span class="n">tcp_admin</span> <span class="o">=</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">port</span> <span class="o">&lt;=</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3389</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">protocol</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span> <span class="ow">or</span> <span class="n">tcp_admin</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_group_id</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;groupId&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;groupId&quot;</span><span class="p">]</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">ec2</span><span class="o">.</span><span class="n">describe_security_groups</span><span class="p">(</span><span class="n">GroupNames</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;groupName&quot;</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">groups</span><span class="p">[</span><span class="s2">&quot;SecurityGroups&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;GroupId&quot;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ingress_permissions</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="c1"># ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる</span>
+    <span class="n">perms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipPermissions&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">):</span>
+        <span class="n">perms</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;ipProtocol&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;fromPort&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;toPort&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;ipRanges&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">:</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)}]},</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">perms</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="n">permission</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ec2</span><span class="o">.</span><span class="n">revoke_security_group_ingress</span><span class="p">(</span><span class="n">GroupId</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">IpPermissions</span><span class="o">=</span><span class="p">[</span><span class="n">permission</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける</span>
+        <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;InvalidPermission.NotFound&quot;</span><span class="p">:</span>
+            <span class="k">raise</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="n">detail</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">]</span>
-    <span class="n">group_id</span> <span class="o">=</span> <span class="n">detail</span><span class="p">[</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">][</span><span class="s2">&quot;groupId&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">detail</span><span class="p">[</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">][</span><span class="s2">&quot;ipPermissions&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">]:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;detail&quot;</span><span class="p">][</span><span class="s2">&quot;requestParameters&quot;</span><span class="p">]</span>
+    <span class="n">group_id</span> <span class="o">=</span> <span class="n">resolve_group_id</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">ingress_permissions</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]}</span>
+        <span class="k">if</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;FromPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;fromPort&quot;</span><span class="p">]</span>
+            <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ToPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;toPort&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipRanges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;0.0.0.0/0&quot;</span> <span class="ow">and</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3389</span><span class="p">):</span>
-                <span class="n">ec2</span><span class="o">.</span><span class="n">revoke_security_group_ingress</span><span class="p">(</span>
-                    <span class="n">GroupId</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span>
-                    <span class="n">IpPermissions</span><span class="o">=</span><span class="p">[{</span>
-                        <span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">],</span>
-                        <span class="s2">&quot;FromPort&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;fromPort&quot;</span><span class="p">],</span>
-                        <span class="s2">&quot;ToPort&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;toPort&quot;</span><span class="p">],</span>
-                        <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">}],</span>
-                    <span class="p">}],</span>
-                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">:</span>
+                <span class="n">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;IpRanges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIp&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">}]})</span>
+        <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipv6Ranges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">if</span> <span class="n">rng</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cidrIpv6&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;::/0&quot;</span><span class="p">:</span>
+                <span class="n">revoke</span><span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;Ipv6Ranges&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;CidrIpv6&quot;</span><span class="p">:</span> <span class="s2">&quot;::/0&quot;</span><span class="p">}]})</span>
 </pre></div>
 </div>
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
@@ -2092,6 +2136,17 @@ flowchart TD
 <span class="w">  </span>--log-destination<span class="w"> </span>arn:aws:s3:::my-flowlogs-bucket/vpc/<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--max-aggregation-interval<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${account-id} ${vpc-id} ${subnet-id} ${interface-id} ${srcaddr} ${dstaddr} ${pkt-srcaddr} ${pkt-dstaddr} ${srcport} ${dstport} ${protocol} ${tcp-flags} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${flow-direction} ${traffic-path}&#39;</span>
+</pre></div>
+</div>
+<p><strong>CLI での作成例(CloudWatch Logs へ、デフォルトフォーマット)</strong></p>
+<p>下の Logs Insights クエリと 11-3 のメトリクスフィルタは、CloudWatch Logs のロググループ <code>/vpc/flowlogs</code> にデフォルトフォーマットで配信されたレコードを前提とします。上の S3 向け Flow Log とは別に、CloudWatch Logs 向けの Flow Log を作成します。</p>
+<div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--resource-ids<span class="w"> </span>vpc-0123456789abcdef0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--log-destination-type<span class="w"> </span>cloud-watch-logs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--log-group-name<span class="w"> </span>/vpc/flowlogs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--deliver-logs-permission-arn<span class="w"> </span>arn:aws:iam::111122223333:role/flowlogs-delivery-role
 </pre></div>
 </div>
 <p><strong>CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)</strong></p>
@@ -2517,13 +2572,13 @@ aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<sp
 <td><strong>ALB アクセスログ</strong></td>
 <td>リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報)</td>
 <td><strong>既定は無効</strong></td>
-<td><strong>S3</strong></td>
+<td><strong>S3</strong>(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3</td>
 </tr>
 <tr class="even">
 <td><strong>NLB アクセスログ</strong></td>
 <td><strong>TLS リスナー</strong> の接続情報</td>
 <td>既定は無効</td>
-<td><strong>S3</strong></td>
+<td><strong>S3</strong>(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3</td>
 </tr>
 <tr class="odd">
 <td><strong>CloudFront 標準ログ</strong></td>
@@ -2588,7 +2643,7 @@ aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<sp
 </tbody>
 </table></div>
 <blockquote>
-<p><strong>試験ポイント</strong>: 「<strong>ALB のログは S3 のみ</strong>」「<strong>パブリック DNS クエリログは CloudWatch Logs のみ</strong>」「<strong>CloudFront リアルタイムログは Kinesis Data Streams</strong>」など、<strong>「サービス ↔ 配信先」の組み合わせ</strong> がよく出ます。</p>
+<p><strong>試験ポイント</strong>: 「<strong>ALB / NLB の従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3 も可)</strong>」「<strong>パブリック DNS クエリログは CloudWatch Logs のみ</strong>」「<strong>CloudFront リアルタイムログは Kinesis Data Streams</strong>」など、<strong>「サービス ↔ 配信先」の組み合わせ</strong> がよく出ます。</p>
 </blockquote>
 <p><strong>根拠 URL</strong></p>
 <ul>
@@ -2678,13 +2733,15 @@ flowchart TD
     NFW --&gt; CT["CloudTrail&lt;br/&gt;直前の SG / ルート / 認証情報の変更"]
     CT --&gt; ACT["対応: 隔離 SG の適用 / ルール追加&lt;br/&gt;→ DNS Firewall・FW ルールで恒久対策"]
 </pre>
-<p>Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):</p>
+<p>Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:</p>
 <div class="code-block" data-lang="sql"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">srcaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstport</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">query_name</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cnt</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">vpc_flow_logs</span><span class="w"> </span><span class="n">f</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">resolver_query_logs</span><span class="w"> </span><span class="n">d</span>
 <span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">srcaddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">srcaddr</span>
-<span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstaddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">answer_address</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ACCEPT&#39;</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">from_iso8601_timestamp</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">query_timestamp</span><span class="p">)</span>
+<span class="w">    </span><span class="k">BETWEEN</span><span class="w"> </span><span class="n">from_unixtime</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="k">start</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">INTERVAL</span><span class="w"> </span><span class="s1">&#39;5&#39;</span><span class="w"> </span><span class="k">MINUTE</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">from_unixtime</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="k">start</span><span class="p">)</span>
+<span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="k">UNNEST</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">answers</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstaddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">answer</span><span class="p">.</span><span class="n">rdata</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">action</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;ACCEPT&#39;</span>
 <span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="k">day</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;2026/10/16&#39;</span>
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">srcaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstaddr</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">dstport</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">query_name</span>
 <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">cnt</span><span class="w"> </span><span class="k">DESC</span>
@@ -2922,7 +2979,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td><strong>モニターモード</strong></td>
-<td>各トラフィックの <strong>暗号化状況を可視化</strong>(Flow Logs に記録)し、平文を許す資源を特定</td>
+<td>各トラフィックの <strong>暗号化状況を可視化</strong>し、平文を許す資源を特定。監視には <code>${encryption-status}</code> を明示的に含むカスタム形式の Flow Log を新規作成する(<strong>既存の Flow Log にはこのフィールドが自動追加されない</strong>)</td>
 </tr>
 <tr class="odd">
 <td><strong>エンフォースモード</strong></td>
@@ -3041,7 +3098,7 @@ flowchart TD
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス</strong></div>
 <ul>
 <li><strong>強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2)</strong> のみに制限する。</li>
-<li>2 本のトンネルを <strong>別々の顧客ゲートウェイ(別の機器)</strong> に接続し、機器障害にも耐える。</li>
+<li>顧客ゲートウェイ(機器)の冗長化には、<strong>顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続</strong> を作成し、各接続で <strong>2 本のトンネルをどちらも設定</strong> する(機器障害にも耐える)。</li>
 <li>証明書認証を使うと <strong>PSK の管理負担が減る</strong>(ACM Private CA と連携)。</li>
 <li>CloudWatch の <code>TunnelState</code> でトンネルダウンを監視する。</li>
 </ul>
@@ -3215,7 +3272,7 @@ flowchart TD
 </tr>
 <tr class="odd">
 <td><strong>Transit Gateway</strong></td>
-<td><strong>TGW 自体はデータプレーンを暗号化しない</strong>。VPN アタッチメントは IPsec。VPC アタッチメント間は対応 Nitro の自動暗号化 / アプリ層 TLS / VPC Encryption Controls</td>
+<td>VPN アタッチメントは IPsec。VPC アタッチメント間で <strong>VPC Encryption Controls</strong> を使う場合は、<strong>TGW 側で暗号化サポートを明示的に有効化</strong> する必要があり、アタッチした VPC 間の通信が暗号化されるかは <strong>公式ドキュメントのエンフォースモードの条件</strong> に依存する。これとは別の手段として <strong>アプリ層 TLS</strong> で暗号化する</td>
 <td>暗号化要件がある場合は上記で担保</td>
 </tr>
 <tr class="even">
@@ -3389,7 +3446,7 @@ flowchart TD
 <ol>
 <li><strong>DNS 検証 + Route 53 の CNAME 自動作成</strong> で、更新を完全自動化する。</li>
 <li><strong>ルート CA はオフライン運用に近い扱い</strong>(使う頻度を最小化)、<strong>下位 CA で発行</strong>。</li>
-<li>内部通信の mTLS・VPN 証明書は <strong>Private CA で一元化</strong> し、短期証明書で失効管理を簡素化する。</li>
+<li>内部通信の mTLS・VPN 証明書は <strong>Private CA で一元化</strong> する。ACM で発行・自動更新するマネージド証明書には <strong>汎用モードの CA</strong> が必要。<strong>短期証明書モードの CA</strong> で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。</li>
 <li><strong>証明書の期限切れ監視</strong> を EventBridge / Config で必ず設定する。</li>
 <li>組織全体で使う場合は <strong>RAM で Private CA を共有</strong>。</li>
 </ol>
@@ -3503,7 +3560,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td><strong>外部リゾルバーの禁止</strong></td>
-<td>NACL / Network Firewall で外部 DNS への 53 番ポートを遮断</td>
+<td>NACL / Network Firewall で外部 DNS への 53 番ポートを遮断。ただし対象は従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)は防げない。Route 53 Resolver に一本化するには、外部 DoH サーバーへの通信を遮断する追加の送信(egress)制御(Network Firewall のドメイン/SNI フィルタリングなど)が必要</td>
 </tr>
 <tr class="odd">
 <td><strong>プライベートホストゾーン</strong></td>
@@ -3612,7 +3669,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td>NAT 経由の実際の送信元を Flow Logs で知りたい</td>
-<td><strong><code>pkt-srcaddr</code> / <code>pkt-dstaddr</code></strong>(v3 以降のフィールド)</td>
+<td><strong><code>pkt-srcaddr</code> / <code>pkt-dstaddr</code></strong>(v3 以降のフィールド。値は記録した ENI と通信の方向で変わるため、該当する方向のレコードを選び、他のレコードと相関させる)</td>
 </tr>
 <tr class="odd">
 <td>DNS クエリの可視化</td>
@@ -3632,7 +3689,7 @@ flowchart TD
 </tr>
 <tr class="odd">
 <td>ALB のアクセスログの保存先</td>
-<td><strong>S3 のみ</strong></td>
+<td>従来のアクセスログは <strong>S3 のみ</strong>(拡張アクセスログは CloudWatch Logs / Firehose / S3)</td>
 </tr>
 <tr class="even">
 <td>転送中データ暗号化の強制と監査(VPC 内)</td>
@@ -3701,12 +3758,12 @@ flowchart TD
 <h2 id="sec-93">21. 確認問題</h2>
 <section class="review-quiz" aria-labelledby="sec-93">
 <div class="quiz-intro"><div><span class="quiz-eyebrow">KNOWLEDGE CHECK</span><p>学んだ知識を、8 問で確認。</p><span>選択肢を選び、各問題の「正解・解説を見る」で理解を確かめましょう。</span></div><span class="quiz-count">全 8 問<span>単一選択 7 問 · 複数選択 1 問</span></span></div>
-<article class="quiz-card" aria-labelledby="quiz-title-1"><div class="quiz-card-meta"><span class="quiz-number">Q01</span><span>外部通信の制御</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-1">会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。</legend><div class="quiz-options">
+<article class="quiz-card" aria-labelledby="quiz-title-1"><div class="quiz-card-meta"><span class="quiz-number">Q01</span><span>外部通信の制御</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-1">会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。TLS の復号は行わず、SNI のホスト名に基づくドメイン単位のフィルタリングで制御します。運用負担を最小限にしながらこの要件を満たす構成はどれですか。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="radio" name="review-q1" value="A"><span class="quiz-letter">A</span><span>NAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する</span></label>
-<label class="quiz-option"><input type="radio" name="review-q1" value="B"><span class="quiz-letter">B</span><span>Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを drop にする</span></label>
+<label class="quiz-option"><input type="radio" name="review-q1" value="B"><span class="quiz-letter">B</span><span>Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする</span></label>
 <label class="quiz-option"><input type="radio" name="review-q1" value="C"><span class="quiz-letter">C</span><span>セキュリティグループで許可ドメインのホスト名を指定する</span></label>
 <label class="quiz-option"><input type="radio" name="review-q1" value="D"><span class="quiz-letter">D</span><span>ネットワーク ACL で許可ドメインの FQDN を指定する</span></label>
-</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>SG/NACL/NAT GW は FQDN での制御ができない。<strong>Network Firewall のドメインリスト + strict order + 既定 drop</strong> が正解。</p></div></details></article>
+</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>SG/NACL/NAT GW は FQDN での制御ができない。<strong>Network Firewall のドメインリスト + strict order + 既定アクション Drop established</strong> が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。</p></div></details></article>
 <article class="quiz-card" aria-labelledby="quiz-title-2"><div class="quiz-card-meta"><span class="quiz-number">Q02</span><span>対称ルーティング</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-2">集中型の検査 VPC で、Transit Gateway 経由の通信が断続的に失敗します。Network Firewall はステートフル検査を行っており、行きと戻りのパケットが異なる AZ のエンドポイントを通っているようです。最も適切な対処はどれですか。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="radio" name="review-q2" value="A"><span class="quiz-letter">A</span><span>NACL のルールを追加する</span></label>
 <label class="quiz-option"><input type="radio" name="review-q2" value="B"><span class="quiz-letter">B</span><span>TGW の VPC アタッチメントでアプライアンスモードを有効にする</span></label>
@@ -3725,18 +3782,18 @@ flowchart TD
 <label class="quiz-option"><input type="radio" name="review-q4" value="C"><span class="quiz-letter">C</span><span>CloudTrail</span></label>
 <label class="quiz-option"><input type="radio" name="review-q4" value="D"><span class="quiz-letter">D</span><span>Trusted Advisor</span></label>
 </div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>ペイロードの検査は <strong>Traffic Mirroring</strong>。Flow Logs はメタデータのみ。</p></div></details></article>
-<article class="quiz-card" aria-labelledby="quiz-title-5"><div class="quiz-card-meta"><span class="quiz-number">Q05</span><span>Flow Logs の読み方</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-5">NAT ゲートウェイ経由の通信を Flow Logs で分析する際、NAT 前の実際の送信元 IP アドレスを知るために使用するフィールドはどれですか。</legend><div class="quiz-options">
-<label class="quiz-option"><input type="radio" name="review-q5" value="A"><span class="quiz-letter">A</span><span><code>srcaddr</code></span></label>
-<label class="quiz-option"><input type="radio" name="review-q5" value="B"><span class="quiz-letter">B</span><span><code>pkt-srcaddr</code></span></label>
+<article class="quiz-card" aria-labelledby="quiz-title-5"><div class="quiz-card-meta"><span class="quiz-number">Q05</span><span>Flow Logs の読み方</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-5">インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。</legend><div class="quiz-options">
+<label class="quiz-option"><input type="radio" name="review-q5" value="A"><span class="quiz-letter">A</span><span><code>dstaddr</code></span></label>
+<label class="quiz-option"><input type="radio" name="review-q5" value="B"><span class="quiz-letter">B</span><span><code>pkt-dstaddr</code></span></label>
 <label class="quiz-option"><input type="radio" name="review-q5" value="C"><span class="quiz-letter">C</span><span><code>interface-id</code></span></label>
 <label class="quiz-option"><input type="radio" name="review-q5" value="D"><span class="quiz-letter">D</span><span><code>log-status</code></span></label>
-</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p><strong><code>pkt-srcaddr</code></strong>(v3 以降)がパケット自体の送信元。<code>srcaddr</code> は NAT 後の ENI のアドレスになりうる。</p></div></details></article>
-<article class="quiz-card" aria-labelledby="quiz-title-6"><div class="quiz-card-meta"><span class="quiz-number">Q06</span><span>ハイブリッド接続の暗号化</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-6">企業はオンプレミスと AWS を Direct Connect で接続しており、<strong>インターネットに通信を出さずに</strong> 終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。</legend><div class="quiz-options">
+</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>このレコードでは <code>dstaddr</code> が NAT ゲートウェイの ENI のプライベート IP、<strong><code>pkt-dstaddr</code></strong>(v3 以降)がインターネット上の最終宛先になる。<code>pkt-*</code> の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、<code>srcaddr</code>・<code>flow-direction</code>・時刻で他のレコードと相関させて特定する。</p></div></details></article>
+<article class="quiz-card" aria-labelledby="quiz-title-6"><div class="quiz-card-meta"><span class="quiz-number">Q06</span><span>ハイブリッド接続の暗号化</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-6">企業はオンプレミスと AWS を Direct Connect で接続しており、<strong>インターネットに通信を出さずに</strong>、かつ VPN の両端のエンドポイントに <strong>プライベート IP アドレス</strong> を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="radio" name="review-q6" value="A"><span class="quiz-letter">A</span><span>パブリック VIF 上の VPN</span></label>
 <label class="quiz-option"><input type="radio" name="review-q6" value="B"><span class="quiz-letter">B</span><span>トランジット VIF 上の Private IP VPN(Transit Gateway)</span></label>
 <label class="quiz-option"><input type="radio" name="review-q6" value="C"><span class="quiz-letter">C</span><span>インターネット VPN への切り替え</span></label>
 <label class="quiz-option"><input type="radio" name="review-q6" value="D"><span class="quiz-letter">D</span><span>NACL による暗号化</span></label>
-</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>インターネットを経由しない IPsec は <strong>Private IP VPN</strong>(トランジット VIF + TGW)。</p></div></details></article>
+</div></fieldset><details class="quiz-answer"><summary>正解・解説を見る</summary><div class="quiz-explanation"><span class="quiz-answer-label">正解 <strong>B</strong></span><p>インターネットを経由しない IPsec は <strong>Private IP VPN</strong>(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。</p></div></details></article>
 <article class="quiz-card" aria-labelledby="quiz-title-7"><div class="quiz-card-meta"><span class="quiz-number">Q07</span><span>DNSSEC の設定</span><span class="quiz-type">2 つ選択</span></div><fieldset><legend id="quiz-title-7">Route 53 のパブリックホストゾーンで DNSSEC 署名を有効にする際の説明として正しいものはどれですか(2 つ選択)。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="checkbox" name="review-q7" value="A"><span class="quiz-letter">A</span><span>KMS の非対称キー(ECC_NIST_P256)を <strong>us-east-1</strong> で作成する</span></label>
 <label class="quiz-option"><input type="checkbox" name="review-q7" value="B"><span class="quiz-letter">B</span><span>親ゾーンに DS レコードを登録する必要はない</span></label>

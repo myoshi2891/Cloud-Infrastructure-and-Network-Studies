@@ -118,7 +118,7 @@ flowchart TD
 | **すべてログを残す** | Flow Logs・ALB ログ・WAF ログ・Network Firewall ログ・Resolver ログ・CloudTrail |
 | **自動化** | Config ルール・EventBridge・Lambda・Systems Manager Automation による自動是正 |
 | **一元管理** | AWS Organizations + Firewall Manager + Security Hub で複数アカウントを統制 |
-| **すべて暗号化** | TLS 1.2 以上、IPsec、MACsec、DNSSEC、KMS |
+| **すべて暗号化** | TLS 1.2 以上、IPsec、MACsec、KMS |
 
 **根拠 URL**
 - 共有責任モデル: https://aws.amazon.com/compliance/shared-responsibility-model/
@@ -229,6 +229,7 @@ flowchart TD
     P1 -- "Yes: Count" --> P2
     P1 -- "No" --> P2{"優先度2のルールに一致?"}
     P2 -- "Yes: Allow / Block" --> END1
+    P2 -- "Yes: Count" --> DEF
     P2 -- "No" --> DEF["Web ACL の既定アクション<br/>Allow または Block"]
 ```
 
@@ -275,19 +276,26 @@ flowchart TD
 
 **ベストプラクティス**(AWS 公式ベストプラクティスガイドの要旨)
 - **ステートレスの既定アクションは「Forward to stateful rule groups」** にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。
-- **Strict rule order** を使い、**ステートフル既定アクションは drop_strict / drop_established** などで「許可リスト方式」にする。
-- 出口制御は **ドメインリスト(許可リスト)** で HTTPS の SNI を検査。
+- **Strict rule order** を使い、ドメイン許可リスト方式では **ステートフル既定アクションを Drop established** にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。
+- 出口制御は **ドメインリスト(許可リスト)** で HTTPS の SNI を検査。ただし SNI はクライアントが申告する値のため、未承認の IP アドレスへ接続しながら承認済みドメインの SNI を提示すれば通過でき、SNI フィルタリングだけでは承認ドメインへの接続を保証できない。保証が必要な場合は TLS インスペクションでサーバー証明書が SNI と一致することを検証する。
 - 一般的な脆弱性対策に **AWS マネージドルールグループ**(脅威シグネチャ)を併用。
 - **AZ ごとに 1 つ以上のエンドポイント** を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。
 - ログ(alert / flow)を必ず有効化する。
 
 ```bash
 # 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)
+# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)
+# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える
 aws network-firewall create-rule-group \
   --rule-group-name allow-approved-domains \
   --type STATEFUL \
   --capacity 100 \
   --rule-group '{
+    "RuleVariables": {
+      "IPSets": {
+        "HOME_NET": { "Definition": ["192.0.2.0/24", "10.0.0.0/16", "10.1.0.0/16"] }
+      }
+    },
     "RulesSource": {
       "RulesSourceList": {
         "Targets": [".amazonaws.com", ".example.com"],
@@ -383,7 +391,7 @@ flowchart TD
 **ベストプラクティス**
 - **AZ ごとに** ファイアウォールエンドポイントと NAT ゲートウェイを置き、**AZ をまたぐ通信を避ける**(コストと可用性)。
 - TGW の VPC アタッチメントで **アプライアンスモード(Appliance Mode)を有効化** し、行きと戻りを同じ AZ のファイアウォールに通す(**対称ルーティング**)。
-- ファイアウォールポリシーは **「許可ドメインのみ」+ 既定 drop**。
+- ファイアウォールポリシーは **「許可ドメインのみ」+ ステートフル既定アクション「Drop established」**。
 - 出口の許可ドメインは **ログ(alert/flow)で実際の利用を把握してから** 絞り込む。
 
 ### 4-4. DNS による持ち出しを防ぐ
@@ -406,7 +414,7 @@ flowchart TD
 | DNS Firewall Advanced | DGA(ドメイン生成アルゴリズム)や DNS トンネリングを **検出してブロック** |
 | 管理 | **Firewall Manager** で組織全体に適用可能 |
 
-**ベストプラクティス**: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を **ネットワーク ACL や Network Firewall で拒否** し、必ず Route 53 Resolver を経由させる。そうしないと DNS Firewall をすり抜けられます。
+**ベストプラクティス**: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を **ネットワーク ACL や Network Firewall で拒否** し、必ず Route 53 Resolver を経由させる。DNS Firewall がフィルタできるのは VPC の Resolver を通過したクエリだけなので、そうしないと DNS Firewall をすり抜けられます。ただし 53 番ポートの遮断で制限できるのは従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)の通信は Route 53 Resolver を経由させられません。DoH を防ぐ追加の送信(egress)制御は 19-4 を参照。
 
 **根拠 URL**
 - Network Firewall の導入パターン(AWS ブログ): https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/
@@ -505,7 +513,8 @@ flowchart TD
       "Action": "s3:*",
       "Resource": ["arn:aws:s3:::my-company-data", "arn:aws:s3:::my-company-data/*"],
       "Condition": {
-        "StringNotEquals": { "aws:SourceVpce": "vpce-0123456789abcdef0" }
+        "StringNotEquals": { "aws:SourceVpce": "vpce-0123456789abcdef0" },
+        "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
       }
     }
   ]
@@ -514,7 +523,7 @@ flowchart TD
 
 **ベストプラクティス(データ境界: Data Perimeter)**
 - **ID 境界**: `aws:PrincipalOrgID` で「自組織の ID のみ」。
-- **リソース境界**: `aws:ResourceOrgID` で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。
+- **リソース境界**: `aws:ResourceOrgID` で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。S3 のエンドポイントポリシーで指定した場合に強制されるのは、そのエンドポイントを経由するリクエストだけ。エンドポイントを経由しない経路も含めて他組織のリソースへのアクセスを防ぐには、SCP などの ID・組織レベルのリソース境界と、適切な出口制御も必要。
 - **ネットワーク境界**: `aws:SourceVpce` / `aws:SourceVpc` で「自社の VPC エンドポイント経由のみ」。
 - PrivateLink の **インターフェイスエンドポイントにも SG を付与**し、アクセス元を限定する。
 
@@ -698,28 +707,63 @@ flowchart TD
 }
 ```
 
-上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば `RevokeSecurityGroupIngress` を実行して SNS で通知します。
+上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば `RevokeSecurityGroupIngress` を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。
 
 ```python
 import boto3
+from botocore.exceptions import ClientError
 
 ec2 = boto3.client("ec2")
 
+def is_admin_rule(perm):
+    protocol = perm.get("ipProtocol")
+    tcp_admin = protocol in ("tcp", "6") and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389))
+    return protocol == "-1" or tcp_admin
+
+def resolve_group_id(params):
+    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する
+    if params.get("groupId"):
+        return params["groupId"]
+    groups = ec2.describe_security_groups(GroupNames=[params["groupName"]])
+    return groups["SecurityGroups"][0]["GroupId"]
+
+def ingress_permissions(params):
+    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる
+    perms = list(params.get("ipPermissions", {}).get("items", []))
+    if params.get("ipProtocol"):
+        perms.append({
+            "ipProtocol": params["ipProtocol"],
+            "fromPort": params.get("fromPort", -1),
+            "toPort": params.get("toPort", -1),
+            "ipRanges": {"items": [{"cidrIp": params.get("cidrIp")}]},
+        })
+    return perms
+
+
+def revoke(group_id, permission):
+    try:
+        ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[permission])
+    except ClientError as error:
+        # 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける
+        if error.response["Error"]["Code"] != "InvalidPermission.NotFound":
+            raise
+
 def handler(event, context):
-    detail = event["detail"]
-    group_id = detail["requestParameters"]["groupId"]
-    for perm in detail["requestParameters"]["ipPermissions"]["items"]:
+    params = event["detail"]["requestParameters"]
+    group_id = resolve_group_id(params)
+    for perm in ingress_permissions(params):
+        if not is_admin_rule(perm):
+            continue
+        base = {"IpProtocol": perm["ipProtocol"]}
+        if perm["ipProtocol"] != "-1":
+            base["FromPort"] = perm["fromPort"]
+            base["ToPort"] = perm["toPort"]
         for rng in perm.get("ipRanges", {}).get("items", []):
-            if rng.get("cidrIp") == "0.0.0.0/0" and perm.get("fromPort") in (22, 3389):
-                ec2.revoke_security_group_ingress(
-                    GroupId=group_id,
-                    IpPermissions=[{
-                        "IpProtocol": perm["ipProtocol"],
-                        "FromPort": perm["fromPort"],
-                        "ToPort": perm["toPort"],
-                        "IpRanges": [{"CidrIp": "0.0.0.0/0"}],
-                    }],
-                )
+            if rng.get("cidrIp") == "0.0.0.0/0":
+                revoke(group_id, {**base, "IpRanges": [{"CidrIp": "0.0.0.0/0"}]})
+        for rng in perm.get("ipv6Ranges", {}).get("items", []):
+            if rng.get("cidrIpv6") == "::/0":
+                revoke(group_id, {**base, "Ipv6Ranges": [{"CidrIpv6": "::/0"}]})
 ```
 
 **ベストプラクティス**
@@ -867,6 +911,20 @@ aws ec2 create-flow-logs \
   --log-destination arn:aws:s3:::my-flowlogs-bucket/vpc/ \
   --max-aggregation-interval 60 \
   --log-format '${version} ${account-id} ${vpc-id} ${subnet-id} ${interface-id} ${srcaddr} ${dstaddr} ${pkt-srcaddr} ${pkt-dstaddr} ${srcport} ${dstport} ${protocol} ${tcp-flags} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${flow-direction} ${traffic-path}'
+```
+
+**CLI での作成例(CloudWatch Logs へ、デフォルトフォーマット)**
+
+下の Logs Insights クエリと 11-3 のメトリクスフィルタは、CloudWatch Logs のロググループ `/vpc/flowlogs` にデフォルトフォーマットで配信されたレコードを前提とします。上の S3 向け Flow Log とは別に、CloudWatch Logs 向けの Flow Log を作成します。
+
+```bash
+aws ec2 create-flow-logs \
+  --resource-type VPC \
+  --resource-ids vpc-0123456789abcdef0 \
+  --traffic-type ALL \
+  --log-destination-type cloud-watch-logs \
+  --log-group-name /vpc/flowlogs \
+  --deliver-logs-permission-arn arn:aws:iam::111122223333:role/flowlogs-delivery-role
 ```
 
 **CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)**
@@ -1088,8 +1146,8 @@ aws cloudwatch put-metric-alarm \
 
 | ログ | 取得できる内容 | 有効化 | 配信先 |
 |---|---|---|---|
-| **ALB アクセスログ** | リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報) | **既定は無効** | **S3** |
-| **NLB アクセスログ** | **TLS リスナー** の接続情報 | 既定は無効 | **S3** |
+| **ALB アクセスログ** | リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報) | **既定は無効** | **S3**(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3 |
+| **NLB アクセスログ** | **TLS リスナー** の接続情報 | 既定は無効 | **S3**(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3 |
 | **CloudFront 標準ログ** | ビューワーリクエスト | 既定は無効 | S3(最新では CloudWatch Logs / Firehose も選択可) |
 | **CloudFront リアルタイムログ** | ほぼリアルタイムのリクエスト(サンプリング率を指定) | 既定は無効 | **Kinesis Data Streams** |
 | **WAF ログ** | Web ACL で評価されたリクエストの詳細(一致ルール・アクション) | 既定は無効 | CloudWatch Logs / S3 / Firehose(**`aws-waf-logs-` で始まる名前**) |
@@ -1101,7 +1159,7 @@ aws cloudwatch put-metric-alarm \
 | **Global Accelerator フローログ** | アクセラレーター経由のトラフィック | 既定は無効 | S3 |
 | **S3 サーバーアクセスログ / API Gateway アクセスログ** | リクエスト記録 | 既定は無効 | S3 / CloudWatch Logs |
 
-> **試験ポイント**: 「**ALB のログは S3 のみ**」「**パブリック DNS クエリログは CloudWatch Logs のみ**」「**CloudFront リアルタイムログは Kinesis Data Streams**」など、**「サービス ↔ 配信先」の組み合わせ** がよく出ます。
+> **試験ポイント**: 「**ALB / NLB の従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3 も可)**」「**パブリック DNS クエリログは CloudWatch Logs のみ**」「**CloudFront リアルタイムログは Kinesis Data Streams**」など、**「サービス ↔ 配信先」の組み合わせ** がよく出ます。
 
 **根拠 URL**
 - CloudTrail: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html
@@ -1167,15 +1225,17 @@ flowchart TD
     CT --> ACT["対応: 隔離 SG の適用 / ルール追加<br/>→ DNS Firewall・FW ルールで恒久対策"]
 ```
 
-Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる):
+Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:
 
 ```sql
 SELECT f.srcaddr, f.dstaddr, f.dstport, d.query_name, COUNT(*) AS cnt
 FROM vpc_flow_logs f
 JOIN resolver_query_logs d
   ON f.srcaddr = d.srcaddr
- AND f.dstaddr = d.answer_address
-WHERE f.action = 'ACCEPT'
+  AND from_iso8601_timestamp(d.query_timestamp)
+    BETWEEN from_unixtime(f.start) - INTERVAL '5' MINUTE AND from_unixtime(f.start)
+CROSS JOIN UNNEST(d.answers) AS a (answer)
+WHERE f.dstaddr = answer.rdata AND f.action = 'ACCEPT'
   AND f.day = '2026/10/16'
 GROUP BY f.srcaddr, f.dstaddr, f.dstport, d.query_name
 ORDER BY cnt DESC
@@ -1291,7 +1351,7 @@ flowchart TD
 | 項目 | 内容 |
 |---|---|
 | 目的 | VPC 内および VPC 間の **転送中暗号化を監査・強制** する |
-| **モニターモード** | 各トラフィックの **暗号化状況を可視化**(Flow Logs に記録)し、平文を許す資源を特定 |
+| **モニターモード** | 各トラフィックの **暗号化状況を可視化**し、平文を許す資源を特定。監視には `${encryption-status}` を明示的に含むカスタム形式の Flow Log を新規作成する(**既存の Flow Log にはこのフィールドが自動追加されない**) |
 | **エンフォースモード** | 暗号化に対応しないリソースの作成などを **防止** し、暗号化を強制 |
 | 進め方 | **既存 VPC はまずモニターモードで開始**、平文のリソースを移行してからエンフォースへ切り替える |
 | 組織管理 | **宣言型ポリシー(Organizations)** でアカウント/OU 単位に一括適用が可能 |
@@ -1338,7 +1398,7 @@ flowchart TD
 
 **ベストプラクティス**
 - **強い暗号アルゴリズム(AES-256、SHA-2、強い DH グループ、IKEv2)** のみに制限する。
-- 2 本のトンネルを **別々の顧客ゲートウェイ(別の機器)** に接続し、機器障害にも耐える。
+- 顧客ゲートウェイ(機器)の冗長化には、**顧客ゲートウェイごとに 1 本ずつ、計 2 本の Site-to-Site VPN 接続** を作成し、各接続で **2 本のトンネルをどちらも設定** する(機器障害にも耐える)。
 - 証明書認証を使うと **PSK の管理負担が減る**(ACM Private CA と連携)。
 - CloudWatch の `TunnelState` でトンネルダウンを監視する。
 
@@ -1420,7 +1480,7 @@ flowchart TD
 | **S3** | **HTTPS のみ許可するバケットポリシー**(`aws:SecureTransport`)、エンドポイント経由 | `Deny` + `aws:SecureTransport = false` |
 | **RDS / Aurora** | 接続の **SSL/TLS 必須化**(PostgreSQL: `rds.force_ssl`、MySQL: `require_secure_transport`)、CA 証明書の更新管理 | アプリ側でも **CA 検証** を有効にする |
 | **Redshift / DynamoDB 等** | Redshift: `require_ssl` パラメータ。DynamoDB は常に HTTPS | パラメータグループで強制 |
-| **Transit Gateway** | **TGW 自体はデータプレーンを暗号化しない**。VPN アタッチメントは IPsec。VPC アタッチメント間は対応 Nitro の自動暗号化 / アプリ層 TLS / VPC Encryption Controls | 暗号化要件がある場合は上記で担保 |
+| **Transit Gateway** | VPN アタッチメントは IPsec。VPC アタッチメント間で **VPC Encryption Controls** を使う場合は、**TGW 側で暗号化サポートを明示的に有効化** する必要があり、アタッチした VPC 間の通信が暗号化されるかは **公式ドキュメントのエンフォースモードの条件** に依存する。これとは別の手段として **アプリ層 TLS** で暗号化する | 暗号化要件がある場合は上記で担保 |
 | **EC2 上の独自アプリ** | アプリの TLS(nginx 等)、**ACM for Nitro Enclaves**、Private CA 発行の証明書 | 証明書の自動更新を設計に組み込む |
 
 ```json
@@ -1527,7 +1587,7 @@ flowchart TD
 **ベストプラクティス**
 1. **DNS 検証 + Route 53 の CNAME 自動作成** で、更新を完全自動化する。
 2. **ルート CA はオフライン運用に近い扱い**(使う頻度を最小化)、**下位 CA で発行**。
-3. 内部通信の mTLS・VPN 証明書は **Private CA で一元化** し、短期証明書で失効管理を簡素化する。
+3. 内部通信の mTLS・VPN 証明書は **Private CA で一元化** する。ACM で発行・自動更新するマネージド証明書には **汎用モードの CA** が必要。**短期証明書モードの CA** で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。
 4. **証明書の期限切れ監視** を EventBridge / Config で必ず設定する。
 5. 組織全体で使う場合は **RAM で Private CA を共有**。
 
@@ -1606,7 +1666,7 @@ flowchart TD
 | **DNS Firewall** | 悪性/不許可ドメインの名前解決を遮断、DGA・トンネリング検出 |
 | **クエリログ** | 不審な問い合わせの調査・GuardDuty との連携 |
 | **Resolver エンドポイントの SG** | インバウンド/アウトバウンドエンドポイントの ENI に SG を設定し、**DNS(UDP/TCP 53)のみを許可元に限定** |
-| **外部リゾルバーの禁止** | NACL / Network Firewall で外部 DNS への 53 番ポートを遮断 |
+| **外部リゾルバーの禁止** | NACL / Network Firewall で外部 DNS への 53 番ポートを遮断。ただし対象は従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)は防げない。Route 53 Resolver に一本化するには、外部 DoH サーバーへの通信を遮断する追加の送信(egress)制御(Network Firewall のドメイン/SNI フィルタリングなど)が必要 |
 | **プライベートホストゾーン** | 内部名をインターネットに露出しない(スプリットホライズン) |
 | **Resolver ルールの共有(RAM)** | 転送ルールを組織で一元管理し、設定ミスを防ぐ |
 
@@ -1649,12 +1709,12 @@ flowchart TD
 | 意図しないインターネット到達経路を検出 | **Network Access Analyzer** |
 | 通信のメタデータ(誰から誰へ・ACCEPT/REJECT) | **VPC Flow Logs** |
 | パケットの中身を IDS で検査 | **VPC Traffic Mirroring**(VXLAN / UDP 4789、NLB ターゲット) |
-| NAT 経由の実際の送信元を Flow Logs で知りたい | **`pkt-srcaddr` / `pkt-dstaddr`**(v3 以降のフィールド) |
+| NAT 経由の実際の送信元を Flow Logs で知りたい | **`pkt-srcaddr` / `pkt-dstaddr`**(v3 以降のフィールド。値は記録した ENI と通信の方向で変わるため、該当する方向のレコードを選び、他のレコードと相関させる) |
 | DNS クエリの可視化 | **Route 53 Resolver クエリログ**(Flow Logs には載らない) |
 | ログの攻撃パターンからアラーム | **メトリクスフィルタ → CloudWatch アラーム → SNS** |
 | 誰が SG を変更したか | **CloudTrail**(EventBridge で通知) |
 | 脅威の自動検出(C2・ポートスキャン) | **GuardDuty** → EventBridge → 自動対応 |
-| ALB のアクセスログの保存先 | **S3 のみ** |
+| ALB のアクセスログの保存先 | 従来のアクセスログは **S3 のみ**(拡張アクセスログは CloudWatch Logs / Firehose / S3) |
 | 転送中データ暗号化の強制と監査(VPC 内) | **VPC Encryption Controls**(モニター → エンフォース) |
 | DX 上の通信を暗号化(L2・ライン速度) | **MACsec**(専用接続) |
 | DX 上でインターネットを経由せず IPsec | **Private IP VPN(トランジット VIF + TGW)** |
@@ -1695,9 +1755,9 @@ flowchart TD
 
 各問題は初学者向けの確認用です。答えと解説は最後にまとめています。
 
-**Q1.** 会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。
+**Q1.** 会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。TLS の復号は行わず、SNI のホスト名に基づくドメイン単位のフィルタリングで制御します。運用負担を最小限にしながらこの要件を満たす構成はどれですか。
 - A. NAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する
-- B. Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを drop にする
+- B. Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする
 - C. セキュリティグループで許可ドメインのホスト名を指定する
 - D. ネットワーク ACL で許可ドメインの FQDN を指定する
 
@@ -1719,13 +1779,13 @@ flowchart TD
 - C. CloudTrail
 - D. Trusted Advisor
 
-**Q5.** NAT ゲートウェイ経由の通信を Flow Logs で分析する際、NAT 前の実際の送信元 IP アドレスを知るために使用するフィールドはどれですか。
-- A. `srcaddr`
-- B. `pkt-srcaddr`
+**Q5.** インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。
+- A. `dstaddr`
+- B. `pkt-dstaddr`
 - C. `interface-id`
 - D. `log-status`
 
-**Q6.** 企業はオンプレミスと AWS を Direct Connect で接続しており、**インターネットに通信を出さずに** 終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。
+**Q6.** 企業はオンプレミスと AWS を Direct Connect で接続しており、**インターネットに通信を出さずに**、かつ VPN の両端のエンドポイントに **プライベート IP アドレス** を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。
 - A. パブリック VIF 上の VPN
 - B. トランジット VIF 上の Private IP VPN(Transit Gateway)
 - C. インターネット VPN への切り替え
@@ -1749,12 +1809,12 @@ flowchart TD
 
 | 問 | 答え | 解説 |
 |---|---|---|
-| Q1 | **B** | SG/NACL/NAT GW は FQDN での制御ができない。**Network Firewall のドメインリスト + strict order + 既定 drop** が正解。 |
+| Q1 | **B** | SG/NACL/NAT GW は FQDN での制御ができない。**Network Firewall のドメインリスト + strict order + 既定アクション Drop established** が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。 |
 | Q2 | **B** | 非対称ルーティングの典型。**アプライアンスモード** で行きと戻りを同じ AZ のアプライアンスに通す。 |
 | Q3 | **B** | NACL はステートレス。**戻りのエフェメラルポート(1024–65535)のアウトバウンド許可** が必要。SG はステートフル。 |
 | Q4 | **B** | ペイロードの検査は **Traffic Mirroring**。Flow Logs はメタデータのみ。 |
-| Q5 | **B** | **`pkt-srcaddr`**(v3 以降)がパケット自体の送信元。`srcaddr` は NAT 後の ENI のアドレスになりうる。 |
-| Q6 | **B** | インターネットを経由しない IPsec は **Private IP VPN**(トランジット VIF + TGW)。 |
+| Q5 | **B** | このレコードでは `dstaddr` が NAT ゲートウェイの ENI のプライベート IP、**`pkt-dstaddr`**(v3 以降)がインターネット上の最終宛先になる。`pkt-*` の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、`srcaddr`・`flow-direction`・時刻で他のレコードと相関させて特定する。 |
+| Q6 | **B** | インターネットを経由しない IPsec は **Private IP VPN**(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。 |
 | Q7 | **A, D** | DNSSEC は **us-east-1 の ECC_NIST_P256 KMS キー**、キーポリシーで Route 53 を許可。**DS レコードの登録が必要**、プライベートゾーンは非対応、暗号化ではなく署名。 |
 | Q8 | **B** | **Firewall Manager のコンテンツ監査ポリシー** で組織全体を継続的に評価・自動是正できる。 |
 
