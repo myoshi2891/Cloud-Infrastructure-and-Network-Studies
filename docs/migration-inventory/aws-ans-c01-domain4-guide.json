@@ -1011,7 +1011,7 @@
     "Resolver エンドポイントの SG",
     "インバウンド/アウトバウンドエンドポイントの ENI に SG を設定し、DNS(UDP/TCP 53)のみを許可元に限定",
     "外部リゾルバーの禁止",
-    "NACL / Network Firewall で外部 DNS への 53 番ポートを遮断",
+    "NACL / Network Firewall で外部 DNS への 53 番ポートを遮断。ただし対象は従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)は防げない。Route 53 Resolver に一本化するには、外部 DoH サーバーへの通信を遮断する追加の送信(egress)制御(Network Firewall のドメイン/SNI フィルタリングなど)が必要",
     "プライベートホストゾーン",
     "内部名をインターネットに露出しない(スプリットホライズン)",
     "Resolver ルールの共有(RAM)",
@@ -2383,6 +2383,18 @@
     },
     {
       "kind": "paragraph",
+      "text": "CLI での作成例(CloudWatch Logs へ、デフォルトフォーマット)"
+    },
+    {
+      "kind": "paragraph",
+      "text": "下の Logs Insights クエリと 11-3 のメトリクスフィルタは、CloudWatch Logs のロググループ /vpc/flowlogs にデフォルトフォーマットで配信されたレコードを前提とします。上の S3 向け Flow Log とは別に、CloudWatch Logs 向けの Flow Log を作成します。"
+    },
+    {
+      "kind": "code",
+      "text": "aws ec2 create-flow-logs \\\n  --resource-type VPC \\\n  --resource-ids vpc-0123456789abcdef0 \\\n  --traffic-type ALL \\\n  --log-destination-type cloud-watch-logs \\\n  --log-group-name /vpc/flowlogs \\\n  --deliver-logs-permission-arn arn:aws:iam::111122223333:role/flowlogs-delivery-role"
+    },
+    {
+      "kind": "paragraph",
       "text": "CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)"
     },
     {
@@ -2629,7 +2641,7 @@
   "counts": {
     "table": 58,
     "diagram": 31,
-    "codeBlock": 14,
+    "codeBlock": 15,
     "figure": 0
   },
   "structures": {
@@ -2699,13 +2711,14 @@
       15,
       15,
       8,
-      19,
+      26,
       2,
       8,
+      7,
       5,
       8,
       19,
-      10,
+      12,
       13,
       7
     ]
