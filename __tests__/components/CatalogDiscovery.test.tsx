@@ -56,6 +56,16 @@ describe('カタログの検索とカテゴリ選択', () => {
         await user.type(screen.getByRole('searchbox'), '運用管理');
         expect(screen.getByRole('heading', { name: 'Associate Cloud Engineer' })).toBeInTheDocument();
     });
+
+    it('プロバイダ識別子でも該当プロバイダの全教材を発見できる', async () => {
+        const user = userEvent.setup();
+        render(<ExamCatalog exams={exams} />);
+        await user.type(screen.getByRole('searchbox'), 'gcp');
+        const gcpSection = document.getElementById('provider-gcp');
+        expect(gcpSection).not.toBeNull();
+        expect(within(gcpSection as HTMLElement).getAllByRole('article'))
+            .toHaveLength(exams.filter((exam) => exam.provider === 'GCP').length);
+    });
 });
 
 describe('グローバルメニューの拡張可能なカテゴリ選択', () => {

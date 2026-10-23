@@ -42,7 +42,7 @@ export function ExamCatalog({ exams }: { exams: Exam[] }) {
     const term = query.trim().toLocaleLowerCase();
     const matches = exams.filter((exam) =>
         (selected === 'all' || exam.provider === selected) &&
-        [exam.label, exam.abbr, exam.description, exam.level, providerMeta[exam.provider].label,
+        [exam.label, exam.abbr, exam.description, exam.level, exam.provider, providerMeta[exam.provider].label,
             ...exam.domains.map((domain) => domain.label)].join(' ').toLocaleLowerCase().includes(term),
     );
     return (
