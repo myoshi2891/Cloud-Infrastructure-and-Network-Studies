@@ -131,7 +131,7 @@ export default function Task43(){return <div className="guide-part" data-part="t
 {"\n"}
 <Diagram id="diag-28" label={"18-4. 証明書戦略の選び方"} />
 {"\n"}
-<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ol>{"\n"}<li><strong>{"DNS 検証 + Route 53 の CNAME 自動作成"}</strong>{" で、更新を完全自動化する。"}</li>{"\n"}<li><strong>{"ルート CA はオフライン運用に近い扱い"}</strong>{"(使う頻度を最小化)、"}<strong>{"下位 CA で発行"}</strong>{"。"}</li>{"\n"}<li>{"内部通信の mTLS・VPN 証明書は "}<strong>{"Private CA で一元化"}</strong>{" し、短期証明書で失効管理を簡素化する。"}</li>{"\n"}<li><strong>{"証明書の期限切れ監視"}</strong>{" を EventBridge / Config で必ず設定する。"}</li>{"\n"}<li>{"組織全体で使う場合は "}<strong>{"RAM で Private CA を共有"}</strong>{"。"}</li>{"\n"}</ol>{"\n"}</div></div>
+<div className="callout-practice"><div className="icon">{"✓"}</div><div className="body"><div className="label"><strong>{"ベストプラクティス"}</strong></div>{"\n"}<ol>{"\n"}<li><strong>{"DNS 検証 + Route 53 の CNAME 自動作成"}</strong>{" で、更新を完全自動化する。"}</li>{"\n"}<li><strong>{"ルート CA はオフライン運用に近い扱い"}</strong>{"(使う頻度を最小化)、"}<strong>{"下位 CA で発行"}</strong>{"。"}</li>{"\n"}<li>{"内部通信の mTLS・VPN 証明書は "}<strong>{"Private CA で一元化"}</strong>{" する。ACM で発行・自動更新するマネージド証明書には "}<strong>{"汎用モードの CA"}</strong>{" が必要。"}<strong>{"短期証明書モードの CA"}</strong>{" で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。"}</li>{"\n"}<li><strong>{"証明書の期限切れ監視"}</strong>{" を EventBridge / Config で必ず設定する。"}</li>{"\n"}<li>{"組織全体で使う場合は "}<strong>{"RAM で Private CA を共有"}</strong>{"。"}</li>{"\n"}</ol>{"\n"}</div></div>
 {"\n"}
 <p><strong>{"根拠 URL"}</strong></p>
 {"\n"}

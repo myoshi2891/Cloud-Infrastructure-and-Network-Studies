@@ -65,7 +65,7 @@ export default function Task32(){return <div className="guide-part" data-part="t
 
 <h4>{"SG と NACL のどちらが拒否したかの見分け方"}</h4>
 
-<div className={"table-scroll"} role="region" tabIndex={0} aria-label={"SG と NACL のどちらが拒否したかの見分け方（表44）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"観察"}</th><th scope="col">{"疑う箇所"}</th></tr></thead><tbody><tr className={"odd"}><td><strong>{"往路は ACCEPT、戻りが REJECT"}</strong></td><td>{" "}<strong>{"ネットワーク ACL"}</strong>{"（ステートレスなので戻りの許可が必要） "}</td></tr><tr className={"even"}><td>{"往路から REJECT"}</td><td>{"セキュリティグループ、または ネットワーク ACL の許可不足"}</td></tr><tr className={"odd"}><td>{"ログに "}<strong>{"そもそも出ない"}</strong></td><td>{" ルーティングの問題（パケットが届いていない）、または記録対象外の通信 "}</td></tr></tbody></table>{" "}</div>
+<div className={"table-scroll"} role="region" tabIndex={0} aria-label={"SG と NACL のどちらが拒否したかの見分け方（表44）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"観察"}</th><th scope="col">{"疑う箇所"}</th></tr></thead><tbody><tr className={"odd"}><td><strong>{"往路は ACCEPT、戻りが REJECT"}</strong></td><td>{" "}<strong>{"ネットワーク ACL"}</strong>{"（ステートレスなので戻りの許可が必要） "}</td></tr><tr className={"even"}><td>{"往路から REJECT"}</td><td>{"セキュリティグループ、または ネットワーク ACL の許可不足"}</td></tr><tr className={"odd"}><td>{"ログに "}<strong>{"そもそも出ない"}</strong></td><td>{" ルーティングの問題（パケットが届いていない）、または記録対象外の通信。"}<code>{"log-status"}</code>{" が "}<code>{"SKIPDATA"}</code>{" のレコードは、集約間隔中に記録がスキップされた（容量超過や内部エラー）ことを示す "}</td></tr></tbody></table>{" "}</div>
 
 <h4>{"Athena での分析例"}</h4>
 
@@ -87,7 +87,7 @@ export default function Task32(){return <div className="guide-part" data-part="t
 <div className="code-line"><span className={"w"}>{"  "}</span>{"--log-destination-type"}<span className={"w"}>{" "}</span>{"s3"}<span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
 <div className="code-line"><span className={"w"}>{"  "}</span>{"--log-destination"}<span className={"w"}>{" "}</span>{"arn:aws:s3:::my-flow-logs-bucket/vpc/"}<span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
 <div className="code-line"><span className={"w"}>{"  "}</span>{"--max-aggregation-interval"}<span className={"w"}>{" "}</span><span className={"m"}>{"60"}</span><span className={"w"}>{" "}</span><span className={"se"}>{"\\"}</span></div>
-<div className="code-line"><span className={"w"}>{"  "}</span>{"--log-format"}<span className={"w"}>{" "}</span><span className={"s1"}>{"'${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction}'"}</span></div></div>{" "}</div>
+<div className="code-line"><span className={"w"}>{"  "}</span>{"--log-format"}<span className={"w"}>{" "}</span><span className={"s1"}>{"'${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction} ${log-status}'"}</span></div></div>{" "}</div>
 
 <h4>{"ベストプラクティス"}</h4>
 

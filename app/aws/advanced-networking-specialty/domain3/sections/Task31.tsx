@@ -208,7 +208,7 @@ export default function Task31(){return <div className="guide-part" data-part="t
 
 <Diagram id="diag-11" label={"選択肢の比較"} />
 
-<blockquote>{" "}<p>{" "}<strong>{"試験ポイント"}</strong>{": 「"}<strong>{"オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず"}</strong>{"」は、一般に "}<strong>{"パブリック VIF"}</strong>{"、または "}<strong>{"プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント"}</strong>{" が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。 "}</p>{" "}</blockquote>
+<blockquote>{" "}<p>{" "}<strong>{"試験ポイント"}</strong>{": 「"}<strong>{"オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず"}</strong>{"」は、一般に "}<strong>{"パブリック VIF"}</strong>{"、または "}<strong>{"プライベート VIF（または DX トランジット VIF 上の Private IP VPN）＋ インターフェイス型 S3 エンドポイント"}</strong>{" が答えになります。インターネット経由の Site-to-Site VPN はこの要件を満たしません。要件（帯域・コスト・VPC 内の制御）を見て選びます。 "}</p>{" "}</blockquote>
 
 <h4>{"ベストプラクティス"}</h4>
 
