@@ -26,7 +26,7 @@ export default function Task31(){return <div className="guide-part" data-part="t
 
 <div className={"table-scroll"} role="region" tabIndex={0} aria-label={"VPC ルートテーブルでの優先順位（同じ宛先の場合）（表6）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"優先度"}</th><th scope="col">{"ルートの種類"}</th></tr></thead><tbody><tr className={"odd"}><td>{"1"}</td><td>{" 静的ルート（VPC ピアリング、インターネットゲートウェイ、TGW、ゲートウェイ型 VPC エンドポイントなど） "}</td></tr><tr className={"even"}><td>{"2"}</td><td>{"プレフィックスリストを参照するルート"}</td></tr><tr className={"odd"}><td>{"3"}</td><td>{" 伝播されたルート：Direct Connect の BGP ルート → VPN の静的ルート → VPN の BGP ルート の順 "}</td></tr></tbody></table>{" "}</div>
 
-<blockquote>{" "}<p>{" "}<strong>{"補足"}</strong>{": 宛先が "}<strong>{"完全に同じ"}</strong>{" ときの順位です。範囲の広さが違えば、常に最長プレフィックス一致が先に適用されます。 "}</p>{" "}<p>{" "}<strong>{"注意"}</strong>{": VPC 自身の CIDR に対する "}<strong>{"ローカルルートは最優先"}</strong>{" で、より具体的な伝播ルートでも上書きできません。 "}</p>{" "}</blockquote>
+<blockquote>{" "}<p>{" "}<strong>{"補足"}</strong>{": 宛先が "}<strong>{"完全に同じ"}</strong>{" ときの順位です。範囲の広さが違えば、常に最長プレフィックス一致が先に適用されます。 "}</p>{" "}<p>{" "}<strong>{"注意"}</strong>{": VPC 自身の CIDR に対する "}<strong>{"ローカルルート"}</strong>{" は、より具体的な "}<strong>{"伝播ルート"}</strong>{" でも上書きできません。ただし、ミドルボックス（ENI や Gateway Load Balancer エンドポイントなど）を宛先とする "}<strong>{"より具体的な静的ルート"}</strong>{" は、ローカルルートより優先されます。 "}</p>{" "}</blockquote>
 
 <h4>{"Transit Gateway ルートテーブルでの優先順位（同じ宛先の場合）"}</h4>
 

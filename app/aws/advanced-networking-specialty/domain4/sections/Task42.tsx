@@ -63,9 +63,23 @@ export default function Task42(){return <div className="guide-part" data-part="t
 <div className="code-line"><span className="w">{"  "}</span>{"--log-format"}<span className="w">{" "}</span><span className="s1">{"'${version} ${account-id} ${vpc-id} ${subnet-id} ${interface-id} ${srcaddr} ${dstaddr} ${pkt-srcaddr} ${pkt-dstaddr} ${srcport} ${dstport} ${protocol} ${tcp-flags} ${packets} ${bytes} ${start} ${end} ${action} ${log-status} ${flow-direction} ${traffic-path}'"}</span></div>
 </div></div>{"\n"}</div>
 {"\n"}
+<p><strong>{"CLI での作成例(CloudWatch Logs へ、デフォルトフォーマット)"}</strong></p>
+{"\n"}
+<p>{"下の Logs Insights クエリと 11-3 のメトリクスフィルタは、CloudWatch Logs のロググループ "}<code>{"/vpc/flowlogs"}</code>{" にデフォルトフォーマットで配信されたレコードを前提とします。上の S3 向け Flow Log とは別に、CloudWatch Logs 向けの Flow Log を作成します。"}</p>
+{"\n"}
+<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード9）"}>
+<div className="code-line">{"aws"}<span className="w">{" "}</span>{"ec2"}<span className="w">{" "}</span>{"create-flow-logs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--resource-type"}<span className="w">{" "}</span>{"VPC"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--resource-ids"}<span className="w">{" "}</span>{"vpc-0123456789abcdef0"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--traffic-type"}<span className="w">{" "}</span>{"ALL"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-destination-type"}<span className="w">{" "}</span>{"cloud-watch-logs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--log-group-name"}<span className="w">{" "}</span>{"/vpc/flowlogs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
+<div className="code-line"><span className="w">{"  "}</span>{"--deliver-logs-permission-arn"}<span className="w">{" "}</span>{"arn:aws:iam::111122223333:role/flowlogs-delivery-role"}</div>
+</div></div>{"\n"}</div>
+{"\n"}
 <p><strong>{"CloudWatch Logs Insights での分析(拒否された通信の送信元 Top10)"}</strong></p>
 {"\n"}
-<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード9）"}>
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード10）"}>
 <div className="code-line"><span className="n">{"fields"}</span><span className="w">{" "}</span><span className="o">{"@"}</span><span className="k">{"timestamp"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"srcAddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstAddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstPort"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"action"}</span></div>
 <div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="n">{"filter"}</span><span className="w">{" "}</span><span className="n">{"action"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="ss">{"\"REJECT\""}</span></div>
 <div className="code-line"><span className="o">{"|"}</span><span className="w">{" "}</span><span className="n">{"stats"}</span><span className="w">{" "}</span><span className="k">{"count"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"as"}</span><span className="w">{" "}</span><span className="n">{"rejectCount"}</span><span className="w">{" "}</span><span className="k">{"by"}</span><span className="w">{" "}</span><span className="n">{"srcAddr"}</span></div>
@@ -75,7 +89,7 @@ export default function Task42(){return <div className="guide-part" data-part="t
 {"\n"}
 <p><strong>{"Athena での分析(S3 に保存した Flow Logs で、ポート 22 への拒否を集計)"}</strong></p>
 {"\n"}
-<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード10）"}>
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"9-5. 作成と分析の流れ（コード11）"}>
 <div className="code-line"><span className="k">{"SELECT"}</span><span className="w">{" "}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="k">{"COUNT"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"AS"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span></div>
 <div className="code-line"><span className="k">{"FROM"}</span><span className="w">{" "}</span><span className="n">{"vpc_flow_logs"}</span></div>
 <div className="code-line"><span className="k">{"WHERE"}</span><span className="w">{" "}</span><span className="n">{"action"}</span><span className="w">{" "}</span><span className="o">{"="}</span><span className="w">{" "}</span><span className="s1">{"'REJECT'"}</span></div>
@@ -148,7 +162,7 @@ export default function Task42(){return <div className="guide-part" data-part="t
 {"\n"}
 <p><strong>{"例: Flow Logs の REJECT をメトリクス化してアラーム"}</strong></p>
 {"\n"}
-<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"11-3. ログからカスタムメトリクスを作る(メトリクスフィルタ)（コード11）"}>
+<div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"11-3. ログからカスタムメトリクスを作る(メトリクスフィルタ)（コード12）"}>
 <div className="code-line"><span className="c1">{"# 1. メトリクスフィルタを作成(Flow Logs の CloudWatch Logs ロググループ)"}</span></div>
 <div className="code-line">{"aws"}<span className="w">{" "}</span>{"logs"}<span className="w">{" "}</span>{"put-metric-filter"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
 <div className="code-line"><span className="w">{"  "}</span>{"--log-group-name"}<span className="w">{" "}</span>{"/vpc/flowlogs"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
@@ -226,7 +240,7 @@ export default function Task42(){return <div className="guide-part" data-part="t
 {"\n"}
 <p>{"Athena で複数テーブルを JOIN する例(ENI を軸に Flow Logs と Resolver ログを突き合わせる)。注意: この例の 5 分の照合窓は簡略化したもので、完全ではありません。DNS 応答はクライアントやリゾルバーに TTL の間キャッシュされるため、名前解決から 5 分以上後に始まった通信は正しい対応があっても結果から漏れます。漏れを許容できない調査では、照合窓を想定する最大 TTL まで広げてください:"}</p>
 {"\n"}
-<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)（コード12）"}>
+<div className="code-sample" data-lang="sql"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"13-3. 相関分析の考え方(例: 不審な外部通信の調査)（コード13）"}>
 <div className="code-line"><span className="k">{"SELECT"}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"srcaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstaddr"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"f"}</span><span className="p">{"."}</span><span className="n">{"dstport"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="n">{"d"}</span><span className="p">{"."}</span><span className="n">{"query_name"}</span><span className="p">{","}</span><span className="w">{" "}</span><span className="k">{"COUNT"}</span><span className="p">{"("}</span><span className="o">{"*"}</span><span className="p">{")"}</span><span className="w">{" "}</span><span className="k">{"AS"}</span><span className="w">{" "}</span><span className="n">{"cnt"}</span></div>
 <div className="code-line"><span className="k">{"FROM"}</span><span className="w">{" "}</span><span className="n">{"vpc_flow_logs"}</span><span className="w">{" "}</span><span className="n">{"f"}</span></div>
 <div className="code-line"><span className="k">{"JOIN"}</span><span className="w">{" "}</span><span className="n">{"resolver_query_logs"}</span><span className="w">{" "}</span><span className="n">{"d"}</span></div>
