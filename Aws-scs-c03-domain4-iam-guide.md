@@ -96,7 +96,8 @@ flowchart TD
     D -->|"ない"| O{"Organizationsの SCP と RCP が許可しているか"}
     O -->|"いいえ"| X
     O -->|"はい"| R{"リソースベースポリシーが許可しているか"}
-    R -->|"はい 同一アカウント"| OK["許可"]
+    R -->|"はい 同一アカウントでユーザーARNかロールセッションARNを指定"| OK["許可"]
+    R -->|"はい 同一アカウントでロールARNを指定"| B
     R -->|"いいえ"| I{"IDベースポリシーが許可しているか"}
     I -->|"いいえ"| X
     I -->|"はい"| B{"境界とセッションポリシーも許可しているか"}
@@ -105,6 +106,7 @@ flowchart TD
 ```
 
 > 上図は初学者向けに簡略化したものです。厳密な評価ロジックは出典の公式ドキュメントで確認してください。
+> 同一アカウントでも、リソースベースポリシーが **ロール ARN** を指定して許可した場合は、境界とセッションポリシーの範囲内でのみ有効です。IAM ユーザー ARN やロールセッション ARN を直接指定した場合は、それらの暗黙の拒否に制限されません。
 > 特に **クロスアカウントでは、リソース側とアクセス元の ID 側の両方で許可が必要** な点が重要です (第 6 章で詳述)。
 
 出典: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html
@@ -241,7 +243,7 @@ flowchart LR
 
 | 機能 | 内容 |
 |---|---|
-| MFA | TOTP アプリ、SMS、メールなど。パスキー (WebAuthn) によるパスワードレス認証にも対応 |
+| MFA | TOTP アプリと SMS は全プラン (Lite, Essentials, Plus) で利用可。メール MFA は Essentials または Plus が必要。パスキー (WebAuthn) によるパスワードレス認証にも対応 (Essentials または Plus が必要) |
 | 適応型認証と侵害された認証情報の検出 | リスクに応じて MFA を要求したりブロックしたりする (脅威保護の機能。利用できる機能はプラン (Lite, Essentials, Plus) で異なる) |
 | パスワードポリシー | 長さや文字種を設定 |
 | Lambda トリガー | サインイン前後やトークン発行前に独自ロジックを挟む (例: トークンにクレームを追加) |
@@ -444,13 +446,13 @@ flowchart TD
 | `AssumeRole` | IAM ユーザーやロール | ロールを引き受ける (クロスアカウント含む) | 既定 1 時間。15 分〜ロールの最大セッション時間 (最大 12 時間) |
 | `AssumeRoleWithSAML` | SAML IdP で認証済みのユーザー | SAML フェデレーション | 15 分〜ロールの最大セッション時間 |
 | `AssumeRoleWithWebIdentity` | OIDC やソーシャルで認証済みのユーザー | Web ID フェデレーション (Cognito ID プールも内部で利用) | 15 分〜ロールの最大セッション時間 |
-| `GetSessionToken` | IAM ユーザー (またはルート) | **MFA 付きの一時認証情報** を得る | IAM ユーザーは既定 12 時間 (15 分〜36 時間) |
+| `GetSessionToken` | IAM ユーザー (またはルート) | **MFA 付きの一時認証情報** を得る | IAM ユーザーは既定 12 時間 (15 分〜36 時間)。ルートは既定 1 時間 (15 分〜最大 1 時間) |
 | `GetFederationToken` | IAM ユーザー | 独自ブローカーによるフェデレーション | 既定 12 時間 (15 分〜36 時間) |
 | `AssumeRoot` | 管理アカウントまたは委任管理者 | メンバーアカウントのルート権限が必要な特定タスクを実行 (中央集権的なルートアクセス管理) | 最大 15 分 |
 | `GetCallerIdentity` | 誰でも | 「今の自分は誰か」を確認 (権限不要) | 該当なし |
 
 > **ロールチェーン** (ロールを引き受けた状態でさらに別のロールを引き受ける) の場合、セッションは **最大 1 時間** に制限されます。
-> `GetSessionToken` で得た認証情報は、**MFA 情報を付けて取得した場合のみ** IAM API や一部の STS API (`AssumeRole` を除く) を呼べます。MFA なしで取得した場合、IAM API は呼べません。試験では「MFA 付きの CLI 認証情報が欲しい」なら `GetSessionToken` と覚えます。
+> `GetSessionToken` で得た認証情報で呼べる STS API は **`AssumeRole` と `GetCallerIdentity` のみ** です。IAM API は **MFA 情報を付けて取得した場合のみ** 呼べ、MFA なしで取得した場合は呼べません。試験では「MFA 付きの CLI 認証情報が欲しい」なら `GetSessionToken` と覚えます。
 
 #### Step 3. AssumeRole の流れ (クロスアカウント)
 
@@ -684,7 +686,8 @@ aws iam get-credential-report --query Content --output text | base64 --decode
 
 | 状況 | 許可の条件 |
 |---|---|
-| 同一アカウント | ID ベースポリシーか、リソースベースポリシー **のどちらか一方** が許可していれば OK (ただし明示的な Deny がない場合) |
+| 同一アカウント (リソースポリシーが IAM ユーザー ARN またはロールセッション ARN を直接指定) | ID ベースポリシーか、リソースベースポリシー **のどちらか一方** が許可していれば OK。リソースポリシーの許可はアクセス許可の境界やセッションポリシーの暗黙の拒否に制限されない (ただし明示的な Deny がない場合) |
+| 同一アカウント (リソースポリシーがロール ARN を指定) | リソースポリシーの許可も **アクセス許可の境界とセッションポリシーの範囲内** でのみ有効 (境界に明示的な Allow が必要) |
 | クロスアカウント | **リソース側のポリシーと、アクセス元の ID ベースポリシーの両方** が許可している必要がある |
 
 ```mermaid
@@ -929,6 +932,7 @@ forbid (
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Sid": "RunTaggedInstance",
       "Effect": "Allow",
       "Action": "ec2:RunInstances",
       "Resource": "arn:aws:ec2:*:*:instance/*",
@@ -940,10 +944,36 @@ forbid (
           "aws:TagKeys": ["project", "Name"]
         }
       }
+    },
+    {
+      "Sid": "RunInstanceDependencies",
+      "Effect": "Allow",
+      "Action": "ec2:RunInstances",
+      "Resource": [
+        "arn:aws:ec2:*::image/*",
+        "arn:aws:ec2:*:*:subnet/*",
+        "arn:aws:ec2:*:*:network-interface/*",
+        "arn:aws:ec2:*:*:volume/*",
+        "arn:aws:ec2:*:*:key-pair/*",
+        "arn:aws:ec2:*:*:security-group/*"
+      ]
+    },
+    {
+      "Sid": "TagOnLaunch",
+      "Effect": "Allow",
+      "Action": "ec2:CreateTags",
+      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:CreateAction": "RunInstances"
+        }
+      }
     }
   ]
 }
 ```
+
+> `RunInstances` は AMI、サブネット、ネットワークインターフェイス、ボリューム、キーペア、セキュリティグループ、インスタンスの各リソースに対して認可されます。リクエストタグはインスタンス以外の既存リソースには付かないため、タグ条件はインスタンスだけに適用し、それ以外のリソースは条件なしの別ステートメントで許可します。作成時のタグ付けには `ec2:CreateAction` で `RunInstances` に限定した `ec2:CreateTags` も必要です。
 
 ### 7.3 属性 (タグ) の渡し方
 
@@ -1055,7 +1085,13 @@ flowchart TD
     {
       "Sid": "DenyBoundaryRemoval",
       "Effect": "Deny",
-      "Action": ["iam:DeleteRolePermissionsBoundary", "iam:DeletePolicy", "iam:CreatePolicyVersion"],
+      "Action": [
+        "iam:DeleteRolePermissionsBoundary",
+        "iam:DeletePolicy",
+        "iam:CreatePolicyVersion",
+        "iam:SetDefaultPolicyVersion",
+        "iam:DeletePolicyVersion"
+      ],
       "Resource": [
         "arn:aws:iam::111122223333:role/app-*",
         "arn:aws:iam::111122223333:policy/DeveloperBoundary"
