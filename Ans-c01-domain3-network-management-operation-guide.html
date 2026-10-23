@@ -5505,7 +5505,7 @@ flowchart LR
                         <strong>試験ポイント</strong>: 「<strong
                             >DNS キャッシュのせいでフェイルオーバーが遅い／クライアントが IP
                             を固定で許可リストに登録している</strong
-                        >」→ <strong>Global Accelerator</strong>。
+                        >」→ <strong>Global Accelerator</strong>。ただし HTTP/HTTPS 配信で許可リスト用の固定 IP だけが必要なら、CloudFront の Anycast 静的 IP リストも選択肢になります。
                     </p>
                 </blockquote>
                 <h4>ベストプラクティス</h4>

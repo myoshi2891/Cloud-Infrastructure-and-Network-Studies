@@ -3669,7 +3669,7 @@ flowchart TD
 </tr>
 <tr class="even">
 <td>NAT 経由の実際の送信元を Flow Logs で知りたい</td>
-<td><strong><code>pkt-srcaddr</code> / <code>pkt-dstaddr</code></strong>(v3 以降のフィールド)</td>
+<td><strong><code>pkt-srcaddr</code> / <code>pkt-dstaddr</code></strong>(v3 以降のフィールド。値は記録した ENI と通信の方向で変わるため、該当する方向のレコードを選び、他のレコードと相関させる)</td>
 </tr>
 <tr class="odd">
 <td>DNS クエリの可視化</td>

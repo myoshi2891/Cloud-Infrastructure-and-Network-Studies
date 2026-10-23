@@ -1709,7 +1709,7 @@ flowchart TD
 | 意図しないインターネット到達経路を検出 | **Network Access Analyzer** |
 | 通信のメタデータ(誰から誰へ・ACCEPT/REJECT) | **VPC Flow Logs** |
 | パケットの中身を IDS で検査 | **VPC Traffic Mirroring**(VXLAN / UDP 4789、NLB ターゲット) |
-| NAT 経由の実際の送信元を Flow Logs で知りたい | **`pkt-srcaddr` / `pkt-dstaddr`**(v3 以降のフィールド) |
+| NAT 経由の実際の送信元を Flow Logs で知りたい | **`pkt-srcaddr` / `pkt-dstaddr`**(v3 以降のフィールド。値は記録した ENI と通信の方向で変わるため、該当する方向のレコードを選び、他のレコードと相関させる) |
 | DNS クエリの可視化 | **Route 53 Resolver クエリログ**(Flow Logs には載らない) |
 | ログの攻撃パターンからアラーム | **メトリクスフィルタ → CloudWatch アラーム → SNS** |
 | 誰が SG を変更したか | **CloudTrail**(EventBridge で通知) |
