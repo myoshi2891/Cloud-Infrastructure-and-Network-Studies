@@ -173,7 +173,7 @@ export default function Task33(){return <div className="guide-part" data-part="t
 
 <div className={"table-scroll"} role="region" tabIndex={0} aria-label={"Route 53 との使い分け（表82）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"比較"}</th><th scope="col">{"Global Accelerator"}</th><th scope="col">{"Route 53（DNS）"}</th></tr></thead><tbody><tr className={"odd"}><td>{"切り替えの仕組み"}</td><td>{" "}<strong>{"IP は変わらない"}</strong>{"ので、DNS キャッシュに左右されない "}</td><td>{" DNS の "}<strong>{"TTL とクライアントのキャッシュ"}</strong>{" に依存 "}</td></tr><tr className={"even"}><td>{"障害時の切り替え速度"}</td><td><strong>{"速い"}</strong></td><td>{"TTL 次第"}</td></tr></tbody></table>{" "}</div>
 
-<blockquote>{" "}<p>{" "}<strong>{"試験ポイント"}</strong>{": 「"}<strong>{"DNS キャッシュのせいでフェイルオーバーが遅い／クライアントが IP を固定で許可リストに登録している"}</strong>{"」→ "}<strong>{"Global Accelerator"}</strong>{"。 "}</p>{" "}</blockquote>
+<blockquote>{" "}<p>{" "}<strong>{"試験ポイント"}</strong>{": 「"}<strong>{"DNS キャッシュのせいでフェイルオーバーが遅い／クライアントが IP を固定で許可リストに登録している"}</strong>{"」→ "}<strong>{"Global Accelerator"}</strong>{"。ただし HTTP/HTTPS 配信で許可リスト用の固定 IP だけが必要なら、CloudFront の Anycast 静的 IP リストも選択肢になります。 "}</p>{" "}</blockquote>
 
 <h4>{"ベストプラクティス"}</h4>
 
