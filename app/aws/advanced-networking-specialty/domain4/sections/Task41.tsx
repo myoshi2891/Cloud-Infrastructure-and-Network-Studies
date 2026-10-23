@@ -142,7 +142,7 @@ export default function Task41(){return <div className="guide-part" data-part="t
 {"\n"}
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4-4. DNS による持ち出しを防ぐ（表13）"}><table><thead><tr className="header"><th scope="col">{"設定項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className="odd"><td>{"ドメインリスト"}</td><td>{"自作リスト、または "}<strong>{"AWS マネージドドメインリスト"}</strong>{"(マルウェア、ボットネット C2 など)"}</td></tr><tr className="even"><td>{"アクション"}</td><td>{"ALLOW / BLOCK(応答は NODATA・NXDOMAIN・OVERRIDE) / ALERT"}</td></tr><tr className="odd"><td>{"フェイルクローズ / フェイルオープン"}</td><td>{"DNS Firewall が判定できない場合に "}<strong>{"名前解決を止める(クローズ)か通す(オープン)か"}</strong>{" を VPC ごとに選択"}</td></tr><tr className="even"><td>{"DNS Firewall Advanced"}</td><td>{"DGA(ドメイン生成アルゴリズム)や DNS トンネリングを "}<strong>{"検出してブロック"}</strong></td></tr><tr className="odd"><td>{"管理"}</td><td><strong>{"Firewall Manager"}</strong>{" で組織全体に適用可能"}</td></tr></tbody></table></div>
 {"\n"}
-<p><strong>{"ベストプラクティス"}</strong>{": 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を "}<strong>{"ネットワーク ACL や Network Firewall で拒否"}</strong>{" し、必ず Route 53 Resolver を経由させる。そうしないと DNS Firewall をすり抜けられます。"}</p>
+<p><strong>{"ベストプラクティス"}</strong>{": 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を "}<strong>{"ネットワーク ACL や Network Firewall で拒否"}</strong>{" し、必ず Route 53 Resolver を経由させる。DNS Firewall がフィルタできるのは VPC の Resolver を通過したクエリだけなので、そうしないと DNS Firewall をすり抜けられます。ただし 53 番ポートの遮断で制限できるのは従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)の通信は Route 53 Resolver を経由させられません。DoH を防ぐ追加の送信(egress)制御は 19-4 を参照。"}</p>
 {"\n"}
 <p><strong>{"根拠 URL"}</strong></p>
 {"\n"}
@@ -295,7 +295,7 @@ export default function Task41(){return <div className="guide-part" data-part="t
 <div className="code-line"><span className="p">{"}"}</span></div>
 </div></div>{"\n"}</div>
 {"\n"}
-<p>{"上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば "}<code>{"RevokeSecurityGroupIngress"}</code>{" を実行して SNS で通知します。"}</p>
+<p>{"上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば "}<code>{"RevokeSecurityGroupIngress"}</code>{" を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。"}</p>
 {"\n"}
 <div className="code-sample" data-lang="python"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"7-2. セキュリティインシデントの自動検出・通知・対応（コード6）"}>
 <div className="code-line"><span className="kn">{"import"}</span><span className="w">{" "}</span><span className="nn">{"boto3"}</span></div>
