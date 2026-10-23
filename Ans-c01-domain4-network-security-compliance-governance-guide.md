@@ -725,7 +725,7 @@ def has_ports(perm):
 def is_admin_rule(perm):
     protocol = perm.get("ipProtocol")
     tcp_admin = protocol in ("tcp", "6") and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389))
-    return not has_ports(perm) or tcp_admin
+    return protocol == "-1" or tcp_admin
 
 def resolve_group_id(params):
     # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する
