@@ -3747,7 +3747,7 @@ flowchart TD
 <h2 id="sec-93">21. 確認問題</h2>
 <section class="review-quiz" aria-labelledby="sec-93">
 <div class="quiz-intro"><div><span class="quiz-eyebrow">KNOWLEDGE CHECK</span><p>学んだ知識を、8 問で確認。</p><span>選択肢を選び、各問題の「正解・解説を見る」で理解を確かめましょう。</span></div><span class="quiz-count">全 8 問<span>単一選択 7 問 · 複数選択 1 問</span></span></div>
-<article class="quiz-card" aria-labelledby="quiz-title-1"><div class="quiz-card-meta"><span class="quiz-number">Q01</span><span>外部通信の制御</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-1">会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。</legend><div class="quiz-options">
+<article class="quiz-card" aria-labelledby="quiz-title-1"><div class="quiz-card-meta"><span class="quiz-number">Q01</span><span>外部通信の制御</span><span class="quiz-type">1 つ選択</span></div><fieldset><legend id="quiz-title-1">会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。TLS の復号は行わず、SNI のホスト名に基づくドメイン単位のフィルタリングで制御します。運用負担を最小限にしながらこの要件を満たす構成はどれですか。</legend><div class="quiz-options">
 <label class="quiz-option"><input type="radio" name="review-q1" value="A"><span class="quiz-letter">A</span><span>NAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する</span></label>
 <label class="quiz-option"><input type="radio" name="review-q1" value="B"><span class="quiz-letter">B</span><span>Network Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする</span></label>
 <label class="quiz-option"><input type="radio" name="review-q1" value="C"><span class="quiz-letter">C</span><span>セキュリティグループで許可ドメインのホスト名を指定する</span></label>
