@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CatalogControls } from '@/components/CatalogControls';
 import { providerMeta, providerOrder, type Exam, type Provider } from '@/app/constants';
 import styles from '@/app/page.module.css';
@@ -11,6 +11,30 @@ import { ExamCard } from './ExamCard';
 export function ExamCatalog({ exams }: { exams: Exam[] }) {
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState<Provider | 'all'>('all');
+    // ヒーローの導線先が絞り込みで非表示のとき、解除後の再描画を待ってから移動する
+    const pendingProviderId = useRef<string | null>(null);
+
+    useEffect(() => {
+        const onProviderLinkClick = (event: MouseEvent) => {
+            if (!(event.target instanceof Element)) return;
+            const targetId = event.target.closest('a[href^="#provider-"]')?.getAttribute('href')?.slice(1);
+            // 絞り込みが無ければ全セクションが描画済みのため、ブラウザ標準のアンカー移動に任せる
+            if (!targetId || (query === '' && selected === 'all')) return;
+            pendingProviderId.current = targetId;
+            setQuery('');
+            setSelected('all');
+        };
+        document.addEventListener('click', onProviderLinkClick);
+        return () => document.removeEventListener('click', onProviderLinkClick);
+    }, [query, selected]);
+
+    useEffect(() => {
+        const targetId = pendingProviderId.current;
+        if (!targetId) return;
+        pendingProviderId.current = null;
+        document.getElementById(targetId)?.scrollIntoView();
+    });
+
     const categories = providerOrder.flatMap((provider) => {
         const count = exams.filter((exam) => exam.provider === provider).length;
         return count ? [{ provider, count }] : [];
