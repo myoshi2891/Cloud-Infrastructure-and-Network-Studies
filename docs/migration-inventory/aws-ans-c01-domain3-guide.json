@@ -890,7 +890,7 @@
     "UnHealthyHostCount、TargetResponseTime、TargetConnectionErrorCount（※NLB は UnHealthyHostCount、TCP_Target_Reset_Count など）",
     "ターゲットの健全性と遅延",
     "EC2 の ENA",
-    "ethtool の bw_in_allowance_exceeded、bw_out_allowance_exceeded、pps_allowance_exceeded、conntrack_allowance_exceeded、linklocal_allowance_exceeded",
+    "ethtool の bw_in_allowance_exceeded、bw_out_allowance_exceeded、pps_allowance_exceeded、conntrack_allowance_exceeded、linklocal_allowance_exceeded（CloudWatch へは自動送信されない。ethtool -S で確認するか、CloudWatch エージェントの ethtool 収集を設定する。取り込んだメトリクス名には ethtool_ 接頭辞が付く）",
     "インスタンスの帯域・PPS・接続追跡の上限超過によるドロップ",
     "1",
     "DX の ConnectionState、VPN の TunnelState に アラーム を設定する",
