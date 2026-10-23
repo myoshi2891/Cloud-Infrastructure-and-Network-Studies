@@ -396,7 +396,7 @@ flowchart TD
 | DXGW あたりの VGW 数 | 20 | 追加不可 |
 | TGW あたりの AWS → オンプレミスへ広告するプレフィックス数 | 200 | 超過分は広告されない |
 
-> **試験ポイント**: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ まず VIF の **プレフィックス割り当て** を必要数まで増やします（CreatePrivateVirtualInterface / UpdateVirtualInterfaceAttributes で最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に **ルート集約**（またはデフォルトルートの広告）を使います。
+> **試験ポイント**: 「オンプレミスから 100 を超えるルートを広告したら BGP が切れた」→ まず VIF の **プレフィックス割り当て** を必要数まで増やします（新規作成時はプライベート VIF なら CreatePrivateVirtualInterface、トランジット VIF なら CreateTransitVirtualInterface で指定し、既存 VIF の割り当ては UpdateVirtualInterfaceAttributes で引き上げます。最大 1,000）。Service Quotas の申請ではありません。割り当てを増やせない場合に **ルート集約**（またはデフォルトルートの広告）を使います。
 
 ### 上限に備える運用の流れ
 

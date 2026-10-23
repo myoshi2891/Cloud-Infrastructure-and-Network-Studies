@@ -1072,7 +1072,7 @@ flowchart TD
 <ul>
 <li><strong>ステートレスの既定アクションは「Forward to stateful rule groups」</strong> にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。</li>
 <li><strong>Strict rule order</strong> を使い、ドメイン許可リスト方式では <strong>ステートフル既定アクションを Drop established</strong> にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。</li>
-<li>出口制御は <strong>ドメインリスト(許可リスト)</strong> で HTTPS の SNI を検査。</li>
+<li>出口制御は <strong>ドメインリスト(許可リスト)</strong> で HTTPS の SNI を検査。ただし SNI はクライアントが申告する値のため、未承認の IP アドレスへ接続しながら承認済みドメインの SNI を提示すれば通過でき、SNI フィルタリングだけでは承認ドメインへの接続を保証できない。保証が必要な場合は TLS インスペクションでサーバー証明書が SNI と一致することを検証する。</li>
 <li>一般的な脆弱性対策に <strong>AWS マネージドルールグループ</strong>(脅威シグネチャ)を併用。</li>
 <li><strong>AZ ごとに 1 つ以上のエンドポイント</strong> を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。</li>
 <li>ログ(alert / flow)を必ず有効化する。</li>
@@ -1444,7 +1444,8 @@ flowchart TD
 <span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3:*&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;arn:aws:s3:::my-company-data&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;arn:aws:s3:::my-company-data/*&quot;</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;StringNotEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:SourceVpce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpce-0123456789abcdef0&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="nt">&quot;StringNotEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:SourceVpce&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vpce-0123456789abcdef0&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;BoolIfExists&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;aws:PrincipalIsAWSService&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -1454,7 +1455,7 @@ flowchart TD
 <div class="callout-practice"><div class="icon">✓</div><div class="body"><div class="label"><strong>ベストプラクティス(データ境界: Data Perimeter)</strong></div>
 <ul>
 <li><strong>ID 境界</strong>: <code>aws:PrincipalOrgID</code> で「自組織の ID のみ」。</li>
-<li><strong>リソース境界</strong>: <code>aws:ResourceOrgID</code> で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。</li>
+<li><strong>リソース境界</strong>: <code>aws:ResourceOrgID</code> で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。S3 のエンドポイントポリシーで指定した場合に強制されるのは、そのエンドポイントを経由するリクエストだけ。エンドポイントを経由しない経路も含めて他組織のリソースへのアクセスを防ぐには、SCP などの ID・組織レベルのリソース境界と、適切な出口制御も必要。</li>
 <li><strong>ネットワーク境界</strong>: <code>aws:SourceVpce</code> / <code>aws:SourceVpc</code> で「自社の VPC エンドポイント経由のみ」。</li>
 <li>PrivateLink の <strong>インターフェイスエンドポイントにも SG を付与</strong>し、アクセス元を限定する。</li>
 </ul>

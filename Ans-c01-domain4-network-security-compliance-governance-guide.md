@@ -276,7 +276,7 @@ flowchart TD
 **ベストプラクティス**(AWS 公式ベストプラクティスガイドの要旨)
 - **ステートレスの既定アクションは「Forward to stateful rule groups」** にし、フィルタリングはステートフルエンジンに集約する(ステートレスの pass ルールがあると、ステートフル検査をすり抜けてしまうため)。
 - **Strict rule order** を使い、ドメイン許可リスト方式では **ステートフル既定アクションを Drop established** にする(TCP ハンドシェイクを通して TLS SNI を検査できるようにするため。Drop all では SNI を検査する前にハンドシェイクが破棄される)。
-- 出口制御は **ドメインリスト(許可リスト)** で HTTPS の SNI を検査。
+- 出口制御は **ドメインリスト(許可リスト)** で HTTPS の SNI を検査。ただし SNI はクライアントが申告する値のため、未承認の IP アドレスへ接続しながら承認済みドメインの SNI を提示すれば通過でき、SNI フィルタリングだけでは承認ドメインへの接続を保証できない。保証が必要な場合は TLS インスペクションでサーバー証明書が SNI と一致することを検証する。
 - 一般的な脆弱性対策に **AWS マネージドルールグループ**(脅威シグネチャ)を併用。
 - **AZ ごとに 1 つ以上のエンドポイント** を配置し、可用性を確保(AZ 間で非対称ルーティングにならないよう AZ 内で完結させる)。
 - ログ(alert / flow)を必ず有効化する。
@@ -511,7 +511,8 @@ flowchart TD
       "Action": "s3:*",
       "Resource": ["arn:aws:s3:::my-company-data", "arn:aws:s3:::my-company-data/*"],
       "Condition": {
-        "StringNotEquals": { "aws:SourceVpce": "vpce-0123456789abcdef0" }
+        "StringNotEquals": { "aws:SourceVpce": "vpce-0123456789abcdef0" },
+        "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
       }
     }
   ]
@@ -520,7 +521,7 @@ flowchart TD
 
 **ベストプラクティス(データ境界: Data Perimeter)**
 - **ID 境界**: `aws:PrincipalOrgID` で「自組織の ID のみ」。
-- **リソース境界**: `aws:ResourceOrgID` で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。
+- **リソース境界**: `aws:ResourceOrgID` で「自組織のリソースのみ」にアクセス(データ持ち出し先の制限)。S3 のエンドポイントポリシーで指定した場合に強制されるのは、そのエンドポイントを経由するリクエストだけ。エンドポイントを経由しない経路も含めて他組織のリソースへのアクセスを防ぐには、SCP などの ID・組織レベルのリソース境界と、適切な出口制御も必要。
 - **ネットワーク境界**: `aws:SourceVpce` / `aws:SourceVpc` で「自社の VPC エンドポイント経由のみ」。
 - PrivateLink の **インターフェイスエンドポイントにも SG を付与**し、アクセス元を限定する。
 
