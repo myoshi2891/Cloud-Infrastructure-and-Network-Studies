@@ -174,7 +174,7 @@ export default function Task31(){return <div className="guide-part" data-part="t
 
 <h4>{"7.1 ルート伝播（Route Propagation）"}</h4>
 
-<p>{" VGW または TGW を使う場合、オンプレミスから学習した経路を "}<strong>{"VPC ルートテーブルに自動で追加（伝播）"}</strong>{" できます。 "}</p>
+<p>{" VGW を使う場合、オンプレミスから学習した経路を "}<strong>{"VPC ルートテーブルに自動で追加（伝播）"}</strong>{" できます。TGW を使う場合は伝播されないため、VPC ルートテーブルに TGW 宛のルートを手動で追加します。 "}</p>
 
 <div className={"table-scroll"} role="region" tabIndex={0} aria-label={"7.1 ルート伝播（Route Propagation）（表25）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr className={"odd"}><td>{"設定場所"}</td><td>{"VPC のルートテーブルで「ルート伝播」を有効化"}</td></tr><tr className={"even"}><td>{"伝播されるもの"}</td><td>{"VPN（静的/動的）や Direct Connect の経路"}</td></tr><tr className={"odd"}><td>{"手動のルート"}</td><td>{" 同じ宛先に手動ルートがあると "}<strong>{"手動（静的）が優先"}</strong>{" "}</td></tr><tr className={"even"}><td>{"TGW の場合"}</td><td>{" VPC ルートテーブルには "}<strong>{"手動で TGW 宛のルートを追加"}</strong>{" が必要（TGW 側のルートが VPC に自動伝播されることはない） "}</td></tr></tbody></table>{" "}</div>
 
@@ -192,7 +192,7 @@ export default function Task31(){return <div className="guide-part" data-part="t
 
 <Diagram id="diag-10" label={"7.3 CIDR 重複への対処"} />
 
-<div className={"table-scroll"} role="region" tabIndex={0} aria-label={"7.3 CIDR 重複への対処（表28）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"手段"}</th><th scope="col">{"向いている場面"}</th><th scope="col">{"注意点"}</th></tr></thead><tbody><tr className={"odd"}><td><strong>{"PrivateLink"}</strong></td><td>{"一方向のサービス利用"}</td><td>{"双方向通信には不向き"}</td></tr><tr className={"even"}><td><strong>{"プライベート NAT ゲートウェイ"}</strong></td><td>{"IP の変更が難しい既存環境"}</td><td>{"設計と運用が複雑になる"}</td></tr><tr className={"odd"}><td><strong>{"CIDR の再設計"}</strong></td><td>{"長期的に最善"}</td><td>{"移行作業が必要"}</td></tr><tr className={"even"}><td><strong>{"TGW のルートテーブル分離"}</strong></td><td>{"重複する VPC を互いに隔離する"}</td><td>{"重複 CIDR の VPC 間通信はできない"}</td></tr></tbody></table>{" "}</div>
+<div className={"table-scroll"} role="region" tabIndex={0} aria-label={"7.3 CIDR 重複への対処（表28）"}>{" "}<table><thead><tr className={"header"}><th scope="col">{"手段"}</th><th scope="col">{"向いている場面"}</th><th scope="col">{"注意点"}</th></tr></thead><tbody><tr className={"odd"}><td><strong>{"PrivateLink"}</strong></td><td>{"一方向のサービス利用"}</td><td>{"双方向通信には不向き"}</td></tr><tr className={"even"}><td><strong>{"プライベート NAT ゲートウェイ"}</strong></td><td>{"IP の変更が難しい既存環境で、重複 VPC から特定の宛先へ送信方向の通信だけを通す"}</td><td>{"送信元アドレスを変換するだけで、任意の双方向通信には使えない（受信方向は ALB/NLB などが別途必要）。設計と運用が複雑になる"}</td></tr><tr className={"odd"}><td><strong>{"CIDR の再設計"}</strong></td><td>{"長期的に最善。双方向のフル接続が必要な場合はこれ"}</td><td>{"移行作業が必要"}</td></tr><tr className={"even"}><td><strong>{"TGW のルートテーブル分離"}</strong></td><td>{"重複する VPC を互いに隔離する"}</td><td>{"重複 CIDR の VPC 間通信はできない"}</td></tr></tbody></table>{" "}</div>
 
 <blockquote>{" "}<p>{" "}<strong>{"補足"}</strong>{": TGW に重複する CIDR の VPC をアタッチした場合、後からアタッチした VPC のルートは "}<strong>{"伝播されません"}</strong>{"。 "}</p>{" "}</blockquote>
 
