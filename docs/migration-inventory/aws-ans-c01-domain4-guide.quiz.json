@@ -136,20 +136,20 @@
     "answer": "正解・解説を見る正解 Bペイロードの検査は Traffic Mirroring。Flow Logs はメタデータのみ。"
   },
   {
-    "text": "Q05Flow Logs の読み方1 つ選択NAT ゲートウェイ経由の通信を Flow Logs で分析する際、NAT 前の実際の送信元 IP アドレスを知るために使用するフィールドはどれですか。 Asrcaddr Bpkt-srcaddr Cinterface-id Dlog-status 正解・解説を見る正解 Bpkt-srcaddr(v3 以降)がパケット自体の送信元。srcaddr は NAT 後の ENI のアドレスになりうる。",
+    "text": "Q05Flow Logs の読み方1 つ選択インスタンスからゾーン NAT ゲートウェイを経由してインターネットへ向かう通信について、NAT ゲートウェイのネットワークインターフェイスで記録された、アドレス変換前(インスタンス → NAT ゲートウェイ)のレコードを分析します。このレコードで、中間レイヤーである NAT ゲートウェイの ENI のアドレスではなく、インターネット上の最終的な宛先 IP アドレスを示すフィールドはどれですか。 Adstaddr Bpkt-dstaddr Cinterface-id Dlog-status 正解・解説を見る正解 Bこのレコードでは dstaddr が NAT ゲートウェイの ENI のプライベート IP、pkt-dstaddr(v3 以降)がインターネット上の最終宛先になる。pkt-* の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、srcaddr・flow-direction・時刻で他のレコードと相関させて特定する。",
     "options": [
       {
         "type": "radio",
         "name": "review-q5",
         "value": "A",
-        "label": "Asrcaddr",
+        "label": "Adstaddr",
         "checked": false
       },
       {
         "type": "radio",
         "name": "review-q5",
         "value": "B",
-        "label": "Bpkt-srcaddr",
+        "label": "Bpkt-dstaddr",
         "checked": false
       },
       {
@@ -167,7 +167,7 @@
         "checked": false
       }
     ],
-    "answer": "正解・解説を見る正解 Bpkt-srcaddr(v3 以降)がパケット自体の送信元。srcaddr は NAT 後の ENI のアドレスになりうる。"
+    "answer": "正解・解説を見る正解 Bこのレコードでは dstaddr が NAT ゲートウェイの ENI のプライベート IP、pkt-dstaddr(v3 以降)がインターネット上の最終宛先になる。pkt-* の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、srcaddr・flow-direction・時刻で他のレコードと相関させて特定する。"
   },
   {
     "text": "Q06ハイブリッド接続の暗号化1 つ選択企業はオンプレミスと AWS を Direct Connect で接続しており、インターネットに通信を出さずに、かつ VPN の両端のエンドポイントに プライベート IP アドレス を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。 Aパブリック VIF 上の VPN Bトランジット VIF 上の Private IP VPN(Transit Gateway) Cインターネット VPN への切り替え DNACL による暗号化 正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。",

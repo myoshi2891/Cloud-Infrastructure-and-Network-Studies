@@ -739,11 +739,11 @@
     "ALB アクセスログ",
     "リクエスト単位(クライアント IP、ターゲット、レイテンシ、ステータス、TLS 情報)",
     "既定は無効",
-    "S3",
+    "S3(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3",
     "NLB アクセスログ",
     "TLS リスナー の接続情報",
     "既定は無効",
-    "S3",
+    "S3(従来のアクセスログ)。拡張アクセスログでは CloudWatch Logs / Firehose / S3",
     "CloudFront 標準ログ",
     "ビューワーリクエスト",
     "既定は無効",
@@ -1061,7 +1061,7 @@
     "脅威の自動検出(C2・ポートスキャン)",
     "GuardDuty → EventBridge → 自動対応",
     "ALB のアクセスログの保存先",
-    "S3 のみ",
+    "従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3)",
     "転送中データ暗号化の強制と監査(VPC 内)",
     "VPC Encryption Controls(モニター → エンフォース)",
     "DX 上の通信を暗号化(L2・ライン速度)",
@@ -1418,7 +1418,7 @@
     "有効期限の監視: EventBridge の ACM 期限切れ間近イベント、CloudWatch メトリクス DaysToExpiry、Config ルール acm-certificate-expiration-check。",
     "DNS 検証 + Route 53 の CNAME 自動作成 で、更新を完全自動化する。",
     "ルート CA はオフライン運用に近い扱い(使う頻度を最小化)、下位 CA で発行。",
-    "内部通信の mTLS・VPN 証明書は Private CA で一元化 し、短期証明書で失効管理を簡素化する。",
+    "内部通信の mTLS・VPN 証明書は Private CA で一元化 する。ACM で発行・自動更新するマネージド証明書には 汎用モードの CA が必要。短期証明書モードの CA で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。",
     "証明書の期限切れ監視 を EventBridge / Config で必ず設定する。",
     "組織全体で使う場合は RAM で Private CA を共有。",
     "ACM: https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html",
@@ -2219,7 +2219,7 @@
     },
     {
       "kind": "code",
-      "text": "# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)\n# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)\naws network-firewall create-rule-group \\\n  --rule-group-name allow-approved-domains \\\n  --type STATEFUL \\\n  --capacity 100 \\\n  --rule-group '{\n    \"RuleVariables\": {\n      \"IPSets\": {\n        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] }\n      }\n    },\n    \"RulesSource\": {\n      \"RulesSourceList\": {\n        \"Targets\": [\".amazonaws.com\", \".example.com\"],\n        \"TargetTypes\": [\"HTTP_HOST\", \"TLS_SNI\"],\n        \"GeneratedRulesType\": \"ALLOWLIST\"\n      }\n    },\n    \"StatefulRuleOptions\": { \"RuleOrder\": \"STRICT_ORDER\" }\n  }'"
+      "text": "# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)\n# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)\n# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える\naws network-firewall create-rule-group \\\n  --rule-group-name allow-approved-domains \\\n  --type STATEFUL \\\n  --capacity 100 \\\n  --rule-group '{\n    \"RuleVariables\": {\n      \"IPSets\": {\n        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] }\n      }\n    },\n    \"RulesSource\": {\n      \"RulesSourceList\": {\n        \"Targets\": [\".amazonaws.com\", \".example.com\"],\n        \"TargetTypes\": [\"HTTP_HOST\", \"TLS_SNI\"],\n        \"GeneratedRulesType\": \"ALLOWLIST\"\n      }\n    },\n    \"StatefulRuleOptions\": { \"RuleOrder\": \"STRICT_ORDER\" }\n  }'"
     },
     {
       "kind": "paragraph",
@@ -2339,7 +2339,7 @@
     },
     {
       "kind": "code",
-      "text": "import boto3\n\nec2 = boto3.client(\"ec2\")\n\ndef is_admin_rule(perm):\n    protocol = perm.get(\"ipProtocol\")\n    tcp_admin = protocol in (\"tcp\", \"6\") and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389))\n    return protocol == \"-1\" or tcp_admin\n\ndef resolve_group_id(params):\n    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する\n    if params.get(\"groupId\"):\n        return params[\"groupId\"]\n    groups = ec2.describe_security_groups(GroupNames=[params[\"groupName\"]])\n    return groups[\"SecurityGroups\"][0][\"GroupId\"]\n\ndef ingress_permissions(params):\n    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる\n    perms = list(params.get(\"ipPermissions\", {}).get(\"items\", []))\n    if params.get(\"ipProtocol\"):\n        perms.append({\n            \"ipProtocol\": params[\"ipProtocol\"],\n            \"fromPort\": params.get(\"fromPort\", -1),\n            \"toPort\": params.get(\"toPort\", -1),\n            \"ipRanges\": {\"items\": [{\"cidrIp\": params.get(\"cidrIp\")}]},\n        })\n    return perms\n\ndef handler(event, context):\n    params = event[\"detail\"][\"requestParameters\"]\n    group_id = resolve_group_id(params)\n    for perm in ingress_permissions(params):\n        if not is_admin_rule(perm):\n            continue\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") != \"0.0.0.0/0\":\n                continue\n            revoked = {\n                \"IpProtocol\": perm[\"ipProtocol\"],\n                \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}],\n            }\n            if perm[\"ipProtocol\"] != \"-1\":\n                revoked[\"FromPort\"] = perm[\"fromPort\"]\n                revoked[\"ToPort\"] = perm[\"toPort\"]\n            ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[revoked])"
+      "text": "import boto3\nfrom botocore.exceptions import ClientError\n\nec2 = boto3.client(\"ec2\")\n\ndef is_admin_rule(perm):\n    protocol = perm.get(\"ipProtocol\")\n    tcp_admin = protocol in (\"tcp\", \"6\") and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389))\n    return protocol == \"-1\" or tcp_admin\n\ndef resolve_group_id(params):\n    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する\n    if params.get(\"groupId\"):\n        return params[\"groupId\"]\n    groups = ec2.describe_security_groups(GroupNames=[params[\"groupName\"]])\n    return groups[\"SecurityGroups\"][0][\"GroupId\"]\n\ndef ingress_permissions(params):\n    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる\n    perms = list(params.get(\"ipPermissions\", {}).get(\"items\", []))\n    if params.get(\"ipProtocol\"):\n        perms.append({\n            \"ipProtocol\": params[\"ipProtocol\"],\n            \"fromPort\": params.get(\"fromPort\", -1),\n            \"toPort\": params.get(\"toPort\", -1),\n            \"ipRanges\": {\"items\": [{\"cidrIp\": params.get(\"cidrIp\")}]},\n        })\n    return perms\n\n\ndef revoke(group_id, permission):\n    try:\n        ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[permission])\n    except ClientError as error:\n        # 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける\n        if error.response[\"Error\"][\"Code\"] != \"InvalidPermission.NotFound\":\n            raise\n\ndef handler(event, context):\n    params = event[\"detail\"][\"requestParameters\"]\n    group_id = resolve_group_id(params)\n    for perm in ingress_permissions(params):\n        if not is_admin_rule(perm):\n            continue\n        base = {\"IpProtocol\": perm[\"ipProtocol\"]}\n        if perm[\"ipProtocol\"] != \"-1\":\n            base[\"FromPort\"] = perm[\"fromPort\"]\n            base[\"ToPort\"] = perm[\"toPort\"]\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") == \"0.0.0.0/0\":\n                revoke(group_id, {**base, \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}]})\n        for rng in perm.get(\"ipv6Ranges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIpv6\") == \"::/0\":\n                revoke(group_id, {**base, \"Ipv6Ranges\": [{\"CidrIpv6\": \"::/0\"}]})"
     },
     {
       "kind": "annotation",
@@ -2467,7 +2467,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "試験ポイント: 「ALB のログは S3 のみ」「パブリック DNS クエリログは CloudWatch Logs のみ」「CloudFront リアルタイムログは Kinesis Data Streams」など、「サービス ↔ 配信先」の組み合わせ がよく出ます。"
+      "text": "試験ポイント: 「ALB / NLB の従来のアクセスログは S3 のみ(拡張アクセスログは CloudWatch Logs / Firehose / S3 も可)」「パブリック DNS クエリログは CloudWatch Logs のみ」「CloudFront リアルタイムログは Kinesis Data Streams」など、「サービス ↔ 配信先」の組み合わせ がよく出ます。"
     },
     {
       "kind": "paragraph",
@@ -2559,7 +2559,7 @@
     },
     {
       "kind": "annotation",
-      "text": "✓ベストプラクティス DNS 検証 + Route 53 の CNAME 自動作成 で、更新を完全自動化する。 ルート CA はオフライン運用に近い扱い(使う頻度を最小化)、下位 CA で発行。 内部通信の mTLS・VPN 証明書は Private CA で一元化 し、短期証明書で失効管理を簡素化する。 証明書の期限切れ監視 を EventBridge / Config で必ず設定する。 組織全体で使う場合は RAM で Private CA を共有。"
+      "text": "✓ベストプラクティス DNS 検証 + Route 53 の CNAME 自動作成 で、更新を完全自動化する。 ルート CA はオフライン運用に近い扱い(使う頻度を最小化)、下位 CA で発行。 内部通信の mTLS・VPN 証明書は Private CA で一元化 する。ACM で発行・自動更新するマネージド証明書には 汎用モードの CA が必要。短期証明書モードの CA で失効管理を簡素化する場合は ACM を使えないため、発行とローテーションを IssueCertificate API や cert-manager などの別ツールで自動化する。 証明書の期限切れ監視 を EventBridge / Config で必ず設定する。 組織全体で使う場合は RAM で Private CA を共有。"
     },
     {
       "kind": "paragraph",
@@ -2615,7 +2615,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "pkt-srcaddr(v3 以降)がパケット自体の送信元。srcaddr は NAT 後の ENI のアドレスになりうる。"
+      "text": "このレコードでは dstaddr が NAT ゲートウェイの ENI のプライベート IP、pkt-dstaddr(v3 以降)がインターネット上の最終宛先になる。pkt-* の値は記録した ENI と通信の方向で変わるため、単独のフィールドで NAT 前のワークロードを常に特定できるわけではない。変換前の方向のレコードを選び、srcaddr・flow-direction・時刻で他のレコードと相関させて特定する。"
     },
     {
       "kind": "paragraph",
@@ -2707,11 +2707,11 @@
     ],
     "codeLines": [
       4,
-      21,
+      22,
       15,
       16,
       8,
-      45,
+      54,
       2,
       8,
       7,

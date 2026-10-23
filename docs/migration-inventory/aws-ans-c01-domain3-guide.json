@@ -928,7 +928,7 @@
     "往路から REJECT",
     "セキュリティグループ、または ネットワーク ACL の許可不足",
     "ログに そもそも出ない",
-    "ルーティングの問題（パケットが届いていない）、または記録対象外の通信",
+    "ルーティングの問題（パケットが届いていない）、または記録対象外の通信。log-status が SKIPDATA のレコードは、集約間隔中に記録がスキップされた（容量超過や内部エラー）ことを示す",
     "1",
     "長期保存と分析は S3 + Athena、リアルタイム検知は CloudWatch Logs を使い分ける",
     "コストと用途の最適化",
@@ -1160,7 +1160,7 @@
     "送信元/受信者",
     "対応する Nitro ベースのインスタンスの ENI など",
     "対象",
-    "VPC 内のマルチキャスト。オンプレミスとの間は、構成要件を公式ドキュメントで確認する",
+    "VPC アタッチメント間のマルチキャストのみ。Direct Connect・Site-to-Site VPN・ピアリング・Connect アタッチメントは非対応のため、オンプレミスへはマルチキャストを届けられない",
     "1",
     "マルチキャストが必要なアプリ（市場データ配信、映像配信など）だけに使う",
     "通常のアプリには不要で、設計が複雑になる",
@@ -1362,7 +1362,7 @@
     "HTTP/HTTPS（および WebSocket など）",
     "固定 IP",
     "あり（静的エニーキャスト IP）",
-    "なし（ドメイン名で利用）",
+    "通常はドメイン名で利用。オプションの Anycast 静的 IP リスト（申請制）で固定 IP も利用可能",
     "キャッシュ",
     "なし",
     "あり",
@@ -1405,7 +1405,7 @@
     "TGW マルチキャスト",
     "静的コンテンツを世界中へ配信",
     "CloudFront",
-    "TCP/UDP の高速化 + 固定 IP + 高速切替",
+    "TCP/UDP（非 HTTP を含む）の高速化 + 固定 IP + 高速切替",
     "Global Accelerator",
     "複数リージョンで遅延が小さい所へ誘導",
     "Route 53 レイテンシー + ヘルスチェック",
@@ -1915,7 +1915,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "試験ポイント: 「オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず」は、一般に パブリック VIF、または プライベート VIF/VPN ＋ インターフェイス型 S3 エンドポイント が答えになります。要件（帯域・コスト・VPC 内の制御）を見て選びます。"
+      "text": "試験ポイント: 「オンプレミスから S3 へ、コストを抑え、かつインターネットを経由せず」は、一般に パブリック VIF、または プライベート VIF（または DX トランジット VIF 上の Private IP VPN）＋ インターフェイス型 S3 エンドポイント が答えになります。インターネット経由の Site-to-Site VPN はこの要件を満たしません。要件（帯域・コスト・VPC 内の制御）を見て選びます。"
     },
     {
       "kind": "paragraph",
@@ -1959,7 +1959,7 @@
     },
     {
       "kind": "code",
-      "text": "aws ec2 create-flow-logs \\\n  --resource-type VPC \\\n  --resource-ids vpc-0123456789abcdef0 \\\n  --traffic-type ALL \\\n  --log-destination-type s3 \\\n  --log-destination arn:aws:s3:::my-flow-logs-bucket/vpc/ \\\n  --max-aggregation-interval 60 \\\n  --log-format '${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction}'"
+      "text": "aws ec2 create-flow-logs \\\n  --resource-type VPC \\\n  --resource-ids vpc-0123456789abcdef0 \\\n  --traffic-type ALL \\\n  --log-destination-type s3 \\\n  --log-destination arn:aws:s3:::my-flow-logs-bucket/vpc/ \\\n  --max-aggregation-interval 60 \\\n  --log-format '${version} ${vpc-id} ${srcaddr} ${dstaddr} ${dstport} ${protocol} ${bytes} ${action} ${tcp-flags} ${flow-direction} ${log-status}'"
     },
     {
       "kind": "paragraph",
@@ -2027,7 +2027,7 @@
     },
     {
       "kind": "paragraph",
-      "text": "試験ポイント: 「同じ静的コンテンツを世界中の多数のユーザーへ配る、オリジンの負荷と転送量を下げたい」→ CloudFront。「TCP/UDP の非 HTTP トラフィックを高速化したい／固定 IP が必要」→ Global Accelerator（C-9 参照）。"
+      "text": "試験ポイント: 「同じ静的コンテンツを世界中の多数のユーザーへ配る、オリジンの負荷と転送量を下げたい」→ CloudFront。「TCP/UDP の非 HTTP トラフィックを高速化したい／非 HTTP 通信で固定 IP が必要」→ Global Accelerator（C-9 参照）。HTTP/HTTPS 配信で許可リスト用の固定 IP が必要なだけなら、CloudFront の Anycast 静的 IP リストも選択肢になります。"
     },
     {
       "kind": "paragraph",
