@@ -1,6 +1,6 @@
 [
   {
-    "text": "Q01外部通信の制御1 つ選択会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。運用負担を最小限にしながらこの要件を満たす構成はどれですか。 ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする Cセキュリティグループで許可ドメインのホスト名を指定する Dネットワーク ACL で許可ドメインの FQDN を指定する 正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。",
+    "text": "Q01外部通信の制御1 つ選択会社は VPC の本番ワークロードから、承認された外部ドメイン(例: 決済 API)にだけ HTTPS で接続を許可する必要があります。TLS の復号は行わず、SNI のホスト名に基づくドメイン単位のフィルタリングで制御します。運用負担を最小限にしながらこの要件を満たす構成はどれですか。 ANAT ゲートウェイのルートテーブルで許可ドメインの IP を指定する BNetwork Firewall のステートフルドメインリスト(許可リスト)で SNI を検査し、既定アクションを Drop established にする Cセキュリティグループで許可ドメインのホスト名を指定する Dネットワーク ACL で許可ドメインの FQDN を指定する 正解・解説を見る正解 BSG/NACL/NAT GW は FQDN での制御ができない。Network Firewall のドメインリスト + strict order + 既定アクション Drop established が正解。Drop all では TLS SNI を検査する前に TCP ハンドシェイクが破棄される。",
     "options": [
       {
         "type": "radio",

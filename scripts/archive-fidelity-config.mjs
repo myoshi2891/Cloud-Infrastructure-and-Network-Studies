@@ -34,7 +34,7 @@
 export const FIDELITY_PAGES = {
     "aws-ans-c01-domain4-guide": {
     "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
-    "sourceCommit": "717ff01e41a4af6320e46fb7b87aa7e612fd5291",
+    "sourceCommit": "af45f5d8e224238580937d78990708a3d7e2fe51",
     "tables": true,
     "codeBlocks": true,
     "styledClasses": true,
