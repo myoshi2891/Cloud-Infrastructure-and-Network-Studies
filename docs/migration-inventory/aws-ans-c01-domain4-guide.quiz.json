@@ -170,7 +170,7 @@
     "answer": "正解・解説を見る正解 Bpkt-srcaddr(v3 以降)がパケット自体の送信元。srcaddr は NAT 後の ENI のアドレスになりうる。"
   },
   {
-    "text": "Q06ハイブリッド接続の暗号化1 つ選択企業はオンプレミスと AWS を Direct Connect で接続しており、インターネットに通信を出さずに 終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。 Aパブリック VIF 上の VPN Bトランジット VIF 上の Private IP VPN(Transit Gateway) Cインターネット VPN への切り替え DNACL による暗号化 正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。",
+    "text": "Q06ハイブリッド接続の暗号化1 つ選択企業はオンプレミスと AWS を Direct Connect で接続しており、インターネットに通信を出さずに、かつ VPN の両端のエンドポイントに プライベート IP アドレス を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。 Aパブリック VIF 上の VPN Bトランジット VIF 上の Private IP VPN(Transit Gateway) Cインターネット VPN への切り替え DNACL による暗号化 正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。",
     "options": [
       {
         "type": "radio",
@@ -201,7 +201,7 @@
         "checked": false
       }
     ],
-    "answer": "正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。"
+    "answer": "正解・解説を見る正解 Bインターネットを経由しない IPsec は Private IP VPN(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。"
   },
   {
     "text": "Q07DNSSEC の設定2 つ選択Route 53 のパブリックホストゾーンで DNSSEC 署名を有効にする際の説明として正しいものはどれですか(2 つ選択)。 AKMS の非対称キー(ECC_NIST_P256)を us-east-1 で作成する B親ゾーンに DS レコードを登録する必要はない Cプライベートホストゾーンにも DNSSEC 署名を設定できる DKMS キーポリシーで Route 53 のサービスプリンシパルに利用を許可する EDNSSEC は DNS クエリの内容を暗号化する 正解・解説を見る正解 A, DDNSSEC は us-east-1 の ECC_NIST_P256 KMS キー、キーポリシーで Route 53 を許可。DS レコードの登録が必要、プライベートゾーンは非対応、暗号化ではなく署名。",

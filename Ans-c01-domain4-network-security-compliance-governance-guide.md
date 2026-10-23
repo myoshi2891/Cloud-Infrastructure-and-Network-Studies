@@ -1773,7 +1773,7 @@ flowchart TD
 - C. `interface-id`
 - D. `log-status`
 
-**Q6.** 企業はオンプレミスと AWS を Direct Connect で接続しており、**インターネットに通信を出さずに** 終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。
+**Q6.** 企業はオンプレミスと AWS を Direct Connect で接続しており、**インターネットに通信を出さずに**、かつ VPN の両端のエンドポイントに **プライベート IP アドレス** を使って終端間で IPsec 暗号化を行いたいと考えています。最も適切な構成はどれですか。
 - A. パブリック VIF 上の VPN
 - B. トランジット VIF 上の Private IP VPN(Transit Gateway)
 - C. インターネット VPN への切り替え
@@ -1802,7 +1802,7 @@ flowchart TD
 | Q3 | **B** | NACL はステートレス。**戻りのエフェメラルポート(1024–65535)のアウトバウンド許可** が必要。SG はステートフル。 |
 | Q4 | **B** | ペイロードの検査は **Traffic Mirroring**。Flow Logs はメタデータのみ。 |
 | Q5 | **B** | **`pkt-srcaddr`**(v3 以降)がパケット自体の送信元。`srcaddr` は NAT 後の ENI のアドレスになりうる。 |
-| Q6 | **B** | インターネットを経由しない IPsec は **Private IP VPN**(トランジット VIF + TGW)。 |
+| Q6 | **B** | インターネットを経由しない IPsec は **Private IP VPN**(トランジット VIF + TGW)。パブリック VIF 上の VPN もインターネットは経由しないが、AWS 側の VPN エンドポイントはパブリック IP アドレスになるため要件を満たさない。 |
 | Q7 | **A, D** | DNSSEC は **us-east-1 の ECC_NIST_P256 KMS キー**、キーポリシーで Route 53 を許可。**DS レコードの登録が必要**、プライベートゾーンは非対応、暗号化ではなく署名。 |
 | Q8 | **B** | **Firewall Manager のコンテンツ監査ポリシー** で組織全体を継続的に評価・自動是正できる。 |
 
