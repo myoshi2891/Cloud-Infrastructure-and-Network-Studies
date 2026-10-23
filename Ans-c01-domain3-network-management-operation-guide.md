@@ -703,7 +703,7 @@ CloudWatch は、各サービスが自動送信するメトリクスを集め、
 | **Transit Gateway** | `BytesIn/Out`、`PacketsIn/Out`、`PacketDropCountBlackhole`、`PacketDropCountNoRoute` | ブラックホール（行き先なし）や ルートなしで捨てられた数 |
 | **NAT ゲートウェイ** | `ErrorPortAllocation`、`PacketsDropCount`、`ConnectionAttemptCount` | ポート枯渇や 同時接続の限界 |
 | **ELB（ALB/NLB）** | `UnHealthyHostCount`、`TargetResponseTime`、`TargetConnectionErrorCount`（※NLB は `UnHealthyHostCount`、`TCP_Target_Reset_Count` など） | ターゲットの健全性と遅延 |
-| **EC2 の ENA** | `ethtool` の `bw_in_allowance_exceeded`、`bw_out_allowance_exceeded`、`pps_allowance_exceeded`、`conntrack_allowance_exceeded`、`linklocal_allowance_exceeded` | **インスタンスの帯域・PPS・接続追跡の上限超過によるドロップ** |
+| **EC2 の ENA** | `ethtool` の `bw_in_allowance_exceeded`、`bw_out_allowance_exceeded`、`pps_allowance_exceeded`、`conntrack_allowance_exceeded`、`linklocal_allowance_exceeded`（CloudWatch へは自動送信されない。`ethtool -S` で確認するか、CloudWatch エージェントの `ethtool` 収集を設定する。取り込んだメトリクス名には `ethtool_` 接頭辞が付く） | **インスタンスの帯域・PPS・接続追跡の上限超過によるドロップ** |
 
 > **試験ポイント**: 「EC2 の ネットワーク性能が突然落ちた。CPU は余裕がある」→ ENA のネットワーク許容量超過メトリクス（`*_allowance_exceeded`）を確認し、**より大きなインスタンスタイプ**、または **ENA Express/EFA** を検討します。
 
@@ -1055,15 +1055,15 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A["VPC どうしを接続したい"] --> B{"VPC の数は<br/>少ないか（目安：数個）"}
-    B -- "はい" --> C{"オンプレミス接続を<br/>共有する必要があるか"}
-    C -- "いいえ" --> PEER["VPC ピアリング<br/>低コスト・高帯域"]
-    C -- "はい" --> TGW["Transit Gateway"]
-    B -- "いいえ" --> D{"CIDR が重複しているか"}
+    A["VPC どうしを接続したい"] --> D{"CIDR が重複しているか"}
     D -- "はい" --> E{"公開したいのは<br/>特定のサービスだけか"}
     E -- "はい" --> PL["PrivateLink<br/>または プロキシ型"]
     E -- "いいえ（VPC全体の通信が必要）" --> RE["双方向のフル接続には CIDR を再設計する<br/>重複 VPC から特定宛先への送信方向だけなら<br/>プライベート NAT ゲートウェイで変換する"]
-    D -- "いいえ" --> TGW
+    D -- "いいえ" --> B{"VPC の数は<br/>少ないか（目安：数個）"}
+    B -- "はい" --> C{"オンプレミス接続を<br/>共有する必要があるか"}
+    C -- "いいえ" --> PEER["VPC ピアリング<br/>低コスト・高帯域"]
+    C -- "はい" --> TGW["Transit Gateway"]
+    B -- "いいえ" --> TGW
 ```
 
 > **試験ポイント**: 「**大量のデータを 2つの VPC 間で、できるだけ低コストで転送**」は **VPC ピアリング**。「**数十の VPC とオンプレミスを一元的に接続**」は **Transit Gateway**。

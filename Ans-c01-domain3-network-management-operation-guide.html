@@ -3315,7 +3315,7 @@ flowchart TD
                                     <code>bw_in_allowance_exceeded</code
                                     >、<code>bw_out_allowance_exceeded</code>、<code>pps_allowance_exceeded</code>、<code>conntrack_allowance_exceeded</code>、<code
                                         >linklocal_allowance_exceeded</code
-                                    >
+                                    >（CloudWatch へは自動送信されない。<code>ethtool -S</code> で確認するか、CloudWatch エージェントの <code>ethtool</code> 収集を設定する。取り込んだメトリクス名には <code>ethtool_</code> 接頭辞が付く）
                                 </td>
                                 <td>
                                     <strong
@@ -4338,15 +4338,15 @@ flowchart TD
                 <h4>選択フロー</h4>
                 <pre class="mermaid">
 flowchart TD
-    A["VPC どうしを接続したい"] --&gt; B{"VPC の数は&lt;br/&gt;少ないか（目安：数個）"}
-    B -- "はい" --&gt; C{"オンプレミス接続を&lt;br/&gt;共有する必要があるか"}
-    C -- "いいえ" --&gt; PEER["VPC ピアリング&lt;br/&gt;低コスト・高帯域"]
-    C -- "はい" --&gt; TGW["Transit Gateway"]
-    B -- "いいえ" --&gt; D{"CIDR が重複しているか"}
+    A["VPC どうしを接続したい"] --&gt; D{"CIDR が重複しているか"}
     D -- "はい" --&gt; E{"公開したいのは&lt;br/&gt;特定のサービスだけか"}
     E -- "はい" --&gt; PL["PrivateLink&lt;br/&gt;または プロキシ型"]
     E -- "いいえ（VPC全体の通信が必要）" --&gt; RE["双方向のフル接続には CIDR を再設計する&lt;br/&gt;重複 VPC から特定宛先への送信方向だけなら&lt;br/&gt;プライベート NAT ゲートウェイで変換する"]
-    D -- "いいえ" --&gt; TGW
+    D -- "いいえ" --&gt; B{"VPC の数は&lt;br/&gt;少ないか（目安：数個）"}
+    B -- "はい" --&gt; C{"オンプレミス接続を&lt;br/&gt;共有する必要があるか"}
+    C -- "いいえ" --&gt; PEER["VPC ピアリング&lt;br/&gt;低コスト・高帯域"]
+    C -- "はい" --&gt; TGW["Transit Gateway"]
+    B -- "いいえ" --&gt; TGW
 </pre
                 >
                 <blockquote>

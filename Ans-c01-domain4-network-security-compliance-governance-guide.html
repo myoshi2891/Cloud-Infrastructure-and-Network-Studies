@@ -1302,7 +1302,7 @@ flowchart TD
 </tr>
 </tbody>
 </table></div>
-<p><strong>ベストプラクティス</strong>: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を <strong>ネットワーク ACL や Network Firewall で拒否</strong> し、必ず Route 53 Resolver を経由させる。そうしないと DNS Firewall をすり抜けられます。</p>
+<p><strong>ベストプラクティス</strong>: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を <strong>ネットワーク ACL や Network Firewall で拒否</strong> し、必ず Route 53 Resolver を経由させる。DNS Firewall がフィルタできるのは VPC の Resolver を通過したクエリだけなので、そうしないと DNS Firewall をすり抜けられます。ただし 53 番ポートの遮断で制限できるのは従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)の通信は Route 53 Resolver を経由させられません。DoH を防ぐ追加の送信(egress)制御は 19-4 を参照。</p>
 <p><strong>根拠 URL</strong></p>
 <ul>
 <li>Network Firewall の導入パターン(AWS ブログ): <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/">https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/</a></li>
@@ -1790,7 +1790,7 @@ flowchart TD
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば <code>RevokeSecurityGroupIngress</code> を実行して SNS で通知します。</p>
+<p>上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば <code>RevokeSecurityGroupIngress</code> を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。</p>
 <div class="code-block" data-lang="python"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 
 <span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">)</span>

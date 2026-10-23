@@ -412,7 +412,7 @@ flowchart TD
 | DNS Firewall Advanced | DGA(ドメイン生成アルゴリズム)や DNS トンネリングを **検出してブロック** |
 | 管理 | **Firewall Manager** で組織全体に適用可能 |
 
-**ベストプラクティス**: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を **ネットワーク ACL や Network Firewall で拒否** し、必ず Route 53 Resolver を経由させる。そうしないと DNS Firewall をすり抜けられます。
+**ベストプラクティス**: 外部 DNS リゾルバー(8.8.8.8 など)へのポート 53 通信を **ネットワーク ACL や Network Firewall で拒否** し、必ず Route 53 Resolver を経由させる。DNS Firewall がフィルタできるのは VPC の Resolver を通過したクエリだけなので、そうしないと DNS Firewall をすり抜けられます。ただし 53 番ポートの遮断で制限できるのは従来の DNS だけで、443 番ポートを使う DNS over HTTPS(DoH)の通信は Route 53 Resolver を経由させられません。DoH を防ぐ追加の送信(egress)制御は 19-4 を参照。
 
 **根拠 URL**
 - Network Firewall の導入パターン(AWS ブログ): https://aws.amazon.com/blogs/networking-and-content-delivery/deployment-models-for-aws-network-firewall/
@@ -704,7 +704,7 @@ flowchart TD
 }
 ```
 
-上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば `RevokeSecurityGroupIngress` を実行して SNS で通知します。
+上記の EventBridge ルールをトリガーに、Lambda で追加されたルールを検査し、違反していれば `RevokeSecurityGroupIngress` を実行します。次のハンドラーはルールの取り消しだけを行い、SNS 通知は送りません。通知が必要な場合は、EventBridge ルールのターゲットに SNS トピックを追加するなどして別途設定します。
 
 ```python
 import boto3
