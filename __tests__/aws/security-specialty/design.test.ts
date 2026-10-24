@@ -28,3 +28,7 @@ it.each([['list-style-type: disc','list-style-type: none'],['list-style-type: de
 it('isolates styles and provides readable natural diagrams and responsive widths',()=>{expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);expect(rules(css,'.scs-guide-page')['color-scheme']).toBe('light');expect(rules(css,'.scs-guide-page .main').width).toBe('calc(100% - 280px)');expect(rules(css,'.scs-guide-page .main','(max-width: 980px)').width).toBe('100%');expect(rules(css,'.scs-guide-page .sidebar:not(.open)','(max-width: 980px)').visibility).toBe('hidden');expect(rules(css,'.scs-guide-page .mermaid-wrap > [role="img"]')).toMatchObject({background:'transparent',border:'none',padding:'0'});});
 
 it('keeps fixed sidebar top a valid length expression',()=>{expect(rules(css,'.scs-guide-page .sidebar').top).not.toMatch(/\+\s*0\s*\)/);});
+it('keeps diagram scrolling on the named keyboard-focusable outer region',()=>{
+ expect(rules(css,'.scs-guide-page .mermaid-wrap')['overflow-x']).toBe('auto');
+ expect(rules(css,'.scs-guide-page .mermaid-wrap > [role="img"]')['overflow-x']).toBe('visible');
+});
