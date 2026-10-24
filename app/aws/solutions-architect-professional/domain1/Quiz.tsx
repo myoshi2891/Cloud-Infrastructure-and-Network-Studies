@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 type QuizItem = {
@@ -9,7 +10,7 @@ type QuizItem = {
     qText: string;
     opts: { opt: string; letter: string; text: string }[];
     strongText: string;
-    expAfterStrong: string;
+    expAfterStrong: ReactNode;
 };
 
 const QUIZ_ITEMS: QuizItem[] = [
@@ -131,7 +132,11 @@ const QUIZ_ITEMS: QuizItem[] = [
             }
         ],
         "strongText": "答え: B。",
-        "expAfterStrong": "リージョン間の継続的レプリケーションで RPO を短く、ウォームスタンバイで RTO を短くできる。ただしレプリケーションは非同期のため、RPO 1分未満は保証値ではなく、レプリケーション遅延に依存する一般的な目標値である (通常の遅延は1秒未満)。上限を明示的に担保したい場合は、Aurora PostgreSQL Global Database の管理対象 RPO (rds.global_db_rpo パラメータ、秒単位) で許容遅延の上限を設定し (すべてのセカンダリクラスターの遅延が目標値を超えると、いずれかが目標値内に戻るまでプライマリでのコミットがブロックされる)、遅延と CloudWatch の AuroraGlobalDBRPOLag を監視する。A と D は RTO と RPO を満たせない。C はリージョン障害に備えられない。"
+        "expAfterStrong": (
+            <>
+                リージョン間の継続的レプリケーションで RPO を短く、ウォームスタンバイで RTO を短くできる。ただしレプリケーションは非同期のため、RPO 1分未満は保証値ではなく、レプリケーション遅延に依存する一般的な目標値である (通常の遅延は1秒未満)。上限を明示的に担保したい場合は、Aurora PostgreSQL Global Database の管理対象 RPO (<code>rds.global_db_rpo</code> パラメータ、秒単位) で許容遅延の上限を設定し (すべてのセカンダリクラスターの遅延が目標値を超えると、いずれかが目標値内に戻るまでプライマリでのコミットがブロックされる)、遅延と CloudWatch の <code>AuroraGlobalDBRPOLag</code> を監視する。A と D は RTO と RPO を満たせない。C はリージョン障害に備えられない。
+            </>
+        )
     },
     {
         "num": 5,

@@ -3,13 +3,43 @@ import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { DIAGRAMS, type DiagramId } from './constants';
 import sourceTheme from './mermaid-theme.json';
 
-const SOURCE_THEME_FRONTMATTER = `---\nconfig: ${JSON.stringify({
+const {
+    primaryColor: p,
+    primaryBorderColor: b,
+    primaryTextColor: t,
+    lineColor: l,
+    background: bg,
+    secondaryColor: s,
+} = sourceTheme.themeVariables;
+
+const renderConfig = {
     ...sourceTheme,
     themeVariables: {
         ...sourceTheme.themeVariables,
         fontFamily: '"Noto Sans JP Variable","Noto Sans JP",sans-serif',
+        mainBkg: p,
+        actorBkg: p,
+        stateBkg: p,
+        activationBkgColor: p,
+        actorBorder: b,
+        stateBorder: b,
+        activationBorderColor: b,
+        actorTextColor: t,
+        stateLabelColor: t,
+        signalTextColor: t,
+        labelTextColor: t,
+        titleColor: t,
+        actorLineColor: l,
+        signalColor: l,
+        labelBoxBkgColor: bg,
+        labelBoxBorderColor: b,
+        noteBkgColor: s,
+        noteTextColor: t,
+        noteBorderColor: b,
     },
-})}\n---\n`;
+};
+
+const SOURCE_THEME_FRONTMATTER = `---\nconfig: ${JSON.stringify(renderConfig)}\n---\n`;
 
 type DiagramProps = {
     id: DiagramId;
@@ -22,19 +52,22 @@ type DiagramProps = {
  */
 export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     const chart = DIAGRAMS[id];
+    const accessibleLabel = `${label}（図${id.slice(5)}）`;
     if (!chart) return null;
     return (
         <div
-            className="diagram"
+            className="mermaid-wrap"
+            role="region"
+            tabIndex={0}
+            aria-label={accessibleLabel}
             data-mermaid-id={id}
-            aria-label={label}
             data-preserve-natural-scale="true"
         >
             <MermaidDiagram
                 chart={SOURCE_THEME_FRONTMATTER + chart}
                 theme="light"
                 preserveChartTheme={true}
-                ariaLabel={label}
+                ariaLabel={accessibleLabel}
                 preserveNaturalScale={true}
             />
         </div>

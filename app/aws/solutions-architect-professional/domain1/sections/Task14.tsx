@@ -204,7 +204,7 @@ export default function Task14() {
 <div className="code-line"><span className="tok-pun">{"}"}</span></div>
 </div>
 <p>
-                    {"注意: "}
+                    {"注意: "}{" "}
                     <code>NotAction</code>
                     {" の除外リストは代表例です。グローバルサービスのアクションは利用するサービスに応じてサービスごとの例外追加が必要なため、AWS 公式のリージョン制限 SCP の例を参照して網羅性を確認してください。"}
                 </p>
@@ -290,7 +290,7 @@ export default function Task14() {
                     </div>
                 </div>
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html">https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html</a>
                 </p>
 <h3 id="55-step-4-aws-control-tower" tabIndex={-1}>5.5 Step 4: AWS Control Tower</h3>
@@ -365,7 +365,7 @@ export default function Task14() {
                     リージョン」があり、後から変更できない点が設計時の重要事項です。
                 </p>
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html">https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html</a>
                 </p>
 <h3 id="56-step-5-集中ログとイベント通知" tabIndex={-1}>5.6 Step 5: 集中ログとイベント通知</h3>

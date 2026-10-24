@@ -12,21 +12,21 @@ export default function References() {
                     <div className="ref-card" id="ref1">
                         <div className="num">1</div>
                         <div className="txt">
-                            SAP-C02 Exam Guide (PDF):
+                            SAP-C02 Exam Guide (PDF):{" "}
                             <a href="https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf">https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref2">
                         <div className="num">2</div>
                         <div className="txt">
-                            AWS Certified Solutions Architect - Professional 公式ページ:
+                            AWS Certified Solutions Architect - Professional 公式ページ:{" "}
                             <a href="https://aws.amazon.com/certification/certified-solutions-architect-professional/">https://aws.amazon.com/certification/certified-solutions-architect-professional/</a>
                         </div>
                     </div>
                     <div className="ref-card" id="ref3">
                         <div className="num">3</div>
                         <div className="txt">
-                            AWS Well-Architected Framework:
+                            AWS Well-Architected Framework:{" "}
                             <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html</a>
                         </div>
                     </div>

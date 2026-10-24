@@ -11,9 +11,9 @@ export default function Foundation() {
                         初学者向けステップバイステップガイド
                     </h1>
                     <div className="meta-row">
-                        <span className="pill">配点 <strong>約26%</strong></span>
-                        <span className="pill">対象 <strong>初学者〜中級者</strong></span>
-                        <span className="pill">図解 <strong>Mermaid 19点</strong></span>
+                        <span className="pill">配点 <strong>約26%</strong></span>{" "}
+                        <span className="pill">対象 <strong>初学者〜中級者</strong></span>{" "}
+                        <span className="pill">図解 <strong>Mermaid 19点</strong></span>{" "}
                         <span className="pill">参考文献 <strong>66件</strong></span>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ export default function Foundation() {
                         SAP-C02 の公式 Exam Guide を一次情報として使用しています
                     </li>
                     <li>
-                        一次情報 (SAP-C02 Exam Guide PDF):
+                        一次情報 (SAP-C02 Exam Guide PDF):{" "}
                         <a href="https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf">https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf</a>
                     </li>
                     <li>
@@ -176,7 +176,7 @@ export default function Foundation() {
                     </table>
 </div>
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html</a>
                 </p>
 <hr />

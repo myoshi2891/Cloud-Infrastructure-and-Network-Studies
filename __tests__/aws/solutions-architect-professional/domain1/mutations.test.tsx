@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/solutions-architect-professional/domain1/page';
 import sourceTheme from '@/app/aws/solutions-architect-professional/domain1/mermaid-theme.json';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
+import { withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
@@ -54,11 +55,19 @@ const expectedSnapshot = {
     diagrams: rawSnapshot.diagrams.map((chart) => prefix + chart),
 };
 
+const snapshotRenderedMain = (root: Element) => {
+    const clone = root.cloneNode(true) as HTMLElement;
+    clone.querySelectorAll('.quiz-score').forEach((el) => el.remove());
+    const snap = snapshotGuidePart(clone);
+    const bodySnap = snapshotGuidePart(withBlockBoundarySpaces(clone));
+    return { ...snap, body: bodySnap.body };
+};
+
 describe('SAP-C02 Domain 1 Full DOM Fidelity & Mutation Detection', () => {
     it('matches the source HTML <main> snapshot across text, headings, tables, lists (with depth), links, inline elements, diagrams, codes, and placement', () => {
         const { container } = render(<Page />);
         const actualMain = container.querySelector('main')!;
-        const actualSnapshot = snapshotGuidePart(actualMain);
+        const actualSnapshot = snapshotRenderedMain(actualMain);
 
         expect(actualSnapshot.headings).toEqual(expectedSnapshot.headings);
         expect(actualSnapshot.tables).toEqual(expectedSnapshot.tables);
@@ -96,11 +105,11 @@ describe('SAP-C02 Domain 1 Full DOM Fidelity & Mutation Detection', () => {
     ] as const)('detects source loss when %s is removed (%s)', (selector, key) => {
         const { container } = render(<Page />);
         const original = container.querySelector('main')!;
-        expect(snapshotGuidePart(original)[key]).toEqual(expectedSnapshot[key]);
+        expect(snapshotRenderedMain(original)[key]).toEqual(expectedSnapshot[key]);
         const clone = original.cloneNode(true) as HTMLElement;
         const target = clone.querySelector(selector);
         expect(target).not.toBeNull();
         target!.remove();
-        expect(snapshotGuidePart(clone)[key]).not.toEqual(expectedSnapshot[key]);
+        expect(snapshotRenderedMain(clone)[key]).not.toEqual(expectedSnapshot[key]);
     });
 });

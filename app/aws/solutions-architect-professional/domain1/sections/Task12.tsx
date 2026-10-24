@@ -103,7 +103,7 @@ export default function Task12() {
                     Deny は優先されます。
                 </p>
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html</a>
                 </p>
 <h3 id="33-step-2-クロスアカウントアクセス" tabIndex={-1}>
@@ -159,7 +159,7 @@ export default function Task12() {
                                 問題」を防ぐ
                             </li>
                             <li>
-                                組織内の共有には、リソースポリシーで{' '}
+                                組織内の共有には、リソースポリシーで{' '}{" "}
                                 <code>aws:PrincipalOrgID</code>{' '}
                                 条件を使い、アカウントを1つずつ列挙しない
                             </li>
@@ -412,7 +412,7 @@ export default function Task12() {
                                 <td>S3</td>
                                 <td>SSE-S3 (既定), SSE-KMS, DSSE-KMS, SSE-C</td>
                                 <td>
-                                    HTTPS を必須化 (バケットポリシーで
+                                    HTTPS を必須化 (バケットポリシーで{" "}
                                     <code>aws:SecureTransport</code>)
                                 </td>
                             </tr>
@@ -566,10 +566,10 @@ export default function Task12() {
                                 ログは専用のログアーカイブアカウントの S3
                                 に保存し、バージョニング、Object Lock (Compliance
                                 モードでは、保持期間中のオブジェクトバージョンを root
-                                ユーザーを含め誰も削除・上書きできない。ただし新しいバージョンの書き込みや削除マーカーの作成は防げず、保護されたバージョンが最新版として見えなくなる可能性があるため、バケットポリシーで許可されていない{' '}
-                                <code>s3:PutObject</code> と削除マーカーを作成する{' '}
+                                ユーザーを含め誰も削除・上書きできない。ただし新しいバージョンの書き込みや削除マーカーの作成は防げず、保護されたバージョンが最新版として見えなくなる可能性があるため、バケットポリシーで許可されていない{' '}{" "}
+                                <code>s3:PutObject</code> と削除マーカーを作成する{' '}{" "}
                                 <code>s3:DeleteObject</code> を拒否する。Governance
-                                モードを使う場合は{' '}
+                                モードを使う場合は{' '}{" "}
                                 <code>s3:BypassGovernanceRetention</code> 権限を厳しく制限する)、KMS
                                 暗号化、厳格なバケットポリシーで改ざんを防ぐ
                             </li>
@@ -606,7 +606,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html</a>
                     </li>
                     <li>
-                        AWS Security Reference Architecture:
+                        AWS Security Reference Architecture:{" "}
                         <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html">https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html</a>
                     </li>
                 </ul>

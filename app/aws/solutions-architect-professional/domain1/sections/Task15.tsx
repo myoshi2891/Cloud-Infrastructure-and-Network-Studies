@@ -352,7 +352,7 @@ export default function Task15() {
                         <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html">https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html</a>
                     </li>
                     <li>
-                        Tagging Best Practices:
+                        Tagging Best Practices:{" "}
                         <a href="https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html">https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html</a>
                     </li>
                 </ul>

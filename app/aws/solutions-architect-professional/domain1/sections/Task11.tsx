@@ -516,7 +516,7 @@ export default function Task11() {
                     </li>
                     <li>
                         プライベートサブネットのコンテナがイメージを取得するには、ECR 用の 2 つの
-                        Interface エンドポイント (<code>com.amazonaws.&lt;region&gt;.ecr.api</code>
+                        Interface エンドポイント (<code>com.amazonaws.&lt;region&gt;.ecr.api</code>{" "}
                         と <code>com.amazonaws.&lt;region&gt;.ecr.dkr</code>)
                         と、イメージレイヤーを取得する S3 の Gateway エンドポイントを用意すると、NAT
                         Gateway 経由を避けられる
@@ -584,67 +584,67 @@ export default function Task11() {
 <h3 id="214-ソース-task-11" tabIndex={-1}>2.14 ソース (Task 1.1)</h3>
 <ul>
                     <li>
-                        Building a Scalable and Secure Multi-VPC AWS Network Infrastructure:
+                        Building a Scalable and Secure Multi-VPC AWS Network Infrastructure:{" "}
                         <a href="https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html">https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html</a>
                     </li>
                     <li>
-                        VPC ピアリング:
+                        VPC ピアリング:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html">https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html</a>
                     </li>
                     <li>
-                        Transit Gateway:
+                        Transit Gateway:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html">https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html</a>
                     </li>
                     <li>
-                        AWS PrivateLink:
+                        AWS PrivateLink:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html">https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html</a>
                     </li>
                     <li>
-                        Gateway エンドポイント:
+                        Gateway エンドポイント:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html">https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html</a>
                     </li>
                     <li>
-                        Site-to-Site VPN:
+                        Site-to-Site VPN:{" "}
                         <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html">https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html</a>
                     </li>
                     <li>
-                        AWS Direct Connect:
+                        AWS Direct Connect:{" "}
                         <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html">https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html</a>
                     </li>
                     <li>
-                        Direct Connect Resiliency Toolkit:
+                        Direct Connect Resiliency Toolkit:{" "}
                         <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/resiliency_toolkit.html">https://docs.aws.amazon.com/directconnect/latest/UserGuide/resiliency_toolkit.html</a>
                     </li>
                     <li>
-                        Amazon VPC connectivity options (ホワイトペーパー):
+                        Amazon VPC connectivity options (ホワイトペーパー):{" "}
                         <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/welcome.html">https://docs.aws.amazon.com/whitepapers/latest/aws-vpc-connectivity-options/welcome.html</a>
                     </li>
                     <li>
-                        Route 53 Resolver:
+                        Route 53 Resolver:{" "}
                         <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html">https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html</a>
                     </li>
                     <li>
-                        Hybrid Cloud DNS Options for Amazon VPC:
+                        Hybrid Cloud DNS Options for Amazon VPC:{" "}
                         <a href="https://docs.aws.amazon.com/whitepapers/latest/hybrid-cloud-dns-options-for-vpc/hybrid-cloud-dns-options-for-vpc.html">https://docs.aws.amazon.com/whitepapers/latest/hybrid-cloud-dns-options-for-vpc/hybrid-cloud-dns-options-for-vpc.html</a>
                     </li>
                     <li>
-                        VPC IPAM:
+                        VPC IPAM:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html">https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html</a>
                     </li>
                     <li>
-                        VPC Flow Logs:
+                        VPC Flow Logs:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html">https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html</a>
                     </li>
                     <li>
-                        Traffic Mirroring:
+                        Traffic Mirroring:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html">https://docs.aws.amazon.com/vpc/latest/mirroring/what-is-traffic-mirroring.html</a>
                     </li>
                     <li>
-                        Reachability Analyzer:
+                        Reachability Analyzer:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html">https://docs.aws.amazon.com/vpc/latest/reachability/what-is-reachability-analyzer.html</a>
                     </li>
                     <li>
-                        Network Access Analyzer:
+                        Network Access Analyzer:{" "}
                         <a href="https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html">https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html</a>
                     </li>
                 </ul>

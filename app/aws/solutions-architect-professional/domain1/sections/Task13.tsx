@@ -109,7 +109,7 @@ export default function Task13() {
 </div>
 <Diagram id="diag-13" label={"4.3 Step 2: 4つの DR 戦略"} />
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html">https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html</a>
                 </p>
 <h3 id="44-step-3-aws-elastic-disaster-recovery-drs" tabIndex={-1}>
@@ -132,7 +132,7 @@ export default function Task13() {
                 </ul>
 <Diagram id="diag-14" label={"4.4 Step 3: AWS Elastic Disaster Recovery (DRS)"} />
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html">https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html</a>
                 </p>
 <h3 id="45-step-4-自動復旧とデータレプリケーション" tabIndex={-1}>
@@ -350,7 +350,7 @@ export default function Task13() {
                     </div>
                 </div>
 <p>
-                    {"出典: "}
+                    {"出典: "}{" "}
                     <a href="https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html">https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html</a>
                 </p>
 <h3 id="48-task-13-ベストプラクティスまとめ" tabIndex={-1}>
