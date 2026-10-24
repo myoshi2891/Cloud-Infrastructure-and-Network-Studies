@@ -150,12 +150,13 @@ flowchart LR
 | 許可セットの構成要素 | 説明 |
 |---|---|
 | AWS 管理ポリシー | `ReadOnlyAccess` など既成のもの |
-| カスタマー管理ポリシー | 各アカウント側に同名で用意するポリシーを参照 |
+| カスタマー管理ポリシー | 各アカウント側に**同じ名前・同じパス**で用意するポリシーを参照 (パスが異なるとプロビジョニングに失敗) |
 | インラインポリシー | 許可セット内に直接記述 |
 | アクセス許可の境界 | 許可セットに付ける権限の上限 |
 | セッション時間 | 既定 1 時間、最大 12 時間 |
 
 > 許可セットを割り当てると、対象アカウントに `AWSReservedSSO_` で始まる名前の IAM ロールが作成されます。
+> カスタマー管理ポリシーは名前だけでなくパスも一致させる必要があり、アカウントごとに異なるカスタムパスで作成しているとプロビジョニングできません。
 > 許可セットを変更したら、**対象アカウントへ再プロビジョニング** されて初めて反映されます (トラブルシュートで重要)。
 
 #### Step 4. その他の押さえどころ
@@ -294,6 +295,7 @@ MFA 未使用の操作を拒否する典型的なポリシーです。長期認�
         "iam:CreateVirtualMFADevice",
         "iam:EnableMFADevice",
         "iam:ListMFADevices",
+        "iam:ListVirtualMFADevices",
         "iam:ResyncMFADevice",
         "sts:GetSessionToken"
       ],
@@ -935,7 +937,10 @@ forbid (
       "Sid": "RunTaggedInstance",
       "Effect": "Allow",
       "Action": "ec2:RunInstances",
-      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Resource": [
+        "arn:aws:ec2:*:*:instance/*",
+        "arn:aws:ec2:*:*:volume/*"
+      ],
       "Condition": {
         "StringEquals": {
           "aws:RequestTag/project": "${aws:PrincipalTag/project}"
@@ -953,7 +958,6 @@ forbid (
         "arn:aws:ec2:*::image/*",
         "arn:aws:ec2:*:*:subnet/*",
         "arn:aws:ec2:*:*:network-interface/*",
-        "arn:aws:ec2:*:*:volume/*",
         "arn:aws:ec2:*:*:key-pair/*",
         "arn:aws:ec2:*:*:security-group/*"
       ]
@@ -962,7 +966,10 @@ forbid (
       "Sid": "TagOnLaunch",
       "Effect": "Allow",
       "Action": "ec2:CreateTags",
-      "Resource": "arn:aws:ec2:*:*:instance/*",
+      "Resource": [
+        "arn:aws:ec2:*:*:instance/*",
+        "arn:aws:ec2:*:*:volume/*"
+      ],
       "Condition": {
         "StringEquals": {
           "ec2:CreateAction": "RunInstances"
@@ -973,7 +980,7 @@ forbid (
 }
 ```
 
-> `RunInstances` は AMI、サブネット、ネットワークインターフェイス、ボリューム、キーペア、セキュリティグループ、インスタンスの各リソースに対して認可されます。リクエストタグはインスタンス以外の既存リソースには付かないため、タグ条件はインスタンスだけに適用し、それ以外のリソースは条件なしの別ステートメントで許可します。作成時のタグ付けには `ec2:CreateAction` で `RunInstances` に限定した `ec2:CreateTags` も必要です。
+> `RunInstances` は AMI、サブネット、ネットワークインターフェイス、ボリューム、キーペア、セキュリティグループ、インスタンスの各リソースに対して認可されます。リクエストタグは起動時に作成されるインスタンスと、`TagSpecifications` でタグを付けて作成するボリュームにだけ付き、既存リソースには付かないため、タグ条件はインスタンスとボリュームに適用し、それ以外のリソースは条件なしの別ステートメントで許可します。この例ではボリュームにも `project` タグの `TagSpecifications` 指定が必要です。作成時のタグ付けには `ec2:CreateAction` で `RunInstances` に限定した `ec2:CreateTags` を、インスタンスとボリュームの両方に許可します。
 
 ### 7.3 属性 (タグ) の渡し方
 
