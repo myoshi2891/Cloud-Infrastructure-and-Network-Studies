@@ -35,6 +35,7 @@ export const FIDELITY_PAGES = {
     'aws-scs-c03-guide': {
         source: 'Aws-scs-c03-guide.html',
         sourceCommit: '71ff4c1a4e31847687477659cf16076fb4264a63',
+        syntaxSelectors: {"p":"pre:not(.mermaid) span.p","w":"pre:not(.mermaid) span.w","nt":"pre:not(.mermaid) span.nt","s2":"pre:not(.mermaid) span.s2","c1":"pre:not(.mermaid) span.c1","se":"pre:not(.mermaid) span.se","s1":"pre:not(.mermaid) span.s1","nv":"pre:not(.mermaid) span.nv","o":"pre:not(.mermaid) span.o","m":"pre:not(.mermaid) span.m","k":"pre:not(.mermaid) span.k","n":"pre:not(.mermaid) span.n","mi":"pre:not(.mermaid) span.mi","kn":"pre:not(.mermaid) span.kn","nn":"pre:not(.mermaid) span.nn","nf":"pre:not(.mermaid) span.nf","kc":"pre:not(.mermaid) span.kc","no":"pre:not(.mermaid) span.no","n-Operator":"pre:not(.mermaid) span.n-Operator"},
         tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
         guideBoundaries: {
             foundation: '',
