@@ -6,7 +6,7 @@
 
 検証: 全体Vitest401ファイル・3779件成功（`bun run test -- --maxWorkers=4 --testTimeout=30000 --retry=1`）。対象18ファイル・138件。型検査・全体ESLint成功。Chrome5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全40SVGの自然倍率・viewBox内包、目次のhash/focus・モバイル開閉、全8問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
 
-開発環境の注意: この環境のTurbopackではSVGが40図中1図の状態で停止した。webpack開発サーバー（`bun run next dev --webpack`）では40図を描画できるため、今回のChrome検証は `PLAYWRIGHT_WEB_SERVER_COMMAND="bun run next dev --webpack"` を指定している。通常のTurbopackでの停止は未解消で、ビルド成功も主張しない。共有Mermaidコンポーネントの変更は残していない。
+開発環境の注意（解消済み）: 通常のTurbopackでSVGが40図中1図で止まる原因は、共通フッターの `body:has(...)` がMermaidの一時要素挿入のたびに文書全体のスタイル再計算を強制していたことだった。兄弟結合子 `:is(<ページルート>) ~ .footer` へ変更して解消し（`add6ce58`）、Turbopackで40図が描画されるため `--webpack` の指定は不要。Chrome検証は通常の開発サーバーで実行できる。ビルド成功は主張しない。回帰テストは `__tests__/components/Footer.palette.test.ts`。
 
 原本HTML・Markdownは内容を変更せず直下に保持し、`archive/Aws/html/security-specialty/` と `archive/Aws/md/security-specialty/` にバイト一致・SHA-256一致でコピー済み。保存先と完全なハッシュは `docs/migration-inventory/aws-scs-c03-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `71ff4c1a4e31847687477659cf16076fb4264a63` 由来のコミット済みfixtureを使用する。原本・archiveがない一時作業ディレクトリでもfixture再生成のバイト一致を検証済み。
 
@@ -161,7 +161,7 @@ ANS-C01 Domain 2の専用E2Eは1440/768/390pxの原本リストCSS比較、全26
 ## 4. 優先度別ネクストアクション
 
 - [x] SCS-C03の全量移行・段階TDDコミット・原本アーカイブ・138件の対象検証。
-- [ ] この環境でのTurbopackの図描画停止を別途調査する。検証時はwebpack開発サーバーを使用。
+- [x] この環境でのTurbopackの図描画停止を調査。共通フッターの `body:has(...)` を兄弟結合子へ変更して解消済み（`add6ce58`）。`--webpack` は不要。
 
 - [x] ANS-C01 Domain 4: 全3タスク・58表・31図・14コード・181リスト項目・確認問題8問を全文移行。全文/構造/CSS/欠落検出/装飾破壊検出を追加。対象15ファイル・97件、Chrome5件、全体Vitest373ファイル・3579件（再試行なし）、型検査・ESLint・Markdown lint成功。
 
@@ -295,7 +295,7 @@ bun run dashboard
 
 ## 7. 次回セッションでのテスト追加再開プロンプト
 
-SCS-C03の8区画・138件の実装は完了。再移行は不要。全体401ファイル・3779件成功、静的集計1163ソース・360対応（31%）・417テストファイル。未確認の本番ビルドを成功扱いにせず、ユーザーのビルド禁止を引き継ぐ。次の検討候補はTurbopackでの図描画停止。
+SCS-C03の8区画・138件の実装は完了。再移行は不要。全体401ファイル・3779件成功、静的集計1163ソース・360対応（31%）・417テストファイル。未確認の本番ビルドを成功扱いにせず、ユーザーのビルド禁止を引き継ぐ。次の検討候補はユーザーによる目視確認（Turbopack停止は解消済み）。
 
 ANS-C01 Domain 4の全文移行と段階別コミットを実施済み。58表・31図・14コード・181リスト項目・33選択肢を固定fixtureで照合し、欠落7種・リストCSS破壊5種を検出する。最新の検証結果はMIGRATION_PROGRESS.mdの現在地を参照。Domain 1〜4の再移行は不要。手動の目視確認は未実施でChrome自動検証で代替済み。次の作業は `bun run build`・`bun run lint` の成功確認による進捗同期の完了。以下は過去の記録。
 
