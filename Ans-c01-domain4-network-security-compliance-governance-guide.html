@@ -1081,7 +1081,7 @@ flowchart TD
 </div></div>
 <div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span><span class="c1"># 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)</span>
 <span class="c1"># 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)</span>
-<span class="c1"># EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える</span>
+<span class="c1"># ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループにはこの上書きが及ばないため、ファイアウォールポリシーの HOME_NET も検査対象の全 CIDR に設定するか、他のルールグループにも同じ範囲を適用する</span>
 aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-group<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group-name<span class="w"> </span>allow-approved-domains<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>STATEFUL<span class="w"> </span><span class="se">\</span>
@@ -1089,7 +1089,8 @@ aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-g
 <span class="w">  </span>--rule-group<span class="w"> </span><span class="s1">&#39;{</span>
 <span class="s1">    &quot;RuleVariables&quot;: {</span>
 <span class="s1">      &quot;IPSets&quot;: {</span>
-<span class="s1">        &quot;HOME_NET&quot;: { &quot;Definition&quot;: [&quot;192.0.2.0/24&quot;, &quot;10.0.0.0/16&quot;, &quot;10.1.0.0/16&quot;] }</span>
+<span class="s1">        &quot;HOME_NET&quot;: { &quot;Definition&quot;: [&quot;192.0.2.0/24&quot;, &quot;10.0.0.0/16&quot;, &quot;10.1.0.0/16&quot;] },</span>
+<span class="s1">        &quot;EXTERNAL_NET&quot;: { &quot;Definition&quot;: [&quot;!192.0.2.0/24&quot;, &quot;!10.0.0.0/16&quot;, &quot;!10.1.0.0/16&quot;] }</span>
 <span class="s1">      }</span>
 <span class="s1">    },</span>
 <span class="s1">    &quot;RulesSource&quot;: {</span>
@@ -1799,6 +1800,12 @@ flowchart TD
 
 <span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">)</span>
 
+<span class="n">PORT_PROTOCOLS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;udp&quot;</span><span class="p">,</span> <span class="s2">&quot;17&quot;</span><span class="p">,</span> <span class="s2">&quot;icmp&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;icmpv6&quot;</span><span class="p">,</span> <span class="s2">&quot;58&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">has_ports</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
+    <span class="c1"># tcp / udp / icmp / icmpv6 以外(-1 を含む)はポート指定を持たず、全ポートが対象になる</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">))</span> <span class="ow">in</span> <span class="n">PORT_PROTOCOLS</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
     <span class="n">protocol</span> <span class="o">=</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">)</span>
     <span class="n">tcp_admin</span> <span class="o">=</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;tcp&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fromPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">port</span> <span class="o">&lt;=</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;toPort&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3389</span><span class="p">))</span>
@@ -1839,7 +1846,7 @@ flowchart TD
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_admin_rule</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
             <span class="k">continue</span>
         <span class="n">base</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;IpProtocol&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]}</span>
-        <span class="k">if</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;ipProtocol&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">has_ports</span><span class="p">(</span><span class="n">perm</span><span class="p">):</span>
             <span class="n">base</span><span class="p">[</span><span class="s2">&quot;FromPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;fromPort&quot;</span><span class="p">]</span>
             <span class="n">base</span><span class="p">[</span><span class="s2">&quot;ToPort&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="s2">&quot;toPort&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">rng</span> <span class="ow">in</span> <span class="n">perm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ipRanges&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;items&quot;</span><span class="p">,</span> <span class="p">[]):</span>
