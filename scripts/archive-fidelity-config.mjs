@@ -32,6 +32,21 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-scs-c03-guide': {
+        source: 'Aws-scs-c03-guide.html',
+        sourceCommit: '71ff4c1a4e31847687477659cf16076fb4264a63',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: 'domain-1-detection検出-16',
+            domain2: 'domain-2-incident-responseインシデント対応-14',
+            domain3: 'domain-3-infrastructure-securityインフラストラクチャセキュリティ-18',
+            domain4: 'domain-4-identity-and-access-managementiam-20',
+            domain5: 'domain-5-data-protectionデータ保護-18',
+            domain6: 'domain-6-security-foundations-and-governance-14',
+            revision: '7-横断チートシート',
+        },
+    },
     "aws-ans-c01-domain4-guide": {
     "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
     "sourceCommit": "2267ddc3474b6e52f4628b742a3739080e196d77",
