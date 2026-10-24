@@ -1081,7 +1081,7 @@ flowchart TD
 </div></div>
 <div class="code-block" data-lang="bash"><div class="highlight"><pre><span></span><span class="c1"># 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)</span>
 <span class="c1"># 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)</span>
-<span class="c1"># ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える</span>
+<span class="c1"># ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループにはこの上書きが及ばないため、ファイアウォールポリシーの HOME_NET も検査対象の全 CIDR に設定するか、他のルールグループにも同じ範囲を適用する</span>
 aws<span class="w"> </span>network-firewall<span class="w"> </span>create-rule-group<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--rule-group-name<span class="w"> </span>allow-approved-domains<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--type<span class="w"> </span>STATEFUL<span class="w"> </span><span class="se">\</span>

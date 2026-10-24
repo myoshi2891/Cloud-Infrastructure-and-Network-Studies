@@ -285,7 +285,7 @@ flowchart TD
 ```bash
 # 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)
 # 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)
-# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える
+# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループにはこの上書きが及ばないため、ファイアウォールポリシーの HOME_NET も検査対象の全 CIDR に設定するか、他のルールグループにも同じ範囲を適用する
 aws network-firewall create-rule-group \
   --rule-group-name allow-approved-domains \
   --type STATEFUL \
