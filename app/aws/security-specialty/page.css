@@ -1253,7 +1253,7 @@
 .scs-guide-page .main .q-options { list-style: none; }
 .scs-guide-page .main .q-options li { display: flex; }
 .scs-guide-page .sidebar nav ul { list-style: none; margin: 0; padding: 0; }
-.scs-guide-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; }
+.scs-guide-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; overflow-x: visible; }
 .scs-guide-page .mermaid-wrap svg { flex-shrink: 0; max-width: none; height: auto; }
 .scs-guide-page .code-line { white-space: pre; min-height: 1.65em; }
 .scs-guide-page .codeblock .code-block { font-family: var(--font-mono); }
