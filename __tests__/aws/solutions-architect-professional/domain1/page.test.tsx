@@ -8,10 +8,11 @@ import {
     codeLineCount,
     extractBodyContent,
     squash,
+    withBlockBoundarySpaces,
 } from '@/__tests__/helpers/migration-test-utils';
 
-vi.mock('@/components/MermaidDiagram', () => ({
-    MermaidDiagram: MermaidDiagramMock,
+vi.mock('@/components/MermaidDiagram', async () => ({
+    MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
 }));
 
 describe('AWS SAP-C02 Domain 1 — 移行元コンテンツの全量移行', () => {
@@ -55,7 +56,7 @@ describe('AWS SAP-C02 Domain 1 — 移行元コンテンツの全量移行', () 
 
     it('本文・注釈・コード全文が移行元の順序どおり一致する', () => {
         const container = renderPage();
-        expect(extractBodyContent(container)).toEqual(inventory.bodyContent);
+        expect(extractBodyContent(withBlockBoundarySpaces(container))).toEqual(inventory.bodyContent);
     });
 
     it('全19点の図が件数どおり存在し、説明または装飾指定と自然スケールを持つ', () => {

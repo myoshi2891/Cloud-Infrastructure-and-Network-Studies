@@ -36,7 +36,24 @@
     --color-ans-d4-18: #f0f3fa;
     --color-ans-d4-19: #f6f8fc;
     --color-ans-d4-20: #f8f8f8;
-    --color-ans-d4-21: #e6f6ec;
+    /* SAP-C02 Domain 1: original light palette */
+    --color-sap-d1-bg: #faf8f3;
+    --color-sap-d1-card: #ffffff;
+    --color-sap-d1-card-2: #f2efe6;
+    --color-sap-d1-border: #d8d2c3;
+    --color-sap-d1-border-soft: #e7e2d5;
+    --color-sap-d1-text: #1d2433;
+    --color-sap-d1-text-dim: #48526a;
+    --color-sap-d1-text-faint: #6b7489;
+    --color-sap-d1-accent: #3a4fb5;
+    --color-sap-d1-accent-soft: #a9b4e6;
+    --color-sap-d1-accent-bg: #e8ecfa;
+    --color-sap-d1-danger: #b3261e;
+    --color-sap-d1-danger-bg: #fbeae8;
+    --color-sap-d1-warn: #8a5a00;
+    --color-sap-d1-warn-bg: #fff3dc;
+    --color-sap-d1-success: #1f6b46;
+    --color-sap-d1-success-bg: #e6f4ec;
     /* ANS-C01 Domain 3: original light palette. */
     --color-ans-d3-1: #f7f9fd;
     --color-ans-d3-2: #d5deee;

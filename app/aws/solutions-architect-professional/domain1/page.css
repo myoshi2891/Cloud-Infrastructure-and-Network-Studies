@@ -1,0 +1,474 @@
+.sap-domain1-page {
+    background: var(--color-sap-d1-bg);
+    color: var(--color-sap-d1-text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+.sap-domain1-page * {
+    box-sizing: border-box;
+}
+
+.sap-domain1-page a {
+    color: var(--color-sap-d1-accent);
+    text-decoration: none;
+}
+.sap-domain1-page a:hover {
+    text-decoration: underline;
+}
+
+/* Layout */
+.sap-domain1-page .layout {
+    display: block;
+}
+
+/* Sidebar */
+.sap-domain1-page .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 340px;
+    background: var(--color-sap-d1-card);
+    border-right: 1px solid var(--color-sap-d1-border);
+    overflow-y: auto;
+    padding: 24px 0 32px;
+    z-index: 40;
+}
+
+.sap-domain1-page .sidebar-header {
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--color-sap-d1-border-soft);
+    margin-bottom: 12px;
+}
+.sap-domain1-page .sidebar-header .kicker {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--color-sap-d1-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.sap-domain1-page .sidebar-header h2 {
+    font-size: 15px;
+    margin: 4px 0 0;
+    color: var(--color-sap-d1-text);
+    line-height: 1.4;
+    border: none;
+    padding: 0;
+}
+
+.sap-domain1-page .sidebar nav {
+    padding: 0 10px;
+}
+.sap-domain1-page .sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.sap-domain1-page .sidebar nav li {
+    margin: 0;
+    padding: 0;
+}
+.sap-domain1-page .sidebar nav a {
+    display: block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--color-sap-d1-text-dim);
+    line-height: 1.45;
+    margin-bottom: 2px;
+}
+.sap-domain1-page .sidebar nav a:hover {
+    background: var(--color-sap-d1-accent-bg);
+    color: var(--color-sap-d1-accent);
+    text-decoration: none;
+}
+.sap-domain1-page .sidebar nav a.active {
+    background: var(--color-sap-d1-accent-bg);
+    color: var(--color-sap-d1-accent);
+    font-weight: 700;
+}
+.sap-domain1-page .sidebar nav a.lvl3 {
+    padding-left: 22px;
+    font-size: 12px;
+    color: var(--color-sap-d1-text-faint);
+}
+
+.sap-domain1-page .sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    background: var(--color-sap-d1-accent);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(58, 79, 181, 0.3);
+    cursor: pointer;
+}
+
+/* Main content */
+.sap-domain1-page .main {
+    margin-left: 340px;
+    max-width: 980px;
+    padding: 40px 48px 120px;
+}
+
+.sap-domain1-page .hero {
+    background: linear-gradient(180deg, #ffffff 0%, var(--color-sap-d1-bg) 100%);
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+}
+.sap-domain1-page .hero .kicker {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--color-sap-d1-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.sap-domain1-page .hero h1 {
+    font-size: 26px;
+    line-height: 1.4;
+    margin: 8px 0 16px;
+    color: var(--color-sap-d1-text);
+}
+.sap-domain1-page .hero .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 12px;
+}
+.sap-domain1-page .pill {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-sap-d1-card);
+    border: 1px solid var(--color-sap-d1-border-soft);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--color-sap-d1-text-dim);
+}
+.sap-domain1-page .pill strong {
+    color: var(--color-sap-d1-text);
+    margin-left: 4px;
+}
+
+.sap-domain1-page .main h2 {
+    font-size: 22px;
+    margin: 48px 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--color-sap-d1-accent-soft);
+    color: var(--color-sap-d1-text);
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+.sap-domain1-page .main h3 {
+    font-size: 17px;
+    margin: 32px 0 12px;
+    color: var(--color-sap-d1-text);
+    position: relative;
+    padding-left: 14px;
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+.sap-domain1-page .main h3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    bottom: 4px;
+    width: 4px;
+    background: var(--color-sap-d1-accent);
+    border-radius: 2px;
+}
+.sap-domain1-page .main h4 {
+    font-size: 15px;
+    margin: 20px 0 8px;
+    color: var(--color-sap-d1-text-dim);
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px);
+}
+
+.sap-domain1-page .main p {
+    margin: 0 0 14px;
+    line-height: 1.85;
+}
+
+.sap-domain1-page .main ul,
+.sap-domain1-page .main ol {
+    margin: 0 0 16px;
+    padding-left: 24px;
+}
+.sap-domain1-page .main li {
+    margin-bottom: 6px;
+    line-height: 1.75;
+}
+.sap-domain1-page .main ul {
+    list-style-type: disc;
+}
+.sap-domain1-page .main ol {
+    list-style-type: decimal;
+}
+
+.sap-domain1-page blockquote {
+    background: var(--color-sap-d1-card-2);
+    border-left: 4px solid var(--color-sap-d1-accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin: 20px 0;
+    color: var(--color-sap-d1-text-dim);
+}
+.sap-domain1-page blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.sap-domain1-page .callout-warn {
+    background: var(--color-sap-d1-warn-bg);
+    border-left: 4px solid var(--color-sap-d1-warn);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin: 20px 0;
+}
+.sap-domain1-page .callout-warn strong {
+    color: var(--color-sap-d1-warn);
+}
+
+.sap-domain1-page .callout-danger {
+    background: var(--color-sap-d1-danger-bg);
+    border-left: 4px solid var(--color-sap-d1-danger);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 20px;
+    margin: 20px 0;
+}
+.sap-domain1-page .callout-danger strong {
+    color: var(--color-sap-d1-danger);
+}
+
+.sap-domain1-page .callout-practice {
+    background: #ffffff;
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 24px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+.sap-domain1-page .callout-practice .kicker {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-sap-d1-accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.sap-domain1-page .callout-practice h4 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--color-sap-d1-text);
+}
+
+/* Tables */
+.sap-domain1-page .table-scroll {
+    overflow-x: auto;
+    margin: 20px 0;
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 8px;
+    background: var(--color-sap-d1-card);
+}
+.sap-domain1-page table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    line-height: 1.6;
+    text-align: left;
+}
+.sap-domain1-page thead {
+    background: var(--color-sap-d1-card-2);
+    border-bottom: 2px solid var(--color-sap-d1-border);
+}
+.sap-domain1-page th {
+    padding: 10px 14px;
+    font-weight: 700;
+    color: var(--color-sap-d1-text);
+}
+.sap-domain1-page td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-sap-d1-border-soft);
+    vertical-align: top;
+}
+.sap-domain1-page tbody tr:last-child td {
+    border-bottom: none;
+}
+.sap-domain1-page tbody tr:hover td {
+    background: rgba(58, 79, 181, 0.02);
+}
+
+/* Code blocks */
+.sap-domain1-page .code-block {
+    background: #1a1e29;
+    color: #e6eaf2;
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.65;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+.sap-domain1-page .code-block .code-line {
+    white-space: pre;
+}
+.sap-domain1-page .tok-pun { color: #8a96b0; }
+.sap-domain1-page .tok-key { color: #7aa2f7; font-weight: 600; }
+.sap-domain1-page .tok-str { color: #9ece6a; }
+
+/* Diagram */
+.sap-domain1-page .diagram {
+    overflow-x: auto;
+    margin: 24px auto;
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 8px;
+    background: var(--color-sap-d1-card);
+    padding: 16px;
+    display: flex;
+    justify-content: safe center;
+}
+.sap-domain1-page .diagram > [role="img"] {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.sap-domain1-page .diagram svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+
+/* Quiz */
+.sap-domain1-page .quiz-card {
+    background: var(--color-sap-d1-card);
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 20px 0 28px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.sap-domain1-page .quiz-card.answered {
+    border-color: var(--color-sap-d1-accent-soft);
+}
+.sap-domain1-page .quiz-q {
+    font-size: 15.5px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--color-sap-d1-text);
+}
+.sap-domain1-page .quiz-options {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+.sap-domain1-page .quiz-opt {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 14px;
+    border: 1px solid var(--color-sap-d1-border-soft);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.15s, border-color 0.15s;
+}
+.sap-domain1-page .quiz-opt:hover {
+    background: var(--color-sap-d1-accent-bg);
+    border-color: var(--color-sap-d1-accent-soft);
+}
+.sap-domain1-page .quiz-opt.correct {
+    background: var(--color-sap-d1-success-bg);
+    border-color: var(--color-sap-d1-success);
+    font-weight: 600;
+}
+.sap-domain1-page .quiz-opt.incorrect {
+    background: var(--color-sap-d1-danger-bg);
+    border-color: var(--color-sap-d1-danger);
+    opacity: 0.8;
+}
+.sap-domain1-page .quiz-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-sap-d1-card-2);
+    font-weight: 700;
+    font-size: 12px;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+.sap-domain1-page .quiz-text {
+    flex: 1;
+}
+
+.sap-domain1-page .quiz-score {
+    background: var(--color-sap-d1-card-2);
+    border: 1px solid var(--color-sap-d1-border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+.sap-domain1-page .quiz-score button {
+    background: var(--color-sap-d1-accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sap-domain1-page details.quiz-answer {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--color-sap-d1-border);
+}
+.sap-domain1-page details.quiz-answer summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-sap-d1-accent);
+}
+.sap-domain1-page .quiz-answer-body {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: var(--color-sap-d1-card-2);
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+@media (max-width: 980px) {
+    .sap-domain1-page .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease-out;
+    }
+    .sap-domain1-page .sidebar.open {
+        transform: translateX(0);
+    }
+    .sap-domain1-page .sidebar-toggle {
+        display: block;
+    }
+    .sap-domain1-page .main {
+        margin-left: 0;
+        padding: 24px 20px 80px;
+    }
+}
