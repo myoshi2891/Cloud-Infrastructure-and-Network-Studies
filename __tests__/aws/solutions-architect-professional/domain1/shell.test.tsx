@@ -111,9 +111,9 @@ describe('SAP-C02 Domain 1 NavBar & Heading Focusability', () => {
     });
 
     it('makes every navigated heading focusable via tabIndex={-1}', () => {
-        const { container } = render(<Page />);
+        render(<Page />);
         for (const item of NAV_ITEMS) {
-            const heading = container.querySelector(`[id="${CSS.escape(item.id)}"]`);
+            const heading = document.getElementById(item.id);
             expect(heading, `Missing heading for #${item.id}`).not.toBeNull();
             expect(heading).toHaveAttribute('tabindex', '-1');
         }
