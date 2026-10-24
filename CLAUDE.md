@@ -6,7 +6,7 @@ Updated 2026-10-24
 
 検証: 全体Vitest401ファイル・3779件成功（`bun run test -- --maxWorkers=4 --testTimeout=30000 --retry=1`）。対象18ファイル・138件。型検査・全体ESLint成功。Chrome5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全40SVGの自然倍率・viewBox内包、目次のhash/focus・モバイル開閉、全8問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
 
-開発環境の注意: この環境のTurbopackではSVGが40図中1図の状態で停止した。webpack開発サーバー（`bun run next dev --webpack`）では40図を描画できるため、今回のChrome検証は `PLAYWRIGHT_WEB_SERVER_COMMAND="bun run next dev --webpack"` を指定している。通常のTurbopackでの停止は未解消で、ビルド成功も主張しない。共有Mermaidコンポーネントの変更は残していない。
+開発環境の注意（2026-10-24解消）: 通常のTurbopackでSVGが40図中1図で止まり、スクロールもできなかった原因は共通フッターの `body:has(...)` だった。Mermaidは採寸用の一時要素を `<body>` 直下へ挿入するため、挿入のたびに文書全体のスタイル再計算が強制されていた（`body:has(> ...)` でも停止）。フッターの明色ルールを兄弟結合子 `:is(<ページルート>) ~ .footer` に変更し、Turbopackで40図が約5秒で描画されることと、SCSのChrome5件の成功を確認した（`--webpack` の指定は不要）。webpackでだけ停止しなかった理由は未解明。回帰テストは `__tests__/components/Footer.palette.test.ts`。ビルドは未実行。
 
 原本HTML・Markdownは内容を変更せず直下に保持し、`archive/Aws/html/security-specialty/` と `archive/Aws/md/security-specialty/` にバイト一致・SHA-256一致でコピー済み。保存先と完全なハッシュは `docs/migration-inventory/aws-scs-c03-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `71ff4c1a4e31847687477659cf16076fb4264a63` 由来のコミット済みfixtureを使用する。原本・archiveがない一時作業ディレクトリでもfixture再生成のバイト一致を検証済み。
 
@@ -962,4 +962,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 共通フッター（2026-10-20）
 
-`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートを `body:has()` で判定するため、クライアント遷移にも追従する。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。共通フッターの `z-index` は `auto` を維持し、固定サイドバーより手前へ配置しない。
+`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートとフッターは `<body>` 直下の兄弟なので、兄弟結合子 `:is(<ページルート>) ~ .footer` で判定し、クライアント遷移にも追従する。`body:has()` は使わない（Mermaidの採寸のたびに文書全体の再計算が起き、描画とスクロールが停止するため）。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。共通フッターの `z-index` は `auto` を維持し、固定サイドバーより手前へ配置しない。
