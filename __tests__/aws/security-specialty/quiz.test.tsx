@@ -45,3 +45,11 @@ it('waits for two multi-select choices and enforces the source limit and replace
  pick('C');expect(card.querySelector('[data-opt="C"]')).toHaveAttribute('aria-checked','false');
  pick('B');expect(card).toHaveClass('is-graded-correct');
 });
+it('names every radio or checkbox group with its original question heading', () => {
+ const {container}=setup();
+ container.querySelectorAll('.q-card').forEach(card=>{
+  const group=card.querySelector('.q-options')!;
+  expect(group).toHaveAttribute('role',card.getAttribute('data-multi')==='2'?'group':'radiogroup');
+  expect(group).toHaveAttribute('aria-labelledby',card.querySelector('h3')!.id);
+ });
+});
