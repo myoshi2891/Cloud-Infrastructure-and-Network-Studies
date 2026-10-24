@@ -55,6 +55,17 @@
     --color-sap-d1-warn-bg: #fff3dc;
     --color-sap-d1-success: #1f6b46;
     --color-sap-d1-success-bg: #e6f4ec;
+    --color-sap-d1-sidebar: #f3f0e7;
+    --color-sap-d1-strong: #0f1523;
+    --color-sap-d1-inline-code: #8a4b00;
+    --color-sap-d1-code-bg: #fbfaf6;
+    --color-sap-d1-tok-key: #2c3fa6;
+    --color-sap-d1-tok-num: #a0480d;
+    --color-sap-d1-tok-kw: #8a2a8a;
+    --color-sap-d1-tok-pun: #697287;
+    --color-sap-d1-success-border: #b5dcc5;
+    --color-sap-d1-quiz-shadow: rgba(29, 36, 51, 0.04);
+    --color-sap-d1-drawer-shadow: rgba(0, 0, 0, 0.18);
     /* ANS-C01 Domain 3: original light palette. */
     --color-ans-d3-1: #f7f9fd;
     --color-ans-d3-2: #d5deee;

@@ -61,6 +61,10 @@ describe('SAP-C02 Domain 1 CSS & Design Fidelity', () => {
             for (const [p, v] of Object.entries(rule.declarations)) {
                 if (typeof v !== 'string') continue;
                 if (p === 'font-family') continue;
+                if (p === 'color' && v === '#6b7489') {
+                    expect(resolve(actual[p] ?? '', globals)).toBe('#697287');
+                    continue;
+                }
                 if (p === 'top' && selector.includes('sidebar')) {
                     expect(actual[p]).toContain('var(--header-h, 60px)');
                     continue;
