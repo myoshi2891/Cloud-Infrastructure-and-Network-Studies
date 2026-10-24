@@ -1356,6 +1356,7 @@ body {
 .card-aws-cloudops { --card-accent: var(--color-theme-aws-cloudops-indigo); }
 .card-aws-aib { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-aip { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-scs { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-ans { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-sap { --card-accent: var(--color-theme-aws-fg); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
@@ -1751,3 +1752,5 @@ body {
         animation: hdr-panel-fade-out 0.2s ease-in forwards;
     }
 }
+
+@utility icon-theme-aws-scs { color: var(--color-theme-aws-fg); background: var(--color-theme-aws-bg); }

@@ -24,6 +24,7 @@ export type ColorKey =
     | 'card-aws-aip'
     | 'card-aws-ans'
     | 'card-aws-sap'
+    | 'card-aws-scs'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -78,6 +79,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-aws-aip': 'card-aws-aip',
     'card-aws-ans': 'card-aws-ans',
     'card-aws-sap': 'card-aws-sap',
+    'card-aws-scs': 'card-aws-scs',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -641,6 +643,22 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: 'ANS-C01',
         icon: '🌐',
+        provider: 'AWS',
+        status: 'available',
+    },
+    {
+        id: 'aws-scs',
+        label: 'AWS Certified Security - Specialty',
+        abbr: 'SCS',
+        level: 'Specialty',
+        score: '合格 750点 / 採点対象50問 + 採点対象外15問',
+        color: 'card-aws-scs',
+        href: '/aws/security-specialty',
+        overviewLabel: 'SCS-C03 完全ガイド',
+        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。',
+        domains: [{ label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' }],
+        badge: 'SCS-C03',
+        icon: '🛡️',
         provider: 'AWS',
         status: 'available',
     },
