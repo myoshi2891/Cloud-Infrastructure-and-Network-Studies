@@ -39,9 +39,9 @@ export function QuizCard({ answer, multi, labelId, className, children, ...props
 export function QuizOption({ value, children, ...props }: Omit<ComponentProps<'li'>, 'value'> & { value: string }) {
     const card = useCard(); const selected = card.selected.includes(value); const correct = card.answers.includes(value);
     const result = card.graded && ((selected && correct) || (card.open && correct)) ? ' is-correct' : card.graded && selected ? ' is-wrong' : '';
-    return <li {...props} role={card.multi > 1 ? 'checkbox' : 'radio'} tabIndex={0} aria-checked={selected} className={`${selected ? 'is-selected' : ''}${result}`} onClick={() => card.select(value)} onKeyDown={event => {
+    return <li {...props} data-opt={undefined} role="none" className={`${selected ? 'is-selected' : ''}${result}`} onClick={() => card.select(value)} onKeyDown={event => {
         if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); card.select(value); }
-    }}>{children}</li>;
+    }}><div className="q-option-control" data-opt={value} role={card.multi > 1 ? 'checkbox' : 'radio'} tabIndex={0} aria-checked={selected}>{children}</div></li>;
 }
 
 /** 自動開示後も利用者が開閉でき、リセットにも連動する解説。 */
