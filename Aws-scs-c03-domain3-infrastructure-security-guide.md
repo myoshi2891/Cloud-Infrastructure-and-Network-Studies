@@ -863,7 +863,7 @@ aws ssm send-command \
 
 #### Session Manager(推奨)
 
-**Session Manager** は、**インバウンドポートを一切開けず**、SSH 鍵も使わずに、ブラウザ / CLI からインスタンスへシェル接続できる仕組みです。接続は IAM で認可され、すべて記録できます。
+**Session Manager** は、**インバウンドポートを一切開けず**、SSH 鍵も使わずに、ブラウザ / CLI からインスタンスへシェル接続できる仕組みです。接続は IAM で認可され、セッションの開始・終了などの API 呼び出しは CloudTrail に記録されます。シェルなど対話型セッションの操作内容は、セッションログ(CloudWatch Logs / S3)に記録できます(ポートフォワーディングと SSH セッションは内容のログ記録に対応していません)。
 
 | 要件 | 内容 |
 |---|---|
@@ -880,15 +880,15 @@ flowchart LR
     SSM -.API 記録.-> CT["CloudTrail"]
 ```
 
-プライベートサブネットで使う場合は、次の **3 つの VPC インターフェイスエンドポイント**が必要です。
+プライベートサブネットで NAT ゲートウェイを使わずに接続する場合は、次の **VPC インターフェイスエンドポイント**が必要です。`ssm` と `ssmmessages` は必須で、`ec2messages` は対応リージョンかつ SSM Agent が必要とする場合のみ追加します。
 
-| エンドポイント | 用途 |
-|---|---|
-| `com.amazonaws.<region>.ssm` | Systems Manager API |
-| `com.amazonaws.<region>.ssmmessages` | Session Manager のセッション通信 |
-| `com.amazonaws.<region>.ec2messages` | SSM Agent の通信 |
+| エンドポイント | 用途 | 必要性 |
+|---|---|---|
+| `com.amazonaws.<region>.ssm` | Systems Manager API | 必須 |
+| `com.amazonaws.<region>.ssmmessages` | Session Manager のセッション通信 | 必須 |
+| `com.amazonaws.<region>.ec2messages` | SSM Agent の通信 | 対応リージョンで、SSM Agent が必要とする場合のみ(新しい SSM Agent は `ssmmessages` を優先使用) |
 
-特定タグのインスタンスだけ接続を許可する IAM ポリシー例:
+特定タグのインスタンスだけ接続を許可する IAM ポリシー例(タグ条件はインスタンスにのみ付け、セッションドキュメントは別ステートメントで許可します):
 
 ```json
 {
@@ -901,6 +901,19 @@ flowchart LR
       "Condition": {
         "StringEquals": { "aws:ResourceTag/Environment": "dev" }
       }
+    },
+    {
+      "Effect": "Allow",
+      "Action": "ssm:StartSession",
+      "Resource": [
+        "arn:aws:ssm:ap-northeast-1:111122223333:document/SSM-SessionManagerRunShell",
+        "arn:aws:ssm:ap-northeast-1::document/AWS-StartPortForwardingSessionToRemoteHost"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "ssmmessages:OpenDataChannel",
+      "Resource": "arn:aws:ssm:*:*:session/${aws:userid}-*"
     }
   ]
 }
@@ -926,7 +939,7 @@ aws ssm start-session \
 | 接続プロトコル | SSM 独自(WebSocket 等) | SSH(Linux)など |
 | 22 番ポート | **不要** | 必要(ただし SG は EIC Endpoint 等に限定できる) |
 | 鍵管理 | 不要 | 一時鍵を自動配布(長期鍵を管理しない) |
-| 監査 | セッションログ(CloudWatch / S3)に操作内容を記録可 | CloudTrail に接続 API を記録(操作内容は記録されない) |
+| 監査 | シェルなど対話型セッションはセッションログ(CloudWatch / S3)に操作内容を記録可(ポートフォワーディング・SSH は内容を記録できない) | CloudTrail に接続 API を記録(操作内容は記録されない) |
 | 向く場面 | 基本の第一選択、監査要件が強い場合 | 既存の SSH ツールを使いたい場合 |
 
 #### ベストプラクティス
@@ -1196,8 +1209,8 @@ flowchart TB
 
 ```text
 # api.example.com と updates.example.org 以外への HTTPS を拒否するルール例(概念例)
-pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"api.example.com"; nocase; endswith; flow:to_server; sid:1000001; rev:1;)
-pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"updates.example.org"; nocase; endswith; flow:to_server; sid:1000002; rev:1;)
+pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"api.example.com"; nocase; startswith; endswith; flow:to_server; sid:1000001; rev:1;)
+pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"updates.example.org"; nocase; startswith; endswith; flow:to_server; sid:1000002; rev:1;)
 drop tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"Blocked non-allowlisted domain"; flow:to_server; sid:1000003; rev:1;)
 ```
 
@@ -1492,7 +1505,7 @@ flowchart TD
 | CloudFront 経由だと S3 が 403 | OAC とバケットポリシー、KMS キーポリシー | CloudFront 設定、バケットポリシー |
 | ブラウザで S3 呼び出しが CORS エラー | S3 CORS 設定(オリジン、メソッド、ヘッダー) | S3 CORS 設定、ブラウザ開発者ツール |
 | 正規ユーザーが WAF でブロック | 誤検知ルール(マネージドルール) | WAF ログ、サンプルリクエスト、Count へ変更 |
-| Session Manager で接続できない | SSM Agent、インスタンスプロファイル、VPC エンドポイント(ssm / ssmmessages / ec2messages) | Fleet Manager、Reachability Analyzer |
+| Session Manager で接続できない | SSM Agent、インスタンスプロファイル、VPC エンドポイント(ssm / ssmmessages、必要に応じて ec2messages) | Fleet Manager、Reachability Analyzer |
 | EC2 のアプリが S3 に Access Denied | インスタンスプロファイルの権限、バケットポリシー、VPC エンドポイントポリシー | IAM Policy Simulator、CloudTrail |
 | 戻り通信が届かない | NACL のエフェメラルポート | NACL ルール、Flow Logs |
 | パッチが適用されない | パッチグループのタグ、ベースライン、SSM 接続 | Patch Manager コンプライアンス、Run Command 履歴 |
