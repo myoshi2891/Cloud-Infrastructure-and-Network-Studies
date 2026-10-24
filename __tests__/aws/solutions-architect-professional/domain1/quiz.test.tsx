@@ -62,4 +62,27 @@ describe('AWS SAP-C02 Domain 1 — Quiz コンポーネントの対話動作', (
         expect(firstCard.querySelectorAll('.quiz-opt.incorrect')).toHaveLength(0);
         expect(firstCard.querySelector('details')).not.toHaveAttribute('open');
     });
+
+    it('各選択肢が選択状態を aria-pressed、回答後のロックを aria-disabled で公開する', () => {
+        // Arrange
+        const { container } = render(<Quiz />);
+        const [firstCard, secondCard] = [...container.querySelectorAll('.quiz-card')];
+        const opts = [...firstCard!.querySelectorAll('.quiz-opt')];
+        expect(opts.map((opt) => opt.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'false', 'false']);
+        expect(opts.map((opt) => opt.getAttribute('aria-disabled'))).toEqual(['false', 'false', 'false', 'false']);
+
+        // Act
+        fireEvent.click(opts[0]!);
+        fireEvent.click(opts[2]!); // ロック中のため選択は変わらない
+
+        // Assert
+        expect(opts.map((opt) => opt.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false']);
+        expect(opts.map((opt) => opt.getAttribute('aria-disabled'))).toEqual(['true', 'true', 'true', 'true']);
+        // 他の問題はロックされない
+        expect([...secondCard!.querySelectorAll('.quiz-opt')].map((opt) => opt.getAttribute('aria-disabled'))).toEqual(['false', 'false', 'false', 'false']);
+
+        fireEvent.click(container.querySelector('#quizReset')!);
+        expect(opts.map((opt) => opt.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'false', 'false']);
+        expect(opts.map((opt) => opt.getAttribute('aria-disabled'))).toEqual(['false', 'false', 'false', 'false']);
+    });
 });

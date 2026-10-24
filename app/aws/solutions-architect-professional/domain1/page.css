@@ -745,3 +745,12 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .sap-domain1-page .sidebar,
+    .sap-domain1-page .sidebar nav a,
+    .sap-domain1-page .main .quiz-opt,
+    .sap-domain1-page .quiz-answer summary::before {
+        transition: none;
+    }
+}

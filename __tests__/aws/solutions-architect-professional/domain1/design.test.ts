@@ -130,4 +130,28 @@ describe('SAP-C02 Domain 1 CSS & Design Fidelity', () => {
             padding: '0',
         });
     });
+    it('prefers-reduced-motion では遷移を持つ要素だけの transition を無効化する', () => {
+        const media = '(prefers-reduced-motion: reduce)';
+        const transitionSelectors = [
+            '.sap-domain1-page .sidebar',
+            '.sap-domain1-page .sidebar nav a',
+            '.sap-domain1-page .main .quiz-opt',
+            '.sap-domain1-page .quiz-answer summary::before',
+        ];
+        const reduced: { selector: string; decls: Record<string, string> }[] = [];
+        postcss.parse(css).walkAtRules('media', (at) => {
+            if (at.params !== media) return;
+            at.walkRules((r) => {
+                const decls: Record<string, string> = {};
+                r.walkDecls((d) => {
+                    decls[d.prop] = d.value;
+                });
+                reduced.push({ selector: r.selector, decls });
+            });
+        });
+        expect(reduced.flatMap((r) => r.selector.split(',').map((s) => s.trim()))).toEqual(transitionSelectors);
+        reduced.forEach((r) => expect(r.decls).toEqual({ transition: 'none' }));
+        // 低減指定がサイドバーの 980px 規則より後に置かれ、カスケードで勝つこと
+        expect(css.lastIndexOf(media)).toBeGreaterThan(css.indexOf('@media (max-width: 980px)'));
+    });
 });

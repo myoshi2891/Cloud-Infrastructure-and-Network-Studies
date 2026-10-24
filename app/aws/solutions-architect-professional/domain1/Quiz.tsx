@@ -263,6 +263,8 @@ export default function Quiz() {
                                             className={optClass}
                                             data-opt={opt.opt}
                                             role="button"
+                                            aria-pressed={opt.opt === userChoice}
+                                            aria-disabled={isAnswered}
                                             tabIndex={0}
                                             onClick={() => handleSelect(item.num, opt.opt)}
                                             onKeyDown={(e) => {
