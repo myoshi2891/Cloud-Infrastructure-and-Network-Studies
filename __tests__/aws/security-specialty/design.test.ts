@@ -11,6 +11,7 @@ const map=(s:string)=>s.split(',').map(s=>['html','body'].includes(s.trim())?'.s
 it('preserves every source CSS declaration and responsive rule',()=>{
  for(const rule of fixture.guideDesign.rules){if(rule.selector===':root')continue;const selector=map(rule.selector);const actual=rules(css,selector,rule.media);
  for(const [p,v] of Object.entries(rule.declarations)){if(typeof v!=='string')continue;
+ const effective=Object.assign({},...fixture.guideDesign.rules.filter(r=>r.selector===rule.selector&&r.media===rule.media).map(r=>r.declarations));if(effective[p as keyof typeof effective]!==v)continue;
  if(p==='font-family')continue;
  if(p==='top'&&selector.includes('sidebar')){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
  if(p==='z-index'){expect(Number(actual[p])).toBeLessThan(40);continue;}
