@@ -486,8 +486,9 @@ IoT デバイスは **X.509 クライアント証明書**で AWS IoT Core に接
 ```mermaid
 flowchart LR
     A["AWS サービスのログ<br/>CloudTrail, VPC Flow Logs, WAF など"] --> SL["Amazon Security Lake"]
-    B["サードパーティのセキュリティ製品"] --> SL
     SL -->|"OCSF 形式に正規化<br/>Parquet で S3 に保存"| S3["S3 データレイク"]
+    B["サードパーティのセキュリティ製品"] --> CONV["ソース側で OCSF に変換<br/>Parquet で出力"]
+    CONV -->|"カスタムソースの<br/>S3 の場所へ書き込み"| S3
     S3 --> ATH["Athena で分析"]
     S3 --> SIEM["SIEM / 分析ツール(サブスクライバー)"]
 ```
@@ -495,7 +496,7 @@ flowchart LR
 **ベストプラクティス**
 
 - ログソースを個別に扱わず、**Amazon Security Lake** で OCSF に正規化して一元管理する。
-- サードパーティ製品を取り込む場合は、**OCSF に準拠した出力**を持つ製品、またはカスタムソース機能で変換する。
+- サードパーティ製品を取り込む場合は、Security Lake が変換するのではなく、**ソース側(製品や変換処理)で OCSF・Parquet 形式にしてから**カスタムソースの S3 の場所へ書き込む。Security Lake が自動で正規化するのは、ネイティブ対応の AWS サービスのログである。
 - 保存先 S3 とサブスクライバーのアクセス権は最小権限にし、ロールアップ Region の設計も確認する。
 
 #### 4.4.2 サードパーティ WAF ルール
@@ -960,7 +961,7 @@ aws ssm start-session \
 
 ### 5.6 Skill 3.2.6 パイプライン内の脆弱性の検出と修復のためのセキュリティツール設定
 
-試験ガイドの例示: **Amazon Q Developer、Amazon CodeGuru Security**。
+試験ガイドの例示: **Amazon Q Developer、Amazon CodeGuru Security**(CodeGuru Security は 2025-11-20 にサポート終了)。
 
 #### 何か
 
@@ -971,7 +972,7 @@ flowchart LR
     DEV["開発者が<br/>コードを書く"] --> IDE["IDE 内スキャン<br/>(Amazon Q Developer)"]
     IDE --> PR["プルリクエスト"]
     PR --> CI["CI/CD パイプライン"]
-    CI --> SAST["静的解析 SAST<br/>(CodeGuru Security など)"]
+    CI --> SAST["静的解析 SAST<br/>(Inspector コードセキュリティ<br/>/ Amazon Q Developer)"]
     CI --> SCA["依存関係スキャン SCA"]
     CI --> IMG["コンテナイメージスキャン<br/>(ECR + Inspector)"]
     SAST --> GATE{"重大な問題?"}
@@ -984,11 +985,12 @@ flowchart LR
 | ツール | できること |
 |---|---|
 | **Amazon Q Developer** | IDE やコマンドラインでのセキュリティスキャン、脆弱性の指摘、修正案の提示 |
-| **Amazon CodeGuru Security** | コードの脆弱性(インジェクション、ハードコードされた認証情報、暗号の誤用など)を検出し、修正提案を提示。CI/CD へ統合可能 |
+| **Amazon Inspector コードセキュリティ** | GitHub / GitLab のリポジトリを対象に、SAST・依存関係(SCA)・IaC のスキャンを行い、CI/CD に組み込める。CodeGuru Security の後継として推奨 |
+| **Amazon CodeGuru Security(提供終了)** | 2025-11-20 にサポート終了。試験ガイドの用語として残っているが、新規の CI/CD 導入には Inspector コードセキュリティまたは Amazon Q Developer を使う |
 | **Amazon ECR + Inspector** | ビルドしたコンテナイメージの脆弱性スキャン |
 | **IaC のポリシー検査(cfn-guard など)** | CloudFormation / IaC の設定ミス(公開 S3、広すぎる SG など)をデプロイ前に検出 |
 
-> **補足**: これらのサービスの提供状況や名称は更新されることがあります。試験ガイドの記載(Amazon Q Developer、CodeGuru Security)に合わせて理解しつつ、最新の提供状況は公式ドキュメントで確認してください。
+> **補足**: 試験ガイドには CodeGuru Security が記載されていますが、同サービスは 2025-11-20 にサポートを終了しています。試験では「CI でコードの脆弱性を検出する SAST」の役割として理解し、実務では Amazon Inspector のコードセキュリティや Amazon Q Developer を使います。
 
 #### ベストプラクティス
 
@@ -1000,7 +1002,7 @@ flowchart LR
 
 #### 試験の着眼点
 
-- 「コードコミット前、または CI でコード内の脆弱性を検出し修正案がほしい」→ **CodeGuru Security / Amazon Q Developer**
+- 「コードコミット前、または CI でコード内の脆弱性を検出し修正案がほしい」→ **Amazon Q Developer / Inspector コードセキュリティ**(選択肢に CodeGuru Security が出たら、試験ガイド上の同じ役割として扱う。サービス自体は提供終了)
 - 「本番稼働中の EC2 の CVE」→ Inspector(パイプラインではなくランタイム)
 
 ---
@@ -1097,7 +1099,7 @@ else:
 | 「ランタイムの不審な挙動を検出」 | GuardDuty ランタイムモニタリング |
 | 「パッチを計画的・自動的に適用し、結果を確認」 | Patch Manager + メンテナンスウィンドウ + Inspector |
 | 「22 / 3389 を開けずに管理接続し、操作を記録」 | Session Manager |
-| 「CI でコードの脆弱性を検出」 | CodeGuru Security / Amazon Q Developer |
+| 「CI でコードの脆弱性を検出」 | Amazon Q Developer / Inspector コードセキュリティ(旧 CodeGuru Security は提供終了) |
 | 「LLM のプロンプトインジェクション対策」 | Bedrock Guardrails |
 
 
@@ -1208,12 +1210,17 @@ flowchart TB
 ドメイン許可リスト(ステートフル・Suricata 形式)の例:
 
 ```text
+# ルール変数(集中検査では HOME_NET を検査 VPC の CIDR だけにせず、スポーク VPC の CIDR を含める)
+# HOME_NET     = [10.1.0.0/16, 10.2.0.0/16]   # スポーク VPC A / B
+# EXTERNAL_NET = !$HOME_NET                    # 拡張した HOME_NET 以外
 # api.example.com と updates.example.org 以外への HTTPS を拒否するルール例(概念例)
 pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"api.example.com"; nocase; startswith; endswith; flow:to_server; sid:1000001; rev:1;)
 pass tls $HOME_NET any -> $EXTERNAL_NET 443 (tls.sni; content:"updates.example.org"; nocase; startswith; endswith; flow:to_server; sid:1000002; rev:1;)
 drop tls $HOME_NET any -> $EXTERNAL_NET 443 (msg:"Blocked non-allowlisted domain"; flow:to_server; sid:1000003; rev:1;)
 ```
 
+> Network Firewall の `HOME_NET` は既定で検査 VPC の CIDR になるため、そのままではスポーク VPC 発の通信が `$HOME_NET` に一致せず、許可ルールが効きません。ルールグループのルール変数で `HOME_NET` にスポーク VPC の CIDR を加え、`EXTERNAL_NET` はその否定として扱います。
+>
 > 実運用では、ドメインリスト型ルールグループ(許可リスト方式)を使うと簡単に書けます。上記は仕組みの理解用です。
 
 **関連する仲間のサービス**
@@ -1275,7 +1282,7 @@ flowchart TD
 
 #### 何か
 
-**AWS Verified Access** は、VPN なしで社内アプリケーションへ**ゼロトラスト**なアクセスを提供するサービスです。アクセスのたびに、**ユーザーの ID とデバイスの状態**を評価して許可・拒否します。
+**AWS Verified Access** は、VPN なしで社内アプリケーションへ**ゼロトラスト**なアクセスを提供するサービスです。アクセスのたびに、**ユーザーの ID** をポリシーで評価して許可・拒否します。**デバイスの状態**も評価したい場合は、デバイス信頼プロバイダーを設定し、そのデータを参照するポリシーを書く必要があります(既定で自動評価されるわけではありません)。
 
 ```mermaid
 flowchart LR
@@ -1439,7 +1446,7 @@ flowchart TD
 | パッチ適用の自動化 | Patch Manager | ベースライン + ウィンドウ |
 | ポートを開けずに管理接続 | Session Manager | 操作ログを記録 |
 | 一時 SSH 鍵で接続 | EC2 Instance Connect | EIC Endpoint で非公開インスタンスへ |
-| コードの脆弱性をパイプラインで検出 | CodeGuru Security / Amazon Q Developer | シフトレフト |
+| コードの脆弱性をパイプラインで検出 | Amazon Q Developer / Inspector コードセキュリティ(CodeGuru Security は提供終了) | シフトレフト |
 | LLM の入出力を制御 | Bedrock Guardrails | プロンプト攻撃、PII、根拠チェック |
 | 通信をサブネット単位で許可 / 拒否 | NACL | ステートレス |
 | 通信をインスタンス単位で許可 | セキュリティグループ | ステートフル |
@@ -1677,7 +1684,8 @@ D. AWS Artifact
 | Systems Manager Patch Manager | https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager.html |
 | Systems Manager Session Manager | https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html |
 | EC2 Instance Connect | https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-linux-inst-eic.html |
-| Amazon CodeGuru Security | https://docs.aws.amazon.com/codeguru/latest/security-ug/what-is-codeguru-security.html |
+| Amazon CodeGuru Security のサポート終了 | https://docs.aws.amazon.com/codeguru/latest/security-ug/end-of-support.html |
+| Amazon Inspector コードセキュリティ | https://docs.aws.amazon.com/inspector/latest/user/code-security-assessments.html |
 | Amazon Q Developer | https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html |
 | Amazon Bedrock Guardrails | https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html |
 | OWASP Top 10 for LLM Applications(GenAI Security Project) | https://genai.owasp.org/llm-top-10/ |
