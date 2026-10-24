@@ -71,7 +71,7 @@ export default function Task41(){return <div className="guide-part" data-part="t
 <div className="code-sample" data-lang="bash"><div className="highlight"><div className="code-block" role="region" tabIndex={0} aria-label={"3-4. AWS Network Firewall(VPC の入口・出口・VPC 間を検査)（コード2）"}>
 <div className="code-line"><span className="c1">{"# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)"}</span></div>
 <div className="code-line"><span className="c1">{"# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)"}</span></div>
-<div className="code-line"><span className="c1">{"# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える"}</span></div>
+<div className="code-line"><span className="c1">{"# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループにはこの上書きが及ばないため、ファイアウォールポリシーの HOME_NET も検査対象の全 CIDR に設定するか、他のルールグループにも同じ範囲を適用する"}</span></div>
 <div className="code-line">{"aws"}<span className="w">{" "}</span>{"network-firewall"}<span className="w">{" "}</span>{"create-rule-group"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
 <div className="code-line"><span className="w">{"  "}</span>{"--rule-group-name"}<span className="w">{" "}</span>{"allow-approved-domains"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
 <div className="code-line"><span className="w">{"  "}</span>{"--type"}<span className="w">{" "}</span>{"STATEFUL"}<span className="w">{" "}</span><span className="se">{"\\"}</span></div>
