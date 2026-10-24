@@ -575,6 +575,16 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    solutions-architect-professional/domain1/
+      page.tsx                      # SAP-C02 Domain 1 組織の複雑さに対応する設計 (Server)
+      SapDomain1Guide.tsx           # 全文構成コンポーネント (Server)
+      NavBar.tsx                    # 78目次・直下aタグ構造・scroll spy・モバイル開閉 (Client)
+      Quiz.tsx                      # 確認シナリオ6問・即時採点・解説開閉・スコア集計 (Client)
+      Diagram.tsx                   # Mermaid図レンダラー (preserveNaturalScale, lightテーマ)
+      constants.ts                  # NAV_ITEMS(78件)・DIAGRAMS(19図)単一正本
+      mermaid-theme.json            # 原本ライト配色テーマ定義
+      page.css                      # 原本ライト配色・340pxサイドバー・table-scroll・クイズスタイル
+      sections/                     # 9分割セクション (Foundation, Task11~15, Summary, QuizSection, References)
     cloudops-engineer-associate/
       page.tsx                      # AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド (Server)
       CloudOpsGuide.tsx             # 本文＋インタラクション (Client)

@@ -57,6 +57,7 @@ Updated 2026-10-21
 
 ## プロジェクト構造
 
+- `/app/aws/solutions-architect-professional/domain1`: SAP-C02 組織の複雑さに対応する設計。Server `page.tsx` / `SapDomain1Guide.tsx` / 9分割sections、Client `NavBar.tsx` / `Quiz.tsx`、19図と78目次の`constants.ts`、`Diagram.tsx`、原本ライト配色・340px目次・クイズスタイルの`page.css`。全49表・19図・1コード・213リスト・130リンク・6問クイズを完全収録。
 - `/app/aws/advanced-networking-specialty/domain4`: ANS-C01セキュリティ。Server `page.tsx` / `AnsDomain4Guide.tsx` / 5分割sections、Client `NavBar.tsx`、31図と99目次の`constants.ts`、`Diagram.tsx`、原本ライト配色・300px目次・リスト装飾の`page.css`。全33選択肢と8解答開閉。
 - `/app/aws/advanced-networking-specialty/domain3`: ANS-C01ネットワーク管理・運用。Server `page.tsx` / `AnsDomain3Guide.tsx` / 5区分、Client `NavBar.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。91表・26図・7コード・シナリオ8問・52目次を保持。
 - `/app/aws/advanced-networking-specialty/domain2`: ANS-C01ネットワーク実装。Server `page.tsx` / `AnsDomain2Guide.tsx` / 6区分、Client `NavBar.tsx`、`constants.ts` / `Diagram.tsx` / `page.css`。57表・26図・11コード・確認問題8問・59目次を保持し、ホーム・Headerから接続。

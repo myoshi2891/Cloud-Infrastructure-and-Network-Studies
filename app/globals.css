@@ -36,6 +36,7 @@
     --color-ans-d4-18: #f0f3fa;
     --color-ans-d4-19: #f6f8fc;
     --color-ans-d4-20: #f8f8f8;
+    --color-ans-d4-21: #e6f6ec;
     /* SAP-C02 Domain 1: original light palette */
     --color-sap-d1-bg: #faf8f3;
     --color-sap-d1-card: #ffffff;
@@ -1310,6 +1311,7 @@ body {
 .card-aws-aib { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-aip { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-ans { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-sap { --card-accent: var(--color-theme-aws-fg); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
 .card-accelerate { --card-accent: var(--color-theme-accelerate-fg); }
 .card-sre { --card-accent: var(--color-theme-sre-fg); }
@@ -1400,6 +1402,11 @@ body {
 }
 
 @utility icon-theme-aws-aip {
+    background: var(--color-theme-aws-bg);
+    color: var(--color-theme-aws-fg);
+}
+
+@utility icon-theme-aws-sap {
     background: var(--color-theme-aws-bg);
     color: var(--color-theme-aws-fg);
 }

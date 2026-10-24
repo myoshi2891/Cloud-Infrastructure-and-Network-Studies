@@ -23,6 +23,7 @@ export type ColorKey =
     | 'card-aws-aib'
     | 'card-aws-aip'
     | 'card-aws-ans'
+    | 'card-aws-sap'
     | 'card-ccna'
     | 'card-comptia'
     | 'card-accelerate'
@@ -76,6 +77,7 @@ export const cardColorMap: Record<ColorKey, string> = {
     'card-aws-aib': 'card-aws-aib',
     'card-aws-aip': 'card-aws-aip',
     'card-aws-ans': 'card-aws-ans',
+    'card-aws-sap': 'card-aws-sap',
     'card-comptia': 'card-comptia',
     'card-accelerate': 'card-accelerate',
     'card-sre': 'card-sre',
@@ -639,6 +641,24 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: 'ANS-C01',
         icon: '🌐',
+        provider: 'AWS',
+        status: 'available',
+    },
+    {
+        id: 'aws-sap',
+        label: 'AWS Certified Solutions Architect - Professional',
+        abbr: 'SAP',
+        level: 'Professional',
+        score: '合格 750点 / 75問 / 180分',
+        color: 'card-aws-sap',
+        href: '/aws/solutions-architect-professional/domain1',
+        overviewLabel: 'ドメイン1: 組織の複雑さに対応する設計',
+        description: 'SAP-C02の組織の複雑さに対応する設計 (26%) を網羅。5つの出題タスクを、49表・19図・1コード・確認問題6問で体系的に学ぶ。',
+        domains: [
+            { label: 'ドメイン1: 組織の複雑さに対応する設計', href: '/aws/solutions-architect-professional/domain1', pct: '26%' },
+        ],
+        badge: 'SAP-C02',
+        icon: '🏗️',
         provider: 'AWS',
         status: 'available',
     },
