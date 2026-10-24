@@ -32,3 +32,6 @@ it('keeps diagram scrolling on the named keyboard-focusable outer region',()=>{
  expect(rules(css,'.scs-guide-page .mermaid-wrap')['overflow-x']).toBe('auto');
  expect(rules(css,'.scs-guide-page .mermaid-wrap > [role="img"]')['overflow-x']).toBe('visible');
 });
+it('wraps long reference URLs inside the light guide background on narrow screens',()=>{
+ expect(rules(css,'.scs-guide-page .main a')['overflow-wrap']).toBe('anywhere');
+});
