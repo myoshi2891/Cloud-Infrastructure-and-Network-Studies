@@ -13,3 +13,10 @@ it('provides actual YAML newlines before each original Mermaid chart',()=>{
   unmount();
  }
 });
+it('retains every implicit source pie color, label size and opacity over shared dark defaults', async()=>{
+ const {default: pieTheme}=await import('@/docs/migration-inventory/aws-scs-c03-guide.pie-theme.json');
+ const {container}=render(<Diagram id="diagram-1" label="ドメイン配分"/>);
+ const chart=container.querySelector('[data-chart]')!.getAttribute('data-chart')!;
+ const config=JSON.parse(chart.split('\n')[1]!.slice('config: '.length));
+ expect(Object.fromEntries(Object.keys(pieTheme).map(key=>[key,config.themeVariables[key]]))).toEqual(pieTheme);
+});
