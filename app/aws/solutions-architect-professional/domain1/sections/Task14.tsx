@@ -3,10 +3,10 @@ import { Diagram } from "../Diagram";
 export default function Task14() {
     return (
         <section className="guide-section" data-section="task14">
-<h2 id="5-task-14-マルチアカウント環境を設計する">
+<h2 id="5-task-14-マルチアカウント環境を設計する" tabIndex={-1}>
                     5. Task 1.4 マルチアカウント環境を設計する
                 </h2>
-<h3 id="51-exam-guide-が求めている内容">5.1 Exam Guide が求めている内容</h3>
+<h3 id="51-exam-guide-が求めている内容" tabIndex={-1}>5.1 Exam Guide が求めている内容</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"5.1 Exam Guide が求めている内容 (表29)"}>
 <table>
                         <thead>
@@ -34,7 +34,7 @@ export default function Task14() {
                         </tbody>
                     </table>
 </div>
-<h3 id="52-step-1-なぜアカウントを分けるのか">
+<h3 id="52-step-1-なぜアカウントを分けるのか" tabIndex={-1}>
                     5.2 Step 1: なぜアカウントを分けるのか
                 </h3>
 <p>アカウントは AWS における最も強い分離境界です。</p>
@@ -73,7 +73,7 @@ export default function Task14() {
                         </tbody>
                     </table>
 </div>
-<h3 id="53-step-2-aws-organizations-の基本">
+<h3 id="53-step-2-aws-organizations-の基本" tabIndex={-1}>
                     5.3 Step 2: AWS Organizations の基本
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"5.3 Step 2: AWS Organizations の基本 (表31)"}>
@@ -220,7 +220,7 @@ export default function Task14() {
                         <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html">https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html</a>
                     </li>
                 </ul>
-<h3 id="54-step-3-アカウント構造の設計-ou-の分け方">
+<h3 id="54-step-3-アカウント構造の設計-ou-の分け方" tabIndex={-1}>
                     5.4 Step 3: アカウント構造の設計 (OU の分け方)
                 </h3>
 <p>
@@ -293,7 +293,7 @@ export default function Task14() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html">https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html</a>
                 </p>
-<h3 id="55-step-4-aws-control-tower">5.5 Step 4: AWS Control Tower</h3>
+<h3 id="55-step-4-aws-control-tower" tabIndex={-1}>5.5 Step 4: AWS Control Tower</h3>
 <p>
                     AWS Control Tower は、Organizations
                     と関連サービスを使って、ベストプラクティスに沿ったマルチアカウント環境
@@ -368,7 +368,7 @@ export default function Task14() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html">https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html</a>
                 </p>
-<h3 id="56-step-5-集中ログとイベント通知">5.6 Step 5: 集中ログとイベント通知</h3>
+<h3 id="56-step-5-集中ログとイベント通知" tabIndex={-1}>5.6 Step 5: 集中ログとイベント通知</h3>
 <Diagram id="diag-16" label={"5.6 Step 5: 集中ログとイベント通知"} />
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"5.6 Step 5: 集中ログとイベント通知 (表36)"}>
 <table>
@@ -442,7 +442,7 @@ export default function Task14() {
                         </ul>
                     </div>
                 </div>
-<h3 id="57-step-6-リソースの共有-aws-ram-と関連手段">
+<h3 id="57-step-6-リソースの共有-aws-ram-と関連手段" tabIndex={-1}>
                     5.7 Step 6: リソースの共有 (AWS RAM と関連手段)
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"5.7 Step 6: リソースの共有 (AWS RAM と関連手段) (表37)"}>
@@ -505,7 +505,7 @@ export default function Task14() {
                         <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html</a>
                     </li>
                 </ul>
-<h3 id="58-step-7-マルチアカウントのガバナンスモデル">
+<h3 id="58-step-7-マルチアカウントのガバナンスモデル" tabIndex={-1}>
                     5.8 Step 7: マルチアカウントのガバナンスモデル
                 </h3>
 <p>統制は「予防」「検出」「修復」の3層で考えます。</p>
@@ -556,7 +556,7 @@ export default function Task14() {
                     <li>必須タグがないリソースの作成を禁止する</li>
                 </ul>
 <Diagram id="diag-17" label={"5.8 Step 7: マルチアカウントのガバナンスモデル"} />
-<h3 id="59-task-14-ベストプラクティスまとめ">
+<h3 id="59-task-14-ベストプラクティスまとめ" tabIndex={-1}>
                     5.9 Task 1.4 ベストプラクティスまとめ
                 </h3>
 <ul>
@@ -572,7 +572,7 @@ export default function Task14() {
                     </li>
                     <li>ルートユーザーに MFA を設定し、日常利用を避ける</li>
                 </ul>
-<h3 id="510-task-14-よく狙われる落とし穴">5.10 Task 1.4 よく狙われる落とし穴</h3>
+<h3 id="510-task-14-よく狙われる落とし穴" tabIndex={-1}>5.10 Task 1.4 よく狙われる落とし穴</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"5.10 Task 1.4 よく狙われる落とし穴 (表39)"}>
 <table>
                         <thead>

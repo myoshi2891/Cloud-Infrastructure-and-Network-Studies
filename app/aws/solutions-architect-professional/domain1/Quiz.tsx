@@ -235,7 +235,7 @@ export default function Quiz() {
 
                 return (
                     <div key={item.id} className="quiz-block">
-                        <h3 id={item.id}>問題 {item.num}</h3>
+                        <h3 id={item.id} tabIndex={-1}>問題 {item.num}</h3>
                         <div
                             className={`quiz-card ${isAnswered ? "answered" : ""}`}
                             data-answer={item.answer}

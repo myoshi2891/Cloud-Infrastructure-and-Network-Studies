@@ -3,10 +3,10 @@ import { Diagram } from "../Diagram";
 export default function Task15() {
     return (
         <section className="guide-section" data-section="task15">
-<h2 id="6-task-15-コスト最適化と可視化の戦略を決める">
+<h2 id="6-task-15-コスト最適化と可視化の戦略を決める" tabIndex={-1}>
                     6. Task 1.5 コスト最適化と可視化の戦略を決める
                 </h2>
-<h3 id="61-exam-guide-が求めている内容">6.1 Exam Guide が求めている内容</h3>
+<h3 id="61-exam-guide-が求めている内容" tabIndex={-1}>6.1 Exam Guide が求めている内容</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.1 Exam Guide が求めている内容 (表40)"}>
 <table>
                         <thead>
@@ -36,7 +36,7 @@ export default function Task15() {
                         </tbody>
                     </table>
 </div>
-<h3 id="62-step-1-コストを見る-可視化ツール">
+<h3 id="62-step-1-コストを見る-可視化ツール" tabIndex={-1}>
                     6.2 Step 1: コストを見る (可視化ツール)
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.2 Step 1: コストを見る (可視化ツール) (表41)"}>
@@ -118,7 +118,7 @@ export default function Task15() {
                     </li>
                     <li><a href="https://calculator.aws/">https://calculator.aws/</a></li>
                 </ul>
-<h3 id="63-step-2-購入オプションを選ぶ">6.3 Step 2: 購入オプションを選ぶ</h3>
+<h3 id="63-step-2-購入オプションを選ぶ" tabIndex={-1}>6.3 Step 2: 購入オプションを選ぶ</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.3 Step 2: 購入オプションを選ぶ (表42)"}>
 <table>
                         <thead>
@@ -215,7 +215,7 @@ export default function Task15() {
                         <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html</a>
                     </li>
                 </ul>
-<h3 id="631-購入オプションがパフォーマンスに与える影響">
+<h3 id="631-購入オプションがパフォーマンスに与える影響" tabIndex={-1}>
                     6.3.1 購入オプションがパフォーマンスに与える影響
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.3.1 購入オプションがパフォーマンスに与える影響 (表43)"}>
@@ -250,7 +250,7 @@ export default function Task15() {
                         </tbody>
                     </table>
 </div>
-<h3 id="64-step-3-タグ戦略でコストを事業部門に紐づける">
+<h3 id="64-step-3-タグ戦略でコストを事業部門に紐づける" tabIndex={-1}>
                     6.4 Step 3: タグ戦略でコストを事業部門に紐づける
                 </h3>
 <p>コスト配分タグを使うと、コストを部門、プロジェクト、環境ごとに集計できます。</p>
@@ -356,7 +356,7 @@ export default function Task15() {
                         <a href="https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html">https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html</a>
                     </li>
                 </ul>
-<h3 id="65-step-4-右サイジング-rightsizing-の可視化">
+<h3 id="65-step-4-右サイジング-rightsizing-の可視化" tabIndex={-1}>
                     6.5 Step 4: 右サイジング (Rightsizing) の可視化
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.5 Step 4: 右サイジング (Rightsizing) の可視化 (表46)"}>
@@ -410,7 +410,7 @@ export default function Task15() {
                         <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html">https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage_lens.html</a>
                     </li>
                 </ul>
-<h3 id="66-step-5-データ転送コストの考え方-補足">
+<h3 id="66-step-5-データ転送コストの考え方-補足" tabIndex={-1}>
                     6.6 Step 5: データ転送コストの考え方 (補足)
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.6 Step 5: データ転送コストの考え方 (補足) (表47)"}>
@@ -452,7 +452,7 @@ export default function Task15() {
                         </tbody>
                     </table>
 </div>
-<h3 id="67-task-15-ベストプラクティスまとめ">
+<h3 id="67-task-15-ベストプラクティスまとめ" tabIndex={-1}>
                     6.7 Task 1.5 ベストプラクティスまとめ
                 </h3>
 <ul>
@@ -469,7 +469,7 @@ export default function Task15() {
                         データ転送の経路 (NAT、AZ 間、リージョン間) をアーキテクチャ設計時に見積もる
                     </li>
                 </ul>
-<h3 id="68-task-15-よく狙われる落とし穴">6.8 Task 1.5 よく狙われる落とし穴</h3>
+<h3 id="68-task-15-よく狙われる落とし穴" tabIndex={-1}>6.8 Task 1.5 よく狙われる落とし穴</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"6.8 Task 1.5 よく狙われる落とし穴 (表48)"}>
 <table>
                         <thead>

@@ -1,13 +1,13 @@
 export default function References() {
     return (
         <section className="guide-section" data-section="references">
-<h2 id="9-参考url一覧-ソース">9. 参考URL一覧 (ソース)</h2>
+<h2 id="9-参考url一覧-ソース" tabIndex={-1}>9. 参考URL一覧 (ソース)</h2>
 <p>
                     注意: 以下は AWS 公式ドキュメントの URL です。AWS
                     はドキュメントを再構成することがあるため、リンク切れや内容の更新があれば、公式サイトで最新版を検索してください。確認済みの一次情報は
                     SAP-C02 Exam Guide (Version 1.2) です。
                 </p>
-<h3 id="91-試験情報">9.1 試験情報</h3>
+<h3 id="91-試験情報" tabIndex={-1}>9.1 試験情報</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref1">
                         <div className="num">1</div>
@@ -31,7 +31,7 @@ export default function References() {
                         </div>
                     </div>
                 </div>
-<h3 id="92-ネットワーク-task-11">9.2 ネットワーク (Task 1.1)</h3>
+<h3 id="92-ネットワーク-task-11" tabIndex={-1}>9.2 ネットワーク (Task 1.1)</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref4">
                         <div className="num">4</div>
@@ -130,7 +130,7 @@ export default function References() {
                         </div>
                     </div>
                 </div>
-<h3 id="93-セキュリティ-task-12">9.3 セキュリティ (Task 1.2)</h3>
+<h3 id="93-セキュリティ-task-12" tabIndex={-1}>9.3 セキュリティ (Task 1.2)</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref20">
                         <div className="num">20</div>
@@ -259,7 +259,7 @@ export default function References() {
                         </div>
                     </div>
                 </div>
-<h3 id="94-信頼性と-dr-task-13">9.4 信頼性と DR (Task 1.3)</h3>
+<h3 id="94-信頼性と-dr-task-13" tabIndex={-1}>9.4 信頼性と DR (Task 1.3)</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref41">
                         <div className="num">41</div>
@@ -292,7 +292,7 @@ export default function References() {
                         </div>
                     </div>
                 </div>
-<h3 id="95-マルチアカウント-task-14">9.5 マルチアカウント (Task 1.4)</h3>
+<h3 id="95-マルチアカウント-task-14" tabIndex={-1}>9.5 マルチアカウント (Task 1.4)</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref46">
                         <div className="num">46</div>
@@ -337,7 +337,7 @@ export default function References() {
                         </div>
                     </div>
                 </div>
-<h3 id="96-コスト-task-15">9.6 コスト (Task 1.5)</h3>
+<h3 id="96-コスト-task-15" tabIndex={-1}>9.6 コスト (Task 1.5)</h3>
 <div className="ref-grid">
                     <div className="ref-card" id="ref53">
                         <div className="num">53</div>

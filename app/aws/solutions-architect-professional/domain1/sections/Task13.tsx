@@ -3,10 +3,10 @@ import { Diagram } from "../Diagram";
 export default function Task13() {
     return (
         <section className="guide-section" data-section="task13">
-<h2 id="4-task-13-信頼性と復元力のあるアーキテクチャを設計する">
+<h2 id="4-task-13-信頼性と復元力のあるアーキテクチャを設計する" tabIndex={-1}>
                     4. Task 1.3 信頼性と復元力のあるアーキテクチャを設計する
                 </h2>
-<h3 id="41-exam-guide-が求めている内容">4.1 Exam Guide が求めている内容</h3>
+<h3 id="41-exam-guide-が求めている内容" tabIndex={-1}>4.1 Exam Guide が求めている内容</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.1 Exam Guide が求めている内容 (表22)"}>
 <table>
                         <thead>
@@ -36,7 +36,7 @@ export default function Task13() {
                         </tbody>
                     </table>
 </div>
-<h3 id="42-step-1-rto-と-rpo-を理解する">4.2 Step 1: RTO と RPO を理解する</h3>
+<h3 id="42-step-1-rto-と-rpo-を理解する" tabIndex={-1}>4.2 Step 1: RTO と RPO を理解する</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.2 Step 1: RTO と RPO を理解する (表23)"}>
 <table>
                         <thead>
@@ -66,7 +66,7 @@ export default function Task13() {
                         試験では、要件の RTO と RPO を満たす中で最も安価な方式を選ぶ問題が頻出する
                     </li>
                 </ul>
-<h3 id="43-step-2-4つの-dr-戦略">4.3 Step 2: 4つの DR 戦略</h3>
+<h3 id="43-step-2-4つの-dr-戦略" tabIndex={-1}>4.3 Step 2: 4つの DR 戦略</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.3 Step 2: 4つの DR 戦略 (表24)"}>
 <table>
                         <thead>
@@ -112,7 +112,7 @@ export default function Task13() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html">https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html</a>
                 </p>
-<h3 id="44-step-3-aws-elastic-disaster-recovery-drs">
+<h3 id="44-step-3-aws-elastic-disaster-recovery-drs" tabIndex={-1}>
                     4.4 Step 3: AWS Elastic Disaster Recovery (DRS)
                 </h3>
 <ul>
@@ -135,7 +135,7 @@ export default function Task13() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html">https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html</a>
                 </p>
-<h3 id="45-step-4-自動復旧とデータレプリケーション">
+<h3 id="45-step-4-自動復旧とデータレプリケーション" tabIndex={-1}>
                     4.5 Step 4: 自動復旧とデータレプリケーション
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.5 Step 4: 自動復旧とデータレプリケーション (表25)"}>
@@ -230,7 +230,7 @@ export default function Task13() {
                         <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html">https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html</a>
                     </li>
                 </ul>
-<h3 id="46-step-5-スケールアップとスケールアウト">
+<h3 id="46-step-5-スケールアップとスケールアウト" tabIndex={-1}>
                     4.6 Step 5: スケールアップとスケールアウト
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.6 Step 5: スケールアップとスケールアウト (表26)"}>
@@ -282,7 +282,7 @@ export default function Task13() {
                     </li>
                     <li>複数 AZ にまたがる配置が、スケールアウトの信頼性メリットを引き出す</li>
                 </ul>
-<h3 id="47-step-6-バックアップと復元の戦略-aws-backup">
+<h3 id="47-step-6-バックアップと復元の戦略-aws-backup" tabIndex={-1}>
                     4.7 Step 6: バックアップと復元の戦略 (AWS Backup)
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.7 Step 6: バックアップと復元の戦略 (AWS Backup) (表27)"}>
@@ -353,7 +353,7 @@ export default function Task13() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html">https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html</a>
                 </p>
-<h3 id="48-task-13-ベストプラクティスまとめ">
+<h3 id="48-task-13-ベストプラクティスまとめ" tabIndex={-1}>
                     4.8 Task 1.3 ベストプラクティスまとめ
                 </h3>
 <ul>
@@ -363,7 +363,7 @@ export default function Task13() {
                     <li>DR は設計だけでなく、定期的な訓練を実施する</li>
                     <li>バックアップは分離したアカウントに保存し、改ざん防止を有効化する</li>
                 </ul>
-<h3 id="49-task-13-よく狙われる落とし穴">4.9 Task 1.3 よく狙われる落とし穴</h3>
+<h3 id="49-task-13-よく狙われる落とし穴" tabIndex={-1}>4.9 Task 1.3 よく狙われる落とし穴</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"4.9 Task 1.3 よく狙われる落とし穴 (表28)"}>
 <table>
                         <thead>

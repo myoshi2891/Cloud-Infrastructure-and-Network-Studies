@@ -1,7 +1,7 @@
 export default function Summary() {
     return (
         <section className="guide-section" data-section="summary">
-<h2 id="7-横断まとめ-キーワードから答えを選ぶ早見表">
+<h2 id="7-横断まとめ-キーワードから答えを選ぶ早見表" tabIndex={-1}>
                     7. 横断まとめ: キーワードから答えを選ぶ早見表
                 </h2>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"7. 横断まとめ: キーワードから答えを選ぶ早見表 (表49)"}>

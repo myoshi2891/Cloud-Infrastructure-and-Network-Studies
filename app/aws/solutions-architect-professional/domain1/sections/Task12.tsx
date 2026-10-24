@@ -3,10 +3,10 @@ import { Diagram } from "../Diagram";
 export default function Task12() {
     return (
         <section className="guide-section" data-section="task12">
-<h2 id="3-task-12-セキュリティコントロールを規定する">
+<h2 id="3-task-12-セキュリティコントロールを規定する" tabIndex={-1}>
                     3. Task 1.2 セキュリティコントロールを規定する
                 </h2>
-<h3 id="31-exam-guide-が求めている内容">3.1 Exam Guide が求めている内容</h3>
+<h3 id="31-exam-guide-が求めている内容" tabIndex={-1}>3.1 Exam Guide が求めている内容</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.1 Exam Guide が求めている内容 (表13)"}>
 <table>
                         <thead>
@@ -36,7 +36,7 @@ export default function Task12() {
                         </tbody>
                     </table>
 </div>
-<h3 id="32-step-1-iam-の基本と権限評価の考え方">
+<h3 id="32-step-1-iam-の基本と権限評価の考え方" tabIndex={-1}>
                     3.2 Step 1: IAM の基本と権限評価の考え方
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.2 Step 1: IAM の基本と権限評価の考え方 (表14)"}>
@@ -106,7 +106,7 @@ export default function Task12() {
                     {"出典: "}
                     <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html</a>
                 </p>
-<h3 id="33-step-2-クロスアカウントアクセス">
+<h3 id="33-step-2-クロスアカウントアクセス" tabIndex={-1}>
                     3.3 Step 2: クロスアカウントアクセス
                 </h3>
 <p>別のアカウントのリソースにアクセスさせる方法は主に2つです。</p>
@@ -179,7 +179,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html</a>
                     </li>
                 </ul>
-<h3 id="34-step-3-id-管理とサードパーティ-id-プロバイダー連携">
+<h3 id="34-step-3-id-管理とサードパーティ-id-プロバイダー連携" tabIndex={-1}>
                     3.4 Step 3: ID 管理とサードパーティ ID プロバイダー連携
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.4 Step 3: ID 管理とサードパーティ ID プロバイダー連携 (表16)"}>
@@ -264,7 +264,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html</a>
                     </li>
                 </ul>
-<h3 id="35-step-4-ネットワークレベルの制御">
+<h3 id="35-step-4-ネットワークレベルの制御" tabIndex={-1}>
                     3.5 Step 4: ネットワークレベルの制御
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.5 Step 4: ネットワークレベルの制御 (表17)"}>
@@ -324,7 +324,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html">https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html</a>
                     </li>
                 </ul>
-<h3 id="36-step-5-暗号化戦略-保存時と転送時">
+<h3 id="36-step-5-暗号化戦略-保存時と転送時" tabIndex={-1}>
                     3.6 Step 5: 暗号化戦略 (保存時と転送時)
                 </h3>
 <h4>AWS KMS の基礎</h4>
@@ -481,7 +481,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html">https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html</a>
                     </li>
                 </ul>
-<h3 id="37-step-6-集中的なセキュリティイベントの通知と監査">
+<h3 id="37-step-6-集中的なセキュリティイベントの通知と監査" tabIndex={-1}>
                     3.7 Step 6: 集中的なセキュリティイベントの通知と監査
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.7 Step 6: 集中的なセキュリティイベントの通知と監査 (表20)"}>
@@ -610,7 +610,7 @@ export default function Task12() {
                         <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html">https://docs.aws.amazon.com/prescriptive-guidance/latest/security-reference-architecture/welcome.html</a>
                     </li>
                 </ul>
-<h3 id="38-task-12-よく狙われる落とし穴">3.8 Task 1.2 よく狙われる落とし穴</h3>
+<h3 id="38-task-12-よく狙われる落とし穴" tabIndex={-1}>3.8 Task 1.2 よく狙われる落とし穴</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"3.8 Task 1.2 よく狙われる落とし穴 (表21)"}>
 <table>
                         <thead>

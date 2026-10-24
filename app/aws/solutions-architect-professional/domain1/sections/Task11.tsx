@@ -3,10 +3,10 @@ import { Diagram } from "../Diagram";
 export default function Task11() {
     return (
         <section className="guide-section" data-section="task11">
-<h2 id="2-task-11-ネットワーク接続戦略を設計する">
+<h2 id="2-task-11-ネットワーク接続戦略を設計する" tabIndex={-1}>
                     2. Task 1.1 ネットワーク接続戦略を設計する
                 </h2>
-<h3 id="21-exam-guide-が求めている内容">2.1 Exam Guide が求めている内容</h3>
+<h3 id="21-exam-guide-が求めている内容" tabIndex={-1}>2.1 Exam Guide が求めている内容</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.1 Exam Guide が求めている内容 (表3)"}>
 <table>
                         <thead>
@@ -38,7 +38,7 @@ export default function Task11() {
                         </tbody>
                     </table>
 </div>
-<h3 id="22-step-1-基礎用語を押さえる">2.2 Step 1: 基礎用語を押さえる</h3>
+<h3 id="22-step-1-基礎用語を押さえる" tabIndex={-1}>2.2 Step 1: 基礎用語を押さえる</h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.2 Step 1: 基礎用語を押さえる (表4)"}>
 <table>
                         <thead>
@@ -82,7 +82,7 @@ export default function Task11() {
                         </tbody>
                     </table>
 </div>
-<h3 id="23-step-2-aws-グローバルインフラと-region--az-の選び方">
+<h3 id="23-step-2-aws-グローバルインフラと-region--az-の選び方" tabIndex={-1}>
                     2.3 Step 2: AWS グローバルインフラと Region / AZ の選び方
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.3 Step 2: AWS グローバルインフラと Region / AZ の選び方 (表5)"}>
@@ -125,7 +125,7 @@ export default function Task11() {
                     <li>料金</li>
                     <li>DR 構成を組む場合の対になるリージョンの距離と提供状況</li>
                 </ol>
-<h3 id="24-step-3-複数-vpc-をつなぐ方式を選ぶ">
+<h3 id="24-step-3-複数-vpc-をつなぐ方式を選ぶ" tabIndex={-1}>
                     2.4 Step 3: 複数 VPC をつなぐ方式を選ぶ
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.4 Step 3: 複数 VPC をつなぐ方式を選ぶ (表6)"}>
@@ -208,7 +208,7 @@ export default function Task11() {
                         を使う」か「必要な組み合わせの分だけ直接ピアリングする」です
                     </li>
                 </ul>
-<h3 id="25-step-4-オンプレミスやコロケーションと接続する">
+<h3 id="25-step-4-オンプレミスやコロケーションと接続する" tabIndex={-1}>
                     2.5 Step 4: オンプレミスやコロケーションと接続する
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.5 Step 4: オンプレミスやコロケーションと接続する (表7)"}>
@@ -272,7 +272,7 @@ export default function Task11() {
                     <li>低コストのバックアップには Site-to-Site VPN を併用するのが定番です</li>
                 </ul>
 <Diagram id="diag-5" label={"Direct Connect の基本構成"} />
-<h3 id="26-step-5-ハイブリッド-dns-route-53-resolver">
+<h3 id="26-step-5-ハイブリッド-dns-route-53-resolver" tabIndex={-1}>
                     2.6 Step 5: ハイブリッド DNS (Route 53 Resolver)
                 </h3>
 <p>オンプレミスと AWS の間で名前解決を相互に行うための仕組みです。</p>
@@ -331,7 +331,7 @@ export default function Task11() {
                         </ul>
                     </div>
                 </div>
-<h3 id="27-step-6-ネットワーク分割と-ip-アドレス設計">
+<h3 id="27-step-6-ネットワーク分割と-ip-アドレス設計" tabIndex={-1}>
                     2.7 Step 6: ネットワーク分割と IP アドレス設計
                 </h3>
 <ul>
@@ -354,7 +354,7 @@ export default function Task11() {
                         (サブネット単位、ステートレス) の使い分けは Task 1.2 で扱います
                     </li>
                 </ul>
-<h3 id="28-step-7-サービスエンドポイント-vpc-エンドポイント">
+<h3 id="28-step-7-サービスエンドポイント-vpc-エンドポイント" tabIndex={-1}>
                     2.8 Step 7: サービスエンドポイント (VPC エンドポイント)
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.8 Step 7: サービスエンドポイント (VPC エンドポイント) (表9)"}>
@@ -418,7 +418,7 @@ export default function Task11() {
                         </ul>
                     </div>
                 </div>
-<h3 id="29-step-8-集中型ネットワーク設計パターン-ハブアンドスポーク">
+<h3 id="29-step-8-集中型ネットワーク設計パターン-ハブアンドスポーク" tabIndex={-1}>
                     2.9 Step 8: 集中型ネットワーク設計パターン (ハブ・アンド・スポーク)
                 </h3>
 <p>
@@ -454,7 +454,7 @@ export default function Task11() {
                         </tbody>
                     </table>
 </div>
-<h3 id="210-step-9-ネットワークの監視とトラブルシューティング">
+<h3 id="210-step-9-ネットワークの監視とトラブルシューティング" tabIndex={-1}>
                     2.10 Step 9: ネットワークの監視とトラブルシューティング
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.10 Step 9: ネットワークの監視とトラブルシューティング (表11)"}>
@@ -502,7 +502,7 @@ export default function Task11() {
 </div>
 <p>トラブルシューティングの標準手順:</p>
 <Diagram id="diag-8" label={"2.10 Step 9: ネットワークの監視とトラブルシューティング"} />
-<h3 id="211-コンテナサービスのネットワーク-exam-guide-の-knowledge-に登場">
+<h3 id="211-コンテナサービスのネットワーク-exam-guide-の-knowledge-に登場" tabIndex={-1}>
                     2.11 コンテナサービスのネットワーク (Exam Guide の Knowledge に登場)
                 </h3>
 <ul>
@@ -522,7 +522,7 @@ export default function Task11() {
                         Gateway 経由を避けられる
                     </li>
                 </ul>
-<h3 id="212-task-11-ベストプラクティスまとめ">
+<h3 id="212-task-11-ベストプラクティスまとめ" tabIndex={-1}>
                     2.12 Task 1.1 ベストプラクティスまとめ
                 </h3>
 <ul>
@@ -535,7 +535,7 @@ export default function Task11() {
                     <li>NAT Gateway と主要リソースは AZ ごとに配置する</li>
                     <li>通信の記録 (Flow Logs) を有効化し、組織の集中ログに送る</li>
                 </ul>
-<h3 id="213-task-11-でよく狙われる落とし穴">
+<h3 id="213-task-11-でよく狙われる落とし穴" tabIndex={-1}>
                     2.13 Task 1.1 でよく狙われる落とし穴
                 </h3>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"2.13 Task 1.1 でよく狙われる落とし穴 (表12)"}>
@@ -581,7 +581,7 @@ export default function Task11() {
                         </tbody>
                     </table>
 </div>
-<h3 id="214-ソース-task-11">2.14 ソース (Task 1.1)</h3>
+<h3 id="214-ソース-task-11" tabIndex={-1}>2.14 ソース (Task 1.1)</h3>
 <ul>
                     <li>
                         Building a Scalable and Secure Multi-VPC AWS Network Infrastructure:

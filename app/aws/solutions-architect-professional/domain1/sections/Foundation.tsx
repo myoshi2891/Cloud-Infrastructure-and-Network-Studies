@@ -28,8 +28,8 @@ export default function Foundation() {
                         Task 名・Knowledge・Skills は同ガイドの記述に沿って構成しています。
                     </p>
                 </blockquote>
-<h2 id="0-はじめに-このガイドの使い方">0. はじめに: このガイドの使い方</h2>
-<h3 id="01-このガイドの前提">0.1 このガイドの前提</h3>
+<h2 id="0-はじめに-このガイドの使い方" tabIndex={-1}>0. はじめに: このガイドの使い方</h2>
+<h3 id="01-このガイドの前提" tabIndex={-1}>0.1 このガイドの前提</h3>
 <ul>
                     <li>
                         想定読者: AWS の基本サービス (EC2, S3, VPC, IAM)
@@ -44,7 +44,7 @@ export default function Foundation() {
                         (ASCII アートは使用していません)
                     </li>
                 </ul>
-<h3 id="02-参照元に関する注意">0.2 参照元に関する注意</h3>
+<h3 id="02-参照元に関する注意" tabIndex={-1}>0.2 参照元に関する注意</h3>
 <ul>
                     <li>
                         依頼文に貼られていた URL (<code>ai-professional-01</code>)
@@ -61,7 +61,7 @@ export default function Foundation() {
                         のドキュメントは頻繁に再構成され、機能の上限値や名称も更新されます。数値や新機能は受験直前に必ず公式ドキュメントで再確認してください
                     </li>
                 </ul>
-<h3 id="03-professional-試験の解き方-最重要">
+<h3 id="03-professional-試験の解き方-最重要" tabIndex={-1}>
                     0.3 Professional 試験の解き方 (最重要)
                 </h3>
 <p>
@@ -70,8 +70,8 @@ export default function Foundation() {
                 </p>
 <Diagram id="diag-1" label={"0.3 Professional 試験の解き方 (最重要)"} />
 <hr />
-<h2 id="1-domain-1-の全体像">1. Domain 1 の全体像</h2>
-<h3 id="11-出題タスクと試験で問われる力">1.1 出題タスクと試験で問われる力</h3>
+<h2 id="1-domain-1-の全体像" tabIndex={-1}>1. Domain 1 の全体像</h2>
+<h3 id="11-出題タスクと試験で問われる力" tabIndex={-1}>1.1 出題タスクと試験で問われる力</h3>
 <p>Domain 1 のテーマは「単一アプリではなく、組織全体を設計する視点」です。</p>
 <div className="table-scroll" role="region" tabIndex={0} aria-label={"1.1 出題タスクと試験で問われる力 (表1)"}>
 <table>
@@ -129,13 +129,13 @@ export default function Foundation() {
                         </tbody>
                     </table>
 </div>
-<h3 id="12-学習の順序-おすすめ">1.2 学習の順序 (おすすめ)</h3>
+<h3 id="12-学習の順序-おすすめ" tabIndex={-1}>1.2 学習の順序 (おすすめ)</h3>
 <p>
                     アカウント構成 (Task 1.4) を先に理解すると、他の Task
                     の「組織全体でどう実現するか」が理解しやすくなります。
                 </p>
 <Diagram id="diag-2" label={"1.2 学習の順序 (おすすめ)"} />
-<h3 id="13-well-architected-framework-との対応">
+<h3 id="13-well-architected-framework-との対応" tabIndex={-1}>
                     1.3 Well-Architected Framework との対応
                 </h3>
 <p>
