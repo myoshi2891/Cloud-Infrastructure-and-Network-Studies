@@ -14,6 +14,41 @@
  */
 
 @theme {
+    /* SCS-C03 original guide palette */
+    --color-scs-1: #f6f8fc;
+    --color-scs-2: #1b2740;
+    --color-scs-3: #2f5fd0;
+    --color-scs-4: #ffffff;
+    --color-scs-5: #e3e9f3;
+    --color-scs-6: #4f5f7c;
+    --color-scs-7: #e8eefc;
+    --color-scs-8: #d3dcea;
+    --color-scs-9: #0f1a30;
+    --color-scs-10: #eef2f9;
+    --color-scs-11: #b45309;
+    --color-scs-12: rgba(47, 95, 208, 0.05);
+    --color-scs-13: #e9f7ef;
+    --color-scs-14: #a7dcc0;
+    --color-scs-15: #1b7f4b;
+    --color-scs-16: rgba(47, 95, 208, 0.06);
+    --color-scs-17: #66758f;
+    --color-scs-18: #f3f6fb;
+    --color-scs-19: rgba(27, 39, 64, 0.04);
+    --color-scs-20: #a9bdf0;
+    --color-scs-21: #8fd4b0;
+    --color-scs-22: rgba(27, 127, 75, 0.08);
+    --color-scs-23: #efb3c0;
+    --color-scs-24: rgba(192, 48, 79, 0.07);
+    --color-scs-25: #fff3e0;
+    --color-scs-26: #b86a00;
+    --color-scs-27: #f3c77e;
+    --color-scs-28: #fdecef;
+    --color-scs-29: #c0304f;
+    --color-scs-30: #f3b5c1;
+    --color-scs-31: #f9fbff;
+    --color-scs-32: #fbfcff;
+    --color-scs-33: rgba(47, 95, 208, 0.08);
+    --color-scs-34: rgba(20, 40, 90, 0.18);
     --color-ans-d4-code-readable: #ad5009;
     --color-ans-d4-success-readable: #197a48;
     --color-ans-d4-1: #f7f8fc;
