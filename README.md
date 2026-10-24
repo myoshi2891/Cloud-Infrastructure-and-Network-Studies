@@ -1,6 +1,14 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-21
+最終更新日: 2026-10-24
+
+2026-10-24 SCS-C03完全ガイド移行: `/aws/security-specialty` に全6ドメイン・16タスク、101表・40図・27コードブロック・251リスト項目・219外部リンク出現・56目次・確認問題8問を全文移行。原本のライト配色、点・番号・階層・字下げ、コード全行と構文色、円グラフの暗黙のbase配色を保持。サイドバーはリポジトリ標準の280pxへ対応付けた。本文はServer Component、目次とクイズだけをClient Componentへ分離し、ホームとHeaderへ導線を追加した。
+
+検証: 全体Vitest401ファイル・3779件成功（`bun run test -- --maxWorkers=4 --testTimeout=30000 --retry=1`）。対象18ファイル・138件。型検査・全体ESLint成功。Chrome5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全40SVGの自然倍率・viewBox内包、目次のhash/focus・モバイル開閉、全8問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
+
+開発環境の注意: この環境のTurbopackではSVGが40図中1図の状態で停止した。webpack開発サーバー（`bun run next dev --webpack`）では40図を描画できるため、今回のChrome検証は `PLAYWRIGHT_WEB_SERVER_COMMAND="bun run next dev --webpack"` を指定している。通常のTurbopackでの停止は未解消で、ビルド成功も主張しない。共有Mermaidコンポーネントの変更は残していない。
+
+原本HTML・Markdownは内容を変更せず直下に保持し、`archive/Aws/html/security-specialty/` と `archive/Aws/md/security-specialty/` にバイト一致・SHA-256一致でコピー済み。保存先と完全なハッシュは `docs/migration-inventory/aws-scs-c03-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `71ff4c1a4e31847687477659cf16076fb4264a63` 由来のコミット済みfixtureを使用する。原本・archiveがない一時作業ディレクトリでもfixture再生成のバイト一致を検証済み。
 
 2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
