@@ -4,16 +4,16 @@
 
 ## 2026-10-24: AWS SAP-C02 Domain 1組織の複雑さに対応する設計移行
 
-2026-10-24 AWS SAP-C02 Domain 1移行: `/aws/solutions-architect-professional/domain1` に全5タスク・49表（th107・td653）・19図・1コード（21行）・213リスト項目・130外部リンク出現・78目次・確認問題6問を全文移行。原本ライト配色（`#faf8f3`、カード `#ffffff`、枠線 `#d8d2c3`、アクセント `#3a4fb5`）・340px目次・直下aタグ構造・点/番号/余白・コード全行と構文色を保持。単一選択6問の即時判定、正解/不正解ハイライト、解説アコーディオン開閉、スコア集計（回答数・正解数）、やり直しリセットを完全実装。ホームとHeaderへSAP-C02（26%）を追加し、共通フッターのライトテーマ判定に `.sap-domain1-page` を登録。原本HTMLおよびMarkdownは `archive/Aws/html/solutions-architect-professional/domain1/` および `archive/Aws/md/solutions-architect-professional/domain1/` へバイト一致（SHA-256一致）でアーカイブ済み。
+2026-10-24 AWS SAP-C02 Domain 1移行: `/aws/solutions-architect-professional/domain1` に全5タスク・49表（th135・td686）・19図・1コード（21行）・213リスト項目・130外部リンク出現・78目次・確認問題6問を全文移行。原本ライト配色（`#faf8f3`、サイドバー `#f3f0e7`、カード `#ffffff`、枠線 `#d8d2c3`、アクセント `#3a4fb5`）・340px目次・直下aタグ構造・点/番号/階層/余白・コード全行と構文色を保持。単一選択6問の即時判定、正解/不正解ハイライト、解説アコーディオン開閉、スコア集計（回答数・正解数）、やり直しリセットを完全実装。全69横スクロール領域（49表 + 19図 + 1コード）に固有の `aria-label` を付与。ホームとHeaderへSAP-C02（26%）を追加し、共通フッターのライトテーマ判定に `.sap-domain1-page` を登録。原本HTMLおよびMarkdownは `archive/Aws/html/solutions-architect-professional/domain1/` および `archive/Aws/md/solutions-architect-professional/domain1/` へバイト一致（SHA-256一致）でアーカイブ済み。
 
-最終検証: 対象Vitest3ファイル・23件すべて成功（`page.test.tsx` 13件、`quiz.test.tsx` 4件、`integration.test.tsx` 6件）。TypeScript型検査（`bunx tsc --noEmit`）およびESLint成功。全体回帰テストは378ファイル・3610件すべて通過。
+最終検証: 対象Vitest8ファイル・53件すべて成功（`page.test.tsx` 13件、`quiz.test.tsx` 4件、`integration.test.tsx` 6件、`design.test.ts` 8件、`contrast.test.ts` 6件、`shell.test.tsx` 6件、`diagram.test.tsx` 1件、`mutations.test.tsx` 9件）。TypeScript型検査（`bunx tsc --noEmit`）および全体ESLint成功。
 
 | 区画 | コミット | 内容 |
 |---|---|---|
-| Step 0 (Inventory) | `03db1007` | 原本inventory抽出（h1: 1, h2: 11, h3: 68, h4: 8, 表: 49, 図: 19, コード: 1, li: 213, links: 130, 本文: 70） |
-| Step 1 (Red) | `2b7a32a0` | 原本inventory全量突合テスト作成（失敗確認） |
-| Step 2 (Green) | `5146ecc2` | 全文・sections・NavBar・Quiz・Diagram・page.css実装およびテスト通過 |
-| Step 3 (Refactor/Route) | 後続 | ルーティング・ナビゲーション・ドキュメント更新 |
+| Step 0 (Inventory & Initial) | `03db1007`〜`41f75373` | 原本inventory抽出・基本ページ構造およびルーティング統合 |
+| Step 1 (Design & Contrast TDD) | Red `e415689e` / Green `3c5c0814` | 元HTMLの全CSS宣言・リストマーカー5種破壊検出・AAコントラスト検証と完全復元 |
+| Step 2 (NavBar & Focus TDD) | Red `1196e7b6` / Green `0ac28653` | 78目次・ハッシュ同期・Escape閉鎖・スクロールスパイ・全見出し `tabIndex={-1}` 実装 |
+| Step 3 (Diagram & Mutation TDD) | Red `bade1ada` / Green `57db339d` | Mermaidライトテーマ変数上書き・全69領域固有ラベル・DOM全量スナップショットと欠落検出 |
 
 ## 2026-10-21: ANS-C01 Domain 3レビュー指摘対応（DXプレフィックス・VPN MTU）
 
