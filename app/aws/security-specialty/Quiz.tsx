@@ -5,7 +5,7 @@ import { createContext, useContext, useId, useState, type ComponentProps, type R
 type AnswerState = { selected: string[]; open: boolean; correct: boolean };
 type QuizState = Record<string, AnswerState>;
 const QuizContext = createContext<{ state: QuizState; update: (id: string, value: AnswerState) => void; reset: () => void } | null>(null);
-const CardContext = createContext<{ selected: string[]; open: boolean; graded: boolean; answers: string[]; multi: number; select: (value: string) => void; toggle: () => void } | null>(null);
+const CardContext = createContext<{ selected: string[]; open: boolean; graded: boolean; answers: string[]; multi: number; labelId: string; select: (value: string) => void; toggle: () => void } | null>(null);
 const empty: AnswerState = { selected: [], open: false, correct: false };
 
 /** 全8問の回答・開閉状態をReactで管理する。 */
@@ -17,7 +17,7 @@ function useQuiz() { const value = useContext(QuizContext); if (!value) throw ne
 function useCard() { const value = useContext(CardContext); if (!value) throw new Error('QuizCard is required'); return value; }
 
 /** 原本の採点・個数制限・DOM順の選択置換を保持する問題カード。 */
-export function QuizCard({ answer, multi, className, children, ...props }: ComponentProps<'div'> & { answer: string; multi: number }) {
+export function QuizCard({ answer, multi, labelId, className, children, ...props }: ComponentProps<'div'> & { answer: string; multi: number; labelId: string }) {
     const id = useId(); const quiz = useQuiz(); const current = quiz.state[id] ?? empty;
     const answers = answer.split(',').map(value => value.trim());
     const isCorrect = (selected: string[]) => selected.length === answers.length && answers.every(value => selected.includes(value));
@@ -30,7 +30,7 @@ export function QuizCard({ answer, multi, className, children, ...props }: Compo
         quiz.update(id, { selected, open: current.open || selected.length >= multi, correct: isCorrect(selected) });
     };
     const toggle = () => quiz.update(id, { ...current, open: !current.open });
-    return <CardContext.Provider value={{ ...current, graded, answers, multi, select, toggle }}>
+    return <CardContext.Provider value={{ ...current, graded, answers, multi, labelId, select, toggle }}>
         <div {...props} data-multi={multi} className={`${className ?? ''}${graded ? isCorrect(current.selected) ? ' is-graded-correct' : ' is-graded-wrong' : ''}`}>{children}</div>
     </CardContext.Provider>;
 }
@@ -63,3 +63,6 @@ export function QuizProgress() { const { state } = useQuiz(); const answered = O
 
 /** 回答・色・採点・解説・進捗を初期状態へ戻す。 */
 export function QuizReset(props: ComponentProps<'button'>) { const { reset } = useQuiz(); return <button {...props} type="button" onClick={reset} />; }
+
+/** 問題見出しで読み上げ名を付けた選択肢グループ。 */
+export function QuizOptions(props: ComponentProps<'ul'>) { const card=useCard();return <ul {...props} role={card.multi > 1 ? 'group' : 'radiogroup'} aria-labelledby={card.labelId} />; }
