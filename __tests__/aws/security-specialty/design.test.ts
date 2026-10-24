@@ -13,6 +13,7 @@ it('preserves every source CSS declaration and responsive rule',()=>{
  for(const [p,v] of Object.entries(rule.declarations)){if(typeof v!=='string')continue;
  const effective=Object.assign({},...fixture.guideDesign.rules.filter(r=>r.selector===rule.selector&&r.media===rule.media).map(r=>r.declarations));if(effective[p as keyof typeof effective]!==v)continue;
  if(p==='font-family')continue;
+ if(p==='color'){const corrections:Record<string,string>={'#3d7b7b':'#3c7a7a','#b45309':'#b25209','#b86a00':'#a45e00'};const corrected=corrections[resolve(v,source)];if(corrected){expect(resolve(actual[p]??'',globals)).toBe(corrected);continue;}}
  if(p==='top'&&selector.includes('sidebar')){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
  if(p==='z-index'){expect(Number(actual[p])).toBeLessThan(40);continue;}
  if(p==='scroll-margin-top'){expect(actual[p]).toContain('var(--header-h, 60px)');continue;}
