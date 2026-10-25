@@ -14,6 +14,14 @@
  */
 
 @theme {
+    /* ANS-C01 complete guide: source palette values absent from existing tokens. */
+    --color-ans-guide-1: #3a5bd9;
+    --color-ans-guide-2: #a14b00;
+    --color-ans-guide-3: rgba(58, 91, 217, 0.05);
+    --color-ans-guide-4: #1a7a4a;
+    --color-ans-guide-5: rgba(58, 91, 217, 0.06);
+    --color-ans-guide-6: #6b7a96;
+    --color-ans-guide-7: #9fb3ef;
     /* SCS-C03 original guide palette */
     --color-scs-1: #f6f8fc;
     --color-scs-2: #1b2740;

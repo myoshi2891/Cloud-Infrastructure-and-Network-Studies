@@ -1,0 +1,856 @@
+
+            .ans-guide-page * {
+                box-sizing: border-box;
+            }
+            .ans-guide-page, .ans-guide-page {
+                overflow-x: clip;
+            }
+            .ans-guide-page {
+                margin: 0;
+                background: var(--color-scs-1);
+                color: var(--color-scs-2);
+                font-family: var(--font-body);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+                color-scheme: light;
+            }
+            .ans-guide-page a {
+                color: var(--color-ans-guide-1);
+                text-decoration: none;
+            }
+            .ans-guide-page a:hover {
+                text-decoration: underline;
+            }
+
+            /* ---------- layout ---------- */
+            .ans-guide-page .layout {
+                display: block;
+            }
+
+            /* Sidebar */
+            .ans-guide-page .sidebar {
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0px);
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                background: var(--color-scs-4);
+                border-right: 1px solid var(--color-scs-5);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 39;
+            }
+            .ans-guide-page .sidebar-header {
+                padding: 0 24px 20px;
+                border-bottom: 1px solid var(--color-scs-5);
+                margin-bottom: 16px;
+            }
+            .ans-guide-page .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--color-ans-guide-1);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .ans-guide-page .sidebar-header h2 {
+                font-size: 16px;
+                margin: 6px 0 0;
+                color: var(--color-scs-2);
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .ans-guide-page .sidebar nav {
+                padding: 0 12px;
+            }
+            .ans-guide-page .sidebar nav a {
+                display: block;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--color-aip-d2-text-dim);
+                line-height: 1.5;
+                margin-bottom: 2px;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .ans-guide-page .sidebar nav a:hover {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-scs-2);
+                text-decoration: none;
+            }
+            .ans-guide-page .sidebar nav a.active {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-ans-guide-1);
+                font-weight: 700;
+            }
+            .ans-guide-page .sidebar nav a.lvl3 {
+                padding-left: 28px;
+                font-size: 12.5px;
+            }
+            .ans-guide-page .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+                left: 14px;
+                z-index: 39;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                color: var(--color-scs-2);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+
+            /* Main content */
+            .ans-guide-page .main {
+                margin-left: 280px;
+                padding: 56px 64px 120px;
+            }
+            .ans-guide-page .hero {
+                margin-bottom: 8px;
+            }
+            .ans-guide-page .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--color-ans-guide-1);
+                margin-bottom: 14px;
+            }
+            .ans-guide-page .hero h1 {
+                font-size: clamp(28px, 3.6vw, 42px);
+                line-height: 1.35;
+                margin: 0 0 18px;
+                background: linear-gradient(135deg, var(--color-scs-2) 0%, var(--color-ans-guide-1) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 800;
+            }
+            .ans-guide-page .hero .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .ans-guide-page .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                font-size: 12.5px;
+                color: var(--color-aip-d2-text-dim);
+            }
+            .ans-guide-page .pill strong {
+                color: var(--color-scs-2);
+            }
+
+            .ans-guide-page .main h2 {
+                font-size: 26px;
+                margin: 56px 0 20px;
+                padding-top: 8px;
+                border-top: 1px solid var(--color-scs-5);
+                color: var(--color-scs-2);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .ans-guide-page .main > .guide-part:first-child > h2:first-of-type {
+                border-top: none;
+                padding-top: 0;
+                margin-top: 8px;
+            }
+            .ans-guide-page .main h3 {
+                font-size: 20px;
+                margin: 38px 0 16px;
+                color: var(--color-scs-2);
+                font-weight: 700;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .ans-guide-page .main h3::before {
+                content: '';
+                display: inline-block;
+                width: 5px;
+                height: 18px;
+                background: var(--color-ans-guide-1);
+                border-radius: 3px;
+                margin-right: 10px;
+                vertical-align: -2px;
+            }
+            .ans-guide-page .main p {
+                margin: 0 0 18px;
+                color: var(--color-scs-2);
+            }
+            .ans-guide-page .main ul, .ans-guide-page .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.4em;
+                color: var(--color-scs-2);
+            }
+            .ans-guide-page .main li {
+                margin-bottom: 8px;
+            }
+            .ans-guide-page .main hr {
+                border: none;
+                border-top: 1px solid var(--color-scs-5);
+                margin: 44px 0;
+            }
+            .ans-guide-page .main strong {
+                color: var(--color-scs-9);
+                font-weight: 700;
+            }
+            .ans-guide-page .footnote-ref {
+                margin-left: 2px;
+            }
+            .ans-guide-page .footnote-ref sup {
+                font-size: 11px;
+                color: var(--color-ans-guide-1);
+                font-weight: 700;
+            }
+            .ans-guide-page .main code:not(.code-block code) {
+                background: var(--color-scs-10);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+                color: var(--color-ans-guide-2);
+                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+
+            /* Tables */
+            .ans-guide-page .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                background: var(--color-scs-4);
+            }
+            .ans-guide-page table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            .ans-guide-page thead th {
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-scs-2);
+                text-align: left;
+                padding: 12px 16px;
+                font-weight: 700;
+                border-bottom: 1px solid var(--color-aip-d1-border);
+                white-space: nowrap;
+            }
+            .ans-guide-page tbody td {
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--color-scs-5);
+                color: var(--color-aip-d2-text-dim);
+                vertical-align: top;
+            }
+            .ans-guide-page tbody tr:last-child td {
+                border-bottom: none;
+            }
+            .ans-guide-page tbody tr:hover td {
+                background: var(--color-ans-guide-3);
+            }
+
+            /* Mermaid */
+            .ans-guide-page .mermaid-wrap {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 28px 20px;
+                margin: 0 0 30px;
+            }
+            .ans-guide-page .mermaid-wrap svg {
+                flex-shrink: 0;
+            }
+            .ans-guide-page .mermaid-wrap p {
+                color: inherit;
+                margin: 0;
+            }
+
+            /* Callouts */
+            .ans-guide-page .callout-practice {
+                display: flex;
+                gap: 14px;
+                background: var(--color-ans-d4-21);
+                border: 1px solid var(--color-aip-d3-7);
+                border-left: 4px solid var(--color-ans-guide-4);
+                border-radius: 12px;
+                padding: 20px 22px;
+                margin: 0 0 26px;
+            }
+            .ans-guide-page .callout-practice .icon {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--color-ans-guide-4);
+                color: var(--color-scs-4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 900;
+            }
+            .ans-guide-page .callout-practice .body {
+                color: var(--color-scs-2);
+            }
+            .ans-guide-page .callout-practice .label {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-ans-guide-4);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .ans-guide-page .callout-practice p {
+                margin: 0;
+                color: var(--color-scs-2);
+            }
+
+            .ans-guide-page .practice-label {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-ans-guide-4);
+                text-transform: uppercase;
+                margin: 0 0 10px;
+            }
+            .ans-guide-page .practice-label::before {
+                content: '✓';
+                font-size: 13px;
+            }
+
+            /* Reference grid */
+            .ans-guide-page .ref-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                margin: 0 0 30px;
+            }
+            .ans-guide-page .ref-card {
+                display: flex;
+                gap: 12px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                min-width: 0;
+            }
+            .ans-guide-page .ref-card .num {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--color-aip-d2-accent-bg);
+                color: var(--color-ans-guide-1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 800;
+            }
+            .ans-guide-page .ref-card .txt {
+                font-size: 13px;
+                color: var(--color-aip-d2-text-dim);
+                min-width: 0;
+                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+            .ans-guide-page .ref-card .txt a {
+                color: var(--color-ans-guide-1);
+                font-weight: 600;
+            }
+
+            /* Checklist */
+            .ans-guide-page .checklist-card {
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 8px 22px 12px;
+                margin: 0 0 30px;
+            }
+            .ans-guide-page .checklist-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 14px 0;
+                border-bottom: 1px solid var(--color-scs-5);
+                margin-bottom: 6px;
+            }
+            .ans-guide-page .checklist-header .title {
+                font-weight: 700;
+                color: var(--color-scs-2);
+                font-size: 14.5px;
+            }
+            .ans-guide-page .checklist-header .count {
+                font-size: 13px;
+                color: var(--color-ans-guide-1);
+                font-weight: 700;
+            }
+            .ans-guide-page .checklist-card ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .ans-guide-page .checklist-card li {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 11px 4px;
+                border-radius: 8px;
+                margin: 0;
+                transition: background 0.15s;
+            }
+            .ans-guide-page .checklist-card li:hover {
+                background: var(--color-ans-guide-5);
+            }
+            .ans-guide-page .checklist-card input[type='checkbox'] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 19px;
+                height: 19px;
+                flex-shrink: 0;
+                margin-top: 2px;
+                border: 1.5px solid var(--color-aip-d1-border);
+                border-radius: 5px;
+                background: var(--color-scs-10);
+                cursor: pointer;
+                position: relative;
+            }
+            .ans-guide-page .checklist-card input[type='checkbox']:checked {
+                background: var(--color-ans-guide-1);
+                border-color: var(--color-ans-guide-1);
+            }
+            .ans-guide-page .checklist-card input[type='checkbox']:checked::after {
+                content: '';
+                position: absolute;
+                left: 5px;
+                top: 1px;
+                width: 5px;
+                height: 10px;
+                border: solid var(--color-scs-4);
+                border-width: 0 2px 2px 0;
+                transform: rotate(40deg);
+            }
+            .ans-guide-page .checklist-card label {
+                color: var(--color-scs-2);
+                font-size: 14.5px;
+                cursor: pointer;
+                line-height: 1.6;
+            }
+            .ans-guide-page .checklist-card li:has(input:checked) label {
+                text-decoration: line-through;
+                color: var(--color-ans-guide-6);
+            }
+
+            /* Footnotes (pandoc) */
+            .ans-guide-page aside.footnotes {
+                display: none;
+            } /* replaced entirely by ref-grid */
+
+            /* Responsive */
+            @media (max-width: 980px) {
+                .ans-guide-page .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px var(--color-aip-drawer-shadow);
+                }
+                .ans-guide-page .sidebar.open {
+                    transform: translateX(0);
+                }
+                .ans-guide-page .main {
+                    margin-left: 0;
+                    padding: 80px 20px 100px;
+                }
+                .ans-guide-page .sidebar-toggle {
+                    display: flex;
+                }
+                .ans-guide-page .ref-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* ---- Supplemental: 原本 MD にあり雛形に無い要素 (h4/h5, 引用, コードブロック) ---- */
+            .ans-guide-page .main h4 {
+                font-size: 17px;
+                margin: 30px 0 12px;
+                color: var(--color-scs-2);
+                font-weight: 700;
+                line-height: 1.5;
+            }
+            .ans-guide-page .main h5 {
+                font-size: 16px;
+                margin: 24px 0 10px;
+                color: var(--color-ans-guide-1);
+                font-weight: 700;
+                line-height: 1.5;
+            }
+            .ans-guide-page .main p, .ans-guide-page .main li, .ans-guide-page .main blockquote {
+                overflow-wrap: break-word;
+            }
+            .ans-guide-page .main td a, .ans-guide-page .main li a, .ans-guide-page .main blockquote a {
+                overflow-wrap: anywhere;
+            }
+            .ans-guide-page .table-scroll td, .ans-guide-page .table-scroll th {
+                overflow-wrap: break-word;
+            }
+            .ans-guide-page .main blockquote {
+                margin: 0 0 26px;
+                padding: 16px 22px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-left: 4px solid var(--color-ans-guide-7);
+                border-radius: 12px;
+                color: var(--color-aip-d2-text-dim);
+            }
+            .ans-guide-page .main blockquote p, .ans-guide-page .main blockquote ul {
+                margin: 0 0 10px;
+                color: var(--color-aip-d2-text-dim);
+            }
+            .ans-guide-page .main blockquote li {
+                color: var(--color-aip-d2-text-dim);
+            }
+            .ans-guide-page .main blockquote > :last-child {
+                margin-bottom: 0;
+            }
+            .ans-guide-page .callout-practice .body {
+                min-width: 0;
+            }
+            .ans-guide-page .callout-practice ol, .ans-guide-page .callout-practice ul {
+                margin: 0;
+            }
+            .ans-guide-page .code-sample {
+                margin: 0 0 26px;
+            }
+            .ans-guide-page .code-sample .code-block {
+                margin: 0;
+                padding: 18px 20px;
+                overflow-x: auto;
+                background: var(--color-scs-10);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+            }
+            .ans-guide-page .main .code-sample .code-block code {
+                display: block;
+                background: none;
+                color: var(--color-scs-2);
+                font-family:
+                    var(--font-mono);
+                font-size: 1rem;
+                line-height: 1.65;
+                white-space: pre;
+            }
+            .ans-guide-page .main .code-sample .code-block code .err {
+                background: none;
+                color: inherit;
+                border: 0;
+            }
+            .ans-guide-page .main .code-sample .code-block code .hll {
+                background: none;
+            }
+            .ans-guide-page .main .code-sample .code-block code .c, .ans-guide-page .main .code-sample .code-block code .c1, .ans-guide-page .main .code-sample .code-block code .cm, .ans-guide-page .main .code-sample .code-block code .cs, .ans-guide-page .main .code-sample .code-block code .ch, .ans-guide-page .main .code-sample .code-block code .cp {
+                color: #2f6a6a;
+            }
+            .ans-guide-page .main .code-sample .code-block code .se {
+                color: #9a4d12;
+            }
+            .ans-guide-page .main .code-sample .code-block code .w {
+                color: inherit;
+            }
+
+            .ans-guide-page .code-block {
+                line-height: 125%;
+            }
+            .ans-guide-page td.linenos .normal {
+                color: inherit;
+                background-color: transparent;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .ans-guide-page span.linenos {
+                color: inherit;
+                background-color: transparent;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .ans-guide-page td.linenos .special {
+                color: #000000;
+                background-color: #ffffc0;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .ans-guide-page span.linenos.special {
+                color: #000000;
+                background-color: #ffffc0;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .ans-guide-page .code-sample .code-block code .hll {
+                background-color: #ffffcc;
+            }
+            .ans-guide-page .code-sample .code-block code {
+                background: var(--color-ans-d4-20);
+            }
+            .ans-guide-page .code-sample .code-block code .c {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment */
+            .ans-guide-page .code-sample .code-block code .err {
+                border: 1px solid #f00;
+            } /* Error */
+            .ans-guide-page .code-sample .code-block code .k {
+                color: #008000;
+                font-weight: bold;
+            } /* Keyword */
+            .ans-guide-page .code-sample .code-block code .o {
+                color: #666;
+            } /* Operator */
+            .ans-guide-page .code-sample .code-block code .ch {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment.Hashbang */
+            .ans-guide-page .code-sample .code-block code .cm {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment.Multiline */
+            .ans-guide-page .code-sample .code-block code .cp {
+                color: #9c6500;
+            } /* Comment.Preproc */
+            .ans-guide-page .code-sample .code-block code .cpf {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment.PreprocFile */
+            .ans-guide-page .code-sample .code-block code .c1 {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment.Single */
+            .ans-guide-page .code-sample .code-block code .cs {
+                color: #3d7b7b;
+                font-style: italic;
+            } /* Comment.Special */
+            .ans-guide-page .code-sample .code-block code .gd {
+                color: #a00000;
+            } /* Generic.Deleted */
+            .ans-guide-page .code-sample .code-block code .ge {
+                font-style: italic;
+            } /* Generic.Emph */
+            .ans-guide-page .code-sample .code-block code .ges {
+                font-weight: bold;
+                font-style: italic;
+            } /* Generic.EmphStrong */
+            .ans-guide-page .code-sample .code-block code .gr {
+                color: #e40000;
+            } /* Generic.Error */
+            .ans-guide-page .code-sample .code-block code .gh {
+                color: #000080;
+                font-weight: bold;
+            } /* Generic.Heading */
+            .ans-guide-page .code-sample .code-block code .gi {
+                color: #008400;
+            } /* Generic.Inserted */
+            .ans-guide-page .code-sample .code-block code .go {
+                color: #717171;
+            } /* Generic.Output */
+            .ans-guide-page .code-sample .code-block code .gp {
+                color: #000080;
+                font-weight: bold;
+            } /* Generic.Prompt */
+            .ans-guide-page .code-sample .code-block code .gs {
+                font-weight: bold;
+            } /* Generic.Strong */
+            .ans-guide-page .code-sample .code-block code .gu {
+                color: #800080;
+                font-weight: bold;
+            } /* Generic.Subheading */
+            .ans-guide-page .code-sample .code-block code .gt {
+                color: #04d;
+            } /* Generic.Traceback */
+            .ans-guide-page .code-sample .code-block code .kc {
+                color: #008000;
+                font-weight: bold;
+            } /* Keyword.Constant */
+            .ans-guide-page .code-sample .code-block code .kd {
+                color: #008000;
+                font-weight: bold;
+            } /* Keyword.Declaration */
+            .ans-guide-page .code-sample .code-block code .kn {
+                color: #008000;
+                font-weight: bold;
+            } /* Keyword.Namespace */
+            .ans-guide-page .code-sample .code-block code .kp {
+                color: #008000;
+            } /* Keyword.Pseudo */
+            .ans-guide-page .code-sample .code-block code .kr {
+                color: #008000;
+                font-weight: bold;
+            } /* Keyword.Reserved */
+            .ans-guide-page .code-sample .code-block code .kt {
+                color: #b00040;
+            } /* Keyword.Type */
+            .ans-guide-page .code-sample .code-block code .m {
+                color: #666;
+            } /* Literal.Number */
+            .ans-guide-page .code-sample .code-block code .s {
+                color: #ba2121;
+            } /* Literal.String */
+            .ans-guide-page .code-sample .code-block code .na {
+                color: #687822;
+            } /* Name.Attribute */
+            .ans-guide-page .code-sample .code-block code .nb {
+                color: #008000;
+            } /* Name.Builtin */
+            .ans-guide-page .code-sample .code-block code .nc {
+                color: #00f;
+                font-weight: bold;
+            } /* Name.Class */
+            .ans-guide-page .code-sample .code-block code .no {
+                color: #800;
+            } /* Name.Constant */
+            .ans-guide-page .code-sample .code-block code .nd {
+                color: #a2f;
+            } /* Name.Decorator */
+            .ans-guide-page .code-sample .code-block code .ni {
+                color: #717171;
+                font-weight: bold;
+            } /* Name.Entity */
+            .ans-guide-page .code-sample .code-block code .ne {
+                color: #cb3f38;
+                font-weight: bold;
+            } /* Name.Exception */
+            .ans-guide-page .code-sample .code-block code .nf {
+                color: #00f;
+            } /* Name.Function */
+            .ans-guide-page .code-sample .code-block code .nl {
+                color: #767600;
+            } /* Name.Label */
+            .ans-guide-page .code-sample .code-block code .nn {
+                color: #00f;
+                font-weight: bold;
+            } /* Name.Namespace */
+            .ans-guide-page .code-sample .code-block code .nt {
+                color: #008000;
+                font-weight: bold;
+            } /* Name.Tag */
+            .ans-guide-page .code-sample .code-block code .nv {
+                color: #19177c;
+            } /* Name.Variable */
+            .ans-guide-page .code-sample .code-block code .ow {
+                color: #a2f;
+                font-weight: bold;
+            } /* Operator.Word */
+            .ans-guide-page .code-sample .code-block code .w {
+                color: #bbb;
+            } /* Text.Whitespace */
+            .ans-guide-page .code-sample .code-block code .mb {
+                color: #666;
+            } /* Literal.Number.Bin */
+            .ans-guide-page .code-sample .code-block code .mf {
+                color: #666;
+            } /* Literal.Number.Float */
+            .ans-guide-page .code-sample .code-block code .mh {
+                color: #666;
+            } /* Literal.Number.Hex */
+            .ans-guide-page .code-sample .code-block code .mi {
+                color: #666;
+            } /* Literal.Number.Integer */
+            .ans-guide-page .code-sample .code-block code .mo {
+                color: #666;
+            } /* Literal.Number.Oct */
+            .ans-guide-page .code-sample .code-block code .sa {
+                color: #ba2121;
+            } /* Literal.String.Affix */
+            .ans-guide-page .code-sample .code-block code .sb {
+                color: #ba2121;
+            } /* Literal.String.Backtick */
+            .ans-guide-page .code-sample .code-block code .sc {
+                color: #ba2121;
+            } /* Literal.String.Char */
+            .ans-guide-page .code-sample .code-block code .dl {
+                color: #ba2121;
+            } /* Literal.String.Delimiter */
+            .ans-guide-page .code-sample .code-block code .sd {
+                color: #ba2121;
+                font-style: italic;
+            } /* Literal.String.Doc */
+            .ans-guide-page .code-sample .code-block code .s2 {
+                color: #ba2121;
+            } /* Literal.String.Double */
+            .ans-guide-page .code-sample .code-block code .se {
+                color: #aa5d1f;
+                font-weight: bold;
+            } /* Literal.String.Escape */
+            .ans-guide-page .code-sample .code-block code .sh {
+                color: #ba2121;
+            } /* Literal.String.Heredoc */
+            .ans-guide-page .code-sample .code-block code .si {
+                color: #a45a77;
+                font-weight: bold;
+            } /* Literal.String.Interpol */
+            .ans-guide-page .code-sample .code-block code .sx {
+                color: #008000;
+            } /* Literal.String.Other */
+            .ans-guide-page .code-sample .code-block code .sr {
+                color: #a45a77;
+            } /* Literal.String.Regex */
+            .ans-guide-page .code-sample .code-block code .s1 {
+                color: #ba2121;
+            } /* Literal.String.Single */
+            .ans-guide-page .code-sample .code-block code .ss {
+                color: #19177c;
+            } /* Literal.String.Symbol */
+            .ans-guide-page .code-sample .code-block code .bp {
+                color: #008000;
+            } /* Name.Builtin.Pseudo */
+            .ans-guide-page .code-sample .code-block code .fm {
+                color: #00f;
+            } /* Name.Function.Magic */
+            .ans-guide-page .code-sample .code-block code .vc {
+                color: #19177c;
+            } /* Name.Variable.Class */
+            .ans-guide-page .code-sample .code-block code .vg {
+                color: #19177c;
+            } /* Name.Variable.Global */
+            .ans-guide-page .code-sample .code-block code .vi {
+                color: #19177c;
+            } /* Name.Variable.Instance */
+            .ans-guide-page .code-sample .code-block code .vm {
+                color: #19177c;
+            } /* Name.Variable.Magic */
+            .ans-guide-page .code-sample .code-block code .il {
+                color: #666;
+            } /* Literal.Number.Integer.Long */
+            /* ---- /Supplemental ---- */
+        
+.ans-guide-page .main { width: calc(100% - 280px); max-width: none; box-sizing: border-box; min-width: 0; }
+.ans-guide-page .main ul { list-style-type: disc; }
+.ans-guide-page .main ol { list-style-type: decimal; }
+.ans-guide-page .main ul, .ans-guide-page .main ol { list-style-position: outside; }
+.ans-guide-page .main li { display: list-item; }
+.ans-guide-page .main ul ul, .ans-guide-page .main ol ul { list-style-type: circle; }
+.ans-guide-page .main ul ul ul, .ans-guide-page .main ol ul ul { list-style-type: square; }
+.ans-guide-page .sidebar nav ul { list-style: none; margin: 0; padding: 0; }
+.ans-guide-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; overflow-x: visible; }
+.ans-guide-page .mermaid-wrap svg { flex-shrink: 0; max-width: none; height: auto; }
+.ans-guide-page .code-line { white-space: pre; min-height: 1.65em; }
+.ans-guide-page .code-block { font-family: var(--font-mono); }
+.ans-guide-page .main :is(h2,h3,h4)[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
+.ans-guide-page .main a { overflow-wrap: anywhere; }
+.ans-guide-page [role="region"]:focus-visible { outline: 2px solid var(--color-ans-guide-1); outline-offset: 2px; }
+@media (max-width: 980px) { .ans-guide-page .main { width: 100%; max-width: none; } .ans-guide-page .sidebar:not(.open) { visibility: hidden; } }
