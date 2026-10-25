@@ -34,6 +34,7 @@
 export const FIDELITY_PAGES = {
     'aws-ans-c01-guide': {
         source: 'Aws-ans-c01-guide.html',
+        syntaxSelectors: {"c1":"pre:not(.mermaid) span.c1","nt":"pre:not(.mermaid) span.nt","p":"pre:not(.mermaid) span.p","w":"pre:not(.mermaid) span.w","l":"pre:not(.mermaid) span.l","l-Scalar":"pre:not(.mermaid) span.l-Scalar","l-Scalar-Plain":"pre:not(.mermaid) span.l-Scalar-Plain","s":"pre:not(.mermaid) span.s","p-Indicator":"pre:not(.mermaid) span.p-Indicator","se":"pre:not(.mermaid) span.se","s1":"pre:not(.mermaid) span.s1","nv":"pre:not(.mermaid) span.nv","o":"pre:not(.mermaid) span.o","m":"pre:not(.mermaid) span.m","kt":"pre:not(.mermaid) span.kt","k":"pre:not(.mermaid) span.k","nb":"pre:not(.mermaid) span.nb","n":"pre:not(.mermaid) span.n","mi":"pre:not(.mermaid) span.mi","err":"pre:not(.mermaid) span.err","ss":"pre:not(.mermaid) span.ss","s2":"pre:not(.mermaid) span.s2"},
         sourceCommit: '6ed18037dc3b87fb6fefe40c895c93776319b72c',
         tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
         guideBoundaries: {
