@@ -1,0 +1,594 @@
+
+            .sap-guide-page * {
+                box-sizing: border-box;
+            }
+            .sap-guide-page, .sap-guide-page {
+                overflow-x: clip;
+            }
+            .sap-guide-page {
+                margin: 0;
+                background: var(--color-scs-1);
+                color: var(--color-sap-guide-1);
+                font-family: var(--font-body);
+                font-size: 16px;
+                line-height: 1.85;
+                -webkit-font-smoothing: antialiased;
+                color-scheme: light;
+            }
+            .sap-guide-page a {
+                color: var(--color-aip-d1-accent);
+                text-decoration: none;
+                overflow-wrap: anywhere;
+            }
+            .sap-guide-page a:hover {
+                text-decoration: underline;
+            }
+            .sap-guide-page .layout {
+                display: block;
+            }
+            .sap-guide-page .sidebar {
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0px);
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                background: var(--color-scs-4);
+                border-right: 1px solid var(--color-scs-5);
+                overflow-y: auto;
+                padding: 28px 0 40px;
+                z-index: 39;
+            }
+            .sap-guide-page .sidebar-header {
+                padding: 0 24px 20px;
+                border-bottom: 1px solid var(--color-scs-5);
+                margin-bottom: 16px;
+            }
+            .sap-guide-page .sidebar-header .kicker {
+                font-size: 12px;
+                letter-spacing: 0.08em;
+                color: var(--color-aip-d1-accent);
+                font-weight: 700;
+                text-transform: uppercase;
+            }
+            .sap-guide-page .sidebar-header h2 {
+                font-size: 16px;
+                margin: 6px 0 0;
+                color: var(--color-sap-guide-1);
+                line-height: 1.5;
+                font-weight: 700;
+            }
+            .sap-guide-page .sidebar nav {
+                padding: 0 12px;
+            }
+            .sap-guide-page .sidebar nav a {
+                display: block;
+                padding: 9px 12px;
+                border-radius: 8px;
+                font-size: 13.5px;
+                color: var(--color-sap-guide-2);
+                line-height: 1.5;
+                margin-bottom: 2px;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .sap-guide-page .sidebar nav a:hover {
+                background: var(--color-scs-7);
+                color: var(--color-sap-guide-1);
+                text-decoration: none;
+            }
+            .sap-guide-page .sidebar nav a.active {
+                background: var(--color-scs-7);
+                color: var(--color-aip-d1-accent);
+                font-weight: 700;
+            }
+            .sap-guide-page .sidebar nav a.lvl3 {
+                padding-left: 28px;
+                font-size: 12.5px;
+            }
+            .sap-guide-page .sidebar-toggle {
+                display: none;
+                position: fixed;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+                left: 14px;
+                z-index: 39;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                color: var(--color-sap-guide-1);
+                font-size: 18px;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+            .sap-guide-page .main {
+                margin-left: 280px;
+                padding: 56px 64px 120px;
+            }
+            .sap-guide-page .hero {
+                margin-bottom: 8px;
+            }
+            .sap-guide-page .hero .kicker {
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--color-aip-d1-accent);
+                margin-bottom: 14px;
+            }
+            .sap-guide-page .hero h1 {
+                font-size: clamp(28px, 3.6vw, 42px);
+                line-height: 1.35;
+                margin: 0 0 18px;
+                background: linear-gradient(135deg, var(--color-sap-guide-1) 0%, var(--color-aip-d1-accent) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                font-weight: 800;
+            }
+            .sap-guide-page .hero .meta-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 32px;
+            }
+            .sap-guide-page .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                font-size: 12.5px;
+                color: var(--color-sap-guide-2);
+            }
+            .sap-guide-page .pill strong {
+                color: var(--color-sap-guide-1);
+            }
+            .sap-guide-page .main h2 {
+                font-size: 26px;
+                margin: 56px 0 20px;
+                padding-top: 8px;
+                border-top: 1px solid var(--color-scs-5);
+                color: var(--color-sap-guide-1);
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .sap-guide-page .main > .guide-part:first-child > h2:first-of-type {
+                border-top: none;
+                padding-top: 0;
+                margin-top: 8px;
+            }
+            .sap-guide-page .main h3 {
+                font-size: 20px;
+                margin: 38px 0 16px;
+                color: var(--color-sap-guide-1);
+                font-weight: 700;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .sap-guide-page .main h3::before {
+                content: '';
+                display: inline-block;
+                width: 5px;
+                height: 18px;
+                background: var(--color-aip-d1-accent);
+                border-radius: 3px;
+                margin-right: 10px;
+                vertical-align: -2px;
+            }
+            .sap-guide-page .main h4 {
+                font-size: 17px;
+                margin: 28px 0 12px;
+                color: var(--color-sap-guide-1);
+                font-weight: 700;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .sap-guide-page .main p {
+                margin: 0 0 18px;
+                color: var(--color-sap-guide-1);
+            }
+            .sap-guide-page .main ul, .sap-guide-page .main ol {
+                margin: 0 0 18px;
+                padding-left: 1.4em;
+                color: var(--color-sap-guide-1);
+            }
+            .sap-guide-page .main li {
+                margin-bottom: 8px;
+            }
+            .sap-guide-page .main hr {
+                border: none;
+                border-top: 1px solid var(--color-scs-5);
+                margin: 44px 0;
+            }
+            .sap-guide-page .main strong {
+                color: var(--color-aip-d2-extra-1);
+                font-weight: 700;
+            }
+            .sap-guide-page .main code:not(.code-block code) {
+                background: var(--color-scs-10);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 5px;
+                padding: 1px 6px;
+                font-size: 0.9em;
+                color: var(--color-sap-guide-3);
+                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+            .sap-guide-page .main details {
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                padding: 12px 18px;
+                margin: 0 0 26px;
+            }
+            .sap-guide-page .main details summary {
+                cursor: pointer;
+                font-weight: 700;
+                color: var(--color-aip-d1-accent);
+            }
+            .sap-guide-page .main details p {
+                margin: 12px 0 0;
+            }
+            .sap-guide-page .table-scroll {
+                overflow-x: auto;
+                margin: 0 0 26px;
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                background: var(--color-scs-4);
+            }
+            .sap-guide-page table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14.5px;
+            }
+            .sap-guide-page thead th {
+                background: var(--color-scs-7);
+                color: var(--color-sap-guide-1);
+                text-align: left;
+                padding: 12px 16px;
+                font-weight: 700;
+                border-bottom: 1px solid var(--color-aip-d1-border);
+                white-space: nowrap;
+            }
+            .sap-guide-page tbody td {
+                padding: 12px 16px;
+                border-bottom: 1px solid var(--color-scs-5);
+                color: var(--color-sap-guide-2);
+                vertical-align: top;
+                overflow-wrap: anywhere;
+            }
+            .sap-guide-page tbody tr:last-child td {
+                border-bottom: none;
+            }
+            .sap-guide-page tbody tr:hover td {
+                background: var(--color-aip-d1-extra-19);
+            }
+            .sap-guide-page .mermaid-wrap {
+                width: 100%;
+                display: flex;
+                justify-content: safe center;
+                overflow-x: auto;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 28px 20px;
+                margin: 0 0 30px;
+            }
+            .sap-guide-page .mermaid-wrap svg {
+                flex-shrink: 0;
+            }
+            .sap-guide-page .mermaid-wrap p {
+                color: inherit;
+                margin: 0;
+            }
+            .sap-guide-page .callout-practice {
+                display: flex;
+                gap: 14px;
+                background: var(--color-scs-13);
+                border: 1px solid var(--color-aip-success-border);
+                border-left: 4px solid var(--color-sap-guide-4);
+                border-radius: 12px;
+                padding: 20px 22px;
+                margin: 0 0 26px;
+            }
+            .sap-guide-page .callout-practice .icon {
+                flex-shrink: 0;
+                width: 26px;
+                height: 26px;
+                border-radius: 7px;
+                background: var(--color-sap-guide-4);
+                color: var(--color-scs-4);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 900;
+            }
+            .sap-guide-page .callout-practice .body {
+                color: var(--color-sap-guide-1);
+                min-width: 0;
+            }
+            .sap-guide-page .callout-practice .label {
+                font-size: 11.5px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-sap-guide-4);
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .sap-guide-page .callout-practice p {
+                margin: 0 0 8px;
+                color: var(--color-sap-guide-1);
+            }
+            .sap-guide-page .callout-practice p:last-child {
+                margin-bottom: 0;
+            }
+            .sap-guide-page .quiz {
+                margin: 0 0 30px;
+            }
+            .sap-guide-page .quiz-bar {
+                position: sticky;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px);
+                z-index: 20;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 14px 18px;
+                margin: 0 0 22px;
+                box-shadow: 0 6px 20px var(--color-sap-guide-5);
+            }
+            .sap-guide-page .qb-info {
+                display: flex;
+                gap: 18px;
+                flex-wrap: wrap;
+                font-size: 14.5px;
+                color: var(--color-sap-guide-2);
+            }
+            .sap-guide-page .qb-info strong {
+                color: var(--color-aip-d1-accent);
+                font-size: 18px;
+            }
+            .sap-guide-page .qb-track {
+                flex: 1 1 160px;
+                height: 8px;
+                border-radius: 999px;
+                background: var(--color-scs-7);
+                overflow: hidden;
+            }
+            .sap-guide-page .qb-fill {
+                height: 100%;
+                width: 0;
+                background: var(--color-aip-d1-accent);
+                border-radius: 999px;
+                transition: width 0.3s ease;
+            }
+            .sap-guide-page .qb-reset {
+                font-family: var(--font-body);
+                font-size: 13.5px;
+                font-weight: 700;
+                color: var(--color-aip-d1-accent);
+                background: var(--color-scs-7);
+                border: 1px solid var(--color-aip-d2-accent-soft);
+                border-radius: 8px;
+                padding: 7px 14px;
+                cursor: pointer;
+            }
+            .sap-guide-page .qb-reset:hover {
+                background: var(--color-aip-d1-accent);
+                color: var(--color-scs-4);
+            }
+            .sap-guide-page .qb-final {
+                background: var(--color-scs-13);
+                border: 1px solid var(--color-aip-success-border);
+                border-left: 4px solid var(--color-sap-guide-4);
+                border-radius: 12px;
+                padding: 16px 20px;
+                margin: 0 0 22px;
+                color: var(--color-sap-guide-1);
+                font-weight: 700;
+            }
+            .sap-guide-page .q-card {
+                background: var(--color-scs-4);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 14px;
+                padding: 22px 24px;
+                margin: 0 0 22px;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+            }
+            .sap-guide-page .q-card.is-correct {
+                border-color: var(--color-aip-success-border);
+            }
+            .sap-guide-page .q-card.is-wrong {
+                border-color: var(--color-sap-guide-6);
+            }
+            .sap-guide-page .q-head {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 0 0 12px;
+            }
+            .sap-guide-page .q-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 44px;
+                height: 28px;
+                padding: 0 10px;
+                border-radius: 8px;
+                background: var(--color-aip-d1-accent);
+                color: var(--color-scs-4);
+                font-size: 13px;
+                font-weight: 800;
+                letter-spacing: 0.04em;
+            }
+            .sap-guide-page .q-tag {
+                font-size: 12.5px;
+                color: var(--color-sap-guide-2);
+                background: var(--color-scs-10);
+                border: 1px solid var(--color-aip-d1-border);
+                border-radius: 999px;
+                padding: 2px 12px;
+            }
+            .sap-guide-page .main .q-text {
+                font-size: 17px;
+                font-weight: 700;
+                line-height: 1.7;
+                margin: 0 0 16px;
+            }
+            .sap-guide-page .q-options {
+                display: grid;
+                gap: 10px;
+            }
+            .sap-guide-page .q-opt {
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                width: 100%;
+                text-align: left;
+                font-family: var(--font-body);
+                font-size: 15.5px;
+                line-height: 1.6;
+                color: var(--color-sap-guide-1);
+                background: var(--color-scs-1);
+                border: 1.5px solid var(--color-aip-d1-border);
+                border-radius: 12px;
+                padding: 12px 16px;
+                cursor: pointer;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .sap-guide-page .q-opt:hover:not(:disabled) {
+                border-color: var(--color-aip-d1-accent);
+                background: var(--color-scs-7);
+            }
+            .sap-guide-page .q-opt:focus-visible {
+                outline: 2px solid var(--color-aip-d1-accent);
+                outline-offset: 2px;
+            }
+            .sap-guide-page .q-opt:disabled {
+                cursor: default;
+            }
+            .sap-guide-page .q-key {
+                flex-shrink: 0;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                font-weight: 800;
+                color: var(--color-aip-d1-accent);
+                background: var(--color-scs-7);
+                border: 1px solid var(--color-aip-d2-accent-soft);
+            }
+            .sap-guide-page .q-label {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .sap-guide-page .q-opt.is-correct {
+                border-color: var(--color-sap-guide-4);
+                background: var(--color-scs-13);
+            }
+            .sap-guide-page .q-opt.is-correct .q-key {
+                background: var(--color-sap-guide-4);
+                border-color: var(--color-sap-guide-4);
+                color: var(--color-scs-4);
+            }
+            .sap-guide-page .q-opt.is-wrong {
+                border-color: var(--color-sap-guide-7);
+                background: var(--color-scs-28);
+            }
+            .sap-guide-page .q-opt.is-wrong .q-key {
+                background: var(--color-sap-guide-7);
+                border-color: var(--color-sap-guide-7);
+                color: var(--color-scs-4);
+            }
+            .sap-guide-page .q-opt.is-dim {
+                opacity: 0.55;
+            }
+            .sap-guide-page .q-result {
+                margin: 16px 0 0;
+                border-top: 1px dashed var(--color-aip-d1-border);
+                padding-top: 14px;
+            }
+            .sap-guide-page .q-verdict {
+                font-weight: 800;
+                font-size: 15.5px;
+                margin: 0 0 8px;
+            }
+            .sap-guide-page .q-card.is-correct .q-verdict {
+                color: var(--color-sap-guide-4);
+            }
+            .sap-guide-page .q-card.is-wrong .q-verdict {
+                color: var(--color-sap-guide-7);
+            }
+            .sap-guide-page .q-expl {
+                background: var(--color-scs-10);
+                border-radius: 10px;
+                padding: 12px 16px;
+            }
+            .sap-guide-page .q-expl-label {
+                display: inline-block;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: 0.06em;
+                color: var(--color-aip-d1-accent);
+                margin: 0 0 4px;
+            }
+            .sap-guide-page .main .q-expl p {
+                margin: 0;
+                font-size: 15px;
+                color: var(--color-sap-guide-1);
+            }
+            @media (max-width: 980px) {
+                .sap-guide-page .quiz-bar {
+                    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 64px);
+                }
+                .sap-guide-page .q-card {
+                    padding: 18px 16px;
+                }
+            }
+            @media (max-width: 980px) {
+                .sap-guide-page .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    box-shadow: 0 0 40px var(--color-sap-guide-8);
+                }
+                .sap-guide-page .sidebar.open {
+                    transform: translateX(0);
+                }
+                .sap-guide-page .main {
+                    margin-left: 0;
+                    padding: 80px 20px 100px;
+                }
+                .sap-guide-page .sidebar-toggle {
+                    display: flex;
+                }
+            }
+        
+.sap-guide-page .main { width: calc(100% - 280px); max-width: none; box-sizing: border-box; min-width: 0; }
+.sap-guide-page .main ul { list-style-type: disc; }
+.sap-guide-page .main ol { list-style-type: decimal; }
+.sap-guide-page .main ul, .sap-guide-page .main ol { list-style-position: outside; }
+.sap-guide-page .main li { display: list-item; }
+.sap-guide-page .main ul ul, .sap-guide-page .main ol ul { list-style-type: circle; }
+.sap-guide-page .main ul ul ul, .sap-guide-page .main ol ul ul { list-style-type: square; }
+.sap-guide-page .sidebar nav ul { list-style: none; margin: 0; padding: 0; }
+.sap-guide-page .mermaid-wrap > [role="img"] { background: transparent; border: none; padding: 0; margin: 0; width: 100%; overflow-x: visible; }
+.sap-guide-page .mermaid-wrap svg { flex-shrink: 0; max-width: none; height: auto; }
+.sap-guide-page .code-line { white-space: pre; min-height: 1.65em; }
+.sap-guide-page .code-block { font-family: var(--font-mono); }
+.sap-guide-page .main :is(h2,h3,h4)[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
+.sap-guide-page .main a { overflow-wrap: anywhere; }
+.sap-guide-page [role="region"]:focus-visible { outline: 2px solid var(--color-aip-d1-accent); outline-offset: 2px; }
+@media (max-width: 980px) { .sap-guide-page .main { width: 100%; max-width: none; } .sap-guide-page .sidebar:not(.open) { visibility: hidden; } }

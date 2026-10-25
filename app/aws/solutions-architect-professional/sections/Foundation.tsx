@@ -1,0 +1,63 @@
+import { Diagram } from '../Diagram';
+/** 原本foundationの全文・表・図を保持する区画。 */
+export default function Foundation() { return <div className="guide-part" data-part="foundation">
+{"\n                "}
+<div className="hero">{"\n                    "}<div className="kicker">{"\n                        AWS Certified Solutions Architect - Professional · SAP-C02\n                    "}</div>{"\n                    "}<h1 >{"\n                        AWS Certified Solutions Architect - Professional (SAP-C02)\n                        初学者向けステップバイステップ完全ガイド\n                    "}</h1>{"\n                    "}<div className="meta-row">{"\n                        "}<span className="pill">{"合格ライン "}<strong >{"750 / 1,000"}</strong></span>{"\n                        "}<span className="pill">{"対象 "}<strong >{"初学者〜中級者"}</strong></span>{"\n                        "}<span className="pill">{"図解 "}<strong >{"Mermaid 50点"}</strong></span>{"\n                        "}<span className="pill">{"参考文献 "}<strong >{"105件"}</strong></span>{"\n                    "}</div>{"\n                "}</div>
+{"\n\n                "}
+<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"このガイドの使い方"}</div>{"\n                        "}<p >{"\n                            SAP-C02 公式試験ガイド(Version 1.2)の 4 つのコンテンツドメイン・21\n                            のタスクを、順番に「なぜ必要か → 基本用語 → サービスの選び方 →\n                            ベストプラクティス → ひっかけ注意」の流れで解説します。\n                        "}</p>{"\n                        "}<p >{"\n                            図解はすべて Mermaid(フローチャート)または Markdown の表で表現し、ASCII\n                            アートは使っていません。\n                        "}</p>{"\n                    "}</div>{"\n                "}</div>
+{"\n                "}
+<hr  />
+{"\n                "}
+<h2 id="目次" tabIndex={-1}>{"目次"}</h2>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="目次 表1">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"Step"}</th><th scope="col">{"内容"}</th><th scope="col">{"対応タスク"}</th><th scope="col">{"ドメイン"}</th></tr></thead><tbody ><tr className="odd"><td >{"0"}</td><td >{"試験の全体像と解き方"}</td><td >{"-"}</td><td >{"-"}</td></tr><tr className="even"><td >{"1"}</td><td >{"ネットワーク接続戦略"}</td><td >{"1.1"}</td><td >{"D1 組織の複雑さ (26%)"}</td></tr><tr className="odd"><td >{"2"}</td><td >{"セキュリティ統制の処方"}</td><td >{"1.2"}</td><td >{"D1"}</td></tr><tr className="even"><td >{"3"}</td><td >{"信頼性と回復力のある設計"}</td><td >{"1.3"}</td><td >{"D1"}</td></tr><tr className="odd"><td >{"4"}</td><td >{"マルチアカウント環境"}</td><td >{"1.4"}</td><td >{"D1"}</td></tr><tr className="even"><td >{"5"}</td><td >{"コスト最適化と可視化"}</td><td >{"1.5"}</td><td >{"D1"}</td></tr><tr className="odd"><td >{"6"}</td><td >{"デプロイ戦略"}</td><td >{"2.1"}</td><td >{"D2 新規ソリューション (29%)"}</td></tr><tr className="even"><td >{"7"}</td><td >{"事業継続"}</td><td >{"2.2"}</td><td >{"D2"}</td></tr><tr className="odd"><td >{"8"}</td><td >{"要件に基づくセキュリティ統制"}</td><td >{"2.3"}</td><td >{"D2"}</td></tr><tr className="even"><td >{"9"}</td><td >{"信頼性要件への対応"}</td><td >{"2.4"}</td><td >{"D2"}</td></tr><tr className="odd"><td >{"10"}</td><td >{"パフォーマンス目標への対応"}</td><td >{"2.5"}</td><td >{"D2"}</td></tr><tr className="even"><td >{"11"}</td><td >{"コスト最適化戦略"}</td><td >{"2.6"}</td><td >{"D2"}</td></tr><tr className="odd"><td >{"12"}</td><td >{"運用上の優秀性の改善"}</td><td >{"3.1"}</td><td >{"D3 既存の継続的改善 (25%)"}</td></tr><tr className="even"><td >{"13"}</td><td >{"セキュリティの改善"}</td><td >{"3.2"}</td><td >{"D3"}</td></tr><tr className="odd"><td >{"14"}</td><td >{"パフォーマンスの改善"}</td><td >{"3.3"}</td><td >{"D3"}</td></tr><tr className="even"><td >{"15"}</td><td >{"信頼性の改善"}</td><td >{"3.4"}</td><td >{"D3"}</td></tr><tr className="odd"><td >{"16"}</td><td >{"コスト最適化の機会の特定"}</td><td >{"3.5"}</td><td >{"D3"}</td></tr><tr className="even"><td >{"17"}</td><td >{"移行対象の選定"}</td><td >{"4.1"}</td><td >{"D4 移行とモダナイゼーション (20%)"}</td></tr><tr className="odd"><td >{"18"}</td><td >{"最適な移行アプローチ"}</td><td >{"4.2"}</td><td >{"D4"}</td></tr><tr className="even"><td >{"19"}</td><td >{"既存ワークロードの新アーキテクチャ"}</td><td >{"4.3"}</td><td >{"D4"}</td></tr><tr className="odd"><td >{"20"}</td><td >{"モダナイゼーションと機能強化"}</td><td >{"4.4"}</td><td >{"D4"}</td></tr><tr className="even"><td >{"21"}</td><td >{"練習問題"}</td><td >{"-"}</td><td >{"全体"}</td></tr><tr className="odd"><td >{"22"}</td><td >{"ひっかけパターン一覧"}</td><td >{"-"}</td><td >{"全体"}</td></tr><tr className="even"><td >{"23"}</td><td >{"最終チートシート"}</td><td >{"-"}</td><td >{"全体"}</td></tr><tr className="odd"><td >{"付録"}</td><td >{"参考 URL 一覧"}</td><td >{"-"}</td><td >{"全体"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<hr  />
+{"\n                "}
+<h2 id="step-0試験の全体像と解き方" tabIndex={-1}>{"Step 0:試験の全体像と解き方"}</h2>
+{"\n                "}
+<h3 id="0-1-sap-c02-とは何を試す試験か" tabIndex={-1}>{"0-1. SAP-C02 とは何を試す試験か"}</h3>
+{"\n                "}
+<p >{"\n                    SAP-C02 は「"}<strong >{"複雑な条件の中で、いちばん条件に合う AWS 設計を選べるか"}</strong>{"」を試す試験です。サービスの名前を暗記しているかではなく、「コスト」「運用の手間」「移行リスク」「可用性」といった競合する条件から、最も合う答えを選ぶ力が問われます。\n                "}</p>
+{"\n                "}
+<p >{"公式試験ガイドによると、次の 4 つの力を確認します。"}</p>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="0-1. SAP-C02 とは何を試す試験か 表2">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"確認される力"}</th><th scope="col">{"意味"}</th></tr></thead><tbody ><tr className="odd"><td >{"組織の複雑さへの対応"}</td><td >{"複数アカウント、ハイブリッド接続、全社ガバナンスを設計する"}</td></tr><tr className="even"><td >{"新規ソリューション設計"}</td><td >{"ゼロから要件に合う構成を作る"}</td></tr><tr className="odd"><td >{"既存ソリューションの継続的改善"}</td><td >{"運用中のシステムの弱点を見つけ改善する"}</td></tr><tr className="even"><td >{"移行とモダナイゼーションの加速"}</td><td >{"オンプレミスから移す、さらに作り替える"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<h3 id="0-2-試験フォーマット公式試験ガイドより" tabIndex={-1}>{"\n                    0-2. 試験フォーマット(公式試験ガイドより)\n                "}</h3>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="0-2. 試験フォーマット(公式試験ガイドより) 表3">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody ><tr className="odd"><td >{"想定受験者"}</td><td >{"AWS で 2 年以上のクラウドソリューション設計・実装経験"}</td></tr><tr className="even"><td >{"問題形式"}</td><td >{"\n                                    択一式(正解 1 つ、不正解 3 つ)と複数選択式(5 つ以上の選択肢から\n                                    2 つ以上を選ぶ)\n                                "}</td></tr><tr className="odd"><td >{"採点対象の問題数"}</td><td >{"65 問"}</td></tr><tr className="even"><td >{"採点対象外の問題数"}</td><td >{"10 問(将来の問題評価用。どれか見分けはつかない)"}</td></tr><tr className="odd"><td >{"スコア"}</td><td >{"\n                                    100〜1,000 のスケールスコア。"}<strong >{"合格ライン 750"}</strong>{"\n                                "}</td></tr><tr className="even"><td >{"採点方式"}</td><td >{"\n                                    補償型。ドメインごとの足切りはなく、全体で合格点を超えればよい\n                                "}</td></tr><tr className="odd"><td >{"未回答"}</td><td >{"不正解扱い。ただし誤答による減点はないので、必ず何か選ぶ"}</td></tr><tr className="even"><td >{"複数選択式"}</td><td >{"正解をすべて選ばないと得点にならない"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ポイント"}</div>{"\n                        "}<p >{"\n                            補償型なので「苦手ドメインがあっても、他で補えば合格できる」。ただしドメイン\n                            2(29%)と 1(26%)で全体の半分以上を占めるので、ここを厚めに学びます。\n                        "}</p>{"\n                    "}</div>{"\n                "}</div>
+{"\n                "}
+<h3 id="0-3-ドメインと重み" tabIndex={-1}>{"0-3. ドメインと重み"}</h3>
+{"\n                "}
+<Diagram id="diagram-1" label="0-3. ドメインと重み 図1" />
+{"\n                "}
+<h3 id="0-4-学習ロードマップ" tabIndex={-1}>{"0-4. 学習ロードマップ"}</h3>
+{"\n                "}
+<Diagram id="diagram-2" label="0-4. 学習ロードマップ 図2" />
+{"\n                "}
+<h3 id="0-5-問題の解き方最重要" tabIndex={-1}>{"0-5. 問題の解き方(最重要)"}</h3>
+{"\n                "}
+<p >{"\n                    SAP-C02 の問題文は長く、"}<strong >{"「正解に見える選択肢が 2 つ」ある"}</strong>{"のが普通です。次の手順で絞り込みます。\n                "}</p>
+{"\n                "}
+<Diagram id="diagram-3" label="0-5. 問題の解き方(最重要) 図3" />
+{"\n                "}
+<h4 id="重要キーワード早見表" tabIndex={-1}>{"重要キーワード早見表"}</h4>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="重要キーワード早見表 表4">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"問題文のキーワード"}</th><th scope="col">{"示唆される方向"}</th></tr></thead><tbody ><tr className="odd"><td >{"運用上のオーバーヘッドを最小化"}</td><td >{"マネージドサービス、サーバーレス"}</td></tr><tr className="even"><td >{"最もコスト効率が高い"}</td><td >{"Savings Plans、Spot、S3 ライフサイクル、VPC エンドポイント"}</td></tr><tr className="odd"><td >{"最小限のコード変更"}</td><td >{"Rehost、Replatform、互換エンジン"}</td></tr><tr className="even"><td >{"RPO がほぼゼロ"}</td><td >{"\n                                    同期または継続的レプリケーション(Aurora Global\n                                    Database、Multi-AZ など)\n                                "}</td></tr><tr className="odd"><td >{"ダウンタイムを最小化"}</td><td >{"継続的レプリケーションとカットオーバー(MGN、DMS CDC)"}</td></tr><tr className="even"><td >{"疎結合"}</td><td >{"SQS、SNS、EventBridge"}</td></tr><tr className="odd"><td >{"最小権限"}</td><td >{"IAM ロール、SCP、Permission Boundary"}</td></tr><tr className="even"><td >{"中央管理、一元化"}</td><td >{"Organizations、Control Tower、委任管理者"}</td></tr><tr className="odd"><td >{"オンプレミスと接続"}</td><td >{"Direct Connect、Site-to-Site VPN"}</td></tr><tr className="even"><td >{"数千の VPC"}</td><td >{"Transit Gateway"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<h3 id="0-6-土台aws-well-architected-フレームワーク" tabIndex={-1}>{"\n                    0-6. 土台:AWS Well-Architected フレームワーク\n                "}</h3>
+{"\n                "}
+<p >{"\n                    公式試験ガイドは「Well-Architected\n                    フレームワークに基づく設計」を前提にしています。6 つの柱を最初に押さえます。\n                "}</p>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="0-6. 土台:AWS Well-Architected フレームワーク 表5">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"柱"}</th><th scope="col">{"一言でいうと"}</th><th scope="col">{"試験での現れ方"}</th></tr></thead><tbody ><tr className="odd"><td >{"運用上の優秀性"}</td><td >{"運用を自動化し継続改善する"}</td><td >{"IaC、CI/CD、監視"}</td></tr><tr className="even"><td >{"セキュリティ"}</td><td >{"データとシステムを守る"}</td><td >{"IAM、暗号化、検知"}</td></tr><tr className="odd"><td >{"信頼性"}</td><td >{"障害から回復し続ける"}</td><td >{"Multi-AZ、DR、自動復旧"}</td></tr><tr className="even"><td >{"パフォーマンス効率"}</td><td >{"適切なリソースを適切な量で使う"}</td><td >{"キャッシュ、適正サイズ"}</td></tr><tr className="odd"><td >{"コスト最適化"}</td><td >{"無駄な支出を避ける"}</td><td >{"購入オプション、階層化"}</td></tr><tr className="even"><td >{"持続可能性"}</td><td >{"環境負荷を減らす"}</td><td >{"適正サイズ、Graviton"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<h4 id="出典step-0" tabIndex={-1}>{"出典(Step 0)"}</h4>
+{"\n                "}
+<div className="table-scroll" role="region" tabIndex={0} aria-label="出典(Step 0) 表6">{"\n                    "}<table ><thead ><tr className="header"><th scope="col">{"内容"}</th><th scope="col">{"URL"}</th><th scope="col">{"確認状況"}</th></tr></thead><tbody ><tr className="odd"><td >{"SAP-C02 公式試験ガイド PDF"}</td><td >{"\n                                    "}<a href="https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf">{"https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf"}</a>{"\n                                "}</td><td >{"取得して内容確認済み"}</td></tr><tr className="even"><td >{"SAP-C02 公式試験ページ"}</td><td >{"\n                                    "}<a href="https://aws.amazon.com/certification/certified-solutions-architect-professional/">{"https://aws.amazon.com/certification/certified-solutions-architect-professional/"}</a>{"\n                                "}</td><td >{"既知のパス"}</td></tr><tr className="odd"><td >{"Well-Architected フレームワーク"}</td><td >{"\n                                    "}<a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html">{"https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"}</a>{"\n                                "}</td><td >{"既知のパス"}</td></tr></tbody></table>{"\n                "}</div>
+{"\n                "}
+<hr  />
+{"\n                "}
+</div>; }

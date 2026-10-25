@@ -14,6 +14,15 @@
  */
 
 @theme {
+    /* SAP-C02 complete guide: source palette values absent from existing tokens. */
+    --color-sap-guide-1: #1b2a41;
+    --color-sap-guide-2: #4a5d7a;
+    --color-sap-guide-3: #a8480a;
+    --color-sap-guide-4: #1d7a4a;
+    --color-sap-guide-5: rgba(27, 42, 65, 0.08);
+    --color-sap-guide-6: #f1c0ca;
+    --color-sap-guide-7: #c2314d;
+    --color-sap-guide-8: rgba(27, 42, 65, 0.18);
     /* ANS-C01 complete guide: source palette values absent from existing tokens. */
     --color-ans-guide-1: #3a5bd9;
     --color-ans-guide-2: #a14b00;
