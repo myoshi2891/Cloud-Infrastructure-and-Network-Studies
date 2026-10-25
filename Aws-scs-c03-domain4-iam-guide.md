@@ -1,6 +1,6 @@
 # AWS Certified Security - Specialty (SCS-C03) Content Domain 4: Identity and Access Management 初学者向けステップバイステップガイド
 
-> Domain 4 は試験全体の **20%** を占め、6 ドメインの中で最も配点が高い領域です。
+> Domain 4 はスコア対象問題の **20%** を占め、6 ドメインの中で最も配点が高い領域です。
 > 認証 (あなたは誰か) と認可 (何をしてよいか) を、設計・実装・トラブルシューティングの 3 つの視点で問われます。
 
 ---
@@ -394,7 +394,7 @@ GitHub Actions を例にした信頼ポリシーです。`sub` (リポジトリ�
 |---|---|---|
 | AWS Managed Microsoft AD | AWS 上のマネージドな本物の Microsoft AD | AWS 上で AD を使う、オンプレ AD と信頼関係を結ぶ |
 | AD Connector | オンプレ AD へ認証要求を転送するプロキシ (ディレクトリ自体は持たない) | 既存の AD をそのまま使いたい |
-| Simple AD | Samba ベースの小規模互換ディレクトリ | 機能が限定的で新規構築には非推奨 (提供状況は公式で確認) |
+| Simple AD | Samba ベースの小規模互換ディレクトリ | 2026 年 7 月 30 日以降は新規のお客様は利用不可 (既存のお客様は継続利用可)。代替は AWS Managed Microsoft AD または AD Connector |
 
 | 項目 | ポイント |
 |---|---|
@@ -449,7 +449,7 @@ flowchart TD
 | `AssumeRole` | IAM ユーザーやロール | ロールを引き受ける (クロスアカウント含む) | 既定 1 時間。15 分〜ロールの最大セッション時間 (最大 12 時間) |
 | `AssumeRoleWithSAML` | SAML IdP で認証済みのユーザー | SAML フェデレーション | 15 分〜ロールの最大セッション時間 |
 | `AssumeRoleWithWebIdentity` | OIDC やソーシャルで認証済みのユーザー | Web ID フェデレーション (Cognito ID プールも内部で利用) | 15 分〜ロールの最大セッション時間 |
-| `GetSessionToken` | IAM ユーザー (またはルート) | **MFA 付きの一時認証情報** を得る | IAM ユーザーは既定 12 時間 (15 分〜36 時間)。ルートは既定 1 時間 (15 分〜最大 1 時間) |
+| `GetSessionToken` | IAM ユーザー (またはルート) | IAM ユーザー: **MFA 付きの一時認証情報** を得る。ルート: ルートの一時認証情報を得るが、MFA で保護された API にはアクセスできない | IAM ユーザーは既定 12 時間 (15 分〜36 時間)。ルートは既定 1 時間 (15 分〜最大 1 時間) |
 | `GetFederationToken` | IAM ユーザー (またはルート) | 独自ブローカーによるフェデレーション | IAM ユーザーは既定 12 時間 (15 分〜36 時間)。ルートは既定 1 時間 (15 分〜最大 1 時間) |
 | `AssumeRoot` | 管理アカウントまたは委任管理者 | メンバーアカウントのルート権限が必要な特定タスクを実行 (中央集権的なルートアクセス管理) | 最大 15 分 |
 | `GetCallerIdentity` | 誰でも | 「今の自分は誰か」を確認 (権限不要) | 該当なし |
@@ -629,7 +629,7 @@ LIMIT 50;
 
 | 対象 | まず確認すること |
 |---|---|
-| IAM Identity Center の許可セット | 許可セット変更後に **再プロビジョニング済みか**。対象アカウントに `AWSReservedSSO_` ロールがあるか。カスタマー管理ポリシーが対象アカウントに **同名で存在** するか。許可セットの境界やアカウントの SCP で拒否されていないか |
+| IAM Identity Center の許可セット | 許可セット変更後に **再プロビジョニング済みか**。対象アカウントに `AWSReservedSSO_` ロールがあるか。カスタマー管理ポリシーが対象アカウントに **同じ名前かつ同じパスで存在** するか。許可セットの境界やアカウントの SCP で拒否されていないか |
 | IdP と Identity Center の同期 | SCIM の同期状況とアクセストークンの期限。ユーザーやグループが割り当て先に含まれているか。SAML 属性の不一致 |
 | Amazon Cognito ユーザープール | ユーザーの確認状態 (`UserNotConfirmedException`)、パスワードや MFA の失敗 (`NotAuthorizedException`)、アプリクライアントの許可フローとコールバック URL の一致、トークンの有効期限 |
 | Amazon Cognito ID プール | ロールの信頼ポリシーの `aud` や `amr` 条件、認証済みと未認証のロール設定、ユーザープールのプロバイダー設定 (ユーザープール ID とアプリクライアント ID) |
@@ -649,7 +649,11 @@ LIMIT 50;
 aws sts get-caller-identity
 
 # 認証情報レポートの取得
-aws iam generate-credential-report
+# State が COMPLETE になるまで生成を待つ (STARTED / INPROGRESS の間は再試行)
+until [ "$(aws iam generate-credential-report --query State --output text)" = "COMPLETE" ]; do
+  sleep 5
+done
+# レポートの準備完了後に取得
 aws iam get-credential-report --query Content --output text | base64 --decode
 ```
 
