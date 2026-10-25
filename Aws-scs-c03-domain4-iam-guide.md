@@ -399,7 +399,7 @@ GitHub Actions を例にした信頼ポリシーです。`sub` (リポジトリ�
 | 項目 | ポイント |
 |---|---|
 | 信頼関係 | Managed Microsoft AD とオンプレ AD の間で一方向または双方向の信頼を設定できる |
-| Identity Center との関係 | AD を ID ソースにできる |
+| Identity Center との関係 | AWS Managed Microsoft AD と AD Connector を ID ソースにできる (Simple AD は ID ソースとして非対応) |
 | ログ | ディレクトリのログを CloudWatch Logs に転送して監査できる |
 
 出典: https://docs.aws.amazon.com/directoryservice/latest/admin-guide/what_is.html
@@ -649,10 +649,19 @@ LIMIT 50;
 aws sts get-caller-identity
 
 # 認証情報レポートの取得
-# State が COMPLETE になるまで生成を待つ (STARTED / INPROGRESS の間は再試行)
-until [ "$(aws iam generate-credential-report --query State --output text)" = "COMPLETE" ]; do
-  sleep 5
+# State が COMPLETE になるまで生成を待つ (STARTED / INPROGRESS の間だけ再試行、最大 60 回 = 約 5 分)
+for attempt in $(seq 1 60); do
+  state=$(aws iam generate-credential-report --query State --output text) || exit 1
+  case "$state" in
+    COMPLETE) break ;;
+    STARTED|INPROGRESS) sleep 5 ;;
+    *) echo "想定外の状態です: $state" >&2; exit 1 ;;
+  esac
 done
+if [ "$state" != "COMPLETE" ]; then
+  echo "認証情報レポートの生成がタイムアウトしました" >&2
+  exit 1
+fi
 # レポートの準備完了後に取得
 aws iam get-credential-report --query Content --output text | base64 --decode
 ```
