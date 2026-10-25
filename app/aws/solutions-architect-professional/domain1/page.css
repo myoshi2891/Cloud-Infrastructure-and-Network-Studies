@@ -560,7 +560,7 @@
 }
 
 .sap-domain1-page .quiz-opt:focus-visible {
-    outline: 3px solid var(--color-sap-d1-accent-soft);
+    outline: 3px solid var(--color-sap-d1-accent);
     outline-offset: 2px;
 }
 
@@ -662,7 +662,7 @@
 }
 
 .sap-domain1-page .quiz-answer summary:focus-visible {
-    outline: 3px solid var(--color-sap-d1-accent-soft);
+    outline: 3px solid var(--color-sap-d1-accent);
 }
 
 .sap-domain1-page .quiz-answer[open] {
