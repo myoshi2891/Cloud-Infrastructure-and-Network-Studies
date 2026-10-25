@@ -879,7 +879,7 @@ forbid (
 | 権限を付与するか | しない (上限のみ) | しない (上限のみ) |
 | 例 | 特定リージョン以外の利用禁止、CloudTrail の停止禁止 | 組織外のプリンシパルからの S3 アクセスを拒否 |
 
-> 管理アカウント自体は SCP の対象外です。ガードレールだけでは権限は付与されないため、IAM の許可も別途必要です。
+> SCP と RCP はどちらも、管理アカウントとそのリソースには適用されません。ガードレールだけでは権限は付与されないため、IAM の許可も別途必要です。
 
 出典: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html
 出典: https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html
