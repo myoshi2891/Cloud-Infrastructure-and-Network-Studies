@@ -6,7 +6,7 @@
 
 検証: 全体Vitest401ファイル・3779件成功（`bun run test -- --maxWorkers=4 --testTimeout=30000 --retry=1`）。対象18ファイル・138件。型検査・全体ESLint成功。Chrome5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全40SVGの自然倍率・viewBox内包、目次のhash/focus・モバイル開閉、全8問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。npm・ビルドはユーザー指定により未実行。
 
-開発環境の注意（2026-10-24解消）: 通常のTurbopackでSVGが40図中1図で止まり、スクロールもできなかった原因は共通フッターの `body:has(...)` だった。Mermaidは採寸用の一時要素を `<body>` 直下へ挿入するため、挿入のたびに文書全体のスタイル再計算が強制されていた（`body:has(> ...)` でも停止）。フッターの明色ルールを兄弟結合子 `:is(<ページルート>) ~ .footer` に変更し、Turbopackで40図が約5秒で描画されることと、SCSのChrome5件の成功を確認した（`--webpack` の指定は不要）。webpackでだけ停止しなかった理由は未解明。回帰テストは `__tests__/components/Footer.palette.test.ts`。ビルドは未実行。
+開発環境の注意（2026-10-24対処済み）: 通常のTurbopackでSVGが40図中1図で止まり、スクロールもできなかった。共通フッターの `body:has(...)` が関与しているという観測に基づく仮説で、プロファイラ等による因果の確認はしていない。Mermaidは採寸用の一時要素を `<body>` 直下へ挿入するため、挿入のたびに文書全体のスタイル再計算が起きると推定している（`body:has(> ...)` でも停止を観測）。フッターの明色ルールを兄弟結合子 `:is(<ページルート>) ~ .footer` に変更した後、Turbopackで40図が約5秒で描画されることと、SCSのChrome5件の成功を確認した（`--webpack` の指定は不要）。webpackでだけ停止しなかった理由は未解明。`__tests__/components/Footer.palette.test.ts` はフッターのセレクターに `:has()` を使わないことだけを検証し、描画停止そのものは再現しない。経緯はMIGRATION_PROGRESS.mdの最新記録を参照。ビルドは未実行。
 
 原本HTML・Markdownは内容を変更せず直下に保持し、`archive/Aws/html/security-specialty/` と `archive/Aws/md/security-specialty/` にバイト一致・SHA-256一致でコピー済み。保存先と完全なハッシュは `docs/migration-inventory/aws-scs-c03-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `71ff4c1a4e31847687477659cf16076fb4264a63` 由来のコミット済みfixtureを使用する。原本・archiveがない一時作業ディレクトリでもfixture再生成のバイト一致を検証済み。
 
