@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Aws-sap-c02-guide.html",
+      "archive": "archive/Aws/html/solutions-architect-professional/Aws-sap-c02-guide.html",
+      "bytes": 509866,
+      "sha256": "2df61fa3dd3a5acce197a2fe3bf2c38487ac4266c1cfd059bfdc914449c1f66e"
+    },
+    {
+      "source": "Aws-sap-c02-guide.md",
+      "archive": "archive/Aws/md/solutions-architect-professional/Aws-sap-c02-guide.md",
+      "bytes": 140000,
+      "sha256": "1efe72ecc3abb04b87405ce9087ae7a6440c032d24e0433a19cd537a37b901e4"
+    }
+  ]
+}
