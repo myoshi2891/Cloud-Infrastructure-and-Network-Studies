@@ -2,6 +2,14 @@
 
 Updated 2026-10-26
 
+2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本のライト配色・点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次とクイズ操作はClientに分離。ホームとHeaderへ総合ガイドを追加し、Domain 1詳細も保持。原本のコードブロックとチェックボックスは0件。
+
+対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
+
+原本HTML509866バイト・Markdown140000バイトは `archive/Aws/html/solutions-architect-professional/` と `archive/Aws/md/solutions-architect-professional/` へバイト一致・SHA-256一致で移動済み。ハッシュと保存先は `docs/migration-inventory/aws-sap-c02-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc` 由来fixtureを使用し、原本・archiveなしでも再生成できる。
+
+npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。 静的集計1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。
+
 2026-10-26 ANS-C01総合ガイドのコード表示修正: 全14ブロック・168行を1行1つのcode要素へ統合し、単語・記号ごとの縦並びを解消。空行6か所は余白0の空段落で保持し、ブラウザーのinnerTextにも原本どおり残す。コード本文・インデント・空行・22種の構文トークンは固定fixtureと完全一致する。
 
 検証: ANS関連73ファイル・552件成功。ブラウザー8件成功（コード専用3件＋総合ガイド既存5件）。1440/768/390pxで全168行の表示位置と全14ブロックのコピー対象テキストを検証し、既存の図・リスト・目次・導線・axe検証も成功。型検査・全体ESLint成功。全体Vitestは今回は再実行せず、直近の全体結果は2026-10-25の3897件中3891件成功・既存SAP-C02の6件失敗。npm・ビルド未実行、目視確認はユーザー担当。
@@ -601,6 +609,15 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    solutions-architect-professional/
+      page.tsx                      # SAP-C02総合ガイドのmetadata・CSS
+      SolutionsArchitectProfessionalGuide.tsx # Server、6区画の全文
+      NavBar.tsx                    # Client、167目次・開閉・scroll spy・hash/focus
+      Quiz.tsx                      # Client、12問の採点・解説・集計・進捗・リセット
+      constants.ts                  # 50図・目次・原本ライト描画設定・解答キー
+      Diagram.tsx                   # memo化・自然倍率・原本配色・固有名
+      page.css                      # 全CSS・標準280px・点/番号/階層
+      sections/                     # Foundation, Domain1〜4, Revision
     solutions-architect-professional/domain1/
       page.tsx                      # SAP-C02 Domain 1 組織の複雑さに対応する設計 (Server)
       SapDomain1Guide.tsx           # 全文構成コンポーネント (Server)
