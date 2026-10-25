@@ -105,3 +105,34 @@ describe('all sidebar guide layouts', () => {
         }
     });
 });
+
+// SAP-C02 Domain 1 は原本の 340px 目次を承認済み例外として優先する
+describe('SAP-C02 Domain 1 sidebar layout exception', () => {
+    const stylesheet = 'app/aws/solutions-architect-professional/domain1/page.css';
+    const sidebarSelector = '.sap-domain1-page .sidebar';
+    const mainSelector = '.sap-domain1-page .main';
+
+    it('fixes a 340px sidebar to the far left', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), sidebarSelector);
+
+        expect(rule).toMatch(/position:\s*fixed\s*;/);
+        expect(rule).toMatch(/left:\s*0\s*;/);
+        expect(rule).toMatch(/width:\s*340px\s*;/);
+    });
+
+    it('offsets the main canvas by the same 340px', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(rule).toMatch(/margin-left:\s*340px\s*;/);
+        expect(rule).toMatch(/width:\s*calc\(100%\s*-\s*340px\)\s*;/);
+    });
+
+    it('restores a 100% main canvas in its responsive rule', () => {
+        const responsiveRules = rulesAfterFirst(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(responsiveRules.some((rule) =>
+            /margin-left:\s*0\s*;/.test(rule)
+            && /width:\s*100%\s*;/.test(rule),
+        )).toBe(true);
+    });
+});
