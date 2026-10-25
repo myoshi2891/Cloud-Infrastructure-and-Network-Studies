@@ -51,7 +51,7 @@
 
 ## 2026-10-21: ANS-C01 Domain 4ネットワークセキュリティ移行
 
-2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。`bun run build`・`bun run lint` の成功が未確認のため検証は未完了。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `c2b4535c7fdf4ec40872a9e093c184b22c0ac954` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。`bun run build`・`bun run lint` の成功が未確認のため検証は未完了。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
