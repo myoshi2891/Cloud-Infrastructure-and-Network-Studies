@@ -14,6 +14,41 @@
  */
 
 @theme {
+    /* SCS-C03 original guide palette */
+    --color-scs-1: #f6f8fc;
+    --color-scs-2: #1b2740;
+    --color-scs-3: #2f5fd0;
+    --color-scs-4: #ffffff;
+    --color-scs-5: #e3e9f3;
+    --color-scs-6: #4f5f7c;
+    --color-scs-7: #e8eefc;
+    --color-scs-8: #d3dcea;
+    --color-scs-9: #0f1a30;
+    --color-scs-10: #eef2f9;
+    --color-scs-11: #b25209;
+    --color-scs-12: rgba(47, 95, 208, 0.05);
+    --color-scs-13: #e9f7ef;
+    --color-scs-14: #a7dcc0;
+    --color-scs-15: #1b7f4b;
+    --color-scs-16: rgba(47, 95, 208, 0.06);
+    --color-scs-17: #66758f;
+    --color-scs-18: #f3f6fb;
+    --color-scs-19: rgba(27, 39, 64, 0.04);
+    --color-scs-20: #a9bdf0;
+    --color-scs-21: #8fd4b0;
+    --color-scs-22: rgba(27, 127, 75, 0.08);
+    --color-scs-23: #efb3c0;
+    --color-scs-24: rgba(192, 48, 79, 0.07);
+    --color-scs-25: #fff3e0;
+    --color-scs-26: #a45e00;
+    --color-scs-27: #f3c77e;
+    --color-scs-28: #fdecef;
+    --color-scs-29: #c0304f;
+    --color-scs-30: #f3b5c1;
+    --color-scs-31: #f9fbff;
+    --color-scs-32: #fbfcff;
+    --color-scs-33: rgba(47, 95, 208, 0.08);
+    --color-scs-34: rgba(20, 40, 90, 0.18);
     --color-ans-d4-code-readable: #ad5009;
     --color-ans-d4-success-readable: #197a48;
     --color-ans-d4-1: #f7f8fc;
@@ -37,6 +72,35 @@
     --color-ans-d4-19: #f6f8fc;
     --color-ans-d4-20: #f8f8f8;
     --color-ans-d4-21: #e6f6ec;
+    /* SAP-C02 Domain 1: original light palette */
+    --color-sap-d1-bg: #faf8f3;
+    --color-sap-d1-card: #ffffff;
+    --color-sap-d1-card-2: #f2efe6;
+    --color-sap-d1-border: #d8d2c3;
+    --color-sap-d1-border-soft: #e7e2d5;
+    --color-sap-d1-text: #1d2433;
+    --color-sap-d1-text-dim: #48526a;
+    --color-sap-d1-text-faint: #6b7489;
+    --color-sap-d1-accent: #3a4fb5;
+    --color-sap-d1-accent-soft: #a9b4e6;
+    --color-sap-d1-accent-bg: #e8ecfa;
+    --color-sap-d1-danger: #b3261e;
+    --color-sap-d1-danger-bg: #fbeae8;
+    --color-sap-d1-warn: #8a5a00;
+    --color-sap-d1-warn-bg: #fff3dc;
+    --color-sap-d1-success: #1f6b46;
+    --color-sap-d1-success-bg: #e6f4ec;
+    --color-sap-d1-sidebar: #f3f0e7;
+    --color-sap-d1-strong: #0f1523;
+    --color-sap-d1-inline-code: #8a4b00;
+    --color-sap-d1-code-bg: #fbfaf6;
+    --color-sap-d1-tok-key: #2c3fa6;
+    --color-sap-d1-tok-num: #a0480d;
+    --color-sap-d1-tok-kw: #8a2a8a;
+    --color-sap-d1-tok-pun: #697287;
+    --color-sap-d1-success-border: #b5dcc5;
+    --color-sap-d1-quiz-shadow: rgba(29, 36, 51, 0.04);
+    --color-sap-d1-drawer-shadow: rgba(0, 0, 0, 0.18);
     /* ANS-C01 Domain 3: original light palette. */
     --color-ans-d3-1: #f7f9fd;
     --color-ans-d3-2: #d5deee;
@@ -1292,7 +1356,9 @@ body {
 .card-aws-cloudops { --card-accent: var(--color-theme-aws-cloudops-indigo); }
 .card-aws-aib { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-aip { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-scs { --card-accent: var(--color-theme-aws-fg); }
 .card-aws-ans { --card-accent: var(--color-theme-aws-fg); }
+.card-aws-sap { --card-accent: var(--color-theme-aws-fg); }
 .card-comptia { --card-accent: var(--color-theme-comptia-fg); }
 .card-accelerate { --card-accent: var(--color-theme-accelerate-fg); }
 .card-sre { --card-accent: var(--color-theme-sre-fg); }
@@ -1383,6 +1449,11 @@ body {
 }
 
 @utility icon-theme-aws-aip {
+    background: var(--color-theme-aws-bg);
+    color: var(--color-theme-aws-fg);
+}
+
+@utility icon-theme-aws-sap {
     background: var(--color-theme-aws-bg);
     color: var(--color-theme-aws-fg);
 }
@@ -1681,3 +1752,5 @@ body {
         animation: hdr-panel-fade-out 0.2s ease-in forwards;
     }
 }
+
+@utility icon-theme-aws-scs { color: var(--color-theme-aws-fg); background: var(--color-theme-aws-bg); }

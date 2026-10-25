@@ -32,9 +32,30 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-domain1': {
+        source: 'Aws-sap-c02-domain1 organizational-complexity-guide.html',
+        sourceCommit: '5f39ec8fad1ed7ed275d1fcd0e9246f65746d3c1',
+        guideBoundaries: { main: '' },
+    },
+    'aws-scs-c03-guide': {
+        source: 'Aws-scs-c03-guide.html',
+        sourceCommit: '71ff4c1a4e31847687477659cf16076fb4264a63',
+        syntaxSelectors: {"p":"pre:not(.mermaid) span.p","w":"pre:not(.mermaid) span.w","nt":"pre:not(.mermaid) span.nt","s2":"pre:not(.mermaid) span.s2","c1":"pre:not(.mermaid) span.c1","se":"pre:not(.mermaid) span.se","s1":"pre:not(.mermaid) span.s1","nv":"pre:not(.mermaid) span.nv","o":"pre:not(.mermaid) span.o","m":"pre:not(.mermaid) span.m","k":"pre:not(.mermaid) span.k","n":"pre:not(.mermaid) span.n","mi":"pre:not(.mermaid) span.mi","kn":"pre:not(.mermaid) span.kn","nn":"pre:not(.mermaid) span.nn","nf":"pre:not(.mermaid) span.nf","kc":"pre:not(.mermaid) span.kc","no":"pre:not(.mermaid) span.no","n-Operator":"pre:not(.mermaid) span.n-Operator"},
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: 'domain-1-detection検出-16',
+            domain2: 'domain-2-incident-responseインシデント対応-14',
+            domain3: 'domain-3-infrastructure-securityインフラストラクチャセキュリティ-18',
+            domain4: 'domain-4-identity-and-access-managementiam-20',
+            domain5: 'domain-5-data-protectionデータ保護-18',
+            domain6: 'domain-6-security-foundations-and-governance-14',
+            revision: '7-横断チートシート',
+        },
+    },
     "aws-ans-c01-domain4-guide": {
     "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
-    "sourceCommit": "ead3ccbc77b05f1e80bef5d64042a2704c2bf238",
+    "sourceCommit": "c2b4535c7fdf4ec40872a9e093c184b22c0ac954",
     "tables": true,
     "codeBlocks": true,
     "styledClasses": true,

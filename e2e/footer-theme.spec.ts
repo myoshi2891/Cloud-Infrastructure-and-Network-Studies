@@ -44,6 +44,60 @@ for (const width of [1440, 390]) {
     });
 }
 
+// Footer.module.css の明色ルール `:is(<ページルート>) ~ .footer` が前提とする DOM 構造
+const lightPageRoots = [
+    ['aib-guide-page', '/aws/ai-business-strategist'],
+    ['aib-domain1-page', '/aws/ai-business-strategist/domain1'],
+    ['aib-domain2-page', '/aws/ai-business-strategist/domain2'],
+    ['aib-domain3-page', '/aws/ai-business-strategist/domain3'],
+    ['aip-guide-page', '/aws/generative-ai-developer-professional'],
+    ['aip-domain1-page', '/aws/generative-ai-developer-professional/domain1'],
+    ['aip-domain2-page', '/aws/generative-ai-developer-professional/domain2'],
+    ['aip-domain3-page', '/aws/generative-ai-developer-professional/domain3'],
+    ['aip-domain4-page', '/aws/generative-ai-developer-professional/domain4'],
+    ['aip-domain5-page', '/aws/generative-ai-developer-professional/domain5'],
+    ['ans-domain1-page', '/aws/advanced-networking-specialty/domain1'],
+    ['ans-domain2-page', '/aws/advanced-networking-specialty/domain2'],
+    ['ans-domain3-page', '/aws/advanced-networking-specialty/domain3'],
+    ['ans-domain4-page', '/aws/advanced-networking-specialty/domain4'],
+    ['dva-development-page', '/aws/developer-associate/domain1'],
+    ['dva-security-page', '/aws/developer-associate/domain2'],
+    ['dva-deployment-page', '/aws/developer-associate/domain3'],
+    ['sap-domain1-page', '/aws/solutions-architect-professional/domain1'],
+    ['scs-guide-page', '/aws/security-specialty'],
+    ['tcpip-page', '/recommended-books/tcpip-illustrated-vol1'],
+    ['agentic-guide-page', '/gcl/professional-agentic-architect'],
+    ['agentic-section1-page', '/gcl/professional-agentic-architect/section1'],
+    ['agentic-section2-page', '/gcl/professional-agentic-architect/section2'],
+    ['agentic-section3-page', '/gcl/professional-agentic-architect/section3'],
+    ['agentic-section4-page', '/gcl/professional-agentic-architect/section4'],
+    ['agentic-section5-page', '/gcl/professional-agentic-architect/section5'],
+] as const;
+
+test('明色ページのルートは body 直下で、共通フッターがその後続の兄弟になる', async ({ page }) => {
+    test.setTimeout(300_000);
+    // 配色と DOM 構造だけを検証するため、図の描画は読み込まない
+    await page.route(/mermaid/, route => route.abort());
+    for (const [rootClass, path] of lightPageRoots) {
+        await page.goto(path);
+        const structure = await page.evaluate(className => {
+            const root = document.getElementsByClassName(className)[0];
+            const footer = document.querySelector('body > footer');
+            if (!root || !footer) return { found: false, rootIsBodyChild: false, footerFollowsRoot: false, scheme: '' };
+            return {
+                found: true,
+                rootIsBodyChild: root.parentElement === document.body,
+                footerFollowsRoot: footer.parentElement === document.body
+                    && Boolean(root.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING),
+                scheme: getComputedStyle(footer).colorScheme,
+            };
+        }, rootClass);
+        expect(structure, path).toEqual({ found: true, rootIsBodyChild: true, footerFollowsRoot: true, scheme: 'light' });
+    }
+    await page.goto('/gcl/associate-cloud-engineer');
+    await expect(page.getByRole('contentinfo')).toHaveCSS('color-scheme', 'dark');
+});
+
 test('ページ末尾でも固定サイドバーがフッターより手前に表示される', async ({ page }) => {
     test.setTimeout(180_000);
     await page.setViewportSize({ width: 1440, height: 900 });

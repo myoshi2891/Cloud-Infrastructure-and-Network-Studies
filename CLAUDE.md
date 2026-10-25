@@ -1,8 +1,20 @@
 # CLAUDE.md
 
-Updated 2026-10-21
+Updated 2026-10-24
 
-2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-24 SCS-C03完全ガイド移行: `/aws/security-specialty` に全6ドメイン・16タスク、101表・40図・27コードブロック・251リスト項目・219外部リンク出現・56目次・確認問題8問を全文移行。原本のライト配色、点・番号・階層・字下げ、コード全行と構文色、円グラフの暗黙のbase配色を保持。サイドバーはリポジトリ標準の280pxへ対応付けた。本文はServer Component、目次とクイズだけをClient Componentへ分離し、ホームとHeaderへ導線を追加した。
+
+検証: 全体Vitest401ファイル・3779件成功（`bun run test -- --maxWorkers=4 --testTimeout=30000 --retry=1`）。対象18ファイル・138件。型検査・全体ESLint成功。Chrome5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全40SVGの自然倍率・viewBox内包、目次のhash/focus・モバイル開閉、全8問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。npm・ビルドはユーザー指定により未実行。
+
+開発環境の注意（2026-10-24解消）: 通常のTurbopackでSVGが40図中1図で止まり、スクロールもできなかった原因は共通フッターの `body:has(...)` だった。Mermaidは採寸用の一時要素を `<body>` 直下へ挿入するため、挿入のたびに文書全体のスタイル再計算が強制されていた（`body:has(> ...)` でも停止）。フッターの明色ルールを兄弟結合子 `:is(<ページルート>) ~ .footer` に変更し、Turbopackで40図が約5秒で描画されることと、SCSのChrome5件の成功を確認した（`--webpack` の指定は不要）。webpackでだけ停止しなかった理由は未解明。回帰テストは `__tests__/components/Footer.palette.test.ts`。ビルドは未実行。
+
+原本HTML・Markdownは内容を変更せず直下に保持し、`archive/Aws/html/security-specialty/` と `archive/Aws/md/security-specialty/` にバイト一致・SHA-256一致でコピー済み。保存先と完全なハッシュは `docs/migration-inventory/aws-scs-c03-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `71ff4c1a4e31847687477659cf16076fb4264a63` 由来のコミット済みfixtureを使用する。原本・archiveがない一時作業ディレクトリでもfixture再生成のバイト一致を検証済み。
+
+構成: `app/aws/security-specialty/page.tsx`（metadata）、`SecuritySpecialtyGuide.tsx`（全8区画の組立）、`sections/`（導入・Domain 1〜6・復習の全文）、`NavBar.tsx`（56目次・hash/focus・scroll spy）、`Quiz.tsx`（単一/複数選択・採点・解説・進捗・リセット）、`Diagram.tsx` / `constants.ts` / `mermaid-pie-theme.json`（全40図）、`page.css`（スコープ付き原本CSS）。
+
+2026-10-24 AWS SAP-C02 Domain 1移行: `/aws/solutions-architect-professional/domain1` に全5タスク・49表（th135・td686）・19図・1コード（21行）・213リスト項目・130外部リンク出現・78目次・確認問題6問を全文移行。原本ライト配色・340px目次・直下aタグ構造・点/番号/階層/余白・コード全行と構文色・全69スクロール領域の固有ラベルを保持。対象Vitest8ファイル・53件、型検査、全体ESLint、Markdown lintすべて成功。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `c2b4535c7fdf4ec40872a9e093c184b22c0ac954` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
@@ -575,6 +587,16 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    solutions-architect-professional/domain1/
+      page.tsx                      # SAP-C02 Domain 1 組織の複雑さに対応する設計 (Server)
+      SapDomain1Guide.tsx           # 全文構成コンポーネント (Server)
+      NavBar.tsx                    # 78目次・直下aタグ構造・scroll spy・モバイル開閉 (Client)
+      Quiz.tsx                      # 確認シナリオ6問・即時採点・解説開閉・スコア集計 (Client)
+      Diagram.tsx                   # Mermaid図レンダラー (preserveNaturalScale, lightテーマ)
+      constants.ts                  # NAV_ITEMS(78件)・DIAGRAMS(19図)単一正本
+      mermaid-theme.json            # 原本ライト配色テーマ定義
+      page.css                      # 原本ライト配色・340pxサイドバー・table-scroll・クイズスタイル
+      sections/                     # 9分割セクション (Foundation, Task11~15, Summary, QuizSection, References)
     cloudops-engineer-associate/
       page.tsx                      # AWS Certified CloudOps Engineer - Associate (SOA-C03) 完全ガイド (Server)
       CloudOpsGuide.tsx             # 本文＋インタラクション (Client)
@@ -909,7 +931,7 @@ archive/                            # 移行済み資料の正規アーカイブ
 - **コードブロック内の改行 (`.code-block`)**: JSX変換時、コード内の改行に `{"\n"}` を使用せず、各行を `<div className="code-line">...</div>` でラップすること。`.code-line` は `white-space: pre` を適用してインデントを保持し、`map` 展開時は安定した `key` を付与すること。
 - **表形式データの構造化**: テキストのスペース揃えで列を表現したデータは、フォント変更による列ズレを防ぐため、必ず `<table>` 要素に変換すること。その際、必ず `<thead>` と `<th scope="col">` を用いたセマンティックな構造にすること。
 - **CSS変数・テーマトークンの適用**: `globals.css` の3層アーキテクチャ CSS 変数（`--color-background`, `--color-foreground`, `--color-border` など）を厳格に使用すること。独自のローカル変数定義や `--color-bg-primary` のような実在しないトークンの使用は避ける。コンポーネントレベルの CSS 内で新たなカスタムプロパティ（`--*`）を定義することは禁止する。
-- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。AIP-C01（総合ガイドとDomain 1〜4）も原本の300pxを例外として優先し、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)` を揃え、各ドメインの専用デザインテストとE2Eで検証する。ANS-C01 Domain 1〜4も原本の300pxを承認済み例外として同じ3値で揃え、各ドメインの `design.test.ts` で検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
+- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。AIP-C01（総合ガイドとDomain 1〜4）も原本の300pxを例外として優先し、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)` を揃え、各ドメインの専用デザインテストとE2Eで検証する。ANS-C01 Domain 1〜4も原本の300pxを承認済み例外として同じ3値で揃え、各ドメインの `design.test.ts` で検証する。SAP-C02 Domain 1は原本の340pxを承認済み例外とし、サイドバー幅 `340px`・メイン `margin-left: 340px`・`width: calc(100% - 340px)` を `__tests__/guide-content-widths.test.ts` の専用ブロックで検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
 - **グローバルメニューの運用（データ駆動）**: ナビゲーションは `app/constants.ts` の `ALL_EXAMS` を正本としている（`EXAMS` はそこから派生する公開値）。新ページ追加時は `ALL_EXAMS` に `Exam` エントリを追加し（`status: 'coming-soon'` → ページ完成後 `'available'` または省略）、`app/navigation.ts` の `toNavTree` が自動でグルーピングするため **`components/Header.tsx` は直接編集しない**。
 - **PCNE セクションページの `metadata.title` 規約**: `PCNE S<n>: <セクション名> | Google Cloud 認定試験対策` に統一する。Next.js の `title.template` は **それを定義したセグメント自身には適用されず、子孫ルートに継承される**。`app/gcl/professional-cloud-network-engineer/layout.tsx` は `title` をプレーン文字列で置いているだけで新しい `template` を定義していないため、ルート `app/layout.tsx` の `template: '%s | Cloud Infrastructure Studies'` は **PCNE サブツリーにもそのまま継承される**（実際の `<title>` は `PCNE S<n>: … | Google Cloud 認定試験対策 | Cloud Infrastructure Studies`）。`| Google Cloud 認定試験対策` はその上に乗せる PCNE 固有の命名規約であり、`__tests__/gcl/professional-cloud-network-engineer/section-title-convention.test.ts` はこの規約への準拠のみを検証する。
 - **移行元ファイルのアーカイブ**: 移行元は削除せず `archive/` 配下へ移動する。Cisco資料の正規保存先は `archive/Cisco/html/` と `archive/Cisco/md/` とし、`Gcl_Archive/Cisco` は作成・使用しない。
@@ -940,4 +962,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 共通フッター（2026-10-20）
 
-`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートを `body:has()` で判定するため、クライアント遷移にも追従する。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。共通フッターの `z-index` は `auto` を維持し、固定サイドバーより手前へ配置しない。
+`Footer.tsx` は `Footer.module.css` で暗色ページと明色ガイドの配色を切り替える。ページルートとフッターは `<body>` 直下の兄弟なので、兄弟結合子 `:is(<ページルート>) ~ .footer` で判定し、クライアント遷移にも追従する。`body:has()` は使わない（Mermaidの採寸のたびに文書全体の再計算が起き、描画とスクロールが停止するため）。新規ライトページではセレクター一覧への追加とブラウザ検証が必要。免責文言は `components/disclaimer.ts` を上部バナーと共有する。640px以下では1列表示。共通フッターの `z-index` は `auto` を維持し、固定サイドバーより手前へ配置しない。

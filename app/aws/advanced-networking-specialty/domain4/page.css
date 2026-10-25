@@ -16,7 +16,10 @@
             /* ---------- layout ---------- */
             .ans-domain4-page .layout { display: block; }
 
-            /* Sidebar */
+            /* Sidebar
+               承認済み例外: 280px契約ではなく、原本HTMLの --sidebar-w (300px) を保持する。
+               サイドバー幅・.main の margin-left・.main の width は300pxで揃え、
+               design.test.ts が原本の宣言と照合する。 */
             .ans-domain4-page .sidebar {
                 position: fixed;
                 top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); left: 0; bottom: 0;

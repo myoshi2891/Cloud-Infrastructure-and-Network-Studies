@@ -101,7 +101,7 @@ describe('Header ドロワー内 NavTree 描画', () => {
     it('AWS 配下に SAA アコーディオン summary が描画されること', async () => {
         const { dialog } = await openDrawer();
         expect(
-            within(dialog).getByText(/AWS Certified Solutions Architect/, { selector: 'summary, summary *' }),
+            within(dialog).getByText(/AWS Certified Solutions Architect – Associate/, { selector: 'summary, summary *' }),
         ).toBeInTheDocument();
     });
 

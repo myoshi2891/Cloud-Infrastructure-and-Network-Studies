@@ -285,7 +285,7 @@ flowchart TD
 ```bash
 # 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)
 # 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)
-# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える
+# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループはこの上書きを参照しないため、マネージドルールグループを使う場合はファイアウォールポリシーの HOME_NET に検査対象の全 CIDR を必ず含める。他のカスタムルールグループにも同じ範囲を定義するかは、これとは別に選べる追加の選択肢
 aws network-firewall create-rule-group \
   --rule-group-name allow-approved-domains \
   --type STATEFUL \
@@ -293,7 +293,8 @@ aws network-firewall create-rule-group \
   --rule-group '{
     "RuleVariables": {
       "IPSets": {
-        "HOME_NET": { "Definition": ["192.0.2.0/24", "10.0.0.0/16", "10.1.0.0/16"] }
+        "HOME_NET": { "Definition": ["192.0.2.0/24", "10.0.0.0/16", "10.1.0.0/16"] },
+        "EXTERNAL_NET": { "Definition": ["!192.0.2.0/24", "!10.0.0.0/16", "!10.1.0.0/16"] }
       }
     },
     "RulesSource": {
@@ -715,6 +716,12 @@ from botocore.exceptions import ClientError
 
 ec2 = boto3.client("ec2")
 
+PORT_PROTOCOLS = ("tcp", "6", "udp", "17", "icmp", "1", "icmpv6", "58")
+
+def has_ports(perm):
+    # tcp / udp / icmp / icmpv6 以外(-1 を含む)はポート指定を持たず、全ポートが対象になる
+    return str(perm.get("ipProtocol")) in PORT_PROTOCOLS
+
 def is_admin_rule(perm):
     protocol = perm.get("ipProtocol")
     tcp_admin = protocol in ("tcp", "6") and any(perm.get("fromPort", -1) <= port <= perm.get("toPort", -1) for port in (22, 3389))
@@ -755,7 +762,7 @@ def handler(event, context):
         if not is_admin_rule(perm):
             continue
         base = {"IpProtocol": perm["ipProtocol"]}
-        if perm["ipProtocol"] != "-1":
+        if has_ports(perm):
             base["FromPort"] = perm["fromPort"]
             base["ToPort"] = perm["toPort"]
         for rng in perm.get("ipRanges", {}).get("items", []):

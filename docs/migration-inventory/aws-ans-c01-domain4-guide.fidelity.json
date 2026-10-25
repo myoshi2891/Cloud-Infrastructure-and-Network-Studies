@@ -1,7 +1,7 @@
 {
   "slug": "aws-ans-c01-domain4-guide",
   "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
-  "sourceCommit": "ead3ccbc77b05f1e80bef5d64042a2704c2bf238",
+  "sourceCommit": "c2b4535c7fdf4ec40872a9e093c184b22c0ac954",
   "guideParts": {
     "foundation": {
       "text": "Advanced Networking - Specialty · Domain 4 AWS Certified Advanced Networking - Specialty (ANS-C01) — Content Domain 4: Network Security, Compliance, and Governance — 初学者向けステップバイステップ解説ガイド 配点 スコア対象の 24% 対象 初学者向け 図解 Mermaid 31点 参考 URL 88件 対象: ネットワークの基礎(IP・ルーティング・TLS の概念)を一通り学んだことがあり、AWS のネットワークセキュリティを体系的に学びたい方 配点: Domain 4 は スコア対象の 24%(全 4 ドメイン中 3 番目) 作成日: 2026-10-16 / 根拠となる公式情報は各セクション末尾および巻末の「参考 URL 一覧」に記載 0. この試験ドメインの全体像 公式試験ガイドでは、Domain 4 は次の 3 つのタスク で構成されています。 タスク 公式タイトル(英語) 本ガイドでの章 ひとことで言うと 4.1 Implement and maintain network features to meet security and compliance needs and requirements 2〜7 「守る」: 入口・出口・内部をどう守るか、構成をどう作るか 4.2 Validate and audit security by using network monitoring and logging services 8〜14 「見る」: ログ・監視で守れているかを検証・監査する 4.3 Implement and maintain confidentiality of data and communications of the network 15〜19 「隠す」: 暗号化・証明書・DNS 保護で通信の機密性を保つ 試験形式のおさらい(公式ガイドより) 項目 内容 問題形式 複数選択(2つ以上の正解)・マッチング 問題数 スコア対象 50 問 + 採点対象外 15 問 合格スコア 100〜1,000 のスケールスコアで 750 以上 採点方式 補償型(セクションごとの合格は不要。全体で合格すればよい) 学習のコツ: Domain 4 の問題は「要件(例: 外部への通信は特定ドメインだけ許可)」→「最小の運用負荷で満たす AWS サービスの組み合わせ」を選ぶ形式が中心です。サービス単体の知識より 「どのサービスをどの場所に置くか」 を意識して読み進めてください。 1. 基礎: セキュリティの考え方 1-1. 共有責任モデル(Shared Responsibility Model) AWS は「クラウドのセキュリティ(Security of the cloud)」、お客様は「クラウド内のセキュリティ(Security in the cloud)」に責任を持ちます。 領域 AWS の責任 お客様の責任 物理・ハードウェア データセンター、ネットワーク機器、ハイパーバイザ なし ネットワーク基盤 リージョン間・AZ 間の物理回線、Nitro による基盤の分離 VPC 設計、SG/NACL、ルートテーブル、ファイアウォール設定 転送中データの暗号化 一部の自動暗号化(Nitro 間通信、リージョン間ピアリング等) アプリ層の TLS、VPN/IPsec、証明書の管理 ログと監視 ログ機能の提供 ログの有効化・保管・分析・アラート設定 試験ポイント: 「AWS が自動でやってくれること」と「お客様が設定しないと有効にならないこと」を区別する問題が出ます。VPC Flow Logs・CloudTrail データイベント・WAF・TLS 設定などは基本的に自分で有効化 します。 1-2. 多層防御(Defense in Depth) 1 つの対策が破られても次の層で止める考え方です。 1-3. ベストプラクティスの原則(Domain 4 全体に共通) 原則 具体例 最小権限・最小通信 SG は必要なポート・送信元だけ許可。0.0.0.0/0 の SSH/RDP は禁止 デフォルト拒否 NACL・Network Firewall の既定アクションを drop 系にする(strict order) すべてログを残す Flow Logs・ALB ログ・WAF ログ・Network Firewall ログ・Resolver ログ・CloudTrail 自動化 Config ルール・EventBridge・Lambda・Systems Manager Automation による自動是正 一元管理 AWS Organizations + Firewall Manager + Security Hub で複数アカウントを統制 すべて暗号化 TLS 1.2 以上、IPsec、MACsec、KMS 根拠 URL 共有責任モデル: https://aws.amazon.com/compliance/shared-responsibility-model/ AWS Well-Architected Framework セキュリティの柱(ネットワーク保護): https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/protecting-networks.html",
@@ -4268,7 +4268,7 @@
         },
         {
           "kind": "code",
-          "text": "# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)\n# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)\n# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える\naws network-firewall create-rule-group \\\n  --rule-group-name allow-approved-domains \\\n  --type STATEFUL \\\n  --capacity 100 \\\n  --rule-group '{\n    \"RuleVariables\": {\n      \"IPSets\": {\n        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] }\n      }\n    },\n    \"RulesSource\": {\n      \"RulesSourceList\": {\n        \"Targets\": [\".amazonaws.com\", \".example.com\"],\n        \"TargetTypes\": [\"HTTP_HOST\", \"TLS_SNI\"],\n        \"GeneratedRulesType\": \"ALLOWLIST\"\n      }\n    },\n    \"StatefulRuleOptions\": { \"RuleOrder\": \"STRICT_ORDER\" }\n  }'"
+          "text": "# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)\n# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)\n# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループはこの上書きを参照しないため、マネージドルールグループを使う場合はファイアウォールポリシーの HOME_NET に検査対象の全 CIDR を必ず含める。他のカスタムルールグループにも同じ範囲を定義するかは、これとは別に選べる追加の選択肢\naws network-firewall create-rule-group \\\n  --rule-group-name allow-approved-domains \\\n  --type STATEFUL \\\n  --capacity 100 \\\n  --rule-group '{\n    \"RuleVariables\": {\n      \"IPSets\": {\n        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] },\n        \"EXTERNAL_NET\": { \"Definition\": [\"!192.0.2.0/24\", \"!10.0.0.0/16\", \"!10.1.0.0/16\"] }\n      }\n    },\n    \"RulesSource\": {\n      \"RulesSourceList\": {\n        \"Targets\": [\".amazonaws.com\", \".example.com\"],\n        \"TargetTypes\": [\"HTTP_HOST\", \"TLS_SNI\"],\n        \"GeneratedRulesType\": \"ALLOWLIST\"\n      }\n    },\n    \"StatefulRuleOptions\": { \"RuleOrder\": \"STRICT_ORDER\" }\n  }'"
         },
         {
           "kind": "paragraph",
@@ -4388,7 +4388,7 @@
         },
         {
           "kind": "code",
-          "text": "import boto3\nfrom botocore.exceptions import ClientError\n\nec2 = boto3.client(\"ec2\")\n\ndef is_admin_rule(perm):\n    protocol = perm.get(\"ipProtocol\")\n    tcp_admin = protocol in (\"tcp\", \"6\") and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389))\n    return protocol == \"-1\" or tcp_admin\n\ndef resolve_group_id(params):\n    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する\n    if params.get(\"groupId\"):\n        return params[\"groupId\"]\n    groups = ec2.describe_security_groups(GroupNames=[params[\"groupName\"]])\n    return groups[\"SecurityGroups\"][0][\"GroupId\"]\n\ndef ingress_permissions(params):\n    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる\n    perms = list(params.get(\"ipPermissions\", {}).get(\"items\", []))\n    if params.get(\"ipProtocol\"):\n        perms.append({\n            \"ipProtocol\": params[\"ipProtocol\"],\n            \"fromPort\": params.get(\"fromPort\", -1),\n            \"toPort\": params.get(\"toPort\", -1),\n            \"ipRanges\": {\"items\": [{\"cidrIp\": params.get(\"cidrIp\")}]},\n        })\n    return perms\n\n\ndef revoke(group_id, permission):\n    try:\n        ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[permission])\n    except ClientError as error:\n        # 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける\n        if error.response[\"Error\"][\"Code\"] != \"InvalidPermission.NotFound\":\n            raise\n\ndef handler(event, context):\n    params = event[\"detail\"][\"requestParameters\"]\n    group_id = resolve_group_id(params)\n    for perm in ingress_permissions(params):\n        if not is_admin_rule(perm):\n            continue\n        base = {\"IpProtocol\": perm[\"ipProtocol\"]}\n        if perm[\"ipProtocol\"] != \"-1\":\n            base[\"FromPort\"] = perm[\"fromPort\"]\n            base[\"ToPort\"] = perm[\"toPort\"]\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") == \"0.0.0.0/0\":\n                revoke(group_id, {**base, \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}]})\n        for rng in perm.get(\"ipv6Ranges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIpv6\") == \"::/0\":\n                revoke(group_id, {**base, \"Ipv6Ranges\": [{\"CidrIpv6\": \"::/0\"}]})"
+          "text": "import boto3\nfrom botocore.exceptions import ClientError\n\nec2 = boto3.client(\"ec2\")\n\nPORT_PROTOCOLS = (\"tcp\", \"6\", \"udp\", \"17\", \"icmp\", \"1\", \"icmpv6\", \"58\")\n\ndef has_ports(perm):\n    # tcp / udp / icmp / icmpv6 以外(-1 を含む)はポート指定を持たず、全ポートが対象になる\n    return str(perm.get(\"ipProtocol\")) in PORT_PROTOCOLS\n\ndef is_admin_rule(perm):\n    protocol = perm.get(\"ipProtocol\")\n    tcp_admin = protocol in (\"tcp\", \"6\") and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389))\n    return protocol == \"-1\" or tcp_admin\n\ndef resolve_group_id(params):\n    # groupName だけのリクエスト(デフォルト VPC)はセキュリティグループ ID に解決する\n    if params.get(\"groupId\"):\n        return params[\"groupId\"]\n    groups = ec2.describe_security_groups(GroupNames=[params[\"groupName\"]])\n    return groups[\"SecurityGroups\"][0][\"GroupId\"]\n\ndef ingress_permissions(params):\n    # ipPermissions.items と旧形式のトップレベル指定を 1 つのリストにまとめる\n    perms = list(params.get(\"ipPermissions\", {}).get(\"items\", []))\n    if params.get(\"ipProtocol\"):\n        perms.append({\n            \"ipProtocol\": params[\"ipProtocol\"],\n            \"fromPort\": params.get(\"fromPort\", -1),\n            \"toPort\": params.get(\"toPort\", -1),\n            \"ipRanges\": {\"items\": [{\"cidrIp\": params.get(\"cidrIp\")}]},\n        })\n    return perms\n\n\ndef revoke(group_id, permission):\n    try:\n        ec2.revoke_security_group_ingress(GroupId=group_id, IpPermissions=[permission])\n    except ClientError as error:\n        # 既に取り消し済みのルールは完了として扱い、残りの権限の処理を続ける\n        if error.response[\"Error\"][\"Code\"] != \"InvalidPermission.NotFound\":\n            raise\n\ndef handler(event, context):\n    params = event[\"detail\"][\"requestParameters\"]\n    group_id = resolve_group_id(params)\n    for perm in ingress_permissions(params):\n        if not is_admin_rule(perm):\n            continue\n        base = {\"IpProtocol\": perm[\"ipProtocol\"]}\n        if has_ports(perm):\n            base[\"FromPort\"] = perm[\"fromPort\"]\n            base[\"ToPort\"] = perm[\"toPort\"]\n        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIp\") == \"0.0.0.0/0\":\n                revoke(group_id, {**base, \"IpRanges\": [{\"CidrIp\": \"0.0.0.0/0\"}]})\n        for rng in perm.get(\"ipv6Ranges\", {}).get(\"items\", []):\n            if rng.get(\"cidrIpv6\") == \"::/0\":\n                revoke(group_id, {**base, \"Ipv6Ranges\": [{\"CidrIpv6\": \"::/0\"}]})"
         },
         {
           "kind": "annotation",
@@ -4426,7 +4426,7 @@
         [
           "# 例: 許可ドメインだけを通すルールグループ(ドメインリスト型・許可リスト)",
           "# 集中検査構成では HOME_NET に検査 VPC と全スポーク VPC の CIDR を含める(既定は検査 VPC の CIDR のみ)",
-          "# EXTERNAL_NET は未指定だとポリシー側 HOME_NET の否定を継承するため、ファイアウォールポリシーの PolicyVariables にも同じ HOME_NET を定義し、EXTERNAL_NET を HOME_NET 全体の否定に揃える",
+          "# ルールグループで HOME_NET を上書きする場合は EXTERNAL_NET も同じルールグループ内で明示定義し、HOME_NET に列挙した全 CIDR の否定に揃える。AWS マネージドルールグループはこの上書きを参照しないため、マネージドルールグループを使う場合はファイアウォールポリシーの HOME_NET に検査対象の全 CIDR を必ず含める。他のカスタムルールグループにも同じ範囲を定義するかは、これとは別に選べる追加の選択肢",
           "aws network-firewall create-rule-group \\",
           "  --rule-group-name allow-approved-domains \\",
           "  --type STATEFUL \\",
@@ -4434,7 +4434,8 @@
           "  --rule-group '{",
           "    \"RuleVariables\": {",
           "      \"IPSets\": {",
-          "        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] }",
+          "        \"HOME_NET\": { \"Definition\": [\"192.0.2.0/24\", \"10.0.0.0/16\", \"10.1.0.0/16\"] },",
+          "        \"EXTERNAL_NET\": { \"Definition\": [\"!192.0.2.0/24\", \"!10.0.0.0/16\", \"!10.1.0.0/16\"] }",
           "      }",
           "    },",
           "    \"RulesSource\": {",
@@ -4498,6 +4499,12 @@
           "",
           "ec2 = boto3.client(\"ec2\")",
           "",
+          "PORT_PROTOCOLS = (\"tcp\", \"6\", \"udp\", \"17\", \"icmp\", \"1\", \"icmpv6\", \"58\")",
+          "",
+          "def has_ports(perm):",
+          "    # tcp / udp / icmp / icmpv6 以外(-1 を含む)はポート指定を持たず、全ポートが対象になる",
+          "    return str(perm.get(\"ipProtocol\")) in PORT_PROTOCOLS",
+          "",
           "def is_admin_rule(perm):",
           "    protocol = perm.get(\"ipProtocol\")",
           "    tcp_admin = protocol in (\"tcp\", \"6\") and any(perm.get(\"fromPort\", -1) <= port <= perm.get(\"toPort\", -1) for port in (22, 3389))",
@@ -4538,7 +4545,7 @@
           "        if not is_admin_rule(perm):",
           "            continue",
           "        base = {\"IpProtocol\": perm[\"ipProtocol\"]}",
-          "        if perm[\"ipProtocol\"] != \"-1\":",
+          "        if has_ports(perm):",
           "            base[\"FromPort\"] = perm[\"fromPort\"]",
           "            base[\"ToPort\"] = perm[\"toPort\"]",
           "        for rng in perm.get(\"ipRanges\", {}).get(\"items\", []):",
@@ -25069,8 +25076,8 @@
     "o",
     "k",
     "nf",
-    "ow",
     "nb",
+    "ow",
     "mi",
     "ss",
     "nv",

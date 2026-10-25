@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-24",
+  "files": [
+    {
+      "source": "Aws-scs-c03-guide.html",
+      "archive": "archive/Aws/html/security-specialty/Aws-scs-c03-guide.html",
+      "bytes": 565993,
+      "sha256": "43f9d4d00e8df0affdaa1ccf6a1d08e290eea65448169622b15c386c84dc8e91"
+    },
+    {
+      "source": "Aws-scs-c03-guide.md",
+      "archive": "archive/Aws/md/security-specialty/Aws-scs-c03-guide.md",
+      "bytes": 153092,
+      "sha256": "5debe15888000ca4483328a4e21a263d1d5f8618def7b7d8924a144e6a39be9a"
+    }
+  ]
+}
