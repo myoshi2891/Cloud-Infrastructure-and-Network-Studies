@@ -61,6 +61,6 @@ test('ANS Domain 2 browser detects removed list markers and indentation',async({
 });
 
 test('ANS home and Header expose the dedicated Domain 2 guide',async({page})=>{
- test.setTimeout(90_000);await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');const card=page.getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty'}).locator('xpath=ancestor::article');await expect(card.locator(`a[href="${route}"]`)).toHaveCount(1);await expect(card.locator('a.home-card-cta')).toHaveAttribute('href','/aws/advanced-networking-specialty/domain1');
+ test.setTimeout(90_000);await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');const card=page.getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty'}).locator('xpath=ancestor::article');await expect(card.locator(`a[href="${route}"]`)).toHaveCount(1);await expect(card.locator('a.home-card-cta')).toHaveAttribute('href','/aws/advanced-networking-specialty');
  await page.getByRole('button',{name:'メニューを開く'}).click();const dialog=page.getByRole('dialog',{name:'サイトナビゲーション'});const link=dialog.locator(`a[href="${route}"]`);await expect(link).toHaveCount(1);await dialog.locator('summary').filter({hasText:'AWS Certified Advanced Networking - Specialty'}).click();await expect(link).toBeVisible();await link.click();await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.locator('.ans-domain2-page h1')).toBeVisible();
 });
