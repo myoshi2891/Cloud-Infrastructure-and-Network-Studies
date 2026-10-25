@@ -5,7 +5,7 @@ import {snapshotGuidePart} from '@/scripts/guide-fidelity-extraction.mjs';
 import {sapGuidePart} from '@/__tests__/helpers/sap-guide-fixture';
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 it.each([
- ['foundation','p','text'],['domain1','tbody tr','tables'],['foundation','li','lists'],
+ ['foundation','p','text'],['domain1','tbody tr','tables'],['domain1','li','lists'],
  ['revision','a[href^="http"]','links'],['domain2','.mermaid-wrap','diagrams'],
  ['revision','.q-opt','text'],['domain4','.callout-practice .body','text'],
 ] as const)('detects source loss from %s %s', (part,selector,key)=>{
