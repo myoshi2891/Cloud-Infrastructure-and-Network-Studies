@@ -9,7 +9,7 @@ const LIGHT_PAGE_ROOTS = [
     'aip-guide-page', 'aip-domain1-page', 'aip-domain2-page', 'aip-domain3-page',
     'aip-domain4-page', 'aip-domain5-page', 'ans-domain1-page', 'ans-domain2-page', 'ans-domain3-page', 'ans-domain4-page',
     'dva-development-page', 'dva-security-page', 'dva-deployment-page',
-    'sap-domain1-page', 'scs-guide-page',
+    'sap-domain1-page', 'scs-guide-page', 'ans-guide-page',
     'tcpip-page', 'agentic-guide-page', 'agentic-section1-page',
     'agentic-section2-page', 'agentic-section3-page', 'agentic-section4-page',
     'agentic-section5-page',
