@@ -1,0 +1,290 @@
+[
+  {
+    "id": "q1",
+    "answer": "B",
+    "question": "多数の VPC(今後さらに増える見込み)とオンプレミスのデータセンターを接続し、本番 VPC と開発 VPC の間は通信できないようにしたい。運用の手間を最小にするには?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aすべての VPC を VPC ピアリングで相互に接続する"
+      },
+      {
+        "key": "B",
+        "text": "BTransit Gateway を使い、本番用と開発用に別々のルートテーブルを関連付ける"
+      },
+      {
+        "key": "C",
+        "text": "C各 VPC に Site-to-Site VPN を個別に構築する"
+      },
+      {
+        "key": "D",
+        "text": "D各 VPC に PrivateLink のエンドポイントを作る"
+      }
+    ],
+    "explanation": "解説 Transit Gateway はハブ型で拡張しやすく、ルートテーブルを分けることで本番と開発を分離できます。A は数が増えると組み合わせが爆発し、推移的ルーティングもできません。C は管理が煩雑、D は特定サービスの一方向公開向けです。"
+  },
+  {
+    "id": "q2",
+    "answer": "C",
+    "question": "オンプレミスから AWS への接続で、通信の暗号化が必須で、安定した帯域も必要。適切な構成は?",
+    "options": [
+      {
+        "key": "A",
+        "text": "ADirect Connect のみ"
+      },
+      {
+        "key": "B",
+        "text": "BSite-to-Site VPN のみ"
+      },
+      {
+        "key": "C",
+        "text": "CDirect Connect に Site-to-Site VPN を重ねる"
+      },
+      {
+        "key": "D",
+        "text": "Dインターネット経由の HTTPS のみ"
+      }
+    ],
+    "explanation": "解説 Direct Connect は既定では暗号化されません。安定した帯域は Direct Connect、暗号化は VPN(または MACsec)で補います。"
+  },
+  {
+    "id": "q3",
+    "answer": "B",
+    "question": "新規アカウントがどの OU に作られても、CloudTrail の停止とルートユーザーの利用を禁止したい。最も適切な方法は?",
+    "options": [
+      {
+        "key": "A",
+        "text": "A各アカウントの IAM ポリシーで Deny を設定する"
+      },
+      {
+        "key": "B",
+        "text": "B組織のルートまたは OU に SCP を適用する"
+      },
+      {
+        "key": "C",
+        "text": "CConfig ルールで定期的に確認して手動で修正する"
+      },
+      {
+        "key": "D",
+        "text": "D管理アカウントの管理者が毎日確認する"
+      }
+    ],
+    "explanation": "解説 SCP は組織全体のガードレールとして、アカウント側の管理者でも越えられない上限を設定できます。なお SCP は管理アカウントには効かない点に注意します。"
+  },
+  {
+    "id": "q4",
+    "answer": "C",
+    "question": "RTO は 15 分、RPO は 1 分未満、リージョン障害にも耐える必要がある。コストはなるべく抑えたい。最も適切な戦略は?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aバックアップと復元"
+      },
+      {
+        "key": "B",
+        "text": "BPilot light"
+      },
+      {
+        "key": "C",
+        "text": "CWarm standby(Aurora Global Database 等と併用)"
+      },
+      {
+        "key": "D",
+        "text": "D1 つのリージョンで Multi-AZ のみ"
+      }
+    ],
+    "explanation": "解説 RTO が数分から十数分、RPO が数秒から分の要件には Warm standby が適しています。A は復旧が遅く、B は起動に時間がかかる場合があります。D はリージョン障害に耐えられません。"
+  },
+  {
+    "id": "q5",
+    "answer": "B",
+    "question": "大規模 Web アプリが SQL インジェクションと大規模な DDoS 攻撃の両方を受ける懸念がある。最も適切な対策は?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aセキュリティグループのみ"
+      },
+      {
+        "key": "B",
+        "text": "BCloudFront と AWS WAF、AWS Shield Advanced を組み合わせる"
+      },
+      {
+        "key": "C",
+        "text": "Cネットワーク ACL のみ"
+      },
+      {
+        "key": "D",
+        "text": "DGuardDuty のみ"
+      }
+    ],
+    "explanation": "解説 アプリ層の攻撃は WAF、DDoS は Shield Advanced、エッジでの吸収は CloudFront で守れます。GuardDuty は検知であり遮断ではありません。"
+  },
+  {
+    "id": "q6",
+    "answer": "B",
+    "question": "DB の認証情報を自動でローテーションしつつ、アプリから安全に取得したい。適切なサービスは?",
+    "options": [
+      {
+        "key": "A",
+        "text": "ASystems Manager Parameter Store の標準パラメータ"
+      },
+      {
+        "key": "B",
+        "text": "BAWS Secrets Manager"
+      },
+      {
+        "key": "C",
+        "text": "CS3 バケットに暗号化して保存"
+      },
+      {
+        "key": "D",
+        "text": "Dアプリのソースコード内に埋め込む"
+      }
+    ],
+    "explanation": "解説 Secrets Manager は RDS などの認証情報の自動ローテーションに対応しています。"
+  },
+  {
+    "id": "q7",
+    "answer": "B",
+    "question": "注文処理で、バックエンドが一時的に遅くなるとフロントエンドがタイムアウトする。疎結合にして耐障害性を高めるには?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aフロントエンドの EC2 を増やす"
+      },
+      {
+        "key": "B",
+        "text": "BSQS キューを間に挟み、非同期で処理する"
+      },
+      {
+        "key": "C",
+        "text": "Cバックエンドのインスタンスを大きくする"
+      },
+      {
+        "key": "D",
+        "text": "Dタイムアウト値を延ばす"
+      }
+    ],
+    "explanation": "解説 キューで非同期化すると、バックエンドが遅くなってもフロントは受け付けを続けられ、ピーク負荷も平準化できます。"
+  },
+  {
+    "id": "q8",
+    "answer": "B",
+    "question": "アクセスパターンが予測できない大量のデータを S3 に保存している。運用の手間なくコストを最適化するには?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aすべて S3 Standard-IA に移す"
+      },
+      {
+        "key": "B",
+        "text": "BS3 Intelligent-Tiering を使う"
+      },
+      {
+        "key": "C",
+        "text": "Cすべて Glacier Deep Archive に移す"
+      },
+      {
+        "key": "D",
+        "text": "D手動で毎月アクセス状況を確認して移動する"
+      }
+    ],
+    "explanation": "解説 アクセスパターンが不明な場合、自動で階層を移動する Intelligent-Tiering が適しています。A と C は頻繁にアクセスされると取り出し料金や遅延で不利になります。"
+  },
+  {
+    "id": "q9",
+    "answer": "B",
+    "question": "プライベートサブネットの EC2 が S3 に大量のデータを送っており、NAT ゲートウェイの費用が高い。最小の変更で費用を下げるには?",
+    "options": [
+      {
+        "key": "A",
+        "text": "ANAT ゲートウェイを大きいものに変える"
+      },
+      {
+        "key": "B",
+        "text": "BS3 のゲートウェイ VPC エンドポイントを作成しルートテーブルに追加する"
+      },
+      {
+        "key": "C",
+        "text": "Cインターネットゲートウェイを使い EC2 をパブリックに置く"
+      },
+      {
+        "key": "D",
+        "text": "DS3 のインターフェイスエンドポイントを作成する"
+      }
+    ],
+    "explanation": "解説 ゲートウェイエンドポイントは無料で、NAT ゲートウェイのデータ処理料金を避けられます。D は時間料金とデータ処理料金が発生します(オンプレミスや他リージョンからの利用など特別な要件がある場合のみ有力)。"
+  },
+  {
+    "id": "q10",
+    "answer": "B",
+    "question": "オンプレミスの Oracle DB を Aurora PostgreSQL へ、ダウンタイムを最小化して移行したい。適切な組み合わせは?",
+    "options": [
+      {
+        "key": "A",
+        "text": "ADMS のみ"
+      },
+      {
+        "key": "B",
+        "text": "BSCT でスキーマを変換し、DMS で CDC を使ってデータを移行"
+      },
+      {
+        "key": "C",
+        "text": "CDataSync でデータファイルをコピー"
+      },
+      {
+        "key": "D",
+        "text": "DSnow ファミリーでバックアップを送る"
+      }
+    ],
+    "explanation": "解説 異種 DB の移行には、スキーマ変換の SCT と、継続的に変更を反映できる DMS(CDC)の組み合わせが定石です。"
+  },
+  {
+    "id": "q11",
+    "answer": "C",
+    "question": "オンプレミスの 200 TB のファイルデータを、回線が 1 Gbps しかない環境で、できるだけ早く S3 へ移したい。最も適切なのは?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aインターネット経由でアップロード"
+      },
+      {
+        "key": "B",
+        "text": "BDataSync のみで 1 Gbps の回線を使う"
+      },
+      {
+        "key": "C",
+        "text": "CSnow ファミリーの物理デバイスを利用する"
+      },
+      {
+        "key": "D",
+        "text": "DTransfer Family を使う"
+      }
+    ],
+    "explanation": "解説 1 Gbps の理論値でも約 20 日かかり、実際はさらに長くなります。このような大容量には物理デバイスが有利です(ただし提供状況は最新情報を確認)。"
+  },
+  {
+    "id": "q12",
+    "answer": "B",
+    "question": "利用者がほとんどいない古い社内システムが多数ある。移行計画で最初に行うべきことは?",
+    "options": [
+      {
+        "key": "A",
+        "text": "Aすべて Rehost する"
+      },
+      {
+        "key": "B",
+        "text": "B使われていないものは Retire(廃止)として移行対象から外す"
+      },
+      {
+        "key": "C",
+        "text": "Cすべて Refactor する"
+      },
+      {
+        "key": "D",
+        "text": "Dすべて Retain して何もしない"
+      }
+    ],
+    "explanation": "解説 移行の前に棚卸しで不要なものを廃止すれば、移行の対象と費用を減らせます。"
+  }
+]
