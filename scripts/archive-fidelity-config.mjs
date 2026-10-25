@@ -32,6 +32,11 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-domain1': {
+        source: 'Aws-sap-c02-domain1 organizational-complexity-guide.html',
+        sourceCommit: '5f39ec8fad1ed7ed275d1fcd0e9246f65746d3c1',
+        guideBoundaries: { main: '' },
+    },
     'aws-scs-c03-guide': {
         source: 'Aws-scs-c03-guide.html',
         sourceCommit: '71ff4c1a4e31847687477659cf16076fb4264a63',

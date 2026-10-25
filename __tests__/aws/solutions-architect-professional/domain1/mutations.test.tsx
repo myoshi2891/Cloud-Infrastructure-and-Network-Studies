@@ -1,9 +1,8 @@
-import { readFileSync } from 'node:fs';
 import { render } from '@testing-library/react';
-import { JSDOM } from 'jsdom';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/solutions-architect-professional/domain1/page';
 import sourceTheme from '@/app/aws/solutions-architect-professional/domain1/mermaid-theme.json';
+import fixture from '@/docs/migration-inventory/aws-sap-c02-domain1.fidelity.json';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
 import { withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
@@ -47,9 +46,8 @@ const renderConfig = {
 };
 const prefix = `---\nconfig: ${JSON.stringify(renderConfig)}\n---\n`;
 
-const html = readFileSync('Aws-sap-c02-domain1 organizational-complexity-guide.html', 'utf8');
-const sourceMain = new JSDOM(html).window.document.querySelector('main')!;
-const rawSnapshot = snapshotGuidePart(sourceMain);
+// 固定Git由来の <main> 全体の snapshotGuidePart 結果。移行元 HTML をテスト実行時に読まない
+const rawSnapshot = fixture.guideParts.main;
 const expectedSnapshot = {
     ...rawSnapshot,
     diagrams: rawSnapshot.diagrams.map((chart) => prefix + chart),

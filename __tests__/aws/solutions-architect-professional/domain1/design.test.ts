@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs';
-import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import { describe, expect, it } from 'vitest';
-import { snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
+import fixture from '@/docs/migration-inventory/aws-sap-c02-domain1.fidelity.json';
 
-const html = readFileSync('Aws-sap-c02-domain1 organizational-complexity-guide.html', 'utf8');
-const guideDesign = snapshotGuideDesign(new JSDOM(html).window.document);
+// 固定Git由来の snapshotGuideDesign 結果。移行元 HTML をテスト実行時に読まない
+const guideDesign = fixture.guideDesign;
 const css = readFileSync('app/aws/solutions-architect-professional/domain1/page.css', 'utf8');
 
 const rules = (text: string, selector: string, media = '') => {

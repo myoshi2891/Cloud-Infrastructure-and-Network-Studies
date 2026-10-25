@@ -1,18 +1,16 @@
-import { readFileSync } from 'node:fs';
 import { act, render, fireEvent } from '@testing-library/react';
-import { JSDOM } from 'jsdom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import NavBar from '@/app/aws/solutions-architect-professional/domain1/NavBar';
 import Page from '@/app/aws/solutions-architect-professional/domain1/page';
 import { NAV_ITEMS } from '@/app/aws/solutions-architect-professional/domain1/constants';
-import { snapshotGuideDesign } from '@/scripts/guide-fidelity-extraction.mjs';
+import fixture from '@/docs/migration-inventory/aws-sap-c02-domain1.fidelity.json';
 
 vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
 }));
 
-const html = readFileSync('Aws-sap-c02-domain1 organizational-complexity-guide.html', 'utf8');
-const guideDesign = snapshotGuideDesign(new JSDOM(html).window.document);
+// 固定Git由来の目次。移行元 HTML をテスト実行時に読まない
+const guideDesign = fixture.guideDesign;
 
 afterEach(() => {
     vi.unstubAllGlobals();
