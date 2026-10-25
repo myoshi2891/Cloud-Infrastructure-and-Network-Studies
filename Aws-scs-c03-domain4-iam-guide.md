@@ -662,8 +662,9 @@ if [ "$state" != "COMPLETE" ]; then
   echo "認証情報レポートの生成がタイムアウトしました" >&2
   exit 1
 fi
-# レポートの準備完了後に取得
-aws iam get-credential-report --query Content --output text | base64 --decode
+# レポートの準備完了後に取得 (取得に失敗した場合はデコードせず中止)
+report=$(aws iam get-credential-report --query Content --output text) || exit 1
+printf '%s' "$report" | base64 --decode
 ```
 
 出典: https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html
