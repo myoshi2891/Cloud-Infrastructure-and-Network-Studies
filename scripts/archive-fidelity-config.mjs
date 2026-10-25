@@ -32,6 +32,19 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-ans-c01-guide': {
+        source: 'Aws-ans-c01-guide.html',
+        sourceCommit: '6ed18037dc3b87fb6fefe40c895c93776319b72c',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: 'domain-1-network-design-30',
+            domain2: 'domain-2-network-implementation-26',
+            domain3: 'domain-3-network-management-and-operation-20',
+            domain4: 'domain-4-network-security-compliance-and-governance-24',
+            revision: '5-横断チートシート',
+        },
+    },
     'aws-sap-c02-domain1': {
         source: 'Aws-sap-c02-domain1 organizational-complexity-guide.html',
         sourceCommit: '5f39ec8fad1ed7ed275d1fcd0e9246f65746d3c1',
