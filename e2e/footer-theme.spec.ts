@@ -82,7 +82,7 @@ test('明色ページのルートは body 直下で、共通フッターがそ�
         await page.goto(path);
         const structure = await page.evaluate(className => {
             const root = document.getElementsByClassName(className)[0];
-            const footer = document.querySelector('[class*="Footer-module"][class*="footer"]');
+            const footer = document.querySelector('body > footer');
             if (!root || !footer) return { found: false, rootIsBodyChild: false, footerFollowsRoot: false, scheme: '' };
             return {
                 found: true,
