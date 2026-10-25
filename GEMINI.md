@@ -1,6 +1,14 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-24
+Updated 2026-10-25
+
+2026-10-25 ANS-C01総合ガイド移行: `/aws/advanced-networking-specialty` に全4ドメイン・16タスク、104表（th251・td1463）・39図・14コード・380リスト項目・187外部リンク出現・27目次・91参考文献を全文移行。原本のライト配色・点/番号/階層/字下げ・コード全行と22種の構文トークンを保持。サイドバーは標準280pxへ対応付け、本文はServer Component、目次操作はClientに分離。ホームの概要リンクとHeaderへ総合ガイドを追加し、既存4ドメイン詳細も保持した。原本にチェックボックス・クイズの実体はなく追加していない。
+
+検証: ANS関連72ファイル・551件成功。ブラウザー5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全39SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、27目次・開閉・hash/focus、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint成功。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
+
+全体Vitestは416ファイル・3897件中3891件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）で、今回の移行に由来する失敗はない。 静的集計は1175ソース・371対応（32%）・433テストファイル、App Routerは132ルート。静的集計はテスト実行成功数や行カバレッジとは区別する。
+
+原本HTML（514642バイト）・Markdown（169011バイト）は内容を変更せず `archive/Aws/html/advanced-networking-specialty/` と `archive/Aws/md/advanced-networking-specialty/` へ移動済み。移動前後のバイト一致・SHA-256一致を確認し、保存先と完全なハッシュを `docs/migration-inventory/aws-ans-c01-guide.archive.json` に記録した。archiveはローカル専用・Git管理外。CIは固定Git `6ed18037dc3b87fb6fefe40c895c93776319b72c` のコミット済みfixtureを使用し、原本・archiveがない一時作業ディレクトリでも同じfixtureを再生成できる。
 
 2026-10-24 SCS-C03完全ガイド移行: `/aws/security-specialty` に全6ドメイン・16タスク、101表・40図・27コードブロック・251リスト項目・219外部リンク出現・56目次・確認問題8問を全文移行。原本のライト配色、点・番号・階層・字下げ、コード全行と構文色、円グラフの暗黙のbase配色を保持。サイドバーはリポジトリ標準の280pxへ対応付けた。本文はServer Component、目次とクイズだけをClient Componentへ分離し、ホームとHeaderへ導線を追加した。
 
@@ -68,6 +76,8 @@ Updated 2026-10-24
 - **ゾンビプロセス診断:** `bun run test:check-zombies`（`bun test` 誤用・長時間ハングプロセス・`while true` 残骸ループを自動検出。異常を感じたら最初に実行する）
 
 ## プロジェクト構造
+
+- `/app/aws/advanced-networking-specialty`: ANS-C01総合ガイド。Server `page.tsx` / `AdvancedNetworkingGuide.tsx` / 6区画の`sections/`、Client `NavBar.tsx`、39図・27目次の`constants.ts` / `Diagram.tsx`、標準280px・原本ライト配色・全リスト装飾の`page.css`。104表・14コード・91参考文献。
 
 - `/app/aws/solutions-architect-professional/domain1`: SAP-C02 組織の複雑さに対応する設計。Server `page.tsx` / `SapDomain1Guide.tsx` / 9分割sections、Client `NavBar.tsx` / `Quiz.tsx`、19図と78目次の`constants.ts`、`Diagram.tsx`、原本ライト配色・340px目次・クイズスタイルの`page.css`。全49表・19図・1コード・213リスト・130リンク・6問クイズを完全収録。
 - `/app/aws/advanced-networking-specialty/domain4`: ANS-C01セキュリティ。Server `page.tsx` / `AnsDomain4Guide.tsx` / 5分割sections、Client `NavBar.tsx`、31図と99目次の`constants.ts`、`Diagram.tsx`、原本ライト配色・300px目次・リスト装飾の`page.css`。全33選択肢と8解答開閉。
