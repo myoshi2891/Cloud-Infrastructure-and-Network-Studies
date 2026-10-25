@@ -1023,7 +1023,7 @@ flowchart TD
 | **誰でもタグを変更できると権限昇格できる** | `iam:TagRole`, `iam:TagUser`, `ec2:CreateTags` などタグ操作の権限を厳密に制限し、SCP で重要タグの変更を禁止する |
 | タグ付けされていないリソースの扱い | 条件が一致しないため暗黙拒否になる。**タグ付けを必須化** (作成時にタグがなければ拒否) |
 | すべてのサービスがタグベースの認可に対応しているわけではない | 利用するサービスが ABAC に対応しているか公式ドキュメントで確認 |
-| タグキーは大文字小文字を区別しない場合がある | 命名規則を統一する |
+| リソースタグのキーと値は大文字小文字を区別する (一方、IAM の条件キー名は区別しない) | `aws:TagKeys` 条件キーや AWS Organizations のタグポリシーで、許可するタグキーの表記 (大文字小文字) を統一し、表記ゆれを防ぐ |
 | タグの値の標準化 | AWS Organizations の **タグポリシー** で許可する値を統制 |
 
 #### ベストプラクティス (ABAC / RBAC)
@@ -1106,17 +1106,19 @@ flowchart TD
     {
       "Sid": "DenyBoundaryRemoval",
       "Effect": "Deny",
+      "Action": "iam:DeleteRolePermissionsBoundary",
+      "Resource": "arn:aws:iam::111122223333:role/app-*"
+    },
+    {
+      "Sid": "DenyBoundaryPolicyModification",
+      "Effect": "Deny",
       "Action": [
-        "iam:DeleteRolePermissionsBoundary",
         "iam:DeletePolicy",
         "iam:CreatePolicyVersion",
         "iam:SetDefaultPolicyVersion",
         "iam:DeletePolicyVersion"
       ],
-      "Resource": [
-        "arn:aws:iam::111122223333:role/app-*",
-        "arn:aws:iam::111122223333:policy/DeveloperBoundary"
-      ]
+      "Resource": "arn:aws:iam::111122223333:policy/DeveloperBoundary"
     }
   ]
 }
