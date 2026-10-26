@@ -242,7 +242,7 @@
   {
     "id": "q11",
     "answer": "C",
-    "question": "新たに AWS を利用し始めた企業が、オンプレミスの 200 TB のファイルデータを、回線が 1 Gbps しかない環境で、できるだけ早く S3 へ移したい。データは持ち運べるストレージ機器にコピーでき、近くに AWS Data Transfer Terminal がある。最も適切なのは?",
+    "question": "新たに AWS を利用し始めた企業が、オンプレミスの 200 TB のファイルデータを、回線が 1 Gbps しかない環境で、できるだけ早く S3 へ移したい。Enterprise Support を契約しており (Data Transfer Terminal の利用条件)、データは持ち運べるストレージ機器にコピーでき、近くに AWS Data Transfer Terminal がある。最も適切なのは?",
     "options": [
       {
         "key": "A",

@@ -60,4 +60,10 @@ export const SAP_GUIDE_CORRECTIONS: readonly Correction[] = [
     ['物理デバイス Snow ファミリー', '物理転送 AWS Data Transfer Terminal'],
     // Step 23 早見表も Q11 と同じ代替に揃える
     ['Snow ファミリー', 'AWS Data Transfer Terminal(Snow ファミリーは新規顧客への提供終了)', '大容量データの物理転送'],
+    // 図7: Permission Boundary はプリンシパルに設定がある場合だけ評価し、同一アカウントで IAM ユーザー ARN・ロールセッション ARN を指定したリソースベースの許可は制限しない
+    ['C -->|はい| D{"Permission Boundary で許可されているか"}', 'C -->|はい| R{"同一アカウントのリソースベースポリシーが IAM ユーザー ARN またはロールセッション ARN を指定して Allow しているか"}\nR -->|はい| Y\nR -->|いいえ| D{"プリンシパルに Permission Boundary が設定されているか"}\nD -->|いいえ| E\nD -->|はい| F{"Permission Boundary で許可されているか"}\nF -->|いいえ| X\nF -->|はい| E'],
+    ['D -->|いいえ| X\nD -->|はい| E{"いずれかのポリシーで明示的に Allow があるか"}', 'E{"アイデンティティベースポリシー、またはロール ARN を指定したリソースベースポリシーで明示的に Allow があるか"}'],
+    // Step 22 #7: 読み取りを受け付けないのは Multi-AZ DB インスタンスのスタンバイで、Multi-AZ DB クラスターは読み取り可能なスタンバイを持つ
+    ['RDS Multi-AZ で読み取りを分散できる', 'RDS Multi-AZ DB インスタンスで読み取りを分散できる'],
+    ['Multi-AZ は可用性のため。分散にはリードレプリカ', 'Multi-AZ DB インスタンスのスタンバイは可用性のためで、読み取りを受け付けない。読み取りのスケーリングにはリードレプリカを使う (Multi-AZ DB クラスターは読み取り可能なスタンバイインスタンスを持つ)'],
 ];
