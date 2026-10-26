@@ -27,6 +27,9 @@ it('restores markers, numbering and indentation',()=>lists(css));
 it.each([['list-style-type: disc','list-style-type: none'],['list-style-type: decimal','list-style-type: none'],['padding-left: 1.4em','padding-left: 0'],['display: list-item','display: block'],['list-style-type: circle','list-style-type: none']])('detects destruction of %s',(from,to)=>{expect(css).toContain(from);expect(()=>lists(css.replaceAll(from,to))).toThrow();});
 it('isolates styles and provides readable natural diagrams and responsive widths',()=>{expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);expect(rules(css,'.sap-guide-page')['color-scheme']).toBe('light');expect(rules(css,'.sap-guide-page .main').width).toBe('calc(100% - 280px)');expect(rules(css,'.sap-guide-page .main','(max-width: 980px)').width).toBe('100%');expect(rules(css,'.sap-guide-page .sidebar:not(.open)','(max-width: 980px)').visibility).toBe('hidden');expect(rules(css,'.sap-guide-page .mermaid-wrap > [role="img"]')).toMatchObject({background:'transparent',border:'none',padding:'0'});});
 
+it('keeps the mobile menu toggle above the open sidebar so it can close the menu',()=>{
+ expect(Number(rules(css,'.sap-guide-page .sidebar-toggle')['z-index'])).toBeGreaterThan(Number(rules(css,'.sap-guide-page .sidebar')['z-index']));
+});
 it('keeps fixed sidebar top a valid length expression',()=>{expect(rules(css,'.sap-guide-page .sidebar').top).not.toMatch(/\+\s*0\s*\)/);});
 it('keeps diagram scrolling on the named keyboard-focusable outer region',()=>{
  expect(rules(css,'.sap-guide-page .mermaid-wrap')['overflow-x']).toBe('auto');
