@@ -1,6 +1,9 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import inventory from '../docs/migration-inventory/aws-sap-c02-guide.json';
+import sourceInventory from '../docs/migration-inventory/aws-sap-c02-guide.json';
+import { withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
+import { SAP_GUIDE_CORRECTIONS } from '../__tests__/helpers/aws-guide-source-corrections';
+const inventory=withSourceCorrections(sourceInventory,SAP_GUIDE_CORRECTIONS);
 import fixture from '../docs/migration-inventory/aws-sap-c02-guide.fidelity.json';
 import quiz from '../docs/migration-inventory/aws-sap-c02-guide.quiz.json';
 const route='/aws/solutions-architect-professional';

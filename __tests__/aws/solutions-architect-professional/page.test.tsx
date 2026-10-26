@@ -6,12 +6,14 @@ import sourceInventory from '@/docs/migration-inventory/aws-sap-c02-guide.json';
 import fixture from '@/docs/migration-inventory/aws-sap-c02-guide.fidelity.json';
 
 
+import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { SAP_GUIDE_CORRECTIONS } from '@/__tests__/helpers/aws-guide-source-corrections';
 import { extractBodyContent, normalizeSpaces, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 
-// 原本から独立して固定した全量期待値
-const inventory = sourceInventory;
+// 原本から独立して固定した全量期待値（公式ドキュメントにもとづく訂正だけを適用）
+const inventory = withSourceCorrections(sourceInventory, SAP_GUIDE_CORRECTIONS);
 
 describe('SAP-C02 independent complete inventory', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const)('retains every %s text in source order', tag => {
