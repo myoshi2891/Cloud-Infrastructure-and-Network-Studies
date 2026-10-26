@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 import fixture from '../docs/migration-inventory/aws-ans-c01-guide.fidelity.json';
+import { withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
+import { ANS_GUIDE_CORRECTIONS } from '../__tests__/helpers/aws-guide-source-corrections';
 
-const expected = Object.values(fixture.guideParts).flatMap(part => part.codes);
+const expected = Object.values(withSourceCorrections(fixture.guideParts, ANS_GUIDE_CORRECTIONS)).flatMap(part => part.codes);
 
 for (const width of [1440, 768, 390]) {
     test(`ANS-C01 ${width}px: all code lines stay on one visual row and copy intact`, async ({ page }) => {
