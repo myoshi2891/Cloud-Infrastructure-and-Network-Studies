@@ -21,6 +21,10 @@ export const ANS_GUIDE_CORRECTIONS: readonly Correction[] = [
     ['--metric-transformations metricName=RejectedPackets,metricNamespace=Network,metricValue=$packets,defaultValue=0', "--metric-transformations 'metricName=RejectedPackets,metricNamespace=Network,metricValue=$packets,defaultValue=0'"],
     // CloudFront と ALB はクライアントの TLS を終端するため、TLS の保護範囲は接続の区間ごとになる
     ['クライアント ↔ サーバー間 (エンドツーエンド)', 'TLS 接続の区間ごと。CloudFront や ALB はクライアントからの TLS を終端し、その先のオリジンやターゲットまでの区間は HTTPS を設定した場合にだけ暗号化される'],
+    // Inter-Region VPC ピアリングは 8,500 バイトまでのジャンボフレームに対応し、1,500 の上限はインターネットと VPN 経由に限る
+    ['VPN 経由は 1,500 未満、Inter-Region ピアリングや IGW 経由は 1,500 など', 'VPN 経由は 1,500 未満、IGW 経由は 1,500、Inter-Region VPC ピアリングは 8,500 など'],
+    ['1,500 (ジャンボは使えない)', 'インターネット / VPN は 1,500 (ジャンボは使えない)。Inter-Region VPC ピアリングは 8,500 まで', 'インターネット / VPN / Inter-Region ピアリング'],
+    ['1,500', '8,500', 'Inter-Region VPC ピアリング'],
 ];
 
 /** 構文トークンの訂正。[クラス, 開始位置, 削除するトークン, 挿入するトークン]。 */
