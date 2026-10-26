@@ -71,6 +71,8 @@ export const SAP_GUIDE_CORRECTIONS: readonly Correction[] = [
     ['回線で何か月もかかるなら最初から Snow などを検討できる', '回線で何か月もかかるなら最初から Data Transfer Terminal での物理転送や回線増強を検討できる'],
     ['DataSync Snow Transfer Family Storage Gateway', 'DataSync Data Transfer Terminal Transfer Family Storage Gateway'],
     ['物理デバイス Snow ファミリー', '物理転送 AWS Data Transfer Terminal'],
+    // 判断の目安: Data Transfer Terminal は Enterprise Support と近隣の拠点が前提のため、物理転送を条件付きにする
+    ['数十 TB から PB 級で、回線が 1 Gbps 以下なら物理デバイス、それ以外はオンラインの DataSync などが第一候補です。', '数十 TB から PB 級で回線が 1 Gbps 以下の場合、Enterprise Support を契約していて近くに AWS Data Transfer Terminal を利用できるなら物理デバイスでの持ち込みが第一候補です。それ以外はオンラインの DataSync か、回線の増強 (Direct Connect など) を検討します。'],
     // Step 23 早見表も Q11 と同じ代替に揃える
     ['Snow ファミリー', 'AWS Data Transfer Terminal(Snow ファミリーは新規顧客への提供終了)', '大容量データの物理転送'],
     // 図7: Permission Boundary はプリンシパルに設定がある場合だけ評価し、同一アカウントで IAM ユーザー ARN・ロールセッション ARN を指定したリソースベースの許可は制限しない
