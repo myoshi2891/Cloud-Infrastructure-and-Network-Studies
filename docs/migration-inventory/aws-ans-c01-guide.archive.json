@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "6ed18037dc3b87fb6fefe40c895c93776319b72c",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Aws-ans-c01-guide.html",
+      "archive": "archive/Aws/html/advanced-networking-specialty/Aws-ans-c01-guide.html",
+      "bytes": 514642,
+      "sha256": "ac138f0a5a8ef9219418989fe06246cc8cd1e60f29879c2bc2480cfaaa595f5e"
+    },
+    {
+      "source": "Aws-ans-c01-guide.md",
+      "archive": "archive/Aws/md/advanced-networking-specialty/Aws-ans-c01-guide.md",
+      "bytes": 169011,
+      "sha256": "4e1bebfebd497bb3802fad9148d2a75b4dac4c684621f7890f364d25a919c586"
+    }
+  ]
+}

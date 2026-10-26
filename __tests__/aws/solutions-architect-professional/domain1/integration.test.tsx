@@ -19,12 +19,12 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
             level: 'Professional',
             provider: 'AWS',
             status: 'available',
-            href: route,
+            href: '/aws/solutions-architect-professional',
             badge: 'SAP-C02',
             color: 'card-aws-sap',
-            overviewLabel: 'ドメイン1: 組織の複雑さに対応する設計',
+            overviewLabel: 'SAP-C02 完全ガイド',
         });
-        expect(exam?.domains).toEqual([
+        expect(exam?.domains).toEqual([{label:'SAP-C02 完全ガイド',href:'/aws/solutions-architect-professional',pct:'全4ドメイン'},
             { label: 'ドメイン1: 組織の複雑さに対応する設計', href: route, pct: '26%' },
         ]);
     });
@@ -35,7 +35,7 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
 
         const sapExam = awsGroup?.exams.find((e) => e.id === 'aws-sap');
         expect(sapExam).toBeDefined();
-        expect(sapExam?.items).toEqual([
+        expect(sapExam?.items).toEqual([{label:'SAP-C02 完全ガイド',href:'/aws/solutions-architect-professional'},
             { label: 'ドメイン1: 組織の複雑さに対応する設計', href: route },
         ]);
     });
@@ -50,7 +50,7 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
             .getByRole('heading', { name: 'AWS Certified Solutions Architect - Professional' })
             .closest('article');
         expect(card).toHaveClass('card-aws-sap');
-        expect(card?.querySelector('a.home-card-cta')).toHaveAttribute('href', route);
+        expect(card?.querySelector('a.home-card-cta')).toHaveAttribute('href', '/aws/solutions-architect-professional');
 
         unmount();
         const header = render(<Header />);

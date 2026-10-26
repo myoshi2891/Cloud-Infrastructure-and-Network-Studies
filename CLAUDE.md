@@ -1,6 +1,28 @@
 # CLAUDE.md
 
-Updated 2026-10-24
+Updated 2026-10-26
+
+2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本のライト配色・点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次とクイズ操作はClientに分離。ホームとHeaderへ総合ガイドを追加し、Domain 1詳細も保持。原本のコードブロックとチェックボックスは0件。
+
+対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
+
+原本HTML509866バイト・Markdown140000バイトは `archive/Aws/html/solutions-architect-professional/` と `archive/Aws/md/solutions-architect-professional/` へバイト一致・SHA-256一致で移動済み。ハッシュと保存先は `docs/migration-inventory/aws-sap-c02-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc` 由来fixtureを使用し、原本・archiveなしでも再生成できる。
+
+npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。 静的集計1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。
+
+2026-10-26 ANS-C01総合ガイドのコード表示修正: 全14ブロック・168行を1行1つのcode要素へ統合し、単語・記号ごとの縦並びを解消。空行6か所は余白0の空段落で保持し、ブラウザーのinnerTextにも原本どおり残す。コード本文・インデント・空行・22種の構文トークンは固定fixtureと完全一致する。
+
+検証: ANS関連73ファイル・552件成功。ブラウザー8件成功（コード専用3件＋総合ガイド既存5件）。1440/768/390pxで全168行の表示位置と全14ブロックのコピー対象テキストを検証し、既存の図・リスト・目次・導線・axe検証も成功。型検査・全体ESLint成功。全体Vitestは今回は再実行せず、直近の全体結果は2026-10-25の3897件中3891件成功・既存SAP-C02の6件失敗。npm・ビルド未実行、目視確認はユーザー担当。
+
+Red `cc139326` / Green `00a04e3c`。修正前はDOM1件とブラウザー3件で分断・コピー文字列不一致を再現。原本fixtureとarchiveは変更していない。追加テストは `__tests__/aws/advanced-networking-specialty/code-layout.test.tsx` と `e2e/aws-ans-c01-code-layout.spec.ts`。
+
+2026-10-25 ANS-C01総合ガイド移行: `/aws/advanced-networking-specialty` に全4ドメイン・16タスク、104表（th251・td1463）・39図・14コード・380リスト項目・187外部リンク出現・27目次・91参考文献を全文移行。原本のライト配色・点/番号/階層/字下げ・コード全行と22種の構文トークンを保持。サイドバーは標準280pxへ対応付け、本文はServer Component、目次操作はClientに分離。ホームの概要リンクとHeaderへ総合ガイドを追加し、既存4ドメイン詳細も保持した。原本にチェックボックス・クイズの実体はなく追加していない。
+
+検証: ANS関連72ファイル・551件成功。ブラウザー5件成功（1440/768/390px・リスト装飾破壊検出・ホーム/Header導線）。全39SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、27目次・開閉・hash/focus、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint成功。npm・ビルドはユーザー指定により未実行。目視確認はユーザー担当。
+
+全体Vitestは416ファイル・3897件中3891件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）で、今回の移行に由来する失敗はない。 静的集計は1175ソース・371対応（32%）・433テストファイル、App Routerは132ルート。静的集計はテスト実行成功数や行カバレッジとは区別する。
+
+原本HTML（514642バイト）・Markdown（169011バイト）は内容を変更せず `archive/Aws/html/advanced-networking-specialty/` と `archive/Aws/md/advanced-networking-specialty/` へ移動済み。移動前後のバイト一致・SHA-256一致を確認し、保存先と完全なハッシュを `docs/migration-inventory/aws-ans-c01-guide.archive.json` に記録した。archiveはローカル専用・Git管理外。CIは固定Git `6ed18037dc3b87fb6fefe40c895c93776319b72c` のコミット済みfixtureを使用し、原本・archiveがない一時作業ディレクトリでも同じfixtureを再生成できる。
 
 2026-10-24 SCS-C03完全ガイド移行: `/aws/security-specialty` に全6ドメイン・16タスク、101表・40図・27コードブロック・251リスト項目・219外部リンク出現・56目次・確認問題8問を全文移行。原本のライト配色、点・番号・階層・字下げ、コード全行と構文色、円グラフの暗黙のbase配色を保持。サイドバーはリポジトリ標準の280pxへ対応付けた。本文はServer Component、目次とクイズだけをClient Componentへ分離し、ホームとHeaderへ導線を追加した。
 
@@ -587,6 +609,15 @@ app/
         NavBar.tsx                  # ドメイン4サイドバーナビ
         constants.ts                # Mermaid 図定義（29図）
         page.css                    # ドメイン4ページ固有スタイル
+    solutions-architect-professional/
+      page.tsx                      # SAP-C02総合ガイドのmetadata・CSS
+      SolutionsArchitectProfessionalGuide.tsx # Server、6区画の全文
+      NavBar.tsx                    # Client、167目次・開閉・scroll spy・hash/focus
+      Quiz.tsx                      # Client、12問の採点・解説・集計・進捗・リセット
+      constants.ts                  # 50図・目次・原本ライト描画設定・解答キー
+      Diagram.tsx                   # memo化・自然倍率・原本配色・固有名
+      page.css                      # 全CSS・標準280px・点/番号/階層
+      sections/                     # Foundation, Domain1〜4, Revision
     solutions-architect-professional/domain1/
       page.tsx                      # SAP-C02 Domain 1 組織の複雑さに対応する設計 (Server)
       SapDomain1Guide.tsx           # 全文構成コンポーネント (Server)
@@ -637,6 +668,14 @@ app/
       Checklist.tsx                 # 9チェックの件数・進捗・全完了表示（ローカル状態）
       page.css                      # 原本ライト配色・Source Serif 4・14px・290px幅・点と番号
       sections/                     # s1〜s33（導入・4 Task・26 Steps・演習・付録）
+    advanced-networking-specialty/
+      page.tsx                      # ANS-C01総合ガイドのmetadata・CSS
+      AdvancedNetworkingGuide.tsx    # Server、6区画の本文を構成
+      NavBar.tsx                    # Client、27目次・開閉・scroll spy・hash/focus
+      constants.ts                  # 全39図・目次・原本のライト設定
+      Diagram.tsx                   # memo化・自然倍率・原本配色・固有の読み上げ名
+      page.css                      # 全CSS・標準280px目次・点と番号と階層
+      sections/                     # Foundation, Domain1〜4, Revision
     advanced-networking-specialty/domain4/
       page.tsx                      # ANS-C01 Domain 4 (Server、metadata、CSS)
       AnsDomain4Guide.tsx            # 導入・Task41〜43・復習を原本の順序で構成

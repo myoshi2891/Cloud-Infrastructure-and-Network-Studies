@@ -8,14 +8,14 @@ import {Header} from '@/components/Header';
 const route='/aws/advanced-networking-specialty/domain1';
 it('registers an available ANS Specialty with all four implemented domain routes',()=>{
  const exam=EXAMS.find(e=>e.id==='aws-ans');
- expect(exam).toMatchObject({label:'AWS Certified Advanced Networking - Specialty',abbr:'ANS',level:'Specialty',provider:'AWS',status:'available',href:route,badge:'ANS-C01',color:'card-aws-ans',overviewLabel:'ドメイン1: ネットワーク設計'});
- expect(exam?.domains).toEqual([{label:'ドメイン1: ネットワーク設計',href:route,pct:'30%'},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2',pct:'26%'},{label:'ドメイン3: ネットワーク管理と運用',href:'/aws/advanced-networking-specialty/domain3',pct:'20%'},{label:'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス',href:'/aws/advanced-networking-specialty/domain4',pct:'24%'}]);
- expect(toNavTree(EXAMS).find(g=>g.provider==='AWS')?.exams.find(e=>e.id==='aws-ans')?.items).toEqual([{label:'ドメイン1: ネットワーク設計',href:route},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2'},{label:'ドメイン3: ネットワーク管理と運用',href:'/aws/advanced-networking-specialty/domain3'},{label:'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス',href:'/aws/advanced-networking-specialty/domain4'}]);
+ expect(exam).toMatchObject({label:'AWS Certified Advanced Networking - Specialty',abbr:'ANS',level:'Specialty',provider:'AWS',status:'available',href:'/aws/advanced-networking-specialty',badge:'ANS-C01',color:'card-aws-ans',overviewLabel:'ANS-C01 完全ガイド'});
+ expect(exam?.domains).toEqual([{label:'ANS-C01 完全ガイド',href:'/aws/advanced-networking-specialty',pct:'全4ドメイン'},{label:'ドメイン1: ネットワーク設計',href:route,pct:'30%'},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2',pct:'26%'},{label:'ドメイン3: ネットワーク管理と運用',href:'/aws/advanced-networking-specialty/domain3',pct:'20%'},{label:'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス',href:'/aws/advanced-networking-specialty/domain4',pct:'24%'}]);
+ expect(toNavTree(EXAMS).find(g=>g.provider==='AWS')?.exams.find(e=>e.id==='aws-ans')?.items).toEqual([{label:'ANS-C01 完全ガイド',href:'/aws/advanced-networking-specialty'},{label:'ドメイン1: ネットワーク設計',href:route},{label:'ドメイン2: ネットワーク実装',href:'/aws/advanced-networking-specialty/domain2'},{label:'ドメイン3: ネットワーク管理と運用',href:'/aws/advanced-networking-specialty/domain3'},{label:'ドメイン4: ネットワークセキュリティ・コンプライアンス・ガバナンス',href:'/aws/advanced-networking-specialty/domain4'}]);
  expect(cardColorMap).toHaveProperty('card-aws-ans','card-aws-ans');
 });
 it('exposes the real homepage card and exactly one Header link to Domain 1',()=>{
  const {container,unmount}=render(<Home/>);const card=within(container).getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty'}).closest('article');
- expect(card).toHaveClass('card-aws-ans');expect(card?.querySelector('a.home-card-cta')).toHaveAttribute('href',route);
+ expect(card).toHaveClass('card-aws-ans');expect(card?.querySelector('a.home-card-cta')).toHaveAttribute('href','/aws/advanced-networking-specialty');
  unmount();const header=render(<Header/>);fireEvent.click(within(header.container).getByRole('button',{name:'メニューを開く'}));
  const dialog=within(header.container).getByRole('dialog',{name:'サイトナビゲーション'});expect(dialog.querySelectorAll(`a[href="${route}"]`)).toHaveLength(1);
 });

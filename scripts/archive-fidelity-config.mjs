@@ -32,6 +32,33 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-guide': {
+        source: 'Aws-sap-c02-guide.html',
+        sourceCommit: 'f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: 'ドメイン-1組織の複雑さに対応するソリューション設計26',
+            domain2: 'ドメイン-2新規ソリューションの設計29',
+            domain3: 'ドメイン-3既存ソリューションの継続的改善25',
+            domain4: 'ドメイン-4ワークロードの移行とモダナイゼーションの加速20',
+            revision: 'step-21練習問題',
+        },
+    },
+    'aws-ans-c01-guide': {
+        source: 'Aws-ans-c01-guide.html',
+        syntaxSelectors: {"c1":"pre:not(.mermaid) span.c1","nt":"pre:not(.mermaid) span.nt","p":"pre:not(.mermaid) span.p","w":"pre:not(.mermaid) span.w","l":"pre:not(.mermaid) span.l","l-Scalar":"pre:not(.mermaid) span.l-Scalar","l-Scalar-Plain":"pre:not(.mermaid) span.l-Scalar-Plain","s":"pre:not(.mermaid) span.s","p-Indicator":"pre:not(.mermaid) span.p-Indicator","se":"pre:not(.mermaid) span.se","s1":"pre:not(.mermaid) span.s1","nv":"pre:not(.mermaid) span.nv","o":"pre:not(.mermaid) span.o","m":"pre:not(.mermaid) span.m","kt":"pre:not(.mermaid) span.kt","k":"pre:not(.mermaid) span.k","nb":"pre:not(.mermaid) span.nb","n":"pre:not(.mermaid) span.n","mi":"pre:not(.mermaid) span.mi","err":"pre:not(.mermaid) span.err","ss":"pre:not(.mermaid) span.ss","s2":"pre:not(.mermaid) span.s2"},
+        sourceCommit: '6ed18037dc3b87fb6fefe40c895c93776319b72c',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            domain1: 'domain-1-network-design-30',
+            domain2: 'domain-2-network-implementation-26',
+            domain3: 'domain-3-network-management-and-operation-20',
+            domain4: 'domain-4-network-security-compliance-and-governance-24',
+            revision: '5-横断チートシート',
+        },
+    },
     'aws-sap-c02-domain1': {
         source: 'Aws-sap-c02-domain1 organizational-complexity-guide.html',
         sourceCommit: '5f39ec8fad1ed7ed275d1fcd0e9246f65746d3c1',
