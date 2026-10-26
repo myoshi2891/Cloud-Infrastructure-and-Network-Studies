@@ -35,3 +35,10 @@ it('keeps diagram scrolling on the named keyboard-focusable outer region',()=>{
 it('wraps long reference URLs inside the light guide background on narrow screens',()=>{
  expect(rules(css,'.ans-guide-page .main a')['overflow-wrap']).toBe('anywhere');
 });
+it('keeps the mobile menu toggle above the open fixed sidebar and the sidebar above the footer',()=>{
+ const sidebar=Number(rules(css,'.ans-guide-page .sidebar')['z-index']);
+ expect(Number(rules(css,'.ans-guide-page .sidebar-toggle','(max-width: 980px)')['z-index'])).toBeGreaterThan(sidebar);
+ expect(Number.isFinite(sidebar)).toBe(true);
+ // 開いたメニューの見出しがトグルボタン（top 14px・高さ42px）の下から始まる
+ expect(rules(css,'.ans-guide-page .sidebar','(max-width: 980px)')['padding-top']).toBe('72px');
+});

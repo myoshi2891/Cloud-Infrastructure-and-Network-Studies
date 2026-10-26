@@ -853,4 +853,4 @@
 .ans-guide-page .main :is(h2,h3,h4)[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
 .ans-guide-page .main a { overflow-wrap: anywhere; }
 .ans-guide-page [role="region"]:focus-visible { outline: 2px solid var(--color-ans-guide-1); outline-offset: 2px; }
-@media (max-width: 980px) { .ans-guide-page .main { width: 100%; max-width: none; } .ans-guide-page .sidebar:not(.open) { visibility: hidden; } }
+@media (max-width: 980px) { .ans-guide-page .main { width: 100%; max-width: none; } .ans-guide-page .sidebar:not(.open) { visibility: hidden; } .ans-guide-page .sidebar-toggle { z-index: 40; } .ans-guide-page .sidebar { padding-top: 72px; } }
