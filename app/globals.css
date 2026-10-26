@@ -31,6 +31,36 @@
     --color-ans-guide-5: rgba(58, 91, 217, 0.06);
     --color-ans-guide-6: #6b7a96;
     --color-ans-guide-7: #9fb3ef;
+    /* ANS-C01 complete guide: source syntax-highlighting colors. */
+    --color-ans-guide-code-1: #2f6a6a;
+    --color-ans-guide-code-2: #9a4d12;
+    --color-ans-guide-code-3: #000000;
+    --color-ans-guide-code-4: #ffffc0;
+    --color-ans-guide-code-5: #ffffcc;
+    --color-ans-guide-code-6: #3d7b7b;
+    --color-ans-guide-code-7: #f00;
+    --color-ans-guide-code-8: #008000;
+    --color-ans-guide-code-9: #666;
+    --color-ans-guide-code-10: #9c6500;
+    --color-ans-guide-code-11: #a00000;
+    --color-ans-guide-code-12: #e40000;
+    --color-ans-guide-code-13: #000080;
+    --color-ans-guide-code-14: #008400;
+    --color-ans-guide-code-15: #717171;
+    --color-ans-guide-code-16: #800080;
+    --color-ans-guide-code-17: #04d;
+    --color-ans-guide-code-18: #b00040;
+    --color-ans-guide-code-19: #ba2121;
+    --color-ans-guide-code-20: #687822;
+    --color-ans-guide-code-21: #00f;
+    --color-ans-guide-code-22: #800;
+    --color-ans-guide-code-23: #a2f;
+    --color-ans-guide-code-24: #cb3f38;
+    --color-ans-guide-code-25: #767600;
+    --color-ans-guide-code-26: #19177c;
+    --color-ans-guide-code-27: #bbb;
+    --color-ans-guide-code-28: #aa5d1f;
+    --color-ans-guide-code-29: #a45a77;
     /* SCS-C03 original guide palette */
     --color-scs-1: #f6f8fc;
     --color-scs-2: #1b2740;
