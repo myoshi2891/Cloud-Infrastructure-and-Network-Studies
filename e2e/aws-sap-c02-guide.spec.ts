@@ -44,11 +44,11 @@ for(const width of [1440,768,390]){
   await expect(root.locator('.code-block')).toHaveCount(0);
 
   const cards=root.locator('.q-card');await expect(cards).toHaveCount(12);
-  const first=cards.first();await first.locator('[data-key="A"]').focus();await page.keyboard.press('Space');await expect(first).toHaveClass(/is-wrong/);await expect(first.locator('.q-result')).toBeVisible();await expect(first.locator('button:disabled')).toHaveCount(4);
+  const first=cards.first();await first.locator('[data-key="A"]').focus();await page.keyboard.press('Space');await expect(first).toHaveClass(/is-wrong/);await expect(first.locator('.q-result')).toBeVisible();await expect(first.locator('.q-opt[aria-disabled="true"]')).toHaveCount(4);await expect(first.locator('[data-key="A"]')).toBeFocused();await page.keyboard.press('Tab');await expect(first.locator('[data-key="B"]')).toBeFocused();
   await root.getByRole('button',{name:'リセット',exact:true}).click();await expect(root.locator('.q-result:visible')).toHaveCount(0);
   for(const [i,item]of quiz.entries()){const button=cards.nth(i).locator('[data-key="'+item.answer+'"]');if(i===0){await button.focus();await page.keyboard.press('Enter');}else await button.click();await expect(cards.nth(i)).toHaveClass(/is-correct/);await expect(cards.nth(i).locator('.q-result')).toBeVisible();}
   await expect(root.locator('#qScore')).toHaveText('12');await expect(root.locator('#qDone')).toHaveText('12');await expect(root.locator('#qFill')).toHaveCSS('width',await root.locator('.qb-track').evaluate(el=>getComputedStyle(el).width));await expect(root.locator('#qFinal')).toContainText('12 / 12(100%)');
-  await root.getByRole('button',{name:'リセット',exact:true}).click();await expect(root.locator('#qScore')).toHaveText('0');await expect(root.locator('.q-opt:disabled,.q-result:visible')).toHaveCount(0);
+  await root.getByRole('button',{name:'リセット',exact:true}).click();await expect(root.locator('#qScore')).toHaveText('0');await expect(root.locator('.q-opt[aria-disabled="true"],.q-result:visible')).toHaveCount(0);
 
   const axe=await new AxeBuilder({page}).include('.sap-guide-page').analyze();expect(axe.violations).toEqual([]);expect(errors).toEqual([]);
  });

@@ -7,7 +7,7 @@ const rules=(text:string,selector:string,media='')=>{const result:Record<string,
 const globals:Record<string,string>={};postcss.parse(readFileSync('app/globals.css','utf8')).walkDecls(d=>{globals[d.prop]=d.value;});
 const source:Record<string,string>={};for(const [k,v]of Object.entries(fixture.guideDesign.rules.find(r=>r.selector===':root')!.declarations))if(typeof v==='string')source[k]=v;
 const resolve=(v:string,vars:Record<string,string>):string=>v.replace(/var\((--[\w-]+)\)/g,(_,k:string)=>vars[k]?resolve(vars[k]!,vars):'MISSING:'+k).replace(/\s+/g,'').toLowerCase();
-const map=(s:string)=>s.split(',').map(s=>['html','body'].includes(s.trim())?'.sap-guide-page':'.sap-guide-page '+s.trim().replaceAll('pre.mermaid','.mermaid-wrap').replaceAll('.code-block','.code-sample').replaceAll('pre','.code-block').replace('.main > h2:first-of-type','.main > .guide-part:first-child > h2:first-of-type')).join(', ');
+const map=(s:string)=>s.split(',').map(s=>['html','body'].includes(s.trim())?'.sap-guide-page':'.sap-guide-page '+s.trim().replaceAll('pre.mermaid','.mermaid-wrap').replaceAll('.code-block','.code-sample').replaceAll('pre','.code-block').replaceAll(':disabled','[aria-disabled="true"]').replace('.main > h2:first-of-type','.main > .guide-part:first-child > h2:first-of-type')).join(', ');
 it('preserves every source CSS declaration and responsive rule',()=>{
  for(const rule of fixture.guideDesign.rules){if(rule.selector===':root')continue;const selector=map(rule.selector);const actual=rules(css,selector,rule.media);
  for(const [p,v] of Object.entries(rule.declarations)){if(typeof v!=='string')continue;

@@ -466,7 +466,7 @@
                     border-color 0.15s,
                     background 0.15s;
             }
-            .sap-guide-page .q-opt:hover:not(:disabled) {
+            .sap-guide-page .q-opt:hover:not([aria-disabled="true"]) {
                 border-color: var(--color-aip-d1-accent);
                 background: var(--color-scs-7);
             }
@@ -474,7 +474,7 @@
                 outline: 2px solid var(--color-aip-d1-accent);
                 outline-offset: 2px;
             }
-            .sap-guide-page .q-opt:disabled {
+            .sap-guide-page .q-opt[aria-disabled="true"] {
                 cursor: default;
             }
             .sap-guide-page .q-key {

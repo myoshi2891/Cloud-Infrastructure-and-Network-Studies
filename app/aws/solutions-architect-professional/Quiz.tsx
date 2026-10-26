@@ -31,11 +31,11 @@ export function QuizCard({ answer, id, className, children, ...props }: Omit<Com
     </CardContext.Provider>;
 }
 
-/** 正解・選択した誤答・その他を色分けし、回答後は無効化する。 */
+/** 正解・選択した誤答・その他を色分けし、回答後はフォーカスを保ったまま aria-disabled で無効化する。 */
 export function QuizOption({ value, className, ...props }: Omit<ComponentProps<'button'>, 'value'> & { value: string }) {
     const { id, answer } = useCard(); const { selected, choose } = useQuiz(); const current = selected[id];
     const result = current ? value === answer ? ' is-correct' : value === current ? ' is-wrong' : ' is-dim' : '';
-    return <button {...props} type="button" className={`${className ?? ''}${result}`} disabled={Boolean(current)} onClick={() => choose(id, value)} />;
+    return <button {...props} type="button" className={`${className ?? ''}${result}`} aria-disabled={current ? true : undefined} onClick={() => { if (!current) choose(id, value); }} />;
 }
 
 /** 選択後だけ原本の解説を開示する。 */

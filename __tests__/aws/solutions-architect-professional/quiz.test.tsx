@@ -27,11 +27,18 @@ it('grades every correct answer, locks choices, reveals explanations and resets 
     const { container } = render(<Revision />);
     quiz.forEach((question, i) => {
         const card = container.querySelector('#' + question.id)!;
-        fireEvent.click(card.querySelector(`[data-key="${question.answer}"]`)!);
+        const answer = card.querySelector<HTMLButtonElement>(`[data-key="${question.answer}"]`)!;
+        answer.focus();
+        fireEvent.click(answer);
         expect(card).toHaveClass('is-correct');
+        // 回答後も選択肢はフォーカス可能なまま残し、aria-disabled で再回答不可を伝える
+        expect(answer).toHaveFocus();
         expect(card.querySelector('.q-verdict')).toHaveTextContent('✓ 正解です');
         expect(card.querySelector('.q-result')).toBeVisible();
-        card.querySelectorAll('.q-opt').forEach(option => expect(option).toBeDisabled());
+        card.querySelectorAll('.q-opt').forEach(option => {
+            expect(option).toBeEnabled();
+            expect(option).toHaveAttribute('aria-disabled', 'true');
+        });
         expect(container.querySelector('#qScore')).toHaveTextContent(String(i + 1));
         expect(container.querySelector('#qDone')).toHaveTextContent(String(i + 1));
         expect(container.querySelector('#qFill')).toHaveStyle({ width: `${(i + 1) / 12 * 100}%` });
@@ -45,7 +52,7 @@ it('grades every correct answer, locks choices, reveals explanations and resets 
     expect(container.querySelector('#qFill')).toHaveStyle({ width: '0%' });
     expect(container.querySelector('#qFinal')).not.toBeVisible();
     expect(container.querySelectorAll('.is-correct,.is-wrong,.is-dim')).toHaveLength(0);
-    container.querySelectorAll('.q-opt').forEach(option => expect(option).toBeEnabled());
+    container.querySelectorAll('.q-opt').forEach(option => expect(option).not.toHaveAttribute('aria-disabled'));
     container.querySelectorAll('.q-result').forEach(result => expect(result).not.toBeVisible());
 });
 it('grades every wrong answer and identifies the correct option without allowing a second answer', () => {
