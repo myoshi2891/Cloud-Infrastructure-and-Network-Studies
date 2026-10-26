@@ -1,6 +1,9 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import inventory from '../docs/migration-inventory/aws-ans-c01-guide.json';
+import sourceInventory from '../docs/migration-inventory/aws-ans-c01-guide.json';
+import { withSourceCorrections } from '../__tests__/helpers/aip-source-corrections';
+import { ANS_GUIDE_CORRECTIONS } from '../__tests__/helpers/aws-guide-source-corrections';
+const inventory=withSourceCorrections(sourceInventory,ANS_GUIDE_CORRECTIONS);
 import fixture from '../docs/migration-inventory/aws-ans-c01-guide.fidelity.json';
 const route='/aws/advanced-networking-specialty';
 for(const width of [1440,768,390]){
@@ -52,4 +55,17 @@ test('ANS-C01 browser detects removed list markers and indentation',async({page}
 test('ANS-C01 home and Header expose the dedicated complete guide',async({page})=>{
  test.setTimeout(90_000);await page.goto('/');const card=page.getByRole('heading',{name:'AWS Certified Advanced Networking - Specialty',exact:true}).locator('xpath=ancestor::article');await expect(card.locator('a.home-card-cta')).toHaveAttribute('href',route);
  await page.getByRole('button',{name:'メニューを開く'}).click();const dialog=page.getByRole('dialog',{name:'サイトナビゲーション'});await dialog.locator('summary').filter({hasText:'AWS Certified Advanced Networking - Specialty'}).click();const link=dialog.locator(`a[href="${route}"]`);await expect(link).toBeVisible();await link.click();await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.locator('.ans-guide-page h1')).toBeVisible();
+});
+test('ANS-C01 390px: the menu toggle stays above the open sidebar and closes it',async({page})=>{
+ test.setTimeout(90_000);await page.setViewportSize({width:390,height:844});await page.goto(route,{waitUntil:'networkidle'});
+ const root=page.locator('.ans-guide-page');const toggle=root.getByRole('button',{name:'メニュー'});
+ // 開発サーバー初回表示の再読み込みで開閉状態が失われる場合に備え、閉じているときだけ押して再試行する
+ await expect(async()=>{if(await toggle.getAttribute('aria-expanded')!=='true')await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','true',{timeout:1000});}).toPass({timeout:20_000});
+ await expect(root.locator('.sidebar')).toBeVisible();
+ // 開いたサイドバーがトグルを覆っていないこと（中心点の最前面要素がトグル自身）
+ expect(await toggle.evaluate(el=>{const r=el.getBoundingClientRect();return document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)===el;})).toBe(true);
+ // トグルがサイドバー見出しに重ならないこと
+ const [button,kicker]=await Promise.all([toggle.boundingBox(),root.locator('.sidebar-header').boundingBox()]);
+ expect(kicker!.y).toBeGreaterThanOrEqual(button!.y+button!.height);
+ await toggle.click();await expect(toggle).toHaveAttribute('aria-expanded','false');await expect(root.locator('.sidebar')).toBeHidden();
 });
