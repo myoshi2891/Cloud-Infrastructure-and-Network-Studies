@@ -1,8 +1,12 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-26)
+(最終更新日: 2026-10-27)
 
-## 2026-10-26: SAP-C02総合ガイド移行・原本アーカイブ
+## 2026-10-27: ANS-C01 Domain 3 原本アーカイブ退避・整合性検証完了
+
+2026-10-27 ANS-C01 Domain 3原本アーカイブ退避: 直下に残存していた `Ans-c01-domain3-network-management-operation-guide.html`（356451バイト・SHA-256 `c413d557296601e3463c43e1596c5b1b1271a168f9e2d7debb2e2a21010f8b81`）および `Ans-c01-domain3-network-management-operation-guide.md`（107870バイト・SHA-256 `af7d1fee0e00ebebb76e4612fad687860d46a30e5a7f3b08cc5cf1d7f4475471`）を、内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain3/` と `archive/Aws/md/advanced-networking-specialty/domain3/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain3-guide.archive.json` に記録した。
+
+直下の原本HTML/MDを削除後、作業ツリー原本不在下で `fixture.test.ts` を実行し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` からfixtureがバイト一致で再生成されること、および全13テストファイル（98件）が100%成功（Pass）することを確認。TypeScript型検査（`tsc --noEmit`）およびESLintもエラー0であることを確認。
 
 2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本ライト配色・リストの点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次と練習問題の操作はClientに分離。ホームとHeaderの概要を総合ガイドへ変更し、Domain 1詳細への導線も保持した。原本にコードブロックとチェックボックスの実体はなく追加していない。
 
@@ -132,7 +136,7 @@ CSS変更後は既存3000番のサーバーがないことを確認し、生成�
 
 `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。原本の白背景・300px目次・リストの点と階層・インデント・コードの全行と構文色・解答解説の開閉を保持。本文はServer Component、目次操作はClientのNavBarに分離し、ホーム・Headerに20%のDomain 3導線を追加。チェックボックスは原本に実体がないため追加していない。
 
-原本HTML・Markdownは変更せず直下に保持。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）inventory/fidelity fixtureをコミットし、原本・archiveが作業ツリーにない状態でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
+原本HTML（356451バイト・SHA-256 `c413d557296601e3463c43e1596c5b1b1271a168f9e2d7debb2e2a21010f8b81`）とMarkdown（107870バイト・SHA-256 `af7d1fee0e00ebebb76e4612fad687860d46a30e5a7f3b08cc5cf1d7f4475471`）は内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain3/` と `archive/Aws/md/advanced-networking-specialty/domain3/` へ移動済み。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain3-guide.archive.json` に記録。直下から原本を削除し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）inventory/fidelity fixtureにより作業ツリー原本不在下でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
 
 対象Vitest13ファイル・98件成功。Chromeは1440/768/390px・リストCSS破壊検出・ホーム/Header導線の計5件成功。全26SVGの自然倍率・viewBox内包、目次とhash/focus、モバイル開閉、8解答のクリック/Enter開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。初回1440pxで検出した原本由来のコード色2系統のみを同色相でAA補正し、本文リンクに下線を追加した。型検査・全体ESLint・対象Markdown lint成功。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。
 

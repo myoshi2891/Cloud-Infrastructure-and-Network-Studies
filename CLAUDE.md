@@ -1,9 +1,10 @@
 # CLAUDE.md
 
-Updated 2026-10-26
+Updated 2026-10-27
+
+2026-10-27 ANS-C01 Domain 3原本アーカイブ退避: 直下に残存していた `Ans-c01-domain3-network-management-operation-guide.html`（356451バイト・SHA-256 `c413d557...`）および `Ans-c01-domain3-network-management-operation-guide.md`（107870バイト・SHA-256 `af7d1fee...`）を `archive/Aws/html|md/advanced-networking-specialty/domain3/` へバイト一致・SHA-256一致で移動・退避。保存先と完全なハッシュを `docs/migration-inventory/aws-ans-c01-domain3-guide.archive.json` に記録。直下から原本を削除し、原本不在下で全13テストファイル（98件）の100%成功、および固定Git `ead3ccbc` 由来fixtureのバイト一致再生成を検証。TypeScript型検査・全体ESLint成功。
 
 2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本のライト配色・点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次とクイズ操作はClientに分離。ホームとHeaderへ総合ガイドを追加し、Domain 1詳細も保持。原本のコードブロックとチェックボックスは0件。
-
 対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
 
 原本HTML509866バイト・Markdown140000バイトは `archive/Aws/html/solutions-architect-professional/` と `archive/Aws/md/solutions-architect-professional/` へバイト一致・SHA-256一致で移動済み。ハッシュと保存先は `docs/migration-inventory/aws-sap-c02-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc` 由来fixtureを使用し、原本・archiveなしでも再生成できる。
@@ -40,7 +41,7 @@ Red `cc139326` / Green `00a04e3c`。修正前はDOM1件とブラウザー3件で
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
-2026-10-21 ANS-C01 Domain 3移行: `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。白背景・300px目次・リストの点と階層・インデント・構文ハイライト・解答開閉を保持。本文はServer Component、目次操作はClientのNavBarへ分離。原本HTML・Markdownは保持し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）fixtureで原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。ホームとHeaderへDomain 3（20%）を追加し、Domain 1・2の導線を保持。原本由来のコード色2系統だけを同系色でAA補正し、本文リンクに下線を追加。原本にチェックボックス実体はなく、追加していない。npm・ビルドは依頼に従い未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果と段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-21 ANS-C01 Domain 3移行: `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。白背景・300px目次・リストの点と階層・インデント・構文ハイライト・解答開閉を保持。本文はServer Component、目次操作はClientのNavBarへ分離。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain3/` へバイト一致で保存後に直下から削除し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）fixtureで原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。ホームとHeaderへDomain 3（20%）を追加し、Domain 1・2の導線を保持。原本由来のコード色2系統だけを同系色でAA補正し、本文リンクに下線を追加。原本にチェックボックス実体はなく、追加していない。npm・ビルドは依頼に従い未実行、表示は自動検証の結果で判定し、ユーザーへ目視確認を求めない。検証結果と段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 2026-10-20 ANS-C01 Domain 2移行: `/aws/advanced-networking-specialty/domain2` に全4タスク・57表（th150・td803）・26図・11コード・86リスト項目・43外部リンク出現・59目次・確認問題8問を全文移行。原本のライト配色・300px目次・点と番号・インデント・構文ハイライト・解答解説の折りたたみを保持。操作状態はClientのNavBarに限定し、本文はServer Component。ホームとHeaderのDomain 1導線を保持したままDomain 2を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain2/` へバイト一致で保存後に直下から削除（`fd574555`。保存時のHTML SHA-256 `c1842b2f…` は修正前の旧版で廃止。現在のarchive原本は固定Git `c5c1000f` とバイト一致するHTML SHA-256 `aa28eb6d…` で、再生成fixtureの元）し、固定Git由来fixtureで全量照合する。コミット・npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証（1440/768/390px・導線を含む5件成功）で代替。検証結果はMIGRATION_PROGRESS.mdの最新記録を参照。
 
