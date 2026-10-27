@@ -17,6 +17,26 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     const [, startTransition] = useTransition();
 
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        let hashId = window.location.hash.slice(1);
+        try {
+            hashId = decodeURIComponent(hashId);
+        } catch {
+            // 不正なエンコードはそのまま扱い、一致しなければ無視する
+        }
+        if (
+            hashId &&
+            NAV_ITEMS.some(
+                (item) => item.id === hashId || item.subItems?.some((s) => s.id === hashId),
+            )
+        ) {
+            setActiveId(hashId);
+        }
+    }, []);
+
+    useEffect(() => {
         if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
             return;
         }
@@ -62,6 +82,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
         e.preventDefault();
         const target = document.getElementById(id);
         if (target) {
+            setActiveId(id);
             target.scrollIntoView({ behavior: 'smooth' });
             window.history.pushState(null, '', `#${id}`);
             if (!target.hasAttribute('tabindex')) {
