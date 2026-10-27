@@ -41,24 +41,32 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     if (!chart) return null;
 
     const ariaLabel = label || DEFAULT_LABELS[id] || `図 ${id}`;
+    const descriptionId = `aib-domain4-diagram-desc-${id}`;
 
     return (
-        <div className="diagram-card">
-            <div
-                className="diagram-canvas"
-                data-diagram-id={id}
-                role="img"
-                aria-label={ariaLabel}
-                data-preserve-natural-scale="true"
-            >
-                <MermaidDiagram
-                    chart={SOURCE_THEME_DIRECTIVE + chart}
-                    theme="light"
-                    preserveChartTheme={true}
-                    ariaLabel={ariaLabel}
-                    preserveNaturalScale={true}
-                />
+        <figure className="diagram-card">
+            <div className="diagram-wrap">
+                <div
+                    className="diagram-canvas"
+                    data-diagram-id={id}
+                    aria-label={ariaLabel}
+                    data-preserve-natural-scale="true"
+                >
+                    <MermaidDiagram
+                        chart={SOURCE_THEME_DIRECTIVE + chart}
+                        theme="light"
+                        preserveChartTheme={true}
+                        ariaLabel={ariaLabel}
+                        ariaDescribedBy={descriptionId}
+                        preserveNaturalScale={true}
+                        focusable={true}
+                    />
+                </div>
             </div>
-        </div>
+            {/* 図の関係を支援技術へ伝える説明。本文抽出の対象外にするため p ではなく span を使う */}
+            <span id={descriptionId} className="sr-only">
+                {ariaLabel}
+            </span>
+        </figure>
     );
 });

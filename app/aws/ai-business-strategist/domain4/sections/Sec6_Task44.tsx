@@ -19,11 +19,7 @@ export const Sec6_Task44: React.FC = () => {
         を繰り返します。AWS CAF for AI
         も、変革は反復的・漸進的な改善に基づくべきとしています。[S7]
       </p>
-      <figure className="diagram-card">
-        <div className="diagram-wrap">
-          <Diagram id="d8" />
-        </div>
-      </figure>
+      <Diagram id="d8" />
       <div className="table-wrap">
         <table>
           <thead>
@@ -197,11 +193,7 @@ export const Sec6_Task44: React.FC = () => {
         <strong>ガイダンス(ベストプラクティス、教訓、チュートリアルなど)</strong> と{' '}
         <strong>能力(人のスキル、ツール、技術ソリューション、再利用可能なテンプレート)</strong> の 2 種類です。[S25]
       </p>
-      <figure className="diagram-card">
-        <div className="diagram-wrap">
-          <Diagram id="d9" />
-        </div>
-      </figure>
+      <Diagram id="d9" />
       <div className="table-wrap">
         <table>
           <thead>
@@ -495,11 +487,7 @@ export const Sec6_Task44: React.FC = () => {
         AWS は、<strong>AI の取り組みは小規模の成功が本番の成功を保証しない</strong> ことも示しています。
         <strong>Five V&apos;s Framework</strong> は、Value、Visualize、Validate、Verify、Venture の 5 つで、本番までの道筋を示します。[S27]
       </p>
-      <figure className="diagram-card">
-        <div className="diagram-wrap">
-          <Diagram id="d10" />
-        </div>
-      </figure>
+      <Diagram id="d10" />
       <div className="table-wrap">
         <table>
           <thead>
@@ -547,11 +535,7 @@ export const Sec6_Task44: React.FC = () => {
         </table>
       </div>
       <p><strong>本番移行の判断フロー(整理)</strong></p>
-      <figure className="diagram-card">
-        <div className="diagram-wrap">
-          <Diagram id="d11" />
-        </div>
-      </figure>
+      <Diagram id="d11" />
       <p>
         <strong>③ 具体例</strong> PoC で精度が高かった文書要約 AI を全社展開する前に、本番の受け入れ基準(精度・応答時間・コスト)、監視と障害時の連絡体制、利用ルール、モデル更新時の確認手順を決める。
       </p>

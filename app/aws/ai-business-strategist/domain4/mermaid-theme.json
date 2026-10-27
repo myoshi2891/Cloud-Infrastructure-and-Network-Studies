@@ -3,12 +3,23 @@
   "themeVariables": {
     "fontFamily": "\"Noto Sans JP Variable\",\"Noto Sans JP\",sans-serif",
     "fontSize": "16px",
+    "background": "#ffffff",
+    "mainBkg": "#ffffff",
+    "nodeBkg": "#ffffff",
+    "nodeBorder": "#9b927c",
     "primaryColor": "#ffffff",
     "primaryTextColor": "#25221c",
     "primaryBorderColor": "#9b927c",
     "lineColor": "#6b6452",
+    "defaultLinkColor": "#6b6452",
     "textColor": "#25221c",
-    "edgeLabelBackground": "#ffffff"
+    "nodeTextColor": "#25221c",
+    "edgeLabelBackground": "#ffffff",
+    "secondaryColor": "#f3eee2",
+    "tertiaryColor": "#f3eee2",
+    "clusterBkg": "#f3eee2",
+    "clusterBorder": "#ded6c4",
+    "titleColor": "#25221c"
   },
   "flowchart": {
     "htmlLabels": true,
