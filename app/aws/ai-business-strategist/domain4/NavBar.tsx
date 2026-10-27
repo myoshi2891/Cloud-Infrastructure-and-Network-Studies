@@ -20,20 +20,29 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
         if (typeof window === 'undefined') {
             return;
         }
-        let hashId = window.location.hash.slice(1);
-        try {
-            hashId = decodeURIComponent(hashId);
-        } catch {
-            // 不正なエンコードはそのまま扱い、一致しなければ無視する
-        }
-        if (
-            hashId &&
-            NAV_ITEMS.some(
-                (item) => item.id === hashId || item.subItems?.some((s) => s.id === hashId),
-            )
-        ) {
-            setActiveId(hashId);
-        }
+        const syncFromHash = () => {
+            let hashId = window.location.hash.slice(1);
+            try {
+                hashId = decodeURIComponent(hashId);
+            } catch {
+                // 不正なエンコードはそのまま扱い、一致しなければ無視する
+            }
+            if (
+                hashId &&
+                NAV_ITEMS.some(
+                    (item) => item.id === hashId || item.subItems?.some((s) => s.id === hashId),
+                )
+            ) {
+                setActiveId(hashId);
+            }
+        };
+        // 初期ハッシュはエフェクト本体で同期的にsetStateせず、コールバック経由で反映する
+        const timer = window.setTimeout(syncFromHash, 0);
+        window.addEventListener('hashchange', syncFromHash);
+        return () => {
+            window.clearTimeout(timer);
+            window.removeEventListener('hashchange', syncFromHash);
+        };
     }, []);
 
     useEffect(() => {

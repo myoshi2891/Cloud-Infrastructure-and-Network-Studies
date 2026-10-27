@@ -65,15 +65,16 @@ describe('aws-ai-business-strategist-domain4 — Mermaid ライトテーマ・�
         });
     });
 
-    it('内側の MermaidDiagram ([data-testid="mermaid-diagram"]) が focusable (tabIndex=0) と aria-describedby を持つ', () => {
+    it('内側の MermaidDiagram ([data-testid="mermaid-diagram"]) が focusable (tabIndex=0) と一意の aria-label を持ち、重複する aria-describedby を持たない', () => {
         const { container } = render(<Page />);
         const diagrams = [...container.querySelectorAll('[data-testid="mermaid-diagram"]')];
         expect(diagrams).toHaveLength(12);
         diagrams.forEach((diag) => {
             expect(diag.getAttribute('tabindex')).toBe('0');
-            const descId = diag.getAttribute('aria-describedby') ?? '';
-            expect(descId).not.toBe('');
-            expect(container.querySelector(`#${descId}`)?.textContent?.trim()).toBeTruthy();
+            expect(diag.getAttribute('aria-describedby')).toBeNull();
+            expect(diag.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
+        const labels = diagrams.map((diag) => diag.getAttribute('aria-label'));
+        expect(new Set(labels).size).toBe(12);
     });
 });

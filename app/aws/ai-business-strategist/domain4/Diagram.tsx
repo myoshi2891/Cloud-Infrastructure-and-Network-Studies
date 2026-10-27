@@ -41,7 +41,6 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
     if (!chart) return null;
 
     const ariaLabel = label || DEFAULT_LABELS[id] || `図 ${id}`;
-    const descriptionId = `aib-domain4-diagram-desc-${id}`;
 
     return (
         <figure className="diagram-card">
@@ -57,16 +56,11 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
                         theme="light"
                         preserveChartTheme={true}
                         ariaLabel={ariaLabel}
-                        ariaDescribedBy={descriptionId}
                         preserveNaturalScale={true}
                         focusable={true}
                     />
                 </div>
             </div>
-            {/* 図の関係を支援技術へ伝える説明。本文抽出の対象外にするため p ではなく span を使う */}
-            <span id={descriptionId} className="sr-only">
-                {ariaLabel}
-            </span>
         </figure>
     );
 });
