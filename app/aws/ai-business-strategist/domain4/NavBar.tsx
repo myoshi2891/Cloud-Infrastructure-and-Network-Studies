@@ -118,6 +118,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
                         <span key={item.id}>
                             <a
                                 className={`nav-a ${isParentActive ? 'active' : ''}`}
+                                aria-current={activeId === item.id ? 'location' : undefined}
                                 href={`#${item.id}`}
                                 onClick={(e) => handleClick(e, item.id)}
                             >
@@ -129,6 +130,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
                                     <span key={sub.id}>
                                         <a
                                             className={`nav-sub ${activeId === sub.id ? 'active' : ''}`}
+                                            aria-current={activeId === sub.id ? 'location' : undefined}
                                             href={`#${sub.id}`}
                                             onClick={(e) => handleClick(e, sub.id)}
                                         >
