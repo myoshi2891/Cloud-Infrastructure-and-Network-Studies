@@ -690,3 +690,9 @@
         display: flex;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .scs-domain1-page .sidebar {
+        transition: none;
+    }
+}

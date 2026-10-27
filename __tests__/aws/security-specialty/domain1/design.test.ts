@@ -147,3 +147,7 @@ it('keeps diagram scrolling on the named keyboard-focusable outer region', () =>
 it('wraps long reference URLs inside the light guide background on narrow screens', () => {
     expect(rules(css, '.scs-domain1-page .main a')['overflow-wrap']).toBe('anywhere');
 });
+
+it('disables the sidebar slide transition when reduced motion is requested', () => {
+    expect(rules(css, '.scs-domain1-page .sidebar', '(prefers-reduced-motion: reduce)').transition).toBe('none');
+});
