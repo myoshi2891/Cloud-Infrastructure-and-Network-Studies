@@ -26,14 +26,14 @@ export const Sec12_References: React.FC = () => {
                             <td>S1</td>
                             <td>AWS Certified AI Business Strategist(認定ページ)</td>
                             <td>
-                                https://aws.amazon.com/certification/certified-ai-business-strategist/
+                                <a href="https://aws.amazon.com/certification/certified-ai-business-strategist/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/certification/certified-ai-business-strategist/</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S2</td>
                             <td>試験ガイド(AIB-C01) トップ</td>
                             <td>
-                                https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html
+                                <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -42,28 +42,28 @@ export const Sec12_References: React.FC = () => {
                                 Content Domain 4: Business Readiness, Leadership, and AI Transformation
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain4.html
+                                <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain4.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/ai-business-strategist-01-domain4.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S4</td>
                             <td>試験に出る可能性のある技術と概念</td>
                             <td>
-                                https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html
+                                <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-technologies-concepts.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S5</td>
                             <td>対象範囲の AWS サービスと機能</td>
                             <td>
-                                https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html
+                                <a href="https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/aws-certification/latest/ai-business-strategist-01/aib-01-in-scope-services.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>-</td>
                             <td>試験対策プラン(AWS Skill Builder)</td>
                             <td>
-                                https://skillbuilder.aws/category/exam-prep/ai-business-strategist-business-AIB-C01
+                                <a href="https://skillbuilder.aws/category/exam-prep/ai-business-strategist-business-AIB-C01" target="_blank" rel="noopener noreferrer">https://skillbuilder.aws/category/exam-prep/ai-business-strategist-business-AIB-C01</a>
                             </td>
                         </tr>
                     </tbody>
@@ -85,7 +85,7 @@ export const Sec12_References: React.FC = () => {
                             <td>S6</td>
                             <td>AWS CAF for AI, ML, and Generative AI(ホワイトペーパー)</td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/aws-caf-for-ai.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -94,21 +94,21 @@ export const Sec12_References: React.FC = () => {
                                 Your AI transformation journey(Envision / Align / Launch / Scale、AI フライホイール)
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/your-ai-transformation-journey.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/your-ai-transformation-journey.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/your-ai-transformation-journey.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S8</td>
                             <td>Foundational AI capabilities(6 つの視点)</td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/foundational-ai-capabilities.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/foundational-ai-capabilities.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/foundational-ai-capabilities.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S9</td>
                             <td>People perspective: Culture and change towards AI-first</td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/people-perspective-culture-and-change-towards-aiml-first.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/people-perspective-culture-and-change-towards-aiml-first.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/people-perspective-culture-and-change-towards-aiml-first.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -117,61 +117,61 @@ export const Sec12_References: React.FC = () => {
                                 Platform perspective: Infrastructure for and applications of AI
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/platform-perspective-infrastructure-for-and-applications-of-aiml.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/platform-perspective-infrastructure-for-and-applications-of-aiml.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/platform-perspective-infrastructure-for-and-applications-of-aiml.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S11</td>
                             <td>Maturity model for adopting generative AI on AWS(概要)</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S12</td>
                             <td>Levels in the generative AI maturity model</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-levels.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-levels.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-levels.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S13</td>
                             <td>Level 2: Experiment</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-2.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-2.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-2.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S14</td>
                             <td>Level 3: Launch</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-3.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-3.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-3.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S15</td>
                             <td>Level 4: Scale</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-4.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-4.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/level-4.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S16</td>
                             <td>Aspects of generative AI maturity</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-aspects.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-aspects.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-gen-ai-maturity-model/overview-aspects.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S34</td>
                             <td>AWS Cloud Adoption Framework(概要)</td>
-                            <td>https://aws.amazon.com/cloud-adoption-framework/</td>
+                            <td><a href="https://aws.amazon.com/cloud-adoption-framework/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/cloud-adoption-framework/</a></td>
                         </tr>
                         <tr>
                             <td>S35</td>
                             <td>CAF People perspective: culture and change</td>
                             <td>
-                                https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/people-perspective.html
+                                <a href="https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/people-perspective.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/people-perspective.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -180,14 +180,14 @@ export const Sec12_References: React.FC = () => {
                                 Building a Cloud Center of Excellence within your organization
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-center-of-excellence/introduction.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-center-of-excellence/introduction.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-center-of-excellence/introduction.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S36b</td>
                             <td>AWS CAF: People Perspective(Learning Needs Analysis の記載)</td>
                             <td>
-                                https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-people-perspective/aws-caf-people-perspective.pdf
+                                <a href="https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-people-perspective/aws-caf-people-perspective.pdf" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/pdfs/whitepapers/latest/aws-caf-people-perspective/aws-caf-people-perspective.pdf</a>
                             </td>
                         </tr>
                     </tbody>
@@ -211,42 +211,42 @@ export const Sec12_References: React.FC = () => {
                                 Data security, lifecycle, and strategy for generative AI applications
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/introduction.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/introduction.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/introduction.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S18</td>
                             <td>Data strategy(導入の 4 段階と 4 つの柱)</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/journey.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/journey.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/journey.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S19</td>
                             <td>Data lifecycle in generative AI</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/lifecycle.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/lifecycle.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-data-considerations-gen-ai/lifecycle.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S20</td>
                             <td>Data architecture - Generative AI Lens(Well-Architected)</td>
                             <td>
-                                https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/data-architecture.html
+                                <a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/data-architecture.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/data-architecture.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S21</td>
                             <td>Generative AI workload assessment: Data strategy</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/data-strategy.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/data-strategy.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/data-strategy.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S22</td>
                             <td>Generative AI workload assessment: FAQ</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/faq.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/faq.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/gen-ai-workload-assessment/faq.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -255,7 +255,7 @@ export const Sec12_References: React.FC = () => {
                                 Data Governance in the Age of Generative AI(AWS Executive in Residence Blog)
                             </td>
                             <td>
-                                https://aws.amazon.com/blogs/enterprise-strategy/data-governance-in-the-age-of-generative-ai
+                                <a href="https://aws.amazon.com/blogs/enterprise-strategy/data-governance-in-the-age-of-generative-ai" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/enterprise-strategy/data-governance-in-the-age-of-generative-ai</a>
                             </td>
                         </tr>
                     </tbody>
@@ -279,14 +279,14 @@ export const Sec12_References: React.FC = () => {
                                 Best practices for enterprise generative AI adoption and scaling
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/best-practices.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/best-practices.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/best-practices.html</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S24</td>
                             <td>Enterprise-ready generative AI platform: Next steps</td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/next-steps.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/next-steps.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-enterprise-ready-gen-ai-platform/next-steps.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -295,7 +295,7 @@ export const Sec12_References: React.FC = () => {
                                 Establishing an AI/ML center of excellence(AWS Machine Learning Blog)
                             </td>
                             <td>
-                                https://aws.amazon.com/blogs/machine-learning/establishing-an-ai-ml-center-of-excellence/
+                                <a href="https://aws.amazon.com/blogs/machine-learning/establishing-an-ai-ml-center-of-excellence/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/establishing-an-ai-ml-center-of-excellence/</a>
                             </td>
                         </tr>
                         <tr>
@@ -304,7 +304,7 @@ export const Sec12_References: React.FC = () => {
                                 Transforming ADM operating models with generative AI: Action areas and recommendations
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-transform-adm-operating-model-gen-ai/recommendations.html
+                                <a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-transform-adm-operating-model-gen-ai/recommendations.html" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/prescriptive-guidance/latest/strategy-transform-adm-operating-model-gen-ai/recommendations.html</a>
                             </td>
                         </tr>
                         <tr>
@@ -313,7 +313,7 @@ export const Sec12_References: React.FC = () => {
                                 Beyond pilots: A proven framework for scaling AI to production(Five V&apos;s Framework)
                             </td>
                             <td>
-                                https://aws.amazon.com/blogs/machine-learning/beyond-pilots-a-proven-framework-for-scaling-ai-to-production/
+                                <a href="https://aws.amazon.com/blogs/machine-learning/beyond-pilots-a-proven-framework-for-scaling-ai-to-production/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/blogs/machine-learning/beyond-pilots-a-proven-framework-for-scaling-ai-to-production/</a>
                             </td>
                         </tr>
                         <tr>
@@ -322,13 +322,13 @@ export const Sec12_References: React.FC = () => {
                                 Generative AI Lifecycle Operational Excellence framework on AWS(PDF)
                             </td>
                             <td>
-                                https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/gen-ai-lifecycle-operational-excellence/gen-ai-lifecycle-operational-excellence.pdf
+                                <a href="https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/gen-ai-lifecycle-operational-excellence/gen-ai-lifecycle-operational-excellence.pdf" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/pdfs/prescriptive-guidance/latest/gen-ai-lifecycle-operational-excellence/gen-ai-lifecycle-operational-excellence.pdf</a>
                             </td>
                         </tr>
                         <tr>
                             <td>-</td>
                             <td>How to Implement AI in Your Business(AWS)</td>
-                            <td>https://aws.amazon.com/ai/implementation/</td>
+                            <td><a href="https://aws.amazon.com/ai/implementation/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/ai/implementation/</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -349,21 +349,21 @@ export const Sec12_References: React.FC = () => {
                             <td>S30</td>
                             <td>Generative AI Security Scoping Matrix</td>
                             <td>
-                                https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/
+                                <a href="https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S31</td>
                             <td>Security, privacy, and responsible AI - Amazon Bedrock</td>
                             <td>
-                                https://aws.amazon.com/bedrock/security-privacy-responsible-ai/
+                                <a href="https://aws.amazon.com/bedrock/security-privacy-responsible-ai/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/bedrock/security-privacy-responsible-ai/</a>
                             </td>
                         </tr>
                         <tr>
                             <td>S32</td>
                             <td>AWS Cost Explorer(ドキュメント / 製品ページ)</td>
                             <td>
-                                https://docs.aws.amazon.com/console/billing/costexplorer / https://aws.amazon.com/aws-cost-management/aws-cost-explorer/
+                                <a href="https://docs.aws.amazon.com/console/billing/costexplorer" target="_blank" rel="noopener noreferrer">https://docs.aws.amazon.com/console/billing/costexplorer</a> / <a href="https://aws.amazon.com/aws-cost-management/aws-cost-explorer/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/aws-cost-management/aws-cost-explorer/</a>
                             </td>
                         </tr>
                         <tr>
@@ -372,7 +372,7 @@ export const Sec12_References: React.FC = () => {
                                 AWS Pricing Calculator / Savings Plans / Bedrock の料金 / SageMaker の料金 / AWS Marketplace
                             </td>
                             <td>
-                                https://calculator.aws/ / https://aws.amazon.com/savingsplans/ / https://aws.amazon.com/bedrock/pricing/ / https://aws.amazon.com/sagemaker/pricing/ / https://aws.amazon.com/marketplace
+                                <a href="https://calculator.aws/" target="_blank" rel="noopener noreferrer">https://calculator.aws/</a> / <a href="https://aws.amazon.com/savingsplans/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/savingsplans/</a> / <a href="https://aws.amazon.com/bedrock/pricing/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/bedrock/pricing/</a> / <a href="https://aws.amazon.com/sagemaker/pricing/" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/sagemaker/pricing/</a> / <a href="https://aws.amazon.com/marketplace" target="_blank" rel="noopener noreferrer">https://aws.amazon.com/marketplace</a>
                             </td>
                         </tr>
                     </tbody>

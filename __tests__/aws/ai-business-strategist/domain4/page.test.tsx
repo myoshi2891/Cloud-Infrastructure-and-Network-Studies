@@ -46,12 +46,17 @@ describe('aws-ai-business-strategist-domain4 — 移行元コンテンツの全�
         expect(rendered).toEqual(items.map(squash));
     });
 
-    it('外部リンクが件数・順序・URL まで移行元と一致する', () => {
+    it('外部リンクが移行元の件数・順序・URL を保持し、参考URL表の URL もリンク化されている', () => {
         const container = renderPage();
-        const rendered = [...container.querySelectorAll('a[href^="http"]')].map((anchor) =>
-            anchor.getAttribute('href'),
-        );
+        const refAnchors = [...container.querySelectorAll('#s12 td a[href^="http"]')];
+        const rendered = [...container.querySelectorAll('a[href^="http"]')]
+            .filter((anchor) => !refAnchors.includes(anchor))
+            .map((anchor) => anchor.getAttribute('href'));
         expect(rendered).toEqual(inventory.links.map((link) => link.href));
+        expect(refAnchors.length).toBeGreaterThan(0);
+        for (const anchor of refAnchors) {
+            expect(anchor.getAttribute('href')).toBe(squash(anchor.textContent ?? ''));
+        }
     });
 
     it('本文・注釈・画像 alt・コード全文が移行元の順序どおり一致する', () => {
