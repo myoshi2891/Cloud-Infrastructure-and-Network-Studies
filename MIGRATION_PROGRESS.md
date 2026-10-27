@@ -4,11 +4,11 @@
 
 ## 2026-10-27: AWS AIB-C01 Domain 4 (Business Readiness, Leadership, and AI Transformation) 移行 & 原本アーカイブ退避
 
-2026-10-27 AIB-C01 Domain 4移行: `/aws/ai-business-strategist/domain4` に全4タスク・19スキル、54表（th162・td883）・12図・54リスト項目・8外部リンク出現・32目次・練習問題6問・チェックリスト22項目を全文移行。原本のライト配色・302px目次・点/番号/階層/字下げ・表構造・Mermaid図のアクセシビリティを保持。本文はServer Component、目次とチェックリスト操作はClientへ分離。ホームとHeaderへDomain 4（24%）を追加。
+2026-10-27 AIB-C01 Domain 4移行: `/aws/ai-business-strategist/domain4` に全4タスク・19スキル、54表（th162・td883）・12図・54リスト項目・8外部リンク出現・32目次・練習問題6問・チェックリスト22項目を全文移行。原本のライト配色・302px目次・全幅メインコンテンツ（`calc(100% - 302px)`）・Hero濃紺グラデーション・表ヘッダー/Blockquote/H3左ボーダー・点/番号/階層/字下げ・Mermaidライトテーマ全変数とラッパー透過・チェックリスト進捗カウンター/バーを完全復元。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、Tailwind `@theme` トークン化（`--color-aib-d4-*` 21変数）を適用。ホームとHeaderへDomain 4（24%）を追加。
 
 原本HTML（229767バイト・SHA-256 `63197732f3772f0a4b0b5b33893ee4c54ef3a6c21b3ea145b9f4b1d087cc902a`）およびMarkdown（86525バイト・SHA-256 `ab92b5932b0d7356e171bfe0765049bd7a97745d0a666d53119ca6f1cba0b7af`）を、内容を変更せず `archive/Aws/html/ai-business-strategist/domain4/` と `archive/Aws/md/ai-business-strategist/domain4/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json` に記録した。
 
-直下の原本削除後、原本不在下で全14テストファイル（14件）が100%成功（Pass）、AIB関連全11ファイル・88テストも100%成功することを確認。TypeScript型検査・ESLint成功。
+直下の原本削除後、原本不在下でDomain 4全5テストファイル（30件）が100%成功（Pass）、AIB関連＋共通Footer全16ファイル・107テストも100%成功することを確認。TypeScript型検査・ESLint成功。
 
 | ステップ | 内容 | コミット |
 |---|---|---|
@@ -20,6 +20,10 @@
 | Step 5 | サービス早見表・判断ルール・練習問題・直前チェックリスト (`Sec7`〜`Sec10`) | `8eaf7747` |
 | Step 6 | 用語集・参考URL・テスト全14件Green達成 (`Sec11`, `Sec12`, `NavBar`) | `63c01f28` |
 | Step 7 | ルーティング統合 (`constants.ts`, `integration.test.ts`) | `de009ebd` |
+| Step 8 | 全画面共通フッター明色テーマ切替 (`Footer.module.css`, `footer.test.ts`) | `89f1c6b9` |
+| Step 9 | Mermaidライトテーマ変数完備・ラッパー透過・二重カード解消 (`mermaid-theme.json`, `Diagram.tsx`, `Sec6_Task44.tsx`, `diagram-theme.test.tsx`) | `bfb2aa40` |
+| Step 10 | 全幅レイアウト・原本デザイン（Hero/表/Blockquote/H3）・リストマーカー・`@theme`トークン復元 (`globals.css`, `page.css`, `design.test.ts`) | `0f7fa60d` |
+| Step 11 | チェックリスト進捗バー/カウンター・モバイルドロワー操作強化 (`Sec10_Checklist.tsx`, `AiBusinessStrategistDomain4Guide.tsx`, `interactive.test.tsx`) | `191203bf` |
 
 ## 2026-10-27: AWS SCS-C03 Domain 1 (Detection) 移行 & 原本アーカイブ退避
 
