@@ -739,6 +739,11 @@ const ALL_EXAMS: Exam[] = [
                 href: '/aws/ai-business-strategist/domain3',
                 pct: '24%',
             },
+            {
+                label: 'Domain 4: Business Readiness, Leadership, and AI Transformation',
+                href: '/aws/ai-business-strategist/domain4',
+                pct: '24%',
+            },
         ],
         badge: 'AIB-C01',
         icon: '💼',
