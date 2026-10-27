@@ -82,7 +82,7 @@ export function AiBusinessStrategistDomain4Guide({ children }: AiBusinessStrateg
                     onClick={() => setNavOpen(false)}
                     role="presentation"
                 />
-                <div className="main">
+                <main className="main">
                     <div className="mobile-bar">
                         <button
                             ref={menuButtonRef}
@@ -100,7 +100,7 @@ export function AiBusinessStrategistDomain4Guide({ children }: AiBusinessStrateg
                     </div>
 
                     {children}
-                </div>
+                </main>
             </div>
         </div>
     );
