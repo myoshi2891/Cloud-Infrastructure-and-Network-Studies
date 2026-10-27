@@ -1,32 +1,15 @@
-.scs-domain1-page {
-    --bg: #f7f8fb;
-    --bg-card: #ffffff;
-    --bg-card-2: #f0f3f9;
-    --border: #d5dcea;
-    --border-soft: #e4e9f2;
-    --text: #1d2740;
-    --text-dim: #4d5b78;
-    --text-faint: #6b7a98;
-    --accent: #3552c9;
-    --accent-soft: #9db0ec;
-    --accent-bg: #e8eefc;
-    --danger: #c62f4a;
-    --danger-bg: #fde8ec;
-    --warn: #a8620a;
-    --warn-bg: #fff1dc;
-    --success: #1c7a49;
-    --success-bg: #e6f6ee;
-    --sidebar-w: 300px;
-}
-
 .scs-domain1-page * {
     box-sizing: border-box;
 }
 
+.scs-domain1-page, .scs-domain1-page {
+    overflow-x: clip;
+}
+
 .scs-domain1-page {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
+    background: var(--color-scs-d1-bg);
+    color: var(--color-scs-d1-text);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.85;
@@ -35,7 +18,7 @@
 }
 
 .scs-domain1-page a {
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     text-decoration: none;
     overflow-wrap: anywhere;
 }
@@ -45,34 +28,41 @@
 }
 
 /* ---------- layout ---------- */
+.scs-domain1-page .layout {
+    display: block;
+}
+
 .scs-domain1-page.layout {
     display: block;
 }
 
-/* Sidebar */
+/* Sidebar
+   承認済み例外: 280px契約ではなく、原本HTMLの --sidebar-w (300px) を保持する。
+   サイドバー幅・.main の margin-left・.main の width は300pxで揃え、
+   design.test.ts が原本の宣言と照合する。 */
 .scs-domain1-page .sidebar {
     position: fixed;
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
     left: 0;
     bottom: 0;
-    width: var(--sidebar-w);
-    background: var(--bg-card);
-    border-right: 1px solid var(--border-soft);
+    width: 300px;
+    background: var(--color-scs-d1-bg-card);
+    border-right: 1px solid var(--color-scs-d1-border-soft);
     overflow-y: auto;
     padding: 28px 0 40px;
-    z-index: 40;
+    z-index: 38;
 }
 
 .scs-domain1-page .sidebar-header {
     padding: 0 24px 20px;
-    border-bottom: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--color-scs-d1-border-soft);
     margin-bottom: 16px;
 }
 
 .scs-domain1-page .sidebar-header .kicker {
     font-size: 1rem;
     letter-spacing: 0.08em;
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -80,7 +70,7 @@
 .scs-domain1-page .sidebar-header h2 {
     font-size: 16px;
     margin: 6px 0 0;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     line-height: 1.5;
     font-weight: 700;
 }
@@ -94,21 +84,21 @@
     padding: 9px 12px;
     border-radius: 8px;
     font-size: 1rem;
-    color: var(--text-dim);
+    color: var(--color-scs-d1-text-dim);
     line-height: 1.5;
     margin-bottom: 2px;
     transition: background 0.15s, color 0.15s;
 }
 
 .scs-domain1-page .sidebar nav a:hover {
-    background: var(--accent-bg);
-    color: var(--text);
+    background: var(--color-scs-d1-accent-bg);
+    color: var(--color-scs-d1-text);
     text-decoration: none;
 }
 
 .scs-domain1-page .sidebar nav a.active {
-    background: var(--accent-bg);
-    color: var(--accent);
+    background: var(--color-scs-d1-accent-bg);
+    color: var(--color-scs-d1-accent);
     font-weight: 700;
 }
 
@@ -122,13 +112,13 @@
     position: fixed;
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
     left: 14px;
-    z-index: 50;
+    z-index: 39;
     width: 42px;
     height: 42px;
     border-radius: 10px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
+    background: var(--color-scs-d1-bg-card);
+    border: 1px solid var(--color-scs-d1-border);
+    color: var(--color-scs-d1-text);
     font-size: 18px;
     align-items: center;
     justify-content: center;
@@ -137,8 +127,10 @@
 
 /* Main content */
 .scs-domain1-page .main {
-    margin-left: var(--sidebar-w);
+    margin-left: 300px;
     padding: 56px 64px 120px;
+    width: calc(100% - 300px);
+    min-width: 0;
 }
 
 .scs-domain1-page .hero {
@@ -150,7 +142,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     margin-bottom: 14px;
 }
 
@@ -158,7 +150,7 @@
     font-size: clamp(28px, 3.6vw, 42px);
     line-height: 1.35;
     margin: 0 0 18px;
-    background: linear-gradient(135deg, #1d2740 0%, #3552c9 100%);
+    background: linear-gradient(135deg, var(--color-scs-d1-text) 0%, var(--color-scs-d1-accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -178,28 +170,28 @@
     gap: 6px;
     padding: 6px 14px;
     border-radius: 999px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-scs-d1-bg-card);
+    border: 1px solid var(--color-scs-d1-border);
     font-size: 1rem;
-    color: var(--text-dim);
+    color: var(--color-scs-d1-text-dim);
 }
 
 .scs-domain1-page .pill strong {
-    color: var(--text);
+    color: var(--color-scs-d1-text);
 }
 
 .scs-domain1-page .main h2 {
     font-size: 26px;
     margin: 56px 0 20px;
     padding-top: 8px;
-    border-top: 1px solid var(--border-soft);
-    color: var(--text);
+    border-top: 1px solid var(--color-scs-d1-border-soft);
+    color: var(--color-scs-d1-text);
     font-weight: 800;
     letter-spacing: -0.01em;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
 
-.scs-domain1-page .main > h2:first-of-type {
+.scs-domain1-page .main > .guide-part:first-child > h2:first-of-type {
     border-top: none;
     padding-top: 0;
     margin-top: 8px;
@@ -208,7 +200,7 @@
 .scs-domain1-page .main h3 {
     font-size: 20px;
     margin: 38px 0 16px;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     font-weight: 700;
     scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
@@ -218,7 +210,7 @@
     display: inline-block;
     width: 5px;
     height: 18px;
-    background: var(--accent);
+    background: var(--color-scs-d1-accent);
     border-radius: 3px;
     margin-right: 10px;
     vertical-align: -2px;
@@ -227,37 +219,54 @@
 .scs-domain1-page .main h4 {
     font-size: 17px;
     margin: 28px 0 12px;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     font-weight: 700;
 }
 
 .scs-domain1-page .main h5 {
     font-size: 16px;
     margin: 22px 0 10px;
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     font-weight: 700;
 }
 
 .scs-domain1-page .main p {
     margin: 0 0 18px;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
 }
 
-.scs-domain1-page .main ul,
+.scs-domain1-page .main ul {
+    list-style-type: disc;
+}
+
 .scs-domain1-page .main ol {
+    list-style-type: decimal;
+}
+
+.scs-domain1-page .main ul, .scs-domain1-page .main ol {
     margin: 0 0 18px;
     padding-left: 1.4em;
-    color: var(--text);
+    list-style-position: outside;
+    color: var(--color-scs-d1-text);
 }
 
 .scs-domain1-page .main li {
+    display: list-item;
     margin-bottom: 8px;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+}
+
+.scs-domain1-page .main ul ul, .scs-domain1-page .main ol ul {
+    list-style-type: circle;
+}
+
+.scs-domain1-page .main ul ul ul, .scs-domain1-page .main ol ul ul {
+    list-style-type: square;
 }
 
 .scs-domain1-page .main hr {
     border: none;
-    border-top: 1px solid var(--border-soft);
+    border-top: 1px solid var(--color-scs-d1-border-soft);
     margin: 44px 0;
 }
 
@@ -268,32 +277,40 @@
 }
 
 .scs-domain1-page .main strong {
-    color: #0f1730;
+    color: var(--color-scs-d1-strong);
     font-weight: 700;
 }
 
-.scs-domain1-page .main code:not(pre code) {
-    background: var(--bg-card-2);
-    border: 1px solid var(--border);
+.scs-domain1-page .main code:not(.code-block code) {
+    background: var(--color-scs-d1-bg-card-2);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 5px;
     padding: 1px 6px;
     font-size: 0.9em;
-    color: #a8480a;
+    color: var(--color-scs-d1-code);
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* Code blocks */
-.scs-domain1-page .main pre:not(.mermaid),
-.scs-domain1-page .code-block {
+.scs-domain1-page .main .code-block:not(.mermaid) {
     overflow-x: auto;
-    background: #f6f8fa;
-    border: 1px solid var(--border);
+    background: var(--color-scs-d1-code-bg);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 12px;
     padding: 16px 20px;
     margin: 0 0 26px;
     font-size: 1rem;
     line-height: 1.7;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.scs-domain1-page .main .code-block:not(.mermaid) code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    white-space: pre;
+    font-family: var(--font-mono);
 }
 
 .scs-domain1-page .code-line {
@@ -301,10 +318,91 @@
     min-height: 1.7em;
 }
 
+.scs-domain1-page .code-block code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+}
+
+.scs-domain1-page code.hljs {
+    padding: 3px 5px;
+}
+
+.scs-domain1-page .hljs {
+    color: #24292e;
+    background: transparent;
+    padding: 0;
+}
+
+.scs-domain1-page .hljs-doctag, .scs-domain1-page .hljs-keyword, .scs-domain1-page .hljs-meta .hljs-keyword, .scs-domain1-page .hljs-template-tag, .scs-domain1-page .hljs-template-variable, .scs-domain1-page .hljs-type, .scs-domain1-page .hljs-variable.language_ {
+    color: #d73a49;
+}
+
+.scs-domain1-page .hljs-title, .scs-domain1-page .hljs-title.class_, .scs-domain1-page .hljs-title.class_.inherited__, .scs-domain1-page .hljs-title.function_ {
+    color: #6f42c1;
+}
+
+.scs-domain1-page .hljs-attr, .scs-domain1-page .hljs-attribute, .scs-domain1-page .hljs-literal, .scs-domain1-page .hljs-meta, .scs-domain1-page .hljs-number, .scs-domain1-page .hljs-operator, .scs-domain1-page .hljs-selector-attr, .scs-domain1-page .hljs-selector-class, .scs-domain1-page .hljs-selector-id, .scs-domain1-page .hljs-variable {
+    color: #005cc5;
+}
+
+.scs-domain1-page .hljs-meta .hljs-string, .scs-domain1-page .hljs-regexp, .scs-domain1-page .hljs-string {
+    color: #032f62;
+}
+
+.scs-domain1-page .hljs-built_in, .scs-domain1-page .hljs-symbol {
+    color: #e36209;
+}
+
+.scs-domain1-page .hljs-code, .scs-domain1-page .hljs-comment, .scs-domain1-page .hljs-formula {
+    color: #6a737d;
+}
+
+.scs-domain1-page .hljs-name, .scs-domain1-page .hljs-quote, .scs-domain1-page .hljs-selector-pseudo, .scs-domain1-page .hljs-selector-tag {
+    color: #22863a;
+}
+
+.scs-domain1-page .hljs-subst {
+    color: #24292e;
+}
+
+.scs-domain1-page .hljs-section {
+    color: #005cc5;
+    font-weight: 700;
+}
+
+.scs-domain1-page .hljs-bullet {
+    color: #735c0f;
+}
+
+.scs-domain1-page .hljs-emphasis {
+    color: #24292e;
+    font-style: italic;
+}
+
+.scs-domain1-page .hljs-strong {
+    color: #24292e;
+    font-weight: 700;
+}
+
+.scs-domain1-page .hljs-addition {
+    color: #22863a;
+    background-color: #f0fff4;
+}
+
+.scs-domain1-page .hljs-deletion {
+    color: #b31d28;
+    background-color: #ffeef0;
+}
+
+.scs-domain1-page .mermaidTooltip {
+    font-size: 1rem;
+}
+
 /* Details (確認問題) */
 .scs-domain1-page .main details {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-scs-d1-bg-card);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 12px;
     padding: 4px 20px;
     margin: 0 0 26px;
@@ -313,7 +411,7 @@
 .scs-domain1-page .main details summary {
     cursor: pointer;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     padding: 10px 0;
 }
 
@@ -321,9 +419,9 @@
 .scs-domain1-page .table-scroll {
     overflow-x: auto;
     margin: 0 0 26px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 12px;
-    background: var(--bg-card);
+    background: var(--color-scs-d1-bg-card);
 }
 
 .scs-domain1-page table {
@@ -333,19 +431,19 @@
 }
 
 .scs-domain1-page thead th {
-    background: var(--accent-bg);
-    color: var(--text);
+    background: var(--color-scs-d1-accent-bg);
+    color: var(--color-scs-d1-text);
     text-align: left;
     padding: 12px 16px;
     font-weight: 700;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--color-scs-d1-border);
     white-space: nowrap;
 }
 
 .scs-domain1-page tbody td {
     padding: 12px 16px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-dim);
+    border-bottom: 1px solid var(--color-scs-d1-border-soft);
+    color: var(--color-scs-d1-text-dim);
     vertical-align: top;
     overflow-wrap: anywhere;
 }
@@ -355,7 +453,7 @@
 }
 
 .scs-domain1-page tbody tr:hover td {
-    background: rgba(53, 82, 201, 0.04);
+    background: var(--color-scs-d1-row-hover);
 }
 
 /* Mermaid */
@@ -364,11 +462,20 @@
     display: flex;
     justify-content: safe center;
     overflow-x: auto;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-scs-d1-bg-card);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 14px;
     padding: 28px 20px;
     margin: 0 0 30px;
+}
+
+.scs-domain1-page .mermaid-wrap > [role="img"] {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    overflow-x: visible;
 }
 
 .scs-domain1-page .mermaid-wrap svg {
@@ -377,13 +484,18 @@
     height: auto;
 }
 
+.scs-domain1-page .mermaid-wrap p {
+    color: inherit;
+    margin: 0;
+}
+
 /* Callouts */
 .scs-domain1-page .callout-practice {
     display: flex;
     gap: 14px;
-    background: var(--success-bg);
-    border: 1px solid #a9dcc0;
-    border-left: 4px solid var(--success);
+    background: var(--color-scs-d1-success-bg);
+    border: 1px solid var(--color-scs-d1-callout-border);
+    border-left: 4px solid var(--color-scs-d1-success);
     border-radius: 12px;
     padding: 20px 22px;
     margin: 0 0 26px;
@@ -394,8 +506,8 @@
     width: 26px;
     height: 26px;
     border-radius: 7px;
-    background: var(--success);
-    color: #ffffff;
+    background: var(--color-scs-d1-success);
+    color: var(--color-scs-d1-bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -404,7 +516,7 @@
 }
 
 .scs-domain1-page .callout-practice .body {
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     min-width: 0;
 }
 
@@ -412,14 +524,14 @@
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: var(--success);
+    color: var(--color-scs-d1-success);
     text-transform: uppercase;
     margin-bottom: 6px;
 }
 
 .scs-domain1-page .callout-practice p {
     margin: 0;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
 }
 
 .scs-domain1-page .callout-practice ul {
@@ -433,7 +545,7 @@
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.06em;
-    color: var(--success);
+    color: var(--color-scs-d1-success);
     text-transform: uppercase;
     margin: 0 0 10px;
 }
@@ -445,8 +557,8 @@
 
 /* Checklist */
 .scs-domain1-page .checklist-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-scs-d1-bg-card);
+    border: 1px solid var(--color-scs-d1-border);
     border-radius: 14px;
     padding: 8px 22px 12px;
     margin: 0 0 30px;
@@ -457,19 +569,19 @@
     align-items: center;
     justify-content: space-between;
     padding: 14px 0;
-    border-bottom: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--color-scs-d1-border-soft);
     margin-bottom: 6px;
 }
 
 .scs-domain1-page .checklist-header .title {
     font-weight: 700;
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     font-size: 1rem;
 }
 
 .scs-domain1-page .checklist-header .count {
     font-size: 1rem;
-    color: var(--accent);
+    color: var(--color-scs-d1-accent);
     font-weight: 700;
 }
 
@@ -477,6 +589,10 @@
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+.scs-domain1-page .main .checklist-card ul {
+    list-style: none;
 }
 
 .scs-domain1-page .checklist-card li {
@@ -489,8 +605,12 @@
     transition: background 0.15s;
 }
 
+.scs-domain1-page .main .checklist-card li {
+    display: flex;
+}
+
 .scs-domain1-page .checklist-card li:hover {
-    background: rgba(53, 82, 201, 0.05);
+    background: var(--color-scs-d1-check-hover);
 }
 
 .scs-domain1-page .checklist-card input[type='checkbox'] {
@@ -500,17 +620,17 @@
     height: 19px;
     flex-shrink: 0;
     margin-top: 2px;
-    border: 1.5px solid var(--border);
+    border: 1.5px solid var(--color-scs-d1-border);
     border-radius: 5px;
-    background: var(--bg-card-2);
+    background: var(--color-scs-d1-bg-card-2);
     cursor: pointer;
     position: relative;
     font-size: 1rem;
 }
 
 .scs-domain1-page .checklist-card input[type='checkbox']:checked {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--color-scs-d1-accent);
+    border-color: var(--color-scs-d1-accent);
 }
 
 .scs-domain1-page .checklist-card input[type='checkbox']:checked::after {
@@ -520,13 +640,13 @@
     top: 1px;
     width: 5px;
     height: 10px;
-    border: solid #ffffff;
+    border: solid var(--color-scs-d1-bg-card);
     border-width: 0 2px 2px 0;
     transform: rotate(40deg);
 }
 
 .scs-domain1-page .checklist-card label {
-    color: var(--text);
+    color: var(--color-scs-d1-text);
     font-size: 1rem;
     cursor: pointer;
     line-height: 1.6;
@@ -534,7 +654,18 @@
 
 .scs-domain1-page .checklist-card li:has(input:checked) label {
     text-decoration: line-through;
-    color: var(--text-faint);
+    color: var(--color-scs-d1-text-dim);
+}
+
+.scs-domain1-page .main a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    overflow-wrap: anywhere;
+}
+
+.scs-domain1-page [role="region"]:focus-visible {
+    outline: 2px solid var(--color-scs-d1-border);
+    outline-offset: 2px;
 }
 
 /* Responsive */
@@ -542,7 +673,10 @@
     .scs-domain1-page .sidebar {
         transform: translateX(-100%);
         transition: transform 0.25s ease;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.18);
+        box-shadow: 0 0 40px var(--color-scs-d1-sidebar-shadow);
+    }
+    .scs-domain1-page .sidebar:not(.open) {
+        visibility: hidden;
     }
     .scs-domain1-page .sidebar.open {
         transform: translateX(0);
@@ -550,6 +684,7 @@
     .scs-domain1-page .main {
         margin-left: 0;
         padding: 80px 20px 100px;
+        width: 100%;
     }
     .scs-domain1-page .sidebar-toggle {
         display: flex;
