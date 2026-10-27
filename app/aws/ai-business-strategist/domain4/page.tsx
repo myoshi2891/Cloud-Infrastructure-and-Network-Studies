@@ -1,0 +1,31 @@
+import type { Metadata } from 'next';
+import { AiBusinessStrategistDomain4Guide } from './AiBusinessStrategistDomain4Guide';
+import { HeroSection } from './sections/HeroSection';
+import { Sec0_About } from './sections/Sec0_About';
+import { Sec1_Overview } from './sections/Sec1_Overview';
+import { Sec2_Map } from './sections/Sec2_Map';
+import './page.css';
+
+export const metadata: Metadata = {
+    title: 'AWS Certified AI Business Strategist (AIB-C01) Domain 4 完全ガイド | Business Readiness, Leadership, and AI Transformation',
+    description:
+        'AIB-C01 Domain 4: Business Readiness, Leadership, and AI Transformation の初学者向け解説ガイド。Task 4.1〜4.4、AI準備度・成熟度、データ戦略、変革リーダーシップ、スケールを図解付きで整理。',
+};
+
+/**
+ * AWS AIB-C01 Domain 4 ガイドの Server ルート。
+ * 静的な本文セクションはここで描画し、Client のレイアウトへ children として渡す。
+ */
+export default function AiBusinessStrategistDomain4Page() {
+    return (
+        <AiBusinessStrategistDomain4Guide>
+            <HeroSection />
+
+            <div id="content" className="content">
+                <Sec0_About />
+                <Sec1_Overview />
+                <Sec2_Map />
+            </div>
+        </AiBusinessStrategistDomain4Guide>
+    );
+}
