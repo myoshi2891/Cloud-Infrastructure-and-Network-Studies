@@ -73,41 +73,44 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     };
 
     return (
-        <aside className="sidebar" id="sidebar" aria-label="目次ナビゲーション">
-            <div className="brand">
-                AIB-C01 Domain 4<br />準備度・リーダーシップ・変革
-            </div>{' '}
-            {NAV_ITEMS.map((item: NavItem) => {
-                const isParentActive =
-                    activeId === item.id ||
-                    (item.subItems?.some((sub) => sub.id === activeId) ?? false);
+        // 原本の aside 構造は移行忠実性 fixture の注釈として照合されるため保持し、目次は内側の nav で公開する
+        <aside className="sidebar" id="sidebar">
+            <nav aria-label="目次ナビゲーション">
+                <div className="brand">
+                    AIB-C01 Domain 4<br />準備度・リーダーシップ・変革
+                </div>{' '}
+                {NAV_ITEMS.map((item: NavItem) => {
+                    const isParentActive =
+                        activeId === item.id ||
+                        (item.subItems?.some((sub) => sub.id === activeId) ?? false);
 
-                return (
-                    <span key={item.id}>
-                        <a
-                            className={`nav-a ${isParentActive ? 'active' : ''}`}
-                            href={`#${item.id}`}
-                            onClick={(e) => handleClick(e, item.id)}
-                        >
-                            {item.icon && <i className={item.icon}></i>}
-                            <span>{item.label}</span>
-                        </a>{' '}
-                        {item.subItems && item.subItems.length > 0 &&
-                            item.subItems.map((sub) => (
-                                <span key={sub.id}>
-                                    <a
-                                        className={`nav-sub ${activeId === sub.id ? 'active' : ''}`}
-                                        href={`#${sub.id}`}
-                                        onClick={(e) => handleClick(e, sub.id)}
-                                    >
-                                        {sub.label}
-                                    </a>{' '}
-                                </span>
-                            ))
-                        }
-                    </span>
-                );
-            })}
+                    return (
+                        <span key={item.id}>
+                            <a
+                                className={`nav-a ${isParentActive ? 'active' : ''}`}
+                                href={`#${item.id}`}
+                                onClick={(e) => handleClick(e, item.id)}
+                            >
+                                {item.icon && <i className={item.icon}></i>}
+                                <span>{item.label}</span>
+                            </a>{' '}
+                            {item.subItems && item.subItems.length > 0 &&
+                                item.subItems.map((sub) => (
+                                    <span key={sub.id}>
+                                        <a
+                                            className={`nav-sub ${activeId === sub.id ? 'active' : ''}`}
+                                            href={`#${sub.id}`}
+                                            onClick={(e) => handleClick(e, sub.id)}
+                                        >
+                                            {sub.label}
+                                        </a>{' '}
+                                    </span>
+                                ))
+                            }
+                        </span>
+                    );
+                })}
+            </nav>
         </aside>
     );
 }

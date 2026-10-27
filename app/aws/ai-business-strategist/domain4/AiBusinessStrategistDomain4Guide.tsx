@@ -33,6 +33,25 @@ export function AiBusinessStrategistDomain4Guide({ children }: AiBusinessStrateg
         const onKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
                 setNavOpen(false);
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            // 開いている間は目次リンクと閉じるボタンの間でフォーカスを循環させ、背面へ逃がさない
+            const links = [...document.querySelectorAll<HTMLElement>('#sidebar a')];
+            const focusables = menuButtonRef.current ? [...links, menuButtonRef.current] : links;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (!first || !last) return;
+            const current = document.activeElement;
+            if (!focusables.some((el) => el === current)) {
+                e.preventDefault();
+                first.focus();
+            } else if (e.shiftKey && current === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && current === last) {
+                e.preventDefault();
+                first.focus();
             }
         };
         const onResize = () => {
