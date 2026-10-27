@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 // 共通フッターを明色へ切り替えるページルート（登録順を保持する）
 const LIGHT_PAGE_ROOTS = [
-    'aib-guide-page', 'aib-domain1-page', 'aib-domain2-page', 'aib-domain3-page',
+    'aib-guide-page', 'aib-domain1-page', 'aib-domain2-page', 'aib-domain3-page', 'aib-domain4-page',
     'aip-guide-page', 'aip-domain1-page', 'aip-domain2-page', 'aip-domain3-page',
     'aip-domain4-page', 'aip-domain5-page', 'ans-domain1-page', 'ans-domain2-page', 'ans-domain3-page', 'ans-domain4-page',
     'dva-development-page', 'dva-security-page', 'dva-deployment-page',

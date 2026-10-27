@@ -15,7 +15,7 @@
    Mermaid measures labels in temporary <body> children, and each insertion would force a
    whole-document style recalculation that freezes rendering and scrolling. */
 :global(:is(
-    .aib-guide-page, .aib-domain1-page, .aib-domain2-page, .aib-domain3-page,
+    .aib-guide-page, .aib-domain1-page, .aib-domain2-page, .aib-domain3-page, .aib-domain4-page,
     .aip-guide-page, .aip-domain1-page, .aip-domain2-page, .aip-domain3-page,
     .aip-domain4-page, .aip-domain5-page, .ans-domain1-page, .ans-domain2-page, .ans-domain3-page, .ans-domain4-page,
     .dva-development-page, .dva-security-page, .dva-deployment-page,
