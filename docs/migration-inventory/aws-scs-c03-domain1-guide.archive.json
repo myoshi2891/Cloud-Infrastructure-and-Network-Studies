@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "90bc905f82d4bba349ca81a3adb508bab8ebaa04",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Scs-c03-domain1-detection-guide.html",
+      "archive": "archive/Aws/html/security-specialty/domain1/Scs-c03-domain1-detection-guide.html",
+      "bytes": 267824,
+      "sha256": "e977a30b0d1a29790c8512544afa4ef7082faf7b4906c07440b6086d2a5f2b34"
+    },
+    {
+      "source": "Scs-c03-domain1-detection-guide.md",
+      "archive": "archive/Aws/md/security-specialty/domain1/Scs-c03-domain1-detection-guide.md",
+      "bytes": 90105,
+      "sha256": "afafae0d45d08f3b25960541aba88dec19b0d987847a808b72c824f57bd0bc3c"
+    }
+  ]
+}
