@@ -27,7 +27,7 @@
 
 ## 2026-10-27: AWS SCS-C03 Domain 1 (Detection) 移行 & 原本アーカイブ退避
 
-2026-10-27 SCS-C03 Domain 1移行: `/aws/security-specialty/domain1` に全3タスク・14スキル、51表（th135・td810）・9図・9コード（64行）・130リスト項目・62外部リンク出現・48目次・確認問題8問・チェックリスト19項目を全文移行。原本のライト配色・300px目次・点/番号/階層/字下げ・コード行構造を保持。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、MermaidDiagramラッパー透過・自然倍率表示、Tailwind `@theme` トークン化（`--color-scs-d1-*` 24変数）を適用。ホームとHeaderへDomain 1（16%）を追加。
+2026-10-27 SCS-C03 Domain 1移行: `/aws/security-specialty/domain1` に全3タスク・13スキル、51表（th135・td810）・9図・9コード（64行）・130リスト項目・62外部リンク出現・48目次・確認問題8問・チェックリスト19項目を全文移行。原本のライト配色・300px目次・点/番号/階層/字下げ・コード行構造を保持。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、MermaidDiagramラッパー透過・自然倍率表示、Tailwind `@theme` トークン化（`--color-scs-d1-*` 24変数）を適用。ホームとHeaderへDomain 1（16%）を追加。
 
 原本HTML（267824バイト・SHA-256 `e977a30b0d1a29790c8512544afa4ef7082faf7b4906c07440b6086d2a5f2b34`）およびMarkdown（90105バイト・SHA-256 `afafae0d45d08f3b25960541aba88dec19b0d987847a808b72c824f57bd0bc3c`）を、内容を変更せず `archive/Aws/html/security-specialty/domain1/` と `archive/Aws/md/security-specialty/domain1/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-scs-c03-domain1-guide.archive.json` に記録した。
 
