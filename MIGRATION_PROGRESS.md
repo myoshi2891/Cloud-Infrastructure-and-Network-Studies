@@ -2,6 +2,21 @@
 
 (最終更新日: 2026-10-27)
 
+## 2026-10-27: AWS SCS-C03 Domain 1 (Detection) 移行 & 原本アーカイブ退避
+
+2026-10-27 SCS-C03 Domain 1移行: `/aws/security-specialty/domain1` に全3タスク・14スキル、51表（th135・td810）・9図・9コード（64行）・130リスト項目・62外部リンク出現・48目次・確認問題8問・チェックリスト19項目を全文移行。原本のライト配色・300px目次・点/番号/階層/字下げ・コード行構造を保持。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、MermaidDiagramラッパー透過・自然倍率表示、Tailwind `@theme` トークン化（`--color-scs-d1-*` 24変数）を適用。ホームとHeaderへDomain 1（16%）を追加。
+
+原本HTML（267824バイト・SHA-256 `e977a30b0d1a29790c8512544afa4ef7082faf7b4906c07440b6086d2a5f2b34`）およびMarkdown（90105バイト・SHA-256 `afafae0d45d08f3b25960541aba88dec19b0d987847a808b72c824f57bd0bc3c`）を、内容を変更せず `archive/Aws/html/security-specialty/domain1/` と `archive/Aws/md/security-specialty/domain1/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-scs-c03-domain1-guide.archive.json` に記録した。
+
+直下の原本HTML/MDを削除後、作業ツリー原本不在下で全17テストファイル（139件）＋共通Footer 3件の計18ファイル・142件が100%成功（Pass）すること、および固定Git `90bc905f82d4bba349ca81a3adb508bab8ebaa04` からfidelity fixtureがバイト一致で再生成されることを確認。TypeScript型検査・ESLint成功。
+
+| ステップ | 内容 | コミット |
+|---|---|---|
+| Step 1 | 全画面共通フッターの明色テーマ対応 (`Footer.module.css`, `footer.test.ts`) | `6fd4e47a` |
+| Step 2 | Mermaid図ラッパー透過・リスト装飾復元・CSSデザイントークン完全移行 (`globals.css`, `page.css`, `design.test.ts`, `diagram.test.tsx`, `contrast.test.ts`) | `2884d64a` |
+| Step 3 | セクション境界 (`data-part`)・見出しフォーカス (`tabIndex={-1}`)・チェックリスト動的連動・全8区画テスト | `cfe9e202` |
+| Step 4 | ミューテーション・ルーティング統合・原本不在fixture再生成テスト (`mutations.test.tsx`, `integration.test.tsx`, `fixture.test.ts`) | `89aaa2fc` |
+
 ## 2026-10-27: ANS-C01 Domain 4 原本アーカイブ退避・整合性検証完了
 
 2026-10-27 ANS-C01 Domain 4原本アーカイブ退避: 直下に残存していた `Ans-c01-domain4-network-security-compliance-governance-guide.html`（274038バイト・SHA-256 `ca19a5e8977443433560a619ebab667c829e6a09552dc0334178a724936b8c9d`）および `Ans-c01-domain4-network-security-compliance-governance-guide.md`（133787バイト・SHA-256 `7a74575c1984ec320d65cf279292dacb7439b9da56a5014e482ce14c12570895`）を、内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain4/` と `archive/Aws/md/advanced-networking-specialty/domain4/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain4-guide.archive.json` に記録した。
