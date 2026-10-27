@@ -1,3 +1,5 @@
+'use client';
+
 import { ChecklistCard } from '../Checklist';
 
 export default function ChecklistSection() {
