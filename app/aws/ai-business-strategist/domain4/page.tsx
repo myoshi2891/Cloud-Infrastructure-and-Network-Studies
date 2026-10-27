@@ -4,6 +4,8 @@ import { HeroSection } from './sections/HeroSection';
 import { Sec0_About } from './sections/Sec0_About';
 import { Sec1_Overview } from './sections/Sec1_Overview';
 import { Sec2_Map } from './sections/Sec2_Map';
+import { Sec3_Task41 } from './sections/Sec3_Task41';
+import { Sec4_Task42 } from './sections/Sec4_Task42';
 import './page.css';
 
 export const metadata: Metadata = {
@@ -25,6 +27,8 @@ export default function AiBusinessStrategistDomain4Page() {
                 <Sec0_About />
                 <Sec1_Overview />
                 <Sec2_Map />
+                <Sec3_Task41 />
+                <Sec4_Task42 />
             </div>
         </AiBusinessStrategistDomain4Guide>
     );
