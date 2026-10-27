@@ -3,6 +3,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { NAV_ITEMS } from './constants';
 
+const DEFAULT_ID = NAV_ITEMS[0]?.id ?? 'overview';
+
 /** URL fragment が目次項目に一致すればその ID、なければ先頭項目の ID を返す。 */
 const idFromHash = (): string => {
     const raw = window.location.hash.slice(1);
@@ -11,15 +13,15 @@ const idFromHash = (): string => {
         hash = decodeURIComponent(raw);
     } catch (error) {
         if (!(error instanceof URIError)) throw error;
-        return NAV_ITEMS[0].id;
+        return DEFAULT_ID;
     }
-    return NAV_ITEMS.some((item) => item.id === hash) ? hash : NAV_ITEMS[0].id;
+    return NAV_ITEMS.some((item) => item.id === hash) ? hash : DEFAULT_ID;
 };
 
 /** モバイル開閉と見出しに連動する目次。 */
 export default function NavBar() {
     const [open, setOpen] = useState(false);
-    const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0].id);
+    const [activeId, setActiveId] = useState<string>(DEFAULT_ID);
     const toggleRef = useRef<HTMLButtonElement>(null);
 
     // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
@@ -77,7 +79,7 @@ export default function NavBar() {
                 window.innerHeight + window.scrollY >=
                     document.documentElement.scrollHeight - 2
             ) {
-                setActiveId(NAV_ITEMS[NAV_ITEMS.length - 1]?.id ?? NAV_ITEMS[0].id);
+                setActiveId(NAV_ITEMS[NAV_ITEMS.length - 1]?.id ?? DEFAULT_ID);
             }
         };
         window.addEventListener('scroll', endOfPage, { passive: true });

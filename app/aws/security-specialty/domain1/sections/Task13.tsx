@@ -2,9 +2,9 @@ import { Diagram } from '../Diagram';
 
 export default function Task13() {
     return (
-        <section className="section-block">
-            <h2 id="4-task-13-監視ログアラートのトラブルシューティング">4. Task 1.3 監視・ログ・アラートのトラブルシューティング</h2>
-<h3 id="41-skill-131-リソースの機能権限設定の分析">4.1 Skill 1.3.1 リソースの機能・権限・設定の分析</h3>
+        <section className="guide-part" data-part="task13">
+            <h2 id="4-task-13-監視ログアラートのトラブルシューティング" tabIndex={-1}>4. Task 1.3 監視・ログ・アラートのトラブルシューティング</h2>
+<h3 id="41-skill-131-リソースの機能権限設定の分析" tabIndex={-1}>4.1 Skill 1.3.1 リソースの機能・権限・設定の分析</h3>
 <h4>基本の考え方: 「ログが届かない」ときの確認順序</h4>
 <Diagram id="diag-9" label="基本の考え方: 「ログが届かない」ときの確認順序" />
 <h4>サービス別の典型的な原因と対処</h4>
@@ -12,7 +12,7 @@ export default function Task13() {
 <p>出典:</p>
 <ul><li><a href="https://repost.aws/knowledge-center/lambda-cloudwatch-log-streams-error">https://repost.aws/knowledge-center/lambda-cloudwatch-log-streams-error</a></li>{' '}<li><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_Centralization.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_Centralization.html</a></li></ul>
 <hr />
-<h3 id="42-skill-132-設定ミスの是正-cloudwatch-エージェントログ欠落">4.2 Skill 1.3.2 設定ミスの是正 (CloudWatch エージェント、ログ欠落)</h3>
+<h3 id="42-skill-132-設定ミスの是正-cloudwatch-エージェントログ欠落" tabIndex={-1}>4.2 Skill 1.3.2 設定ミスの是正 (CloudWatch エージェント、ログ欠落)</h3>
 <h4>CloudWatch エージェントのトラブルシューティング</h4>
 <div className="table-scroll" role="region" tabIndex={0} aria-label="CloudWatch エージェントのトラブルシューティング 表 41"><table><thead><tr className="header"><th scope="col">症状</th><th scope="col">確認すること</th></tr></thead><tbody><tr className="odd"><td>ログもメトリクスも出ない</td><td>エージェントのプロセスが動いているか。IAM ロール (またはオンプレ用の認証情報) があるか</td></tr><tr className="even"><td>一部のログだけ出ない</td><td>設定ファイルの{' '}<code>logs</code>{' '}セクションの{' '}<code>file_path</code>{' '}が正しいか。ファイルの読み取り権限があるか</td></tr><tr className="odd"><td>設定を変えたのに反映されない</td><td>設定の再読み込みや再起動をしたか。複数の設定ファイルが競合していないか</td></tr><tr className="even"><td>権限エラー</td><td>IAM ロールに{' '}<code>logs:PutLogEvents</code>、<code>logs:CreateLogStream</code>{' '}などの権限があるか</td></tr><tr className="odd"><td>経路の問題</td><td>プライベートサブネットで、CloudWatch Logs へのエンドポイントまたは NAT があるか</td></tr></tbody></table></div>
 <p>確認コマンドの例 (Linux):</p>

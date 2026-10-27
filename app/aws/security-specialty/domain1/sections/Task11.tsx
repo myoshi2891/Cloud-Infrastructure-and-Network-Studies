@@ -2,9 +2,9 @@ import { Diagram } from '../Diagram';
 
 export default function Task11() {
     return (
-        <section className="section-block">
-            <h2 id="2-task-11-監視とアラートの設計実装">2. Task 1.1 監視とアラートの設計・実装</h2>
-<h3 id="21-skill-111-ワークロードを分析して監視要件を決める">2.1 Skill 1.1.1 ワークロードを分析して監視要件を決める</h3>
+        <section className="guide-part" data-part="task11">
+            <h2 id="2-task-11-監視とアラートの設計実装" tabIndex={-1}>2. Task 1.1 監視とアラートの設計・実装</h2>
+<h3 id="21-skill-111-ワークロードを分析して監視要件を決める" tabIndex={-1}>2.1 Skill 1.1.1 ワークロードを分析して監視要件を決める</h3>
 <h4>やさしい説明</h4>
 <p>「何を守るのか」「どんな攻撃や事故が起きうるのか」を先に整理しないと、必要なログも検出サービスも選べません。まず要件を言語化します。</p>
 <h4>ステップ</h4>
@@ -15,7 +15,7 @@ export default function Task11() {
 <div className="table-scroll" role="region" tabIndex={0} aria-label="判断に使う観点 (試験での決め手になりやすい点) 表 7"><table><thead><tr className="header"><th scope="col">観点</th><th scope="col">質問の例</th><th scope="col">選び方の方向性</th></tr></thead><tbody><tr className="odd"><td>リアルタイム性</td><td>数秒で検知したいか</td><td>CloudWatch Logs のメトリクスフィルター + アラーム、EventBridge</td></tr><tr className="even"><td>保管期間</td><td>何年保管する規制か</td><td>S3 + ライフサイクル、Security Lake</td></tr><tr className="odd"><td>コスト</td><td>ログ量が膨大か</td><td>S3 保管 + Athena、フローログのカスタム形式で項目を絞る</td></tr><tr className="even"><td>運用負荷</td><td>運用人員が少ないか</td><td>マネージドな検出 (GuardDuty、Security Hub) を優先</td></tr><tr className="odd"><td>規制</td><td>改ざん防止が必須か</td><td>ログファイル整合性検証、S3 Object Lock、別アカウント保管</td></tr></tbody></table></div>
 <div className="callout-practice"><div className="icon">✓</div>{' '}<div className="body"><div className="label">ベストプラクティス</div>{' '}<ul><li>脅威モデル (何が起きたら困るか) から逆算して、ログと検出を選ぶ。</li>{' '}<li>「すべてのログを無期限に保存する」ではなく、重要度に応じて保持期間とストレージ階層を分ける。</li>{' '}<li>コスト、セキュリティ、デプロイの複雑さのトレードオフを説明できるようにする (公式の試験ガイドでも、これらのトレードオフを踏まえた判断が求められると記載されています)。</li></ul></div></div>
 <hr />
-<h3 id="22-skill-112-ワークロード監視戦略の設計と実装-ヘルスチェックなど">2.2 Skill 1.1.2 ワークロード監視戦略の設計と実装 (ヘルスチェックなど)</h3>
+<h3 id="22-skill-112-ワークロード監視戦略の設計と実装-ヘルスチェックなど" tabIndex={-1}>2.2 Skill 1.1.2 ワークロード監視戦略の設計と実装 (ヘルスチェックなど)</h3>
 <h4>やさしい説明</h4>
 <p>「サービスが元気か」を常時チェックし、異常があれば知らせる仕組みです。セキュリティの観点では、攻撃による停止や乗っ取りの兆候を早く見つける目的があります。</p>
 <h4>主要な仕組み</h4>
@@ -30,7 +30,7 @@ export default function Task11() {
 <div className="callout-practice"><div className="icon">✓</div>{' '}<div className="body"><div className="label">ベストプラクティス</div>{' '}<ul><li>検知対象は「重要度が高く、誤検知が少ないもの」から始める。</li>{' '}<li>アラームには必ず通知先 (SNS) と対応手順を結びつける。</li>{' '}<li>ヘルスチェックの失敗が出たら、まず「セキュリティグループや NACL でチェック元を許可しているか」を確認する (4 章で詳述)。</li>{' '}<li>固定しきい値が決めにくい指標には異常検出を使う。</li></ul></div></div>
 <p>出典:{' '}<a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html">https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html</a></p>
 <hr />
-<h3 id="23-skill-113-セキュリティイベントと監視イベントの集約">2.3 Skill 1.1.3 セキュリティイベントと監視イベントの集約</h3>
+<h3 id="23-skill-113-セキュリティイベントと監視イベントの集約" tabIndex={-1}>2.3 Skill 1.1.3 セキュリティイベントと監視イベントの集約</h3>
 <h4>やさしい説明</h4>
 <p>アカウントやリージョンが増えるほど、見る場所が散らばります。1 か所に集めて見られるようにするのが集約です。</p>
 <h4>組織での基本構成</h4>
@@ -44,7 +44,7 @@ export default function Task11() {
 <p>出典:</p>
 <ul><li><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Cross-Account-Methods.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Cross-Account-Methods.html</a></li>{' '}<li><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_Centralization.html">https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_Centralization.html</a></li></ul>
 <hr />
-<h3 id="24-skill-114-異常を検出するメトリクスアラートダッシュボード">2.4 Skill 1.1.4 異常を検出するメトリクス・アラート・ダッシュボード</h3>
+<h3 id="24-skill-114-異常を検出するメトリクスアラートダッシュボード" tabIndex={-1}>2.4 Skill 1.1.4 異常を検出するメトリクス・アラート・ダッシュボード</h3>
 <p>ここが Domain 1 の中心です。サービスごとに「何を見て、何を見つけるか」を理解しましょう。</p>
 <h4>2.4.1 検出サービスの選び方 (フローチャート)</h4>
 <Diagram id="diag-4" label="2.4.1 検出サービスの選び方 (フローチャート)" />
@@ -89,7 +89,7 @@ export default function Task11() {
 <h4>2.4.8 サービス比較表 (試験直前の見直し用)</h4>
 <div className="table-scroll" role="region" tabIndex={0} aria-label="2.4.8 サービス比較表 (試験直前の見直し用) 表 19"><table><thead><tr className="header"><th scope="col">サービス</th><th scope="col">一言で</th><th scope="col">主な入力</th><th scope="col">主な出力</th><th scope="col">よくある誤答</th></tr></thead><tbody><tr className="odd"><td>GuardDuty</td><td>脅威を見つける</td><td>CloudTrail、フローログ、DNS ログ ほか</td><td>脅威の検出結果</td><td>設定ミスの検出には使わない (Config や Security Hub CSPM)</td></tr><tr className="even"><td>Security Hub</td><td>結果を集めて優先順位付け</td><td>各サービスの検出結果</td><td>集約された結果、エクスポージャー</td><td>自分でログを分析するわけではない</td></tr><tr className="odd"><td>Config</td><td>設定の履歴と準拠状況</td><td>リソース構成の変更</td><td>構成履歴、準拠・非準拠</td><td>脅威検出ではない</td></tr><tr className="even"><td>Macie</td><td>S3 の機密データ</td><td>S3 オブジェクト</td><td>機密データ・ポリシー検出結果</td><td>S3 以外のデータは対象外</td></tr><tr className="odd"><td>Inspector</td><td>脆弱性</td><td>EC2、ECR、Lambda</td><td>脆弱性の検出結果</td><td>マルウェア検出は GuardDuty</td></tr><tr className="even"><td>Detective</td><td>調査</td><td>CloudTrail、フローログ、GuardDuty 結果</td><td>関係グラフ</td><td>検知そのものはしない</td></tr><tr className="odd"><td>Security Lake</td><td>セキュリティデータレイク</td><td>各種ログ (OCSF に正規化)</td><td>Parquet データ、サブスクライバー経由の提供</td><td>ログ分析ツールそのものではない (Athena などで分析する)</td></tr></tbody></table></div>
 <hr />
-<h3 id="25-skill-115-定期的な評価と調査の自動化">2.5 Skill 1.1.5 定期的な評価と調査の自動化</h3>
+<h3 id="25-skill-115-定期的な評価と調査の自動化" tabIndex={-1}>2.5 Skill 1.1.5 定期的な評価と調査の自動化</h3>
 <h4>2.5.1 AWS Config (構成の記録と評価)</h4>
 <h5>やさしい説明</h5>
 <p>「いつ、どのリソースの設定がどう変わったか」を記録し、「設定がルールに合っているか」を自動で評価するサービスです。「誰が変更したか」を特定するには、CloudTrail のイベントと突き合わせます。</p>
