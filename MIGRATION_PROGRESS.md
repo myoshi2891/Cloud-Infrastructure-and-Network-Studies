@@ -1,6 +1,15 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-27)
+(最終更新日: 2026-10-28)
+
+## 2026-10-28: SAP/SCS Domain 1 テスト期待値の訂正
+
+SAP Domain 1の本文訂正6箇所とSCS Domain 1の本文訂正4箇所を明示的な変換表にし、固定Git由来fixtureを改変せず表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で明示的に検証する。欠落検出テストの削除前の一致確認が再び成功し、削除による差分も検出する。訂正対象の存在・訂正の反映・fixtureの不変性を確認する回帰2件を追加。
+
+- Red: `fc3a7dc2`（訂正ヘルパー未実装による失敗を確認）。
+- Green: `2894a848`。対象28ファイル・222件成功。全体Vitestは456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。型検査・全体ESLint・対象Markdown lint成功。
+- テストのみの変更で画面挙動へ影響しないため、E2E・本番ビルドは省略。
+- 作業開始時の既存SCS CSS差分は保持し、今回のコミットから除外。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。静的集計は実行成功数・行カバレッジとは区別する。
 
 ## 2026-10-27: AWS AIB-C01 Domain 4 (Business Readiness, Leadership, and AI Transformation) 移行 & 原本アーカイブ退避
 
@@ -2157,15 +2166,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** 2026-10-27 AIB-C01 Domain 4移行・原本アーカイブ、SCS-C03 Domain 1移行・原本アーカイブ、ANS-C01 Domain 3／Domain 4原本アーカイブ退避
-- **最終更新日:** 2026-10-27
-- **最新実装 HEAD:** `78cc392`（AIB-C01 Domain 4 モバイル目次のnavランドマーク・フォーカストラップ。チェックリスト進捗・ドロワー操作は `191203bf`、SCS-C03 Domain 1 最終実装は `938a34ff`、ANS-C01 Domain 4 原本退避は `ab0c8b14`、Domain 3 は `e9a8a851`）
+- **最新完了タスク:** 2026-10-28 SAP/SCS Domain 1テスト期待値の訂正。AIB/SCS移行・ANS原本退避の履歴は冒頭の各記録を参照。
+- **最終更新日:** 2026-10-28
+- **最新実装 HEAD:** `2894a848`（SAP/SCS Domain 1の表示期待値を本文訂正・フォーカス枠改善へ追従。Red `fc3a7dc2`）
 - **仕様同期コミット:** `a5577b28`（AIB-C01 Domain 4 の仕様同期）
 - **前回進捗同期コミット:** `a5577b28`（AIB-C01 Domain 4。それ以前は `2cf3ecd1`、ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
-- **検証状態:** AIB-C01 Domain 4 は原本不在下で全5テストファイル（30件）、AIB関連＋共通Footer 16ファイル（107件）成功。SCS-C03 Domain 1 は固定Git `90bc905f` 由来fixtureで原本・archive不在でも18ファイル（142件）成功。ANS-C01 Domain 3 は13ファイル（98件）、Domain 4 は15ファイル（97件）が原本不在下で成功し、fixtureのバイト一致再生成も確認。TypeScript型検査・ESLint成功。
-- **ビルド状態:** 本番ビルドは未実行。成功は未確認。
+- **検証状態:** 2026-10-28 全体Vitest 456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。SAP/SCS Domain 1期待値の既存失敗13件を解消し、回帰2件を追加。対象28ファイル・222件成功。TypeScript型検査・全体ESLint・対象Markdown lint成功。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。
+- **ビルド状態:** 本番ビルド・E2Eは今回は省略（テスト・文書のみの変更で画面挙動への影響なし）。本番ビルド成功は未確認。
 - **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
-- **次の作業:** 次ページはユーザー指定待ち。既存SAP-C02 Domain 1の6件失敗は別タスクで監査。
+- **次の作業:** 次ページはユーザー指定待ち。SAP/SCS Domain 1の期待値不整合は対応済み。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3504,13 +3513,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `78cc392`。前回進捗同期コミット: `a5577b28`。仕様同期コミット: `a5577b28`。最終更新日: 2026-10-27。
+最新実装 HEAD: `2894a848`。前回進捗同期コミット: `a5577b28`。仕様同期コミット: `a5577b28`（今回の仕様同期差分は未コミット）。最終更新日: 2026-10-28。
 
 2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
-検証: AIB Domain 4 30件（AIB関連＋Footer 107件）、SCS Domain 1 142件、ANS Domain 3 98件・Domain 4 97件が原本不在下で成功。型検査・ESLint成功。本番ビルドは未実行。
+検証: 2026-10-28 全体Vitest 456ファイル・4225件すべて成功。SAP/SCS Domain 1の13件の期待値不整合を解消し、回帰2件を追加。型検査・全体ESLint・対象Markdown lint成功。テスト・文書のみの変更のためE2E・本番ビルドは省略。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。既存SAP-C02 Domain 1の6件失敗は別タスク。
+次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。SAP/SCS Domain 1の期待値不整合は対応済み。対象28ファイル・222件成功。全体の最新結果は「現在地」を参照。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

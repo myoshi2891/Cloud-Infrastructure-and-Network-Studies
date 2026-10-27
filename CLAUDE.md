@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-Updated 2026-10-27
+Updated 2026-10-28
+
+2026-10-28 SAP/SCS Domain 1テスト修正: 本文訂正を `__tests__/helpers/domain1-source-corrections.ts` に明示し、固定Git由来fixtureを保持したまま表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で検証する。対象28ファイル・222件成功。テスト変更のみのためE2E・本番ビルドは省略。全体の最終結果は `MIGRATION_PROGRESS.md` の現在地を参照。
 
 2026-10-27 AIB-C01 Domain 4移行: `/aws/ai-business-strategist/domain4` に全4タスク・19スキル、54表（th162・td883）・12図・54リスト項目・8外部リンク出現・32目次・練習問題6問・チェックリスト22項目を全文移行。原本のライト配色・302px目次・全幅メインコンテンツ（`calc(100% - 302px)`）・Hero濃紺グラデーション・表ヘッダー/Blockquote/H3左ボーダー・点/番号/階層/字下げ・Mermaidライトテーマ全変数とラッパー透過・チェックリスト進捗カウンター/バーを完全復元。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、Tailwind `@theme` トークン化（`--color-aib-d4-*` 21変数）を適用。ホームとHeaderへDomain 4（24%）を追加。原本HTML（229767バイト・SHA-256 `63197732f3772f0a4b0b5b33893ee4c54ef3a6c21b3ea145b9f4b1d087cc902a`）およびMarkdown（86525バイト・SHA-256 `ab92b5932b0d7356e171bfe0765049bd7a97745d0a666d53119ca6f1cba0b7af`）を `archive/Aws/html|md/ai-business-strategist/domain4/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json` に記録。原本不在下でDomain 4全5テストファイル（30件）およびAIB関連＋共通Footer全16ファイル（107件）が100%成功することを検証。TypeScript型検査・ESLint成功。
 
