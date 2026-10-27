@@ -2,6 +2,25 @@
 
 (最終更新日: 2026-10-27)
 
+## 2026-10-27: AWS AIB-C01 Domain 4 (Business Readiness, Leadership, and AI Transformation) 移行 & 原本アーカイブ退避
+
+2026-10-27 AIB-C01 Domain 4移行: `/aws/ai-business-strategist/domain4` に全4タスク・19スキル、54表（th162・td883）・12図・54リスト項目・8外部リンク出現・32目次・練習問題6問・チェックリスト22項目を全文移行。原本のライト配色・302px目次・点/番号/階層/字下げ・表構造・Mermaid図のアクセシビリティを保持。本文はServer Component、目次とチェックリスト操作はClientへ分離。ホームとHeaderへDomain 4（24%）を追加。
+
+原本HTML（229767バイト・SHA-256 `63197732f3772f0a4b0b5b33893ee4c54ef3a6c21b3ea145b9f4b1d087cc902a`）およびMarkdown（86525バイト・SHA-256 `ab92b5932b0d7356e171bfe0765049bd7a97745d0a666d53119ca6f1cba0b7af`）を、内容を変更せず `archive/Aws/html/ai-business-strategist/domain4/` と `archive/Aws/md/ai-business-strategist/domain4/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json` に記録した。
+
+直下の原本削除後、原本不在下で全14テストファイル（14件）が100%成功（Pass）、AIB関連全11ファイル・88テストも100%成功することを確認。TypeScript型検査・ESLint成功。
+
+| ステップ | 内容 | コミット |
+|---|---|---|
+| Step 0 | 原本インベントリ確定 (`aws-ai-business-strategist-domain4.json`) | `e9db8d72` |
+| Step 1 | Red: 失敗テスト作成 (`domain4/page.test.tsx`) | `30d991bc` |
+| Step 2 | Scaffold & Foundation (`NavBar`, `page.css`, `Diagram`, `Hero`, `Sec0`, `Sec1`, `Sec2`) | `1921fff1` |
+| Step 3 | Task 4.1 & 4.2 コアコンテンツ実装 (`Sec3_Task41.tsx`, `Sec4_Task42.tsx`) | `40546224` |
+| Step 4 | Task 4.3 & 4.4 コアコンテンツ実装 (`Sec5_Task43.tsx`, `Sec6_Task44.tsx`) | `a650d79d` |
+| Step 5 | サービス早見表・判断ルール・練習問題・直前チェックリスト (`Sec7`〜`Sec10`) | `8eaf7747` |
+| Step 6 | 用語集・参考URL・テスト全14件Green達成 (`Sec11`, `Sec12`, `NavBar`) | `63c01f28` |
+| Step 7 | ルーティング統合 (`constants.ts`, `integration.test.ts`) | `de009ebd` |
+
 ## 2026-10-27: AWS SCS-C03 Domain 1 (Detection) 移行 & 原本アーカイブ退避
 
 2026-10-27 SCS-C03 Domain 1移行: `/aws/security-specialty/domain1` に全3タスク・14スキル、51表（th135・td810）・9図・9コード（64行）・130リスト項目・62外部リンク出現・48目次・確認問題8問・チェックリスト19項目を全文移行。原本のライト配色・300px目次・点/番号/階層/字下げ・コード行構造を保持。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、MermaidDiagramラッパー透過・自然倍率表示、Tailwind `@theme` トークン化（`--color-scs-d1-*` 24変数）を適用。ホームとHeaderへDomain 1（16%）を追加。
