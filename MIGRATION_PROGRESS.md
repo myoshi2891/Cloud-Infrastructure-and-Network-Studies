@@ -2157,9 +2157,9 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** 2026-10-27 AIB-C01 Domain 4移行・原本アーカイブ、SCS-C03 Domain 1移行・原本アーカイブ、ANS-C01 Domain 3／Domain 4原本アーカイブ退避
 - **最終更新日:** 2026-10-27
-- **最新実装 HEAD:** `191203bf`（AIB-C01 Domain 4 チェックリスト進捗・ドロワー操作。SCS-C03 Domain 1 最終実装は `938a34ff`、ANS-C01 Domain 4 原本退避は `ab0c8b14`、Domain 3 は `e9a8a851`）
+- **最新実装 HEAD:** `78cc392`（AIB-C01 Domain 4 モバイル目次のnavランドマーク・フォーカストラップ。チェックリスト進捗・ドロワー操作は `191203bf`、SCS-C03 Domain 1 最終実装は `938a34ff`、ANS-C01 Domain 4 原本退避は `ab0c8b14`、Domain 3 は `e9a8a851`）
 - **仕様同期コミット:** `a5577b28`（AIB-C01 Domain 4 の仕様同期）
-- **前回進捗同期コミット:** `2cf3ecd1`（AIB-C01 Domain 4。それ以前は ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
+- **前回進捗同期コミット:** `a5577b28`（AIB-C01 Domain 4。それ以前は `2cf3ecd1`、ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
 - **検証状態:** AIB-C01 Domain 4 は原本不在下で全5テストファイル（30件）、AIB関連＋共通Footer 16ファイル（107件）成功。SCS-C03 Domain 1 は固定Git `90bc905f` 由来fixtureで原本・archive不在でも18ファイル（142件）成功。ANS-C01 Domain 3 は13ファイル（98件）、Domain 4 は15ファイル（97件）が原本不在下で成功し、fixtureのバイト一致再生成も確認。TypeScript型検査・ESLint成功。
 - **ビルド状態:** 本番ビルドは未実行。成功は未確認。
 - **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
@@ -3502,7 +3502,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `191203bf`。前回進捗同期コミット: `2cf3ecd1`。仕様同期コミット: `a5577b28`。最終更新日: 2026-10-27。
+最新実装 HEAD: `78cc392`。前回進捗同期コミット: `a5577b28`。仕様同期コミット: `a5577b28`。最終更新日: 2026-10-27。
 
 2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
