@@ -2,7 +2,9 @@
 // @vitest-environment jsdom
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import inventory from '@/docs/migration-inventory/aws-scs-c03-domain1-guide.json';
+import sourceInventory from '@/docs/migration-inventory/aws-scs-c03-domain1-guide.json';
+import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { SCS_DOMAIN1_CORRECTIONS } from '@/__tests__/helpers/domain1-source-corrections';
 import Page from '@/app/aws/security-specialty/domain1/page';
 import {
     MermaidDiagramMock,
@@ -17,6 +19,8 @@ import {
 vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
 }));
+
+const inventory = withSourceCorrections(sourceInventory, SCS_DOMAIN1_CORRECTIONS);
 
 describe('aws-scs-c03-domain1-guide — 移行元コンテンツの全量移行', () => {
     const renderPage = () => {

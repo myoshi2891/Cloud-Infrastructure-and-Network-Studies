@@ -5,6 +5,8 @@ import sourceTheme from '@/app/aws/solutions-architect-professional/domain1/merm
 import fixture from '@/docs/migration-inventory/aws-sap-c02-domain1.fidelity.json';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
 import { withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
+import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { SAP_DOMAIN1_CORRECTIONS } from '@/__tests__/helpers/domain1-source-corrections';
 
 vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
@@ -47,7 +49,7 @@ const renderConfig = {
 const prefix = `---\nconfig: ${JSON.stringify(renderConfig)}\n---\n`;
 
 // 固定Git由来の <main> 全体の snapshotGuidePart 結果。移行元 HTML をテスト実行時に読まない
-const rawSnapshot = fixture.guideParts.main;
+const rawSnapshot = withSourceCorrections(fixture.guideParts.main, SAP_DOMAIN1_CORRECTIONS);
 const expectedSnapshot = {
     ...rawSnapshot,
     diagrams: rawSnapshot.diagrams.map((chart) => prefix + chart),
