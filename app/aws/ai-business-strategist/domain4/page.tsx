@@ -8,6 +8,10 @@ import { Sec3_Task41 } from './sections/Sec3_Task41';
 import { Sec4_Task42 } from './sections/Sec4_Task42';
 import { Sec5_Task43 } from './sections/Sec5_Task43';
 import { Sec6_Task44 } from './sections/Sec6_Task44';
+import { Sec7_Services } from './sections/Sec7_Services';
+import { Sec8_Rules } from './sections/Sec8_Rules';
+import { Sec9_PracticeQuestions } from './sections/Sec9_PracticeQuestions';
+import { Sec10_Checklist } from './sections/Sec10_Checklist';
 import './page.css';
 
 export const metadata: Metadata = {
@@ -33,6 +37,10 @@ export default function AiBusinessStrategistDomain4Page() {
                 <Sec4_Task42 />
                 <Sec5_Task43 />
                 <Sec6_Task44 />
+                <Sec7_Services />
+                <Sec8_Rules />
+                <Sec9_PracticeQuestions />
+                <Sec10_Checklist />
             </div>
         </AiBusinessStrategistDomain4Guide>
     );
