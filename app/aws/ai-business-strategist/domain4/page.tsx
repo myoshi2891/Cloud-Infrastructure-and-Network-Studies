@@ -12,6 +12,8 @@ import { Sec7_Services } from './sections/Sec7_Services';
 import { Sec8_Rules } from './sections/Sec8_Rules';
 import { Sec9_PracticeQuestions } from './sections/Sec9_PracticeQuestions';
 import { Sec10_Checklist } from './sections/Sec10_Checklist';
+import { Sec11_Glossary } from './sections/Sec11_Glossary';
+import { Sec12_References } from './sections/Sec12_References';
 import './page.css';
 
 export const metadata: Metadata = {
@@ -41,7 +43,13 @@ export default function AiBusinessStrategistDomain4Page() {
                 <Sec8_Rules />
                 <Sec9_PracticeQuestions />
                 <Sec10_Checklist />
+                <Sec11_Glossary />
+                <Sec12_References />
             </div>
+
+            <footer className="footer">
+                AWS 公式資料に基づく学習用ガイドです。最新情報は必ず公式ページで確認してください。
+            </footer>
         </AiBusinessStrategistDomain4Guide>
     );
 }

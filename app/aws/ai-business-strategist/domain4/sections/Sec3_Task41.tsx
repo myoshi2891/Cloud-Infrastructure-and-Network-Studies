@@ -10,7 +10,7 @@ export const Sec3_Task41: React.FC = () => {
             <h3 id="k4-1-1">Skill 4.1.1 事業準備度を複数の観点で評価する</h3>
             <p>
                 <strong>① 何を問われるか</strong> AI
-                を導入する前に、組織が「始められる状態か」を、リーダーの合意・データ品質・文化的な準備・技術基盤・ガバナンスといった
+                を導入する前に、組織が「始められる状態か」を、リーダーの合意・データ品質・文化的な準備・技術基盤・ガバナンスといった{' '}
                 <strong>複数の観点</strong> で診断できるか。[S3]
             </p>
             <p>
@@ -58,7 +58,7 @@ export const Sec3_Task41: React.FC = () => {
             <p>
                 <strong>③ 具体例</strong> ある小売企業が「問い合わせ対応を生成 AI
                 で自動化したい」と考えた場合。経営層の合意はあるが、FAQ
-                が古く、商品データが部署ごとに別管理で、利用ルールもない。この場合の正しい判断は「いきなり全店導入」ではなく、<strong>データの整備とルール作りを優先しつつ小さく検証する</strong>ことです。
+                が古く、商品データが部署ごとに別管理で、利用ルールもない。この場合の正しい判断は「いきなり全店導入」ではなく、<strong>データの整備とルール作りを優先しつつ小さく検証する</strong>{' '}ことです。
             </p>
             <p><strong>④ ベストプラクティス</strong></p>
             <div className="table-wrap">
@@ -108,7 +108,7 @@ export const Sec3_Task41: React.FC = () => {
             </div>
             <p>
                 <strong>⑤ ひっかけ注意</strong> -
-                「最新ツールの導入」や「エンジニアの大量採用」を最初の一手にする選択肢は誤りになりやすいです。<strong>準備度の診断が先</strong>です。 - 準備度の評価は「合格・不合格の判定」ではなく、<strong>次の一手を決めるための診断</strong>です。
+                「最新ツールの導入」や「エンジニアの大量採用」を最初の一手にする選択肢は誤りになりやすいです。<strong>準備度の診断が先</strong>{' '}です。 - 準備度の評価は「合格・不合格の判定」ではなく、<strong>次の一手を決めるための診断</strong>{' '}です。
             </p>
             <p><strong>⑥ 根拠</strong>: [S3] [S6] [S7] [S8] [S21] [S22]</p>
             <h3 id="k4-1-2">Skill 4.1.2 AI 成熟度モデルで現在地を評価する</h3>
@@ -117,12 +117,12 @@ export const Sec3_Task41: React.FC = () => {
                 成熟度モデルを使い、企業が「実験段階」から「全社展開」までのどこにいるかを評価できるか。[S3]
             </p>
             <p>
-                <strong>② やさしい説明</strong> 成熟度モデルは
-                <strong>「AI 活用の階段」</strong>
+                <strong>② やさしい説明</strong> 成熟度モデルは{' '}
+                <strong>「AI 活用の階段」</strong>{' '}
                 です。自分が何段目にいるかが分かれば、次の一段に必要なことだけに集中できます。
             </p>
             <p>
-                AWS の規範的ガイダンスには、生成 AI の成熟度モデルがあり、<strong>Envision → Experiment → Launch → Scale</strong>の 4 段階で整理されています。[S11][S12]
+                AWS の規範的ガイダンスには、生成 AI の成熟度モデルがあり、<strong>Envision → Experiment → Launch → Scale</strong>{' '}の 4 段階で整理されています。[S11][S12]
             </p>
             <Diagram id="d2" />
             <div className="table-wrap">
@@ -179,7 +179,7 @@ export const Sec3_Task41: React.FC = () => {
             </div>
             <p>
                 <strong>③ 具体例</strong> 「部署 A が PoC を 3
-                つ実施し、専任チームもできたが、本番用の監視や責任分担は未整備」という企業は、<strong>Level 2(Experiment)から Level 3(Launch)への移行期</strong>にいます。次の一手は、新しい PoC を増やすことではなく、<strong>本番のインフラ・ガバナンス・監視を整えること</strong>です。
+                つ実施し、専任チームもできたが、本番用の監視や責任分担は未整備」という企業は、<strong>Level 2(Experiment)から Level 3(Launch)への移行期</strong>{' '}にいます。次の一手は、新しい PoC を増やすことではなく、<strong>本番のインフラ・ガバナンス・監視を整えること</strong>{' '}です。
             </p>
             <p><strong>④ ベストプラクティス</strong></p>
             <div className="table-wrap">
@@ -219,15 +219,15 @@ export const Sec3_Task41: React.FC = () => {
             <p><strong>⑤ ひっかけ注意(重要)</strong></p>
             <blockquote>
                 <p>
-                    <strong>成熟度モデルの段階名は、資料によって違います。</strong> -
-                    <strong>生成 AI 成熟度モデル(規範的ガイダンス)</strong>: Envision →
-                    <strong>Experiment</strong> → Launch → Scale -
-                    <strong>AWS CAF for AI の変革の旅</strong>: Envision →
+                    <strong>成熟度モデルの段階名は、資料によって違います。</strong> -{' '}
+                    <strong>生成 AI 成熟度モデル(規範的ガイダンス)</strong>: Envision →{' '}
+                    <strong>Experiment</strong> → Launch → Scale -{' '}
+                    <strong>AWS CAF for AI の変革の旅</strong>: Envision →{' '}
                     <strong>Align</strong> → Launch → Scale [S7]
                 </p>
                 <p>
                     試験ガイドの Skill 4.4.1 の例は「envision, experiment, launch,
-                    scale」です。[S3] 「Align」は CAF の 2 番目の段階で、<strong>能力ギャップの特定や関係者の合意</strong>に焦点があります。混同しないようにしましょう。
+                    scale」です。[S3] 「Align」は CAF の 2 番目の段階で、<strong>能力ギャップの特定や関係者の合意</strong>{' '}に焦点があります。混同しないようにしましょう。
                 </p>
             </blockquote>
             <p><strong>⑥ 根拠</strong>: [S3] [S7] [S11] [S12] [S13] [S14] [S15] [S16] [S18]</p>
@@ -235,11 +235,11 @@ export const Sec3_Task41: React.FC = () => {
                 Skill 4.1.3 人・プロセス・技術・ガバナンスの能力ギャップを特定する
             </h3>
             <p>
-                <strong>① 何を問われるか</strong> AI 変革の成功を妨げる具体的な不足を、<strong>人・プロセス・技術・ガバナンス</strong>の 4 領域で見つけられるか。[S3]
+                <strong>① 何を問われるか</strong> AI 変革の成功を妨げる具体的な不足を、<strong>人・プロセス・技術・ガバナンス</strong>{' '}の 4 領域で見つけられるか。[S3]
             </p>
             <p>
                 <strong>② やさしい説明</strong> 「AI
-                がうまくいかない」という漠然とした悩みを、<strong>どの領域の何が足りないのか</strong>に分解する作業です。医師が「体調が悪い」を検査で具体的な原因に絞るのと同じです。
+                がうまくいかない」という漠然とした悩みを、<strong>どの領域の何が足りないのか</strong>{' '}に分解する作業です。医師が「体調が悪い」を検査で具体的な原因に絞るのと同じです。
             </p>
             <div className="table-wrap">
                 <table>
@@ -280,9 +280,9 @@ export const Sec3_Task41: React.FC = () => {
             </div>
             <p>
                 <strong>③ 具体例</strong> 「PoC
-                は成功するのに本番に進まない」という症状を分解すると、多くの場合
-                <strong>プロセス(本番移行の基準がない)</strong> と
-                <strong>ガバナンス(本番運用の責任者と承認が不明)</strong>
+                は成功するのに本番に進まない」という症状を分解すると、多くの場合{' '}
+                <strong>プロセス(本番移行の基準がない)</strong> と{' '}
+                <strong>ガバナンス(本番運用の責任者と承認が不明)</strong>{' '}
                 の不足が見つかります。技術を増強しても解決しません。
             </p>
             <p><strong>④ ベストプラクティス</strong></p>
@@ -321,19 +321,19 @@ export const Sec3_Task41: React.FC = () => {
                 </table>
             </div>
             <p>
-                <strong>⑤ ひっかけ注意</strong>
+                <strong>⑤ ひっかけ注意</strong>{' '}
                 選択肢に「技術」だけを強化する案と、「人・プロセス・ガバナンスも含む案」が並ぶ場合、後者が正解になりやすいです。
             </p>
             <p><strong>⑥ 根拠</strong>: [S3] [S7] [S8]</p>
             <h3 id="k4-1-4">Skill 4.1.4 投資の優先順位と成長の道筋を作る</h3>
             <p>
-                <strong>① 何を問われるか</strong>
-                戦略目標と現在の成熟度に基づき、<strong>どのギャップにどの順番で投資するか</strong>、そして
+                <strong>① 何を問われるか</strong>{' '}
+                戦略目標と現在の成熟度に基づき、<strong>どのギャップにどの順番で投資するか</strong>、そして{' '}
                 <strong>次の段階へ進む道筋</strong> を作れるか。[S3]
             </p>
             <p>
-                <strong>② やさしい説明</strong>
-                限られた予算と人員で、全部を一度に直すことはできません。<strong>「戦略目標に効くか」と「いまの段階で実行できるか」</strong>の 2 軸で優先順位を付けます。
+                <strong>② やさしい説明</strong>{' '}
+                限られた予算と人員で、全部を一度に直すことはできません。<strong>「戦略目標に効くか」と「いまの段階で実行できるか」</strong>{' '}の 2 軸で優先順位を付けます。
             </p>
             <Diagram id="d3" />
             <p><strong>③ 具体例</strong></p>
@@ -395,8 +395,8 @@ export const Sec3_Task41: React.FC = () => {
                 </table>
             </div>
             <p>
-                <strong>⑤ ひっかけ注意</strong>
-                「最も高度な技術」や「最大規模の投資」を優先する選択肢は誤りになりやすいです。<strong>戦略目標と現在地に合うもの</strong>が正解です。
+                <strong>⑤ ひっかけ注意</strong>{' '}
+                「最も高度な技術」や「最大規模の投資」を優先する選択肢は誤りになりやすいです。<strong>戦略目標と現在地に合うもの</strong>{' '}が正解です。
             </p>
             <p><strong>⑥ 根拠</strong>: [S3] [S4] [S7] [S13] [S14] [S27]</p>
         </section>

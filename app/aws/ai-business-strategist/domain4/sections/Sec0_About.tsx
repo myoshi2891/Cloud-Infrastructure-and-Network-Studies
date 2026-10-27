@@ -6,9 +6,8 @@ export const Sec0_About: React.FC = () => {
             <h2><i className="ti ti-info-circle"></i>この文書について</h2>
             <p>
                 <strong>
-                    Business Readiness, Leadership, and AI
-                    Transformation(準備度・リーダーシップ・変革)
-                </strong>
+                    Business Readiness, Leadership, and AI Transformation(準備度・リーダーシップ・変革)
+                </strong>{' '}
                 を、初学者向けにステップバイステップで解説します。
             </p>
             <ul>
@@ -21,8 +20,8 @@ export const Sec0_About: React.FC = () => {
             </ul>
             <blockquote>
                 <p>
-                    <strong>この文書の読み方</strong>
-                    「公式が書いていること」と「初学者向けに筆者が整理した考え方」を区別するため、各項目を次の順で書いています。
+                    <strong>この文書の読み方</strong>{' '}
+                    「公式が書いていること」と「初学者向けに筆者が整理した考え方」を区別するため、各項目を次の順で書いています。{' '}
                     <strong>
                         ①何を問われるか → ②やさしい説明 → ③具体例 → ④ベストプラクティス →
                         ⑤ひっかけ注意 → ⑥根拠

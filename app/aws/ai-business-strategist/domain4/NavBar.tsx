@@ -73,46 +73,41 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     };
 
     return (
-        <nav className="sidebar" id="sidebar" aria-label="目次ナビゲーション">
+        <aside className="sidebar" id="sidebar" aria-label="目次ナビゲーション">
             <div className="brand">
-                <i className="ti ti-rocket"></i>
-                <span>AIB-C01 Domain 4<br />準備度・リーダーシップ・変革</span>
-            </div>
-            <ul className="nav">
-                {NAV_ITEMS.map((item: NavItem) => {
-                    const isParentActive =
-                        activeId === item.id ||
-                        (item.subItems?.some((sub) => sub.id === activeId) ?? false);
+                AIB-C01 Domain 4<br />準備度・リーダーシップ・変革
+            </div>{' '}
+            {NAV_ITEMS.map((item: NavItem) => {
+                const isParentActive =
+                    activeId === item.id ||
+                    (item.subItems?.some((sub) => sub.id === activeId) ?? false);
 
-                    return (
-                        <li key={item.id}>
-                            <a
-                                className={isParentActive ? 'active' : ''}
-                                href={`#${item.id}`}
-                                onClick={(e) => handleClick(e, item.id)}
-                            >
-                                {item.icon && <i className={item.icon}></i>}
-                                <span>{item.label}</span>
-                            </a>
-                            {item.subItems && item.subItems.length > 0 && (
-                                <ul className="sub">
-                                    {item.subItems.map((sub) => (
-                                        <li key={sub.id}>
-                                            <a
-                                                className={activeId === sub.id ? 'active' : ''}
-                                                href={`#${sub.id}`}
-                                                onClick={(e) => handleClick(e, sub.id)}
-                                            >
-                                                <span>{sub.label}</span>
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    );
-                })}
-            </ul>
-        </nav>
+                return (
+                    <span key={item.id}>
+                        <a
+                            className={`nav-a ${isParentActive ? 'active' : ''}`}
+                            href={`#${item.id}`}
+                            onClick={(e) => handleClick(e, item.id)}
+                        >
+                            {item.icon && <i className={item.icon}></i>}
+                            <span>{item.label}</span>
+                        </a>{' '}
+                        {item.subItems && item.subItems.length > 0 &&
+                            item.subItems.map((sub) => (
+                                <span key={sub.id}>
+                                    <a
+                                        className={`nav-sub ${activeId === sub.id ? 'active' : ''}`}
+                                        href={`#${sub.id}`}
+                                        onClick={(e) => handleClick(e, sub.id)}
+                                    >
+                                        {sub.label}
+                                    </a>{' '}
+                                </span>
+                            ))
+                        }
+                    </span>
+                );
+            })}
+        </aside>
     );
 }
