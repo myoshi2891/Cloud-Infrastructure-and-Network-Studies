@@ -37,11 +37,23 @@ export const Sec10_Checklist: React.FC = () => {
         }));
     };
 
+    const total = CHECKLIST_ITEMS.length;
+    const completedCount = Object.values(checkedItems).filter(Boolean).length;
+    const progressPercent = (100 * completedCount) / total;
+
     return (
         <section className="section" id="s10">
             <h2>
                 <i className="ti ti-checklist"></i>9. 直前チェックリスト
             </h2>
+            <div>
+                <div className="chk-count">
+                    {completedCount} / {total} 完了
+                </div>
+                <div className="chk-bar">
+                    <i style={{ width: `${progressPercent}%` }}></i>
+                </div>
+            </div>
             <ul className="checklist">
                 {CHECKLIST_ITEMS.map((text, index) => (
                     <li key={index}>

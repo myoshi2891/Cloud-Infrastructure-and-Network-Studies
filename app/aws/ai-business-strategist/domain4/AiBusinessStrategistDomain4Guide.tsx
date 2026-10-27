@@ -28,6 +28,26 @@ export function AiBusinessStrategistDomain4Guide({ children }: AiBusinessStrateg
         restoreFocusRef.current = true;
     }, [navOpen]);
 
+    useEffect(() => {
+        if (!navOpen) return;
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setNavOpen(false);
+            }
+        };
+        const onResize = () => {
+            if (window.innerWidth > 900) {
+                setNavOpen(false);
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('resize', onResize);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('resize', onResize);
+        };
+    }, [navOpen]);
+
     const closeAfterNavigation = () => {
         restoreFocusRef.current = false;
         setNavOpen(false);
@@ -49,7 +69,7 @@ export function AiBusinessStrategistDomain4Guide({ children }: AiBusinessStrateg
                             ref={menuButtonRef}
                             type="button"
                             id="menuBtn"
-                            aria-label="目次を開く"
+                            aria-label={navOpen ? '目次を閉じる' : '目次を開く'}
                             aria-controls="sidebar"
                             aria-expanded={navOpen}
                             onClick={() => setNavOpen((prev) => !prev)}
