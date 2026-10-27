@@ -2155,17 +2155,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** SAP-C02総合ガイドのNext.js移行・原本アーカイブ
-- **最終更新日:** 2026-10-26
-- **最新実装 HEAD:** `0f005c05`（総合ガイド・導線統合。原本保存は `4025ae45`、欠落テスト対象訂正は `dbaccf24`）
-- **仕様同期コミット:** `2fb3d719`（SAP総合の仕様・テスト進捗・ダッシュボード同期）
-- **前回進捗同期コミット:** `f27f2e68`
-- **検証状態:** 対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
-- **今回の検証条件:** npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。
-- **ビルド状態:** ユーザー指定により未実行。本番ビルド成功は未確認。
-- **静的集計:** 1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。
-- **HTML残数:** 未移行13件、直下HTML17件（移行済み原本4件を含む）。SAP総合のHTML/Markdownはarchiveへ移動済み。
-- **次の作業:** 次ページはユーザー指定待ち。SAP総合の再移行は不要。既存SAP Domain 1の6件失敗は別タスクで監査。ビルドは禁止を引き継ぐ。
+- **最新完了タスク:** 2026-10-27 AIB-C01 Domain 4移行・原本アーカイブ、SCS-C03 Domain 1移行・原本アーカイブ、ANS-C01 Domain 3／Domain 4原本アーカイブ退避
+- **最終更新日:** 2026-10-27
+- **最新実装 HEAD:** `191203bf`（AIB-C01 Domain 4 チェックリスト進捗・ドロワー操作。SCS-C03 Domain 1 最終実装は `938a34ff`、ANS-C01 Domain 4 原本退避は `ab0c8b14`、Domain 3 は `e9a8a851`）
+- **仕様同期コミット:** `a5577b28`（AIB-C01 Domain 4 の仕様同期）
+- **前回進捗同期コミット:** `2cf3ecd1`（AIB-C01 Domain 4。それ以前は ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
+- **検証状態:** AIB-C01 Domain 4 は原本不在下で全5テストファイル（30件）、AIB関連＋共通Footer 16ファイル（107件）成功。SCS-C03 Domain 1 は固定Git `90bc905f` 由来fixtureで原本・archive不在でも18ファイル（142件）成功。ANS-C01 Domain 3 は13ファイル（98件）、Domain 4 は15ファイル（97件）が原本不在下で成功し、fixtureのバイト一致再生成も確認。TypeScript型検査・ESLint成功。
+- **ビルド状態:** 本番ビルドは未実行。成功は未確認。
+- **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
+- **次の作業:** 次ページはユーザー指定待ち。既存SAP-C02 Domain 1の6件失敗は別タスクで監査。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3504,15 +3502,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `0f005c05`。原本保存: `4025ae45`。前回進捗同期コミット: `f27f2e68`。仕様同期コミット: `2fb3d719`。2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本のライト配色・点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次とクイズ操作はClientに分離。ホームとHeaderへ総合ガイドを追加し、Domain 1詳細も保持。原本のコードブロックとチェックボックスは0件。
+最新実装 HEAD: `191203bf`。前回進捗同期コミット: `2cf3ecd1`。仕様同期コミット: `a5577b28`。最終更新日: 2026-10-27。
 
-対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
+2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
-原本HTML509866バイト・Markdown140000バイトは `archive/Aws/html/solutions-architect-professional/` と `archive/Aws/md/solutions-architect-professional/` へバイト一致・SHA-256一致で移動済み。ハッシュと保存先は `docs/migration-inventory/aws-sap-c02-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc` 由来fixtureを使用し、原本・archiveなしでも再生成できる。
+検証: AIB Domain 4 30件（AIB関連＋Footer 107件）、SCS Domain 1 142件、ANS Domain 3 98件・Domain 4 97件が原本不在下で成功。型検査・ESLint成功。本番ビルドは未実行。
 
-npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。
-
-静的集計1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。 次ページはユーザー指定待ち。未移行HTML13件、直下HTML17件。既存SAP Domain 1の6件失敗は別タスク。
+次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。既存SAP-C02 Domain 1の6件失敗は別タスク。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
