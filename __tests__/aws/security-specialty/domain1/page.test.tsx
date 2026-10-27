@@ -9,11 +9,14 @@ import {
     codeBlockSelector,
     codeLineCount,
     extractBodyContent,
+    normalizeSpaces,
     squash,
+    withBlockBoundarySpaces,
 } from '@/__tests__/helpers/migration-test-utils';
 
-// MermaidDiagram は名前付きエクスポート。
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
+vi.mock('@/components/MermaidDiagram', async () => ({
+    MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
+}));
 
 describe('aws-scs-c03-domain1-guide — 移行元コンテンツの全量移行', () => {
     const renderPage = () => {
@@ -56,7 +59,11 @@ describe('aws-scs-c03-domain1-guide — 移行元コンテンツの全量移行'
 
     it('本文・注釈・画像 alt・コード全文が移行元の順序どおり一致する', () => {
         const container = renderPage();
-        expect(extractBodyContent(container)).toEqual(inventory.bodyContent);
+        const normalize = (blocks: { kind: string; text: string }[]) =>
+            blocks.map((block) => ({ ...block, text: normalizeSpaces(block.text) }));
+        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(
+            normalize(inventory.bodyContent),
+        );
     });
 
     it('全形式の図が件数どおり存在し、説明または装飾指定と自然スケールを持つ', () => {
@@ -104,4 +111,46 @@ describe('aws-scs-c03-domain1-guide — 移行元コンテンツの全量移行'
             expect(codeLineCount(block)).toBe(inventory.structures.codeLines[index]);
         });
     });
+
+    it('makes every source table horizontally scrollable by keyboard with an accessible label', () => {
+        const container = renderPage();
+        const wrappers = container.querySelectorAll('.table-scroll');
+        expect(wrappers).toHaveLength(inventory.counts.table);
+        wrappers.forEach((wrapper) => {
+            expect(wrapper).toHaveAttribute('tabindex', '0');
+            expect(wrapper).toHaveAttribute('role', 'region');
+            expect(wrapper.getAttribute('aria-label')?.trim()).toBeTruthy();
+        });
+    });
+
+    it('gives both code scroll regions unique accessible names derived from their headings', () => {
+        const container = renderPage();
+        const blocks = [...container.querySelectorAll('.code-block')];
+        expect(blocks).toHaveLength(inventory.counts.codeBlock);
+        const labels = blocks.map((block) => block.getAttribute('aria-label'));
+        expect(labels.every((label) => Boolean(label?.trim()))).toBe(true);
+        expect(new Set(labels).size).toBe(inventory.counts.codeBlock);
+    });
+
+    it('gives every table and diagram scroll region a unique accessible name', () => {
+        const container = renderPage();
+        const regions = [...container.querySelectorAll('[role="region"]')];
+        expect(regions).toHaveLength(
+            inventory.counts.table + inventory.counts.diagram + inventory.counts.codeBlock,
+        );
+        const labels = regions.map((region) => region.getAttribute('aria-label'));
+        expect(labels.every((label) => Boolean(label?.trim()))).toBe(true);
+        expect(new Set(labels).size).toBe(regions.length);
+    });
+
+    it('avoids hydration-invalid whitespace children in every table structural element', () => {
+        const container = renderPage();
+        container.querySelectorAll('table,thead,tbody,tfoot,tr,colgroup').forEach((element) => {
+            expect(
+                [...element.childNodes].filter((node) => node.nodeType === Node.TEXT_NODE),
+                element.tagName,
+            ).toHaveLength(0);
+        });
+    });
 });
+
