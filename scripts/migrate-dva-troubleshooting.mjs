@@ -20,7 +20,7 @@ function jsx(node) {
     }
     if(node.nodeType !== 1 || node.tagName === 'SCRIPT') return '';
     if(node.matches('[data-diagram-id]')) return `<Diagram id=${JSON.stringify(node.dataset.diagramId)} label=${JSON.stringify(node.getAttribute('aria-label'))} />`;
-    if(node.tagName === 'PRE') return `<div className="code-viewport"><div className="code-block" data-language=${JSON.stringify(node.querySelector('code')?.className.replace('language-','') ?? '')}>${codeLines(node).map(line => `<div className="code-line">{${JSON.stringify(line)}}</div>`).join('\n')}</div></div>`;
+    if(node.tagName === 'PRE') return `<CodeBlock language=${JSON.stringify(node.querySelector('code')?.className.replace('language-','') ?? '')} lines={${JSON.stringify(codeLines(node))}} />`;
     const tag = node.tagName.toLowerCase();
     const attrs = [...node.attributes].map(attr => {
         if(attr.name === 'style') {
@@ -42,7 +42,7 @@ if(stage === 'scaffold') {
     const nav = JSON.parse(fs.readFileSync('docs/migration-inventory/aws-dva-domain4.fidelity.json','utf8')).nav;
     write('constants.ts',`/** 原本の全目次・全図の単一正本。 */\nexport const NAV_ITEMS = ${JSON.stringify(nav,null,2)} as const;\nexport const DIAGRAMS = ${JSON.stringify(diagrams,null,2)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;`);
     write('mermaid-theme.json',JSON.stringify(theme,null,2));
-    write('page.tsx',`import type { Metadata } from 'next';\nimport { TroubleshootingGuide } from './TroubleshootingGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nexport const metadata: Metadata = {title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 Domain 4の全3タスク・25 Stepsを、159表・34図・25コード例で学ぶトラブルシューティングと最適化のガイド。'};\n/** Domain 4学習ガイドのServer入口。 */\nexport default function Page() { return <TroubleshootingGuide />; }`);
+    write('page.tsx',`import '@tabler/icons-webfont/tabler-icons.min.css';\nimport type { Metadata } from 'next';\nimport { TroubleshootingGuide } from './TroubleshootingGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nexport const metadata: Metadata = {title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 Domain 4の全3タスク・25 Stepsを、159表・34図・25コード例で学ぶトラブルシューティングと最適化のガイド。'};\n/** Domain 4学習ガイドのServer入口。 */\nexport default function Page() { return <TroubleshootingGuide />; }`);
     write('Diagram.tsx',`'use client';\nimport { memo } from 'react';\nimport { MermaidDiagram } from '@/components/MermaidDiagram';\nimport { DIAGRAMS, type DiagramId } from './constants';\nimport theme from './mermaid-theme.json';\nconst prefix = \`---\\nconfig: \${JSON.stringify({...theme,themeVariables:{...theme.themeVariables,fontFamily:'"Noto Sans JP Variable",sans-serif'}})}\\n---\\n\`;\n/** 原本のテーマ・DSL・自然倍率を保持する。 */\nexport const Diagram = memo(function Diagram({id,label}:{id:DiagramId;label:string}) {\nconst chart = DIAGRAMS[id]; if(!chart) return null;\nreturn <div className="diagram-wrap" data-diagram-id={id} tabIndex={0} role="region" aria-label={label}><MermaidDiagram chart={prefix+chart} theme="light" preserveChartTheme={true} ariaLabel={label} preserveNaturalScale={true}/></div>;\n});`);
     const css = postcss.parse(doc.querySelector('style').textContent);
     const mapping = {'--sidebar-w':'288px','--font-body':'var(--font-body)','--font-display':'var(--font-dva-serif)','--font-mono':'var(--font-mono)'};
@@ -83,6 +83,7 @@ if(stage === 'scaffold') {
 .dva-troubleshooting-page .section ul ul, .dva-troubleshooting-page .section ol ul { list-style-type: circle; }
 .dva-troubleshooting-page .section li { display: list-item; }
 .dva-troubleshooting-page .section .ref-list { list-style-type: none; }
+.dva-troubleshooting-page .code-block { font-family: var(--font-mono); }
 .dva-troubleshooting-page .code-line { white-space: pre; min-height: 1.7em; }
 .dva-troubleshooting-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }
 .dva-troubleshooting-page .backdrop { border: 0; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; }
@@ -97,7 +98,7 @@ if(stage === 'scaffold') {
     for(const section of sections.filter(el=>groups[stage].includes(el.id))) {
         const name='Section'+sections.indexOf(section);
         const body=jsx(section);
-        write('sections/'+name+'.tsx',`${body.includes('<Diagram ')?"import { Diagram } from '../Diagram';\n":''}/** 原本${section.id}の全内容。 */\nexport function ${name}() { return (${body}); }`);
+        write('sections/'+name+'.tsx',`${body.includes('<CodeBlock ')?"import { CodeBlock } from '../CodeBlock';\n":''}${body.includes('<Diagram ')?"import { Diagram } from '../Diagram';\n":''}/** 原本${section.id}の全内容。 */\nexport function ${name}() { return (${body}); }`);
     }
 }
 const names=sections.map((_,i)=>'Section'+i).filter(name=>fs.existsSync(dir+'/sections/'+name+'.tsx'));

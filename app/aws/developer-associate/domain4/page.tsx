@@ -1,3 +1,4 @@
+import '@tabler/icons-webfont/tabler-icons.min.css';
 import type { Metadata } from 'next';
 import { TroubleshootingGuide } from './TroubleshootingGuide';
 import '@fontsource-variable/source-serif-4/index.css';

@@ -377,3 +377,13 @@
 .dva-troubleshooting-page :focus-visible { outline: 2px solid var(--color-dva-troubleshooting-34439a); outline-offset: 3px; }
 @media(max-width: 900px) { .dva-troubleshooting-page main { width: 100%; } .dva-troubleshooting-page:not(.menu-open) .sidebar { visibility: hidden; } }
 @media(prefers-reduced-motion: reduce) { .dva-troubleshooting-page .sidebar { transition: none; } }
+
+.dva-troubleshooting-page .code-block { font-family: var(--font-mono); }
+
+/* Atom One Darkの原本構文色。 */
+.dva-troubleshooting-page .hljs-comment { color: #5c6370; font-style: italic; }
+.dva-troubleshooting-page .hljs-keyword { color: #c678dd; }
+.dva-troubleshooting-page .hljs-string { color: #98c379; }
+.dva-troubleshooting-page .hljs-number, .dva-troubleshooting-page .hljs-literal { color: #d19a66; }
+.dva-troubleshooting-page .hljs-attr { color: #e06c75; }
+.dva-troubleshooting-page .hljs-title { color: #61afef; }
