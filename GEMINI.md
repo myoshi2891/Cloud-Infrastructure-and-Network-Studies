@@ -1,6 +1,10 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-28
+Updated 2026-10-29
+
+2026-10-29 DVA-C02 Domain 4移行: `/aws/developer-associate/domain4` に全3タスク・24スキル（Step 0〜24）・33セクション、159表・34図・25コード例・181リスト項目・練習問題13問を全文移行。原本のライト配色、288px目次、Hero、表、点・番号・入れ子・字下げを保持。コードは空行・字下げ・等幅フォントとJSON/Pythonの構文色を保持する。目次の現在位置・モバイル開閉・hash/focus、図の原本DSL・テーマ・自然倍率、ホームとHeaderのDomain 4（18%）、共有フッターの明色切替を実装した。 実体: `app/aws/developer-associate/domain4/page.tsx`（metadata）、`TroubleshootingGuide.tsx` と `sections/`（Server本文）、`NavBar.tsx`（Client目次）、`Diagram.tsx`（共有Mermaid）、`CodeBlock.tsx`（静的構文色）、`constants.ts`、`mermaid-theme.json`、`page.css`。
+
+検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。DVA関連13ファイル・182件成功。最終整形後のDomain 4＋原本抽出は6ファイル・27件成功、共有フッター3件も成功。34図すべてのMermaid構文解析、全本文・表結合・リスト階層・コード行・CSS宣言の全量比較と欠落検出を含む。型検査・全体ESLint成功。原本HTMLは保持し、テストは固定Git由来fixtureのみを参照する。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
 
 2026-10-28 SAP/SCS Domain 1テスト修正: 本文訂正を `__tests__/helpers/domain1-source-corrections.ts` に明示し、固定Git由来fixtureを保持したまま表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で検証する。対象28ファイル・222件成功。テスト変更のみのためE2E・本番ビルドは省略。全体の最終結果は `MIGRATION_PROGRESS.md` の現在地を参照。
 
