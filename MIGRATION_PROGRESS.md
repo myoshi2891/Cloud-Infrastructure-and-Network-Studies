@@ -2,6 +2,12 @@
 
 (最終更新日: 2026-10-28)
 
+## 2026-10-28: SAP-C02 Domain 1 指定HTMLの移行状態を再検証
+
+`Aws-sap-c02-domain1 organizational-complexity-guide.html` は `/aws/solutions-architect-professional/domain1` に既に実装・ナビ統合済み。再移行せず既存実装を検証した。対象Vitestは9ファイル・69件すべて成功（`bun run test -- __tests__/aws/solutions-architect-professional/domain1 --maxWorkers=4`）。全見出し・本文・49表・19図・1コードブロック・リンクの順序、リスト階層、CSS宣言、点・番号・字下げの欠落検出、目次とクイズ操作を含む。
+
+指定HTMLからインベントリを再抽出して比較し、既存インベントリとの差は割引共有の説明1項目のみであることを確認した。実装は既存の訂正済み文言（共有は既定で有効で、対象使用量に自動適用）を保持する。固定Git由来fixtureとの差6箇所は既存の `SAP_DOMAIN1_CORRECTIONS` で明示的に検証されている。今回の実装・テスト変更はなし。型検査・全体ESLint・対象Markdown lint成功。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
+
 ## 2026-10-28: SAP/SCS Domain 1 テスト期待値の訂正
 
 SAP Domain 1の本文訂正6箇所とSCS Domain 1の本文訂正6箇所を明示的な変換表にし、固定Git由来fixtureを改変せず表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で明示的に検証する。欠落検出テストの削除前の一致確認が再び成功し、削除による差分も検出する。訂正対象の存在・訂正の反映・fixtureの不変性を確認する回帰2件を追加。
