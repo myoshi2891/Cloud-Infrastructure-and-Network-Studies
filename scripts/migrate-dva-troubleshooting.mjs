@@ -4,6 +4,7 @@ import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import { troubleshootingSource } from './dva-troubleshooting-fidelity.mjs';
 import { codeLines } from './inventory-extraction.mjs';
+import { stylePracticeMarkup } from './dva-practice-design.mjs';
 const html = execFileSync('git',['show','994d23de:Aws-dva-c02-domain4-troubleshooting-optimization-guide.html'],{encoding:'utf8',maxBuffer:8*1024*1024});
 const doc = new JSDOM(html).window.document;
 const {diagrams,theme} = troubleshootingSource(doc);
@@ -44,7 +45,7 @@ if(stage === 'scaffold') {
     const nav = JSON.parse(fs.readFileSync('docs/migration-inventory/aws-dva-domain4.fidelity.json','utf8')).nav;
     write('constants.ts',`/** 原本の全目次・全図の単一正本。 */\nexport const NAV_ITEMS = ${JSON.stringify(nav,null,2)} as const;\nexport const DIAGRAMS = ${JSON.stringify(diagrams,null,2)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;`);
     write('mermaid-theme.json',JSON.stringify(theme,null,2));
-    write('page.tsx',`import '@tabler/icons-webfont/tabler-icons.min.css';\nimport type { Metadata } from 'next';\nimport { TroubleshootingGuide } from './TroubleshootingGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nexport const metadata: Metadata = {title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 Domain 4の全3タスク・25 Stepsを、159表・34図・25コード例で学ぶトラブルシューティングと最適化のガイド。'};\n/** Domain 4学習ガイドのServer入口。 */\nexport default function Page() { return <TroubleshootingGuide />; }`);
+    write('page.tsx',`import '@tabler/icons-webfont/tabler-icons.min.css';\nimport type { Metadata } from 'next';\nimport { TroubleshootingGuide } from './TroubleshootingGuide';\nimport '@fontsource-variable/source-serif-4/index.css';\nimport './page.css';\nimport './practice.css';\nexport const metadata: Metadata = {title: ${JSON.stringify(doc.title)}, description: 'AWS DVA-C02 Domain 4の全3タスク・25 Stepsを、159表・34図・25コード例で学ぶトラブルシューティングと最適化のガイド。'};\n/** Domain 4学習ガイドのServer入口。 */\nexport default function Page() { return <TroubleshootingGuide />; }`);
     write('Diagram.tsx',`'use client';\nimport { memo } from 'react';\nimport { MermaidDiagram } from '@/components/MermaidDiagram';\nimport { DIAGRAMS, type DiagramId } from './constants';\nimport theme from './render-theme.json';\nconst prefix = \`---\\nconfig: \${JSON.stringify(theme)}\\n---\\n\`;\n/** 原本のテーマ・DSL・自然倍率を保持する。 */\nexport const Diagram = memo(function Diagram({id,label}:{id:DiagramId;label:string}) {\nconst chart = DIAGRAMS[id]; if(!chart) return null;\nreturn <div className="diagram-wrap" data-diagram-id={id} tabIndex={0} role="region" aria-label={label}><MermaidDiagram chart={prefix+chart} theme="light" preserveChartTheme={true} ariaLabel={label} preserveNaturalScale={true}/></div>;\n});`);
     const css = postcss.parse(doc.querySelector('style').textContent);
     const mapping = {'--sidebar-w':'288px','--font-body':'var(--font-body)','--font-display':'var(--font-dva-serif)','--font-mono':'var(--font-mono)'};
@@ -105,7 +106,7 @@ if(stage === 'scaffold') {
     if(!groups[stage]) throw Error('Unknown stage');
     for(const section of sections.filter(el=>groups[stage].includes(el.id))) {
         const name='Section'+sections.indexOf(section);
-        const body=jsx(section);
+        const body=section.id === 'app-a' ? stylePracticeMarkup(jsx(section)) : jsx(section);
         write('sections/'+name+'.tsx',`${body.includes('<CodeBlock ')?"import { CodeBlock } from '../CodeBlock';\n":''}${body.includes('<Diagram ')?"import { Diagram } from '../Diagram';\n":''}/** 原本${section.id}の全内容。 */\nexport function ${name}() { return (${body}); }`);
     }
 }

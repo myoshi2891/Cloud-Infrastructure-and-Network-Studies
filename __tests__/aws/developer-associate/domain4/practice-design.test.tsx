@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { render } from '@testing-library/react';
 import { expect, it } from 'vitest';
+import postcss from 'postcss';
 import { Section26 } from '@/app/aws/developer-associate/domain4/sections/Section26';
 import original from '@/docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
 
@@ -28,6 +29,7 @@ it('13問を見出し付きカードとして分け、選択肢と対応付け�
     expect(container.querySelectorAll('.practice-answers tbody tr')).toHaveLength(13);
 });
 it('付録A内に限定したカード・選択肢・解答表の装飾を持つ', () => {
-    const css=fs.readFileSync('app/aws/developer-associate/domain4/page.css','utf8');
+    const css=fs.readFileSync('app/aws/developer-associate/domain4/practice.css','utf8');
     for(const selector of ['#app-a .practice-question','#app-a .practice-question > ul > li','#app-a .practice-answers']) expect(css).toContain(selector);
+    postcss.parse(css).walkRules(rule => { expect(rule.selector).toContain('.dva-troubleshooting-page #app-a'); });
 });

@@ -15,7 +15,8 @@ export function Section26() { return (<section className="section" id="app-a" ta
 {" "}
 <h3>{"問題"}</h3>
 {" "}
-<p><strong>{"問 1."}</strong>{" Lambda 関数の処理時間が長いと感じています。どのダウンストリーム呼び出しが全体の遅延の原因かを特定したい。最も適切な方法はどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-1">
+<p id="practice-question-1"><strong>{"問 1."}</strong>{" Lambda 関数の処理時間が長いと感じています。どのダウンストリーム呼び出しが全体の遅延の原因かを特定したい。最も適切な方法はどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -28,8 +29,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. CloudTrail でイベントを検索する"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 2."}</strong>{" Lambda 関数から、API 呼び出しによる追加の遅延なく、非同期にカスタムメトリクスを CloudWatch へ送りたい。最も適切なのはどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-2">
+<p id="practice-question-2"><strong>{"問 2."}</strong>{" Lambda 関数から、API 呼び出しによる追加の遅延なく、非同期にカスタムメトリクスを CloudWatch へ送りたい。最も適切なのはどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -42,8 +45,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. CloudTrail のログからメトリクスを作る"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 3."}</strong>{" X-Ray のトレースに「会員ランク」を付け、特定ランクのトレースだけを検索できるようにしたい。どれを使うか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-3">
+<p id="practice-question-3"><strong>{"問 3."}</strong>{" X-Ray のトレースに「会員ランク」を付け、特定ランクのトレースだけを検索できるようにしたい。どれを使うか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -56,8 +61,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. サンプリングルールの変更"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 4."}</strong>{" 重要な Lambda 関数が、他の関数の急増によってスロットルされています。この重要な関数の実行枠を確保し、追加料金も避けたい。どうすればよいか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-4">
+<p id="practice-question-4"><strong>{"問 4."}</strong>{" 重要な Lambda 関数が、他の関数の急増によってスロットルされています。この重要な関数の実行枠を確保し、追加料金も避けたい。どうすればよいか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -70,8 +77,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. タイムアウトを短くする"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 5."}</strong>{" SQS をイベントソースとする Lambda で、同じメッセージが重複して処理されます。関数のタイムアウトは 60 秒、キューの可視性タイムアウトは 30 秒です。最初に行うべき修正はどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-5">
+<p id="practice-question-5"><strong>{"問 5."}</strong>{" SQS をイベントソースとする Lambda で、同じメッセージが重複して処理されます。関数のタイムアウトは 60 秒、キューの可視性タイムアウトは 30 秒です。最初に行うべき修正はどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -84,8 +93,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. キューを FIFO に変更する"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 6."}</strong>{" SNS トピックに「注文イベント」を発行しています。ある購読者は "}<code>{"status = \"approved\""}</code>{" のメッセージだけ処理したい。購読者のコード変更を最小にするには。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-6">
+<p id="practice-question-6"><strong>{"問 6."}</strong>{" SNS トピックに「注文イベント」を発行しています。ある購読者は "}<code>{"status = \"approved\""}</code>{" のメッセージだけ処理したい。購読者のコード変更を最小にするには。"}</p>
 {" "}
 <ul>
 {" "}
@@ -98,8 +109,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. 購読者を SQS に置き換える"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 7."}</strong>{" CloudFront で、ビューワーの言語ごとに内容を出し分けつつ、キャッシュヒット率を高く保ちたい。適切な設定はどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-7">
+<p id="practice-question-7"><strong>{"問 7."}</strong>{" CloudFront で、ビューワーの言語ごとに内容を出し分けつつ、キャッシュヒット率を高く保ちたい。適切な設定はどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -112,8 +125,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. "}<code>{"User-Agent"}</code>{" をキャッシュキーに含める"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 8."}</strong>{" DynamoDB の読み取りが特定のアイテムに集中し、レイテンシが問題になっています。アプリのコード変更を最小限に、マイクロ秒単位の読み取りを実現するには。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-8">
+<p id="practice-question-8"><strong>{"問 8."}</strong>{" DynamoDB の読み取りが特定のアイテムに集中し、レイテンシが問題になっています。アプリのコード変更を最小限に、マイクロ秒単位の読み取りを実現するには。"}</p>
 {" "}
 <ul>
 {" "}
@@ -126,8 +141,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. グローバルテーブルにする"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 9."}</strong>{" ALB 配下のアプリで、利用者が 503 を受け取っています。まず確認すべきことは何か。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-9">
+<p id="practice-question-9"><strong>{"問 9."}</strong>{" ALB 配下のアプリで、利用者が 503 を受け取っています。まず確認すべきことは何か。"}</p>
 {" "}
 <ul>
 {" "}
@@ -140,8 +157,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. SNS のフィルターポリシー"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 10."}</strong>{" CodeDeploy で EC2 へのデプロイが失敗しました。原因の調査として最も適切なのはどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-10">
+<p id="practice-question-10"><strong>{"問 10."}</strong>{" CodeDeploy で EC2 へのデプロイが失敗しました。原因の調査として最も適切なのはどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -154,8 +173,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. DynamoDB のメトリクス"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 11."}</strong>{" (複数選択)Lambda から RDS へ接続するアプリで、トラフィック急増時に「接続数が多すぎる」エラーが出ます。適切な対策を 2 つ選べ。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-11">
+<p id="practice-question-11"><strong>{"問 11."}</strong>{" (複数選択)Lambda から RDS へ接続するアプリで、トラフィック急増時に「接続数が多すぎる」エラーが出ます。適切な対策を 2 つ選べ。"}</p>
 {" "}
 <ul>
 {" "}
@@ -170,8 +191,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"E. ログレベルを DEBUG にする"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 12."}</strong>{" Lambda 関数のコストを下げつつ速くしたい。関数は CPU 負荷が高く、"}<code>{"Max Memory Used"}</code>{" は割り当ての 20% 程度です。最も適切な調査はどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-12">
+<p id="practice-question-12"><strong>{"問 12."}</strong>{" Lambda 関数のコストを下げつつ速くしたい。関数は CPU 負荷が高く、"}<code>{"Max Memory Used"}</code>{" は割り当ての 20% 程度です。最も適切な調査はどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -184,8 +207,10 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. プロビジョニング済み同時実行数を設定する"}</li>
 {" "}
 </ul>
+</article>
 {" "}
-<p><strong>{"問 13."}</strong>{" 「デプロイの失敗・成功をチームのチャットに自動で通知したい」。最も適切な構成はどれか。"}</p>
+<article className="practice-question" aria-labelledby="practice-question-13">
+<p id="practice-question-13"><strong>{"問 13."}</strong>{" 「デプロイの失敗・成功をチームのチャットに自動で通知したい」。最も適切な構成はどれか。"}</p>
 {" "}
 <ul>
 {" "}
@@ -198,10 +223,11 @@ export function Section26() { return (<section className="section" id="app-a" ta
 <li>{"D. Route 53 のヘルスチェック"}</li>
 {" "}
 </ul>
+</article>
 {" "}
 <h3>{"解答と解説"}</h3>
 {" "}
-<div className="table-wrap" tabIndex={0} role="region" aria-label="表 148">
+<div className="table-wrap practice-answers" tabIndex={0} role="region" aria-label="表 148">
 <table className="t3">
 
 <thead>
