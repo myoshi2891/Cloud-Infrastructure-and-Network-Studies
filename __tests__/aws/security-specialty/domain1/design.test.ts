@@ -21,6 +21,10 @@ const globals: Record<string, string> = {};
 postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls((d) => {
     globals[d.prop] = d.value;
 });
+const pageVariables = {
+    ...globals,
+    ...rules(css, '.scs-domain1-page'),
+};
 
 const source: Record<string, string> = {};
 for (const [k, v] of Object.entries(fixture.guideDesign.rules.find((r) => r.selector === ':root')!.declarations)) {
@@ -89,7 +93,7 @@ it('preserves every source CSS declaration and responsive rule', () => {
                 expect(actual['overflow-wrap']).toBe('anywhere');
                 continue;
             }
-            expect(resolve(actual[p] ?? '', globals), selector + ' ' + p).toBe(
+            expect(resolve(actual[p] ?? '', pageVariables), selector + ' ' + p).toBe(
                 resolve(v.replace('var(--sidebar-w)', '300px'), source),
             );
         }
@@ -123,7 +127,12 @@ it.each([
 });
 
 it('isolates styles and provides readable natural diagrams and responsive widths', () => {
-    expect(css).not.toMatch(/@layer|^[ \t]*--[\w-]+\s*:/m);
+    expect(css).not.toMatch(/@layer/);
+    postcss.parse(css).walkDecls((d) => {
+        if (d.prop.startsWith('--')) {
+            expect(d.parent?.type === 'rule' && d.parent.selector).toBe('.scs-domain1-page');
+        }
+    });
     expect(rules(css, '.scs-domain1-page')['color-scheme']).toBe('light');
     expect(rules(css, '.scs-domain1-page .main').width).toBe('calc(100% - 300px)');
     expect(rules(css, '.scs-domain1-page .main', '(max-width: 980px)').width).toBe('100%');
