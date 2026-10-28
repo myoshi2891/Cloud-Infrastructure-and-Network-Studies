@@ -2,6 +2,10 @@
 
 最終更新日: 2026-10-29
 
+2026-10-29 DVA-C02 Domain 4 Mermaid黒塗り修正: ページの部分的なthemeVariablesが共通dark初期化とマージされ、未指定のmainBkg（#0f2040）・clusterBkg（#0d1a2e）等が残っていた。原本単体の全派生色を `render-theme.json` へ固定し、`Diagram.tsx` から使用する。`bun scripts/gen-dva-troubleshooting-theme.mjs` とscaffold再生成にも反映。Red `e0eb617d`、修正 `b2cc12f2`。関連15ファイル・219テスト、型検査・対象ESLint成功。Chromeで全34図の修正前の配色不一致を再現し、修正後のSVGノード・グループ・ラベル色が原本単体と完全一致する1件が成功。npm・ビルド・開発サーバーは未実行。
+
+SVG検証は `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test --config=playwright.mermaid.config.ts` で実行する。ページ全体のレイアウト検証とは区別する。
+
 2026-10-29 DVA-C02 Domain 4移行: `/aws/developer-associate/domain4` に全3タスク・24スキル（Step 0〜24）・33セクション、159表・34図・25コード例・181リスト項目・練習問題13問を全文移行。原本のライト配色、288px目次、Hero、表、点・番号・入れ子・字下げを保持。コードは空行・字下げ・等幅フォントとJSON/Pythonの構文色を保持する。目次の現在位置・モバイル開閉・hash/focus、図の原本DSL・テーマ・自然倍率、ホームとHeaderのDomain 4（18%）、共有フッターの明色切替を実装した。
 
 検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。DVA関連13ファイル・182件成功。最終整形後のDomain 4＋原本抽出は6ファイル・27件成功、共有フッター3件も成功。34図すべてのMermaid構文解析、全本文・表結合・リスト階層・コード行・CSS宣言の全量比較と欠落検出を含む。型検査・全体ESLint成功。原本HTMLは保持し、テストは固定Git由来fixtureのみを参照する。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
