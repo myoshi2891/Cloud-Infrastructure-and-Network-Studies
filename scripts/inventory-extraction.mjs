@@ -2,6 +2,17 @@ export const codeBlockSelector = 'pre:not(.mermaid), .code-block';
 
 /** Keep language labels outside the canonical code block for highlighted HTML. */
 export function normalizeCodeContainers(root) {
+    root.querySelectorAll('script.code-src').forEach(script => {
+        const wrapper = script.parentElement;
+        const code = wrapper?.querySelector('pre code');
+        if (!code) throw new Error('code-src requires a pre/code container');
+        const lines = script.textContent.replace(/\r\n/g, '\n').replace(/^\n+|\n+$/g, '').split('\n');
+        const indents = lines.filter(line => line.trim()).map(line => line.match(/^[ \t]*/)[0].length);
+        const indent = indents.length ? Math.min(...indents) : 0;
+        code.textContent = lines.map(line => line.slice(Math.min(indent, line.match(/^[ \t]*/)[0].length))).join('\n');
+        wrapper.classList.replace('code-block', 'code-sample');
+        script.remove();
+    });
     root.querySelectorAll('.code-block').forEach(element => {
         // .cb-head 付き（DVA Domain 1）はラベル込みの .code-block が正本のため変換しない
         if (!element.querySelector('pre') || element.querySelector('.cb-head')) return;
