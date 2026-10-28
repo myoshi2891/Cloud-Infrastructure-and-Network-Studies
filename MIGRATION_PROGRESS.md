@@ -2,6 +2,12 @@
 
 (最終更新日: 2026-10-29)
 
+## 2026-10-29: DVA Domain 4付録Aのカード表示と選択式採点
+
+2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
+
+検証: 関連17ファイル・225件、型検査・対象ESLint成功。Chromeで1440/768/390pxの実コンポーネント静的描画に対し、全文不変・13カード・全選択肢・解答表の収まりを検証する3件が成功。採点操作はVitestで全13問・誤答・回答変更・複数選択の過不足と解除を検証した。ページ全体のブラウザー操作検証とは区別する。npm・ビルド・開発サーバーは未実行。Red `a2411128`、カード装飾 `a14ff9a5`、採点Red `67a4776a`、採点Green `a1b51073`。
+
 ## 2026-10-29: DVA Domain 4 Mermaid黒塗りの原因特定と修正
 
 2026-10-29 DVA-C02 Domain 4 Mermaid黒塗り修正: ページの部分的なthemeVariablesが共通dark初期化とマージされ、未指定のmainBkg（#0f2040）・clusterBkg（#0d1a2e）等が残っていた。原本単体の全派生色を `render-theme.json` へ固定し、`Diagram.tsx` から使用する。`bun scripts/gen-dva-troubleshooting-theme.mjs` とscaffold再生成にも反映。Red `e0eb617d`、修正 `b2cc12f2`。関連15ファイル・219テスト、型検査・対象ESLint成功。Chromeで全34図の修正前の配色不一致を再現し、修正後のSVGノード・グループ・ラベル色が原本単体と完全一致する1件が成功。npm・ビルド・開発サーバーは未実行。
@@ -2197,13 +2203,13 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** 2026-10-29 DVA Domain 4 Mermaid黒塗り修正。全34図をChromeで原本配色と照合。
+- **最新完了タスク:** DVA Domain 4付録Aの原文保持・カード表示・選択式採点。
 - **最終更新日:** 2026-10-29
-- **最新実装 HEAD:** `b2cc12f2`（DVA Domain 4のMermaid暗色継承を修正）
-- **仕様同期コミット:** `4127544d`（Mermaid黒塗りの原因と配色検証結果）
-- **前回進捗同期コミット:** `72061aab`（DVA Domain 4移行完了時の同期）
-- **検証状態:** 今回は関連15ファイル・219件とChrome SVG検証1件が成功。型検査・対象ESLint成功。直近の全体Vitestは修正前の462ファイル・4252件成功で、今回は全体再実行なし。静的集計1263ソース・402対応（32%）・483テストファイル・136ルート。
-- **ビルド状態:** npm・本番ビルド・開発サーバーは未実行。Chromeの独立SVG配色検証は成功。ページ全体のブラウザーE2Eは今回未実行。
+- **最新実装 HEAD:** `a1b51073`（付録Aの選択式採点・各問の元の解説表示）
+- **仕様同期コミット:** `c8791b26`（付録Aの原文保持・カード装飾・選択式採点）
+- **前回進捗同期コミット:** `aca8ef0a`（Mermaid配色修正の同期）
+- **検証状態:** 今回は関連17ファイル・225件、静的描画のChrome表示3件、型検査・対象ESLint成功。直近の全体Vitestは今回変更前の462ファイル・4252件成功。静的集計1265ソース・404対応（32%）・486テストファイル・136ルート。
+- **ビルド状態:** npm・本番ビルド・開発サーバーは未実行。付録Aの静的描画でChrome 3画面幅を検証。採点操作はVitestで確認。
 - **HTML残数:** 直下HTML12件（未移行10件・移行済み原本2件）。SAP-C02 Domain 1、AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
 - **次の作業:** 次ページはユーザー指定待ち。DVA-C02 Domain 4の移行・導線統合は完了。
 
@@ -3544,7 +3550,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `b2cc12f2`。前回進捗同期コミット: `72061aab`。仕様同期コミット: `4127544d`。最終更新日: 2026-10-29。DVA-C02 Domain 4の移行・統合と黒塗り修正は完了。今回の関連219件・Chrome SVG検証1件が成功。
+最新実装 HEAD: `a1b51073`。前回進捗同期コミット: `aca8ef0a`。仕様同期コミット: `c8791b26`。最終更新日: 2026-10-29。DVA-C02 Domain 4の移行・配色修正・付録Aカード表示と選択式採点は完了。今回の関連225件と静的描画のChrome表示3件が成功。
 
 2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
