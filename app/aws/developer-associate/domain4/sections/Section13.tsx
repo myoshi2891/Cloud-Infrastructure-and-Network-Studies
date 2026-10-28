@@ -1,3 +1,529 @@
 import { Diagram } from '../Diagram';
 /** 原本step-12の全内容。 */
-export function Section13() { return (<section className="section" id="step-12" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-route" aria-hidden="true"></i></div><div><p className="eyebrow">{"Task 2 · Step 12 · 4.2.6"}</p><h2>{"AWS サービスとツールによるトレーシング"}</h2></div></div>{" "}<h3>{"この項目で学ぶこと"}</h3>{" "}<p><strong>{"分散トレーシング"}</strong>{" で、1 つのリクエストが複数のサービスをどう通ったかを記録します。AWS では "}<strong>{"AWS X-Ray"}</strong>{" がトレースの受け口・分析の中心で、計装には "}<strong>{"OpenTelemetry(ADOT)"}</strong>{" が推奨されています。"}</p>{" "}<h3>{"やさしい解説"}</h3>{" "}<h4>{"12-1. 基本用語"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 68"><table><thead><tr><th scope="col">{"用語"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr><td>{"トレース ID"}</td><td>{"1 リクエスト全体を識別する ID("}<code>{"Root=1-5759e988-bd862e3fe1be46a994272793"}</code>{" の形式)"}</td></tr><tr><td><code>{"X-Amzn-Trace-Id"}</code>{" ヘッダー"}</td><td>{"トレース ID を "}<strong>{"サービス間で引き継ぐ"}</strong>{" HTTP ヘッダー"}</td></tr><tr><td>{"セグメント"}</td><td>{"1 つのサービス(例: 自分の Lambda 関数)の作業記録"}</td></tr><tr><td>{"サブセグメント"}</td><td>{"下流呼び出し(DynamoDB、HTTP、SQL)の詳細"}</td></tr><tr><td>{"サンプリング"}</td><td><strong>{"全リクエストではなく一部だけ"}</strong>{" を記録して、コストと負荷を抑える仕組み"}</td></tr><tr><td>{"サービスマップ"}</td><td>{"トレースから自動生成される依存関係図"}</td></tr><tr><td>{"グループ"}</td><td>{"フィルター式でトレースをまとめ、グループ単位でメトリクス・通知を出す機能"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d18" label="図 19" /></figure>{" "}<h4>{"12-2. 各サービスでトレースを有効にする方法"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 69"><table className="t3"><thead><tr><th scope="col">{"サービス"}</th><th scope="col">{"方法"}</th><th scope="col">{"補足"}</th></tr></thead><tbody><tr><td><strong>{"Lambda"}</strong></td><td>{"関数設定で "}<strong>{"アクティブトレース(Active tracing)"}</strong>{" を有効化。実行ロールに "}<strong>{"X-Ray への書き込み権限"}</strong>{"("}<code>{"xray:PutTraceSegments"}</code>{"、"}<code>{"xray:PutTelemetryRecords"}</code>{"。AWS 管理ポリシー "}<code>{"AWSXRayDaemonWriteAccess"}</code>{")が必要"}</td><td>{"Lambda は "}<strong>{"X-Ray デーモンを自前で用意する必要がない"}</strong>{"。トレースモードが "}<strong>{"PassThrough"}</strong>{"(上流の判断に従う)と "}<strong>{"Active"}</strong>{"(Lambda が自らサンプリングして記録)"}</td></tr><tr><td><strong>{"API Gateway"}</strong></td><td><strong>{"ステージの設定"}</strong>{" でトレースを有効化"}</td><td>{"サンプリングルールが適用される"}</td></tr><tr><td><strong>{"ECS / EC2 / EKS"}</strong></td><td><strong>{"X-Ray デーモン"}</strong>{" または "}<strong>{"ADOT コレクター"}</strong>{" をサイドカー / エージェントとして動かす(デーモンは UDP 2000 番で受信)"}</td><td>{"コンテナでは "}<strong>{"サイドカー"}</strong>{" が定石"}</td></tr><tr><td><strong>{"Elastic Beanstalk"}</strong></td><td>{"設定でデーモンを有効化"}</td><td></td></tr><tr><td><strong>{"Step Functions / SNS / SQS"}</strong>{" など"}</td><td>{"サービス側のトレース設定、またはヘッダーの伝播"}</td><td></td></tr></tbody></table></div>{" "}<h4>{"12-3. 計装の方法: X-Ray SDK から OpenTelemetry へ"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 70"><table><thead><tr><th scope="col">{"方法"}</th><th scope="col">{"状況"}</th></tr></thead><tbody><tr><td><strong>{"X-Ray SDK"}</strong>{"(Java / Node.js / Python / .NET / Go / Ruby)+ X-Ray デーモン"}</td><td><strong>{"2026-02-25 にメンテナンスモードへ"}</strong>{"(セキュリティ修正のみ)。"}<strong>{"サポート終了は 2027-02-25"}</strong>{"。既存コードでは今も動作する"}</td></tr><tr><td><strong>{"AWS Distro for OpenTelemetry(ADOT)"}</strong></td><td>{"AWS が "}<strong>{"新規計装に推奨"}</strong>{"。OpenTelemetry の SDK(または自動計装)+ ADOT コレクターでトレースを X-Ray に送る。Java / Python は自動計装(コード変更なし)に対応"}</td></tr><tr><td><strong>{"CloudWatch Application Signals"}</strong></td><td>{"ADOT ベースの自動計装でサービス・SLO・依存関係を可視化"}</td></tr><tr><td><strong>{"CloudWatch Transaction Search"}</strong></td><td>{"スパンを CloudWatch Logs に取り込み、"}<strong>{"高い割合でトレースを検索・分析"}</strong></td></tr></tbody></table></div>{" "}<blockquote className="callout">{" "}<p><strong>{"X-Ray サービス自体はサポート継続"}</strong>{" です。X-Ray は OpenTelemetry のネイティブ取り込みに対応し、機能も追加されています。「SDK がメンテナンスモード」という話を「X-Ray が終了する」と取り違えないよう注意しましょう。"}</p>{" "}</blockquote>{" "}<h4>{"12-4. サンプリング"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 71"><table><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr><td>{"既定のルール"}</td><td><strong>{"毎秒 1 件は必ず記録し、それ以降は 5% を記録"}</strong>{"(リザーバー 1 + 固定レート 5%)"}</td></tr><tr><td>{"カスタムルール"}</td><td>{"X-Ray コンソール / API で、"}<strong>{"サービス名・URL パス・HTTP メソッドなど"}</strong>{" に応じたルールを作る(重要な API は高率、ヘルスチェックは低率など)"}</td></tr><tr><td>{"効果"}</td><td>{"コストとオーバーヘッドの削減。"}<strong>{"統計的に傾向を把握するには十分"}</strong></td></tr></tbody></table></div>{" "}<h4>{"12-5. 試験でよく出る「トレースに出ない」問題"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 72"><table><thead><tr><th scope="col">{"症状"}</th><th scope="col">{"原因"}</th></tr></thead><tbody><tr><td>{"Lambda のトレースが出ない"}</td><td><strong>{"アクティブトレースが無効"}</strong>{"、または "}<strong>{"実行ロールに X-Ray 権限がない"}</strong></td></tr><tr><td>{"下流の DynamoDB 呼び出しがサブセグメントに出ない"}</td><td><strong>{"AWS SDK クライアントを計装していない"}</strong>{"(SDK のラップ / 自動計装の設定漏れ)"}</td></tr><tr><td>{"API Gateway から Lambda へトレースが繋がらない"}</td><td>{"API Gateway ステージのトレースが無効"}</td></tr><tr><td>{"ECS のトレースが出ない"}</td><td><strong>{"デーモン / ADOT コレクターのサイドカーがない"}</strong>{"、ポートが開いていない、タスクロールに権限がない"}</td></tr><tr><td>{"一部のリクエストしか見えない"}</td><td><strong>{"サンプリング"}</strong>{" のため(正常)"}</td></tr></tbody></table></div>{" "}<h3>{"ベストプラクティス"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 73"><table className="t3"><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr><td>{"計装方式"}</td><td><strong>{"新規は OpenTelemetry(ADOT)を採用"}</strong>{"。既存の X-Ray SDK は移行計画を立てる"}</td><td>{"SDK は 2027-02-25 でサポート終了予定"}</td></tr><tr><td>{"有効化の範囲"}</td><td>{"入口(API Gateway)から下流まで "}<strong>{"全経路でトレースを有効化"}</strong></td><td>{"途切れると原因をたどれない"}</td></tr><tr><td>{"下流呼び出し"}</td><td>{"AWS SDK・HTTP クライアント・DB クライアントを "}<strong>{"計装する"}</strong></td><td>{"サブセグメントで遅延箇所が分かる"}</td></tr><tr><td>{"サンプリング"}</td><td>{"ルールで "}<strong>{"重要度に応じて調整"}</strong>{"。ヘルスチェックは除外"}</td><td>{"コストの最適化"}</td></tr><tr><td>{"ログ相関"}</td><td><strong>{"トレース ID をログに出力"}</strong>{" する"}</td><td>{"ログ ↔ トレースをたどる"}</td></tr><tr><td>{"権限"}</td><td>{"最小権限で X-Ray への書き込みのみを付与"}</td><td>{"セキュリティ"}</td></tr><tr><td>{"機密"}</td><td>{"アノテーション・メタデータ・スパン属性に "}<strong>{"機密情報を入れない"}</strong></td><td>{"トレースも閲覧可能なデータ"}</td></tr></tbody></table></div>{" "}<h3>{"ひっかけポイント"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 74"><table><thead><tr><th scope="col">{"問われ方"}</th><th scope="col">{"正しい考え方"}</th></tr></thead><tbody><tr><td>{"「Lambda のトレースを最小の手間で有効にしたい」"}</td><td>{"関数の "}<strong>{"アクティブトレース"}</strong>{" を有効化(+ 実行ロールの権限)"}</td></tr><tr><td>{"「マイクロサービスのどこで遅いか知りたい」"}</td><td><strong>{"X-Ray(分散トレース)"}</strong>{" のサービスマップ・トレース"}</td></tr><tr><td>{"「ECS でトレースを送りたい」"}</td><td><strong>{"X-Ray デーモン / ADOT コレクターのサイドカー"}</strong></td></tr><tr><td>{"「X-Ray SDK の将来」"}</td><td>{"メンテナンスモード(2026-02-25〜)、"}<strong>{"サポート終了 2027-02-25"}</strong>{"。新規は "}<strong>{"OpenTelemetry / ADOT"}</strong></td></tr><tr><td>{"「全リクエストを記録しなくてよいのはなぜ」"}</td><td><strong>{"サンプリング"}</strong>{"(既定: 毎秒 1 件 + 5%)"}</td></tr></tbody></table></div>{" "}<h3>{"参考 URL"}</h3>{" "}<ul className="ref-list">{" "}<li>{"AWS X-Ray とは: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html"}</a></li>{" "}<li>{"X-Ray の概念: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html"}</a></li>{" "}<li>{"アプリケーションの計装(ADOT と X-Ray SDK の選択): "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-instrumenting-your-app.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-instrumenting-your-app.html"}</a></li>{" "}<li>{"X-Ray 計装から OpenTelemetry 計装への移行: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html"}</a></li>{" "}<li>{"サンプリングルール: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html"}</a></li>{" "}<li>{"Lambda と X-Ray: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html"}</a></li>{" "}</ul>{" "}</section>); }
+export function Section13() { return (<section className="section" id="step-12" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-route" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 2 · Step 12 · 4.2.6"}</p>
+<h2>{"AWS サービスとツールによるトレーシング"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p><strong>{"分散トレーシング"}</strong>{" で、1 つのリクエストが複数のサービスをどう通ったかを記録します。AWS では "}<strong>{"AWS X-Ray"}</strong>{" がトレースの受け口・分析の中心で、計装には "}<strong>{"OpenTelemetry(ADOT)"}</strong>{" が推奨されています。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"12-1. 基本用語"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 68">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"用語"}</th>
+
+<th scope="col">{"意味"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"トレース ID"}</td>
+
+<td>{"1 リクエスト全体を識別する ID("}<code>{"Root=1-5759e988-bd862e3fe1be46a994272793"}</code>{" の形式)"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"X-Amzn-Trace-Id"}</code>{" ヘッダー"}</td>
+
+<td>{"トレース ID を "}<strong>{"サービス間で引き継ぐ"}</strong>{" HTTP ヘッダー"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"セグメント"}</td>
+
+<td>{"1 つのサービス(例: 自分の Lambda 関数)の作業記録"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"サブセグメント"}</td>
+
+<td>{"下流呼び出し(DynamoDB、HTTP、SQL)の詳細"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"サンプリング"}</td>
+
+<td><strong>{"全リクエストではなく一部だけ"}</strong>{" を記録して、コストと負荷を抑える仕組み"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"サービスマップ"}</td>
+
+<td>{"トレースから自動生成される依存関係図"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"グループ"}</td>
+
+<td>{"フィルター式でトレースをまとめ、グループ単位でメトリクス・通知を出す機能"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d18" label="図 19" />
+</figure>
+{" "}
+<h4>{"12-2. 各サービスでトレースを有効にする方法"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 69">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"サービス"}</th>
+
+<th scope="col">{"方法"}</th>
+
+<th scope="col">{"補足"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"Lambda"}</strong></td>
+
+<td>{"関数設定で "}<strong>{"アクティブトレース(Active tracing)"}</strong>{" を有効化。実行ロールに "}<strong>{"X-Ray への書き込み権限"}</strong>{"("}<code>{"xray:PutTraceSegments"}</code>{"、"}<code>{"xray:PutTelemetryRecords"}</code>{"。AWS 管理ポリシー "}<code>{"AWSXRayDaemonWriteAccess"}</code>{")が必要"}</td>
+
+<td>{"Lambda は "}<strong>{"X-Ray デーモンを自前で用意する必要がない"}</strong>{"。トレースモードが "}<strong>{"PassThrough"}</strong>{"(上流の判断に従う)と "}<strong>{"Active"}</strong>{"(Lambda が自らサンプリングして記録)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"API Gateway"}</strong></td>
+
+<td><strong>{"ステージの設定"}</strong>{" でトレースを有効化"}</td>
+
+<td>{"サンプリングルールが適用される"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"ECS / EC2 / EKS"}</strong></td>
+
+<td><strong>{"X-Ray デーモン"}</strong>{" または "}<strong>{"ADOT コレクター"}</strong>{" をサイドカー / エージェントとして動かす(デーモンは UDP 2000 番で受信)"}</td>
+
+<td>{"コンテナでは "}<strong>{"サイドカー"}</strong>{" が定石"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Elastic Beanstalk"}</strong></td>
+
+<td>{"設定でデーモンを有効化"}</td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Step Functions / SNS / SQS"}</strong>{" など"}</td>
+
+<td>{"サービス側のトレース設定、またはヘッダーの伝播"}</td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"12-3. 計装の方法: X-Ray SDK から OpenTelemetry へ"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 70">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"方法"}</th>
+
+<th scope="col">{"状況"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"X-Ray SDK"}</strong>{"(Java / Node.js / Python / .NET / Go / Ruby)+ X-Ray デーモン"}</td>
+
+<td><strong>{"2026-02-25 にメンテナンスモードへ"}</strong>{"(セキュリティ修正のみ)。"}<strong>{"サポート終了は 2027-02-25"}</strong>{"。既存コードでは今も動作する"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"AWS Distro for OpenTelemetry(ADOT)"}</strong></td>
+
+<td>{"AWS が "}<strong>{"新規計装に推奨"}</strong>{"。OpenTelemetry の SDK(または自動計装)+ ADOT コレクターでトレースを X-Ray に送る。Java / Python は自動計装(コード変更なし)に対応"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"CloudWatch Application Signals"}</strong></td>
+
+<td>{"ADOT ベースの自動計装でサービス・SLO・依存関係を可視化"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"CloudWatch Transaction Search"}</strong></td>
+
+<td>{"スパンを CloudWatch Logs に取り込み、"}<strong>{"高い割合でトレースを検索・分析"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<blockquote className="callout">{" "}<p><strong>{"X-Ray サービス自体はサポート継続"}</strong>{" です。X-Ray は OpenTelemetry のネイティブ取り込みに対応し、機能も追加されています。「SDK がメンテナンスモード」という話を「X-Ray が終了する」と取り違えないよう注意しましょう。"}</p>{" "}</blockquote>
+{" "}
+<h4>{"12-4. サンプリング"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 71">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"既定のルール"}</td>
+
+<td><strong>{"毎秒 1 件は必ず記録し、それ以降は 5% を記録"}</strong>{"(リザーバー 1 + 固定レート 5%)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"カスタムルール"}</td>
+
+<td>{"X-Ray コンソール / API で、"}<strong>{"サービス名・URL パス・HTTP メソッドなど"}</strong>{" に応じたルールを作る(重要な API は高率、ヘルスチェックは低率など)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"効果"}</td>
+
+<td>{"コストとオーバーヘッドの削減。"}<strong>{"統計的に傾向を把握するには十分"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"12-5. 試験でよく出る「トレースに出ない」問題"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 72">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"症状"}</th>
+
+<th scope="col">{"原因"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Lambda のトレースが出ない"}</td>
+
+<td><strong>{"アクティブトレースが無効"}</strong>{"、または "}<strong>{"実行ロールに X-Ray 権限がない"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"下流の DynamoDB 呼び出しがサブセグメントに出ない"}</td>
+
+<td><strong>{"AWS SDK クライアントを計装していない"}</strong>{"(SDK のラップ / 自動計装の設定漏れ)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway から Lambda へトレースが繋がらない"}</td>
+
+<td>{"API Gateway ステージのトレースが無効"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ECS のトレースが出ない"}</td>
+
+<td><strong>{"デーモン / ADOT コレクターのサイドカーがない"}</strong>{"、ポートが開いていない、タスクロールに権限がない"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"一部のリクエストしか見えない"}</td>
+
+<td><strong>{"サンプリング"}</strong>{" のため(正常)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 73">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"計装方式"}</td>
+
+<td><strong>{"新規は OpenTelemetry(ADOT)を採用"}</strong>{"。既存の X-Ray SDK は移行計画を立てる"}</td>
+
+<td>{"SDK は 2027-02-25 でサポート終了予定"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"有効化の範囲"}</td>
+
+<td>{"入口(API Gateway)から下流まで "}<strong>{"全経路でトレースを有効化"}</strong></td>
+
+<td>{"途切れると原因をたどれない"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"下流呼び出し"}</td>
+
+<td>{"AWS SDK・HTTP クライアント・DB クライアントを "}<strong>{"計装する"}</strong></td>
+
+<td>{"サブセグメントで遅延箇所が分かる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"サンプリング"}</td>
+
+<td>{"ルールで "}<strong>{"重要度に応じて調整"}</strong>{"。ヘルスチェックは除外"}</td>
+
+<td>{"コストの最適化"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログ相関"}</td>
+
+<td><strong>{"トレース ID をログに出力"}</strong>{" する"}</td>
+
+<td>{"ログ ↔ トレースをたどる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"権限"}</td>
+
+<td>{"最小権限で X-Ray への書き込みのみを付与"}</td>
+
+<td>{"セキュリティ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"機密"}</td>
+
+<td>{"アノテーション・メタデータ・スパン属性に "}<strong>{"機密情報を入れない"}</strong></td>
+
+<td>{"トレースも閲覧可能なデータ"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 74">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「Lambda のトレースを最小の手間で有効にしたい」"}</td>
+
+<td>{"関数の "}<strong>{"アクティブトレース"}</strong>{" を有効化(+ 実行ロールの権限)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「マイクロサービスのどこで遅いか知りたい」"}</td>
+
+<td><strong>{"X-Ray(分散トレース)"}</strong>{" のサービスマップ・トレース"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「ECS でトレースを送りたい」"}</td>
+
+<td><strong>{"X-Ray デーモン / ADOT コレクターのサイドカー"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「X-Ray SDK の将来」"}</td>
+
+<td>{"メンテナンスモード(2026-02-25〜)、"}<strong>{"サポート終了 2027-02-25"}</strong>{"。新規は "}<strong>{"OpenTelemetry / ADOT"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「全リクエストを記録しなくてよいのはなぜ」"}</td>
+
+<td><strong>{"サンプリング"}</strong>{"(既定: 毎秒 1 件 + 5%)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"AWS X-Ray とは: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html"}</a></li>
+{" "}
+<li>{"X-Ray の概念: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html"}</a></li>
+{" "}
+<li>{"アプリケーションの計装(ADOT と X-Ray SDK の選択): "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-instrumenting-your-app.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-instrumenting-your-app.html"}</a></li>
+{" "}
+<li>{"X-Ray 計装から OpenTelemetry 計装への移行: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-migration.html"}</a></li>
+{" "}
+<li>{"サンプリングルール: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html"}</a></li>
+{" "}
+<li>{"Lambda と X-Ray: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/services-xray.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

@@ -1,3 +1,259 @@
 import { Diagram } from '../Diagram';
 /** 原本step-8の全内容。 */
-export function Section9() { return (<section className="section" id="step-8" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-eye" aria-hidden="true"></i></div><div><p className="eyebrow">{"Task 2 · Step 8 · 4.2.1"}</p><h2>{"ロギング・モニタリング・オブザーバビリティの違い"}</h2></div></div>{" "}<h3>{"この項目で学ぶこと"}</h3>{" "}<p>{"似た言葉ですが、"}<strong>{"目的が違います"}</strong>{"。試験では「この要件を満たすのはどれか」という形で区別が問われます。"}</p>{" "}<h3>{"やさしい解説"}</h3>{" "}<h4>{"8-1. 3 つの違い"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 49"><table className="t4"><thead><tr><th scope="col">{"用語"}</th><th scope="col">{"問い"}</th><th scope="col">{"例え(健康診断)"}</th><th scope="col">{"主な AWS サービス"}</th></tr></thead><tbody><tr><td><strong>{"ロギング"}</strong></td><td>{"「"}<strong>{"何が起きたか"}</strong>{"」を記録する"}</td><td>{"カルテ(出来事の記録)"}</td><td>{"CloudWatch Logs"}</td></tr><tr><td><strong>{"モニタリング"}</strong></td><td>{"「"}<strong>{"既知の指標が正常か"}</strong>{"」を監視し、異常で知らせる"}</td><td>{"体温計と警報(既知の指標を見張る)"}</td><td>{"CloudWatch Metrics / アラーム"}</td></tr><tr><td><strong>{"オブザーバビリティ"}</strong></td><td>{"「"}<strong>{"未知の問題でも、外から原因を突き止められるか"}</strong>{"」という能力"}</td><td>{"総合検査(想定外の症状でも原因を探れる)"}</td><td>{"ログ + メトリクス + トレースの組み合わせ(CloudWatch、X-Ray / OpenTelemetry、Application Signals)"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d14" label="図 15" /></figure>{" "}<h4>{"8-2. 重要な考え方"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 50"><table><thead><tr><th scope="col">{"ポイント"}</th><th scope="col">{"説明"}</th></tr></thead><tbody><tr><td>{"モニタリングは "}<strong>{"「何を見るか」を事前に決める"}</strong></td><td>{"想定していない故障は見逃す"}</td></tr><tr><td>{"オブザーバビリティは "}<strong>{"「後から自由に質問できる」データがある"}</strong></td><td>{"高カーディナリティな情報(ユーザー ID、リクエスト ID)を含む "}<strong>{"豊富なテレメトリ"}</strong>{" が前提"}</td></tr><tr><td>{"3 つのシグナル(メトリクス・ログ・トレース)"}</td><td>{"どれか 1 つでは足りない。"}<strong>{"相互に結びつける"}</strong>{"(トレース ID をログに出す)"}</td></tr><tr><td>{"計装(Instrumentation)"}</td><td>{"コードに "}<strong>{"テレメトリを出す仕組みを組み込む"}</strong>{" こと。ドメイン 4 Task 2 の主題"}</td></tr></tbody></table></div>{" "}<h3>{"ベストプラクティス"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 51"><table><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"ベストプラクティス"}</th></tr></thead><tbody><tr><td>{"設計の順序"}</td><td>{"まず "}<strong>{"ビジネスと利用者の観点の指標"}</strong>{"(成功率・レイテンシ)を決め、そこから計装を設計する"}</td></tr><tr><td>{"相関"}</td><td>{"ログ・メトリクス・トレースに "}<strong>{"共通の ID"}</strong>{" を含める"}</td></tr><tr><td>{"通知"}</td><td>{"アラートは "}<strong>{"利用者への影響が出る症状"}</strong>{" に基づける(CPU 使用率だけでなく、エラー率・レイテンシ)"}</td></tr><tr><td>{"継続改善"}</td><td>{"障害のたびに「なぜ早く気づけなかったか」を振り返り、計装を追加する"}</td></tr></tbody></table></div>{" "}<h3>{"ひっかけポイント"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 52"><table><thead><tr><th scope="col">{"問われ方"}</th><th scope="col">{"正しい考え方"}</th></tr></thead><tbody><tr><td>{"「既知のしきい値を超えたら通知したい」"}</td><td><strong>{"モニタリング"}</strong>{"(メトリクス + アラーム)"}</td></tr><tr><td>{"「想定外の障害でも、どのサービスが原因かをたどりたい」"}</td><td><strong>{"オブザーバビリティ"}</strong>{"(トレース + 構造化ログ + メトリクス)"}</td></tr><tr><td>{"「アプリの動作の履歴を残したい」"}</td><td><strong>{"ロギング"}</strong></td></tr></tbody></table></div>{" "}<h3>{"参考 URL"}</h3>{" "}<ul className="ref-list">{" "}<li>{"AWS Observability Best Practices: "}<a href="https://aws-observability.github.io/observability-best-practices/" target="_blank" rel="noopener">{"https://aws-observability.github.io/observability-best-practices/"}</a></li>{" "}<li>{"Operational Excellence Pillar(Well-Architected): "}<a href="https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html"}</a></li>{" "}</ul>{" "}</section>); }
+export function Section9() { return (<section className="section" id="step-8" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-eye" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 2 · Step 8 · 4.2.1"}</p>
+<h2>{"ロギング・モニタリング・オブザーバビリティの違い"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"似た言葉ですが、"}<strong>{"目的が違います"}</strong>{"。試験では「この要件を満たすのはどれか」という形で区別が問われます。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"8-1. 3 つの違い"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 49">
+<table className="t4">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"用語"}</th>
+
+<th scope="col">{"問い"}</th>
+
+<th scope="col">{"例え(健康診断)"}</th>
+
+<th scope="col">{"主な AWS サービス"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"ロギング"}</strong></td>
+
+<td>{"「"}<strong>{"何が起きたか"}</strong>{"」を記録する"}</td>
+
+<td>{"カルテ(出来事の記録)"}</td>
+
+<td>{"CloudWatch Logs"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"モニタリング"}</strong></td>
+
+<td>{"「"}<strong>{"既知の指標が正常か"}</strong>{"」を監視し、異常で知らせる"}</td>
+
+<td>{"体温計と警報(既知の指標を見張る)"}</td>
+
+<td>{"CloudWatch Metrics / アラーム"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"オブザーバビリティ"}</strong></td>
+
+<td>{"「"}<strong>{"未知の問題でも、外から原因を突き止められるか"}</strong>{"」という能力"}</td>
+
+<td>{"総合検査(想定外の症状でも原因を探れる)"}</td>
+
+<td>{"ログ + メトリクス + トレースの組み合わせ(CloudWatch、X-Ray / OpenTelemetry、Application Signals)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d14" label="図 15" />
+</figure>
+{" "}
+<h4>{"8-2. 重要な考え方"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 50">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"ポイント"}</th>
+
+<th scope="col">{"説明"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"モニタリングは "}<strong>{"「何を見るか」を事前に決める"}</strong></td>
+
+<td>{"想定していない故障は見逃す"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"オブザーバビリティは "}<strong>{"「後から自由に質問できる」データがある"}</strong></td>
+
+<td>{"高カーディナリティな情報(ユーザー ID、リクエスト ID)を含む "}<strong>{"豊富なテレメトリ"}</strong>{" が前提"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"3 つのシグナル(メトリクス・ログ・トレース)"}</td>
+
+<td>{"どれか 1 つでは足りない。"}<strong>{"相互に結びつける"}</strong>{"(トレース ID をログに出す)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"計装(Instrumentation)"}</td>
+
+<td>{"コードに "}<strong>{"テレメトリを出す仕組みを組み込む"}</strong>{" こと。ドメイン 4 Task 2 の主題"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 51">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"設計の順序"}</td>
+
+<td>{"まず "}<strong>{"ビジネスと利用者の観点の指標"}</strong>{"(成功率・レイテンシ)を決め、そこから計装を設計する"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"相関"}</td>
+
+<td>{"ログ・メトリクス・トレースに "}<strong>{"共通の ID"}</strong>{" を含める"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"通知"}</td>
+
+<td>{"アラートは "}<strong>{"利用者への影響が出る症状"}</strong>{" に基づける(CPU 使用率だけでなく、エラー率・レイテンシ)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"継続改善"}</td>
+
+<td>{"障害のたびに「なぜ早く気づけなかったか」を振り返り、計装を追加する"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 52">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「既知のしきい値を超えたら通知したい」"}</td>
+
+<td><strong>{"モニタリング"}</strong>{"(メトリクス + アラーム)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「想定外の障害でも、どのサービスが原因かをたどりたい」"}</td>
+
+<td><strong>{"オブザーバビリティ"}</strong>{"(トレース + 構造化ログ + メトリクス)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「アプリの動作の履歴を残したい」"}</td>
+
+<td><strong>{"ロギング"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"AWS Observability Best Practices: "}<a href="https://aws-observability.github.io/observability-best-practices/" target="_blank" rel="noopener">{"https://aws-observability.github.io/observability-best-practices/"}</a></li>
+{" "}
+<li>{"Operational Excellence Pillar(Well-Architected): "}<a href="https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/wellarchitected/latest/operational-excellence-pillar/welcome.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

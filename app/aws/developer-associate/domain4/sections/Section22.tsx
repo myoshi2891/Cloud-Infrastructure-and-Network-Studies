@@ -1,4 +1,653 @@
 import { CodeBlock } from '../CodeBlock';
 import { Diagram } from '../Diagram';
 /** 原本step-21の全内容。 */
-export function Section22() { return (<section className="section" id="step-21" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-database" aria-hidden="true"></i></div><div><p className="eyebrow">{"Task 3 · Step 21 · 4.3.6"}</p><h2>{"アプリケーションレベルのキャッシュ"}</h2></div></div>{" "}<h3>{"この項目で学ぶこと"}</h3>{" "}<p><strong>{"アプリケーションコードの中で、よく使うデータを高速な場所に保存"}</strong>{" して、"}<strong>{"遅い・高価なデータ源(DB や外部 API)へのアクセスを減らす"}</strong>{" 方法です。"}</p>{" "}<h3>{"やさしい解説"}</h3>{" "}<h4>{"21-1. キャッシュを置く場所"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 122"><table className="t3"><thead><tr><th scope="col">{"場所"}</th><th scope="col">{"特徴"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr><td><strong>{"プロセス / 実行環境内メモリ"}</strong></td><td>{"最速。ただし "}<strong>{"実行環境ごとに別々"}</strong>{"(共有されない)"}</td><td>{"Lambda の "}<strong>{"ハンドラー外の変数"}</strong>{"(実行環境の再利用)、"}<code>{"/tmp"}</code></td></tr><tr><td><strong>{"分散インメモリキャッシュ"}</strong></td><td>{"複数のアプリで共有。ミリ秒未満の応答"}</td><td><strong>{"Amazon ElastiCache"}</strong>{"(Valkey / Redis OSS / Memcached)"}</td></tr><tr><td><strong>{"DB 専用キャッシュ"}</strong></td><td>{"アプリのコード変更が最小"}</td><td><strong>{"DynamoDB Accelerator(DAX)"}</strong></td></tr><tr><td><strong>{"エッジ / API キャッシュ"}</strong></td><td>{"HTTP 応答をキャッシュ"}</td><td>{"CloudFront、API Gateway(Step 20)"}</td></tr><tr><td><strong>{"拡張機能による設定のキャッシュ"}</strong></td><td>{"設定・シークレットの取得回数を削減"}</td><td><strong>{"Lambda 拡張機能"}</strong>{"(AppConfig、Secrets Manager、Parameter Store 向け)"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d29" label="図 30" /></figure>{" "}<h4>{"21-2. 代表的なキャッシュ戦略(ElastiCache)"}</h4>{" "}<p><strong>{"① 遅延読み込み(Lazy loading / キャッシュアサイド)"}</strong></p>{" "}<figure className="diagram-card"><Diagram id="d30" label="図 31" /></figure>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 123"><table><thead><tr><th scope="col">{"長所"}</th><th scope="col">{"短所"}</th></tr></thead><tbody><tr><td><strong>{"要求されたデータだけ"}</strong>{" がキャッシュされる。キャッシュ障害時も DB から読めば動く"}</td><td>{"初回(ミス)は遅い。"}<strong>{"データが古くなる"}</strong>{"(DB が更新されてもキャッシュは古いまま)"}</td></tr></tbody></table></div>{" "}<p><strong>{"② ライトスルー(Write-through)"}</strong></p>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 124"><table><thead><tr><th scope="col">{"長所"}</th><th scope="col">{"短所"}</th></tr></thead><tbody><tr><td>{"DB へ書くとき "}<strong>{"同時にキャッシュも更新"}</strong>{" するので、キャッシュが "}<strong>{"常に新しい"}</strong></td><td>{"書き込みのたびに "}<strong>{"余計な処理"}</strong>{"。"}<strong>{"一度も読まれないデータもキャッシュ"}</strong>{" される。新しいノードは空(ミスが発生)なので遅延読み込みと併用が多い"}</td></tr></tbody></table></div>{" "}<p><strong>{"③ TTL(有効期限)の追加"}</strong></p>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 125"><table><thead><tr><th scope="col">{"内容"}</th></tr></thead><tbody><tr><td>{"どちらの戦略にも "}<strong>{"TTL を設定"}</strong>{" して、古いデータの滞留とメモリの無駄を防ぐ。"}<strong>{"データの鮮度要件に合わせて"}</strong>{" 値を決める"}</td></tr></tbody></table></div>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 126"><table><thead><tr><th scope="col">{"戦略"}</th><th scope="col">{"一言"}</th></tr></thead><tbody><tr><td>{"遅延読み込み"}</td><td><strong>{"読むときに詰める"}</strong>{"(古くなりうる)"}</td></tr><tr><td>{"ライトスルー"}</td><td><strong>{"書くときに詰める"}</strong>{"(新鮮だが無駄が出る)"}</td></tr><tr><td>{"TTL"}</td><td><strong>{"期限で自動削除"}</strong>{"(併用が定石)"}</td></tr></tbody></table></div>{" "}<h4>{"21-3. DynamoDB Accelerator(DAX)"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 127"><table><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"内容"}</th></tr></thead><tbody><tr><td>{"何か"}</td><td>{"DynamoDB 専用の "}<strong>{"完全マネージドなインメモリキャッシュ"}</strong>{"。"}<strong>{"マイクロ秒単位"}</strong>{" の読み取り"}</td></tr><tr><td>{"導入"}</td><td><strong>{"DAX クライアントに差し替える"}</strong>{" だけで、アプリのロジックは大きく変えずに使える"}</td></tr><tr><td>{"向いている処理"}</td><td><strong>{"読み取りが多く、同じキーへ繰り返しアクセス"}</strong>{"(ホットキー)する処理"}</td></tr><tr><td>{"向かない処理"}</td><td><strong>{"強い整合性のある読み取りが必須"}</strong>{"(DAX は結果整合性の読み取りを処理し、強い整合性の読み取りはキャッシュを通らず DynamoDB へ渡される)、"}<strong>{"書き込みが多い"}</strong>{"処理"}</td></tr><tr><td>{"書き込み"}</td><td>{"ライトスルー(DAX 経由で書くとキャッシュも更新)"}</td></tr></tbody></table></div>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 128"><table className="t3"><thead><tr><th scope="col">{"比較"}</th><th scope="col">{"ElastiCache"}</th><th scope="col">{"DAX"}</th></tr></thead><tbody><tr><td>{"対象"}</td><td>{"任意のデータ(DB の結果、セッション、計算結果)"}</td><td><strong>{"DynamoDB 専用"}</strong></td></tr><tr><td>{"コード変更"}</td><td>{"キャッシュ操作を "}<strong>{"自分で実装"}</strong></td><td><strong>{"クライアントの差し替え"}</strong>{" 中心"}</td></tr><tr><td>{"柔軟性"}</td><td>{"高い"}</td><td>{"DynamoDB の API の範囲"}</td></tr></tbody></table></div>{" "}<h4>{"21-4. Lambda での実行環境の再利用によるキャッシュ"}</h4>{" "}<div className="code-sample"><div className="cb-head">{"Python"}</div><CodeBlock language="python" lines={["import boto3","","# ハンドラーの外: 実行環境の初期化時に 1 回だけ実行され、再利用される","dynamodb = boto3.resource(\"dynamodb\")","table = dynamodb.Table(\"products\")","_cache = {}","","def handler(event, context):","    pid = event[\"productId\"]","    if pid not in _cache:                    # ミスのときだけ DB を読む","        _cache[pid] = table.get_item(Key={\"id\": pid})[\"Item\"]","    return _cache[pid]"]} /></div>{" "}<p>{"注意点: "}<strong>{"実行環境ごとに別々のキャッシュ"}</strong>{"、"}<strong>{"環境が破棄されれば消える"}</strong>{"、"}<strong>{"古くなるリスク"}</strong>{"(TTL を自前で持つ)。"}<strong>{"共有・一貫性が必要なら ElastiCache"}</strong>{" を使います。"}</p>{" "}<h4>{"21-5. キャッシュで起きる問題"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 129"><table className="t3"><thead><tr><th scope="col">{"問題"}</th><th scope="col">{"内容"}</th><th scope="col">{"対策"}</th></tr></thead><tbody><tr><td>{"古いデータ(Stale data)"}</td><td>{"DB 更新後もキャッシュが古い"}</td><td><strong>{"TTL"}</strong>{"、更新時の "}<strong>{"キャッシュ削除 / 更新"}</strong>{"、ライトスルー"}</td></tr><tr><td><strong>{"キャッシュスタンピード"}</strong>{"(雷鳴の群れ)"}</td><td>{"人気キーの期限切れで "}<strong>{"大量のリクエストが一斉に DB へ"}</strong></td><td><strong>{"TTL にランダムなずれを加える"}</strong>{"、ロック(1 つだけ再取得)、事前の再読み込み"}</td></tr><tr><td>{"キャッシュ障害"}</td><td>{"キャッシュが落ちて DB に負荷が集中"}</td><td><strong>{"フォールバックで DB から読める設計"}</strong>{"、レプリカ・マルチ AZ"}</td></tr><tr><td>{"メモリ枯渇"}</td><td>{"キャッシュが一杯"}</td><td><strong>{"削除ポリシー(eviction)"}</strong>{"、サイズ設計、TTL。メトリクス "}<code>{"Evictions"}</code>{" を監視"}</td></tr><tr><td>{"機密データ"}</td><td>{"共有キャッシュに個人情報を載せる"}</td><td>{"暗号化(保管時・転送中)、アクセス制御"}</td></tr></tbody></table></div>{" "}<h3>{"ベストプラクティス"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 130"><table className="t3"><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr><td>{"対象の選定"}</td><td><strong>{"読み取りが多く、更新が少なく、取得が高コスト"}</strong>{" なデータをキャッシュ"}</td><td>{"効果が大きい"}</td></tr><tr><td>{"TTL"}</td><td><strong>{"必ず TTL を設定"}</strong>{"。"}<strong>{"ランダムなずれ"}</strong>{" を加えて同時失効を避ける"}</td><td>{"古いデータとスタンピードの防止"}</td></tr><tr><td>{"戦略"}</td><td>{"遅延読み込みを基本に、鮮度が重要なデータは "}<strong>{"ライトスルー併用"}</strong></td><td>{"両方の長所"}</td></tr><tr><td>{"障害時"}</td><td>{"キャッシュが使えなくても "}<strong>{"DB から取得して動く"}</strong>{"(フェイルオープン)設計"}</td><td>{"可用性"}</td></tr><tr><td>{"監視"}</td><td><strong><code>{"CacheHitRate"}</code>{"、"}<code>{"Evictions"}</code>{"、CPU、接続数"}</strong>{" を監視"}</td><td>{"効果とボトルネックの確認"}</td></tr><tr><td>{"設定の取得"}</td><td>{"Secrets Manager / Parameter Store / AppConfig は "}<strong>{"キャッシュ(拡張機能 or 自前)して API 呼び出しを減らす"}</strong></td><td>{"レイテンシ・料金・スロットリングの回避"}</td></tr><tr><td>{"DynamoDB"}</td><td>{"読み取りが集中するなら "}<strong>{"DAX"}</strong>{"、強い整合性が必要な読み取りは "}<strong>{"DAX を使わない"}</strong></td><td>{"適材適所"}</td></tr><tr><td>{"一貫性"}</td><td>{"「キャッシュは "}<strong>{"コピー"}</strong>{"」で "}<strong>{"正は DB"}</strong>{" と割り切る"}</td><td>{"設計の単純化"}</td></tr></tbody></table></div>{" "}<h3>{"ひっかけポイント"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 131"><table><thead><tr><th scope="col">{"問われ方"}</th><th scope="col">{"正しい考え方"}</th></tr></thead><tbody><tr><td>{"「DB の読み取り負荷を下げ、応答を速くしたい」"}</td><td><strong>{"ElastiCache"}</strong>{"(または DynamoDB なら "}<strong>{"DAX"}</strong>{")"}</td></tr><tr><td>{"「DynamoDB をマイクロ秒で読みたい。コード変更は最小限」"}</td><td><strong>{"DAX"}</strong></td></tr><tr><td>{"「常に最新データをキャッシュに保ちたい」"}</td><td><strong>{"ライトスルー"}</strong></td></tr><tr><td>{"「必要なデータだけをキャッシュに入れたい」"}</td><td><strong>{"遅延読み込み(キャッシュアサイド)"}</strong></td></tr><tr><td>{"「古いデータがキャッシュに残り続ける」"}</td><td><strong>{"TTL を設定"}</strong></td></tr><tr><td>{"「Lambda で Secrets Manager の呼び出しが多すぎる」"}</td><td><strong>{"ハンドラー外でキャッシュ"}</strong>{" または "}<strong>{"Lambda 拡張機能"}</strong></td></tr><tr><td>{"「DAX が使えない読み取り」"}</td><td><strong>{"強い整合性のある読み取り"}</strong>{"(DynamoDB に直接渡される)"}</td></tr></tbody></table></div>{" "}<h3>{"参考 URL"}</h3>{" "}<ul className="ref-list">{" "}<li>{"データベースキャッシュ戦略(Redis ホワイトペーパー): "}<a href="https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/welcome.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/welcome.html"}</a></li>{" "}<li>{"ElastiCache のキャッシュ戦略: "}<a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html"}</a></li>{" "}<li>{"DynamoDB Accelerator(DAX): "}<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html"}</a></li>{" "}<li>{"Lambda の実行環境のライフサイクル: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html"}</a></li>{" "}<li>{"Lambda のベストプラクティス: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"}</a></li>{" "}</ul>{" "}</section>); }
+export function Section22() { return (<section className="section" id="step-21" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-database" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 3 · Step 21 · 4.3.6"}</p>
+<h2>{"アプリケーションレベルのキャッシュ"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p><strong>{"アプリケーションコードの中で、よく使うデータを高速な場所に保存"}</strong>{" して、"}<strong>{"遅い・高価なデータ源(DB や外部 API)へのアクセスを減らす"}</strong>{" 方法です。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"21-1. キャッシュを置く場所"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 122">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"場所"}</th>
+
+<th scope="col">{"特徴"}</th>
+
+<th scope="col">{"例"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"プロセス / 実行環境内メモリ"}</strong></td>
+
+<td>{"最速。ただし "}<strong>{"実行環境ごとに別々"}</strong>{"(共有されない)"}</td>
+
+<td>{"Lambda の "}<strong>{"ハンドラー外の変数"}</strong>{"(実行環境の再利用)、"}<code>{"/tmp"}</code></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"分散インメモリキャッシュ"}</strong></td>
+
+<td>{"複数のアプリで共有。ミリ秒未満の応答"}</td>
+
+<td><strong>{"Amazon ElastiCache"}</strong>{"(Valkey / Redis OSS / Memcached)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"DB 専用キャッシュ"}</strong></td>
+
+<td>{"アプリのコード変更が最小"}</td>
+
+<td><strong>{"DynamoDB Accelerator(DAX)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"エッジ / API キャッシュ"}</strong></td>
+
+<td>{"HTTP 応答をキャッシュ"}</td>
+
+<td>{"CloudFront、API Gateway(Step 20)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"拡張機能による設定のキャッシュ"}</strong></td>
+
+<td>{"設定・シークレットの取得回数を削減"}</td>
+
+<td><strong>{"Lambda 拡張機能"}</strong>{"(AppConfig、Secrets Manager、Parameter Store 向け)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d29" label="図 30" />
+</figure>
+{" "}
+<h4>{"21-2. 代表的なキャッシュ戦略(ElastiCache)"}</h4>
+{" "}
+<p><strong>{"① 遅延読み込み(Lazy loading / キャッシュアサイド)"}</strong></p>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d30" label="図 31" />
+</figure>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 123">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"長所"}</th>
+
+<th scope="col">{"短所"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"要求されたデータだけ"}</strong>{" がキャッシュされる。キャッシュ障害時も DB から読めば動く"}</td>
+
+<td>{"初回(ミス)は遅い。"}<strong>{"データが古くなる"}</strong>{"(DB が更新されてもキャッシュは古いまま)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p><strong>{"② ライトスルー(Write-through)"}</strong></p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 124">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"長所"}</th>
+
+<th scope="col">{"短所"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"DB へ書くとき "}<strong>{"同時にキャッシュも更新"}</strong>{" するので、キャッシュが "}<strong>{"常に新しい"}</strong></td>
+
+<td>{"書き込みのたびに "}<strong>{"余計な処理"}</strong>{"。"}<strong>{"一度も読まれないデータもキャッシュ"}</strong>{" される。新しいノードは空(ミスが発生)なので遅延読み込みと併用が多い"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p><strong>{"③ TTL(有効期限)の追加"}</strong></p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 125">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"どちらの戦略にも "}<strong>{"TTL を設定"}</strong>{" して、古いデータの滞留とメモリの無駄を防ぐ。"}<strong>{"データの鮮度要件に合わせて"}</strong>{" 値を決める"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 126">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"戦略"}</th>
+
+<th scope="col">{"一言"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"遅延読み込み"}</td>
+
+<td><strong>{"読むときに詰める"}</strong>{"(古くなりうる)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ライトスルー"}</td>
+
+<td><strong>{"書くときに詰める"}</strong>{"(新鮮だが無駄が出る)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"TTL"}</td>
+
+<td><strong>{"期限で自動削除"}</strong>{"(併用が定石)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"21-3. DynamoDB Accelerator(DAX)"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 127">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"何か"}</td>
+
+<td>{"DynamoDB 専用の "}<strong>{"完全マネージドなインメモリキャッシュ"}</strong>{"。"}<strong>{"マイクロ秒単位"}</strong>{" の読み取り"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"導入"}</td>
+
+<td><strong>{"DAX クライアントに差し替える"}</strong>{" だけで、アプリのロジックは大きく変えずに使える"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"向いている処理"}</td>
+
+<td><strong>{"読み取りが多く、同じキーへ繰り返しアクセス"}</strong>{"(ホットキー)する処理"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"向かない処理"}</td>
+
+<td><strong>{"強い整合性のある読み取りが必須"}</strong>{"(DAX は結果整合性の読み取りを処理し、強い整合性の読み取りはキャッシュを通らず DynamoDB へ渡される)、"}<strong>{"書き込みが多い"}</strong>{"処理"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"書き込み"}</td>
+
+<td>{"ライトスルー(DAX 経由で書くとキャッシュも更新)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 128">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"比較"}</th>
+
+<th scope="col">{"ElastiCache"}</th>
+
+<th scope="col">{"DAX"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"対象"}</td>
+
+<td>{"任意のデータ(DB の結果、セッション、計算結果)"}</td>
+
+<td><strong>{"DynamoDB 専用"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"コード変更"}</td>
+
+<td>{"キャッシュ操作を "}<strong>{"自分で実装"}</strong></td>
+
+<td><strong>{"クライアントの差し替え"}</strong>{" 中心"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"柔軟性"}</td>
+
+<td>{"高い"}</td>
+
+<td>{"DynamoDB の API の範囲"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"21-4. Lambda での実行環境の再利用によるキャッシュ"}</h4>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"Python"}
+</div>
+<CodeBlock language="python" lines={["import boto3","","# ハンドラーの外: 実行環境の初期化時に 1 回だけ実行され、再利用される","dynamodb = boto3.resource(\"dynamodb\")","table = dynamodb.Table(\"products\")","_cache = {}","","def handler(event, context):","    pid = event[\"productId\"]","    if pid not in _cache:                    # ミスのときだけ DB を読む","        _cache[pid] = table.get_item(Key={\"id\": pid})[\"Item\"]","    return _cache[pid]"]} />
+</div>
+{" "}
+<p>{"注意点: "}<strong>{"実行環境ごとに別々のキャッシュ"}</strong>{"、"}<strong>{"環境が破棄されれば消える"}</strong>{"、"}<strong>{"古くなるリスク"}</strong>{"(TTL を自前で持つ)。"}<strong>{"共有・一貫性が必要なら ElastiCache"}</strong>{" を使います。"}</p>
+{" "}
+<h4>{"21-5. キャッシュで起きる問題"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 129">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問題"}</th>
+
+<th scope="col">{"内容"}</th>
+
+<th scope="col">{"対策"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"古いデータ(Stale data)"}</td>
+
+<td>{"DB 更新後もキャッシュが古い"}</td>
+
+<td><strong>{"TTL"}</strong>{"、更新時の "}<strong>{"キャッシュ削除 / 更新"}</strong>{"、ライトスルー"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"キャッシュスタンピード"}</strong>{"(雷鳴の群れ)"}</td>
+
+<td>{"人気キーの期限切れで "}<strong>{"大量のリクエストが一斉に DB へ"}</strong></td>
+
+<td><strong>{"TTL にランダムなずれを加える"}</strong>{"、ロック(1 つだけ再取得)、事前の再読み込み"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"キャッシュ障害"}</td>
+
+<td>{"キャッシュが落ちて DB に負荷が集中"}</td>
+
+<td><strong>{"フォールバックで DB から読める設計"}</strong>{"、レプリカ・マルチ AZ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"メモリ枯渇"}</td>
+
+<td>{"キャッシュが一杯"}</td>
+
+<td><strong>{"削除ポリシー(eviction)"}</strong>{"、サイズ設計、TTL。メトリクス "}<code>{"Evictions"}</code>{" を監視"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"機密データ"}</td>
+
+<td>{"共有キャッシュに個人情報を載せる"}</td>
+
+<td>{"暗号化(保管時・転送中)、アクセス制御"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 130">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"対象の選定"}</td>
+
+<td><strong>{"読み取りが多く、更新が少なく、取得が高コスト"}</strong>{" なデータをキャッシュ"}</td>
+
+<td>{"効果が大きい"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"TTL"}</td>
+
+<td><strong>{"必ず TTL を設定"}</strong>{"。"}<strong>{"ランダムなずれ"}</strong>{" を加えて同時失効を避ける"}</td>
+
+<td>{"古いデータとスタンピードの防止"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"戦略"}</td>
+
+<td>{"遅延読み込みを基本に、鮮度が重要なデータは "}<strong>{"ライトスルー併用"}</strong></td>
+
+<td>{"両方の長所"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"障害時"}</td>
+
+<td>{"キャッシュが使えなくても "}<strong>{"DB から取得して動く"}</strong>{"(フェイルオープン)設計"}</td>
+
+<td>{"可用性"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"監視"}</td>
+
+<td><strong><code>{"CacheHitRate"}</code>{"、"}<code>{"Evictions"}</code>{"、CPU、接続数"}</strong>{" を監視"}</td>
+
+<td>{"効果とボトルネックの確認"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"設定の取得"}</td>
+
+<td>{"Secrets Manager / Parameter Store / AppConfig は "}<strong>{"キャッシュ(拡張機能 or 自前)して API 呼び出しを減らす"}</strong></td>
+
+<td>{"レイテンシ・料金・スロットリングの回避"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"DynamoDB"}</td>
+
+<td>{"読み取りが集中するなら "}<strong>{"DAX"}</strong>{"、強い整合性が必要な読み取りは "}<strong>{"DAX を使わない"}</strong></td>
+
+<td>{"適材適所"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"一貫性"}</td>
+
+<td>{"「キャッシュは "}<strong>{"コピー"}</strong>{"」で "}<strong>{"正は DB"}</strong>{" と割り切る"}</td>
+
+<td>{"設計の単純化"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 131">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「DB の読み取り負荷を下げ、応答を速くしたい」"}</td>
+
+<td><strong>{"ElastiCache"}</strong>{"(または DynamoDB なら "}<strong>{"DAX"}</strong>{")"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「DynamoDB をマイクロ秒で読みたい。コード変更は最小限」"}</td>
+
+<td><strong>{"DAX"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「常に最新データをキャッシュに保ちたい」"}</td>
+
+<td><strong>{"ライトスルー"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「必要なデータだけをキャッシュに入れたい」"}</td>
+
+<td><strong>{"遅延読み込み(キャッシュアサイド)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「古いデータがキャッシュに残り続ける」"}</td>
+
+<td><strong>{"TTL を設定"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「Lambda で Secrets Manager の呼び出しが多すぎる」"}</td>
+
+<td><strong>{"ハンドラー外でキャッシュ"}</strong>{" または "}<strong>{"Lambda 拡張機能"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「DAX が使えない読み取り」"}</td>
+
+<td><strong>{"強い整合性のある読み取り"}</strong>{"(DynamoDB に直接渡される)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"データベースキャッシュ戦略(Redis ホワイトペーパー): "}<a href="https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/welcome.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/whitepapers/latest/database-caching-strategies-using-redis/welcome.html"}</a></li>
+{" "}
+<li>{"ElastiCache のキャッシュ戦略: "}<a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/Strategies.html"}</a></li>
+{" "}
+<li>{"DynamoDB Accelerator(DAX): "}<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html"}</a></li>
+{" "}
+<li>{"Lambda の実行環境のライフサイクル: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html"}</a></li>
+{" "}
+<li>{"Lambda のベストプラクティス: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

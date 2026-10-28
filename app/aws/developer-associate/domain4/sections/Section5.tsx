@@ -1,4 +1,396 @@
 import { CodeBlock } from '../CodeBlock';
 import { Diagram } from '../Diagram';
 /** 原本step-4の全内容。 */
-export function Section5() { return (<section className="section" id="step-4" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-chart-dots" aria-hidden="true"></i></div><div><p className="eyebrow">{"Task 1 · Step 4 · 4.1.4"}</p><h2>{"カスタムメトリクスと EMF"}</h2></div></div>{" "}<h3>{"この項目で学ぶこと"}</h3>{" "}<p>{"AWS が標準で出すメトリクス(CPU、Invocations など)では足りないとき、"}<strong>{"「注文数」「決済失敗数」のような業務固有の数値"}</strong>{" を自分で CloudWatch に送ります。これが "}<strong>{"カスタムメトリクス"}</strong>{" です。中でも試験ガイドが例に挙げる "}<strong>{"EMF(Embedded Metric Format)"}</strong>{" は最重要です。"}</p>{" "}<h3>{"やさしい解説"}</h3>{" "}<h4>{"4-1. カスタムメトリクスを送る 3 つの方法"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 25"><table className="t3"><thead><tr><th scope="col">{"方法"}</th><th scope="col">{"仕組み"}</th><th scope="col">{"特徴"}</th></tr></thead><tbody><tr><td><code>{"PutMetricData"}</code>{" API"}</td><td>{"SDK で "}<strong>{"直接 CloudWatch に送信"}</strong></td><td>{"シンプル。ただし "}<strong>{"API 呼び出し"}</strong>{" になるため、Lambda では遅延・コスト・スロットリングの要因"}</td></tr><tr><td><strong>{"EMF(埋め込みメトリクスフォーマット)"}</strong></td><td><strong>{"特定の JSON 形式でログを出力"}</strong>{" するだけで、CloudWatch が "}<strong>{"自動でメトリクスを生成"}</strong></td><td><strong>{"非同期・API 呼び出し不要"}</strong>{"。詳細なログも同時に残る。Lambda に最適"}</td></tr><tr><td>{"メトリクスフィルター"}</td><td>{"既存の "}<strong>{"ログ行をパターンで数えて"}</strong>{" メトリクス化"}</td><td>{"コードを変えずに導入できるが、柔軟性は低い"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d08" label="図 9" /></figure>{" "}<h4>{"4-2. EMF のログの形"}</h4>{" "}<p>{"EMF は "}<strong><code>{"_aws"}</code>{" というキーを持つ JSON"}</strong>{" をログとして出力します。"}</p>{" "}<div className="code-sample"><div className="cb-head">{"JSON"}</div><CodeBlock language="json" lines={["{","  \"_aws\": {","    \"Timestamp\": 1760000000000,","    \"CloudWatchMetrics\": [","      {","        \"Namespace\": \"ShopApp\",","        \"Dimensions\": [[\"Service\", \"Operation\"]],","        \"Metrics\": [","          { \"Name\": \"OrderProcessingTime\", \"Unit\": \"Milliseconds\" },","          { \"Name\": \"OrdersPlaced\", \"Unit\": \"Count\" }","        ]","      }","    ]","  },","  \"Service\": \"checkout\",","  \"Operation\": \"PlaceOrder\",","  \"OrderProcessingTime\": 183,","  \"OrdersPlaced\": 1,","  \"orderId\": \"ord-12345\",","  \"userTier\": \"premium\"","}"]} /></div>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 26"><table><thead><tr><th scope="col">{"部分"}</th><th scope="col">{"役割"}</th></tr></thead><tbody><tr><td><code>{"Namespace"}</code></td><td>{"メトリクスの入れ物"}</td></tr><tr><td><code>{"Dimensions"}</code></td><td>{"メトリクスを分ける軸。値は JSON の同名キー("}<code>{"Service"}</code>{", "}<code>{"Operation"}</code>{")から取る"}</td></tr><tr><td><code>{"Metrics"}</code></td><td>{"送る数値の "}<strong>{"名前と単位"}</strong>{"。値は JSON の同名キーから取る"}</td></tr><tr><td>{"それ以外のキー("}<code>{"orderId"}</code>{" など)"}</td><td>{"メトリクスにはならず "}<strong>{"ログのプロパティとして保存"}</strong>{"(Logs Insights で検索できる)"}</td></tr></tbody></table></div>{" "}<p>{"つまり "}<strong>{"「メトリクスにする項目」と「あとで調べるための詳細」を 1 行のログに同居"}</strong>{" させられます。これが EMF の強みです。"}</p>{" "}<h4>{"4-3. 高解像度メトリクスとデータ保持"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 27"><table className="t3"><thead><tr><th scope="col">{"解像度"}</th><th scope="col">{"間隔"}</th><th scope="col">{"備考"}</th></tr></thead><tbody><tr><td>{"標準解像度"}</td><td>{"60 秒"}</td><td>{"既定"}</td></tr><tr><td>{"高解像度"}</td><td>{"1 秒("}<code>{"StorageResolution"}</code>{" を 1 に設定)"}</td><td>{"急激な変化の検知に有効(追加コストあり)"}</td></tr></tbody></table></div>{" "}<p>{"CloudWatch はメトリクスを細かい粒度から順に "}<strong>{"集約して長く保持"}</strong>{" します(1 秒データは約 3 時間、60 秒データは 15 日、5 分データは 63 日、1 時間データは 455 日が目安)。"}</p>{" "}<h4>{"4-4. 実装の選択肢"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 28"><table><thead><tr><th scope="col">{"実行環境"}</th><th scope="col">{"EMF の出し方"}</th></tr></thead><tbody><tr><td><strong>{"Lambda"}</strong></td><td>{"標準出力に JSON を出すだけ(Lambda が CloudWatch Logs へ送る)。"}<strong>{"Powertools for AWS Lambda の Metrics ユーティリティ"}</strong>{" が EMF を組み立ててくれる"}</td></tr><tr><td>{"ECS / EC2 / オンプレ"}</td><td><strong>{"CloudWatch エージェント"}</strong>{" 経由で EMF を送る。またはクライアントライブラリを使う"}</td></tr></tbody></table></div>{" "}<p>{"Powertools(Python)の例です。"}</p>{" "}<div className="code-sample"><div className="cb-head">{"Python"}</div><CodeBlock language="python" lines={["from aws_lambda_powertools import Metrics","from aws_lambda_powertools.metrics import MetricUnit","","metrics = Metrics(namespace=\"ShopApp\", service=\"checkout\")","","@metrics.log_metrics(capture_cold_start_metric=True)","def handler(event, context):","    metrics.add_metric(name=\"OrdersPlaced\", unit=MetricUnit.Count, value=1)","    return {\"statusCode\": 200}"]} /></div>{" "}<p><code>{"capture_cold_start_metric=True"}</code>{" を付けると、"}<strong>{"コールドスタート回数"}</strong>{" も自動でメトリクス化されます。"}</p>{" "}<h3>{"ベストプラクティス"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 29"><table className="t3"><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr><td>{"Lambda での送信"}</td><td><strong><code>{"PutMetricData"}</code>{" よりも EMF"}</strong>{" を使う"}</td><td>{"同期 API 呼び出しによる遅延・追加コスト・スロットリングを避けられる"}</td></tr><tr><td>{"ディメンション"}</td><td><strong>{"カーディナリティ(値の種類)が少ないもの"}</strong>{"(サービス名、操作名、環境)に限る"}</td><td>{"ディメンションの組み合わせごとに "}<strong>{"別メトリクスとして課金"}</strong>{" される"}</td></tr><tr><td>{"高カーディナリティ値"}</td><td><code>{"userId"}</code>{" や "}<code>{"requestId"}</code>{" は "}<strong>{"ディメンションにせず、ログのプロパティ"}</strong>{" として残す"}</td><td>{"メトリクス数の爆発を防ぐ"}</td></tr><tr><td>{"単位"}</td><td><code>{"Unit"}</code>{" を必ず指定する(Count, Milliseconds, Bytes など)"}</td><td>{"グラフの読み違いを防ぐ"}</td></tr><tr><td>{"名前空間"}</td><td>{"アプリ単位で "}<code>{"Namespace"}</code>{" を分ける。"}<code>{"AWS/"}</code>{" で始まる名前は予約済みなので使わない"}</td><td>{"管理しやすい"}</td></tr><tr><td>{"解像度"}</td><td>{"通常は標準解像度。"}<strong>{"秒単位の検知が必要なときだけ"}</strong>{" 高解像度"}</td><td>{"コスト最適化"}</td></tr></tbody></table></div>{" "}<h3>{"ひっかけポイント"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 30"><table><thead><tr><th scope="col">{"問われ方"}</th><th scope="col">{"正しい考え方"}</th></tr></thead><tbody><tr><td>{"「Lambda からカスタムメトリクスを、"}<strong>{"API 呼び出しなしで"}</strong>{"、追加の遅延なく送りたい」"}</td><td><strong>{"EMF"}</strong>{"(構造化ログを出力する)"}</td></tr><tr><td>{"「カスタムメトリクスのコストが急増した」"}</td><td><strong>{"高カーディナリティなディメンション"}</strong>{"(ユーザー ID など)が原因"}</td></tr><tr><td>{"「EMF のメトリクスはどこに現れる?」"}</td><td>{"指定した "}<strong>{"Namespace"}</strong>{" の下の CloudWatch メトリクス。元のログは CloudWatch Logs に残る"}</td></tr></tbody></table></div>{" "}<h3>{"参考 URL"}</h3>{" "}<ul className="ref-list">{" "}<li>{"EMF の概要: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format.html"}</a></li>{" "}<li>{"EMF 仕様: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html"}</a></li>{" "}<li>{"カスタムメトリクスの発行: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html"}</a></li>{" "}<li>{"Powertools for AWS Lambda(Python): "}<a href="https://docs.powertools.aws.dev/lambda/python/latest/" target="_blank" rel="noopener">{"https://docs.powertools.aws.dev/lambda/python/latest/"}</a></li>{" "}</ul>{" "}</section>); }
+export function Section5() { return (<section className="section" id="step-4" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-chart-dots" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 1 · Step 4 · 4.1.4"}</p>
+<h2>{"カスタムメトリクスと EMF"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"AWS が標準で出すメトリクス(CPU、Invocations など)では足りないとき、"}<strong>{"「注文数」「決済失敗数」のような業務固有の数値"}</strong>{" を自分で CloudWatch に送ります。これが "}<strong>{"カスタムメトリクス"}</strong>{" です。中でも試験ガイドが例に挙げる "}<strong>{"EMF(Embedded Metric Format)"}</strong>{" は最重要です。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"4-1. カスタムメトリクスを送る 3 つの方法"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 25">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"方法"}</th>
+
+<th scope="col">{"仕組み"}</th>
+
+<th scope="col">{"特徴"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><code>{"PutMetricData"}</code>{" API"}</td>
+
+<td>{"SDK で "}<strong>{"直接 CloudWatch に送信"}</strong></td>
+
+<td>{"シンプル。ただし "}<strong>{"API 呼び出し"}</strong>{" になるため、Lambda では遅延・コスト・スロットリングの要因"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"EMF(埋め込みメトリクスフォーマット)"}</strong></td>
+
+<td><strong>{"特定の JSON 形式でログを出力"}</strong>{" するだけで、CloudWatch が "}<strong>{"自動でメトリクスを生成"}</strong></td>
+
+<td><strong>{"非同期・API 呼び出し不要"}</strong>{"。詳細なログも同時に残る。Lambda に最適"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"メトリクスフィルター"}</td>
+
+<td>{"既存の "}<strong>{"ログ行をパターンで数えて"}</strong>{" メトリクス化"}</td>
+
+<td>{"コードを変えずに導入できるが、柔軟性は低い"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d08" label="図 9" />
+</figure>
+{" "}
+<h4>{"4-2. EMF のログの形"}</h4>
+{" "}
+<p>{"EMF は "}<strong><code>{"_aws"}</code>{" というキーを持つ JSON"}</strong>{" をログとして出力します。"}</p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"JSON"}
+</div>
+<CodeBlock language="json" lines={["{","  \"_aws\": {","    \"Timestamp\": 1760000000000,","    \"CloudWatchMetrics\": [","      {","        \"Namespace\": \"ShopApp\",","        \"Dimensions\": [[\"Service\", \"Operation\"]],","        \"Metrics\": [","          { \"Name\": \"OrderProcessingTime\", \"Unit\": \"Milliseconds\" },","          { \"Name\": \"OrdersPlaced\", \"Unit\": \"Count\" }","        ]","      }","    ]","  },","  \"Service\": \"checkout\",","  \"Operation\": \"PlaceOrder\",","  \"OrderProcessingTime\": 183,","  \"OrdersPlaced\": 1,","  \"orderId\": \"ord-12345\",","  \"userTier\": \"premium\"","}"]} />
+</div>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 26">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"部分"}</th>
+
+<th scope="col">{"役割"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><code>{"Namespace"}</code></td>
+
+<td>{"メトリクスの入れ物"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"Dimensions"}</code></td>
+
+<td>{"メトリクスを分ける軸。値は JSON の同名キー("}<code>{"Service"}</code>{", "}<code>{"Operation"}</code>{")から取る"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"Metrics"}</code></td>
+
+<td>{"送る数値の "}<strong>{"名前と単位"}</strong>{"。値は JSON の同名キーから取る"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"それ以外のキー("}<code>{"orderId"}</code>{" など)"}</td>
+
+<td>{"メトリクスにはならず "}<strong>{"ログのプロパティとして保存"}</strong>{"(Logs Insights で検索できる)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"つまり "}<strong>{"「メトリクスにする項目」と「あとで調べるための詳細」を 1 行のログに同居"}</strong>{" させられます。これが EMF の強みです。"}</p>
+{" "}
+<h4>{"4-3. 高解像度メトリクスとデータ保持"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 27">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"解像度"}</th>
+
+<th scope="col">{"間隔"}</th>
+
+<th scope="col">{"備考"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"標準解像度"}</td>
+
+<td>{"60 秒"}</td>
+
+<td>{"既定"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"高解像度"}</td>
+
+<td>{"1 秒("}<code>{"StorageResolution"}</code>{" を 1 に設定)"}</td>
+
+<td>{"急激な変化の検知に有効(追加コストあり)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"CloudWatch はメトリクスを細かい粒度から順に "}<strong>{"集約して長く保持"}</strong>{" します(1 秒データは約 3 時間、60 秒データは 15 日、5 分データは 63 日、1 時間データは 455 日が目安)。"}</p>
+{" "}
+<h4>{"4-4. 実装の選択肢"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 28">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"実行環境"}</th>
+
+<th scope="col">{"EMF の出し方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"Lambda"}</strong></td>
+
+<td>{"標準出力に JSON を出すだけ(Lambda が CloudWatch Logs へ送る)。"}<strong>{"Powertools for AWS Lambda の Metrics ユーティリティ"}</strong>{" が EMF を組み立ててくれる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ECS / EC2 / オンプレ"}</td>
+
+<td><strong>{"CloudWatch エージェント"}</strong>{" 経由で EMF を送る。またはクライアントライブラリを使う"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"Powertools(Python)の例です。"}</p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"Python"}
+</div>
+<CodeBlock language="python" lines={["from aws_lambda_powertools import Metrics","from aws_lambda_powertools.metrics import MetricUnit","","metrics = Metrics(namespace=\"ShopApp\", service=\"checkout\")","","@metrics.log_metrics(capture_cold_start_metric=True)","def handler(event, context):","    metrics.add_metric(name=\"OrdersPlaced\", unit=MetricUnit.Count, value=1)","    return {\"statusCode\": 200}"]} />
+</div>
+{" "}
+<p><code>{"capture_cold_start_metric=True"}</code>{" を付けると、"}<strong>{"コールドスタート回数"}</strong>{" も自動でメトリクス化されます。"}</p>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 29">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Lambda での送信"}</td>
+
+<td><strong><code>{"PutMetricData"}</code>{" よりも EMF"}</strong>{" を使う"}</td>
+
+<td>{"同期 API 呼び出しによる遅延・追加コスト・スロットリングを避けられる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ディメンション"}</td>
+
+<td><strong>{"カーディナリティ(値の種類)が少ないもの"}</strong>{"(サービス名、操作名、環境)に限る"}</td>
+
+<td>{"ディメンションの組み合わせごとに "}<strong>{"別メトリクスとして課金"}</strong>{" される"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"高カーディナリティ値"}</td>
+
+<td><code>{"userId"}</code>{" や "}<code>{"requestId"}</code>{" は "}<strong>{"ディメンションにせず、ログのプロパティ"}</strong>{" として残す"}</td>
+
+<td>{"メトリクス数の爆発を防ぐ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"単位"}</td>
+
+<td><code>{"Unit"}</code>{" を必ず指定する(Count, Milliseconds, Bytes など)"}</td>
+
+<td>{"グラフの読み違いを防ぐ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"名前空間"}</td>
+
+<td>{"アプリ単位で "}<code>{"Namespace"}</code>{" を分ける。"}<code>{"AWS/"}</code>{" で始まる名前は予約済みなので使わない"}</td>
+
+<td>{"管理しやすい"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"解像度"}</td>
+
+<td>{"通常は標準解像度。"}<strong>{"秒単位の検知が必要なときだけ"}</strong>{" 高解像度"}</td>
+
+<td>{"コスト最適化"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 30">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「Lambda からカスタムメトリクスを、"}<strong>{"API 呼び出しなしで"}</strong>{"、追加の遅延なく送りたい」"}</td>
+
+<td><strong>{"EMF"}</strong>{"(構造化ログを出力する)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「カスタムメトリクスのコストが急増した」"}</td>
+
+<td><strong>{"高カーディナリティなディメンション"}</strong>{"(ユーザー ID など)が原因"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「EMF のメトリクスはどこに現れる?」"}</td>
+
+<td>{"指定した "}<strong>{"Namespace"}</strong>{" の下の CloudWatch メトリクス。元のログは CloudWatch Logs に残る"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"EMF の概要: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format.html"}</a></li>
+{" "}
+<li>{"EMF 仕様: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Embedded_Metric_Format_Specification.html"}</a></li>
+{" "}
+<li>{"カスタムメトリクスの発行: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html"}</a></li>
+{" "}
+<li>{"Powertools for AWS Lambda(Python): "}<a href="https://docs.powertools.aws.dev/lambda/python/latest/" target="_blank" rel="noopener">{"https://docs.powertools.aws.dev/lambda/python/latest/"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

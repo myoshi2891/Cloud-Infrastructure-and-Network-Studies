@@ -1,3 +1,425 @@
 import { Diagram } from '../Diagram';
 /** 原本step-15の全内容。 */
-export function Section16() { return (<section className="section" id="step-15" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-heartbeat" aria-hidden="true"></i></div><div><p className="eyebrow">{"Task 2 · Step 15 · 4.2.8"}</p><h2>{"ヘルスチェックとレディネスプローブ"}</h2></div></div>{" "}<h3>{"この項目で学ぶこと"}</h3>{" "}<p>{"アプリが "}<strong>{"「生きているか」「リクエストを受けられる状態か」"}</strong>{" を、プラットフォームが自動で判断できるようにします。異常なインスタンスを "}<strong>{"自動で切り離し・再起動・置き換え"}</strong>{" するための土台です。"}</p>{" "}<h3>{"やさしい解説"}</h3>{" "}<h4>{"15-1. 3 つのプローブの違い(Kubernetes / EKS での考え方)"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 86"><table className="t4"><thead><tr><th scope="col">{"種類"}</th><th scope="col">{"問い"}</th><th scope="col">{"失敗したときの動作"}</th><th scope="col">{"例"}</th></tr></thead><tbody><tr><td><strong>{"Liveness(生存)"}</strong></td><td>{"プロセスは "}<strong>{"生きている(固まっていない)か"}</strong></td><td>{"コンテナを "}<strong>{"再起動"}</strong>{" する"}</td><td>{"デッドロックしたアプリの回復"}</td></tr><tr><td><strong>{"Readiness(準備完了)"}</strong></td><td><strong>{"トラフィックを受けられる状態か"}</strong></td><td><strong>{"ロードバランサーのターゲット(Service のエンドポイント)から外す"}</strong>{"(再起動はしない)"}</td><td>{"起動直後の初期化中、依存先の障害時"}</td></tr><tr><td><strong>{"Startup(起動)"}</strong></td><td><strong>{"起動が完了したか"}</strong></td><td>{"完了するまで他のプローブを待たせる"}</td><td>{"起動が遅いアプリ"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d22" label="図 23" /></figure>{" "}<h4>{"15-2. AWS サービスごとのヘルスチェック"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 87"><table className="t3"><thead><tr><th scope="col">{"サービス"}</th><th scope="col">{"ヘルスチェックの仕組み"}</th><th scope="col">{"主な設定"}</th></tr></thead><tbody><tr><td><strong>{"ALB / NLB のターゲットグループ"}</strong></td><td>{"ターゲットへ "}<strong>{"定期的にリクエスト"}</strong>{" を送り、正常 / 異常を判定。異常なターゲットへはトラフィックを送らない"}</td><td>{"パス(例 "}<code>{"/health"}</code>{")、プロトコル、ポート、"}<strong>{"間隔・タイムアウト・正常/異常のしきい値"}</strong>{"、"}<strong>{"成功コード(例 200-299)"}</strong></td></tr><tr><td><strong>{"Auto Scaling グループ"}</strong></td><td>{"EC2 の状態に加え、"}<strong>{"ELB のヘルスチェックを使用するよう設定"}</strong>{" できる。異常なインスタンスを "}<strong>{"終了して新規起動(置き換え)"}</strong></td><td>{"ヘルスチェックの種類(EC2 / ELB)、"}<strong>{"ヘルスチェックの猶予期間(Grace period)"}</strong></td></tr><tr><td><strong>{"ECS"}</strong></td><td><strong>{"コンテナのヘルスチェック"}</strong>{"(タスク定義にコマンドを指定)と、ALB のターゲットグループのヘルスチェック。異常なタスクは停止され、サービスが "}<strong>{"新しいタスクで置き換え"}</strong></td><td>{"コマンド、間隔、タイムアウト、再試行回数、"}<strong>{"開始期間(startPeriod)"}</strong></td></tr><tr><td><strong>{"EKS(Kubernetes)"}</strong></td><td><code>{"livenessProbe"}</code>{" / "}<code>{"readinessProbe"}</code>{" / "}<code>{"startupProbe"}</code>{"(HTTP・TCP・コマンド・gRPC)"}</td><td><code>{"initialDelaySeconds"}</code>{"、"}<code>{"periodSeconds"}</code>{"、"}<code>{"failureThreshold"}</code>{" など"}</td></tr><tr><td><strong>{"Route 53"}</strong></td><td><strong>{"エンドポイント監視"}</strong>{"、他のヘルスチェックを組み合わせる "}<strong>{"計算されたヘルスチェック"}</strong>{"、"}<strong>{"CloudWatch アラームを監視するヘルスチェック"}</strong>{"。異常時に "}<strong>{"DNS フェイルオーバー"}</strong></td><td>{"間隔、失敗しきい値、文字列マッチング"}</td></tr><tr><td><strong>{"Elastic Beanstalk"}</strong></td><td><strong>{"拡張ヘルスレポート"}</strong>{"(Ok / Warning / Degraded / Severe などの色分け)。ヘルスチェック URL を設定"}</td><td>{"アプリケーションヘルスチェックの URL"}</td></tr><tr><td><strong>{"CodeDeploy"}</strong></td><td><strong><code>{"ValidateService"}</code>{" フック"}</strong>{" や、Lambda の "}<strong><code>{"AfterAllowTraffic"}</code>{" フック"}</strong>{"・アラームで、デプロイ後の健全性を確認"}</td><td>{"検証スクリプト"}</td></tr><tr><td><strong>{"Lambda"}</strong></td><td>{"関数にヘルスチェックという概念はない。ALB のターゲットにした場合は "}<strong>{"ヘルスチェックを有効にするかどうか"}</strong>{" を設定。死活は "}<strong>{"メトリクス・Synthetics"}</strong>{" で監視"}</td><td></td></tr></tbody></table></div>{" "}<h4>{"15-3. 良いヘルスチェックエンドポイントの作り方"}</h4>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 88"><table className="t3"><thead><tr><th scope="col">{"種類"}</th><th scope="col">{"何を確認するか"}</th><th scope="col">{"使いどころ"}</th></tr></thead><tbody><tr><td><strong>{"シャロー(浅い)チェック"}</strong></td><td>{"プロセスが応答できるか(固定の 200 を返す)"}</td><td><strong>{"Liveness"}</strong>{"、頻繁なチェック"}</td></tr><tr><td><strong>{"ディープ(深い)チェック"}</strong></td><td>{"データベース・キャッシュ・必須の外部サービスに "}<strong>{"実際に接続できるか"}</strong></td><td><strong>{"Readiness"}</strong>{"(ただし慎重に)"}</td></tr></tbody></table></div>{" "}<figure className="diagram-card"><Diagram id="d23" label="図 24" /></figure>{" "}<p><strong>{"重要な注意:"}</strong>{" Liveness に "}<strong>{"「依存先 DB の接続確認」"}</strong>{" を入れてはいけません。DB が一時的に落ちただけで "}<strong>{"全コンテナが再起動"}</strong>{" され、障害が拡大します("}<strong>{"連鎖障害"}</strong>{")。依存先の確認は "}<strong>{"Readiness"}</strong>{" に置き、「しばらくトラフィックを受けない」だけに留めます。"}</p>{" "}<h3>{"ベストプラクティス"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 89"><table className="t3"><thead><tr><th scope="col">{"項目"}</th><th scope="col">{"ベストプラクティス"}</th><th scope="col">{"理由"}</th></tr></thead><tbody><tr><td>{"役割分担"}</td><td><strong>{"Liveness は浅く、Readiness は依存先まで確認"}</strong></td><td>{"連鎖的な再起動を避ける"}</td></tr><tr><td>{"軽量化"}</td><td>{"ヘルスチェックの処理は "}<strong>{"軽く・速く・認証不要"}</strong>{" にする"}</td><td>{"負荷をかけず、ロードバランサーがアクセスできる"}</td></tr><tr><td>{"起動猶予"}</td><td>{"起動に時間がかかるアプリは "}<strong>{"Startup プローブ / startPeriod / Grace period"}</strong>{" を設定"}</td><td>{"起動中に異常判定されて再起動ループになるのを防ぐ"}</td></tr><tr><td>{"しきい値"}</td><td>{"一時的な揺らぎで切り離さないよう、"}<strong>{"連続失敗回数"}</strong>{" を設定"}</td><td>{"誤検知の防止"}</td></tr><tr><td>{"ログ・メトリクス"}</td><td>{"ヘルスチェックの失敗を "}<strong>{"メトリクス(UnHealthyHostCount など)とアラーム"}</strong>{" で通知"}</td><td>{"切り離しに気づける"}</td></tr><tr><td>{"グレースフル終了"}</td><td>{"終了シグナルを受けたら、"}<strong>{"処理中のリクエストを終わらせてから終了"}</strong>{"。ALB の "}<strong>{"登録解除の遅延(deregistration delay)"}</strong>{" と整合させる"}</td><td>{"デプロイ時のエラー防止"}</td></tr><tr><td>{"ステータスコード"}</td><td>{"異常時は "}<strong>{"200 以外(503 など)"}</strong>{" を返す"}</td><td>{"ロードバランサーが判定できる"}</td></tr></tbody></table></div>{" "}<h3>{"ひっかけポイント"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 90"><table><thead><tr><th scope="col">{"問われ方"}</th><th scope="col">{"正しい考え方"}</th></tr></thead><tbody><tr><td>{"「起動直後はトラフィックを受けたくない」"}</td><td><strong>{"Readiness プローブ"}</strong>{"(またはターゲットグループのヘルスチェック + Grace period)"}</td></tr><tr><td>{"「デッドロックしたコンテナを自動復旧したい」"}</td><td><strong>{"Liveness プローブ"}</strong>{"(再起動)"}</td></tr><tr><td>{"「ALB が 503 を返す」"}</td><td><strong>{"正常なターゲットが 0"}</strong>{" → ターゲットグループのヘルスチェック設定と、アプリの応答を確認"}</td></tr><tr><td>{"「新タスクが起動直後にヘルスチェックに失敗して停止を繰り返す」"}</td><td><strong>{"開始期間 / Grace period"}</strong>{" が短い、ヘルスチェックのパスやポートが違う"}</td></tr><tr><td>{"「リージョン障害時に DNS で別リージョンへ切り替えたい」"}</td><td><strong>{"Route 53 ヘルスチェック + フェイルオーバールーティング"}</strong></td></tr></tbody></table></div>{" "}<h3>{"参考 URL"}</h3>{" "}<ul className="ref-list">{" "}<li>{"ALB のターゲットグループのヘルスチェック: "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html"}</a></li>{" "}<li>{"ALB のトラブルシューティング(502 / 503 / 504): "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html"}</a></li>{" "}<li>{"Route 53 のヘルスチェックと DNS フェイルオーバー: "}<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html"}</a></li>{" "}<li>{"Kubernetes のプローブ(Liveness / Readiness / Startup): "}<a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/" target="_blank" rel="noopener">{"https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"}</a></li>{" "}<li>{"Elastic Beanstalk の拡張ヘルス: "}<a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html"}</a></li>{" "}<li>{"ECS のトラブルシューティング: "}<a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/troubleshooting.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonECS/latest/developerguide/troubleshooting.html"}</a></li>{" "}</ul>{" "}</section>); }
+export function Section16() { return (<section className="section" id="step-15" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-heartbeat" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 2 · Step 15 · 4.2.8"}</p>
+<h2>{"ヘルスチェックとレディネスプローブ"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"アプリが "}<strong>{"「生きているか」「リクエストを受けられる状態か」"}</strong>{" を、プラットフォームが自動で判断できるようにします。異常なインスタンスを "}<strong>{"自動で切り離し・再起動・置き換え"}</strong>{" するための土台です。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"15-1. 3 つのプローブの違い(Kubernetes / EKS での考え方)"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 86">
+<table className="t4">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"種類"}</th>
+
+<th scope="col">{"問い"}</th>
+
+<th scope="col">{"失敗したときの動作"}</th>
+
+<th scope="col">{"例"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"Liveness(生存)"}</strong></td>
+
+<td>{"プロセスは "}<strong>{"生きている(固まっていない)か"}</strong></td>
+
+<td>{"コンテナを "}<strong>{"再起動"}</strong>{" する"}</td>
+
+<td>{"デッドロックしたアプリの回復"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Readiness(準備完了)"}</strong></td>
+
+<td><strong>{"トラフィックを受けられる状態か"}</strong></td>
+
+<td><strong>{"ロードバランサーのターゲット(Service のエンドポイント)から外す"}</strong>{"(再起動はしない)"}</td>
+
+<td>{"起動直後の初期化中、依存先の障害時"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Startup(起動)"}</strong></td>
+
+<td><strong>{"起動が完了したか"}</strong></td>
+
+<td>{"完了するまで他のプローブを待たせる"}</td>
+
+<td>{"起動が遅いアプリ"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d22" label="図 23" />
+</figure>
+{" "}
+<h4>{"15-2. AWS サービスごとのヘルスチェック"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 87">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"サービス"}</th>
+
+<th scope="col">{"ヘルスチェックの仕組み"}</th>
+
+<th scope="col">{"主な設定"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"ALB / NLB のターゲットグループ"}</strong></td>
+
+<td>{"ターゲットへ "}<strong>{"定期的にリクエスト"}</strong>{" を送り、正常 / 異常を判定。異常なターゲットへはトラフィックを送らない"}</td>
+
+<td>{"パス(例 "}<code>{"/health"}</code>{")、プロトコル、ポート、"}<strong>{"間隔・タイムアウト・正常/異常のしきい値"}</strong>{"、"}<strong>{"成功コード(例 200-299)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Auto Scaling グループ"}</strong></td>
+
+<td>{"EC2 の状態に加え、"}<strong>{"ELB のヘルスチェックを使用するよう設定"}</strong>{" できる。異常なインスタンスを "}<strong>{"終了して新規起動(置き換え)"}</strong></td>
+
+<td>{"ヘルスチェックの種類(EC2 / ELB)、"}<strong>{"ヘルスチェックの猶予期間(Grace period)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"ECS"}</strong></td>
+
+<td><strong>{"コンテナのヘルスチェック"}</strong>{"(タスク定義にコマンドを指定)と、ALB のターゲットグループのヘルスチェック。異常なタスクは停止され、サービスが "}<strong>{"新しいタスクで置き換え"}</strong></td>
+
+<td>{"コマンド、間隔、タイムアウト、再試行回数、"}<strong>{"開始期間(startPeriod)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"EKS(Kubernetes)"}</strong></td>
+
+<td><code>{"livenessProbe"}</code>{" / "}<code>{"readinessProbe"}</code>{" / "}<code>{"startupProbe"}</code>{"(HTTP・TCP・コマンド・gRPC)"}</td>
+
+<td><code>{"initialDelaySeconds"}</code>{"、"}<code>{"periodSeconds"}</code>{"、"}<code>{"failureThreshold"}</code>{" など"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Route 53"}</strong></td>
+
+<td><strong>{"エンドポイント監視"}</strong>{"、他のヘルスチェックを組み合わせる "}<strong>{"計算されたヘルスチェック"}</strong>{"、"}<strong>{"CloudWatch アラームを監視するヘルスチェック"}</strong>{"。異常時に "}<strong>{"DNS フェイルオーバー"}</strong></td>
+
+<td>{"間隔、失敗しきい値、文字列マッチング"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Elastic Beanstalk"}</strong></td>
+
+<td><strong>{"拡張ヘルスレポート"}</strong>{"(Ok / Warning / Degraded / Severe などの色分け)。ヘルスチェック URL を設定"}</td>
+
+<td>{"アプリケーションヘルスチェックの URL"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"CodeDeploy"}</strong></td>
+
+<td><strong><code>{"ValidateService"}</code>{" フック"}</strong>{" や、Lambda の "}<strong><code>{"AfterAllowTraffic"}</code>{" フック"}</strong>{"・アラームで、デプロイ後の健全性を確認"}</td>
+
+<td>{"検証スクリプト"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Lambda"}</strong></td>
+
+<td>{"関数にヘルスチェックという概念はない。ALB のターゲットにした場合は "}<strong>{"ヘルスチェックを有効にするかどうか"}</strong>{" を設定。死活は "}<strong>{"メトリクス・Synthetics"}</strong>{" で監視"}</td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"15-3. 良いヘルスチェックエンドポイントの作り方"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 88">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"種類"}</th>
+
+<th scope="col">{"何を確認するか"}</th>
+
+<th scope="col">{"使いどころ"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"シャロー(浅い)チェック"}</strong></td>
+
+<td>{"プロセスが応答できるか(固定の 200 を返す)"}</td>
+
+<td><strong>{"Liveness"}</strong>{"、頻繁なチェック"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"ディープ(深い)チェック"}</strong></td>
+
+<td>{"データベース・キャッシュ・必須の外部サービスに "}<strong>{"実際に接続できるか"}</strong></td>
+
+<td><strong>{"Readiness"}</strong>{"(ただし慎重に)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d23" label="図 24" />
+</figure>
+{" "}
+<p><strong>{"重要な注意:"}</strong>{" Liveness に "}<strong>{"「依存先 DB の接続確認」"}</strong>{" を入れてはいけません。DB が一時的に落ちただけで "}<strong>{"全コンテナが再起動"}</strong>{" され、障害が拡大します("}<strong>{"連鎖障害"}</strong>{")。依存先の確認は "}<strong>{"Readiness"}</strong>{" に置き、「しばらくトラフィックを受けない」だけに留めます。"}</p>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 89">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"役割分担"}</td>
+
+<td><strong>{"Liveness は浅く、Readiness は依存先まで確認"}</strong></td>
+
+<td>{"連鎖的な再起動を避ける"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"軽量化"}</td>
+
+<td>{"ヘルスチェックの処理は "}<strong>{"軽く・速く・認証不要"}</strong>{" にする"}</td>
+
+<td>{"負荷をかけず、ロードバランサーがアクセスできる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"起動猶予"}</td>
+
+<td>{"起動に時間がかかるアプリは "}<strong>{"Startup プローブ / startPeriod / Grace period"}</strong>{" を設定"}</td>
+
+<td>{"起動中に異常判定されて再起動ループになるのを防ぐ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"しきい値"}</td>
+
+<td>{"一時的な揺らぎで切り離さないよう、"}<strong>{"連続失敗回数"}</strong>{" を設定"}</td>
+
+<td>{"誤検知の防止"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログ・メトリクス"}</td>
+
+<td>{"ヘルスチェックの失敗を "}<strong>{"メトリクス(UnHealthyHostCount など)とアラーム"}</strong>{" で通知"}</td>
+
+<td>{"切り離しに気づける"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"グレースフル終了"}</td>
+
+<td>{"終了シグナルを受けたら、"}<strong>{"処理中のリクエストを終わらせてから終了"}</strong>{"。ALB の "}<strong>{"登録解除の遅延(deregistration delay)"}</strong>{" と整合させる"}</td>
+
+<td>{"デプロイ時のエラー防止"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ステータスコード"}</td>
+
+<td>{"異常時は "}<strong>{"200 以外(503 など)"}</strong>{" を返す"}</td>
+
+<td>{"ロードバランサーが判定できる"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 90">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「起動直後はトラフィックを受けたくない」"}</td>
+
+<td><strong>{"Readiness プローブ"}</strong>{"(またはターゲットグループのヘルスチェック + Grace period)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「デッドロックしたコンテナを自動復旧したい」"}</td>
+
+<td><strong>{"Liveness プローブ"}</strong>{"(再起動)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「ALB が 503 を返す」"}</td>
+
+<td><strong>{"正常なターゲットが 0"}</strong>{" → ターゲットグループのヘルスチェック設定と、アプリの応答を確認"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「新タスクが起動直後にヘルスチェックに失敗して停止を繰り返す」"}</td>
+
+<td><strong>{"開始期間 / Grace period"}</strong>{" が短い、ヘルスチェックのパスやポートが違う"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「リージョン障害時に DNS で別リージョンへ切り替えたい」"}</td>
+
+<td><strong>{"Route 53 ヘルスチェック + フェイルオーバールーティング"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"ALB のターゲットグループのヘルスチェック: "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html"}</a></li>
+{" "}
+<li>{"ALB のトラブルシューティング(502 / 503 / 504): "}<a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html"}</a></li>
+{" "}
+<li>{"Route 53 のヘルスチェックと DNS フェイルオーバー: "}<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html"}</a></li>
+{" "}
+<li>{"Kubernetes のプローブ(Liveness / Readiness / Startup): "}<a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/" target="_blank" rel="noopener">{"https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"}</a></li>
+{" "}
+<li>{"Elastic Beanstalk の拡張ヘルス: "}<a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced.html"}</a></li>
+{" "}
+<li>{"ECS のトラブルシューティング: "}<a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/troubleshooting.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonECS/latest/developerguide/troubleshooting.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

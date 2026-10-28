@@ -1,3 +1,381 @@
 import { Diagram } from '../Diagram';
 /** 原本step-0の全内容。 */
-export function Section1() { return (<section className="section" id="step-0" tabIndex={-1}>{" "}<div className="sec-head"><div className="sec-icon"><i className="ti ti-compass" aria-hidden="true"></i></div><div><p className="eyebrow">{"Step 0"}</p><h2>{"ドメイン 4 の全体像"}</h2></div></div>{" "}<h3>{"0-1. ドメイン 4 は 3 つのタスクでできている"}</h3>{" "}<figure className="diagram-card"><Diagram id="d01" label="図 2" /></figure>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 4"><table className="t3"><thead><tr><th scope="col">{"タスク"}</th><th scope="col">{"ひとことで言うと"}</th><th scope="col">{"主な登場サービス"}</th></tr></thead><tbody><tr><td>{"Task 1"}</td><td>{"壊れたものを "}<strong>{"調べて原因を突き止める"}</strong></td><td>{"CloudWatch(Logs / Logs Insights / Metrics / Dashboards)、X-Ray、CloudTrail、CodeBuild / CodeDeploy / CloudFormation のログ"}</td></tr><tr><td>{"Task 2"}</td><td>{"調べられるように "}<strong>{"あらかじめ仕込む"}</strong></td><td>{"CloudWatch Logs、EMF、X-Ray / ADOT、SNS、EventBridge、ELB のヘルスチェック"}</td></tr><tr><td>{"Task 3"}</td><td>{"遅い・高いものを "}<strong>{"速く・安く・安定させる"}</strong></td><td>{"Lambda、SNS、CloudFront、API Gateway、ElastiCache、DynamoDB(DAX)"}</td></tr></tbody></table></div>{" "}<h3>{"0-2. 「障害対応」の基本サイクル"}</h3>{" "}<p>{"どの問題でも、次のサイクルで考えると選択肢を絞りやすくなります。"}</p>{" "}<figure className="diagram-card"><Diagram id="d02" label="図 3" /></figure>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 5"><table className="t3"><thead><tr><th scope="col">{"フェーズ"}</th><th scope="col">{"使う道具"}</th><th scope="col">{"対応する Step"}</th></tr></thead><tbody><tr><td>{"検知"}</td><td>{"CloudWatch アラーム、SNS、EventBridge"}</td><td>{"Step 14"}</td></tr><tr><td>{"切り分け"}</td><td>{"ダッシュボード、メトリクス、Lambda Insights、Contributor Insights"}</td><td>{"Step 2, 5"}</td></tr><tr><td>{"原因特定"}</td><td>{"Logs Insights、X-Ray トレース、サービス出力ログ"}</td><td>{"Step 3, 6, 7, 12, 13"}</td></tr><tr><td>{"修正"}</td><td>{"コード修正、メモリ変更、キャッシュ、同時実行数の調整"}</td><td>{"Step 16〜22"}</td></tr><tr><td>{"再発防止"}</td><td>{"構造化ログ、カスタムメトリクス、ヘルスチェック"}</td><td>{"Step 9〜11, 15"}</td></tr></tbody></table></div>{" "}<h3>{"0-3. このドメインで押さえるサービス早見表"}</h3>{" "}<p>{"試験ガイドの「In-Scope AWS Services」に含まれる、ドメイン 4 に深く関係するサービスです。"}</p>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 6"><table className="t3"><thead><tr><th scope="col">{"カテゴリ"}</th><th scope="col">{"サービス"}</th><th scope="col">{"ドメイン 4 での役割"}</th></tr></thead><tbody><tr><td>{"監視"}</td><td>{"Amazon CloudWatch"}</td><td>{"メトリクス・ログ・アラーム・ダッシュボード・Logs Insights・EMF"}</td></tr><tr><td>{"監視"}</td><td>{"AWS X-Ray"}</td><td>{"分散トレーシング(サービスマップ・トレース)"}</td></tr><tr><td>{"監査"}</td><td>{"AWS CloudTrail"}</td><td>{"「誰が・いつ・どの API を呼んだか」の記録(API 操作の調査)"}</td></tr><tr><td>{"通知"}</td><td>{"Amazon SNS / EventBridge"}</td><td>{"アラート通知、イベント駆動の通知、フィルターポリシー"}</td></tr><tr><td>{"コンピュート"}</td><td>{"AWS Lambda"}</td><td>{"同時実行数、メモリ設定、ログ、トレース"}</td></tr><tr><td>{"コンテナ"}</td><td>{"Amazon ECS / EKS"}</td><td>{"ヘルスチェック、停止タスクの理由、プローブ"}</td></tr><tr><td>{"配信"}</td><td>{"Amazon CloudFront / API Gateway"}</td><td>{"ヘッダーベースのキャッシュ、ステージキャッシュ"}</td></tr><tr><td>{"データ"}</td><td>{"ElastiCache / DynamoDB(DAX)/ RDS"}</td><td>{"アプリケーションレベルのキャッシュ、スロットリング"}</td></tr><tr><td>{"開発者ツール"}</td><td>{"CodeBuild / CodeDeploy / CodePipeline / CloudFormation"}</td><td>{"デプロイ失敗時のログ調査"}</td></tr><tr><td>{"開発支援"}</td><td>{"Amazon Q Developer"}</td><td>{"エラー分析・最適化提案などの AI 支援(新興トピック)"}</td></tr></tbody></table></div>{" "}<h3>{"0-4. 最初に覚える用語"}</h3>{" "}<div className="table-wrap" tabIndex={0} role="region" aria-label="表 7"><table><thead><tr><th scope="col">{"用語"}</th><th scope="col">{"意味"}</th></tr></thead><tbody><tr><td>{"メトリクス(Metric)"}</td><td>{"時間とともに変わる "}<strong>{"数値"}</strong>{"(例: エラー数、処理時間)"}</td></tr><tr><td>{"ログ(Log)"}</td><td>{"出来事の "}<strong>{"文字の記録"}</strong>{"(例: 「注文 123 の処理に失敗」)"}</td></tr><tr><td>{"トレース(Trace)"}</td><td>{"1 つのリクエストが "}<strong>{"複数のサービスを通った道のり"}</strong>{" の記録"}</td></tr><tr><td>{"ディメンション(Dimension)"}</td><td>{"メトリクスを区別する "}<strong>{"名前と値の組"}</strong>{"(例: FunctionName=orders)"}</td></tr><tr><td>{"名前空間(Namespace)"}</td><td>{"メトリクスをまとめる "}<strong>{"入れ物"}</strong>{"(例: AWS/Lambda)"}</td></tr><tr><td>{"SLI / SLO"}</td><td>{"測る指標 / 守る目標(例: 成功率 99.9%)"}</td></tr><tr><td>{"コールドスタート"}</td><td>{"Lambda の実行環境を "}<strong>{"新規に初期化"}</strong>{" すること(初回が遅くなる原因)"}</td></tr><tr><td>{"スロットリング"}</td><td>{"上限を超えたリクエストを "}<strong>{"AWS が拒否"}</strong>{" すること(HTTP 429 など)"}</td></tr><tr><td>{"冪等性(べきとうせい)"}</td><td>{"同じ処理を "}<strong>{"何度実行しても結果が同じ"}</strong>{" になる性質"}</td></tr></tbody></table></div>{" "}</section>); }
+export function Section1() { return (<section className="section" id="step-0" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-compass" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Step 0"}</p>
+<h2>{"ドメイン 4 の全体像"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"0-1. ドメイン 4 は 3 つのタスクでできている"}</h3>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d01" label="図 2" />
+</figure>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 4">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"タスク"}</th>
+
+<th scope="col">{"ひとことで言うと"}</th>
+
+<th scope="col">{"主な登場サービス"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Task 1"}</td>
+
+<td>{"壊れたものを "}<strong>{"調べて原因を突き止める"}</strong></td>
+
+<td>{"CloudWatch(Logs / Logs Insights / Metrics / Dashboards)、X-Ray、CloudTrail、CodeBuild / CodeDeploy / CloudFormation のログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Task 2"}</td>
+
+<td>{"調べられるように "}<strong>{"あらかじめ仕込む"}</strong></td>
+
+<td>{"CloudWatch Logs、EMF、X-Ray / ADOT、SNS、EventBridge、ELB のヘルスチェック"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Task 3"}</td>
+
+<td>{"遅い・高いものを "}<strong>{"速く・安く・安定させる"}</strong></td>
+
+<td>{"Lambda、SNS、CloudFront、API Gateway、ElastiCache、DynamoDB(DAX)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"0-2. 「障害対応」の基本サイクル"}</h3>
+{" "}
+<p>{"どの問題でも、次のサイクルで考えると選択肢を絞りやすくなります。"}</p>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d02" label="図 3" />
+</figure>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 5">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"フェーズ"}</th>
+
+<th scope="col">{"使う道具"}</th>
+
+<th scope="col">{"対応する Step"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"検知"}</td>
+
+<td>{"CloudWatch アラーム、SNS、EventBridge"}</td>
+
+<td>{"Step 14"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"切り分け"}</td>
+
+<td>{"ダッシュボード、メトリクス、Lambda Insights、Contributor Insights"}</td>
+
+<td>{"Step 2, 5"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"原因特定"}</td>
+
+<td>{"Logs Insights、X-Ray トレース、サービス出力ログ"}</td>
+
+<td>{"Step 3, 6, 7, 12, 13"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"修正"}</td>
+
+<td>{"コード修正、メモリ変更、キャッシュ、同時実行数の調整"}</td>
+
+<td>{"Step 16〜22"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"再発防止"}</td>
+
+<td>{"構造化ログ、カスタムメトリクス、ヘルスチェック"}</td>
+
+<td>{"Step 9〜11, 15"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"0-3. このドメインで押さえるサービス早見表"}</h3>
+{" "}
+<p>{"試験ガイドの「In-Scope AWS Services」に含まれる、ドメイン 4 に深く関係するサービスです。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 6">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"カテゴリ"}</th>
+
+<th scope="col">{"サービス"}</th>
+
+<th scope="col">{"ドメイン 4 での役割"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"監視"}</td>
+
+<td>{"Amazon CloudWatch"}</td>
+
+<td>{"メトリクス・ログ・アラーム・ダッシュボード・Logs Insights・EMF"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"監視"}</td>
+
+<td>{"AWS X-Ray"}</td>
+
+<td>{"分散トレーシング(サービスマップ・トレース)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"監査"}</td>
+
+<td>{"AWS CloudTrail"}</td>
+
+<td>{"「誰が・いつ・どの API を呼んだか」の記録(API 操作の調査)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"通知"}</td>
+
+<td>{"Amazon SNS / EventBridge"}</td>
+
+<td>{"アラート通知、イベント駆動の通知、フィルターポリシー"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"コンピュート"}</td>
+
+<td>{"AWS Lambda"}</td>
+
+<td>{"同時実行数、メモリ設定、ログ、トレース"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"コンテナ"}</td>
+
+<td>{"Amazon ECS / EKS"}</td>
+
+<td>{"ヘルスチェック、停止タスクの理由、プローブ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"配信"}</td>
+
+<td>{"Amazon CloudFront / API Gateway"}</td>
+
+<td>{"ヘッダーベースのキャッシュ、ステージキャッシュ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"データ"}</td>
+
+<td>{"ElastiCache / DynamoDB(DAX)/ RDS"}</td>
+
+<td>{"アプリケーションレベルのキャッシュ、スロットリング"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"開発者ツール"}</td>
+
+<td>{"CodeBuild / CodeDeploy / CodePipeline / CloudFormation"}</td>
+
+<td>{"デプロイ失敗時のログ調査"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"開発支援"}</td>
+
+<td>{"Amazon Q Developer"}</td>
+
+<td>{"エラー分析・最適化提案などの AI 支援(新興トピック)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"0-4. 最初に覚える用語"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 7">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"用語"}</th>
+
+<th scope="col">{"意味"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"メトリクス(Metric)"}</td>
+
+<td>{"時間とともに変わる "}<strong>{"数値"}</strong>{"(例: エラー数、処理時間)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログ(Log)"}</td>
+
+<td>{"出来事の "}<strong>{"文字の記録"}</strong>{"(例: 「注文 123 の処理に失敗」)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"トレース(Trace)"}</td>
+
+<td>{"1 つのリクエストが "}<strong>{"複数のサービスを通った道のり"}</strong>{" の記録"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ディメンション(Dimension)"}</td>
+
+<td>{"メトリクスを区別する "}<strong>{"名前と値の組"}</strong>{"(例: FunctionName=orders)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"名前空間(Namespace)"}</td>
+
+<td>{"メトリクスをまとめる "}<strong>{"入れ物"}</strong>{"(例: AWS/Lambda)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"SLI / SLO"}</td>
+
+<td>{"測る指標 / 守る目標(例: 成功率 99.9%)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"コールドスタート"}</td>
+
+<td>{"Lambda の実行環境を "}<strong>{"新規に初期化"}</strong>{" すること(初回が遅くなる原因)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"スロットリング"}</td>
+
+<td>{"上限を超えたリクエストを "}<strong>{"AWS が拒否"}</strong>{" すること(HTTP 429 など)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"冪等性(べきとうせい)"}</td>
+
+<td>{"同じ処理を "}<strong>{"何度実行しても結果が同じ"}</strong>{" になる性質"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+</section>); }

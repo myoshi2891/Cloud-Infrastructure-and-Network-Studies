@@ -36,7 +36,8 @@ function jsx(node) {
     if(node.matches('.table-wrap')) attrs.push('tabIndex={0}','role="region"',`aria-label="表 ${tables.indexOf(node)+1}"`);
     const start = `<${tag}${attrs.length?' '+attrs.join(' '):''}`;
     if(['br','hr','img','input'].includes(tag)) return start+' />';
-    return `${start}>${[...node.childNodes].map(jsx).join('')}</${tag}>`;
+    const block = ['section','div','table','thead','tbody','tr','ul','ol','figure','header','footer'].includes(tag);
+    return `${start}>${block?'\n':''}${[...node.childNodes].map(jsx).join(block?'\n':'')}${block?'\n':''}</${tag}>`;
 }
 if(stage === 'scaffold') {
     const nav = JSON.parse(fs.readFileSync('docs/migration-inventory/aws-dva-domain4.fidelity.json','utf8')).nav;
@@ -74,7 +75,7 @@ if(stage === 'scaffold') {
     });
     let globals = fs.readFileSync('app/globals.css','utf8');
     const missing = Object.entries(additions).filter(([key])=>!globals.includes(key+':'));
-    globals=globals.replace('@theme {','@theme {\n    /* DVA Domain 4 原本テーマ */\n'+missing.map(([k,v])=>`    ${k}: ${v};`).join('\n'));
+    if(missing.length) globals=globals.replace('@theme {','@theme {\n    /* DVA Domain 4 原本テーマ */\n'+missing.map(([k,v])=>`    ${k}: ${v};`).join('\n'));
     fs.writeFileSync('app/globals.css',globals);
     write('page.css',css.toString()+`\n.dva-troubleshooting-page { color-scheme: light; }
 .dva-troubleshooting-page main { width: calc(100% - 288px); max-width: none; }
@@ -84,6 +85,12 @@ if(stage === 'scaffold') {
 .dva-troubleshooting-page .section li { display: list-item; }
 .dva-troubleshooting-page .section .ref-list { list-style-type: none; }
 .dva-troubleshooting-page .code-block { font-family: var(--font-mono); }
+.dva-troubleshooting-page .hljs-comment { color: #5c6370; font-style: italic; }
+.dva-troubleshooting-page .hljs-keyword { color: #c678dd; }
+.dva-troubleshooting-page .hljs-string { color: #98c379; }
+.dva-troubleshooting-page .hljs-number, .dva-troubleshooting-page .hljs-literal { color: #d19a66; }
+.dva-troubleshooting-page .hljs-attr { color: #e06c75; }
+.dva-troubleshooting-page .hljs-title { color: #61afef; }
 .dva-troubleshooting-page .code-line { white-space: pre; min-height: 1.7em; }
 .dva-troubleshooting-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }
 .dva-troubleshooting-page .backdrop { border: 0; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; }
