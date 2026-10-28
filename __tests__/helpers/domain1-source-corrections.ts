@@ -12,6 +12,7 @@ export const SAP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
 
 /** SCS Domain 1: 123e71db の管理イベントとデータイベントの区別を期待値へ適用する。 */
 export const SCS_DOMAIN1_CORRECTIONS: readonly Correction[] = [
+    ['--start-time 2026-10-01T00:00:00Z', '--start-time 2026-10-01T00:00:00Z --account-id 444455556666 --region ap-northeast-1'],
     ['組織内の全アカウント、全リージョンの API アクティビティを漏れなく記録し', '組織内の全アカウント、全リージョンの管理イベント (管理 API アクティビティ) を漏れなく記録し'],
     ['ログファイル整合性検証を有効にし、SSE-KMS で暗号化する。', 'ログファイル整合性検証を有効にし、SSE-KMS で暗号化する。S3 オブジェクトアクセスなどのデータイベントも記録する必要がある場合は、データイベントセレクターを追加する。'],
     ['全アカウントの API 操作を漏れなく記録したい', '全アカウントの管理イベント (管理 API 操作) を漏れなく記録したい'],
