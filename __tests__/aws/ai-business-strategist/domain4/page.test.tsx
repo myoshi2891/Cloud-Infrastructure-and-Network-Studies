@@ -15,6 +15,16 @@ vi.mock('@/components/MermaidDiagram', async () => {
     return { MermaidDiagram: MermaidDiagramMock };
 });
 
+// 優先度マトリクスの行ラベルは原本の td を行見出し（th[scope=row]）へ訂正する。在庫は原本のまま保持する
+const ROW_HEADERS = ['インパクト大', 'インパクト小'];
+const rowHeaderAnchor = inventory.th.indexOf('実現可能性が低い') + 1;
+const expectedTh = [
+    ...inventory.th.slice(0, rowHeaderAnchor),
+    ...ROW_HEADERS,
+    ...inventory.th.slice(rowHeaderAnchor),
+];
+const expectedTd = inventory.td.filter((cell) => !ROW_HEADERS.includes(cell));
+
 describe('aws-ai-business-strategist-domain4 — 移行元コンテンツの全量移行', () => {
     const renderPage = () => {
         const { container } = render(<Page />);
@@ -35,8 +45,8 @@ describe('aws-ai-business-strategist-domain4 — 移行元コンテンツの全�
     });
 
     it.each([
-        ['th', inventory.th],
-        ['td', inventory.td],
+        ['th', expectedTh],
+        ['td', expectedTd],
         ['li', inventory.listItems],
     ])('%s の件数・順序・テキストが移行元と一致する', (selector, items) => {
         const container = renderPage();
@@ -117,6 +127,14 @@ describe('aws-ai-business-strategist-domain4 — 移行元コンテンツの全�
                 inventory.structures.tableColumnHeaders[index],
             );
         });
+    });
+
+    it('優先度マトリクスのインパクト行ラベルが th[scope=row] である', () => {
+        const container = renderPage();
+        const rowHeaders = [...container.querySelectorAll('tbody th[scope="row"]')].map(
+            (element) => squash(element.textContent ?? ''),
+        );
+        expect(rowHeaders).toEqual(ROW_HEADERS);
     });
 
     it('コードブロックが .code-line でラップされている（コードが存在する場合）', () => {
