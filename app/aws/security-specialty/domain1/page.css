@@ -7,17 +7,6 @@
 }
 
 .scs-domain1-page {
-    --color-scs-d1-hljs-keyword: #d73a49;
-    --color-scs-d1-hljs-title: #6f42c1;
-    --color-scs-d1-hljs-attr: #005cc5;
-    --color-scs-d1-hljs-string: #032f62;
-    --color-scs-d1-hljs-built-in: #e36209;
-    --color-scs-d1-hljs-comment: #6a737d;
-    --color-scs-d1-hljs-name: #22863a;
-    --color-scs-d1-hljs-bullet: #735c0f;
-    --color-scs-d1-hljs-addition-bg: #f0fff4;
-    --color-scs-d1-hljs-deletion: #b31d28;
-    --color-scs-d1-hljs-deletion-bg: #ffeef0;
     margin: 0;
     background: var(--color-scs-d1-bg);
     color: var(--color-scs-d1-text);

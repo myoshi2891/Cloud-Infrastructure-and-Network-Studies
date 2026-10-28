@@ -121,6 +121,17 @@
     --color-scs-d1-row-hover: rgba(53, 82, 201, 0.04);
     --color-scs-d1-check-hover: rgba(53, 82, 201, 0.05);
     --color-scs-d1-sidebar-shadow: rgba(0, 0, 0, 0.18);
+    --color-scs-d1-hljs-keyword: #d73a49;
+    --color-scs-d1-hljs-title: #6f42c1;
+    --color-scs-d1-hljs-attr: #005cc5;
+    --color-scs-d1-hljs-string: #032f62;
+    --color-scs-d1-hljs-built-in: #e36209;
+    --color-scs-d1-hljs-comment: #6a737d;
+    --color-scs-d1-hljs-name: #22863a;
+    --color-scs-d1-hljs-bullet: #735c0f;
+    --color-scs-d1-hljs-addition-bg: #f0fff4;
+    --color-scs-d1-hljs-deletion: #b31d28;
+    --color-scs-d1-hljs-deletion-bg: #ffeef0;
     --color-ans-d4-code-readable: #ad5009;
     --color-ans-d4-success-readable: #197a48;
     --color-ans-d4-1: #f7f8fc;
