@@ -32,3 +32,8 @@ it('元HTMLの全CSS宣言・メディア条件・装飾を保持する', () => 
         }
     }
 });
+
+it('コード本文は等幅フォントで原本の字下げ・配置を保持する', () => {
+    const rules = snapshotCssRules(fs.readFileSync('app/aws/developer-associate/domain4/page.css','utf8'));
+    expect(rules.some((rule: {selector:string;declarations:{prop:string;value:string}[]}) => rule.selector === '.dva-troubleshooting-page .code-block' && rule.declarations.some(d => d.prop === 'font-family' && d.value === 'var(--font-mono)'))).toBe(true);
+});
