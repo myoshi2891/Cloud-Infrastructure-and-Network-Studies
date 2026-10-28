@@ -15,13 +15,13 @@ it('元HTMLの全CSS宣言・メディア条件・装飾を保持する', () => 
     for(const rule of fixture.css) {
         if(rule.selector === ':root') continue;
         const selector = [...new Set(rule.selector.split(',').map(part => {
-            const s = part.trim().replaceAll('body.menu-open','.dva-troubleshooting-page.menu-open').replaceAll('.code-block','.code-sample').replaceAll('pre code','.code-block').replaceAll('pre','.code-block');
+            const s = part.trim().replaceAll('body.menu-open','.dva-troubleshooting-page.menu-open').replaceAll('.code-block','.code-sample').replaceAll('pre code','.code-viewport .code-block').replaceAll('pre','.code-viewport');
             return ['html','body'].includes(s) ? '.dva-troubleshooting-page' : s.startsWith('.dva-troubleshooting-page') ? s : '.dva-troubleshooting-page '+s;
         }))].join(', ');
-        const found = actual.find((candidate: {selector:string;media:string|null}) => candidate.selector === selector && candidate.media === rule.media);
-        expect(found,selector).toBeDefined();
+        const found = actual.filter((candidate: {selector:string;media:string|null}) => candidate.selector === selector && candidate.media === rule.media);
+        expect(found.length,selector).toBeGreaterThan(0);
         for(const decl of rule.declarations) {
-            const observed = found?.declarations.find((d: {prop:string}) => d.prop === decl.prop);
+            const observed = found.flatMap((candidate: {declarations: {prop:string;value:string;important:boolean}[]}) => candidate.declarations).find((d: {prop:string}) => d.prop === decl.prop);
             expect(observed,selector+' '+decl.prop).toBeDefined();
             if(decl.prop === 'font-family') continue;
             if(decl.prop === 'top' && ['.sidebar','.menu-btn'].includes(rule.selector)) { expect(observed?.value).toContain('var(--header-h, 60px)'); continue; }

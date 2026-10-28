@@ -20,7 +20,7 @@ function jsx(node) {
     }
     if(node.nodeType !== 1 || node.tagName === 'SCRIPT') return '';
     if(node.matches('[data-diagram-id]')) return `<Diagram id=${JSON.stringify(node.dataset.diagramId)} label=${JSON.stringify(node.getAttribute('aria-label'))} />`;
-    if(node.tagName === 'PRE') return `<div className="code-block" data-language=${JSON.stringify(node.querySelector('code')?.className.replace('language-','') ?? '')}>${codeLines(node).map(line => `<div className="code-line">{${JSON.stringify(line)}}</div>`).join('\n')}</div>`;
+    if(node.tagName === 'PRE') return `<div className="code-viewport"><div className="code-block" data-language=${JSON.stringify(node.querySelector('code')?.className.replace('language-','') ?? '')}>${codeLines(node).map(line => `<div className="code-line">{${JSON.stringify(line)}}</div>`).join('\n')}</div></div>`;
     const tag = node.tagName.toLowerCase();
     const attrs = [...node.attributes].map(attr => {
         if(attr.name === 'style') {
@@ -61,7 +61,7 @@ if(stage === 'scaffold') {
     css.walkRules(rule => {
         const source = rule.selector;
         rule.selector = [...new Set(source.split(',').map(part => {
-            const s = part.trim().replaceAll('body.menu-open','.dva-troubleshooting-page.menu-open').replaceAll('.code-block','.code-sample').replaceAll('pre code','.code-block').replaceAll('pre','.code-block');
+            const s = part.trim().replaceAll('body.menu-open','.dva-troubleshooting-page.menu-open').replaceAll('.code-block','.code-sample').replaceAll('pre code','.code-viewport .code-block').replaceAll('pre','.code-viewport');
             return ['html','body'].includes(s) ? '.dva-troubleshooting-page' : s.startsWith('.dva-troubleshooting-page') ? s : '.dva-troubleshooting-page '+s;
         }))].join(', ');
         rule.walkDecls(decl => {

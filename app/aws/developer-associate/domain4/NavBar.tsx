@@ -39,10 +39,10 @@ export function NavBar() {
         <button ref={button} className="menu-btn" type="button" aria-label="目次を開く" aria-expanded={open} aria-controls="dva4-sidebar" onClick={() => setOpen(value => !value)}>☰</button>
         <button className="backdrop" type="button" aria-label="目次を閉じる" onClick={() => {setOpen(false);button.current?.focus();}} />
         <aside className="sidebar" id="dva4-sidebar" aria-label="目次">
-            <div className="sidebar-brand"><span className="badge">DVA-C02 · Domain 4</span><p className="brand-title">Troubleshooting and Optimization</p></div>
+            <div className="sidebar-brand"><span className="badge">DVA-C02 · Domain 4</span><p className="brand-title">Troubleshooting and Optimization</p></div>{' '}
             <nav className="nav" aria-label="学習ガイド目次"><ul>{NAV_ITEMS.map(item => <li key={item.id}>
-                {item.group && <div className="nav-group">{item.group}</div>}
-                <a href={'#'+item.id} className={active === item.id ? 'active' : undefined} aria-current={active === item.id ? 'location' : undefined} onClick={event => navigate(event,item.id)}><span className="n">{item.n}</span><span className="t">{item.label}</span></a>
+                {item.group && <><div className="nav-group">{item.group}</div>{' '}</>}
+                <a href={'#'+item.id} className={active === item.id ? 'active' : undefined} aria-current={active === item.id ? 'location' : undefined} onClick={event => navigate(event,item.id)}><span className="n">{item.n}</span><span className="t">{item.label}</span></a>{' '}
             </li>)}</ul></nav>
         </aside>
     </>;

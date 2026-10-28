@@ -15,13 +15,13 @@ export function troubleshootingSource(document) {
     };
     let diagrams, theme, classes;
     const visit = node => {
-        if (ts.isBinaryExpression(node) && node.left.getText(ast) === 'window.DIAGRAMS') diagrams = literal(node.right);
+        if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.EqualsToken && node.left.getText(ast) === 'window.DIAGRAMS') diagrams = literal(node.right);
         if (ts.isCallExpression(node) && node.expression.getText(ast) === 'window.mermaid.initialize') theme = literal(node.arguments[0]);
         if (ts.isVariableDeclaration(node) && node.name.getText(ast) === 'CLASSDEFS') classes = literal(node.initializer.expression.expression).join('\n');
         ts.forEachChild(node, visit);
     };
     visit(ast);
-    if (!diagrams || !theme || !classes) throw new Error('Incomplete source diagrams/theme');
+    if (!diagrams || Object.keys(diagrams).length !== document.querySelectorAll('[data-diagram-id]').length || !theme || !classes) throw new Error('Incomplete source diagrams/theme');
     normalizeCodeContainers(document);
     return { diagrams: Object.fromEntries(Object.entries(diagrams).map(([id, text]) => [id, text.split('\n').map(line => line.trim()).join('\n') + '\n' + classes])), theme };
 }

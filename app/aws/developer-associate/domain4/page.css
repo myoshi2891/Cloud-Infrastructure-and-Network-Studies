@@ -261,12 +261,12 @@
   font-weight: 700;
   letter-spacing: 0.04em;
 }
-.dva-troubleshooting-page .code-sample .code-block {
+.dva-troubleshooting-page .code-sample .code-viewport {
   margin: 0;
   overflow-x: auto;
   background: var(--color-dva-troubleshooting-282c34);
 }
-.dva-troubleshooting-page .code-sample .code-block {
+.dva-troubleshooting-page .code-sample .code-viewport .code-block {
   display: block;
   background: transparent;
   color: var(--color-dva-troubleshooting-abb2bf);
@@ -277,7 +277,7 @@
   white-space: pre;
   overflow-wrap: normal;
 }
-.dva-troubleshooting-page .code-sample .code-block.hljs { padding: 16px 20px; }
+.dva-troubleshooting-page .code-sample .code-viewport .code-block.hljs { padding: 16px 20px; }
 
 /* ---------- tables ---------- */
 .dva-troubleshooting-page .table-wrap {
