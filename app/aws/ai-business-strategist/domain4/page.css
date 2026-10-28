@@ -501,6 +501,10 @@
         font-size: 1.75rem;
     }
 
+    .aib-domain4-page h3 {
+        scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 60px + 20px);
+    }
+
     .aib-domain4-page h2 {
         font-size: 1.45rem;
     }
