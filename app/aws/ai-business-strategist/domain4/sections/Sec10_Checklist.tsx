@@ -47,7 +47,7 @@ export const Sec10_Checklist: React.FC = () => {
                 <i className="ti ti-checklist"></i>9. 直前チェックリスト
             </h2>
             <div>
-                <div className="chk-count">
+                <div className="chk-count" aria-live="polite" aria-atomic="true">
                     {completedCount} / {total} 完了
                 </div>
                 <div className="chk-bar">
