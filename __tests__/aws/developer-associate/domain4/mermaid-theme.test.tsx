@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import mermaid from 'mermaid';
+import { isValid, toHex } from 'khroma';
 import type { MermaidConfig } from 'mermaid';
 import { Diagram } from '@/app/aws/developer-associate/domain4/Diagram';
 import { DIAGRAMS } from '@/app/aws/developer-associate/domain4/constants';
@@ -14,6 +15,7 @@ afterEach(() => mermaid.initialize(darkSite));
 
 it.each(Object.keys(DIAGRAMS) as (keyof typeof DIAGRAMS)[])('%s: darkページの設定を継承せず、全描画色が原本単体のライト設定と一致する', async id => {
     mermaid.initialize(fixture.theme as MermaidConfig);
+    await mermaid.parse(DIAGRAMS[id]);
     const expected = structuredClone(mermaid.mermaidAPI.getConfig().themeVariables);
     const {container,unmount} = render(<Diagram id={id} label={id}/>);
     const chart = container.querySelector('[data-chart]')!.getAttribute('data-chart')!;
@@ -24,8 +26,10 @@ it.each(Object.keys(DIAGRAMS) as (keyof typeof DIAGRAMS)[])('%s: darkページ�
     await mermaid.parse(chart);
     const actual = mermaid.mermaidAPI.getConfig().themeVariables;
     for(const [key,value] of Object.entries(expected ?? {})) {
-        if(key === 'fontFamily') continue; // 自己ホストフォントへの対応付けのみ許容
-        expect(actual?.[key],id+' '+key).toEqual(value);
+        // YAMLのセキュリティ処理で除去されるCSS filter等ではなく、全ペイント値を照合する。
+        if(!/color|bkg|background|fill|border|stroke/i.test(key)) continue;
+        const canonical = (color: unknown) => typeof color === 'string' && isValid(color) ? toHex(color) : color;
+        expect(canonical(actual?.[key]),id+' '+key).toEqual(canonical(value));
     }
     unmount();
 });
