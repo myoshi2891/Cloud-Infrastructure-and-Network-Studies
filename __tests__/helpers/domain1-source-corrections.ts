@@ -12,6 +12,8 @@ export const SAP_DOMAIN1_CORRECTIONS: readonly Correction[] = [
 
 /** SCS Domain 1: 123e71db の管理イベントとデータイベントの区別を期待値へ適用する。 */
 export const SCS_DOMAIN1_CORRECTIONS: readonly Correction[] = [
+    ['aws cloudtrail create-trail', 'aws cloudtrail create-trail --region ap-northeast-1'],
+    ['aws cloudtrail start-logging --name organization-audit-trail', 'aws cloudtrail start-logging --name organization-audit-trail --region ap-northeast-1'],
     // https://docs.aws.amazon.com/config/latest/developerguide/cpack-prerequisites.html
     ['で始まる必要があります。', 'で始まる必要があります。コマンド実行前に、展開対象の各アカウント・リージョンで AWS Config の記録を有効化し、配信先 S3 バケットに組織用バケットポリシーを設定してください。'],
     ['--start-time 2026-10-01T00:00:00Z', '--start-time 2026-10-01T00:00:00Z --account-id 444455556666 --region ap-northeast-1'],
