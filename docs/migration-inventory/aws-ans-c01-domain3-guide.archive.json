@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "ead3ccbc77b05f1e80bef5d64042a2704c2bf238",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Ans-c01-domain3-network-management-operation-guide.html",
+      "archive": "archive/Aws/html/advanced-networking-specialty/domain3/Ans-c01-domain3-network-management-operation-guide.html",
+      "bytes": 356451,
+      "sha256": "c413d557296601e3463c43e1596c5b1b1271a168f9e2d7debb2e2a21010f8b81"
+    },
+    {
+      "source": "Ans-c01-domain3-network-management-operation-guide.md",
+      "archive": "archive/Aws/md/advanced-networking-specialty/domain3/Ans-c01-domain3-network-management-operation-guide.md",
+      "bytes": 107870,
+      "sha256": "af7d1fee0e00ebebb76e4612fad687860d46a30e5a7f3b08cc5cf1d7f4475471"
+    }
+  ]
+}

@@ -1093,7 +1093,7 @@
     "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html",
     "https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html",
     "https://calculator.aws/",
-    "一括請求では、RI と Savings Plans の割引は自動で共有されるのではなく、共有が有効なアカウント間で対象となる使用量に適用される。共有設定と使用率を確認し、購入は集約して使用率を高める",
+    "一括請求では、RI と Savings Plans の割引は、共有が有効なアカウント間で対象となる使用量に自動的に適用される。共有は既定で有効。共有設定と使用率を確認し、購入は集約して使用率を高める",
     "ベースの使用量は Savings Plans、変動分はオンデマンド、中断可能なものはスポットを組み合わせる (ミックス戦略)",
     "スポットを使う場合は、複数のインスタンスタイプと AZ に分散して中断の影響を減らす",
     "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html",

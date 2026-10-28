@@ -60,6 +60,12 @@ describe('SAP-C02 Domain 1 CSS & Design Fidelity', () => {
             for (const [p, v] of Object.entries(rule.declarations)) {
                 if (typeof v !== 'string') continue;
                 if (p === 'font-family') continue;
+                // 9281f4ef: キーボードフォーカスを見やすくするため枠をアクセント色へ変更。
+                if (p === 'outline' && ['.quiz-opt:focus-visible', '.quiz-answer summary:focus-visible'].includes(rule.selector)) {
+                    expect(actual[p]).toBe('3px solid var(--color-sap-d1-accent)');
+                    expect(resolve(actual[p] ?? '', globals)).toBe('3pxsolid#3a4fb5');
+                    continue;
+                }
                 if (p === 'color' && v === '#6b7489') {
                     expect(resolve(actual[p] ?? '', globals)).toBe('#697287');
                     continue;

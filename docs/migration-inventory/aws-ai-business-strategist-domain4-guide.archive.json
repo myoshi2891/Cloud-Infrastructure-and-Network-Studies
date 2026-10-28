@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "36531f996e587ff6e62f8af60879a58e346e704f",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Aws-ai-business-strategist-domain4-guide.html",
+      "archive": "archive/Aws/html/ai-business-strategist/domain4/Aws-ai-business-strategist-domain4-guide.html",
+      "bytes": 229767,
+      "sha256": "63197732f3772f0a4b0b5b33893ee4c54ef3a6c21b3ea145b9f4b1d087cc902a"
+    },
+    {
+      "source": "Aws-ai-business-strategist-domain4-guide.md",
+      "archive": "archive/Aws/md/ai-business-strategist/domain4/Aws-ai-business-strategist-domain4-guide.md",
+      "bytes": 86525,
+      "sha256": "ab92b5932b0d7356e171bfe0765049bd7a97745d0a666d53119ca6f1cba0b7af"
+    }
+  ]
+}

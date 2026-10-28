@@ -1,8 +1,69 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-26)
+(最終更新日: 2026-10-28)
 
-## 2026-10-26: SAP-C02総合ガイド移行・原本アーカイブ
+## 2026-10-28: SAP/SCS Domain 1 テスト期待値の訂正
+
+SAP Domain 1の本文訂正6箇所とSCS Domain 1の本文訂正6箇所を明示的な変換表にし、固定Git由来fixtureを改変せず表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で明示的に検証する。欠落検出テストの削除前の一致確認が再び成功し、削除による差分も検出する。訂正対象の存在・訂正の反映・fixtureの不変性を確認する回帰2件を追加。
+
+- Red: `fc3a7dc2`（訂正ヘルパー未実装による失敗を確認）。
+- Green: `2894a848`。対象28ファイル・222件成功。全体Vitestは456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。型検査・全体ESLint・対象Markdown lint成功。
+- テストのみの変更で画面挙動へ影響しないため、E2E・本番ビルドは省略。
+- レビュー対応で証跡作成・ログ開始の両CLIに `--region ap-northeast-1` を明示。既存の本文訂正6組にこの2組を加え、現在の `SCS_DOMAIN1_CORRECTIONS` は計8組の置換ペア。カバレッジ記録のSCS Domain 1「7件」は訂正前の失敗テスト数（期待値比較のアサーション不一致）を指し、置換ペア数とは異なる。
+
+- 作業開始時の既存SCS CSS差分は保持し、今回のコミットから除外。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。静的集計は実行成功数・行カバレッジとは区別する。
+
+## 2026-10-27: AWS AIB-C01 Domain 4 (Business Readiness, Leadership, and AI Transformation) 移行 & 原本アーカイブ退避
+
+2026-10-27 AIB-C01 Domain 4移行: `/aws/ai-business-strategist/domain4` に全4タスク・19スキル、54表（th162・td883）・12図・54リスト項目・8外部リンク出現・32目次・練習問題6問・チェックリスト22項目を全文移行。原本のライト配色・302px目次・全幅メインコンテンツ（`calc(100% - 302px)`）・Hero濃紺グラデーション・表ヘッダー/Blockquote/H3左ボーダー・点/番号/階層/字下げ・Mermaidライトテーマ全変数とラッパー透過・チェックリスト進捗カウンター/バーを完全復元。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、Tailwind `@theme` トークン化（`--color-aib-d4-*` 21変数）を適用。ホームとHeaderへDomain 4（24%）を追加。
+
+原本HTML（229767バイト・SHA-256 `63197732f3772f0a4b0b5b33893ee4c54ef3a6c21b3ea145b9f4b1d087cc902a`）およびMarkdown（86525バイト・SHA-256 `ab92b5932b0d7356e171bfe0765049bd7a97745d0a666d53119ca6f1cba0b7af`）を、内容を変更せず `archive/Aws/html/ai-business-strategist/domain4/` と `archive/Aws/md/ai-business-strategist/domain4/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json` に記録した。
+
+直下の原本削除後、原本不在下でDomain 4全5テストファイル（30件）が100%成功（Pass）、AIB関連＋共通Footer全16ファイル・107テストも100%成功することを確認。TypeScript型検査・ESLint成功。
+
+| ステップ | 内容 | コミット |
+|---|---|---|
+| Step 0 | 原本インベントリ確定 (`aws-ai-business-strategist-domain4.json`) | `e9db8d72` |
+| Step 1 | Red: 失敗テスト作成 (`domain4/page.test.tsx`) | `30d991bc` |
+| Step 2 | Scaffold & Foundation (`NavBar`, `page.css`, `Diagram`, `Hero`, `Sec0`, `Sec1`, `Sec2`) | `1921fff1` |
+| Step 3 | Task 4.1 & 4.2 コアコンテンツ実装 (`Sec3_Task41.tsx`, `Sec4_Task42.tsx`) | `40546224` |
+| Step 4 | Task 4.3 & 4.4 コアコンテンツ実装 (`Sec5_Task43.tsx`, `Sec6_Task44.tsx`) | `a650d79d` |
+| Step 5 | サービス早見表・判断ルール・練習問題・直前チェックリスト (`Sec7`〜`Sec10`) | `8eaf7747` |
+| Step 6 | 用語集・参考URL・テスト全14件Green達成 (`Sec11`, `Sec12`, `NavBar`) | `63c01f28` |
+| Step 7 | ルーティング統合 (`constants.ts`, `integration.test.ts`) | `de009ebd` |
+| Step 8 | 全画面共通フッター明色テーマ切替 (`Footer.module.css`, `footer.test.ts`) | `89f1c6b9` |
+| Step 9 | Mermaidライトテーマ変数完備・ラッパー透過・二重カード解消 (`mermaid-theme.json`, `Diagram.tsx`, `Sec6_Task44.tsx`, `diagram-theme.test.tsx`) | `bfb2aa40` |
+| Step 10 | 全幅レイアウト・原本デザイン（Hero/表/Blockquote/H3）・リストマーカー・`@theme`トークン復元 (`globals.css`, `page.css`, `design.test.ts`) | `0f7fa60d` |
+| Step 11 | チェックリスト進捗バー/カウンター・モバイルドロワー操作強化 (`Sec10_Checklist.tsx`, `AiBusinessStrategistDomain4Guide.tsx`, `interactive.test.tsx`) | `191203bf` |
+
+## 2026-10-27: AWS SCS-C03 Domain 1 (Detection) 移行 & 原本アーカイブ退避
+
+2026-10-27 SCS-C03 Domain 1移行: `/aws/security-specialty/domain1` に全3タスク・13スキル、51表（th135・td810）・9図・9コード（64行）・130リスト項目・62外部リンク出現・48目次・確認問題8問・チェックリスト19項目を全文移行。原本のライト配色・300px目次・点/番号/階層/字下げ・コード行構造を保持。本文はServer Component、目次とチェックリスト操作はClientへ分離し、全画面共通フッターの明色テーマ切替、MermaidDiagramラッパー透過・自然倍率表示、Tailwind `@theme` トークン化（`--color-scs-d1-*` 24変数）を適用。ホームとHeaderへDomain 1（16%）を追加。
+
+原本HTML（267824バイト・SHA-256 `e977a30b0d1a29790c8512544afa4ef7082faf7b4906c07440b6086d2a5f2b34`）およびMarkdown（90105バイト・SHA-256 `afafae0d45d08f3b25960541aba88dec19b0d987847a808b72c824f57bd0bc3c`）を、内容を変更せず `archive/Aws/html/security-specialty/domain1/` と `archive/Aws/md/security-specialty/domain1/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-scs-c03-domain1-guide.archive.json` に記録した。
+
+直下の原本HTML/MDを削除後、作業ツリー原本不在下で全17テストファイル（139件）＋共通Footer 3件の計18ファイル・142件が100%成功（Pass）すること、および固定Git `90bc905f82d4bba349ca81a3adb508bab8ebaa04` からfidelity fixtureがバイト一致で再生成されることを確認。TypeScript型検査・ESLint成功。
+
+| ステップ | 内容 | コミット |
+|---|---|---|
+| Step 1 | 全画面共通フッターの明色テーマ対応 (`Footer.module.css`, `footer.test.ts`) | `6fd4e47a` |
+| Step 2 | Mermaid図ラッパー透過・リスト装飾復元・CSSデザイントークン完全移行 (`globals.css`, `page.css`, `design.test.ts`, `diagram.test.tsx`, `contrast.test.ts`) | `2884d64a` |
+| Step 3 | セクション境界 (`data-part`)・見出しフォーカス (`tabIndex={-1}`)・チェックリスト動的連動・全8区画テスト | `cfe9e202` |
+| Step 4 | ミューテーション・ルーティング統合・原本不在fixture再生成テスト (`mutations.test.tsx`, `integration.test.tsx`, `fixture.test.ts`) | `89aaa2fc` |
+
+## 2026-10-27: ANS-C01 Domain 4 原本アーカイブ退避・整合性検証完了
+
+2026-10-27 ANS-C01 Domain 4原本アーカイブ退避: 直下に残存していた `Ans-c01-domain4-network-security-compliance-governance-guide.html`（274038バイト・SHA-256 `ca19a5e8977443433560a619ebab667c829e6a09552dc0334178a724936b8c9d`）および `Ans-c01-domain4-network-security-compliance-governance-guide.md`（133787バイト・SHA-256 `7a74575c1984ec320d65cf279292dacb7439b9da56a5014e482ce14c12570895`）を、内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain4/` と `archive/Aws/md/advanced-networking-specialty/domain4/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain4-guide.archive.json` に記録した。
+
+直下の原本HTML/MDを削除後、作業ツリー原本不在下で `fixture.test.ts` を実行し、固定Git `c2b4535c7fdf4ec40872a9e093c184b22c0ac954` からfixtureがバイト一致で再生成されること、および全15テストファイル（97件）が100%成功（Pass）することを確認。TypeScript型検査（`tsc --noEmit`）およびESLintもエラー0であることを確認。
+
+## 2026-10-27: ANS-C01 Domain 3 原本アーカイブ退避・整合性検証完了
+
+2026-10-27 ANS-C01 Domain 3原本アーカイブ退避: 直下に残存していた `Ans-c01-domain3-network-management-operation-guide.html`（356451バイト・SHA-256 `c413d557296601e3463c43e1596c5b1b1271a168f9e2d7debb2e2a21010f8b81`）および `Ans-c01-domain3-network-management-operation-guide.md`（107870バイト・SHA-256 `af7d1fee0e00ebebb76e4612fad687860d46a30e5a7f3b08cc5cf1d7f4475471`）を、内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain3/` と `archive/Aws/md/advanced-networking-specialty/domain3/` へ移動。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain3-guide.archive.json` に記録した。
+
+直下の原本HTML/MDを削除後、作業ツリー原本不在下で `fixture.test.ts` を実行し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` からfixtureがバイト一致で再生成されること、および全13テストファイル（98件）が100%成功（Pass）することを確認。TypeScript型検査（`tsc --noEmit`）およびESLintもエラー0であることを確認。
+
+## 2026-10-26: SAP-C02総合ガイド移行
 
 2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本ライト配色・リストの点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次と練習問題の操作はClientに分離。ホームとHeaderの概要を総合ガイドへ変更し、Domain 1詳細への導線も保持した。原本にコードブロックとチェックボックスの実体はなく追加していない。
 
@@ -103,7 +164,7 @@ Red `cc139326` / Green `00a04e3c`。修正前はDOM1件とブラウザー3件で
 
 ## 2026-10-21: ANS-C01 Domain 4ネットワークセキュリティ移行
 
-2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは直下に保持し、レビュー指摘に基づき訂正済み。固定Git `c2b4535c7fdf4ec40872a9e093c184b22c0ac954` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archiveに依存せず検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。`bun run build`・`bun run lint` の成功が未確認のため検証は未完了。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
+2026-10-21 ANS-C01 Domain 4移行: `/aws/advanced-networking-specialty/domain4` に全3タスク・58表（th148・td999）・31図・14コード・181リスト項目・176外部リンク出現・99目次・確認問題8問を全文移行。原本ライト配色・300px目次・点/番号/階層/余白・コード全行と構文色を保持。単一選択7問・複数選択1問の33選択肢と8解答開閉を保持し、採点や永続化は追加していない。ホームとHeaderへDomain 4（24%）を追加。原本HTML・Markdownは `archive/Aws/html|md/advanced-networking-specialty/domain4/` へバイト一致で保存後に直下から削除し、完全なハッシュを `docs/migration-inventory/aws-ans-c01-domain4-guide.archive.json` に記録。固定Git `c2b4535c7fdf4ec40872a9e093c184b22c0ac954` 由来fixture（`15e57d87`・`af45f5d8`・`717ff01e`・`24fd796e`・`bc3999a1`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）で原本・archive不在でも全文・順序・表構造・コード行・トークン・CSSを検証する。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。検証結果・段階別コミットはMIGRATION_PROGRESS.mdの最新記録を参照。
 
 最終検証: 全体Vitest373ファイル・3579件すべて成功（`bun run test -- --maxWorkers=4 --testTimeout=30000`、再試行なし）。Domain 4は15ファイル・97件。Chromeは1440/768/390px・装飾破壊検出・ホーム/Header導線の5件成功。全31SVGの自然倍率・viewBox内包、全リストの原本計算済みCSSとの一致、99目次・モバイル開閉・hash/focus、33選択肢・8解答開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。型検査・全体ESLint・対象Markdown lint成功。
 
@@ -132,7 +193,7 @@ CSS変更後は既存3000番のサーバーがないことを確認し、生成�
 
 `/aws/advanced-networking-specialty/domain3` に全3タスク・91表（th237・td1190）・26図・7コード・38リスト項目・34外部リンク出現・52目次・シナリオ8問を全文移行。原本の白背景・300px目次・リストの点と階層・インデント・コードの全行と構文色・解答解説の開閉を保持。本文はServer Component、目次操作はClientのNavBarに分離し、ホーム・Headerに20%のDomain 3導線を追加。チェックボックスは原本に実体がないため追加していない。
 
-原本HTML・Markdownは変更せず直下に保持。固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）inventory/fidelity fixtureをコミットし、原本・archiveが作業ツリーにない状態でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
+原本HTML（356451バイト・SHA-256 `c413d557296601e3463c43e1596c5b1b1271a168f9e2d7debb2e2a21010f8b81`）とMarkdown（107870バイト・SHA-256 `af7d1fee0e00ebebb76e4612fad687860d46a30e5a7f3b08cc5cf1d7f4475471`）は内容を変更せず `archive/Aws/html/advanced-networking-specialty/domain3/` と `archive/Aws/md/advanced-networking-specialty/domain3/` へ移動済み。移動前後のバイト一致・SHA-256一致を確認し、完全なハッシュと保存先を `docs/migration-inventory/aws-ans-c01-domain3-guide.archive.json` に記録。直下から原本を削除し、固定Git `ead3ccbc77b05f1e80bef5d64042a2704c2bf238` 由来（`15e57d87`・`717ff01e`・`e035a60f`・`670b47ec`・`3782b32c`・`dace8727`・`836d4531` は旧版の固定値）inventory/fidelity fixtureにより作業ツリー原本不在下でもfixture再生成がバイト一致することを確認した。本文・表行・リスト項目・図・コード行・参考リンク・解説の削除、およびリストCSS5種の破壊を検出する。全リストの計算済みCSSを隔離した原本CSSと完全照合した。
 
 対象Vitest13ファイル・98件成功。Chromeは1440/768/390px・リストCSS破壊検出・ホーム/Header導線の計5件成功。全26SVGの自然倍率・viewBox内包、目次とhash/focus、モバイル開閉、8解答のクリック/Enter開閉、横はみ出しなし、axe違反0・コンソールエラー0を確認。初回1440pxで検出した原本由来のコード色2系統のみを同色相でAA補正し、本文リンクに下線を追加した。型検査・全体ESLint・対象Markdown lint成功。npm・ビルド未実行。手動の目視確認は未実施で、Chrome自動検証で代替。
 
@@ -2107,17 +2168,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** SAP-C02総合ガイドのNext.js移行・原本アーカイブ
-- **最終更新日:** 2026-10-26
-- **最新実装 HEAD:** `0f005c05`（総合ガイド・導線統合。原本保存は `4025ae45`、欠落テスト対象訂正は `dbaccf24`）
-- **仕様同期コミット:** `2fb3d719`（SAP総合の仕様・テスト進捗・ダッシュボード同期）
-- **前回進捗同期コミット:** `f27f2e68`
-- **検証状態:** 対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
-- **今回の検証条件:** npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。
-- **ビルド状態:** ユーザー指定により未実行。本番ビルド成功は未確認。
-- **静的集計:** 1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。
-- **HTML残数:** 未移行13件、直下HTML17件（移行済み原本4件を含む）。SAP総合のHTML/Markdownはarchiveへ移動済み。
-- **次の作業:** 次ページはユーザー指定待ち。SAP総合の再移行は不要。既存SAP Domain 1の6件失敗は別タスクで監査。ビルドは禁止を引き継ぐ。
+- **最新完了タスク:** 2026-10-28 SAP/SCS Domain 1テスト期待値の訂正。AIB/SCS移行・ANS原本退避の履歴は冒頭の各記録を参照。
+- **最終更新日:** 2026-10-28
+- **最新実装 HEAD:** `2894a848`（SAP/SCS Domain 1の表示期待値を本文訂正・フォーカス枠改善へ追従。Red `fc3a7dc2`）
+- **仕様同期コミット:** `a5577b28`（AIB-C01 Domain 4 の仕様同期）
+- **前回進捗同期コミット:** `a5577b28`（AIB-C01 Domain 4。それ以前は `2cf3ecd1`、ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
+- **検証状態:** 2026-10-28 全体Vitest 456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。SAP/SCS Domain 1期待値の既存失敗13件を解消し、回帰2件を追加。対象28ファイル・222件成功。TypeScript型検査・全体ESLint・対象Markdown lint成功。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。
+- **ビルド状態:** 本番ビルド・E2Eは今回は省略（テスト・文書のみの変更で画面挙動への影響なし）。本番ビルド成功は未確認。
+- **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
+- **次の作業:** 次ページはユーザー指定待ち。SAP/SCS Domain 1の期待値不整合は対応済み。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3456,15 +3515,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `0f005c05`。原本保存: `4025ae45`。前回進捗同期コミット: `f27f2e68`。仕様同期コミット: `2fb3d719`。2026-10-26 SAP-C02総合ガイド移行: `/aws/solutions-architect-professional` にStep 0〜23・全4ドメイン、143表（th333・td1863）・50図・39リスト項目・175外部リンク出現・167目次・105参考文献・練習問題12問を全文移行。原本のライト配色・点/番号/階層/字下げを保持し、サイドバーは標準280pxへ対応付けた。本文はServer Component、目次とクイズ操作はClientに分離。ホームとHeaderへ総合ガイドを追加し、Domain 1詳細も保持。原本のコードブロックとチェックボックスは0件。
+最新実装 HEAD: `2894a848`。前回進捗同期コミット: `a5577b28`。仕様同期コミット: `a5577b28`（今回の仕様同期差分は未コミット）。最終更新日: 2026-10-28。
 
-対象14ファイル・111件＋共通Footer3件、ブラウザー5件、型検査・全体ESLint・対象Markdown lint成功。1440/768/390pxで全50SVGの自然倍率・viewBox内包、原本CSSとの全リスト計算済みスタイル一致、167目次のhash/focusとモバイル開閉、12問の採点・解説・集計・リセット、横はみ出しなし、axe違反0・コンソールエラー0を確認。 全体Vitestは431ファイル・4009件中4003件成功。失敗6件は着手前からのSAP-C02 Domain 1（design 1件・mutations 5件）のみ。
+2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
-原本HTML509866バイト・Markdown140000バイトは `archive/Aws/html/solutions-architect-professional/` と `archive/Aws/md/solutions-architect-professional/` へバイト一致・SHA-256一致で移動済み。ハッシュと保存先は `docs/migration-inventory/aws-sap-c02-guide.archive.json` に記録。archiveはローカル専用・Git管理外で、CIは固定Git `f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc` 由来fixtureを使用し、原本・archiveなしでも再生成できる。
+検証: 2026-10-28 全体Vitest 456ファイル・4225件すべて成功。SAP/SCS Domain 1の13件の期待値不整合を解消し、回帰2件を追加。型検査・全体ESLint・対象Markdown lint成功。テスト・文書のみの変更のためE2E・本番ビルドは省略。
 
-npm・本番ビルドは未実行、目視確認はユーザー担当。既存3000番は停止せず、一時コピー・新規キャッシュ・webpackの開発サーバーを3017番で使ってブラウザー検証した。127.0.0.1では開発リソースが拒否されたため、localhostで再実行した。
-
-静的集計1188ソース・382対応（32%）・450テストファイル、133ルート。静的集計とテスト実行成功数・行カバレッジは区別する。 次ページはユーザー指定待ち。未移行HTML13件、直下HTML17件。既存SAP Domain 1の6件失敗は別タスク。
+次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。SAP/SCS Domain 1の期待値不整合は対応済み。対象28ファイル・222件成功。全体の最新結果は「現在地」を参照。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

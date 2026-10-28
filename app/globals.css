@@ -96,6 +96,42 @@
     --color-scs-32: #fbfcff;
     --color-scs-33: rgba(47, 95, 208, 0.08);
     --color-scs-34: rgba(20, 40, 90, 0.18);
+    /* SCS-C03 Domain 1: original light palette */
+    --color-scs-d1-bg: #f7f8fb;
+    --color-scs-d1-bg-card: #ffffff;
+    --color-scs-d1-bg-card-2: #f0f3f9;
+    --color-scs-d1-border: #d5dcea;
+    --color-scs-d1-border-soft: #e4e9f2;
+    --color-scs-d1-text: #1d2740;
+    --color-scs-d1-text-dim: #4d5b78;
+    --color-scs-d1-text-faint: #6b7a98;
+    --color-scs-d1-accent: #3552c9;
+    --color-scs-d1-accent-soft: #9db0ec;
+    --color-scs-d1-accent-bg: #e8eefc;
+    --color-scs-d1-danger: #c62f4a;
+    --color-scs-d1-danger-bg: #fde8ec;
+    --color-scs-d1-warn: #a8620a;
+    --color-scs-d1-warn-bg: #fff1dc;
+    --color-scs-d1-success: #1c7a49;
+    --color-scs-d1-success-bg: #e6f6ee;
+    --color-scs-d1-strong: #0f1730;
+    --color-scs-d1-code: #a8480a;
+    --color-scs-d1-code-bg: #f6f8fa;
+    --color-scs-d1-callout-border: #a9dcc0;
+    --color-scs-d1-row-hover: rgba(53, 82, 201, 0.04);
+    --color-scs-d1-check-hover: rgba(53, 82, 201, 0.05);
+    --color-scs-d1-sidebar-shadow: rgba(0, 0, 0, 0.18);
+    --color-scs-d1-hljs-keyword: #d73a49;
+    --color-scs-d1-hljs-title: #6f42c1;
+    --color-scs-d1-hljs-attr: #005cc5;
+    --color-scs-d1-hljs-string: #032f62;
+    --color-scs-d1-hljs-built-in: #e36209;
+    --color-scs-d1-hljs-comment: #6a737d;
+    --color-scs-d1-hljs-name: #22863a;
+    --color-scs-d1-hljs-bullet: #735c0f;
+    --color-scs-d1-hljs-addition-bg: #f0fff4;
+    --color-scs-d1-hljs-deletion: #b31d28;
+    --color-scs-d1-hljs-deletion-bg: #ffeef0;
     --color-ans-d4-code-readable: #ad5009;
     --color-ans-d4-success-readable: #197a48;
     --color-ans-d4-1: #f7f8fc;
@@ -415,6 +451,29 @@
     --color-aib-plum-border: #f5d0fe;
     --color-aib-plum-text: #581c87;
     --color-aib-drawer-shadow: rgba(0, 0, 0, 0.15);
+
+    /* Layer 3: AIB-C01 Domain 4 原本ライト配色 */
+    --color-aib-d4-paper: #fbf8f1;
+    --color-aib-d4-card: #ffffff;
+    --color-aib-d4-alt: #f3eee2;
+    --color-aib-d4-ink: #25221c;
+    --color-aib-d4-soft: #4a4538;
+    --color-aib-d4-faint: #726858;
+    --color-aib-d4-indigo: #2f3f9e;
+    --color-aib-d4-indigo-s: #e3e8ff;
+    --color-aib-d4-gold: #7d5c14;
+    --color-aib-d4-gold-s: #fff4d6;
+    --color-aib-d4-forest: #2e6b3a;
+    --color-aib-d4-forest-s: #dff3e4;
+    --color-aib-d4-border: #ded6c4;
+    --color-aib-d4-nav-hover: #e8e1d0;
+    --color-aib-d4-hero-1: #161d42;
+    --color-aib-d4-hero-2: #263172;
+    --color-aib-d4-hero-3: #33417f;
+    --color-aib-d4-hero-text: #e6e2ff;
+    --color-aib-d4-eyebrow: #cfd6ff;
+    --color-aib-d4-backdrop: rgba(20, 20, 30, 0.45);
+    --shadow-aib-d4: 0 1px 3px rgba(60, 50, 30, 0.1);
 
     /* Layer 3: DVA Domain 1 原本ライト配色・書体 */
     --color-dva-development-paper: #faf7f0;

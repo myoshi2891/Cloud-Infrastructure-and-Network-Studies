@@ -45,6 +45,10 @@ describe('AWS AIB 完全ガイド ホーム・Header統合', () => {
                 label: 'Domain 3: AI Governance and Responsible AI',
                 href: '/aws/ai-business-strategist/domain3',
             },
+            {
+                label: 'Domain 4: Business Readiness, Leadership, and AI Transformation',
+                href: '/aws/ai-business-strategist/domain4',
+            },
         ]);
     });
 });

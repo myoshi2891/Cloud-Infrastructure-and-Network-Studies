@@ -656,8 +656,11 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-scs',
         href: '/aws/security-specialty',
         overviewLabel: 'SCS-C03 完全ガイド',
-        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。',
-        domains: [{ label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' }],
+        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。ドメイン1詳細ガイドも収録。',
+        domains: [
+            { label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' },
+            { label: 'ドメイン1: 検出 (Detection)', href: '/aws/security-specialty/domain1', pct: '16%' },
+        ],
         badge: 'SCS-C03',
         icon: '🛡️',
         provider: 'AWS',
@@ -734,6 +737,11 @@ const ALL_EXAMS: Exam[] = [
             {
                 label: 'Domain 3: AI Governance and Responsible AI',
                 href: '/aws/ai-business-strategist/domain3',
+                pct: '24%',
+            },
+            {
+                label: 'Domain 4: Business Readiness, Leadership, and AI Transformation',
+                href: '/aws/ai-business-strategist/domain4',
                 pct: '24%',
             },
         ],

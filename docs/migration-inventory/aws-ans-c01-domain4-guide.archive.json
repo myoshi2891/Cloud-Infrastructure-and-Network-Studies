@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "c2b4535c7fdf4ec40872a9e093c184b22c0ac954",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
+      "archive": "archive/Aws/html/advanced-networking-specialty/domain4/Ans-c01-domain4-network-security-compliance-governance-guide.html",
+      "bytes": 274038,
+      "sha256": "ca19a5e8977443433560a619ebab667c829e6a09552dc0334178a724936b8c9d"
+    },
+    {
+      "source": "Ans-c01-domain4-network-security-compliance-governance-guide.md",
+      "archive": "archive/Aws/md/advanced-networking-specialty/domain4/Ans-c01-domain4-network-security-compliance-governance-guide.md",
+      "bytes": 133787,
+      "sha256": "7a74575c1984ec320d65cf279292dacb7439b9da56a5014e482ce14c12570895"
+    }
+  ]
+}
