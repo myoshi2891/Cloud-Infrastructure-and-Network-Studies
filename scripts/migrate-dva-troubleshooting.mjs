@@ -106,8 +106,9 @@ if(stage === 'scaffold') {
     if(!groups[stage]) throw Error('Unknown stage');
     for(const section of sections.filter(el=>groups[stage].includes(el.id))) {
         const name='Section'+sections.indexOf(section);
-        const body=section.id === 'app-a' ? stylePracticeMarkup(jsx(section)) : jsx(section);
-        write('sections/'+name+'.tsx',`${body.includes('<CodeBlock ')?"import { CodeBlock } from '../CodeBlock';\n":''}${body.includes('<Diagram ')?"import { Diagram } from '../Diagram';\n":''}/** 原本${section.id}の全内容。 */\nexport function ${name}() { return (${body}); }`);
+        const answers=section.id === 'app-a' ? [...section.querySelectorAll('tbody tr')].map(row=>({correct:row.children[1].textContent.trim().split(',').map(letter=>letter.trim()),explanation:[...row.children[2].childNodes].map(jsx).join('')})) : [];
+        const body=section.id === 'app-a' ? stylePracticeMarkup(jsx(section),answers) : jsx(section);
+        write('sections/'+name+'.tsx',`${body.includes('<PracticeQuestion ')?"import { PracticeQuestion } from '../PracticeQuestion';\n":''}${body.includes('<CodeBlock ')?"import { CodeBlock } from '../CodeBlock';\n":''}${body.includes('<Diagram ')?"import { Diagram } from '../Diagram';\n":''}/** 原本${section.id}の全内容。 */\nexport function ${name}() { return (${body}); }`);
     }
 }
 const names=sections.map((_,i)=>'Section'+i).filter(name=>fs.existsSync(dir+'/sections/'+name+'.tsx'));
