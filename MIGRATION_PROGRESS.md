@@ -2,6 +2,10 @@
 
 (最終更新日: 2026-10-28)
 
+## 2026-10-28: SAP-C02 Domain 1 原本アーカイブ
+
+原本HTMLと対応Markdownを、内容を変更せず `archive/Aws/html/solutions-architect-professional/domain1/` と `archive/Aws/md/solutions-architect-professional/domain1/` へ移動。既存の古いアーカイブはハッシュ付き `.original-*` 名で保持した。移動前後のバイト一致を確認し、サイズ・SHA-256・復元元Gitコミットを `docs/migration-inventory/aws-sap-c02-domain1.archive.json` に記録。archiveはGit管理外のローカル保存先で、原本は記録したGitコミットからも復元可能。直下のHTML/Markdown不在で対象9ファイル・69テストすべて成功。npm・ビルド未実行。
+
 ## 2026-10-28: SAP-C02 Domain 1 指定HTMLの移行状態を再検証
 
 `Aws-sap-c02-domain1 organizational-complexity-guide.html` は `/aws/solutions-architect-professional/domain1` に既に実装・ナビ統合済み。再移行せず既存実装を検証した。対象Vitestは9ファイル・69件すべて成功（`bun run test -- __tests__/aws/solutions-architect-professional/domain1 --maxWorkers=4`）。全見出し・本文・49表・19図・1コードブロック・リンクの順序、リスト階層、CSS宣言、点・番号・字下げの欠落検出、目次とクイズ操作を含む。
@@ -2181,7 +2185,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **前回進捗同期コミット:** `a5577b28`（AIB-C01 Domain 4。それ以前は `2cf3ecd1`、ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
 - **検証状態:** 2026-10-28 全体Vitest 456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。SAP/SCS Domain 1期待値の既存失敗13件を解消し、回帰2件を追加。対象28ファイル・222件成功。TypeScript型検査・全体ESLint・対象Markdown lint成功。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。
 - **ビルド状態:** 本番ビルド・E2Eは今回は省略（テスト・文書のみの変更で画面挙動への影響なし）。本番ビルド成功は未確認。
-- **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
+- **HTML残数:** 直下HTML12件（未移行11件・移行済み原本1件）。SAP-C02 Domain 1、AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
 - **次の作業:** 次ページはユーザー指定待ち。SAP/SCS Domain 1の期待値不整合は対応済み。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
@@ -3527,7 +3531,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 検証: 2026-10-28 全体Vitest 456ファイル・4225件すべて成功。SAP/SCS Domain 1の13件の期待値不整合を解消し、回帰2件を追加。型検査・全体ESLint・対象Markdown lint成功。テスト・文書のみの変更のためE2E・本番ビルドは省略。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。SAP/SCS Domain 1の期待値不整合は対応済み。対象28ファイル・222件成功。全体の最新結果は「現在地」を参照。
+次の作業: 次ページはユーザー指定待ち。直下HTML12件（未移行11件・移行済み原本1件）。SAP/SCS Domain 1の期待値不整合は対応済み。対象28ファイル・222件成功。全体の最新結果は「現在地」を参照。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

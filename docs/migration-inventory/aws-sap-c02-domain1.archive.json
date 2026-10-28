@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "c0ae25a188506d1ef2ec05c7bdfd56cc1ea4392c",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Aws-sap-c02-domain1 organizational-complexity-guide.html",
+      "archive": "archive/Aws/html/solutions-architect-professional/domain1/Aws-sap-c02-domain1 organizational-complexity-guide.html",
+      "bytes": 298932,
+      "sha256": "820ae8ba5c30d14f6c79f19e56e1beb50a03604dfea27c4149e2293d7bfc6cb2"
+    },
+    {
+      "source": "Aws-sap-c02-domain1 organizational-complexity-guide.md",
+      "archive": "archive/Aws/md/solutions-architect-professional/domain1/Aws-sap-c02-domain1 organizational-complexity-guide.md",
+      "bytes": 93154,
+      "sha256": "b205b2bbddeb8dbbcbf75aa0af0403b4b7fb45624201646ab913e19b1ee42b1d"
+    }
+  ]
+}
