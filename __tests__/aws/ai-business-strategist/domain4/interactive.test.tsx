@@ -72,7 +72,7 @@ describe('aws-ai-business-strategist-domain4 — チェックリスト進捗バ�
         navLinks.forEach((link) => {
             const href = link.getAttribute('href') ?? '';
             const targetId = href.slice(1);
-            const target = container.querySelector<HTMLElement>(`#${CSS.escape(targetId)}`);
+            const target = container.ownerDocument.getElementById(targetId);
             expect(target).not.toBeNull();
         });
 
