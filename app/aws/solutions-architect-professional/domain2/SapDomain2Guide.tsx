@@ -6,6 +6,7 @@ import Task21 from './sections/task21';
 import Task22 from './sections/task22';
 import Task23 from './sections/task23';
 import Task24 from './sections/task24';
+import Task25 from './sections/task25';
 /** Domain 2本文と各タスクの独立したチェック進捗。 */
 export default function SapDomain2Guide() {
  const [progress,setProgress]=useState<Record<string,number>>({});
@@ -18,5 +19,5 @@ export default function SapDomain2Guide() {
   setProgress(previous=>({...previous,[index]:card.querySelectorAll('input:checked').length}));
  }
  const props={progress,updateProgress};
- return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task21 {...props}/><Task22 {...props}/><Task23 {...props}/><Task24 {...props}/></main></div></div>;
+ return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task21 {...props}/><Task22 {...props}/><Task23 {...props}/><Task24 {...props}/><Task25 {...props}/></main></div></div>;
 }
