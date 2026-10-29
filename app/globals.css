@@ -1665,6 +1665,11 @@ body {
     color: var(--color-theme-accelerate-fg);
 }
 
+@utility icon-theme-ddia {
+    background: var(--color-theme-accelerate-bg);
+    color: var(--color-theme-accelerate-fg);
+}
+
 @utility icon-theme-sre {
     background: var(--color-theme-sre-bg);
     color: var(--color-theme-sre-fg);
