@@ -1,4 +1,5 @@
 # Google Cloud チャレンジラボ解説ガイド
+
 ## セキュアな Windows 環境を踏み台ホスト（Bastion Host）と VPC で構築する
 
 > **対象読者**: Google Cloud 初学者〜Professional Cloud Architect（PCA）受験準備中の方
@@ -438,7 +439,7 @@ gcloud compute instances create vm-securehost \
 | `--network-interface=network=default,no-address`（2つ目） | default に接続し、**外部 IP を付けない** |
 
 > 🔑 **最重要**: `no-address` が「インターネットから隔離される」ことの実体です。**外部 IP がなければ、インターネットから直接到達できず、インターネットへ直接接続もできません。**
-
+>
 > ⚠️ **イメージ名について**: ラボ環境や時期によってイメージファミリー名が異なる場合があります。エラーが出たら `gcloud compute images list --filter="family~windows-2016"` で確認してください。
 
 ### 7.3 踏み台ホスト `vm-bastionhost` の作成
@@ -617,16 +618,16 @@ gcloud compute instances describe vm-bastionhost --zone=$ZONE \
 
 ```bash
 gcloud compute instances describe vm-securehost --zone=$ZONE \
-  --format="get(networkInterfaces[0].networkIP)"
+  --format="get(networkInterfaces[1].networkIP)"
 ```
 
-→ `10.0.0.x` のような値が表示されます。コンソールの VM 一覧の「内部 IP」列でも確認できます。
+→ `default` VPC に接続した nic1 の内部 IP（`10.128.x.x` のような値）が表示されます。8.3.3 のとおり踏み台からの RDP は `default` 側の内部通信で成立するため、nic0（`securenetwork` 側の `10.0.0.x`）ではなく nic1 の IP を使います。コンソールの VM 一覧の「内部 IP」列でも確認できます（`default` ネットワーク側の値を選びます）。
 
 #### 8.3.2 踏み台内での操作
 
 1. 踏み台の Windows で **スタート** を右クリック → **ファイル名を指定して実行**（または Windows キー + R）
 2. `mstsc.exe` と入力して **OK**（スタートメニューから「リモート デスクトップ接続」を検索してもよい）
-3. **コンピューター** 欄に **vm-securehost の内部 IP**（例: `10.0.0.3`）を入力 → **接続**
+3. **コンピューター** 欄に **vm-securehost の nic1（default）の内部 IP**（例: `10.128.0.3`）を入力 → **接続**
 4. 資格情報の入力画面で以下を入力
 
 | 項目 | 値 |
@@ -810,20 +811,28 @@ gcloud compute firewall-rules describe allow-rdp-bastion
 
 ### 11.2 追加推奨：securenetwork 内の RDP を明示的に許可（最小限）
 
-「踏み台はセキュアホストと RDP のみ通信」を `securenetwork` 側でも明示する場合の例です（任意）。
+「踏み台はセキュアホストと RDP のみ通信」を `securenetwork` 側でも明示する場合の例です（任意）。まずセキュアホストにネットワークタグ `securehost` を付与し、そのうえで送信元を `bastion` タグ、宛先を `securehost` タグに限定したルールを作成します。
 
 ```bash
+# セキュアホストにルールの適用対象となるタグを付与する
+gcloud compute instances add-tags vm-securehost \
+  --zone=$ZONE \
+  --tags=securehost
+
+# bastion タグの VM から securehost タグの VM への TCP 3389 だけを許可する
 gcloud compute firewall-rules create allow-rdp-internal \
   --network=securenetwork \
   --direction=INGRESS \
   --action=ALLOW \
   --rules=tcp:3389 \
-  --source-ranges=10.0.0.0/24
+  --source-tags=bastion \
+  --target-tags=securehost
 ```
 
 | 項目 | 内容 |
 |---|---|
-| ソース | サブネット内（`10.0.0.0/24`）のみ |
+| ソース | タグ `bastion` を持つ VM（踏み台）のみ |
+| ターゲット | タグ `securehost` を持つ VM（セキュアホスト）のみ |
 | 効果 | 内部経路でも RDP（3389）以外は許可しない設計を明示できる |
 
 ### 11.3 追加推奨：IAP TCP 転送（外部 IP すら不要）

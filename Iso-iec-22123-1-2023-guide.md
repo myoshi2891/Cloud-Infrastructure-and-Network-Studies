@@ -654,7 +654,7 @@ NIST SP 800-145 は Peter Mell 氏と Timothy Grance 氏による文書で、**5
 
 | 観点 | NIST SP 800-145（2011） | ISO/IEC 22123-1:2023 |
 |---|---|---|
-| 性質 | 米国 NIST の特別刊行物（約7ページ） | 国際規格（約18ページ）。**用語集**の形式 |
+| 性質 | 米国 NIST の特別刊行物（約7ページ） | 国際規格（ISO カタログでは16ページ、IEC Webstore / SIS では約18ページ）。**用語集**の形式 |
 | 特性 | on-demand self-service / broad network access / resource pooling / rapid elasticity / measured service | 3.4 節に on-demand self-service / resource pooling / measured service / tenant / multi-tenancy。elastic・network access は cloud computing の定義に含まれる |
 | サービスモデル | SaaS / PaaS / IaaS（3つ） | 能力タイプ3種＋サービスカテゴリ（IaaS / PaaS / SaaS に加え CaaS / CompaaS / DSaaS / NaaS） |
 | 配備モデル | private / community / public / hybrid（4つ） | 4つに加え multi-cloud / hybrid multi-cloud / federated cloud / inter-cloud など |
