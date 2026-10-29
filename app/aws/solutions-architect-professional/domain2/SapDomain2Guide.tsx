@@ -3,6 +3,7 @@ import { useState, type ChangeEvent } from 'react';
 import NavBar from './NavBar';
 import Foundation from './sections/foundation';
 import Task21 from './sections/task21';
+import Task22 from './sections/task22';
 /** Domain 2本文と各タスクの独立したチェック進捗。 */
 export default function SapDomain2Guide() {
  const [progress,setProgress]=useState<Record<string,number>>({});
@@ -15,5 +16,5 @@ export default function SapDomain2Guide() {
   setProgress(previous=>({...previous,[index]:card.querySelectorAll('input:checked').length}));
  }
  const props={progress,updateProgress};
- return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task21 {...props}/></main></div></div>;
+ return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task21 {...props}/><Task22 {...props}/></main></div></div>;
 }
