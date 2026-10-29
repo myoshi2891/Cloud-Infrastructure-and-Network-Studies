@@ -1,5 +1,9 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-10-29: SAP-C02 Domain 3
+
+`app/aws/solutions-architect-professional/domain3/` に Server `page.tsx`、Client `SapDomain3Guide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、7分割の `sections/`、定数・原本テーマJSON・全派生色JSON・スコープCSSを追加。全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本から移行した。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、チェック進捗を保持。ホーム・HeaderのDomain 3（25%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain3.mjs <foundation|task31|task32|task33|task34|task35|appendix>` で固定Git原本から再生成できる。
+
 ## 2026-10-29: 移行済み原本の一括アーカイブ
 
 直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。

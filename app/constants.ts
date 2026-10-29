@@ -676,11 +676,12 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-sap',
         href: '/aws/solutions-architect-professional',
         overviewLabel: 'SAP-C02 完全ガイド',
-        description: 'SAP-C02全4ドメインを143表・50図・12問の練習問題で学ぶ完全ガイド。ドメイン1・2の詳細ガイドも収録。',
+        description: 'SAP-C02全4ドメインを143表・50図・12問の練習問題で学ぶ完全ガイド。ドメイン1〜3の詳細ガイドも収録。',
         domains: [
             { label: 'SAP-C02 完全ガイド', href: '/aws/solutions-architect-professional', pct: '全4ドメイン' },
             { label: 'ドメイン1: 組織の複雑さに対応する設計', href: '/aws/solutions-architect-professional/domain1', pct: '26%' },
             { label: 'ドメイン2: 新しいソリューションの設計', href: '/aws/solutions-architect-professional/domain2', pct: '29%' },
+            { label: 'ドメイン3: 既存ソリューションの継続的改善', href: '/aws/solutions-architect-professional/domain3', pct: '25%' },
         ],
         badge: 'SAP-C02',
         icon: '🏗️',
