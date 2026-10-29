@@ -32,6 +32,21 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-domain2': {
+        source: 'Aws-sap-c02-domain2-guide.html',
+        sourceCommit: '49e40e8b084cc377511a4249ea311ce522429c0c',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task21: '3-task-21-デプロイ戦略の設計',
+            task22: '4-task-22-ビジネス継続性の確保',
+            task23: '5-task-23-要件に基づくセキュリティ統制の決定',
+            task24: '6-task-24-信頼性要件を満たす戦略の設計',
+            task25: '7-task-25-パフォーマンス目標を満たすソリューション設計',
+            task26: '8-task-26-コスト最適化戦略の決定',
+            appendix: '9-横断-シナリオ別この要件ならこの答え早見表',
+        },
+    },
     'aws-sap-c02-guide': {
         source: 'Aws-sap-c02-guide.html',
         sourceCommit: 'f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc',
