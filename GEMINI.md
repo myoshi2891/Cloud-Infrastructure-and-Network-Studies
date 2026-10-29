@@ -1,5 +1,9 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-10-29: SAP-C02 Domain 2
+
+`app/aws/solutions-architect-professional/domain2/` に Server `page.tsx`、Client `SapDomain2Guide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割の `sections/`、定数とテーマJSON、スコープCSSを追加。全6タスク・66表・23図・5コード例・51リスト項目・81外部リンク出現・23チェック項目を原本から移行。原本単体のMermaid派生色を全量固定し、黒塗りを防止。ホーム・HeaderのDomain 2（29%）導線と明色フッターを統合。`bun scripts/migrate-sap-domain2.mjs <foundation|task21|task22|task23|task24|task25|task26|appendix>` で固定Git原本から本文を再生成できる。
+
 ## 2026-10-29: DDIA 学習ガイド
 
 `app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
