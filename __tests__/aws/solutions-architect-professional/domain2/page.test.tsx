@@ -15,6 +15,8 @@ import { codeLineCount, extractBodyContent, squash, withBlockBoundarySpaces } fr
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 function parts(c:HTMLElement){const clone=c.cloneNode(true) as HTMLElement;clone.querySelectorAll('[data-chart]').forEach(e=>{const value=e.getAttribute('data-chart')!;expect(value).toMatch(/^---\nconfig: /);e.setAttribute('data-chart',value.slice(value.indexOf('\n---\n')+5));});return snapshotGuideParts({querySelector:()=>clone.querySelector('main'),createElement:(tag:string)=>document.createElement(tag)},FIDELITY_PAGES['aws-sap-c02-domain2']!.guideBoundaries);}
 describe('SAP Domain 2 原本全量契約',()=>{
+ it('表の構造要素の直下にテキストノードを置かない',()=>{const c=render(<Page/>).container;expect([...c.querySelectorAll('table,thead,tbody,tfoot,tr')].flatMap(e=>[...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent))).toEqual([]);});
+
  it.each(Object.keys(fixture.guideParts))('%s 本文・表結合・コード・リスト階層・配置順を完全照合',key=>{expect((parts(render(<Page/>).container) as Record<string,unknown>)[key]).toEqual(fixture.guideParts[key as keyof typeof fixture.guideParts]);});
  it.each(['h1','h2','h3','h4','th','td','li'] as const)('%s 全件・順序を照合',tag=>{const c=render(<Page/>).container;const expected=tag==='li'?inventory.listItems:inventory[tag];expect([...c.querySelectorAll(tag==='li'?'main li':tag)].map(e=>squash(e.textContent??''))).toEqual(expected.map(squash));});
  it('本文・注釈・コード全文と外部リンク81出現の順序',()=>{const c=render(<Page/>).container;expect(extractBodyContent(withBlockBoundarySpaces(c))).toEqual(inventory.bodyContent);expect([...c.querySelectorAll('a[href^="http"]')].map(e=>e.getAttribute('href'))).toEqual(inventory.links.map(e=>e.href));});
