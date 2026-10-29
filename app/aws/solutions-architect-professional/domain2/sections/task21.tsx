@@ -14,7 +14,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 1: 何を問われるか"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 1: 何を問われるか"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 4：Step 1: 何を問われるか"}>
 {"\n                    "}
 <table>
 <thead>
@@ -136,7 +136,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {":\n                    手作業の構築は「人によって違う」「再現できない」「レビューできない」問題を生みます。コード化すると、Git\n                    で管理でき、同じ環境を何度でも作れ、DR 時の復旧も速くなります。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: Infrastructure as Code(IaC)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 5：Step 2-A: Infrastructure as Code(IaC)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -208,7 +208,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: Infrastructure as Code(IaC)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 6：Step 2-A: Infrastructure as Code(IaC)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -517,7 +517,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-1" label={"Step 2-B: CI/CD(継続的インテグレーション/継続的デリバリー)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: CI/CD(継続的インテグレーション/継続的デリバリー)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 7：Step 2-B: CI/CD(継続的インテグレーション/継続的デリバリー)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -588,7 +588,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"デプロイ方式の比較(最重要)"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：デプロイ方式の比較(最重要)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 8：デプロイ方式の比較(最重要)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -767,7 +767,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：デプロイ方式の比較(最重要)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 9：デプロイ方式の比較(最重要)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1030,7 +1030,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-C: 変更管理(Change Management)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: 変更管理(Change Management)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 10：Step 2-C: 変更管理(Change Management)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1125,7 +1125,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"です。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: 構成管理(AWS Systems Manager)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 11：Step 2-D: 構成管理(AWS Systems Manager)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1281,7 +1281,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {":\n                    運用負荷(プロビジョニング、パッチ適用、冗長化)を減らす判断が頻出です。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: 移行/アップグレード経路とマネージドサービス活用"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 12：Step 2-E: 移行/アップグレード経路とマネージドサービス活用"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1392,7 +1392,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 3: Task 2.1 試験のコツ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 3: Task 2.1 試験のコツ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 13：Step 3: Task 2.1 試験のコツ"}>
 {"\n                    "}
 <table>
 <thead>
