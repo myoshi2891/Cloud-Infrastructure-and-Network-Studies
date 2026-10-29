@@ -1,0 +1,417 @@
+import { CodeBlock } from '../CodeBlock';
+import { Diagram } from '../Diagram';
+/** 原本step-3の全内容。 */
+export function Section4() { return (<section className="section" id="step-3" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-search" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 1 · Step 3 · 4.1.3"}</p>
+<h2>{"ログをクエリして必要なデータを見つける"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"ログは大量です。"}<strong>{"CloudWatch Logs Insights"}</strong>{" で目的のログだけを素早く取り出す方法を学びます。試験では「どの機能でログを検索・集計するか」が問われます。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"3-1. ログを調べる道具の使い分け"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 21">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"道具"}</th>
+
+<th scope="col">{"向いている場面"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"CloudWatch Logs Insights"}</strong></td>
+
+<td>{"ロググループを "}<strong>{"クエリして集計・絞り込み"}</strong>{"(最も基本)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Live Tail"}</strong></td>
+
+<td>{"今まさに流れているログを "}<strong>{"リアルタイムで確認"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"メトリクスフィルター"}</strong></td>
+
+<td>{"ログ中の文字列を数えて "}<strong>{"メトリクス化"}</strong>{"(アラームと組み合わせる)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"サブスクリプションフィルター"}</strong></td>
+
+<td>{"ログを "}<strong>{"Kinesis / Firehose / Lambda / OpenSearch へ転送"}</strong>{" してリアルタイム処理"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"S3 へのエクスポート + Athena"}</strong></td>
+
+<td>{"長期保存したログを "}<strong>{"SQL で分析"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Amazon OpenSearch Service"}</strong></td>
+
+<td>{"ログの全文検索・可視化を高度に行う"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"CloudTrail"}</strong></td>
+
+<td><strong>{"API 操作の履歴"}</strong>{"(アプリのログではなく「誰が何の API を呼んだか」)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d06" label="図 7" />
+</figure>
+{" "}
+<h4>{"3-2. Logs Insights の基本コマンド"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 22">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"コマンド"}</th>
+
+<th scope="col">{"役割"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><code>{"fields"}</code></td>
+
+<td>{"表示する項目を選ぶ"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"filter"}</code></td>
+
+<td>{"条件で絞り込む"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"stats"}</code></td>
+
+<td>{"集計する(count, avg, max, pct など)"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"sort"}</code></td>
+
+<td>{"並べ替える"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"limit"}</code></td>
+
+<td>{"件数を制限する"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"parse"}</code></td>
+
+<td>{"文字列から値を取り出して項目にする(正規表現・グロブ)"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"display"}</code></td>
+
+<td>{"最終的に表示する項目を指定"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"dedup"}</code></td>
+
+<td>{"重複を除く"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"3-3. すぐ使えるクエリ例"}</h4>
+{" "}
+<p><strong>{"① エラーログを新しい順に 20 件"}</strong></p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"テキスト"}
+</div>
+<CodeBlock language="plaintext" lines={["fields @timestamp, @message","| filter @message like /ERROR/","| sort @timestamp desc","| limit 20"]} />
+</div>
+{" "}
+<p><strong>{"② 5 分ごとのエラー件数"}</strong></p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"テキスト"}
+</div>
+<CodeBlock language="plaintext" lines={["filter @message like /ERROR/","| stats count(*) as errorCount by bin(5m)"]} />
+</div>
+{" "}
+<p><strong>{"③ Lambda の遅い呼び出し上位 10 件"}</strong></p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"テキスト"}
+</div>
+<CodeBlock language="plaintext" lines={["filter @type = \"REPORT\"","| fields @requestId, @duration, @maxMemoryUsed / 1024 / 1024 as maxMemoryMB","| sort @duration desc","| limit 10"]} />
+</div>
+{" "}
+<p><strong>{"④ Lambda のコールドスタート回数と平均初期化時間"}</strong></p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"テキスト"}
+</div>
+<CodeBlock language="plaintext" lines={["filter @type = \"REPORT\" and ispresent(@initDuration)","| stats count(*) as coldStarts, avg(@initDuration) as avgInit"]} />
+</div>
+{" "}
+<p><strong>{"⑤ 構造化(JSON)ログの特定ユーザーを検索"}</strong></p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"テキスト"}
+</div>
+<CodeBlock language="plaintext" lines={["fields @timestamp, level, message, requestId","| filter userId = \"u-1001\" and level = \"ERROR\"","| sort @timestamp desc"]} />
+</div>
+{" "}
+<p>{"Lambda の REPORT 行は "}<code>{"@duration"}</code>{"、"}<code>{"@billedDuration"}</code>{"、"}<code>{"@memorySize"}</code>{"、"}<code>{"@maxMemoryUsed"}</code>{"、"}<code>{"@initDuration"}</code>{" などの "}<strong>{"自動検出フィールド"}</strong>{" として使えます。JSON ログは "}<strong>{"キー名をそのままフィールドとして"}</strong>{" 参照できます。"}</p>
+{" "}
+<h4>{"3-4. メトリクスフィルターの考え方"}</h4>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d07" label="図 8" />
+</figure>
+{" "}
+<p>{"注意点は "}<strong>{"メトリクスフィルターは設定した後に届いたログにだけ適用される(過去ログにはさかのぼらない)"}</strong>{" ことです。"}</p>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 23">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"クエリ範囲"}</td>
+
+<td><strong>{"時間範囲とロググループを必要最小限"}</strong>{" に絞る"}</td>
+
+<td>{"スキャン量が課金とクエリ時間に直結する"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログ形式"}</td>
+
+<td><strong>{"JSON 構造化ログ"}</strong>{" にしてフィールドで検索する"}</td>
+
+<td><code>{"parse"}</code>{" や正規表現より速く確実("}<a href="#step-10">{"Step 10"}</a>{")"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"頻出クエリ"}</td>
+
+<td>{"保存済みクエリとして "}<strong>{"Logs Insights に保存"}</strong>{"、ダッシュボードにも載せる"}</td>
+
+<td>{"障害時に迷わない"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"相関 ID"}</td>
+
+<td>{"リクエスト ID・トレース ID をログに含める"}</td>
+
+<td>{"1 リクエストのログを串刺しで検索できる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"継続監視"}</td>
+
+<td>{"繰り返し見るパターンは "}<strong>{"メトリクスフィルター + アラーム"}</strong>{" にする"}</td>
+
+<td>{"人が毎回クエリしなくてよい"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"長期分析"}</td>
+
+<td>{"長期保管は S3 へ出し、Athena で分析する"}</td>
+
+<td>{"CloudWatch Logs の保存コストを抑えられる"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 24">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「ログから 5 分ごとのエラー数を集計したい」"}</td>
+
+<td>{"Logs Insights の "}<code>{"stats count(*) by bin(5m)"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"「ログ中の特定語句でアラームを出したい」"}</td>
+
+<td><strong>{"メトリクスフィルター + CloudWatch アラーム"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「ログをリアルタイムで別アカウント・別サービスへ転送」"}</td>
+
+<td><strong>{"サブスクリプションフィルター"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「過去ログにも新しいメトリクスフィルターを適用したい」"}</td>
+
+<td><strong>{"不可"}</strong>{"。Logs Insights で過去分は集計する"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「誰がその API を実行したか調べたい」"}</td>
+
+<td>{"アプリログではなく "}<strong>{"CloudTrail"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"Logs Insights によるログ分析: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html"}</a></li>
+{" "}
+<li>{"Logs Insights クエリ構文: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html"}</a></li>
+{" "}
+<li>{"メトリクスフィルター: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html"}</a></li>
+{" "}
+<li>{"サブスクリプションフィルター: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Subscriptions.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Subscriptions.html"}</a></li>
+{" "}
+<li>{"Live Tail: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_LiveTail.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogs_LiveTail.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

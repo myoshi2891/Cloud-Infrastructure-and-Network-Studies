@@ -1,0 +1,280 @@
+/** 原本app-eの全内容。 */
+export function Section30() { return (<section className="section" id="app-e" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-map-2" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"付録 E"}</p>
+<h2>{"スキルと Step の対応表"}</h2>
+</div>
+</div>
+{" "}
+<p>{"試験ガイドの全 24 スキルが、本ガイドのどの Step に対応するかの一覧です。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 152">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"スキル"}</th>
+
+<th scope="col">{"内容"}</th>
+
+<th scope="col">{"Step"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"4.1.1"}</td>
+
+<td>{"コードをデバッグして不具合を特定する"}</td>
+
+<td><a href="#step-1">{"Step 1"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.2"}</td>
+
+<td>{"アプリケーションのメトリクス・ログ・トレースを解釈する"}</td>
+
+<td><a href="#step-2">{"Step 2"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.3"}</td>
+
+<td>{"ログをクエリして関連データを見つける"}</td>
+
+<td><a href="#step-3">{"Step 3"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.4"}</td>
+
+<td>{"カスタムメトリクスを実装する(CloudWatch EMF など)"}</td>
+
+<td><a href="#step-4">{"Step 4"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.5"}</td>
+
+<td>{"ダッシュボードとインサイトでアプリのヘルスを確認する"}</td>
+
+<td><a href="#step-5">{"Step 5"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.6"}</td>
+
+<td>{"サービス出力ログでデプロイ失敗をトラブルシューティングする"}</td>
+
+<td><a href="#step-6">{"Step 6"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.1.7"}</td>
+
+<td>{"アプリケーションのサービス統合の問題をデバッグする"}</td>
+
+<td><a href="#step-7">{"Step 7"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.1"}</td>
+
+<td>{"ロギング・モニタリング・オブザーバビリティの違いを説明する"}</td>
+
+<td><a href="#step-8">{"Step 8"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.2"}</td>
+
+<td>{"アプリの動作と状態を記録する効果的なロギング戦略を実装する"}</td>
+
+<td><a href="#step-9">{"Step 9"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.3"}</td>
+
+<td>{"カスタムメトリクスを出力するコードを実装する"}</td>
+
+<td><a href="#step-11">{"Step 11"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.4"}</td>
+
+<td>{"サービスのトレース用アノテーションを追加する"}</td>
+
+<td><a href="#step-13">{"Step 13"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.5"}</td>
+
+<td>{"特定のアクションの通知アラートを実装する"}</td>
+
+<td><a href="#step-14">{"Step 14"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.6"}</td>
+
+<td>{"AWS のサービスとツールでトレーシングを実装する"}</td>
+
+<td><a href="#step-12">{"Step 12"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.7"}</td>
+
+<td>{"アプリイベントとユーザー操作の構造化ログを実装する"}</td>
+
+<td><a href="#step-10">{"Step 10"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.2.8"}</td>
+
+<td>{"アプリのヘルスチェックとレディネスプローブを構成する"}</td>
+
+<td><a href="#step-15">{"Step 15"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.1"}</td>
+
+<td>{"同時実行数を定義する"}</td>
+
+<td><a href="#step-16">{"Step 16"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.2"}</td>
+
+<td>{"アプリのパフォーマンスをプロファイルする"}</td>
+
+<td><a href="#step-17">{"Step 17"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.3"}</td>
+
+<td>{"アプリに必要な最小限のメモリとコンピューティング能力を決定する"}</td>
+
+<td><a href="#step-18">{"Step 18"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.4"}</td>
+
+<td>{"サブスクリプションフィルターポリシーでメッセージングを最適化する"}</td>
+
+<td><a href="#step-19">{"Step 19"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.5"}</td>
+
+<td>{"リクエストヘッダーに基づいてコンテンツをキャッシュする"}</td>
+
+<td><a href="#step-20">{"Step 20"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.6"}</td>
+
+<td>{"アプリケーションレベルのキャッシュを実装する"}</td>
+
+<td><a href="#step-21">{"Step 21"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.7"}</td>
+
+<td>{"アプリのリソース使用量を最適化する"}</td>
+
+<td><a href="#step-22">{"Step 22"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.8"}</td>
+
+<td>{"アプリのパフォーマンス問題を分析する"}</td>
+
+<td><a href="#step-23">{"Step 23"}</a></td>
+
+</tr>
+
+<tr>
+
+<td>{"4.3.9"}</td>
+
+<td>{"アプリケーションログでパフォーマンスのボトルネックを特定する"}</td>
+
+<td><a href="#step-24">{"Step 24"}</a></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+</section>); }

@@ -1,0 +1,523 @@
+import { Diagram } from '../Diagram';
+/** 原本step-9の全内容。 */
+export function Section10() { return (<section className="section" id="step-9" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-file-text" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 2 · Step 9 · 4.2.2"}</p>
+<h2>{"効果的なロギング戦略"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"ただ "}<code>{"print"}</code>{" するのではなく、"}<strong>{"「必要なときに必要な情報が見つかり、コストも安全も守れる」ログの出し方"}</strong>{" を学びます。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"9-1. ログレベルの使い分け"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 53">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"レベル"}</th>
+
+<th scope="col">{"用途"}</th>
+
+<th scope="col">{"本番での出力"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><code>{"DEBUG"}</code></td>
+
+<td>{"開発時の詳細な内部状態"}</td>
+
+<td>{"通常は "}<strong>{"オフ"}</strong>{"(必要な時だけ一時的にオン)"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"INFO"}</code></td>
+
+<td>{"正常な重要イベント(注文受付、処理完了)"}</td>
+
+<td>{"オン"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"WARN"}</code></td>
+
+<td>{"想定外だが処理は続行できる(再試行した、フォールバックした)"}</td>
+
+<td>{"オン"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"ERROR"}</code></td>
+
+<td>{"処理が失敗した"}</td>
+
+<td>{"オン(必ず原因情報を含める)"}</td>
+
+</tr>
+
+<tr>
+
+<td><code>{"FATAL"}</code>{" / "}<code>{"CRITICAL"}</code></td>
+
+<td>{"アプリ継続が不可能"}</td>
+
+<td>{"オン(アラームの対象)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"9-2. 何を記録するか"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 54">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"記録する"}</th>
+
+<th scope="col">{"記録してはいけない"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"リクエスト ID・トレース ID・相関 ID"}</td>
+
+<td><strong>{"パスワード、アクセスキー、トークン、シークレット"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"重要な処理の開始・終了・結果"}</td>
+
+<td><strong>{"個人情報(PII)"}</strong>{"(氏名、メールアドレス、カード番号など)をそのまま"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"失敗時の "}<strong>{"入力の識別子"}</strong>{"・例外の種類・スタックトレース"}</td>
+
+<td>{"リクエスト / レスポンス本文の "}<strong>{"丸ごと"}</strong>{" 出力(機密を含み、容量も大きい)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"外部呼び出しの対象・所要時間・結果"}</td>
+
+<td>{"意味のない大量の繰り返しログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"設定値・バージョン・デプロイ ID("}<strong>{"機密でないもの"}</strong>{")"}</td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"AI サービスを組み込む場合も同様で、"}<strong>{"モデルへの入出力に含まれる機密情報がログに残らないように"}</strong>{" 注意します(試験ガイドの新興トピックに「機密コンテンツがログに出ないようにする」が含まれます)。"}</p>
+{" "}
+<h4>{"9-3. CloudWatch Logs の構造と管理"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 55">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"用語"}</th>
+
+<th scope="col">{"意味"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"ロググループ"}</td>
+
+<td>{"同じ保持・アクセス設定を持つログの集まり(例: "}<code>{"/aws/lambda/order-handler"}</code>{")"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログストリーム"}</td>
+
+<td>{"同じソース(1 つの Lambda 実行環境、1 つのコンテナなど)の出力の並び"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"保持期間(Retention)"}</td>
+
+<td>{"ロググループごとに設定。"}<strong>{"既定は無期限(期限切れにならない)"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"ログクラス"}</td>
+
+<td><strong>{"Standard"}</strong>{" と、検索機能が限定的で単価の低い "}<strong>{"Infrequent Access"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"データ保護ポリシー"}</td>
+
+<td>{"ログ中の "}<strong>{"機密データ(PII など)を検出してマスク"}</strong>{" する機能"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d15" label="図 16" />
+</figure>
+{" "}
+<h4>{"9-4. Lambda のログ設定(高度なログ制御)"}</h4>
+{" "}
+<p>{"Lambda では関数ごとに次を設定できます。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 56">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"設定"}</th>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"ログ形式"}</td>
+
+<td><strong>{"JSON"}</strong>{" または Text。JSON にするとシステムログも構造化される"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログレベルのフィルタリング"}</td>
+
+<td>{"アプリケーションログとシステムログの "}<strong>{"最小レベル"}</strong>{" を指定し、不要なログを出さない"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ロググループ"}</td>
+
+<td>{"既定の "}<code>{"/aws/lambda/<関数名>"}</code>{" ではなく "}<strong>{"任意のロググループ"}</strong>{" に出力できる(複数関数で集約も可能)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"9-5. ECS / EC2 でのログ"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 57">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"実行環境"}</th>
+
+<th scope="col">{"ログの送り方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"ECS(EC2 / Fargate)"}</td>
+
+<td>{"タスク定義で "}<strong><code>{"awslogs"}</code>{" ログドライバー"}</strong>{" を指定して CloudWatch Logs へ。または FireLens(Fluent Bit / Fluentd)で複数宛先へ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"EC2"}</td>
+
+<td><strong>{"CloudWatch エージェント"}</strong>{" でファイルのログを送る"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Lambda"}</td>
+
+<td>{"標準出力・標準エラーが自動で CloudWatch Logs へ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Lambda の実行ロール"}</td>
+
+<td><strong><code>{"logs:CreateLogGroup"}</code>{" / "}<code>{"CreateLogStream"}</code>{" / "}<code>{"PutLogEvents"}</code></strong>{" の権限が必要("}<code>{"AWSLambdaBasicExecutionRole"}</code>{")。"}<strong>{"ログが出ない原因の第 1 位は権限不足"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 58">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"保持期間"}</td>
+
+<td><strong>{"すべてのロググループに保持期間を設定"}</strong>{" する"}</td>
+
+<td>{"既定は無期限でコストが増え続ける"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログレベル"}</td>
+
+<td>{"本番は INFO 以上。DEBUG は "}<strong>{"環境変数やログレベル設定で切り替え可能"}</strong>{" にする"}</td>
+
+<td>{"コストとノイズの削減、必要時の詳細調査"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"機密情報"}</td>
+
+<td>{"秘密情報・PII を出力しない。必要なら "}<strong>{"マスク"}</strong>{" し、"}<strong>{"データ保護ポリシー"}</strong>{" も併用"}</td>
+
+<td>{"漏えい防止・コンプライアンス"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"相関 ID"}</td>
+
+<td>{"リクエスト ID・トレース ID を "}<strong>{"全ログに付与"}</strong></td>
+
+<td>{"1 リクエストのログを串刺しで検索できる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"例外"}</td>
+
+<td>{"例外は "}<strong>{"スタックトレースとコンテキスト付きで 1 回だけ"}</strong>{" ログに出す"}</td>
+
+<td>{"重複ログと調査の混乱を避ける"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"形式"}</td>
+
+<td><strong>{"構造化(JSON)ログ"}</strong>{" にする("}<a href="#step-10">{"Step 10"}</a>{")"}</td>
+
+<td>{"クエリ・集計がしやすい"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"サンプリング"}</td>
+
+<td>{"大量の DEBUG / 正常系ログは "}<strong>{"サンプリング"}</strong>{" する"}</td>
+
+<td>{"コスト削減"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"アクセス制御"}</td>
+
+<td>{"ロググループへのアクセスを IAM で制限し、必要なら "}<strong>{"KMS で暗号化"}</strong></td>
+
+<td>{"ログにも機密が入りうる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ストリーム処理"}</td>
+
+<td>{"常時リアルタイム処理するログだけ "}<strong>{"サブスクリプションフィルター"}</strong>{" で転送"}</td>
+
+<td>{"不要な転送コストを避ける"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 59">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「ログのコストが増え続ける」"}</td>
+
+<td><strong>{"保持期間の設定"}</strong>{"、ログレベルの見直し、Infrequent Access クラス、S3 へのエクスポート"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「ログに個人情報が含まれてしまう」"}</td>
+
+<td>{"そもそも出力しない。"}<strong>{"データ保護ポリシーでマスク"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「Lambda のログが CloudWatch Logs に出ない」"}</td>
+
+<td><strong>{"実行ロールの Logs 権限"}</strong>{" を確認"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「複数の Lambda のログを 1 つのロググループにまとめたい」"}</td>
+
+<td>{"Lambda の "}<strong>{"ロググループ設定(高度なログ制御)"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"Lambda 関数のログ設定: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html"}</a></li>
+{" "}
+<li>{"CloudWatch Logs のデータ保護(機密データのマスク): "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL-data-protection.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL-data-protection.html"}</a></li>
+{" "}
+<li>{"CloudWatch Logs の概念: "}<a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogsConcepts.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CloudWatchLogsConcepts.html"}</a></li>
+{" "}
+<li>{"Powertools Logger(Python): "}<a href="https://docs.powertools.aws.dev/lambda/python/latest/core/logger/" target="_blank" rel="noopener">{"https://docs.powertools.aws.dev/lambda/python/latest/core/logger/"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

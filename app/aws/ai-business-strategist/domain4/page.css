@@ -273,7 +273,7 @@
     font-weight: 700;
 }
 
-.aib-domain4-page tbody tr:last-child td {
+.aib-domain4-page tbody tr:last-child :is(th, td) {
     border-bottom: none;
 }
 

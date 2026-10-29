@@ -1,6 +1,41 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-10-28)
+(最終更新日: 2026-10-29)
+
+## 2026-10-29: DVA Domain 4付録Aのカード表示と選択式採点
+
+2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
+
+検証: 関連17ファイル・225件、型検査・対象ESLint成功。Chromeで1440/768/390pxの実コンポーネント静的描画に対し、全文不変・13カード・全選択肢・解答表の収まりを検証する3件が成功。採点操作はVitestで全13問・誤答・回答変更・複数選択の過不足と解除を検証した。ページ全体のブラウザー操作検証とは区別する。npm・ビルド・開発サーバーは未実行。Red `a2411128`、カード装飾 `a14ff9a5`、採点Red `67a4776a`、採点Green `a1b51073`。
+
+## 2026-10-29: DVA Domain 4 Mermaid黒塗りの原因特定と修正
+
+2026-10-29 DVA-C02 Domain 4 Mermaid黒塗り修正: ページの部分的なthemeVariablesが共通dark初期化とマージされ、未指定のmainBkg（#0f2040）・clusterBkg（#0d1a2e）等が残っていた。原本単体の全派生色を `render-theme.json` へ固定し、`Diagram.tsx` から使用する。`bun scripts/gen-dva-troubleshooting-theme.mjs` とscaffold再生成にも反映。Red `e0eb617d`、修正 `b2cc12f2`。関連15ファイル・219テスト、型検査・対象ESLint成功。Chromeで全34図の修正前の配色不一致を再現し、修正後のSVGノード・グループ・ラベル色が原本単体と完全一致する1件が成功。npm・ビルド・開発サーバーは未実行。
+
+SVG検証は `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test --config=playwright.mermaid.config.ts` で実行する。ページ全体のレイアウト検証とは区別する。
+
+## 2026-10-29: AWS DVA-C02 Domain 4 移行
+
+2026-10-29 DVA-C02 Domain 4移行: `/aws/developer-associate/domain4` に全3タスク・24スキル（Step 0〜24）・33セクション、159表・34図・25コード例・181リスト項目・練習問題13問を全文移行。原本のライト配色、288px目次、Hero、表、点・番号・入れ子・字下げを保持。コードは空行・字下げ・等幅フォントとJSON/Pythonの構文色を保持する。目次の現在位置・モバイル開閉・hash/focus、図の原本DSL・テーマ・自然倍率、ホームとHeaderのDomain 4（18%）、共有フッターの明色切替を実装した。
+
+検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。DVA関連13ファイル・182件成功。最終整形後のDomain 4＋原本抽出は6ファイル・27件成功、共有フッター3件も成功。34図すべてのMermaid構文解析、全本文・表結合・リスト階層・コード行・CSS宣言の全量比較と欠落検出を含む。型検査・全体ESLint成功。原本HTMLは保持し、テストは固定Git由来fixtureのみを参照する。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
+
+- 原本コード抽出のRed/Green: `5447a39b` → `93af96e0`。原本の不活性なcode-srcを実行せず展開。
+- インベントリ: `da2b2565`。全量テストRed: `e0ad9eb5`。
+- 基盤: `3b395fbe`、Task 1: `3a14a899`、Task 2: `080ac2f8`、Task 3: `f132f54c`、付録と全量Green: `015168de`。
+- 導線・コード装飾Green: `629e3eca`。可読性と再生成: `f73627f4`。共有フッター期待値同期: `11c7bb2c`。
+- 原本・配置・デザイン期待値は `docs/migration-inventory/aws-dva-domain4.json` と `aws-dva-domain4.fidelity.json`。`bun scripts/gen-dva-troubleshooting-fixture.mjs` で固定Gitからバイト一致再生成済み。
+- 静的集計: 1263ソース・401対応（32%）・481テストファイル・136ルート。実行成功数や行カバレッジとは区別する。
+
+## 2026-10-28: SAP-C02 Domain 1 原本アーカイブ
+
+原本HTMLと対応Markdownを、内容を変更せず `archive/Aws/html/solutions-architect-professional/domain1/` と `archive/Aws/md/solutions-architect-professional/domain1/` へ移動。既存の古いアーカイブはハッシュ付き `.original-*` 名で保持した。移動前後のバイト一致を確認し、サイズ・SHA-256・復元元Gitコミットを `docs/migration-inventory/aws-sap-c02-domain1.archive.json` に記録。archiveはGit管理外のローカル保存先で、原本は記録したGitコミットからも復元可能。直下のHTML/Markdown不在で対象9ファイル・69テストすべて成功。npm・ビルド未実行。
+
+## 2026-10-28: SAP-C02 Domain 1 指定HTMLの移行状態を再検証
+
+`Aws-sap-c02-domain1 organizational-complexity-guide.html` は `/aws/solutions-architect-professional/domain1` に既に実装・ナビ統合済み。再移行せず既存実装を検証した。対象Vitestは9ファイル・69件すべて成功（`bun run test -- __tests__/aws/solutions-architect-professional/domain1 --maxWorkers=4`）。全見出し・本文・49表・19図・1コードブロック・リンクの順序、リスト階層、CSS宣言、点・番号・字下げの欠落検出、目次とクイズ操作を含む。
+
+指定HTMLからインベントリを再抽出して比較し、既存インベントリとの差は割引共有の説明1項目のみであることを確認した。実装は既存の訂正済み文言（共有は既定で有効で、対象使用量に自動適用）を保持する。固定Git由来fixtureとの差6箇所は既存の `SAP_DOMAIN1_CORRECTIONS` で明示的に検証されている。今回の実装・テスト変更はなし。型検査・全体ESLint・対象Markdown lint成功。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
 
 ## 2026-10-28: SAP/SCS Domain 1 テスト期待値の訂正
 
@@ -2168,15 +2203,15 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** 2026-10-28 SAP/SCS Domain 1テスト期待値の訂正。AIB/SCS移行・ANS原本退避の履歴は冒頭の各記録を参照。
-- **最終更新日:** 2026-10-28
-- **最新実装 HEAD:** `2894a848`（SAP/SCS Domain 1の表示期待値を本文訂正・フォーカス枠改善へ追従。Red `fc3a7dc2`）
-- **仕様同期コミット:** `a5577b28`（AIB-C01 Domain 4 の仕様同期）
-- **前回進捗同期コミット:** `a5577b28`（AIB-C01 Domain 4。それ以前は `2cf3ecd1`、ANS-C01 Domain 4 `2220aa6e`、Domain 3 `f53c9dd2`）
-- **検証状態:** 2026-10-28 全体Vitest 456ファイル・4225件すべて成功（`bun run test -- --maxWorkers=4`）。SAP/SCS Domain 1期待値の既存失敗13件を解消し、回帰2件を追加。対象28ファイル・222件成功。TypeScript型検査・全体ESLint・対象Markdown lint成功。静的集計は1223ソース・397対応（32%）・475テストファイル、135ルート。
-- **ビルド状態:** 本番ビルド・E2Eは今回は省略（テスト・文書のみの変更で画面挙動への影響なし）。本番ビルド成功は未確認。
-- **HTML残数:** 直下HTML13件（未移行11件・移行済み原本2件）。AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
-- **次の作業:** 次ページはユーザー指定待ち。SAP/SCS Domain 1の期待値不整合は対応済み。
+- **最新完了タスク:** DVA Domain 4付録Aの原文保持・カード表示・選択式採点。
+- **最終更新日:** 2026-10-29
+- **最新実装 HEAD:** `a1b51073`（付録Aの選択式採点・各問の元の解説表示）
+- **仕様同期コミット:** `c8791b26`（付録Aの原文保持・カード装飾・選択式採点）
+- **前回進捗同期コミット:** `aca8ef0a`（Mermaid配色修正の同期）
+- **検証状態:** 今回は関連17ファイル・225件、静的描画のChrome表示3件、型検査・対象ESLint成功。直近の全体Vitestは今回変更前の462ファイル・4252件成功。静的集計1265ソース・404対応（32%）・486テストファイル・136ルート。
+- **ビルド状態:** npm・本番ビルド・開発サーバーは未実行。付録Aの静的描画でChrome 3画面幅を検証。採点操作はVitestで確認。
+- **HTML残数:** 直下HTML12件（未移行10件・移行済み原本2件）。SAP-C02 Domain 1、AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
+- **次の作業:** 次ページはユーザー指定待ち。DVA-C02 Domain 4の移行・導線統合は完了。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3515,13 +3550,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `2894a848`。前回進捗同期コミット: `a5577b28`。仕様同期コミット: `a5577b28`（今回の仕様同期差分は未コミット）。最終更新日: 2026-10-28。
+最新実装 HEAD: `a1b51073`。前回進捗同期コミット: `aca8ef0a`。仕様同期コミット: `c8791b26`。最終更新日: 2026-10-29。DVA-C02 Domain 4の移行・配色修正・付録Aカード表示と選択式採点は完了。今回の関連225件と静的描画のChrome表示3件が成功。
 
 2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
 
-検証: 2026-10-28 全体Vitest 456ファイル・4225件すべて成功。SAP/SCS Domain 1の13件の期待値不整合を解消し、回帰2件を追加。型検査・全体ESLint・対象Markdown lint成功。テスト・文書のみの変更のためE2E・本番ビルドは省略。
+検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。型検査・全体ESLint・対象Markdown lint成功。npm・本番ビルド・ブラウザーE2Eは未実行、目視確認はユーザー担当。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML13件（未移行11件・移行済み原本2件）。SAP/SCS Domain 1の期待値不整合は対応済み。対象28ファイル・222件成功。全体の最新結果は「現在地」を参照。
+次の作業: 次ページはユーザー指定待ち。直下HTML12件（未移行10件・移行済み原本2件）。DVA-C02 Domain 4移行・統合は完了。DVA関連182件と全体4252件が成功。全体の最新結果は「現在地」を参照。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

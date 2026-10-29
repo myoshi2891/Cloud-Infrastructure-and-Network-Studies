@@ -129,12 +129,12 @@ export const Sec6_Task44: React.FC = () => {
           </thead>
           <tbody>
             <tr>
-              <td><strong>インパクト大</strong></td>
+              <th scope="row"><strong>インパクト大</strong></th>
               <td><strong>最優先</strong>(クイックウィンの候補)</td>
               <td>戦略的施策(前提整備を進めながら中長期で)</td>
             </tr>
             <tr>
-              <td><strong>インパクト小</strong></td>
+              <th scope="row"><strong>インパクト小</strong></th>
               <td>余力があれば(学習目的)</td>
               <td>見送り</td>
             </tr>

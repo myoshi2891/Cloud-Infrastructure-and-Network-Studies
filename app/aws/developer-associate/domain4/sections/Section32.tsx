@@ -1,0 +1,70 @@
+/** 原本closingの全内容。 */
+export function Section32() { return (<section className="section" id="closing" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-flag" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Wrap up"}</p>
+<h2>{"おわりに: 学習の進め方"}</h2>
+</div>
+</div>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 159">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"段階"}</th>
+
+<th scope="col">{"やること"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"1 周目"}</td>
+
+<td>{"Step 0 → Step 24 を順に読み、図(Mermaid)と「ひっかけポイント」の表を中心に理解する"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"2 周目"}</td>
+
+<td><strong>{"付録 B(症状チートシート)"}</strong>{" と "}<strong>{"付録 C(ひっかけパターン)"}</strong>{" を見ながら、各症状で「どのツール・どの設定か」を即答できるようにする"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"実践"}</td>
+
+<td>{"AWS アカウントで "}<strong>{"Lambda + API Gateway + DynamoDB"}</strong>{" を作り、(1) アクティブトレース、(2) EMF のカスタムメトリクス、(3) Logs Insights のクエリ、(4) アラーム + SNS、(5) メモリ変更による性能比較 を実際に試す"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"仕上げ"}</td>
+
+<td><strong>{"付録 A の練習問題"}</strong>{" を解き、間違えた Step に戻る。公式の試験準備リソースで模擬問題も活用する"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<blockquote className="callout">{" "}<p><strong>{"最後に押さえる 5 つの原則"}</strong>{" 1. 推測せず "}<strong>{"まず計測する"}</strong>{"(メトリクス → トレース → ログの順) 2. Lambda の CPU は "}<strong>{"メモリで決まる"}</strong>{"。"}<strong>{"予約済み = 無料の枠確保 / プロビジョニング済み = 有料のコールドスタート対策"}</strong>{" 3. カスタムメトリクスは "}<strong>{"EMF"}</strong>{"、検索したいトレース情報は "}<strong>{"アノテーション"}</strong>{" 4. キャッシュは "}<strong>{"「必要最小限のキー」+ 「TTL」"}</strong>{"。ElastiCache / DAX / CloudFront / API Gateway を場面で使い分ける 5. "}<strong>{"Liveness は浅く、Readiness は依存先まで"}</strong>{"。再試行は "}<strong>{"指数バックオフ + ジッター"}</strong>{"、重複は "}<strong>{"冪等性"}</strong>{" で守る"}</p>{" "}</blockquote>
+{" "}
+</section>); }

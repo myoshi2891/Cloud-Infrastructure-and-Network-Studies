@@ -1,0 +1,10 @@
+import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import { JSDOM } from 'jsdom';
+import { troubleshootingSource, snapshotTroubleshooting } from './dva-troubleshooting-fidelity.mjs';
+import { snapshotCssRules } from './tanenbaum-fidelity.mjs';
+const source = 'Aws-dva-c02-domain4-troubleshooting-optimization-guide.html';
+const sourceCommit = '994d23de';
+const doc = new JSDOM(execFileSync('git', ['show', `${sourceCommit}:${source}`], { encoding: 'utf8', maxBuffer: 8*1024*1024 })).window.document;
+const extracted = troubleshootingSource(doc);
+fs.writeFileSync('docs/migration-inventory/aws-dva-domain4.fidelity.json', JSON.stringify({ source, sourceCommit, ...extracted, structure: snapshotTroubleshooting(doc), css: snapshotCssRules(doc.querySelector('style').textContent), nav: [...doc.querySelectorAll('.nav a')].map(el => ({ id: el.hash.slice(1), n: el.querySelector('.n').textContent, label: el.querySelector('.t').textContent, group: el.previousElementSibling?.matches('.nav-group') ? el.previousElementSibling.textContent : '' })) }, null, 2)+'\n');

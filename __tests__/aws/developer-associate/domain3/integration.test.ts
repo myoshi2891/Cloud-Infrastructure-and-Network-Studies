@@ -11,14 +11,16 @@ describe('DVA Deployment ホーム・Header統合', () => {
             { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1', pct: '32%' },
             { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2', pct: '26%' },
             { label: 'ドメイン3: デプロイ', href: '/aws/developer-associate/domain3', pct: '24%' },
+            { label: 'ドメイン4: トラブルシューティングと最適化', href: '/aws/developer-associate/domain4', pct: '18%' },
         ]);
     });
-    it('AWS Headerに3ドメインを重複なしで登録する', () => {
+    it('AWS Headerに4ドメインを重複なしで登録する', () => {
         const nav = toNavTree(EXAMS).find(group => group.provider === 'AWS')?.exams.find(exam => exam.id === 'aws-dva');
         expect(nav?.items).toEqual([
             { label: 'ドメイン2: セキュリティ', href: '/aws/developer-associate/domain2' },
             { label: 'ドメイン1: AWSサービスを使用した開発', href: '/aws/developer-associate/domain1' },
             { label: 'ドメイン3: デプロイ', href: '/aws/developer-associate/domain3' },
+            { label: 'ドメイン4: トラブルシューティングと最適化', href: '/aws/developer-associate/domain4' },
         ]);
     });
 });

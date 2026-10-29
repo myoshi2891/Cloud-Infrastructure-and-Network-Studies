@@ -1,0 +1,23 @@
+{
+  "startOnLoad": false,
+  "theme": "base",
+  "securityLevel": "strict",
+  "fontFamily": "\"Noto Sans JP\",\"Hiragino Sans\",\"Yu Gothic\",Meiryo,sans-serif",
+  "themeVariables": {
+    "fontSize": "16px",
+    "primaryColor": "#ffffff",
+    "primaryBorderColor": "#8a7f6b",
+    "primaryTextColor": "#211d17",
+    "lineColor": "#6b624f",
+    "textColor": "#211d17",
+    "edgeLabelBackground": "#fbf8f1"
+  },
+  "flowchart": {
+    "htmlLabels": true,
+    "useMaxWidth": false,
+    "curve": "basis",
+    "nodeSpacing": 36,
+    "rankSpacing": 46,
+    "padding": 14
+  }
+}

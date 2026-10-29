@@ -1,0 +1,229 @@
+import { Diagram } from '../Diagram';
+/** 原本introの全内容。 */
+export function Section0() { return (<section className="section" id="intro" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-book-2" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Introduction"}</p>
+<h2>{"はじめに"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"このガイドの使い方"}</h3>
+{" "}
+<p>{"このガイドは、DVA-C02 の "}<strong>{"Domain 4(Troubleshooting and Optimization)"}</strong>{" だけを、初学者がゼロから順番に学べるように作ったものです。試験ガイドに載っている "}<strong>{"全 24 スキル(4.1.1〜4.3.9)"}</strong>{" を、1 つずつ Step として解説しています。"}</p>
+{" "}
+<p>{"各 Step は次の構成で統一しています。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 1">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"見出し"}</th>
+
+<th scope="col">{"中身"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"この項目で学ぶこと"}</td>
+
+<td>{"何のための知識か(なぜ試験に出るか)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"やさしい解説"}</td>
+
+<td>{"用語の意味・仕組み・図解(Mermaid と表)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ベストプラクティス"}</td>
+
+<td>{"「こうするのが正しい」を表で整理"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ひっかけポイント"}</td>
+
+<td>{"試験で間違えやすい点"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"参考 URL"}</td>
+
+<td>{"根拠にした AWS 公式ドキュメント"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"試験の基本情報(公式試験ガイドより)"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 2">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"試験時間"}</td>
+
+<td>{"130 分"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"問題数"}</td>
+
+<td>{"採点対象 50 問 + 採点されない問題 15 問(合計 65 問。どれが採点外かは分からない)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"合格スコア"}</td>
+
+<td>{"720 / 1000(スケールスコア)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"出題形式"}</td>
+
+<td>{"択一(正解 1・誤答 3)と複数選択(正解 2 つ以上・選択肢 5 つ以上)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"採点方式"}</td>
+
+<td>{"加点方式(compensatory)。ドメインごとの合格点はなく、総合点で合否が決まる"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"未回答"}</td>
+
+<td>{"不正解扱い。誤答のペナルティはないので必ず何か選ぶ"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"4 つのドメインの出題比率"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 3">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"ドメイン"}</th>
+
+<th scope="col">{"比率"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Domain 1: Development with AWS Services"}</td>
+
+<td>{"32%"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Domain 2: Security"}</td>
+
+<td>{"26%"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Domain 3: Deployment"}</td>
+
+<td>{"24%"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"Domain 4: Troubleshooting and Optimization"}</strong></td>
+
+<td><strong>{"18%"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d00" label="図 1" />
+</figure>
+{" "}
+<h3>{"前提となる考え方"}</h3>
+{" "}
+<ul>
+{" "}
+<li>{"試験は "}<strong>{"開発者(Developer)の視点"}</strong>{" です。「アーキテクチャを設計する」「IAM ユーザーを管理する」「サーバー OS を管理する」といった仕事は "}<strong>{"対象外"}</strong>{" と試験ガイドに明記されています。"}</li>
+{" "}
+<li>{"問われるのは "}<strong>{"「障害が起きたとき、どのツールで、どこを見て、どう直すか」"}</strong>{" と "}<strong>{"「遅い・高い・詰まるアプリを、どのサービス機能で改善するか」"}</strong>{" です。"}</li>
+{" "}
+<li>{"本ガイドの数値(上限値・既定値)は執筆時点の AWS 公式ドキュメントに基づく目安です。試験前に最新のドキュメントで確認してください。"}</li>
+{" "}
+</ul>
+{" "}
+<blockquote className="callout">{" "}<p><strong>{"重要な最新情報(X-Ray SDK)"}</strong>{" AWS X-Ray の "}<strong>{"SDK と X-Ray デーモンは 2026-02-25 にメンテナンスモード"}</strong>{" に入り(セキュリティ修正のみ)、"}<strong>{"サポート終了は 2027-02-25"}</strong>{" と公式に告知されています。AWS は新規の計装に "}<strong>{"OpenTelemetry(AWS Distro for OpenTelemetry: ADOT)"}</strong>{" を推奨しています。"}<strong>{"X-Ray サービス自体は継続"}</strong>{" しており、トレースの受信・分析・サービスマップは引き続き使えます。試験では従来の X-Ray の概念(セグメント・サブセグメント・アノテーション・サンプリング)が問われる可能性が高いので、概念は必ず押さえつつ、新規実装は OpenTelemetry が主流になることも覚えておきましょう。詳細は "}<a href="#step-12">{"Step 12"}</a>{" を参照してください。"}</p>{" "}</blockquote>
+{" "}
+</section>); }

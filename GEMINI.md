@@ -1,6 +1,18 @@
 # Project Overview: Cloud Infrastructure Studies
 
-Updated 2026-10-28
+Updated 2026-10-29
+
+2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
+
+検証: 関連17ファイル・225件、型検査・対象ESLint成功。Chromeで1440/768/390pxの実コンポーネント静的描画に対し、全文不変・13カード・全選択肢・解答表の収まりを検証する3件が成功。採点操作はVitestで全13問・誤答・回答変更・複数選択の過不足と解除を検証した。ページ全体のブラウザー操作検証とは区別する。npm・ビルド・開発サーバーは未実行。Red `a2411128`、カード装飾 `a14ff9a5`、採点Red `67a4776a`、採点Green `a1b51073`。
+
+2026-10-29 DVA-C02 Domain 4 Mermaid黒塗り修正: ページの部分的なthemeVariablesが共通dark初期化とマージされ、未指定のmainBkg（#0f2040）・clusterBkg（#0d1a2e）等が残っていた。原本単体の全派生色を `render-theme.json` へ固定し、`Diagram.tsx` から使用する。`bun scripts/gen-dva-troubleshooting-theme.mjs` とscaffold再生成にも反映。Red `e0eb617d`、修正 `b2cc12f2`。関連15ファイル・219テスト、型検査・対象ESLint成功。Chromeで全34図の修正前の配色不一致を再現し、修正後のSVGノード・グループ・ラベル色が原本単体と完全一致する1件が成功。npm・ビルド・開発サーバーは未実行。
+
+SVG検証は `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test --config=playwright.mermaid.config.ts` で実行する。ページ全体のレイアウト検証とは区別する。
+
+2026-10-29 DVA-C02 Domain 4移行: `/aws/developer-associate/domain4` に全3タスク・24スキル（Step 0〜24）・33セクション、159表・34図・25コード例・181リスト項目・練習問題13問を全文移行。原本のライト配色、288px目次、Hero、表、点・番号・入れ子・字下げを保持。コードは空行・字下げ・等幅フォントとJSON/Pythonの構文色を保持する。目次の現在位置・モバイル開閉・hash/focus、図の原本DSL・テーマ・自然倍率、ホームとHeaderのDomain 4（18%）、共有フッターの明色切替を実装した。 実体: `app/aws/developer-associate/domain4/page.tsx`（metadata）、`TroubleshootingGuide.tsx` と `sections/`（Server本文）、`NavBar.tsx`（Client目次）、`Diagram.tsx`（共有Mermaid）、`CodeBlock.tsx`（静的構文色）、`constants.ts`、`mermaid-theme.json`、`page.css`。
+
+検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。DVA関連13ファイル・182件成功。最終整形後のDomain 4＋原本抽出は6ファイル・27件成功、共有フッター3件も成功。34図すべてのMermaid構文解析、全本文・表結合・リスト階層・コード行・CSS宣言の全量比較と欠落検出を含む。型検査・全体ESLint成功。原本HTMLは保持し、テストは固定Git由来fixtureのみを参照する。npm・本番ビルドは依頼に従い未実行。ブラウザーE2Eは今回未実行、目視確認はユーザー担当。
 
 2026-10-28 SAP/SCS Domain 1テスト修正: 本文訂正を `__tests__/helpers/domain1-source-corrections.ts` に明示し、固定Git由来fixtureを保持したまま表示期待値へ適用。SAPのフォーカス枠改善もCSS比較で検証する。対象28ファイル・222件成功。テスト変更のみのためE2E・本番ビルドは省略。全体の最終結果は `MIGRATION_PROGRESS.md` の現在地を参照。
 

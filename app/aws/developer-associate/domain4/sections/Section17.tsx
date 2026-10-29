@@ -1,0 +1,491 @@
+import { Diagram } from '../Diagram';
+/** 原本step-16の全内容。 */
+export function Section17() { return (<section className="section" id="step-16" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-stack-2" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 3 · Step 16 · 4.3.1"}</p>
+<h2>{"同時実行数(Concurrency)の定義"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p><strong>{"同時実行数 = 「ある瞬間に処理中のリクエストの数」"}</strong>{" です。Lambda ではこれが "}<strong>{"スケーリング・スロットリング・コスト"}</strong>{" のすべてに直結します。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"16-1. 同時実行数の計算式(必ず覚える)"}</h4>
+{" "}
+<blockquote className="callout">{" "}<p><strong>{"同時実行数 ≒ 1 秒あたりのリクエスト数 × 平均処理時間(秒)"}</strong></p>{" "}</blockquote>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 91">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"例"}</th>
+
+<th scope="col">{"計算"}</th>
+
+<th scope="col">{"同時実行数"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"100 リクエスト/秒、平均 0.5 秒"}</td>
+
+<td>{"100 × 0.5"}</td>
+
+<td>{"約 50"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"100 リクエスト/秒、平均 2 秒"}</td>
+
+<td>{"100 × 2"}</td>
+
+<td>{"約 200"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"1,000 リクエスト/秒、平均 1 秒"}</td>
+
+<td>{"1,000 × 1"}</td>
+
+<td>{"約 1,000("}<strong>{"アカウント上限に到達"}</strong>{")"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"処理時間が長くなるほど、同じリクエスト数でも必要な同時実行数が増えます。"}<strong>{"遅い下流サービス = 同時実行数の枯渇"}</strong>{" という因果関係は頻出です。"}</p>
+{" "}
+<h4>{"16-2. 同時実行数の 3 つの設定"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 92">
+<table className="t4">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"設定"}</th>
+
+<th scope="col">{"意味"}</th>
+
+<th scope="col">{"料金"}</th>
+
+<th scope="col">{"主な用途"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"アカウントの同時実行数の上限"}</strong></td>
+
+<td>{"リージョン内の全関数の合計上限("}<strong>{"既定 1,000"}</strong>{"、引き上げ申請可能)"}</td>
+
+<td>{"無料"}</td>
+
+<td>{"全体の天井"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"予約済み同時実行数(Reserved concurrency)"}</strong></td>
+
+<td>{"特定の関数に "}<strong>{"同時実行数を確保しつつ、上限としても働く"}</strong></td>
+
+<td><strong>{"無料"}</strong></td>
+
+<td>{"重要な関数のリソース確保、"}<strong>{"下流を守る上限"}</strong>{"(DB 接続数の制御など)"}</td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"プロビジョニングされた同時実行数(Provisioned concurrency)"}</strong></td>
+
+<td><strong>{"あらかじめ初期化済みの実行環境"}</strong>{" を常に用意"}</td>
+
+<td><strong>{"有料"}</strong>{"(確保している間)"}</td>
+
+<td><strong>{"コールドスタートの排除"}</strong>{"(低レイテンシが必須の API)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d24" label="図 25" />
+</figure>
+{" "}
+<ul>
+{" "}
+<li>{"予約済み同時実行数を "}<strong>{"0"}</strong>{" にすると、関数は "}<strong>{"完全に停止(すべての呼び出しがスロットル)"}</strong>{" します(緊急停止に使える)。"}</li>
+{" "}
+<li><strong>{"プロビジョニング済み ≦ 予約済み"}</strong>{" である必要があります(同じ関数に両方設定する場合)。"}</li>
+{" "}
+<li>{"プロビジョニング済み同時実行数は "}<strong>{"エイリアスまたはバージョンに対して"}</strong>{" 設定します($LATEST には設定できません)。"}</li>
+{" "}
+<li><strong>{"Application Auto Scaling"}</strong>{" で、スケジュールや使用率に応じて "}<strong>{"プロビジョニング済み同時実行数を自動調整"}</strong>{" できます。"}</li>
+{" "}
+</ul>
+{" "}
+<h4>{"16-3. スケーリングの仕組み"}</h4>
+{" "}
+<ul>
+{" "}
+<li>{"同時実行数が足りないとき、Lambda は "}<strong>{"新しい実行環境を作って増やします"}</strong>{"(関数ごとに "}<strong>{"10 秒あたり最大 1,000 実行環境ずつ"}</strong>{" 追加できる)。"}</li>
+{" "}
+<li>{"新しい実行環境ができるたびに "}<strong>{"コールドスタート"}</strong>{"(初期化)が発生します。"}</li>
+{" "}
+<li>{"上限に達すると、呼び出し方法ごとに次のように動きます。"}</li>
+{" "}
+</ul>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 93">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"呼び出し方法"}</th>
+
+<th scope="col">{"スロットル時の動作"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"同期(API Gateway、SDK の "}<code>{"RequestResponse"}</code>{")"}</td>
+
+<td><strong>{"429(TooManyRequestsException)"}</strong>{" を即座に返す。"}<strong>{"呼び出し側で再試行"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"非同期(S3、SNS、EventBridge など)"}</td>
+
+<td>{"Lambda が内部キューで "}<strong>{"自動再試行"}</strong>{"(最大 6 時間)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ポーリング型(SQS、Kinesis、DynamoDB Streams)"}</td>
+
+<td>{"Lambda が "}<strong>{"再試行"}</strong>{"(SQS はメッセージがキューに戻る)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"16-4. SQS をイベントソースにするときの同時実行数"}</h4>
+{" "}
+<p>{"SQS を使う Lambda は、メッセージ量に応じて "}<strong>{"ポーラーが自動で増え、同時実行数が増加"}</strong>{" します。"}<strong>{"下流(RDS の接続数など)を守りたいとき"}</strong>{" は次の方法があります。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 94">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"方法"}</th>
+
+<th scope="col">{"内容"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>{"イベントソースマッピングの最大同時実行数(Maximum concurrency)"}</strong></td>
+
+<td>{"その SQS トリガーが使える同時実行数に "}<strong>{"上限"}</strong>{" を設定(関数全体の設定とは別)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"予約済み同時実行数"}</td>
+
+<td>{"関数全体の上限。ただし "}<strong>{"上限に達するとスロットルされたメッセージが再試行を消費"}</strong>{" する点に注意"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"16-5. 他のサービスでの「同時実行」"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 95">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"サービス"}</th>
+
+<th scope="col">{"考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Kinesis + Lambda"}</td>
+
+<td><strong>{"シャード数 × 並列化係数(最大 10)"}</strong>{" が同時実行数の目安"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"DynamoDB"}</td>
+
+<td>{"読み書き容量(RCU / WCU)や "}<strong>{"オンデマンドモード"}</strong>{" が同時アクセスの許容量を決める"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ECS / EC2"}</td>
+
+<td>{"タスク数・インスタンス数を "}<strong>{"Auto Scaling"}</strong>{" で増減する"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway"}</td>
+
+<td>{"アカウント・ステージ・メソッドごとの "}<strong>{"スロットリング(レート / バースト)"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 96">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"見積もり"}</td>
+
+<td><strong>{"リクエスト/秒 × 処理時間"}</strong>{" でピーク時の同時実行数を見積もる"}</td>
+
+<td>{"上限超過を事前に防ぐ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"監視"}</td>
+
+<td><code>{"ConcurrentExecutions"}</code>{" と "}<code>{"Throttles"}</code>{" に "}<strong>{"アラーム"}</strong>{" を設定"}</td>
+
+<td>{"スロットルの早期検知"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"重要関数"}</td>
+
+<td>{"重要な関数には "}<strong>{"予約済み同時実行数"}</strong>{" を設定して、他の関数に奪われないようにする"}</td>
+
+<td>{"重要処理の確保"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"下流の保護"}</td>
+
+<td>{"DB 接続数などが限られる場合、"}<strong>{"予約済み同時実行数や SQS の最大同時実行数"}</strong>{" で上限を設ける。"}<strong>{"RDS Proxy"}</strong>{" も併用"}</td>
+
+<td>{"下流の過負荷防止"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"コールドスタート"}</td>
+
+<td>{"レイテンシ要件が厳しいときだけ "}<strong>{"プロビジョニング済み同時実行数"}</strong>{"(コスト増)や "}<strong>{"SnapStart"}</strong>{"(Java・Python・.NET)を検討"}</td>
+
+<td>{"コストと性能のバランス"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"処理時間"}</td>
+
+<td><strong>{"処理時間を短縮"}</strong>{" すれば、同じ同時実行数でより多くのリクエストをさばける"}</td>
+
+<td>{"根本的な最適化"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"再試行"}</td>
+
+<td>{"同期呼び出しの呼び出し側は "}<strong>{"指数バックオフ + ジッター"}</strong>{" で再試行"}</td>
+
+<td>{"429 からの回復"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 97">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「重要な関数が他の関数のスパイクでスロットルされる」"}</td>
+
+<td><strong>{"予約済み同時実行数"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「Lambda のコールドスタートを排除したい」"}</td>
+
+<td><strong>{"プロビジョニング済み同時実行数"}</strong>{"(確保中は課金)/ SnapStart"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「DB の接続数を守るため Lambda の同時実行を制限したい」"}</td>
+
+<td><strong>{"予約済み同時実行数"}</strong>{"(または SQS の最大同時実行数)+ RDS Proxy"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「予約済み同時実行数に追加料金は?」"}</td>
+
+<td><strong>{"無料"}</strong>{"。"}<strong>{"プロビジョニング済み"}</strong>{" は有料"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「同時実行数を 0 にすると?」"}</td>
+
+<td><strong>{"関数が完全に止まる"}</strong>{"(全呼び出しがスロットル)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"Lambda の同時実行数: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html"}</a></li>
+{" "}
+<li>{"Lambda のスケーリング動作: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/scaling-behavior.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/scaling-behavior.html"}</a></li>
+{" "}
+<li>{"予約済み同時実行数の設定: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html"}</a></li>
+{" "}
+<li>{"Lambda SnapStart: "}<a href="https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

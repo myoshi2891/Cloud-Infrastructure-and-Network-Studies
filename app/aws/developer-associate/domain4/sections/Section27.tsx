@@ -1,0 +1,298 @@
+/** 原本app-bの全内容。 */
+export function Section27() { return (<section className="section" id="app-b" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-lifebuoy" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"付録 B"}</p>
+<h2>{"症状から原因を引くチートシート"}</h2>
+</div>
+</div>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 149">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"症状"}</th>
+
+<th scope="col">{"まず疑うこと"}</th>
+
+<th scope="col">{"見る場所 / 解決策"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"Lambda で "}<code>{"Task timed out"}</code></td>
+
+<td>{"下流の遅延、タイムアウト設定"}</td>
+
+<td>{"トレース、"}<code>{"Duration"}</code>{"、下流のタイムアウトを短く"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Lambda が 429 / "}<code>{"Throttles"}</code>{" 増加"}</td>
+
+<td>{"同時実行数の上限"}</td>
+
+<td><code>{"ConcurrentExecutions"}</code>{"、予約済み、上限引き上げ、SQS でバッファ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"最初のリクエストだけ遅い"}</td>
+
+<td>{"コールドスタート"}</td>
+
+<td><code>{"Init Duration"}</code>{"、SnapStart、プロビジョニング済み"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"Lambda が OOM"}</td>
+
+<td>{"メモリ不足"}</td>
+
+<td><code>{"Max Memory Used"}</code>{"、メモリ増"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ログが CloudWatch Logs に出ない"}</td>
+
+<td>{"実行ロールの Logs 権限"}</td>
+
+<td><code>{"AWSLambdaBasicExecutionRole"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"トレースが出ない"}</td>
+
+<td>{"アクティブトレース無効 / X-Ray 権限なし / サイドカーなし"}</td>
+
+<td>{"関数設定、ロール、デーモン / ADOT"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway 502"}</td>
+
+<td>{"Lambda の戻り値形式、Lambda の例外"}</td>
+
+<td>{"プロキシ統合の戻り値、実行ログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway 504"}</td>
+
+<td>{"統合のタイムアウト"}</td>
+
+<td>{"処理短縮、非同期化"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway 429"}</td>
+
+<td>{"スロットリング"}</td>
+
+<td>{"使用量プラン、バックオフ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"API Gateway 403"}</td>
+
+<td>{"認可 / WAF / リソースポリシー"}</td>
+
+<td>{"アクセスログ・実行ログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ALB 502"}</td>
+
+<td>{"ターゲットの不正応答・接続切断"}</td>
+
+<td>{"アプリの応答、キープアライブ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ALB 503"}</td>
+
+<td>{"登録済みターゲットなし / 全ターゲットが unused(未使用)"}</td>
+
+<td>{"ターゲットの登録状況・ターゲットの状態"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ALB 504"}</td>
+
+<td>{"ターゲットの応答遅延"}</td>
+
+<td>{"処理時間、アイドルタイムアウト"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"SQS メッセージの二重処理"}</td>
+
+<td>{"可視性タイムアウトが短い、冪等性なし"}</td>
+
+<td>{"可視性タイムアウト ≥ 6 × 関数タイムアウト + MaximumBatchingWindowInSeconds、冪等キー"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"バッチの 1 件失敗で全再処理"}</td>
+
+<td>{"バッチ全体を失敗扱い"}</td>
+
+<td><code>{"ReportBatchItemFailures"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"ポイズンメッセージ"}</td>
+
+<td>{"無限再配信"}</td>
+
+<td>{"DLQ + "}<code>{"maxReceiveCount"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"Kinesis の処理が止まる"}</td>
+
+<td>{"不良レコードの再試行"}</td>
+
+<td><code>{"BisectBatchOnFunctionError"}</code>{"、失敗時の送信先"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"DynamoDB スロットル"}</td>
+
+<td>{"容量不足 / ホットパーティション"}</td>
+
+<td>{"容量・キー設計・DAX・バックオフ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"RDS 接続数枯渇"}</td>
+
+<td>{"Lambda の同時接続"}</td>
+
+<td>{"RDS Proxy、同時実行数の制限"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"キャッシュヒット率が低い"}</td>
+
+<td>{"キャッシュキーが細かい"}</td>
+
+<td>{"不要なヘッダー等を除く、オリジンリクエストポリシー"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"SNS メールが届かない"}</td>
+
+<td>{"購読未承認 / アクセスポリシー"}</td>
+
+<td>{"確認リンク、トピックポリシー"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"アラームが "}<code>{"INSUFFICIENT_DATA"}</code></td>
+
+<td>{"データなし、設定ミス"}</td>
+
+<td>{"ディメンション、欠損データの扱い"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"CloudFormation "}<code>{"ROLLBACK_COMPLETE"}</code></td>
+
+<td>{"作成失敗後"}</td>
+
+<td>{"最初の失敗イベントを読み、削除して再作成"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"CodeBuild の失敗"}</td>
+
+<td>{"buildspec、権限、依存関係"}</td>
+
+<td>{"Phase details、ビルドログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"CodeDeploy(EC2)の失敗"}</td>
+
+<td>{"appspec、スクリプトの終了コード、エージェント"}</td>
+
+<td>{"ライフサイクルイベント、エージェントログ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"ECS タスクがすぐ停止"}</td>
+
+<td>{"イメージ取得失敗、必須コンテナ終了、ヘルスチェック"}</td>
+
+<td>{"Stopped reason、コンテナログ"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+</section>); }

@@ -1,0 +1,332 @@
+import { CodeBlock } from '../CodeBlock';
+import { Diagram } from '../Diagram';
+/** 原本step-13の全内容。 */
+export function Section14() { return (<section className="section" id="step-13" tabIndex={-1}>
+{" "}
+<div className="sec-head">
+<div className="sec-icon">
+<i className="ti ti-tag" aria-hidden="true"></i>
+</div>
+<div>
+<p className="eyebrow">{"Task 2 · Step 13 · 4.2.4"}</p>
+<h2>{"トレースへのアノテーション追加"}</h2>
+</div>
+</div>
+{" "}
+<h3>{"この項目で学ぶこと"}</h3>
+{" "}
+<p>{"トレースに "}<strong>{"業務の目印(ユーザーの種類、注文の種類など)"}</strong>{" を付けて、あとから "}<strong>{"「プレミアム会員のリクエストだけ遅い」"}</strong>{" のように絞り込めるようにする機能です。"}</p>
+{" "}
+<h3>{"やさしい解説"}</h3>
+{" "}
+<h4>{"13-1. アノテーションとメタデータの違い(最重要)"}</h4>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 75">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"アノテーション(Annotations)"}</th>
+
+<th scope="col">{"メタデータ(Metadata)"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"目的"}</td>
+
+<td><strong>{"検索・フィルターのため"}</strong>{" の目印"}</td>
+
+<td><strong>{"補足情報を保存するため"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td><strong>{"インデックス(索引)"}</strong></td>
+
+<td><strong>{"作られる"}</strong>{"(フィルター式で検索できる)"}</td>
+
+<td><strong>{"作られない"}</strong>{"(検索できない)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"値の型"}</td>
+
+<td>{"文字列・数値・ブール値"}</td>
+
+<td><strong>{"任意の型"}</strong>{"(オブジェクト・リストも可)"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"付ける対象"}</td>
+
+<td>{"セグメントとサブセグメント"}</td>
+
+<td>{"セグメントとサブセグメント"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"例"}</td>
+
+<td><code>{"userTier = \"premium\""}</code>{"、"}<code>{"orderType = \"bulk\""}</code></td>
+
+<td>{"リクエストの詳細オブジェクト、デバッグ用の大きなデータ"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"件数の目安"}</td>
+
+<td><strong>{"1 トレースあたり最大 50 個"}</strong></td>
+
+<td>{"サイズは制限あり(セグメント全体のサイズ上限)"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<p>{"覚え方は "}<strong>{"「探す(Search)ならアノテーション、しまう(Store)ならメタデータ」"}</strong>{" です。"}</p>
+{" "}
+<figure className="diagram-card">
+<Diagram id="d19" label="図 20" />
+</figure>
+{" "}
+<h4>{"13-2. X-Ray SDK での記述例(Python)"}</h4>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"Python"}
+</div>
+<CodeBlock language="python" lines={["from aws_xray_sdk.core import xray_recorder","","# Lambda ではサブセグメントを使う(関数のセグメント自体は Lambda サービスが作る)","subsegment = xray_recorder.begin_subsegment(\"process-order\")","subsegment.put_annotation(\"userTier\", \"premium\")       # 検索対象","subsegment.put_annotation(\"orderType\", \"bulk\")","subsegment.put_metadata(\"orderDetail\", {\"items\": 12})  # 検索対象外","xray_recorder.end_subsegment()"]} />
+</div>
+{" "}
+<p>{"Powertools Tracer を使うと、デコレーターで簡単に書けます。"}</p>
+{" "}
+<div className="code-sample">
+<div className="cb-head">
+{"Python"}
+</div>
+<CodeBlock language="python" lines={["from aws_lambda_powertools import Tracer","tracer = Tracer()","","@tracer.capture_method","def process(order):","    tracer.put_annotation(key=\"userTier\", value=\"premium\")","    tracer.put_metadata(key=\"orderDetail\", value=order)"]} />
+</div>
+{" "}
+<h4>{"13-3. フィルター式で絞り込む"}</h4>
+{" "}
+<p>{"アノテーションを付けると、X-Ray コンソールの "}<strong>{"フィルター式"}</strong>{" で検索できます。"}</p>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 76">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"目的"}</th>
+
+<th scope="col">{"フィルター式の例"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"プレミアム会員のトレース"}</td>
+
+<td><code>{"annotation.userTier = \"premium\""}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"応答が 5 秒を超えたトレース"}</td>
+
+<td><code>{"responsetime > 5"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"プレミアム会員で、かつ失敗"}</td>
+
+<td><code>{"annotation.userTier = \"premium\" AND fault = true"}</code></td>
+
+</tr>
+
+<tr>
+
+<td>{"特定サービスの 5xx"}</td>
+
+<td><code>{"service(\"order-handler\") { fault }"}</code></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h4>{"13-4. OpenTelemetry での対応"}</h4>
+{" "}
+<p>{"OpenTelemetry では "}<strong>{"スパン属性(span attributes)"}</strong>{" を付けます。ADOT / X-Ray への変換では、"}<strong>{"既定ではスパン属性は X-Ray の「メタデータ」として扱われ、検索可能な「アノテーション」にしたい属性は、コレクター(X-Ray エクスポーター)の設定で「インデックス対象の属性」として指定"}</strong>{" します。概念は同じ(検索したい値だけをインデックス化する)ですが、設定方法が異なる点に注意してください。"}</p>
+{" "}
+<h3>{"ベストプラクティス"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 77">
+<table className="t3">
+
+<thead>
+
+<tr>
+
+<th scope="col">{"項目"}</th>
+
+<th scope="col">{"ベストプラクティス"}</th>
+
+<th scope="col">{"理由"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"使い分け"}</td>
+
+<td><strong>{"検索したい値だけをアノテーション"}</strong>{" にし、他はメタデータへ"}</td>
+
+<td>{"アノテーションの数に上限があり、検索の対象は絞った方が管理しやすい"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"値の種類"}</td>
+
+<td>{"値の種類が "}<strong>{"ビジネス上意味のあるもの"}</strong>{"(会員種別、機能フラグ、テナント ID、APIバージョン)にする"}</td>
+
+<td>{"絞り込みの価値が高い"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"機密"}</td>
+
+<td><strong>{"パスワード・トークン・個人情報は入れない"}</strong></td>
+
+<td>{"トレースを閲覧できる人に見える"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"キー名"}</td>
+
+<td>{"アルファベット・数字・アンダースコアのみ(記号・スペースは不可)"}</td>
+
+<td>{"キー名のルール"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"命名"}</td>
+
+<td>{"ログのフィールド名と "}<strong>{"揃える"}</strong></td>
+
+<td>{"ログとトレースを横断して調べやすい"}</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"ひっかけポイント"}</h3>
+{" "}
+<div className="table-wrap" tabIndex={0} role="region" aria-label="表 78">
+<table>
+
+<thead>
+
+<tr>
+
+<th scope="col">{"問われ方"}</th>
+
+<th scope="col">{"正しい考え方"}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>{"「特定の顧客タイプのトレースを検索したい」"}</td>
+
+<td><strong>{"アノテーション"}</strong>{" + フィルター式"}</td>
+
+</tr>
+
+<tr>
+
+<td>{"「大きなオブジェクトをトレースに保存したい(検索は不要)」"}</td>
+
+<td><strong>{"メタデータ"}</strong></td>
+
+</tr>
+
+<tr>
+
+<td>{"「アノテーションはインデックスされるか」"}</td>
+
+<td><strong>{"される"}</strong>{"。メタデータは "}<strong>{"されない"}</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+{" "}
+<h3>{"参考 URL"}</h3>
+{" "}
+<ul className="ref-list">
+{" "}
+<li>{"X-Ray のセグメントドキュメント(アノテーションとメタデータ): "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html"}</a></li>
+{" "}
+<li>{"フィルター式: "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-console-filters.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-console-filters.html"}</a></li>
+{" "}
+<li>{"X-Ray の概念(アノテーション): "}<a href="https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html" target="_blank" rel="noopener">{"https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html"}</a></li>
+{" "}
+<li>{"Powertools Tracer(Python): "}<a href="https://docs.powertools.aws.dev/lambda/python/latest/core/tracer/" target="_blank" rel="noopener">{"https://docs.powertools.aws.dev/lambda/python/latest/core/tracer/"}</a></li>
+{" "}
+</ul>
+{" "}
+</section>); }

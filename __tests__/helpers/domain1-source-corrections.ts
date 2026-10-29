@@ -20,5 +20,7 @@ export const SCS_DOMAIN1_CORRECTIONS: readonly Correction[] = [
     ['組織内の全アカウント、全リージョンの API アクティビティを漏れなく記録し', '組織内の全アカウント、全リージョンの管理イベント (管理 API アクティビティ) を漏れなく記録し'],
     ['ログファイル整合性検証を有効にし、SSE-KMS で暗号化する。', 'ログファイル整合性検証を有効にし、SSE-KMS で暗号化する。S3 オブジェクトアクセスなどのデータイベントも記録する必要がある場合は、データイベントセレクターを追加する。'],
     ['全アカウントの API 操作を漏れなく記録したい', '全アカウントの管理イベント (管理 API 操作) を漏れなく記録したい'],
-    ['組織トレイル + マルチリージョン + ログアーカイブアカウントの S3', '組織トレイル + マルチリージョン + ログアーカイブアカウントの S3 (S3 オブジェクトアクセスなどは別途データイベントセレクターが必要)'],
+    // ConsoleLogin の失敗は errorcode が空で responseelements に Failure が入る場合がある（responseelements は文字列列）
+    ['AND errorcode IS NOT NULL', "AND (errorcode IS NOT NULL OR json_extract_scalar(responseelements, '$.ConsoleLogin') = 'Failure')"],
+    ['組織トレイル + マルチリージョン + ログアーカイブアカウントの S3','組織トレイル + マルチリージョン + ログアーカイブアカウントの S3 (S3 オブジェクトアクセスなどは別途データイベントセレクターが必要)'],
 ];
