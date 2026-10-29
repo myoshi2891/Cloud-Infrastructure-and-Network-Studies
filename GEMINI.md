@@ -1,5 +1,11 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-10-29: 移行済み原本の一括アーカイブ
+
+直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
+
+原本不在下で4教材の関連49ファイル・409テストすべて成功。アプリ実装への変更はなし。直下のHTMLは未移行8件のみ。静的集計1285ソース・412対応・491テストファイルは不変。npm・ビルドは未実行。過去の「原本を直下に保持」という記述は移動前の履歴として扱う。
+
 ## 2026-10-29: SAP-C02 Domain 2
 
 `app/aws/solutions-architect-professional/domain2/` に Server `page.tsx`、Client `SapDomain2Guide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割の `sections/`、定数とテーマJSON、スコープCSSを追加。全6タスク・66表・23図・5コード例・51リスト項目・81外部リンク出現・23チェック項目を原本から移行。原本単体のMermaid派生色を全量固定し、黒塗りを防止。ホーム・HeaderのDomain 2（29%）導線と明色フッターを統合。`bun scripts/migrate-sap-domain2.mjs <foundation|task21|task22|task23|task24|task25|task26|appendix>` で固定Git原本から本文を再生成できる。
