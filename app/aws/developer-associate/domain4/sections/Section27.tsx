@@ -144,9 +144,9 @@ export function Section27() { return (<section className="section" id="app-b" ta
 
 <td>{"ALB 503"}</td>
 
-<td>{"正常なターゲットなし"}</td>
+<td>{"登録済みターゲットなし / 全ターゲットが unused(未使用)"}</td>
 
-<td>{"ヘルスチェック"}</td>
+<td>{"ターゲットの登録状況・ターゲットの状態"}</td>
 
 </tr>
 
@@ -166,7 +166,7 @@ export function Section27() { return (<section className="section" id="app-b" ta
 
 <td>{"可視性タイムアウトが短い、冪等性なし"}</td>
 
-<td>{"可視性タイムアウト ≥ 6 × 関数タイムアウト、冪等キー"}</td>
+<td>{"可視性タイムアウト ≥ 6 × 関数タイムアウト + MaximumBatchingWindowInSeconds、冪等キー"}</td>
 
 </tr>
 

@@ -223,7 +223,7 @@ export function Section23() { return (<section className="section" id="step-22" 
 
 <td><strong>{"必要な属性だけを取得"}</strong></td>
 
-<td><code>{"ProjectionExpression"}</code>{" で取得する項目を絞り、転送量・消費容量を削減"}</td>
+<td><code>{"ProjectionExpression"}</code>{" で取得する項目を絞り、転送量を削減(消費する読み取り容量はアイテム全体のサイズで計算されるため減らない)"}</td>
 
 </tr>
 
@@ -565,7 +565,7 @@ export function Section23() { return (<section className="section" id="step-22" 
 
 <td>{"「DynamoDB の読み取りコストを減らしたい(特定の属性だけ必要)」"}</td>
 
-<td><strong><code>{"ProjectionExpression"}</code></strong>{"、Scan → Query への変更"}</td>
+<td>{"Scan → Query への変更(消費容量を削減)。"}<strong><code>{"ProjectionExpression"}</code></strong>{" は転送量を減らすが、消費容量は減らない"}</td>
 
 </tr>
 

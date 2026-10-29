@@ -193,7 +193,7 @@ export function Section2() { return (<section className="section" id="step-1" ta
 
 <td>{"サービス利用不可"}</td>
 
-<td>{"ALB の "}<strong>{"正常なターゲットがない"}</strong></td>
+<td>{"ALB が生成する 503: "}<strong>{"ターゲットグループが空、または登録済みターゲットがすべて unused(未使用)状態"}</strong></td>
 
 </tr>
 

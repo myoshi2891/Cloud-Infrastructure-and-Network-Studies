@@ -379,7 +379,7 @@ export function Section16() { return (<section className="section" id="step-15" 
 
 <td>{"「ALB が 503 を返す」"}</td>
 
-<td><strong>{"正常なターゲットが 0"}</strong>{" → ターゲットグループのヘルスチェック設定と、アプリの応答を確認"}</td>
+<td><strong>{"登録済みターゲットがない、または全ターゲットが unused(未使用)状態"}</strong>{" → ターゲットの登録状況と、unused の原因(ターゲットの AZ がロードバランサーで有効か、ターゲットグループがリスナーで使われているか、インスタンスが停止していないか)を確認"}</td>
 
 </tr>
 

@@ -156,7 +156,7 @@ export function Section28() { return (<section className="section" id="app-c" ta
 
 <td>{"可視性タイムアウトの設定"}</td>
 
-<td>{"関数のタイムアウトより長く(目安 6 倍以上)"}</td>
+<td>{"関数のタイムアウトの 6 倍 + MaximumBatchingWindowInSeconds 以上"}</td>
 
 </tr>
 

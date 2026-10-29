@@ -319,9 +319,9 @@ export function Section24() { return (<section className="section" id="step-23" 
 
 <td>{"ALB の 503"}</td>
 
-<td><strong>{"正常なターゲットがない"}</strong></td>
+<td><strong>{"登録済みターゲットがない、または全ターゲットが unused(未使用)状態"}</strong></td>
 
-<td>{"ヘルスチェックの設定・アプリの状態"}</td>
+<td>{"ターゲットの登録状況、ロードバランサーで有効な AZ、ターゲットの状態(unused の理由)を確認"}</td>
 
 </tr>
 
@@ -503,7 +503,7 @@ export function Section24() { return (<section className="section" id="step-23" 
 
 <td>{"「ALB が 503」"}</td>
 
-<td><strong>{"正常なターゲットがゼロ"}</strong></td>
+<td><strong>{"登録済みターゲットがない、または全ターゲットが unused(未使用)状態"}</strong></td>
 
 </tr>
 

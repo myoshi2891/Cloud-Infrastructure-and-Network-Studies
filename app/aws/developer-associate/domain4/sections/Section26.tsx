@@ -144,12 +144,12 @@ export function Section26() { return (<section className="section" id="app-a" ta
 </ul>
 </PracticeQuestion>
 {" "}
-<PracticeQuestion number={9} correct={["A"]} explanation={<>{"ALB の 503 は "}<strong>{"正常なターゲットがない"}</strong>{" 場合。ヘルスチェックの状態を確認("}<a href="#step-15">{"Step 15"}</a>{", "}<a href="#step-23">{"Step 23"}</a>{")"}</>}>
+<PracticeQuestion number={9} correct={["A"]} explanation={<>{"ALB の 503 は "}<strong>{"登録済みターゲットがない、または登録済みターゲットがすべて unused(未使用)状態"}</strong>{" の場合に返る。全ターゲットがヘルスチェックに失敗した場合は、ALB はフェイルオープンして全ターゲットへ転送する。ヘルスチェックの状態は診断材料として併せて確認("}<a href="#step-15">{"Step 15"}</a>{", "}<a href="#step-23">{"Step 23"}</a>{")"}</>}>
 <p id="practice-question-9"><strong>{"問 9."}</strong>{" ALB 配下のアプリで、利用者が 503 を受け取っています。まず確認すべきことは何か。"}</p>
 {" "}
 <ul>
 {" "}
-<li>{"A. ターゲットグループに正常なターゲットがあるか(ヘルスチェックの状態)"}</li>
+<li>{"A. ターゲットグループにターゲットが登録され、unused(未使用)状態になっていないか(ターゲットの状態)"}</li>
 {" "}
 <li>{"B. CloudFront のキャッシュ設定"}</li>
 {" "}
@@ -333,7 +333,7 @@ export function Section26() { return (<section className="section" id="app-a" ta
 
 <td><strong>{"A"}</strong></td>
 
-<td>{"ALB の 503 は "}<strong>{"正常なターゲットがない"}</strong>{" 場合。ヘルスチェックの状態を確認("}<a href="#step-15">{"Step 15"}</a>{", "}<a href="#step-23">{"Step 23"}</a>{")"}</td>
+<td>{"ALB の 503 は "}<strong>{"登録済みターゲットがない、または登録済みターゲットがすべて unused(未使用)状態"}</strong>{" の場合に返る。全ターゲットがヘルスチェックに失敗した場合は、ALB はフェイルオープンして全ターゲットへ転送する。ヘルスチェックの状態は診断材料として併せて確認("}<a href="#step-15">{"Step 15"}</a>{", "}<a href="#step-23">{"Step 23"}</a>{")"}</td>
 
 </tr>
 

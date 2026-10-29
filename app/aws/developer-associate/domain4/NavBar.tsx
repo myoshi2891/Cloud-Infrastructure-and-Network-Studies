@@ -14,7 +14,9 @@ export function NavBar() {
     }, [open]);
     useEffect(() => {
         const close = () => { setOpen(false); button.current?.focus(); };
-        const key = (event: KeyboardEvent) => { if (event.key === 'Escape') close(); };
+        // 閉じているときはフォーカスを奪わない
+        const isOpen = () => button.current?.getAttribute('aria-expanded') === 'true';
+        const key = (event: KeyboardEvent) => { if (event.key === 'Escape' && isOpen()) close(); };
         const resize = () => { if (window.innerWidth > 900) setOpen(false); };
         const hash = () => {
             const id = window.location.hash.slice(1);
