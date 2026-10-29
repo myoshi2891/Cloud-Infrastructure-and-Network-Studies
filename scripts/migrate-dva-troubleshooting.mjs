@@ -75,6 +75,7 @@ if(stage === 'scaffold') {
             if(decl.prop==='overflow-wrap' && decl.value==='break-word') decl.value='anywhere';
         });
     });
+    const syntax = {comment:token('#5c6370'),keyword:token('#c678dd'),string:token('#98c379'),number:token('#d19a66'),attr:token('#e06c75'),title:token('#61afef')};
     let globals = fs.readFileSync('app/globals.css','utf8');
     const missing = Object.entries(additions).filter(([key])=>!globals.includes(key+':'));
     if(missing.length) globals=globals.replace('@theme {','@theme {\n    /* DVA Domain 4 原本テーマ */\n'+missing.map(([k,v])=>`    ${k}: ${v};`).join('\n'));
@@ -87,12 +88,12 @@ if(stage === 'scaffold') {
 .dva-troubleshooting-page .section li { display: list-item; }
 .dva-troubleshooting-page .section .ref-list { list-style-type: none; }
 .dva-troubleshooting-page .code-block { font-family: var(--font-mono); }
-.dva-troubleshooting-page .hljs-comment { color: #5c6370; font-style: italic; }
-.dva-troubleshooting-page .hljs-keyword { color: #c678dd; }
-.dva-troubleshooting-page .hljs-string { color: #98c379; }
-.dva-troubleshooting-page .hljs-number, .dva-troubleshooting-page .hljs-literal { color: #d19a66; }
-.dva-troubleshooting-page .hljs-attr { color: #e06c75; }
-.dva-troubleshooting-page .hljs-title { color: #61afef; }
+.dva-troubleshooting-page .hljs-comment { color: ${syntax.comment}; font-style: italic; }
+.dva-troubleshooting-page .hljs-keyword { color: ${syntax.keyword}; }
+.dva-troubleshooting-page .hljs-string { color: ${syntax.string}; }
+.dva-troubleshooting-page .hljs-number, .dva-troubleshooting-page .hljs-literal { color: ${syntax.number}; }
+.dva-troubleshooting-page .hljs-attr { color: ${syntax.attr}; }
+.dva-troubleshooting-page .hljs-title { color: ${syntax.title}; }
 .dva-troubleshooting-page .code-line { white-space: pre; min-height: 1.7em; }
 .dva-troubleshooting-page .diagram-wrap > [role="img"] { border: 0; background: transparent; padding: 0; margin: 0; overflow: visible; }
 .dva-troubleshooting-page .backdrop { border: 0; inset: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)) 0 0; }
