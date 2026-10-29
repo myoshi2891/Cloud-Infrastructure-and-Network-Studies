@@ -502,7 +502,9 @@
 .ddia-page .main .checklist-card ul { list-style: none; padding: 0; }
 .ddia-page nav ul { list-style: none; margin: 0; padding: 0; }
 .ddia-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); z-index: 40; }
-.ddia-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 40; }
+.ddia-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }
+@media (max-width: 980px) { .ddia-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s ease, visibility 0s linear 0.25s; } }
+.ddia-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-google-blue); }
 .ddia-page .main h2, .ddia-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
 .ddia-page .main { min-width: 0; }
 .ddia-page .ref-card a { overflow-wrap: anywhere; }

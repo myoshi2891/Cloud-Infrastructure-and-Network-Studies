@@ -34,6 +34,11 @@ describe('DDIA 全量移行',()=>{
   }
   expect(rules.find(r=>r.selector==='.ddia-page .main ul')?.declarations).toContainEqual({prop:'list-style-type',value:'disc',important:false});
   expect(rules.find(r=>r.selector==='.ddia-page .main ol')?.declarations).toContainEqual({prop:'list-style-type',value:'decimal',important:false});
+  const closed=rules.find(r=>r.selector==='.ddia-page .sidebar:not(.open)'&&r.media==='(max-width: 980px)');
+  expect(closed?.declarations).toContainEqual({prop:'visibility',value:'hidden',important:false});
+  const z=(selector:string)=>Number(rules.filter(r=>r.selector===selector&&!r.media).flatMap(r=>r.declarations).filter(d=>d.prop==='z-index').at(-1)?.value);
+  expect(z('.ddia-page .sidebar-toggle')).toBeGreaterThan(z('.ddia-page .sidebar'));
+  expect(rules.find(r=>r.selector===".ddia-page .checklist-card input[type='checkbox']:not(:checked)")?.declarations).toContainEqual({prop:'border-color',value:'var(--color-google-blue)',important:false});
  });
  it('モバイル目次の開閉・hashとfocus・チェック進捗',()=>{const c=render(<Guide/>).container;const button=c.querySelector('button')!;fireEvent.click(button);expect(button).toHaveAttribute('aria-expanded','true');const link=c.querySelector('nav a')!;fireEvent.click(link);expect(button).toHaveAttribute('aria-expanded','false');expect(document.activeElement?.id).toBe(fixture.nav[0]!.id);const boxes=c.querySelectorAll('input');expect(boxes).toHaveLength(13);fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('1 / 13 完了');fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('0 / 13 完了');});
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});
