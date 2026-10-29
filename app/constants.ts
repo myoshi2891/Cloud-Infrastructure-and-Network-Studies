@@ -959,6 +959,14 @@ const ALL_EXAMS: Exam[] = [
         provider: 'CompTIA',
     },
     {
+        id: 'ddia', label: 'Designing Data-Intensive Applications', abbr: 'DDIA',
+        level: 'データシステム設計', score: '第2版 / 14図解', color: 'card-accelerate',
+        href: '/recommended-books/designing-data-intensive-applications',
+        description: 'データモデル・ストレージ・分散システム・派生データと倫理を、トレードオフの視点から学ぶ初学者向け完全ガイド。',
+        domains: [{ label: '初学者向け完全ガイド', href: '/recommended-books/designing-data-intensive-applications', pct: '完全解説' }],
+        badge: '名著ガイド', icon: '📚', provider: 'Books',
+    },
+    {
         id: 'accelerate',
         label: 'Accelerate',
         abbr: 'Accelerate',
