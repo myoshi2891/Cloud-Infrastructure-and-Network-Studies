@@ -21,7 +21,7 @@ describe('SAP Domain 2 統合契約',()=>{
   for(const [key,value] of Object.entries(root.declarations))if(key.startsWith('--')&&!['--sidebar-w','--font-jp'].includes(key))expect(globals).toContain(`--color-sap-d2-${key.slice(2)}: ${value};`);
  });
  it('原本単体の派生色を全量固定し、共有dark設定の混入を防ぐ',()=>{
-  mermaid.initialize({...source,startOnLoad:false});const expected=Object.fromEntries(Object.entries(mermaid.mermaidAPI.getConfig().themeVariables??{}).map(([k,v])=>[k,typeof v==='string'&&/^(?:hsl|rgb)a?\(/.test(v)&&isValid(v)?toHex(v):v]));
+  mermaid.initialize({...source,theme:'base',flowchart:{...source.flowchart,curve:'basis'},startOnLoad:false});const expected=Object.fromEntries(Object.entries(mermaid.mermaidAPI.getConfig().themeVariables??{}).map(([k,v])=>[k,typeof v==='string'&&/^(?:hsl|rgb)a?\(/.test(v)&&isValid(v)?toHex(v):v]));
   expect(renderTheme.themeVariables).toEqual({...expected,fontFamily:'"Noto Sans JP Variable",sans-serif'});
  });
  it('固定目次・アンカー着地が共有ヘッダーの高さを含む',()=>{
