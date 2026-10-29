@@ -9,255 +9,175 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：9. 横断: シナリオ別「この要件ならこの答え」早見表"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"要件(問題文のシグナル)"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"第一候補の設計"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"関連タスク"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"複数アカウント/リージョンに同じインフラを展開"}
 </td>
-{"\n                                "}
 <td>
 {"CloudFormation StackSets"}
 </td>
-{"\n                                "}
 <td>
 {"2.1"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ダウンタイムなしで安全に切替、即時ロールバック"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Blue/Green(CodeDeploy、ALB\n                                    の加重ターゲットグループでリクエスト単位に分散。Route 53 加重は\n                                    DNS 応答の選択でありリゾルバーの TTL\n                                    キャッシュにより実際の比率がずれ、切り戻しも遅れうる)\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"2.1"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"オンプレミスの DR を低コストで"}
 </td>
-{"\n                                "}
 <td>
 {"AWS Elastic Disaster Recovery"}
 </td>
-{"\n                                "}
 <td>
 {"2.2"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"RTO 分単位、RPO 秒単位、リージョン障害対応"}
 </td>
-{"\n                                "}
 <td>
 {"Aurora Global Database + ウォームスタンバイ + Route 53"}
 </td>
-{"\n                                "}
 <td>
 {"2.2 / 2.4"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"S3 データのリージョン間複製"}
 </td>
-{"\n                                "}
 <td>
 {"S3 CRR(バージョニング必須)"}
 </td>
-{"\n                                "}
 <td>
 {"2.2"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"バックアップの削除・改ざん防止"}
 </td>
-{"\n                                "}
 <td>
 {"AWS Backup Vault Lock + クロスアカウントコピー"}
 </td>
-{"\n                                "}
 <td>
 {"2.2"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"インターネットを通さず AWS サービスへ接続"}
 </td>
-{"\n                                "}
 <td>
 {"VPC エンドポイント(S3/DynamoDB はゲートウェイ型)"}
 </td>
-{"\n                                "}
 <td>
 {"2.3 / 2.6"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"L7 攻撃と DDoS の多層防御"}
 </td>
-{"\n                                "}
 <td>
 {"CloudFront + WAF + Shield(Advanced) + Route 53"}
 </td>
-{"\n                                "}
 <td>
 {"2.3"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"DB パスワードの自動ローテーション"}
 </td>
-{"\n                                "}
 <td>
 {"Secrets Manager"}
 </td>
-{"\n                                "}
 <td>
 {"2.3"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"急な負荷増・処理の取りこぼし防止"}
 </td>
-{"\n                                "}
 <td>
 {"SQS でバッファ + Auto Scaling"}
 </td>
-{"\n                                "}
 <td>
 {"2.4 / 2.5"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"読み取り負荷の高い DB の高速化"}
 </td>
-{"\n                                "}
 <td>
 {"ElastiCache / DAX / リードレプリカ"}
 </td>
-{"\n                                "}
 <td>
 {"2.5"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"世界中のユーザーへ低レイテンシー"}
 </td>
-{"\n                                "}
 <td>
 {"CloudFront、レイテンシールーティング、Global Accelerator"}
 </td>
-{"\n                                "}
 <td>
 {"2.4 / 2.5"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"変動する負荷で最安"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    ベース: Savings Plans/RI、変動: オンデマンド、中断可: スポット\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"2.6"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"古いデータの保管コスト削減"}
 </td>
-{"\n                                "}
 <td>
 {"S3 ライフサイクル / Intelligent-Tiering / Glacier"}
 </td>
-{"\n                                "}
 <td>
 {"2.6"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -616,31 +536,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：試験ガイド"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"SAP-C02 試験ガイド(トップ)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html"}>
@@ -648,15 +558,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"\n                                    Content Domain 2: Design for New Solutions(本ガイドのアンカー)\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02-domain2.html"}>
@@ -664,11 +570,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -680,31 +583,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：全般(Well-Architected)"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Well-Architected Framework"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"}>
@@ -712,15 +605,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"信頼性の柱"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html"}>
@@ -728,15 +617,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"セキュリティの柱"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html"}>
@@ -744,15 +629,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"パフォーマンス効率の柱"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/wellarchitected/latest/performance-efficiency-pillar/welcome.html"}>
@@ -760,15 +641,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"コスト最適化の柱"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/wellarchitected/latest/cost-optimization-pillar/welcome.html"}>
@@ -776,15 +653,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS グローバルインフラストラクチャ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://aws.amazon.com/about-aws/global-infrastructure/"}>
@@ -792,11 +665,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -808,31 +678,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.1 デプロイ戦略"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS CloudFormation ユーザーガイド"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"}>
@@ -840,15 +700,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"CloudFormation ベストプラクティス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html"}>
@@ -856,15 +712,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"変更セット"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-changesets.html"}>
@@ -872,15 +724,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ドリフト検出"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-stack-drift.html"}>
@@ -888,15 +736,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ロールバックトリガー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-rollback-triggers.html"}>
@@ -904,15 +748,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"StackSets"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/what-is-cfnstacksets.html"}>
@@ -920,15 +760,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS CDK デベロッパーガイド"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/cdk/v2/guide/home.html"}>
@@ -936,15 +772,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS CodePipeline"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html"}>
@@ -952,15 +784,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS CodeDeploy"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html"}>
@@ -968,15 +796,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Elastic Beanstalk のデプロイポリシー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html"}>
@@ -984,15 +808,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ホワイトペーパー: Practicing CI/CD on AWS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/whitepapers/latest/practicing-continuous-integration-continuous-delivery/welcome.html"}>
@@ -1000,15 +820,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ホワイトペーパー: Overview of Deployment Options on AWS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/whitepapers/latest/overview-deployment-options/welcome.html"}>
@@ -1016,15 +832,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Systems Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html"}>
@@ -1032,15 +844,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Systems Manager Patch Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/systems-manager/latest/userguide/patch-manager.html"}>
@@ -1048,15 +856,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Systems Manager Parameter Store"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html"}>
@@ -1064,11 +868,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1080,31 +881,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.2 ビジネス継続性"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ホワイトペーパー: Disaster Recovery of Workloads on AWS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html"}>
@@ -1112,15 +903,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"\n                                    DR\n                                    オプション(バックアップとリストア、パイロットライト、ウォームスタンバイ、マルチサイト)\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"}>
@@ -1128,15 +915,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Elastic Disaster Recovery"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html"}>
@@ -1144,15 +927,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Backup"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html"}>
@@ -1160,15 +939,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Route 53 ルーティングポリシー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html"}>
@@ -1176,15 +951,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Route 53 Application Recovery Controller"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html"}>
@@ -1192,15 +963,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"S3 レプリケーション"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html"}>
@@ -1208,15 +975,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Aurora Global Database"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html"}>
@@ -1224,15 +987,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"DynamoDB グローバルテーブル"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GlobalTables.html"}>
@@ -1240,15 +999,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"RDS Multi-AZ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"}>
@@ -1256,11 +1011,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1272,31 +1024,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.3 セキュリティ"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"IAM のセキュリティベストプラクティス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"}>
@@ -1304,15 +1046,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ポリシーの評価論理"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html"}>
@@ -1320,15 +1058,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"権限境界"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html"}>
@@ -1336,15 +1070,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"VPC セキュリティグループ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html"}>
@@ -1352,15 +1082,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ネットワーク ACL"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"}>
@@ -1368,15 +1094,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ルートテーブル"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html"}>
@@ -1384,15 +1106,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"VPC エンドポイント(PrivateLink)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/vpc/latest/privatelink/what-are-vpc-endpoints.html"}>
@@ -1400,15 +1118,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ゲートウェイエンドポイント"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html"}>
@@ -1416,15 +1130,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS KMS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/kms/latest/developerguide/overview.html"}>
@@ -1432,15 +1142,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Secrets Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"}>
@@ -1448,15 +1154,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Certificate Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html"}>
@@ -1464,15 +1166,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Shield"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html"}>
@@ -1480,15 +1178,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS WAF"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html"}>
@@ -1496,15 +1190,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Firewall Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html"}>
@@ -1512,15 +1202,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon GuardDuty"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html"}>
@@ -1528,15 +1214,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Security Hub"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html"}>
@@ -1544,15 +1226,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ホワイトペーパー: AWS Best Practices for DDoS Resiliency"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/whitepapers/latest/aws-best-practices-ddos-resiliency/welcome.html"}>
@@ -1560,11 +1238,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1576,31 +1251,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.4 信頼性"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon EC2 Auto Scaling"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html"}>
@@ -1608,15 +1273,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Auto Scaling のスケーリングポリシー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html"}>
@@ -1624,15 +1285,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon SQS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"}>
@@ -1640,15 +1297,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon SNS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/sns/latest/dg/welcome.html"}>
@@ -1656,15 +1309,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Step Functions"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html"}>
@@ -1672,15 +1321,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon EventBridge"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html"}>
@@ -1688,15 +1333,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Service Quotas"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html"}>
@@ -1704,11 +1345,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1720,31 +1358,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.5 パフォーマンス"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon CloudWatch"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html"}>
@@ -1752,15 +1380,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS X-Ray"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html"}>
@@ -1768,15 +1392,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Compute Optimizer"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html"}>
@@ -1784,15 +1404,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"EC2 インスタンスタイプ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/ec2/latest/instancetypes/instance-types.html"}>
@@ -1800,15 +1416,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"EBS ボリュームタイプ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html"}>
@@ -1816,15 +1428,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon EFS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"}>
@@ -1832,15 +1440,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"S3 のパフォーマンス最適化"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html"}>
@@ -1848,15 +1452,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"DynamoDB Accelerator (DAX)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html"}>
@@ -1864,15 +1464,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"RDS Proxy"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html"}>
@@ -1880,15 +1476,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon CloudFront"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"}>
@@ -1896,15 +1488,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Global Accelerator"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html"}>
@@ -1912,15 +1500,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS のデータベース(目的特化型)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://aws.amazon.com/products/databases/"}>
@@ -1928,11 +1512,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1944,31 +1525,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.6 コスト最適化"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"URL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Cost Explorer"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"}>
@@ -1976,15 +1547,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Budgets"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"}>
@@ -1992,15 +1559,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Cost Anomaly Detection"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html"}>
@@ -2008,15 +1571,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"コスト配分タグ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html"}>
@@ -2024,15 +1583,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Trusted Advisor"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html"}>
@@ -2040,15 +1595,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Pricing Calculator"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/pricing-calculator/latest/userguide/what-is-pricing-calculator.html"}>
@@ -2056,15 +1607,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Savings Plans"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"}>
@@ -2072,15 +1619,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"EC2 リザーブドインスタンス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-reserved-instances.html"}>
@@ -2088,15 +1631,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"EC2 スポットインスタンス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html"}>
@@ -2104,15 +1643,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"S3 ストレージクラス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"}>
@@ -2120,15 +1655,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"\n                                    ブログ: Overview of Data Transfer Costs for Common Architectures\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <a href={"https://aws.amazon.com/blogs/architecture/overview-of-data-transfer-costs-for-common-architectures/"}>
@@ -2136,11 +1667,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </a>
 {"\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>

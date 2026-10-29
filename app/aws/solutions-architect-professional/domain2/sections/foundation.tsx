@@ -80,75 +80,50 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：SAP-C02\n                    は「サービスの名前を知っているか」ではなく、複数の要件(コスト・可用性・セキュリティ・運用負荷)が衝突する場面で、最も適切な組み合わせを選べるかを問う試験です。そのため本ガイドは、各タスクを次の4ステップで解説します。"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"ステップ"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Step 1"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    公式試験ガイドの「Knowledge of(知識)」「Skills\n                                    in(スキル)」を、初学者向けにやさしく言い換える\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Step 2"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    関連サービス・機能の仕組みを、図(Mermaid)と表(Markdown)で理解する\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Step 3"}
 </td>
-{"\n                                "}
 <td>
 {"ベストプラクティス(設計の定石)を押さえる"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Step 4"}
 </td>
-{"\n                                "}
 <td>
 {"試験での「選び方のコツ」と「ひっかけポイント」を確認する"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -160,111 +135,74 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：初学者がつまずきやすい用語(先に確認)"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"用語"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"やさしい意味"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"リージョン (Region)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    世界各地にある、AWSのデータセンター群の「地域」(例:\n                                    東京、バージニア北部)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"アベイラビリティゾーン (AZ)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    1つのリージョン内にある、電源・ネットワークが独立した複数の拠点\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"IaC (Infrastructure as Code)"}
 </td>
-{"\n                                "}
 <td>
 {"インフラ構成をコード(テキスト)で書き、再現可能にする考え方"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"RTO"}
 </td>
-{"\n                                "}
 <td>
 {"障害から「どれくらいの時間で」復旧するか(目標復旧時間)"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"RPO"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    障害時に「どれくらい前の時点まで」データが戻ってよいか(目標復旧時点)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"最小権限"}
 </td>
-{"\n                                "}
 <td>
 {"必要な操作だけを許可し、それ以外は許可しない原則"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"マネージドサービス"}
 </td>
-{"\n                                "}
 <td>
 {"パッチ適用や冗長化などの運用をAWSに任せられるサービス"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -296,127 +234,87 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    D2[\"Domain 2: Design for New Solutions\"]\n    T1[\"Task 2.1<br/>デプロイ戦略<br/>運用上の優秀性\"]\n    T2[\"Task 2.2<br/>ビジネス継続性<br/>信頼性 DR\"]\n    T3[\"Task 2.3<br/>セキュリティ統制<br/>セキュリティ\"]\n    T4[\"Task 2.4<br/>信頼性要件<br/>信頼性 可用性\"]\n    T5[\"Task 2.5<br/>パフォーマンス目標<br/>パフォーマンス効率\"]\n    T6[\"Task 2.6<br/>コスト最適化<br/>コスト最適化\"]\n    D2 --> T1\n    D2 --> T2\n    D2 --> T3\n    D2 --> T4\n    D2 --> T5\n    D2 --> T6\n\n    classDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\n    class D2 highlightFill"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"タスク"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"一言でいうと"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"中心となるサービス・概念"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"2.1"}
 </td>
-{"\n                                "}
 <td>
 {"安全に素早くリリースし、失敗したら戻せる設計"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    CloudFormation, CDK, CodePipeline, CodeDeploy, Systems Manager\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"2.2"}
 </td>
-{"\n                                "}
 <td>
 {"災害時にも事業を止めない設計"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    RTO/RPO, DR 4戦略, Route 53, AWS Backup, Elastic Disaster\n                                    Recovery\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"2.3"}
 </td>
-{"\n                                "}
 <td>
 {"守るべきものを、必要最小限の許可で守る設計"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    IAM, セキュリティグループ, NACL, KMS, WAF, Shield, GuardDuty\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"2.4"}
 </td>
-{"\n                                "}
 <td>
 {"壊れても動き続ける・すぐ戻る設計"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Multi-AZ/Region, Auto Scaling, SQS/SNS/Step Functions, Route 53\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"2.5"}
 </td>
-{"\n                                "}
 <td>
 {"負荷が増えても速く動く設計"}
 </td>
-{"\n                                "}
 <td>
 {"キャッシュ, レプリカ, ストレージ選定, 専用データベース"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"2.6"}
 </td>
-{"\n                                "}
 <td>
 {"必要な性能を最も安く得る設計"}
 </td>
-{"\n                                "}
 <td>
 {"Savings Plans, RI, ストレージ階層化, データ転送コスト"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>

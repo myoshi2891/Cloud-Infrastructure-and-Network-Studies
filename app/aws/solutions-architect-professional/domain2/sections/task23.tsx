@@ -17,143 +17,98 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 1: 何を問われるか"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"区分"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"公式の項目"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"やさしい言い換え"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"IAM"}
 </td>
-{"\n                                "}
 <td>
 {"誰が何をできるかの制御"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"ルートテーブル、セキュリティグループ、ネットワーク ACL"}
 </td>
-{"\n                                "}
 <td>
 {"ネットワークの通り道と門番"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"保存時/転送時の暗号化"}
 </td>
-{"\n                                "}
 <td>
 {"保存データと通信データの暗号化"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"AWS サービスエンドポイント"}
 </td>
-{"\n                                "}
 <td>
 {"AWS サービスへの接続口"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"認証情報管理サービス"}
 </td>
-{"\n                                "}
 <td>
 {"パスワードやキーの安全な保管"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"知識"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    マネージドセキュリティサービス(Shield、WAF、GuardDuty、Security\n                                    Hub)\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"攻撃防御と脅威検出の道具"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"スキル"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    最小権限、通信制御、大規模 Web\n                                    攻撃対策、暗号化戦略、エンドポイント指定、パッチ管理\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"上記を要件に合わせて組み合わせる"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -183,55 +138,37 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：覚え方: 「明示的 Deny が最優先 → 暗黙的\n                    Deny(何も許可がなければ拒否) → Allow があって初めて許可」。"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"仕組み"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"役割"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"IAM ロール"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    一時的な認証情報を発行。EC2、Lambda、ECS\n                                    タスクにはアクセスキーではなくロールを付与\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"IAM Identity Center"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    人間のユーザー向けのシングルサインオンとフェデレーション(長期アクセスキーを避ける)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"権限境界 (Permissions Boundary)"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    ロール/ユーザーが持てる"}
 <strong>
@@ -239,15 +176,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"を制限(委任管理で有効)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"SCP"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    組織/OU/アカウントの"}
 <strong>
@@ -255,27 +188,19 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"を制限(Domain 1 で詳述)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"IAM Access Analyzer"}
 </td>
-{"\n                                "}
 <td>
 {"外部公開や未使用の権限を検出、最小権限ポリシーの生成を支援"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"条件キー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <code>
@@ -291,11 +216,8 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </code>
 {"\n                                    などで条件付き許可\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -460,79 +382,57 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: ネットワーク統制(ルートテーブル、セキュリティグループ、NACL)"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"観点"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"セキュリティグループ"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"ネットワーク ACL"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"適用単位"}
 </td>
-{"\n                                "}
 <td>
 {"ENI(インスタンス等)"}
 </td>
-{"\n                                "}
 <td>
 {"サブネット"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"状態"}
 </td>
-{"\n                                "}
 <td>
 <strong>
 {"ステートフル"}
 </strong>
 {"(戻り通信は自動許可)"}
 </td>
-{"\n                                "}
 <td>
 <strong>
 {"ステートレス"}
 </strong>
 {"(往復とも明示が必要)"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ルール"}
 </td>
-{"\n                                "}
 <td>
 <strong>
 {"許可のみ"}
 </strong>
 </td>
-{"\n                                "}
 <td>
 {"許可と"}
 <strong>
@@ -540,19 +440,14 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"の両方"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"評価"}
 </td>
-{"\n                                "}
 <td>
 {"全ルールを評価"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <strong>
@@ -560,27 +455,19 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"に評価、最初に一致したもので決定\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"用途"}
 </td>
-{"\n                                "}
 <td>
 {"通常の通信制御の主役"}
 </td>
-{"\n                                "}
 <td>
 {"サブネット境界での粗い制御、特定 IP の明示的拒否"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -644,31 +531,21 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    subgraph REST[\"保存時の暗号化\"]\n        K[\"AWS KMS<br/>カスタマー管理キー\"] --> S3[\"S3 SSE-KMS\"]\n        K --> EBS[\"EBS 暗号化\"]\n        K --> RDS[\"RDS 暗号化\"]\n    end\n    subgraph TRANSIT[\"転送時の暗号化\"]\n        ACM[\"AWS Certificate Manager\"] --> CF[\"CloudFront と ALB で TLS\"]\n    end"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"対象"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"方法"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"鍵管理"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <strong>
@@ -676,15 +553,11 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {": AWS 所有キー、AWS\n                                    マネージドキー、カスタマー管理キー(ローテーション、キーポリシー、監査が可能)。マルチリージョンキーで\n                                    DR 用に同じキーマテリアルを複数リージョンで利用\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"専用ハードウェア要件"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <strong>
@@ -692,39 +565,27 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {": 専有の HSM\n                                    が必要な場合(厳格なコンプライアンス)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"S3"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    SSE-S3、SSE-KMS、DSSE-KMS、クライアント側暗号化。バケットポリシーで暗号化なしのアップロードや\n                                    HTTP を拒否できる\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"EBS / RDS / DynamoDB / EFS"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    作成時に暗号化を有効化(既存の非暗号化リソースはスナップショット経由などで暗号化版を作成)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"転送時"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    TLS。証明書は\n                                    "}
 <strong>
@@ -732,23 +593,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {" で発行・自動更新。ALB、CloudFront、API\n                                    Gateway に適用\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"内部通信"}
 </td>
-{"\n                                "}
 <td>
 {"VPN、Direct Connect + MACsec/IPsec 等で保護"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -855,99 +709,70 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：目的は、インターネットを経由せずに VPC から AWS\n                    サービスへ接続することです。"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"種類"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"対象"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"仕組み"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"費用の考え方"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ゲートウェイエンドポイント"}
 </td>
-{"\n                                "}
 <td>
 <strong>
 {"S3 と DynamoDB"}
 </strong>
 </td>
-{"\n                                "}
 <td>
 {"ルートテーブルにエントリを追加"}
 </td>
-{"\n                                "}
 <td>
 <strong>
 {"追加料金なし"}
 </strong>
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"インターフェースエンドポイント (PrivateLink)"}
 </td>
-{"\n                                "}
 <td>
 {"多数の AWS サービス、他社/自社の公開サービス"}
 </td>
-{"\n                                "}
 <td>
 {"サブネットに ENI を作成しプライベート IP で接続"}
 </td>
-{"\n                                "}
 <td>
 {"時間課金+データ処理料金"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"ゲートウェイロードバランサーエンドポイント"}
 </td>
-{"\n                                "}
 <td>
 {"仮想アプライアンス(ファイアウォール等)の挿入"}
 </td>
-{"\n                                "}
 <td>
 {"トラフィックを検査装置へ"}
 </td>
-{"\n                                "}
 <td>
 {"構成による"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -997,39 +822,27 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: 認証情報の管理"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"サービス"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"向いている用途"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"特徴"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Secrets Manager"}
 </td>
-{"\n                                "}
 <td>
 {"DB パスワード、API キー"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    "}
 <strong>
@@ -1037,59 +850,41 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"(RDS\n                                    等はネイティブ対応)、リージョン間レプリケーション、KMS\n                                    暗号化。有料\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"SSM Parameter Store"}
 </td>
-{"\n                                "}
 <td>
 {"設定値、シンプルな秘密情報"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    階層管理、SecureString。標準パラメータは無料枠あり。自動ローテーションは標準では持たない\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"IAM ロール(一時認証情報)"}
 </td>
-{"\n                                "}
 <td>
 {"AWS サービス間のアクセス"}
 </td>
-{"\n                                "}
 <td>
 {"キーそのものを持たない(最も安全)"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"ACM"}
 </td>
-{"\n                                "}
 <td>
 {"TLS 証明書"}
 </td>
-{"\n                                "}
 <td>
 {"自動更新"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1117,35 +912,24 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-F: マネージドセキュリティサービス"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"サービス"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"役割"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"覚え方"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Shield"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    DDoS 対策。"}
 <strong>
@@ -1157,67 +941,47 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {" は高度な検知、SRT(Shield Response\n                                    Team)支援、コスト保護など\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"「DDoS = Shield」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS WAF"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Web アプリケーション層(L7)のルール(SQL\n                                    インジェクション、XSS、レートベース、Bot\n                                    制御)。CloudFront、ALB、API Gateway などに適用\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"「Web の攻撃 = WAF」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Firewall Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    複数アカウントの WAF、Shield\n                                    Advanced、セキュリティグループ、Network Firewall\n                                    のルールを一元管理\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"「組織全体で統制」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Network Firewall"}
 </td>
-{"\n                                "}
 <td>
 {"VPC のネットワーク境界での状態検査 / 侵入防止"}
 </td>
-{"\n                                "}
 <td>
 {"「VPC 境界のファイアウォール」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon GuardDuty"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    CloudTrail、VPC フローログ、DNS\n                                    ログなどを分析する"}
 <strong>
@@ -1225,82 +989,58 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"(機械学習)\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"「怪しい挙動を検知」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"AWS Security Hub"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    各サービスの検出結果を集約し、セキュリティ標準への準拠を評価\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"「検出結果の集約」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Amazon Inspector"}
 </td>
-{"\n                                "}
 <td>
 {"EC2、コンテナ、Lambda の"}
 <strong>
 {"脆弱性スキャン"}
 </strong>
 </td>
-{"\n                                "}
 <td>
 {"「脆弱性 = Inspector」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon Macie"}
 </td>
-{"\n                                "}
 <td>
 {"S3 内の機密データ(PII など)を検出"}
 </td>
-{"\n                                "}
 <td>
 {"「機密データ = Macie」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"AWS Config"}
 </td>
-{"\n                                "}
 <td>
 {"構成の準拠性評価と変更履歴"}
 </td>
-{"\n                                "}
 <td>
 {"「構成のルール評価」"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1368,55 +1108,37 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-H: パッチ管理"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"手段"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"Systems Manager Patch Manager"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    パッチベースラインで承認ルールを定義し、メンテナンスウィンドウで適用。コンプライアンスレポートも出力\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"Amazon Inspector"}
 </td>
-{"\n                                "}
 <td>
 {"脆弱性を継続的にスキャンし、優先度付け"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"EC2 Image Builder"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    パッチ適用済みの AMI\n                                    を"}
 <strong>
@@ -1424,23 +1146,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 {"(Immutable な運用)\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"マネージドサービス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    RDS のメンテナンスウィンドウ、Fargate、Lambda などは基盤パッチを\n                                    AWS が担う\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1476,147 +1191,98 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 3: Task 2.3 試験のコツ"}>
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className={"header"}>
-{"\n                                "}
 <th scope="col">
 {"問題文のキーワード"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"選ぶべき方向性"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"「インターネット経由なしで S3 へ」"}
 </td>
-{"\n                                "}
 <td>
 {"ゲートウェイ VPC エンドポイント"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"「特定 IP を確実にブロック」"}
 </td>
-{"\n                                "}
 <td>
 {"NACL の拒否ルール(セキュリティグループは拒否不可)"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"「SQL インジェクション/XSS を防ぐ」"}
 </td>
-{"\n                                "}
 <td>
 {"AWS WAF"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"「大規模 DDoS、コスト保護、専門チーム支援」"}
 </td>
-{"\n                                "}
 <td>
 {"Shield Advanced"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"「パスワードの自動ローテーション」"}
 </td>
-{"\n                                "}
 <td>
 {"Secrets Manager"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"「複数アカウントのルールを一括適用」"}
 </td>
-{"\n                                "}
 <td>
 {"Firewall Manager"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"「異常な API 呼び出しや不正通信を検出」"}
 </td>
-{"\n                                "}
 <td>
 {"GuardDuty"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"「検出結果を一元表示」"}
 </td>
-{"\n                                "}
 <td>
 {"Security Hub"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"odd"}>
-{"\n                                "}
 <td>
 {"「暗号鍵の使用を細かく監査・制御」"}
 </td>
-{"\n                                "}
 <td>
 {"KMS カスタマー管理キー(キーポリシー、CloudTrail)"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className={"even"}>
-{"\n                                "}
 <td>
 {"「長期アクセスキーを使わない」"}
 </td>
-{"\n                                "}
 <td>
 {"IAM ロール、IAM Identity Center"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
