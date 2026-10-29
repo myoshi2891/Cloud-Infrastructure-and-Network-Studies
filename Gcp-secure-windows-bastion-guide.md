@@ -642,11 +642,44 @@ gcloud compute instances describe vm-securehost --zone=$ZONE \
 | 通信 | 経路 | 許可している設定 |
 |---|---|---|
 | 管理者 PC → 踏み台 | インターネット → 外部 IP | `allow-rdp-bastion`（securenetwork） |
-| 踏み台 → セキュアホスト | VPC 内の内部通信 | 下記の説明 |
+| 踏み台 → セキュアホスト | `default` VPC 内の内部通信（両 VM の nic1） | `allow-rdp-bastion-to-securehost`（default、下記で作成） |
 
-> 🔑 **補足（重要）**: 受信はデフォルトで全拒否なので、`securenetwork` 側にはセキュアホストへの許可ルールがありません。一方、**`default` VPC には `default-allow-internal`（内部通信を全許可）が最初から存在**します。両 VM は nic1 で `default` に接続されているため、**踏み台からセキュアホストへの RDP は default 側の内部通信で成立**します。これが「全 VM に default VPC への第2 NIC を付ける」要件が、結果的に管理経路としても機能する理由です。
+> 🔑 **補足（重要）**: 踏み台からセキュアホストへの RDP は、両 VM の nic1 が接続された **`default` VPC 側**を通ります。`default` VPC には `default-allow-internal`（VPC 内の全通信を許可）が最初から存在するため、何もしなくても接続できてしまいますが、この広いルールに依存すると、セキュアホストの nic1 が `default` VPC の全 VM から全ポートで到達可能なままになります。次の手順で **踏み台からセキュアホストへの TCP 3389 だけ** を許可するルールを作成し、そのうえで `default-allow-internal` と、同じく `default` VPC の全 VM へ TCP 3389 を許可する `default-allow-rdp` を削除します（踏み台への管理者 PC からの RDP は `securenetwork` 側の外部 IP と `allow-rdp-bastion` で成立するため影響しません）。
+
+```bash
+# 踏み台の nic1（default VPC 側）の内部 IP を取得する
+BASTION_DEFAULT_IP=$(gcloud compute instances describe vm-bastionhost --zone=$ZONE \
+  --format="get(networkInterfaces[1].networkIP)")
+echo "BASTION_DEFAULT_IP=${BASTION_DEFAULT_IP}"
+
+# セキュアホストにルールの適用対象となるタグを付与する（11.2 と共通）
+gcloud compute instances add-tags vm-securehost \
+  --zone=$ZONE \
+  --tags=securehost
+
+# default VPC で、踏み台の nic1 からセキュアホストへの TCP 3389 だけを許可する
+gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
+  --network=default \
+  --direction=INGRESS \
+  --action=ALLOW \
+  --rules=tcp:3389 \
+  --source-ranges="${BASTION_DEFAULT_IP}/32" \
+  --target-tags=securehost
+
+# 上のルールで RDP できることを確認してから、広い許可ルールを削除する
+# default-allow-rdp（0.0.0.0/0 から TCP 3389）も default VPC の全 VM に RDP を許可するため、併せて削除する
+gcloud compute firewall-rules delete default-allow-internal default-allow-rdp --quiet
+```
+
+| 項目 | 内容 |
+|---|---|
+| ソース | 踏み台の nic1（`default` VPC 側）の内部 IP のみ（`/32`） |
+| ターゲット | タグ `securehost` を持つ VM（セキュアホスト）のみ |
+| 効果 | `default` VPC 側でも、踏み台からの RDP（3389）以外はセキュアホストへ届かない |
+
+> ⚠️ **`securenetwork` のルールでは保護されない**: 11.2 の `allow-rdp-internal` は `securenetwork` に作るルールで、セキュアホストの nic0（`securenetwork` 側）にしか作用しません。セキュアホストの nic1（`default` VPC 側）への通信は `default` VPC のファイアウォールルールだけで決まるため、上のとおり `default` 側でも許可を絞る必要があります。
 >
-> ただし、この構成は「default 側のルールに依存している」ともいえます。意図を明示するには、11 章の「RDP を内部だけに許可する FW ルール」を `securenetwork` に追加するのがよい設計です。
+> 💡 **監視などで内部通信が必要な場合**: `default-allow-internal` を削除すると、`default` VPC 内の他の通信も拒否されます。監視エージェントやヘルスチェックなどで必要な通信がある場合は、必要なポートだけを、送信元を必要な IP 範囲（ヘルスチェックなら Google の指定範囲など）に限定した個別のルールとして追加してください。
 
 ### 8.4 手順 3：IIS（Web サーバー）のインストール
 

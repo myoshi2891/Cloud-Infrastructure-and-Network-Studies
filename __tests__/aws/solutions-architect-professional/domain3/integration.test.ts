@@ -28,4 +28,13 @@ describe('SAP Domain 3 統合契約',()=>{
   const rules=snapshotCssRules(fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8'));
   const sidebar=rules.filter(r=>r.selector==='.sap-domain3-page .sidebar');expect(sidebar.at(-1)?.declarations).toContainEqual({prop:'top',value:'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))',important:false});
  });
+ it('モバイルで閉じた目次をフォーカス・読み上げ対象から外し、再生成処理にも反映',()=>{
+  const rule='@media (max-width: 980px) { .sap-domain3-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s, visibility 0s linear 0.25s; } }';
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');const rules=snapshotCssRules(css);
+  const closed=rules.find(r=>r.selector==='.sap-domain3-page .sidebar:not(.open)'&&r.media==='(max-width: 980px)');
+  expect(closed?.declarations).toContainEqual({prop:'visibility',value:'hidden',important:false});
+  expect(closed?.declarations).toContainEqual({prop:'transition',value:'transform 0.25s, visibility 0s linear 0.25s',important:false});
+  expect(rules.some(r=>r.selector==='.sap-domain3-page .sidebar.open'&&r.declarations.some(d=>d.prop==='visibility'))).toBe(false);
+  expect(css).toContain(rule);expect(fs.readFileSync('scripts/migrate-sap-domain3.mjs','utf8')).toContain(rule);
+ });
 });

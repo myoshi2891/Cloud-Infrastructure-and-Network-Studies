@@ -117,8 +117,14 @@ gcloud container clusters list
 
 ```bash
 gcloud container clusters get-credentials echo-cluster --zone=$ZONE
-kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
+if [ -z "$(kubectl get deployment echo-web --ignore-not-found -o name)" ]; then
+  kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+fi
+if [ -z "$(kubectl get service echo-web --ignore-not-found -o name)" ]; then
+  kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+fi
+kubectl get deployment,service echo-web
 ```
 
 | コマンド | 何をしているか |
@@ -126,6 +132,7 @@ kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8
 | `get-credentials` | `kubectl` がどのクラスタを操作するかの接続情報を取得して設定する |
 | `create deployment` | `echo-web` という Deployment を作り、v1 イメージで Pod を 1 つ起動する |
 | `expose deployment` | Deployment に対する Service を作る |
+| `get ... --ignore-not-found -o name` | 既存リソースの有無を確認する。ラボ環境で v1 が作成済みの場合は `create` / `expose` を実行せず、既存の Deployment と Service をそのまま使う（再実行すると `AlreadyExists` エラーになるため） |
 
 #### `expose` の 3 つのオプションを理解する
 
@@ -561,8 +568,14 @@ export PROJECT_ID=$(gcloud config get-value project)
 
 # 0-1. 接続と v1 のデプロイ
 gcloud container clusters get-credentials echo-cluster --zone=$ZONE
-kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
+if [ -z "$(kubectl get deployment echo-web --ignore-not-found -o name)" ]; then
+  kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+fi
+if [ -z "$(kubectl get service echo-web --ignore-not-found -o name)" ]; then
+  kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+fi
+kubectl get deployment,service echo-web
 
 # Task 1: ダウンロード・展開・ビルド
 gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
@@ -586,7 +599,13 @@ kubectl get pods
 
 # Task 5: 動作確認
 kubectl get service echo-web
-export EXTERNAL_IP=$(kubectl get service echo-web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+# LoadBalancer に外部 IP が割り当てられるまで待つ（空のまま curl しない）
+EXTERNAL_IP=""
+until [ -n "$EXTERNAL_IP" ]; do
+  EXTERNAL_IP=$(kubectl get service echo-web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  [ -n "$EXTERNAL_IP" ] || { echo "外部 IP の割り当て待ち..."; sleep 10; }
+done
+export EXTERNAL_IP
 curl "http://${EXTERNAL_IP}"
 ```
 

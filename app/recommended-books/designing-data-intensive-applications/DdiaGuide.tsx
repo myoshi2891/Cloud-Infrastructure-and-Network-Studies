@@ -118,7 +118,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"1.2 著者について"}
 </h3>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 1：1.2 著者について">
 {"\n                    "}
 <table>
 <thead>
@@ -191,7 +191,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"2.1 版の比較表"}
 </h3>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 2：2.1 版の比較表">
 {"\n                    "}
 <table>
 <thead>
@@ -311,7 +311,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"2.3 章構成の対応表（第1版 → 第2版）"}
 </h3>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 3：2.3 章構成の対応表（第1版 → 第2版）">
 {"\n                    "}
 <table>
 <thead>
@@ -580,7 +580,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                    第2版で新設されたこの章は、個々の技術に入る前に「意思決定の軸」を整理するための章です。主なトレードオフは以下の3つです。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 4：4.1 第1章：データシステムのトレードオフ">
 {"\n                    "}
 <table>
 <thead>
@@ -713,7 +713,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                    「システムが期待通りに動作し続けること」と定義され、以下の障害への耐性で構成されます。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 5：信頼性（Reliability）">
 {"\n                    "}
 <table>
 <thead>
@@ -788,7 +788,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"を使うことが定石とされています。平均値は一部の極端に遅いリクエスト（テールレイテンシ）を隠してしまうためです。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 6：スケーラビリティ（Scalability）">
 {"\n                    "}
 <table>
 <thead>
@@ -901,7 +901,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-3" label="図4：データモデルの選択は、アプリケーション開発の初期段階で最も影響の大きい意思決定の一つです。DDIA第2版では、リレーショナル・ドキュメント・グラフの3大モデルに加え、GraphQL、Datalog、DataFrame/行列形式まで議論の幅が広がっています。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 7：5.1 第3章：データモデルとクエリ言語">
 {"\n                    "}
 <table>
 <thead>
@@ -1055,7 +1055,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-4" label="図5：「データベースの内部でデータがどう保存されているか」を理解することは、パフォーマンスチューニングやデータベース選定において不可欠です。DDIAはOLTP用途の2大インデックス構造、B-TreeとLSM-Tree（Log-Structured Merge-Tree）を対比しながら解説します。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 8：5.2 第4章：ストレージとインデックス">
 {"\n                    "}
 <table>
 <thead>
@@ -1198,7 +1198,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-5" label="図6：データをネットワークやディスクへ送る際には、メモリ上のオブジェクトを別の形式に変換（エンコード）する必要があります。この章は「スキーマが時間とともに変化しても、新旧のコードが互いに読み書きできる（後方互換性・前方互換性）」ことの重要性を扱います。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 9：5.3 第5章：エンコーディングとスキーマの進化">
 {"\n                    "}
 <table>
 <thead>
@@ -1327,7 +1327,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-6" label="図7：同じデータを複数のノードにコピーして保持する仕組みで、可用性の向上・読み取り負荷の分散・低レイテンシアクセスを目的とします。方式は大きく3つに分類されます。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 10：6.1 第6章：レプリケーション">
 {"\n                    "}
 <table>
 <thead>
@@ -1492,7 +1492,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-7" label="図8：1台のノードに収まらない量のデータを複数ノードに分割して保存する手法です。第2版では章題が「Partitioning」から「Sharding」に変更され、マルチテナンシー（複数の顧客・テナントのデータを1つの基盤で扱う設計）の観点が強化されています。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 11：6.2 第7章：シャーディング（パーティショニング）">
 {"\n                    "}
 <table>
 <thead>
@@ -1605,7 +1605,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                "}
 <Diagram id="diagram-8" label="図9：トランザクションはアプリケーション開発者が「複雑な障害シナリオを気にせずに済むようにする」ための抽象化です。ACID（Atomicity・Consistency・Isolation・Durability）という言葉自体は有名ですが、DDIAはこの言葉が実装によって意味がぶれやすいことを丁寧に解きほぐします。"/>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 12：6.3 第8章：トランザクション">
 {"\n                    "}
 <table>
 <thead>
@@ -1786,7 +1786,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"」という点です。ネットワーク遅延なのか、ノードが本当にダウンしているのか、処理が単に遅いだけなのかを外部から区別することは原理的に不可能であり、これが分散システム設計の根本的な難しさになっています。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 13：6.4 第9章：分散システムの落とし穴">
 {"\n                    "}
 <table>
 <thead>
@@ -2040,7 +2040,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"がバッチ処理基盤の主役として明確に位置づけられたことです。これは第2章で紹介した「ストレージがローカルディスクからリモートのオブジェクトストレージへ」という業界全体のシフトを反映しています。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 14：7.1 第11章：バッチ処理">
 {"\n                    "}
 <table>
 <thead>
@@ -2177,7 +2177,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"は、データベースの変更（INSERT/UPDATE/DELETE）をイベントストリームとして捕捉し、他のデータストアへ反映する仕組みで、正データと派生データを同期させる代表的な手法です。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 15：7.2 第12章：ストリーム処理">
 {"\n                    "}
 <table>
 <thead>
@@ -2330,7 +2330,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"も負う、という問題意識が軸になっています。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 16：8.1 第14章：正しいことをする">
 {"\n                    "}
 <table>
 <thead>
@@ -2685,7 +2685,7 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 {"\n                    DDIAで得た「トレードオフを見極める視点」を、次のような形で実務・学習に接続していくことをお勧めします。\n                "}
 </p>
 {"\n                "}
-<div className="table-scroll">
+<div className="table-scroll" tabIndex={0} role="region" aria-label="比較表 17：11. 学習後のネクストステップ">
 {"\n                    "}
 <table>
 <thead>
