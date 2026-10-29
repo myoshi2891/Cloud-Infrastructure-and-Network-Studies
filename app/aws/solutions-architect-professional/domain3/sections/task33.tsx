@@ -10,7 +10,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    5.1 このタスクで問われること(Exam Guide より)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.1 このタスクで問われること(Exam Guide より)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 39：5.1 このタスクで問われること(Exam Guide より)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -109,7 +109,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"「遅い」「速くしたい」のままでは改善できません。数値目標に置き換えます。"}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.2 Step 1: ビジネス要件を測定可能な指標へ変換する"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 40：5.2 Step 1: ビジネス要件を測定可能な指標へ変換する"}>
 {"\n                    "}
 <table>
 <thead>
@@ -175,7 +175,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.2 Step 1: ビジネス要件を測定可能な指標へ変換する"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 41：5.2 Step 1: ビジネス要件を測定可能な指標へ変換する"}>
 {"\n                    "}
 <table>
 <thead>
@@ -252,7 +252,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-8" label={"5.3 Step 2: ボトルネックを特定する"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.3 Step 2: ボトルネックを特定する"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 42：5.3 Step 2: ボトルネックを特定する"}>
 {"\n                    "}
 <table>
 <thead>
@@ -348,7 +348,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"EC2 Auto Scaling のポリシー"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：EC2 Auto Scaling のポリシー"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 43：EC2 Auto Scaling のポリシー"}>
 {"\n                    "}
 <table>
 <thead>
@@ -437,7 +437,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"インスタンスフリートとプレイスメントグループ"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：インスタンスフリートとプレイスメントグループ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 44：インスタンスフリートとプレイスメントグループ"}>
 {"\n                    "}
 <table>
 <thead>
@@ -472,7 +472,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：インスタンスフリートとプレイスメントグループ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 45：インスタンスフリートとプレイスメントグループ"}>
 {"\n                    "}
 <table>
 <thead>
@@ -542,7 +542,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"ストレージとデータベースの改善"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：ストレージとデータベースの改善"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 46：ストレージとデータベースの改善"}>
 {"\n                    "}
 <table>
 <thead>
@@ -613,7 +613,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    5.5 Step 4: グローバルサービスとエッジで遅延を減らす\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.5 Step 4: グローバルサービスとエッジで遅延を減らす"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 47：5.5 Step 4: グローバルサービスとエッジで遅延を減らす"}>
 {"\n                    "}
 <table>
 <thead>
@@ -716,7 +716,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"CloudFront と Global Accelerator の使い分け"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：CloudFront と Global Accelerator の使い分け"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 48：CloudFront と Global Accelerator の使い分け"}>
 {"\n                    "}
 <table>
 <thead>
@@ -799,7 +799,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-9" label={"5.6 Step 5: 改善案をテストし、ライトサイジングを行う"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.6 Step 5: 改善案をテストし、ライトサイジングを行う"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 49：5.6 Step 5: 改善案をテストし、ライトサイジングを行う"}>
 {"\n                    "}
 <table>
 <thead>
@@ -882,7 +882,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"マネージドサービスの採用機会"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：マネージドサービスの採用機会"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 50：マネージドサービスの採用機会"}>
 {"\n                    "}
 <table>
 <thead>
@@ -945,7 +945,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"5.7 Task 3.3 の試験での考え方"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：5.7 Task 3.3 の試験での考え方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 51：5.7 Task 3.3 の試験での考え方"}>
 {"\n                    "}
 <table>
 <thead>

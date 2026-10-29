@@ -18,7 +18,7 @@ describe('SAP Domain 3 原本全量契約',()=>{
  it('原本の装飾クラスを省略しない',()=>{const c=render(<Page/>).container;for(const name of fixture.styledClasses)expect(c.querySelector('.'+(name==='mermaid'?'mermaid-wrap':name)),name).not.toBeNull();});
  it('Preflightで消える段落の余白と目次見出しの太字を復元する',()=>{const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');expect(css).toContain('.sap-domain3-page .main p { margin: 1em 0; }');expect(css).toContain('.sap-domain3-page .sidebar-header h2 { font-weight: 700; }');});
 
- it('表のアクセシブル名は直前の見出しを使う',()=>{const c=render(<Page/>).container;for(const wrapper of c.querySelectorAll('.table-scroll')){let heading=wrapper.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;expect(wrapper).toHaveAttribute('aria-label','比較表：'+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim());}});
+ it('表のアクセシブル名は通し番号と直前の見出しで一意になる',()=>{const c=render(<Page/>).container;const wrappers=[...c.querySelectorAll('.table-scroll')];for(const [index,wrapper] of wrappers.entries()){let heading=wrapper.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;expect(wrapper).toHaveAttribute('aria-label',`比較表 ${index+1}：`+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim());}const names=wrappers.map(w=>w.getAttribute('aria-label'));expect(new Set(names).size).toBe(names.length);});
 
  it('表の構造要素の直下にテキストノードを置かない',()=>{const c=render(<Page/>).container;expect([...c.querySelectorAll('table,thead,tbody,tfoot,tr')].flatMap(e=>[...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent))).toEqual([]);});
 

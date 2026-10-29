@@ -14,7 +14,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 1: 何を問われるか"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 1: 何を問われるか"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 42：Step 1: 何を問われるか"}>
 {"\n                    "}
 <table>
 <thead>
@@ -95,7 +95,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-A: パフォーマンス監視"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: パフォーマンス監視"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 43：Step 2-A: パフォーマンス監視"}>
 {"\n                    "}
 <table>
 <thead>
@@ -188,7 +188,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-15" label={"Step 2-B: ストレージの選択"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: ストレージの選択"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 44：Step 2-B: ストレージの選択"}>
 {"\n                    "}
 <table>
 <thead>
@@ -333,7 +333,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-C: インスタンスファミリーの選び方\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: インスタンスファミリーの選び方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 45：Step 2-C: インスタンスファミリーの選び方"}>
 {"\n                    "}
 <table>
 <thead>
@@ -484,7 +484,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-16" label={"Step 2-D: 目的特化型データベース(Purpose-built databases)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: 目的特化型データベース(Purpose-built databases)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 46：Step 2-D: 目的特化型データベース(Purpose-built databases)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -633,7 +633,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-17" label={"Step 2-E: キャッシュ、バッファリング、レプリカ"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: キャッシュ、バッファリング、レプリカ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 47：Step 2-E: キャッシュ、バッファリング、レプリカ"}>
 {"\n                    "}
 <table>
 <thead>
@@ -756,7 +756,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-F: 弾力性とライトサイジング"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-F: 弾力性とライトサイジング"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 48：Step 2-F: 弾力性とライトサイジング"}>
 {"\n                    "}
 <table>
 <thead>
@@ -823,7 +823,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 3: Task 2.5 試験のコツ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 3: Task 2.5 試験のコツ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 49：Step 3: Task 2.5 試験のコツ"}>
 {"\n                    "}
 <table>
 <thead>

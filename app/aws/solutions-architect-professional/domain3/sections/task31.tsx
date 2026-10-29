@@ -10,7 +10,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    3.1 このタスクで問われること(Exam Guide より)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：3.1 このタスクで問われること(Exam Guide より)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 7：3.1 このタスクで問われること(Exam Guide より)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -123,7 +123,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"3 つのシグナルを使い分ける"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：3 つのシグナルを使い分ける"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 8：3 つのシグナルを使い分ける"}>
 {"\n                    "}
 <table>
 <thead>
@@ -204,7 +204,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"CloudWatch の主要機能"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：CloudWatch の主要機能"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 9：CloudWatch の主要機能"}>
 {"\n                    "}
 <table>
 <thead>
@@ -329,7 +329,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"ベストプラクティス"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：ベストプラクティス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 10：ベストプラクティス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -414,7 +414,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"基本パターン"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：基本パターン"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 11：基本パターン"}>
 {"\n                    "}
 <table>
 <thead>
@@ -575,7 +575,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"ベストプラクティス"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：ベストプラクティス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 12：ベストプラクティス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -649,7 +649,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"デプロイ戦略の比較"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：デプロイ戦略の比較"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 13：デプロイ戦略の比較"}>
 {"\n                    "}
 <table>
 <thead>
@@ -830,7 +830,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"AWS サービスと戦略の対応"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：AWS サービスと戦略の対応"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 14：AWS サービスと戦略の対応"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1064,7 +1064,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"ベストプラクティス"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：ベストプラクティス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 15：ベストプラクティス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1149,7 +1149,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    AWS Systems Manager\n                    は、サーバー群の運用作業をまとめて自動化するための機能群です。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：3.6 Step 4: 構成管理を自動化する (AWS Systems Manager)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 16：3.6 Step 4: 構成管理を自動化する (AWS Systems Manager)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1267,7 +1267,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    を使うと、コードで定義した構成と実環境のずれを見つけられます。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：3.6 Step 4: 構成管理を自動化する (AWS Systems Manager)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 17：3.6 Step 4: 構成管理を自動化する (AWS Systems Manager)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1342,7 +1342,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"DR 戦略の 4 パターン"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：DR 戦略の 4 パターン"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 18：DR 戦略の 4 パターン"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1427,7 +1427,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"関連サービス"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：関連サービス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 19：関連サービス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1484,7 +1484,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-4" label={"障害訓練 (ゲームデー) の手順"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：障害訓練 (ゲームデー) の手順"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 20：障害訓練 (ゲームデー) の手順"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1531,7 +1531,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"3.8 Task 3.1 の試験での考え方"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：3.8 Task 3.1 の試験での考え方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 21：3.8 Task 3.1 の試験での考え方"}>
 {"\n                    "}
 <table>
 <thead>

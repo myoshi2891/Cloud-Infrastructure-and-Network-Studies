@@ -552,6 +552,7 @@
 .sap-domain2-page nav ul { list-style: none; padding: 0; margin: 0; }
 .sap-domain2-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); z-index: 40; }
 .sap-domain2-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 40; }
+@media (max-width: 980px) { .sap-domain2-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s ease, visibility 0s linear 0.25s; } }
 .sap-domain2-page .main h2, .sap-domain2-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
 .sap-domain2-page .main { min-width: 0; }
 .sap-domain2-page .mermaid-wrap > [role="img"] { background: transparent; border: 0; padding: 0; margin: 0; width: 100%; }

@@ -14,7 +14,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 1: 何を問われるか"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 1: 何を問われるか"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 50：Step 1: 何を問われるか"}>
 {"\n                    "}
 <table>
 <thead>
@@ -106,7 +106,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-A: コストの可視化と分析ツール\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: コストの可視化と分析ツール"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 51：Step 2-A: コストの可視化と分析ツール"}>
 {"\n                    "}
 <table>
 <thead>
@@ -214,7 +214,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-B: 料金モデルの選択"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: 料金モデルの選択"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 52：Step 2-B: 料金モデルの選択"}>
 {"\n                    "}
 <table>
 <thead>
@@ -401,7 +401,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-C: ストレージ階層化(S3)"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: ストレージ階層化(S3)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 53：Step 2-C: ストレージ階層化(S3)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -717,7 +717,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-D: データ転送コスト"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: データ転送コスト"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 54：Step 2-D: データ転送コスト"}>
 {"\n                    "}
 <table>
 <thead>
@@ -840,7 +840,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-E: マネージドサービスと総保有コスト(TCO)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: マネージドサービスと総保有コスト(TCO)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 55：Step 2-E: マネージドサービスと総保有コスト(TCO)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -895,7 +895,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-F: 支出と使用状況の統制"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-F: 支出と使用状況の統制"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 56：Step 2-F: 支出と使用状況の統制"}>
 {"\n                    "}
 <table>
 <thead>
@@ -966,7 +966,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 3: Task 2.6 試験のコツ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 3: Task 2.6 試験のコツ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 57：Step 3: Task 2.6 試験のコツ"}>
 {"\n                    "}
 <table>
 <thead>

@@ -18,7 +18,8 @@ const write=(name,s)=>{if(/\.tsx?$/.test(name))s=ts.createPrinter({newLine:ts.Ne
 const diagrams=[...doc.querySelectorAll('pre.mermaid')];
 const cardIndices=new Map([...doc.querySelectorAll('.checklist-card')].map((c,i)=>[c,i]));
 function tokens(line,language){const regex=language==='json'?/"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+\b/g:/#.*$|"(?:\\.|[^"\\])*"|[\w]+(?=:)|\b(?:true|false)\b|\b\d+\b|!Ref\b/g;let out='',end=0;for(const m of line.matchAll(regex)){out+='{'+JSON.stringify(line.slice(end,m.index))+'}';const text=m[0];const cls=text.startsWith('#')?'comment':line.slice(m.index+text.length).trimStart().startsWith(':')?'attr':text.startsWith('"')?'string':/^\d/.test(text)?'number':'literal';out+=`<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;end=m.index+text.length;}return out+'{'+JSON.stringify(line.slice(end))+'}';}
-function tableLabel(n){let heading=n.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;return '比較表：'+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim();}
+const tableScrolls=[...doc.querySelectorAll('.table-scroll')];
+function tableLabel(n){let heading=n.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;return `比較表 ${tableScrolls.indexOf(n)+1}：`+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim();}
 function jsx(n){
  if(n.nodeType===3){if(['TABLE','THEAD','TBODY','TFOOT','TR'].includes(n.parentElement?.tagName)&&!n.textContent.trim())return '';return '{'+JSON.stringify(n.textContent)+'}';}if(n.nodeType!==1)return '';
  if(n.matches('pre.mermaid')){const i=diagrams.indexOf(n);let prev=n.previousElementSibling;while(prev&&!prev.matches('h2,h3,h4'))prev=prev.previousElementSibling;return `<Diagram id="diag-${i}" label={${JSON.stringify(prev?.textContent.trim()??`図${i+1}`)}} />`;}
@@ -53,6 +54,7 @@ fs.writeFileSync(dir+'/page.css',css.toString()+`
 .sap-domain2-page nav ul { list-style: none; padding: 0; margin: 0; }
 .sap-domain2-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); z-index: 40; }
 .sap-domain2-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 40; }
+@media (max-width: 980px) { .sap-domain2-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s ease, visibility 0s linear 0.25s; } }
 .sap-domain2-page .main h2, .sap-domain2-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
 .sap-domain2-page .main { min-width: 0; }
 .sap-domain2-page .mermaid-wrap > [role="img"] { background: transparent; border: 0; padding: 0; margin: 0; width: 100%; }

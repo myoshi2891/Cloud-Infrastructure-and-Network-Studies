@@ -66,7 +66,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：学習資料"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 1：学習資料"}>
 {"\n                    "}
 <table>
 <thead>
@@ -157,7 +157,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    1.2 5 つのタスクと Well-Architected の柱\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：1.2 5 つのタスクと Well-Architected の柱"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 2：1.2 5 つのタスクと Well-Architected の柱"}>
 {"\n                    "}
 <table>
 <thead>
@@ -266,7 +266,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"1.4 学習のステップ(おすすめ順)"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：1.4 学習のステップ(おすすめ順)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 3：1.4 学習のステップ(おすすめ順)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -355,7 +355,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    SAP-C02 は Well-Architected Framework に基づく設計力を検証する試験です。Domain 3\n                    の 5 タスクは、6 つの柱のうち 5 つに対応しています。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：2.1 AWS Well-Architected Framework の 6 つの柱"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 4：2.1 AWS Well-Architected Framework の 6 つの柱"}>
 {"\n                    "}
 <table>
 <thead>
@@ -447,7 +447,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"2.2 用語集"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：2.2 用語集"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 5：2.2 用語集"}>
 {"\n                    "}
 <table>
 <thead>
@@ -572,7 +572,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"2.3 試験の形式(Exam Guide より)"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：2.3 試験の形式(Exam Guide より)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 6：2.3 試験の形式(Exam Guide より)"}>
 {"\n                    "}
 <table>
 <thead>

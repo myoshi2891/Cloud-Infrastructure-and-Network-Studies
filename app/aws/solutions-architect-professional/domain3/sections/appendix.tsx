@@ -10,7 +10,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"8.1 SAP-C02 の問題の特徴"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：8.1 SAP-C02 の問題の特徴"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 72：8.1 SAP-C02 の問題の特徴"}>
 {"\n                    "}
 <table>
 <thead>
@@ -79,7 +79,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"8.3 頻出の比較"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：8.3 頻出の比較"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 73：8.3 頻出の比較"}>
 {"\n                    "}
 <table>
 <thead>
@@ -531,7 +531,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"10.1 試験ガイド"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：10.1 試験ガイド"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 74：10.1 試験ガイド"}>
 {"\n                    "}
 <table>
 <thead>
@@ -590,7 +590,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"10.2 Well-Architected Framework"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：10.2 Well-Architected Framework"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 75：10.2 Well-Architected Framework"}>
 {"\n                    "}
 <table>
 <thead>
@@ -697,7 +697,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"10.3 サービス別ドキュメント"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：10.3 サービス別ドキュメント"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 76：10.3 サービス別ドキュメント"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1248,7 +1248,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"10.4 補足の参考資料"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：10.4 補足の参考資料"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 77：10.4 補足の参考資料"}>
 {"\n                    "}
 <table>
 <thead>
