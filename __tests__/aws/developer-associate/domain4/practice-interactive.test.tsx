@@ -48,3 +48,13 @@ it('問11は2つ以上選んだ際に集合の完全一致で判定し、解除�
     fireEvent.click(options[4]!);fireEvent.click(options[1]!);
     expect(card.querySelector('[role="status"]')).toBeNull();
 });
+it('各設問の選択肢群は設問見出しを名前に持つグループとして読み上げられる', () => {
+    const {container}=render(<Section26/>);
+    const cards=[...container.querySelectorAll('article.practice-question')];
+    cards.forEach((card,index) => {
+        const group=card.querySelector('ul');
+        expect(group).toHaveAttribute('role','group');
+        expect(group).toHaveAttribute('aria-labelledby','practice-question-'+(index+1));
+        expect(container.querySelector('#practice-question-'+(index+1))).not.toBeNull();
+    });
+});

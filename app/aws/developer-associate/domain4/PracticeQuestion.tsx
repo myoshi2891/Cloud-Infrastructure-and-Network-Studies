@@ -13,9 +13,9 @@ export function PracticeQuestion({number,correct,explanation,children}:{number:n
         const next=new Set(previous);if(next.has(letter))next.delete(letter);else next.add(letter);return next;
     });
     const content=Children.map(children,child=>{
-        if(!isValidElement<{children?:ReactNode}>(child)||child.type!=='ul')return child;
+        if(!isValidElement<{children?:ReactNode;role?:string;'aria-labelledby'?:string}>(child)||child.type!=='ul')return child;
         let index=0;
-        return cloneElement(child,{},Children.map(child.props.children,option=>{
+        return cloneElement(child,{role:'group','aria-labelledby':'practice-question-'+number},Children.map(child.props.children,option=>{
             if(!isValidElement<{children?:ReactNode;className?:string;'data-state'?:string}>(option)||option.type!=='li')return option;
             const letter=String.fromCharCode(65+index++);
             const isCorrect=correct.includes(letter);
