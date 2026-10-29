@@ -22,6 +22,7 @@ describe('DDIA 全量移行',()=>{
  });
  it('本文・注釈の全文と外部リンク順序',()=>{const c=render(<Guide/>).container; expect(extractBodyContent(c)).toEqual(inventory.bodyContent);expect([...c.querySelectorAll('a[href^="http"]')].map(e=>e.getAttribute('href'))).toEqual(inventory.links.map(e=>e.href));});
  it('14図のDSL・自然倍率・説明と表の構造',()=>{const c=render(<Guide/>).container;const diagrams=[...c.querySelectorAll('[data-testid="mermaid-diagram"]')];expect(diagrams).toHaveLength(inventory.counts.diagram);expect(Object.values(DIAGRAMS)).toEqual(fixture.charts);diagrams.forEach(e=>{expect(e.getAttribute('aria-label')?.trim()).toBeTruthy();expect(e.getAttribute('data-preserve-natural-scale')).toBe('true');});const tables=[...c.querySelectorAll('table')];expect(tables).toHaveLength(inventory.counts.table);tables.forEach((e,i)=>expect(e.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[i]!));});
+ it('表の構造要素の直下にテキストノードを置かない（hydrationエラー防止）',()=>{const c=render(<Guide/>).container;const textNodes=[...c.querySelectorAll('table, thead, tbody, tfoot, tr')].flatMap(e=>[...e.childNodes].filter(n=>n.nodeType===3).map(n=>`${e.tagName}:${JSON.stringify(n.textContent)}`));expect(textNodes).toEqual([]);});
  it('全CSS宣言を保持（スコープ・トークン対応・固定位置補正のみ許可）',()=>{
   const rules=snapshotCssRules(fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8'));
   for(const original of fixture.css.filter(r=>r.selector!==':root')) {
