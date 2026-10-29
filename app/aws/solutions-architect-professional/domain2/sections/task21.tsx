@@ -581,7 +581,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 <strong>
 {"補足"}
 </strong>
-{": CodeCommit は一時期新規受付を停止していましたが、AWS は\n                    2025 年 11 月 25 日に新規サインアップを再開しており、新規顧客も利用できます。\n                "}
+{": CodeCommit は一時期新規受付を停止していましたが、AWS は\n                    2025 年 11 月 24 日に新規サインアップを再開しており、新規顧客も利用できます。\n                "}
 </p>
 {"\n                "}
 <h4>
