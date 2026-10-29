@@ -1,6 +1,8 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
+import { EXAMS } from '@/app/constants';
+import mermaid from 'mermaid';
 import Guide from '@/app/recommended-books/designing-data-intensive-applications/DdiaGuide';
 import { DIAGRAMS } from '@/app/recommended-books/designing-data-intensive-applications/constants';
 import inventory from '@/docs/migration-inventory/designing-data-intensive-applications.json';
@@ -9,6 +11,9 @@ import { snapshotDdia, snapshotCssRules } from '@/scripts/ddia-fidelity.mjs';
 import { squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 describe('DDIA 全量移行',()=>{
+ it('ホーム・Header共通のBooks導線',()=>{const entry=EXAMS.find(e=>e.id==='ddia');expect(entry?.href).toBe('/recommended-books/designing-data-intensive-applications');expect(entry?.provider).toBe('Books');expect(entry?.domains[0]?.href).toBe(entry?.href);});
+ it('全14図のMermaid構文解析',async()=>{mermaid.initialize({startOnLoad:false});for(const chart of Object.values(DIAGRAMS))expect(await mermaid.parse(chart)).toBeTruthy();});
+
  it('本文の全要素・属性・階層・順序が原本と一致',()=>{expect(snapshotDdia(render(<Guide/>).container)).toEqual(fixture.structure);});
  it.each(['h1','h2','h3','h4','th','td','li'] as const)('%s の全量と順序',tag=>{
   const c=render(<Guide/>).container;
@@ -23,7 +28,8 @@ describe('DDIA 全量移行',()=>{
    const selectors=original.selector.split(',').map(s=>s.trim()==='body'||s.trim()==='html'?'.ddia-page':'.ddia-page '+s.trim().replaceAll('pre.mermaid','.ddia-diagram')).join(', ');
    const actual=rules.find(r=>r.selector===selectors&&r.media===original.media);
    expect(actual,selectors).toBeDefined();
-   for(const d of original.declarations) {if(d.prop==='word-break') continue;expect(actual!.declarations.some(v=>v.prop===d.prop),`${selectors}: ${d.prop}`).toBe(true);}
+   const mapping:Record<string,string>={bg:'background','bg-card':'card','bg-card-2':'gcp-code-background',border:'gcp-border','border-soft':'gcp-border',text:'foreground','text-dim':'muted-foreground','text-faint':'muted-foreground',accent:'google-blue','accent-soft':'gcp-border-bright','accent-bg':'gcp-code-background',danger:'google-red','danger-bg':'card',warn:'google-yellow','warn-bg':'card',success:'google-green','success-bg':'card'};
+   for(const d of original.declarations) {if(d.prop==='word-break') continue;const value=d.value.replace(/var\(--([\w-]+)\)/g,(_,key:string)=>key==='sidebar-w'?'300px':key==='font-jp'?'var(--font-body)':`var(--color-${mapping[key]??key})`);expect(actual!.declarations,`${selectors}: ${d.prop}`).toContainEqual({...d,value});}
   }
   expect(rules.find(r=>r.selector==='.ddia-page .main ul')?.declarations).toContainEqual({prop:'list-style-type',value:'disc',important:false});
   expect(rules.find(r=>r.selector==='.ddia-page .main ol')?.declarations).toContainEqual({prop:'list-style-type',value:'decimal',important:false});
