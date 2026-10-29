@@ -137,7 +137,8 @@ gcloud config list project
 export PROJECT_ID=$(gcloud config get-value project)
 
 # ゾーン: ラボ画面左側に表示されている ZONE の値を入れる
-export ZONE=ここにラボ指定のゾーンを入力
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
 
 # 確認
 echo "PROJECT_ID=${PROJECT_ID}"
@@ -715,7 +716,8 @@ readinessProbe:
 ```bash
 # ===== 0. 変数 =====
 export PROJECT_ID=$(gcloud config get-value project)
-export ZONE=ここにラボ指定のゾーンを入力
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
 
 # ===== 1. クラスタ作成 =====
 gcloud container clusters create echo-cluster \

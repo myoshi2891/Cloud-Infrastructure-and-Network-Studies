@@ -80,8 +80,8 @@ flowchart LR
 ラボ画面に表示される **ZONE** と **バケット名** は、受講ごとに異なります。コマンドに毎回手打ちすると打ち間違いの原因になるため、シェル変数に入れておきます。
 
 ```bash
-export ZONE=<ラボ画面に表示されたゾーン>
-export BUCKET=<ラボ画面に表示されたバケット名>
+export ZONE="REPLACE_WITH_LAB_ZONE"      # ラボ画面に表示されたゾーンに置き換える
+export BUCKET="REPLACE_WITH_LAB_BUCKET"  # ラボ画面に表示されたバケット名に置き換える
 export PROJECT_ID=$(gcloud config get-value project)
 ```
 
@@ -265,10 +265,10 @@ docker push gcr.io/$PROJECT_ID/echo-app:v2
 **手順 3：確認**
 
 ```bash
-gcloud container images list-tags gcr.io/$PROJECT_ID/echo-app
+gcloud artifacts docker tags list gcr.io/$PROJECT_ID/echo-app
 ```
 
-`TAGS` 列に `v2` が表示されれば成功です。ここで **Check my progress** を押します。
+`TAG` 列に `v2` が表示されれば成功です。ここで **Check my progress** を押します。
 
 ### 4.4 つまずきポイント
 
@@ -555,8 +555,8 @@ flowchart TD
 
 ```bash
 # 0. 変数
-export ZONE=<ZONE>
-export BUCKET=<バケット名>
+export ZONE="REPLACE_WITH_LAB_ZONE"      # ラボ指定のゾーンに置き換える
+export BUCKET="REPLACE_WITH_LAB_BUCKET"  # ラボ指定のバケット名に置き換える
 export PROJECT_ID=$(gcloud config get-value project)
 
 # 0-1. 接続と v1 のデプロイ
@@ -566,9 +566,11 @@ kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8
 
 # Task 1: ダウンロード・展開・ビルド
 gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
-tar -xzf echo-web-v2.tar.gz
-ls
-docker build -t gcr.io/$PROJECT_ID/echo-app:v2 .
+mkdir -p echo-web-v2
+tar -xzf echo-web-v2.tar.gz -C echo-web-v2
+BUILD_DIR=$(dirname "$(find echo-web-v2 -name Dockerfile -print -quit)")
+echo "BUILD_DIR=${BUILD_DIR}"
+docker build -t gcr.io/$PROJECT_ID/echo-app:v2 "$BUILD_DIR"
 
 # Task 2: push
 gcloud auth configure-docker
@@ -584,10 +586,11 @@ kubectl get pods
 
 # Task 5: 動作確認
 kubectl get service echo-web
-curl http://<EXTERNAL-IP>
+export EXTERNAL_IP=$(kubectl get service echo-web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+curl "http://${EXTERNAL_IP}"
 ```
 
-> `docker build` は、Dockerfile のあるディレクトリで実行してください。
+> `docker build` のビルドコンテキストは、Dockerfile のあるディレクトリ（上の `BUILD_DIR`）を指定してください。
 
 ---
 

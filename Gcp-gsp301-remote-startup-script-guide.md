@@ -271,6 +271,28 @@ gcloud storage cat "gs://${BUCKET_NAME}/install-web.sh"
 
 ### 5.2 手順 A: gcloud コマンド（推奨）
 
+まず、VM が使うサービスアカウントを特定し、そのアカウントにバケット単位で `roles/storage.objectViewer`（オブジェクトの読み取り）を付与します。ここでは Compute Engine の既定のサービスアカウントを使います。
+
+```bash
+# VM が使うサービスアカウント（Compute Engine の既定のサービスアカウント）を特定する
+PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
+VM_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+echo "VM_SA=${VM_SA}"
+
+# バケット単位で読み取りロールを付与する（プロジェクト全体には付与しない）
+gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+  --member="serviceAccount:${VM_SA}" \
+  --role="roles/storage.objectViewer"
+
+# 付与されたことを確認する（VM_SA を含む行が表示されれば OK）
+gcloud storage buckets get-iam-policy "gs://${BUCKET_NAME}" \
+  --flatten="bindings[].members" \
+  --filter="bindings.role=roles/storage.objectViewer AND bindings.members=serviceAccount:${VM_SA}" \
+  --format="value(bindings.members)"
+```
+
+次に、同じサービスアカウントを明示して VM を作成します。
+
 ```bash
 gcloud compute instances create "${VM_NAME}" \
   --zone="${ZONE}" \
@@ -278,6 +300,7 @@ gcloud compute instances create "${VM_NAME}" \
   --image-family=debian-12 \
   --image-project=debian-cloud \
   --tags=http-server \
+  --service-account="${VM_SA}" \
   --scopes=storage-ro \
   --metadata=startup-script-url="gs://${BUCKET_NAME}/install-web.sh"
 ```
@@ -288,6 +311,7 @@ gcloud compute instances create "${VM_NAME}" \
 | `--machine-type` | マシンタイプ。Apache を動かすだけなら `e2-medium` 程度で十分 |
 | `--image-family` / `--image-project` | OS イメージ。Debian の最新版ファミリーを使う |
 | `--tags=http-server` | ネットワークタグ。Task 3 のルールの対象になる |
+| `--service-account` | VM が使うサービスアカウント。上で `roles/storage.objectViewer` を付与したものを明示する |
 | `--scopes=storage-ro` | Cloud Storage の読み取り専用スコープ。必要最小限の API アクセス |
 | `--metadata=startup-script-url=...` | **このラボの核心**。起動時に取得して実行するスクリプトの場所 |
 
