@@ -58,3 +58,14 @@ it('各設問の選択肢群は設問見出しを名前に持つグループと�
         expect(container.querySelector('#practice-question-'+(index+1))).not.toBeNull();
     });
 });
+it('採点結果の正誤を status 領域の文言として読み上げ、回答変更にも追従する', () => {
+    const {container}=render(<Section26/>);
+    const card=container.querySelector('article.practice-question') as HTMLElement;
+    const options=card.querySelectorAll<HTMLInputElement>('input');
+    fireEvent.click(options[0]!);
+    expect(within(card).getByRole('status').querySelector('.practice-result')?.textContent).toBe('不正解です');
+    fireEvent.click(options[1]!);
+    const status=within(card).getByRole('status');
+    expect(status.querySelector('.practice-result')?.textContent).toBe('正解です');
+    expect(status.textContent).toContain('正解 B');
+});

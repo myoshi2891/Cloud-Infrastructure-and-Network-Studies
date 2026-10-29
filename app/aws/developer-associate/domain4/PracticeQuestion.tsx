@@ -30,6 +30,7 @@ export function PracticeQuestion({number,correct,explanation,children}:{number:n
     return <article className="practice-question" aria-labelledby={'practice-question-'+number} data-result={revealed?(success?'correct':'incorrect'):undefined}>
         {content}
         {revealed && <div className="practice-feedback" id={feedbackId} role="status" aria-live="polite" data-result={success?'correct':'incorrect'}>
+            <p className="practice-result">{success?'正解です':'不正解です'}</p>
             <p><strong>正解</strong>{' '+correct.join(', ')}</p>
             <div>{explanation}</div>
         </div>}
