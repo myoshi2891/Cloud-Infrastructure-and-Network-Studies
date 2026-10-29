@@ -3,6 +3,3414 @@ import { memo, useState, type ChangeEvent } from 'react';
 import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { DIAGRAMS } from './constants';
 import NavBar from './NavBar';
-const Diagram = memo(function Diagram({id,label}:{id:string;label:string}) {const chart=DIAGRAMS[id];if(!chart) throw new Error(id);return <div className="ddia-diagram"><MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale /></div>;});
+const Diagram = memo(function Diagram({ id, label }: {
+    id: string;
+    label: string;
+}) { const chart = DIAGRAMS[id]; if (!chart)
+    throw new Error(id); return <div className="ddia-diagram">
+<MermaidDiagram chart={chart} ariaLabel={label} preserveNaturalScale/>
+</div>; });
 /** DDIA原本の本文とチェックリスト進捗。 */
-export default function DdiaGuide(){const [checked,setChecked]=useState(0);function updateProgress(event:ChangeEvent<HTMLInputElement>){const card=event.currentTarget.closest('.checklist-card');setChecked(card?.querySelectorAll('input:checked').length??0);}return <div className="ddia-page"><div className="layout"><NavBar/><main className="main">{"\n                "}<div className="hero">{"\n                    "}<div className="kicker">{"\n                        Martin Kleppmann & Chris Riccomini 著『Designing Data-Intensive\n                        Applications』第2版 解説ガイド\n                    "}</div>{"\n                    "}<h1 >{"Designing Data-Intensive Applications（DDIA）初学者向け完全ガイド"}</h1>{"\n                    "}<div className="meta-row">{"\n                        "}<span className="pill">{"版 "}<strong >{"第2版（2026年刊）"}</strong></span>{"\n                        "}<span className="pill">{"対象 "}<strong >{"初学者〜中級者"}</strong></span>{"\n                        "}<span className="pill">{"図解 "}<strong >{"Mermaid 14点"}</strong></span>{"\n                        "}<span className="pill">{"参考文献 "}<strong >{"8件"}</strong></span>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<p >{"\n                    本ガイドは、Martin Kleppmann（マーティン・クレップマン）著（第2版からChris\n                    Riccomini共著）『Designing Data-Intensive Applications』（O'Reilly\n                    Media）の内容をベースに、初学者がゼロから体系的に学べるよう再構成した技術文書です。ASCII図解は使用せず、すべての図解はMermaid、比較表はMarkdownテーブルで表現しています。本文中の情報は2026年8月23日時点のWeb検索結果に基づいており、根拠となる出典URLは末尾の「参考文献」にまとめています。\n                "}</p>{"\n\n                "}<h2 id="1-ddiaとは何か" tabIndex={-1}>{"1. DDIAとは何か"}</h2>{"\n                "}<p >{"\n                    "}<strong >{"Designing Data-Intensive Applications"}</strong>{"（通称「DDIA」、表紙のイノシシから「Wild Boar\n                    Book」とも呼ばれる）は、リレーショナルDB・NoSQL・データウェアハウス・メッセージキュー・分散システムなど、データを扱うあらゆるソフトウェアに共通する「原理原則」を1冊にまとめた技術書です。特定の製品の使い方を教えるマニュアルではなく、"}<strong >{"なぜそのように設計されているのか"}</strong>{"という設計思想と、"}<strong >{"それぞれの選択肢がどのようなトレードオフを持つのか"}</strong>{"を体系的に解説する点が最大の特徴です。\n                "}</p>{"\n\n                "}<h3 id="11-なぜエンジニアに読まれ続けているのか" tabIndex={-1}>{"\n                    1.1 なぜエンジニアに読まれ続けているのか\n                "}</h3>{"\n                "}<p >{"\n                    初版（2017年）刊行から約10年が経過した今も、システム設計面接の定番教材、バックエンド/インフラエンジニアの必読書として挙げられ続けています。著名な開発者からも高く評価されており、例えば\n                    Apache Kafka の創作者であり Confluent 共同創業者の Jay Kreps\n                    は、本書が分散システムの理論と実務の間の大きなギャップを橋渡ししてくれる点を高く評価しています"}<a className="footnote-ref" href="#ref4" id="fnref1" role="doc-noteref"><sup >{"4"}</sup></a>{"。また Microsoft の CTO である Kevin Scott\n                    も、本書はソフトウェアエンジニアの必読書だとコメントしています"}<a className="footnote-ref" href="#ref4" id="fnref2" role="doc-noteref"><sup >{"4"}</sup></a>{"。\n                "}</p>{"\n                "}<p >{"\n                    さらに、Google でデータベース関連の仕事をしていた経験を持ち、後に Amazon Web\n                    Services のプリンシパルエンジニアとなった Jaana Dogan\n                    も、本書を最も優れたリファレンス書の一冊として挙げています"}<a className="footnote-ref" href="#ref4" id="fnref3" role="doc-noteref"><sup >{"4"}</sup></a>{"。\n                "}</p>{"\n\n                "}<h3 id="12-著者について" tabIndex={-1}>{"1.2 著者について"}</h3>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"項目"}</th>{"\n                                "}<th scope="col">{"内容"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"Martin Kleppmann"}</td>{"\n                                "}<td >{"\n                                    ケンブリッジ大学准教授。分散システムと暗号プロトコルの研究者。かつて\n                                    LinkedIn や Rapportive\n                                    で大規模データ基盤に従事。ローカルファースト・ソフトウェア運動の立ち上げにも関わる\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"Chris Riccomini（第2版から共著）"}</td>{"\n                                "}<td >{"\n                                    PayPal・LinkedIn・WePay\n                                    で15年以上の経験を持つソフトウェアエンジニア。現在は\n                                    Materialized View Capital\n                                    を運営し、インフラ系スタートアップに投資\n                                "}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h3 id="13-本書の全体像" tabIndex={-1}>{"1.3 本書の全体像"}</h3>{"\n                "}<Diagram id="diagram-0" label="図1：1.3 本書の全体像" />{"\n                "}<p >{"\n                    DDIAは大きく5つのパートに分かれており、"}<strong >{"基礎概念 → 単一ノードでのデータ保存 → 複数ノードに分散したデータ →\n                        複数のデータストアをまたぐ派生データ → 技術と社会の関係"}</strong>{"という順序で理解が積み上がっていく構成になっています。この順序どおりに学習を進めることが、初学者にとって最も挫折しにくいステップです。\n                "}</p>{"\n\n                "}<h2 id="2-第1版と第2版何が変わったか" tabIndex={-1}>{"2. 第1版と第2版：何が変わったか"}</h2>{"\n                "}<p >{"\n                    2026年2月〜3月、約9年ぶりとなる"}<strong >{"第2版"}</strong>{"が Kleppmann と Riccomini\n                    の共著という形で刊行されました。参考文献2のURL（"}<code >{".../9781491903063/"}</code>{"）は2017年刊行の"}<strong >{"第1版"}</strong>{"のページであるため、まずは両版の違いを正確に把握しておくことが重要です。\n                "}</p>{"\n\n                "}<h3 id="21-版の比較表" tabIndex={-1}>{"2.1 版の比較表"}</h3>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"項目"}</th>{"\n                                "}<th scope="col">{"第1版（2017年）"}</th>{"\n                                "}<th scope="col">{"第2版（2026年）"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"著者"}</td>{"\n                                "}<td >{"Martin Kleppmann（単著）"}</td>{"\n                                "}<td >{"Martin Kleppmann, Chris Riccomini（共著）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"刊行時期"}</td>{"\n                                "}<td >{"2017年3月"}</td>{"\n                                "}<td >{"2026年2月〜3月"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"章構成"}</td>{"\n                                "}<td >{"全12章・3パート"}</td>{"\n                                "}<td >{"全14章・5パート"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"想定読者"}</td>{"\n                                "}<td >{"中級〜上級エンジニア"}</td>{"\n                                "}<td >{"中級〜上級エンジニア"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"主な追加テーマ"}</td>{"\n                                "}<td >{"―"}</td>{"\n                                "}<td >{"\n                                    クラウドネイティブ・オブジェクトストレージ・ベクトル埋め込み・ローカルファースト同期・Durable\n                                    Execution・AIとデータシステムの倫理章\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"O'Reillyページ"}</td>{"\n                                "}<td ><code >{"9781491903063"}</code></td>{"\n                                "}<td ><code >{"9781098119058"}</code></td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h3 id="22-なぜ改訂されたのか" tabIndex={-1}>{"2.2 なぜ改訂されたのか"}</h3>{"\n                "}<p >{"\n                    Kleppmann自身は、本書の中心となる「信頼性・スケーラビリティ・保守性」といった原理原則は数年〜数十年単位でしか変化しないため書籍としての鮮度は保たれていたが、"}<strong >{"この10年でクラウドサービスの使われ方が根本的に変わった"}</strong>{"ことが最大の改訂動機だったと語っています。特に象徴的なのが、ストレージの前提の変化です。第1版執筆時点ではデータベースのノードはローカルディスクにデータを保存し、レプリケーションはアプリケーション層で行うのが一般的なモデルでした。しかし現在は、"}<strong >{"オブジェクトストレージ（すでにレプリケートされたリモートサービス）の上にデータベースを構築する"}</strong>{"という、まったく新しいトレードオフの選択肢が実用段階に入っています。\n                "}</p>{"\n                "}<p >{"\n                    共著者の Riccomini\n                    は、データベースアーキテクチャの変化として「"}<strong >{"コントロールプレーン・データプレーン・コンピュートプレーンの分離"}</strong>{"」がこの数年で広く受け入れられた設計パターンになったと指摘しており、これはSaaSとBYOC（Bring\n                    Your Own Cloud）の両方に対応する上で柔軟性をもたらしていると説明しています。\n                "}</p>{"\n\n                "}<h3 id="23-章構成の対応表第1版第2版" tabIndex={-1}>{"2.3 章構成の対応表（第1版 → 第2版）"}</h3>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"Part"}</th>{"\n                                "}<th scope="col">{"第1版の該当章"}</th>{"\n                                "}<th scope="col">{"第2版の該当章"}</th>{"\n                                "}<th scope="col">{"主な変更点"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"基礎"}</td>{"\n                                "}<td >{"1章（信頼性・拡張性・保守性）"}</td>{"\n                                "}<td >{"1章＋2章に分割・拡張"}</td>{"\n                                "}<td >{"\n                                    1章内に「クラウド vs\n                                    自己ホスティング」節を追加、1章・2章の内容を再編・拡張\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"データモデル"}</td>{"\n                                "}<td >{"2章"}</td>{"\n                                "}<td >{"3章"}</td>{"\n                                "}<td >{"\n                                    GraphQL・DataFrameを新規追加（Datalog・Property\n                                    Graphは第1版から存在し、記述を再編・拡張）\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ストレージ"}</td>{"\n                                "}<td >{"3章"}</td>{"\n                                "}<td >{"4章"}</td>{"\n                                "}<td >{"ベクトル埋め込み・列指向クエリのベクトル化実行を追加"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"エンコーディング"}</td>{"\n                                "}<td >{"4章"}</td>{"\n                                "}<td >{"5章"}</td>{"\n                                "}<td >{"\n                                    Durable Execution／Workflows・イベント駆動アーキテクチャを追加\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"レプリケーション"}</td>{"\n                                "}<td >{"5章"}</td>{"\n                                "}<td >{"6章"}</td>{"\n                                "}<td >{"\n                                    Sync Engines・ローカルファースト・マルチリージョン運用を追加\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"パーティショニング"}</td>{"\n                                "}<td >{"6章"}</td>{"\n                                "}<td >{"7章（章題を「Sharding」に変更）"}</td>{"\n                                "}<td >{"マルチテナンシー観点を追加"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"トランザクション"}</td>{"\n                                "}<td >{"7章"}</td>{"\n                                "}<td >{"8章"}</td>{"\n                                "}<td >{"「Exactly-Once Message Processing」を再論"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"分散システムの問題"}</td>{"\n                                "}<td >{"8章"}</td>{"\n                                "}<td >{"9章"}</td>{"\n                                "}<td >{"形式手法・ランダム化テストを追加"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"一貫性と合意"}</td>{"\n                                "}<td >{"9章"}</td>{"\n                                "}<td >{"10章"}</td>{"\n                                "}<td >{"ID生成器・論理クロックの節を新設"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"バッチ処理"}</td>{"\n                                "}<td >{"10章"}</td>{"\n                                "}<td >{"11章"}</td>{"\n                                "}<td >{"オブジェクトストアを主軸に再構成"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ストリーム処理"}</td>{"\n                                "}<td >{"11章"}</td>{"\n                                "}<td >{"12章"}</td>{"\n                                "}<td >{"\n                                    第1版の「Partitioned Logs」「Event Sourcing」は第12章「Log-Based\n                                    Message Brokers」として整理・改称。「Event Sourcing and\n                                    CQRS」はデータモデルを扱う第3章へ移動\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"未来の展望"}</td>{"\n                                "}<td >{"12章「データシステムの未来」"}</td>{"\n                                "}<td >{"13章「ストリーミングシステムの哲学」に改題"}</td>{"\n                                "}<td >{"Unbundling Databasesの議論を継承・発展"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"倫理"}</td>{"\n                                "}<td >{"12章の一節「正しいことをする」"}</td>{"\n                                "}<td >{"14章「正しいことをする」（独立章化）"}</td>{"\n                                "}<td >{"\n                                    予測分析・バイアス・プライバシー／トラッキングは第1版12章にも存在。AI時代を踏まえて再編・大幅加筆\n                                "}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h2 id="3-学習の進め方ステップバイステップロードマップ" tabIndex={-1}>{"\n                    3. 学習の進め方（ステップバイステップ・ロードマップ）\n                "}</h2>{"\n                "}<p >{"\n                    初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念\n                    → 単一ノード → 分散 → 応用」と段階的に負荷を上げていくことをお勧めします。\n                "}</p>{"\n                "}<Diagram id="diagram-1" label="図2：初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念\n                    → 単一ノード → 分散 → 応用」と段階的に負荷を上げていくことをお勧めします。" />{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス（学習の心構え）"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                各章を読んだら「自分が今使っているシステムはどの方式か」を必ず言語化する（例：「うちのMySQLはSingle-Leader\n                                Replicationで、非同期レプリケーションだからReplication\n                                Lagが起きうる」）\n                            "}</li>{"\n                            "}<li >{"\n                                暗記ではなく"}<strong >{"トレードオフの軸"}</strong>{"を掴むことを優先する。DDIAに「絶対的な正解」は登場しない\n                            "}</li>{"\n                            "}<li >{"\n                                Kelsey\n                                Hightower（Google／CoreOSで著名なインフラエンジニア、『Kubernetes Up\n                                and Running』著者）はMonster SCALE\n                                Summitで、\"他社のスケール事例を真似する前に、自分たちが本当にその規模の問題を抱えているかをまず確認すべきだ\"という趣旨の助言をしています。DDIAで学ぶ技術も同様に、"}<strong >{"「使えるから使う」ではなく「自分たちの負荷特性に合っているか」で選ぶ"}</strong>{"姿勢が重要です\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h2 id="4-part-iデータシステムの基礎" tabIndex={-1}>{"4. Part I：データシステムの基礎"}</h2>{"\n\n                "}<h3 id="41-第1章データシステムのトレードオフ" tabIndex={-1}>{"\n                    4.1 第1章：データシステムのトレードオフ\n                "}</h3>{"\n                "}<p >{"\n                    第2版で新設されたこの章は、個々の技術に入る前に「意思決定の軸」を整理するための章です。主なトレードオフは以下の3つです。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"トレードオフの軸"}</th>{"\n                                "}<th scope="col">{"選択肢A"}</th>{"\n                                "}<th scope="col">{"選択肢B"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ワークロードの性質"}</td>{"\n                                "}<td >{"OLTP（Operational／日常のトランザクション処理）"}</td>{"\n                                "}<td >{"OLAP（Analytical／集計・分析処理）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"ホスティング形態"}</td>{"\n                                "}<td >{"クラウドサービス（マネージド）"}</td>{"\n                                "}<td >{"自己ホスティング（オンプレミス／セルフマネージド）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ノード構成"}</td>{"\n                                "}<td >{"単一ノード（Single-Node）"}</td>{"\n                                "}<td >{"分散システム（Distributed）"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<ul >{"\n                    "}<li >{"\n                        "}<strong >{"OLTP vs OLAP"}</strong>{"：OLTPは「注文を1件登録する」のような少量データへの高頻度アクセス、OLAPは「先月の売上を地域別に集計する」のような大量データへの低頻度・重いクエリという性質の違いがあります。多くの組織では、OLTP用のデータベース（System\n                        of\n                        Record＝正データ）から、ETLやCDCによってOLAP用のデータウェアハウス（Derived\n                        Data＝派生データ）へデータを流し込む二層構成を取ります。\n                    "}</li>{"\n                    "}<li >{"\n                        "}<strong >{"クラウド vs 自己ホスティング"}</strong>{"：クラウドサービスは運用負荷を下げる一方でベンダーロックインやコストの予測しづらさというリスクを伴います。近年はクラウドネイティブなアーキテクチャ（コントロール・データ・コンピュートプレーンの分離）が主流になりつつあります。\n                    "}</li>{"\n                    "}<li >{"\n                        "}<strong >{"単一ノード vs 分散システム"}</strong>{"：分散システムはスケーラビリティと可用性を得られる代わりに、ネットワーク分断・部分障害・整合性の管理という複雑さを引き受けることになります（この複雑さは第9章で詳しく扱われます）。\n                    "}</li>{"\n                "}</ul>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                新しいプロジェクトでは「本当に分散システムが必要か」を最初に問う。単一ノードのPostgreSQLで十分なスケールのプロダクトは非常に多い\n                            "}</li>{"\n                            "}<li >{"\n                                OLTPとOLAPのワークロードを同じデータベースに混在させると、分析クエリが日常のトランザクション処理の性能を圧迫することがあるため、早い段階で分離戦略（レプリカ、専用DWHなど）を検討する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="42-第2章非機能要件の定義" tabIndex={-1}>{"4.2 第2章：非機能要件の定義"}</h3>{"\n                "}<p >{"\n                    「動くこと」だけでなく、"}<strong >{"信頼性（Reliability）・スケーラビリティ（Scalability）・保守性（Maintainability）"}</strong>{"という3本柱の非機能要件を明確に定義することが、データシステム設計の出発点になります。\n                "}</p>{"\n                "}<Diagram id="diagram-2" label="図3：「動くこと」だけでなく、信頼性（Reliability）・スケーラビリティ（Scalability）・保守性（Maintainability）という3本柱の非機能要件を明確に定義することが、データシステム設計の出発点になります。" />{"\n\n                "}<h4 >{"信頼性（Reliability）"}</h4>{"\n                "}<p >{"\n                    「システムが期待通りに動作し続けること」と定義され、以下の障害への耐性で構成されます。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"障害の種類"}</th>{"\n                                "}<th scope="col">{"具体例"}</th>{"\n                                "}<th scope="col">{"主な対策"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ハードウェア障害"}</td>{"\n                                "}<td >{"ディスク故障、電源障害"}</td>{"\n                                "}<td >{"冗長化（RAID、レプリケーション）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"ソフトウェアエラー"}</td>{"\n                                "}<td >{"バグ、リソースリーク、カスケード障害"}</td>{"\n                                "}<td >{"テスト、モニタリング、サーキットブレーカー"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"人的エラー"}</td>{"\n                                "}<td >{"設定ミス、誤ったデプロイ"}</td>{"\n                                "}<td >{"\n                                    設定検証・レビュープロセス、段階的リリース、ロールバック機構\n                                "}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h4 >{"スケーラビリティ（Scalability）"}</h4>{"\n                "}<p >{"\n                    DDIAの最重要ポイントの一つは「スケーラビリティとは単一の指標ではなく、"}<strong >{"負荷パラメータ（Load\n                        Parameters）を定義した上で『Xが増えたときにYはどうなるか』を問う概念"}</strong>{"」だという考え方です。例えばTwitter/X型のSNSでは「フォロワー数」「投稿頻度」がリクエストレートに直結する負荷パラメータになります。\n                "}</p>{"\n                "}<p >{"\n                    レスポンスタイムの評価では、平均値ではなく"}<strong >{"パーセンタイル（p50・p95・p99）"}</strong>{"を使うことが定石とされています。平均値は一部の極端に遅いリクエスト（テールレイテンシ）を隠してしまうためです。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"指標"}</th>{"\n                                "}<th scope="col">{"説明"}</th>{"\n                                "}<th scope="col">{"用途"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"p50（中央値）"}</td>{"\n                                "}<td >{"リクエストの半数がこの時間以内に完了"}</td>{"\n                                "}<td >{"典型的なユーザー体験の把握"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"p95 / p99"}</td>{"\n                                "}<td >{"上位5%・1%の遅いリクエストの境界値"}</td>{"\n                                "}<td >{"SLA設定、遅いリクエストの検知"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"平均（Average）"}</td>{"\n                                "}<td >{"全体の合計÷件数"}</td>{"\n                                "}<td >{"参考値程度に留める（テールを隠しやすいため非推奨）"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h4 >{"保守性（Maintainability）"}</h4>{"\n                "}<p >{"\n                    保守性は「運用性（日々の運用のしやすさ）」「単純性（複雑さの管理）」「進化性（変更のしやすさ）」の3つに分解されます。第2版ではこの節がより体系的に整理され、"}<strong >{"複雑さ（Complexity）をいかに管理するか"}</strong>{"が強調されています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                スケーラビリティを議論する前に、必ず自分たちの「負荷パラメータ」を明文化する（例：DAU、秒間書き込み数、ホットキーの偏り）\n                            "}</li>{"\n                            "}<li >{"\n                                レイテンシのSLA/SLOはp99など高いパーセンタイルで設定し、平均値だけで判断しない\n                            "}</li>{"\n                            "}<li >{"\n                                「進化性（Evolvability）」を軽視しない。要件は必ず変化するため、スキーマ変更やAPI変更を安全に行える設計（第5章）を早期から意識する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h2 id="5-part-iiデータの保存と検索" tabIndex={-1}>{"5. Part II：データの保存と検索"}</h2>{"\n\n                "}<h3 id="51-第3章データモデルとクエリ言語" tabIndex={-1}>{"5.1 第3章：データモデルとクエリ言語"}</h3>{"\n                "}<p >{"\n                    データモデルの選択は、アプリケーション開発の初期段階で最も影響の大きい意思決定の一つです。DDIA第2版では、リレーショナル・ドキュメント・グラフの3大モデルに加え、GraphQL、Datalog、DataFrame/行列形式まで議論の幅が広がっています。\n                "}</p>{"\n                "}<Diagram id="diagram-3" label="図4：データモデルの選択は、アプリケーション開発の初期段階で最も影響の大きい意思決定の一つです。DDIA第2版では、リレーショナル・ドキュメント・グラフの3大モデルに加え、GraphQL、Datalog、DataFrame/行列形式まで議論の幅が広がっています。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"モデル"}</th>{"\n                                "}<th scope="col">{"得意な用途"}</th>{"\n                                "}<th scope="col">{"代表的なクエリ言語"}</th>{"\n                                "}<th scope="col">{"弱点"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"リレーショナル"}</td>{"\n                                "}<td >{"多対多の関係、複雑な結合、強いスキーマ"}</td>{"\n                                "}<td >{"SQL"}</td>{"\n                                "}<td >{"ドキュメント全体の局所性が低い"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"ドキュメント"}</td>{"\n                                "}<td >{"ツリー構造、局所性の高いデータ、柔軟なスキーマ"}</td>{"\n                                "}<td >{"JSON操作クエリ"}</td>{"\n                                "}<td >{"多対多関係の表現が苦手"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"グラフ"}</td>{"\n                                "}<td >{"高度に相互接続したデータ（SNS、レコメンド）"}</td>{"\n                                "}<td >{"Cypher、SPARQL、Datalog"}</td>{"\n                                "}<td >{"単純な表形式データには過剰"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    "}<strong >{"補足：GraphQLはこの分類には入らない"}</strong><br  />{"\n                    GraphQLはクライアントとサーバー間のAPI向けクエリ言語であり、背後のストレージモデル（リレーショナル／ドキュメント／グラフのいずれでも可）には依存しません。名前に「Graph」を含むためグラフDBのクエリ言語と混同されがちですが、Cypher・SPARQL・Datalogのようなグラフデータモデル向け言語とは層が異なります。\n                "}</p>{"\n                "}<p >{"\n                    第2版で新たに加わったのは、"}<strong >{"GraphQL"}</strong>{"（クライアント主導で必要なフィールドを指定してデータを取得するAPI向けクエリ言語。ストレージモデルには依存しない）と、"}<strong >{"DataFrame・行列形式"}</strong>{"（機械学習・データ分析パイプラインで多用される表現）です。一方、"}<strong >{"Datalog"}</strong>{"（再帰的なクエリを表現できる宣言的言語）や"}<strong >{"Property Graph"}</strong>{"、"}<strong >{"Event Sourcing"}</strong>{"（状態の変更を追記型のイベント列として保存し、そこから現在の状態を再構成する方式）、"}<strong >{"CQRS"}</strong>{"（書き込みモデルと読み取りモデルを分離する設計パターン）は第1版でも扱われていたテーマであり、第2版では記述の再編・拡張が行われています。Event\n                    SourcingとCQRSはそれぞれ独立したパターンであり、単独でも採用できますが、併用されることが多い組み合わせです。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                「とりあえずドキュメントDB」「とりあえずリレーショナルDB」という思考停止を避け、データ間の関係の濃さで判断する\n                            "}</li>{"\n                            "}<li >{"\n                                多対多の関係が中心になるドメイン（レコメンド、ソーシャルグラフ、不正検知）では早期からグラフモデルを検討する\n                            "}</li>{"\n                            "}<li >{"\n                                スキーマの柔軟性が欲しいだけであれば、リレーショナルDBのJSONカラム機能で十分なケースも多い\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="52-第4章ストレージとインデックス" tabIndex={-1}>{"5.2 第4章：ストレージとインデックス"}</h3>{"\n                "}<p >{"\n                    「データベースの内部でデータがどう保存されているか」を理解することは、パフォーマンスチューニングやデータベース選定において不可欠です。DDIAはOLTP用途の2大インデックス構造、"}<strong >{"B-Tree"}</strong>{"と"}<strong >{"LSM-Tree（Log-Structured Merge-Tree）"}</strong>{"を対比しながら解説します。\n                "}</p>{"\n                "}<Diagram id="diagram-4" label="図5：「データベースの内部でデータがどう保存されているか」を理解することは、パフォーマンスチューニングやデータベース選定において不可欠です。DDIAはOLTP用途の2大インデックス構造、B-TreeとLSM-Tree（Log-Structured Merge-Tree）を対比しながら解説します。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"観点"}</th>{"\n                                "}<th scope="col">{"B-Tree"}</th>{"\n                                "}<th scope="col">{"LSM-Tree"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"書き込みパターン"}</td>{"\n                                "}<td >{"インプレース更新"}</td>{"\n                                "}<td >{"追記型（Append-Only）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"書き込みスループット"}</td>{"\n                                "}<td >{"中程度"}</td>{"\n                                "}<td >{"高い（順次書き込みが中心）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"読み取り性能"}</td>{"\n                                "}<td >{"安定して高速"}</td>{"\n                                "}<td >{"Compaction次第で変動しうる"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"代表的な採用例"}</td>{"\n                                "}<td >{"多くのRDBMS（MySQL/InnoDB、PostgreSQL）"}</td>{"\n                                "}<td >{"Cassandra、RocksDB、LevelDB"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"空間効率"}</td>{"\n                                "}<td >{"断片化しやすい"}</td>{"\n                                "}<td >{"Compactionで最適化されるが一時的に肥大化"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    第2版では、分析（OLAP）用途に特化した"}<strong >{"列指向ストレージ（Column-Oriented Storage）"}</strong>{"、"}<strong >{"クエリのコンパイルとベクトル化実行"}</strong>{"、"}<strong >{"マテリアライズドビューとデータキューブ"}</strong>{"、そして生成AI時代を反映した"}<strong >{"ベクトル埋め込み（Vector Embeddings）"}</strong>{"と全文検索の節が新たに追加されています。ベクトル埋め込みはRAG（検索拡張生成）アプリケーションの基盤技術として、近年のデータベース設計で無視できないテーマになっています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                書き込みが多いワークロード（ログ集約、時系列データ、IoT）ではLSM-Tree系のストレージエンジンを検討する\n                            "}</li>{"\n                            "}<li >{"\n                                読み取りが多く更新頻度が低いワークロードにはB-Tree系のRDBMSが安定した選択肢になりやすい\n                            "}</li>{"\n                            "}<li >{"\n                                分析用途を混在させる場合は、行指向（OLTP）と列指向（OLAP）を最初から分離する設計を検討する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="53-第5章エンコーディングとスキーマの進化" tabIndex={-1}>{"\n                    5.3 第5章：エンコーディングとスキーマの進化\n                "}</h3>{"\n                "}<p >{"\n                    データをネットワークやディスクへ送る際には、メモリ上のオブジェクトを別の形式に変換（エンコード）する必要があります。この章は「"}<strong >{"スキーマが時間とともに変化しても、新旧のコードが互いに読み書きできる"}</strong>{"（後方互換性・前方互換性）」ことの重要性を扱います。\n                "}</p>{"\n                "}<Diagram id="diagram-5" label="図6：データをネットワークやディスクへ送る際には、メモリ上のオブジェクトを別の形式に変換（エンコード）する必要があります。この章は「スキーマが時間とともに変化しても、新旧のコードが互いに読み書きできる（後方互換性・前方互換性）」ことの重要性を扱います。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"フォーマット"}</th>{"\n                                "}<th scope="col">{"特徴"}</th>{"\n                                "}<th scope="col">{"スキーマ"}</th>{"\n                                "}<th scope="col">{"主な用途"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"JSON / XML"}</td>{"\n                                "}<td >{"人間が読みやすい、テキストベース"}</td>{"\n                                "}<td >{"任意（緩い）"}</td>{"\n                                "}<td >{"Web API、設定ファイル"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"Protocol Buffers"}</td>{"\n                                "}<td >{"バイナリ、コンパクト、コード生成前提"}</td>{"\n                                "}<td >{"必須（IDLで定義）"}</td>{"\n                                "}<td >{"gRPC、内部サービス間通信"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"Avro"}</td>{"\n                                "}<td >{"バイナリ、スキーマをデータと分離管理"}</td>{"\n                                "}<td >{"必須（動的にも対応）"}</td>{"\n                                "}<td >{"Kafkaなどのストリーミング基盤"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    第2版では新たに、長時間にわたる処理を安全に継続実行するための"}<strong >{"Durable Execution とワークフロー"}</strong>{"、そして"}<strong >{"イベント駆動アーキテクチャ（Event-Driven Architecture）"}</strong>{"の節が追加され、マイクロサービス時代の非同期処理設計により踏み込んだ内容になっています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                APIやイベントスキーマを変更する際は「フィールドの追加は基本的に安全、削除・型変更は要注意」という後方/前方互換性の原則を徹底する\n                            "}</li>{"\n                            "}<li >{"\n                                スキーマを持たないJSONに頼りきるのではなく、Protocol\n                                BuffersやAvroのような明示的スキーマ管理ツールを社内標準にすると事故が減る\n                            "}</li>{"\n                            "}<li >{"\n                                サービス間の結合度が高くなりすぎないよう、同期RPCと非同期イベントを適材適所で使い分ける\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h2 id="6-part-iii分散データ" tabIndex={-1}>{"6. Part III：分散データ"}</h2>{"\n                "}<p >{"\n                    ここからが本書の核心部分です。「1台のマシンに収まらないデータをどう扱うか」という問いに、レプリケーション・シャーディング・トランザクション・分散システムの落とし穴・一貫性と合意という5つの章で答えていきます。\n                "}</p>{"\n\n                "}<h3 id="61-第6章レプリケーション" tabIndex={-1}>{"6.1 第6章：レプリケーション"}</h3>{"\n                "}<p >{"\n                    同じデータを複数のノードにコピーして保持する仕組みで、可用性の向上・読み取り負荷の分散・低レイテンシアクセスを目的とします。方式は大きく3つに分類されます。\n                "}</p>{"\n                "}<Diagram id="diagram-6" label="図7：同じデータを複数のノードにコピーして保持する仕組みで、可用性の向上・読み取り負荷の分散・低レイテンシアクセスを目的とします。方式は大きく3つに分類されます。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"方式"}</th>{"\n                                "}<th scope="col">{"書き込み経路"}</th>{"\n                                "}<th scope="col">{"長所"}</th>{"\n                                "}<th scope="col">{"短所"}</th>{"\n                                "}<th scope="col">{"代表例"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"シングルリーダー"}</td>{"\n                                "}<td >{"すべての書き込みが1つのリーダーを経由"}</td>{"\n                                "}<td >{"実装がシンプル、整合性を保ちやすい"}</td>{"\n                                "}<td >{"リーダー障害時の切替コスト、地理的に遠いと書き込みが遅い"}</td>{"\n                                "}<td >{"MySQL、PostgreSQLの標準レプリケーション"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"マルチリーダー"}</td>{"\n                                "}<td >{"複数の拠点それぞれにリーダーを配置"}</td>{"\n                                "}<td >{"拠点ごとに低レイテンシ書き込みが可能"}</td>{"\n                                "}<td >{"書き込み競合（Conflict）の解決が必要"}</td>{"\n                                "}<td >{"複数リージョンにまたがるDB、オフライン対応アプリ"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"リーダーレス"}</td>{"\n                                "}<td >{"\n                                    どのノードにも書き込み可能、読み書きクォーラム（w + r >\n                                    n）で読み取りの鮮度を調整\n                                "}</td>{"\n                                "}<td >{"\n                                    単一障害点がなく、一部ノードが落ちても読み書きを継続しやすい（実際の可用性・耐障害性はレプリケーション係数、読み取り／書き込みクォーラムの設定、修復と競合解決の実装に依存する）\n                                "}</td>{"\n                                "}<td >{"読み取り時の修復（Read Repair）が必要"}</td>{"\n                                "}<td >{"Amazon Dynamo系（Cassandra、Riak）"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    同期／非同期レプリケーションの選択も重要な論点です。同期は整合性を保証しやすい一方でレイテンシが増加し、非同期は高速だが"}<strong >{"レプリケーションラグ（Replication Lag）"}</strong>{"によって「書いた直後に自分の書き込みが読めない」といった不整合が起こり得ます。\n                "}</p>{"\n                "}<p >{"\n                    第2版で新設された注目トピックが、"}<strong >{"Sync Engines とローカルファースト・ソフトウェア"}</strong>{"です。これはKleppmann自身の近年の研究テーマでもあり、オフライン中でもローカルで編集を続け、オンライン復帰時に自動的に同期・マージするアプリケーション設計を扱っています。なお「ローカルファースト」は、データの正本をユーザーの手元に置き、サーバーを同期の補助と位置付ける設計原則を指します。FigmaやLinearは"}<strong >{"オフライン編集と同期に取り組んだ商用アプリの例"}</strong>{"として参考になりますが、いずれもサーバー側に正本を持つアーキテクチャであり、ローカルファーストの定義を満たす実装として扱うべきではありません。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                決済や在庫確保のような業務整合性が必須な機能では、"}<strong >{"レプリケーション方式の選択と業務ルールの保証を分けて考える"}</strong>{"。レプリケーションは「どのノードがいつ最新データを持つか」を決めるだけであり、二重引き落としや在庫のマイナスを防ぐ責務は負わない\n                            "}</li>{"\n                            "}<li >{"\n                                業務整合性そのものは、"}<strong >{"守りたい不変条件とアクセスパターン"}</strong>{"に応じて必要な分離レベル・制約を選ぶ。単一行への条件付き原子更新（"}<code >{"UPDATE stock SET qty = qty - 1 WHERE id = ? AND qty >=\n                                    1"}</code>{"）や、在庫キー・オーダーIDへの一意性制約で安全に守れる不変条件なら\n                                Read Committed でも成立する。一方、複数行を読んでから判断する Write\n                                Skew 型の不変条件（「オンコール担当者を最低1人残す」など）は\n                                Snapshot Isolation でも防げないため、直列化可能性（Serializable）や\n                                "}<code >{"SELECT ... FOR UPDATE"}</code>{"\n                                のような明示的ロックが必要になる。いずれの場合も、操作の冪等性キーによる重複要求の排除を併用する\n                            "}</li>{"\n                            "}<li >{"\n                                その上で、シングルリーダー構成は「書き込みの順序付け点が1つに定まる」という点で上記の制約・分離レベルを実装しやすく、同期レプリケーションはリーダー障害時のコミット済みデータ喪失を抑えるために選ぶ（＝耐久性の話であって、業務整合性の代用ではない）\n                            "}</li>{"\n                            "}<li >{"\n                                グローバル分散が前提のアプリでは、書き込み競合の解決戦略（Last-Write-Wins、CRDT、アプリケーションレベルのマージ）を設計段階で決めておく\n                            "}</li>{"\n                            "}<li >{"\n                                「自分の書き込みを自分で読む（Read-Your-Writes）」保証が必要な機能があるなら、レプリケーションラグへの対策（書き込み直後は同一ノードから読むなど）を組み込む\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="62-第7章シャーディングパーティショニング" tabIndex={-1}>{"\n                    6.2 第7章：シャーディング（パーティショニング）\n                "}</h3>{"\n                "}<p >{"\n                    1台のノードに収まらない量のデータを複数ノードに分割して保存する手法です。第2版では章題が「Partitioning」から「Sharding」に変更され、マルチテナンシー（複数の顧客・テナントのデータを1つの基盤で扱う設計）の観点が強化されています。\n                "}</p>{"\n                "}<Diagram id="diagram-7" label="図8：1台のノードに収まらない量のデータを複数ノードに分割して保存する手法です。第2版では章題が「Partitioning」から「Sharding」に変更され、マルチテナンシー（複数の顧客・テナントのデータを1つの基盤で扱う設計）の観点が強化されています。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"観点"}</th>{"\n                                "}<th scope="col">{"キー範囲シャーディング"}</th>{"\n                                "}<th scope="col">{"ハッシュシャーディング"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"範囲クエリ"}</td>{"\n                                "}<td >{"得意（隣接するキーが同じシャードに集まる）"}</td>{"\n                                "}<td >{"苦手（キーが分散するため複数シャードへの問い合わせが必要）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"負荷分散"}</td>{"\n                                "}<td >{"偏りやすい（ホットスポットのリスク）"}</td>{"\n                                "}<td >{"均一になりやすい"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"リバランシング"}</td>{"\n                                "}<td >{"手動・自動どちらの運用も一般的"}</td>{"\n                                "}<td >{"ハッシュリングによる自動化がしやすい"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    セカンダリインデックスの扱いも重要な論点で、"}<strong >{"ローカルセカンダリインデックス"}</strong>{"（各シャード内で完結、書き込みは速いが読み取り時に全シャードへの問い合わせが必要）と"}<strong >{"グローバルセカンダリインデックス"}</strong>{"（インデックス自体も別途シャーディング、読み取りは速いが書き込みが複雑）のトレードオフが解説されます。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                テナントID・ユーザーIDのような自然なパーティションキーがある場合は、それを軸にシャーディングすることでクエリのローカリティを最大化できる\n                            "}</li>{"\n                            "}<li >{"\n                                リバランシングは「自動化するが、いつ発火するかは運用者がコントロールできる」設計（Automatic\n                                but operator-triggered）が事故を減らす定石\n                            "}</li>{"\n                            "}<li >{"\n                                ホットスポット対策として、キーの先頭にランダムなプレフィックスを付与する「ソルティング」も有効な選択肢の一つ\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="63-第8章トランザクション" tabIndex={-1}>{"6.3 第8章：トランザクション"}</h3>{"\n                "}<p >{"\n                    トランザクションはアプリケーション開発者が「複雑な障害シナリオを気にせずに済むようにする」ための抽象化です。"}<strong >{"ACID"}</strong>{"（Atomicity・Consistency・Isolation・Durability）という言葉自体は有名ですが、DDIAはこの言葉が実装によって意味がぶれやすいことを丁寧に解きほぐします。\n                "}</p>{"\n                "}<Diagram id="diagram-8" label="図9：トランザクションはアプリケーション開発者が「複雑な障害シナリオを気にせずに済むようにする」ための抽象化です。ACID（Atomicity・Consistency・Isolation・Durability）という言葉自体は有名ですが、DDIAはこの言葉が実装によって意味がぶれやすいことを丁寧に解きほぐします。" />{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"分離レベル"}</th>{"\n                                "}<th scope="col">{"防げる異常"}</th>{"\n                                "}<th scope="col">{"防げない異常"}</th>{"\n                                "}<th scope="col">{"代表的な実装"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"Read Committed"}</td>{"\n                                "}<td >{"Dirty Read"}</td>{"\n                                "}<td >{"Non-Repeatable Read、Write Skew"}</td>{"\n                                "}<td >{"多くのRDBMSのデフォルト"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"Snapshot Isolation"}</td>{"\n                                "}<td >{"Non-Repeatable Read、大半のLost Update"}</td>{"\n                                "}<td >{"Write Skew、一部のPhantom"}</td>{"\n                                "}<td >{"\n                                    PostgreSQLの"}<code >{"REPEATABLE READ"}</code>{"はSnapshot\n                                    Isolationとして実装されている。MySQL(InnoDB)の"}<code >{"REPEATABLE READ"}</code>{"は一貫性読み取りに加えロック読み取り（"}<code >{"SELECT ... FOR UPDATE"}</code>{"など）が最新コミットを見るなど挙動が異なり、Snapshot\n                                    Isolationと同一視できない\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"Serializable"}</td>{"\n                                "}<td >{"\n                                    ほぼ全ての異常（トランザクションを直列実行したのと同じ結果を保証）\n                                "}</td>{"\n                                "}<td >{"なし"}</td>{"\n                                "}<td >{"Serializable Snapshot Isolation (SSI) など"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    上図はあくまで「どの異常を防げるか」という保証の強弱の順序であり、"}<strong >{"標準SQLの分離レベル名だけでは実際の保証内容は決まりません"}</strong>{"。同じ"}<code >{"READ COMMITTED"}</code>{"や"}<code >{"REPEATABLE READ"}</code>{"でも実装（PostgreSQL、MySQL/InnoDB、Oracle、SQL\n                    Serverなど）ごとに防げる異常が異なるため、採用するDBのドキュメントで実際の挙動を確認する必要があります。\n                "}</p>{"\n                "}<p >{"\n                    ただし Serializable\n                    が「異常を防げない」わけではない一方で、無償でもありません。2相ロックのような悲観的実装ではロック競合によりスループットが落ち、SSI\n                    のような楽観的実装では競合を検出した時点でトランザクションが"}<strong >{"直列化失敗（serialization failure）"}</strong>{"としてアボートされます。つまりコストは異常の見逃しではなく、実装コスト・スループット・"}<strong >{"アプリケーション側でのリトライ実装"}</strong>{"という形で現れます。\n                "}</p>{"\n                "}<p >{"\n                    特に初学者がつまずきやすいのが"}<strong >{"Write Skew"}</strong>{"です。2つのトランザクションがそれぞれ異なる行を更新するため一見競合しないように見えても、両者が読んだ前提条件（例：「オンコール担当者が最低1人いること」）が同時に崩れてしまう現象で、Snapshot\n                    Isolationだけでは防げません。\n                "}</p>{"\n                "}<p >{"\n                    分散トランザクションについては、"}<strong >{"Two-Phase Commit (2PC)"}</strong>{"の仕組みと、それが持つ「コーディネーター障害時にリソースがロックされたまま止まる」という弱点が解説されます。第2版ではメッセージングシステムにおける「Exactly-Once（正確に1回）」処理の実現方法も改めて論じられています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                「トランザクションを使っているから安全」と思い込まず、実際の分離レベルを必ず確認する（多くのDBのデフォルトはSerializableではない）\n                            "}</li>{"\n                            "}<li >{"\n                                Write\n                                Skewが起きうる業務ロジック（在庫の二重予約、シフトの最低人数チェックなど）では、明示的なロック（"}<code >{"SELECT ... FOR UPDATE"}</code>{"）やSerializableレベルの利用を検討する\n                            "}</li>{"\n                            "}<li >{"\n                                複数のデータストアをまたぐ分散トランザクションは複雑さとレイテンシのコストが大きいため、可能な限り「1トランザクション=1データストア」に設計を寄せ、それ以外はSagaパターンや冪等なリトライで対応する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="64-第9章分散システムの落とし穴" tabIndex={-1}>{"6.4 第9章：分散システムの落とし穴"}</h3>{"\n                "}<p >{"\n                    分散システムが単一ノードのシステムと決定的に異なるのは、「"}<strong >{"部分的な障害（Partial Failure）"}</strong>{"」が常態化する点です。この章はネットワーク・クロック・プロセスという3つの観点で、なぜ分散システムの設計が難しいのかを解説します。\n                "}</p>{"\n                "}<Diagram id="diagram-9" label="図10：分散システムが単一ノードのシステムと決定的に異なるのは、「部分的な障害（Partial Failure）」が常態化する点です。この章はネットワーク・クロック・プロセスという3つの観点で、なぜ分散システムの設計が難しいのかを解説します。" />{"\n                "}<p >{"\n                    重要な洞察は、「"}<strong >{"ノードから応答がないことは、そのノードが停止していることを意味しない"}</strong>{"」という点です。ネットワーク遅延なのか、ノードが本当にダウンしているのか、処理が単に遅いだけなのかを外部から区別することは原理的に不可能であり、これが分散システム設計の根本的な難しさになっています。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"落とし穴の種類"}</th>{"\n                                "}<th scope="col">{"具体例"}</th>{"\n                                "}<th scope="col">{"設計上の対策"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ネットワークの非同期性"}</td>{"\n                                "}<td >{"メッセージの遅延・順序逆転・重複"}</td>{"\n                                "}<td >{"タイムアウト設計、冪等な処理"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"クロックの不正確さ"}</td>{"\n                                "}<td >{"NTPドリフト、うるう秒"}</td>{"\n                                "}<td >{"\n                                    単調時計（Monotonic\n                                    Clock）を経過時間計測に使う、時刻に依存したロジックを避ける\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"プロセスの一時停止"}</td>{"\n                                "}<td >{"GCポーズ、CPUスチール"}</td>{"\n                                "}<td >{"リースの有効期限をフェンシングトークンで保護する"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"ビザンチン障害"}</td>{"\n                                "}<td >{"悪意あるノード・不正なデータ送信"}</td>{"\n                                "}<td >{"多くの一般的な分散DBでは想定外（信頼された環境が前提）"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                タイムアウト値は固定値でなく、実測レイテンシの分布（p99等）に基づいて動的・保守的に設定する\n                            "}</li>{"\n                            "}<li >{"\n                                リーダーのリース（Lease）を用いる設計では、必ず「フェンシングトークン」のような単調増加する識別子で古いリーダーからの書き込みを拒否できるようにする\n                            "}</li>{"\n                            "}<li >{"\n                                「起きてほしくないこと」ではなく「起きうること」を前提にリトライ・冪等性・タイムアウトを設計する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="65-第10章一貫性と合意" tabIndex={-1}>{"6.5 第10章：一貫性と合意"}</h3>{"\n                "}<p >{"\n                    分散システムにおける最も理論的に難しいテーマが「一貫性（Consistency）」と「合意（Consensus）」です。\n                "}</p>{"\n                "}<p >{"\n                    "}<strong >{"線形化可能性（Linearizability）"}</strong>{"は、分散システムがあたかも単一のコピーしか存在しないかのように振る舞う、"}<strong >{"単一オブジェクトに対する強い一貫性（recency）保証"}</strong>{"です。ただし「あらゆる意味で最も強い保証」ではなく、複数オブジェクトにまたがるトランザクションの直列化可能性と線形化可能性を合わせた"}<strong >{"厳密直列化可能性（Strict Serializability）"}</strong>{"のように、さらに強い保証も存在します。また強力である反面、達成のためのコストが大きく、"}<strong >{"ネットワーク分断が発生している間は、線形化可能性と（分断された側の）可用性を同時に満たせない"}</strong>{"というトレードオフ（いわゆるCAP的な制約）が存在します。分断が起きていない通常時にまで可用性を犠牲にするわけではない点に注意してください。\n                "}</p>{"\n                "}<Diagram id="diagram-10" label="図11：線形化可能性（Linearizability）は、分散システムがあたかも単一のコピーしか存在しないかのように振る舞う、単一オブジェクトに対する強い一貫性（recency）保証です。ただし「あらゆる意味で最も強い保証」ではなく、複数オブジェクトにまたがるトランザクションの直列化可能性と線形化可能性を合わせた厳密直列化可能性（Strict Serializability）のように、さらに強い保証も存在します。また強力である反面、達成のためのコストが大きく、ネットワーク分断が発生している間は、線形化可能性と（分断された側の）可用性を同時に満たせないというトレードオフ（いわゆるCAP的な制約）が存在します。分断が起きていない通常時にまで可用性を犠牲にするわけではない点に注意してください。" />{"\n                "}<p >{"\n                    "}<strong >{"合意アルゴリズム（Consensus）"}</strong>{"は、複数のレプリカが「ある1つの値」または「コマンドの並び」について同じ決定に至り、"}<strong >{"互いに矛盾する決定を決して行わない"}</strong>{"ことを保証する"}<strong >{"耐障害性のあるプリミティブ"}</strong>{"です。ここでの中核は安全性（safety）——一度確定した決定が覆らず、ノード間で食い違わないこと——であり、リーダー選出・分散ロック・全順序ブロードキャストなどの基盤になります。代表的な実装にPaxos、Raft、Zabがあり、実務ではこれらを内包したZooKeeperやetcdのような「"}<strong >{"コーディネーションサービス"}</strong>{"」を直接利用するケースが一般的です。\n                "}</p>{"\n                "}<p >{"\n                    一方、複数のノードにまたがる書き込みを「全員コミットするか、全員アボートするか」に揃える"}<strong >{"2相コミット（2PC）"}</strong>{"は、これとは別の抽象化です。2PCは"}<strong >{"アトミックコミットプロトコル"}</strong>{"であり、コーディネーターが準備フェーズ後に停止すると参加者はロックを握ったまま待ち続ける（"}<strong >{"ブロックし得る"}</strong>{"）という弱点を持ちます。Consensusはこの点で異なり、"}<strong >{"過半数のノードが生存しているだけでなく、それらが互いに（そして必要に応じてクライアントとも）通信できている限り"}</strong>{"進行できます。ここで注意したいのは、これが無条件の保証ではないという点です。PaxosやRaftはFLP不可能性を回避するために、障害検出のタイムアウトといったタイミング仮定と、メッセージがいずれ届くというネットワークの活性（liveness）仮定を置いています。ネットワーク分断や極端な遅延が続く間は、ノードが「生きている」だけでは合意は進みません。それでも、コーディネーター1台の停止で無期限にブロックし得る2PCとは対照的に、Consensusは少数派ノードの障害を乗り越えて進行を継続できます。両者は排他的ではなく、コーディネーターの決定ログを合意アルゴリズムで複製して単一障害点を減らす（いわゆる耐障害性のある2PC）という形で"}<strong >{"併用される場合があります"}</strong>{"。\n                "}</p>{"\n                "}<p >{"\n                    第2版では新たに、"}<strong >{"論理クロック（Logical Clocks）"}</strong>{"と、それを応用した"}<strong >{"線形化可能なID生成器"}</strong>{"という節が追加され、分散システムにおける「順序」の扱いがより実践的に解説されています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                自前でPaxosやRaftを実装しようとせず、ZooKeeper・etcd・Consulのような実績のあるコーディネーションサービスを利用する\n                            "}</li>{"\n                            "}<li >{"\n                                「強い一貫性」が本当に必要な操作（リーダー選出、分散ロック、一意なID発行）だけをコーディネーションサービスに任せ、その他の高頻度な処理には持ち込まない\n                            "}</li>{"\n                            "}<li >{"\n                                線形化可能性のコストを理解した上で、業務要件が許すなら「結果整合性（Eventual\n                                Consistency）」で十分な箇所を切り分ける\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h2 id="7-part-iv派生データ" tabIndex={-1}>{"7. Part IV：派生データ"}</h2>{"\n                "}<p >{"\n                    正データ（System of\n                    Record）から、検索インデックス・キャッシュ・分析基盤のような「派生データ（Derived\n                    Data）」を生成・維持する仕組みを扱うパートです。\n                "}</p>{"\n\n                "}<h3 id="71-第11章バッチ処理" tabIndex={-1}>{"7.1 第11章：バッチ処理"}</h3>{"\n                "}<p >{"\n                    大量データを一括で処理し、その結果を新しいデータセットとして生成するアプローチです。DDIAはUnixのパイプ（"}<code >{"cat file | grep | sort | uniq"}</code>{"のような思想）から始め、それを分散環境に拡張した"}<strong >{"MapReduce"}</strong>{"、そしてより柔軟な"}<strong >{"Dataflowエンジン"}</strong>{"（Spark、Flinkのバッチモードなど）へと解説を進めます。\n                "}</p>{"\n                "}<Diagram id="diagram-11" label="図12：大量データを一括で処理し、その結果を新しいデータセットとして生成するアプローチです。DDIAはUnixのパイプ（cat file | grep | sort | uniqのような思想）から始め、それを分散環境に拡張したMapReduce、そしてより柔軟なDataflowエンジン（Spark、Flinkのバッチモードなど）へと解説を進めます。" />{"\n                "}<p >{"\n                    第2版で特筆すべき変更は、分散ファイルシステム（HDFSなど）と並んで"}<strong >{"オブジェクトストア（S3、GCSなど）"}</strong>{"がバッチ処理基盤の主役として明確に位置づけられたことです。これは第2章で紹介した「ストレージがローカルディスクからリモートのオブジェクトストレージへ」という業界全体のシフトを反映しています。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"処理モデル"}</th>{"\n                                "}<th scope="col">{"特徴"}</th>{"\n                                "}<th scope="col">{"代表例"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"MapReduce"}</td>{"\n                                "}<td >{"Map/Reduceの2段階、フォールトトレラント、ディスク経由が多い"}</td>{"\n                                "}<td >{"Hadoop MapReduce"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"Dataflowエンジン"}</td>{"\n                                "}<td >{"演算子グラフを最適化して実行、中間結果をメモリ活用しやすい"}</td>{"\n                                "}<td >{"Apache Spark、Apache Flink（バッチモード）"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"クエリ言語層"}</td>{"\n                                "}<td >{"SQLライクな高水準記述からジョブを生成"}</td>{"\n                                "}<td >{"Hive、Spark SQL"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                バッチジョブは「入力データを変更しない（イミュータブル）」設計にすることで、失敗時の再実行や過去データの再処理（Reprocessing）の前提を整える。ただし"}<strong >{"入力の不変性だけでは再実行は安全にならない"}</strong>{"。リトライで同じ出力が二重に作られないよう、出力を冪等化（決定的なキーでの上書き）・重複排除することが必須条件になる\n                            "}</li>{"\n                            "}<li >{"\n                                ETL（Extract–Transform–Load）パイプラインの出力は、既存の本番データストアへ直接上書き・追記せず、新しいテーブル／パーティションとして生成してから"}<strong >{"アトミックに公開（切り替え）"}</strong>{"する。公開前の中間出力は誰からも見えないため、失敗したジョブの部分出力をそのまま破棄でき、再実行時の重複行を防げる\n                            "}</li>{"\n                            "}<li >{"\n                                メール送信や外部API呼び出しのような取り消せない副作用を伴うジョブでは、冪等キーによる重複排除を出力側に必ず設ける（副作用は「再実行すれば消える」ものではない）\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="72-第12章ストリーム処理" tabIndex={-1}>{"7.2 第12章：ストリーム処理"}</h3>{"\n                "}<p >{"\n                    バッチ処理が「一定期間分をまとめて処理する」のに対し、ストリーム処理は「イベントが発生した瞬間に近いタイミングで継続的に処理する」アプローチです。\n                "}</p>{"\n                "}<Diagram id="diagram-12" label="図13：バッチ処理が「一定期間分をまとめて処理する」のに対し、ストリーム処理は「イベントが発生した瞬間に近いタイミングで継続的に処理する」アプローチです。" />{"\n                "}<p >{"\n                    Apache Kafkaに代表される"}<strong >{"ログ型メッセージブローカー（Log-Based Message Broker）"}</strong>{"は、メッセージを消費後に削除する伝統的なメッセージキューとは異なり、追記型のログとしてイベントを保持します。保持されるのは無期限ではなく、"}<strong >{"設定した保持期間（retention.ms）やサイズ上限（retention.bytes）の範囲内"}</strong>{"です。この範囲内であれば、複数の消費者が独立して・後からでも過去のイベントを再生できます。逆に言えば、再生したい期間を保持設定が下回っていると古いイベントは失われるため、再処理の要件から保持設定を逆算しておく必要があります。\n                "}</p>{"\n                "}<p >{"\n                    これとは別の仕組みが"}<strong >{"ログコンパクション（log compaction）"}</strong>{"です。コンパクションはバックグラウンドで非同期に古いレコードを削除し、少なくともキーごとの最新値を残すことを保証しますが、"}<strong >{"イベント履歴全体を保持するものではありません"}</strong>{"。したがって「保持期間内なら過去の全イベントを再生できる」性質はコンパクション対象トピックには当てはまらず、得られるのは各キーの最新状態のスナップショットに近いものです（削除を表すtombstoneレコードはさらに別の保持設定に従って削除されます）。時系列の全イベントを再生したい用途と、キー単位の最新状態を保持したい用途は、トピックを分けて設計するのが定石です。\n                "}</p>{"\n                "}<p >{"\n                    "}<strong >{"CDC（Change Data Capture）"}</strong>{"は、データベースの変更（INSERT/UPDATE/DELETE）をイベントストリームとして捕捉し、他のデータストアへ反映する仕組みで、正データと派生データを同期させる代表的な手法です。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"概念"}</th>{"\n                                "}<th scope="col">{"説明"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ウィンドウ処理"}</td>{"\n                                "}<td >{"\n                                    一定の時間範囲（タンブリング／スライディングウィンドウ）でイベントを集約する\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"イベント時刻 vs 処理時刻"}</td>{"\n                                "}<td >{"\n                                    イベントが実際に発生した時刻と、システムがそれを処理した時刻のズレをどう扱うかが重要な論点\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"ストリーム結合（Stream-Stream Join、Stream-Table Join）"}</td>{"\n                                "}<td >{"\n                                    複数のストリームやテーブルを結合する際、状態（State）の保持方法が性能・正確性を左右する\n                                "}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n                "}<p >{"\n                    第2版のインタビューでKleppmannは、ストリーム処理の実務が「行単位のコールバックAPIによる低レベルな実装」と、「SQLクエリを渡すだけでインクリメンタルにビューを維持してくれる高レベルなシステム（Materializeなど）」の二極化に向かいつつあるという見解を示しています。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                リアルタイム性が本当に必要な機能（不正検知、リアルタイムダッシュボード）にのみストリーム処理を採用し、日次バッチで十分な処理まで無理にストリーム化しない\n                            "}</li>{"\n                            "}<li >{"\n                                イベント時刻と処理時刻のズレ（Late Arriving\n                                Events）を前提に、"}<strong >{"Watermark"}</strong>{"（「このイベント時刻までのデータは出揃ったとみなす」というイベント時刻の進行シグナル）と、"}<strong >{"許容遅延（allowed lateness）"}</strong>{"（Watermark\n                                通過後もウィンドウの状態を保持し、遅れて届いたイベントを受け付ける猶予）を、それぞれ独立した設定として設計段階で決めておく\n                            "}</li>{"\n                            "}<li >{"\n                                CDCを導入する際は、スキーマ変更が下流の消費者を壊さないよう、第5章の互換性原則をあわせて徹底する\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="73-第13章ストリーミングシステムの哲学" tabIndex={-1}>{"\n                    7.3 第13章：ストリーミングシステムの哲学\n                "}</h3>{"\n                "}<p >{"\n                    第1版の最終章「データシステムの未来」を発展的に改題した章で、複数の特化型データストアを組み合わせて大きなシステムを構築する際の設計思想を扱います。\n                "}</p>{"\n                "}<Diagram id="diagram-13" label="図14：第1版の最終章「データシステムの未来」を発展的に改題した章で、複数の特化型データストアを組み合わせて大きなシステムを構築する際の設計思想を扱います。" />{"\n                "}<p >{"\n                    中心的な考え方は「"}<strong >{"Unbundling Databases（データベースの分解）"}</strong>{"」です。従来1つの製品に統合されていたインデックス作成・キャッシュ・クエリ実行といった機能を、独立したコンポーネントの組み合わせとして再構築し、それらをイベントストリームでつなぐという発想です。あわせて、"}<strong >{"End-to-End Argument（両端の原則）"}</strong>{"——正確性の保証はシステムの末端（アプリケーション）で行うのが最も確実であり、中間層だけに頼りすぎるべきではないという設計原則——も解説されます。\n                "}</p>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                1つのデータベースにすべての機能（トランザクション・全文検索・分析・キャッシュ）を詰め込もうとせず、CDC/イベントストリームで「正データ→派生データ」の一方向フローを構築する\n                            "}</li>{"\n                            "}<li >{"\n                                派生データストア（検索インデックスやキャッシュ）は「いつでも正データから再構築できる」設計にしておくと、障害時の復旧やスキーマ変更が大幅に楽になる\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h2 id="8-part-v倫理と社会第2版新設" tabIndex={-1}>{"8. Part V：倫理と社会（第2版新設）"}</h2>{"\n\n                "}<h3 id="81-第14章正しいことをする" tabIndex={-1}>{"8.1 第14章：正しいことをする"}</h3>{"\n                "}<p >{"\n                    倫理を独立したパートとして立てたのが第2版の構成上の変更点です。テーマ自体は第1版12章の一節「Doing\n                    the Right\n                    Thing」で扱われていましたが、AIが意思決定プロセスに深く組み込まれるようになった現状を踏まえて再編・大幅に加筆され、独立章となりました。データシステムの設計者が技術的な正しさだけでなく"}<strong >{"倫理的な責任"}</strong>{"も負う、という問題意識が軸になっています。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"テーマ"}</th>{"\n                                "}<th scope="col">{"主な論点"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"予測分析とバイアス"}</td>{"\n                                "}<td >{"\n                                    機械学習モデルが既存の社会的バイアスを増幅・固定化するリスク\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"責任と説明責任"}</td>{"\n                                "}<td >{"自動化された意思決定の結果に誰が責任を持つのか"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"フィードバックループ"}</td>{"\n                                "}<td >{"\n                                    予測が現実に影響を与え、その影響がさらに予測データに反映される自己強化ループ\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"プライバシーとトラッキング"}</td>{"\n                                "}<td >{"監視・同意・データの利用目的の透明性"}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"データを資産・権力として捉える視点"}</td>{"\n                                "}<td >{"産業革命期の教訓との比較、法制度と自主規制のバランス"}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<div className="callout-practice">{"\n                    "}<div className="icon">{"✓"}</div>{"\n                    "}<div className="body">{"\n                        "}<div className="label">{"ベストプラクティス"}</div>{"\n                        "}<ul >{"\n                            "}<li >{"\n                                予測モデルをプロダクトに組み込む前に、フィードバックループによって差別的な結果が固定化されないかをレビューするプロセスを設ける\n                            "}</li>{"\n                            "}<li >{"\n                                自動化された意思決定については、判断根拠の記録と異議申し立ての経路をシステム要件として最初から設計に含める\n                            "}</li>{"\n                        "}</ul>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<h3 id="82-関連する見解aiエージェントとデータベース書籍本文外" tabIndex={-1}>{"\n                    8.2 関連する見解：AIエージェントとデータベース（書籍本文外）\n                "}</h3>{"\n                "}<p >{"\n                    "}<strong >{"注記"}</strong>{"：以下は第14章の本文ではなく、刊行後のインタビュー（参考文献5・7）で Kleppmann\n                    が述べた見解です。書籍の内容と混同しないよう、実務トレンドとして分けて扱います。\n                "}</p>{"\n                "}<p >{"\n                    Kleppmann\n                    は、AIエージェントがデータベースに対して直接操作を行うようになる将来を見据え、「"}<strong >{"AIに許可する操作は、あらかじめ明確に定義されたAPI経由に限定し、その操作が満たすべき整合性のルールを明示すべきだ"}</strong>{"」という考えを示しています。人間とAIエージェントの双方が同じデータベースを共通の基盤としながら、互いの変更をレビュー・比較・マージできるワークフローの必要性を説いており、これは第6章のマルチリーダーレプリケーションにおける「競合解決」の考え方とも通じる発想です。\n                "}</p>{"\n                "}<p >{"\n                    "}<strong >{"実務上の示唆（インタビュー由来）"}</strong>{"\n                "}</p>{"\n                "}<ul >{"\n                    "}<li >{"\n                        AIエージェントにデータベースへの書き込み権限を与える場合は、汎用的なSQL実行権限ではなく、業務的に意味のある操作に限定したAPIを経由させる\n                    "}</li>{"\n                "}</ul>{"\n\n                "}<h2 id="9-2026年の実務トレンドとddiaの位置づけ" tabIndex={-1}>{"\n                    9. 2026年の実務トレンドとDDIAの位置づけ\n                "}</h2>{"\n                "}<p >{"\n                    DDIA第2版の刊行にあわせて行われたインタビューから、2026年時点で特に注目されているトレンドを整理します。\n                "}</p>{"\n\n                "}<h3 id="91-ストレージのオブジェクトストア化" tabIndex={-1}>{"\n                    9.1 ストレージのオブジェクトストア化\n                "}</h3>{"\n                "}<p >{"\n                    第1版執筆時点のデータベースは「ノードがローカルディスクにデータを持ち、レプリケーションはアプリケーション層で行う」モデルが標準でした。現在は、"}<strong >{"すでにレプリケートされたリモートサービスであるオブジェクトストレージの上にデータベースを構築する"}</strong>{"という新しいトレードオフの選択肢が実用化しています。Kleppmannはこれを「一方が優れているわけではなく、新しいトレードオフ空間が生まれた」と評しています。\n                "}</p>{"\n\n                "}<h3 id="92-データベースの移動可能性とpostgres拡張エコシステム" tabIndex={-1}>{"\n                    9.2 データベースの「移動可能性」とPostgres拡張エコシステム\n                "}</h3>{"\n                "}<p >{"\n                    Riccominiは、将来成功するデータベースは「ノートPC → サーバー → クラウド →\n                    別のクラウド」へとシームレスに移動・スケールできる必要があるという仮説を提示しています。DuckDBとMotherDuck、組み込み用途に広がるPostgres（PGlite）、SQLiteの組み込み利用の広がりはこの流れを示す事例として挙げられています。\n                "}</p>{"\n                "}<p >{"\n                    あわせて、PostgreSQLの拡張エコシステム（"}<code >{"pgvector"}</code>{"によるベクトル検索、"}<code >{"pg_search"}</code>{"による全文検索、"}<code >{"pg_duckdb"}</code>{"による分析）が非常に強力になっており、Riccominiは「まずPostgresで拡張機能を使い、本当にスケールやコア機能として必要になった段階で専用ストア（Pinecone、Turbopufferのようなベクトル検索専業サービスなど）に移行する」という段階的な戦略が有望だという分析・仮説を示しています。\n                "}</p>{"\n\n                "}<h3 id="93-コントロールデータコンピュートプレーンの分離" tabIndex={-1}>{"\n                    9.3 コントロール／データ／コンピュートプレーンの分離\n                "}</h3>{"\n                "}<p >{"\n                    クラウドネイティブなデータシステムアーキテクチャの標準パターンとして、"}<strong >{"制御を司るコントロールプレーン"}</strong>{"・"}<strong >{"実データを保持するデータプレーン"}</strong>{"・"}<strong >{"計算を実行するコンピュートプレーン"}</strong>{"を分離する設計が広く採用されるようになりました。この分離により、SaaS型とBYOC（顧客のクラウド環境内で稼働させる形態）の両方に対応しやすくなっています。\n                "}</p>{"\n\n                "}<h3 id="94-ストリーミングとレイテンシスループットのトレードオフ" tabIndex={-1}>{"\n                    9.4 ストリーミングとレイテンシ／スループットのトレードオフ\n                "}</h3>{"\n                "}<p >{"\n                    Riccominiは、あらゆるストリーム処理システムが直面する根本的なトレードオフとして「"}<strong >{"レイテンシを下げようとするとスループットが犠牲になり、書き込みをバッチ化してスループットを上げようとするとレイテンシが増える"}</strong>{"」という関係を挙げています。この基本原則は、ストリーム処理基盤を選定・チューニングする際の判断軸として引き続き有効です。\n                "}</p>{"\n                "}<p >{"\n                    "}<strong >{"出典"}</strong>{"：本節の内容は、ScyllaDBが実施したMartin Kleppmann・Chris\n                    Riccominiへのインタビュー記事に基づきます。詳細は参考文献を参照してください。\n                "}</p>{"\n\n                "}<h2 id="10-ベストプラクティス実践チェックリスト" tabIndex={-1}>{"\n                    10. ベストプラクティス実践チェックリスト\n                "}</h2>{"\n                "}<div className="checklist-card">{"\n                    "}<div className="checklist-header">{"\n                        "}<span className="title">{"実践チェックリスト"}</span><span className="count">{`${checked} / 13 完了`}</span>{"\n                    "}</div>{"\n                    "}<ul >{"\n                        "}<li >{"\n                            "}<input id="chk1" type="checkbox" onChange={updateProgress} /><label htmlFor="chk1">{"新規プロジェクトで「本当に分散システムが必要か」を最初に検討したか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk2" type="checkbox" onChange={updateProgress} /><label htmlFor="chk2">{"スケーラビリティ要件を「負荷パラメータ」として明文化したか（DAU、秒間書き込み数など）"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk3" type="checkbox" onChange={updateProgress} /><label htmlFor="chk3">{"レイテンシSLAをp99などの高パーセンタイルで定義し、平均値だけに頼っていないか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk4" type="checkbox" onChange={updateProgress} /><label htmlFor="chk4">{"データモデル選定時に「多対多の関係の濃さ」を判断基準に含めたか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk5" type="checkbox" onChange={updateProgress} /><label htmlFor="chk5">{"書き込み中心か読み取り中心かでLSM-Tree系／B-Tree系ストレージエンジンを選び分けたか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk6" type="checkbox" onChange={updateProgress} /><label htmlFor="chk6">{"APIやイベントのスキーマ変更時に後方/前方互換性のルールを守っているか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk7" type="checkbox" onChange={updateProgress} /><label htmlFor="chk7">{"レプリケーション方式（シングルリーダー／マルチリーダー／リーダーレス）を業務要件に基づいて選定したか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk8" type="checkbox" onChange={updateProgress} /><label htmlFor="chk8">{"シャーディングキーの選択がホットスポットを生まないか検証したか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk9" type="checkbox" onChange={updateProgress} /><label htmlFor="chk9">{"トランザクションの実際の分離レベルを確認し、Write\n                                Skewのリスクを評価したか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk10" type="checkbox" onChange={updateProgress} /><label htmlFor="chk10">{"タイムアウト・リトライ・冪等性を「部分障害は必ず起きる」前提で設計したか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk11" type="checkbox" onChange={updateProgress} /><label htmlFor="chk11">{"強い一貫性が必要な操作を、実績あるコーディネーションサービスに限定して任せているか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk12" type="checkbox" onChange={updateProgress} /><label htmlFor="chk12">{"派生データ（検索インデックス、キャッシュ、DWH）を正データから再構築可能な設計にしているか"}</label>{"\n                        "}</li>{"\n                        "}<li >{"\n                            "}<input id="chk13" type="checkbox" onChange={updateProgress} /><label htmlFor="chk13">{"AIエージェントにデータ操作権限を与える場合、汎用SQL実行ではなく限定APIを経由させているか"}</label>{"\n                        "}</li>{"\n                    "}</ul>{"\n                "}</div>{"\n\n                "}<h2 id="11-学習後のネクストステップ" tabIndex={-1}>{"11. 学習後のネクストステップ"}</h2>{"\n                "}<p >{"\n                    DDIAで得た「トレードオフを見極める視点」を、次のような形で実務・学習に接続していくことをお勧めします。\n                "}</p>{"\n                "}<div className="table-scroll">{"\n                    "}<table >{"\n                        "}<thead >{"\n                            "}<tr className="header">{"\n                                "}<th scope="col">{"ステップ"}</th>{"\n                                "}<th scope="col">{"内容"}</th>{"\n                            "}</tr>{"\n                        "}</thead>{"\n                        "}<tbody >{"\n                            "}<tr className="odd">{"\n                                "}<td >{"1. 自社システムの棚卸し"}</td>{"\n                                "}<td >{"\n                                    使用中のDB/メッセージング基盤がDDIAのどの分類に当てはまるかをマッピングする\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"2. 障害訓練"}</td>{"\n                                "}<td >{"\n                                    Chaos\n                                    Engineering的な手法で、第9章の「部分障害」を意図的に発生させ挙動を確認する\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="odd">{"\n                                "}<td >{"3. 専門書への展開"}</td>{"\n                                "}<td >{"\n                                    ストレージ内部をより深く知りたい場合はAlex Petrov著『Database\n                                    Internals』、分散合意をさらに深く学びたい場合は原論文（Raft、Paxos）へ進む\n                                "}</td>{"\n                            "}</tr>{"\n                            "}<tr className="even">{"\n                                "}<td >{"4. コミュニティ・カンファレンス"}</td>{"\n                                "}<td >{"\n                                    Monster SCALE Summit、QConなど、著者本人や実務家の講演を追う\n                                "}</td>{"\n                            "}</tr>{"\n                        "}</tbody>{"\n                    "}</table>{"\n                "}</div>{"\n\n                "}<h2 id="12-参考文献" tabIndex={-1}>{"12. 参考文献"}</h2>{"\n                "}<div className="ref-grid" id="referenceGrid">{"\n                    "}<div className="ref-card" id="ref1">{"\n                        "}<div className="num">{"1"}</div>{"\n                        "}<div className="txt">{"\n                            O'Reilly Media「Designing Data-Intensive Applications, 2nd\n                            Edition」目次・書誌情報（2026年）.\n                            "}<a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/">{"https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref2">{"\n                        "}<div className="num">{"2"}</div>{"\n                        "}<div className="txt">{"\n                            O'Reilly Media「Designing Data-Intensive Applications」（初版、2017年）.\n                            "}<a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/">{"https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref3">{"\n                        "}<div className="num">{"3"}</div>{"\n                        "}<div className="txt">{"\n                            Martin Kleppmann's website「Designing Data-Intensive Applications, 2nd\n                            Edition」出版案内・書評掲載.\n                            "}<a href="https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html">{"https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref4">{"\n                        "}<div className="num">{"4"}</div>{"\n                        "}<div className="txt">{"\n                            dataintensive.net（書籍公式サイト。Jay Kreps・Kevin Scott・Jaana Dogan\n                            らの推薦文を掲載）.\n                            "}<a href="https://dataintensive.net/">{"https://dataintensive.net/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref5">{"\n                        "}<div className="num">{"5"}</div>{"\n                        "}<div className="txt">{"\n                            ScyllaDB「Rethinking \"Designing Data-Intensive Applications\"」— Martin\n                            Kleppmann・Chris Riccominiインタビュー.\n                            "}<a href="https://www.scylladb.com/2026/03/26/rethinking-designing-data-intensive-applications/">{"https://www.scylladb.com/2026/03/26/rethinking-designing-data-intensive-applications/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref6">{"\n                        "}<div className="num">{"6"}</div>{"\n                        "}<div className="txt">{"\n                            ScyllaDB「Kelsey Hightower's Take on Engineering at Scale」— Monster\n                            SCALE Summit講演レポート.\n                            "}<a href="https://www.scylladb.com/2026/02/19/kelsey-hightower-engineering-at-scale/">{"https://www.scylladb.com/2026/02/19/kelsey-hightower-engineering-at-scale/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref7">{"\n                        "}<div className="num">{"7"}</div>{"\n                        "}<div className="txt">{"\n                            ScyllaDB Tech Talk「Designing Data-Intensive Applications Second\n                            Edition」（Kleppmann・Riccomini・Tzach Livyatan）.\n                            "}<a href="https://www.scylladb.com/tech-talk/designing-data-intensive-applications-second-edition/">{"https://www.scylladb.com/tech-talk/designing-data-intensive-applications-second-edition/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                    "}<div className="ref-card" id="ref8">{"\n                        "}<div className="num">{"8"}</div>{"\n                        "}<div className="txt">{"\n                            Martin Kleppmann's website（著者プロフィール・出版物一覧）.\n                            "}<a href="https://martin.kleppmann.com/">{"https://martin.kleppmann.com/"}</a>{"\n                        "}</div>{"\n                    "}</div>{"\n                "}</div>{"\n\n                "}<p >{"\n                    "}<em >{"本ガイドは教育目的の要約・解説であり、書籍本文の引用は最小限（15語未満）に留めています。詳細な内容は必ず原著（第2版）をご参照ください。"}</em>{"\n                "}</p>{"\n            "}</main></div></div>;}
+export default function DdiaGuide() { const [checked, setChecked] = useState(0); function updateProgress(event: ChangeEvent<HTMLInputElement>) { const card = event.currentTarget.closest('.checklist-card'); setChecked(card?.querySelectorAll('input:checked').length ?? 0); } return <div className="ddia-page">
+<div className="layout">
+<NavBar />
+<main className="main">
+{"\n                "}
+<div className="hero">
+{"\n                    "}
+<div className="kicker">
+{"\n                        Martin Kleppmann & Chris Riccomini 著『Designing Data-Intensive\n                        Applications』第2版 解説ガイド\n                    "}
+</div>
+{"\n                    "}
+<h1>
+{"Designing Data-Intensive Applications（DDIA）初学者向け完全ガイド"}
+</h1>
+{"\n                    "}
+<div className="meta-row">
+{"\n                        "}
+<span className="pill">
+{"版 "}
+<strong>
+{"第2版（2026年刊）"}
+</strong>
+</span>
+{"\n                        "}
+<span className="pill">
+{"対象 "}
+<strong>
+{"初学者〜中級者"}
+</strong>
+</span>
+{"\n                        "}
+<span className="pill">
+{"図解 "}
+<strong>
+{"Mermaid 14点"}
+</strong>
+</span>
+{"\n                        "}
+<span className="pill">
+{"参考文献 "}
+<strong>
+{"8件"}
+</strong>
+</span>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<p>
+{"\n                    本ガイドは、Martin Kleppmann（マーティン・クレップマン）著（第2版からChris\n                    Riccomini共著）『Designing Data-Intensive Applications』（O'Reilly\n                    Media）の内容をベースに、初学者がゼロから体系的に学べるよう再構成した技術文書です。ASCII図解は使用せず、すべての図解はMermaid、比較表はMarkdownテーブルで表現しています。本文中の情報は2026年8月23日時点のWeb検索結果に基づいており、根拠となる出典URLは末尾の「参考文献」にまとめています。\n                "}
+</p>
+{"\n\n                "}
+<h2 id="1-ddiaとは何か" tabIndex={-1}>
+{"1. DDIAとは何か"}
+</h2>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"Designing Data-Intensive Applications"}
+</strong>
+{"（通称「DDIA」、表紙のイノシシから「Wild Boar\n                    Book」とも呼ばれる）は、リレーショナルDB・NoSQL・データウェアハウス・メッセージキュー・分散システムなど、データを扱うあらゆるソフトウェアに共通する「原理原則」を1冊にまとめた技術書です。特定の製品の使い方を教えるマニュアルではなく、"}
+<strong>
+{"なぜそのように設計されているのか"}
+</strong>
+{"という設計思想と、"}
+<strong>
+{"それぞれの選択肢がどのようなトレードオフを持つのか"}
+</strong>
+{"を体系的に解説する点が最大の特徴です。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="11-なぜエンジニアに読まれ続けているのか" tabIndex={-1}>
+{"\n                    1.1 なぜエンジニアに読まれ続けているのか\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    初版（2017年）刊行から約10年が経過した今も、システム設計面接の定番教材、バックエンド/インフラエンジニアの必読書として挙げられ続けています。著名な開発者からも高く評価されており、例えば\n                    Apache Kafka の創作者であり Confluent 共同創業者の Jay Kreps\n                    は、本書が分散システムの理論と実務の間の大きなギャップを橋渡ししてくれる点を高く評価しています"}
+<a className="footnote-ref" href="#ref4" id="fnref1" role="doc-noteref">
+<sup>
+{"4"}
+</sup>
+</a>
+{"。また Microsoft の CTO である Kevin Scott\n                    も、本書はソフトウェアエンジニアの必読書だとコメントしています"}
+<a className="footnote-ref" href="#ref4" id="fnref2" role="doc-noteref">
+<sup>
+{"4"}
+</sup>
+</a>
+{"。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    さらに、Google でデータベース関連の仕事をしていた経験を持ち、後に Amazon Web\n                    Services のプリンシパルエンジニアとなった Jaana Dogan\n                    も、本書を最も優れたリファレンス書の一冊として挙げています"}
+<a className="footnote-ref" href="#ref4" id="fnref3" role="doc-noteref">
+<sup>
+{"4"}
+</sup>
+</a>
+{"。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="12-著者について" tabIndex={-1}>
+{"1.2 著者について"}
+</h3>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"項目"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"内容"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"Martin Kleppmann"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    ケンブリッジ大学准教授。分散システムと暗号プロトコルの研究者。かつて\n                                    LinkedIn や Rapportive\n                                    で大規模データ基盤に従事。ローカルファースト・ソフトウェア運動の立ち上げにも関わる\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"Chris Riccomini（第2版から共著）"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    PayPal・LinkedIn・WePay\n                                    で15年以上の経験を持つソフトウェアエンジニア。現在は\n                                    Materialized View Capital\n                                    を運営し、インフラ系スタートアップに投資\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="13-本書の全体像" tabIndex={-1}>
+{"1.3 本書の全体像"}
+</h3>
+{"\n                "}
+<Diagram id="diagram-0" label="図1：1.3 本書の全体像"/>
+{"\n                "}
+<p>
+{"\n                    DDIAは大きく5つのパートに分かれており、"}
+<strong>
+{"基礎概念 → 単一ノードでのデータ保存 → 複数ノードに分散したデータ →\n                        複数のデータストアをまたぐ派生データ → 技術と社会の関係"}
+</strong>
+{"という順序で理解が積み上がっていく構成になっています。この順序どおりに学習を進めることが、初学者にとって最も挫折しにくいステップです。\n                "}
+</p>
+{"\n\n                "}
+<h2 id="2-第1版と第2版何が変わったか" tabIndex={-1}>
+{"2. 第1版と第2版：何が変わったか"}
+</h2>
+{"\n                "}
+<p>
+{"\n                    2026年2月〜3月、約9年ぶりとなる"}
+<strong>
+{"第2版"}
+</strong>
+{"が Kleppmann と Riccomini\n                    の共著という形で刊行されました。参考文献2のURL（"}
+<code>
+{".../9781491903063/"}
+</code>
+{"）は2017年刊行の"}
+<strong>
+{"第1版"}
+</strong>
+{"のページであるため、まずは両版の違いを正確に把握しておくことが重要です。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="21-版の比較表" tabIndex={-1}>
+{"2.1 版の比較表"}
+</h3>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"項目"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"第1版（2017年）"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"第2版（2026年）"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"著者"}
+</td>
+{"\n                                "}
+<td>
+{"Martin Kleppmann（単著）"}
+</td>
+{"\n                                "}
+<td>
+{"Martin Kleppmann, Chris Riccomini（共著）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"刊行時期"}
+</td>
+{"\n                                "}
+<td>
+{"2017年3月"}
+</td>
+{"\n                                "}
+<td>
+{"2026年2月〜3月"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"章構成"}
+</td>
+{"\n                                "}
+<td>
+{"全12章・3パート"}
+</td>
+{"\n                                "}
+<td>
+{"全14章・5パート"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"想定読者"}
+</td>
+{"\n                                "}
+<td>
+{"中級〜上級エンジニア"}
+</td>
+{"\n                                "}
+<td>
+{"中級〜上級エンジニア"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"主な追加テーマ"}
+</td>
+{"\n                                "}
+<td>
+{"―"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    クラウドネイティブ・オブジェクトストレージ・ベクトル埋め込み・ローカルファースト同期・Durable\n                                    Execution・AIとデータシステムの倫理章\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"O'Reillyページ"}
+</td>
+{"\n                                "}
+<td>
+<code>
+{"9781491903063"}
+</code>
+</td>
+{"\n                                "}
+<td>
+<code>
+{"9781098119058"}
+</code>
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="22-なぜ改訂されたのか" tabIndex={-1}>
+{"2.2 なぜ改訂されたのか"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    Kleppmann自身は、本書の中心となる「信頼性・スケーラビリティ・保守性」といった原理原則は数年〜数十年単位でしか変化しないため書籍としての鮮度は保たれていたが、"}
+<strong>
+{"この10年でクラウドサービスの使われ方が根本的に変わった"}
+</strong>
+{"ことが最大の改訂動機だったと語っています。特に象徴的なのが、ストレージの前提の変化です。第1版執筆時点ではデータベースのノードはローカルディスクにデータを保存し、レプリケーションはアプリケーション層で行うのが一般的なモデルでした。しかし現在は、"}
+<strong>
+{"オブジェクトストレージ（すでにレプリケートされたリモートサービス）の上にデータベースを構築する"}
+</strong>
+{"という、まったく新しいトレードオフの選択肢が実用段階に入っています。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    共著者の Riccomini\n                    は、データベースアーキテクチャの変化として「"}
+<strong>
+{"コントロールプレーン・データプレーン・コンピュートプレーンの分離"}
+</strong>
+{"」がこの数年で広く受け入れられた設計パターンになったと指摘しており、これはSaaSとBYOC（Bring\n                    Your Own Cloud）の両方に対応する上で柔軟性をもたらしていると説明しています。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="23-章構成の対応表第1版第2版" tabIndex={-1}>
+{"2.3 章構成の対応表（第1版 → 第2版）"}
+</h3>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"Part"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"第1版の該当章"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"第2版の該当章"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"主な変更点"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"基礎"}
+</td>
+{"\n                                "}
+<td>
+{"1章（信頼性・拡張性・保守性）"}
+</td>
+{"\n                                "}
+<td>
+{"1章＋2章に分割・拡張"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    1章内に「クラウド vs\n                                    自己ホスティング」節を追加、1章・2章の内容を再編・拡張\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"データモデル"}
+</td>
+{"\n                                "}
+<td>
+{"2章"}
+</td>
+{"\n                                "}
+<td>
+{"3章"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    GraphQL・DataFrameを新規追加（Datalog・Property\n                                    Graphは第1版から存在し、記述を再編・拡張）\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ストレージ"}
+</td>
+{"\n                                "}
+<td>
+{"3章"}
+</td>
+{"\n                                "}
+<td>
+{"4章"}
+</td>
+{"\n                                "}
+<td>
+{"ベクトル埋め込み・列指向クエリのベクトル化実行を追加"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"エンコーディング"}
+</td>
+{"\n                                "}
+<td>
+{"4章"}
+</td>
+{"\n                                "}
+<td>
+{"5章"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    Durable Execution／Workflows・イベント駆動アーキテクチャを追加\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"レプリケーション"}
+</td>
+{"\n                                "}
+<td>
+{"5章"}
+</td>
+{"\n                                "}
+<td>
+{"6章"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    Sync Engines・ローカルファースト・マルチリージョン運用を追加\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"パーティショニング"}
+</td>
+{"\n                                "}
+<td>
+{"6章"}
+</td>
+{"\n                                "}
+<td>
+{"7章（章題を「Sharding」に変更）"}
+</td>
+{"\n                                "}
+<td>
+{"マルチテナンシー観点を追加"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"トランザクション"}
+</td>
+{"\n                                "}
+<td>
+{"7章"}
+</td>
+{"\n                                "}
+<td>
+{"8章"}
+</td>
+{"\n                                "}
+<td>
+{"「Exactly-Once Message Processing」を再論"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"分散システムの問題"}
+</td>
+{"\n                                "}
+<td>
+{"8章"}
+</td>
+{"\n                                "}
+<td>
+{"9章"}
+</td>
+{"\n                                "}
+<td>
+{"形式手法・ランダム化テストを追加"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"一貫性と合意"}
+</td>
+{"\n                                "}
+<td>
+{"9章"}
+</td>
+{"\n                                "}
+<td>
+{"10章"}
+</td>
+{"\n                                "}
+<td>
+{"ID生成器・論理クロックの節を新設"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"バッチ処理"}
+</td>
+{"\n                                "}
+<td>
+{"10章"}
+</td>
+{"\n                                "}
+<td>
+{"11章"}
+</td>
+{"\n                                "}
+<td>
+{"オブジェクトストアを主軸に再構成"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ストリーム処理"}
+</td>
+{"\n                                "}
+<td>
+{"11章"}
+</td>
+{"\n                                "}
+<td>
+{"12章"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    第1版の「Partitioned Logs」「Event Sourcing」は第12章「Log-Based\n                                    Message Brokers」として整理・改称。「Event Sourcing and\n                                    CQRS」はデータモデルを扱う第3章へ移動\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"未来の展望"}
+</td>
+{"\n                                "}
+<td>
+{"12章「データシステムの未来」"}
+</td>
+{"\n                                "}
+<td>
+{"13章「ストリーミングシステムの哲学」に改題"}
+</td>
+{"\n                                "}
+<td>
+{"Unbundling Databasesの議論を継承・発展"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"倫理"}
+</td>
+{"\n                                "}
+<td>
+{"12章の一節「正しいことをする」"}
+</td>
+{"\n                                "}
+<td>
+{"14章「正しいことをする」（独立章化）"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    予測分析・バイアス・プライバシー／トラッキングは第1版12章にも存在。AI時代を踏まえて再編・大幅加筆\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="3-学習の進め方ステップバイステップロードマップ" tabIndex={-1}>
+{"\n                    3. 学習の進め方（ステップバイステップ・ロードマップ）\n                "}
+</h2>
+{"\n                "}
+<p>
+{"\n                    初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念\n                    → 単一ノード → 分散 → 応用」と段階的に負荷を上げていくことをお勧めします。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-1" label="図2：初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念\n                    → 単一ノード → 分散 → 応用」と段階的に負荷を上げていくことをお勧めします。"/>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス（学習の心構え）"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                各章を読んだら「自分が今使っているシステムはどの方式か」を必ず言語化する（例：「うちのMySQLはSingle-Leader\n                                Replicationで、非同期レプリケーションだからReplication\n                                Lagが起きうる」）\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                暗記ではなく"}
+<strong>
+{"トレードオフの軸"}
+</strong>
+{"を掴むことを優先する。DDIAに「絶対的な正解」は登場しない\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                Kelsey\n                                Hightower（Google／CoreOSで著名なインフラエンジニア、『Kubernetes Up\n                                and Running』著者）はMonster SCALE\n                                Summitで、\"他社のスケール事例を真似する前に、自分たちが本当にその規模の問題を抱えているかをまず確認すべきだ\"という趣旨の助言をしています。DDIAで学ぶ技術も同様に、"}
+<strong>
+{"「使えるから使う」ではなく「自分たちの負荷特性に合っているか」で選ぶ"}
+</strong>
+{"姿勢が重要です\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="4-part-iデータシステムの基礎" tabIndex={-1}>
+{"4. Part I：データシステムの基礎"}
+</h2>
+{"\n\n                "}
+<h3 id="41-第1章データシステムのトレードオフ" tabIndex={-1}>
+{"\n                    4.1 第1章：データシステムのトレードオフ\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    第2版で新設されたこの章は、個々の技術に入る前に「意思決定の軸」を整理するための章です。主なトレードオフは以下の3つです。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"トレードオフの軸"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"選択肢A"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"選択肢B"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ワークロードの性質"}
+</td>
+{"\n                                "}
+<td>
+{"OLTP（Operational／日常のトランザクション処理）"}
+</td>
+{"\n                                "}
+<td>
+{"OLAP（Analytical／集計・分析処理）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"ホスティング形態"}
+</td>
+{"\n                                "}
+<td>
+{"クラウドサービス（マネージド）"}
+</td>
+{"\n                                "}
+<td>
+{"自己ホスティング（オンプレミス／セルフマネージド）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ノード構成"}
+</td>
+{"\n                                "}
+<td>
+{"単一ノード（Single-Node）"}
+</td>
+{"\n                                "}
+<td>
+{"分散システム（Distributed）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<ul>
+{"\n                    "}
+<li>
+{"\n                        "}
+<strong>
+{"OLTP vs OLAP"}
+</strong>
+{"：OLTPは「注文を1件登録する」のような少量データへの高頻度アクセス、OLAPは「先月の売上を地域別に集計する」のような大量データへの低頻度・重いクエリという性質の違いがあります。多くの組織では、OLTP用のデータベース（System\n                        of\n                        Record＝正データ）から、ETLやCDCによってOLAP用のデータウェアハウス（Derived\n                        Data＝派生データ）へデータを流し込む二層構成を取ります。\n                    "}
+</li>
+{"\n                    "}
+<li>
+{"\n                        "}
+<strong>
+{"クラウド vs 自己ホスティング"}
+</strong>
+{"：クラウドサービスは運用負荷を下げる一方でベンダーロックインやコストの予測しづらさというリスクを伴います。近年はクラウドネイティブなアーキテクチャ（コントロール・データ・コンピュートプレーンの分離）が主流になりつつあります。\n                    "}
+</li>
+{"\n                    "}
+<li>
+{"\n                        "}
+<strong>
+{"単一ノード vs 分散システム"}
+</strong>
+{"：分散システムはスケーラビリティと可用性を得られる代わりに、ネットワーク分断・部分障害・整合性の管理という複雑さを引き受けることになります（この複雑さは第9章で詳しく扱われます）。\n                    "}
+</li>
+{"\n                "}
+</ul>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                新しいプロジェクトでは「本当に分散システムが必要か」を最初に問う。単一ノードのPostgreSQLで十分なスケールのプロダクトは非常に多い\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                OLTPとOLAPのワークロードを同じデータベースに混在させると、分析クエリが日常のトランザクション処理の性能を圧迫することがあるため、早い段階で分離戦略（レプリカ、専用DWHなど）を検討する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="42-第2章非機能要件の定義" tabIndex={-1}>
+{"4.2 第2章：非機能要件の定義"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    「動くこと」だけでなく、"}
+<strong>
+{"信頼性（Reliability）・スケーラビリティ（Scalability）・保守性（Maintainability）"}
+</strong>
+{"という3本柱の非機能要件を明確に定義することが、データシステム設計の出発点になります。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-2" label="図3：「動くこと」だけでなく、信頼性（Reliability）・スケーラビリティ（Scalability）・保守性（Maintainability）という3本柱の非機能要件を明確に定義することが、データシステム設計の出発点になります。"/>
+{"\n\n                "}
+<h4>
+{"信頼性（Reliability）"}
+</h4>
+{"\n                "}
+<p>
+{"\n                    「システムが期待通りに動作し続けること」と定義され、以下の障害への耐性で構成されます。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"障害の種類"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"具体例"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"主な対策"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ハードウェア障害"}
+</td>
+{"\n                                "}
+<td>
+{"ディスク故障、電源障害"}
+</td>
+{"\n                                "}
+<td>
+{"冗長化（RAID、レプリケーション）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"ソフトウェアエラー"}
+</td>
+{"\n                                "}
+<td>
+{"バグ、リソースリーク、カスケード障害"}
+</td>
+{"\n                                "}
+<td>
+{"テスト、モニタリング、サーキットブレーカー"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"人的エラー"}
+</td>
+{"\n                                "}
+<td>
+{"設定ミス、誤ったデプロイ"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    設定検証・レビュープロセス、段階的リリース、ロールバック機構\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h4>
+{"スケーラビリティ（Scalability）"}
+</h4>
+{"\n                "}
+<p>
+{"\n                    DDIAの最重要ポイントの一つは「スケーラビリティとは単一の指標ではなく、"}
+<strong>
+{"負荷パラメータ（Load\n                        Parameters）を定義した上で『Xが増えたときにYはどうなるか』を問う概念"}
+</strong>
+{"」だという考え方です。例えばTwitter/X型のSNSでは「フォロワー数」「投稿頻度」がリクエストレートに直結する負荷パラメータになります。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    レスポンスタイムの評価では、平均値ではなく"}
+<strong>
+{"パーセンタイル（p50・p95・p99）"}
+</strong>
+{"を使うことが定石とされています。平均値は一部の極端に遅いリクエスト（テールレイテンシ）を隠してしまうためです。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"指標"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"説明"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"用途"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"p50（中央値）"}
+</td>
+{"\n                                "}
+<td>
+{"リクエストの半数がこの時間以内に完了"}
+</td>
+{"\n                                "}
+<td>
+{"典型的なユーザー体験の把握"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"p95 / p99"}
+</td>
+{"\n                                "}
+<td>
+{"上位5%・1%の遅いリクエストの境界値"}
+</td>
+{"\n                                "}
+<td>
+{"SLA設定、遅いリクエストの検知"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"平均（Average）"}
+</td>
+{"\n                                "}
+<td>
+{"全体の合計÷件数"}
+</td>
+{"\n                                "}
+<td>
+{"参考値程度に留める（テールを隠しやすいため非推奨）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h4>
+{"保守性（Maintainability）"}
+</h4>
+{"\n                "}
+<p>
+{"\n                    保守性は「運用性（日々の運用のしやすさ）」「単純性（複雑さの管理）」「進化性（変更のしやすさ）」の3つに分解されます。第2版ではこの節がより体系的に整理され、"}
+<strong>
+{"複雑さ（Complexity）をいかに管理するか"}
+</strong>
+{"が強調されています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                スケーラビリティを議論する前に、必ず自分たちの「負荷パラメータ」を明文化する（例：DAU、秒間書き込み数、ホットキーの偏り）\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                レイテンシのSLA/SLOはp99など高いパーセンタイルで設定し、平均値だけで判断しない\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                「進化性（Evolvability）」を軽視しない。要件は必ず変化するため、スキーマ変更やAPI変更を安全に行える設計（第5章）を早期から意識する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="5-part-iiデータの保存と検索" tabIndex={-1}>
+{"5. Part II：データの保存と検索"}
+</h2>
+{"\n\n                "}
+<h3 id="51-第3章データモデルとクエリ言語" tabIndex={-1}>
+{"5.1 第3章：データモデルとクエリ言語"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    データモデルの選択は、アプリケーション開発の初期段階で最も影響の大きい意思決定の一つです。DDIA第2版では、リレーショナル・ドキュメント・グラフの3大モデルに加え、GraphQL、Datalog、DataFrame/行列形式まで議論の幅が広がっています。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-3" label="図4：データモデルの選択は、アプリケーション開発の初期段階で最も影響の大きい意思決定の一つです。DDIA第2版では、リレーショナル・ドキュメント・グラフの3大モデルに加え、GraphQL、Datalog、DataFrame/行列形式まで議論の幅が広がっています。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"モデル"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"得意な用途"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"代表的なクエリ言語"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"弱点"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"リレーショナル"}
+</td>
+{"\n                                "}
+<td>
+{"多対多の関係、複雑な結合、強いスキーマ"}
+</td>
+{"\n                                "}
+<td>
+{"SQL"}
+</td>
+{"\n                                "}
+<td>
+{"ドキュメント全体の局所性が低い"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"ドキュメント"}
+</td>
+{"\n                                "}
+<td>
+{"ツリー構造、局所性の高いデータ、柔軟なスキーマ"}
+</td>
+{"\n                                "}
+<td>
+{"JSON操作クエリ"}
+</td>
+{"\n                                "}
+<td>
+{"多対多関係の表現が苦手"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"グラフ"}
+</td>
+{"\n                                "}
+<td>
+{"高度に相互接続したデータ（SNS、レコメンド）"}
+</td>
+{"\n                                "}
+<td>
+{"Cypher、SPARQL、Datalog"}
+</td>
+{"\n                                "}
+<td>
+{"単純な表形式データには過剰"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"補足：GraphQLはこの分類には入らない"}
+</strong>
+<br />
+{"\n                    GraphQLはクライアントとサーバー間のAPI向けクエリ言語であり、背後のストレージモデル（リレーショナル／ドキュメント／グラフのいずれでも可）には依存しません。名前に「Graph」を含むためグラフDBのクエリ言語と混同されがちですが、Cypher・SPARQL・Datalogのようなグラフデータモデル向け言語とは層が異なります。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    第2版で新たに加わったのは、"}
+<strong>
+{"GraphQL"}
+</strong>
+{"（クライアント主導で必要なフィールドを指定してデータを取得するAPI向けクエリ言語。ストレージモデルには依存しない）と、"}
+<strong>
+{"DataFrame・行列形式"}
+</strong>
+{"（機械学習・データ分析パイプラインで多用される表現）です。一方、"}
+<strong>
+{"Datalog"}
+</strong>
+{"（再帰的なクエリを表現できる宣言的言語）や"}
+<strong>
+{"Property Graph"}
+</strong>
+{"、"}
+<strong>
+{"Event Sourcing"}
+</strong>
+{"（状態の変更を追記型のイベント列として保存し、そこから現在の状態を再構成する方式）、"}
+<strong>
+{"CQRS"}
+</strong>
+{"（書き込みモデルと読み取りモデルを分離する設計パターン）は第1版でも扱われていたテーマであり、第2版では記述の再編・拡張が行われています。Event\n                    SourcingとCQRSはそれぞれ独立したパターンであり、単独でも採用できますが、併用されることが多い組み合わせです。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                「とりあえずドキュメントDB」「とりあえずリレーショナルDB」という思考停止を避け、データ間の関係の濃さで判断する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                多対多の関係が中心になるドメイン（レコメンド、ソーシャルグラフ、不正検知）では早期からグラフモデルを検討する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                スキーマの柔軟性が欲しいだけであれば、リレーショナルDBのJSONカラム機能で十分なケースも多い\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="52-第4章ストレージとインデックス" tabIndex={-1}>
+{"5.2 第4章：ストレージとインデックス"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    「データベースの内部でデータがどう保存されているか」を理解することは、パフォーマンスチューニングやデータベース選定において不可欠です。DDIAはOLTP用途の2大インデックス構造、"}
+<strong>
+{"B-Tree"}
+</strong>
+{"と"}
+<strong>
+{"LSM-Tree（Log-Structured Merge-Tree）"}
+</strong>
+{"を対比しながら解説します。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-4" label="図5：「データベースの内部でデータがどう保存されているか」を理解することは、パフォーマンスチューニングやデータベース選定において不可欠です。DDIAはOLTP用途の2大インデックス構造、B-TreeとLSM-Tree（Log-Structured Merge-Tree）を対比しながら解説します。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"観点"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"B-Tree"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"LSM-Tree"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"書き込みパターン"}
+</td>
+{"\n                                "}
+<td>
+{"インプレース更新"}
+</td>
+{"\n                                "}
+<td>
+{"追記型（Append-Only）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"書き込みスループット"}
+</td>
+{"\n                                "}
+<td>
+{"中程度"}
+</td>
+{"\n                                "}
+<td>
+{"高い（順次書き込みが中心）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"読み取り性能"}
+</td>
+{"\n                                "}
+<td>
+{"安定して高速"}
+</td>
+{"\n                                "}
+<td>
+{"Compaction次第で変動しうる"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"代表的な採用例"}
+</td>
+{"\n                                "}
+<td>
+{"多くのRDBMS（MySQL/InnoDB、PostgreSQL）"}
+</td>
+{"\n                                "}
+<td>
+{"Cassandra、RocksDB、LevelDB"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"空間効率"}
+</td>
+{"\n                                "}
+<td>
+{"断片化しやすい"}
+</td>
+{"\n                                "}
+<td>
+{"Compactionで最適化されるが一時的に肥大化"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    第2版では、分析（OLAP）用途に特化した"}
+<strong>
+{"列指向ストレージ（Column-Oriented Storage）"}
+</strong>
+{"、"}
+<strong>
+{"クエリのコンパイルとベクトル化実行"}
+</strong>
+{"、"}
+<strong>
+{"マテリアライズドビューとデータキューブ"}
+</strong>
+{"、そして生成AI時代を反映した"}
+<strong>
+{"ベクトル埋め込み（Vector Embeddings）"}
+</strong>
+{"と全文検索の節が新たに追加されています。ベクトル埋め込みはRAG（検索拡張生成）アプリケーションの基盤技術として、近年のデータベース設計で無視できないテーマになっています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                書き込みが多いワークロード（ログ集約、時系列データ、IoT）ではLSM-Tree系のストレージエンジンを検討する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                読み取りが多く更新頻度が低いワークロードにはB-Tree系のRDBMSが安定した選択肢になりやすい\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                分析用途を混在させる場合は、行指向（OLTP）と列指向（OLAP）を最初から分離する設計を検討する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="53-第5章エンコーディングとスキーマの進化" tabIndex={-1}>
+{"\n                    5.3 第5章：エンコーディングとスキーマの進化\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    データをネットワークやディスクへ送る際には、メモリ上のオブジェクトを別の形式に変換（エンコード）する必要があります。この章は「"}
+<strong>
+{"スキーマが時間とともに変化しても、新旧のコードが互いに読み書きできる"}
+</strong>
+{"（後方互換性・前方互換性）」ことの重要性を扱います。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-5" label="図6：データをネットワークやディスクへ送る際には、メモリ上のオブジェクトを別の形式に変換（エンコード）する必要があります。この章は「スキーマが時間とともに変化しても、新旧のコードが互いに読み書きできる（後方互換性・前方互換性）」ことの重要性を扱います。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"フォーマット"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"特徴"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"スキーマ"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"主な用途"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"JSON / XML"}
+</td>
+{"\n                                "}
+<td>
+{"人間が読みやすい、テキストベース"}
+</td>
+{"\n                                "}
+<td>
+{"任意（緩い）"}
+</td>
+{"\n                                "}
+<td>
+{"Web API、設定ファイル"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"Protocol Buffers"}
+</td>
+{"\n                                "}
+<td>
+{"バイナリ、コンパクト、コード生成前提"}
+</td>
+{"\n                                "}
+<td>
+{"必須（IDLで定義）"}
+</td>
+{"\n                                "}
+<td>
+{"gRPC、内部サービス間通信"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"Avro"}
+</td>
+{"\n                                "}
+<td>
+{"バイナリ、スキーマをデータと分離管理"}
+</td>
+{"\n                                "}
+<td>
+{"必須（動的にも対応）"}
+</td>
+{"\n                                "}
+<td>
+{"Kafkaなどのストリーミング基盤"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    第2版では新たに、長時間にわたる処理を安全に継続実行するための"}
+<strong>
+{"Durable Execution とワークフロー"}
+</strong>
+{"、そして"}
+<strong>
+{"イベント駆動アーキテクチャ（Event-Driven Architecture）"}
+</strong>
+{"の節が追加され、マイクロサービス時代の非同期処理設計により踏み込んだ内容になっています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                APIやイベントスキーマを変更する際は「フィールドの追加は基本的に安全、削除・型変更は要注意」という後方/前方互換性の原則を徹底する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                スキーマを持たないJSONに頼りきるのではなく、Protocol\n                                BuffersやAvroのような明示的スキーマ管理ツールを社内標準にすると事故が減る\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                サービス間の結合度が高くなりすぎないよう、同期RPCと非同期イベントを適材適所で使い分ける\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="6-part-iii分散データ" tabIndex={-1}>
+{"6. Part III：分散データ"}
+</h2>
+{"\n                "}
+<p>
+{"\n                    ここからが本書の核心部分です。「1台のマシンに収まらないデータをどう扱うか」という問いに、レプリケーション・シャーディング・トランザクション・分散システムの落とし穴・一貫性と合意という5つの章で答えていきます。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="61-第6章レプリケーション" tabIndex={-1}>
+{"6.1 第6章：レプリケーション"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    同じデータを複数のノードにコピーして保持する仕組みで、可用性の向上・読み取り負荷の分散・低レイテンシアクセスを目的とします。方式は大きく3つに分類されます。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-6" label="図7：同じデータを複数のノードにコピーして保持する仕組みで、可用性の向上・読み取り負荷の分散・低レイテンシアクセスを目的とします。方式は大きく3つに分類されます。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"方式"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"書き込み経路"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"長所"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"短所"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"代表例"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"シングルリーダー"}
+</td>
+{"\n                                "}
+<td>
+{"すべての書き込みが1つのリーダーを経由"}
+</td>
+{"\n                                "}
+<td>
+{"実装がシンプル、整合性を保ちやすい"}
+</td>
+{"\n                                "}
+<td>
+{"リーダー障害時の切替コスト、地理的に遠いと書き込みが遅い"}
+</td>
+{"\n                                "}
+<td>
+{"MySQL、PostgreSQLの標準レプリケーション"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"マルチリーダー"}
+</td>
+{"\n                                "}
+<td>
+{"複数の拠点それぞれにリーダーを配置"}
+</td>
+{"\n                                "}
+<td>
+{"拠点ごとに低レイテンシ書き込みが可能"}
+</td>
+{"\n                                "}
+<td>
+{"書き込み競合（Conflict）の解決が必要"}
+</td>
+{"\n                                "}
+<td>
+{"複数リージョンにまたがるDB、オフライン対応アプリ"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"リーダーレス"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    どのノードにも書き込み可能、読み書きクォーラム（w + r >\n                                    n）で読み取りの鮮度を調整\n                                "}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    単一障害点がなく、一部ノードが落ちても読み書きを継続しやすい（実際の可用性・耐障害性はレプリケーション係数、読み取り／書き込みクォーラムの設定、修復と競合解決の実装に依存する）\n                                "}
+</td>
+{"\n                                "}
+<td>
+{"読み取り時の修復（Read Repair）が必要"}
+</td>
+{"\n                                "}
+<td>
+{"Amazon Dynamo系（Cassandra、Riak）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    同期／非同期レプリケーションの選択も重要な論点です。同期は整合性を保証しやすい一方でレイテンシが増加し、非同期は高速だが"}
+<strong>
+{"レプリケーションラグ（Replication Lag）"}
+</strong>
+{"によって「書いた直後に自分の書き込みが読めない」といった不整合が起こり得ます。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    第2版で新設された注目トピックが、"}
+<strong>
+{"Sync Engines とローカルファースト・ソフトウェア"}
+</strong>
+{"です。これはKleppmann自身の近年の研究テーマでもあり、オフライン中でもローカルで編集を続け、オンライン復帰時に自動的に同期・マージするアプリケーション設計を扱っています。なお「ローカルファースト」は、データの正本をユーザーの手元に置き、サーバーを同期の補助と位置付ける設計原則を指します。FigmaやLinearは"}
+<strong>
+{"オフライン編集と同期に取り組んだ商用アプリの例"}
+</strong>
+{"として参考になりますが、いずれもサーバー側に正本を持つアーキテクチャであり、ローカルファーストの定義を満たす実装として扱うべきではありません。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                決済や在庫確保のような業務整合性が必須な機能では、"}
+<strong>
+{"レプリケーション方式の選択と業務ルールの保証を分けて考える"}
+</strong>
+{"。レプリケーションは「どのノードがいつ最新データを持つか」を決めるだけであり、二重引き落としや在庫のマイナスを防ぐ責務は負わない\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                業務整合性そのものは、"}
+<strong>
+{"守りたい不変条件とアクセスパターン"}
+</strong>
+{"に応じて必要な分離レベル・制約を選ぶ。単一行への条件付き原子更新（"}
+<code>
+{"UPDATE stock SET qty = qty - 1 WHERE id = ? AND qty >=\n                                    1"}
+</code>
+{"）や、在庫キー・オーダーIDへの一意性制約で安全に守れる不変条件なら\n                                Read Committed でも成立する。一方、複数行を読んでから判断する Write\n                                Skew 型の不変条件（「オンコール担当者を最低1人残す」など）は\n                                Snapshot Isolation でも防げないため、直列化可能性（Serializable）や\n                                "}
+<code>
+{"SELECT ... FOR UPDATE"}
+</code>
+{"\n                                のような明示的ロックが必要になる。いずれの場合も、操作の冪等性キーによる重複要求の排除を併用する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                その上で、シングルリーダー構成は「書き込みの順序付け点が1つに定まる」という点で上記の制約・分離レベルを実装しやすく、同期レプリケーションはリーダー障害時のコミット済みデータ喪失を抑えるために選ぶ（＝耐久性の話であって、業務整合性の代用ではない）\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                グローバル分散が前提のアプリでは、書き込み競合の解決戦略（Last-Write-Wins、CRDT、アプリケーションレベルのマージ）を設計段階で決めておく\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                「自分の書き込みを自分で読む（Read-Your-Writes）」保証が必要な機能があるなら、レプリケーションラグへの対策（書き込み直後は同一ノードから読むなど）を組み込む\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="62-第7章シャーディングパーティショニング" tabIndex={-1}>
+{"\n                    6.2 第7章：シャーディング（パーティショニング）\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    1台のノードに収まらない量のデータを複数ノードに分割して保存する手法です。第2版では章題が「Partitioning」から「Sharding」に変更され、マルチテナンシー（複数の顧客・テナントのデータを1つの基盤で扱う設計）の観点が強化されています。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-7" label="図8：1台のノードに収まらない量のデータを複数ノードに分割して保存する手法です。第2版では章題が「Partitioning」から「Sharding」に変更され、マルチテナンシー（複数の顧客・テナントのデータを1つの基盤で扱う設計）の観点が強化されています。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"観点"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"キー範囲シャーディング"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"ハッシュシャーディング"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"範囲クエリ"}
+</td>
+{"\n                                "}
+<td>
+{"得意（隣接するキーが同じシャードに集まる）"}
+</td>
+{"\n                                "}
+<td>
+{"苦手（キーが分散するため複数シャードへの問い合わせが必要）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"負荷分散"}
+</td>
+{"\n                                "}
+<td>
+{"偏りやすい（ホットスポットのリスク）"}
+</td>
+{"\n                                "}
+<td>
+{"均一になりやすい"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"リバランシング"}
+</td>
+{"\n                                "}
+<td>
+{"手動・自動どちらの運用も一般的"}
+</td>
+{"\n                                "}
+<td>
+{"ハッシュリングによる自動化がしやすい"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    セカンダリインデックスの扱いも重要な論点で、"}
+<strong>
+{"ローカルセカンダリインデックス"}
+</strong>
+{"（各シャード内で完結、書き込みは速いが読み取り時に全シャードへの問い合わせが必要）と"}
+<strong>
+{"グローバルセカンダリインデックス"}
+</strong>
+{"（インデックス自体も別途シャーディング、読み取りは速いが書き込みが複雑）のトレードオフが解説されます。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                テナントID・ユーザーIDのような自然なパーティションキーがある場合は、それを軸にシャーディングすることでクエリのローカリティを最大化できる\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                リバランシングは「自動化するが、いつ発火するかは運用者がコントロールできる」設計（Automatic\n                                but operator-triggered）が事故を減らす定石\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                ホットスポット対策として、キーの先頭にランダムなプレフィックスを付与する「ソルティング」も有効な選択肢の一つ\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="63-第8章トランザクション" tabIndex={-1}>
+{"6.3 第8章：トランザクション"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    トランザクションはアプリケーション開発者が「複雑な障害シナリオを気にせずに済むようにする」ための抽象化です。"}
+<strong>
+{"ACID"}
+</strong>
+{"（Atomicity・Consistency・Isolation・Durability）という言葉自体は有名ですが、DDIAはこの言葉が実装によって意味がぶれやすいことを丁寧に解きほぐします。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-8" label="図9：トランザクションはアプリケーション開発者が「複雑な障害シナリオを気にせずに済むようにする」ための抽象化です。ACID（Atomicity・Consistency・Isolation・Durability）という言葉自体は有名ですが、DDIAはこの言葉が実装によって意味がぶれやすいことを丁寧に解きほぐします。"/>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"分離レベル"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"防げる異常"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"防げない異常"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"代表的な実装"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"Read Committed"}
+</td>
+{"\n                                "}
+<td>
+{"Dirty Read"}
+</td>
+{"\n                                "}
+<td>
+{"Non-Repeatable Read、Write Skew"}
+</td>
+{"\n                                "}
+<td>
+{"多くのRDBMSのデフォルト"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"Snapshot Isolation"}
+</td>
+{"\n                                "}
+<td>
+{"Non-Repeatable Read、大半のLost Update"}
+</td>
+{"\n                                "}
+<td>
+{"Write Skew、一部のPhantom"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    PostgreSQLの"}
+<code>
+{"REPEATABLE READ"}
+</code>
+{"はSnapshot\n                                    Isolationとして実装されている。MySQL(InnoDB)の"}
+<code>
+{"REPEATABLE READ"}
+</code>
+{"は一貫性読み取りに加えロック読み取り（"}
+<code>
+{"SELECT ... FOR UPDATE"}
+</code>
+{"など）が最新コミットを見るなど挙動が異なり、Snapshot\n                                    Isolationと同一視できない\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"Serializable"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    ほぼ全ての異常（トランザクションを直列実行したのと同じ結果を保証）\n                                "}
+</td>
+{"\n                                "}
+<td>
+{"なし"}
+</td>
+{"\n                                "}
+<td>
+{"Serializable Snapshot Isolation (SSI) など"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    上図はあくまで「どの異常を防げるか」という保証の強弱の順序であり、"}
+<strong>
+{"標準SQLの分離レベル名だけでは実際の保証内容は決まりません"}
+</strong>
+{"。同じ"}
+<code>
+{"READ COMMITTED"}
+</code>
+{"や"}
+<code>
+{"REPEATABLE READ"}
+</code>
+{"でも実装（PostgreSQL、MySQL/InnoDB、Oracle、SQL\n                    Serverなど）ごとに防げる異常が異なるため、採用するDBのドキュメントで実際の挙動を確認する必要があります。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    ただし Serializable\n                    が「異常を防げない」わけではない一方で、無償でもありません。2相ロックのような悲観的実装ではロック競合によりスループットが落ち、SSI\n                    のような楽観的実装では競合を検出した時点でトランザクションが"}
+<strong>
+{"直列化失敗（serialization failure）"}
+</strong>
+{"としてアボートされます。つまりコストは異常の見逃しではなく、実装コスト・スループット・"}
+<strong>
+{"アプリケーション側でのリトライ実装"}
+</strong>
+{"という形で現れます。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    特に初学者がつまずきやすいのが"}
+<strong>
+{"Write Skew"}
+</strong>
+{"です。2つのトランザクションがそれぞれ異なる行を更新するため一見競合しないように見えても、両者が読んだ前提条件（例：「オンコール担当者が最低1人いること」）が同時に崩れてしまう現象で、Snapshot\n                    Isolationだけでは防げません。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    分散トランザクションについては、"}
+<strong>
+{"Two-Phase Commit (2PC)"}
+</strong>
+{"の仕組みと、それが持つ「コーディネーター障害時にリソースがロックされたまま止まる」という弱点が解説されます。第2版ではメッセージングシステムにおける「Exactly-Once（正確に1回）」処理の実現方法も改めて論じられています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                「トランザクションを使っているから安全」と思い込まず、実際の分離レベルを必ず確認する（多くのDBのデフォルトはSerializableではない）\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                Write\n                                Skewが起きうる業務ロジック（在庫の二重予約、シフトの最低人数チェックなど）では、明示的なロック（"}
+<code>
+{"SELECT ... FOR UPDATE"}
+</code>
+{"）やSerializableレベルの利用を検討する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                複数のデータストアをまたぐ分散トランザクションは複雑さとレイテンシのコストが大きいため、可能な限り「1トランザクション=1データストア」に設計を寄せ、それ以外はSagaパターンや冪等なリトライで対応する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="64-第9章分散システムの落とし穴" tabIndex={-1}>
+{"6.4 第9章：分散システムの落とし穴"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    分散システムが単一ノードのシステムと決定的に異なるのは、「"}
+<strong>
+{"部分的な障害（Partial Failure）"}
+</strong>
+{"」が常態化する点です。この章はネットワーク・クロック・プロセスという3つの観点で、なぜ分散システムの設計が難しいのかを解説します。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-9" label="図10：分散システムが単一ノードのシステムと決定的に異なるのは、「部分的な障害（Partial Failure）」が常態化する点です。この章はネットワーク・クロック・プロセスという3つの観点で、なぜ分散システムの設計が難しいのかを解説します。"/>
+{"\n                "}
+<p>
+{"\n                    重要な洞察は、「"}
+<strong>
+{"ノードから応答がないことは、そのノードが停止していることを意味しない"}
+</strong>
+{"」という点です。ネットワーク遅延なのか、ノードが本当にダウンしているのか、処理が単に遅いだけなのかを外部から区別することは原理的に不可能であり、これが分散システム設計の根本的な難しさになっています。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"落とし穴の種類"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"具体例"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"設計上の対策"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ネットワークの非同期性"}
+</td>
+{"\n                                "}
+<td>
+{"メッセージの遅延・順序逆転・重複"}
+</td>
+{"\n                                "}
+<td>
+{"タイムアウト設計、冪等な処理"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"クロックの不正確さ"}
+</td>
+{"\n                                "}
+<td>
+{"NTPドリフト、うるう秒"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    単調時計（Monotonic\n                                    Clock）を経過時間計測に使う、時刻に依存したロジックを避ける\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"プロセスの一時停止"}
+</td>
+{"\n                                "}
+<td>
+{"GCポーズ、CPUスチール"}
+</td>
+{"\n                                "}
+<td>
+{"リースの有効期限をフェンシングトークンで保護する"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"ビザンチン障害"}
+</td>
+{"\n                                "}
+<td>
+{"悪意あるノード・不正なデータ送信"}
+</td>
+{"\n                                "}
+<td>
+{"多くの一般的な分散DBでは想定外（信頼された環境が前提）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                タイムアウト値は固定値でなく、実測レイテンシの分布（p99等）に基づいて動的・保守的に設定する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                リーダーのリース（Lease）を用いる設計では、必ず「フェンシングトークン」のような単調増加する識別子で古いリーダーからの書き込みを拒否できるようにする\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                「起きてほしくないこと」ではなく「起きうること」を前提にリトライ・冪等性・タイムアウトを設計する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="65-第10章一貫性と合意" tabIndex={-1}>
+{"6.5 第10章：一貫性と合意"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    分散システムにおける最も理論的に難しいテーマが「一貫性（Consistency）」と「合意（Consensus）」です。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"線形化可能性（Linearizability）"}
+</strong>
+{"は、分散システムがあたかも単一のコピーしか存在しないかのように振る舞う、"}
+<strong>
+{"単一オブジェクトに対する強い一貫性（recency）保証"}
+</strong>
+{"です。ただし「あらゆる意味で最も強い保証」ではなく、複数オブジェクトにまたがるトランザクションの直列化可能性と線形化可能性を合わせた"}
+<strong>
+{"厳密直列化可能性（Strict Serializability）"}
+</strong>
+{"のように、さらに強い保証も存在します。また強力である反面、達成のためのコストが大きく、"}
+<strong>
+{"ネットワーク分断が発生している間は、線形化可能性と（分断された側の）可用性を同時に満たせない"}
+</strong>
+{"というトレードオフ（いわゆるCAP的な制約）が存在します。分断が起きていない通常時にまで可用性を犠牲にするわけではない点に注意してください。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-10" label="図11：線形化可能性（Linearizability）は、分散システムがあたかも単一のコピーしか存在しないかのように振る舞う、単一オブジェクトに対する強い一貫性（recency）保証です。ただし「あらゆる意味で最も強い保証」ではなく、複数オブジェクトにまたがるトランザクションの直列化可能性と線形化可能性を合わせた厳密直列化可能性（Strict Serializability）のように、さらに強い保証も存在します。また強力である反面、達成のためのコストが大きく、ネットワーク分断が発生している間は、線形化可能性と（分断された側の）可用性を同時に満たせないというトレードオフ（いわゆるCAP的な制約）が存在します。分断が起きていない通常時にまで可用性を犠牲にするわけではない点に注意してください。"/>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"合意アルゴリズム（Consensus）"}
+</strong>
+{"は、複数のレプリカが「ある1つの値」または「コマンドの並び」について同じ決定に至り、"}
+<strong>
+{"互いに矛盾する決定を決して行わない"}
+</strong>
+{"ことを保証する"}
+<strong>
+{"耐障害性のあるプリミティブ"}
+</strong>
+{"です。ここでの中核は安全性（safety）——一度確定した決定が覆らず、ノード間で食い違わないこと——であり、リーダー選出・分散ロック・全順序ブロードキャストなどの基盤になります。代表的な実装にPaxos、Raft、Zabがあり、実務ではこれらを内包したZooKeeperやetcdのような「"}
+<strong>
+{"コーディネーションサービス"}
+</strong>
+{"」を直接利用するケースが一般的です。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    一方、複数のノードにまたがる書き込みを「全員コミットするか、全員アボートするか」に揃える"}
+<strong>
+{"2相コミット（2PC）"}
+</strong>
+{"は、これとは別の抽象化です。2PCは"}
+<strong>
+{"アトミックコミットプロトコル"}
+</strong>
+{"であり、コーディネーターが準備フェーズ後に停止すると参加者はロックを握ったまま待ち続ける（"}
+<strong>
+{"ブロックし得る"}
+</strong>
+{"）という弱点を持ちます。Consensusはこの点で異なり、"}
+<strong>
+{"過半数のノードが生存しているだけでなく、それらが互いに（そして必要に応じてクライアントとも）通信できている限り"}
+</strong>
+{"進行できます。ここで注意したいのは、これが無条件の保証ではないという点です。PaxosやRaftはFLP不可能性を回避するために、障害検出のタイムアウトといったタイミング仮定と、メッセージがいずれ届くというネットワークの活性（liveness）仮定を置いています。ネットワーク分断や極端な遅延が続く間は、ノードが「生きている」だけでは合意は進みません。それでも、コーディネーター1台の停止で無期限にブロックし得る2PCとは対照的に、Consensusは少数派ノードの障害を乗り越えて進行を継続できます。両者は排他的ではなく、コーディネーターの決定ログを合意アルゴリズムで複製して単一障害点を減らす（いわゆる耐障害性のある2PC）という形で"}
+<strong>
+{"併用される場合があります"}
+</strong>
+{"。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    第2版では新たに、"}
+<strong>
+{"論理クロック（Logical Clocks）"}
+</strong>
+{"と、それを応用した"}
+<strong>
+{"線形化可能なID生成器"}
+</strong>
+{"という節が追加され、分散システムにおける「順序」の扱いがより実践的に解説されています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                自前でPaxosやRaftを実装しようとせず、ZooKeeper・etcd・Consulのような実績のあるコーディネーションサービスを利用する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                「強い一貫性」が本当に必要な操作（リーダー選出、分散ロック、一意なID発行）だけをコーディネーションサービスに任せ、その他の高頻度な処理には持ち込まない\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                線形化可能性のコストを理解した上で、業務要件が許すなら「結果整合性（Eventual\n                                Consistency）」で十分な箇所を切り分ける\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="7-part-iv派生データ" tabIndex={-1}>
+{"7. Part IV：派生データ"}
+</h2>
+{"\n                "}
+<p>
+{"\n                    正データ（System of\n                    Record）から、検索インデックス・キャッシュ・分析基盤のような「派生データ（Derived\n                    Data）」を生成・維持する仕組みを扱うパートです。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="71-第11章バッチ処理" tabIndex={-1}>
+{"7.1 第11章：バッチ処理"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    大量データを一括で処理し、その結果を新しいデータセットとして生成するアプローチです。DDIAはUnixのパイプ（"}
+<code>
+{"cat file | grep | sort | uniq"}
+</code>
+{"のような思想）から始め、それを分散環境に拡張した"}
+<strong>
+{"MapReduce"}
+</strong>
+{"、そしてより柔軟な"}
+<strong>
+{"Dataflowエンジン"}
+</strong>
+{"（Spark、Flinkのバッチモードなど）へと解説を進めます。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-11" label="図12：大量データを一括で処理し、その結果を新しいデータセットとして生成するアプローチです。DDIAはUnixのパイプ（cat file | grep | sort | uniqのような思想）から始め、それを分散環境に拡張したMapReduce、そしてより柔軟なDataflowエンジン（Spark、Flinkのバッチモードなど）へと解説を進めます。"/>
+{"\n                "}
+<p>
+{"\n                    第2版で特筆すべき変更は、分散ファイルシステム（HDFSなど）と並んで"}
+<strong>
+{"オブジェクトストア（S3、GCSなど）"}
+</strong>
+{"がバッチ処理基盤の主役として明確に位置づけられたことです。これは第2章で紹介した「ストレージがローカルディスクからリモートのオブジェクトストレージへ」という業界全体のシフトを反映しています。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"処理モデル"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"特徴"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"代表例"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"MapReduce"}
+</td>
+{"\n                                "}
+<td>
+{"Map/Reduceの2段階、フォールトトレラント、ディスク経由が多い"}
+</td>
+{"\n                                "}
+<td>
+{"Hadoop MapReduce"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"Dataflowエンジン"}
+</td>
+{"\n                                "}
+<td>
+{"演算子グラフを最適化して実行、中間結果をメモリ活用しやすい"}
+</td>
+{"\n                                "}
+<td>
+{"Apache Spark、Apache Flink（バッチモード）"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"クエリ言語層"}
+</td>
+{"\n                                "}
+<td>
+{"SQLライクな高水準記述からジョブを生成"}
+</td>
+{"\n                                "}
+<td>
+{"Hive、Spark SQL"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                バッチジョブは「入力データを変更しない（イミュータブル）」設計にすることで、失敗時の再実行や過去データの再処理（Reprocessing）の前提を整える。ただし"}
+<strong>
+{"入力の不変性だけでは再実行は安全にならない"}
+</strong>
+{"。リトライで同じ出力が二重に作られないよう、出力を冪等化（決定的なキーでの上書き）・重複排除することが必須条件になる\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                ETL（Extract–Transform–Load）パイプラインの出力は、既存の本番データストアへ直接上書き・追記せず、新しいテーブル／パーティションとして生成してから"}
+<strong>
+{"アトミックに公開（切り替え）"}
+</strong>
+{"する。公開前の中間出力は誰からも見えないため、失敗したジョブの部分出力をそのまま破棄でき、再実行時の重複行を防げる\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                メール送信や外部API呼び出しのような取り消せない副作用を伴うジョブでは、冪等キーによる重複排除を出力側に必ず設ける（副作用は「再実行すれば消える」ものではない）\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="72-第12章ストリーム処理" tabIndex={-1}>
+{"7.2 第12章：ストリーム処理"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    バッチ処理が「一定期間分をまとめて処理する」のに対し、ストリーム処理は「イベントが発生した瞬間に近いタイミングで継続的に処理する」アプローチです。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-12" label="図13：バッチ処理が「一定期間分をまとめて処理する」のに対し、ストリーム処理は「イベントが発生した瞬間に近いタイミングで継続的に処理する」アプローチです。"/>
+{"\n                "}
+<p>
+{"\n                    Apache Kafkaに代表される"}
+<strong>
+{"ログ型メッセージブローカー（Log-Based Message Broker）"}
+</strong>
+{"は、メッセージを消費後に削除する伝統的なメッセージキューとは異なり、追記型のログとしてイベントを保持します。保持されるのは無期限ではなく、"}
+<strong>
+{"設定した保持期間（retention.ms）やサイズ上限（retention.bytes）の範囲内"}
+</strong>
+{"です。この範囲内であれば、複数の消費者が独立して・後からでも過去のイベントを再生できます。逆に言えば、再生したい期間を保持設定が下回っていると古いイベントは失われるため、再処理の要件から保持設定を逆算しておく必要があります。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    これとは別の仕組みが"}
+<strong>
+{"ログコンパクション（log compaction）"}
+</strong>
+{"です。コンパクションはバックグラウンドで非同期に古いレコードを削除し、少なくともキーごとの最新値を残すことを保証しますが、"}
+<strong>
+{"イベント履歴全体を保持するものではありません"}
+</strong>
+{"。したがって「保持期間内なら過去の全イベントを再生できる」性質はコンパクション対象トピックには当てはまらず、得られるのは各キーの最新状態のスナップショットに近いものです（削除を表すtombstoneレコードはさらに別の保持設定に従って削除されます）。時系列の全イベントを再生したい用途と、キー単位の最新状態を保持したい用途は、トピックを分けて設計するのが定石です。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"CDC（Change Data Capture）"}
+</strong>
+{"は、データベースの変更（INSERT/UPDATE/DELETE）をイベントストリームとして捕捉し、他のデータストアへ反映する仕組みで、正データと派生データを同期させる代表的な手法です。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"概念"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"説明"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ウィンドウ処理"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    一定の時間範囲（タンブリング／スライディングウィンドウ）でイベントを集約する\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"イベント時刻 vs 処理時刻"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    イベントが実際に発生した時刻と、システムがそれを処理した時刻のズレをどう扱うかが重要な論点\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"ストリーム結合（Stream-Stream Join、Stream-Table Join）"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    複数のストリームやテーブルを結合する際、状態（State）の保持方法が性能・正確性を左右する\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n                "}
+<p>
+{"\n                    第2版のインタビューでKleppmannは、ストリーム処理の実務が「行単位のコールバックAPIによる低レベルな実装」と、「SQLクエリを渡すだけでインクリメンタルにビューを維持してくれる高レベルなシステム（Materializeなど）」の二極化に向かいつつあるという見解を示しています。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                リアルタイム性が本当に必要な機能（不正検知、リアルタイムダッシュボード）にのみストリーム処理を採用し、日次バッチで十分な処理まで無理にストリーム化しない\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                イベント時刻と処理時刻のズレ（Late Arriving\n                                Events）を前提に、"}
+<strong>
+{"Watermark"}
+</strong>
+{"（「このイベント時刻までのデータは出揃ったとみなす」というイベント時刻の進行シグナル）と、"}
+<strong>
+{"許容遅延（allowed lateness）"}
+</strong>
+{"（Watermark\n                                通過後もウィンドウの状態を保持し、遅れて届いたイベントを受け付ける猶予）を、それぞれ独立した設定として設計段階で決めておく\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                CDCを導入する際は、スキーマ変更が下流の消費者を壊さないよう、第5章の互換性原則をあわせて徹底する\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="73-第13章ストリーミングシステムの哲学" tabIndex={-1}>
+{"\n                    7.3 第13章：ストリーミングシステムの哲学\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    第1版の最終章「データシステムの未来」を発展的に改題した章で、複数の特化型データストアを組み合わせて大きなシステムを構築する際の設計思想を扱います。\n                "}
+</p>
+{"\n                "}
+<Diagram id="diagram-13" label="図14：第1版の最終章「データシステムの未来」を発展的に改題した章で、複数の特化型データストアを組み合わせて大きなシステムを構築する際の設計思想を扱います。"/>
+{"\n                "}
+<p>
+{"\n                    中心的な考え方は「"}
+<strong>
+{"Unbundling Databases（データベースの分解）"}
+</strong>
+{"」です。従来1つの製品に統合されていたインデックス作成・キャッシュ・クエリ実行といった機能を、独立したコンポーネントの組み合わせとして再構築し、それらをイベントストリームでつなぐという発想です。あわせて、"}
+<strong>
+{"End-to-End Argument（両端の原則）"}
+</strong>
+{"——正確性の保証はシステムの末端（アプリケーション）で行うのが最も確実であり、中間層だけに頼りすぎるべきではないという設計原則——も解説されます。\n                "}
+</p>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                1つのデータベースにすべての機能（トランザクション・全文検索・分析・キャッシュ）を詰め込もうとせず、CDC/イベントストリームで「正データ→派生データ」の一方向フローを構築する\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                派生データストア（検索インデックスやキャッシュ）は「いつでも正データから再構築できる」設計にしておくと、障害時の復旧やスキーマ変更が大幅に楽になる\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="8-part-v倫理と社会第2版新設" tabIndex={-1}>
+{"8. Part V：倫理と社会（第2版新設）"}
+</h2>
+{"\n\n                "}
+<h3 id="81-第14章正しいことをする" tabIndex={-1}>
+{"8.1 第14章：正しいことをする"}
+</h3>
+{"\n                "}
+<p>
+{"\n                    倫理を独立したパートとして立てたのが第2版の構成上の変更点です。テーマ自体は第1版12章の一節「Doing\n                    the Right\n                    Thing」で扱われていましたが、AIが意思決定プロセスに深く組み込まれるようになった現状を踏まえて再編・大幅に加筆され、独立章となりました。データシステムの設計者が技術的な正しさだけでなく"}
+<strong>
+{"倫理的な責任"}
+</strong>
+{"も負う、という問題意識が軸になっています。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"テーマ"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"主な論点"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"予測分析とバイアス"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    機械学習モデルが既存の社会的バイアスを増幅・固定化するリスク\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"責任と説明責任"}
+</td>
+{"\n                                "}
+<td>
+{"自動化された意思決定の結果に誰が責任を持つのか"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"フィードバックループ"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    予測が現実に影響を与え、その影響がさらに予測データに反映される自己強化ループ\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"プライバシーとトラッキング"}
+</td>
+{"\n                                "}
+<td>
+{"監視・同意・データの利用目的の透明性"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"データを資産・権力として捉える視点"}
+</td>
+{"\n                                "}
+<td>
+{"産業革命期の教訓との比較、法制度と自主規制のバランス"}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<div className="callout-practice">
+{"\n                    "}
+<div className="icon">
+{"✓"}
+</div>
+{"\n                    "}
+<div className="body">
+{"\n                        "}
+<div className="label">
+{"ベストプラクティス"}
+</div>
+{"\n                        "}
+<ul>
+{"\n                            "}
+<li>
+{"\n                                予測モデルをプロダクトに組み込む前に、フィードバックループによって差別的な結果が固定化されないかをレビューするプロセスを設ける\n                            "}
+</li>
+{"\n                            "}
+<li>
+{"\n                                自動化された意思決定については、判断根拠の記録と異議申し立ての経路をシステム要件として最初から設計に含める\n                            "}
+</li>
+{"\n                        "}
+</ul>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h3 id="82-関連する見解aiエージェントとデータベース書籍本文外" tabIndex={-1}>
+{"\n                    8.2 関連する見解：AIエージェントとデータベース（書籍本文外）\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"注記"}
+</strong>
+{"：以下は第14章の本文ではなく、刊行後のインタビュー（参考文献5・7）で Kleppmann\n                    が述べた見解です。書籍の内容と混同しないよう、実務トレンドとして分けて扱います。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    Kleppmann\n                    は、AIエージェントがデータベースに対して直接操作を行うようになる将来を見据え、「"}
+<strong>
+{"AIに許可する操作は、あらかじめ明確に定義されたAPI経由に限定し、その操作が満たすべき整合性のルールを明示すべきだ"}
+</strong>
+{"」という考えを示しています。人間とAIエージェントの双方が同じデータベースを共通の基盤としながら、互いの変更をレビュー・比較・マージできるワークフローの必要性を説いており、これは第6章のマルチリーダーレプリケーションにおける「競合解決」の考え方とも通じる発想です。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"実務上の示唆（インタビュー由来）"}
+</strong>
+{"\n                "}
+</p>
+{"\n                "}
+<ul>
+{"\n                    "}
+<li>
+{"\n                        AIエージェントにデータベースへの書き込み権限を与える場合は、汎用的なSQL実行権限ではなく、業務的に意味のある操作に限定したAPIを経由させる\n                    "}
+</li>
+{"\n                "}
+</ul>
+{"\n\n                "}
+<h2 id="9-2026年の実務トレンドとddiaの位置づけ" tabIndex={-1}>
+{"\n                    9. 2026年の実務トレンドとDDIAの位置づけ\n                "}
+</h2>
+{"\n                "}
+<p>
+{"\n                    DDIA第2版の刊行にあわせて行われたインタビューから、2026年時点で特に注目されているトレンドを整理します。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="91-ストレージのオブジェクトストア化" tabIndex={-1}>
+{"\n                    9.1 ストレージのオブジェクトストア化\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    第1版執筆時点のデータベースは「ノードがローカルディスクにデータを持ち、レプリケーションはアプリケーション層で行う」モデルが標準でした。現在は、"}
+<strong>
+{"すでにレプリケートされたリモートサービスであるオブジェクトストレージの上にデータベースを構築する"}
+</strong>
+{"という新しいトレードオフの選択肢が実用化しています。Kleppmannはこれを「一方が優れているわけではなく、新しいトレードオフ空間が生まれた」と評しています。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="92-データベースの移動可能性とpostgres拡張エコシステム" tabIndex={-1}>
+{"\n                    9.2 データベースの「移動可能性」とPostgres拡張エコシステム\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    Riccominiは、将来成功するデータベースは「ノートPC → サーバー → クラウド →\n                    別のクラウド」へとシームレスに移動・スケールできる必要があるという仮説を提示しています。DuckDBとMotherDuck、組み込み用途に広がるPostgres（PGlite）、SQLiteの組み込み利用の広がりはこの流れを示す事例として挙げられています。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    あわせて、PostgreSQLの拡張エコシステム（"}
+<code>
+{"pgvector"}
+</code>
+{"によるベクトル検索、"}
+<code>
+{"pg_search"}
+</code>
+{"による全文検索、"}
+<code>
+{"pg_duckdb"}
+</code>
+{"による分析）が非常に強力になっており、Riccominiは「まずPostgresで拡張機能を使い、本当にスケールやコア機能として必要になった段階で専用ストア（Pinecone、Turbopufferのようなベクトル検索専業サービスなど）に移行する」という段階的な戦略が有望だという分析・仮説を示しています。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="93-コントロールデータコンピュートプレーンの分離" tabIndex={-1}>
+{"\n                    9.3 コントロール／データ／コンピュートプレーンの分離\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    クラウドネイティブなデータシステムアーキテクチャの標準パターンとして、"}
+<strong>
+{"制御を司るコントロールプレーン"}
+</strong>
+{"・"}
+<strong>
+{"実データを保持するデータプレーン"}
+</strong>
+{"・"}
+<strong>
+{"計算を実行するコンピュートプレーン"}
+</strong>
+{"を分離する設計が広く採用されるようになりました。この分離により、SaaS型とBYOC（顧客のクラウド環境内で稼働させる形態）の両方に対応しやすくなっています。\n                "}
+</p>
+{"\n\n                "}
+<h3 id="94-ストリーミングとレイテンシスループットのトレードオフ" tabIndex={-1}>
+{"\n                    9.4 ストリーミングとレイテンシ／スループットのトレードオフ\n                "}
+</h3>
+{"\n                "}
+<p>
+{"\n                    Riccominiは、あらゆるストリーム処理システムが直面する根本的なトレードオフとして「"}
+<strong>
+{"レイテンシを下げようとするとスループットが犠牲になり、書き込みをバッチ化してスループットを上げようとするとレイテンシが増える"}
+</strong>
+{"」という関係を挙げています。この基本原則は、ストリーム処理基盤を選定・チューニングする際の判断軸として引き続き有効です。\n                "}
+</p>
+{"\n                "}
+<p>
+{"\n                    "}
+<strong>
+{"出典"}
+</strong>
+{"：本節の内容は、ScyllaDBが実施したMartin Kleppmann・Chris\n                    Riccominiへのインタビュー記事に基づきます。詳細は参考文献を参照してください。\n                "}
+</p>
+{"\n\n                "}
+<h2 id="10-ベストプラクティス実践チェックリスト" tabIndex={-1}>
+{"\n                    10. ベストプラクティス実践チェックリスト\n                "}
+</h2>
+{"\n                "}
+<div className="checklist-card">
+{"\n                    "}
+<div className="checklist-header">
+{"\n                        "}
+<span className="title">
+{"実践チェックリスト"}
+</span>
+<span className="count">
+{`${checked} / 13 完了`}
+</span>
+{"\n                    "}
+</div>
+{"\n                    "}
+<ul>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk1" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk1">
+{"新規プロジェクトで「本当に分散システムが必要か」を最初に検討したか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk2" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk2">
+{"スケーラビリティ要件を「負荷パラメータ」として明文化したか（DAU、秒間書き込み数など）"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk3" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk3">
+{"レイテンシSLAをp99などの高パーセンタイルで定義し、平均値だけに頼っていないか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk4" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk4">
+{"データモデル選定時に「多対多の関係の濃さ」を判断基準に含めたか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk5" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk5">
+{"書き込み中心か読み取り中心かでLSM-Tree系／B-Tree系ストレージエンジンを選び分けたか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk6" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk6">
+{"APIやイベントのスキーマ変更時に後方/前方互換性のルールを守っているか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk7" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk7">
+{"レプリケーション方式（シングルリーダー／マルチリーダー／リーダーレス）を業務要件に基づいて選定したか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk8" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk8">
+{"シャーディングキーの選択がホットスポットを生まないか検証したか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk9" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk9">
+{"トランザクションの実際の分離レベルを確認し、Write\n                                Skewのリスクを評価したか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk10" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk10">
+{"タイムアウト・リトライ・冪等性を「部分障害は必ず起きる」前提で設計したか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk11" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk11">
+{"強い一貫性が必要な操作を、実績あるコーディネーションサービスに限定して任せているか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk12" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk12">
+{"派生データ（検索インデックス、キャッシュ、DWH）を正データから再構築可能な設計にしているか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                        "}
+<li>
+{"\n                            "}
+<input id="chk13" type="checkbox" onChange={updateProgress}/>
+<label htmlFor="chk13">
+{"AIエージェントにデータ操作権限を与える場合、汎用SQL実行ではなく限定APIを経由させているか"}
+</label>
+{"\n                        "}
+</li>
+{"\n                    "}
+</ul>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="11-学習後のネクストステップ" tabIndex={-1}>
+{"11. 学習後のネクストステップ"}
+</h2>
+{"\n                "}
+<p>
+{"\n                    DDIAで得た「トレードオフを見極める視点」を、次のような形で実務・学習に接続していくことをお勧めします。\n                "}
+</p>
+{"\n                "}
+<div className="table-scroll">
+{"\n                    "}
+<table>
+{"\n                        "}
+<thead>
+{"\n                            "}
+<tr className="header">
+{"\n                                "}
+<th scope="col">
+{"ステップ"}
+</th>
+{"\n                                "}
+<th scope="col">
+{"内容"}
+</th>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</thead>
+{"\n                        "}
+<tbody>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"1. 自社システムの棚卸し"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    使用中のDB/メッセージング基盤がDDIAのどの分類に当てはまるかをマッピングする\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"2. 障害訓練"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    Chaos\n                                    Engineering的な手法で、第9章の「部分障害」を意図的に発生させ挙動を確認する\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="odd">
+{"\n                                "}
+<td>
+{"3. 専門書への展開"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    ストレージ内部をより深く知りたい場合はAlex Petrov著『Database\n                                    Internals』、分散合意をさらに深く学びたい場合は原論文（Raft、Paxos）へ進む\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                            "}
+<tr className="even">
+{"\n                                "}
+<td>
+{"4. コミュニティ・カンファレンス"}
+</td>
+{"\n                                "}
+<td>
+{"\n                                    Monster SCALE Summit、QConなど、著者本人や実務家の講演を追う\n                                "}
+</td>
+{"\n                            "}
+</tr>
+{"\n                        "}
+</tbody>
+{"\n                    "}
+</table>
+{"\n                "}
+</div>
+{"\n\n                "}
+<h2 id="12-参考文献" tabIndex={-1}>
+{"12. 参考文献"}
+</h2>
+{"\n                "}
+<div className="ref-grid" id="referenceGrid">
+{"\n                    "}
+<div className="ref-card" id="ref1">
+{"\n                        "}
+<div className="num">
+{"1"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            O'Reilly Media「Designing Data-Intensive Applications, 2nd\n                            Edition」目次・書誌情報（2026年）.\n                            "}
+<a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/">
+{"https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref2">
+{"\n                        "}
+<div className="num">
+{"2"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            O'Reilly Media「Designing Data-Intensive Applications」（初版、2017年）.\n                            "}
+<a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/">
+{"https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref3">
+{"\n                        "}
+<div className="num">
+{"3"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            Martin Kleppmann's website「Designing Data-Intensive Applications, 2nd\n                            Edition」出版案内・書評掲載.\n                            "}
+<a href="https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html">
+{"https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref4">
+{"\n                        "}
+<div className="num">
+{"4"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            dataintensive.net（書籍公式サイト。Jay Kreps・Kevin Scott・Jaana Dogan\n                            らの推薦文を掲載）.\n                            "}
+<a href="https://dataintensive.net/">
+{"https://dataintensive.net/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref5">
+{"\n                        "}
+<div className="num">
+{"5"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            ScyllaDB「Rethinking \"Designing Data-Intensive Applications\"」— Martin\n                            Kleppmann・Chris Riccominiインタビュー.\n                            "}
+<a href="https://www.scylladb.com/2026/03/26/rethinking-designing-data-intensive-applications/">
+{"https://www.scylladb.com/2026/03/26/rethinking-designing-data-intensive-applications/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref6">
+{"\n                        "}
+<div className="num">
+{"6"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            ScyllaDB「Kelsey Hightower's Take on Engineering at Scale」— Monster\n                            SCALE Summit講演レポート.\n                            "}
+<a href="https://www.scylladb.com/2026/02/19/kelsey-hightower-engineering-at-scale/">
+{"https://www.scylladb.com/2026/02/19/kelsey-hightower-engineering-at-scale/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref7">
+{"\n                        "}
+<div className="num">
+{"7"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            ScyllaDB Tech Talk「Designing Data-Intensive Applications Second\n                            Edition」（Kleppmann・Riccomini・Tzach Livyatan）.\n                            "}
+<a href="https://www.scylladb.com/tech-talk/designing-data-intensive-applications-second-edition/">
+{"https://www.scylladb.com/tech-talk/designing-data-intensive-applications-second-edition/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                    "}
+<div className="ref-card" id="ref8">
+{"\n                        "}
+<div className="num">
+{"8"}
+</div>
+{"\n                        "}
+<div className="txt">
+{"\n                            Martin Kleppmann's website（著者プロフィール・出版物一覧）.\n                            "}
+<a href="https://martin.kleppmann.com/">
+{"https://martin.kleppmann.com/"}
+</a>
+{"\n                        "}
+</div>
+{"\n                    "}
+</div>
+{"\n                "}
+</div>
+{"\n\n                "}
+<p>
+{"\n                    "}
+<em>
+{"本ガイドは教育目的の要約・解説であり、書籍本文の引用は最小限（15語未満）に留めています。詳細な内容は必ず原著（第2版）をご参照ください。"}
+</em>
+{"\n                "}
+</p>
+{"\n            "}
+</main>
+</div>
+</div>; }
