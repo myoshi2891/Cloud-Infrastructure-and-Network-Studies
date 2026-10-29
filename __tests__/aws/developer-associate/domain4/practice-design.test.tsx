@@ -3,7 +3,10 @@ import { render } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import postcss from 'postcss';
 import { Section26 } from '@/app/aws/developer-associate/domain4/sections/Section26';
-import original from '@/docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import rawOriginal from '@/docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import { withDvaDomain4Corrections } from '@/__tests__/helpers/dva-domain4-source-corrections';
+
+const original = withDvaDomain4Corrections(rawOriginal);
 
 it('付録Aの全文を空白・句読点・コード・リンクまで変更しない', () => {
     const {container} = render(<Section26/>);

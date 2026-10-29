@@ -1,7 +1,10 @@
 import { fireEvent, render, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { Section26 } from '@/app/aws/developer-associate/domain4/sections/Section26';
-import original from '@/docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import rawOriginal from '@/docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import { withDvaDomain4Corrections } from '@/__tests__/helpers/dva-domain4-source-corrections';
+
+const original = withDvaDomain4Corrections(rawOriginal);
 
 it('13問の各選択肢から、その場で原本の正解と解説を確認できる', () => {
     const {container}=render(<Section26/>);

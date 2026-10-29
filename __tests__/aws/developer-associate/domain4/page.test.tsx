@@ -2,10 +2,14 @@ import { readFileSync } from 'node:fs';
 import { render, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/developer-associate/domain4/page';
-import inventory from '@/docs/migration-inventory/aws-dva-domain4.json';
-import fixture from '@/docs/migration-inventory/aws-dva-domain4.fidelity.json';
+import rawInventory from '@/docs/migration-inventory/aws-dva-domain4.json';
+import rawFixture from '@/docs/migration-inventory/aws-dva-domain4.fidelity.json';
+import { withDvaDomain4Corrections, withDvaDomain4SquashedCorrections } from '@/__tests__/helpers/dva-domain4-source-corrections';
 import { snapshotTroubleshooting } from '@/scripts/dva-troubleshooting-fidelity.mjs';
 import { codeBlockSelector, codeLineCount, extractBodyContent, squash } from '@/__tests__/helpers/migration-test-utils';
+// 原本fixtureは固定Gitの証跡として保持し、本文訂正を期待値にだけ適用する
+const inventory = withDvaDomain4Corrections(rawInventory);
+const fixture = {...rawFixture, structure: withDvaDomain4SquashedCorrections(rawFixture.structure)};
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 const mount = () => render(<Page />);
 describe('DVA Domain 4 全量移行', () => {

@@ -2,7 +2,10 @@ import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import postcss from 'postcss';
 import { expect, test } from '@playwright/test';
-import original from '../docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import rawOriginal from '../docs/migration-inventory/aws-dva-domain4-appendix-a.text.json';
+import { withDvaDomain4Corrections } from '../__tests__/helpers/dva-domain4-source-corrections';
+
+const original = withDvaDomain4Corrections(rawOriginal);
 
 const tokens: string[] = [];
 postcss.parse(fs.readFileSync('app/globals.css','utf8')).walkAtRules('theme', rule => {
