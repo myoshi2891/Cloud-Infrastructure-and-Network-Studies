@@ -6,8 +6,8 @@ import { DIAGRAMS } from '@/app/recommended-books/designing-data-intensive-appli
 import inventory from '@/docs/migration-inventory/designing-data-intensive-applications.json';
 import fixture from '@/docs/migration-inventory/designing-data-intensive-applications.fidelity.json';
 import { snapshotDdia, snapshotCssRules } from '@/scripts/ddia-fidelity.mjs';
-import { MermaidDiagramMock, squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
+import { squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
+vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 describe('DDIA 全量移行',()=>{
  it('本文の全要素・属性・階層・順序が原本と一致',()=>{expect(snapshotDdia(render(<Guide/>).container)).toEqual(fixture.structure);});
  it.each(['h1','h2','h3','h4','th','td','li'] as const)('%s の全量と順序',tag=>{
