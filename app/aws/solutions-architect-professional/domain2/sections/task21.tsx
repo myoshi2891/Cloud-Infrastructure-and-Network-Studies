@@ -136,7 +136,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {":\n                    手作業の構築は「人によって違う」「再現できない」「レビューできない」問題を生みます。コード化すると、Git\n                    で管理でき、同じ環境を何度でも作れ、DR 時の復旧も速くなります。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：IaC を使う理由:\n                    手作業の構築は「人によって違う」「再現できない」「レビューできない」問題を生みます。コード化すると、Git\n                    で管理でき、同じ環境を何度でも作れ、DR 時の復旧も速くなります。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: Infrastructure as Code(IaC)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -208,7 +208,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：CloudFormation の重要機能"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: Infrastructure as Code(IaC)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -517,7 +517,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-1" label={"Step 2-B: CI/CD(継続的インテグレーション/継続的デリバリー)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart LR\n    A[\"コード変更<br/>CodeCommit または GitHub\"] --> B[\"Source<br/>CodePipeline\"]\n    B --> C[\"Build and Test<br/>CodeBuild\"]\n    C --> D[\"Deploy<br/>CodeDeploy または CloudFormation\"]\n    D --> E{\"ヘルスチェック<br/>CloudWatch アラーム\"}\n    E -->|\"正常\"| F[\"本番反映完了\"]\n    E -->|\"異常\"| G[\"自動ロールバック\"]\n\n    classDef dangerFill fill:#ffdfe5,stroke:#c0213f,color:#5c1020;\n    classDef successFill fill:#d7f1e2,stroke:#1d7f4e,color:#0f3d26;\n    class G dangerFill\n    class F successFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: CI/CD(継続的インテグレーション/継続的デリバリー)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -767,7 +767,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </strong>
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：サービス別の代表的なデプロイ手段"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：デプロイ方式の比較(最重要)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1125,7 +1125,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"です。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Systems Manager は、多数のサーバー(EC2\n                    やオンプレミス)をまとめて管理する運用ハブです。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: 構成管理(AWS Systems Manager)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1281,7 +1281,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {":\n                    運用負荷(プロビジョニング、パッチ適用、冗長化)を減らす判断が頻出です。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：「自前で運用」から「AWS に任せる」へ:\n                    運用負荷(プロビジョニング、パッチ適用、冗長化)を減らす判断が頻出です。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: 移行/アップグレード経路とマネージドサービス活用"}>
 {"\n                    "}
 <table>
 <thead>

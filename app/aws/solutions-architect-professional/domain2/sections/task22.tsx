@@ -119,7 +119,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-4" label={"Step 2-A: AWS グローバルインフラの基礎"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    G[\"AWS グローバルインフラ\"]\n    R[\"リージョン<br/>地理的に離れた独立した地域\"]\n    AZ[\"アベイラビリティゾーン<br/>リージョン内の独立した拠点\"]\n    E[\"エッジロケーション<br/>CloudFront などの配信拠点\"]\n    LZ[\"Local Zones / Wavelength<br/>ユーザー近くへの拡張\"]\n    G --> R\n    R --> AZ\n    G --> E\n    G --> LZ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: AWS グローバルインフラの基礎"}>
 {"\n                    "}
 <table>
 <thead>
@@ -188,7 +188,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-5" label={"Step 2-B: RTO と RPO"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart LR\n    A[\"最後のバックアップ<br/>または複製時点\"] -->|\"RPO<br/>失ってよいデータの期間\"| B[\"障害発生\"]\n    B -->|\"RTO<br/>復旧までに許容できる時間\"| C[\"サービス復旧\"]\n\n    classDef dangerFill fill:#ffdfe5,stroke:#c0213f,color:#5c1020;\n    classDef successFill fill:#d7f1e2,stroke:#1d7f4e,color:#0f3d26;\n    class B dangerFill\n    class C successFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: RTO と RPO"}>
 {"\n                    "}
 <table>
 <thead>
@@ -471,7 +471,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-7" label={"Step 2-E: Route 53 とフェイルオーバー"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    U[\"ユーザー\"] --> R53[\"Route 53<br/>フェイルオーバーポリシー\"]\n    HC[\"ヘルスチェック\"] --> R53\n    R53 -->|\"正常時\"| P[\"プライマリ環境<br/>東京リージョン\"]\n    R53 -->|\"異常検知時\"| S[\"セカンダリ環境<br/>大阪リージョン\"]\n    P --> HC\n\n    classDef successFill fill:#d7f1e2,stroke:#1d7f4e,color:#0f3d26;\n    classDef warnFill fill:#ffe8c7,stroke:#a85f0a,color:#4a2a00;\n    class P successFill\n    class S warnFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: Route 53 とフェイルオーバー"}>
 {"\n                    "}
 <table>
 <thead>

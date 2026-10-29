@@ -135,7 +135,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {": 「明示的 Deny が最優先 → 暗黙的\n                    Deny(何も許可がなければ拒否) → Allow があって初めて許可」。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：覚え方: 「明示的 Deny が最優先 → 暗黙的\n                    Deny(何も許可がなければ拒否) → Allow があって初めて許可」。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: IAM と最小権限"}>
 {"\n                    "}
 <table>
 <thead>
@@ -528,7 +528,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-10" label={"Step 2-C: 暗号化(保存時・転送時)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    subgraph REST[\"保存時の暗号化\"]\n        K[\"AWS KMS<br/>カスタマー管理キー\"] --> S3[\"S3 SSE-KMS\"]\n        K --> EBS[\"EBS 暗号化\"]\n        K --> RDS[\"RDS 暗号化\"]\n    end\n    subgraph TRANSIT[\"転送時の暗号化\"]\n        ACM[\"AWS Certificate Manager\"] --> CF[\"CloudFront と ALB で TLS\"]\n    end"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: 暗号化(保存時・転送時)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -706,7 +706,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"に VPC から AWS\n                    サービスへ接続することです。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：目的は、インターネットを経由せずに VPC から AWS\n                    サービスへ接続することです。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: AWS サービスエンドポイント(VPC エンドポイント)"}>
 {"\n                    "}
 <table>
 <thead>

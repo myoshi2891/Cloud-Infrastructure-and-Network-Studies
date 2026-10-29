@@ -116,7 +116,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-13" label={"Step 2-A: 高可用性の基本形(Multi-AZ)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    U[\"ユーザー\"] --> R53[\"Route 53\"]\n    R53 --> ALB[\"Application Load Balancer<br/>複数 AZ に配置\"]\n    ALB --> A1[\"EC2 AZ-a<br/>Auto Scaling\"]\n    ALB --> A2[\"EC2 AZ-c<br/>Auto Scaling\"]\n    A1 --> DBP[\"Aurora ライター<br/>AZ-a\"]\n    A2 --> DBP\n    DBP -.->|\"レプリケーション\"| DBR[\"Aurora リーダー<br/>AZ-c\"]\n\n    classDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\n    class DBP,DBR highlightFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: 高可用性の基本形(Multi-AZ)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -412,7 +412,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：スケーリング方式\n                                内容\n                                使いどころ\n                            \n                        \n                        \n                            \n                                ターゲット追跡\n                                指標(例: CPU 50%)を目標値に保つよう自動調整\n                                最初の選択肢。設定が簡単\n                            \n                            \n                                ステップスケーリング\n                                アラームの超過幅に応じて段階的に増減\n                                負荷に応じたきめ細かい調整\n                            \n                            \n                                スケジュールスケーリング\n                                時刻や日付で増減\n                                予測できる負荷(営業時間、イベント)\n                            \n                            \n                                予測スケーリング\n                                過去のパターンを機械学習で予測し事前に拡張\n                                周期的な負荷、起動に時間がかかるアプリ\n                            \n                            \n                                カスタムメトリクス\n                                例: SQS の「1インスタンスあたりの待ちメッセージ数」\n                                キュー処理ワーカーの最適な増減"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: Auto Scaling(ポリシーとイベント)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -489,7 +489,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-14" label={"Step 2-D: 疎結合(アプリケーション統合)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart LR\n    P[\"注文受付 API\"] --> SNS[\"Amazon SNS<br/>トピック\"]\n    SNS --> Q1[\"SQS キュー 決済処理\"]\n    SNS --> Q2[\"SQS キュー 在庫更新\"]\n    SNS --> Q3[\"SQS キュー 通知\"]\n    Q1 --> W1[\"ワーカー Auto Scaling\"]\n    Q2 --> W2[\"ワーカー Auto Scaling\"]\n    Q3 --> W3[\"Lambda\"]\n    Q1 -.->|\"失敗を繰り返したら\"| DLQ[\"デッドレターキュー\"]\n\n    classDef dangerFill fill:#ffdfe5,stroke:#c0213f,color:#5c1020;\n    class DLQ dangerFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: 疎結合(アプリケーション統合)"}>
 {"\n                    "}
 <table>
 <thead>

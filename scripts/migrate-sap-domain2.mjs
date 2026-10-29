@@ -18,13 +18,14 @@ const write=(name,s)=>{if(/\.tsx?$/.test(name))s=ts.createPrinter({newLine:ts.Ne
 const diagrams=[...doc.querySelectorAll('pre.mermaid')];
 const cardIndices=new Map([...doc.querySelectorAll('.checklist-card')].map((c,i)=>[c,i]));
 function tokens(line,language){const regex=language==='json'?/"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+\b/g:/#.*$|"(?:\\.|[^"\\])*"|[\w]+(?=:)|\b(?:true|false)\b|\b\d+\b|!Ref\b/g;let out='',end=0;for(const m of line.matchAll(regex)){out+='{'+JSON.stringify(line.slice(end,m.index))+'}';const text=m[0];const cls=text.startsWith('#')?'comment':line.slice(m.index+text.length).trimStart().startsWith(':')?'attr':text.startsWith('"')?'string':/^\d/.test(text)?'number':'literal';out+=`<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;end=m.index+text.length;}return out+'{'+JSON.stringify(line.slice(end))+'}';}
+function tableLabel(n){let heading=n.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;return '比較表：'+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim();}
 function jsx(n){
  if(n.nodeType===3){if(['TABLE','THEAD','TBODY','TFOOT','TR'].includes(n.parentElement?.tagName)&&!n.textContent.trim())return '';return '{'+JSON.stringify(n.textContent)+'}';}if(n.nodeType!==1)return '';
  if(n.matches('pre.mermaid')){const i=diagrams.indexOf(n);let prev=n.previousElementSibling;while(prev&&!prev.matches('h2,h3,h4'))prev=prev.previousElementSibling;return `<Diagram id="diag-${i}" label={${JSON.stringify(prev?.textContent.trim()??`図${i+1}`)}} />`;}
  if(n.matches('pre')){const code=n.querySelector('code');const language=code?.className.replace('language-','')??'text';return `<pre className="code-block" aria-label="${language} コード例">`+n.textContent.replace(/^\n|\n$/g,'').split('\n').map(line=>'<div className="code-line">'+tokens(line,language)+'</div>').join('')+'</pre>';}
  const attrs=[...n.attributes].map(a=>`${({'class':'className','for':'htmlFor'}[a.name]||a.name)}={${JSON.stringify(a.value)}}`);
  if(n.matches('th'))attrs.push('scope="col"');if(n.matches('h2[id],h3[id]'))attrs.push('tabIndex={-1}');
- if(n.matches('.table-scroll'))attrs.push('tabIndex={0}','role="region"',`aria-label={${JSON.stringify('比較表：'+(n.previousElementSibling?.textContent.trim()??'学習資料'))}}`);
+ if(n.matches('.table-scroll'))attrs.push('tabIndex={0}','role="region"',`aria-label={${JSON.stringify(tableLabel(n))}}`);
  if(n.matches('input'))attrs.push(`onChange={updateProgress}`);
  if(n.matches('.count')){const card=n.closest('.checklist-card'),i=cardIndices.get(card);return `<span className="count">{\`\${progress[${i}]??0} / ${card.querySelectorAll('input').length} 完了\`}</span>`;}
  const tag=n.tagName.toLowerCase();return '<'+tag+' '+attrs.join(' ')+(['input','br','hr','img'].includes(tag)?' />':'>'+[...n.childNodes].map(jsx).join('')+'</'+tag+'>');

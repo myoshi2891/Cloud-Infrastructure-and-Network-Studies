@@ -77,7 +77,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"を問う試験です。そのため本ガイドは、各タスクを次の4ステップで解説します。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：SAP-C02\n                    は「サービスの名前を知っているか」ではなく、複数の要件(コスト・可用性・セキュリティ・運用負荷)が衝突する場面で、最も適切な組み合わせを選べるかを問う試験です。そのため本ガイドは、各タスクを次の4ステップで解説します。"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：1. このガイドの使い方"}>
 {"\n                    "}
 <table>
 <thead>
@@ -231,7 +231,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-0" label={"2. Domain 2 の全体像"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    D2[\"Domain 2: Design for New Solutions\"]\n    T1[\"Task 2.1<br/>デプロイ戦略<br/>運用上の優秀性\"]\n    T2[\"Task 2.2<br/>ビジネス継続性<br/>信頼性 DR\"]\n    T3[\"Task 2.3<br/>セキュリティ統制<br/>セキュリティ\"]\n    T4[\"Task 2.4<br/>信頼性要件<br/>信頼性 可用性\"]\n    T5[\"Task 2.5<br/>パフォーマンス目標<br/>パフォーマンス効率\"]\n    T6[\"Task 2.6<br/>コスト最適化<br/>コスト最適化\"]\n    D2 --> T1\n    D2 --> T2\n    D2 --> T3\n    D2 --> T4\n    D2 --> T5\n    D2 --> T6\n\n    classDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\n    class D2 highlightFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：2. Domain 2 の全体像"}>
 {"\n                    "}
 <table>
 <thead>

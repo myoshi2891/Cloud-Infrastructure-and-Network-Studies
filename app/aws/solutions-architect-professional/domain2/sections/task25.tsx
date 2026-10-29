@@ -188,7 +188,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-15" label={"Step 2-B: ストレージの選択"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    S[\"データの種類は?\"] --> O{\"オブジェクト<br/>画像 動画 ログ\"}\n    S --> B{\"ブロック<br/>OS 起動 DB\"}\n    S --> F{\"共有ファイル\"}\n    O --> S3[\"Amazon S3\"]\n    B --> EBS[\"Amazon EBS\"]\n    B --> IS[\"インスタンスストア<br/>一時データ 超高速\"]\n    F --> EFS[\"Amazon EFS<br/>Linux NFS\"]\n    F --> FSX[\"Amazon FSx<br/>Windows Lustre ONTAP OpenZFS\"]"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: ストレージの選択"}>
 {"\n                    "}
 <table>
 <thead>
@@ -484,7 +484,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-16" label={"Step 2-D: 目的特化型データベース(Purpose-built databases)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart TB\n    Q[\"データとアクセスの特徴は?\"] --> A{\"複雑な結合 ACID<br/>リレーショナル\"}\n    Q --> B{\"キーによる高速アクセス<br/>大規模 ミリ秒\"}\n    Q --> C{\"マイクロ秒の<br/>インメモリ\"}\n    Q --> D{\"関係性 グラフ\"}\n    Q --> E{\"時系列\"}\n    Q --> F{\"分析 DWH\"}\n    Q --> G{\"全文検索 ログ分析\"}\n    A --> RDS[\"Amazon RDS または Aurora\"]\n    B --> DDB[\"Amazon DynamoDB\"]\n    C --> EC[\"ElastiCache または MemoryDB\"]\n    D --> NEP[\"Amazon Neptune\"]\n    E --> TS[\"Timestream for InfluxDB<br/>新規 / LiveAnalytics は既存顧客\"]\n    F --> RS[\"Amazon Redshift\"]\n    G --> OS[\"Amazon OpenSearch Service\"]"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: 目的特化型データベース(Purpose-built databases)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -633,7 +633,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-17" label={"Step 2-E: キャッシュ、バッファリング、レプリカ"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：flowchart LR\n    U[\"ユーザー\"] --> CF[\"CloudFront<br/>エッジキャッシュ\"]\n    CF --> ALB[\"ALB\"]\n    ALB --> APP[\"アプリ\"]\n    APP --> CACHE[\"ElastiCache<br/>アプリ側キャッシュ\"]\n    APP --> RP[\"RDS Proxy<br/>接続プール\"]\n    RP --> W[\"DB ライター\"]\n    RP --> RR[\"DB リードレプリカ\"]\n    APP --> Q[\"SQS または Kinesis<br/>バッファ\"]\n\n    classDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\n    classDef warnFill fill:#ffe8c7,stroke:#a85f0a,color:#4a2a00;\n    class CF highlightFill\n    class CACHE warnFill"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: キャッシュ、バッファリング、レプリカ"}>
 {"\n                    "}
 <table>
 <thead>
