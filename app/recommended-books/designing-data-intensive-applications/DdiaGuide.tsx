@@ -121,51 +121,34 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"項目"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"Martin Kleppmann"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    ケンブリッジ大学准教授。分散システムと暗号プロトコルの研究者。かつて\n                                    LinkedIn や Rapportive\n                                    で大規模データ基盤に従事。ローカルファースト・ソフトウェア運動の立ち上げにも関わる\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"Chris Riccomini（第2版から共著）"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    PayPal・LinkedIn・WePay\n                                    で15年以上の経験を持つソフトウェアエンジニア。現在は\n                                    Materialized View Capital\n                                    を運営し、インフラ系スタートアップに投資\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -211,131 +194,91 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"項目"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"第1版（2017年）"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"第2版（2026年）"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"著者"}
 </td>
-{"\n                                "}
 <td>
 {"Martin Kleppmann（単著）"}
 </td>
-{"\n                                "}
 <td>
 {"Martin Kleppmann, Chris Riccomini（共著）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"刊行時期"}
 </td>
-{"\n                                "}
 <td>
 {"2017年3月"}
 </td>
-{"\n                                "}
 <td>
 {"2026年2月〜3月"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"章構成"}
 </td>
-{"\n                                "}
 <td>
 {"全12章・3パート"}
 </td>
-{"\n                                "}
 <td>
 {"全14章・5パート"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"想定読者"}
 </td>
-{"\n                                "}
 <td>
 {"中級〜上級エンジニア"}
 </td>
-{"\n                                "}
 <td>
 {"中級〜上級エンジニア"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"主な追加テーマ"}
 </td>
-{"\n                                "}
 <td>
 {"―"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    クラウドネイティブ・オブジェクトストレージ・ベクトル埋め込み・ローカルファースト同期・Durable\n                                    Execution・AIとデータシステムの倫理章\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"O'Reillyページ"}
 </td>
-{"\n                                "}
 <td>
 <code>
 {"9781491903063"}
 </code>
 </td>
-{"\n                                "}
 <td>
 <code>
 {"9781098119058"}
 </code>
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -371,295 +314,206 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"Part"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"第1版の該当章"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"第2版の該当章"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"主な変更点"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"基礎"}
 </td>
-{"\n                                "}
 <td>
 {"1章（信頼性・拡張性・保守性）"}
 </td>
-{"\n                                "}
 <td>
 {"1章＋2章に分割・拡張"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    1章内に「クラウド vs\n                                    自己ホスティング」節を追加、1章・2章の内容を再編・拡張\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"データモデル"}
 </td>
-{"\n                                "}
 <td>
 {"2章"}
 </td>
-{"\n                                "}
 <td>
 {"3章"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    GraphQL・DataFrameを新規追加（Datalog・Property\n                                    Graphは第1版から存在し、記述を再編・拡張）\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ストレージ"}
 </td>
-{"\n                                "}
 <td>
 {"3章"}
 </td>
-{"\n                                "}
 <td>
 {"4章"}
 </td>
-{"\n                                "}
 <td>
 {"ベクトル埋め込み・列指向クエリのベクトル化実行を追加"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"エンコーディング"}
 </td>
-{"\n                                "}
 <td>
 {"4章"}
 </td>
-{"\n                                "}
 <td>
 {"5章"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Durable Execution／Workflows・イベント駆動アーキテクチャを追加\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"レプリケーション"}
 </td>
-{"\n                                "}
 <td>
 {"5章"}
 </td>
-{"\n                                "}
 <td>
 {"6章"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Sync Engines・ローカルファースト・マルチリージョン運用を追加\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"パーティショニング"}
 </td>
-{"\n                                "}
 <td>
 {"6章"}
 </td>
-{"\n                                "}
 <td>
 {"7章（章題を「Sharding」に変更）"}
 </td>
-{"\n                                "}
 <td>
 {"マルチテナンシー観点を追加"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"トランザクション"}
 </td>
-{"\n                                "}
 <td>
 {"7章"}
 </td>
-{"\n                                "}
 <td>
 {"8章"}
 </td>
-{"\n                                "}
 <td>
 {"「Exactly-Once Message Processing」を再論"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"分散システムの問題"}
 </td>
-{"\n                                "}
 <td>
 {"8章"}
 </td>
-{"\n                                "}
 <td>
 {"9章"}
 </td>
-{"\n                                "}
 <td>
 {"形式手法・ランダム化テストを追加"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"一貫性と合意"}
 </td>
-{"\n                                "}
 <td>
 {"9章"}
 </td>
-{"\n                                "}
 <td>
 {"10章"}
 </td>
-{"\n                                "}
 <td>
 {"ID生成器・論理クロックの節を新設"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"バッチ処理"}
 </td>
-{"\n                                "}
 <td>
 {"10章"}
 </td>
-{"\n                                "}
 <td>
 {"11章"}
 </td>
-{"\n                                "}
 <td>
 {"オブジェクトストアを主軸に再構成"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ストリーム処理"}
 </td>
-{"\n                                "}
 <td>
 {"11章"}
 </td>
-{"\n                                "}
 <td>
 {"12章"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    第1版の「Partitioned Logs」「Event Sourcing」は第12章「Log-Based\n                                    Message Brokers」として整理・改称。「Event Sourcing and\n                                    CQRS」はデータモデルを扱う第3章へ移動\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"未来の展望"}
 </td>
-{"\n                                "}
 <td>
 {"12章「データシステムの未来」"}
 </td>
-{"\n                                "}
 <td>
 {"13章「ストリーミングシステムの哲学」に改題"}
 </td>
-{"\n                                "}
 <td>
 {"Unbundling Databasesの議論を継承・発展"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"倫理"}
 </td>
-{"\n                                "}
 <td>
 {"12章の一節「正しいことをする」"}
 </td>
-{"\n                                "}
 <td>
 {"14章「正しいことをする」（独立章化）"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    予測分析・バイアス・プライバシー／トラッキングは第1版12章にも存在。AI時代を踏まえて再編・大幅加筆\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -729,79 +583,54 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"トレードオフの軸"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"選択肢A"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"選択肢B"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ワークロードの性質"}
 </td>
-{"\n                                "}
 <td>
 {"OLTP（Operational／日常のトランザクション処理）"}
 </td>
-{"\n                                "}
 <td>
 {"OLAP（Analytical／集計・分析処理）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"ホスティング形態"}
 </td>
-{"\n                                "}
 <td>
 {"クラウドサービス（マネージド）"}
 </td>
-{"\n                                "}
 <td>
 {"自己ホスティング（オンプレミス／セルフマネージド）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ノード構成"}
 </td>
-{"\n                                "}
 <td>
 {"単一ノード（Single-Node）"}
 </td>
-{"\n                                "}
 <td>
 {"分散システム（Distributed）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -887,79 +716,54 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"障害の種類"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"具体例"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"主な対策"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ハードウェア障害"}
 </td>
-{"\n                                "}
 <td>
 {"ディスク故障、電源障害"}
 </td>
-{"\n                                "}
 <td>
 {"冗長化（RAID、レプリケーション）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"ソフトウェアエラー"}
 </td>
-{"\n                                "}
 <td>
 {"バグ、リソースリーク、カスケード障害"}
 </td>
-{"\n                                "}
 <td>
 {"テスト、モニタリング、サーキットブレーカー"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"人的エラー"}
 </td>
-{"\n                                "}
 <td>
 {"設定ミス、誤ったデプロイ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    設定検証・レビュープロセス、段階的リリース、ロールバック機構\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -987,79 +791,54 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"指標"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"説明"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"用途"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"p50（中央値）"}
 </td>
-{"\n                                "}
 <td>
 {"リクエストの半数がこの時間以内に完了"}
 </td>
-{"\n                                "}
 <td>
 {"典型的なユーザー体験の把握"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"p95 / p99"}
 </td>
-{"\n                                "}
 <td>
 {"上位5%・1%の遅いリクエストの境界値"}
 </td>
-{"\n                                "}
 <td>
 {"SLA設定、遅いリクエストの検知"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"平均（Average）"}
 </td>
-{"\n                                "}
 <td>
 {"全体の合計÷件数"}
 </td>
-{"\n                                "}
 <td>
 {"参考値程度に留める（テールを隠しやすいため非推奨）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1125,95 +904,66 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"モデル"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"得意な用途"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"代表的なクエリ言語"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"弱点"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"リレーショナル"}
 </td>
-{"\n                                "}
 <td>
 {"多対多の関係、複雑な結合、強いスキーマ"}
 </td>
-{"\n                                "}
 <td>
 {"SQL"}
 </td>
-{"\n                                "}
 <td>
 {"ドキュメント全体の局所性が低い"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"ドキュメント"}
 </td>
-{"\n                                "}
 <td>
 {"ツリー構造、局所性の高いデータ、柔軟なスキーマ"}
 </td>
-{"\n                                "}
 <td>
 {"JSON操作クエリ"}
 </td>
-{"\n                                "}
 <td>
 {"多対多関係の表現が苦手"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"グラフ"}
 </td>
-{"\n                                "}
 <td>
 {"高度に相互接続したデータ（SNS、レコメンド）"}
 </td>
-{"\n                                "}
 <td>
 {"Cypher、SPARQL、Datalog"}
 </td>
-{"\n                                "}
 <td>
 {"単純な表形式データには過剰"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1308,111 +1058,76 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"観点"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"B-Tree"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"LSM-Tree"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"書き込みパターン"}
 </td>
-{"\n                                "}
 <td>
 {"インプレース更新"}
 </td>
-{"\n                                "}
 <td>
 {"追記型（Append-Only）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"書き込みスループット"}
 </td>
-{"\n                                "}
 <td>
 {"中程度"}
 </td>
-{"\n                                "}
 <td>
 {"高い（順次書き込みが中心）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"読み取り性能"}
 </td>
-{"\n                                "}
 <td>
 {"安定して高速"}
 </td>
-{"\n                                "}
 <td>
 {"Compaction次第で変動しうる"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"代表的な採用例"}
 </td>
-{"\n                                "}
 <td>
 {"多くのRDBMS（MySQL/InnoDB、PostgreSQL）"}
 </td>
-{"\n                                "}
 <td>
 {"Cassandra、RocksDB、LevelDB"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"空間効率"}
 </td>
-{"\n                                "}
 <td>
 {"断片化しやすい"}
 </td>
-{"\n                                "}
 <td>
 {"Compactionで最適化されるが一時的に肥大化"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1486,95 +1201,66 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"フォーマット"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"特徴"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"スキーマ"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"主な用途"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"JSON / XML"}
 </td>
-{"\n                                "}
 <td>
 {"人間が読みやすい、テキストベース"}
 </td>
-{"\n                                "}
 <td>
 {"任意（緩い）"}
 </td>
-{"\n                                "}
 <td>
 {"Web API、設定ファイル"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"Protocol Buffers"}
 </td>
-{"\n                                "}
 <td>
 {"バイナリ、コンパクト、コード生成前提"}
 </td>
-{"\n                                "}
 <td>
 {"必須（IDLで定義）"}
 </td>
-{"\n                                "}
 <td>
 {"gRPC、内部サービス間通信"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"Avro"}
 </td>
-{"\n                                "}
 <td>
 {"バイナリ、スキーマをデータと分離管理"}
 </td>
-{"\n                                "}
 <td>
 {"必須（動的にも対応）"}
 </td>
-{"\n                                "}
 <td>
 {"Kafkaなどのストリーミング基盤"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1644,111 +1330,78 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"方式"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"書き込み経路"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"長所"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"短所"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"代表例"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"シングルリーダー"}
 </td>
-{"\n                                "}
 <td>
 {"すべての書き込みが1つのリーダーを経由"}
 </td>
-{"\n                                "}
 <td>
 {"実装がシンプル、整合性を保ちやすい"}
 </td>
-{"\n                                "}
 <td>
 {"リーダー障害時の切替コスト、地理的に遠いと書き込みが遅い"}
 </td>
-{"\n                                "}
 <td>
 {"MySQL、PostgreSQLの標準レプリケーション"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"マルチリーダー"}
 </td>
-{"\n                                "}
 <td>
 {"複数の拠点それぞれにリーダーを配置"}
 </td>
-{"\n                                "}
 <td>
 {"拠点ごとに低レイテンシ書き込みが可能"}
 </td>
-{"\n                                "}
 <td>
 {"書き込み競合（Conflict）の解決が必要"}
 </td>
-{"\n                                "}
 <td>
 {"複数リージョンにまたがるDB、オフライン対応アプリ"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"リーダーレス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    どのノードにも書き込み可能、読み書きクォーラム（w + r >\n                                    n）で読み取りの鮮度を調整\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    単一障害点がなく、一部ノードが落ちても読み書きを継続しやすい（実際の可用性・耐障害性はレプリケーション係数、読み取り／書き込みクォーラムの設定、修復と競合解決の実装に依存する）\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"読み取り時の修復（Read Repair）が必要"}
 </td>
-{"\n                                "}
 <td>
 {"Amazon Dynamo系（Cassandra、Riak）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1842,79 +1495,54 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"観点"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"キー範囲シャーディング"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"ハッシュシャーディング"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"範囲クエリ"}
 </td>
-{"\n                                "}
 <td>
 {"得意（隣接するキーが同じシャードに集まる）"}
 </td>
-{"\n                                "}
 <td>
 {"苦手（キーが分散するため複数シャードへの問い合わせが必要）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"負荷分散"}
 </td>
-{"\n                                "}
 <td>
 {"偏りやすい（ホットスポットのリスク）"}
 </td>
-{"\n                                "}
 <td>
 {"均一になりやすい"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"リバランシング"}
 </td>
-{"\n                                "}
 <td>
 {"手動・自動どちらの運用も一般的"}
 </td>
-{"\n                                "}
 <td>
 {"ハッシュリングによる自動化がしやすい"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -1980,67 +1608,47 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"分離レベル"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"防げる異常"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"防げない異常"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"代表的な実装"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"Read Committed"}
 </td>
-{"\n                                "}
 <td>
 {"Dirty Read"}
 </td>
-{"\n                                "}
 <td>
 {"Non-Repeatable Read、Write Skew"}
 </td>
-{"\n                                "}
 <td>
 {"多くのRDBMSのデフォルト"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"Snapshot Isolation"}
 </td>
-{"\n                                "}
 <td>
 {"Non-Repeatable Read、大半のLost Update"}
 </td>
-{"\n                                "}
 <td>
 {"Write Skew、一部のPhantom"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    PostgreSQLの"}
 <code>
@@ -2056,31 +1664,22 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 </code>
 {"など）が最新コミットを見るなど挙動が異なり、Snapshot\n                                    Isolationと同一視できない\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"Serializable"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    ほぼ全ての異常（トランザクションを直列実行したのと同じ結果を保証）\n                                "}
 </td>
-{"\n                                "}
 <td>
 {"なし"}
 </td>
-{"\n                                "}
 <td>
 {"Serializable Snapshot Isolation (SSI) など"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -2190,95 +1789,65 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"落とし穴の種類"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"具体例"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"設計上の対策"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ネットワークの非同期性"}
 </td>
-{"\n                                "}
 <td>
 {"メッセージの遅延・順序逆転・重複"}
 </td>
-{"\n                                "}
 <td>
 {"タイムアウト設計、冪等な処理"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"クロックの不正確さ"}
 </td>
-{"\n                                "}
 <td>
 {"NTPドリフト、うるう秒"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    単調時計（Monotonic\n                                    Clock）を経過時間計測に使う、時刻に依存したロジックを避ける\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"プロセスの一時停止"}
 </td>
-{"\n                                "}
 <td>
 {"GCポーズ、CPUスチール"}
 </td>
-{"\n                                "}
 <td>
 {"リースの有効期限をフェンシングトークンで保護する"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"ビザンチン障害"}
 </td>
-{"\n                                "}
 <td>
 {"悪意あるノード・不正なデータ送信"}
 </td>
-{"\n                                "}
 <td>
 {"多くの一般的な分散DBでは想定外（信頼された環境が前提）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -2474,79 +2043,54 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"処理モデル"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"特徴"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"代表例"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"MapReduce"}
 </td>
-{"\n                                "}
 <td>
 {"Map/Reduceの2段階、フォールトトレラント、ディスク経由が多い"}
 </td>
-{"\n                                "}
 <td>
 {"Hadoop MapReduce"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"Dataflowエンジン"}
 </td>
-{"\n                                "}
 <td>
 {"演算子グラフを最適化して実行、中間結果をメモリ活用しやすい"}
 </td>
-{"\n                                "}
 <td>
 {"Apache Spark、Apache Flink（バッチモード）"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"クエリ言語層"}
 </td>
-{"\n                                "}
 <td>
 {"SQLライクな高水準記述からジョブを生成"}
 </td>
-{"\n                                "}
 <td>
 {"Hive、Spark SQL"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -2636,63 +2180,42 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"概念"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"説明"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ウィンドウ処理"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    一定の時間範囲（タンブリング／スライディングウィンドウ）でイベントを集約する\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"イベント時刻 vs 処理時刻"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    イベントが実際に発生した時刻と、システムがそれを処理した時刻のズレをどう扱うかが重要な論点\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"ストリーム結合（Stream-Stream Join、Stream-Table Join）"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    複数のストリームやテーブルを結合する際、状態（State）の保持方法が性能・正確性を左右する\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -2810,87 +2333,58 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"テーマ"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"主な論点"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"予測分析とバイアス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    機械学習モデルが既存の社会的バイアスを増幅・固定化するリスク\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"責任と説明責任"}
 </td>
-{"\n                                "}
 <td>
 {"自動化された意思決定の結果に誰が責任を持つのか"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"フィードバックループ"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    予測が現実に影響を与え、その影響がさらに予測データに反映される自己強化ループ\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"プライバシーとトラッキング"}
 </td>
-{"\n                                "}
 <td>
 {"監視・同意・データの利用目的の透明性"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"データを資産・権力として捉える視点"}
 </td>
-{"\n                                "}
 <td>
 {"産業革命期の教訓との比較、法制度と自主規制のバランス"}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
@@ -3194,75 +2688,50 @@ export default function DdiaGuide() { const [checked, setChecked] = useState(0);
 <div className="table-scroll">
 {"\n                    "}
 <table>
-{"\n                        "}
 <thead>
-{"\n                            "}
 <tr className="header">
-{"\n                                "}
 <th scope="col">
 {"ステップ"}
 </th>
-{"\n                                "}
 <th scope="col">
 {"内容"}
 </th>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </thead>
-{"\n                        "}
 <tbody>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"1. 自社システムの棚卸し"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    使用中のDB/メッセージング基盤がDDIAのどの分類に当てはまるかをマッピングする\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"2. 障害訓練"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Chaos\n                                    Engineering的な手法で、第9章の「部分障害」を意図的に発生させ挙動を確認する\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="odd">
-{"\n                                "}
 <td>
 {"3. 専門書への展開"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    ストレージ内部をより深く知りたい場合はAlex Petrov著『Database\n                                    Internals』、分散合意をさらに深く学びたい場合は原論文（Raft、Paxos）へ進む\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                            "}
 <tr className="even">
-{"\n                                "}
 <td>
 {"4. コミュニティ・カンファレンス"}
 </td>
-{"\n                                "}
 <td>
 {"\n                                    Monster SCALE Summit、QConなど、著者本人や実務家の講演を追う\n                                "}
 </td>
-{"\n                            "}
 </tr>
-{"\n                        "}
 </tbody>
-{"\n                    "}
 </table>
 {"\n                "}
 </div>
