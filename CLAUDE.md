@@ -2,7 +2,7 @@
 
 ## 2026-10-29: SAP-C02 Domain 3
 
-`app/aws/solutions-architect-professional/domain3/` に Server `page.tsx`、Client `SapDomain3Guide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、7分割の `sections/`、定数・原本テーマJSON・全派生色JSON・スコープCSSを追加。全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本から移行した。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、チェック進捗を保持。ホーム・HeaderのDomain 3（25%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain3.mjs <foundation|task31|task32|task33|task34|task35|appendix>` で固定Git原本から再生成できる。
+`app/aws/solutions-architect-professional/domain3/` に Server `page.tsx`、Client `SapDomain3Guide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、7分割の `sections/`、定数・原本テーマJSON・全派生色JSON・スコープCSSを追加。全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本から移行した。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、チェック進捗を保持。ホーム・HeaderのDomain 3（25%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain3.mjs <foundation|task31|task32|task33|task34|task35|appendix>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。
 
 ## 2026-10-29: 移行済み原本の一括アーカイブ
 

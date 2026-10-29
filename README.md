@@ -2,6 +2,14 @@
 
 最終更新日: 2026-10-29
 
+## 2026-10-29: SAP-C02 Domain 3 移行
+
+`/aws/solutions-architect-professional/domain3` へ全5タスクを移行。77表（th200・td1228）・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本どおり保持。明色配色・Hero・表・コールアウト・点と番号・入れ子・字下げ・段落余白、JSON/YAML/Bashコードの全文・空行・構文色を復元した。目次の現在位置・開閉・hash/focus、タスク別チェック進捗、ホーム・Headerの25%導線と明色フッターへ統合。
+
+Inventory `f04fcb46`、Red `237da13e`、基盤 `0f6bff7d`、Task 3.1 `6858f73e`、3.2 `ea322af1`、3.3 `d5e4d57a`、3.4 `9e575ac7`、3.5 `c64b0a29`、付録 `e105888b`、統合 `93bf6256` の段階別コミットを実施。原本固定fixtureで全文・表結合・リスト階層・配置順・コード行・CSS宣言値・装飾クラスと、Mermaidの原本DSL・全派生色を照合する。原本不在下の全体Vitestは472ファイル・4378件すべて成功（`bun run test -- --maxWorkers=4`）。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本不在でfixture再生成一致も確認した。静的集計1299ソース・416対応（32%）・493テストファイル・139ルートは実行成功数とは区別する。
+
+原本HTML/Markdownは `082d4c3d` でバイト一致・SHA-256一致を確認して `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` へ移動。保存先・サイズ・ハッシュ・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。直下には未移行HTML7件のみ残る。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+
 ## 2026-10-29: 移行済み原本の一括アーカイブ
 
 直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
