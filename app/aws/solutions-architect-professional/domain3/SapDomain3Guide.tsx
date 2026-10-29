@@ -7,6 +7,7 @@ import Task32 from './sections/task32';
 import Task33 from './sections/task33';
 import Task34 from './sections/task34';
 import Task35 from './sections/task35';
+import Appendix from './sections/appendix';
 /** Domain 3本文と各タスクの独立したチェック進捗。 */
 export default function SapDomain3Guide() {
  const [progress,setProgress]=useState<Record<string,number>>({});
@@ -19,5 +20,5 @@ export default function SapDomain3Guide() {
   setProgress(previous=>({...previous,[index]:card.querySelectorAll('input:checked').length}));
  }
  const props={progress,updateProgress};
- return <div className="sap-domain3-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task31 {...props}/><Task32 {...props}/><Task33 {...props}/><Task34 {...props}/><Task35 {...props}/></main></div></div>;
+ return <div className="sap-domain3-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task31 {...props}/><Task32 {...props}/><Task33 {...props}/><Task34 {...props}/><Task35 {...props}/><Appendix {...props}/></main></div></div>;
 }
