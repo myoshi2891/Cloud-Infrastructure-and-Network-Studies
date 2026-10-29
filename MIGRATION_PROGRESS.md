@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-10-29)
 
+## 2026-10-29: SAP-C02 Domain 3 移行
+
+`/aws/solutions-architect-professional/domain3` へ全5タスクを移行。77表（th200・td1228）・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本どおり保持。明色配色・Hero・表・コールアウト・点と番号・入れ子・字下げ・段落余白、JSON/YAML/Bashコードの全文・空行・構文色を復元した。目次の現在位置・開閉・hash/focus、タスク別チェック進捗、ホーム・Headerの25%導線と明色フッターへ統合。
+
+Inventory `f04fcb46`、Red `237da13e`、基盤 `0f6bff7d`、Task 3.1 `6858f73e`、3.2 `ea322af1`、3.3 `d5e4d57a`、3.4 `9e575ac7`、3.5 `c64b0a29`、付録 `e105888b`、統合 `93bf6256` の段階別コミットを実施。原本固定fixtureで全文・表結合・リスト階層・配置順・コード行・CSS宣言値・装飾クラスと、Mermaidの原本DSL・全派生色を照合する。原本不在下の全体Vitestは472ファイル・4378件すべて成功（`bun run test -- --maxWorkers=4`）。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本不在でfixture再生成一致も確認した。静的集計1299ソース・416対応（32%）・493テストファイル・139ルートは実行成功数とは区別する。
+
+原本HTML/Markdownは `082d4c3d` でバイト一致・SHA-256一致を確認して `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` へ移動。保存先・サイズ・ハッシュ・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。直下には未移行HTML7件のみ残る。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+
 ## 2026-10-29: 移行済み原本の一括アーカイブ
 
 直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
@@ -2221,17 +2229,17 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** 移行済み原本4教材のHTML・Markdown計8ファイルをアーカイブ。
+- **最新完了タスク:** SAP-C02 Domain 3の全文移行・導線統合・原本アーカイブ。
 - **最終更新日:** 2026-10-29
-- **最新実装 HEAD:** `e7491792`（進捗同期直前HEAD。アーカイブ移動は `bb338096`）
-- **仕様同期コミット:** `e7491792`（保存先・復元情報・検証結果を同期）
-- **前回進捗同期コミット:** `dd3c9021`（SAP Domain 2完了記録の整形）
-- **検証状態:** 原本不在下でDDIA・SAP Domain 2・DVA Domain 4・SCS総合とDomain 1の関連49ファイル・409件すべて成功。全8ファイルのバイト一致・SHA-256一致を確認。対象Markdown lint成功。直近の全体Vitestは470ファイル・4346件成功、その後の読み上げ名補正後は関連183件成功。静的集計1285ソース・412対応・491テストファイル・138ルート。
-- **ビルド状態:** npm・ビルド未実行。ファイル移動と文書更新のみでアプリ実装は変更なし。
-- **HTML残数:** 直下HTML8件、すべて未移行。移行済みの直下HTMLは0件。
-- **アーカイブ:** `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に保存先・サイズ・SHA-256・復元元Gitコミットを記録。archiveはGit管理外のローカル保存先。
-- **既存差分:** なし。DDIAの表空白対策は作業開始前に `8e888247` でコミット済み。
-- **次の作業:** 次ページはユーザー指定待ち。原本の一括アーカイブは完了。
+- **最新実装 HEAD:** `b91b205e`（進捗同期直前HEAD。導線統合 `93bf6256`、原本保存 `082d4c3d`）
+- **仕様同期コミット:** `b91b205e`（仕様・全体検証・静的集計・再開情報を同期）
+- **前回進捗同期コミット:** `13e845fd`（移行済み4教材の一括アーカイブ）
+- **検証状態:** 原本不在下の全体Vitest472ファイル・4378件すべて成功。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本インベントリと固定Git fixture再生成一致、HTML/Markdownのバイト一致・SHA-256一致も確認。静的集計1299ソース・416対応（32%）・493テストファイル・139ルート。
+- **ビルド状態:** ユーザー指定に従いnpm・ビルド未実行。開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
+- **HTML残数:** 直下HTML7件、すべて未移行。移行済みの直下HTMLは0件。
+- **アーカイブ:** SAP Domain 3の保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはGit管理外のローカル保存先。
+- **既存差分:** なし。
+- **次の作業:** 次ページはユーザー指定待ち。SAP Domain 3の移行・統合・原本保存は完了。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3570,11 +3578,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `e7491792`。前回進捗同期コミット: `dd3c9021`。仕様同期コミット: `e7491792`。最終更新日: 2026-10-29。移行済み原本4教材（DDIA、SAP Domain 2、DVA Domain 4、SCS総合）のHTML・Markdown計8ファイルを `bb338096` でアーカイブ済み。保存先・サイズ・SHA-256・復元元Gitコミットは `docs/migration-inventory/completed-guides-2026-10-29.archive.json` を参照。archiveはGit管理外。Gitからの復元元は `8e888247`。
+最新実装 HEAD: `b91b205e`。前回進捗同期コミット: `13e845fd`。仕様同期コミット: `b91b205e`。最終更新日: 2026-10-29。SAP-C02 Domain 3（`/aws/solutions-architect-professional/domain3`）の全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を全文移行済み。点・番号・階層・段落余白・コード装飾・図の原本配色を保持し、25%の共通導線と明色フッターへ統合した。
 
-検証: 原本不在下で4教材の関連49ファイル・409件すべて成功。移動前後のバイト一致・SHA-256一致と対象Markdown lintを確認。今回のアプリコード変更はなし。npm・ビルドは未実行。
+原本HTML/Markdownは `082d4c3d` でアーカイブ済み。保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはローカル専用・Git管理外。固定Git fixtureは `13e845fd` 時点の原本から再生成できる。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML8件はすべて未移行で、移行済み原本の残留は0件。次の移行でもInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+検証: 原本不在下の全体Vitest472ファイル・4378件すべて成功。関連6ファイル・184件、最終型検査・全体ESLint・対象Markdown lint成功。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+
+次の作業: 次ページはユーザー指定待ち。直下HTML7件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
