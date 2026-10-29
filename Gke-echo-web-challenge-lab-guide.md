@@ -1,4 +1,5 @@
 # Google Cloud チャレンジラボ解説ガイド
+
 ## コンテナイメージのビルド・push と GKE へのデプロイ（echo-web）
 
 > **対象読者**: Docker・Kubernetes・Google Cloud を初めて触る方
@@ -92,7 +93,7 @@ flowchart TB
 
 ### 2-1. イメージ名の読み方
 
-```
+```text
 gcr.io / my-project-123 / echo-app : v1
 ```
 

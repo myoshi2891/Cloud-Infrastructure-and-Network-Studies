@@ -1,4 +1,5 @@
 # Google Cloud チャレンジラボ解説ガイド
+
 ## セキュアな Windows 環境を踏み台ホスト（Bastion Host）と VPC で構築する
 
 > **対象読者**: Google Cloud 初学者〜Professional Cloud Architect（PCA）受験準備中の方
@@ -438,7 +439,7 @@ gcloud compute instances create vm-securehost \
 | `--network-interface=network=default,no-address`（2つ目） | default に接続し、**外部 IP を付けない** |
 
 > 🔑 **最重要**: `no-address` が「インターネットから隔離される」ことの実体です。**外部 IP がなければ、インターネットから直接到達できず、インターネットへ直接接続もできません。**
-
+>
 > ⚠️ **イメージ名について**: ラボ環境や時期によってイメージファミリー名が異なる場合があります。エラーが出たら `gcloud compute images list --filter="family~windows-2016"` で確認してください。
 
 ### 7.3 踏み台ホスト `vm-bastionhost` の作成
