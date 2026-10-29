@@ -14,7 +14,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 1: 何を問われるか"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 1: 何を問われるか"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 23：Step 1: 何を問われるか"}>
 {"\n                    "}
 <table>
 <thead>
@@ -135,7 +135,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {": 「明示的 Deny が最優先 → 暗黙的\n                    Deny(何も許可がなければ拒否) → Allow があって初めて許可」。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-A: IAM と最小権限"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 24：Step 2-A: IAM と最小権限"}>
 {"\n                    "}
 <table>
 <thead>
@@ -379,7 +379,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-B: ネットワーク統制(ルートテーブル、セキュリティグループ、NACL)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-B: ネットワーク統制(ルートテーブル、セキュリティグループ、NACL)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 25：Step 2-B: ネットワーク統制(ルートテーブル、セキュリティグループ、NACL)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -528,7 +528,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-10" label={"Step 2-C: 暗号化(保存時・転送時)"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-C: 暗号化(保存時・転送時)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 26：Step 2-C: 暗号化(保存時・転送時)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -706,7 +706,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"に VPC から AWS\n                    サービスへ接続することです。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-D: AWS サービスエンドポイント(VPC エンドポイント)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 27：Step 2-D: AWS サービスエンドポイント(VPC エンドポイント)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -819,7 +819,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-E: 認証情報の管理"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-E: 認証情報の管理"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 28：Step 2-E: 認証情報の管理"}>
 {"\n                    "}
 <table>
 <thead>
@@ -909,7 +909,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    Step 2-F: マネージドセキュリティサービス\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-F: マネージドセキュリティサービス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 29：Step 2-F: マネージドセキュリティサービス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1105,7 +1105,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 2-H: パッチ管理"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 2-H: パッチ管理"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 30：Step 2-H: パッチ管理"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1188,7 +1188,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Step 3: Task 2.3 試験のコツ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Step 3: Task 2.3 試験のコツ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 31：Step 3: Task 2.3 試験のコツ"}>
 {"\n                    "}
 <table>
 <thead>

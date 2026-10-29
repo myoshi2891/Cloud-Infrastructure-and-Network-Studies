@@ -11,7 +11,7 @@ import { snapshotDdia, snapshotCssRules } from '@/scripts/ddia-fidelity.mjs';
 import { squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 describe('DDIA 全量移行',()=>{
- it('ホーム・Header共通のBooks導線',()=>{const entry=EXAMS.find(e=>e.id==='ddia');expect(entry?.href).toBe('/recommended-books/designing-data-intensive-applications');expect(entry?.provider).toBe('Books');expect(entry?.domains[0]?.href).toBe(entry?.href);});
+ it('ホーム・Header共通のBooks導線',()=>{const entry=EXAMS.find(e=>e.id==='ddia');expect(entry?.href).toBe('/recommended-books/designing-data-intensive-applications');expect(entry?.provider).toBe('Books');expect(entry?.domains[0]?.href).toBe(entry?.href);expect(fs.readFileSync('app/globals.css','utf8')).toMatch(/@utility icon-theme-ddia\s*\{\s*background:\s*var\(--color-theme-accelerate-bg\);\s*color:\s*var\(--color-theme-accelerate-fg\);\s*\}/);});
  it('全14図のMermaid構文解析',async()=>{mermaid.initialize({startOnLoad:false});for(const chart of Object.values(DIAGRAMS))expect(await mermaid.parse(chart)).toBeTruthy();});
 
  it('本文の全要素・属性・階層・順序が原本と一致',()=>{expect(snapshotDdia(render(<Guide/>).container)).toEqual(fixture.structure);});
@@ -30,10 +30,15 @@ describe('DDIA 全量移行',()=>{
    const actual=rules.find(r=>r.selector===selectors&&r.media===original.media);
    expect(actual,selectors).toBeDefined();
    const mapping:Record<string,string>={bg:'background','bg-card':'card','bg-card-2':'gcp-code-background',border:'gcp-border','border-soft':'gcp-border',text:'foreground','text-dim':'muted-foreground','text-faint':'muted-foreground',accent:'google-blue','accent-soft':'gcp-border-bright','accent-bg':'gcp-code-background',danger:'google-red','danger-bg':'card',warn:'google-yellow','warn-bg':'card',success:'google-green','success-bg':'card'};
-   for(const d of original.declarations) {if(d.prop==='word-break') continue;const value=d.value.replace(/var\(--([\w-]+)\)/g,(_,key:string)=>key==='sidebar-w'?'300px':key==='font-jp'?'var(--font-body)':`var(--color-${mapping[key]??key})`);expect(actual!.declarations,`${selectors}: ${d.prop}`).toContainEqual({...d,value});}
+   for(const d of original.declarations) {if(d.prop==='word-break') continue;const value=d.value.replace(/var\(--([\w-]+)\)/g,(_,key:string)=>key==='sidebar-w'?'280px':key==='font-jp'?'var(--font-body)':`var(--color-${mapping[key]??key})`);expect(actual!.declarations,`${selectors}: ${d.prop}`).toContainEqual({...d,value});}
   }
   expect(rules.find(r=>r.selector==='.ddia-page .main ul')?.declarations).toContainEqual({prop:'list-style-type',value:'disc',important:false});
   expect(rules.find(r=>r.selector==='.ddia-page .main ol')?.declarations).toContainEqual({prop:'list-style-type',value:'decimal',important:false});
+  const closed=rules.find(r=>r.selector==='.ddia-page .sidebar:not(.open)'&&r.media==='(max-width: 980px)');
+  expect(closed?.declarations).toContainEqual({prop:'visibility',value:'hidden',important:false});
+  const z=(selector:string)=>Number(rules.filter(r=>r.selector===selector&&!r.media).flatMap(r=>r.declarations).filter(d=>d.prop==='z-index').at(-1)?.value);
+  expect(z('.ddia-page .sidebar-toggle')).toBeGreaterThan(z('.ddia-page .sidebar'));
+  expect(rules.find(r=>r.selector===".ddia-page .checklist-card input[type='checkbox']:not(:checked)")?.declarations).toContainEqual({prop:'border-color',value:'var(--color-google-blue)',important:false});
  });
  it('モバイル目次の開閉・hashとfocus・チェック進捗',()=>{const c=render(<Guide/>).container;const button=c.querySelector('button')!;fireEvent.click(button);expect(button).toHaveAttribute('aria-expanded','true');const link=c.querySelector('nav a')!;fireEvent.click(link);expect(button).toHaveAttribute('aria-expanded','false');expect(document.activeElement?.id).toBe(fixture.nav[0]!.id);const boxes=c.querySelectorAll('input');expect(boxes).toHaveLength(13);fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('1 / 13 完了');fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('0 / 13 完了');});
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});

@@ -10,7 +10,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    7.1 このタスクで問われること(Exam Guide より)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.1 このタスクで問われること(Exam Guide より)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 60：7.1 このタスクで問われること(Exam Guide より)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -111,7 +111,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    7.3 Step 1: 使用状況を分析して無駄を見つける\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.3 Step 1: 使用状況を分析して無駄を見つける"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 61：7.3 Step 1: 使用状況を分析して無駄を見つける"}>
 {"\n                    "}
 <table>
 <thead>
@@ -192,7 +192,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"未使用・低使用リソースの典型例"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：未使用・低使用リソースの典型例"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 62：未使用・低使用リソースの典型例"}>
 {"\n                    "}
 <table>
 <thead>
@@ -295,7 +295,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    7.4 Step 2: コストを意識した構成にする\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.4 Step 2: コストを意識した構成にする"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 63：7.4 Step 2: コストを意識した構成にする"}>
 {"\n                    "}
 <table>
 <thead>
@@ -398,7 +398,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"7.5 Step 3: 料金モデルを選ぶ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.5 Step 3: 料金モデルを選ぶ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 64：7.5 Step 3: 料金モデルを選ぶ"}>
 {"\n                    "}
 <table>
 <thead>
@@ -537,7 +537,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"ベストプラクティス"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：ベストプラクティス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 65：ベストプラクティス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -596,7 +596,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    7.6 Step 4: ネットワークとデータ転送のコストを抑える\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.6 Step 4: ネットワークとデータ転送のコストを抑える"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 66：7.6 Step 4: ネットワークとデータ転送のコストを抑える"}>
 {"\n                    "}
 <table>
 <thead>
@@ -695,7 +695,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.6 Step 4: ネットワークとデータ転送のコストを抑える"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 67：7.6 Step 4: ネットワークとデータ転送のコストを抑える"}>
 {"\n                    "}
 <table>
 <thead>
@@ -762,7 +762,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    7.7 Step 5: コスト管理、アラート、レポートの仕組み\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.7 Step 5: コスト管理、アラート、レポートの仕組み"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 68：7.7 Step 5: コスト管理、アラート、レポートの仕組み"}>
 {"\n                    "}
 <table>
 <thead>
@@ -843,7 +843,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"請求アラームの設計の考え方"}
 </h4>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：請求アラームの設計の考え方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 69：請求アラームの設計の考え方"}>
 {"\n                    "}
 <table>
 <thead>
@@ -906,7 +906,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"7.8 Step 6: タグでコストを配賦する"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.8 Step 6: タグでコストを配賦する"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 70：7.8 Step 6: タグでコストを配賦する"}>
 {"\n                    "}
 <table>
 <thead>
@@ -989,7 +989,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"7.9 Task 3.5 の試験での考え方"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：7.9 Task 3.5 の試験での考え方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 71：7.9 Task 3.5 の試験での考え方"}>
 {"\n                    "}
 <table>
 <thead>

@@ -2235,11 +2235,11 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **仕様同期コミット:** `b91b205e`（仕様・全体検証・静的集計・再開情報を同期）
 - **前回進捗同期コミット:** `13e845fd`（移行済み4教材の一括アーカイブ）
 - **検証状態:** 原本不在下の全体Vitest472ファイル・4378件すべて成功。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本インベントリと固定Git fixture再生成一致、HTML/Markdownのバイト一致・SHA-256一致も確認。静的集計1299ソース・416対応（32%）・493テストファイル・139ルート。
-- **ビルド状態:** ユーザー指定に従いnpm・ビルド未実行。開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
+- **ビルド状態:** `bun run build` はユーザー指定に従い未実行。`bun run lint`（全体ESLint）は成功。開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
 - **HTML残数:** 直下HTML7件、すべて未移行。移行済みの直下HTMLは0件。
 - **アーカイブ:** SAP Domain 3の保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはGit管理外のローカル保存先。
 - **既存差分:** なし。
-- **次の作業:** 次ページはユーザー指定待ち。SAP Domain 3の移行・統合・原本保存は完了。
+- **次の作業:** `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。SAP Domain 3の移行・統合・原本保存は完了。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3584,7 +3584,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 検証: 原本不在下の全体Vitest472ファイル・4378件すべて成功。関連6ファイル・184件、最終型検査・全体ESLint・対象Markdown lint成功。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML7件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。直下HTML7件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

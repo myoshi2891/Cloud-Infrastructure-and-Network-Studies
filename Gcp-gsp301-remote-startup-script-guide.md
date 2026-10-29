@@ -1,4 +1,5 @@
 # Google Cloud チャレンジラボ GSP301 完全ガイド
+
 ## リモート起動スクリプトで Apache を自動インストールする Compute Engine VM を構築する
 
 > **対象読者**: Google Cloud を学び始めた初学者（Compute Engine・Cloud Storage・VPC ファイアウォールを一度は触ったことがある方）
@@ -175,7 +176,7 @@ echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAM
 ```
 
 > 💡 **ベストプラクティス**: ゾーン・名前などの値を最初に変数へ入れておくと、入力ミスを減らせて、後から同じ手順を再実行しやすくなります。これは Infrastructure as Code（IaC）の第一歩でもあります。
-
+>
 > ⚠️ **注意（チャレンジラボ特有）**: 採点は「ラボが指定する条件」で行われます。バケット名・VM 名・ネットワークタグなどの指定がラボ画面に書かれている場合は、本ガイドの例よりもラボの指定を優先してください。また、事前作成済みのリソース（特に `lab-monitor` インスタンス）は**変更・削除しない**でください。
 
 ---
@@ -270,6 +271,28 @@ gcloud storage cat "gs://${BUCKET_NAME}/install-web.sh"
 
 ### 5.2 手順 A: gcloud コマンド（推奨）
 
+まず、VM が使うサービスアカウントを特定し、そのアカウントにバケット単位で `roles/storage.objectViewer`（オブジェクトの読み取り）を付与します。ここでは Compute Engine の既定のサービスアカウントを使います。
+
+```bash
+# VM が使うサービスアカウント（Compute Engine の既定のサービスアカウント）を特定する
+PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
+VM_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+echo "VM_SA=${VM_SA}"
+
+# バケット単位で読み取りロールを付与する（プロジェクト全体には付与しない）
+gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+  --member="serviceAccount:${VM_SA}" \
+  --role="roles/storage.objectViewer"
+
+# 付与されたことを確認する（VM_SA を含む行が表示されれば OK）
+gcloud storage buckets get-iam-policy "gs://${BUCKET_NAME}" \
+  --flatten="bindings[].members" \
+  --filter="bindings.role=roles/storage.objectViewer AND bindings.members=serviceAccount:${VM_SA}" \
+  --format="value(bindings.members)"
+```
+
+次に、同じサービスアカウントを明示して VM を作成します。
+
 ```bash
 gcloud compute instances create "${VM_NAME}" \
   --zone="${ZONE}" \
@@ -277,6 +300,7 @@ gcloud compute instances create "${VM_NAME}" \
   --image-family=debian-12 \
   --image-project=debian-cloud \
   --tags=http-server \
+  --service-account="${VM_SA}" \
   --scopes=storage-ro \
   --metadata=startup-script-url="gs://${BUCKET_NAME}/install-web.sh"
 ```
@@ -287,6 +311,7 @@ gcloud compute instances create "${VM_NAME}" \
 | `--machine-type` | マシンタイプ。Apache を動かすだけなら `e2-medium` 程度で十分 |
 | `--image-family` / `--image-project` | OS イメージ。Debian の最新版ファミリーを使う |
 | `--tags=http-server` | ネットワークタグ。Task 3 のルールの対象になる |
+| `--service-account` | VM が使うサービスアカウント。上で `roles/storage.objectViewer` を付与したものを明示する |
 | `--scopes=storage-ro` | Cloud Storage の読み取り専用スコープ。必要最小限の API アクセス |
 | `--metadata=startup-script-url=...` | **このラボの核心**。起動時に取得して実行するスクリプトの場所 |
 
@@ -309,7 +334,7 @@ gcloud compute instances create "${VM_NAME}" \
 7. **作成** をクリックします。
 
 > ⚠️ **よくある間違い**: コンソールの「起動スクリプト」欄は、**スクリプトの本文**を貼る欄（キーは `startup-script`）です。URL を入れる場合は、上のとおり**メタデータ欄に `startup-script-url`** を追加します。
-
+>
 > 💡 **ベストプラクティス**: コンソールの「HTTP トラフィックを許可する」チェックを入れると、タグ `http-server` の付与とファイアウォールルールの作成が自動で行われます。ただし、チャレンジラボでは「自分でルールを作る」ことが目的のため、Task 3 で明示的にルールを作成する流れを本ガイドでは採用します。
 
 ### 5.4 VM が起動時に取得できる権限の考え方

@@ -6,7 +6,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    9. 横断: シナリオ別「この要件ならこの答え」早見表\n                "}
 </h2>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：9. 横断: シナリオ別「この要件ならこの答え」早見表"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 58：9. 横断: シナリオ別「この要件ならこの答え」早見表"}>
 {"\n                    "}
 <table>
 <thead>
@@ -533,7 +533,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"試験ガイド"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：試験ガイド"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 59：試験ガイド"}>
 {"\n                    "}
 <table>
 <thead>
@@ -580,7 +580,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"全般(Well-Architected)"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：全般(Well-Architected)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 60：全般(Well-Architected)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -675,7 +675,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.1 デプロイ戦略"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.1 デプロイ戦略"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 61：Task 2.1 デプロイ戦略"}>
 {"\n                    "}
 <table>
 <thead>
@@ -878,7 +878,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.2 ビジネス継続性"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.2 ビジネス継続性"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 62：Task 2.2 ビジネス継続性"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1021,7 +1021,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.3 セキュリティ"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.3 セキュリティ"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 63：Task 2.3 セキュリティ"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1248,7 +1248,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.4 信頼性"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.4 信頼性"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 64：Task 2.4 信頼性"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1355,7 +1355,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.5 パフォーマンス"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.5 パフォーマンス"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 65：Task 2.5 パフォーマンス"}>
 {"\n                    "}
 <table>
 <thead>
@@ -1522,7 +1522,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"Task 2.6 コスト最適化"}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：Task 2.6 コスト最適化"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 66：Task 2.6 コスト最適化"}>
 {"\n                    "}
 <table>
 <thead>

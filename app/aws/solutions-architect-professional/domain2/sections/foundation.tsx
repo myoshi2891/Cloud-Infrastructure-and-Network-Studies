@@ -77,7 +77,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"を問う試験です。そのため本ガイドは、各タスクを次の4ステップで解説します。\n                "}
 </p>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：1. このガイドの使い方"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 1：1. このガイドの使い方"}>
 {"\n                    "}
 <table>
 <thead>
@@ -132,7 +132,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    初学者がつまずきやすい用語(先に確認)\n                "}
 </h3>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：初学者がつまずきやすい用語(先に確認)"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 2：初学者がつまずきやすい用語(先に確認)"}>
 {"\n                    "}
 <table>
 <thead>
@@ -231,7 +231,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-0" label={"2. Domain 2 の全体像"}/>
 {"\n                "}
-<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表：2. Domain 2 の全体像"}>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 3：2. Domain 2 の全体像"}>
 {"\n                    "}
 <table>
 <thead>
