@@ -5,17 +5,22 @@ import mermaid from 'mermaid';
 import Page from '@/app/aws/solutions-architect-professional/domain3/page';
 import { DIAGRAMS } from '@/app/aws/solutions-architect-professional/domain3/constants';
 import theme from '@/app/aws/solutions-architect-professional/domain3/mermaid-theme.json';
-import inventory from '@/docs/migration-inventory/aws-sap-c02-domain3.json';
-import fixture from '@/docs/migration-inventory/aws-sap-c02-domain3.fidelity.json';
+import rawInventory from '@/docs/migration-inventory/aws-sap-c02-domain3.json';
+import rawFixture from '@/docs/migration-inventory/aws-sap-c02-domain3.fidelity.json';
+import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { SAP_DOMAIN3_CORRECTIONS } from '@/__tests__/helpers/sap-domain3-source-corrections';
 import { FIDELITY_PAGES } from '@/scripts/archive-fidelity-config.mjs';
 import { snapshotGuideParts } from '@/scripts/guide-fidelity-extraction.mjs';
 import { snapshotGuideChecks } from '@/scripts/guide-interaction-extraction.mjs';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 import { SAP_D3_COLOR_LITERAL, SAP_D3_COLOR_TOKENS } from '@/scripts/sap-domain3-color-tokens.mjs';
 import { codeLineCount, extractBodyContent, squash, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
+const inventory=withSourceCorrections(rawInventory,SAP_DOMAIN3_CORRECTIONS);
+const fixture=withSourceCorrections(rawFixture,SAP_DOMAIN3_CORRECTIONS);
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 function parts(c:HTMLElement){const clone=c.cloneNode(true) as HTMLElement;clone.querySelectorAll('[data-chart]').forEach(e=>{const value=e.getAttribute('data-chart')!;expect(value).toMatch(/^---\nconfig: /);e.setAttribute('data-chart',value.slice(value.indexOf('\n---\n')+5));});return snapshotGuideParts({querySelector:()=>clone.querySelector('main'),createElement:(tag:string)=>document.createElement(tag)},FIDELITY_PAGES['aws-sap-c02-domain3']!.guideBoundaries);}
 describe('SAP Domain 3 原本全量契約',()=>{
+ it('本文訂正の対象が原本に存在し、原本fixtureは保持する',()=>{const before=JSON.stringify([rawInventory,rawFixture]);const after=JSON.stringify([inventory,fixture]);for(const [from,to] of SAP_DOMAIN3_CORRECTIONS){expect(before).toContain(from);expect(after).not.toContain(from);expect(after).toContain(to);}expect(JSON.stringify([rawInventory,rawFixture])).toBe(before);});
  it('原本の装飾クラスを省略しない',()=>{const c=render(<Page/>).container;for(const name of fixture.styledClasses)expect(c.querySelector('.'+(name==='mermaid'?'mermaid-wrap':name)),name).not.toBeNull();});
  it('Preflightで消える段落の余白と目次見出しの太字を復元する',()=>{const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');expect(css).toContain('.sap-domain3-page .main p { margin: 1em 0; }');expect(css).toContain('.sap-domain3-page .sidebar-header h2 { font-weight: 700; }');});
 
