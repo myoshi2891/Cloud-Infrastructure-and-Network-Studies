@@ -116,15 +116,23 @@ gcloud container clusters list
 ### 2.4 v1 をデプロイする（ラボ指定の手順）
 
 ```bash
-gcloud container clusters get-credentials echo-cluster --zone=$ZONE
 # 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
-if [ -z "$(kubectl get deployment echo-web --ignore-not-found -o name)" ]; then
-  kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+# 接続や確認のコマンドが失敗した場合は「未作成」と誤認せず、リソースを作成せずに止める
+if ! gcloud container clusters get-credentials echo-cluster --zone=$ZONE; then
+  echo "クラスタの接続情報を取得できません。ZONE とクラスタ名を確認してください。" >&2
+elif ! DEPLOYMENT=$(kubectl get deployment echo-web --ignore-not-found -o name); then
+  echo "Deployment の確認に失敗しました。リソースは作成しません。" >&2
+elif ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
+  echo "Service の確認に失敗しました。リソースは作成しません。" >&2
+else
+  if [ -z "$DEPLOYMENT" ]; then
+    kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+  fi &&
+  if [ -z "$SERVICE" ]; then
+    kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+  fi &&
+  kubectl get deployment,service echo-web
 fi
-if [ -z "$(kubectl get service echo-web --ignore-not-found -o name)" ]; then
-  kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
-fi
-kubectl get deployment,service echo-web
 ```
 
 | コマンド | 何をしているか |
@@ -132,7 +140,7 @@ kubectl get deployment,service echo-web
 | `get-credentials` | `kubectl` がどのクラスタを操作するかの接続情報を取得して設定する |
 | `create deployment` | `echo-web` という Deployment を作り、v1 イメージで Pod を 1 つ起動する |
 | `expose deployment` | Deployment に対する Service を作る |
-| `get ... --ignore-not-found -o name` | 既存リソースの有無を確認する。ラボ環境で v1 が作成済みの場合は `create` / `expose` を実行せず、既存の Deployment と Service をそのまま使う（再実行すると `AlreadyExists` エラーになるため） |
+| `get ... --ignore-not-found -o name` | 既存リソースの有無を確認する。ラボ環境で v1 が作成済みの場合は `create` / `expose` を実行せず、既存の Deployment と Service をそのまま使う（再実行すると `AlreadyExists` エラーになるため）。`get-credentials` や `get` 自体が失敗した場合（認証切れ・ゾーン違いなど）は空の結果と区別できないため、終了ステータスを確認し、失敗時はリソースを作成せずに止める |
 
 #### `expose` の 3 つのオプションを理解する
 
@@ -568,15 +576,23 @@ export BUCKET="REPLACE_WITH_LAB_BUCKET"  # ラボ指定のバケット名に置�
 export PROJECT_ID=$(gcloud config get-value project)
 
 # 0-1. 接続と v1 のデプロイ
-gcloud container clusters get-credentials echo-cluster --zone=$ZONE
 # 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
-if [ -z "$(kubectl get deployment echo-web --ignore-not-found -o name)" ]; then
-  kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+# 接続や確認のコマンドが失敗した場合は「未作成」と誤認せず、リソースを作成せずに止める
+if ! gcloud container clusters get-credentials echo-cluster --zone=$ZONE; then
+  echo "クラスタの接続情報を取得できません。ZONE とクラスタ名を確認してください。" >&2
+elif ! DEPLOYMENT=$(kubectl get deployment echo-web --ignore-not-found -o name); then
+  echo "Deployment の確認に失敗しました。リソースは作成しません。" >&2
+elif ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
+  echo "Service の確認に失敗しました。リソースは作成しません。" >&2
+else
+  if [ -z "$DEPLOYMENT" ]; then
+    kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
+  fi &&
+  if [ -z "$SERVICE" ]; then
+    kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+  fi &&
+  kubectl get deployment,service echo-web
 fi
-if [ -z "$(kubectl get service echo-web --ignore-not-found -o name)" ]; then
-  kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
-fi
-kubectl get deployment,service echo-web
 
 # Task 1: ダウンロード・展開・ビルド
 gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .

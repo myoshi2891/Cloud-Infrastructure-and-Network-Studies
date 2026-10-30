@@ -384,8 +384,8 @@ sequenceDiagram
 ### 6-4. 確認
 
 ```bash
-gcloud container images list --repository gcr.io/${PROJECT_ID}
-gcloud container images list-tags gcr.io/${PROJECT_ID}/echo-app
+gcloud artifacts docker images list gcr.io/${PROJECT_ID}
+gcloud artifacts docker tags list gcr.io/${PROJECT_ID}/echo-app
 ```
 
 | 確認項目 | 期待する結果 |
@@ -753,7 +753,7 @@ kubectl get service echo-web --watch
 kubectl delete service echo-web
 kubectl delete deployment echo-web
 gcloud container clusters delete echo-cluster --zone ${ZONE}
-gcloud container images delete gcr.io/${PROJECT_ID}/echo-app:v1 --force-delete-tags
+gcloud artifacts docker images delete gcr.io/${PROJECT_ID}/echo-app:v1 --delete-tags
 ```
 
 | 削除対象 | 理由 |

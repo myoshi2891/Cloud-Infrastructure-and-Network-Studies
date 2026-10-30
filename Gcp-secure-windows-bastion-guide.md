@@ -268,6 +268,7 @@ gcloud compute networks create securenetwork \
 | リージョン | **ラボ指定のリージョン** |
 | IP スタックタイプ | IPv4 |
 | IPv4 範囲 | `10.0.0.0/24` |
+| 限定公開の Google アクセス | **オン** |
 
 #### 6.2.3 gcloud コマンドでの手順
 
@@ -275,14 +276,33 @@ gcloud compute networks create securenetwork \
 gcloud compute networks subnets create secure-subnet \
   --network=securenetwork \
   --region=$REGION \
-  --range=10.0.0.0/24
+  --range=10.0.0.0/24 \
+  --enable-private-ip-google-access
+
+# 2 つ目の NIC を接続する default VPC のサブネットでも有効化する
+gcloud compute networks subnets update default \
+  --region=$REGION \
+  --enable-private-ip-google-access
 ```
 
 #### 6.2.4 確認
 
 ```bash
 gcloud compute networks subnets list --network=securenetwork
+
+# 限定公開の Google アクセスが両サブネットで True になっていることを確認
+gcloud compute networks subnets describe secure-subnet --region=$REGION \
+  --format="value(privateIpGoogleAccess)"
+gcloud compute networks subnets describe default --region=$REGION \
+  --format="value(privateIpGoogleAccess)"
+
+# Windows ライセンス認証（kms.windows.googlecloud.com / 35.190.247.13）への経路を確認
+gcloud compute routes list \
+  --filter="network~(securenetwork|default) AND destRange=0.0.0.0/0" \
+  --format="table(name,network.basename(),destRange,nextHopGateway.basename())"
 ```
+
+> 💡 **限定公開の Google アクセスを有効にする理由**: 外部 IP を持たない Windows VM（`vm-securehost` の両 NIC、`vm-bastionhost` の default 側 NIC）は、そのままでは Google の KMS サーバー `kms.windows.googlecloud.com`（`35.190.247.13`）に到達できず、Windows のライセンス認証が失敗することがあります。両サブネットで限定公開の Google アクセスを有効にし、各 VPC に `0.0.0.0/0`（または `35.190.247.13/32`）宛てで次ホップが `default-internet-gateway` のルートが残っていることを確認してください。このルートを削除した VPC では、`35.190.247.13/32` 宛てのルートを個別に追加する必要があります。
 
 ### 6.3 ファイアウォールルールの作成（RDP 許可）
 
@@ -443,6 +463,8 @@ gcloud compute instances create vm-securehost \
 > ⚠️ **注意**: `no-address` だけでは **インターネットへの送信（egress）は止まりません**。接続先 VPC・サブネットに Cloud NAT やプロキシなど別の送信経路があれば、外部 IP がなくても外部へ出られます。送信も厳密に遮断する場合は、Cloud NAT の有無と Egress ファイアウォールルールもあわせて確認してください。
 >
 > ⚠️ **イメージ名について**: ラボ環境や時期によってイメージファミリー名が異なる場合があります。エラーが出たら `gcloud compute images list --filter="family~windows-2016"` で確認してください。
+>
+> ⚠️ **ライフサイクルについて**: Windows Server 2016 は Google Cloud でのサポート終了（EOS）とイメージの非推奨化が **2027 年 1 月 12 日** に予定されています。本ラボはラボの指示どおり Windows Server 2016 を明示的に選択します。この日以降にラボを実施する場合は、最新のラボ手順を確認するか、代替のイメージ（例: `windows-2019` / `windows-2022` ファミリー）の利用を検討してください。
 
 ### 7.3 踏み台ホスト `vm-bastionhost` の作成
 
@@ -669,7 +691,16 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
   --target-tags=securehost
 ```
 
-**広い許可ルールの削除**: 次のコマンドは、上で作成したルールを使って **踏み台からセキュアホストへ RDP 接続できることを確認した後にだけ** 実行します。`default` VPC には、0.0.0.0/0 から全 VM への受信を許可する `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）が残っています。これらはセキュアホストの nic1 への到達経路になるため、`default-allow-internal` を残すかどうかに関係なく削除します。
+**広い許可ルールの削除**: 次のコマンドは、上で作成したルールを使って **踏み台からセキュアホストへ RDP 接続できることを確認した後にだけ** 実行します。`default` VPC には、0.0.0.0/0 から全 VM への受信を許可する `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）が残っています。これらはセキュアホストの nic1 への到達経路になるため、`default-allow-internal` を残すかどうかに関係なく削除します。ただし、これらは `default` VPC の **全 VM** に適用されるため、削除前に、同じ `default` VPC 上の他の VM（ラボ外の既存 VM を含む）がこれらのルールに依存した RDP・SSH・ICMP 通信を使っていないことを必ず確認してください。依存する VM がある場合は、その VM 専用にソース範囲とターゲットを絞ったルールを先に作成してから削除します。
+
+```bash
+# 削除前の確認: default VPC 上の VM と、各ルールの適用範囲（ターゲット未指定なら全 VM）を確認する
+gcloud compute instances list --filter="networkInterfaces.network~/default$" \
+  --format="table(name,zone.basename(),tags.items.list())"
+gcloud compute firewall-rules describe default-allow-rdp --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
+gcloud compute firewall-rules describe default-allow-ssh --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
+gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
+```
 
 ```bash
 # 踏み台経由の RDP を確認後に実行する: インターネットから default VPC の全 VM への受信を許可する既定ルールを削除
@@ -770,8 +801,32 @@ Get-WindowsFeature -Name Web-Server
 | セキュアホストに外部 IP がない | `gcloud compute instances list` の外部 IP 列 | **空** |
 | セキュアホストにインターネットから直接 RDP できない | 外部 IP がないため接続先が存在しない | 接続不可 |
 | セキュアホストに外部 IP 経由の直接接続経路がない | 外部 IP 列が空であることを確認（上の行） | 外部 IP 経由では外部へ出られない |
-| 厳密な送信遮断が必要な場合: 送信経路がない | `gcloud compute routers list` で両 VPC の Cloud NAT の有無、`gcloud compute firewall-rules list --filter="direction=EGRESS"` で Egress ルールを確認 | Cloud NAT などの送信経路がない、または Egress ルールで遮断されている |
+| 厳密な送信遮断が必要な場合: 送信経路がない | 下の「送信経路の確認コマンド」で、両 VPC の各ルーター・リージョンの Cloud NAT 構成、ルート、セキュアホストに適用される実効 Egress ファイアウォールルールを確認 | Cloud NAT などの送信経路がない、または Egress ルールで遮断されている |
 | 踏み台だけ RDP 可能 | 踏み台の外部 IP に RDP | 接続成功 |
+
+送信経路の確認コマンド（厳密な送信遮断が必要な場合）:
+
+```bash
+# 両 VPC のルーターごとに、そのリージョンの Cloud NAT 構成を一覧する（ルーター一覧だけでは NAT の有無はわからない）
+for NET in securenetwork default; do
+  gcloud compute routers list --filter="network~/${NET}$" \
+    --format="value(name,region.basename())" |
+  while read -r ROUTER ROUTER_REGION; do
+    echo "== ${NET} / ${ROUTER} (${ROUTER_REGION}) =="
+    gcloud compute routers nats list --router="$ROUTER" --region="$ROUTER_REGION"
+  done
+done
+
+# 両 VPC のルート（0.0.0.0/0 の次ホップなど）を確認する
+gcloud compute routes list --filter="network~(securenetwork|default)" \
+  --format="table(name,network.basename(),destRange,nextHopGateway.basename(),nextHopInstance.basename(),priority)"
+
+# セキュアホストの各 NIC に実際に適用される Egress ルールを確認する（nic0 / nic1）
+gcloud compute instances network-interfaces get-effective-firewalls vm-securehost \
+  --zone=$ZONE --network-interface=nic0
+gcloud compute instances network-interfaces get-effective-firewalls vm-securehost \
+  --zone=$ZONE --network-interface=nic1
+```
 
 ### 9.2 NIC 構成の検証
 
@@ -952,7 +1007,12 @@ gcloud compute networks create securenetwork --subnet-mode=custom
 gcloud compute networks subnets create secure-subnet \
   --network=securenetwork \
   --region=$REGION \
-  --range=10.0.0.0/24
+  --range=10.0.0.0/24 \
+  --enable-private-ip-google-access
+
+gcloud compute networks subnets update default \
+  --region=$REGION \
+  --enable-private-ip-google-access
 
 gcloud compute firewall-rules create allow-rdp-bastion \
   --network=securenetwork \
