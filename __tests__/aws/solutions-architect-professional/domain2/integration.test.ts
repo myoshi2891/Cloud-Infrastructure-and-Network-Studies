@@ -7,6 +7,7 @@ import renderTheme from '@/app/aws/solutions-architect-professional/domain2/rend
 import { isValid, toHex } from 'khroma';
 import fixture from '@/docs/migration-inventory/aws-sap-c02-domain2.fidelity.json';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
+import { SAP_D2_COLOR_LITERAL, SAP_D2_COLOR_TOKENS } from '@/scripts/sap-domain2-color-tokens.mjs';
 
 describe('SAP Domain 2 統合契約',()=>{
  it('ホームとHeaderの共通EXAMS導線はDomain 2と29%を表示',()=>{
@@ -23,6 +24,15 @@ describe('SAP Domain 2 統合契約',()=>{
  it('原本単体の派生色を全量固定し、共有dark設定の混入を防ぐ',()=>{
   mermaid.initialize({...source,theme:'base',flowchart:{...source.flowchart,curve:'basis'},startOnLoad:false});const expected=Object.fromEntries(Object.entries(mermaid.mermaidAPI.getConfig().themeVariables??{}).map(([k,v])=>[k,typeof v==='string'&&/^(?:hsl|rgb)a?\(/.test(v)&&isValid(v)?toHex(v):v]));
   expect(renderTheme.themeVariables).toEqual({...expected,fontFamily:'"Noto Sans JP Variable",sans-serif'});
+ });
+ it('サイドバー背景・構文色などの固定色を@themeトークンで参照し、再生成処理にも反映',()=>{
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8');const globals=fs.readFileSync('app/globals.css','utf8');const theme=globals.slice(globals.indexOf('@theme {'),globals.indexOf('\n}',globals.indexOf('@theme {')));
+  const literals=fixture.guideDesign.rules.filter(r=>r.selector!==':root').flatMap(r=>Object.values(r.declarations).flatMap(v=>v.match(SAP_D2_COLOR_LITERAL)??[]));expect(literals.length).toBeGreaterThan(0);for(const literal of literals)expect(SAP_D2_COLOR_TOKENS[literal],literal).toBeDefined();
+  for(const literal of ['#6a737d','#c0213f','#0b57c4','#0a6b3a','#b04a00','#6f42c1','#4f5f7e'])expect(SAP_D2_COLOR_TOKENS[literal],literal).toMatch(/^hljs-/);
+  for(const [literal,token] of Object.entries(SAP_D2_COLOR_TOKENS)){expect(theme).toContain(`--color-sap-d2-${token}: ${literal};`);expect(css).toContain(`var(--color-sap-d2-${token})`);}
+  expect(css.match(SAP_D2_COLOR_LITERAL)).toBeNull();
+  const sidebar=snapshotCssRules(css).find(r=>r.selector==='.sap-domain2-page .sidebar');expect(sidebar?.declarations).toContainEqual({prop:'background',value:`var(--color-sap-d2-${SAP_D2_COLOR_TOKENS['#fbfcff']})`,important:false});
+  expect(fs.readFileSync('scripts/migrate-sap-domain2.mjs','utf8')).toContain("from './sap-domain2-color-tokens.mjs'");
  });
  it('固定目次・アンカー着地が共有ヘッダーの高さを含む',()=>{
   const rules=snapshotCssRules(fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8'));
