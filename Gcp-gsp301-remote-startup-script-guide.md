@@ -663,6 +663,8 @@ flowchart LR
 - [ ] VM をラボ指定のゾーンに作成した
 - [ ] メタデータ `startup-script-url` にバケット内スクリプトの URL を設定した
 - [ ] ネットワークタグ `http-server` を付けた
+- [ ] VM に設定したサービスアカウントが、手順 A でロールを付与したもの（`--service-account` で明示したもの）と一致している
+- [ ] そのサービスアカウントにバケット単位で `roles/storage.objectViewer` が付与されている（`gcloud storage buckets get-iam-policy` またはバケットの **権限** 画面で確認）
 - [ ] Storage 読み取りのスコープ（`storage-ro` 以上）を付けた
 - [ ] 事前作成済みの `lab-monitor` を変更していない
 

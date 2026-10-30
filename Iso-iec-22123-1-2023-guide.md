@@ -58,7 +58,7 @@
 | 版 | 第2版（Edition 2） |
 | 発行 | 2023年2月 |
 | ステージ | 60.60（国際規格として発行済み） |
-| ページ数 | 18ページ（IEC Webstore / SIS の表記） |
+| ページ数 | IEC Webstore: 16ページ／SIS: 18ページ（出典により表記が異なる） |
 | 担当委員会 | ISO/IEC JTC 1/SC 38（クラウドコンピューティングと分散プラットフォーム） |
 | ICS | 35.210（クラウドコンピューティング）／ 01.040.35（IT 用語） |
 | 置き換えた規格 | ISO/IEC 17788:2014、ISO/IEC 22123-1:2021 |
@@ -338,7 +338,7 @@ flowchart TB
 |---|---|---|---|
 | 自社システムをパブリッククラウドへ移行 | 自社 | クラウド事業者 | 移行支援ベンダー（支援）、第三者監査法人（auditor） |
 | SaaS を従業員が利用 | 自社（契約主体） | SaaS 事業者 | 代理店（broker 的な役割になり得る） |
-| 自社アプリの利用者 | （自社が CSP role を担う） | 自社 | ― |
+| 自社が提供するクラウドアプリを外部の顧客が利用 | 顧客企業（契約主体）。その従業員などのアプリ利用者は CSU | 自社（CSP role を担う） | ― |
 
 > 💡 **注意**: 上表の具体例は理解用の例示で、規格本文の記載ではありません。
 
@@ -576,7 +576,7 @@ flowchart TB
 | **cloud service customer data** | **CSC** | CSC が cloud service に入力した、または CSC（または代理）が公開インタフェースを通じてサービスの機能を使った結果として生じたデータ |
 | **cloud service derived data** | **CSP** | CSC が cloud service を使った**結果として派生**したデータ（利用ログ、設定・カスタマイズ情報など） |
 | **cloud service provider data** | **CSP** | cloud service の**運用に固有**のデータ（リソース構成・利用状況、仮想マシンの割り当てなど） |
-| **account data** | （CSC ごとに固有） | cloud service を**管理するために必要**な、CSC ごとの固有データ |
+| **account data** | **CSP** | cloud service を**管理するために必要**な、CSC ごとに固有のデータ |
 
 ```mermaid
 flowchart LR
@@ -584,7 +584,7 @@ flowchart LR
     SVC --> D1["cloud service customer data<br/>管理権: CSC"]
     SVC --> D2["cloud service derived data<br/>管理権: CSP<br/>利用ログなど"]
     CSP["CSP"] --> D3["cloud service provider data<br/>管理権: CSP<br/>運用データ"]
-    CSC -.- D4["account data<br/>CSC ごとの管理用データ"]
+    CSP --> D4["account data<br/>管理権: CSP<br/>CSC ごとに固有の管理用データ"]
 ```
 
 ### 注記から学べる重要ポイント
@@ -654,7 +654,7 @@ NIST SP 800-145 は Peter Mell 氏と Timothy Grance 氏による文書で、**5
 
 | 観点 | NIST SP 800-145（2011） | ISO/IEC 22123-1:2023 |
 |---|---|---|
-| 性質 | 米国 NIST の特別刊行物（約7ページ） | 国際規格（ISO カタログでは16ページ、IEC Webstore / SIS では約18ページ）。**用語集**の形式 |
+| 性質 | 米国 NIST の特別刊行物（約7ページ） | 国際規格（ISO カタログ・IEC Webstore では16ページ、SIS では18ページ）。**用語集**の形式 |
 | 特性 | on-demand self-service / broad network access / resource pooling / rapid elasticity / measured service | 3.4 節に on-demand self-service / resource pooling / measured service / tenant / multi-tenancy。elastic・network access は cloud computing の定義に含まれる |
 | サービスモデル | SaaS / PaaS / IaaS（3つ） | 能力タイプ3種＋サービスカテゴリ（IaaS / PaaS / SaaS に加え CaaS / CompaaS / DSaaS / NaaS） |
 | 配備モデル | private / community / public / hybrid（4つ） | 4つに加え multi-cloud / hybrid multi-cloud / federated cloud / inter-cloud など |
@@ -768,7 +768,7 @@ Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hoh
 | 1 | ISO 公式（22123-1:2023） | https://www.iso.org/standard/82758.html | タイトル、第2版、2023-02、ステージ 60.60、スコープ、SC 38 |
 | 2 | iTeh 公開プレビュー（PDF） | https://cdn.standards.iteh.ai/samples/82758/9e30847fd9734768b084500f1e0dcb50/ISO-IEC-22123-1-2023.pdf | まえがき、目次、3.1〜3.7.6 の定義 |
 | 3 | iTeh カタログ（HTML プレビュー） | https://iteh.es/catalog/standards/iso/83fb23a3-9c08-4835-999e-40d2338c60b5/iso-iec-22123-1-2023 | 目次、まえがき、第3章冒頭、FDIS 版の 3.9 周辺 |
-| 4 | IEC Webstore（22123-1:2023） | https://webstore.iec.ch/publication/82913 | 発行日 2023-02-10、18ページ、ICS |
+| 4 | IEC Webstore（22123-1:2023） | https://webstore.iec.ch/publication/82913 | 発行日 2023-02-10、16ページ、ICS |
 | 5 | IEC Webstore（17788:2014） | https://webstore.iec.ch/publication/10567 | 17788 が 22123-1 と 22123-2 により部分的に置き換えられた旨 |
 | 6 | SIS（スウェーデン規格協会） | https://www.sis.se/en/produkter/information-technology-office-machines/cloud-computing/ISOIEC-22123-12023 | 置き換え関係（17788:2014、22123-1:2021）、18ページ |
 | 7 | AFNOR | https://www.boutique.afnor.org/en-gb/standard/iso-iec-2212312023/information-technology-cloud-computing-part-1-vocabulary/xs141293/342177 | 廃止された2規格の概要 |

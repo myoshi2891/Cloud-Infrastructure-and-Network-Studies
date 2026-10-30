@@ -324,22 +324,23 @@ flowchart TD
 
 **手順 1：コンテナ名を確認する**
 
-`kubectl set image` では「Deployment 内のどのコンテナを更新するか」をコンテナ名で指定します。`kubectl create deployment --image=.../echo-app:v1` で作った場合、コンテナ名はイメージ名から自動で **`echo-app`** になりますが、念のため確認します。
+`kubectl set image` では「Deployment 内のどのコンテナを更新するか」をコンテナ名で指定します。`kubectl create deployment --image=.../echo-app:v1` で作った場合、コンテナ名はイメージ名から自動で **`echo-app`** になりますが、既存の Deployment が別の名前で作られている場合もあるため、実際の名前を取得して変数に保存します。
 
 ```bash
-kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[*].name}'
+CONTAINER_NAME=$(kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[0].name}')
+echo "CONTAINER_NAME=${CONTAINER_NAME}"
 ```
 
 **手順 2：イメージを更新**
 
 ```bash
-kubectl set image deployment/echo-web echo-app=gcr.io/$PROJECT_ID/echo-app:v2
+kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `deployment/echo-web` | 更新対象の Deployment |
-| `echo-app=` | 更新するコンテナ名（等号の左） |
+| `${CONTAINER_NAME}=` | 更新するコンテナ名（等号の左）。手順 1 で既存の Deployment から取得した名前 |
 | `gcr.io/.../echo-app:v2` | 新しいイメージ（等号の右） |
 
 **手順 3：更新の完了を待つ**
@@ -589,8 +590,9 @@ docker build -t gcr.io/$PROJECT_ID/echo-app:v2 "$BUILD_DIR"
 gcloud auth configure-docker
 docker push gcr.io/$PROJECT_ID/echo-app:v2
 
-# Task 3: v2 へ更新
-kubectl set image deployment/echo-web echo-app=gcr.io/$PROJECT_ID/echo-app:v2
+# Task 3: v2 へ更新（コンテナ名は既存の Deployment から取得する）
+CONTAINER_NAME=$(kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[0].name}')
+kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"
 kubectl rollout status deployment/echo-web
 
 # Task 4: スケールアウト
@@ -599,14 +601,22 @@ kubectl get pods
 
 # Task 5: 動作確認
 kubectl get service echo-web
-# LoadBalancer に外部 IP が割り当てられるまで待つ（空のまま curl しない）
+# LoadBalancer に外部 IP が割り当てられるまで最大 10 分（10 秒 × 60 回）待つ（空のまま curl しない）
 EXTERNAL_IP=""
-until [ -n "$EXTERNAL_IP" ]; do
+for attempt in $(seq 1 60); do
   EXTERNAL_IP=$(kubectl get service echo-web -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  [ -n "$EXTERNAL_IP" ] || { echo "外部 IP の割り当て待ち..."; sleep 10; }
+  [ -n "$EXTERNAL_IP" ] && break
+  echo "外部 IP の割り当て待ち... (${attempt}/60)"
+  sleep 10
 done
-export EXTERNAL_IP
-curl "http://${EXTERNAL_IP}"
+if [ -z "$EXTERNAL_IP" ]; then
+  echo "外部 IP が割り当てられませんでした。Service のイベントを確認してください。" >&2
+  kubectl describe service echo-web
+  kubectl get events --field-selector involvedObject.kind=Service,involvedObject.name=echo-web
+else
+  export EXTERNAL_IP
+  curl "http://${EXTERNAL_IP}"
+fi
 ```
 
 > `docker build` のビルドコンテキストは、Dockerfile のあるディレクトリ（上の `BUILD_DIR`）を指定してください。
