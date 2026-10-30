@@ -208,6 +208,18 @@
     --color-sap-d2-warn-bg: #fff1dc;
     --color-sap-d2-success: #1d7f4e;
     --color-sap-d2-success-bg: #e5f5ec;
+    /* DDIA: original fixed colors */
+    --color-ddia-sidebar-bg: #060d17;
+    --color-ddia-hero-gradient-start: #dbe4f3;
+    --color-ddia-hero-gradient-end: #7c9eff;
+    --color-ddia-strong: #f0f4fc;
+    --color-ddia-inline-code: #ffd08a;
+    --color-ddia-row-hover: rgba(124, 158, 255, 0.04);
+    --color-ddia-callout-practice-border: #1d5a3a;
+    --color-ddia-callout-practice-icon: #08150e;
+    --color-ddia-checklist-hover: rgba(124, 158, 255, 0.05);
+    --color-ddia-check-mark: #08101f;
+    --color-ddia-sidebar-shadow: rgba(0, 0, 0, 0.5);
     /* SAP-C02 Domain 3: original light palette */
     --color-sap-d3-bg: #f5f7fb;
     --color-sap-d3-bg-card: #fff;

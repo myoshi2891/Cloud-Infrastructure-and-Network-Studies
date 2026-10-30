@@ -34,7 +34,7 @@
                 left: 0;
                 bottom: 0;
                 width: 280px;
-                background: #060d17;
+                background: var(--color-ddia-sidebar-bg);
                 border-right: 1px solid var(--color-gcp-border);
                 overflow-y: auto;
                 padding: 28px 0 40px;
@@ -129,7 +129,7 @@
                 font-size: clamp(28px, 3.6vw, 42px);
                 line-height: 1.35;
                 margin: 0 0 18px;
-                background: linear-gradient(135deg, #dbe4f3 0%, #7c9eff 100%);
+                background: linear-gradient(135deg, var(--color-ddia-hero-gradient-start) 0%, var(--color-ddia-hero-gradient-end) 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -206,7 +206,7 @@
                 margin: 44px 0;
             }
             .ddia-page .main strong {
-                color: #f0f4fc;
+                color: var(--color-ddia-strong);
                 font-weight: 700;
             }
             .ddia-page .footnote-ref {
@@ -223,7 +223,7 @@
                 border-radius: 5px;
                 padding: 1px 6px;
                 font-size: 0.9em;
-                color: #ffd08a;
+                color: var(--color-ddia-inline-code);
                 overflow-wrap: break-word;
             }
 
@@ -259,7 +259,7 @@
                 border-bottom: none;
             }
             .ddia-page tbody tr:hover td {
-                background: rgba(124, 158, 255, 0.04);
+                background: var(--color-ddia-row-hover);
             }
 
             /* Mermaid */
@@ -287,7 +287,7 @@
                 display: flex;
                 gap: 14px;
                 background: var(--color-card);
-                border: 1px solid #1d5a3a;
+                border: 1px solid var(--color-ddia-callout-practice-border);
                 border-left: 4px solid var(--color-google-green);
                 border-radius: 12px;
                 padding: 20px 22px;
@@ -299,7 +299,7 @@
                 height: 26px;
                 border-radius: 7px;
                 background: var(--color-google-green);
-                color: #08150e;
+                color: var(--color-ddia-callout-practice-icon);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -430,7 +430,7 @@
                 transition: background 0.15s;
             }
             .ddia-page .checklist-card li:hover {
-                background: rgba(124, 158, 255, 0.05);
+                background: var(--color-ddia-checklist-hover);
             }
             .ddia-page .checklist-card input[type='checkbox'] {
                 appearance: none;
@@ -456,7 +456,7 @@
                 top: 1px;
                 width: 5px;
                 height: 10px;
-                border: solid #08101f;
+                border: solid var(--color-ddia-check-mark);
                 border-width: 0 2px 2px 0;
                 transform: rotate(40deg);
             }
@@ -481,7 +481,7 @@
                 .ddia-page .sidebar {
                     transform: translateX(-100%);
                     transition: transform 0.25s ease;
-                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 0 40px var(--color-ddia-sidebar-shadow);
                 }
                 .ddia-page .sidebar.open {
                     transform: translateX(0);
