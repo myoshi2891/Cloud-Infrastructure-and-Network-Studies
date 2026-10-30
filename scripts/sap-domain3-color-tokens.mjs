@@ -1,4 +1,6 @@
-/** SAP-C02 Domain 3 原本CSSの固定色と、app/globals.css の @theme に置くトークン名（--color-sap-d3-<名前>）の対応。 */
+/** SAP-C02 Domain 3 原本CSSの固定色と、app/globals.css の @theme に置くトークン名（--color-sap-d3-<名前>）の対応。
+ * @type {Readonly<Record<string, string>>}
+ */
 export const SAP_D3_COLOR_TOKENS = {
     '#fff': 'surface',
     '#a4430f': 'inline-code',
