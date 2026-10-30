@@ -196,10 +196,20 @@ gcloud container clusters create echo-cluster \
 
 クラスタ作成には **約 3〜5 分**かかります。完了を待たずに進めたい場合は、`--async` を付けるか、**別の Cloud Shell タブ**を開いて Task 2 に進みます。
 
+> **注意（別タブの変数）**: 環境変数はタブごとに独立しているため、新しいタブでは 3-3 で設定した `PROJECT_ID` と `ZONE` が空のままです。Task 2 に進む前に、新しいタブで次を実行して値が表示されることを確認してください。`--async` を付けた場合は同じタブで続けられるため、この作業は不要です。
+
+```bash
+export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"
+```
+
 ```mermaid
 flowchart LR
     S["クラスタ作成を開始"] --> W["作成中（3〜5分）"]
-    S --> T2["別タブで<br/>Task 2・3を進める"]
+    S --> T2["別タブで変数を再設定し<br/>Task 2・3を進める"]
     W --> D["クラスタ完成"]
     T2 --> D
     D --> T4["Task 4 へ"]
@@ -297,7 +307,7 @@ cat Dockerfile
 | `EXPOSE` | アプリが待ち受けるポート（今回は **8000**） |
 | 起動コマンド | コンテナ起動時に何が実行されるか |
 
-> **重要**: `EXPOSE 8000` は「このコンテナは 8000 番で待つ」という**宣言（ドキュメント）**で、Task 4 の Service 設定の `targetPort` と一致させる必要があります。
+> **重要**: Task 4 の Service の `targetPort` は、**アプリが実際に待ち受けているポート**（今回は 8000）と一致させる必要があります。`EXPOSE 8000` はそのポートを示す**説明用のメタデータ**にすぎず、ポートを開いたり待ち受け先を変えたりはしません。Dockerfile の `EXPOSE` はアプリの待ち受けポートを確認する手掛かりとして使います。
 
 ### 5-6. イメージをビルドする
 

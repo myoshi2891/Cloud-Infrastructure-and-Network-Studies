@@ -118,12 +118,17 @@ gcloud container clusters list
 ```bash
 # 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
 # 接続や確認のコマンドが失敗した場合は「未作成」と誤認せず、リソースを作成せずに止める
+# ( ) のサブシェル内で exit 1 するため、Cloud Shell は閉じずに終了ステータスだけが 0 以外になる
+(
 if ! gcloud container clusters get-credentials echo-cluster --zone=$ZONE; then
   echo "クラスタの接続情報を取得できません。ZONE とクラスタ名を確認してください。" >&2
+  exit 1
 elif ! DEPLOYMENT=$(kubectl get deployment echo-web --ignore-not-found -o name); then
   echo "Deployment の確認に失敗しました。リソースは作成しません。" >&2
+  exit 1
 elif ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
   echo "Service の確認に失敗しました。リソースは作成しません。" >&2
+  exit 1
 else
   if [ -z "$DEPLOYMENT" ]; then
     kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
@@ -133,6 +138,7 @@ else
   fi &&
   kubectl get deployment,service echo-web
 fi
+) || echo "v1 の準備に失敗しました。上のエラーを解消するまで Task 1 以降へ進まないでください。" >&2
 ```
 
 | コマンド | 何をしているか |
@@ -156,7 +162,7 @@ flowchart LR
     B -->|転送| C[コンテナ<br/>targetPort: 8000]
 ```
 
-> **これが 504 エラーの最大原因です。** Dockerfile で EXPOSE されているポート（8000）と `--target-port` が食い違うと、ロードバランサは Pod に到達できません。
+> **これが 504 エラーの最大原因です。** `--target-port` は**アプリが実際に待ち受けているポート**（今回は 8000）と一致させる必要があり、食い違うとロードバランサは Pod に到達できません。Dockerfile の `EXPOSE 8000` は待ち受けポートを示す説明用のメタデータにすぎず、ポートを開いたり変更したりはしないため、確認の手掛かりとして使います。
 
 ---
 
@@ -448,7 +454,16 @@ Kubernetes は水平スケールが基本です。複数 Pod に分散するこ�
 kubectl scale deployment echo-web --replicas=2
 ```
 
-確認します。
+2 つのレプリカがどちらも Ready になるまで待ちます（`scale` は台数の指定を変えるだけで、Pod の起動完了は待ちません）。
+
+```bash
+kubectl rollout status deployment/echo-web --timeout=5m
+kubectl get deployment echo-web
+```
+
+`rollout status` が `successfully rolled out` で終わり、`READY` 列が `2/2` になったことを確認してから次へ進みます。タイムアウトした場合は `kubectl describe deployment echo-web` と `kubectl get events` で原因を確認してください。
+
+Ready を確認したうえで、Pod の一覧を見ます。
 
 ```bash
 kubectl get pods -l app=echo-web
@@ -575,15 +590,24 @@ export ZONE="REPLACE_WITH_LAB_ZONE"      # ラボ指定のゾーンに置き換�
 export BUCKET="REPLACE_WITH_LAB_BUCKET"  # ラボ指定のバケット名に置き換える
 export PROJECT_ID=$(gcloud config get-value project)
 
+# 0-1 以降は ( ) のサブシェルで実行する。接続や確認に失敗すると exit 1 で
+# サブシェルだけが終了し、古い kubectl コンテキストに対して Task 1〜5 を実行しない
+# （Cloud Shell 自体は閉じない）。set -e で途中のコマンド失敗時も以降を止める
+(
+set -e
+
 # 0-1. 接続と v1 のデプロイ
 # 既存の v1 Deployment / Service があれば作り直さず、無い場合だけ作成する
 # 接続や確認のコマンドが失敗した場合は「未作成」と誤認せず、リソースを作成せずに止める
 if ! gcloud container clusters get-credentials echo-cluster --zone=$ZONE; then
   echo "クラスタの接続情報を取得できません。ZONE とクラスタ名を確認してください。" >&2
+  exit 1
 elif ! DEPLOYMENT=$(kubectl get deployment echo-web --ignore-not-found -o name); then
   echo "Deployment の確認に失敗しました。リソースは作成しません。" >&2
+  exit 1
 elif ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
   echo "Service の確認に失敗しました。リソースは作成しません。" >&2
+  exit 1
 else
   if [ -z "$DEPLOYMENT" ]; then
     kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
@@ -611,8 +635,10 @@ CONTAINER_NAME=$(kubectl get deployment echo-web -o jsonpath='{.spec.template.sp
 kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"
 kubectl rollout status deployment/echo-web
 
-# Task 4: スケールアウト
+# Task 4: スケールアウト（2 レプリカが Ready になるまで待つ）
 kubectl scale deployment echo-web --replicas=2
+kubectl rollout status deployment/echo-web --timeout=5m
+kubectl get deployment echo-web
 kubectl get pods
 
 # Task 5: 動作確認
@@ -630,9 +656,9 @@ if [ -z "$EXTERNAL_IP" ]; then
   kubectl describe service echo-web
   kubectl get events --field-selector involvedObject.kind=Service,involvedObject.name=echo-web
 else
-  export EXTERNAL_IP
   curl "http://${EXTERNAL_IP}"
 fi
+) || echo "途中で失敗したため、以降のコマンドは実行していません。上のエラーを確認してください。" >&2
 ```
 
 > `docker build` のビルドコンテキストは、Dockerfile のあるディレクトリ（上の `BUILD_DIR`）を指定してください。

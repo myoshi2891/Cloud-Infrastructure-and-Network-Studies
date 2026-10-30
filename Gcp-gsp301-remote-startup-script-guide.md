@@ -309,7 +309,7 @@ gcloud compute instances create "${VM_NAME}" \
 |---|---|
 | `--zone` | VM を作るゾーン（ラボ指定） |
 | `--machine-type` | マシンタイプ。Apache を動かすだけなら `e2-medium` 程度で十分 |
-| `--image-family` / `--image-project` | OS イメージ。Debian の最新版ファミリーを使う |
+| `--image-family` / `--image-project` | OS イメージ。Debian 12（`debian-cloud/debian-12`）のファミリーを使う |
 | `--tags=http-server` | ネットワークタグ。Task 3 のルールの対象になる |
 | `--service-account` | VM が使うサービスアカウント。上で `roles/storage.objectViewer` を付与したものを明示する |
 | `--scopes=storage-ro` | Cloud Storage の読み取り専用スコープ。必要最小限の API アクセス |
@@ -322,19 +322,20 @@ gcloud compute instances create "${VM_NAME}" \
 1. **Compute Engine > VM インスタンス > インスタンスを作成** をクリックします。
 2. **名前** を入力し、**リージョン** と **ゾーン** にラボ指定のゾーンを選びます。
 3. マシン構成は既定のまま、または `e2-medium` にします。
-4. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。
-5. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 2 点を設定します。
+4. 左メニューの **OS とストレージ** を開き、**ブートディスク** の **変更** をクリックして、オペレーティングシステムに **Debian GNU/Linux**、バージョンに **Debian GNU/Linux 12 (bookworm)**（`debian-cloud/debian-12`）を選び、**選択** をクリックします。手順 A の `--image-family=debian-12` と同じ OS にそろえるためです。
+5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。
+6. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 2 点を設定します。
    - **サービスアカウント** に、手順 A で `roles/storage.objectViewer` を付与したサービスアカウント（ここでは Compute Engine の既定のサービスアカウント `プロジェクト番号-compute@developer.gserviceaccount.com`）を選びます。
    - **アクセススコープ** で、Cloud Storage の読み取りが許可されていることを確認します。
    - 手順 A の `gcloud storage buckets add-iam-policy-binding` をまだ実行していない場合は、**Cloud Storage > バケット >（自分のバケット）> 権限** で **アクセス権を付与** をクリックし、上で選んだサービスアカウントに **Storage オブジェクト閲覧者**（`roles/storage.objectViewer`）をバケット単位で付与します。付与済みの場合は、同じ画面でそのサービスアカウントにロールが表示されることを確認します。
-6. **詳細設定 > 管理 > メタデータ** で **項目を追加** をクリックし、次の値を入力します。
+7. **詳細設定 > 管理 > メタデータ** で **項目を追加** をクリックし、次の値を入力します。
 
 | 項目 | 値 |
 |---|---|
 | キー | `startup-script-url` |
 | 値 | `gs://（自分のバケット名）/install-web.sh` |
 
-7. **作成** をクリックします。
+8. **作成** をクリックします。
 
 > ⚠️ **よくある間違い**: コンソールの「起動スクリプト」欄は、**スクリプトの本文**を貼る欄（キーは `startup-script`）です。URL を入れる場合は、上のとおり**メタデータ欄に `startup-script-url`** を追加します。
 >

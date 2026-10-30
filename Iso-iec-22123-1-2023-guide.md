@@ -415,6 +415,7 @@ flowchart LR
         PAAS["PaaS"]
         IAAS["IaaS"]
         CAAS["CaaS"]
+        COMPAAS["CompaaS"]
         DSAAS["DSaaS"]
         NAAS["NaaS"]
     end
@@ -429,9 +430,10 @@ flowchart LR
     APP -.-> NAAS
     PLT -.-> NAAS
     INF -.-> NAAS
+    INF -.->|"処理リソース"| COMPAAS
 ```
 
-> 実線は「そのカテゴリそのもの／注記で明示された組み合わせ」、点線は「3種類のどれでも提供し得る」を表します。
+> 実線は「そのカテゴリそのもの／注記で明示された組み合わせ」、点線は「3種類のどれでも提供し得る」を表します。ラベル付きの点線（infrastructure → CompaaS）は、CompaaS が提供する**処理リソース**が infrastructure capabilities type の処理リソースに相当することを示す目安です。規格は CompaaS の能力タイプを明示しておらず、他の能力が別途必要な場合があります（8-3 の注記）。
 
 ### 8-4. IaaS の責任範囲（規格が書いている部分）
 
