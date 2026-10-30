@@ -286,7 +286,7 @@ docker push gcr.io/$PROJECT_ID/echo-app:v2
 **手順 3：確認**
 
 ```bash
-gcloud artifacts docker tags list gcr.io/$PROJECT_ID/echo-app
+gcloud artifacts docker tags list us-docker.pkg.dev/$PROJECT_ID/gcr.io/echo-app
 ```
 
 `TAG` 列に `v2` が表示されれば成功です。ここで **Check my progress** を押します。

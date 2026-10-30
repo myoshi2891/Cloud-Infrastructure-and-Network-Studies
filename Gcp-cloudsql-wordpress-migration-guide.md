@@ -570,10 +570,10 @@ define( 'DB_HOST', 'localhost' );
 
 ```bash
 gcloud compute ssh blog --zone=$ZONE
-sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
+sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
 ```
 
-> **ベストプラクティス**: 設定ファイルを触る前のバックアップは基本です。失敗してもすぐ戻せます。
+> **ベストプラクティス**: 設定ファイルを触る前のバックアップは基本です。失敗してもすぐ戻せます。バックアップは Web ルート（`/var/www/html`）の外の `/root` に、所有者 root・権限 `0600` で保存します。Web ルート内に置くと、DB パスワードを含むファイルが HTTP 経由で取得されるおそれがあります。
 
 **2. 現在の設定を確認**
 
@@ -729,7 +729,12 @@ sudo a2disconf wp-readonly
 sudo systemctl reload apache2
 ```
 
-> 移行が確認できない場合は、読み取り専用のまま `wp-config.php.bak` に戻して原因を調べます。書き込みを再開する前に切り戻せば、ローカル DB との差分は生じません。
+> 移行が確認できない場合は、読み取り専用のまま `/root/wp-config.php.bak` に戻して原因を調べます。書き込みを再開する前に切り戻せば、ローカル DB との差分は生じません。
+>
+> ```bash
+> # 既存ファイルへ上書きコピーするため、wp-config.php の所有者・権限は変わらない
+> sudo cp /root/wp-config.php.bak /var/www/html/wordpress/wp-config.php
+> ```
 
 ---
 
@@ -896,7 +901,7 @@ mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED \
 mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
 
 # ---------- Task 4: wp-config.php 更新 ----------
-sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
+sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
 sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '$SQL_IP' );/" \
   /var/www/html/wordpress/wp-config.php
 sudo sed -i "/define( *'DB_HOST'/a define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );" \

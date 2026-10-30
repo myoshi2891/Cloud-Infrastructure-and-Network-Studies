@@ -429,7 +429,7 @@ flowchart TD
 
 | 症状 | 主な原因 | 対処 |
 |---|---|---|
-| **Connection Refused**（接続拒否） | ① Apache が TCP 80 で待ち受けていない（未インストール・停止中）　② `https://`（TCP 443）で接続している | `sudo systemctl status apache2` と `sudo ss -ltnp \| grep ':80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2`。URL を `http://` に修正 |
+| **Connection Refused**（接続拒否） | ① Apache が TCP 80 で待ち受けていない（未インストール・停止中）　② `https://`（TCP 443）で接続している | `sudo systemctl status apache2` と `sudo ss -ltnp 'sport = :80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2`。URL を `http://` に修正 |
 | 読み込み中のまま**タイムアウト** | ① ファイアウォールルールがない　② VM のネットワークタグとルールのターゲットタグが一致しない　③ ルールのポート・ソース範囲の設定違い | ルールの存在・ターゲットタグ・ポート・ソース範囲と VM のタグを確認 |
 | 「Apache2 Debian Default Page」が出る | 正常。既定ページが表示されている | 必要なら 6.5 の手順で Hello World に置き換え |
 | `apt-get install` が失敗する | `update` 未実施・一時的なネットワーク障害 | `sudo apt-get update` を実行して再試行 |

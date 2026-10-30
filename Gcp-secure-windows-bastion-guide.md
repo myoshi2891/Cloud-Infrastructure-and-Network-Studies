@@ -1045,6 +1045,19 @@ gcloud compute instances create vm-bastionhost \
   --network-interface=network=securenetwork,subnet=secure-subnet \
   --network-interface=network=default,no-address
 
+# ===== default VPC: 踏み台 nic1 → セキュアホストの TCP 3389 のみ許可（8.3.3）=====
+BASTION_DEFAULT_IP=$(gcloud compute instances describe vm-bastionhost --zone=$ZONE \
+  --format="get(networkInterfaces[1].networkIP)")
+gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
+  --network=default \
+  --direction=INGRESS \
+  --action=ALLOW \
+  --rules=tcp:3389 \
+  --source-ranges="${BASTION_DEFAULT_IP}/32" \
+  --target-tags=securehost
+# 既定ルール（default-allow-rdp/ssh/icmp、任意で default-allow-internal）の削除は、
+# 踏み台経由の RDP を確認した後に 8.3.3 の条件付き手順で行う
+
 # ===== 数分待ってからパスワードリセット =====
 gcloud compute reset-windows-password vm-bastionhost --user app_admin --zone=$ZONE
 gcloud compute reset-windows-password vm-securehost --user app_admin --zone=$ZONE

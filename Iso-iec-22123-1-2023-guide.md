@@ -751,8 +751,9 @@ Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hoh
 
 - [ ] 規格が「用語集型」であり、準拠認証の対象ではないことを説明できる
 - [ ] party と role の違いを例で説明できる
-- [ ] 5つの配備モデル（private / public / community / hybrid / multi-cloud）を区別できる
-- [ ] multi-cloud・inter-cloud・federated cloud の違いを図で描ける
+- [ ] 基本の4モデル（private / public / community / hybrid）を区別できる
+- [ ] 複数 CSP 系の4モデル（multi-cloud / hybrid multi-cloud / federated cloud / inter-cloud）を区別できる
+- [ ] multi-cloud・hybrid multi-cloud・inter-cloud・federated cloud の違いを図で描ける
 - [ ] IaaS / PaaS / SaaS が能力タイプとどう対応するか説明できる
 - [ ] 相互運用性5レベルと可搬性の観点を、移行計画の確認項目に落とせる
 - [ ] SLA / SLO / SQO / remedy の関係を説明できる
