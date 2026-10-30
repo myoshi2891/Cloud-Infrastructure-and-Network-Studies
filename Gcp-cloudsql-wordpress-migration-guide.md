@@ -1,0 +1,761 @@
+# Google Cloud チャレンジラボ完全ガイド
+
+## WordPress のローカル MySQL を Cloud SQL へ移行する（初学者向け）
+
+> **対象**: Google Cloud 初学者〜Professional Cloud Architect（PCA）試験対策中の方
+> **ゴール**: `blog` インスタンス上の WordPress が、ローカル MySQL ではなく **Cloud SQL** を使って動く状態にする
+> **全 5 タスク**: 作成 → 設定 → ダンプ＆インポート → 再設定 → 検証
+
+---
+
+## 目次
+
+1. [このラボで何をするのか（全体像）](#1-このラボで何をするのか全体像)
+2. [先に知っておきたい用語](#2-先に知っておきたい用語)
+3. [事前準備（変数・API・接続）](#3-事前準備変数api接続)
+4. [Task 1: Cloud SQL インスタンスを作成する](#4-task-1-cloud-sql-インスタンスを作成する)
+5. [Task 2: データベースとユーザーを設定する](#5-task-2-データベースとユーザーを設定する)
+6. [Task 3: ダンプを取得してインポートする](#6-task-3-ダンプを取得してインポートする)
+7. [Task 4: WordPress の接続先を変更する](#7-task-4-wordpress-の接続先を変更する)
+8. [Task 5: 検証とトラブルシューティング](#8-task-5-検証とトラブルシューティング)
+9. [ベストプラクティス（本番運用ならこうする）](#9-ベストプラクティス本番運用ならこうする)
+10. [PCA 試験に向けたポイント](#10-pca-試験に向けたポイント)
+11. [最終チェックリスト](#11-最終チェックリスト)
+12. [コマンド一括リファレンス](#12-コマンド一括リファレンス)
+
+---
+
+## 1. このラボで何をするのか（全体像）
+
+### 1.1 シナリオの整理
+
+| 項目 | 内容 |
+|---|---|
+| 現状 | VM `blog` の中で **WordPress と MySQL が同居** している |
+| WordPress の場所 | `/var/www/html/wordpress` |
+| 設定ファイル | `/var/www/html/wordpress/wp-config.php` |
+| 既存 DB 名 | `wordpress` |
+| 既存 DB ユーザー | `blogadmin`（パスワード `Password1*`） |
+| 目標 | DB を **マネージドサービス Cloud SQL** へ移し、WordPress の接続先だけを差し替える |
+
+### 1.2 移行前と移行後
+
+```mermaid
+flowchart LR
+    subgraph BEFORE["移行前"]
+        U1["ブラウザ"] --> VM1["blog VM"]
+        subgraph VM1["blog VM"]
+            WP1["WordPress"] --> DB1[("ローカル MySQL")]
+        end
+    end
+```
+
+```mermaid
+flowchart LR
+    subgraph AFTER["移行後"]
+        U2["ブラウザ"] --> VM2["blog VM"]
+        subgraph VM2["blog VM"]
+            WP2["WordPress"]
+        end
+        WP2 -->|"3306 番ポート"| SQL[("Cloud SQL for MySQL")]
+    end
+```
+
+**ポイント**: アプリ（WordPress）と DB を別々の場所に分離します。これが「マイグレーションの第一歩」であり、DB の運用（バックアップ・パッチ適用・高可用性）を Google に任せられるのが利点です。
+
+### 1.3 5 つのタスクの流れ
+
+```mermaid
+flowchart TD
+    A["Task 1\nCloud SQL インスタンス作成"] --> B["Task 2\nデータベース wordpress と\nユーザー blogadmin を作成"]
+    B --> C["Task 3\nblog の IP を承認ネットワークに登録\nmysqldump で書き出して取り込み"]
+    C --> D["Task 4\nwp-config.php の DB_HOST を\nCloud SQL の IP に変更"]
+    D --> E["Task 5\nブラウザで表示確認\nエラー時はログから原因を調査"]
+```
+
+### 1.4 データ移行の時系列（シーケンス図）
+
+```mermaid
+sequenceDiagram
+    participant You as あなた
+    participant VM as blog VM
+    participant Local as ローカル MySQL
+    participant CSQL as Cloud SQL
+
+    You->>CSQL: インスタンス作成（Task 1）
+    You->>CSQL: DB とユーザーを作成（Task 2）
+    You->>CSQL: blog の外部 IP を承認（Task 3）
+    You->>VM: SSH で接続
+    VM->>Local: mysqldump でダンプ取得
+    Local-->>VM: wordpress_backup.sql
+    VM->>CSQL: mysql コマンドでインポート
+    You->>VM: wp-config.php の DB_HOST を変更（Task 4）
+    VM->>CSQL: WordPress が Cloud SQL に接続
+    You->>VM: ブラウザで動作確認（Task 5）
+```
+
+---
+
+## 2. 先に知っておきたい用語
+
+| 用語 | 意味 | このラボでの役割 |
+|---|---|---|
+| **Cloud SQL** | Google Cloud のマネージドなリレーショナル DB サービス（MySQL / PostgreSQL / SQL Server） | 移行先の DB |
+| **マネージドサービス** | パッチ適用・バックアップ・フェイルオーバー等を Google が代行する仕組み | 運用負荷の削減 |
+| **インスタンス** | Cloud SQL の「DB サーバー 1 台分」の単位 | Task 1 で作成 |
+| **データベース** | インスタンスの中にある論理的な DB（スキーマ） | `wordpress` |
+| **ユーザー** | DB へのログインアカウント | `blogadmin` |
+| **承認済みネットワーク（Authorized networks）** | パブリック IP の Cloud SQL に接続できる送信元 IP の許可リスト | `blog` の外部 IP を登録 |
+| **mysqldump** | MySQL のデータを SQL 文として書き出すツール | 移行データの作成 |
+| **wp-config.php** | WordPress の接続設定ファイル | Task 4 で編集 |
+| **DB_HOST** | WordPress が接続する DB のホスト名または IP | ここを Cloud SQL の IP に変える |
+| **Cloud Shell** | ブラウザ内で使える Google Cloud 用ターミナル | 操作の起点 |
+
+---
+
+## 3. 事前準備（変数・API・接続）
+
+### 3.1 ラボ画面の値を確認する
+
+ラボ左側のパネルに **Region（リージョン）** と **Zone（ゾーン）** が表示されています。問題文中の `REGION` `ZONE` はこの値のことです。**必ず指定された値を使ってください**（別のリージョンで作ると、チェックに通らない可能性があります）。
+
+### 3.2 Cloud Shell を開いて変数を設定する
+
+コンソール右上の **Cloud Shell アクティブ化** アイコンをクリックし、以下を実行します。
+
+```bash
+# ★ 自分のラボの値に置き換える（例: us-central1 / us-central1-a）
+export REGION=us-central1
+export ZONE=us-central1-a
+
+# 以降のタスクで使う名前
+export INSTANCE_NAME=wordpress-sql
+export DB_NAME=wordpress
+export DB_USER=blogadmin
+export DB_PASS='Password1*'
+```
+
+> **注意**: `Password1*` の `*` はシェルで特別な意味を持つため、**必ずシングルクォート `'` で囲みます**。
+
+> **補足**: Cloud Shell を閉じたり再接続したりすると変数は消えます。作業を中断した場合は、上のブロックをもう一度実行してください。
+
+### 3.3 プロジェクトと API の確認
+
+```bash
+# 現在のプロジェクトを確認
+gcloud config get-value project
+
+# Cloud SQL Admin API を有効化（ラボでは既に有効なことが多い）
+gcloud services enable sqladmin.googleapis.com
+
+# リージョン・ゾーンの既定値を設定しておくと入力が楽になる
+gcloud config set compute/region $REGION
+gcloud config set compute/zone $ZONE
+```
+
+---
+
+## 4. Task 1: Cloud SQL インスタンスを作成する
+
+### 4.1 このタスクの目的
+
+WordPress が使える **MySQL 互換のインスタンス** を、指定リージョン・ゾーンに作ります。
+
+### 4.2 考え方（設計判断の理由）
+
+| 判断項目 | 選択 | 理由 |
+|---|---|---|
+| DB エンジン | **Cloud SQL for MySQL** | WordPress は MySQL（または MariaDB）を前提としているため |
+| バージョン | **既存 MySQL と同じメジャーバージョン以上** | 古いバージョンから新しいバージョンへの移行は互換性が高い。逆方向は失敗しやすい |
+| 場所 | **指定された Region / Zone** | 問題文の指示。`blog` と近いほど遅延が小さい |
+| 接続方式 | **パブリック IP ＋ 承認済みネットワーク** | ラボの構成が最も簡単。本番では Private IP 推奨（9 章参照） |
+| マシンサイズ | 小さめ（例: `db-n1-standard-1`） | ラボ用途なので十分。作成も早い |
+
+### 4.3 先に既存 MySQL のバージョンを確認する（推奨）
+
+`blog` へ SSH 接続して確認します。
+
+```bash
+gcloud compute ssh blog --zone=$ZONE
+```
+
+接続後、`blog` の中で次を実行します。
+
+```bash
+mysql --version
+```
+
+> **見方**: `Ver 8.0.xx` なら MySQL 8.0、`Distrib 5.7.xx` なら MySQL 5.7、`MariaDB` と出る場合は MariaDB です。確認できたら `exit` で Cloud Shell に戻ります。
+> MariaDB の場合も、WordPress の標準的なテーブル程度であれば MySQL 8.0 へ取り込めます。
+
+### 4.4 手順 A: コンソール（GUI）で作成する
+
+1. ナビゲーションメニュー → **SQL** を開く
+2. **インスタンスを作成** をクリック
+3. **MySQL を選択**
+4. 次のように設定する
+
+| 設定項目 | 値 |
+|---|---|
+| インスタンス ID | `wordpress-sql` |
+| パスワード（root） | 任意の強いパスワード（控えておく） |
+| データベースのバージョン | MySQL 8.0（既存に合わせる） |
+| エディション | **Enterprise**（小さいマシンタイプを使うため） |
+| リージョン | ラボで指定された REGION |
+| ゾーンの可用性 | **シングルゾーン** → 指定された ZONE |
+| マシン構成 | 軽量（共有コア or 1 vCPU 程度） |
+| 接続 | **パブリック IP** を有効のまま |
+
+5. **インスタンスを作成** をクリック（完了まで **5〜10 分** かかります）
+
+### 4.5 手順 B: gcloud で作成する（再現性が高い）
+
+```bash
+gcloud sql instances create $INSTANCE_NAME \
+  --database-version=MYSQL_8_0 \
+  --edition=ENTERPRISE \
+  --tier=db-n1-standard-1 \
+  --region=$REGION \
+  --zone=$ZONE \
+  --root-password='RootPassw0rd!' \
+  --storage-type=SSD \
+  --storage-size=10GB
+```
+
+| オプション | 意味 |
+|---|---|
+| `--database-version` | MySQL のバージョン |
+| `--edition=ENTERPRISE` | カスタム／小型のマシンタイプを使うためのエディション指定 |
+| `--tier` | マシンタイプ（CPU・メモリのサイズ） |
+| `--region` / `--zone` | 配置場所（問題文で指定された値） |
+| `--root-password` | 管理者 `root` のパスワード |
+| `--storage-type` / `--storage-size` | ディスク種別と容量 |
+
+> **ヒント**: エラーでエディションやマシンタイプの組み合わせが拒否された場合は、メッセージに従って `--edition` と `--tier` の組み合わせを見直してください。**エラーメッセージを読んで自分で直す**ことがこのチャレンジラボの趣旨です。
+
+### 4.6 作成できたか確認する
+
+```bash
+gcloud sql instances list
+```
+
+`STATUS` が **RUNNABLE** になっていれば成功です。ラボ画面の **Check my progress** を押して Task 1 を確認します。
+
+---
+
+## 5. Task 2: データベースとユーザーを設定する
+
+### 5.1 このタスクの目的
+
+空の Cloud SQL インスタンスの中に、**既存と同じ名前の DB とユーザー** を用意します。こうすると、Task 4 で変更する箇所が `DB_HOST` だけで済みます。
+
+```mermaid
+flowchart LR
+    subgraph OLD["既存のローカル MySQL"]
+        O1["DB: wordpress"]
+        O2["ユーザー: blogadmin"]
+    end
+    subgraph NEW["Cloud SQL（Task 2 で用意）"]
+        N1["DB: wordpress"]
+        N2["ユーザー: blogadmin"]
+    end
+    O1 -.同じ名前で作る.-> N1
+    O2 -.同じ名前で作る.-> N2
+```
+
+### 5.2 手順 A: コンソール
+
+1. **SQL** → `wordpress-sql` をクリック
+2. 左メニュー **データベース** → **データベースを作成** → 名前 `wordpress` → 作成
+3. 左メニュー **ユーザー** → **ユーザー アカウントを追加**
+   - ユーザー名: `blogadmin`
+   - パスワード: `Password1*`
+   - ホスト名: **任意のホスト（%）**
+4. **追加** をクリック
+
+### 5.3 手順 B: gcloud
+
+```bash
+# データベースを作成
+gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME
+
+# ユーザーを作成（ホストは % = どこからでも）
+gcloud sql users create $DB_USER \
+  --instance=$INSTANCE_NAME \
+  --host=% \
+  --password="$DB_PASS"
+```
+
+### 5.4 確認
+
+```bash
+gcloud sql databases list --instance=$INSTANCE_NAME
+gcloud sql users list --instance=$INSTANCE_NAME
+```
+
+一覧に `wordpress` と `blogadmin` が表示されれば成功です。**Check my progress** を押します。
+
+### 5.5 よくある疑問
+
+| 質問 | 回答 |
+|---|---|
+| ホストを `%` にして大丈夫？ | ユーザーの許可は広いですが、実際の接続元は **承認済みネットワーク** で絞れます（Task 3）。本番では更に絞るか Private IP を使います |
+| 権限（GRANT）は要る？ | Cloud SQL が作る標準ユーザーは、基本的な操作権限を持ちます。WordPress の利用には通常これで足ります |
+| root は使わない？ | はい。アプリ用は **専用ユーザー** を使うのが最小権限の原則です |
+
+---
+
+## 6. Task 3: ダンプを取得してインポートする
+
+このタスクには、実は **3 つの作業** が含まれています。
+
+```mermaid
+flowchart TD
+    S1["3-1. blog の外部 IP を調べる"] --> S2["3-2. その IP を Cloud SQL の\n承認済みネットワークに登録"]
+    S2 --> S3["3-3. blog にSSHして\nmysqldump でダンプ取得"]
+    S3 --> S4["3-4. Cloud SQL にインポート"]
+    S4 --> S5["3-5. 件数などで取り込み確認"]
+```
+
+> **ラボの確認ポイント**: Task 3 の **Check my progress** は「blog インスタンスが Cloud SQL にアクセスを承認されているか」を見ます。つまり **3-2 の承認設定が重要** です。
+
+### 6.1 手順 3-1: blog の外部 IP を取得する
+
+Cloud Shell で実行します。
+
+```bash
+export BLOG_IP=$(gcloud compute instances describe blog \
+  --zone=$ZONE \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+echo $BLOG_IP
+```
+
+IP アドレス（例: `34.xx.xx.xx`）が表示されれば OK です。
+
+### 6.2 手順 3-2: 承認済みネットワークに登録する
+
+**コンソールの場合**
+
+1. **SQL** → `wordpress-sql` → 左メニュー **接続**
+2. **ネットワーキング** タブ → **ネットワークを追加**
+3. 名前: `blog` ／ ネットワーク: `<BLOG_IP>/32` → **完了** → **保存**
+
+**gcloud の場合**
+
+```bash
+gcloud sql instances patch $INSTANCE_NAME \
+  --authorized-networks=${BLOG_IP}/32 \
+  --quiet
+```
+
+> **`/32` とは？**
+> CIDR 表記で「その 1 つの IP アドレスだけ」を意味します。`blog` 1 台だけを許可する、最小権限の設定です。
+
+> **注意**: `--authorized-networks` は **既存リストを上書き** します。複数の IP を許可したい場合は、カンマ区切りで全部書いてください（例: `--authorized-networks=1.2.3.4/32,5.6.7.8/32`）。
+
+### 6.3 手順 3-3: Cloud SQL の IP を調べる
+
+```bash
+export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME \
+  --format='get(ipAddresses[0].ipAddress)')
+
+echo $SQL_IP
+```
+
+この IP は **Task 4 でも使う** ので、控えておきます。
+
+### 6.4 手順 3-4: blog に SSH してダンプを取得する
+
+```bash
+gcloud compute ssh blog --zone=$ZONE
+```
+
+接続後、`blog` の中で次のコマンドを実行します。
+
+```bash
+mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
+```
+
+| 部分 | 意味 |
+|---|---|
+| `mysqldump` | DB を SQL 文として書き出すコマンド |
+| `-u blogadmin` | 使用するユーザー |
+| `-p'Password1*'` | パスワード（`-p` の直後に空白なしで指定。シングルクォート必須） |
+| `wordpress` | ダンプ対象のデータベース名 |
+| `> wordpress_backup.sql` | 出力先ファイル |
+
+#### ダンプの中身を軽く確認する
+
+```bash
+ls -lh wordpress_backup.sql
+head -n 20 wordpress_backup.sql
+grep -c "CREATE TABLE" wordpress_backup.sql
+```
+
+`CREATE TABLE` が **約 12 個前後**（WordPress 標準テーブル）出てくれば、基本的なデータは取れています。ファイルサイズが 0 の場合は、ユーザー名・パスワード・DB 名を見直してください。
+
+> **補足（mysqldump のオプション）**
+> 環境によっては次のエラーや警告が出ることがあります。メッセージを読み、必要なら下表のオプションを追加します。
+>
+> | 状況 | 追加するオプション |
+> |---|---|
+> | 権限に関するエラー（テーブルスペース） | `--no-tablespaces` |
+> | 整合性を保って取得したい（InnoDB） | `--single-transaction` |
+> | GTID 関連の警告・エラー（MySQL クライアントの場合） | `--set-gtid-purged=OFF` |
+
+### 6.5 手順 3-5: Cloud SQL にインポートする
+
+引き続き `blog` の中で、MySQL クライアントを使って流し込みます。`<SQL_IP>` は 6.3 で調べた値に置き換えてください。
+
+```bash
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
+```
+
+> **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
+
+### 6.6 取り込みの確認
+
+```bash
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+```
+
+- `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
+- テーブル接頭辞（`wp_`）は環境によって異なります。`SHOW TABLES;` の結果に合わせて読み替えてください。
+
+確認できたら、ラボ画面で **Check my progress** を押します。
+
+### 6.7 （別解）Cloud Storage 経由でインポートする方法
+
+Cloud Storage にダンプを置き、Cloud SQL の **インポート機能** を使う方法もあります。大きな DB や、DB に直接ネットワーク接続できない場合に向いています。
+
+```mermaid
+flowchart LR
+    D["ダンプファイル .sql"] -->|"アップロード"| G[("Cloud Storage バケット")]
+    G -->|"gcloud sql import sql"| C[("Cloud SQL")]
+```
+
+```bash
+gcloud sql import sql $INSTANCE_NAME gs://<バケット名>/wordpress_backup.sql \
+  --database=$DB_NAME
+```
+
+> この方法では、**Cloud SQL のサービスアカウントにバケットの読み取り権限** が必要です。このラボでは手順 3-4／3-5 の直接インポートが手軽です。
+
+---
+
+## 7. Task 4: WordPress の接続先を変更する
+
+### 7.1 このタスクの目的
+
+WordPress が見に行く DB を、ローカル（`localhost`）から Cloud SQL の IP に切り替えます。
+
+```mermaid
+flowchart LR
+    WP["WordPress\nwp-config.php"] -->|"変更前 DB_HOST = localhost"| L[("ローカル MySQL")]
+    WP -->|"変更後 DB_HOST = Cloud SQL の IP"| C[("Cloud SQL")]
+```
+
+### 7.2 設定ファイルの該当箇所を理解する
+
+`wp-config.php` には、概ね次の 4 行があります。
+
+```php
+define( 'DB_NAME', 'wordpress' );
+define( 'DB_USER', 'blogadmin' );
+define( 'DB_PASSWORD', 'Password1*' );
+define( 'DB_HOST', 'localhost' );
+```
+
+| 定数 | 変更の要否 | 理由 |
+|---|---|---|
+| `DB_NAME` | **不要** | Task 2 で同名の DB を作成済み |
+| `DB_USER` | **不要** | 同名のユーザーを作成済み |
+| `DB_PASSWORD` | **不要** | 同じパスワードで作成済み |
+| `DB_HOST` | **必要** | `localhost` → **Cloud SQL の IP** に変更する |
+
+### 7.3 手順
+
+**1. blog に SSH して、必ず先にバックアップを取る**
+
+```bash
+gcloud compute ssh blog --zone=$ZONE
+sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
+```
+
+> **ベストプラクティス**: 設定ファイルを触る前のバックアップは基本です。失敗してもすぐ戻せます。
+
+**2. 現在の設定を確認**
+
+```bash
+grep DB_ /var/www/html/wordpress/wp-config.php
+```
+
+**3. DB_HOST を変更する（方法 A: エディタ）**
+
+```bash
+sudo nano /var/www/html/wordpress/wp-config.php
+```
+
+`DB_HOST` の行を次のように書き換え、`Ctrl + O` → Enter → `Ctrl + X` で保存します。
+
+```php
+define( 'DB_HOST', '<SQL_IP>' );
+```
+
+**3'. DB_HOST を変更する（方法 B: sed でワンライナー）**
+
+```bash
+sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '<SQL_IP>' );/" \
+  /var/www/html/wordpress/wp-config.php
+```
+
+**4. 変更結果を確認**
+
+```bash
+grep DB_HOST /var/www/html/wordpress/wp-config.php
+```
+
+`<SQL_IP>` に置き換えた値が表示されていれば OK です。ラボ画面で **Check my progress** を押します。
+
+> **ポイント**: Apache や PHP の再起動は通常不要です。WordPress はリクエストのたびに `wp-config.php` を読み込みます。ただし表示が更新されない場合は `sudo systemctl restart apache2` を試します。
+
+---
+
+## 8. Task 5: 検証とトラブルシューティング
+
+### 8.1 動作確認
+
+**方法 1: ブラウザ**
+
+1. コンソール → **Compute Engine** → **VM インスタンス**
+2. `blog` の **外部 IP** を `http://<外部IP>` で開く
+3. ブログのトップページが表示されることを確認
+
+**方法 2: コマンド**（`blog` の中で）
+
+```bash
+curl -I http://localhost/wordpress/
+```
+
+> `HTTP/1.1 200 OK` なら正常です。URL のパスは環境により `/` のこともあります。
+
+### 8.2 「本当に Cloud SQL を見ているか」を確かめる（任意）
+
+ローカル MySQL を一時停止しても表示されれば、確実に Cloud SQL を参照している証拠になります。
+
+```bash
+# blog の中で
+sudo systemctl stop mysql      # 環境により mysqld / mariadb
+curl -I http://localhost/wordpress/
+```
+
+- **200 が返る** → Cloud SQL を使えている
+- **エラーになる** → まだローカル MySQL を参照している（`DB_HOST` を再確認）
+
+> 確認後、ラボを続けるうえで問題があれば `sudo systemctl start mysql` で戻せます。
+
+### 8.3 エラー診断フローチャート
+
+```mermaid
+flowchart TD
+    A["ブログが表示されない"] --> B{"画面のメッセージは？"}
+    B -->|"Error establishing a database connection"| C{"blog から Cloud SQL に\nmysql コマンドで接続できる？"}
+    B -->|"白い画面 / 500 エラー"| H["Apache のエラーログを確認\n/var/log/apache2/error.log"]
+    B -->|"ページは出るが記事が空"| I["インポートが不完全\nテーブルと件数を確認"]
+    C -->|"タイムアウト"| D["承認済みネットワークに\nblog の外部 IP/32 が登録されているか確認"]
+    C -->|"Access denied"| E["ユーザー名 パスワード ホストを確認\nDB_USER と DB_PASSWORD も確認"]
+    C -->|"Unknown database"| F["Cloud SQL に wordpress DB があるか確認"]
+    C -->|"接続できる"| G["wp-config.php の DB_HOST が\n正しい IP か確認 タイプミスなど"]
+```
+
+### 8.4 よくあるエラーと対処
+
+| 症状・エラー | 主な原因 | 対処 |
+|---|---|---|
+| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep DB_ wp-config.php` で値を確認し、`mysql -h` で直接接続テスト |
+| `ERROR 2003 (HY000): Can't connect to MySQL server` | 承認済みネットワーク未設定 | `blog` の外部 IP を `/32` で登録（6.2） |
+| `ERROR 1045 (28000): Access denied` | ユーザー名・パスワード違い | `gcloud sql users list` で存在確認、必要ならパスワード再設定 |
+| `ERROR 1049 (42000): Unknown database` | DB 未作成 | `gcloud sql databases create wordpress ...` |
+| インポート時に権限系のエラー（SUPER 等） | ダンプに特権が必要な文が含まれる | `mysqldump` のオプション見直し、メッセージ内容を確認 |
+| ブログの記事が消えている | インポート漏れ・別 DB に取り込んだ | `SHOW TABLES;` と `COUNT(*)` を確認し再インポート |
+| blog の IP が変わって接続できない | 外部 IP が **一時的（エフェメラル）** で再起動により変化 | 再度 IP を調べて承認リストを更新（9 章で恒久対策） |
+| `gcloud sql instances create` が拒否される | エディションとマシンタイプの組み合わせ不一致 | メッセージに従い `--edition` と `--tier` を調整 |
+
+### 8.5 最終確認コマンド
+
+```bash
+# Cloud Shell で
+gcloud sql instances describe $INSTANCE_NAME \
+  --format='yaml(name,state,region,gceZone,databaseVersion,ipAddresses,settings.ipConfiguration.authorizedNetworks)'
+```
+
+- `state: RUNNABLE`
+- `authorizedNetworks` に `blog` の外部 IP
+- `region` / `gceZone` が指定どおり
+
+ラボ画面で **Check my progress** を押し、**Task 5（blog が応答する）** も確認します。
+
+---
+
+## 9. ベストプラクティス（本番運用ならこうする）
+
+ラボは「動くこと」が目的ですが、実務では次の点を押さえます。
+
+### 9.1 接続方式の選択
+
+| 方式 | 概要 | 適した場面 |
+|---|---|---|
+| パブリック IP ＋ 承認済みネットワーク | 本ラボの方式。IP 許可リストで制御 | 学習・検証・小規模 |
+| **Cloud SQL Auth Proxy** | IAM 認証＋自動で暗号化された接続 | **推奨**。IP 管理が不要 |
+| **Private IP（VPC 内部接続）** | インターネットに出さず VPC 内で接続 | **本番の推奨構成** |
+| Cloud SQL コネクタ（言語ライブラリ） | アプリコードから安全に接続 | 新規アプリ開発 |
+
+### 9.2 セキュリティ
+
+| 項目 | ベストプラクティス |
+|---|---|
+| 承認済みネットワーク | `0.0.0.0/0`（全開放）は **絶対に使わない**。必要な IP のみ `/32` で許可 |
+| 暗号化通信 | SSL/TLS を必須にし、暗号化されていない接続を拒否する |
+| パスワード管理 | **Secret Manager** に保管。`wp-config.php` への直書きを避ける仕組みを検討 |
+| ユーザー権限 | アプリ用ユーザーには **必要最小限の権限** のみ付与 |
+| 固定 IP | `blog` の外部 IP は **静的 IP に予約** して、再起動での変化を防ぐ |
+
+### 9.3 可用性・運用
+
+| 項目 | ベストプラクティス |
+|---|---|
+| 高可用性 | 本番では **高可用性（リージョン）構成** を有効にし、自動フェイルオーバーを確保 |
+| バックアップ | **自動バックアップ** と **ポイントインタイムリカバリ** を有効化 |
+| メンテナンス | メンテナンスウィンドウを業務時間外に設定 |
+| 監視 | Cloud Monitoring でCPU・接続数・ディスク使用率にアラートを設定 |
+| 削除保護 | 誤削除を防ぐ **削除保護** を有効化 |
+| ラベル | 環境・用途のラベルを付けてコスト管理を容易にする |
+
+### 9.4 移行手法の選択
+
+| 手法 | 特徴 | 停止時間 |
+|---|---|---|
+| **ダンプ＆インポート（本ラボ）** | シンプル。データ量が小さい場合に最適 | 取得〜切替の間は更新を止める必要あり |
+| **Database Migration Service（DMS）** | 継続的レプリケーションで切替直前まで同期 | **最小化できる**（本番向き） |
+
+```mermaid
+flowchart TD
+    Q["移行方式を選ぶ"] --> R{"データ量は多い？\nまたは停止許容時間が短い？"}
+    R -->|"いいえ"| S["ダンプ＆インポート"]
+    R -->|"はい"| T["Database Migration Service\n継続レプリケーション"]
+```
+
+---
+
+## 10. PCA 試験に向けたポイント
+
+| 観点 | 押さえるべき内容 |
+|---|---|
+| サービス選定 | RDB でマネージドが良い → **Cloud SQL**。グローバル分散・水平スケールが必要 → **Spanner** |
+| 移行 | 停止時間を最小化したい → **Database Migration Service**。シンプルなら **ダンプ＆インポート** |
+| 接続セキュリティ | 本番は **Private IP** や **Cloud SQL Auth Proxy**。IP 許可は最終手段 |
+| 高可用性 | Cloud SQL の **HA 構成**（プライマリ＋スタンバイを別ゾーンに配置し自動フェイルオーバー） |
+| 読み取り負荷対策 | **リードレプリカ** で読み取りを分散 |
+| バックアップ | 自動バックアップ＋PITR で障害時に復旧可能 |
+| 責任共有 | OS・DB エンジンのパッチ適用は Google、スキーマ・クエリ・アクセス制御はユーザー |
+| 最小権限 | IAM と DB ユーザー、どちらも最小権限を意識 |
+
+---
+
+## 11. 最終チェックリスト
+
+| # | 確認項目 | 確認方法 | 完了 |
+|---|---|---|---|
+| 1 | Cloud SQL インスタンスが RUNNABLE | `gcloud sql instances list` | ☐ |
+| 2 | リージョン・ゾーンが指定どおり | `gcloud sql instances describe` | ☐ |
+| 3 | `wordpress` DB が存在する | `gcloud sql databases list` | ☐ |
+| 4 | `blogadmin` ユーザーが存在する | `gcloud sql users list` | ☐ |
+| 5 | `blog` の外部 IP が承認済みネットワークに登録済み | コンソール または `describe` | ☐ |
+| 6 | ダンプのインポートが完了し、テーブルが存在する | `SHOW TABLES;` | ☐ |
+| 7 | `wp-config.php` の `DB_HOST` が Cloud SQL の IP | `grep DB_HOST` | ☐ |
+| 8 | ブログがブラウザで表示される | `http://<blog外部IP>` | ☐ |
+| 9 | 各タスクで **Check my progress** が緑 | ラボ画面 | ☐ |
+
+---
+
+## 12. コマンド一括リファレンス
+
+> **使い方**: 値（`REGION` `ZONE` `<SQL_IP>`）を自分のラボに合わせてから、上から順に実行します。各ステップの結果は本文の確認コマンドで検証してください。
+
+### 12.1 Cloud Shell で実行する部分
+
+```bash
+# ---------- 変数 ----------
+export REGION=us-central1          # ★ラボ指定の値に変更
+export ZONE=us-central1-a          # ★ラボ指定の値に変更
+export INSTANCE_NAME=wordpress-sql
+export DB_NAME=wordpress
+export DB_USER=blogadmin
+export DB_PASS='Password1*'
+
+# ---------- Task 1: インスタンス作成 ----------
+gcloud services enable sqladmin.googleapis.com
+gcloud sql instances create $INSTANCE_NAME \
+  --database-version=MYSQL_8_0 \
+  --edition=ENTERPRISE \
+  --tier=db-n1-standard-1 \
+  --region=$REGION \
+  --zone=$ZONE \
+  --root-password='RootPassw0rd!' \
+  --storage-type=SSD \
+  --storage-size=10GB
+
+# ---------- Task 2: DB とユーザー ----------
+gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME
+gcloud sql users create $DB_USER --instance=$INSTANCE_NAME --host=% --password="$DB_PASS"
+
+# ---------- Task 3: 承認済みネットワーク ----------
+export BLOG_IP=$(gcloud compute instances describe blog --zone=$ZONE \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+gcloud sql instances patch $INSTANCE_NAME --authorized-networks=${BLOG_IP}/32 --quiet
+
+# ---------- Cloud SQL の IP を取得（控える） ----------
+export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME \
+  --format='get(ipAddresses[0].ipAddress)')
+echo "SQL_IP=$SQL_IP"
+
+# ---------- blog に接続 ----------
+gcloud compute ssh blog --zone=$ZONE
+```
+
+### 12.2 blog の中で実行する部分
+
+```bash
+# ★ Cloud Shell で表示された SQL_IP を入れる
+export SQL_IP=<Cloud SQL の IP>
+
+# ---------- Task 3: ダンプ → インポート ----------
+mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
+
+# ---------- Task 4: wp-config.php 更新 ----------
+sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
+sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '$SQL_IP' );/" \
+  /var/www/html/wordpress/wp-config.php
+grep DB_HOST /var/www/html/wordpress/wp-config.php
+
+# ---------- Task 5: 動作確認 ----------
+curl -I http://localhost/wordpress/
+```
+
+---
+
+## まとめ
+
+| 学んだこと | 要点 |
+|---|---|
+| マネージド DB への移行 | **作成 → 設定 → ダンプ＆インポート → 接続先変更 → 検証** の 5 ステップ |
+| 同名の DB／ユーザーを先に用意 | 変更箇所を `DB_HOST` だけに絞れる |
+| 承認済みネットワーク | 接続元 IP を `/32` で最小限に許可。ここが一番の詰まりポイント |
+| 検証 | ブラウザ表示に加え、ローカル MySQL 停止でも動くかを確認すると確実 |
+| 本番化に向けて | Private IP・Auth Proxy・HA・自動バックアップ・Secret Manager・DMS を検討 |
+
+> **最後に**: 詰まったときは、エラーメッセージの **最初の 1 行** を読み、「どの層の問題か（Cloud SQL の設定／ネットワーク／認証／アプリ設定）」を切り分けるのが近道です。8 章のフローチャートを活用してください。
