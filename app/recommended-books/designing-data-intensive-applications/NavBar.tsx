@@ -30,10 +30,17 @@ export default function NavBar() {
             }
             setActive(next);
         };
+        // scroll・resize は高頻度で届くため、見出し位置の読み取りは次の描画フレームで1回にまとめる
+        let frame = 0;
+        const schedule = () => {
+            if (frame !== 0)
+                return;
+            frame = window.requestAnimationFrame(() => { frame = 0; update(); });
+        };
         update();
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-        return () => { window.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        return () => { window.cancelAnimationFrame(frame); window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule); };
     }, []);
     return <><button className="sidebar-toggle" id="sidebarToggle" type="button" aria-label="メニュー" aria-controls="sidebar" aria-expanded={open} onClick={() => setOpen(!open)}>☰</button><aside className={`sidebar${open ? ' open' : ''}`} id="sidebar"><div className="sidebar-header"><div className="kicker">DDIA 解説ガイド</div>{" "}<h2>初学者向け完全ガイド</h2>{" "}</div><nav id="sidebarNav" aria-label="DDIA 目次"><ul>{NAV_ITEMS.map(i => <li key={i.id}><a href={'#' + i.id} className={active === i.id ? 'active' : ''} aria-current={active === i.id ? 'location' : undefined} onClick={e => { if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
         return; e.preventDefault(); window.history.pushState(null, '', '#' + i.id); document.getElementById(i.id)?.scrollIntoView?.(); document.getElementById(i.id)?.focus(); setActive(i.id); setOpen(false); }}>{i.label}</a>{" "}</li>)}</ul></nav></aside></>;
