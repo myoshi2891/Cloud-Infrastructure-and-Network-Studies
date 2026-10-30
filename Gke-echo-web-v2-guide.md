@@ -360,10 +360,10 @@ kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo
 **手順 3：更新の完了を待つ**
 
 ```bash
-kubectl rollout status deployment/echo-web
+kubectl rollout status deployment/echo-web --timeout=5m
 ```
 
-`successfully rolled out` と出れば完了です。
+`successfully rolled out` と出れば完了です。5 分以内に終わらない場合はタイムアウトして制御が戻るので、`kubectl describe deployment echo-web` と `kubectl get events` で原因を確認してください。
 
 **手順 4：イメージが v2 になったか確認**
 
@@ -633,7 +633,7 @@ docker push gcr.io/$PROJECT_ID/echo-app:v2
 # Task 3: v2 へ更新（コンテナ名は既存の Deployment から取得する）
 CONTAINER_NAME=$(kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[0].name}')
 kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"
-kubectl rollout status deployment/echo-web
+kubectl rollout status deployment/echo-web --timeout=5m
 
 # Task 4: スケールアウト（2 レプリカが Ready になるまで待つ）
 kubectl scale deployment echo-web --replicas=2

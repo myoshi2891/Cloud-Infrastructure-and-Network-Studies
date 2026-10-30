@@ -817,7 +817,7 @@ for NET in securenetwork default; do
   done
 done
 
-# 両 VPC のルート（0.0.0.0/0 の次ホップなど）を確認する
+# 両 VPC のルート（0.0.0.0/0 の次ホップなど）を確認する（部分的な確認。下の注意を参照）
 gcloud compute routes list --filter='network~"(securenetwork|default)"' \
   --format="table(name,network.basename(),destRange,nextHopGateway.basename(),nextHopInstance.basename(),priority)"
 
@@ -827,6 +827,8 @@ gcloud compute instances network-interfaces get-effective-firewalls vm-securehos
 gcloud compute instances network-interfaces get-effective-firewalls vm-securehost \
   --zone=$ZONE --network-interface=nic1
 ```
+
+> ⚠️ **ルート一覧は部分的な確認です**: `gcloud compute routes list` には、Cloud Router が学習した動的ルート、VPC ネットワーク ピアリングでインポートされたルート、ポリシーベース ルートなど一部の種類のルートが表示されません。そのため、この一覧だけで Egress 経路の有無を判断しないでください。最終的には Google Cloud コンソールの **VPC ネットワーク** → **ルート** → **有効なルート（Effective routes）** タブで、`vm-securehost` の **nic0 と nic1 それぞれ**について、そのネットワーク インターフェースに実際に適用されるすべてのルートを確認します。
 
 ### 9.2 NIC 構成の検証
 
@@ -1087,7 +1089,9 @@ Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 
 ### 14.3 補足：問題文の「キータスク」について
 
-> 問題文冒頭の公式「Tasks」一覧には「**スタートアップスクリプトを参照する VM の作成**」と「**HTTP アクセスを許可するファイアウォールルールの追加**」が含まれていますが、ラボ画面に表示される 6 つの Checkpoint（上表）には対応する項目がありません。採点は Checkpoint で行われるため上表の手順を優先し、公式 Tasks の記載にも従う場合は、ラボの最新の指示を確認したうえで次のようなルールを追加できます。ルールは `securehost` タグ（13 章の一括コマンドで `vm-securehost` に付与）を持つ VM だけに適用されます。
+> 問題文冒頭の公式「Tasks」一覧には「**スタートアップスクリプトを参照する VM の作成**」と「**HTTP アクセスを許可するファイアウォールルールの追加**」が含まれていますが、ラボ画面に表示される 6 つの Checkpoint（上表）には対応する項目がありません。**本ガイドの範囲は、この 6 つの Checkpoint に限定しています。** スタートアップスクリプトを参照する VM の作成（対象 VM、スクリプトの配置場所、作成コマンド、完了確認）と HTTP アクセスを許可するルールの追加は、本ガイドの手順に含まれず、採点（Checkpoint）にも必要ありません。
+>
+> 以下は**本ガイドの範囲外の参考例**です（採点には不要）。HTTP アクセスを許可するルールを作る場合の書き方を示します。ルールは `securehost` タグ（13 章の一括コマンドで `vm-securehost` に付与）を持つ VM だけに適用されます。
 >
 > ```bash
 > gcloud compute firewall-rules create allow-http-secure \

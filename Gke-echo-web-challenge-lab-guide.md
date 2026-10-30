@@ -282,7 +282,6 @@ ls
 ### 5-4. 展開されたフォルダを確認
 
 ```bash
-cd echo-web
 ls
 ```
 
@@ -291,7 +290,7 @@ ls
 | `Dockerfile` | **ここにあるディレクトリでビルドする**ことが重要 |
 | ソースコード（Go） | アプリ本体 |
 
-> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。`Dockerfile` がある場所（echo-web ディレクトリ）で実行してください。`ls` で `Dockerfile` が見えない場合は、階層が1つ違っています。
+> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。このアーカイブは現在のディレクトリ（`~`）に直接展開されるため、`cd` せずにそのままビルドできます。`ls` で `Dockerfile` が見えない場合だけ、`Dockerfile` のあるディレクトリへ移動してください。
 
 ### 5-5. Dockerfile の中身を読んでみる（任意・理解のため）
 
@@ -604,7 +603,7 @@ kubectl get services
 | Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod` で名前を確認、push を再実行 |
 | Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
-| `docker build` で `Dockerfile` がない | ディレクトリが違う | `cd echo-web` して `ls` で確認 |
+| `docker build` で `Dockerfile` がない | ディレクトリが違う | `ls` で `Dockerfile` のあるディレクトリを確認し、そこで実行 |
 | `kubectl` が別クラスタにつながる | コンテキスト未切替 | `gcloud container clusters get-credentials ...` |
 
 ### 9-2. 診断の進め方
@@ -740,7 +739,6 @@ gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
 cd ~
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
 tar -xzf echo-web.tar.gz
-cd echo-web
 docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 .
 
 # ===== 3. push =====

@@ -132,10 +132,9 @@ export ZONE=us-central1-a
 export INSTANCE_NAME=wordpress-sql
 export DB_NAME=wordpress
 export DB_USER=blogadmin
-export DB_PASS='Password1*'
 ```
 
-> **注意**: `Password1*` の `*` はシェルで特別な意味を持つため、**必ずシングルクォート `'` で囲みます**。
+> **パスワードの扱い**: パスワードは変数やコマンド引数に書かず、Task 2 の `gcloud sql users set-password --prompt-for-password` で**対話入力**します（入力は画面に表示されず、シェル履歴やプロセス一覧にも残りません）。ラボでは、既存の `wp-config.php` の `DB_PASSWORD` と同じ、ラボ画面で指定された値を入力します。本番では一意のパスワードを生成して **Secret Manager** に保管し、そこから取り出して入力・設定してください（9.2 参照）。
 
 > **補足**: Cloud Shell を閉じたり再接続したりすると変数は消えます。作業を中断した場合は、上のブロックをもう一度実行してください。
 
@@ -217,9 +216,14 @@ gcloud sql instances create $INSTANCE_NAME \
   --tier=db-n1-standard-1 \
   --region=$REGION \
   --zone=$ZONE \
-  --root-password='RootPassw0rd!' \
   --storage-type=SSD \
   --storage-size=10GB
+
+# root のパスワードは引数に書かず、対話入力で設定する
+gcloud sql users set-password root \
+  --instance=$INSTANCE_NAME \
+  --host=% \
+  --prompt-for-password
 ```
 
 | オプション | 意味 |
@@ -228,7 +232,7 @@ gcloud sql instances create $INSTANCE_NAME \
 | `--edition=ENTERPRISE` | カスタム／小型のマシンタイプを使うためのエディション指定 |
 | `--tier` | マシンタイプ（CPU・メモリのサイズ） |
 | `--region` / `--zone` | 配置場所（問題文で指定された値） |
-| `--root-password` | 管理者 `root` のパスワード |
+| `set-password root --prompt-for-password` | 管理者 `root` のパスワードを、画面に表示せず対話入力で設定する（コマンド引数やシェル履歴に残さない） |
 | `--storage-type` / `--storage-size` | ディスク種別と容量 |
 
 > **ヒント**: エラーでエディションやマシンタイプの組み合わせが拒否された場合は、メッセージに従って `--edition` と `--tier` の組み合わせを見直してください。**エラーメッセージを読んで自分で直す**ことがこのチャレンジラボの趣旨です。
@@ -273,18 +277,49 @@ flowchart LR
    - ホスト名: **任意のホスト（%）**
 4. **追加** をクリック
 
+> **権限に注意**: MySQL 8.0 の Cloud SQL でコンソールや `gcloud sql users create`（`--database-roles` 指定なし）から作成したユーザーには、管理者相当の `cloudsqlsuperuser` ロールが付与されます。最小権限にしたい場合は、次の手順 B で `wordpress.*` だけに権限を絞ったロールを割り当ててください。
+
 ### 5.3 手順 B: gcloud
 
 ```bash
 # データベースを作成
 gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME
 
-# ユーザーを作成（ホストは % = どこからでも）
+# wordpress.* だけに権限を絞ったカスタムロールを作成する
+# （Cloud Shell から root で接続。root のパスワードは対話入力。接続中だけ Cloud Shell の IP が一時的に許可される）
+gcloud sql connect $INSTANCE_NAME --user=root
+```
+
+接続した MySQL プロンプトで次を実行し、`exit` で抜けます。
+
+```sql
+CREATE ROLE 'wordpress_app';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress_app';
+```
+
+```bash
+# ユーザーを作成（ホストは % = どこからでも）。--database-roles を指定すると
+# cloudsqlsuperuser は付与されず、指定したロールだけが割り当てられる
 gcloud sql users create $DB_USER \
   --instance=$INSTANCE_NAME \
   --host=% \
-  --password="$DB_PASS"
+  --database-roles=wordpress_app
+
+# パスワードを対話入力で設定する（ラボ画面で指定された値）
+gcloud sql users set-password $DB_USER \
+  --instance=$INSTANCE_NAME \
+  --host=% \
+  --prompt-for-password
 ```
+
+続けて `gcloud sql connect $INSTANCE_NAME --user=root` で再接続し、ログイン時にロールが有効になるよう既定ロールを設定してから権限を確認します（既定ロールが未設定だと、Task 3 のインポートが Access denied で失敗します）。
+
+```sql
+SET DEFAULT ROLE 'wordpress_app' TO 'blogadmin'@'%';
+SHOW GRANTS FOR 'blogadmin'@'%';
+```
+
+> **確認**: `SHOW GRANTS` の結果に `cloudsqlsuperuser` が含まれず、`wordpress_app` だけが付与されていれば成功です。
 
 ### 5.4 確認
 
@@ -300,7 +335,7 @@ gcloud sql users list --instance=$INSTANCE_NAME
 | 質問 | 回答 |
 |---|---|
 | ホストを `%` にして大丈夫？ | ユーザーの許可は広いですが、実際の接続元は **承認済みネットワーク** で絞れます（Task 3）。本番では更に絞るか Private IP を使います |
-| 権限（GRANT）は要る？ | Cloud SQL が作る標準ユーザーは、基本的な操作権限を持ちます。WordPress の利用には通常これで足ります |
+| 権限（GRANT）は要る？ | `--database-roles` を指定せずに作ったユーザーは `cloudsqlsuperuser` を持ち、権限が広すぎます。5.3 のように `wordpress.*` に限定したロールを割り当てます |
 | root は使わない？ | はい。アプリ用は **専用ユーザー** を使うのが最小権限の原則です |
 
 ---
@@ -374,14 +409,14 @@ gcloud compute ssh blog --zone=$ZONE
 接続後、`blog` の中で次のコマンドを実行します。
 
 ```bash
-mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
+mysqldump -u blogadmin -p wordpress > wordpress_backup.sql
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `mysqldump` | DB を SQL 文として書き出すコマンド |
 | `-u blogadmin` | 使用するユーザー |
-| `-p'Password1*'` | パスワード（`-p` の直後に空白なしで指定。シングルクォート必須） |
+| `-p` | パスワードを対話入力する（値をコマンド引数に書かない。プロンプトでラボ指定のパスワードを入力） |
 | `wordpress` | ダンプ対象のデータベース名 |
 | `> wordpress_backup.sql` | 出力先ファイル |
 
@@ -409,7 +444,7 @@ grep -c "CREATE TABLE" wordpress_backup.sql
 引き続き `blog` の中で、MySQL クライアントを使って流し込みます。`<SQL_IP>` は 6.3 で調べた値に置き換えてください。
 
 ```bash
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
+mysql -h <SQL_IP> -u blogadmin -p wordpress < wordpress_backup.sql
 ```
 
 > **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
@@ -417,8 +452,8 @@ mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
 ### 6.6 取り込みの確認
 
 ```bash
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h <SQL_IP> -u blogadmin -p wordpress -e "SHOW TABLES;"
+mysql -h <SQL_IP> -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
 - `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
@@ -574,7 +609,7 @@ flowchart TD
 
 | 症状・エラー | 主な原因 | 対処 |
 |---|---|---|
-| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep DB_ wp-config.php` で値を確認し、`mysql -h` で直接接続テスト |
+| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep DB_ /var/www/html/wordpress/wp-config.php` で値を確認し、`mysql -h` で直接接続テスト |
 | `ERROR 2003 (HY000): Can't connect to MySQL server` | 承認済みネットワーク未設定 | `blog` の外部 IP を `/32` で登録（6.2） |
 | `ERROR 1045 (28000): Access denied` | ユーザー名・パスワード違い | `gcloud sql users list` で存在確認、必要ならパスワード再設定 |
 | `ERROR 1049 (42000): Unknown database` | DB 未作成 | `gcloud sql databases create wordpress ...` |
@@ -693,7 +728,7 @@ export ZONE=us-central1-a          # ★ラボ指定の値に変更
 export INSTANCE_NAME=wordpress-sql
 export DB_NAME=wordpress
 export DB_USER=blogadmin
-export DB_PASS='Password1*'
+# パスワードは変数に置かず、Task 2 で対話入力する
 
 # ---------- Task 1: インスタンス作成 ----------
 gcloud services enable sqladmin.googleapis.com
@@ -703,13 +738,18 @@ gcloud sql instances create $INSTANCE_NAME \
   --tier=db-n1-standard-1 \
   --region=$REGION \
   --zone=$ZONE \
-  --root-password='RootPassw0rd!' \
   --storage-type=SSD \
   --storage-size=10GB
+gcloud sql users set-password root --instance=$INSTANCE_NAME --host=% --prompt-for-password
 
 # ---------- Task 2: DB とユーザー ----------
 gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME
-gcloud sql users create $DB_USER --instance=$INSTANCE_NAME --host=% --password="$DB_PASS"
+# 先に root で接続し、5.3 の CREATE ROLE / GRANT を実行してから exit する
+gcloud sql connect $INSTANCE_NAME --user=root
+gcloud sql users create $DB_USER --instance=$INSTANCE_NAME --host=% --database-roles=wordpress_app
+gcloud sql users set-password $DB_USER --instance=$INSTANCE_NAME --host=% --prompt-for-password
+# 再度 root で接続し、5.3 の SET DEFAULT ROLE を実行してから exit する
+gcloud sql connect $INSTANCE_NAME --user=root
 
 # ---------- Task 3: 承認済みネットワーク ----------
 export BLOG_IP=$(gcloud compute instances describe blog --zone=$ZONE \
@@ -732,9 +772,9 @@ gcloud compute ssh blog --zone=$ZONE
 export SQL_IP=<Cloud SQL の IP>
 
 # ---------- Task 3: ダンプ → インポート ----------
-mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
+mysqldump -u blogadmin -p wordpress > wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p wordpress < wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p wordpress -e "SHOW TABLES;"
 
 # ---------- Task 4: wp-config.php 更新 ----------
 sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
