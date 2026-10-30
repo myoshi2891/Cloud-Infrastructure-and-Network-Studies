@@ -34,4 +34,12 @@ describe('SAP Domain 2 統合契約',()=>{
   expect(closed?.declarations).toContainEqual({prop:'visibility',value:'hidden',important:false});
   expect(rules.some(r=>r.selector==='.sap-domain2-page .sidebar.open'&&r.declarations.some(d=>d.prop==='visibility'))).toBe(false);
  });
+ it('目次を開いている間も開閉ボタンを目次より手前に保ち、再生成処理にも反映',()=>{
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8');const rules=snapshotCssRules(css);
+  const z=(selector:string)=>Number(rules.filter(r=>r.selector===selector&&!r.media).flatMap(r=>r.declarations).filter(d=>d.prop==='z-index').at(-1)?.value);
+  expect(z('.sap-domain2-page .sidebar-toggle')).toBeGreaterThan(z('.sap-domain2-page .sidebar'));
+  expect(z('.sap-domain2-page .sidebar-toggle')).toBeLessThan(50);
+  const rule='.sap-domain2-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }';
+  expect(css).toContain(rule);expect(fs.readFileSync('scripts/migrate-sap-domain2.mjs','utf8')).toContain(rule);
+ });
 });
