@@ -53,7 +53,7 @@ fs.writeFileSync(dir+'/page.css',css.toString()+`
 .sap-domain3-page .main .checklist-card ul { list-style: none; padding: 0; }
 .sap-domain3-page nav ul { list-style: none; padding: 0; margin: 0; }
 .sap-domain3-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); z-index: 40; }
-.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 40; }
+.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }
 @media (max-width: 980px) { .sap-domain3-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s, visibility 0s linear 0.25s; } }
 .sap-domain3-page .main h2, .sap-domain3-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }
 .sap-domain3-page .main { min-width: 0; }
