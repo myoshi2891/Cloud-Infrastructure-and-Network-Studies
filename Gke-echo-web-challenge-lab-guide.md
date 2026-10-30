@@ -279,10 +279,11 @@ ls
 
 > **補足**: 新しい環境では `gcloud storage cp gs://${PROJECT_ID}/echo-web.tar.gz .` も使えます。ラボでは `gsutil` でも動作します。
 
-### 5-4. 展開されたフォルダを確認
+### 5-4. 展開された内容を確認
+
+アーカイブは `Dockerfile`・`main.go`・`manifests/` を**現在のディレクトリ（`~`）に直接**展開します。サブディレクトリへ移動せず、このディレクトリのまま以降のビルドを実行します。
 
 ```bash
-cd echo-web
 ls
 ```
 
@@ -291,7 +292,7 @@ ls
 | `Dockerfile` | **ここにあるディレクトリでビルドする**ことが重要 |
 | ソースコード（Go） | アプリ本体 |
 
-> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。`Dockerfile` がある場所（echo-web ディレクトリ）で実行してください。`ls` で `Dockerfile` が見えない場合は、階層が1つ違っています。
+> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。`Dockerfile` がある場所（アーカイブを展開したディレクトリ）で実行してください。`ls` で `Dockerfile` が見えない場合は、展開したディレクトリと違う場所にいます。
 
 ### 5-5. Dockerfile の中身を読んでみる（任意・理解のため）
 
@@ -604,7 +605,7 @@ kubectl get services
 | Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod` で名前を確認、push を再実行 |
 | Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
-| `docker build` で `Dockerfile` がない | ディレクトリが違う | `cd echo-web` して `ls` で確認 |
+| `docker build` で `Dockerfile` がない | ディレクトリが違う | アーカイブを展開したディレクトリ（例: `cd ~`）に戻り、`ls` で確認 |
 | `kubectl` が別クラスタにつながる | コンテキスト未切替 | `gcloud container clusters get-credentials ...` |
 
 ### 9-2. 診断の進め方

@@ -221,8 +221,6 @@ gcloud storage ls "gs://${BUCKET_NAME}/"
 
 `gs://（バケット名）/install-web.sh` が表示されれば成功です。
 
-> 💡 **補足**: 従来の `gsutil`（`gsutil mb` / `gsutil cp`）でも同じことができます。現在の公式ドキュメントでは `gcloud storage` コマンドが推奨されています。ラボの過去の解説では `gsutil` が使われることが多いので、どちらを見ても混乱しないようにしておくと安心です。
-
 ### 4.3 手順 B: Google Cloud コンソール
 
 1. ナビゲーションメニューから **Cloud Storage > バケット** を開きます。

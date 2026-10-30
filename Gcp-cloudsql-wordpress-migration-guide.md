@@ -136,7 +136,7 @@ export DB_PASS='Password1*'
 ```
 
 > **注意**: `Password1*` の `*` はシェルで特別な意味を持つため、**必ずシングルクォート `'` で囲みます**。
-
+>
 > **補足**: Cloud Shell を閉じたり再接続したりすると変数は消えます。作業を中断した場合は、上のブロックをもう一度実行してください。
 
 ### 3.3 プロジェクトと API の確認
@@ -169,7 +169,7 @@ WordPress が使える **MySQL 互換のインスタンス** を、指定リー�
 | バージョン | **既存 MySQL と同じメジャーバージョン以上** | 古いバージョンから新しいバージョンへの移行は互換性が高い。逆方向は失敗しやすい |
 | 場所 | **指定された Region / Zone** | 問題文の指示。`blog` と近いほど遅延が小さい |
 | 接続方式 | **パブリック IP ＋ 承認済みネットワーク** | ラボの構成が最も簡単。本番では Private IP 推奨（9 章参照） |
-| マシンサイズ | 小さめ（例: `db-n1-standard-1`） | ラボ用途なので十分。作成も早い |
+| マシンサイズ | 小さめの専用コア（例: 1 vCPU・3,840 MiB = `--cpu=1 --memory=3840MiB`） | ラボ用途なので十分。Enterprise エディションの専用コア構成として指定できる |
 
 ### 4.3 先に既存 MySQL のバージョンを確認する（推奨）
 
@@ -187,6 +187,13 @@ mysql --version
 
 > **見方**: `Ver 8.0.xx` なら MySQL 8.0、`Distrib 5.7.xx` なら MySQL 5.7、`MariaDB` と出る場合は MariaDB です。確認できたら `exit` で Cloud Shell に戻ります。
 > MariaDB の場合も、WordPress の標準的なテーブル程度であれば MySQL 8.0 へ取り込めます。
+>
+> **バージョンの前提**: 本ガイドのコマンドは、既存が **MySQL 8.0 以前（または MariaDB）** であることを前提に `MYSQL_8_0` を指定しています。既存が MySQL 8.4 など 8.0 より新しい場合は、新しい版から古い版へは取り込めないため、`DB_VERSION` を同じ版（例: `MYSQL_8_4`）に変更してください。
+
+```bash
+# 4.3 の結果に合わせて設定する（MySQL 8.0 以前／MariaDB → MYSQL_8_0、MySQL 8.4 → MYSQL_8_4）
+export DB_VERSION=MYSQL_8_0
+```
 
 ### 4.4 手順 A: コンソール（GUI）で作成する
 
@@ -199,11 +206,11 @@ mysql --version
 |---|---|
 | インスタンス ID | `wordpress-sql` |
 | パスワード（root） | 任意の強いパスワード（控えておく） |
-| データベースのバージョン | MySQL 8.0（既存に合わせる） |
+| データベースのバージョン | 4.3 で確認した既存バージョンと互換のもの（既存が MySQL 8.0 以前または MariaDB なら MySQL 8.0、MySQL 8.4 なら MySQL 8.4） |
 | エディション | **Enterprise**（小さいマシンタイプを使うため） |
 | リージョン | ラボで指定された REGION |
 | ゾーンの可用性 | **シングルゾーン** → 指定された ZONE |
-| マシン構成 | 軽量（共有コア or 1 vCPU 程度） |
+| マシン構成 | 専用コア: 1 vCPU・3.75 GB（3,840 MiB） |
 | 接続 | **パブリック IP** を有効のまま |
 
 5. **インスタンスを作成** をクリック（完了まで **5〜10 分** かかります）
@@ -212,9 +219,10 @@ mysql --version
 
 ```bash
 gcloud sql instances create $INSTANCE_NAME \
-  --database-version=MYSQL_8_0 \
+  --database-version=$DB_VERSION \
   --edition=ENTERPRISE \
-  --tier=db-n1-standard-1 \
+  --cpu=1 \
+  --memory=3840MiB \
   --region=$REGION \
   --zone=$ZONE \
   --root-password='RootPassw0rd!' \
@@ -225,13 +233,13 @@ gcloud sql instances create $INSTANCE_NAME \
 | オプション | 意味 |
 |---|---|
 | `--database-version` | MySQL のバージョン |
-| `--edition=ENTERPRISE` | カスタム／小型のマシンタイプを使うためのエディション指定 |
-| `--tier` | マシンタイプ（CPU・メモリのサイズ） |
+| `--edition=ENTERPRISE` | 専用コアのカスタム構成（CPU・メモリ指定）を使うためのエディション指定 |
+| `--cpu` / `--memory` | 専用コアの vCPU 数とメモリ量（メモリは 256 MiB の倍数で、vCPU あたり 0.9〜6.5 GB の範囲） |
 | `--region` / `--zone` | 配置場所（問題文で指定された値） |
 | `--root-password` | 管理者 `root` のパスワード |
 | `--storage-type` / `--storage-size` | ディスク種別と容量 |
 
-> **ヒント**: エラーでエディションやマシンタイプの組み合わせが拒否された場合は、メッセージに従って `--edition` と `--tier` の組み合わせを見直してください。**エラーメッセージを読んで自分で直す**ことがこのチャレンジラボの趣旨です。
+> **ヒント**: エラーでエディションやマシンタイプの組み合わせが拒否された場合は、メッセージに従って `--edition` と `--cpu` / `--memory` の組み合わせを見直してください。**エラーメッセージを読んで自分で直す**ことがこのチャレンジラボの趣旨です。
 
 ### 4.6 作成できたか確認する
 
@@ -351,7 +359,7 @@ gcloud sql instances patch $INSTANCE_NAME \
 
 > **`/32` とは？**
 > CIDR 表記で「その 1 つの IP アドレスだけ」を意味します。`blog` 1 台だけを許可する、最小権限の設定です。
-
+>
 > **注意**: `--authorized-networks` は **既存リストを上書き** します。複数の IP を許可したい場合は、カンマ区切りで全部書いてください（例: `--authorized-networks=1.2.3.4/32,5.6.7.8/32`）。
 
 ### 6.3 手順 3-3: Cloud SQL の IP を調べる
@@ -365,16 +373,55 @@ echo $SQL_IP
 
 この IP は **Task 4 でも使う** ので、控えておきます。
 
+#### 暗号化（TLS）接続を必須にする
+
+パブリック IP 経由の接続はインターネットを通るため、Cloud SQL 側で **暗号化されていない接続を拒否** する設定にします。以降の `mysql` コマンドと WordPress の接続も TLS を必須にします。
+
+```bash
+gcloud sql instances patch $INSTANCE_NAME \
+  --ssl-mode=ENCRYPTED_ONLY \
+  --quiet
+```
+
+> **補足**: TLS を自分で設定する代わりに、**Cloud SQL Auth Proxy** を `blog` で動かし、`127.0.0.1` の別ポート経由で接続する方法もあります（9 章参照）。Auth Proxy は通信を自動で暗号化し、IAM で接続を認可します。
+
 ### 6.4 手順 3-4: blog に SSH してダンプを取得する
 
 ```bash
 gcloud compute ssh blog --zone=$ZONE
 ```
 
-接続後、`blog` の中で次のコマンドを実行します。
+#### ダンプの前にサイトを読み取り専用にする
+
+ダンプ取得後に記事・コメント・設定が書き込まれると、その変更は Cloud SQL へ移らず失われます。そこで、**ダンプ取得からインポート、`DB_HOST` の切り替え、検証（8 章）が終わるまで**、Apache で書き込み系のリクエスト（POST など）を拒否し、閲覧（GET／HEAD）だけを許可します。接続後、`blog` の中で次を実行します。
 
 ```bash
-mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
+sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
+# 移行中は WordPress への書き込み系リクエストを拒否する（閲覧のみ許可）
+<Directory /var/www/html/wordpress>
+  <LimitExcept GET HEAD>
+    Require all denied
+  </LimitExcept>
+</Directory>
+EOF
+sudo a2enconf wp-readonly
+sudo systemctl reload apache2
+```
+
+> **ポイント**: 閲覧（GET）はできるため、8 章の `curl -I` やブラウザでの表示確認はそのまま行えます。書き込みを再開するのは、8 章で移行が確認できてからです（8.6）。
+
+#### ダンプを取得する
+
+引き続き `blog` の中で次のコマンドを実行します。
+
+```bash
+mysqldump -u blogadmin -p'Password1*' \
+  --databases wordpress \
+  --hex-blob \
+  --single-transaction \
+  --set-gtid-purged=OFF \
+  --default-character-set=utf8mb4 \
+  > wordpress_backup.sql
 ```
 
 | 部分 | 意味 |
@@ -382,7 +429,11 @@ mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
 | `mysqldump` | DB を SQL 文として書き出すコマンド |
 | `-u blogadmin` | 使用するユーザー |
 | `-p'Password1*'` | パスワード（`-p` の直後に空白なしで指定。シングルクォート必須） |
-| `wordpress` | ダンプ対象のデータベース名 |
+| `--databases wordpress` | ダンプ対象のデータベース名。`CREATE DATABASE IF NOT EXISTS` と `USE` 文もダンプに含める |
+| `--hex-blob` | バイナリ列を 16 進数で書き出し、取り込み時の文字化け・破損を防ぐ |
+| `--single-transaction` | InnoDB のテーブルを、ロックせずに一貫した時点の状態で取得する |
+| `--set-gtid-purged=OFF` | GTID の設定文を出力しない（Cloud SQL への取り込み時のエラーを防ぐ）。MariaDB の `mysqldump` にはないため、MariaDB の場合だけ外す |
+| `--default-character-set=utf8mb4` | 絵文字などを含む文字列を utf8mb4 で正しく書き出す |
 | `> wordpress_backup.sql` | 出力先ファイル |
 
 #### ダンプの中身を軽く確認する
@@ -396,29 +447,32 @@ grep -c "CREATE TABLE" wordpress_backup.sql
 `CREATE TABLE` が **約 12 個前後**（WordPress 標準テーブル）出てくれば、基本的なデータは取れています。ファイルサイズが 0 の場合は、ユーザー名・パスワード・DB 名を見直してください。
 
 > **補足（mysqldump のオプション）**
-> 環境によっては次のエラーや警告が出ることがあります。メッセージを読み、必要なら下表のオプションを追加します。
+> 上の標準オプションに加えて、環境によっては次のエラーが出ることがあります。メッセージを読み、必要なら下表のオプションを追加します。
 >
 > | 状況 | 追加するオプション |
 > |---|---|
 > | 権限に関するエラー（テーブルスペース） | `--no-tablespaces` |
-> | 整合性を保って取得したい（InnoDB） | `--single-transaction` |
-> | GTID 関連の警告・エラー（MySQL クライアントの場合） | `--set-gtid-purged=OFF` |
 
 ### 6.5 手順 3-5: Cloud SQL にインポートする
 
 引き続き `blog` の中で、MySQL クライアントを使って流し込みます。`<SQL_IP>` は 6.3 で調べた値に置き換えてください。
 
 ```bash
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' \
+  --ssl-mode=REQUIRED \
+  --default-character-set=utf8mb4 \
+  wordpress < wordpress_backup.sql
 ```
 
+> **TLS の指定**: `--ssl-mode=REQUIRED` は暗号化できない場合に接続を中止します（MySQL クライアントの書き方）。`mysql --version` が MariaDB の場合は、代わりに `--ssl` を指定します。Cloud SQL 側も 6.3 で暗号化必須にしているため、暗号化されていない接続は拒否されます。
+>
 > **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
 
 ### 6.6 取り込みの確認
 
 ```bash
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
-mysql -h <SQL_IP> -u blogadmin -p'Password1*' wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
+mysql -h <SQL_IP> -u blogadmin -p'Password1*' --ssl-mode=REQUIRED wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
 - `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
@@ -517,7 +571,21 @@ sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '<SQL_IP>' );
 grep DB_HOST /var/www/html/wordpress/wp-config.php
 ```
 
-`<SQL_IP>` に置き換えた値が表示されていれば OK です。ラボ画面で **Check my progress** を押します。
+`<SQL_IP>` に置き換えた値が表示されていれば OK です。
+
+**5. WordPress から Cloud SQL への接続にも TLS を必須にする**
+
+`wp-config.php` の `DB_HOST` の行の直後に、次の 1 行を追加します（Cloud SQL 側は 6.3 で暗号化必須にしているため、この設定がないと接続できません）。
+
+```bash
+sudo sed -i "/define( *'DB_HOST'/a define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );" \
+  /var/www/html/wordpress/wp-config.php
+grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
+```
+
+> **注意**: この設定は通信を暗号化しますが、サーバー証明書の検証は省略します（ラボ向け）。本番ではサーバー CA 証明書で検証するか、Cloud SQL Auth Proxy を使います（9 章）。
+
+ラボ画面で **Check my progress** を押します。
 
 > **ポイント**: Apache や PHP の再起動は通常不要です。WordPress はリクエストのたびに `wp-config.php` を読み込みます。ただし表示が更新されない場合は `sudo systemctl restart apache2` を試します。
 
@@ -545,16 +613,35 @@ curl -I http://localhost/wordpress/
 
 ローカル MySQL を一時停止しても表示されれば、確実に Cloud SQL を参照している証拠になります。
 
+実際のサービス名（`mysql` / `mysqld` / `mariadb`）を調べて停止し、**停止したことを確認できた場合だけ** `curl` で判定します。停止や確認に失敗した場合は、判定を行わずに中止します。
+
 ```bash
 # blog の中で
-sudo systemctl stop mysql      # 環境により mysqld / mariadb
-curl -I http://localhost/wordpress/
+LOCAL_DB_SVC=""
+for svc in mysql mysqld mariadb; do
+  if systemctl list-unit-files "${svc}.service" --no-legend | grep -q "^${svc}\.service"; then
+    LOCAL_DB_SVC=$svc
+    break
+  fi
+done
+
+if [ -z "$LOCAL_DB_SVC" ]; then
+  echo "ローカル DB のサービスが見つかりません。確認を中止します" >&2
+elif ! sudo systemctl stop "$LOCAL_DB_SVC"; then
+  echo "$LOCAL_DB_SVC を停止できませんでした。確認を中止します" >&2
+elif systemctl is-active --quiet "$LOCAL_DB_SVC"; then
+  echo "$LOCAL_DB_SVC がまだ動作しています。確認を中止します" >&2
+else
+  echo "$LOCAL_DB_SVC の停止を確認しました"
+  curl -I http://localhost/wordpress/
+fi
 ```
 
 - **200 が返る** → Cloud SQL を使えている
 - **エラーになる** → まだローカル MySQL を参照している（`DB_HOST` を再確認）
+- **「中止します」と表示された** → 判定は行われていません。サービス名と状態（`systemctl status`）を確認してください
 
-> 確認後、ラボを続けるうえで問題があれば `sudo systemctl start mysql` で戻せます。
+> 確認後、ラボを続けるうえで問題があれば `sudo systemctl start "$LOCAL_DB_SVC"` で戻せます。
 
 ### 8.3 エラー診断フローチャート
 
@@ -581,7 +668,7 @@ flowchart TD
 | インポート時に権限系のエラー（SUPER 等） | ダンプに特権が必要な文が含まれる | `mysqldump` のオプション見直し、メッセージ内容を確認 |
 | ブログの記事が消えている | インポート漏れ・別 DB に取り込んだ | `SHOW TABLES;` と `COUNT(*)` を確認し再インポート |
 | blog の IP が変わって接続できない | 外部 IP が **一時的（エフェメラル）** で再起動により変化 | 再度 IP を調べて承認リストを更新（9 章で恒久対策） |
-| `gcloud sql instances create` が拒否される | エディションとマシンタイプの組み合わせ不一致 | メッセージに従い `--edition` と `--tier` を調整 |
+| `gcloud sql instances create` が拒否される | エディションとマシンタイプの組み合わせ不一致 | メッセージに従い `--edition` と `--cpu` / `--memory` を調整 |
 
 ### 8.5 最終確認コマンド
 
@@ -596,6 +683,18 @@ gcloud sql instances describe $INSTANCE_NAME \
 - `region` / `gceZone` が指定どおり
 
 ラボ画面で **Check my progress** を押し、**Task 5（blog が応答する）** も確認します。
+
+### 8.6 書き込みを再開する
+
+8.1〜8.5 で、ブログが Cloud SQL を参照して正しく表示されることを確認できてから、6.4 で設定した読み取り専用を解除します。
+
+```bash
+# blog の中で
+sudo a2disconf wp-readonly
+sudo systemctl reload apache2
+```
+
+> 移行が確認できない場合は、読み取り専用のまま `wp-config.php.bak` に戻して原因を調べます。書き込みを再開する前に切り戻せば、ローカル DB との差分は生じません。
 
 ---
 
@@ -694,13 +793,15 @@ export INSTANCE_NAME=wordpress-sql
 export DB_NAME=wordpress
 export DB_USER=blogadmin
 export DB_PASS='Password1*'
+export DB_VERSION=MYSQL_8_0        # ★既存 MySQL のバージョン（4.3）に合わせる。8.0 以前／MariaDB は MYSQL_8_0
 
 # ---------- Task 1: インスタンス作成 ----------
 gcloud services enable sqladmin.googleapis.com
 gcloud sql instances create $INSTANCE_NAME \
-  --database-version=MYSQL_8_0 \
+  --database-version=$DB_VERSION \
   --edition=ENTERPRISE \
-  --tier=db-n1-standard-1 \
+  --cpu=1 \
+  --memory=3840MiB \
   --region=$REGION \
   --zone=$ZONE \
   --root-password='RootPassw0rd!' \
@@ -721,6 +822,9 @@ export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME \
   --format='get(ipAddresses[0].ipAddress)')
 echo "SQL_IP=$SQL_IP"
 
+# ---------- 暗号化（TLS）接続を必須にする ----------
+gcloud sql instances patch $INSTANCE_NAME --ssl-mode=ENCRYPTED_ONLY --quiet
+
 # ---------- blog に接続 ----------
 gcloud compute ssh blog --zone=$ZONE
 ```
@@ -731,19 +835,39 @@ gcloud compute ssh blog --zone=$ZONE
 # ★ Cloud Shell で表示された SQL_IP を入れる
 export SQL_IP=<Cloud SQL の IP>
 
+# ---------- 移行中は読み取り専用にする ----------
+sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
+# 移行中は WordPress への書き込み系リクエストを拒否する（閲覧のみ許可）
+<Directory /var/www/html/wordpress>
+  <LimitExcept GET HEAD>
+    Require all denied
+  </LimitExcept>
+</Directory>
+EOF
+sudo a2enconf wp-readonly && sudo systemctl reload apache2
+
 # ---------- Task 3: ダンプ → インポート ----------
-mysqldump -u blogadmin -p'Password1*' wordpress > wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress < wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p'Password1*' wordpress -e "SHOW TABLES;"
+# MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、mysql の --ssl-mode=REQUIRED を --ssl に置き換える
+mysqldump -u blogadmin -p'Password1*' --databases wordpress --hex-blob \
+  --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
+  > wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p'Password1*' --ssl-mode=REQUIRED \
+  --default-character-set=utf8mb4 wordpress < wordpress_backup.sql
+mysql -h $SQL_IP -u blogadmin -p'Password1*' --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
 
 # ---------- Task 4: wp-config.php 更新 ----------
 sudo cp /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config.php.bak
 sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '$SQL_IP' );/" \
   /var/www/html/wordpress/wp-config.php
-grep DB_HOST /var/www/html/wordpress/wp-config.php
+sudo sed -i "/define( *'DB_HOST'/a define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );" \
+  /var/www/html/wordpress/wp-config.php
+grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
 
 # ---------- Task 5: 動作確認 ----------
 curl -I http://localhost/wordpress/
+
+# ---------- 移行を確認できたら書き込みを再開 ----------
+sudo a2disconf wp-readonly && sudo systemctl reload apache2
 ```
 
 ---

@@ -219,9 +219,9 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    S["クラウドの使い方を分類したい"] --> Q1{"CSC が1組織だけで<br/>専用利用している？"}
-    Q1 -->|"はい"| PRI["private cloud"]
-    Q1 -->|"いいえ"| Q2{"共通要件をもつ<br/>特定グループだけで共有？"}
+    S["クラウドの使い方を分類したい"] --> Q1{"単一の CSC が専用利用し、<br/>かつその CSC が資源を管理している？"}
+    Q1 -->|"両方とも はい"| PRI["private cloud"]
+    Q1 -->|"いずれかが いいえ"| Q2{"共通要件をもつ<br/>特定グループだけで共有？"}
     Q2 -->|"はい"| COM["community cloud"]
     Q2 -->|"いいえ"| PUB["public cloud<br/>（誰でも使える可能性）"]
     PRI --> Q3{"public も併用している？"}
