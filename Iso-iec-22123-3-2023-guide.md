@@ -549,7 +549,7 @@ flowchart LR
 
 | 機関 | 採用形態 |
 |---|---|
-| エストニア規格協会（EVS） | EVS-ISO/IEC 22123-3:2025（ISO/IEC 22123-3:2023と同一、2025年3月17日から有効） |
+| エストニア規格協会（EVS） | 現行版は EVS-EN ISO/IEC 22123-3:2026（欧州規格 EN ISO/IEC 22123-3:2026 の国家採用。ISO/IEC 22123-3:2023と同一）。旧版 EVS-ISO/IEC 22123-3:2025（2025年3月17日から有効）は**廃止**され、この版に置き換えられた |
 | スロバキア規格 | STN ISO/IEC 22123-3:2024（英語版をそのまま公式版として採用） |
 
 ---
@@ -717,7 +717,9 @@ flowchart LR
 | 3 | 規格プレビューPDF（VDE-Verlag） | https://www.vde-verlag.de/iec-normen/preview-pdf/info_isoiec22123-3{ed1.0}en.pdf | 目次（章・節・ページ構成）、序文（17789の置き換えと主な変更点）、用語、Scope |
 | 4 | 規格プレビューPDF（ANSI Webstore） | https://webstore.ansi.org/preview-pages/ISO/preview_ISO+IEC+22123-3-2023.pdf | 目次の補足確認 |
 | 5 | JTC 1 公式：クラウドコンピューティング フラッグシップ規格 | https://jtc1info.org/technology/subcommittees/flagship-standards/cloud-computing/ | CCRAの2ビュー・4層の説明、Part 1〜3の関係、関連規格 |
-| 6 | エストニア規格協会 EVS-ISO/IEC 22123-3:2025 | https://www.evs.ee/en/evs-iso-iec-22123-3-2025 | 国家規格としての同一採用 |
+| 6 | エストニア規格協会 EVS-ISO/IEC 22123-3:2025 | https://www.evs.ee/en/evs-iso-iec-22123-3-2025 | 旧版（廃止。EVS-EN ISO/IEC 22123-3:2026 に置き換え） |
+| 6a | エストニア規格協会 EVS-EN ISO/IEC 22123-3:2026 | https://www.evs.ee/en/evs-en-iso-iec-22123-3-2026 | 現行版（EN ISO/IEC 22123-3:2026 の国家採用） |
+| 6b | CENELEC 月次公表一覧（2026年4月） | https://www.ceinorme.it/wp-content/uploads/2026/05/CENELEC-monthly-publications_042026.pdf | EN ISO/IEC 22123-3:2026 の公開（DAV 2026-04-08、DOW 2026-10-31） |
 | 7 | スロバキア規格 STN ISO/IEC 22123-3:2024 | https://normy.normoff.gov.sk/norma/138359/nahlad | 国家規格としての採用、17789置き換えと変更点 |
 | 8 | カナダ規格評議会 標準データベース | https://scc-ccn.ca/standardsdb/standards/8185211 | 発行日、ステータス |
 

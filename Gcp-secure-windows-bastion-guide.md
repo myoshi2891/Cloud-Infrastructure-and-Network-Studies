@@ -438,7 +438,9 @@ gcloud compute instances create vm-securehost \
 | `--network-interface=...,no-address`（1つ目） | securenetwork に接続し、**外部 IP を付けない** |
 | `--network-interface=network=default,no-address`（2つ目） | default に接続し、**外部 IP を付けない** |
 
-> 🔑 **最重要**: `no-address` が「インターネットから隔離される」ことの実体です。**外部 IP がなければ、インターネットから直接到達できず、インターネットへ直接接続もできません。**
+> 🔑 **最重要**: `no-address` は **外部 IP を付けない** 指定です。外部 IP がなければ、インターネットから直接到達できず、VM が外部 IP を使ってインターネットへ直接接続することもできません。
+>
+> ⚠️ **注意**: `no-address` だけでは **インターネットへの送信（egress）は止まりません**。接続先 VPC・サブネットに Cloud NAT やプロキシなど別の送信経路があれば、外部 IP がなくても外部へ出られます。送信も厳密に遮断する場合は、Cloud NAT の有無と Egress ファイアウォールルールもあわせて確認してください。
 >
 > ⚠️ **イメージ名について**: ラボ環境や時期によってイメージファミリー名が異なる場合があります。エラーが出たら `gcloud compute images list --filter="family~windows-2016"` で確認してください。
 
@@ -767,7 +769,8 @@ Get-WindowsFeature -Name Web-Server
 |---|---|---|
 | セキュアホストに外部 IP がない | `gcloud compute instances list` の外部 IP 列 | **空** |
 | セキュアホストにインターネットから直接 RDP できない | 外部 IP がないため接続先が存在しない | 接続不可 |
-| セキュアホストからインターネットへ出られない | セキュアホスト上のブラウザで外部サイトを開く | **開けない** |
+| セキュアホストに外部 IP 経由の直接接続経路がない | 外部 IP 列が空であることを確認（上の行） | 外部 IP 経由では外部へ出られない |
+| 厳密な送信遮断が必要な場合: 送信経路がない | `gcloud compute routers list` で両 VPC の Cloud NAT の有無、`gcloud compute firewall-rules list --filter="direction=EGRESS"` で Egress ルールを確認 | Cloud NAT などの送信経路がない、または Egress ルールで遮断されている |
 | 踏み台だけ RDP 可能 | 踏み台の外部 IP に RDP | 接続成功 |
 
 ### 9.2 NIC 構成の検証

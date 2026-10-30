@@ -673,7 +673,11 @@ NIST SP 800-145 は Peter Mell 氏と Timothy Grance 氏による文書で、**5
 
 ### 欧州での採用状況
 
-DIN の公開情報によると、ISO/IEC 22123-1:2023 を欧州規格として採用する **prEN ISO/IEC 22123-1:2025**（DIN EN ISO/IEC 22123-1:2026-02 草案）が2026年1月に公開されています。DIN ISO/IEC 17788:2016-04 からの変更点として、hybrid cloud の定義変更、CSC／CSP／CSN role の追加、multi-cloud 関連用語の追加などが挙げられています。
+ISO/IEC 22123-1:2023 は、欧州規格 **EN ISO/IEC 22123-1:2026** として最終版が2026年4月に公開されました（CENELEC の公表一覧: 公開 2026-04-08、各国採用の期限 2026-10-31）。これは技術内容を変えない同一採用です。
+
+これとは別に、DIN は最終版に先立つ草案 **prEN ISO/IEC 22123-1:2025**（DIN EN ISO/IEC 22123-1:2026-02 草案）を2026年1月に公開していました。DIN ISO/IEC 17788:2016-04 からの変更点として、hybrid cloud の定義変更、CSC／CSP／CSN role の追加、multi-cloud 関連用語の追加などが挙げられています。
+
+調査時点では各国での採用も始まっています。たとえばエストニアの EVS-EN ISO/IEC 22123-1:2026（2026年4月15日から有効）、スペインの UNE-EN ISO/IEC 22123-1:2026（2026年5月承認）があります。
 
 ---
 
@@ -755,7 +759,7 @@ Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hoh
 | 責任範囲の表（Step 8-5） | 一般的な理解にもとづく目安で、規格本文の表ではありません |
 | 開発者の発信 | 22123-1 そのものを直接論じた著名開発者の投稿は、今回の検索ではほとんど見つかりませんでした。そのため、**関連テーマ（ロックイン）の議論**として Hohpe 氏らの発信を補足的に紹介しています |
 | 最新情報 | 2026年10月23日時点で、ISO のページ上は「Published」（ステージ 60.60）でした。**改訂・訂正の有無は ISO の公式ページで再確認**してください |
-| 欧州採用 | prEN ISO/IEC 22123-1:2025 は**草案**の段階の情報です（2026年1月公開） |
+| 欧州採用 | 最終版 EN ISO/IEC 22123-1:2026 は2026年4月に公開済み。prEN ISO/IEC 22123-1:2025（2026年1月公開）は最終版に先立つ**草案**です。各国採用の状況は国ごとに異なるため、各国の規格団体で確認してください |
 
 ---
 
@@ -773,6 +777,9 @@ Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hoh
 | 6 | SIS（スウェーデン規格協会） | https://www.sis.se/en/produkter/information-technology-office-machines/cloud-computing/ISOIEC-22123-12023 | 置き換え関係（17788:2014、22123-1:2021）、18ページ |
 | 7 | AFNOR | https://www.boutique.afnor.org/en-gb/standard/iso-iec-2212312023/information-technology-cloud-computing-part-1-vocabulary/xs141293/342177 | 廃止された2規格の概要 |
 | 8 | DIN（欧州採用草案） | https://www.dinmedia.de/de/norm-entwurf/din-en-iso-iec-22123-1/398086512 | prEN ISO/IEC 22123-1:2025、変更点（hybrid の定義変更ほか） |
+| 8a | CENELEC 月次公表一覧（2026年4月） | https://www.ceinorme.it/wp-content/uploads/2026/05/CENELEC-monthly-publications_042026.pdf | EN ISO/IEC 22123-1:2026 の公開（DAV 2026-04-08、DOP・DOW 2026-10-31） |
+| 8b | エストニア規格協会 EVS-EN ISO/IEC 22123-1:2026 | https://www.evs.ee/en/evs-en-iso-iec-22123-1-2026 | 国家採用、2026年4月15日から有効 |
+| 8c | UNE（スペイン） | https://www.en.une.org/encuentra-tu-norma/busca-tu-norma/norma?c=N0076031 | UNE-EN ISO/IEC 22123-1:2026、2026年5月承認・有効 |
 
 ### B. 関連規格
 
