@@ -37,4 +37,13 @@ describe('SAP Domain 3 統合契約',()=>{
   expect(rules.some(r=>r.selector==='.sap-domain3-page .sidebar.open'&&r.declarations.some(d=>d.prop==='visibility'))).toBe(false);
   expect(css).toContain(rule);expect(fs.readFileSync('scripts/migrate-sap-domain3.mjs','utf8')).toContain(rule);
  });
+ it('目次を開いている間も開閉ボタンを目次より手前に保ち、再生成処理にも反映',()=>{
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');const rules=snapshotCssRules(css);
+  const z=(selector:string)=>Number(rules.filter(r=>r.selector===selector&&!r.media).flatMap(r=>r.declarations).filter(d=>d.prop==='z-index').at(-1)?.value);
+  expect(z('.sap-domain3-page .sidebar-toggle')).toBeGreaterThan(z('.sap-domain3-page .sidebar'));
+  expect(z('.sap-domain3-page .sidebar-toggle')).toBeLessThan(50);
+  const script=fs.readFileSync('scripts/migrate-sap-domain3.mjs','utf8');
+  expect(script).toContain('.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
+  expect(css).toContain('.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
+ });
 });
