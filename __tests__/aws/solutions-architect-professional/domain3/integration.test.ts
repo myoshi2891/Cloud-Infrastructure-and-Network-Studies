@@ -6,6 +6,7 @@ import source from '@/app/aws/solutions-architect-professional/domain3/mermaid-t
 import renderTheme from '@/app/aws/solutions-architect-professional/domain3/render-theme.json';
 import { isValid, toHex } from 'khroma';
 import fixture from '@/docs/migration-inventory/aws-sap-c02-domain3.fidelity.json';
+import { contrastRatio, themeColor } from '@/__tests__/helpers/color-contrast';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 import { SAP_D3_COLOR_LITERAL, SAP_D3_COLOR_TOKENS } from '@/scripts/sap-domain3-color-tokens.mjs';
 
@@ -54,5 +55,13 @@ describe('SAP Domain 3 統合契約',()=>{
   const script=fs.readFileSync('scripts/migrate-sap-domain3.mjs','utf8');
   expect(script).toContain('.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
   expect(css).toContain('.sap-domain3-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
+ });
+ it('チェックボックス枠と完了項目の文字色は白背景に対しWCAGの非テキスト3:1・本文4.5:1を満たし、再生成処理にも反映',()=>{
+  const globals=fs.readFileSync('app/globals.css','utf8');const surface=themeColor(globals,'color-sap-d3-surface');
+  expect(contrastRatio(themeColor(globals,'color-sap-d3-checkbox-border'),surface)).toBeGreaterThanOrEqual(3);
+  expect(contrastRatio(themeColor(globals,'color-sap-d3-checked-label'),surface)).toBeGreaterThanOrEqual(4.5);
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');const script=fs.readFileSync('scripts/migrate-sap-domain3.mjs','utf8');
+  for(const rule of [".sap-domain3-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d3-checkbox-border); }",".sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }"]){expect(css).toContain(rule);expect(script).toContain(rule);}
+  expect(css.lastIndexOf(".sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }")).toBeGreaterThan(css.indexOf('li:has(input:checked) label {'));
  });
 });

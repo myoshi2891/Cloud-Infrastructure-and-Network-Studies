@@ -571,7 +571,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 </tr>
 <tr className={"odd"}>
 <td>
-{"Content Domain 3 (本依頼で指定されたページ)"}
+{"Content Domain 3 (ドメイン3の公式解説ページ)"}
 </td>
 <td>
 {"\n                                    "}

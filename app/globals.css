@@ -208,6 +208,9 @@
     --color-sap-d2-warn-bg: #fff1dc;
     --color-sap-d2-success: #1d7f4e;
     --color-sap-d2-success-bg: #e5f5ec;
+    /* SAP-C02 Domain 2: checklist contrast (WCAG 3:1 / 4.5:1 on white) */
+    --color-sap-d2-checkbox-border: #6f84c8;
+    --color-sap-d2-checked-label: #5f6f8c;
     /* DDIA: original fixed colors */
     --color-ddia-sidebar-bg: #060d17;
     --color-ddia-hero-gradient-start: #dbe4f3;
@@ -233,6 +236,9 @@
     --color-sap-d3-accent-bg: #e6ecfb;
     --color-sap-d3-success: #1f7a4a;
     --color-sap-d3-success-bg: #e9f7ef;
+    /* SAP-C02 Domain 3: checklist contrast (WCAG 3:1 / 4.5:1 on white) */
+    --color-sap-d3-checkbox-border: #7c8ab0;
+    --color-sap-d3-checked-label: #5f6f8c;
     /* SAP-C02 Domain 3: original fixed colors */
     --color-sap-d3-surface: #fff;
     --color-sap-d3-inline-code: #a4430f;

@@ -68,4 +68,6 @@ fs.writeFileSync(dir+'/page.css',css.toString()+`
 .sap-domain3-page .main p { margin: 1em 0; }
 .sap-domain3-page .main .callout-practice p { margin: 0; }
 .sap-domain3-page .sidebar-header h2 { font-weight: 700; }
+.sap-domain3-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d3-checkbox-border); }
+.sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }
 `);

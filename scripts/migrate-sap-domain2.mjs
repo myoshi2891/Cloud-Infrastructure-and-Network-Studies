@@ -65,4 +65,6 @@ fs.writeFileSync(dir+'/page.css',css.toString()+`
 .sap-domain2-page .mermaid-wrap > [role="img"] { background: transparent; border: 0; padding: 0; margin: 0; width: 100%; }
 .sap-domain2-page .mermaid-wrap svg { flex-shrink: 0; max-width: none; height: auto; }
 .sap-domain2-page .code-line { white-space: pre; min-height: 1.65em; }
+.sap-domain2-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d2-checkbox-border); }
+.sap-domain2-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d2-checked-label); }
 `);
