@@ -298,7 +298,7 @@ gcloud compute networks subnets describe default --region=$REGION \
 
 # Windows ライセンス認証（kms.windows.googlecloud.com / 35.190.247.13）への経路を確認
 gcloud compute routes list \
-  --filter="network~(securenetwork|default) AND destRange=0.0.0.0/0" \
+  --filter='network~"(securenetwork|default)" AND (destRange=0.0.0.0/0 OR destRange=35.190.247.13/32)' \
   --format="table(name,network.basename(),destRange,nextHopGateway.basename())"
 ```
 
@@ -818,7 +818,7 @@ for NET in securenetwork default; do
 done
 
 # 両 VPC のルート（0.0.0.0/0 の次ホップなど）を確認する
-gcloud compute routes list --filter="network~(securenetwork|default)" \
+gcloud compute routes list --filter='network~"(securenetwork|default)"' \
   --format="table(name,network.basename(),destRange,nextHopGateway.basename(),nextHopInstance.basename(),priority)"
 
 # セキュアホストの各 NIC に実際に適用される Egress ルールを確認する（nic0 / nic1）
@@ -1030,7 +1030,8 @@ gcloud compute instances create vm-securehost \
   --image-project=windows-cloud \
   --boot-disk-size=50GB \
   --network-interface=network=securenetwork,subnet=secure-subnet,no-address \
-  --network-interface=network=default,no-address
+  --network-interface=network=default,no-address \
+  --tags=securehost
 
 gcloud compute instances create vm-bastionhost \
   --zone=$ZONE \
@@ -1086,7 +1087,7 @@ Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 
 ### 14.3 補足：問題文の「キータスク」について
 
-> 問題文の冒頭「Tasks」一覧には「**スタートアップスクリプトを指す VM の作成**」と「**HTTP アクセス許可のファイアウォールルール**」が含まれていますが、詳細な Task 1〜3 には対応する手順がなく、採点項目にも含まれていません。別ラボの文面が残っている可能性が高く、**詳細手順（Task 1〜3）に従えば 100% に到達できます**。もし HTTP でのアクセス確認をしたい場合は、次のようなルールを任意で追加できます（採点対象外）。
+> 問題文冒頭の公式「Tasks」一覧には「**スタートアップスクリプトを参照する VM の作成**」と「**HTTP アクセスを許可するファイアウォールルールの追加**」が含まれていますが、ラボ画面に表示される 6 つの Checkpoint（上表）には対応する項目がありません。採点は Checkpoint で行われるため上表の手順を優先し、公式 Tasks の記載にも従う場合は、ラボの最新の指示を確認したうえで次のようなルールを追加できます。ルールは `securehost` タグ（13 章の一括コマンドで `vm-securehost` に付与）を持つ VM だけに適用されます。
 >
 > ```bash
 > gcloud compute firewall-rules create allow-http-secure \
@@ -1094,7 +1095,8 @@ Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 >   --direction=INGRESS \
 >   --action=ALLOW \
 >   --rules=tcp:80 \
->   --source-ranges=10.0.0.0/24
+>   --source-ranges=10.0.0.0/24 \
+>   --target-tags=securehost
 > ```
 >
 > ただし「本番サーバーは当初インターネットから完全に隔離」という要件に反しないよう、ソースは内部範囲に限定しています。

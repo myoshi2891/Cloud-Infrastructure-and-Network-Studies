@@ -302,7 +302,7 @@ flowchart TB
 | **CSP**（cloud service provider） | CSP role | クラウドサービスを**利用可能にする**活動の集合 |
 | **CSN**（cloud service partner） | CSN role | CSP role や CSC role（または両方）を**支援・補助**する活動の集合 |
 
-### 6-3. その他の関係者
+### 6-3. その他の関係者と関連用語
 
 | 用語 | 意味 |
 |---|---|

@@ -367,7 +367,8 @@ flowchart TD
 VM を作成してから、Apache がインストールされるまでに**1〜数分**かかります。この間に実行状況を確認できます。
 
 ```bash
-gcloud compute instances get-serial-port-output "${VM_NAME}" --zone="${ZONE}" | grep -i startup-script
+gcloud compute instances get-serial-port-output "${VM_NAME}" --zone="${ZONE}" \
+  | grep -iE "google_metadata_script_runner|startup-script|startup scripts"
 ```
 
 | ログに出る内容の例 | 意味 |
