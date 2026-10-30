@@ -665,9 +665,12 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
   --rules=tcp:3389 \
   --source-ranges="${BASTION_DEFAULT_IP}/32" \
   --target-tags=securehost
+```
 
-# 上のルールで RDP できることを確認してから、広い許可ルールを削除する
-# default-allow-rdp（0.0.0.0/0 から TCP 3389）も default VPC の全 VM に RDP を許可するため、併せて削除する
+**（任意）広い許可ルールの削除**: 次のコマンドは、上で作成したルールを使って **踏み台からセキュアホストへ RDP 接続できることを確認した後にだけ** 実行します。監視エージェントやヘルスチェックなどで `default-allow-internal` に依存する通信がある場合は、このコマンドを実行しないでください（下の注意を参照）。`default-allow-rdp`（0.0.0.0/0 から TCP 3389）も `default` VPC の全 VM に RDP を許可するため、併せて削除します。
+
+```bash
+# 任意: 踏み台経由の RDP を確認済みで、default-allow-internal が不要な場合のみ実行する
 gcloud compute firewall-rules delete default-allow-internal default-allow-rdp --quiet
 ```
 
