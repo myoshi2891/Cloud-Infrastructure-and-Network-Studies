@@ -243,6 +243,24 @@
     --color-sap-d3-hljs-comment: #6b7a99;
     --color-sap-d3-hljs-title: #1d4ed8;
     --color-sap-d3-callout-practice-border: #b6e0c8;
+    /* SAP-C02 Domain 2: original fixed colors */
+    --color-sap-d2-sidebar-bg: #fbfcff;
+    --color-sap-d2-hero-gradient-start: #1b2640;
+    --color-sap-d2-hero-gradient-end: #3556d6;
+    --color-sap-d2-strong: #0e1830;
+    --color-sap-d2-inline-code: #9a4a00;
+    --color-sap-d2-row-hover: rgba(53, 86, 214, 0.045);
+    --color-sap-d2-hljs-comment: #6a737d;
+    --color-sap-d2-hljs-keyword: #c0213f;
+    --color-sap-d2-hljs-attr: #0b57c4;
+    --color-sap-d2-hljs-string: #0a6b3a;
+    --color-sap-d2-hljs-number: #b04a00;
+    --color-sap-d2-hljs-meta: #6f42c1;
+    --color-sap-d2-hljs-punctuation: #4f5f7e;
+    --color-sap-d2-callout-practice-border: #b9e0c9;
+    --color-sap-d2-on-accent: #ffffff;
+    --color-sap-d2-checklist-hover: rgba(53, 86, 214, 0.05);
+    --color-sap-d2-sidebar-shadow: rgba(27, 38, 64, 0.18);
     /* SAP-C02 Domain 1: original light palette */
     --color-sap-d1-bg: #faf8f3;
     --color-sap-d1-card: #ffffff;
