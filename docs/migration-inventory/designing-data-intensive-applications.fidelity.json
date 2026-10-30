@@ -28,14 +28,14 @@
               ]
             ],
             "children": [
-              "MartinKleppmann&ChrisRiccomini著『DesigningData-IntensiveApplications』第2版解説ガイド"
+              "Martin Kleppmann & Chris Riccomini 著『Designing Data-Intensive Applications』第2版 解説ガイド"
             ]
           },
           {
             "tag": "h1",
             "attrs": [],
             "children": [
-              "DesigningData-IntensiveApplications（DDIA）初学者向け完全ガイド"
+              "Designing Data-Intensive Applications（DDIA）初学者向け完全ガイド"
             ]
           },
           {
@@ -99,7 +99,7 @@
                     "tag": "strong",
                     "attrs": [],
                     "children": [
-                      "Mermaid14点"
+                      "Mermaid 14点"
                     ]
                   }
                 ]
@@ -131,7 +131,7 @@
         "tag": "p",
         "attrs": [],
         "children": [
-          "本ガイドは、MartinKleppmann（マーティン・クレップマン）著（第2版からChrisRiccomini共著）『DesigningData-IntensiveApplications』（O'ReillyMedia）の内容をベースに、初学者がゼロから体系的に学べるよう再構成した技術文書です。ASCII図解は使用せず、すべての図解はMermaid、比較表はMarkdownテーブルで表現しています。本文中の情報は2026年8月23日時点のWeb検索結果に基づいており、根拠となる出典URLは末尾の「参考文献」にまとめています。"
+          "本ガイドは、Martin Kleppmann（マーティン・クレップマン）著（第2版からChris Riccomini共著）『Designing Data-Intensive Applications』（O'Reilly Media）の内容をベースに、初学者がゼロから体系的に学べるよう再構成した技術文書です。ASCII図解は使用せず、すべての図解はMermaid、比較表はMarkdownテーブルで表現しています。本文中の情報は2026年8月23日時点のWeb検索結果に基づいており、根拠となる出典URLは末尾の「参考文献」にまとめています。"
         ]
       },
       {
@@ -143,7 +143,7 @@
           ]
         ],
         "children": [
-          "1.DDIAとは何か"
+          "1. DDIAとは何か"
         ]
       },
       {
@@ -154,10 +154,10 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "DesigningData-IntensiveApplications"
+              "Designing Data-Intensive Applications"
             ]
           },
-          "（通称「DDIA」、表紙のイノシシから「WildBoarBook」とも呼ばれる）は、リレーショナルDB・NoSQL・データウェアハウス・メッセージキュー・分散システムなど、データを扱うあらゆるソフトウェアに共通する「原理原則」を1冊にまとめた技術書です。特定の製品の使い方を教えるマニュアルではなく、",
+          "（通称「DDIA」、表紙のイノシシから「Wild Boar Book」とも呼ばれる）は、リレーショナルDB・NoSQL・データウェアハウス・メッセージキュー・分散システムなど、データを扱うあらゆるソフトウェアに共通する「原理原則」を1冊にまとめた技術書です。特定の製品の使い方を教えるマニュアルではなく、",
           {
             "tag": "strong",
             "attrs": [],
@@ -185,14 +185,14 @@
           ]
         ],
         "children": [
-          "1.1なぜエンジニアに読まれ続けているのか"
+          "1.1 なぜエンジニアに読まれ続けているのか"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "初版（2017年）刊行から約10年が経過した今も、システム設計面接の定番教材、バックエンド/インフラエンジニアの必読書として挙げられ続けています。著名な開発者からも高く評価されており、例えばApacheKafkaの創作者でありConfluent共同創業者のJayKrepsは、本書が分散システムの理論と実務の間の大きなギャップを橋渡ししてくれる点を高く評価しています",
+          "初版（2017年）刊行から約10年が経過した今も、システム設計面接の定番教材、バックエンド/インフラエンジニアの必読書として挙げられ続けています。著名な開発者からも高く評価されており、例えば Apache Kafka の創作者であり Confluent 共同創業者の Jay Kreps は、本書が分散システムの理論と実務の間の大きなギャップを橋渡ししてくれる点を高く評価しています",
           {
             "tag": "a",
             "attrs": [
@@ -223,7 +223,7 @@
               }
             ]
           },
-          "。またMicrosoftのCTOであるKevinScottも、本書はソフトウェアエンジニアの必読書だとコメントしています",
+          "。また Microsoft の CTO である Kevin Scott も、本書はソフトウェアエンジニアの必読書だとコメントしています",
           {
             "tag": "a",
             "attrs": [
@@ -261,7 +261,7 @@
         "tag": "p",
         "attrs": [],
         "children": [
-          "さらに、Googleでデータベース関連の仕事をしていた経験を持ち、後にAmazonWebServicesのプリンシパルエンジニアとなったJaanaDoganも、本書を最も優れたリファレンス書の一冊として挙げています",
+          "さらに、Google でデータベース関連の仕事をしていた経験を持ち、後に Amazon Web Services のプリンシパルエンジニアとなった Jaana Dogan も、本書を最も優れたリファレンス書の一冊として挙げています",
           {
             "tag": "a",
             "attrs": [
@@ -304,7 +304,7 @@
           ]
         ],
         "children": [
-          "1.2著者について"
+          "1.2 著者について"
         ]
       },
       {
@@ -368,14 +368,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "MartinKleppmann"
+                          "Martin Kleppmann"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ケンブリッジ大学准教授。分散システムと暗号プロトコルの研究者。かつてLinkedInやRapportiveで大規模データ基盤に従事。ローカルファースト・ソフトウェア運動の立ち上げにも関わる"
+                          "ケンブリッジ大学准教授。分散システムと暗号プロトコルの研究者。かつて LinkedIn や Rapportive で大規模データ基盤に従事。ローカルファースト・ソフトウェア運動の立ち上げにも関わる"
                         ]
                       }
                     ]
@@ -393,14 +393,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ChrisRiccomini（第2版から共著）"
+                          "Chris Riccomini（第2版から共著）"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "PayPal・LinkedIn・WePayで15年以上の経験を持つソフトウェアエンジニア。現在はMaterializedViewCapitalを運営し、インフラ系スタートアップに投資"
+                          "PayPal・LinkedIn・WePay で15年以上の経験を持つソフトウェアエンジニア。現在は Materialized View Capital を運営し、インフラ系スタートアップに投資"
                         ]
                       }
                     ]
@@ -420,7 +420,7 @@
           ]
         ],
         "children": [
-          "1.3本書の全体像"
+          "1.3 本書の全体像"
         ]
       },
       {
@@ -435,7 +435,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "基礎概念→単一ノードでのデータ保存→複数ノードに分散したデータ→複数のデータストアをまたぐ派生データ→技術と社会の関係"
+              "基礎概念 → 単一ノードでのデータ保存 → 複数ノードに分散したデータ → 複数のデータストアをまたぐ派生データ → 技術と社会の関係"
             ]
           },
           "という順序で理解が積み上がっていく構成になっています。この順序どおりに学習を進めることが、初学者にとって最も挫折しにくいステップです。"
@@ -450,7 +450,7 @@
           ]
         ],
         "children": [
-          "2.第1版と第2版：何が変わったか"
+          "2. 第1版と第2版：何が変わったか"
         ]
       },
       {
@@ -465,7 +465,7 @@
               "第2版"
             ]
           },
-          "がKleppmannとRiccominiの共著という形で刊行されました。参考文献2のURL（",
+          "が Kleppmann と Riccomini の共著という形で刊行されました。参考文献2のURL（",
           {
             "tag": "code",
             "attrs": [],
@@ -493,7 +493,7 @@
           ]
         ],
         "children": [
-          "2.1版の比較表"
+          "2.1 版の比較表"
         ]
       },
       {
@@ -571,14 +571,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "MartinKleppmann（単著）"
+                          "Martin Kleppmann（単著）"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "MartinKleppmann,ChrisRiccomini（共著）"
+                          "Martin Kleppmann, Chris Riccomini（共著）"
                         ]
                       }
                     ]
@@ -706,7 +706,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "クラウドネイティブ・オブジェクトストレージ・ベクトル埋め込み・ローカルファースト同期・DurableExecution・AIとデータシステムの倫理章"
+                          "クラウドネイティブ・オブジェクトストレージ・ベクトル埋め込み・ローカルファースト同期・Durable Execution・AIとデータシステムの倫理章"
                         ]
                       }
                     ]
@@ -770,7 +770,7 @@
           ]
         ],
         "children": [
-          "2.2なぜ改訂されたのか"
+          "2.2 なぜ改訂されたのか"
         ]
       },
       {
@@ -800,7 +800,7 @@
         "tag": "p",
         "attrs": [],
         "children": [
-          "共著者のRiccominiは、データベースアーキテクチャの変化として「",
+          "共著者の Riccomini は、データベースアーキテクチャの変化として「",
           {
             "tag": "strong",
             "attrs": [],
@@ -808,7 +808,7 @@
               "コントロールプレーン・データプレーン・コンピュートプレーンの分離"
             ]
           },
-          "」がこの数年で広く受け入れられた設計パターンになったと指摘しており、これはSaaSとBYOC（BringYourOwnCloud）の両方に対応する上で柔軟性をもたらしていると説明しています。"
+          "」がこの数年で広く受け入れられた設計パターンになったと指摘しており、これはSaaSとBYOC（Bring Your Own Cloud）の両方に対応する上で柔軟性をもたらしていると説明しています。"
         ]
       },
       {
@@ -820,7 +820,7 @@
           ]
         ],
         "children": [
-          "2.3章構成の対応表（第1版→第2版）"
+          "2.3 章構成の対応表（第1版 → 第2版）"
         ]
       },
       {
@@ -919,7 +919,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "1章内に「クラウドvs自己ホスティング」節を追加、1章・2章の内容を再編・拡張"
+                          "1章内に「クラウド vs 自己ホスティング」節を追加、1章・2章の内容を再編・拡張"
                         ]
                       }
                     ]
@@ -958,7 +958,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "GraphQL・DataFrameを新規追加（Datalog・PropertyGraphは第1版から存在し、記述を再編・拡張）"
+                          "GraphQL・DataFrameを新規追加（Datalog・Property Graphは第1版から存在し、記述を再編・拡張）"
                         ]
                       }
                     ]
@@ -1036,7 +1036,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "DurableExecution／Workflows・イベント駆動アーキテクチャを追加"
+                          "Durable Execution／Workflows・イベント駆動アーキテクチャを追加"
                         ]
                       }
                     ]
@@ -1075,7 +1075,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "SyncEngines・ローカルファースト・マルチリージョン運用を追加"
+                          "Sync Engines・ローカルファースト・マルチリージョン運用を追加"
                         ]
                       }
                     ]
@@ -1153,7 +1153,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "「Exactly-OnceMessageProcessing」を再論"
+                          "「Exactly-Once Message Processing」を再論"
                         ]
                       }
                     ]
@@ -1309,7 +1309,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "第1版の「PartitionedLogs」「EventSourcing」は第12章「Log-BasedMessageBrokers」として整理・改称。「EventSourcingandCQRS」はデータモデルを扱う第3章へ移動"
+                          "第1版の「Partitioned Logs」「Event Sourcing」は第12章「Log-Based Message Brokers」として整理・改称。「Event Sourcing and CQRS」はデータモデルを扱う第3章へ移動"
                         ]
                       }
                     ]
@@ -1348,7 +1348,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "UnbundlingDatabasesの議論を継承・発展"
+                          "Unbundling Databasesの議論を継承・発展"
                         ]
                       }
                     ]
@@ -1407,14 +1407,14 @@
           ]
         ],
         "children": [
-          "3.学習の進め方（ステップバイステップ・ロードマップ）"
+          "3. 学習の進め方（ステップバイステップ・ロードマップ）"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念→単一ノード→分散→応用」と段階的に負荷を上げていくことをお勧めします。"
+          "初学者がDDIAを最短距離で理解するための推奨ステップです。いきなり全章を通読しようとせず、以下の順番で「概念 → 単一ノード → 分散 → 応用」と段階的に負荷を上げていくことをお勧めします。"
         ]
       },
       {
@@ -1470,7 +1470,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "各章を読んだら「自分が今使っているシステムはどの方式か」を必ず言語化する（例：「うちのMySQLはSingle-LeaderReplicationで、非同期レプリケーションだからReplicationLagが起きうる」）"
+                      "各章を読んだら「自分が今使っているシステムはどの方式か」を必ず言語化する（例：「うちのMySQLはSingle-Leader Replicationで、非同期レプリケーションだからReplication Lagが起きうる」）"
                     ]
                   },
                   {
@@ -1492,7 +1492,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "KelseyHightower（Google／CoreOSで著名なインフラエンジニア、『KubernetesUpandRunning』著者）はMonsterSCALESummitで、\"他社のスケール事例を真似する前に、自分たちが本当にその規模の問題を抱えているかをまず確認すべきだ\"という趣旨の助言をしています。DDIAで学ぶ技術も同様に、",
+                      "Kelsey Hightower（Google／CoreOSで著名なインフラエンジニア、『Kubernetes Up and Running』著者）はMonster SCALE Summitで、\"他社のスケール事例を真似する前に、自分たちが本当にその規模の問題を抱えているかをまず確認すべきだ\"という趣旨の助言をしています。DDIAで学ぶ技術も同様に、",
                       {
                         "tag": "strong",
                         "attrs": [],
@@ -1518,7 +1518,7 @@
           ]
         ],
         "children": [
-          "4.PartI：データシステムの基礎"
+          "4. Part I：データシステムの基礎"
         ]
       },
       {
@@ -1530,7 +1530,7 @@
           ]
         ],
         "children": [
-          "4.1第1章：データシステムのトレードオフ"
+          "4.1 第1章：データシステムのトレードオフ"
         ]
       },
       {
@@ -1709,10 +1709,10 @@
                 "tag": "strong",
                 "attrs": [],
                 "children": [
-                  "OLTPvsOLAP"
+                  "OLTP vs OLAP"
                 ]
               },
-              "：OLTPは「注文を1件登録する」のような少量データへの高頻度アクセス、OLAPは「先月の売上を地域別に集計する」のような大量データへの低頻度・重いクエリという性質の違いがあります。多くの組織では、OLTP用のデータベース（SystemofRecord＝正データ）から、ETLやCDCによってOLAP用のデータウェアハウス（DerivedData＝派生データ）へデータを流し込む二層構成を取ります。"
+              "：OLTPは「注文を1件登録する」のような少量データへの高頻度アクセス、OLAPは「先月の売上を地域別に集計する」のような大量データへの低頻度・重いクエリという性質の違いがあります。多くの組織では、OLTP用のデータベース（System of Record＝正データ）から、ETLやCDCによってOLAP用のデータウェアハウス（Derived Data＝派生データ）へデータを流し込む二層構成を取ります。"
             ]
           },
           {
@@ -1723,7 +1723,7 @@
                 "tag": "strong",
                 "attrs": [],
                 "children": [
-                  "クラウドvs自己ホスティング"
+                  "クラウド vs 自己ホスティング"
                 ]
               },
               "：クラウドサービスは運用負荷を下げる一方でベンダーロックインやコストの予測しづらさというリスクを伴います。近年はクラウドネイティブなアーキテクチャ（コントロール・データ・コンピュートプレーンの分離）が主流になりつつあります。"
@@ -1737,7 +1737,7 @@
                 "tag": "strong",
                 "attrs": [],
                 "children": [
-                  "単一ノードvs分散システム"
+                  "単一ノード vs 分散システム"
                 ]
               },
               "：分散システムはスケーラビリティと可用性を得られる代わりに、ネットワーク分断・部分障害・整合性の管理という複雑さを引き受けることになります（この複雑さは第9章で詳しく扱われます）。"
@@ -1820,7 +1820,7 @@
           ]
         ],
         "children": [
-          "4.2第2章：非機能要件の定義"
+          "4.2 第2章：非機能要件の定義"
         ]
       },
       {
@@ -2028,7 +2028,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "負荷パラメータ（LoadParameters）を定義した上で『Xが増えたときにYはどうなるか』を問う概念"
+              "負荷パラメータ（Load Parameters）を定義した上で『Xが増えたときにYはどうなるか』を問う概念"
             ]
           },
           "」だという考え方です。例えばTwitter/X型のSNSでは「フォロワー数」「投稿頻度」がリクエストレートに直結する負荷パラメータになります。"
@@ -2149,7 +2149,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "p95/p99"
+                          "p95 / p99"
                         ]
                       },
                       {
@@ -2310,7 +2310,7 @@
           ]
         ],
         "children": [
-          "5.PartII：データの保存と検索"
+          "5. Part II：データの保存と検索"
         ]
       },
       {
@@ -2322,7 +2322,7 @@
           ]
         ],
         "children": [
-          "5.1第3章：データモデルとクエリ言語"
+          "5.1 第3章：データモデルとクエリ言語"
         ]
       },
       {
@@ -2572,7 +2572,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "PropertyGraph"
+              "Property Graph"
             ]
           },
           "、",
@@ -2580,7 +2580,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "EventSourcing"
+              "Event Sourcing"
             ]
           },
           "（状態の変更を追記型のイベント列として保存し、そこから現在の状態を再構成する方式）、",
@@ -2591,7 +2591,7 @@
               "CQRS"
             ]
           },
-          "（書き込みモデルと読み取りモデルを分離する設計パターン）は第1版でも扱われていたテーマであり、第2版では記述の再編・拡張が行われています。EventSourcingとCQRSはそれぞれ独立したパターンであり、単独でも採用できますが、併用されることが多い組み合わせです。"
+          "（書き込みモデルと読み取りモデルを分離する設計パターン）は第1版でも扱われていたテーマであり、第2版では記述の再編・拡張が行われています。Event SourcingとCQRSはそれぞれ独立したパターンであり、単独でも採用できますが、併用されることが多い組み合わせです。"
         ]
       },
       {
@@ -2676,7 +2676,7 @@
           ]
         ],
         "children": [
-          "5.2第4章：ストレージとインデックス"
+          "5.2 第4章：ストレージとインデックス"
         ]
       },
       {
@@ -2696,7 +2696,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "LSM-Tree（Log-StructuredMerge-Tree）"
+              "LSM-Tree（Log-Structured Merge-Tree）"
             ]
           },
           "を対比しながら解説します。"
@@ -2935,7 +2935,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "列指向ストレージ（Column-OrientedStorage）"
+              "列指向ストレージ（Column-Oriented Storage）"
             ]
           },
           "、",
@@ -2959,7 +2959,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "ベクトル埋め込み（VectorEmbeddings）"
+              "ベクトル埋め込み（Vector Embeddings）"
             ]
           },
           "と全文検索の節が新たに追加されています。ベクトル埋め込みはRAG（検索拡張生成）アプリケーションの基盤技術として、近年のデータベース設計で無視できないテーマになっています。"
@@ -3047,7 +3047,7 @@
           ]
         ],
         "children": [
-          "5.3第5章：エンコーディングとスキーマの進化"
+          "5.3 第5章：エンコーディングとスキーマの進化"
         ]
       },
       {
@@ -3143,7 +3143,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "JSON/XML"
+                          "JSON / XML"
                         ]
                       },
                       {
@@ -3164,7 +3164,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "WebAPI、設定ファイル"
+                          "Web API、設定ファイル"
                         ]
                       }
                     ]
@@ -3182,7 +3182,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ProtocolBuffers"
+                          "Protocol Buffers"
                         ]
                       },
                       {
@@ -3262,7 +3262,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "DurableExecutionとワークフロー"
+              "Durable Execution とワークフロー"
             ]
           },
           "、そして",
@@ -3270,7 +3270,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "イベント駆動アーキテクチャ（Event-DrivenArchitecture）"
+              "イベント駆動アーキテクチャ（Event-Driven Architecture）"
             ]
           },
           "の節が追加され、マイクロサービス時代の非同期処理設計により踏み込んだ内容になっています。"
@@ -3333,7 +3333,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "スキーマを持たないJSONに頼りきるのではなく、ProtocolBuffersやAvroのような明示的スキーマ管理ツールを社内標準にすると事故が減る"
+                      "スキーマを持たないJSONに頼りきるのではなく、Protocol BuffersやAvroのような明示的スキーマ管理ツールを社内標準にすると事故が減る"
                     ]
                   },
                   {
@@ -3358,7 +3358,7 @@
           ]
         ],
         "children": [
-          "6.PartIII：分散データ"
+          "6. Part III：分散データ"
         ]
       },
       {
@@ -3377,7 +3377,7 @@
           ]
         ],
         "children": [
-          "6.1第6章：レプリケーション"
+          "6.1 第6章：レプリケーション"
         ]
       },
       {
@@ -3571,7 +3571,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "どのノードにも書き込み可能、読み書きクォーラム（w+r>n）で読み取りの鮮度を調整"
+                          "どのノードにも書き込み可能、読み書きクォーラム（w + r > n）で読み取りの鮮度を調整"
                         ]
                       },
                       {
@@ -3585,14 +3585,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "読み取り時の修復（ReadRepair）が必要"
+                          "読み取り時の修復（Read Repair）が必要"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "AmazonDynamo系（Cassandra、Riak）"
+                          "Amazon Dynamo系（Cassandra、Riak）"
                         ]
                       }
                     ]
@@ -3612,7 +3612,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "レプリケーションラグ（ReplicationLag）"
+              "レプリケーションラグ（Replication Lag）"
             ]
           },
           "によって「書いた直後に自分の書き込みが読めない」といった不整合が起こり得ます。"
@@ -3627,7 +3627,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "SyncEnginesとローカルファースト・ソフトウェア"
+              "Sync Engines とローカルファースト・ソフトウェア"
             ]
           },
           "です。これはKleppmann自身の近年の研究テーマでもあり、オフライン中でもローカルで編集を続け、オンライン復帰時に自動的に同期・マージするアプリケーション設計を扱っています。なお「ローカルファースト」は、データの正本をユーザーの手元に置き、サーバーを同期の補助と位置付ける設計原則を指します。FigmaやLinearは",
@@ -3719,15 +3719,15 @@
                         "tag": "code",
                         "attrs": [],
                         "children": [
-                          "UPDATEstockSETqty=qty-1WHEREid=?ANDqty>=1"
+                          "UPDATE stock SET qty = qty - 1 WHERE id = ? AND qty >= 1"
                         ]
                       },
-                      "）や、在庫キー・オーダーIDへの一意性制約で安全に守れる不変条件ならReadCommittedでも成立する。一方、複数行を読んでから判断するWriteSkew型の不変条件（「オンコール担当者を最低1人残す」など）はSnapshotIsolationでも防げないため、直列化可能性（Serializable）や",
+                      "）や、在庫キー・オーダーIDへの一意性制約で安全に守れる不変条件なら Read Committed でも成立する。一方、複数行を読んでから判断する Write Skew 型の不変条件（「オンコール担当者を最低1人残す」など）は Snapshot Isolation でも防げないため、直列化可能性（Serializable）や",
                       {
                         "tag": "code",
                         "attrs": [],
                         "children": [
-                          "SELECT...FORUPDATE"
+                          "SELECT ... FOR UPDATE"
                         ]
                       },
                       "のような明示的ロックが必要になる。いずれの場合も、操作の冪等性キーによる重複要求の排除を併用する"
@@ -3769,7 +3769,7 @@
           ]
         ],
         "children": [
-          "6.2第7章：シャーディング（パーティショニング）"
+          "6.2 第7章：シャーディング（パーティショニング）"
         ]
       },
       {
@@ -4019,7 +4019,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "リバランシングは「自動化するが、いつ発火するかは運用者がコントロールできる」設計（Automaticbutoperator-triggered）が事故を減らす定石"
+                      "リバランシングは「自動化するが、いつ発火するかは運用者がコントロールできる」設計（Automatic but operator-triggered）が事故を減らす定石"
                     ]
                   },
                   {
@@ -4044,7 +4044,7 @@
           ]
         ],
         "children": [
-          "6.3第8章：トランザクション"
+          "6.3 第8章：トランザクション"
         ]
       },
       {
@@ -4140,21 +4140,21 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ReadCommitted"
+                          "Read Committed"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "DirtyRead"
+                          "Dirty Read"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "Non-RepeatableRead、WriteSkew"
+                          "Non-Repeatable Read、Write Skew"
                         ]
                       },
                       {
@@ -4179,21 +4179,21 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "SnapshotIsolation"
+                          "Snapshot Isolation"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "Non-RepeatableRead、大半のLostUpdate"
+                          "Non-Repeatable Read、大半のLost Update"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "WriteSkew、一部のPhantom"
+                          "Write Skew、一部のPhantom"
                         ]
                       },
                       {
@@ -4205,15 +4205,15 @@
                             "tag": "code",
                             "attrs": [],
                             "children": [
-                              "REPEATABLEREAD"
+                              "REPEATABLE READ"
                             ]
                           },
-                          "はSnapshotIsolationとして実装されている。MySQL(InnoDB)の",
+                          "はSnapshot Isolationとして実装されている。MySQL(InnoDB)の",
                           {
                             "tag": "code",
                             "attrs": [],
                             "children": [
-                              "REPEATABLEREAD"
+                              "REPEATABLE READ"
                             ]
                           },
                           "は一貫性読み取りに加えロック読み取り（",
@@ -4221,10 +4221,10 @@
                             "tag": "code",
                             "attrs": [],
                             "children": [
-                              "SELECT...FORUPDATE"
+                              "SELECT ... FOR UPDATE"
                             ]
                           },
-                          "など）が最新コミットを見るなど挙動が異なり、SnapshotIsolationと同一視できない"
+                          "など）が最新コミットを見るなど挙動が異なり、Snapshot Isolationと同一視できない"
                         ]
                       }
                     ]
@@ -4263,7 +4263,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "SerializableSnapshotIsolation(SSI)など"
+                          "Serializable Snapshot Isolation (SSI) など"
                         ]
                       }
                     ]
@@ -4291,7 +4291,7 @@
             "tag": "code",
             "attrs": [],
             "children": [
-              "READCOMMITTED"
+              "READ COMMITTED"
             ]
           },
           "や",
@@ -4299,22 +4299,22 @@
             "tag": "code",
             "attrs": [],
             "children": [
-              "REPEATABLEREAD"
+              "REPEATABLE READ"
             ]
           },
-          "でも実装（PostgreSQL、MySQL/InnoDB、Oracle、SQLServerなど）ごとに防げる異常が異なるため、採用するDBのドキュメントで実際の挙動を確認する必要があります。"
+          "でも実装（PostgreSQL、MySQL/InnoDB、Oracle、SQL Serverなど）ごとに防げる異常が異なるため、採用するDBのドキュメントで実際の挙動を確認する必要があります。"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "ただしSerializableが「異常を防げない」わけではない一方で、無償でもありません。2相ロックのような悲観的実装ではロック競合によりスループットが落ち、SSIのような楽観的実装では競合を検出した時点でトランザクションが",
+          "ただし Serializable が「異常を防げない」わけではない一方で、無償でもありません。2相ロックのような悲観的実装ではロック競合によりスループットが落ち、SSI のような楽観的実装では競合を検出した時点でトランザクションが",
           {
             "tag": "strong",
             "attrs": [],
             "children": [
-              "直列化失敗（serializationfailure）"
+              "直列化失敗（serialization failure）"
             ]
           },
           "としてアボートされます。つまりコストは異常の見逃しではなく、実装コスト・スループット・",
@@ -4337,10 +4337,10 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "WriteSkew"
+              "Write Skew"
             ]
           },
-          "です。2つのトランザクションがそれぞれ異なる行を更新するため一見競合しないように見えても、両者が読んだ前提条件（例：「オンコール担当者が最低1人いること」）が同時に崩れてしまう現象で、SnapshotIsolationだけでは防げません。"
+          "です。2つのトランザクションがそれぞれ異なる行を更新するため一見競合しないように見えても、両者が読んだ前提条件（例：「オンコール担当者が最低1人いること」）が同時に崩れてしまう現象で、Snapshot Isolationだけでは防げません。"
         ]
       },
       {
@@ -4352,7 +4352,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "Two-PhaseCommit(2PC)"
+              "Two-Phase Commit (2PC)"
             ]
           },
           "の仕組みと、それが持つ「コーディネーター障害時にリソースがロックされたまま止まる」という弱点が解説されます。第2版ではメッセージングシステムにおける「Exactly-Once（正確に1回）」処理の実現方法も改めて論じられています。"
@@ -4415,12 +4415,12 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "WriteSkewが起きうる業務ロジック（在庫の二重予約、シフトの最低人数チェックなど）では、明示的なロック（",
+                      "Write Skewが起きうる業務ロジック（在庫の二重予約、シフトの最低人数チェックなど）では、明示的なロック（",
                       {
                         "tag": "code",
                         "attrs": [],
                         "children": [
-                          "SELECT...FORUPDATE"
+                          "SELECT ... FOR UPDATE"
                         ]
                       },
                       "）やSerializableレベルの利用を検討する"
@@ -4448,7 +4448,7 @@
           ]
         ],
         "children": [
-          "6.4第9章：分散システムの落とし穴"
+          "6.4 第9章：分散システムの落とし穴"
         ]
       },
       {
@@ -4460,7 +4460,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "部分的な障害（PartialFailure）"
+              "部分的な障害（Partial Failure）"
             ]
           },
           "」が常態化する点です。この章はネットワーク・クロック・プロセスという3つの観点で、なぜ分散システムの設計が難しいのかを解説します。"
@@ -4598,7 +4598,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "単調時計（MonotonicClock）を経過時間計測に使う、時刻に依存したロジックを避ける"
+                          "単調時計（Monotonic Clock）を経過時間計測に使う、時刻に依存したロジックを避ける"
                         ]
                       }
                     ]
@@ -4755,7 +4755,7 @@
           ]
         ],
         "children": [
-          "6.5第10章：一貫性と合意"
+          "6.5 第10章：一貫性と合意"
         ]
       },
       {
@@ -4789,7 +4789,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "厳密直列化可能性（StrictSerializability）"
+              "厳密直列化可能性（Strict Serializability）"
             ]
           },
           "のように、さらに強い保証も存在します。また強力である反面、達成のためのコストが大きく、",
@@ -4900,7 +4900,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "論理クロック（LogicalClocks）"
+              "論理クロック（Logical Clocks）"
             ]
           },
           "と、それを応用した",
@@ -4978,7 +4978,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "線形化可能性のコストを理解した上で、業務要件が許すなら「結果整合性（EventualConsistency）」で十分な箇所を切り分ける"
+                      "線形化可能性のコストを理解した上で、業務要件が許すなら「結果整合性（Eventual Consistency）」で十分な箇所を切り分ける"
                     ]
                   }
                 ]
@@ -4996,14 +4996,14 @@
           ]
         ],
         "children": [
-          "7.PartIV：派生データ"
+          "7. Part IV：派生データ"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "正データ（SystemofRecord）から、検索インデックス・キャッシュ・分析基盤のような「派生データ（DerivedData）」を生成・維持する仕組みを扱うパートです。"
+          "正データ（System of Record）から、検索インデックス・キャッシュ・分析基盤のような「派生データ（Derived Data）」を生成・維持する仕組みを扱うパートです。"
         ]
       },
       {
@@ -5015,7 +5015,7 @@
           ]
         ],
         "children": [
-          "7.1第11章：バッチ処理"
+          "7.1 第11章：バッチ処理"
         ]
       },
       {
@@ -5027,7 +5027,7 @@
             "tag": "code",
             "attrs": [],
             "children": [
-              "catfile|grep|sort|uniq"
+              "cat file | grep | sort | uniq"
             ]
           },
           "のような思想）から始め、それを分散環境に拡張した",
@@ -5149,7 +5149,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "HadoopMapReduce"
+                          "Hadoop MapReduce"
                         ]
                       }
                     ]
@@ -5181,7 +5181,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ApacheSpark、ApacheFlink（バッチモード）"
+                          "Apache Spark、Apache Flink（バッチモード）"
                         ]
                       }
                     ]
@@ -5213,7 +5213,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "Hive、SparkSQL"
+                          "Hive、Spark SQL"
                         ]
                       }
                     ]
@@ -5322,7 +5322,7 @@
           ]
         ],
         "children": [
-          "7.2第12章：ストリーム処理"
+          "7.2 第12章：ストリーム処理"
         ]
       },
       {
@@ -5339,12 +5339,12 @@
         "tag": "p",
         "attrs": [],
         "children": [
-          "ApacheKafkaに代表される",
+          "Apache Kafkaに代表される",
           {
             "tag": "strong",
             "attrs": [],
             "children": [
-              "ログ型メッセージブローカー（Log-BasedMessageBroker）"
+              "ログ型メッセージブローカー（Log-Based Message Broker）"
             ]
           },
           "は、メッセージを消費後に削除する伝統的なメッセージキューとは異なり、追記型のログとしてイベントを保持します。保持されるのは無期限ではなく、",
@@ -5367,7 +5367,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "ログコンパクション（logcompaction）"
+              "ログコンパクション（log compaction）"
             ]
           },
           "です。コンパクションはバックグラウンドで非同期に古いレコードを削除し、少なくともキーごとの最新値を残すことを保証しますが、",
@@ -5389,7 +5389,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "CDC（ChangeDataCapture）"
+              "CDC（Change Data Capture）"
             ]
           },
           "は、データベースの変更（INSERT/UPDATE/DELETE）をイベントストリームとして捕捉し、他のデータストアへ反映する仕組みで、正データと派生データを同期させる代表的な手法です。"
@@ -5481,7 +5481,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "イベント時刻vs処理時刻"
+                          "イベント時刻 vs 処理時刻"
                         ]
                       },
                       {
@@ -5506,7 +5506,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ストリーム結合（Stream-StreamJoin、Stream-TableJoin）"
+                          "ストリーム結合（Stream-Stream Join、Stream-Table Join）"
                         ]
                       },
                       {
@@ -5588,7 +5588,7 @@
                     "tag": "li",
                     "attrs": [],
                     "children": [
-                      "イベント時刻と処理時刻のズレ（LateArrivingEvents）を前提に、",
+                      "イベント時刻と処理時刻のズレ（Late Arriving Events）を前提に、",
                       {
                         "tag": "strong",
                         "attrs": [],
@@ -5601,10 +5601,10 @@
                         "tag": "strong",
                         "attrs": [],
                         "children": [
-                          "許容遅延（allowedlateness）"
+                          "許容遅延（allowed lateness）"
                         ]
                       },
-                      "（Watermark通過後もウィンドウの状態を保持し、遅れて届いたイベントを受け付ける猶予）を、それぞれ独立した設定として設計段階で決めておく"
+                      "（Watermark 通過後もウィンドウの状態を保持し、遅れて届いたイベントを受け付ける猶予）を、それぞれ独立した設定として設計段階で決めておく"
                     ]
                   },
                   {
@@ -5629,7 +5629,7 @@
           ]
         ],
         "children": [
-          "7.3第13章：ストリーミングシステムの哲学"
+          "7.3 第13章：ストリーミングシステムの哲学"
         ]
       },
       {
@@ -5651,7 +5651,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "UnbundlingDatabases（データベースの分解）"
+              "Unbundling Databases（データベースの分解）"
             ]
           },
           "」です。従来1つの製品に統合されていたインデックス作成・キャッシュ・クエリ実行といった機能を、独立したコンポーネントの組み合わせとして再構築し、それらをイベントストリームでつなぐという発想です。あわせて、",
@@ -5659,7 +5659,7 @@
             "tag": "strong",
             "attrs": [],
             "children": [
-              "End-to-EndArgument（両端の原則）"
+              "End-to-End Argument（両端の原則）"
             ]
           },
           "——正確性の保証はシステムの末端（アプリケーション）で行うのが最も確実であり、中間層だけに頼りすぎるべきではないという設計原則——も解説されます。"
@@ -5740,7 +5740,7 @@
           ]
         ],
         "children": [
-          "8.PartV：倫理と社会（第2版新設）"
+          "8. Part V：倫理と社会（第2版新設）"
         ]
       },
       {
@@ -5752,14 +5752,14 @@
           ]
         ],
         "children": [
-          "8.1第14章：正しいことをする"
+          "8.1 第14章：正しいことをする"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "倫理を独立したパートとして立てたのが第2版の構成上の変更点です。テーマ自体は第1版12章の一節「DoingtheRightThing」で扱われていましたが、AIが意思決定プロセスに深く組み込まれるようになった現状を踏まえて再編・大幅に加筆され、独立章となりました。データシステムの設計者が技術的な正しさだけでなく",
+          "倫理を独立したパートとして立てたのが第2版の構成上の変更点です。テーマ自体は第1版12章の一節「Doing the Right Thing」で扱われていましたが、AIが意思決定プロセスに深く組み込まれるようになった現状を踏まえて再編・大幅に加筆され、独立章となりました。データシステムの設計者が技術的な正しさだけでなく",
           {
             "tag": "strong",
             "attrs": [],
@@ -6024,7 +6024,7 @@
           ]
         ],
         "children": [
-          "8.2関連する見解：AIエージェントとデータベース（書籍本文外）"
+          "8.2 関連する見解：AIエージェントとデータベース（書籍本文外）"
         ]
       },
       {
@@ -6038,14 +6038,14 @@
               "注記"
             ]
           },
-          "：以下は第14章の本文ではなく、刊行後のインタビュー（参考文献5・7）でKleppmannが述べた見解です。書籍の内容と混同しないよう、実務トレンドとして分けて扱います。"
+          "：以下は第14章の本文ではなく、刊行後のインタビュー（参考文献5・7）で Kleppmann が述べた見解です。書籍の内容と混同しないよう、実務トレンドとして分けて扱います。"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "Kleppmannは、AIエージェントがデータベースに対して直接操作を行うようになる将来を見据え、「",
+          "Kleppmann は、AIエージェントがデータベースに対して直接操作を行うようになる将来を見据え、「",
           {
             "tag": "strong",
             "attrs": [],
@@ -6091,7 +6091,7 @@
           ]
         ],
         "children": [
-          "9.2026年の実務トレンドとDDIAの位置づけ"
+          "9. 2026年の実務トレンドとDDIAの位置づけ"
         ]
       },
       {
@@ -6110,7 +6110,7 @@
           ]
         ],
         "children": [
-          "9.1ストレージのオブジェクトストア化"
+          "9.1 ストレージのオブジェクトストア化"
         ]
       },
       {
@@ -6137,14 +6137,14 @@
           ]
         ],
         "children": [
-          "9.2データベースの「移動可能性」とPostgres拡張エコシステム"
+          "9.2 データベースの「移動可能性」とPostgres拡張エコシステム"
         ]
       },
       {
         "tag": "p",
         "attrs": [],
         "children": [
-          "Riccominiは、将来成功するデータベースは「ノートPC→サーバー→クラウド→別のクラウド」へとシームレスに移動・スケールできる必要があるという仮説を提示しています。DuckDBとMotherDuck、組み込み用途に広がるPostgres（PGlite）、SQLiteの組み込み利用の広がりはこの流れを示す事例として挙げられています。"
+          "Riccominiは、将来成功するデータベースは「ノートPC → サーバー → クラウド → 別のクラウド」へとシームレスに移動・スケールできる必要があるという仮説を提示しています。DuckDBとMotherDuck、組み込み用途に広がるPostgres（PGlite）、SQLiteの組み込み利用の広がりはこの流れを示す事例として挙げられています。"
         ]
       },
       {
@@ -6187,7 +6187,7 @@
           ]
         ],
         "children": [
-          "9.3コントロール／データ／コンピュートプレーンの分離"
+          "9.3 コントロール／データ／コンピュートプレーンの分離"
         ]
       },
       {
@@ -6230,7 +6230,7 @@
           ]
         ],
         "children": [
-          "9.4ストリーミングとレイテンシ／スループットのトレードオフ"
+          "9.4 ストリーミングとレイテンシ／スループットのトレードオフ"
         ]
       },
       {
@@ -6259,7 +6259,7 @@
               "出典"
             ]
           },
-          "：本節の内容は、ScyllaDBが実施したMartinKleppmann・ChrisRiccominiへのインタビュー記事に基づきます。詳細は参考文献を参照してください。"
+          "：本節の内容は、ScyllaDBが実施したMartin Kleppmann・Chris Riccominiへのインタビュー記事に基づきます。詳細は参考文献を参照してください。"
         ]
       },
       {
@@ -6271,7 +6271,7 @@
           ]
         ],
         "children": [
-          "10.ベストプラクティス実践チェックリスト"
+          "10. ベストプラクティス実践チェックリスト"
         ]
       },
       {
@@ -6313,7 +6313,7 @@
                   ]
                 ],
                 "children": [
-                  "0/13完了"
+                  "0 / 13 完了"
                 ]
               }
             ]
@@ -6605,7 +6605,7 @@
                       ]
                     ],
                     "children": [
-                      "トランザクションの実際の分離レベルを確認し、WriteSkewのリスクを評価したか"
+                      "トランザクションの実際の分離レベルを確認し、Write Skewのリスクを評価したか"
                     ]
                   }
                 ]
@@ -6751,7 +6751,7 @@
           ]
         ],
         "children": [
-          "11.学習後のネクストステップ"
+          "11. 学習後のネクストステップ"
         ]
       },
       {
@@ -6822,7 +6822,7 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "1.自社システムの棚卸し"
+                          "1. 自社システムの棚卸し"
                         ]
                       },
                       {
@@ -6847,14 +6847,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "2.障害訓練"
+                          "2. 障害訓練"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ChaosEngineering的な手法で、第9章の「部分障害」を意図的に発生させ挙動を確認する"
+                          "Chaos Engineering的な手法で、第9章の「部分障害」を意図的に発生させ挙動を確認する"
                         ]
                       }
                     ]
@@ -6872,14 +6872,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "3.専門書への展開"
+                          "3. 専門書への展開"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "ストレージ内部をより深く知りたい場合はAlexPetrov著『DatabaseInternals』、分散合意をさらに深く学びたい場合は原論文（Raft、Paxos）へ進む"
+                          "ストレージ内部をより深く知りたい場合はAlex Petrov著『Database Internals』、分散合意をさらに深く学びたい場合は原論文（Raft、Paxos）へ進む"
                         ]
                       }
                     ]
@@ -6897,14 +6897,14 @@
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "4.コミュニティ・カンファレンス"
+                          "4. コミュニティ・カンファレンス"
                         ]
                       },
                       {
                         "tag": "td",
                         "attrs": [],
                         "children": [
-                          "MonsterSCALESummit、QConなど、著者本人や実務家の講演を追う"
+                          "Monster SCALE Summit、QConなど、著者本人や実務家の講演を追う"
                         ]
                       }
                     ]
@@ -6924,7 +6924,7 @@
           ]
         ],
         "children": [
-          "12.参考文献"
+          "12. 参考文献"
         ]
       },
       {
@@ -6974,7 +6974,7 @@
                   ]
                 ],
                 "children": [
-                  "O'ReillyMedia「DesigningData-IntensiveApplications,2ndEdition」目次・書誌情報（2026年）.",
+                  "O'Reilly Media「Designing Data-Intensive Applications, 2nd Edition」目次・書誌情報（2026年）.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7025,7 +7025,7 @@
                   ]
                 ],
                 "children": [
-                  "O'ReillyMedia「DesigningData-IntensiveApplications」（初版、2017年）.",
+                  "O'Reilly Media「Designing Data-Intensive Applications」（初版、2017年）.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7076,7 +7076,7 @@
                   ]
                 ],
                 "children": [
-                  "MartinKleppmann'swebsite「DesigningData-IntensiveApplications,2ndEdition」出版案内・書評掲載.",
+                  "Martin Kleppmann's website「Designing Data-Intensive Applications, 2nd Edition」出版案内・書評掲載.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7127,7 +7127,7 @@
                   ]
                 ],
                 "children": [
-                  "dataintensive.net（書籍公式サイト。JayKreps・KevinScott・JaanaDoganらの推薦文を掲載）.",
+                  "dataintensive.net（書籍公式サイト。Jay Kreps・Kevin Scott・Jaana Dogan らの推薦文を掲載）.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7178,7 +7178,7 @@
                   ]
                 ],
                 "children": [
-                  "ScyllaDB「Rethinking\"DesigningData-IntensiveApplications\"」—MartinKleppmann・ChrisRiccominiインタビュー.",
+                  "ScyllaDB「Rethinking \"Designing Data-Intensive Applications\"」— Martin Kleppmann・Chris Riccominiインタビュー.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7229,7 +7229,7 @@
                   ]
                 ],
                 "children": [
-                  "ScyllaDB「KelseyHightower'sTakeonEngineeringatScale」—MonsterSCALESummit講演レポート.",
+                  "ScyllaDB「Kelsey Hightower's Take on Engineering at Scale」— Monster SCALE Summit講演レポート.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7280,7 +7280,7 @@
                   ]
                 ],
                 "children": [
-                  "ScyllaDBTechTalk「DesigningData-IntensiveApplicationsSecondEdition」（Kleppmann・Riccomini・TzachLivyatan）.",
+                  "ScyllaDB Tech Talk「Designing Data-Intensive Applications Second Edition」（Kleppmann・Riccomini・Tzach Livyatan）.",
                   {
                     "tag": "a",
                     "attrs": [
@@ -7331,7 +7331,7 @@
                   ]
                 ],
                 "children": [
-                  "MartinKleppmann'swebsite（著者プロフィール・出版物一覧）.",
+                  "Martin Kleppmann's website（著者プロフィール・出版物一覧）.",
                   {
                     "tag": "a",
                     "attrs": [

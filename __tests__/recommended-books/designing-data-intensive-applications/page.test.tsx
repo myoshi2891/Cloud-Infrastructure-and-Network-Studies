@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import { EXAMS } from '@/app/constants';
@@ -51,4 +51,20 @@ describe('DDIA 全量移行',()=>{
  ])('修飾付き・非主ボタンの目次クリック（%s）はブラウザー既定動作に任せる',(_,init)=>{const c=render(<Guide/>).container;const button=c.querySelector('button')!;fireEvent.click(button);const link=c.querySelectorAll('nav a')[1]!;const pushState=vi.spyOn(window.history,'pushState');const event=new MouseEvent('click',{bubbles:true,cancelable:true,...init});fireEvent(link,event);expect(event.defaultPrevented).toBe(false);expect(pushState).not.toHaveBeenCalled();expect(button).toHaveAttribute('aria-expanded','true');expect(link).not.toHaveClass('active');pushState.mockRestore();});
  it('修飾なしの主ボタンクリックは従来どおりページ内移動を処理する',()=>{const c=render(<Guide/>).container;const link=c.querySelectorAll('nav a')[1]!;const event=new MouseEvent('click',{bubbles:true,cancelable:true,button:0});fireEvent(link,event);expect(event.defaultPrevented).toBe(true);expect(decodeURIComponent(window.location.hash)).toBe('#'+fixture.nav[1]!.id);expect(link).toHaveClass('active');});
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});
+ it('本文比較は書式上の空白を畳み、語間の空白は区別する',()=>{const make=(html:string)=>{const root=document.createElement('div');root.innerHTML='<main>'+html+'</main>';return root;};expect(snapshotDdia(make('<p>REPEATABLE READ</p>'))).not.toEqual(snapshotDdia(make('<p>REPEATABLEREAD</p>')));expect(snapshotDdia(make('<p>\n   REPEATABLE\n   READ\n</p>'))).toEqual(snapshotDdia(make('<p>REPEATABLE READ</p>')));expect(snapshotDdia(make('<ul>\n  <li>a</li>\n</ul>'))).toEqual(snapshotDdia(make('<ul><li>a</li></ul>')));});
+ it('現在位置の判定線は見出しのscroll-margin（ヘッダー＋免責バナー＋24px）と一致し、バナー高さの変化に追従する',async()=>{
+  const margins:string[]=[];
+  class FakeObserver{constructor(_:IntersectionObserverCallback,options?:IntersectionObserverInit){margins.push(options?.rootMargin??'');}observe(){}unobserve(){}disconnect(){}takeRecords(){return [];}}
+  vi.stubGlobal('IntersectionObserver',FakeObserver);
+  const root=document.documentElement;root.style.setProperty('--header-h','60px');root.style.setProperty('--disclaimer-height','40px');
+  try{
+   const c=render(<Guide/>).container;
+   // 判定線の +24px は、目次の全リンク先（h2/h3）に効く scroll-margin-top と同じ値であること
+   expect(fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8')).toContain('.ddia-page .main h2, .ddia-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }');
+   expect([...c.querySelectorAll('nav a')].map(a=>document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1)))?.tagName)).toEqual([...c.querySelectorAll('nav a')].map(()=>expect.stringMatching(/^H[23]$/)));
+   expect(margins.at(-1)?.split(' ')[0]).toBe('-124px');
+   root.style.setProperty('--disclaimer-height','56px');
+   await waitFor(()=>expect(margins.at(-1)?.split(' ')[0]).toBe('-140px'));
+  }finally{root.style.removeProperty('--header-h');root.style.removeProperty('--disclaimer-height');vi.unstubAllGlobals();}
+ });
 });
