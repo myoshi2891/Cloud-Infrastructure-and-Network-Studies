@@ -53,18 +53,22 @@ describe('DDIA 全量移行',()=>{
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});
  it('本文比較は書式上の空白を畳み、語間の空白は区別する',()=>{const make=(html:string)=>{const root=document.createElement('div');root.innerHTML='<main>'+html+'</main>';return root;};expect(snapshotDdia(make('<p>REPEATABLE READ</p>'))).not.toEqual(snapshotDdia(make('<p>REPEATABLEREAD</p>')));expect(snapshotDdia(make('<p>\n   REPEATABLE\n   READ\n</p>'))).toEqual(snapshotDdia(make('<p>REPEATABLE READ</p>')));expect(snapshotDdia(make('<ul>\n  <li>a</li>\n</ul>'))).toEqual(snapshotDdia(make('<ul><li>a</li></ul>')));});
  it('現在位置の判定線は見出しのscroll-margin（ヘッダー＋免責バナー＋24px）と一致し、バナー高さの変化に追従する',async()=>{
-  const margins:string[]=[];
-  class FakeObserver{constructor(_:IntersectionObserverCallback,options?:IntersectionObserverInit){margins.push(options?.rootMargin??'');}observe(){}unobserve(){}disconnect(){}takeRecords(){return [];}}
-  vi.stubGlobal('IntersectionObserver',FakeObserver);
   const root=document.documentElement;root.style.setProperty('--header-h','60px');root.style.setProperty('--disclaimer-height','40px');
+  const {container:c,unmount}=render(<Guide/>);
+  const links=[...c.querySelectorAll('nav a')];
+  const targets=links.map(a=>document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1)))!);
+  // 2番目の見出しだけ top を差し替え、それ以外は判定線より十分下に置く
+  const placeSecond=(top:number)=>{targets.forEach((t,i)=>{t.getBoundingClientRect=()=>({top:i===0?-1000:i===1?top:99999} as DOMRect);});fireEvent.scroll(window);};
   try{
-   const c=render(<Guide/>).container;
    // 判定線の +24px は、目次の全リンク先（h2/h3）に効く scroll-margin-top と同じ値であること
    expect(fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8')).toContain('.ddia-page .main h2, .ddia-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }');
-   expect([...c.querySelectorAll('nav a')].map(a=>document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1)))?.tagName)).toEqual([...c.querySelectorAll('nav a')].map(()=>expect.stringMatching(/^H[23]$/)));
-   expect(margins.at(-1)?.split(' ')[0]).toBe('-124px');
+   expect(targets.map(t=>t?.tagName)).toEqual(links.map(()=>expect.stringMatching(/^H[23]$/)));
+   // 判定線 = 60 + 40 + 24 = 124px（サブピクセル許容 1px）
+   placeSecond(124);await waitFor(()=>expect(links[1]).toHaveAttribute('aria-current','location'));
+   placeSecond(130);await waitFor(()=>expect(links[0]).toHaveAttribute('aria-current','location'));
+   // バナーが 56px に伸びると判定線は 140px へ移り、130px の見出しが現在位置になる
    root.style.setProperty('--disclaimer-height','56px');
-   await waitFor(()=>expect(margins.at(-1)?.split(' ')[0]).toBe('-140px'));
-  }finally{root.style.removeProperty('--header-h');root.style.removeProperty('--disclaimer-height');vi.unstubAllGlobals();}
+   placeSecond(130);await waitFor(()=>expect(links[1]).toHaveAttribute('aria-current','location'));
+  }finally{unmount();root.style.removeProperty('--header-h');root.style.removeProperty('--disclaimer-height');}
  });
 });

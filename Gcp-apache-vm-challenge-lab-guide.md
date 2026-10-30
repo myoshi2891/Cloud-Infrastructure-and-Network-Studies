@@ -258,6 +258,9 @@ gcloud compute firewall-rules create default-allow-http \
   --rules=tcp:80 \
   --source-ranges=0.0.0.0/0 \
   --target-tags=http-server
+
+# 3) 新規作成できた場合だけ、後片付け用にルール名を記録する
+FW_RULE_NAME=default-allow-http
 ```
 
 > 方法 A で既に `default-allow-http` が作られている場合、同名で再作成するとエラー（already exists）になります。**まず一覧で存在を確認**してください。
@@ -426,8 +429,8 @@ flowchart TD
 
 | 症状 | 主な原因 | 対処 |
 |---|---|---|
-| **Connection Refused**（接続拒否） | ① VM にタグがない　② ファイアウォールルールがない　③ `https://` で接続している | タグ付与・ルール作成・URL を `http://` に修正 |
-| 読み込み中のまま**タイムアウト** | ファイアウォールで通信が破棄されている | ルールのタグ・ポート・ソース範囲を確認 |
+| **Connection Refused**（接続拒否） | ① Apache が TCP 80 で待ち受けていない（未インストール・停止中）　② `https://`（TCP 443）で接続している | `sudo systemctl status apache2` と `sudo ss -ltnp \| grep ':80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2`。URL を `http://` に修正 |
+| 読み込み中のまま**タイムアウト** | ① ファイアウォールルールがない　② VM のネットワークタグとルールのターゲットタグが一致しない　③ ルールのポート・ソース範囲の設定違い | ルールの存在・ターゲットタグ・ポート・ソース範囲と VM のタグを確認 |
 | 「Apache2 Debian Default Page」が出る | 正常。既定ページが表示されている | 必要なら 6.5 の手順で Hello World に置き換え |
 | `apt-get install` が失敗する | `update` 未実施・一時的なネットワーク障害 | `sudo apt-get update` を実行して再試行 |
 | `default-allow-http` 作成時に「already exists」 | 作成時のチェックボックスで既に作成済み | 新規作成せず、内容が正しいか確認する |
@@ -502,9 +505,16 @@ systemctl enable --now apache2'
 
 チャレンジラボのリソースはラボ終了時に自動で破棄されますが、**個人プロジェクトで試した場合は課金を避けるため必ず削除**してください。
 
+ファイアウォールルールは、**このラボで自分が新規作成したものだけ**を削除します。作業前から存在していたルール（既存の `default-allow-http` を含む）は他の VM が利用している可能性があるため削除しません。5.4 でルールを新規作成した時点（方法 A のチェックボックスで新規作成された場合も含む）に記録した名前を使います。
+
 ```bash
+# FW_RULE_NAME は 5.4 でルールを新規作成したときに記録した値（既存ルールを流用した場合は未設定のまま）
 gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet
-gcloud compute firewall-rules delete default-allow-http --quiet
+
+# このラボで作成したルールが記録されている場合だけ削除する
+if [ -n "${FW_RULE_NAME:-}" ]; then
+  gcloud compute firewall-rules delete "$FW_RULE_NAME" --quiet
+fi
 ```
 
 | 削除対象 | 理由 |
