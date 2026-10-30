@@ -513,7 +513,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"EventBridge ルールの例 (EC2 の停止を検知)"}
 </h4>
 {"\n                "}
-<pre className="code code-block" aria-label="json コード例">
+<pre className="code code-block" tabIndex={0} aria-label="json コード例">
 <div className="code-line">
 {"{"}
 </div>
@@ -933,7 +933,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"CodeDeploy の appspec.yml の例 (Lambda のカナリア)"}
 </h4>
 {"\n                "}
-<pre className="code code-block" aria-label="yaml コード例">
+<pre className="code code-block" tabIndex={0} aria-label="yaml コード例">
 <div className="code-line">
 {""}
 <span className="hljs-attr">

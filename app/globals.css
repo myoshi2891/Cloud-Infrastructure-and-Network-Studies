@@ -233,6 +233,16 @@
     --color-sap-d3-accent-bg: #e6ecfb;
     --color-sap-d3-success: #1f7a4a;
     --color-sap-d3-success-bg: #e9f7ef;
+    /* SAP-C02 Domain 3: original fixed colors */
+    --color-sap-d3-surface: #fff;
+    --color-sap-d3-inline-code: #a4430f;
+    --color-sap-d3-code-bg: #fbfcfe;
+    --color-sap-d3-hljs-keyword: #7c3aed;
+    --color-sap-d3-hljs-string: #0f7a4a;
+    --color-sap-d3-hljs-number: #b45309;
+    --color-sap-d3-hljs-comment: #6b7a99;
+    --color-sap-d3-hljs-title: #1d4ed8;
+    --color-sap-d3-callout-practice-border: #b6e0c8;
     /* SAP-C02 Domain 1: original light palette */
     --color-sap-d1-bg: #faf8f3;
     --color-sap-d1-card: #ffffff;

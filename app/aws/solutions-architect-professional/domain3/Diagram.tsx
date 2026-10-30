@@ -10,5 +10,5 @@ export const Diagram = memo(function Diagram({ id, label }: {
     label: string;
 }) { const chart = DIAGRAMS[id]; if (!chart)
     throw new Error('Missing diagram: ' + id); return <div className="mermaid-wrap">
-<MermaidDiagram chart={config + chart} theme="light" preserveChartTheme ariaLabel={label} preserveNaturalScale/>
+<MermaidDiagram chart={config + chart} theme="light" preserveChartTheme ariaLabel={label} preserveNaturalScale focusable/>
 </div>; });
