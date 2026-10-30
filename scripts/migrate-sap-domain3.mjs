@@ -8,9 +8,13 @@ import { isValid, toHex } from 'khroma';
 import fixture from '../docs/migration-inventory/aws-sap-c02-domain3.fidelity.json' with { type: 'json' };
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { SAP_D3_COLOR_LITERAL, SAP_D3_COLOR_TOKENS } from './sap-domain3-color-tokens.mjs';
+import { SAP_DOMAIN3_CORRECTIONS } from '../__tests__/helpers/sap-domain3-source-corrections.ts';
 const dir='app/aws/solutions-architect-professional/domain3';
 const source=execFileSync('git',['show',`${fixture.sourceCommit}:${fixture.source}`],{encoding:'utf8',maxBuffer:8*1024*1024});
-const doc=new JSDOM(source).window.document;
+// 本文訂正を原本の改行・字下げを保ったまま適用してから解析する。
+const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const corrected=SAP_DOMAIN3_CORRECTIONS.reduce((html,[from,to])=>{const words=from.split(/\s+/),next=to.split(/\s+/);if(words.length!==next.length)throw new Error('Correction word count mismatch: '+from);const pattern=new RegExp(words.map(escape).join('(\\s+)'));if(!pattern.test(html))throw new Error('Correction not found: '+from);return html.replace(pattern,(...m)=>next.map((w,i)=>w+(i<next.length-1?m[i+1]:'')).join(''));},source);
+const doc=new JSDOM(corrected).window.document;
 const boundaries=FIDELITY_PAGES['aws-sap-c02-domain3'].guideBoundaries;
 const phase=process.argv[2];
 if(!Object.hasOwn(boundaries,phase))throw new Error('Specify foundation, task31..task35 or appendix');
