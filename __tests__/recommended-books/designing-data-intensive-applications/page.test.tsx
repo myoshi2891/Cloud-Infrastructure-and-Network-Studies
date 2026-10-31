@@ -53,7 +53,11 @@ describe('DDIA 全量移行',()=>{
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});
  it('本文比較は書式上の空白を畳み、語間の空白は区別する',()=>{const make=(html:string)=>{const root=document.createElement('div');root.innerHTML='<main>'+html+'</main>';return root;};expect(snapshotDdia(make('<p>REPEATABLE READ</p>'))).not.toEqual(snapshotDdia(make('<p>REPEATABLEREAD</p>')));expect(snapshotDdia(make('<p>\n   REPEATABLE\n   READ\n</p>'))).toEqual(snapshotDdia(make('<p>REPEATABLE READ</p>')));expect(snapshotDdia(make('<ul>\n  <li>a</li>\n</ul>'))).toEqual(snapshotDdia(make('<ul><li>a</li></ul>')));
   // インライン要素との境界の空白は意味を持つため、有無を区別する
-  expect(snapshotDdia(make('<p>foo <strong>bar</strong></p>'))).not.toEqual(snapshotDdia(make('<p>foo<strong>bar</strong></p>')));expect(snapshotDdia(make('<p><strong>bar</strong> foo</p>'))).not.toEqual(snapshotDdia(make('<p><strong>bar</strong>foo</p>')));});
+  expect(snapshotDdia(make('<p>foo <strong>bar</strong></p>'))).not.toEqual(snapshotDdia(make('<p>foo<strong>bar</strong></p>')));expect(snapshotDdia(make('<p><strong>bar</strong> foo</p>'))).not.toEqual(snapshotDdia(make('<p><strong>bar</strong>foo</p>')));
+  // インライン要素の内側の先頭・末尾の空白も語間として区別する
+  expect(snapshotDdia(make('<p>foo<strong> bar</strong></p>'))).not.toEqual(snapshotDdia(make('<p>foo<strong>bar</strong></p>')));expect(snapshotDdia(make('<p><strong>bar </strong>foo</p>'))).not.toEqual(snapshotDdia(make('<p><strong>bar</strong>foo</p>')));
+  // ブロック境界に接する空白はインライン要素を挟んでも書式上の空白として除く
+  expect(snapshotDdia(make('<p>\n  <strong> bar </strong>\n</p>'))).toEqual(snapshotDdia(make('<p><strong>bar</strong></p>')));expect(snapshotDdia(make('<li><a href="#x"><em> a</em></a> b</li>'))).toEqual(snapshotDdia(make('<li><a href="#x"><em>a</em></a> b</li>')));});
  it('現在位置の判定線は見出しのscroll-margin（ヘッダー＋免責バナー＋24px）と一致し、バナー高さの変化に追従する',async()=>{
   const root=document.documentElement;root.style.setProperty('--header-h','60px');root.style.setProperty('--disclaimer-height','40px');
   const {container:c,unmount}=render(<Guide/>);
