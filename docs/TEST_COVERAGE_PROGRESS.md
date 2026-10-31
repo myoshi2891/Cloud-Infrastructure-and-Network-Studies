@@ -372,7 +372,7 @@ bun run dashboard
 
 ## 7. 次回セッションでのテスト追加再開プロンプト
 
-2026-10-29: SAP-C02 Domain 3は全文移行・共通導線統合・原本アーカイブ済み。最新実装 `93bf6256`。原本不在下の全体4378件と関連184件成功。原本fixtureの全文・表構造・リスト装飾・コード・図・目次・チェック進捗の契約を維持する。最新全体検証は冒頭と `MIGRATION_PROGRESS.md` の現在地を参照。次のページは `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4` へ移行するSAP-C02 Domain 4（`MIGRATION_PROGRESS.md` の次の作業と同じ）。npm・ビルドは未実行、目視確認はユーザー担当。以下は過去の記録。
+2026-10-29: SAP-C02 Domain 3は全文移行・共通導線統合・原本アーカイブ済み。最新実装 `ca2ef52e`（Domain 3導線統合は先行の統合コミット `93bf6256`）。原本不在下の全体4378件と関連184件成功。原本fixtureの全文・表構造・リスト装飾・コード・図・目次・チェック進捗の契約を維持する。最新全体検証は冒頭と `MIGRATION_PROGRESS.md` の現在地を参照。次のページは `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4` へ移行するSAP-C02 Domain 4（`MIGRATION_PROGRESS.md` の次の作業と同じ）。npm・ビルドは未実行、目視確認はユーザー担当。以下は過去の記録。
 
 2026-10-29: 移行済み原本4教材・8ファイルは `bb338096` でアーカイブ済み。原本不在下で関連409件成功。保存先とGit復元元は `completed-guides-2026-10-29.archive.json` を参照。直下には未移行HTML8件のみ残る。以下の原本保持に関する記述は移動前の履歴。
 
