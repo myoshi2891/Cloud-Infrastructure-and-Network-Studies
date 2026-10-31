@@ -430,7 +430,7 @@ gcloud compute ssh blog --zone=$ZONE
 
 #### ダンプの前にサイトを読み取り専用にする
 
-ダンプ取得後に記事・コメント・設定が書き込まれると、その変更は Cloud SQL へ移らず失われます。そこで、**ダンプ取得からインポート、`DB_HOST` の切り替え、検証（8 章）が終わるまで**、Apache で書き込み系のリクエスト（POST など）を拒否し、閲覧（GET／HEAD）だけを許可します。接続後、`blog` の中で次を実行します。
+ダンプ取得後に記事・コメント・設定が書き込まれると、その変更は Cloud SQL へ移らず失われます。そこで、**ダンプ取得からインポート、`DB_HOST` の切り替え、検証（8 章）が終わるまで**、Apache で書き込み系のリクエスト（POST など）を拒否し、閲覧（GET／HEAD）だけを許可します。予約投稿などを GET でも実行する `wp-cron.php` は、メソッドに関係なく拒否します。接続後、`blog` の中で次を実行します。
 
 ```bash
 sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
@@ -439,13 +439,29 @@ sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
   <LimitExcept GET HEAD>
     Require all denied
   </LimitExcept>
+  # wp-cron.php は GET でも DB に書き込むため、メソッドを問わず拒否する
+  <Files "wp-cron.php">
+    Require all denied
+  </Files>
 </Directory>
 EOF
 sudo a2enconf wp-readonly
 sudo systemctl reload apache2
+
+# ページ表示のたびに WP-Cron が起動しないよう、検証が終わるまで無効化する
+# （既に DISABLE_WP_CRON が定義されている場合は二重定義を避けて追加しない。8.6 では追加した行だけを削除する）
+if ! sudo grep -q "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php; then
+  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" \
+    /var/www/html/wordpress/wp-config.php
+fi
+
+# WP-Cron や WP-CLI を外部から定期実行するジョブがあれば一覧に出る
+sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev/null
 ```
 
-> **ポイント**: 閲覧（GET）はできるため、8 章の `curl -I` やブラウザでの表示確認はそのまま行えます。書き込みを再開するのは、8 章で移行が確認できてからです（8.6）。
+最後の `grep` で行が表示された場合は、検証（8 章）が終わるまで、その行の先頭に `#` を付けてジョブを止めてください（ユーザーごとの crontab は `sudo crontab -e -u <ユーザー>` で編集します）。何も表示されなければ、外部の定期実行はありません。
+
+> **ポイント**: 閲覧（GET）はできるため、8 章の `curl -I` やブラウザでの表示確認はそのまま行えます。書き込みと WP-Cron を再開するのは、8 章で移行が確認できてからです（8.6）。
 
 #### ダンプを取得する
 
@@ -728,13 +744,19 @@ gcloud sql instances describe $INSTANCE_NAME \
 
 ### 8.6 書き込みを再開する
 
-8.1〜8.5 で、ブログが Cloud SQL を参照して正しく表示されることを確認できてから、6.4 で設定した読み取り専用を解除します。
+8.1〜8.5 で、ブログが Cloud SQL を参照して正しく表示されることを確認できてから、6.4 で設定した読み取り専用と WP-Cron の停止を解除します。
 
 ```bash
 # blog の中で
 sudo a2disconf wp-readonly
 sudo systemctl reload apache2
+
+# 6.4 で追加した DISABLE_WP_CRON の行だけを削除する（元からあった定義は残る）
+sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
+  /var/www/html/wordpress/wp-config.php
 ```
+
+6.4 で外部の定期実行ジョブを `#` で止めた場合は、ここで `#` を外して再開します。
 
 > 移行が確認できない場合は、読み取り専用のまま `/root/wp-config.php.bak` に戻して原因を調べます。書き込みを再開する前に切り戻せば、ローカル DB との差分は生じません。
 >
@@ -894,9 +916,19 @@ sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
   <LimitExcept GET HEAD>
     Require all denied
   </LimitExcept>
+  # wp-cron.php は GET でも DB に書き込むため、メソッドを問わず拒否する
+  <Files "wp-cron.php">
+    Require all denied
+  </Files>
 </Directory>
 EOF
 sudo a2enconf wp-readonly && sudo systemctl reload apache2
+if ! sudo grep -q "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php; then
+  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" \
+    /var/www/html/wordpress/wp-config.php
+fi
+# 外部の定期実行ジョブを確認し、表示された行は 6.4 のとおり検証完了まで # で止める
+sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev/null
 
 # ---------- Task 3: ダンプ → インポート ----------
 # MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、mysql の --ssl-mode=REQUIRED を --ssl に置き換える
@@ -918,8 +950,11 @@ grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
 # ---------- Task 5: 動作確認 ----------
 curl -I http://localhost/wordpress/
 
-# ---------- 移行を確認できたら書き込みを再開 ----------
+# ---------- 移行を確認できたら書き込みと WP-Cron を再開 ----------
 sudo a2disconf wp-readonly && sudo systemctl reload apache2
+sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
+  /var/www/html/wordpress/wp-config.php
+# 6.4 で外部の定期実行ジョブを止めた場合は、ここで # を外して再開する
 ```
 
 ---
