@@ -809,24 +809,25 @@ gcloud artifacts docker images list "${REGION}-docker.pkg.dev/${PROJECT_ID}/${RE
 
 ### 9.7 手順 6: Deployment のイメージを v2 に更新する
 
-まず、Deployment 内のコンテナ名を確認します。
+まず、Deployment 内の実際のコンテナ名を取得して変数に保存します。
 
 ```bash
-kubectl get deployment helloweb -n "$NAMESPACE_NAME" \
-  -o jsonpath='{.spec.template.spec.containers[*].name}'
+CONTAINER_NAME=$(kubectl get deployment helloweb -n "$NAMESPACE_NAME" \
+  -o jsonpath='{.spec.template.spec.containers[0].name}')
+echo "CONTAINER_NAME=${CONTAINER_NAME}"
 ```
 
-一般的には `hello-app` と表示されます。その名前を使って更新します。
+一般的には `hello-app` と表示されます。取得した名前を使って更新します。
 
 ```bash
-kubectl set image deployment/helloweb hello-app="$IMAGE" -n "$NAMESPACE_NAME"
+kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"
 kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `deployment/helloweb` | 更新する Deployment |
-| `hello-app=...` | 「コンテナ名=新しいイメージ」の指定 |
+| `${CONTAINER_NAME}=...` | 「コンテナ名=新しいイメージ」の指定。コンテナ名は直前に Deployment から取得した値 |
 | `rollout status` | ローリングアップデートが完了するまで待つ |
 
 > **ローリングアップデート**: 古い Pod を一度に全部止めず、新しい Pod を起動しながら少しずつ入れ替えます。そのためサービスを止めずに更新できます。
@@ -990,12 +991,15 @@ gcloud auth configure-docker "${REGION}-docker.pkg.dev" -q
 docker build -t "$IMAGE" .
 docker push "$IMAGE"
 
-kubectl set image deployment/helloweb hello-app="$IMAGE" -n "$NAMESPACE_NAME"
+CONTAINER_NAME=$(kubectl get deployment helloweb -n "$NAMESPACE_NAME" \
+  -o jsonpath='{.spec.template.spec.containers[0].name}')   # 実際のコンテナ名を取得
+kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"
 kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
 
 grep -n -i "EXPOSE\|PORT" Dockerfile          # ターゲットポートを確認
+export TARGET_PORT=8080                       # Dockerfile で確認した値に合わせる
 kubectl expose deployment helloweb -n "$NAMESPACE_NAME" \
-  --type=LoadBalancer --name="$SERVICE_NAME" --port=8080 --target-port=8080
+  --type=LoadBalancer --name="$SERVICE_NAME" --port=8080 --target-port="$TARGET_PORT"
 
 kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
 ```

@@ -138,7 +138,7 @@ else
   fi &&
   kubectl get deployment,service echo-web
 fi
-) || echo "v1 の準備に失敗しました。上のエラーを解消するまで Task 1 以降へ進まないでください。" >&2
+) || { echo "v1 の準備に失敗しました。上のエラーを解消するまで Task 1 以降へ進まないでください。" >&2; false; }
 ```
 
 | コマンド | 何をしているか |
@@ -666,8 +666,12 @@ status=$?
 if [ "$status" -ne 0 ]; then
   echo "途中で失敗したため、以降のコマンドは実行していません。上のエラーを確認してください。" >&2
 fi
+# 保存した終了ステータスを最後のコマンドの結果として返す（exit と違い Cloud Shell は閉じない）
+(exit "$status")
 ```
 
+> 失敗時は診断メッセージを表示したうえで、最後の `(exit "$status")` により全体が保存した終了ステータス（失敗時は 0 以外）で終わります（サブシェル内の `exit` なので Cloud Shell は閉じません）。`docker push` や `kubectl set image` の失敗も、スクリプトや CI にそのまま伝わります。
+>
 > `docker build` のビルドコンテキストは、Dockerfile のあるディレクトリ（上の `BUILD_DIR`）を指定してください。
 
 ---
