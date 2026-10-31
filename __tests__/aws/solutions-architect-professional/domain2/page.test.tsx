@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import mermaid from 'mermaid';
@@ -37,4 +37,23 @@ describe('SAP Domain 2 原本全量契約',()=>{
  it('修飾キー付き・主ボタン以外の目次クリックはブラウザーに任せる',()=>{const c=render(<Page/>).container;const link=c.querySelector('nav a')!;const before=location.hash;for(const init of [{ctrlKey:true},{metaKey:true},{shiftKey:true},{altKey:true},{button:1}]){expect(fireEvent.click(link,init)).toBe(true);expect(location.hash).toBe(before);}expect(fireEvent.click(link)).toBe(false);});
  it('全目次の階層・開閉・hash・フォーカス',()=>{const c=render(<Page/>).container;expect([...c.querySelectorAll('nav a')].map(e=>({id:e.getAttribute('href')!.slice(1),label:e.textContent,level:e.classList.contains('lvl3')?3:2}))).toEqual(fixture.guideDesign.nav);const toggle=c.querySelector('button')!;for(const link of c.querySelectorAll('nav a')){fireEvent.click(toggle);expect(toggle).toHaveAttribute('aria-expanded','true');fireEvent.click(link);expect(toggle).toHaveAttribute('aria-expanded','false');expect(document.activeElement?.id).toBe(link.getAttribute('href')!.slice(1));expect(decodeURIComponent(location.hash.slice(1))).toBe(document.activeElement?.id);}});
  it('本文削除・リスト階層・コード行欠落を検出する',()=>{for(const selector of ['main p','main li','main .code-line']){const c=render(<Page/>).container;expect(parts(c)).toEqual(fixture.guideParts);c.querySelector(selector)!.remove();expect(parts(c)).not.toEqual(fixture.guideParts);}});
+ it('上方向へのスクロールでも、判定線（見出しのscroll-margin）より上の最後の見出しを現在位置にする',async()=>{
+  const root=document.documentElement;root.style.setProperty('--header-h','60px');root.style.setProperty('--disclaimer-height','40px');
+  const {container:c,unmount}=render(<Page/>);
+  const links=[...c.querySelectorAll('nav a')];
+  const targets=links.map(a=>document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1)))!);
+  // 2番目の見出しだけ top を差し替え、それ以外は判定線より十分下に置く（判定線付近に見出しが無い＝可視集合が空の状態）
+  const placeSecond=(top:number)=>{targets.forEach((t,i)=>{t.getBoundingClientRect=()=>({top:i===0?-1000:i===1?top:99999} as DOMRect);});fireEvent.scroll(window);};
+  try{
+   expect(fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8')).toContain('.sap-domain2-page .main h2, .sap-domain2-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px); }');
+   expect(targets.map(t=>t?.tagName)).toEqual(links.map(()=>expect.stringMatching(/^H[23]$/)));
+   // 判定線 = 60 + 40 + 24 = 124px（サブピクセル許容 1px）
+   placeSecond(124);await waitFor(()=>expect(links[1]).toHaveAttribute('aria-current','location'));
+   // 上へ戻り2番目の見出しが判定線より下へ出たら、1番目へ戻る
+   placeSecond(130);await waitFor(()=>expect(links[0]).toHaveAttribute('aria-current','location'));
+   root.style.setProperty('--disclaimer-height','56px');
+   placeSecond(130);await waitFor(()=>expect(links[1]).toHaveAttribute('aria-current','location'));
+  }finally{unmount();root.style.removeProperty('--header-h');root.style.removeProperty('--disclaimer-height');}
+ });
 });
+
