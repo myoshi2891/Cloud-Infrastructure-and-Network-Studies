@@ -21,7 +21,6 @@ if(!Object.hasOwn(boundaries,phase))throw new Error('Specify foundation, task31.
 fs.mkdirSync(dir+'/sections',{recursive:true});
 const write=(name,s)=>{if(/\.tsx?$/.test(name))s=ts.createPrinter({newLine:ts.NewLineKind.LineFeed}).printFile(ts.createSourceFile(name,s,ts.ScriptTarget.Latest,true,name.endsWith('tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS));s=s.replaceAll('><','>\n<').replaceAll('>{','>\n{').replaceAll('}<','}\n<');fs.writeFileSync(dir+'/'+name,s);};
 const diagrams=[...doc.querySelectorAll('pre.mermaid')];
-const cardIndices=new Map([...doc.querySelectorAll('.checklist-card')].map((c,i)=>[c,i]));
 function tokens(line,language){if(language==='bash'){let output='',end=0;for(const m of line.matchAll(/\baws\b|--[\w-]+/g)){output+='{'+JSON.stringify(line.slice(end,m.index))+'}';output+='<span className="hljs-'+(m[0]==='aws'?'built_in':'keyword')+'">{'+JSON.stringify(m[0])+'}</span>';end=m.index+m[0].length;}return output+'{'+JSON.stringify(line.slice(end))+'}';}const regex=language==='json'?/"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+\b/g:/#.*$|"(?:\\.|[^"\\])*"|[\w]+(?=:)|\b(?:true|false)\b|\b\d+\b|!Ref\b/g;let out='',end=0;for(const m of line.matchAll(regex)){out+='{'+JSON.stringify(line.slice(end,m.index))+'}';const text=m[0];const cls=text.startsWith('#')?'comment':line.slice(m.index+text.length).trimStart().startsWith(':')?'attr':text.startsWith('"')?'string':/^\d/.test(text)?'number':'literal';out+=`<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;end=m.index+text.length;}return out+'{'+JSON.stringify(line.slice(end))+'}';}
 const tableScrolls=[...doc.querySelectorAll('.table-scroll')];
 function tableLabel(n){let heading=n.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;return `比較表 ${tableScrolls.indexOf(n)+1}：`+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim();}
@@ -32,15 +31,17 @@ function jsx(n){
  const attrs=[...n.attributes].map(a=>`${({'class':'className','for':'htmlFor'}[a.name]||a.name)}={${JSON.stringify(a.value)}}`);
  if(n.matches('th'))attrs.push('scope="col"');if(n.matches('h2[id],h3[id]'))attrs.push('tabIndex={-1}');
  if(n.matches('.table-scroll'))attrs.push('tabIndex={0}','role="region"',`aria-label={${JSON.stringify(tableLabel(n))}}`);
- if(n.matches('input'))attrs.push(`onChange={updateProgress}`);
- if(n.matches('.count')){const card=n.closest('.checklist-card'),i=cardIndices.get(card);return `<span className="count">{\`\${progress[${i}]??0} / ${card.querySelectorAll('input').length} 完了\`}</span>`;}
+ // チェック状態はClientのChecklistCardだけが持ち、本文はServer Componentのまま描画する。
+ if(n.matches('.checklist-card')){if(n.attributes.length!==1)throw new Error('Unexpected checklist-card attributes');return '<ChecklistCard>'+[...n.childNodes].map(jsx).join('')+'</ChecklistCard>';}
+ if(n.matches('.count'))return `<ChecklistCount total={${n.closest('.checklist-card').querySelectorAll('input').length}} />`;
  const tag=n.tagName.toLowerCase();return '<'+tag+' '+attrs.join(' ')+(['input','br','hr','img'].includes(tag)?' />':'>'+[...n.childNodes].map(jsx).join('')+'</'+tag+'>');
 }
 let current='foundation';const chunks=Object.fromEntries(Object.keys(boundaries).map(k=>[k,[]]));
 for(const n of doc.querySelector('main').childNodes){const found=Object.entries(boundaries).find(([,id])=>id&&n.nodeType===1&&n.id===id)?.[0];if(found)current=found;chunks[current].push(n);}
-write('sections/'+phase+'.tsx',`import { Diagram } from '../Diagram';\nimport type { ChecklistProps } from '../types';\n/** 原本の${phase}本文。 */\nexport default function Content({progress,updateProgress}:ChecklistProps){void progress;void updateProgress;return <>${chunks[phase].map(jsx).join('')}</>;}`);
+const body=chunks[phase].map(jsx).join('');
+write('sections/'+phase+'.tsx',`import { Diagram } from '../Diagram';\n${body.includes('<ChecklistCard>')?"import { ChecklistCard, ChecklistCount } from '../ChecklistCard';\n":''}/** 原本の${phase}本文。 */\nexport default function Content(){return <>${body}</>;}`);
 if(phase!=='foundation')process.exit(0);
-write('types.ts',`import type { ChangeEventHandler } from 'react';\nexport interface ChecklistProps{progress:Record<string,number>;updateProgress:ChangeEventHandler<HTMLInputElement>;}`);
+write('ChecklistCard.tsx',`'use client';\nimport {createContext,useContext,useState,type ReactNode} from 'react';\nconst CheckedCount=createContext(0);\n/** チェックリスト1枚。カード内の選択済み項目数だけをClient状態として持つ。 */\nexport function ChecklistCard({children}:{children:ReactNode}){const [count,setCount]=useState(0);return <CheckedCount.Provider value={count}><div className="checklist-card" onChange={event=>setCount(event.currentTarget.querySelectorAll('input:checked').length)}>{children}</div></CheckedCount.Provider>;}\n/** 所属するカードの完了数を表示する。 */\nexport function ChecklistCount({total}:{total:number}){const count=useContext(CheckedCount);return <span className="count">{\`\${count} / \${total} 完了\`}</span>;}`);
 write('constants.ts','export const DIAGRAMS:Record<string,string> = '+JSON.stringify(Object.fromEntries(diagrams.map((e,i)=>['diag-'+i,e.textContent.trim().split('\n').map(l=>l.trimStart()).join('\n')])),null,2)+';\nexport const NAV_ITEMS = '+JSON.stringify(fixture.guideDesign.nav,null,2)+' as const;');
 const theme=fixture.guideInteractions.mermaidConfig;fs.writeFileSync(dir+'/mermaid-theme.json',JSON.stringify(theme,null,2)+'\n');
 mermaid.initialize({...theme,startOnLoad:false});const vars=mermaid.mermaidAPI.getConfig().themeVariables;

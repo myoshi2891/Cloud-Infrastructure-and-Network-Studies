@@ -1,7 +1,6 @@
 import { Diagram } from '../Diagram';
-import type { ChecklistProps } from '../types';
 /** 原本のfoundation本文。 */
-export default function Content({ progress, updateProgress }: ChecklistProps) { void progress; void updateProgress; return <>
+export default function Content() { return <>
 {"\n                "}
 <div className={"hero"}>
 {"\n                    "}

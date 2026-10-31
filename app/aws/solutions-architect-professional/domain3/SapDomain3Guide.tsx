@@ -1,5 +1,3 @@
-'use client';
-import { useState, type ChangeEvent } from 'react';
 import NavBar from './NavBar';
 import Foundation from './sections/foundation';
 import Task31 from './sections/task31';
@@ -8,17 +6,7 @@ import Task33 from './sections/task33';
 import Task34 from './sections/task34';
 import Task35 from './sections/task35';
 import Appendix from './sections/appendix';
-/** Domain 3本文と各タスクの独立したチェック進捗。 */
+/** Domain 3本文（Server）。チェック進捗はChecklistCardのClient状態に閉じる。 */
 export default function SapDomain3Guide() {
- const [progress,setProgress]=useState<Record<string,number>>({});
- function updateProgress(event:ChangeEvent<HTMLInputElement>){
-  const input=event.currentTarget;
-  const card=input.closest('.checklist-card');
-  const cards=[...(input.closest('main')?.querySelectorAll('.checklist-card')??[])];
-  if(!card)return;
-  const index=cards.indexOf(card);
-  setProgress(previous=>({...previous,[index]:card.querySelectorAll('input:checked').length}));
- }
- const props={progress,updateProgress};
- return <div className="sap-domain3-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task31 {...props}/><Task32 {...props}/><Task33 {...props}/><Task34 {...props}/><Task35 {...props}/><Appendix {...props}/></main></div></div>;
+ return <div className="sap-domain3-page"><div className="layout"><NavBar/><main className="main"><Foundation/><Task31/><Task32/><Task33/><Task34/><Task35/><Appendix/></main></div></div>;
 }

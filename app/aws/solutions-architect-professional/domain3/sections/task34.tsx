@@ -1,7 +1,6 @@
 import { Diagram } from '../Diagram';
-import type { ChecklistProps } from '../types';
 /** 原本のtask34本文。 */
-export default function Content({ progress, updateProgress }: ChecklistProps) { void progress; void updateProgress; return <>
+export default function Content() { return <>
 <h2 id={"6-task-34-信頼性を改善する"} tabIndex={-1}>
 {"6. Task 3.4 信頼性を改善する"}
 </h2>

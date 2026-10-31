@@ -1,7 +1,7 @@
 import { Diagram } from '../Diagram';
-import type { ChecklistProps } from '../types';
+import { ChecklistCard, ChecklistCount } from '../ChecklistCard';
 /** 原本のappendix本文。 */
-export default function Content({ progress, updateProgress }: ChecklistProps) { void progress; void updateProgress; return <>
+export default function Content() { return <>
 <h2 id={"9-横断-シナリオ別この要件ならこの答え早見表"} tabIndex={-1}>
 {"\n                    9. 横断: シナリオ別「この要件ならこの答え」早見表\n                "}
 </h2>
@@ -198,16 +198,14 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"最終チェックリスト"}
 </h3>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.1 デプロイ戦略"}
 </span>
-<span className="count">
-{`${progress[0] ?? 0} / 4 完了`}
-</span>
+<ChecklistCount total={4}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -215,7 +213,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk1"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk1"} type={"checkbox"}/>
 <label htmlFor={"chk1"}>
 {"CloudFormation の変更セット、ロールバック、ドリフト検出、StackSets\n                                を説明できる"}
 </label>
@@ -224,7 +222,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk2"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk2"} type={"checkbox"}/>
 <label htmlFor={"chk2"}>
 {"Rolling、Immutable、Blue/Green、Canary、Linear\n                                の違いと使い分けを説明できる"}
 </label>
@@ -233,7 +231,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk3"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk3"} type={"checkbox"}/>
 <label htmlFor={"chk3"}>
 {"CodePipeline、CodeBuild、CodeDeploy の役割を区別できる"}
 </label>
@@ -242,7 +240,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk4"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk4"} type={"checkbox"}/>
 <label htmlFor={"chk4"}>
 {"Systems Manager の主要機能(Parameter Store、Patch Manager、Session\n                                Manager、Automation)を説明できる"}
 </label>
@@ -251,18 +249,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.2 ビジネス継続性"}
 </span>
-<span className="count">
-{`${progress[1] ?? 0} / 3 完了`}
-</span>
+<ChecklistCount total={3}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -270,7 +266,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk5"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk5"} type={"checkbox"}/>
 <label htmlFor={"chk5"}>
 {"RTO/RPO を説明し、DR 4戦略を要件から選べる"}
 </label>
@@ -279,7 +275,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk6"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk6"} type={"checkbox"}/>
 <label htmlFor={"chk6"}>
 {"主要サービスのレプリケーション手段(S3 CRR、Aurora Global\n                                Database、DynamoDB グローバルテーブル、Elastic Disaster\n                                Recovery)を選べる"}
 </label>
@@ -288,7 +284,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk7"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk7"} type={"checkbox"}/>
 <label htmlFor={"chk7"}>
 {"AWS Backup(クロスリージョン/アカウント、Vault Lock)と DR\n                                テストの重要性を説明できる"}
 </label>
@@ -297,18 +293,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.3 セキュリティ"}
 </span>
-<span className="count">
-{`${progress[2] ?? 0} / 4 完了`}
-</span>
+<ChecklistCount total={4}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -316,7 +310,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk8"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk8"} type={"checkbox"}/>
 <label htmlFor={"chk8"}>
 {"IAM の評価ロジック(明示的 Deny 優先)と権限境界/SCP\n                                の違いを説明できる"}
 </label>
@@ -325,7 +319,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk9"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk9"} type={"checkbox"}/>
 <label htmlFor={"chk9"}>
 {"セキュリティグループと NACL\n                                の違い(ステートフル/ステートレス、拒否ルール)を説明できる"}
 </label>
@@ -334,7 +328,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk10"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk10"} type={"checkbox"}/>
 <label htmlFor={"chk10"}>
 {"KMS、ACM\n                                による保存時/転送時の暗号化と、ゲートウェイ/インターフェースエンドポイントの違いを説明できる"}
 </label>
@@ -343,7 +337,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk11"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk11"} type={"checkbox"}/>
 <label htmlFor={"chk11"}>
 {"Shield、WAF、GuardDuty、Security Hub、Inspector、Macie\n                                の役割を区別できる"}
 </label>
@@ -352,18 +346,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.4 信頼性"}
 </span>
-<span className="count">
-{`${progress[3] ?? 0} / 4 完了`}
-</span>
+<ChecklistCount total={4}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -371,7 +363,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk12"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk12"} type={"checkbox"}/>
 <label htmlFor={"chk12"}>
 {"Multi-AZ 設計の各層を説明でき、RDS の Multi-AZ\n                                とリードレプリカの違いを説明できる"}
 </label>
@@ -380,7 +372,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk13"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk13"} type={"checkbox"}/>
 <label htmlFor={"chk13"}>
 {"Auto Scaling\n                                ポリシー(ターゲット追跡、ステップ、スケジュール、予測)を使い分けられる"}
 </label>
@@ -389,7 +381,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk14"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk14"} type={"checkbox"}/>
 <label htmlFor={"chk14"}>
 {"SQS/SNS/EventBridge/Step Functions で疎結合設計を説明できる"}
 </label>
@@ -398,7 +390,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk15"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk15"} type={"checkbox"}/>
 <label htmlFor={"chk15"}>
 {"Route 53 のルーティングポリシーを要件から選べる"}
 </label>
@@ -407,18 +399,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.5 パフォーマンス"}
 </span>
-<span className="count">
-{`${progress[4] ?? 0} / 4 完了`}
-</span>
+<ChecklistCount total={4}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -426,7 +416,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk16"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk16"} type={"checkbox"}/>
 <label htmlFor={"chk16"}>
 {"S3、EBS(gp3/io2)、インスタンスストア、EFS、FSx\n                                を用途で選べる"}
 </label>
@@ -435,7 +425,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk17"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk17"} type={"checkbox"}/>
 <label htmlFor={"chk17"}>
 {"EC2 のファミリーを用途で選べる"}
 </label>
@@ -444,7 +434,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk18"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk18"} type={"checkbox"}/>
 <label htmlFor={"chk18"}>
 {"目的特化型データベースを要件から選べる"}
 </label>
@@ -453,7 +443,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk19"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk19"} type={"checkbox"}/>
 <label htmlFor={"chk19"}>
 {"キャッシュ、バッファリング、レプリカの設計パターンを説明できる"}
 </label>
@@ -462,18 +452,16 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
-<div className={"checklist-card"}>
+<ChecklistCard>
 {"\n                    "}
 <div className={"checklist-header"}>
 {"\n                        "}
 <span className={"title"}>
 {"Task 2.6 コスト最適化"}
 </span>
-<span className="count">
-{`${progress[5] ?? 0} / 4 完了`}
-</span>
+<ChecklistCount total={4}/>
 {"\n                    "}
 </div>
 {"\n                    "}
@@ -481,7 +469,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk20"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk20"} type={"checkbox"}/>
 <label htmlFor={"chk20"}>
 {"Savings\n                                Plans、RI、スポット、オンデマンドを組み合わせて選べる"}
 </label>
@@ -490,7 +478,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk21"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk21"} type={"checkbox"}/>
 <label htmlFor={"chk21"}>
 {"S3 ストレージクラスとライフサイクルで階層化を設計できる"}
 </label>
@@ -499,7 +487,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk22"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk22"} type={"checkbox"}/>
 <label htmlFor={"chk22"}>
 {"データ転送コストの発生ポイントと削減策を説明できる"}
 </label>
@@ -508,7 +496,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                        "}
 <li>
 {"\n                            "}
-<input id={"chk23"} type={"checkbox"} onChange={updateProgress}/>
+<input id={"chk23"} type={"checkbox"}/>
 <label htmlFor={"chk23"}>
 {"Budgets、Cost Explorer、Cost Anomaly Detection、Compute Optimizer\n                                の違いを説明できる"}
 </label>
@@ -517,7 +505,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                    "}
 </ul>
 {"\n                "}
-</div>
+</ChecklistCard>
 {"\n                "}
 <hr />
 {"\n                "}

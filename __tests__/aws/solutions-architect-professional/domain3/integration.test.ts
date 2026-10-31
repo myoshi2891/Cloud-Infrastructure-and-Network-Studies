@@ -64,4 +64,14 @@ describe('SAP Domain 3 統合契約',()=>{
   for(const rule of [".sap-domain3-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d3-checkbox-border); }",".sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }"]){expect(css).toContain(rule);expect(script).toContain(rule);}
   expect(css.lastIndexOf(".sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }")).toBeGreaterThan(css.indexOf('li:has(input:checked) label {'));
  });
+ it("本文はServer Componentで描画し、Client状態はチェック進捗のChecklistCardに限定し、再生成処理にも反映",()=>{
+  // jsdomのrenderはServer/Clientを区別しないため、境界はソースで検証する
+  const dir="app/aws/solutions-architect-professional/domain3";const isClient=(file:string)=>/^\x27use client\x27;/.test(fs.readFileSync(dir+"/"+file,"utf8"));
+  const clients=fs.readdirSync(dir).filter(file=>file.endsWith(".tsx")).filter(isClient).sort();
+  expect(clients).toEqual(["ChecklistCard.tsx","Diagram.tsx","NavBar.tsx"]);
+  expect(fs.existsSync(dir+"/types.ts")).toBe(false);
+  for(const file of fs.readdirSync(dir+"/sections")){const code=fs.readFileSync(dir+"/sections/"+file,"utf8");expect(isClient("sections/"+file),file).toBe(false);expect(code,file).not.toMatch(/\bon[A-Z]\w*=|ChecklistProps|progress/);expect(code,file).toMatch(/export default function Content\(\)/);}
+  const appendix=fs.readFileSync(dir+"/sections/appendix.tsx","utf8");expect(appendix.match(/<ChecklistCard>/g)).toHaveLength(5);
+  const script=fs.readFileSync("scripts/migrate-sap-domain3.mjs","utf8");expect(script).toContain("<ChecklistCard>");expect(script).toContain("write(\x27ChecklistCard.tsx\x27");expect(script).not.toMatch(/updateProgress|ChecklistProps|types\.ts/);
+ });
 });

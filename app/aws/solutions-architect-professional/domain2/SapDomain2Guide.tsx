@@ -1,5 +1,3 @@
-'use client';
-import { useState, type ChangeEvent } from 'react';
 import NavBar from './NavBar';
 import Foundation from './sections/foundation';
 import Task21 from './sections/task21';
@@ -9,17 +7,7 @@ import Task24 from './sections/task24';
 import Task25 from './sections/task25';
 import Task26 from './sections/task26';
 import Appendix from './sections/appendix';
-/** Domain 2本文と各タスクの独立したチェック進捗。 */
+/** Domain 2本文（Server）。チェック進捗はChecklistCardのClient状態に閉じる。 */
 export default function SapDomain2Guide() {
- const [progress,setProgress]=useState<Record<string,number>>({});
- function updateProgress(event:ChangeEvent<HTMLInputElement>){
-  const input=event.currentTarget;
-  const card=input.closest('.checklist-card');
-  const cards=[...(input.closest('main')?.querySelectorAll('.checklist-card')??[])];
-  if(!card)return;
-  const index=cards.indexOf(card);
-  setProgress(previous=>({...previous,[index]:card.querySelectorAll('input:checked').length}));
- }
- const props={progress,updateProgress};
- return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation {...props}/><Task21 {...props}/><Task22 {...props}/><Task23 {...props}/><Task24 {...props}/><Task25 {...props}/><Task26 {...props}/><Appendix {...props}/></main></div></div>;
+ return <div className="sap-domain2-page"><div className="layout"><NavBar/><main className="main"><Foundation/><Task21/><Task22/><Task23/><Task24/><Task25/><Task26/><Appendix/></main></div></div>;
 }
