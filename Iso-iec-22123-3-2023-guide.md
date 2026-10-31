@@ -381,8 +381,8 @@ flowchart TB
     subgraph LAYERS["4つの層"]
         direction TB
         UL["ユーザー層 User layer<br/>利用者・パートナー・管理者との接点"]
-        AL["アクセス層 Access layer<br/>外部からの要求の受け口"]
-        SL["サービス層 Service layer<br/>提供するクラウドサービス本体"]
+        AL["アクセス層 Access layer<br/>サービスへのアクセスと<br/>機能の分散・相互接続を促進"]
+        SL["サービス層 Service layer<br/>クラウドサービスと関連する<br/>管理・ビジネス機能、オーケストレーション"]
         RL["リソース層 Resource layer<br/>物理・仮想リソースとその制御"]
         UL ~~~ AL ~~~ SL ~~~ RL
     end
@@ -395,8 +395,8 @@ flowchart TB
 | 層 | 英語 | 役割 | 規格の節 |
 |---|---|---|---|
 | ユーザー層 | User layer | クラウドを使う主体との接点を担う | 9.2.2 |
-| アクセス層 | Access layer | サービスへのアクセス経路・インターフェースを提供する | 9.2.3 |
-| サービス層 | Service layer | クラウドサービスそのものを実現・提供する | 9.2.4 |
+| アクセス層 | Access layer | サービスへのアクセスに加え、機能の分散と相互接続を促進する | 9.2.3 |
+| サービス層 | Service layer | クラウドサービスと、それに関連する管理・ビジネス機能およびオーケストレーションを含む | 9.2.4 |
 | リソース層 | Resource layer | 計算・ストレージ・ネットワーク等の資源を扱う | 9.2.5 |
 | マルチレイヤー機能 | Multi-layer functions | 複数の層にまたがって働く機能 | 9.2.6 |
 
