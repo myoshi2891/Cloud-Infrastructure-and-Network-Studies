@@ -1,5 +1,23 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-10-29: SAP-C02 Domain 3
+
+`app/aws/solutions-architect-professional/domain3/` に Server `page.tsx` / `SapDomain3Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（カード単位のチェック進捗のみ）、memo化した `Diagram.tsx`、7分割のServer `sections/`、定数・原本テーマJSON・全派生色JSON・スコープCSSを追加。全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本から移行した。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、チェック進捗を保持。ホーム・HeaderのDomain 3（25%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain3.mjs <foundation|task31|task32|task33|task34|task35|appendix>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。
+
+## 2026-10-29: 移行済み原本の一括アーカイブ
+
+直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
+
+原本不在下で4教材の関連49ファイル・409テストすべて成功。アプリ実装への変更はなし。直下のHTMLは未移行8件のみ。静的集計1285ソース・412対応・491テストファイルは不変。npm・ビルドは未実行。過去の「原本を直下に保持」という記述は移動前の履歴として扱う。
+
+## 2026-10-29: SAP-C02 Domain 2
+
+`app/aws/solutions-architect-professional/domain2/` に Server `page.tsx` / `SapDomain2Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（カード単位のチェック進捗のみ）、memo化した `Diagram.tsx`、8分割のServer `sections/`、定数とテーマJSON、スコープCSSを追加。全6タスク・66表・23図・5コード例・51リスト項目・81外部リンク出現・23チェック項目を原本から移行。原本単体のMermaid派生色を全量固定し、黒塗りを防止。ホーム・HeaderのDomain 2（29%）導線と明色フッターを統合。`bun scripts/migrate-sap-domain2.mjs <foundation|task21|task22|task23|task24|task25|task26|appendix>` で固定Git原本から本文を再生成できる。
+
+## 2026-10-29: DDIA 学習ガイド
+
+`app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
+
 Updated 2026-10-29
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。

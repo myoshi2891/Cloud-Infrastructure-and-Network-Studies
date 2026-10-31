@@ -190,6 +190,83 @@
     --color-ans-d4-19: #f6f8fc;
     --color-ans-d4-20: #f8f8f8;
     --color-ans-d4-21: #e6f6ec;
+    /* SAP-C02 Domain 2: original light palette */
+    --color-sap-d2-bg: #f5f7fc;
+    --color-sap-d2-bg-card: #ffffff;
+    --color-sap-d2-bg-card-2: #eef2fa;
+    --color-sap-d2-border: #d3dcee;
+    --color-sap-d2-border-soft: #e2e8f4;
+    --color-sap-d2-text: #1b2640;
+    --color-sap-d2-text-dim: #4f5f7e;
+    --color-sap-d2-text-faint: #75849f;
+    --color-sap-d2-accent: #3556d6;
+    --color-sap-d2-accent-soft: #a3b4ee;
+    --color-sap-d2-accent-bg: #e7edfc;
+    --color-sap-d2-danger: #c0213f;
+    --color-sap-d2-danger-bg: #fde8ec;
+    --color-sap-d2-warn: #a85f0a;
+    --color-sap-d2-warn-bg: #fff1dc;
+    --color-sap-d2-success: #1d7f4e;
+    --color-sap-d2-success-bg: #e5f5ec;
+    /* SAP-C02 Domain 2: checklist contrast (WCAG 3:1 / 4.5:1 on white) */
+    --color-sap-d2-checkbox-border: #6f84c8;
+    --color-sap-d2-checked-label: #5f6f8c;
+    /* DDIA: original fixed colors */
+    --color-ddia-sidebar-bg: #060d17;
+    --color-ddia-hero-gradient-start: #dbe4f3;
+    --color-ddia-hero-gradient-end: #7c9eff;
+    --color-ddia-strong: #f0f4fc;
+    --color-ddia-inline-code: #ffd08a;
+    --color-ddia-row-hover: rgba(124, 158, 255, 0.04);
+    --color-ddia-callout-practice-border: #1d5a3a;
+    --color-ddia-callout-practice-icon: #08150e;
+    --color-ddia-checklist-hover: rgba(124, 158, 255, 0.05);
+    --color-ddia-check-mark: #08101f;
+    --color-ddia-sidebar-shadow: rgba(0, 0, 0, 0.5);
+    /* SAP-C02 Domain 3: original light palette */
+    --color-sap-d3-bg: #f5f7fb;
+    --color-sap-d3-bg-card: #fff;
+    --color-sap-d3-bg-card-2: #eef2fa;
+    --color-sap-d3-border: #d3dcec;
+    --color-sap-d3-border-soft: #e3e9f5;
+    --color-sap-d3-text: #1b2740;
+    --color-sap-d3-text-dim: #4a5b78;
+    --color-sap-d3-text-faint: #7283a2;
+    --color-sap-d3-accent: #3556c8;
+    --color-sap-d3-accent-bg: #e6ecfb;
+    --color-sap-d3-success: #1f7a4a;
+    --color-sap-d3-success-bg: #e9f7ef;
+    /* SAP-C02 Domain 3: checklist contrast (WCAG 3:1 / 4.5:1 on white) */
+    --color-sap-d3-checkbox-border: #7c8ab0;
+    --color-sap-d3-checked-label: #5f6f8c;
+    /* SAP-C02 Domain 3: original fixed colors */
+    --color-sap-d3-surface: #fff;
+    --color-sap-d3-inline-code: #a4430f;
+    --color-sap-d3-code-bg: #fbfcfe;
+    --color-sap-d3-hljs-keyword: #7c3aed;
+    --color-sap-d3-hljs-string: #0f7a4a;
+    --color-sap-d3-hljs-number: #b45309;
+    --color-sap-d3-hljs-comment: #6b7a99;
+    --color-sap-d3-hljs-title: #1d4ed8;
+    --color-sap-d3-callout-practice-border: #b6e0c8;
+    /* SAP-C02 Domain 2: original fixed colors */
+    --color-sap-d2-sidebar-bg: #fbfcff;
+    --color-sap-d2-hero-gradient-start: #1b2640;
+    --color-sap-d2-hero-gradient-end: #3556d6;
+    --color-sap-d2-strong: #0e1830;
+    --color-sap-d2-inline-code: #9a4a00;
+    --color-sap-d2-row-hover: rgba(53, 86, 214, 0.045);
+    --color-sap-d2-hljs-comment: #6a737d;
+    --color-sap-d2-hljs-keyword: #c0213f;
+    --color-sap-d2-hljs-attr: #0b57c4;
+    --color-sap-d2-hljs-string: #0a6b3a;
+    --color-sap-d2-hljs-number: #b04a00;
+    --color-sap-d2-hljs-meta: #6f42c1;
+    --color-sap-d2-hljs-punctuation: #4f5f7e;
+    --color-sap-d2-callout-practice-border: #b9e0c9;
+    --color-sap-d2-on-accent: #ffffff;
+    --color-sap-d2-checklist-hover: rgba(53, 86, 214, 0.05);
+    --color-sap-d2-sidebar-shadow: rgba(27, 38, 64, 0.18);
     /* SAP-C02 Domain 1: original light palette */
     --color-sap-d1-bg: #faf8f3;
     --color-sap-d1-card: #ffffff;
@@ -1630,6 +1707,11 @@ body {
 }
 
 @utility icon-theme-accelerate {
+    background: var(--color-theme-accelerate-bg);
+    color: var(--color-theme-accelerate-fg);
+}
+
+@utility icon-theme-ddia {
     background: var(--color-theme-accelerate-bg);
     color: var(--color-theme-accelerate-fg);
 }

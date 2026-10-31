@@ -26,6 +26,8 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
         });
         expect(exam?.domains).toEqual([{label:'SAP-C02 完全ガイド',href:'/aws/solutions-architect-professional',pct:'全4ドメイン'},
             { label: 'ドメイン1: 組織の複雑さに対応する設計', href: route, pct: '26%' },
+            { label: 'ドメイン2: 新しいソリューションの設計', href: '/aws/solutions-architect-professional/domain2', pct: '29%' },
+            { label: 'ドメイン3: 既存ソリューションの継続的改善', href: '/aws/solutions-architect-professional/domain3', pct: '25%' },
         ]);
     });
 
@@ -37,6 +39,8 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
         expect(sapExam).toBeDefined();
         expect(sapExam?.items).toEqual([{label:'SAP-C02 完全ガイド',href:'/aws/solutions-architect-professional'},
             { label: 'ドメイン1: 組織の複雑さに対応する設計', href: route },
+            { label: 'ドメイン2: 新しいソリューションの設計', href: '/aws/solutions-architect-professional/domain2' },
+            { label: 'ドメイン3: 既存ソリューションの継続的改善', href: '/aws/solutions-architect-professional/domain3' },
         ]);
     });
 
@@ -57,6 +61,8 @@ describe('AWS SAP-C02 Domain 1 — ルーティング・ナビゲーション統
         fireEvent.click(within(header.container).getByRole('button', { name: 'メニューを開く' }));
         const dialog = within(header.container).getByRole('dialog', { name: 'サイトナビゲーション' });
         expect(dialog.querySelectorAll(`a[href="${route}"]`)).toHaveLength(1);
+        expect(dialog.querySelectorAll('a[href="/aws/solutions-architect-professional/domain2"]')).toHaveLength(1);
+        expect(dialog.querySelectorAll('a[href="/aws/solutions-architect-professional/domain3"]')).toHaveLength(1);
     });
 
     it('app/globals.css に card-aws-sap と icon-theme-aws-sap が定義されている', () => {

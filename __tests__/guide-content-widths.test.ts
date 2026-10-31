@@ -25,6 +25,7 @@ const guideLayouts = [
     ['app/aws/solutions-architect-associate/domain3/page.css', '.domain3-page .sidebar', '.domain3-page .content'],
     ['app/aws/solutions-architect-associate/domain4/page.css', '.domain4-page .sidebar', '.domain4-page .content'],
     ['app/aws/solutions-architect-associate/page.css', '.aws-saa-page .sidebar', '.aws-saa-page .main'],
+    ['app/aws/solutions-architect-professional/domain2/page.css', '.sap-domain2-page .sidebar', '.sap-domain2-page .main'],
     ['app/aws/cloudops-engineer-associate/page.css', '.aws-cloudops-page .sidebar', '.aws-cloudops-page .main'],
     ['app/cisco/ccna/automation-api-guide/page.css', '.ccna-automation-api-page .sidebar', '.ccna-automation-api-page .main'],
     ['app/cisco/ccna/automation-application-deployment-security/page.css', '.ccna-app-deployment-security-page .sidebar', '.ccna-app-deployment-security-page .main'],
@@ -59,6 +60,7 @@ const guideLayouts = [
     ['app/recommended-books/kubernetes-in-action/page.css', '.kia-page .sidebar', '.kia-page .main'],
     ['app/recommended-books/tcpip-illustrated-vol1/page.css', '.tcpip-page .sidebar', '.tcpip-page .main'],
     ['app/recommended-books/terraform-up-and-running/page.css', '.terraform-up-and-running-page .sidebar', '.terraform-up-and-running-page .main'],
+    ['app/recommended-books/designing-data-intensive-applications/page.css', '.ddia-page .sidebar', '.ddia-page .main'],
     ['app/gcl/professional-agentic-architect/page.css', '.agentic-guide-page .sidebar', '.agentic-guide-page .main'],
     ['app/gcl/professional-agentic-architect/section1/page.css', '.agentic-section1-page .sidebar', '.agentic-section1-page .main'],
     ['app/gcl/professional-agentic-architect/section2/page.css', '.agentic-section2-page .sidebar', '.agentic-section2-page .main'],
@@ -133,6 +135,39 @@ describe('SAP-C02 Domain 1 sidebar layout exception', () => {
         expect(responsiveRules.some((rule) =>
             /margin-left:\s*0\s*;/.test(rule)
             && /width:\s*100%\s*;/.test(rule),
+        )).toBe(true);
+    });
+});
+
+// SAP-C02 Domain 3 は原本の 300px 目次を承認済み例外として優先する
+describe('SAP-C02 Domain 3 sidebar layout exception', () => {
+    const stylesheet = 'app/aws/solutions-architect-professional/domain3/page.css';
+    const sidebarSelector = '.sap-domain3-page .sidebar';
+    const mainSelector = '.sap-domain3-page .main';
+
+    it('fixes a 300px sidebar to the far left', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), sidebarSelector);
+
+        expect(rule).toMatch(/position:\s*fixed\s*;/);
+        expect(rule).toMatch(/left:\s*0\s*;/);
+        expect(rule).toMatch(/width:\s*300px\s*;/);
+    });
+
+    it('gives the main canvas all remaining width beside the 300px sidebar', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(rule).toMatch(/margin-left:\s*300px\s*;/);
+        expect(rule).toMatch(/width:\s*calc\(100%\s*-\s*300px\)\s*;/);
+        expect(rule).toMatch(/max-width:\s*none\s*;/);
+    });
+
+    it('restores a 100% main canvas in its responsive rule', () => {
+        const responsiveRules = rulesAfterFirst(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(responsiveRules.some((rule) =>
+            /margin-left:\s*0\s*;/.test(rule)
+            && /width:\s*100%\s*;/.test(rule)
+            && /max-width:\s*none\s*;/.test(rule),
         )).toBe(true);
     });
 });

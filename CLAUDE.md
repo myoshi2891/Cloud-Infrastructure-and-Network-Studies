@@ -1,5 +1,23 @@
 # CLAUDE.md
 
+## 2026-10-29: SAP-C02 Domain 3
+
+`app/aws/solutions-architect-professional/domain3/` に Server `page.tsx` / `SapDomain3Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（カード単位のチェック進捗のみ）、memo化した `Diagram.tsx`、7分割のServer `sections/`、定数・原本テーマJSON・全派生色JSON・スコープCSSを追加。全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本から移行した。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、チェック進捗を保持。ホーム・HeaderのDomain 3（25%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain3.mjs <foundation|task31|task32|task33|task34|task35|appendix>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。
+
+## 2026-10-29: 移行済み原本の一括アーカイブ
+
+直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
+
+原本不在下で4教材の関連49ファイル・409テストすべて成功。アプリ実装への変更はなし。直下のHTMLは未移行8件のみ。静的集計1285ソース・412対応・491テストファイルは不変。npm・ビルドは未実行。過去の「原本を直下に保持」という記述は移動前の履歴として扱う。
+
+## 2026-10-29: SAP-C02 Domain 2
+
+`app/aws/solutions-architect-professional/domain2/` に Server `page.tsx` / `SapDomain2Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（カード単位のチェック進捗のみ）、memo化した `Diagram.tsx`、8分割のServer `sections/`、定数とテーマJSON、スコープCSSを追加。全6タスク・66表・23図・5コード例・51リスト項目・81外部リンク出現・23チェック項目を原本から移行。原本単体のMermaid派生色を全量固定し、黒塗りを防止。ホーム・HeaderのDomain 2（29%）導線と明色フッターを統合。`bun scripts/migrate-sap-domain2.mjs <foundation|task21|task22|task23|task24|task25|task26|appendix>` で固定Git原本から本文を再生成できる。
+
+## 2026-10-29: DDIA 学習ガイド
+
+`app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
+
 Updated 2026-10-29
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
@@ -991,7 +1009,7 @@ archive/                            # 移行済み資料の正規アーカイブ
 - **コードブロック内の改行 (`.code-block`)**: JSX変換時、コード内の改行に `{"\n"}` を使用せず、各行を `<div className="code-line">...</div>` でラップすること。`.code-line` は `white-space: pre` を適用してインデントを保持し、`map` 展開時は安定した `key` を付与すること。
 - **表形式データの構造化**: テキストのスペース揃えで列を表現したデータは、フォント変更による列ズレを防ぐため、必ず `<table>` 要素に変換すること。その際、必ず `<thead>` と `<th scope="col">` を用いたセマンティックな構造にすること。
 - **CSS変数・テーマトークンの適用**: `globals.css` の3層アーキテクチャ CSS 変数（`--color-background`, `--color-foreground`, `--color-border` など）を厳格に使用すること。独自のローカル変数定義や `--color-bg-primary` のような実在しないトークンの使用は避ける。コンポーネントレベルの CSS 内で新たなカスタムプロパティ（`--*`）を定義することは禁止する。
-- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。AIP-C01（総合ガイドとDomain 1〜4）も原本の300pxを例外として優先し、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)` を揃え、各ドメインの専用デザインテストとE2Eで検証する。ANS-C01 Domain 1〜4も原本の300pxを承認済み例外として同じ3値で揃え、各ドメインの `design.test.ts` で検証する。SAP-C02 Domain 1は原本の340pxを承認済み例外とし、サイドバー幅 `340px`・メイン `margin-left: 340px`・`width: calc(100% - 340px)` を `__tests__/guide-content-widths.test.ts` の専用ブロックで検証する。この共通契約は `__tests__/guide-content-widths.test.ts` の130ケースで登録済み43スタイルシートを検証する。
+- **サイドバーガイドのレイアウト契約**: サイドバーを持つガイド画面は、デスクトップでサイドバーを左端へ固定し幅を `280px` に統一する。メイン領域は `margin-left: 280px`、`width: calc(100% - 280px)`、`max-width: none` で残り幅をすべて使い、本文全体を再制限する `content-inner` 等の最大幅は設けない。レスポンシブ規則では `margin-left: 0`、`width: 100%` へ戻す。DVA-C02ドメイン1は288px、ドメイン2は300px、ドメイン3は290pxの原本幅をユーザー指定により優先し、専用の移行テストで検証する。AIP-C01（総合ガイドとDomain 1〜4）も原本の300pxを例外として優先し、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)` を揃え、各ドメインの専用デザインテストとE2Eで検証する。ANS-C01 Domain 1〜4も原本の300pxを承認済み例外として同じ3値で揃え、各ドメインの `design.test.ts` で検証する。SAP-C02 Domain 1は原本の340pxを承認済み例外とし、サイドバー幅 `340px`・メイン `margin-left: 340px`・`width: calc(100% - 340px)` を `__tests__/guide-content-widths.test.ts` の専用ブロックで検証する。SAP-C02 Domain 3は原本の300pxを承認済み例外とし、サイドバー幅 `300px`・メイン `margin-left: 300px`・`width: calc(100% - 300px)`・`max-width: none` を同ファイルの専用ブロックで検証する。SAP-C02 Domain 2は共通の280px契約に従う。この共通契約は `__tests__/guide-content-widths.test.ts` の142ケースで登録済み45スタイルシートを検証する。
 - **グローバルメニューの運用（データ駆動）**: ナビゲーションは `app/constants.ts` の `ALL_EXAMS` を正本としている（`EXAMS` はそこから派生する公開値）。新ページ追加時は `ALL_EXAMS` に `Exam` エントリを追加し（`status: 'coming-soon'` → ページ完成後 `'available'` または省略）、`app/navigation.ts` の `toNavTree` が自動でグルーピングするため **`components/Header.tsx` は直接編集しない**。
 - **PCNE セクションページの `metadata.title` 規約**: `PCNE S<n>: <セクション名> | Google Cloud 認定試験対策` に統一する。Next.js の `title.template` は **それを定義したセグメント自身には適用されず、子孫ルートに継承される**。`app/gcl/professional-cloud-network-engineer/layout.tsx` は `title` をプレーン文字列で置いているだけで新しい `template` を定義していないため、ルート `app/layout.tsx` の `template: '%s | Cloud Infrastructure Studies'` は **PCNE サブツリーにもそのまま継承される**（実際の `<title>` は `PCNE S<n>: … | Google Cloud 認定試験対策 | Cloud Infrastructure Studies`）。`| Google Cloud 認定試験対策` はその上に乗せる PCNE 固有の命名規約であり、`__tests__/gcl/professional-cloud-network-engineer/section-title-convention.test.ts` はこの規約への準拠のみを検証する。
 - **移行元ファイルのアーカイブ**: 移行元は削除せず `archive/` 配下へ移動する。Cisco資料の正規保存先は `archive/Cisco/html/` と `archive/Cisco/md/` とし、`Gcl_Archive/Cisco` は作成・使用しない。

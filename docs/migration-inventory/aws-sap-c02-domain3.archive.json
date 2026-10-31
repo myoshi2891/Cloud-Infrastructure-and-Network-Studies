@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "93bf6256345041ce9f9e2bd0720a07e1893b2244",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Sap-c02-domain3-continuous-improvement-guide.html",
+      "archive": "archive/Aws/html/solutions-architect-professional/domain3/Sap-c02-domain3-continuous-improvement-guide.html",
+      "bytes": 276557,
+      "sha256": "36a3b40ecb91948175e37aa83bbb0f5ac05a0b03583d48445b2c83f9d9762b85"
+    },
+    {
+      "source": "Sap-c02-domain3-continuous-improvement-guide.md",
+      "archive": "archive/Aws/md/solutions-architect-professional/domain3/Sap-c02-domain3-continuous-improvement-guide.md",
+      "bytes": 79522,
+      "sha256": "4262e307e7da1fd02477fda8be2059de0275b1bc240b63965583dde582c80d8c"
+    }
+  ]
+}

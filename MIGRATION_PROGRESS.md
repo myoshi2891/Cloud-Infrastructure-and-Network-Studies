@@ -2,6 +2,32 @@
 
 (最終更新日: 2026-10-29)
 
+## 2026-10-29: SAP-C02 Domain 3 移行
+
+`/aws/solutions-architect-professional/domain3` へ全5タスクを移行。77表（th200・td1228）・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を原本どおり保持。明色配色・Hero・表・コールアウト・点と番号・入れ子・字下げ・段落余白、JSON/YAML/Bashコードの全文・空行・構文色を復元した。目次の現在位置・開閉・hash/focus、タスク別チェック進捗、ホーム・Headerの25%導線と明色フッターへ統合。
+
+Inventory `f04fcb46`、Red `237da13e`、基盤 `0f6bff7d`、Task 3.1 `6858f73e`、3.2 `ea322af1`、3.3 `d5e4d57a`、3.4 `9e575ac7`、3.5 `c64b0a29`、付録 `e105888b`、統合 `93bf6256` の段階別コミットを実施。原本固定fixtureで全文・表結合・リスト階層・配置順・コード行・CSS宣言値・装飾クラスと、Mermaidの原本DSL・全派生色を照合する。原本不在下の全体Vitestは472ファイル・4378件すべて成功（`bun run test -- --maxWorkers=4`）。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本不在でfixture再生成一致も確認した。静的集計1299ソース・416対応（32%）・493テストファイル・139ルートは実行成功数とは区別する。
+
+原本HTML/Markdownは `082d4c3d` でバイト一致・SHA-256一致を確認して `archive/Aws/html/solutions-architect-professional/domain3/` と `archive/Aws/md/solutions-architect-professional/domain3/` へ移動。保存先・サイズ・ハッシュ・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。直下には未移行HTML7件のみ残る。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+
+## 2026-10-29: 移行済み原本の一括アーカイブ
+
+直下に残っていた移行済み4教材（DDIA、SAP-C02 Domain 2、DVA-C02 Domain 4、SCS-C03総合ガイド）のHTMLと対応Markdown、計8ファイルを `archive/Books/html|md/` と `archive/Aws/html|md/<試験・ドメイン>/` へ移動した。内容は変更せず、全ファイルのバイト一致・SHA-256一致を確認。Git管理外の保存先・サイズ・ハッシュ・復元元コミット `8e888247` は `docs/migration-inventory/completed-guides-2026-10-29.archive.json` に記録している。移動コミットは `bb338096`。
+
+原本不在下で4教材の関連49ファイル・409テストすべて成功。アプリ実装への変更はなし。直下のHTMLは未移行8件のみ。静的集計1285ソース・412対応・491テストファイルは不変。npm・ビルドは未実行。過去の「原本を直下に保持」という記述は移動前の履歴として扱う。
+
+## 2026-10-29: SAP-C02 Domain 2 移行
+
+`/aws/solutions-architect-professional/domain2` へ全6タスクを移行。66表（th173・td1153）・23図・5コード例・51リスト項目・81外部リンク出現・73目次・23チェック項目を保持した。原本の明色配色、Hero・表・コールアウト・点と番号・入れ子と字下げ・コードの空行と構文色を復元。目次の開閉・hash/focus・現在位置、タスクごとのチェック進捗、ホーム・Headerの29%導線と明色フッターに対応する。原本HTML/Markdownは保持。
+
+インベントリ `09d07298`、全量Red `51772c2e`、基盤 `45e2ea68`、Task 2.1 `33c49274`、2.2 `2b9f4717`、2.3 `4ccebd90`、2.4 `30712e32`、2.5 `fa46bdff`、2.6 `3288aee2`、付録 `de24ef17`、統合Red `b44909a5`、導線統合 `5ef9760d`、表hydration Red `51e06a74` → Green `26047545` の段階別コミット。固定Git fixtureの全文・表結合・リスト階層・配置順・コード行・CSS宣言値・図DSLと、原本単体のMermaid全派生色を検証した。全体Vitestは470ファイル・4346件すべて成功（`bun run test -- --maxWorkers=4`）。その後の表の読み上げ名補正（Red `6f94a51d` → Green `74647040`）では、最終関連6ファイル・183件、型検査・対象ESLintが成功。全体ESLintも成功済み。SAPの旧ナビ期待値は `16cb2eb4` で3項目の完全一致へ更新し、HeaderのDomain 2リンクも検証した。fixture・インベントリの再生成一致も確認。静的集計1285ソース・412対応（32%）・491テストファイル・138ルートは実行成功数とは区別する。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。作業開始時のDDIA 2ファイルの差分は保持し、今回のコミットから除外。
+
+## 2026-10-29: DDIA 学習ガイド移行
+
+`/recommended-books/designing-data-intensive-applications` へ本文を全量移行。17表・14図・61リスト項目・8外部リンク、目次12項目、チェック13項目を保持。原本由来fixtureで全要素・属性・階層・本文・CSS値・図DSLを照合し、リストの点・番号・入れ子を明示的に復元した。目次開閉・hash/focus・現在位置・チェック進捗を実装し、Booksへ導線統合。原本は保持。
+
+Inventory `8b1a92b6`、Red `ea329623`、抽出・モック補正 `54ad2bd4`、Green `3d589e5d`、導線Red `067b7b34`、統合 `a2d9e7cd`、整形 `80afd377`、仕様同期 `d3dd19f1`。全体468ファイル・4316件、DDIA15件、共通幅契約込み148件成功。14図の構文解析・fixture再生成一致・型検査・全体ESLint・対象Markdown lint成功。npm・ビルド未実行、目視確認はユーザー担当。
+
 ## 2026-10-29: DVA Domain 4付録Aのカード表示と選択式採点
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
@@ -2203,15 +2229,17 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** DVA Domain 4付録Aの原文保持・カード表示・選択式採点。
-- **最終更新日:** 2026-10-29
-- **最新実装 HEAD:** `a1b51073`（付録Aの選択式採点・各問の元の解説表示）
-- **仕様同期コミット:** `c8791b26`（付録Aの原文保持・カード装飾・選択式採点）
-- **前回進捗同期コミット:** `aca8ef0a`（Mermaid配色修正の同期）
-- **検証状態:** 今回は関連17ファイル・225件、静的描画のChrome表示3件、型検査・対象ESLint成功。直近の全体Vitestは今回変更前の462ファイル・4252件成功。静的集計1265ソース・404対応（32%）・486テストファイル・136ルート。
-- **ビルド状態:** npm・本番ビルド・開発サーバーは未実行。付録Aの静的描画でChrome 3画面幅を検証。採点操作はVitestで確認。
-- **HTML残数:** 直下HTML12件（未移行10件・移行済み原本2件）。SAP-C02 Domain 1、AIB-C01 Domain 4、SCS-C03 Domain 1、ANS-C01 Domain 3／4 の原本はarchiveへ移動済み。
-- **次の作業:** 次ページはユーザー指定待ち。DVA-C02 Domain 4の移行・導線統合は完了。
+- **最新完了タスク:** SAP-C02 Domain 3の全文移行・導線統合・原本アーカイブ。
+- **最終更新日:** 2026-10-31
+- **最新実装 HEAD:** `cb662c92`（進捗同期直前HEAD。`ca2ef52e` 以降の実装として SAP Domain 2/3の上方向スクロール時の目次追従 `5e5fb65a`・`26f8eaca`、DDIA本文比較のインライン境界空白保持 `967dbc45`・`6d62a1bd`、DDIA目次判定の描画フレーム集約 `81cd0042`・`4f850f9a`、DDIA目次判定線と語間空白 `2cf75f83`、SAP Domain 2/3チェックリストのコントラスト `e8f7122c`、DDIA両方向スクロール追従 `d4874f20`・`7b7bf3f6`、Domain 3コスト配分タグ注記の訂正 `26d7f668`・`90f94bf5`、SAP生成器のレビュー指摘修正 `2d6caa7c`、Domain 2色リテラルの型付け `25471641` を含む。以前の実装: SAP-C02 Domain 2の固定色トークン化 `ca2ef52e`、SAP Domain 2/3の目次修飾クリック・コード/図のキーボードフォーカス `c916de3`・`b23e521`、Domain 3固定色トークン化 `2c4c171`、DDIAの@themeトークン化・目次クリック修正 `425b5e9`・`bdf6b5e` を含む。Domain 3導線統合 `93bf6256`、原本保存 `082d4c3d`）
+- **仕様同期コミット:** `b91b205e`（仕様・全体検証・静的集計・再開情報を同期）
+- **前回進捗同期コミット:** `7b3a438e`（最新実装 HEAD と再開プロンプトを `ca2ef52e` へ更新した最新の完了済み進捗同期）
+- **検証状態:** 原本不在下の全体Vitest472ファイル・4378件すべて成功。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本インベントリと固定Git fixture再生成一致、HTML/Markdownのバイト一致・SHA-256一致も確認。静的集計1299ソース・416対応（32%）・493テストファイル・139ルート。
+- **ビルド状態:** `bun run build` はユーザー指定に従い未実行。`bun run lint`（全体ESLint）は成功。開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
+- **HTML残数:** 直下HTML7件、すべて未移行。移行済みの直下HTMLは0件。
+- **アーカイブ:** SAP Domain 3の保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはGit管理外のローカル保存先。
+- **既存差分:** なし。
+- **次の作業:** `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。SAP Domain 3の移行・統合・原本保存は完了。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3550,13 +3578,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `a1b51073`。前回進捗同期コミット: `aca8ef0a`。仕様同期コミット: `c8791b26`。最終更新日: 2026-10-29。DVA-C02 Domain 4の移行・配色修正・付録Aカード表示と選択式採点は完了。今回の関連225件と静的描画のChrome表示3件が成功。
+最新実装 HEAD: `cb662c92`（`ca2ef52e` 以降の SAP Domain 2/3の上方向スクロール時の目次追従 `5e5fb65a`・`26f8eaca`、DDIA本文比較のインライン境界空白保持 `967dbc45`・`6d62a1bd`、DDIA目次判定の描画フレーム集約 `81cd0042`・`4f850f9a`、DDIA目次判定線と語間空白 `2cf75f83`、SAP Domain 2/3チェックリストのコントラスト `e8f7122c`、DDIA両方向スクロール追従 `d4874f20`・`7b7bf3f6`、Domain 3コスト配分タグ注記の訂正 `26d7f668`・`90f94bf5`、SAP生成器のレビュー指摘修正 `2d6caa7c`、Domain 2色リテラルの型付け `25471641` と、それ以前のSAP Domain 2/3・DDIAのアクセシビリティ修正と固定色トークン化を含む）。前回進捗同期コミット: `7b3a438e`。仕様同期コミット: `b91b205e`。最終更新日: 2026-10-31。SAP-C02 Domain 3（`/aws/solutions-architect-professional/domain3`）の全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を全文移行済み。点・番号・階層・段落余白・コード装飾・図の原本配色を保持し、25%の共通導線と明色フッターへ統合した。
 
-2026-10-27 に AIB-C01 Domain 4（`/aws/ai-business-strategist/domain4`）と SCS-C03 Domain 1（`/aws/security-specialty/domain1`）を全文移行し、原本HTML・Markdownを `archive/Aws/html|md/` 配下へバイト一致・SHA-256一致で退避した（記録: `docs/migration-inventory/aws-ai-business-strategist-domain4-guide.archive.json`、`aws-scs-c03-domain1-guide.archive.json`）。ANS-C01 Domain 3／Domain 4 は直下に残っていた原本を同様に退避した（`aws-ans-c01-domain3-guide.archive.json`、`aws-ans-c01-domain4-guide.archive.json`）。archiveはローカル専用・Git管理外で、テストはコミット済みfixtureのみを使う。
+原本HTML/Markdownは `082d4c3d` でアーカイブ済み。保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはローカル専用・Git管理外。固定Git fixtureは `13e845fd` 時点の原本から再生成できる。
 
-検証: 2026-10-29 全体Vitestは462ファイル・4252件すべて成功（`bun run test -- --maxWorkers=4`）。型検査・全体ESLint・対象Markdown lint成功。npm・本番ビルド・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+検証: 原本不在下の全体Vitest472ファイル・4378件すべて成功。関連6ファイル・184件、最終型検査・全体ESLint・対象Markdown lint成功。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
 
-次の作業: 次ページはユーザー指定待ち。直下HTML12件（未移行10件・移行済み原本2件）。DVA-C02 Domain 4移行・統合は完了。DVA関連182件と全体4252件が成功。全体の最新結果は「現在地」を参照。
+次の作業: `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。直下HTML7件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
