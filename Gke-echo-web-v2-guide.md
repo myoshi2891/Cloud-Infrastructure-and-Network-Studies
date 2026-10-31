@@ -593,6 +593,7 @@ export PROJECT_ID=$(gcloud config get-value project)
 # 0-1 以降は ( ) のサブシェルで実行する。接続や確認に失敗すると exit 1 で
 # サブシェルだけが終了し、古い kubectl コンテキストに対して Task 1〜5 を実行しない
 # （Cloud Shell 自体は閉じない）。set -e で途中のコマンド失敗時も以降を止める
+# （set -e を有効に保つため、サブシェルを || や && の左辺に置かない）
 (
 set -e
 
@@ -655,10 +656,16 @@ if [ -z "$EXTERNAL_IP" ]; then
   echo "外部 IP が割り当てられませんでした。Service のイベントを確認してください。" >&2
   kubectl describe service echo-web
   kubectl get events --field-selector involvedObject.kind=Service,involvedObject.name=echo-web
+  exit 1
 else
   curl "http://${EXTERNAL_IP}"
 fi
-) || echo "途中で失敗したため、以降のコマンドは実行していません。上のエラーを確認してください。" >&2
+)
+# サブシェルを || の左辺に置くと set -e が無効になるため、終了ステータスは別の行で判定する
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "途中で失敗したため、以降のコマンドは実行していません。上のエラーを確認してください。" >&2
+fi
 ```
 
 > `docker build` のビルドコンテキストは、Dockerfile のあるディレクトリ（上の `BUILD_DIR`）を指定してください。

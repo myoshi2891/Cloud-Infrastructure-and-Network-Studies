@@ -401,7 +401,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 
 | 確認項目 | 期待する結果 |
 |---|---|
-| イメージ一覧 | `gcr.io/プロジェクトID/echo-app` がある |
+| イメージ一覧 | `us-docker.pkg.dev/プロジェクトID/gcr.io/echo-app`（イメージ名 `echo-app`）がある |
 | タグ一覧 | `v1` が表示される |
 
 ### 6-5. 【重要】Container Registry から Artifact Registry へ

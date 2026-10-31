@@ -181,10 +181,12 @@ gcloud compute ssh blog --zone=$ZONE
 接続後、`blog` の中で次を実行します。
 
 ```bash
-mysql --version
+# ローカルのデータベースサーバーへ接続し、サーバー自身のバージョンを表示する
+sudo mysql -e "SELECT VERSION();"
+# root にパスワードが設定されている場合: mysql -u root -p -e "SELECT VERSION();"
 ```
 
-> **見方**: `Ver 8.0.xx` なら MySQL 8.0、`Distrib 5.7.xx` なら MySQL 5.7、`MariaDB` と出る場合は MariaDB です。確認できたら `exit` で Cloud Shell に戻ります。
+> **見方**: `8.0.xx` なら MySQL 8.0、`5.7.xx` なら MySQL 5.7、`10.x.xx-MariaDB` のように `MariaDB` を含む場合は MariaDB です。`mysql --version` はインストール済みクライアントの版であり、サーバーの版とは一致しない場合があるため、ここでは使いません。確認できたら `exit` で Cloud Shell に戻ります。
 > MariaDB の場合も、WordPress の標準的なテーブル程度であれば MySQL 8.0 へ取り込めます。
 >
 > **バージョンの前提**: 本ガイドのコマンドは、既存が **MySQL 8.0 以前（または MariaDB）** であることを前提に `MYSQL_8_0` を指定しています。既存が MySQL 8.4 など 8.0 より新しい場合は、新しい版から古い版へは取り込めないため、`DB_VERSION` を同じ版（例: `MYSQL_8_4`）に変更してください。
@@ -506,8 +508,13 @@ mysql -h <SQL_IP> -u blogadmin -p \
 ### 6.6 取り込みの確認
 
 ```bash
+# MySQL クライアントの場合
 mysql -h <SQL_IP> -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
 mysql -h <SQL_IP> -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+
+# MariaDB クライアントの場合（--ssl-mode は使えないため --ssl を指定）
+mysql -h <SQL_IP> -u blogadmin -p --ssl wordpress -e "SHOW TABLES;"
+mysql -h <SQL_IP> -u blogadmin -p --ssl wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
 - `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。

@@ -668,7 +668,7 @@ gcloud compute instances describe vm-securehost --zone=$ZONE \
 | 管理者 PC → 踏み台 | インターネット → 外部 IP | `allow-rdp-bastion`（securenetwork） |
 | 踏み台 → セキュアホスト | `default` VPC 内の内部通信（両 VM の nic1） | `allow-rdp-bastion-to-securehost`（default、下記で作成） |
 
-> 🔑 **補足（重要）**: 踏み台からセキュアホストへの RDP は、両 VM の nic1 が接続された **`default` VPC 側**を通ります。`default` VPC には `default-allow-internal`（VPC 内の全通信を許可）が最初から存在するため、何もしなくても接続できてしまいますが、この広いルールに依存すると、セキュアホストの nic1 が `default` VPC の全 VM から全ポートで到達可能なままになります。次の手順で **踏み台からセキュアホストへの TCP 3389 だけ** を許可するルールを作成し、そのうえで、`default` VPC の全 VM へインターネット（0.0.0.0/0）からの到達を許可する既定ルール `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）を削除し、必要に応じて `default-allow-internal` も削除します（踏み台への管理者 PC からの RDP は `securenetwork` 側の外部 IP と `allow-rdp-bastion` で成立するため影響しません）。
+> 🔑 **補足（重要）**: 踏み台からセキュアホストへの RDP は、両 VM の nic1 が接続された **`default` VPC 側**を通ります。`default` VPC には `default-allow-internal`（VPC 内の全通信を許可）が最初から存在するため、何もしなくても接続できてしまいますが、この広いルールに依存すると、セキュアホストの nic1 が `default` VPC の全 VM から全ポートで到達可能なままになります。次の手順で **踏み台からセキュアホストへの TCP 3389 だけ** を許可するルールを作成し、そのうえで、`default` VPC の全 VM へインターネット（0.0.0.0/0）からの到達を許可する既定ルール `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）を削除し、RDP のみに絞るため `default-allow-internal` も（依存通信を個別ルールへ置き換えたうえで）削除します（踏み台への管理者 PC からの RDP は `securenetwork` 側の外部 IP と `allow-rdp-bastion` で成立するため影響しません）。
 
 ```bash
 # 踏み台の nic1（default VPC 側）の内部 IP を取得する
@@ -707,14 +707,14 @@ gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceR
 gcloud compute firewall-rules delete default-allow-rdp default-allow-ssh default-allow-icmp --quiet
 ```
 
-`default-allow-internal`（`default` VPC 内の全通信を許可）は、監視エージェントやヘルスチェックなどで依存する通信がない場合にだけ、追加で削除します（下の注意を参照）。
+`default-allow-internal`（`default` VPC 内の全通信を許可）も、「踏み台からセキュアホストへは RDP のみ」を満たすには **削除が必須** です。監視エージェントやヘルスチェックなどで依存する通信がある場合は、先にその通信だけを **送信元・宛先（ターゲット）・ポートを限定した個別ルール** に置き換え、置き換えた通信が動作することを確認してから削除します（下の注意を参照）。
 
 ```bash
-# 任意: default-allow-internal に依存する通信がない場合のみ実行する
+# 依存する通信を送信元・宛先・ポートを限定した個別ルールへ置き換えた後に実行する
 gcloud compute firewall-rules delete default-allow-internal --quiet
 ```
 
-`default-allow-internal` を意図的に残す場合、`default` VPC 内の他の VM からセキュアホストの nic1 へは全ポートで到達できる状態が続きます（下表の効果は `default-allow-internal` も削除した場合のものです）。
+> ⚠️ **例外（RDP のみの要件を満たさない）**: `default-allow-internal` を残す場合、`default` VPC 内の他の VM からセキュアホストの nic1 へは全ポートで到達できる状態が続きます。これは「RDP のみ」の要件に対する **例外** として扱い、理由と期限を記録してください（下表の効果は `default-allow-internal` も削除した場合のものです）。
 
 | 項目 | 内容 |
 |---|---|
@@ -916,7 +916,9 @@ gcloud compute firewall-rules describe allow-rdp-bastion
 
 ### 11.2 追加推奨：securenetwork 内の RDP を明示的に許可（最小限）
 
-「踏み台はセキュアホストと RDP のみ通信」を `securenetwork` 側でも明示する場合の例です（任意）。まずセキュアホストにネットワークタグ `securehost` を付与し、そのうえで送信元を `bastion` タグ、宛先を `securehost` タグに限定したルールを作成します。
+「踏み台はセキュアホストと RDP のみ通信」を `securenetwork` 側でも明示する場合の例です（任意）。
+
+> ⚠️ **このルールは実際の RDP 経路を制御しない**: 8.3.3 のとおり、踏み台からセキュアホストへの RDP は両 VM の nic1 が接続された **`default` VPC** を通ります。`securenetwork` に作る `allow-rdp-internal` は nic0 側にしか作用しないため、RDP のみに絞る効果は `default` 側のルール（`allow-rdp-bastion-to-securehost` の作成と `default-allow-internal` などの削除）で担保します。まずセキュアホストにネットワークタグ `securehost` を付与し、そのうえで送信元を `bastion` タグ、宛先を `securehost` タグに限定したルールを作成します。
 
 ```bash
 # セキュアホストにルールの適用対象となるタグを付与する
@@ -938,7 +940,9 @@ gcloud compute firewall-rules create allow-rdp-internal \
 |---|---|
 | ソース | タグ `bastion` を持つ VM（踏み台）のみ |
 | ターゲット | タグ `securehost` を持つ VM（セキュアホスト）のみ |
-| 効果 | 内部経路でも RDP（3389）以外は許可しない設計を明示できる |
+| 効果 | `securenetwork` 側（nic0）の受信を RDP（3389）に限定することを明示できる。`default` VPC を通る実際の RDP 経路には作用しない |
+
+> 💡 **送信（Egress）の制限は任意**: 全送信を拒否するような包括的な Egress 拒否ルールは必須ではありません。追加する場合は、ターゲットを踏み台の NIC（タグ `bastion` など）に限定し、セキュアホストへの RDP や、監視・更新など必要な依存通信を許可したうえで設定してください。
 
 ### 11.3 追加推奨：IAP TCP 転送（外部 IP すら不要）
 

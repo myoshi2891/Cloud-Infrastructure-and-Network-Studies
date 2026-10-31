@@ -205,17 +205,21 @@ flowchart TB
 | **community cloud** | 共通要件と関係性をもつ**特定のグループ**だけが共有 | グループ内の**少なくとも1メンバー** |
 | **hybrid cloud** | private と public の**両方**を使う | （構成要素ごとに異なる） |
 
-### 5-3. 2023年版で整理された複数 CSP 系のモデル
+### 5-3. 2023年版で整理された複数 CSP 系の配備モデルと関連用語
 
-| モデル | 要点 |
+配備モデルは multi-cloud・hybrid multi-cloud・federated cloud・inter-cloud です。cloud service federation は配備モデルではなく、federated cloud の前提となる関係を表す関連用語です。
+
+| 用語（種別） | 要点 |
 |---|---|
-| **multi-cloud** | **CSC が**、**2社以上の CSP** の**パブリッククラウド**サービスを使う。**統合と管理の責任は CSC 側**にある |
-| **hybrid multi-cloud** | CSC が **hybrid cloud と multi-cloud の両方**のサービスを使う |
-| **cloud service federation** | 2つ以上の CSP が、**合意したポリシー・プロセス・信頼**で結びついてサービスを提供する関係（※モデルではなく"連合"という関係の名前） |
-| **federated cloud** | federation のメンバーがサービスを提供する配備モデル |
-| **inter-cloud** | CSP が、**他の CSP のサービスを1つ以上使って**自社サービスを提供する形。プライマリ CSP が仲介・集約・裁定（アービトラージ）などで提供することが多い、と注記されている |
+| **multi-cloud**（配備モデル） | **CSC が**、**2社以上の CSP** の**パブリッククラウド**サービスを使う。**統合と管理の責任は CSC 側**にある |
+| **hybrid multi-cloud**（配備モデル） | CSC が **hybrid cloud と multi-cloud の両方**のサービスを使う |
+| **cloud service federation**（関連用語） | 2つ以上の CSP が、**合意したポリシー・プロセス・信頼**で結びついてサービスを提供する関係（※モデルではなく"連合"という関係の名前） |
+| **federated cloud**（配備モデル） | federation のメンバーがサービスを提供する配備モデル |
+| **inter-cloud**（配備モデル） | CSP が、**他の CSP のサービスを1つ以上使って**自社サービスを提供する形。プライマリ CSP が仲介・集約・裁定（アービトラージ）などで提供することが多い、と注記されている |
 
-### 5-4. 「どのモデル？」判定フロー
+### 5-4. 「どのモデル？」判定フロー（簡易版）
+
+このフローは private / public / community / hybrid / multi-cloud / hybrid multi-cloud の **6 モデルだけ** を対象にした簡易版です。5-3 の federated cloud と inter-cloud は CSP 間の関係で決まるモデルのため、このフローの対象外です（違いは 5-6 を参照）。
 
 ```mermaid
 flowchart TD

@@ -46,7 +46,7 @@ flowchart LR
 flowchart TB
     User["訪問者のブラウザ<br/>http://外部IP"] -->|"TCP 80"| FW{"VPC ファイアウォール<br/>default-allow-http<br/>対象タグ: http-server"}
     FW -->|"タグ一致 かつ 80番許可"| VM["Compute Engine VM<br/>Debian Linux + Apache2"]
-    FW -.->|"タグ不一致 または ルールなし"| Block["通信は破棄<br/>Connection Refused / Timeout"]
+    FW -.->|"タグ不一致 または ルールなし"| Block["通信は破棄<br/>Timeout（応答なし）"]
     VM --> Page["index.html<br/>Hello World!"]
 ```
 
@@ -245,22 +245,24 @@ flowchart LR
 ### 5.4 gcloud での同等コマンド
 
 ```bash
+# 0) 後片付け用の記録を初期化する（以前の値を引き継がない）
+FW_RULE_NAME=""
+
 # 1) VM に既にあるタグを追加する場合
 gcloud compute instances add-tags INSTANCE_NAME \
   --zone=ZONE \
   --tags=http-server
 
-# 2) ファイアウォールルールを作成する
-gcloud compute firewall-rules create default-allow-http \
+# 2) ファイアウォールルールを作成し、3) 新規作成に成功した場合だけ後片付け用にルール名を記録する
+if gcloud compute firewall-rules create default-allow-http \
   --network=default \
   --direction=INGRESS \
   --action=allow \
   --rules=tcp:80 \
   --source-ranges=0.0.0.0/0 \
-  --target-tags=http-server
-
-# 3) 新規作成できた場合だけ、後片付け用にルール名を記録する
-FW_RULE_NAME=default-allow-http
+  --target-tags=http-server; then
+  FW_RULE_NAME=default-allow-http
+fi
 ```
 
 > 方法 A で既に `default-allow-http` が作られている場合、同名で再作成するとエラー（already exists）になります。**まず一覧で存在を確認**してください。
