@@ -263,8 +263,13 @@ if gcloud compute firewall-rules create default-allow-http \
   --target-tags=http-server; then
   FW_RULE_NAME=default-allow-http
 fi
+
+# 4) 後片付け用に記録したルール名を表示する（空なら新規作成していない）
+echo "FW_RULE_NAME=${FW_RULE_NAME:-（新規作成なし）}"
 ```
 
+> **記録の控え**: `FW_RULE_NAME` はシェル変数のため、Cloud Shell を閉じたり再接続したりすると消えます。4) で `FW_RULE_NAME=default-allow-http` と表示された場合は、その値を控えておいてください（10 章の後片付けで使います）。
+>
 > 方法 A で既に `default-allow-http` が作られている場合、同名で再作成するとエラー（already exists）になります。**まず一覧で存在を確認**してください。
 
 ### 5.5 設定の確認方法
@@ -431,8 +436,8 @@ flowchart TD
 
 | 症状 | 主な原因 | 対処 |
 |---|---|---|
-| **Connection Refused**（接続拒否） | ① Apache が TCP 80 で待ち受けていない（未インストール・停止中）　② `https://`（TCP 443）で接続している | `sudo systemctl status apache2` と `sudo ss -ltnp 'sport = :80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2`。URL を `http://` に修正 |
-| 読み込み中のまま**タイムアウト** | ① ファイアウォールルールがない　② VM のネットワークタグとルールのターゲットタグが一致しない　③ ルールのポート・ソース範囲の設定違い | ルールの存在・ターゲットタグ・ポート・ソース範囲と VM のタグを確認 |
+| **Connection Refused**（接続拒否） | 通信は VM まで届いているが、Apache が TCP 80 で待ち受けていない（未インストール・停止中） | `sudo systemctl status apache2` と `sudo ss -ltnp 'sport = :80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2` |
+| 読み込み中のまま**タイムアウト** | ① ファイアウォールルールがない　② VM のネットワークタグとルールのターゲットタグが一致しない　③ ルールのポート・ソース範囲の設定違い　④ `https://`（TCP 443）で接続している（`tcp:80` だけを許可しているため、443 番への通信はファイアウォールで破棄される） | ルールの存在・ターゲットタグ・ポート・ソース範囲と VM のタグを確認。URL を `http://` に修正 |
 | 「Apache2 Debian Default Page」が出る | 正常。既定ページが表示されている | 必要なら 6.5 の手順で Hello World に置き換え |
 | `apt-get install` が失敗する | `update` 未実施・一時的なネットワーク障害 | `sudo apt-get update` を実行して再試行 |
 | `default-allow-http` 作成時に「already exists」 | 作成時のチェックボックスで既に作成済み | 新規作成せず、内容が正しいか確認する |
@@ -511,12 +516,31 @@ systemctl enable --now apache2'
 
 方法 A（VM 作成画面のチェックボックス）でルールが新規作成された場合、`FW_RULE_NAME` は記録されません（5.4 のスクリプトを経由しないため）。作業前に `default-allow-http` が存在せず、このラボで初めて作られたと確認できる場合に限り、VM の削除後に `gcloud compute firewall-rules delete default-allow-http --quiet` で手動削除してください。
 
+5.4 とは別の Cloud Shell セッション（再接続後など）で後片付けをする場合、`FW_RULE_NAME` は空になっています。5.4 の 4) で `FW_RULE_NAME=default-allow-http` と表示されたことを確認できた場合に限り、後片付けの前に次を実行して値を設定し直します。確認できない場合は設定せず、未設定のまま進めてください（ルールは削除されません）。
+
+```bash
+# 5.4 の 4) の表示で新規作成を確認できた場合だけ実行する
+FW_RULE_NAME=default-allow-http
+```
+
 ```bash
 # FW_RULE_NAME は 5.4 のスクリプトでルールを新規作成したときに記録した値（方法 A や既存ルールの流用では未設定のまま）
-gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet
+# VM の削除が成功した（または既に削除済みだと確認できた）場合だけ、ファイアウォールルールの削除へ進む
+VM_DELETED=false
+if ! VM_FOUND=$(gcloud compute instances list --zones=ZONE \
+  --filter="name=INSTANCE_NAME" --format="value(name)"); then
+  echo "VM の存在確認に失敗しました。ファイアウォールルールは削除しません" >&2
+elif [ -z "$VM_FOUND" ]; then
+  echo "VM は既に削除済みです"
+  VM_DELETED=true
+elif gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet; then
+  VM_DELETED=true
+else
+  echo "VM の削除に失敗しました。ファイアウォールルールは削除しません" >&2
+fi
 
-# このラボで作成したルールが記録されている場合だけ削除する
-if [ -n "${FW_RULE_NAME:-}" ]; then
+# このラボで作成したルールが記録されていて、VM を削除できた場合だけ削除する
+if [ "$VM_DELETED" = true ] && [ -n "${FW_RULE_NAME:-}" ]; then
   gcloud compute firewall-rules delete "$FW_RULE_NAME" --quiet
 fi
 ```
@@ -557,9 +581,9 @@ fi
 </details>
 
 <details>
-<summary>Q3. `Connection Refused` が出たとき、URL の確認ポイントは？</summary>
+<summary>Q3. `https://EXTERNAL_IP` で開くと読み込み中のままタイムアウトする。なぜか？</summary>
 
-**A.** `https://` ではなく **`http://`** になっているかを確認します。本ラボでは HTTPS（443）は設定していません。
+**A.** ファイアウォールが `tcp:80` だけを許可しているため、TCP 443 への通信は VM に届く前に破棄（ドロップ）され、応答がないままタイムアウトします。URL を **`http://`** に直してください。`Connection Refused` は、通信が VM まで届いたものの Apache が待ち受けていない場合に出るエラーで、HTTPS の問題とは別物です。
 </details>
 
 <details>

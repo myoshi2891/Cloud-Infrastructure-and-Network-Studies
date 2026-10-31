@@ -844,7 +844,15 @@ gcloud compute instances describe vm-securehost --zone=$ZONE \
 ### 9.3 FW ルールの検証
 
 ```bash
+# securenetwork 側のルール
 gcloud compute firewall-rules list --filter="network:securenetwork"
+
+# default VPC 側のルール（セキュアホストの nic1 への到達を決めるのはこちら。8.3.3 参照）
+gcloud compute firewall-rules list --filter="network ~ /default$"
+
+# セキュアホストの nic1（default VPC 側）に実際に適用されるファイアウォールルール
+gcloud compute instances network-interfaces get-effective-firewalls vm-securehost \
+  --zone=$ZONE --network-interface=nic1
 ```
 
 ---

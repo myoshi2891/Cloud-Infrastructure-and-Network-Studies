@@ -322,7 +322,7 @@ gcloud compute instances create "${VM_NAME}" \
 3. マシン構成は既定のまま、または `e2-medium` にします。
 4. 左メニューの **OS とストレージ** を開き、**ブートディスク** の **変更** をクリックして、オペレーティングシステムに **Debian GNU/Linux**、バージョンに **Debian GNU/Linux 12 (bookworm)**（`debian-cloud/debian-12`）を選び、**選択** をクリックします。手順 A の `--image-family=debian-12` と同じ OS にそろえるためです。
 5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。
-6. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 2 点を設定します。
+6. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 3 点を設定します。
    - **サービスアカウント** に、手順 A で `roles/storage.objectViewer` を付与したサービスアカウント（ここでは Compute Engine の既定のサービスアカウント `プロジェクト番号-compute@developer.gserviceaccount.com`）を選びます。
    - **アクセススコープ** で、Cloud Storage の読み取りが許可されていることを確認します。
    - 手順 A の `gcloud storage buckets add-iam-policy-binding` をまだ実行していない場合は、**Cloud Storage > バケット >（自分のバケット）> 権限** で **アクセス権を付与** をクリックし、上で選んだサービスアカウントに **Storage オブジェクト閲覧者**（`roles/storage.objectViewer`）をバケット単位で付与します。付与済みの場合は、同じ画面でそのサービスアカウントにロールが表示されることを確認します。

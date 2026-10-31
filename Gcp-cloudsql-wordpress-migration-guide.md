@@ -449,11 +449,18 @@ sudo a2enconf wp-readonly
 sudo systemctl reload apache2
 
 # ページ表示のたびに WP-Cron が起動しないよう、検証が終わるまで無効化する
-# （既に DISABLE_WP_CRON が定義されている場合は二重定義を避けて追加しない。8.6 では追加した行だけを削除する）
-if ! sudo grep -q "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php; then
-  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" \
-    /var/www/html/wordpress/wp-config.php
+# 有効な（コメントではない）定義が true の場合だけ変更しない。false や判別できない値の定義は、
+# 元の行を目印付きのコメントにして退避し、true の行を追加する（8.6 で追加行を削除し、退避した行を元に戻す）
+WP_CONFIG=/var/www/html/wordpress/wp-config.php
+CRON_DEFINE="[[:space:]]*define\([[:space:]]*[\"']DISABLE_WP_CRON[\"'][[:space:]]*,"
+if sudo grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)" "$WP_CONFIG"; then
+  echo "DISABLE_WP_CRON は既に true で定義されているため変更しません"
+else
+  sudo sed -i -E "s#^(${CRON_DEFINE}.*)\$#// migration-readonly-orig \1#" "$WP_CONFIG"
+  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
 fi
+# 有効な定義が true の 1 行だけで、退避した行は「// migration-readonly-orig」で始まることを確認する
+sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG"
 
 # WP-Cron や WP-CLI を外部から定期実行するジョブがあれば一覧に出る
 sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev/null
@@ -601,7 +608,8 @@ sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root
 **2. 現在の設定を確認**
 
 ```bash
-grep DB_ /var/www/html/wordpress/wp-config.php
+# DB_PASSWORD を画面に出さないよう、DB_NAME・DB_USER・DB_HOST の行だけを表示する
+grep -e "'DB_NAME'" -e "'DB_USER'" -e "'DB_HOST'" /var/www/html/wordpress/wp-config.php
 ```
 
 **3. DB_HOST を変更する（方法 A: エディタ）**
@@ -719,7 +727,7 @@ flowchart TD
 
 | 症状・エラー | 主な原因 | 対処 |
 |---|---|---|
-| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep DB_ /var/www/html/wordpress/wp-config.php` で値を確認し、`mysql -h` で直接接続テスト |
+| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep -e "'DB_NAME'" -e "'DB_USER'" -e "'DB_HOST'" /var/www/html/wordpress/wp-config.php` で値を確認し（`DB_PASSWORD` は表示しない）、`mysql -h` で直接接続テスト |
 | `ERROR 2003 (HY000): Can't connect to MySQL server` | 承認済みネットワーク未設定 | `blog` の外部 IP を `/32` で登録（6.2） |
 | `ERROR 1045 (28000): Access denied` | ユーザー名・パスワード違い | `gcloud sql users list` で存在確認、必要ならパスワード再設定 |
 | `ERROR 1049 (42000): Unknown database` | DB 未作成 | `gcloud sql databases create wordpress ...` |
@@ -751,9 +759,12 @@ gcloud sql instances describe $INSTANCE_NAME \
 sudo a2disconf wp-readonly
 sudo systemctl reload apache2
 
-# 6.4 で追加した DISABLE_WP_CRON の行だけを削除する（元からあった定義は残る）
+# 6.4 で追加した DISABLE_WP_CRON の行だけを削除する
 sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
   /var/www/html/wordpress/wp-config.php
+# 6.4 で退避した元の定義（false など）を元の値のまま戻す（退避していなければ何も変わらない）
+sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
+sudo grep -n "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php
 ```
 
 6.4 で外部の定期実行ジョブを `#` で止めた場合は、ここで `#` を外して再開します。
@@ -906,8 +917,8 @@ gcloud compute ssh blog --zone=$ZONE
 ### 12.2 blog の中で実行する部分
 
 ```bash
-# ★ Cloud Shell で表示された SQL_IP を入れる
-export SQL_IP=<Cloud SQL の IP>
+# ★ REPLACE_WITH_SQL_IP を、Cloud Shell の echo で表示された SQL_IP の値（例: 34.xx.xx.xx の形式）に置き換える
+export SQL_IP="REPLACE_WITH_SQL_IP"
 
 # ---------- 移行中は読み取り専用にする ----------
 sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
@@ -923,10 +934,14 @@ sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
 </Directory>
 EOF
 sudo a2enconf wp-readonly && sudo systemctl reload apache2
-if ! sudo grep -q "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php; then
-  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" \
-    /var/www/html/wordpress/wp-config.php
+# 有効な定義が true なら変更しない。それ以外は元の行を退避して true を追加する（6.4 参照）
+WP_CONFIG=/var/www/html/wordpress/wp-config.php
+CRON_DEFINE="[[:space:]]*define\([[:space:]]*[\"']DISABLE_WP_CRON[\"'][[:space:]]*,"
+if ! sudo grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)" "$WP_CONFIG"; then
+  sudo sed -i -E "s#^(${CRON_DEFINE}.*)\$#// migration-readonly-orig \1#" "$WP_CONFIG"
+  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
 fi
+sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG"
 # 外部の定期実行ジョブを確認し、表示された行は 6.4 のとおり検証完了まで # で止める
 sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev/null
 
@@ -954,6 +969,7 @@ curl -I http://localhost/wordpress/
 sudo a2disconf wp-readonly && sudo systemctl reload apache2
 sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
   /var/www/html/wordpress/wp-config.php
+sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
 # 6.4 で外部の定期実行ジョブを止めた場合は、ここで # を外して再開する
 ```
 
