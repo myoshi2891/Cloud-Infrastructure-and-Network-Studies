@@ -457,9 +457,18 @@ if sudo grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)" "$WP_CONFIG"; 
   echo "DISABLE_WP_CRON は既に true で定義されているため変更しません"
 else
   sudo sed -i -E "s#^(${CRON_DEFINE}.*)\$#// migration-readonly-orig \1#" "$WP_CONFIG"
-  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
+  # DB_HOST の定義が単一引用符でも二重引用符でも、その直後に追加する
+  sudo sed -i "/define( *[\"']DB_HOST[\"']/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
 fi
-# 有効な定義が true の 1 行だけで、退避した行は「// migration-readonly-orig」で始まることを確認する
+# 有効な（コメントではない）定義が true の 1 行だけであることを検証し、満たさない場合は移行を中止する
+ACTIVE_CRON=$(sudo grep -Ei "^${CRON_DEFINE}" "$WP_CONFIG")
+if [ "$(printf '%s\n' "$ACTIVE_CRON" | grep -c .)" -ne 1 ] || \
+  ! printf '%s\n' "$ACTIVE_CRON" | grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)"; then
+  echo "DISABLE_WP_CRON を true の 1 行にできませんでした。移行を中止します（SSH セッションを終了します）" >&2
+  sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG" >&2
+  exit 1
+fi
+# 退避した行は「// migration-readonly-orig」で始まる
 sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG"
 
 # WP-Cron や WP-CLI を外部から定期実行するジョブがあれば一覧に出る
@@ -478,6 +487,7 @@ sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev
 mysqldump -u blogadmin -p \
   --databases wordpress \
   --hex-blob \
+  --no-tablespaces \
   --single-transaction \
   --set-gtid-purged=OFF \
   --default-character-set=utf8mb4 \
@@ -491,6 +501,7 @@ mysqldump -u blogadmin -p \
 | `-p` | パスワードを対話入力する（値をコマンド引数に書かない。プロンプトでラボ指定のパスワードを入力） |
 | `--databases wordpress` | ダンプ対象のデータベース名。`CREATE DATABASE IF NOT EXISTS` と `USE` 文もダンプに含める |
 | `--hex-blob` | バイナリ列を 16 進数で書き出し、取り込み時の文字化け・破損を防ぐ |
+| `--no-tablespaces` | テーブルスペース情報を出力しない。`blogadmin` に PROCESS 権限がなくてもダンプできる（MariaDB の `mysqldump` にも同名のオプションがあり、そのまま使える） |
 | `--single-transaction` | InnoDB のテーブルを、ロックせずに一貫した時点の状態で取得する |
 | `--set-gtid-purged=OFF` | GTID の設定文を出力しない（Cloud SQL への取り込み時のエラーを防ぐ）。MariaDB の `mysqldump` にはないため、MariaDB の場合だけ外す |
 | `--default-character-set=utf8mb4` | 絵文字などを含む文字列を utf8mb4 で正しく書き出す |
@@ -505,13 +516,6 @@ grep -c "CREATE TABLE" wordpress_backup.sql
 ```
 
 `CREATE TABLE` が **約 12 個前後**（WordPress 標準テーブル）出てくれば、基本的なデータは取れています。ファイルサイズが 0 の場合は、ユーザー名・パスワード・DB 名を見直してください。
-
-> **補足（mysqldump のオプション）**
-> 上の標準オプションに加えて、環境によっては次のエラーが出ることがあります。メッセージを読み、必要なら下表のオプションを追加します。
->
-> | 状況 | 追加するオプション |
-> |---|---|
-> | 権限に関するエラー（テーブルスペース） | `--no-tablespaces` |
 
 ### 6.5 手順 3-5: Cloud SQL にインポートする
 
@@ -939,7 +943,16 @@ WP_CONFIG=/var/www/html/wordpress/wp-config.php
 CRON_DEFINE="[[:space:]]*define\([[:space:]]*[\"']DISABLE_WP_CRON[\"'][[:space:]]*,"
 if ! sudo grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)" "$WP_CONFIG"; then
   sudo sed -i -E "s#^(${CRON_DEFINE}.*)\$#// migration-readonly-orig \1#" "$WP_CONFIG"
-  sudo sed -i "/define( *'DB_HOST'/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
+  # DB_HOST の定義が単一引用符でも二重引用符でも、その直後に追加する
+  sudo sed -i "/define( *[\"']DB_HOST[\"']/a define( 'DISABLE_WP_CRON', true ); // migration-readonly" "$WP_CONFIG"
+fi
+# 有効な（コメントではない）定義が true の 1 行だけであることを検証し、満たさない場合は移行を中止する
+ACTIVE_CRON=$(sudo grep -Ei "^${CRON_DEFINE}" "$WP_CONFIG")
+if [ "$(printf '%s\n' "$ACTIVE_CRON" | grep -c .)" -ne 1 ] || \
+  ! printf '%s\n' "$ACTIVE_CRON" | grep -Eiq "^${CRON_DEFINE}[[:space:]]*true[[:space:]]*\)"; then
+  echo "DISABLE_WP_CRON を true の 1 行にできませんでした。移行を中止します（SSH セッションを終了します）" >&2
+  sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG" >&2
+  exit 1
 fi
 sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG"
 # 外部の定期実行ジョブを確認し、表示された行は 6.4 のとおり検証完了まで # で止める
@@ -947,7 +960,7 @@ sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev
 
 # ---------- Task 3: ダンプ → インポート ----------
 # MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、mysql の --ssl-mode=REQUIRED を --ssl に置き換える
-mysqldump -u blogadmin -p --databases wordpress --hex-blob \
+mysqldump -u blogadmin -p --databases wordpress --hex-blob --no-tablespaces \
   --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
   > wordpress_backup.sql
 mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED \
