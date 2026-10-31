@@ -763,8 +763,18 @@ kubectl get service echo-web --watch
 kubectl delete service echo-web
 kubectl delete deployment echo-web
 gcloud container clusters delete echo-cluster --zone ${ZONE}
-gcloud artifacts docker images delete us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app:v1 --delete-tags
 ```
+
+イメージを削除する前に、`echo-app` のタグ一覧を表示し、**`v1` と同じ `DIGEST` を指すタグが他にないか**を確認します。`--delete-tags` は、そのイメージ（ダイジェスト）を指すタグをすべて削除するためです。
+
+```bash
+gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app
+```
+
+| 確認結果 | 実行するコマンド |
+|---|---|
+| `v1` の `DIGEST` を指すタグが `v1` だけ | `gcloud artifacts docker images delete us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app:v1 --delete-tags` |
+| 同じ `DIGEST` を指す別のタグがある | イメージは削除せず、`v1` タグだけを外す: `gcloud artifacts docker tags delete us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app:v1` |
 
 | 削除対象 | 理由 |
 |---|---|
