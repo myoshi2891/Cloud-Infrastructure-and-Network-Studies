@@ -318,7 +318,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<pre className="code-block" tabIndex={0} aria-label="yaml コード例">
+<pre className="code-block" tabIndex={0} role="group" aria-label="yaml コード例">
 <div className="code-line">
 {""}
 <span className="hljs-comment">
@@ -859,7 +859,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<pre className="code-block" tabIndex={0} aria-label="yaml コード例">
+<pre className="code-block" tabIndex={0} role="group" aria-label="yaml コード例">
 <div className="code-line">
 {""}
 <span className="hljs-comment">

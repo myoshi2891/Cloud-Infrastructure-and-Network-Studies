@@ -222,7 +222,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<pre className="code-block" tabIndex={0} aria-label="json コード例">
+<pre className="code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
 {"{"}
 </div>
@@ -607,7 +607,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 </div>
 {"\n                "}
-<pre className="code-block" tabIndex={0} aria-label="json コード例">
+<pre className="code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
 {"{"}
 </div>

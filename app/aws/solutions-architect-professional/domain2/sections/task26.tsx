@@ -518,7 +518,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"\n                "}
 <Diagram id="diag-20" label={"Step 2-C: ストレージ階層化(S3)"}/>
 {"\n                "}
-<pre className="code-block" tabIndex={0} aria-label="json コード例">
+<pre className="code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
 {"{"}
 </div>

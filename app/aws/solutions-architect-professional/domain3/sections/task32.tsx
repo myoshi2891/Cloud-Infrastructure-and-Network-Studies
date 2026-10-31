@@ -642,7 +642,7 @@ export default function Content({ progress, updateProgress }: ChecklistProps) { 
 {"CLI の例: シークレットの取得"}
 </h4>
 {"\n                "}
-<pre className="code code-block" tabIndex={0} aria-label="bash コード例">
+<pre className="code code-block" tabIndex={0} role="group" aria-label="bash コード例">
 <div className="code-line">
 {""}
 <span className="hljs-built_in">

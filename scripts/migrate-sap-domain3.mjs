@@ -28,7 +28,7 @@ function tableLabel(n){let heading=n.previousElementSibling;while(heading&&!head
 function jsx(n){
  if(n.nodeType===3){if(['TABLE','THEAD','TBODY','TFOOT','TR'].includes(n.parentElement?.tagName)&&!n.textContent.trim())return '';return '{'+JSON.stringify(n.textContent)+'}';}if(n.nodeType!==1)return '';
  if(n.matches('pre.mermaid')){const i=diagrams.indexOf(n);let prev=n.previousElementSibling;while(prev&&!prev.matches('h2,h3,h4'))prev=prev.previousElementSibling;return `<Diagram id="diag-${i}" label={${JSON.stringify(prev?.textContent.trim()??`図${i+1}`)}} />`;}
- if(n.matches('pre')){const code=n.querySelector('code');const language=code?.className.replace('language-','')??'text';return `<pre className="code code-block" tabIndex={0} aria-label="${language} コード例">`+n.textContent.replace(/^\n|\n$/g,'').split('\n').map(line=>'<div className="code-line">'+tokens(line,language)+'</div>').join('')+'</pre>';}
+ if(n.matches('pre')){const code=n.querySelector('code');const language=code?.className.replace('language-','')??'text';return `<pre className="code code-block" tabIndex={0} role="group" aria-label="${language} コード例">`+n.textContent.replace(/^\n|\n$/g,'').split('\n').map(line=>'<div className="code-line">'+tokens(line,language)+'</div>').join('')+'</pre>';}
  const attrs=[...n.attributes].map(a=>`${({'class':'className','for':'htmlFor'}[a.name]||a.name)}={${JSON.stringify(a.value)}}`);
  if(n.matches('th'))attrs.push('scope="col"');if(n.matches('h2[id],h3[id]'))attrs.push('tabIndex={-1}');
  if(n.matches('.table-scroll'))attrs.push('tabIndex={0}','role="region"',`aria-label={${JSON.stringify(tableLabel(n))}}`);
