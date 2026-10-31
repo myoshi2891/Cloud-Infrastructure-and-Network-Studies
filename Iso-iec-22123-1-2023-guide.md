@@ -223,17 +223,17 @@ flowchart TB
 
 ```mermaid
 flowchart TD
-    S["クラウドの使い方を分類したい"] --> Q1{"単一の CSC が専用利用し、<br/>かつその CSC が資源を管理している？"}
+    S["クラウドの使い方を分類したい"] --> Q0{"private cloud と public cloud を<br/>組み合わせて使っている？"}
+    Q0 -->|"はい"| Q5{"public を 2社以上の CSP から使い、<br/>CSC が自分で束ねている？"}
+    Q5 -->|"はい"| HMC["hybrid multi-cloud"]
+    Q5 -->|"いいえ"| HYB["hybrid cloud"]
+    Q0 -->|"いいえ"| Q1{"単一の CSC が専用利用し、<br/>かつその CSC が資源を管理している？"}
     Q1 -->|"両方とも はい"| PRI["private cloud"]
     Q1 -->|"いずれかが いいえ"| Q2{"共通要件をもつ<br/>特定グループだけで共有？"}
     Q2 -->|"はい"| COM["community cloud"]
     Q2 -->|"いいえ"| PUB["public cloud<br/>（誰でも使える可能性）"]
-    PRI --> Q3{"public も併用している？"}
     PUB --> Q4{"2社以上の CSP の<br/>public を CSC が自分で束ねている？"}
-    Q3 -->|"はい"| HYB["hybrid cloud"]
     Q4 -->|"はい"| MUL["multi-cloud"]
-    HYB --> Q5{"さらに複数 CSP の<br/>public も使っている？"}
-    Q5 -->|"はい"| HMC["hybrid multi-cloud"]
 ```
 
 ### 5-5. 組み合わせの関係図
