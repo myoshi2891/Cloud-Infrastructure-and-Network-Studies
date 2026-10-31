@@ -33,7 +33,7 @@
                 top: 0;
                 left: 0;
                 bottom: 0;
-                width: 300px;
+                width: 280px;
                 background: var(--color-sap-d2-sidebar-bg);
                 border-right: 1px solid var(--color-sap-d2-border-soft);
                 overflow-y: auto;
@@ -108,8 +108,11 @@
 
             /* Main content */
             .sap-domain2-page .main {
-                margin-left: 300px;
+                margin-left: 280px;
                 padding: 56px 64px 120px;
+                width: calc(100% - 280px);
+                max-width: none;
+                box-sizing: border-box;
             }
             .sap-domain2-page .hero {
                 margin-bottom: 8px;
@@ -534,6 +537,8 @@
                 .sap-domain2-page .main {
                     margin-left: 0;
                     padding: 80px 20px 100px;
+                    width: 100%;
+                    max-width: none;
                 }
                 .sap-domain2-page .sidebar-toggle {
                     display: flex;

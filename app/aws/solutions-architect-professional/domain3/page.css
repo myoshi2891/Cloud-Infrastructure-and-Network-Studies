@@ -94,6 +94,9 @@
             .sap-domain3-page .main {
                 margin-left: 300px;
                 padding: 56px 64px 120px;
+                width: calc(100% - 300px);
+                max-width: none;
+                box-sizing: border-box;
             }
             .sap-domain3-page .hero .kicker {
                 font-size: 1rem;
@@ -369,6 +372,8 @@
                 .sap-domain3-page .main {
                     margin-left: 0;
                     padding: 80px 20px 100px;
+                    width: 100%;
+                    max-width: none;
                 }
                 .sap-domain3-page .sidebar-toggle {
                     display: flex;
