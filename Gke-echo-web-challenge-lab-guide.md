@@ -265,39 +265,56 @@ cd ~
 # バケットからコピー
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
 
-# 展開
-tar -xzf echo-web.tar.gz
+# 展開専用の空ディレクトリを作り、そこへ展開する（ホームディレクトリ全体をビルドコンテキストにしないため）
+BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
+echo "BUILD_DIR=${BUILD_DIR}"
+tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
 
-# 展開された内容を確認
-ls
+# 展開された内容を確認（.dockerignore などの隠しファイルも表示する）
+ls -la "$BUILD_DIR"
 ```
 
 | コマンド | 意味 |
 |---|---|
 | `gsutil cp 元 先` | Cloud Storage とローカルの間でコピー（`.` は現在のディレクトリ） |
-| `tar -xzf` | `x`=展開、`z`=gzip、`f`=ファイル指定 |
+| `mktemp -d` | 重複しない名前の空ディレクトリを作る。以降のビルドコンテキストになる |
+| `tar -xzf … -C "$BUILD_DIR"` | `x`=展開、`z`=gzip、`f`=ファイル指定、`-C`=展開先ディレクトリ |
 
+> **注意（変数の消失）**: `BUILD_DIR` はシェル変数のため、別タブや再接続後には空になります。その場合は `echo` で表示された値を `BUILD_DIR=...` で設定し直してから続けてください。
+>
 > **補足**: 新しい環境では `gcloud storage cp gs://${PROJECT_ID}/echo-web.tar.gz .` も使えます。ラボでは `gsutil` でも動作します。
 
 ### 5-4. 展開された内容を確認
 
-アーカイブは `Dockerfile`・`main.go`・`manifests/` を**現在のディレクトリ（`~`）に直接**展開します。サブディレクトリへ移動せず、このディレクトリのまま以降のビルドを実行します。
+アーカイブは `Dockerfile`・`main.go`・`manifests/` を展開先の**直下**に置きます。5-3 で展開先を `BUILD_DIR` にしたため、`BUILD_DIR` 直下に `Dockerfile` があるはずです。
 
 ```bash
-ls
+ls -la "$BUILD_DIR"
+
+# Dockerfile がビルドコンテキストから取り込むファイルを確認する
+grep -nE '^[[:space:]]*(COPY|ADD)' "$BUILD_DIR/Dockerfile"
+
+# .dockerignore があれば、除外されるファイルを確認する
+if [ -f "$BUILD_DIR/.dockerignore" ]; then
+  cat "$BUILD_DIR/.dockerignore"
+else
+  echo ".dockerignore はありません（BUILD_DIR の全ファイルがコンテキストに含まれます）"
+fi
 ```
 
 | 確認するもの | 説明 |
 |---|---|
-| `Dockerfile` | **ここにあるディレクトリでビルドする**ことが重要 |
+| `Dockerfile` | **`BUILD_DIR` 直下にある**ことを確認する |
 | ソースコード（Go） | アプリ本体 |
+| `COPY` / `ADD` の取り込み元 | すべて `BUILD_DIR` の中に存在すること |
+| `.dockerignore` | `COPY` / `ADD` で必要なファイル（`main.go` など）を除外していないこと |
 
-> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。このアーカイブは現在のディレクトリ（`~`）に直接展開されるため、`cd` せずにそのままビルドできます。`ls` で `Dockerfile` が見えない場合だけ、`Dockerfile` のあるディレクトリへ移動してください。
+> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。ホームディレクトリ（`~`）をコンテキストにすると、無関係なファイルや認証情報まで Docker に送られるうえ、ビルドも遅くなります。そのため、アーカイブだけを展開した `BUILD_DIR` をコンテキストにします。`BUILD_DIR` 直下に `Dockerfile` が見えない場合（サブディレクトリに展開された場合）は、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直してください。
 
 ### 5-5. Dockerfile の中身を読んでみる（任意・理解のため）
 
 ```bash
-cat Dockerfile
+cat "$BUILD_DIR/Dockerfile"
 ```
 
 見るべき観点は次の 3 つです。
@@ -313,7 +330,7 @@ cat Dockerfile
 ### 5-6. イメージをビルドする
 
 ```bash
-docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 .
+docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 "$BUILD_DIR"
 ```
 
 | 部分 | 意味 |
@@ -321,7 +338,7 @@ docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 .
 | `docker build` | イメージを作る |
 | `-t 名前:タグ` | イメージに名前とタグを付ける（**tag の `t`**） |
 | `gcr.io/${PROJECT_ID}/echo-app:v1` | push 先を含んだ完全な名前 |
-| `.`（末尾のドット） | 現在のディレクトリをビルドコンテキストにする。**忘れがちなので注意** |
+| `"$BUILD_DIR"`（末尾） | 展開専用ディレクトリをビルドコンテキストにする。**省略すると引数不足のエラーになるので注意** |
 
 ### 5-7. ビルド結果を確認
 
@@ -605,7 +622,7 @@ kubectl get services
 | Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod` で名前を確認、push を再実行 |
 | Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
-| `docker build` で `Dockerfile` がない | ディレクトリが違う | `ls` で `Dockerfile` のあるディレクトリを確認し、そこで実行 |
+| `docker build` で `Dockerfile` がない | `BUILD_DIR` が空、または `Dockerfile` のあるディレクトリと違う | `echo "$BUILD_DIR"` と `ls -la "$BUILD_DIR"` で確認し、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直す |
 | `kubectl` が別クラスタにつながる | コンテキスト未切替 | `gcloud container clusters get-credentials ...` |
 
 ### 9-2. 診断の進め方
@@ -740,8 +757,10 @@ gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
 # ===== 2. ビルド =====
 cd ~
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
-tar -xzf echo-web.tar.gz
-docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 .
+BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
+tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
+ls -la "$BUILD_DIR"   # Dockerfile と .dockerignore の内容を 5-4 のとおり確認する
+docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 "$BUILD_DIR"
 
 # ===== 3. push =====
 gcloud auth configure-docker
@@ -822,7 +841,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 | 段階 | 行ったこと | キーワード |
 |---|---|---|
 | 準備 | クラスタ作成 | `gcloud container clusters create` |
-| 作る | イメージのビルド | `docker build -t gcr.io/...:v1 .` |
+| 作る | イメージのビルド | `docker build -t gcr.io/...:v1 "$BUILD_DIR"` |
 | 預ける | レジストリへ push | `gcloud auth configure-docker` / `docker push` |
 | 動かす | Deployment 作成 | `kubectl create deployment` |
 | 公開する | Service 作成 | `--port 80 --target-port 8000` |

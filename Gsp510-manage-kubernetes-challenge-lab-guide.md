@@ -552,10 +552,32 @@ flowchart LR
 
 ```text
 resource.type="k8s_pod"
+resource.labels.cluster_name="CLUSTER_NAME"
+resource.labels.namespace_name="NAMESPACE_NAME"
+log_id("events")
 severity=WARNING
+jsonPayload.message:"Failed to apply default image tag"
 ```
 
-または GUI で次のように選びます。
+> `CLUSTER_NAME` と `NAMESPACE_NAME` は、ラボ画面の値に置き換えます。Cloud Shell で次を実行すると、値を埋め込んだクエリを表示できます（そのままコピーして貼り付けられます）。
+>
+> ```bash
+> printf '%s\n' 'resource.type="k8s_pod"' \
+>   "resource.labels.cluster_name=\"${CLUSTER_NAME}\"" \
+>   "resource.labels.namespace_name=\"${NAMESPACE_NAME}\"" \
+>   'log_id("events")' 'severity=WARNING' \
+>   'jsonPayload.message:"Failed to apply default image tag"'
+> ```
+
+| 条件 | 狙い |
+|---|---|
+| `resource.type="k8s_pod"` | Kubernetes Pod のログに限定する |
+| `resource.labels.cluster_name` / `namespace_name` | このラボのクラスタと namespace のイベントだけを数える |
+| `log_id("events")` | Kubernetes イベントのログ（`events`）に限定する |
+| `severity=WARNING` | 警告レベルのイベントに限定する |
+| `jsonPayload.message:"Failed to apply default image tag"` | `InvalidImageName` の原因となるメッセージだけを数える |
+
+または GUI で次のように選び、残りの条件はクエリ欄に追記します。
 
 | 項目 | 選択 |
 |---|---|
@@ -585,10 +607,15 @@ Failed to apply default image tag "<todo>": couldn't parse image reference "<tod
 
 #### 参考: コマンドで作成する場合
 
+7.2 と同じ条件のフィルタで作成します（`CLUSTER_NAME` と `NAMESPACE_NAME` は 2.2 で設定した環境変数から展開されます）。
+
 ```bash
 gcloud logging metrics create pod-image-errors \
   --description="Pod image errors" \
-  --log-filter='resource.type="k8s_pod" severity=WARNING'
+  --log-filter="resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.namespace_name=\"${NAMESPACE_NAME}\" AND log_id(\"events\") AND severity=WARNING AND jsonPayload.message:\"Failed to apply default image tag\""
+
+# 登録されたフィルタを確認する（変数が空のまま展開されていないこと）
+gcloud logging metrics describe pod-image-errors --format="value(filter)"
 ```
 
 > `gcloud logging metrics create` で作られるのは既定でカウンタ型です。**ラボの採点は結果（名前・種類）を見る**ため、GUI でもコマンドでも構いません。
@@ -973,7 +1000,7 @@ kubectl get pods -n "$NAMESPACE_NAME"          # InvalidImageName を確認
 ############ Task 4: ログベースメトリクス(メトリクス部分のみコマンド可) ############
 gcloud logging metrics create pod-image-errors \
   --description="Pod image errors" \
-  --log-filter='resource.type="k8s_pod" severity=WARNING'
+  --log-filter="resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.namespace_name=\"${NAMESPACE_NAME}\" AND log_id(\"events\") AND severity=WARNING AND jsonPayload.message:\"Failed to apply default image tag\""
 # アラートポリシー "Pod Error Alert" は Console で作成する(7.4 参照)
 
 ############ Task 5: 修正して再デプロイ ############
@@ -1022,7 +1049,7 @@ kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
 | `set image` が `unable to find container` | コンテナ名の誤り | 9.7 のコマンドでコンテナ名を確認 |
 | `EXTERNAL-IP` が `<pending>` のまま | ロードバランサ作成中 | 1〜3 分待つ。長引く場合は `kubectl describe service ...` |
 | `curl` で応答がない | ポート不一致、起動途中 | `--target-port` が Dockerfile と一致するか、Pod が Running か確認 |
-| Logs Explorer に何も出ない | 時間範囲が狭い、クエリ誤り | 時間範囲を広げ、`resource.type="k8s_pod"` と `severity=WARNING` を確認 |
+| Logs Explorer に何も出ない | 時間範囲が狭い、クエリ誤り | 時間範囲を広げ、7.2 のクエリ（`resource.type`・クラスタ名・namespace 名・`log_id("events")`・`severity=WARNING`・メッセージ条件）の値を確認 |
 | アラートの指標が選べない | Active フィルタで隠れている | **Active のチェックを外す** |
 | PodMonitoring でデータが取れない | ラベルまたはポート名の不一致 | `matchLabels.app` と `ports.name`/`endpoints.port` を確認 |
 

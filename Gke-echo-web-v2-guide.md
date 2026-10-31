@@ -610,12 +610,14 @@ elif ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
   echo "Service の確認に失敗しました。リソースは作成しません。" >&2
   exit 1
 else
+  # if 文を && でつなぐと set -e が効かず、失敗しても以降の Task に進んでしまう。
+  # そのため各コマンドを独立した文にし、create / expose の失敗時は即座に exit 1 で止める
   if [ -z "$DEPLOYMENT" ]; then
-    kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
-  fi &&
+    kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1 || exit 1
+  fi
   if [ -z "$SERVICE" ]; then
-    kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
-  fi &&
+    kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000 || exit 1
+  fi
   kubectl get deployment,service echo-web
 fi
 
@@ -658,7 +660,17 @@ if [ -z "$EXTERNAL_IP" ]; then
   kubectl get events --field-selector involvedObject.kind=Service,involvedObject.name=echo-web
   exit 1
 else
-  curl "http://${EXTERNAL_IP}"
+  # -f で HTTP エラー（4xx/5xx）を失敗として扱う。LB の準備中は一時的なエラーが出るため再試行する
+  if ! RESPONSE=$(curl -fsS --retry 6 --retry-delay 10 --retry-all-errors "http://${EXTERNAL_IP}"); then
+    echo "外部 IP からの応答が HTTP エラーまたは接続失敗でした。" >&2
+    exit 1
+  fi
+  echo "$RESPONSE"
+  # 応答に v2 が含まれることを確認する（v1 のままなら失敗にする）
+  if ! printf '%s\n' "$RESPONSE" | grep -q "v2"; then
+    echo "応答に v2 が含まれていません。Deployment のイメージを確認してください。" >&2
+    exit 1
+  fi
 fi
 )
 # サブシェルを || の左辺に置くと set -e が無効になるため、終了ステータスは別の行で判定する
