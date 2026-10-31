@@ -1212,9 +1212,19 @@ kubectl delete namespace "$NAMESPACE_NAME"
 # 3. クラスタを削除
 gcloud container clusters delete "$CLUSTER_NAME" --zone "$ZONE"
 
-# 4. 練習用に作ったイメージを削除(不要な場合)
-gcloud artifacts docker images delete "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2"
+# 4. 練習用に作ったイメージを削除(不要な場合)は、下のタグ確認を先に行う
 ```
+
+イメージを削除する前に `hello-app` のタグ一覧を表示し、**`v2` と同じ `DIGEST` を指すタグが他にないか**を確認します。`--delete-tags` は、そのイメージ（ダイジェスト）を指すタグをすべて削除するためです。
+
+```bash
+gcloud artifacts docker tags list "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app"
+```
+
+| 確認結果 | 実行するコマンド |
+|---|---|
+| `v2` の `DIGEST` を指すタグが `v2` だけ | `gcloud artifacts docker images delete "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2" --delete-tags` |
+| 同じ `DIGEST` を指す別のタグがある | イメージは削除せず、`v2` タグだけを外す: `gcloud artifacts docker tags delete "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2"` |
 
 | 順序 | 理由 |
 |---|---|
