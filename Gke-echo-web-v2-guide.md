@@ -625,7 +625,13 @@ fi
 gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
 mkdir -p echo-web-v2
 tar -xzf echo-web-v2.tar.gz -C echo-web-v2
-BUILD_DIR=$(dirname "$(find echo-web-v2 -name Dockerfile -print -quit)")
+# Dockerfile が見つからないまま dirname を呼ぶと "." になり、意図しないディレクトリでビルドしてしまうため先に確認する
+DOCKERFILE_PATH=$(find echo-web-v2 -name Dockerfile -print -quit)
+if [ -z "$DOCKERFILE_PATH" ]; then
+  echo "展開結果に Dockerfile が見つかりません。echo-web-v2.tar.gz の中身を確認してください。" >&2
+  exit 1
+fi
+BUILD_DIR=$(dirname "$DOCKERFILE_PATH")
 echo "BUILD_DIR=${BUILD_DIR}"
 docker build -t gcr.io/$PROJECT_ID/echo-app:v2 "$BUILD_DIR"
 
