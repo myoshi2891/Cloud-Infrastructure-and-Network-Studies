@@ -6,7 +6,10 @@ import mermaid from 'mermaid';
 import Guide from '@/app/recommended-books/designing-data-intensive-applications/DdiaGuide';
 import { DIAGRAMS } from '@/app/recommended-books/designing-data-intensive-applications/constants';
 import inventory from '@/docs/migration-inventory/designing-data-intensive-applications.json';
-import fixture from '@/docs/migration-inventory/designing-data-intensive-applications.fidelity.json';
+import rawFixture from '@/docs/migration-inventory/designing-data-intensive-applications.fidelity.json';
+import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
+import { DDIA_DIAGRAM_CORRECTIONS } from '@/__tests__/helpers/ddia-source-corrections';
+const fixture=withSourceCorrections(rawFixture,DDIA_DIAGRAM_CORRECTIONS);
 import { snapshotDdia, snapshotCssRules } from '@/scripts/ddia-fidelity.mjs';
 import { squash, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
@@ -15,6 +18,7 @@ const DDIA_COLOR_TOKENS:Record<string,string>={'#060d17':'sidebar-bg','#dbe4f3':
 const COLOR_LITERAL=/#[0-9a-fA-F]{3,8}\b|rgba?\([^)]*\)/g;
 describe('DDIA 全量移行',()=>{
  it('ホーム・Header共通のBooks導線',()=>{const entry=EXAMS.find(e=>e.id==='ddia');expect(entry?.href).toBe('/recommended-books/designing-data-intensive-applications');expect(entry?.provider).toBe('Books');expect(entry?.domains[0]?.href).toBe(entry?.href);expect(fs.readFileSync('app/globals.css','utf8')).toMatch(/@utility icon-theme-ddia\s*\{\s*background:\s*var\(--color-theme-accelerate-bg\);\s*color:\s*var\(--color-theme-accelerate-fg\);\s*\}/);});
+ it('図の訂正対象は原本の図にそれぞれ1回だけ存在し、原本fixtureは保持する',()=>{const raw=rawFixture.charts.join('\n');for(const [from,to] of DDIA_DIAGRAM_CORRECTIONS){expect(raw.split(from)).toHaveLength(2);expect(fixture.charts.join('\n')).toContain(to);expect(fixture.charts.join('\n')).not.toContain(from);}});
  it('全14図のMermaid構文解析',async()=>{mermaid.initialize({startOnLoad:false});for(const chart of Object.values(DIAGRAMS))expect(await mermaid.parse(chart)).toBeTruthy();});
 
  it('本文の全要素・属性・階層・順序が原本と一致',()=>{expect(snapshotDdia(render(<Guide/>).container)).toEqual(fixture.structure);});
@@ -24,7 +28,7 @@ describe('DDIA 全量移行',()=>{
   expect([...c.querySelectorAll(tag==='li'?'main li':tag)].map(e=>squash(e.textContent??''))).toEqual(values.map(squash));
  });
  it('本文・注釈の全文と外部リンク順序',()=>{const c=render(<Guide/>).container; expect(extractBodyContent(c)).toEqual(inventory.bodyContent);expect([...c.querySelectorAll('a[href^="http"]')].map(e=>e.getAttribute('href'))).toEqual(inventory.links.map(e=>e.href));});
- it('14図のDSL・自然倍率・説明と表の構造',()=>{const c=render(<Guide/>).container;const diagrams=[...c.querySelectorAll('[data-testid="mermaid-diagram"]')];expect(diagrams).toHaveLength(inventory.counts.diagram);expect(Object.values(DIAGRAMS)).toEqual(fixture.charts);expect(diagrams.map(e=>e.getAttribute('data-chart'))).toEqual(fixture.charts);diagrams.forEach(e=>{expect(e.getAttribute('aria-label')?.trim()).toBeTruthy();expect(e.getAttribute('data-preserve-natural-scale')).toBe('true');});const tables=[...c.querySelectorAll('table')];expect(tables).toHaveLength(inventory.counts.table);tables.forEach((e,i)=>expect(e.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[i]!));});
+ it('14図のDSL・自然倍率・説明と表の構造',()=>{const c=render(<Guide/>).container;const diagrams=[...c.querySelectorAll('[data-testid="mermaid-diagram"]')];expect(diagrams).toHaveLength(inventory.counts.diagram);expect(Object.values(DIAGRAMS)).toEqual(fixture.charts);expect(diagrams.map(e=>e.getAttribute('data-chart'))).toEqual(fixture.charts);diagrams.forEach(e=>{expect(e.getAttribute('aria-label')?.trim()).toBeTruthy();expect(e.getAttribute('data-preserve-natural-scale')).toBe('true');});const tables=[...c.querySelectorAll('table')];expect(tables).toHaveLength(inventory.counts.table);tables.forEach((e,i)=>expect(e.querySelectorAll('thead th[scope="col"]')).toHaveLength(inventory.structures.tableColumnHeaders[i]!));const codeBlocks=[...c.querySelectorAll('.code-block')];expect(codeBlocks).toHaveLength(inventory.counts.codeBlock);codeBlocks.forEach(e=>expect(e.querySelector(':scope > .code-line')).not.toBeNull());});
  it('全表のスクロール領域はキーボード操作可能で固有の読み上げ名を持つ',()=>{const c=render(<Guide/>).container;const wrappers=[...c.querySelectorAll('.table-scroll')];expect(wrappers).toHaveLength(inventory.counts.table);for(const [index,wrapper] of wrappers.entries()){let heading=wrapper.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;expect(wrapper).toHaveAttribute('tabindex','0');expect(wrapper).toHaveAttribute('role','region');expect(wrapper).toHaveAttribute('aria-label',`比較表 ${index+1}：`+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim());}const names=wrappers.map(w=>w.getAttribute('aria-label'));expect(new Set(names).size).toBe(names.length);});
  it('表の構造要素の直下にテキストノードを置かない（hydrationエラー防止）',()=>{const c=render(<Guide/>).container;const textNodes=[...c.querySelectorAll('table, thead, tbody, tfoot, tr')].flatMap(e=>[...e.childNodes].filter(n=>n.nodeType===3).map(n=>`${e.tagName}:${JSON.stringify(n.textContent)}`));expect(textNodes).toEqual([]);});
  it('全CSS宣言を保持（スコープ・トークン対応・固定位置補正のみ許可）',()=>{
