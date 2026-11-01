@@ -172,7 +172,12 @@ flowchart TD
 ### 4.4 gcloud での同等コマンド（Task 2 のタグ指定込み）
 
 ```bash
+# 作成先のプロジェクト ID を記録する（10 章の後片付けで同じプロジェクトを明示指定するため）
+PROJECT_ID=$(gcloud config get-value project)
+echo "PROJECT_ID=${PROJECT_ID:?プロジェクトが未設定です。gcloud config set project を実行してください}"
+
 gcloud compute instances create INSTANCE_NAME \
+  --project="$PROJECT_ID" \
   --zone=ZONE \
   --machine-type=e2-medium \
   --image-family=debian-12 \
@@ -182,6 +187,7 @@ gcloud compute instances create INSTANCE_NAME \
 
 | オプション | 意味 |
 |---|---|
+| `--project` | VM を作るプロジェクト。記録した `PROJECT_ID` を明示し、後片付けでも同じ値を使う |
 | `--zone` | VM を作るゾーン |
 | `--machine-type` | CPU とメモリの組み合わせ |
 | `--image-family` / `--image-project` | 使用する OS イメージ（Debian 12） |
@@ -268,7 +274,7 @@ fi
 echo "FW_RULE_NAME=${FW_RULE_NAME:-（新規作成なし）}"
 ```
 
-> **記録の控え**: `FW_RULE_NAME` はシェル変数のため、Cloud Shell を閉じたり再接続したりすると消えます。4) で `FW_RULE_NAME=default-allow-http` と表示された場合は、その値を控えておいてください（10 章の後片付けで使います）。
+> **記録の控え**: `FW_RULE_NAME` と 4.4 の `PROJECT_ID` はシェル変数のため、Cloud Shell を閉じたり再接続したりすると消えます。4) で `FW_RULE_NAME=default-allow-http` と表示された場合は、その値と `PROJECT_ID` の値を控えておいてください（10 章の後片付けで使います）。
 >
 > 方法 A で既に `default-allow-http` が作られている場合、同名で再作成するとエラー（already exists）になります。**まず一覧で存在を確認**してください。
 
@@ -297,7 +303,7 @@ flowchart TD
     A["VM の SSH ボタンを押す<br/>ブラウザ内ターミナルが開く"] --> B["パッケージ一覧を更新<br/>apt-get update"]
     B --> C["Apache2 をインストール<br/>apt-get install apache2"]
     C --> D["起動状態を確認<br/>systemctl status apache2"]
-    D --> E["必要に応じて<br/>Hello World ページを配置"]
+    D --> E["Hello World ページを配置<br/>（必須）"]
 ```
 
 ### 6.2 SSH で VM に接続する
@@ -340,9 +346,9 @@ sudo systemctl status apache2
 sudo systemctl enable apache2
 ```
 
-### 6.5 「Hello World!」ページについて
+### 6.5 「Hello World!」ページを配置する（必須）
 
-Debian に Apache2 を入れると、**既定で「Apache2 Debian Default Page」が表示**されます。ラボの文言は「Hello World! ページが見える」ですが、ラボの採点は Apache が稼働しインストールされていることを確認する形式です。**表示内容を課題の文言に合わせたい場合**は、次のコマンドでページを置き換えます。
+Debian に Apache2 を入れると、**既定で「Apache2 Debian Default Page」が表示**されます。ラボのゴールは「Hello World! ページが見える」状態なので、**Task 4 で確認する前に、次のコマンドで必ずページを置き換えてください。**
 
 ```bash
 echo '<!doctype html><html><body><h1>Hello World!</h1></body></html>' | sudo tee /var/www/html/index.html
@@ -438,7 +444,7 @@ flowchart TD
 |---|---|---|
 | **Connection Refused**（接続拒否） | 通信は VM まで届いているが、Apache が TCP 80 で待ち受けていない（未インストール・停止中） | `sudo systemctl status apache2` と `sudo ss -ltnp 'sport = :80'` で待ち受けを確認し、必要なら `sudo systemctl start apache2` |
 | 読み込み中のまま**タイムアウト** | ① ファイアウォールルールがない　② VM のネットワークタグとルールのターゲットタグが一致しない　③ ルールのポート・ソース範囲の設定違い　④ `https://`（TCP 443）で接続している（`tcp:80` だけを許可しているため、443 番への通信はファイアウォールで破棄される） | ルールの存在・ターゲットタグ・ポート・ソース範囲と VM のタグを確認。URL を `http://` に修正 |
-| 「Apache2 Debian Default Page」が出る | 正常。既定ページが表示されている | 必要なら 6.5 の手順で Hello World に置き換え |
+| 「Apache2 Debian Default Page」が出る | Apache は正常だが、6.5 の Hello World ページ配置が未実施 | 6.5 の手順（必須）で Hello World に置き換えてから再確認 |
 | `apt-get install` が失敗する | `update` 未実施・一時的なネットワーク障害 | `sudo apt-get update` を実行して再試行 |
 | `default-allow-http` 作成時に「already exists」 | 作成時のチェックボックスで既に作成済み | 新規作成せず、内容が正しいか確認する |
 | SSH ボタンで接続できない | `default-allow-ssh` が無い／VM が起動中でない | ルールと VM の状態を確認 |
@@ -467,7 +473,7 @@ flowchart TD
 
 ### 9.2 ベストプラクティスを活かした作成例（参考）
 
-起動スクリプトで Apache の導入を自動化し、タグと最小権限の考え方を取り入れた例です。
+起動スクリプトで Apache の導入を自動化し、タグと最小権限の考え方を取り入れた例です。この例の VM は Google Cloud API にアクセスしないため、サービスアカウントを接続せずに作成します。
 
 ```bash
 gcloud compute instances create INSTANCE_NAME \
@@ -480,6 +486,8 @@ gcloud compute instances create INSTANCE_NAME \
   --shielded-secure-boot \
   --shielded-vtpm \
   --shielded-integrity-monitoring \
+  --no-service-account \
+  --no-scopes \
   --metadata=startup-script='#! /bin/bash
 apt-get update
 apt-get install -y apache2
@@ -492,6 +500,7 @@ systemctl enable --now apache2'
 | `startup-script` | VM 起動時に自動でセットアップ。手作業の再現ミスを排除 |
 | `--labels` | 環境や用途を明示し、請求や棚卸しで追跡しやすくする |
 | `--shielded-*` | ブートレベルの改ざん検知を有効化 |
+| `--no-service-account` / `--no-scopes` | 既定のサービスアカウントを接続しない（`--no-service-account` は `--no-scopes` と併用が必須）。この例の VM は Google Cloud API を呼ばないため、認証情報を持たせない（最小権限） |
 | `--machine-type=e2-small` | 用途に合った適正サイズ（コスト最適化） |
 
 > **注意**：本ラボでは指定されたとおりの手順で採点されます。上記は理解を深めるための参考例であり、**ラボ本番では既定値・指示どおりに進めてください**。
@@ -514,7 +523,14 @@ systemctl enable --now apache2'
 
 ファイアウォールルールは、**このラボで自分が新規作成したものだけ**を削除します。作業前から存在していたルール（既存の `default-allow-http` を含む）は他の VM が利用している可能性があるため削除しません。5.4 のスクリプトでルールを新規作成した場合は、その時点で記録した名前（`FW_RULE_NAME`）を使います。
 
-方法 A（VM 作成画面のチェックボックス）でルールが新規作成された場合、`FW_RULE_NAME` は記録されません（5.4 のスクリプトを経由しないため）。作業前に `default-allow-http` が存在せず、このラボで初めて作られたと確認できる場合に限り、VM の削除後に `gcloud compute firewall-rules delete default-allow-http --quiet` で手動削除してください。
+方法 A（VM 作成画面のチェックボックス）でルールが新規作成された場合、`FW_RULE_NAME` は記録されません（5.4 のスクリプトを経由しないため）。作業前に `default-allow-http` が存在せず、このラボで初めて作られたと確認できる場合に限り、VM の削除後に `gcloud compute firewall-rules delete default-allow-http --project="$PROJECT_ID" --quiet` で手動削除してください。
+
+後片付けのコマンドは、Cloud Shell で現在選択中のプロジェクトではなく、**4.4 で VM 作成時に記録した `PROJECT_ID`** を全コマンドに `--project` で明示指定します。別の Cloud Shell セッション（再接続後など）では `PROJECT_ID` も空になるため、VM を作成したプロジェクト ID を控えから設定し直してください（`gcloud config get-value project` の結果で代用しないでください）。`PROJECT_ID` が空のままでは何も削除しません。
+
+```bash
+# 4.4 で控えた、VM を作成したプロジェクト ID に置き換えて実行する
+PROJECT_ID=VM_PROJECT_ID
+```
 
 5.4 とは別の Cloud Shell セッション（再接続後など）で後片付けをする場合、`FW_RULE_NAME` は空になっています。5.4 の 4) で `FW_RULE_NAME=default-allow-http` と表示されたことを確認できた場合に限り、後片付けの前に次を実行して値を設定し直します。確認できない場合は設定せず、未設定のまま進めてください（ルールは削除されません）。
 
@@ -526,21 +542,24 @@ FW_RULE_NAME=default-allow-http
 ```bash
 # FW_RULE_NAME は 5.4 のスクリプトでルールを新規作成したときに記録した値（方法 A や既存ルールの流用では未設定のまま）
 # VM の削除が成功した（または既に削除済みだと確認できた）場合だけ、ファイアウォールルールの削除へ進む
+# 全コマンドに VM 作成時に記録した PROJECT_ID を明示し、Cloud Shell で選択中の別プロジェクトを対象にしない
 VM_DELETED=false
-if ! VM_FOUND=$(gcloud compute instances list --zones=ZONE \
+if [ -z "${PROJECT_ID:-}" ]; then
+  echo "PROJECT_ID が未設定です。VM を作成したプロジェクト ID を設定するまで何も削除しません" >&2
+elif ! VM_FOUND=$(gcloud compute instances list --project="$PROJECT_ID" --zones=ZONE \
   --filter="name=INSTANCE_NAME" --format="value(name)"); then
   echo "VM の存在確認に失敗しました。ファイアウォールルールは削除しません" >&2
 elif [ -z "$VM_FOUND" ]; then
   # 空の一覧だけでは、ZONE や INSTANCE_NAME の置き換え間違いと区別できない。次の 2 点を両方確認できた場合だけ削除済みとみなす
   #   1) 全ゾーンを対象にした一覧でも同名の VM が見つからない（別ゾーンに残っていない）
   #   2) 対象 VM を直接参照し、ゾーンではなくインスタンス自体の not found エラーが返る（ZONE の誤りではない）
-  if ! ALL_ZONES_FOUND=$(gcloud compute instances list \
+  if ! ALL_ZONES_FOUND=$(gcloud compute instances list --project="$PROJECT_ID" \
     --filter="name=INSTANCE_NAME" --format="value(name,zone.basename())"); then
     echo "全ゾーンでの VM の存在確認に失敗しました。ファイアウォールルールは削除しません" >&2
   elif [ -n "$ALL_ZONES_FOUND" ]; then
     echo "同名の VM が別のゾーンに存在します（ZONE を確認してください）。ファイアウォールルールは削除しません" >&2
     printf '%s\n' "$ALL_ZONES_FOUND" >&2
-  elif DESCRIBE_ERR=$(gcloud compute instances describe INSTANCE_NAME --zone=ZONE \
+  elif DESCRIBE_ERR=$(gcloud compute instances describe INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE \
     --format="value(name)" 2>&1 >/dev/null); then
     echo "VM が存在します（一覧と結果が一致しません）。ファイアウォールルールは削除しません" >&2
   elif printf '%s\n' "$DESCRIBE_ERR" | grep -q "instances/INSTANCE_NAME' was not found"; then
@@ -550,7 +569,7 @@ elif [ -z "$VM_FOUND" ]; then
     echo "VM の不在を確認できませんでした。ファイアウォールルールは削除しません" >&2
     printf '%s\n' "$DESCRIBE_ERR" >&2
   fi
-elif gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet; then
+elif gcloud compute instances delete INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --quiet; then
   VM_DELETED=true
 else
   echo "VM の削除に失敗しました。ファイアウォールルールは削除しません" >&2
@@ -558,7 +577,7 @@ fi
 
 # このラボで作成したルールが記録されていて、VM を削除できた場合だけ削除する
 if [ "$VM_DELETED" = true ] && [ -n "${FW_RULE_NAME:-}" ]; then
-  gcloud compute firewall-rules delete "$FW_RULE_NAME" --quiet
+  gcloud compute firewall-rules delete "$FW_RULE_NAME" --project="$PROJECT_ID" --quiet
 fi
 ```
 
@@ -580,7 +599,7 @@ fi
 | 3 | VM にネットワークタグ `http-server` が付いている | ☐ |
 | 4 | `default-allow-http`（TCP 80・Ingress・許可）が存在する | ☐ |
 | 5 | `apache2` がインストールされ `active (running)` である | ☐ |
-| 6 | `http://EXTERNAL_IP` でページが表示される | ☐ |
+| 6 | `http://EXTERNAL_IP` で「Hello World!」ページが表示される | ☐ |
 | 7 | 各タスクの **Check my progress** がすべて通っている | ☐ |
 
 ### 11.2 理解度チェック

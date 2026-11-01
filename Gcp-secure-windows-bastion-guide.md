@@ -4,6 +4,7 @@
 
 > **対象読者**: Google Cloud 初学者〜Professional Cloud Architect（PCA）受験準備中の方
 > **ゴール**: 「インターネットから完全に隔離された Windows サーバー」を作り、「踏み台サーバー経由でのみ」管理できる構成を自力で構築できるようになる
+> **範囲**: ラボ画面の 6 つの Checkpoint を対象とします。公式 Tasks のうちスタートアップスクリプトを参照する VM の作成と HTTP 許可ルールの追加は扱いません（[14.3](#143-補足問題文のキータスクについて) 参照）
 
 ---
 
@@ -711,18 +712,27 @@ gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceR
 
 ```bash
 # 手順 2（手順 1 と上の確認の後に実行する）: default-allow-internal と default-allow-rdp を無効化し、新しいルールのロギングを有効にする
-# 両方の無効化が成功した場合だけ先へ進む。どちらかが失敗したら、手順 3 以降（RDP の確認・ロギング有効化）は実行しない
+# 2 つの無効化とロギング有効化の 3 つすべてが成功した場合だけ STEP2_OK=true にする。1 つでも失敗したら手順 3 以降に進まない
+STEP2_OK=false
 if gcloud compute firewall-rules update default-allow-internal --disabled &&
-  gcloud compute firewall-rules update default-allow-rdp --disabled; then
-  gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
+  gcloud compute firewall-rules update default-allow-rdp --disabled &&
+  gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging; then
+  STEP2_OK=true
+  echo '手順 2 が完了しました。踏み台から新しい RDP セッションでセキュアホストへ接続してから、手順 3 のログ確認を実行してください。'
 else
-  echo '既定ルールの無効化に失敗しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
+  echo '既定ルールの無効化またはロギングの有効化に失敗しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
 fi
+```
 
-# 手順 3: 上のコマンドがエラーなく完了した場合のみ、踏み台から新しい RDP セッションでセキュアホストへ接続し、一致したルールを確認する
-gcloud logging read \
-  'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
-  --limit=5 --freshness=10m
+```bash
+# 手順 3: 新しい RDP セッションで接続した後に実行する。手順 2 の 3 つの更新がすべて成功した場合（STEP2_OK=true）だけログを確認する
+if [ "${STEP2_OK:-false}" = true ]; then
+  gcloud logging read \
+    'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
+    --limit=5 --freshness=10m
+else
+  echo '手順 2 が完了していません（STEP2_OK が true ではありません）。ログ確認は行いません。' >&2
+fi
 ```
 
 ```bash
@@ -1131,7 +1141,7 @@ Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 
 ### 14.3 補足：問題文の「キータスク」について
 
-> 問題文冒頭の公式「Tasks」一覧には「**スタートアップスクリプトを参照する VM の作成**」と「**HTTP アクセスを許可するファイアウォールルールの追加**」が含まれていますが、ラボ画面に表示される 6 つの Checkpoint（上表）には対応する項目がありません。**本ガイドの範囲は、この 6 つの Checkpoint に限定しています。** スタートアップスクリプトを参照する VM の作成（対象 VM、スクリプトの配置場所、作成コマンド、完了確認）と HTTP アクセスを許可するルールの追加は、本ガイドの手順に含まれず、採点（Checkpoint）にも必要ありません。
+> 問題文冒頭の公式「Tasks」一覧には「**スタートアップスクリプトを参照する VM の作成**」と「**HTTP アクセスを許可するファイアウォールルールの追加**」が含まれていますが、ラボ画面に表示される 6 つの Checkpoint（上表）には対応する項目がありません。**本ガイドが扱う範囲は、この 6 つの Checkpoint だけです。本ガイドはラボの公式 Tasks をすべて網羅する完全な手順書ではなく、本ガイドだけでラボのすべての Tasks が完了するわけではありません。** スタートアップスクリプトを参照する VM の作成（対象 VM、スクリプトの配置場所、作成コマンド、完了確認）と HTTP アクセスを許可するルールの追加は本ガイドの範囲外のため、これらが必要な場合はラボの公式手順を参照してください。
 >
 > 以下は**本ガイドの範囲外の参考例**です（採点には不要）。HTTP アクセスを許可するルールを作る場合の書き方を示します。ルールは `securehost` タグ（13 章の一括コマンドで `vm-securehost` に付与）を持つ VM だけに適用されます。
 >
