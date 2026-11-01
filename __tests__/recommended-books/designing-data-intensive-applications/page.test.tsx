@@ -55,7 +55,8 @@ describe('DDIA 全量移行',()=>{
   expect(rootVars.get('--bg')).toBe('#07111e');expect(rootVars.get('--accent')).toBe('#7c9eff');
   const rules=snapshotCssRules(fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8'));
   const targets=fixture.css.filter(r=>r.selector!==':root').flatMap(r=>r.declarations.filter(d=>/var\(--(bg|accent)\)/.test(d.value)).map(d=>({rule:r,d})));
-  expect(targets).not.toHaveLength(0);
+  // 原本fixtureで --bg / --accent を参照する宣言は12件
+  expect(targets).toHaveLength(12);
   for(const {rule,d} of targets){
    const selectors=rule.selector.split(',').map(s=>s.trim()==='body'||s.trim()==='html'?'.ddia-page':'.ddia-page '+s.trim().replaceAll('pre.mermaid','.ddia-diagram')).join(', ');
    const actual=rules.find(r=>r.selector===selectors&&r.media===rule.media)?.declarations.filter(x=>x.prop===d.prop).map(x=>resolve(x.value,themeVars));
@@ -68,6 +69,8 @@ describe('DDIA 全量移行',()=>{
  it('修飾なしの主ボタンクリックは従来どおりページ内移動を処理する',()=>{const c=render(<Guide/>).container;const link=c.querySelectorAll('nav a')[1]!;const event=new MouseEvent('click',{bubbles:true,cancelable:true,button:0});fireEvent(link,event);expect(event.defaultPrevented).toBe(true);expect(decodeURIComponent(window.location.hash)).toBe('#'+fixture.nav[1]!.id);expect(link).toHaveClass('active');});
  it('検査が本文欠落とリスト階層改変を検知',()=>{const c=render(<Guide/>).container;expect(snapshotDdia(c)).toEqual(fixture.structure);c.querySelector('main li')!.remove();expect(snapshotDdia(c)).not.toEqual(fixture.structure);});
  it('本文比較は書式上の空白を畳み、語間の空白は区別する',()=>{const make=(html:string)=>{const root=document.createElement('div');root.innerHTML='<main>'+html+'</main>';return root;};expect(snapshotDdia(make('<p>REPEATABLE READ</p>'))).not.toEqual(snapshotDdia(make('<p>REPEATABLEREAD</p>')));expect(snapshotDdia(make('<p>\n   REPEATABLE\n   READ\n</p>'))).toEqual(snapshotDdia(make('<p>REPEATABLE READ</p>')));expect(snapshotDdia(make('<ul>\n  <li>a</li>\n</ul>'))).toEqual(snapshotDdia(make('<ul><li>a</li></ul>')));
+  // 隣接するブロック兄弟（li同士・p同士）の間の書式上の空白も比較しない
+  expect(snapshotDdia(make('<ul>\n  <li>a</li>\n  <li>b</li>\n</ul>'))).toEqual(snapshotDdia(make('<ul><li>a</li><li>b</li></ul>')));expect(snapshotDdia(make('<div><p>a</p>\n<p>b</p></div>'))).toEqual(snapshotDdia(make('<div><p>a</p><p>b</p></div>')));
   // インライン要素との境界の空白は意味を持つため、有無を区別する
   expect(snapshotDdia(make('<p>foo <strong>bar</strong></p>'))).not.toEqual(snapshotDdia(make('<p>foo<strong>bar</strong></p>')));expect(snapshotDdia(make('<p><strong>bar</strong> foo</p>'))).not.toEqual(snapshotDdia(make('<p><strong>bar</strong>foo</p>')));
   // インライン要素の内側の先頭・末尾の空白も語間として区別する

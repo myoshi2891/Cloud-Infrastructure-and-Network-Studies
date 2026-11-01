@@ -21,8 +21,9 @@ export function snapshotDdia(root) {
   // 書式上の改行・字下げは1つの空白に畳み、語間とインライン要素境界の空白は残す。ブロック要素の先頭・末尾に接する空白だけを除く
   if (n.nodeType === 3) {
    let text = n.textContent.replace(/\s+/g, ' ');
-   // 表の構造要素の間の空白は描画されず、React も出力しないため比較しない
-   if (text === ' ' && n.parentNode.matches('table, thead, tbody, tfoot, tr, colgroup')) return '';
+   // ブロック兄弟（li 同士・tr 同士など）の間の空白だけのテキストは描画されず、React も出力しないため比較しない
+   const isBlock = (s) => s?.nodeType === 1 && !s.matches(INLINE);
+   if (text === ' ' && isBlock(contentSibling(n, 'previousSibling')) && isBlock(contentSibling(n, 'nextSibling'))) return '';
    if (atBlockEdge(n, 'previousSibling')) text = text.trimStart();
    if (atBlockEdge(n, 'nextSibling')) text = text.trimEnd();
    return text;
