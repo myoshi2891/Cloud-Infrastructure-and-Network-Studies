@@ -194,16 +194,18 @@ flowchart TB
 
 ### 5-1. 配備モデル（cloud deployment model）とは
 
-**cloud deployment model** は、**「物理・仮想リソースの"管理権（コントロール）"と"共有のされ方"によって、クラウドをどう構成するか」** の分類です。
+**cloud deployment model** は、**「物理・仮想リソースの"制御（コントロール）"と"共有のされ方"によって、クラウドをどう構成するか」** の分類です。
 
 ### 5-2. 基本の4モデル
 
-| モデル | 誰が使う？ | リソースを誰が管理？ |
+| モデル | 誰が使う？ | リソースを誰が制御（コントロール）する？ |
 |---|---|---|
 | **private cloud** | 1つの CSC だけが専用に使う | その CSC |
 | **public cloud** | 原則どの CSC でも使える | CSP |
 | **community cloud** | 共通要件と関係性をもつ**特定のグループ**だけが共有 | グループ内の**少なくとも1メンバー** |
 | **hybrid cloud** | private と public の**両方**を使う | （構成要素ごとに異なる） |
+
+> 💡 **「制御」と「管理・運用」は別の観点です**: 配備モデルを分けるのは、リソースを**誰が制御するか**です。日々の管理・運用（保守や監視など）は第三者に委託されていてもかまいません。たとえば、CSC が制御するリソースを外部事業者が管理・運用していても、そのクラウドは private cloud に該当し得ます。
 
 ### 5-3. 2023年版で整理された複数 CSP 系の配備モデルと関連用語
 
@@ -227,7 +229,7 @@ flowchart TD
     Q0 -->|"はい"| Q5{"public を 2社以上の CSP から使い、<br/>CSC が自分で束ねている？"}
     Q5 -->|"はい"| HMC["hybrid multi-cloud"]
     Q5 -->|"いいえ"| HYB["hybrid cloud"]
-    Q0 -->|"いいえ"| Q1{"単一の CSC が専用利用し、<br/>かつその CSC が資源を管理している？"}
+    Q0 -->|"いいえ"| Q1{"単一の CSC が専用利用し、<br/>かつその CSC が資源を制御している？<br/>（管理・運用の委託先は問わない）"}
     Q1 -->|"両方とも はい"| PRI["private cloud"]
     Q1 -->|"いずれかが いいえ"| Q2{"共通要件をもつ<br/>特定グループだけで共有？"}
     Q2 -->|"はい"| COM["community cloud"]
@@ -302,11 +304,16 @@ flowchart TB
 
 ### 6-2. 3つの主役
 
-| party | 担う role | role の意味 |
+party を表す用語（CSC / CSP / CSN）と、role を表す用語（CSC role / CSP role / CSN role）は、それぞれ独立した用語として定義されています。
+
+| 用語 | 種別 | 意味 |
 |---|---|---|
-| **CSC**（cloud service customer） | CSC role | クラウドサービスを**使う**ための活動の集合 |
-| **CSP**（cloud service provider） | CSP role | クラウドサービスを**利用可能にする**活動の集合 |
-| **CSN**（cloud service partner） | CSN role | CSP role や CSC role（または両方）を**支援・補助**する活動の集合 |
+| **CSC**（cloud service customer） | party | CSC role を担う party |
+| **CSP**（cloud service provider） | party | CSP role を担う party |
+| **CSN**（cloud service partner） | party | CSN role を担う party |
+| **CSC role** | role | クラウドサービスを**使う**ための活動の集合 |
+| **CSP role** | role | クラウドサービスを**利用可能にする**活動の集合 |
+| **CSN role** | role | CSP role や CSC role（または両方）を**支援・補助**する活動の集合 |
 
 ### 6-3. その他の関係者と関連用語
 
