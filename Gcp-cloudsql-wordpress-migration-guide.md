@@ -69,7 +69,7 @@ flowchart LR
 flowchart TD
     A["Task 1<br/>Cloud SQL インスタンス作成"] --> B["Task 2<br/>データベース wordpress と<br/>ユーザー blogadmin を作成"]
     B --> C["Task 3<br/>blog の IP を承認ネットワークに登録<br/>mysqldump で書き出して取り込み"]
-    C --> D["Task 4<br/>wp-config.php の DB_HOST を<br/>Cloud SQL の IP に変更"]
+    C --> D["Task 4<br/>Auth Proxy を起動し<br/>wp-config.php の DB_HOST を変更"]
     D --> E["Task 5<br/>ブラウザで表示確認<br/>エラー時はログから原因を調査"]
 ```
 
@@ -108,7 +108,7 @@ sequenceDiagram
 | **承認済みネットワーク（Authorized networks）** | パブリック IP の Cloud SQL に接続できる送信元 IP の許可リスト | `blog` の外部 IP を登録 |
 | **mysqldump** | MySQL のデータを SQL 文として書き出すツール | 移行データの作成 |
 | **wp-config.php** | WordPress の接続設定ファイル | Task 4 で編集 |
-| **DB_HOST** | WordPress が接続する DB のホスト名または IP | ここを Cloud SQL の IP に変える |
+| **DB_HOST** | WordPress が接続する DB のホスト名または IP | ここを Cloud SQL Auth Proxy の `127.0.0.1:3307` に変える |
 | **Cloud Shell** | ブラウザ内で使える Google Cloud 用ターミナル | 操作の起点 |
 
 ---
@@ -408,7 +408,7 @@ export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME \
 echo $SQL_IP
 ```
 
-この IP は **Task 4 でも使う** ので、控えておきます。
+この IP は 6.5〜6.6 のインポートと確認で使うので、控えておきます（Task 4 の WordPress の接続は Auth Proxy 経由のため、この IP は使いません。7 章参照）。
 
 #### 暗号化（TLS）接続を必須にする
 
@@ -576,13 +576,18 @@ gcloud sql import sql $INSTANCE_NAME gs://<バケット名>/wordpress_backup.sql
 
 ### 7.1 このタスクの目的
 
-WordPress が見に行く DB を、ローカル（`localhost`）から Cloud SQL の IP に切り替えます。
+WordPress が見に行く DB を、ローカル（`localhost`）から Cloud SQL に切り替えます。本ガイドでは、`blog` 上で **Cloud SQL Auth Proxy** を動かし、WordPress は `127.0.0.1:3307`（プロキシ）経由で Cloud SQL に接続します。
 
 ```mermaid
 flowchart LR
     WP["WordPress<br/>wp-config.php"] -->|"変更前 DB_HOST = localhost"| L[("ローカル MySQL")]
-    WP -->|"変更後 DB_HOST = Cloud SQL の IP"| C[("Cloud SQL")]
+    WP -->|"変更後 DB_HOST = 127.0.0.1:3307"| P["Cloud SQL Auth Proxy<br/>blog 上で常駐"]
+    P -->|"証明書を検証する TLS 接続"| C[("Cloud SQL")]
 ```
+
+> **なぜ IP 直結にしないのか**: WordPress 本体（`wpdb`）は `MYSQL_CLIENT_FLAGS` を `mysqli_real_connect()` に渡すだけで、CA 証明書を指定する設定を持ちません。そのため、パブリック IP へ直接 TLS 接続しようとすると、サーバー証明書の検証を無効にする（`MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT`）しかなく、なりすましを防げません。Auth Proxy は Cloud SQL のサーバー証明書を検証したうえで暗号化し、IAM で接続を認可するため、この問題を避けられます。6.3 の `ENCRYPTED_ONLY` 設定とも両立します（プロキシ経由の接続は暗号化済みとして扱われます）。
+>
+> **ラボの指示との関係**: ラボの問題文は「`DB_HOST` を Cloud SQL の IP に変更する」よう求めています。本ガイドは安全性を優先してプロキシ経由の構成を示します。採点で問題文どおりの値が求められる場合の扱いは、ラボ画面の指示に従ってください。
 
 ### 7.2 設定ファイルの該当箇所を理解する
 
@@ -600,14 +605,70 @@ define( 'DB_HOST', 'localhost' );
 | `DB_NAME` | **不要** | Task 2 で同名の DB を作成済み |
 | `DB_USER` | **不要** | 同名のユーザーを作成済み |
 | `DB_PASSWORD` | **不要** | 同じパスワードで作成済み |
-| `DB_HOST` | **必要** | `localhost` → **Cloud SQL の IP** に変更する |
+| `DB_HOST` | **必要** | `localhost` → **`127.0.0.1:3307`**（Cloud SQL Auth Proxy）に変更する |
 
 ### 7.3 手順
 
-**1. blog に SSH して、必ず先にバックアップを取る**
+**0. blog で Cloud SQL Auth Proxy を動かす準備をする**
+
+まず Cloud Shell で、`blog` のサービスアカウントとアクセス スコープを確認し、Cloud SQL への接続権限を付与します。
+
+```bash
+# Cloud Shell で
+export BLOG_SA=$(gcloud compute instances describe blog --zone=$ZONE \
+  --format='value(serviceAccounts[0].email)')
+export CONNECTION_NAME=$(gcloud sql instances describe $INSTANCE_NAME \
+  --format='value(connectionName)')
+echo "BLOG_SA=$BLOG_SA CONNECTION_NAME=$CONNECTION_NAME"
+
+# Auth Proxy に必要な IAM ロール（Cloud SQL クライアント）を付与する
+gcloud projects add-iam-policy-binding "$(gcloud config get-value project)" \
+  --member="serviceAccount:${BLOG_SA}" \
+  --role=roles/cloudsql.client
+
+# アクセス スコープを確認する（cloud-platform または sqlservice.admin が必要）
+gcloud compute instances describe blog --zone=$ZONE \
+  --format='value(serviceAccounts[0].scopes)'
+```
+
+> **スコープが足りない場合**: 既定のスコープには Cloud SQL Admin API が含まれないことがあり、その場合プロキシは権限エラーで起動に失敗します。スコープの変更には VM の停止が必要です（`gcloud compute instances stop blog --zone=$ZONE` → `gcloud compute instances set-service-account blog --zone=$ZONE --service-account=$BLOG_SA --scopes=cloud-platform` → `gcloud compute instances start blog --zone=$ZONE`）。停止・起動で `blog` のエフェメラル外部 IP が変わる場合がありますが、プロキシ経由の接続は承認済みネットワークに依存しません。
+
+続いて `blog` に SSH し、プロキシを常駐サービスとして起動します。ローカル MySQL が 3306 を使っているため、プロキシは **3307** で待ち受けます。
 
 ```bash
 gcloud compute ssh blog --zone=$ZONE
+# ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示した CONNECTION_NAME（例: project:region:wordpress-sql）に置き換える
+CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
+
+curl -sSfL -o cloud-sql-proxy \
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64
+sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+
+sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
+[Unit]
+Description=Cloud SQL Auth Proxy
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/cloud-sql-proxy --address 127.0.0.1 --port 3307 ${CONNECTION_NAME}
+Restart=always
+DynamicUser=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable --now cloud-sql-proxy
+sudo systemctl status cloud-sql-proxy --no-pager
+
+# プロキシ経由で Cloud SQL に接続できることを確認する（パスワードは対話入力）
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+```
+
+**1. 必ず先にバックアップを取る**（引き続き `blog` の中で）
+
+```bash
 sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
 ```
 
@@ -629,35 +690,25 @@ sudo nano /var/www/html/wordpress/wp-config.php
 `DB_HOST` の行を次のように書き換え、`Ctrl + O` → Enter → `Ctrl + X` で保存します。
 
 ```php
-define( 'DB_HOST', '<SQL_IP>' );
+define( 'DB_HOST', '127.0.0.1:3307' );
 ```
 
 **3'. DB_HOST を変更する（方法 B: sed でワンライナー）**
 
+定数名・値が単一引用符（`'`）でも二重引用符（`"`）でも置き換えられるようにしています。
+
 ```bash
-sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '<SQL_IP>' );/" \
+sudo sed -i -E "s/define\( *['\"]DB_HOST['\"] *, *['\"][^'\"]*['\"] *\);/define( 'DB_HOST', '127.0.0.1:3307' );/" \
   /var/www/html/wordpress/wp-config.php
 ```
 
 **4. 変更結果を確認**
 
 ```bash
-grep DB_HOST /var/www/html/wordpress/wp-config.php
-```
-
-`<SQL_IP>` に置き換えた値が表示されていれば OK です。
-
-**5. WordPress から Cloud SQL への接続にも TLS を必須にする**
-
-`wp-config.php` の `DB_HOST` の行の直後に、次の 1 行を追加します（Cloud SQL 側は 6.3 で暗号化必須にしているため、この設定がないと接続できません）。
-
-```bash
-sudo sed -i "/define( *'DB_HOST'/a define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );" \
-  /var/www/html/wordpress/wp-config.php
 grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
 ```
 
-> **注意**: この設定は通信を暗号化しますが、サーバー証明書の検証は省略します（ラボ向け）。本番ではサーバー CA 証明書で検証するか、Cloud SQL Auth Proxy を使います（9 章）。
+`DB_HOST` が `127.0.0.1:3307` になっていれば OK です。`MYSQL_CLIENT_FLAGS` は設定しません（プロキシとの間はループバック接続で、Cloud SQL までの区間はプロキシが証明書を検証して暗号化します）。もし `MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT` を含む行が表示された場合は、証明書の検証を無効にする設定なので削除してください。
 
 ラボ画面で **Check my progress** を押します。
 
@@ -728,7 +779,7 @@ flowchart TD
     C -->|"タイムアウト"| D["承認済みネットワークに<br/>blog の外部 IP/32 が登録されているか確認"]
     C -->|"Access denied"| E["ユーザー名 パスワード ホストを確認<br/>DB_USER と DB_PASSWORD も確認"]
     C -->|"Unknown database"| F["Cloud SQL に wordpress DB があるか確認"]
-    C -->|"接続できる"| G["wp-config.php の DB_HOST が<br/>正しい IP か確認 タイプミスなど"]
+    C -->|"接続できる"| G["DB_HOST が 127.0.0.1:3307 か<br/>cloud-sql-proxy が稼働中か確認"]
 ```
 
 ### 8.4 よくあるエラーと対処
@@ -764,18 +815,20 @@ gcloud sql instances describe $INSTANCE_NAME \
 
 ```bash
 # blog の中で
-sudo a2disconf wp-readonly
-sudo systemctl reload apache2
-
-# 6.4 で追加した DISABLE_WP_CRON の行だけを削除する
-sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
-  /var/www/html/wordpress/wp-config.php
-# 6.4 で退避した元の定義（false など）を元の値のまま戻す（退避していなければ何も変わらない）
-sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
-sudo grep -n "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php
+# 読み取り専用の解除・構文検査・再読み込みがすべて成功した場合だけ、WP-Cron を再開する
+if sudo a2disconf wp-readonly && sudo apache2ctl configtest && sudo systemctl reload apache2; then
+  # 6.4 で追加した DISABLE_WP_CRON の行だけを削除する
+  sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
+    /var/www/html/wordpress/wp-config.php
+  # 6.4 で退避した元の定義（false など）を元の値のまま戻す（退避していなければ何も変わらない）
+  sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
+  sudo grep -n "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php
+else
+  echo "読み取り専用の解除に失敗しました。WP-Cron と外部の定期実行は停止したままにします" >&2
+fi
 ```
 
-6.4 で外部の定期実行ジョブを `#` で止めた場合は、ここで `#` を外して再開します。
+上のコマンドが成功した場合に限り、6.4 で外部の定期実行ジョブを `#` で止めていれば、ここで `#` を外して再開します。失敗した場合は Apache の設定を直してから再実行し、それまで定期実行は止めたままにします。
 
 > 移行が確認できない場合は、読み取り専用のまま `/root/wp-config.php.bak` に戻して原因を調べます。書き込みを再開する前に切り戻せば、ローカル DB との差分は生じません。
 >
@@ -861,7 +914,7 @@ flowchart TD
 | 4 | `blogadmin` ユーザーが存在する | `gcloud sql users list` | ☐ |
 | 5 | `blog` の外部 IP が承認済みネットワークに登録済み | コンソール または `describe` | ☐ |
 | 6 | ダンプのインポートが完了し、テーブルが存在する | `SHOW TABLES;` | ☐ |
-| 7 | `wp-config.php` の `DB_HOST` が Cloud SQL の IP | `grep DB_HOST` | ☐ |
+| 7 | `wp-config.php` の `DB_HOST` が `127.0.0.1:3307`（Auth Proxy）で、プロキシが稼働中 | `grep DB_HOST` と `systemctl status cloud-sql-proxy` | ☐ |
 | 8 | ブログがブラウザで表示される | `http://<blog外部IP>` | ☐ |
 | 9 | 各タスクで **Check my progress** が緑 | ラボ画面 | ☐ |
 
@@ -917,6 +970,17 @@ echo "SQL_IP=$SQL_IP"
 
 # ---------- 暗号化（TLS）接続を必須にする ----------
 gcloud sql instances patch $INSTANCE_NAME --ssl-mode=ENCRYPTED_ONLY --quiet
+
+# ---------- Task 4 の準備: Auth Proxy 用の権限と接続名（7.3 手順 0） ----------
+export BLOG_SA=$(gcloud compute instances describe blog --zone=$ZONE \
+  --format='value(serviceAccounts[0].email)')
+gcloud projects add-iam-policy-binding "$(gcloud config get-value project)" \
+  --member="serviceAccount:${BLOG_SA}" --role=roles/cloudsql.client
+# cloud-platform または sqlservice.admin が含まれない場合は 7.3 手順 0 の注記に従ってスコープを変更する
+gcloud compute instances describe blog --zone=$ZONE --format='value(serviceAccounts[0].scopes)'
+export CONNECTION_NAME=$(gcloud sql instances describe $INSTANCE_NAME \
+  --format='value(connectionName)')
+echo "CONNECTION_NAME=$CONNECTION_NAME"
 
 # ---------- blog に接続 ----------
 gcloud compute ssh blog --zone=$ZONE
@@ -976,11 +1040,33 @@ mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED \
   --default-character-set=utf8mb4 wordpress < wordpress_backup.sql
 mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
 
-# ---------- Task 4: wp-config.php 更新 ----------
+# ---------- Task 4: Auth Proxy を常駐させる（7.3 手順 0） ----------
+# ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示された CONNECTION_NAME に置き換える
+CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
+curl -sSfL -o cloud-sql-proxy \
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64
+sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
+[Unit]
+Description=Cloud SQL Auth Proxy
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/cloud-sql-proxy --address 127.0.0.1 --port 3307 ${CONNECTION_NAME}
+Restart=always
+DynamicUser=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable --now cloud-sql-proxy
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+
+# ---------- Task 4: wp-config.php 更新（証明書の検証を無効にする MYSQL_CLIENT_FLAGS は設定しない） ----------
 sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
-sudo sed -i "s/define( *'DB_HOST', *'[^']*' *);/define( 'DB_HOST', '$SQL_IP' );/" \
-  /var/www/html/wordpress/wp-config.php
-sudo sed -i "/define( *'DB_HOST'/a define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );" \
+sudo sed -i -E "s/define\( *['\"]DB_HOST['\"] *, *['\"][^'\"]*['\"] *\);/define( 'DB_HOST', '127.0.0.1:3307' );/" \
   /var/www/html/wordpress/wp-config.php
 grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
 
@@ -988,11 +1074,15 @@ grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
 curl -I http://localhost/wordpress/
 
 # ---------- 移行を確認できたら書き込みと WP-Cron を再開 ----------
-sudo a2disconf wp-readonly && sudo systemctl reload apache2
-sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
-  /var/www/html/wordpress/wp-config.php
-sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
-# 6.4 で外部の定期実行ジョブを止めた場合は、ここで # を外して再開する
+# 読み取り専用の解除・構文検査・再読み込みがすべて成功した場合だけ再開する（失敗時は停止したまま）
+if sudo a2disconf wp-readonly && sudo apache2ctl configtest && sudo systemctl reload apache2; then
+  sudo sed -i "\#define( 'DISABLE_WP_CRON', true ); // migration-readonly\$#d" \
+    /var/www/html/wordpress/wp-config.php
+  sudo sed -i "s#^// migration-readonly-orig ##" /var/www/html/wordpress/wp-config.php
+  # 6.4 で外部の定期実行ジョブを止めた場合は、ここで # を外して再開する
+else
+  echo "読み取り専用の解除に失敗しました。WP-Cron と外部の定期実行は停止したままにします" >&2
+fi
 ```
 
 ---

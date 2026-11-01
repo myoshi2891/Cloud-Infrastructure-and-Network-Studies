@@ -694,30 +694,31 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
 **広い許可ルールの削除**: `default-allow-internal`（`default` VPC 内の全通信を許可）が残っていると、踏み台からセキュアホストへの RDP は上で作成したルールがなくても成立するため、接続できても新しいルールが機能している証明になりません。そこで、次の順序で進めます。
 
 1. **`default-allow-internal` への依存を個別ルールへ移す**: 監視エージェントやヘルスチェックなど、`default-allow-internal` に依存している通信を、**送信元・宛先（ターゲット）・ポートを限定した個別ルール**として先に作成し、置き換えた通信が動作することを確認します（下の注意を参照）。
-2. **`default-allow-internal` を無効化（または削除）する**: まず無効化しておくと、問題があったときに `--no-disabled` ですぐ戻せます。
-3. **新しい RDP セッションで確認する**: 踏み台から既存のセキュアホストへの RDP セッションを切断し、**新しく接続し直して** `allow-rdp-bastion-to-securehost` 経由で接続できることを確認します。ルールのロギングを有効にすると、この接続がどのルールに一致したかを Cloud Logging で確認できます。
-4. **残りの既定ルールを削除する**: 確認できたら `default-allow-internal` を削除し、続いて 0.0.0.0/0 から全 VM への受信を許可する `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）を削除します。これらはセキュアホストの nic1 への到達経路になります。
+2. **`default-allow-internal` と `default-allow-rdp` を無効化する**: `default-allow-rdp` はソースが `0.0.0.0/0` のため、踏み台の nic1 からの RDP にも一致します。両方を無効化しないと、新しいルールが機能しているかを確認できません。削除ではなく無効化にしておくと、問題があったときに `--no-disabled` ですぐ戻せます。無効化の前に、下の「削除前の確認」で `default-allow-rdp` に依存する他の VM がないことを確認してください。
+3. **新しい RDP セッションで確認する**（両方の既定ルールを無効化した後に行う）: 踏み台から既存のセキュアホストへの RDP セッションを切断し、**新しく接続し直して** `allow-rdp-bastion-to-securehost` 経由で接続できることを確認します。ルールのロギングを有効にすると、この接続がどのルールに一致したかを Cloud Logging で確認できます。
+4. **残りの既定ルールを削除する**: 確認できたら無効化した `default-allow-internal` と `default-allow-rdp` を削除し、続いて 0.0.0.0/0 から全 VM への受信を許可する `default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）を削除します。これらはセキュアホストの nic1 への到達経路になります。
+
+`default-allow-rdp`・`default-allow-ssh`・`default-allow-icmp` は `default` VPC の **全 VM** に適用されるため、無効化・削除の前に、同じ `default` VPC 上の他の VM（ラボ外の既存 VM を含む）がこれらのルールに依存した RDP・SSH・ICMP 通信を使っていないことを必ず確認してください。依存する VM がある場合は、その VM 専用にソース範囲とターゲットを絞ったルールを先に作成してから無効化・削除します。
 
 ```bash
-# 手順 1 の後に実行する: default-allow-internal を無効化し、新しいルールのロギングを有効にする
-gcloud compute firewall-rules update default-allow-internal --disabled
-gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
-
-# 手順 3: 踏み台から新しい RDP セッションでセキュアホストへ接続した後、一致したルールを確認する
-gcloud logging read \
-  'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
-  --limit=5 --freshness=10m
-```
-
-`default-allow-rdp`・`default-allow-ssh`・`default-allow-icmp` は `default` VPC の **全 VM** に適用されるため、削除前に、同じ `default` VPC 上の他の VM（ラボ外の既存 VM を含む）がこれらのルールに依存した RDP・SSH・ICMP 通信を使っていないことを必ず確認してください。依存する VM がある場合は、その VM 専用にソース範囲とターゲットを絞ったルールを先に作成してから削除します。
-
-```bash
-# 削除前の確認: default VPC 上の VM と、各ルールの適用範囲（ターゲット未指定なら全 VM）を確認する
+# 削除前の確認（手順 2 の前に実行する）: default VPC 上の VM と、各ルールの適用範囲（ターゲット未指定なら全 VM）を確認する
 gcloud compute instances list --filter="networkInterfaces.network~/default$" \
   --format="table(name,zone.basename(),tags.items.list())"
 gcloud compute firewall-rules describe default-allow-rdp --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
 gcloud compute firewall-rules describe default-allow-ssh --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
 gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceRanges,targetTags,targetServiceAccounts)"
+```
+
+```bash
+# 手順 2（手順 1 と上の確認の後に実行する）: default-allow-internal と default-allow-rdp を無効化し、新しいルールのロギングを有効にする
+gcloud compute firewall-rules update default-allow-internal --disabled
+gcloud compute firewall-rules update default-allow-rdp --disabled
+gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
+
+# 手順 3: 両方の既定ルールを無効化した後、踏み台から新しい RDP セッションでセキュアホストへ接続し、一致したルールを確認する
+gcloud logging read \
+  'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
+  --limit=5 --freshness=10m
 ```
 
 ```bash
@@ -1079,7 +1080,7 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
   --rules=tcp:3389 \
   --source-ranges="${BASTION_DEFAULT_IP}/32" \
   --target-tags=securehost
-# default-allow-internal の依存移行・無効化 → 新しい RDP セッションの確認 →
+# default-allow-internal の依存移行 → default-allow-internal と default-allow-rdp の無効化 → 新しい RDP セッションの確認 →
 # default-allow-internal と default-allow-rdp/ssh/icmp の削除は 8.3.3 の手順で行う
 
 # ===== 数分待ってからパスワードリセット =====

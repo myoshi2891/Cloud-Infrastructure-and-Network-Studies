@@ -531,8 +531,25 @@ if ! VM_FOUND=$(gcloud compute instances list --zones=ZONE \
   --filter="name=INSTANCE_NAME" --format="value(name)"); then
   echo "VM の存在確認に失敗しました。ファイアウォールルールは削除しません" >&2
 elif [ -z "$VM_FOUND" ]; then
-  echo "VM は既に削除済みです"
-  VM_DELETED=true
+  # 空の一覧だけでは、ZONE や INSTANCE_NAME の置き換え間違いと区別できない。次の 2 点を両方確認できた場合だけ削除済みとみなす
+  #   1) 全ゾーンを対象にした一覧でも同名の VM が見つからない（別ゾーンに残っていない）
+  #   2) 対象 VM を直接参照し、ゾーンではなくインスタンス自体の not found エラーが返る（ZONE の誤りではない）
+  if ! ALL_ZONES_FOUND=$(gcloud compute instances list \
+    --filter="name=INSTANCE_NAME" --format="value(name,zone.basename())"); then
+    echo "全ゾーンでの VM の存在確認に失敗しました。ファイアウォールルールは削除しません" >&2
+  elif [ -n "$ALL_ZONES_FOUND" ]; then
+    echo "同名の VM が別のゾーンに存在します（ZONE を確認してください）。ファイアウォールルールは削除しません" >&2
+    printf '%s\n' "$ALL_ZONES_FOUND" >&2
+  elif DESCRIBE_ERR=$(gcloud compute instances describe INSTANCE_NAME --zone=ZONE \
+    --format="value(name)" 2>&1 >/dev/null); then
+    echo "VM が存在します（一覧と結果が一致しません）。ファイアウォールルールは削除しません" >&2
+  elif printf '%s\n' "$DESCRIBE_ERR" | grep -q "instances/INSTANCE_NAME' was not found"; then
+    echo "VM は既に削除済みです（インスタンスの not found を確認）"
+    VM_DELETED=true
+  else
+    echo "VM の不在を確認できませんでした。ファイアウォールルールは削除しません" >&2
+    printf '%s\n' "$DESCRIBE_ERR" >&2
+  fi
 elif gcloud compute instances delete INSTANCE_NAME --zone=ZONE --quiet; then
   VM_DELETED=true
 else
