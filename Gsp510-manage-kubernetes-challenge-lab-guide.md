@@ -947,8 +947,13 @@ Hostname: helloweb-6fc7476576-cvv5f
 ## 10. コマンド一括集（コピペ用）
 
 > **使い方**: 先頭で環境変数を設定し、**コマンドを上から順に**実行します。Task 4（Console 操作）の箇所は、コマンドではなく画面操作です。**途中のコメントを読みながら進めてください**。
+>
+> **失敗時の動作**: ブロック全体をサブシェル `( ... )` 内で `set -euo pipefail` 付きで実行するため、クラスタ作成や `get-credentials` などが失敗するとその時点で止まり、後続のコマンドは実行されません。呼び出し元のシェルには影響しませんが、サブシェル内の `export` と `cd` も残らないため、続けて手作業する場合や 14 章のクリーンアップの前には 2.2 の `export` を再実行してください。
 
 ```bash
+(
+set -euo pipefail
+
 ############ 0. 環境変数(ラボの値に置き換える) ############
 export PROJECT_ID="ラボのプロジェクトID"
 export CLUSTER_NAME="ラボで指定されたクラスタ名"
@@ -980,7 +985,11 @@ grep -n "<todo>" prometheus-app.yaml          # 位置を確認
 sed -i 's|image: <todo>|image: nilebox/prometheus-example-app:latest|' prometheus-app.yaml
 sed -i 's|- name: <todo>|- name: metrics|' prometheus-app.yaml
 sed -i 's|name: <todo>|name: prometheus-test|' prometheus-app.yaml
-grep -n "<todo>" prometheus-app.yaml          # 何も出なければOK
+# <todo> が残っていなければ（grep の一致なし）成功。残っていればエラーで止める
+if grep -n "<todo>" prometheus-app.yaml; then
+  echo "prometheus-app.yaml に <todo> が残っています。5.5 の方法 A で修正してください" >&2
+  exit 1
+fi
 kubectl apply -f prometheus-app.yaml -n "$NAMESPACE_NAME"
 
 gcloud storage cp gs://spls/gsp510/pod-monitoring.yaml .
@@ -1029,6 +1038,7 @@ kubectl expose deployment helloweb -n "$NAMESPACE_NAME" \
   --type=LoadBalancer --name="$SERVICE_NAME" --port=8080 --target-port="$TARGET_PORT"
 
 kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
+)
 ```
 
 ---

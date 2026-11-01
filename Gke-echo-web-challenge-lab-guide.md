@@ -555,9 +555,15 @@ spec:
       targetPort: 8000
 ```
 
+上の YAML を、`sed` で読み込む前に `echo-web.yaml` という名前で保存します（例: `nano echo-web.yaml` で貼り付けて保存）。
+
 ```bash
-# PROJECT_ID を置換して適用する場合
-sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+# PROJECT_ID を置換して適用する場合（echo-web.yaml が保存済みであることを先に確認する）
+if [ ! -f echo-web.yaml ]; then
+  echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" >&2
+else
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+fi
 ```
 
 | 項目 | コマンド方式 | マニフェスト方式 |
@@ -747,6 +753,11 @@ export PROJECT_ID=$(gcloud config get-value project)
 read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
 export ZONE
 
+# 以降はサブシェル内で実行し、必須コマンドが 1 つでも失敗したらその時点で止める
+# （set -e の影響を呼び出し元のシェルに残さないため、( ) で囲む）
+(
+set -euo pipefail
+
 # ===== 1. クラスタ作成 =====
 gcloud container clusters create echo-cluster \
   --zone ${ZONE} \
@@ -770,7 +781,10 @@ docker push gcr.io/${PROJECT_ID}/echo-app:v1
 kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
 kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
 kubectl get service echo-web --watch
+)
 ```
+
+> 途中で失敗した場合は、表示されたエラーを直してから、失敗したステップ以降を 1 つずつ実行してください（クラスタ作成済みのまま全体を再実行すると、`clusters create` が「既に存在する」で止まります）。
 
 ---
 
