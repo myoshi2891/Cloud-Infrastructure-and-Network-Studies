@@ -8,18 +8,21 @@ import theme from '@/app/aws/solutions-architect-professional/domain2/mermaid-th
 import rawInventory from '@/docs/migration-inventory/aws-sap-c02-domain2.json';
 import rawFixture from '@/docs/migration-inventory/aws-sap-c02-domain2.fidelity.json';
 import { withSourceCorrections } from '@/__tests__/helpers/aip-source-corrections';
-import { SAP_DOMAIN2_CORRECTIONS } from '@/__tests__/helpers/sap-domain2-source-corrections';
+import { SAP_DOMAIN2_CORRECTIONS, SAP_DOMAIN2_DIAGRAM_CORRECTIONS } from '@/__tests__/helpers/sap-domain2-source-corrections';
 import { FIDELITY_PAGES } from '@/scripts/archive-fidelity-config.mjs';
 import { snapshotGuideParts } from '@/scripts/guide-fidelity-extraction.mjs';
 import { snapshotGuideChecks } from '@/scripts/guide-interaction-extraction.mjs';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 import { SAP_D2_COLOR_LITERAL, SAP_D2_COLOR_TOKENS } from '@/scripts/sap-domain2-color-tokens.mjs';
 import { codeLineCount, extractBodyContent, squash, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
-const inventory=withSourceCorrections(rawInventory,SAP_DOMAIN2_CORRECTIONS);
-const fixture=withSourceCorrections(rawFixture,SAP_DOMAIN2_CORRECTIONS);
+const inventory=withSourceCorrections(rawInventory,[...SAP_DOMAIN2_CORRECTIONS,...SAP_DOMAIN2_DIAGRAM_CORRECTIONS]);
+const fixture=withSourceCorrections(rawFixture,[...SAP_DOMAIN2_CORRECTIONS,...SAP_DOMAIN2_DIAGRAM_CORRECTIONS]);
 vi.mock('@/components/MermaidDiagram',async()=>({MermaidDiagram:(await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock}));
 function parts(c:HTMLElement){const clone=c.cloneNode(true) as HTMLElement;clone.querySelectorAll('[data-chart]').forEach(e=>{const value=e.getAttribute('data-chart')!;expect(value).toMatch(/^---\nconfig: /);e.setAttribute('data-chart',value.slice(value.indexOf('\n---\n')+5));});return snapshotGuideParts({querySelector:()=>clone.querySelector('main'),createElement:(tag:string)=>document.createElement(tag)},FIDELITY_PAGES['aws-sap-c02-domain2']!.guideBoundaries);}
 describe('SAP Domain 2 原本全量契約',()=>{
+ it('図の訂正は原本の図全体と一致し、訂正後の図だけを描画する',()=>{const raw=Object.values(rawFixture.guideParts).flatMap(p=>p.diagrams).map(d=>d.trim());const fixed=Object.values(fixture.guideParts).flatMap(p=>p.diagrams).map(d=>d.trim());for(const [from,to] of SAP_DOMAIN2_DIAGRAM_CORRECTIONS){expect(raw.filter(d=>d===from)).toHaveLength(1);expect(fixed).toContain(to);expect(fixed).not.toContain(from);}});
+ it('目次内にフォーカスがある状態のEscapeは目次を閉じ、開閉ボタンへフォーカスを戻す',()=>{const c=render(<Page/>).container;const toggle=c.querySelector<HTMLButtonElement>('#sidebarToggle')!;fireEvent.click(toggle);expect(toggle).toHaveAttribute('aria-expanded','true');const link=c.querySelector<HTMLAnchorElement>('#sidebarNav a')!;link.focus();expect(document.activeElement).toBe(link);fireEvent.keyDown(window,{key:'Escape'});expect(toggle).toHaveAttribute('aria-expanded','false');expect(document.activeElement).toBe(toggle);});
+ it('目次外にフォーカスがある状態のEscapeは目次を閉じるだけでフォーカスを動かさない',()=>{const c=render(<Page/>).container;const toggle=c.querySelector<HTMLButtonElement>('#sidebarToggle')!;fireEvent.click(toggle);const outside=c.querySelector<HTMLElement>('main a, main [tabindex="0"]')!;outside.focus();expect(document.activeElement).toBe(outside);fireEvent.keyDown(window,{key:'Escape'});expect(toggle).toHaveAttribute('aria-expanded','false');expect(document.activeElement).toBe(outside);});
  it('本文訂正の対象が原本に存在し、原本fixtureは保持する',()=>{const before=JSON.stringify([rawInventory,rawFixture]);const after=JSON.stringify([inventory,fixture]);for(const [from,to] of SAP_DOMAIN2_CORRECTIONS){expect(before).toContain(from);expect(after).not.toContain(from);expect(after).toContain(to);}expect(JSON.stringify([rawInventory,rawFixture])).toBe(before);});
  it('表のアクセシブル名は通し番号と直前の見出しで一意になる',()=>{const c=render(<Page/>).container;const wrappers=[...c.querySelectorAll('.table-scroll')];for(const [index,wrapper] of wrappers.entries()){let heading=wrapper.previousElementSibling;while(heading&&!heading.matches('h2,h3,h4'))heading=heading.previousElementSibling;expect(wrapper).toHaveAttribute('aria-label',`比較表 ${index+1}：`+(heading?.textContent??'学習資料').replace(/\s+/g,' ').trim());}const names=wrappers.map(w=>w.getAttribute('aria-label'));expect(new Set(names).size).toBe(names.length);});
 

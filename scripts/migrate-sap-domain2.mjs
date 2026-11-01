@@ -8,13 +8,16 @@ import { isValid, toHex } from 'khroma';
 import fixture from '../docs/migration-inventory/aws-sap-c02-domain2.fidelity.json' with { type: 'json' };
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { SAP_D2_COLOR_LITERAL, SAP_D2_COLOR_TOKENS } from './sap-domain2-color-tokens.mjs';
-import { SAP_DOMAIN2_CORRECTIONS } from '../__tests__/helpers/sap-domain2-source-corrections.ts';
+import { SAP_DOMAIN2_CORRECTIONS, SAP_DOMAIN2_DIAGRAM_CORRECTIONS } from '../__tests__/helpers/sap-domain2-source-corrections.ts';
 const dir='app/aws/solutions-architect-professional/domain2';
 const source=execFileSync('git',['show',`${fixture.sourceCommit}:${fixture.source}`],{encoding:'utf8',maxBuffer:8*1024*1024});
 // 本文訂正を原本の改行・字下げを保ったまま適用してから解析する。
 const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const corrected=SAP_DOMAIN2_CORRECTIONS.reduce((html,[from,to])=>{const words=from.split(/\s+/),next=to.split(/\s+/);if(words.length!==next.length)throw new Error('Correction word count mismatch: '+from);const pattern=new RegExp(words.map(escape).join('(\\s+)'));if(!pattern.test(html))throw new Error('Correction not found: '+from);return html.replace(pattern,(...m)=>next.map((w,i)=>w+(i<next.length-1?m[i+1]:'')).join(''));},source);
 const doc=new JSDOM(corrected).window.document;
+// 図の訂正は原本の図全体と完全一致した場合だけ置き換える（本文訂正の語数一致規則とは別に扱う）。
+const unusedDiagramCorrections=new Set(SAP_DOMAIN2_DIAGRAM_CORRECTIONS.map(([from])=>from));
+const correctDiagram=chart=>{const hit=SAP_DOMAIN2_DIAGRAM_CORRECTIONS.find(([from])=>from===chart);if(!hit)return chart;unusedDiagramCorrections.delete(hit[0]);return hit[1];};
 const boundaries=FIDELITY_PAGES['aws-sap-c02-domain2'].guideBoundaries;
 const phase=process.argv[2];
 if(!Object.hasOwn(boundaries,phase))throw new Error('Specify foundation, task21..task26 or appendix');
@@ -42,7 +45,9 @@ const body=chunks[phase].map(jsx).join('');
 write('sections/'+phase+'.tsx',`import { Diagram } from '../Diagram';\n${body.includes('<ChecklistCard>')?"import { ChecklistCard, ChecklistCount } from '../ChecklistCard';\n":''}/** 原本の${phase}本文。 */\nexport default function Content(){return <>${body}</>;}`);
 if(phase!=='foundation')process.exit(0);
 write('ChecklistCard.tsx',`'use client';\nimport {createContext,useContext,useState,type ReactNode} from 'react';\nconst CheckedCount=createContext(0);\n/** チェックリスト1枚。カード内の選択済み項目数だけをClient状態として持つ。 */\nexport function ChecklistCard({children}:{children:ReactNode}){const [count,setCount]=useState(0);return <CheckedCount.Provider value={count}><div className="checklist-card" onChange={event=>setCount(event.currentTarget.querySelectorAll('input:checked').length)}>{children}</div></CheckedCount.Provider>;}\n/** 所属するカードの完了数を表示する。 */\nexport function ChecklistCount({total}:{total:number}){const count=useContext(CheckedCount);return <span className="count">{\`\${count} / \${total} 完了\`}</span>;}`);
-write('constants.ts','export const DIAGRAMS:Record<string,string> = '+JSON.stringify(Object.fromEntries(diagrams.map((e,i)=>['diag-'+i,e.textContent.trim().split('\n').map(l=>l.trimStart()).join('\n')])),null,2)+';\nexport const NAV_ITEMS = '+JSON.stringify(fixture.guideDesign.nav,null,2)+' as const;');
+const diagramCharts=Object.fromEntries(diagrams.map((e,i)=>['diag-'+i,correctDiagram(e.textContent.trim().split('\n').map(l=>l.trimStart()).join('\n'))]));
+if(unusedDiagramCorrections.size)throw new Error('Diagram correction not found: '+[...unusedDiagramCorrections][0].split('\n')[1]);
+write('constants.ts','export const DIAGRAMS:Record<string,string> = '+JSON.stringify(diagramCharts,null,2)+';\nexport const NAV_ITEMS = '+JSON.stringify(fixture.guideDesign.nav,null,2)+' as const;');
 const theme=fixture.guideInteractions.mermaidConfig;fs.writeFileSync(dir+'/mermaid-theme.json',JSON.stringify(theme,null,2)+'\n');
 mermaid.initialize({...theme,startOnLoad:false});const vars=mermaid.mermaidAPI.getConfig().themeVariables;
 fs.writeFileSync(dir+'/render-theme.json',JSON.stringify({...theme,themeVariables:{...Object.fromEntries(Object.entries(vars).map(([k,v])=>[k,typeof v==='string'&&/^(?:hsl|rgb)a?\(/.test(v)&&isValid(v)?toHex(v):v])),fontFamily:'"Noto Sans JP Variable",sans-serif'}},null,2)+'\n');

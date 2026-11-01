@@ -25,7 +25,8 @@ export default function NavBar() {
   // scroll・resize は高頻度で届くため、見出し位置の読み取りは次の描画フレームで1回にまとめる
   let frame=0;
   const schedule=()=>{if(frame!==0)return;frame=window.requestAnimationFrame(()=>{frame=0;update();});};
-  const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape')setOpen(false);};
+  // 目次内にフォーカスがあるまま閉じると、非表示の要素にフォーカスが取り残されるため開閉ボタンへ戻す
+  const onKey=(e:KeyboardEvent)=>{if(e.key!=='Escape')return;const focusInSidebar=document.getElementById('sidebar')?.contains(document.activeElement)??false;setOpen(false);if(focusInSidebar)document.getElementById('sidebarToggle')?.focus();};
   update();
   window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule);window.addEventListener('keydown',onKey);
   return()=>{window.cancelAnimationFrame(frame);window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);window.removeEventListener('keydown',onKey);};

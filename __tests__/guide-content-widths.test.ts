@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 
 const readWorkspaceFile = (path: string): string =>
     readFileSync(join(process.cwd(), path), 'utf8');
@@ -161,13 +162,17 @@ describe('SAP-C02 Domain 3 sidebar layout exception', () => {
         expect(rule).toMatch(/max-width:\s*none\s*;/);
     });
 
-    it('restores a 100% main canvas in its responsive rule', () => {
-        const responsiveRules = rulesAfterFirst(readWorkspaceFile(stylesheet), mainSelector);
+    it('restores a 100% main canvas inside its responsive media query', () => {
+        // 後続のデスクトップ用ルールではなく、max-width メディアクエリ内の同一セレクタだけを判定対象にする
+        const responsiveRules = snapshotCssRules(readWorkspaceFile(stylesheet))
+            .filter((rule) => rule.selector === mainSelector && /max-width/.test(rule.media ?? ''));
+        const has = (declarations: readonly { prop: string; value: string }[], prop: string, value: string) =>
+            declarations.some((declaration) => declaration.prop === prop && declaration.value === value);
 
-        expect(responsiveRules.some((rule) =>
-            /margin-left:\s*0\s*;/.test(rule)
-            && /width:\s*100%\s*;/.test(rule)
-            && /max-width:\s*none\s*;/.test(rule),
+        expect(responsiveRules.some(({ declarations }) =>
+            has(declarations, 'margin-left', '0')
+            && has(declarations, 'width', '100%')
+            && has(declarations, 'max-width', 'none'),
         )).toBe(true);
     });
 });
