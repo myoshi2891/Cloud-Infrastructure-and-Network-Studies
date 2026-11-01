@@ -28,7 +28,7 @@ describe('SAP Domain 2 統合契約',()=>{
  });
  it('サイドバー背景・構文色などの固定色を@themeトークンで参照し、再生成処理にも反映',()=>{
   const css=fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8');const globals=fs.readFileSync('app/globals.css','utf8');const theme=globals.slice(globals.indexOf('@theme {'),globals.indexOf('\n}',globals.indexOf('@theme {')));
-  const literals=fixture.guideDesign.rules.filter(r=>r.selector!==':root').flatMap(r=>Object.values(r.declarations).flatMap(v=>v.match(SAP_D2_COLOR_LITERAL)??[]));expect(literals.length).toBeGreaterThan(0);for(const literal of literals)expect(SAP_D2_COLOR_TOKENS[literal],literal).toBeDefined();
+  const literals=fixture.guideDesign.rules.filter(r=>r.selector!==':root').flatMap(r=>Object.values(r.declarations).flatMap(v=>v.match(SAP_D2_COLOR_LITERAL)??[]));expect(literals).toHaveLength(18);expect([...new Set(literals)].sort()).toEqual(Object.keys(SAP_D2_COLOR_TOKENS).sort());for(const literal of literals)expect(SAP_D2_COLOR_TOKENS[literal],literal).toBeDefined();
   for(const literal of ['#6a737d','#c0213f','#0b57c4','#0a6b3a','#b04a00','#6f42c1','#4f5f7e'])expect(SAP_D2_COLOR_TOKENS[literal],literal).toMatch(/^hljs-/);
   for(const [literal,token] of Object.entries(SAP_D2_COLOR_TOKENS)){expect(theme).toContain(`--color-sap-d2-${token}: ${literal};`);expect(css).toContain(`var(--color-sap-d2-${token})`);}
   expect(css.match(SAP_D2_COLOR_LITERAL)).toBeNull();
