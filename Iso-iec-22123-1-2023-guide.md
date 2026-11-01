@@ -235,7 +235,9 @@ flowchart TD
     Q2 -->|"はい"| COM["community cloud"]
     Q2 -->|"いいえ"| Q4{"2社以上の CSP の<br/>public を CSC が自分で束ねている？"}
     Q4 -->|"はい"| MUL["multi-cloud"]
-    Q4 -->|"いいえ"| PUB["public cloud<br/>（誰でも使える可能性）"]
+    Q4 -->|"いいえ"| Q6{"CSP が資源を制御し、<br/>CSC 一般が利用できる可能性がある？"}
+    Q6 -->|"はい"| PUB["public cloud<br/>（誰でも使える可能性）"]
+    Q6 -->|"いいえ"| OOS["この簡易フローの対象外<br/>（定義を個別に確認）"]
 ```
 
 ### 5-5. 組み合わせの関係図
