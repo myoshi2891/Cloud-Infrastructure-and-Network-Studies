@@ -253,14 +253,18 @@ flowchart LR
 ```bash
 # 0) 後片付け用の記録を初期化する（以前の値を引き継がない）
 FW_RULE_NAME=""
+# 4.4 で VM 作成時に記録した PROJECT_ID を使い、VM と同じプロジェクトを明示的に操作する（空なら止める）
+echo "PROJECT_ID=${PROJECT_ID:?4.4 で記録した PROJECT_ID を設定してください}"
 
 # 1) VM に既にあるタグを追加する場合
 gcloud compute instances add-tags INSTANCE_NAME \
+  --project="$PROJECT_ID" \
   --zone=ZONE \
   --tags=http-server
 
 # 2) ファイアウォールルールを作成し、3) 新規作成に成功した場合だけ後片付け用にルール名を記録する
 if gcloud compute firewall-rules create default-allow-http \
+  --project="$PROJECT_ID" \
   --network=default \
   --direction=INGRESS \
   --action=allow \
@@ -281,8 +285,8 @@ echo "FW_RULE_NAME=${FW_RULE_NAME:-（新規作成なし）}"
 ### 5.5 設定の確認方法
 
 ```bash
-gcloud compute firewall-rules list --filter="name=default-allow-http"
-gcloud compute instances describe INSTANCE_NAME --zone=ZONE --format="get(tags.items)"
+gcloud compute firewall-rules list --project="$PROJECT_ID" --filter="name=default-allow-http"
+gcloud compute instances describe INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --format="get(tags.items)"
 ```
 
 | 確認項目 | 期待される結果 |
