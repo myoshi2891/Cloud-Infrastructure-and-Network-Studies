@@ -67,10 +67,10 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A["Task 1\nCloud SQL インスタンス作成"] --> B["Task 2\nデータベース wordpress と\nユーザー blogadmin を作成"]
-    B --> C["Task 3\nblog の IP を承認ネットワークに登録\nmysqldump で書き出して取り込み"]
-    C --> D["Task 4\nwp-config.php の DB_HOST を\nCloud SQL の IP に変更"]
-    D --> E["Task 5\nブラウザで表示確認\nエラー時はログから原因を調査"]
+    A["Task 1<br/>Cloud SQL インスタンス作成"] --> B["Task 2<br/>データベース wordpress と<br/>ユーザー blogadmin を作成"]
+    B --> C["Task 3<br/>blog の IP を承認ネットワークに登録<br/>mysqldump で書き出して取り込み"]
+    C --> D["Task 4<br/>wp-config.php の DB_HOST を<br/>Cloud SQL の IP に変更"]
+    D --> E["Task 5<br/>ブラウザで表示確認<br/>エラー時はログから原因を調査"]
 ```
 
 ### 1.4 データ移行の時系列（シーケンス図）
@@ -356,8 +356,8 @@ gcloud sql users list --instance=$INSTANCE_NAME
 
 ```mermaid
 flowchart TD
-    S1["3-1. blog の外部 IP を調べる"] --> S2["3-2. その IP を Cloud SQL の\n承認済みネットワークに登録"]
-    S2 --> S3["3-3. blog にSSHして\nmysqldump でダンプ取得"]
+    S1["3-1. blog の外部 IP を調べる"] --> S2["3-2. その IP を Cloud SQL の<br/>承認済みネットワークに登録"]
+    S2 --> S3["3-3. blog にSSHして<br/>mysqldump でダンプ取得"]
     S3 --> S4["3-4. Cloud SQL にインポート"]
     S4 --> S5["3-5. 件数などで取り込み確認"]
 ```
@@ -445,8 +445,12 @@ sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
   </Files>
 </Directory>
 EOF
-sudo a2enconf wp-readonly
-sudo systemctl reload apache2
+# 有効化・構文検査・再読み込みのどれかが失敗したら、読み取り専用にならないままダンプしないよう中止する
+if ! sudo a2enconf wp-readonly || ! sudo apache2ctl configtest || ! sudo systemctl reload apache2; then
+  sudo a2disconf wp-readonly > /dev/null 2>&1
+  echo "読み取り専用設定を有効にできませんでした。移行を中止します（SSH セッションを終了します）" >&2
+  exit 1
+fi
 
 # ページ表示のたびに WP-Cron が起動しないよう、検証が終わるまで無効化する
 # 有効な（コメントではない）定義が true の場合だけ変更しない。false や判別できない値の定義は、
@@ -576,7 +580,7 @@ WordPress が見に行く DB を、ローカル（`localhost`）から Cloud SQL
 
 ```mermaid
 flowchart LR
-    WP["WordPress\nwp-config.php"] -->|"変更前 DB_HOST = localhost"| L[("ローカル MySQL")]
+    WP["WordPress<br/>wp-config.php"] -->|"変更前 DB_HOST = localhost"| L[("ローカル MySQL")]
     WP -->|"変更後 DB_HOST = Cloud SQL の IP"| C[("Cloud SQL")]
 ```
 
@@ -718,13 +722,13 @@ fi
 ```mermaid
 flowchart TD
     A["ブログが表示されない"] --> B{"画面のメッセージは？"}
-    B -->|"Error establishing a database connection"| C{"blog から Cloud SQL に\nmysql コマンドで接続できる？"}
-    B -->|"白い画面 / 500 エラー"| H["Apache のエラーログを確認\n/var/log/apache2/error.log"]
-    B -->|"ページは出るが記事が空"| I["インポートが不完全\nテーブルと件数を確認"]
-    C -->|"タイムアウト"| D["承認済みネットワークに\nblog の外部 IP/32 が登録されているか確認"]
-    C -->|"Access denied"| E["ユーザー名 パスワード ホストを確認\nDB_USER と DB_PASSWORD も確認"]
+    B -->|"Error establishing a database connection"| C{"blog から Cloud SQL に<br/>mysql コマンドで接続できる？"}
+    B -->|"白い画面 / 500 エラー"| H["Apache のエラーログを確認<br/>/var/log/apache2/error.log"]
+    B -->|"ページは出るが記事が空"| I["インポートが不完全<br/>テーブルと件数を確認"]
+    C -->|"タイムアウト"| D["承認済みネットワークに<br/>blog の外部 IP/32 が登録されているか確認"]
+    C -->|"Access denied"| E["ユーザー名 パスワード ホストを確認<br/>DB_USER と DB_PASSWORD も確認"]
     C -->|"Unknown database"| F["Cloud SQL に wordpress DB があるか確認"]
-    C -->|"接続できる"| G["wp-config.php の DB_HOST が\n正しい IP か確認 タイプミスなど"]
+    C -->|"接続できる"| G["wp-config.php の DB_HOST が<br/>正しい IP か確認 タイプミスなど"]
 ```
 
 ### 8.4 よくあるエラーと対処
@@ -825,9 +829,9 @@ sudo grep -n "DISABLE_WP_CRON" /var/www/html/wordpress/wp-config.php
 
 ```mermaid
 flowchart TD
-    Q["移行方式を選ぶ"] --> R{"データ量は多い？\nまたは停止許容時間が短い？"}
+    Q["移行方式を選ぶ"] --> R{"データ量は多い？<br/>または停止許容時間が短い？"}
     R -->|"いいえ"| S["ダンプ＆インポート"]
-    R -->|"はい"| T["Database Migration Service\n継続レプリケーション"]
+    R -->|"はい"| T["Database Migration Service<br/>継続レプリケーション"]
 ```
 
 ---
@@ -937,7 +941,12 @@ sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
   </Files>
 </Directory>
 EOF
-sudo a2enconf wp-readonly && sudo systemctl reload apache2
+# 有効化・構文検査・再読み込みのどれかが失敗したら、ダンプと wp-config.php の変更より前に中止する
+if ! sudo a2enconf wp-readonly || ! sudo apache2ctl configtest || ! sudo systemctl reload apache2; then
+  sudo a2disconf wp-readonly > /dev/null 2>&1
+  echo "読み取り専用設定を有効にできませんでした。移行を中止します（SSH セッションを終了します）" >&2
+  exit 1
+fi
 # 有効な定義が true なら変更しない。それ以外は元の行を退避して true を追加する（6.4 参照）
 WP_CONFIG=/var/www/html/wordpress/wp-config.php
 CRON_DEFINE="[[:space:]]*define\([[:space:]]*[\"']DISABLE_WP_CRON[\"'][[:space:]]*,"
