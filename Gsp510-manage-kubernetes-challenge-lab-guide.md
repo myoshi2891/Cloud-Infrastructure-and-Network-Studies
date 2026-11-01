@@ -948,7 +948,9 @@ Hostname: helloweb-6fc7476576-cvv5f
 
 > **使い方**: 先頭で環境変数を設定し、**コマンドを上から順に**実行します。Task 4（Console 操作）の箇所は、コマンドではなく画面操作です。**途中のコメントを読みながら進めてください**。
 >
-> **失敗時の動作**: ブロック全体をサブシェル `( ... )` 内で `set -euo pipefail` 付きで実行するため、クラスタ作成や `get-credentials` などが失敗するとその時点で止まり、後続のコマンドは実行されません。呼び出し元のシェルには影響しませんが、サブシェル内の `export` と `cd` も残らないため、続けて手作業する場合や 14 章のクリーンアップの前には 2.2 の `export` を再実行してください。
+> **2 ブロック構成**: `pod-monitoring.yaml` は手動編集が必要なため、ダウンロード直後で 1 つ目のブロックを終え、編集後に 2 つ目のブロックを実行します。
+>
+> **失敗時の動作**: 各ブロックをサブシェル `( ... )` 内で `set -euo pipefail` 付きで実行するため、クラスタ作成や `get-credentials` などが失敗するとその時点で止まり、後続のコマンドは実行されません。呼び出し元のシェルには影響しませんが、サブシェル内の `export` と `cd` も残らないため、続けて手作業する場合や 14 章のクリーンアップの前には 2.2 の `export` を再実行してください。
 
 ```bash
 (
@@ -981,7 +983,7 @@ gcloud container clusters update "$CLUSTER_NAME" --zone "$ZONE" --enable-managed
 kubectl create namespace "$NAMESPACE_NAME"
 
 gcloud storage cp gs://spls/gsp510/prometheus-app.yaml .
-grep -n "<todo>" prometheus-app.yaml          # 位置を確認
+grep -n "<todo>" prometheus-app.yaml || true  # 位置を確認（一致なしでも止めない。判定は下の検証で行う）
 sed -i 's|image: <todo>|image: nilebox/prometheus-example-app:latest|' prometheus-app.yaml
 sed -i 's|- name: <todo>|- name: metrics|' prometheus-app.yaml
 sed -i 's|name: <todo>|name: prometheus-test|' prometheus-app.yaml
@@ -993,11 +995,38 @@ fi
 kubectl apply -f prometheus-app.yaml -n "$NAMESPACE_NAME"
 
 gcloud storage cp gs://spls/gsp510/pod-monitoring.yaml .
-# pod-monitoring.yaml の <todo>(18〜24行目)をエディタで編集する
-#   metadata.name: prometheus-test
-#   labels.app.kubernetes.io/name: prometheus-test
-#   matchLabels.app: prometheus-test
-#   endpoints.interval: ラボ画面の値
+)
+```
+
+ここでいったん止め、`pod-monitoring.yaml` の `<todo>`（18〜24行目）を **エディタで手動編集** します（5.8 参照）。
+
+| 項目 | 設定する値 |
+|---|---|
+| `metadata.name` | `prometheus-test` |
+| `labels.app.kubernetes.io/name` | `prometheus-test` |
+| `matchLabels.app` | `prometheus-test` |
+| `endpoints.interval` | ラボ画面の値 |
+
+編集を保存したら、同じディレクトリで次のブロックを実行します。サブシェルの `export` は前のブロックから引き継がれないため、先頭で環境変数を再設定します。`<todo>` が残っている場合は、`kubectl apply` の前で止まります。
+
+```bash
+(
+set -euo pipefail
+
+############ 0. 環境変数(前のブロックと同じ値に置き換える) ############
+export PROJECT_ID="ラボのプロジェクトID"
+export CLUSTER_NAME="ラボで指定されたクラスタ名"
+export REGION="ラボで指定されたリージョン"
+export ZONE="ラボで指定されたゾーン"
+export NAMESPACE_NAME="ラボで指定されたnamespace名"
+export REPO_NAME="ラボで指定されたリポジトリ名"
+export SERVICE_NAME="ラボで指定されたサービス名"
+
+############ Task 2(続き): PodMonitoring ############
+if grep -n "<todo>" pod-monitoring.yaml; then
+  echo "pod-monitoring.yaml に <todo> が残っています。編集してから再実行してください" >&2
+  exit 1
+fi
 kubectl apply -f pod-monitoring.yaml -n "$NAMESPACE_NAME"
 
 ############ Task 3: デプロイしてエラーを確認 ############
