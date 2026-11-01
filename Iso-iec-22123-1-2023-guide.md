@@ -732,7 +732,7 @@ flowchart LR
     LI["ロックインを<br/>どう考えるか"] --> PORT["可搬性<br/>portability<br/>（移せるか）"]
     LI --> INTER["相互運用性<br/>interoperability<br/>（つなげるか）"]
     LI --> MULTI["multi-cloud<br/>（複数 CSP を使う）"]
-    PORT --> P1["データ・アプリの<br/>5観点で確認"]
+    PORT --> P1["データ3観点・<br/>アプリ5観点で確認"]
     INTER --> I1["transport から policy まで<br/>5レベルで確認"]
     MULTI --> M1["統合・管理の責任は<br/>CSC にある"]
 ```
