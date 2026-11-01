@@ -523,10 +523,12 @@ grep -c "CREATE TABLE" wordpress_backup.sql
 
 ### 6.5 手順 3-5: Cloud SQL にインポートする
 
-引き続き `blog` の中で、MySQL クライアントを使って流し込みます。`<SQL_IP>` は 6.3 で調べた値に置き換えてください。
+引き続き `blog` の中で、MySQL クライアントを使って流し込みます。`REPLACE_WITH_SQL_IP` は 6.3 で調べた値に置き換えてください（6.6 でも同じ変数を使います）。
 
 ```bash
-mysql -h <SQL_IP> -u blogadmin -p \
+# ★ REPLACE_WITH_SQL_IP を 6.3 で表示された SQL_IP の値に置き換える
+SQL_IP="REPLACE_WITH_SQL_IP"
+mysql -h "$SQL_IP" -u blogadmin -p \
   --ssl-mode=REQUIRED \
   --default-character-set=utf8mb4 \
   wordpress < wordpress_backup.sql
@@ -540,12 +542,12 @@ mysql -h <SQL_IP> -u blogadmin -p \
 
 ```bash
 # MySQL クライアントの場合
-mysql -h <SQL_IP> -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
-mysql -h <SQL_IP> -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 
 # MariaDB クライアントの場合（--ssl-mode は使えないため --ssl を指定）
-mysql -h <SQL_IP> -u blogadmin -p --ssl wordpress -e "SHOW TABLES;"
-mysql -h <SQL_IP> -u blogadmin -p --ssl wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl wordpress -e "SHOW TABLES;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
 - `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
@@ -564,7 +566,9 @@ flowchart LR
 ```
 
 ```bash
-gcloud sql import sql $INSTANCE_NAME gs://<バケット名>/wordpress_backup.sql \
+# ★ REPLACE_WITH_BUCKET_NAME をダンプを置いたバケット名に置き換える
+BUCKET_NAME="REPLACE_WITH_BUCKET_NAME"
+gcloud sql import sql $INSTANCE_NAME "gs://${BUCKET_NAME}/wordpress_backup.sql" \
   --database=$DB_NAME
 ```
 
@@ -641,8 +645,10 @@ gcloud compute ssh blog --zone=$ZONE
 CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
 
 curl -sSfL -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64
-sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64
+# v2.26.3 のリリースノートに公開された linux.amd64 の SHA-256 と一致した場合だけインストールする
+echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
 
 sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
 [Unit]
@@ -922,7 +928,7 @@ flowchart TD
 
 ## 12. コマンド一括リファレンス
 
-> **使い方**: 値（`REGION` `ZONE` `<SQL_IP>`）を自分のラボに合わせてから、上から順に実行します。各ステップの結果は本文の確認コマンドで検証してください。
+> **使い方**: 値（`REGION` `ZONE` `SQL_IP`）を自分のラボに合わせてから、上から順に実行します。各ステップの結果は本文の確認コマンドで検証してください。
 
 ### 12.1 Cloud Shell で実行する部分
 
@@ -1044,8 +1050,10 @@ mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
 # ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示された CONNECTION_NAME に置き換える
 CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
 curl -sSfL -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64
-sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64
+# リリースノート公開の SHA-256 と一致した場合だけインストールする
+echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
 sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
 [Unit]
 Description=Cloud SQL Auth Proxy
