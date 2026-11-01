@@ -63,7 +63,7 @@ describe('SAP Domain 2 統合契約',()=>{
  });
  it("本文はServer Componentで描画し、Client状態はチェック進捗のChecklistCardに限定し、再生成処理にも反映",()=>{
   // jsdomのrenderはServer/Clientを区別しないため、境界はソースで検証する
-  const dir="app/aws/solutions-architect-professional/domain2";const isClient=(file:string)=>/^\x27use client\x27;/.test(fs.readFileSync(dir+"/"+file,"utf8"));
+  const dir="app/aws/solutions-architect-professional/domain2";const isClient=(file:string)=>/^\s*([\x27"])use client\1;?/.test(fs.readFileSync(dir+"/"+file,"utf8"));
   const clients=fs.readdirSync(dir).filter(file=>file.endsWith(".tsx")).filter(isClient).sort();
   expect(clients).toEqual(["ChecklistCard.tsx","Diagram.tsx","NavBar.tsx"]);
   expect(fs.existsSync(dir+"/types.ts")).toBe(false);
