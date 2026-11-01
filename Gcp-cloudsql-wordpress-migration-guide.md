@@ -420,6 +420,18 @@ gcloud sql instances patch $INSTANCE_NAME \
   --quiet
 ```
 
+#### サーバー CA 証明書を blog へ渡す
+
+暗号化だけでは、接続先が本物の Cloud SQL かどうか（なりすましでないか）を確かめられません。6.5〜6.6 で **サーバー証明書を検証** できるよう、Cloud SQL のサーバー CA 証明書を取得して `blog` へコピーします。
+
+```bash
+gcloud sql ssl server-ca-certs list --instance=$INSTANCE_NAME \
+  --format='value(cert)' > server-ca.pem
+# 空ファイルなら取得に失敗している。-----BEGIN CERTIFICATE----- が表示されることを確認する
+test -s server-ca.pem && head -n 1 server-ca.pem
+gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE
+```
+
 > **補足**: TLS を自分で設定する代わりに、**Cloud SQL Auth Proxy** を `blog` で動かし、`127.0.0.1` の別ポート経由で接続する方法もあります（9 章参照）。Auth Proxy は通信を自動で暗号化し、IAM で接続を認可します。
 
 ### 6.4 手順 3-4: blog に SSH してダンプを取得する
@@ -529,12 +541,14 @@ grep -c "CREATE TABLE" wordpress_backup.sql
 # ★ REPLACE_WITH_SQL_IP を 6.3 で表示された SQL_IP の値に置き換える
 SQL_IP="REPLACE_WITH_SQL_IP"
 mysql -h "$SQL_IP" -u blogadmin -p \
-  --ssl-mode=REQUIRED \
+  --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
   --default-character-set=utf8mb4 \
   wordpress < wordpress_backup.sql
 ```
 
-> **TLS の指定**: `--ssl-mode=REQUIRED` は暗号化できない場合に接続を中止します（MySQL クライアントの書き方）。`mysql --version` が MariaDB の場合は、代わりに `--ssl` を指定します。Cloud SQL 側も 6.3 で暗号化必須にしているため、暗号化されていない接続は拒否されます。
+> **TLS の指定**: `--ssl-mode=VERIFY_CA` は、6.3 でコピーした CA 証明書（`--ssl-ca`）でサーバー証明書を検証し、検証できない場合は接続を中止します。`REQUIRED` は暗号化するだけで証明書を検証しないため、なりすましを防げません。Cloud SQL のサーバー証明書は IP アドレスではなくインスタンスを識別するため、ホスト名まで照合する `VERIFY_IDENTITY` ではなく `VERIFY_CA` を使います。
+>
+> **MariaDB クライアントの場合**（`mysql --version` に MariaDB と表示される）: `--ssl` だけではサーバー証明書を検証しません。IP 直結は使わず、先に 7.3 の手順 0 で **Cloud SQL Auth Proxy** を起動し、`mysql -h 127.0.0.1 -P 3307 -u blogadmin -p --default-character-set=utf8mb4 wordpress < wordpress_backup.sql` で取り込みます。プロキシが証明書を検証したうえで暗号化します。
 >
 > **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
 
@@ -542,12 +556,12 @@ mysql -h "$SQL_IP" -u blogadmin -p \
 
 ```bash
 # MySQL クライアントの場合
-mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
-mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SHOW TABLES;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 
-# MariaDB クライアントの場合（--ssl-mode は使えないため --ssl を指定）
-mysql -h "$SQL_IP" -u blogadmin -p --ssl wordpress -e "SHOW TABLES;"
-mysql -h "$SQL_IP" -u blogadmin -p --ssl wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+# MariaDB クライアントの場合（--ssl では証明書を検証しないため、7.3 手順 0 の Auth Proxy 経由で確認する）
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SHOW TABLES;"
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
 - `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
@@ -684,7 +698,7 @@ sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root
 
 ```bash
 # DB_PASSWORD を画面に出さないよう、DB_NAME・DB_USER・DB_HOST の行だけを表示する
-grep -e "'DB_NAME'" -e "'DB_USER'" -e "'DB_HOST'" /var/www/html/wordpress/wp-config.php
+grep -E "[\"'](DB_NAME|DB_USER|DB_HOST)[\"']" /var/www/html/wordpress/wp-config.php
 ```
 
 **3. DB_HOST を変更する（方法 A: エディタ）**
@@ -792,7 +806,7 @@ flowchart TD
 
 | 症状・エラー | 主な原因 | 対処 |
 |---|---|---|
-| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep -e "'DB_NAME'" -e "'DB_USER'" -e "'DB_HOST'" /var/www/html/wordpress/wp-config.php` で値を確認し（`DB_PASSWORD` は表示しない）、`mysql -h` で直接接続テスト |
+| `Error establishing a database connection` | `DB_HOST` の誤り／接続拒否 | `grep -e "[\"']DB_NAME[\"']" -e "[\"']DB_USER[\"']" -e "[\"']DB_HOST[\"']" /var/www/html/wordpress/wp-config.php` で値を確認し（`DB_PASSWORD` は表示しない）、`mysql -h` で直接接続テスト |
 | `ERROR 2003 (HY000): Can't connect to MySQL server` | 承認済みネットワーク未設定 | `blog` の外部 IP を `/32` で登録（6.2） |
 | `ERROR 1045 (28000): Access denied` | ユーザー名・パスワード違い | `gcloud sql users list` で存在確認、必要ならパスワード再設定 |
 | `ERROR 1049 (42000): Unknown database` | DB 未作成 | `gcloud sql databases create wordpress ...` |
@@ -977,6 +991,12 @@ echo "SQL_IP=$SQL_IP"
 # ---------- 暗号化（TLS）接続を必須にする ----------
 gcloud sql instances patch $INSTANCE_NAME --ssl-mode=ENCRYPTED_ONLY --quiet
 
+# ---------- サーバー CA 証明書を取得して blog へコピーする（6.3 参照） ----------
+gcloud sql ssl server-ca-certs list --instance=$INSTANCE_NAME \
+  --format='value(cert)' > server-ca.pem
+test -s server-ca.pem && head -n 1 server-ca.pem
+gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE
+
 # ---------- Task 4 の準備: Auth Proxy 用の権限と接続名（7.3 手順 0） ----------
 export BLOG_SA=$(gcloud compute instances describe blog --zone=$ZONE \
   --format='value(serviceAccounts[0].email)')
@@ -1038,13 +1058,14 @@ sudo grep -n "DISABLE_WP_CRON" "$WP_CONFIG"
 sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev/null
 
 # ---------- Task 3: ダンプ → インポート ----------
-# MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、mysql の --ssl-mode=REQUIRED を --ssl に置き換える
+# MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、下の 2 つの mysql は
+# 先に Task 4 の Auth Proxy を起動してから -h 127.0.0.1 -P 3307 で実行する（--ssl では証明書を検証しないため。6.5 参照）
 mysqldump -u blogadmin -p --databases wordpress --hex-blob --no-tablespaces \
   --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
   > wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED \
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
   --default-character-set=utf8mb4 wordpress < wordpress_backup.sql
-mysql -h $SQL_IP -u blogadmin -p --ssl-mode=REQUIRED wordpress -e "SHOW TABLES;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SHOW TABLES;"
 
 # ---------- Task 4: Auth Proxy を常駐させる（7.3 手順 0） ----------
 # ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示された CONNECTION_NAME に置き換える
