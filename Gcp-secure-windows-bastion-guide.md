@@ -691,7 +691,25 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
   --target-tags=securehost
 ```
 
-**広い許可ルールの削除**: 次のコマンドは、上で作成したルールを使って **踏み台からセキュアホストへ RDP 接続できることを確認した後にだけ** 実行します。`default` VPC には、0.0.0.0/0 から全 VM への受信を許可する `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）が残っています。これらはセキュアホストの nic1 への到達経路になるため、`default-allow-internal` を残すかどうかに関係なく削除します。ただし、これらは `default` VPC の **全 VM** に適用されるため、削除前に、同じ `default` VPC 上の他の VM（ラボ外の既存 VM を含む）がこれらのルールに依存した RDP・SSH・ICMP 通信を使っていないことを必ず確認してください。依存する VM がある場合は、その VM 専用にソース範囲とターゲットを絞ったルールを先に作成してから削除します。
+**広い許可ルールの削除**: `default-allow-internal`（`default` VPC 内の全通信を許可）が残っていると、踏み台からセキュアホストへの RDP は上で作成したルールがなくても成立するため、接続できても新しいルールが機能している証明になりません。そこで、次の順序で進めます。
+
+1. **`default-allow-internal` への依存を個別ルールへ移す**: 監視エージェントやヘルスチェックなど、`default-allow-internal` に依存している通信を、**送信元・宛先（ターゲット）・ポートを限定した個別ルール**として先に作成し、置き換えた通信が動作することを確認します（下の注意を参照）。
+2. **`default-allow-internal` を無効化（または削除）する**: まず無効化しておくと、問題があったときに `--no-disabled` ですぐ戻せます。
+3. **新しい RDP セッションで確認する**: 踏み台から既存のセキュアホストへの RDP セッションを切断し、**新しく接続し直して** `allow-rdp-bastion-to-securehost` 経由で接続できることを確認します。ルールのロギングを有効にすると、この接続がどのルールに一致したかを Cloud Logging で確認できます。
+4. **残りの既定ルールを削除する**: 確認できたら `default-allow-internal` を削除し、続いて 0.0.0.0/0 から全 VM への受信を許可する `default-allow-rdp`（TCP 3389）・`default-allow-ssh`（TCP 22）・`default-allow-icmp`（ICMP）を削除します。これらはセキュアホストの nic1 への到達経路になります。
+
+```bash
+# 手順 1 の後に実行する: default-allow-internal を無効化し、新しいルールのロギングを有効にする
+gcloud compute firewall-rules update default-allow-internal --disabled
+gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
+
+# 手順 3: 踏み台から新しい RDP セッションでセキュアホストへ接続した後、一致したルールを確認する
+gcloud logging read \
+  'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
+  --limit=5 --freshness=10m
+```
+
+`default-allow-rdp`・`default-allow-ssh`・`default-allow-icmp` は `default` VPC の **全 VM** に適用されるため、削除前に、同じ `default` VPC 上の他の VM（ラボ外の既存 VM を含む）がこれらのルールに依存した RDP・SSH・ICMP 通信を使っていないことを必ず確認してください。依存する VM がある場合は、その VM 専用にソース範囲とターゲットを絞ったルールを先に作成してから削除します。
 
 ```bash
 # 削除前の確認: default VPC 上の VM と、各ルールの適用範囲（ターゲット未指定なら全 VM）を確認する
@@ -703,15 +721,9 @@ gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceR
 ```
 
 ```bash
-# 踏み台経由の RDP を確認後に実行する: インターネットから default VPC の全 VM への受信を許可する既定ルールを削除
-gcloud compute firewall-rules delete default-allow-rdp default-allow-ssh default-allow-icmp --quiet
-```
-
-`default-allow-internal`（`default` VPC 内の全通信を許可）も、「踏み台からセキュアホストへは RDP のみ」を満たすには **削除が必須** です。監視エージェントやヘルスチェックなどで依存する通信がある場合は、先にその通信だけを **送信元・宛先（ターゲット）・ポートを限定した個別ルール** に置き換え、置き換えた通信が動作することを確認してから削除します（下の注意を参照）。
-
-```bash
-# 依存する通信を送信元・宛先・ポートを限定した個別ルールへ置き換えた後に実行する
+# 手順 4: 新しい RDP セッションを確認した後に実行する
 gcloud compute firewall-rules delete default-allow-internal --quiet
+gcloud compute firewall-rules delete default-allow-rdp default-allow-ssh default-allow-icmp --quiet
 ```
 
 > ⚠️ **例外（RDP のみの要件を満たさない）**: `default-allow-internal` を残す場合、`default` VPC 内の他の VM からセキュアホストの nic1 へは全ポートで到達できる状態が続きます。これは「RDP のみ」の要件に対する **例外** として扱い、理由と期限を記録してください（下表の効果は `default-allow-internal` も削除した場合のものです）。
@@ -1067,8 +1079,8 @@ gcloud compute firewall-rules create allow-rdp-bastion-to-securehost \
   --rules=tcp:3389 \
   --source-ranges="${BASTION_DEFAULT_IP}/32" \
   --target-tags=securehost
-# 既定ルール（default-allow-rdp/ssh/icmp、任意で default-allow-internal）の削除は、
-# 踏み台経由の RDP を確認した後に 8.3.3 の条件付き手順で行う
+# default-allow-internal の依存移行・無効化 → 新しい RDP セッションの確認 →
+# default-allow-internal と default-allow-rdp/ssh/icmp の削除は 8.3.3 の手順で行う
 
 # ===== 数分待ってからパスワードリセット =====
 gcloud compute reset-windows-password vm-bastionhost --user app_admin --zone=$ZONE
