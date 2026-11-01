@@ -711,11 +711,15 @@ gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceR
 
 ```bash
 # 手順 2（手順 1 と上の確認の後に実行する）: default-allow-internal と default-allow-rdp を無効化し、新しいルールのロギングを有効にする
-gcloud compute firewall-rules update default-allow-internal --disabled
-gcloud compute firewall-rules update default-allow-rdp --disabled
-gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
+# 両方の無効化が成功した場合だけ先へ進む。どちらかが失敗したら、手順 3 以降（RDP の確認・ロギング有効化）は実行しない
+if gcloud compute firewall-rules update default-allow-internal --disabled &&
+  gcloud compute firewall-rules update default-allow-rdp --disabled; then
+  gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging
+else
+  echo '既定ルールの無効化に失敗しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
+fi
 
-# 手順 3: 両方の既定ルールを無効化した後、踏み台から新しい RDP セッションでセキュアホストへ接続し、一致したルールを確認する
+# 手順 3: 上のコマンドがエラーなく完了した場合のみ、踏み台から新しい RDP セッションでセキュアホストへ接続し、一致したルールを確認する
 gcloud logging read \
   'jsonPayload.rule_details.reference="network:default/firewall:allow-rdp-bastion-to-securehost"' \
   --limit=5 --freshness=10m
