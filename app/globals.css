@@ -212,6 +212,8 @@
     --color-sap-d2-checkbox-border: #6f84c8;
     --color-sap-d2-checked-label: #5f6f8c;
     /* DDIA: original fixed colors */
+    --color-ddia-background: #07111e;
+    --color-ddia-accent: #7c9eff;
     --color-ddia-sidebar-bg: #060d17;
     --color-ddia-hero-gradient-start: #dbe4f3;
     --color-ddia-hero-gradient-end: #7c9eff;

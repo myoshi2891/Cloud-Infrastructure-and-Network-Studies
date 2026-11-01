@@ -33,7 +33,7 @@ describe('DDIA 全量移行',()=>{
    const selectors=original.selector.split(',').map(s=>s.trim()==='body'||s.trim()==='html'?'.ddia-page':'.ddia-page '+s.trim().replaceAll('pre.mermaid','.ddia-diagram')).join(', ');
    const actual=rules.find(r=>r.selector===selectors&&r.media===original.media);
    expect(actual,selectors).toBeDefined();
-   const mapping:Record<string,string>={bg:'background','bg-card':'card','bg-card-2':'gcp-code-background',border:'gcp-border','border-soft':'gcp-border',text:'foreground','text-dim':'muted-foreground','text-faint':'muted-foreground',accent:'google-blue','accent-soft':'gcp-border-bright','accent-bg':'gcp-code-background',danger:'google-red','danger-bg':'card',warn:'google-yellow','warn-bg':'card',success:'google-green','success-bg':'card'};
+   const mapping:Record<string,string>={bg:'ddia-background','bg-card':'card','bg-card-2':'gcp-code-background',border:'gcp-border','border-soft':'gcp-border',text:'foreground','text-dim':'muted-foreground','text-faint':'muted-foreground',accent:'ddia-accent','accent-soft':'gcp-border-bright','accent-bg':'gcp-code-background',danger:'google-red','danger-bg':'card',warn:'google-yellow','warn-bg':'card',success:'google-green','success-bg':'card'};
    for(const d of original.declarations) {if(d.prop==='word-break') continue;const value=d.value.replace(/var\(--([\w-]+)\)/g,(_,key:string)=>key==='sidebar-w'?'280px':key==='font-jp'?'var(--font-body)':`var(--color-${mapping[key]??key})`).replace(COLOR_LITERAL,literal=>DDIA_COLOR_TOKENS[literal]?`var(--color-ddia-${DDIA_COLOR_TOKENS[literal]})`:literal);expect(actual!.declarations,`${selectors}: ${d.prop}`).toContainEqual({...d,value});}
   }
   expect(rules.find(r=>r.selector==='.ddia-page .main ul')?.declarations).toContainEqual({prop:'list-style-type',value:'disc',important:false});
@@ -42,10 +42,26 @@ describe('DDIA 全量移行',()=>{
   expect(closed?.declarations).toContainEqual({prop:'visibility',value:'hidden',important:false});
   const z=(selector:string)=>Number(rules.filter(r=>r.selector===selector&&!r.media).flatMap(r=>r.declarations).filter(d=>d.prop==='z-index').at(-1)?.value);
   expect(z('.ddia-page .sidebar-toggle')).toBeGreaterThan(z('.ddia-page .sidebar'));
-  expect(rules.find(r=>r.selector===".ddia-page .checklist-card input[type='checkbox']:not(:checked)")?.declarations).toContainEqual({prop:'border-color',value:'var(--color-google-blue)',important:false});
+  expect(rules.find(r=>r.selector===".ddia-page .checklist-card input[type='checkbox']:not(:checked)")?.declarations).toContainEqual({prop:'border-color',value:'var(--color-ddia-accent)',important:false});
  });
  it('モバイル目次の開閉・hashとfocus・チェック進捗',()=>{const c=render(<Guide/>).container;const button=c.querySelector('button')!;fireEvent.click(button);expect(button).toHaveAttribute('aria-expanded','true');const link=c.querySelector('nav a')!;fireEvent.click(link);expect(button).toHaveAttribute('aria-expanded','false');expect(document.activeElement?.id).toBe(fixture.nav[0]!.id);const boxes=c.querySelectorAll('input');expect(boxes).toHaveLength(13);fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('1 / 13 完了');fireEvent.click(boxes[0]!);expect(c.querySelector('.count')).toHaveTextContent('0 / 13 完了');});
  it('サイドバー背景・Hero文字グラデーション・コールアウト等の固定色を@themeトークンで参照する',()=>{const css=fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8');const globals=fs.readFileSync('app/globals.css','utf8');const theme=globals.slice(globals.indexOf('@theme {'),globals.indexOf('\n}',globals.indexOf('@theme {')));for(const [literal,token] of Object.entries(DDIA_COLOR_TOKENS)){expect(theme).toContain(`--color-ddia-${token}: ${literal};`);expect(css).toContain(`var(--color-ddia-${token})`);}expect(css.match(COLOR_LITERAL)).toBeNull();});
+ it('原本の背景色・アクセント色を解決後の色値で保持する',()=>{
+  // トークン名ではなく、@theme と原本 :root で解決した実際の色値同士を比較する
+  const globals=fs.readFileSync('app/globals.css','utf8');const theme=globals.slice(globals.indexOf('@theme {'),globals.indexOf('\n}',globals.indexOf('@theme {')));
+  const themeVars=new Map([...theme.matchAll(/(--color-[\w-]+):\s*([^;]+);/g)].map(m=>[m[1]!,m[2]!.trim()] as const));
+  const rootVars=new Map((fixture.css.find(r=>r.selector===':root')?.declarations??[]).map(d=>[d.prop,d.value] as const));
+  const resolve=(value:string,vars:Map<string,string>)=>value.replace(/var\((--[\w-]+)\)/g,(match,key:string)=>vars.get(key)??match);
+  expect(rootVars.get('--bg')).toBe('#07111e');expect(rootVars.get('--accent')).toBe('#7c9eff');
+  const rules=snapshotCssRules(fs.readFileSync('app/recommended-books/designing-data-intensive-applications/page.css','utf8'));
+  const targets=fixture.css.filter(r=>r.selector!==':root').flatMap(r=>r.declarations.filter(d=>/var\(--(bg|accent)\)/.test(d.value)).map(d=>({rule:r,d})));
+  expect(targets).not.toHaveLength(0);
+  for(const {rule,d} of targets){
+   const selectors=rule.selector.split(',').map(s=>s.trim()==='body'||s.trim()==='html'?'.ddia-page':'.ddia-page '+s.trim().replaceAll('pre.mermaid','.ddia-diagram')).join(', ');
+   const actual=rules.find(r=>r.selector===selectors&&r.media===rule.media)?.declarations.filter(x=>x.prop===d.prop).map(x=>resolve(x.value,themeVars));
+   expect(actual,`${selectors}: ${d.prop}`).toContain(resolve(d.value,rootVars));
+  }
+ });
  it.each([
   ['Ctrl-click',{ctrlKey:true}],['Command-click',{metaKey:true}],['Shift-click',{shiftKey:true}],['Alt-click',{altKey:true}],['中ボタン',{button:1}],
  ])('修飾付き・非主ボタンの目次クリック（%s）はブラウザー既定動作に任せる',(_,init)=>{const c=render(<Guide/>).container;const button=c.querySelector('button')!;fireEvent.click(button);const link=c.querySelectorAll('nav a')[1]!;const pushState=vi.spyOn(window.history,'pushState');const event=new MouseEvent('click',{bubbles:true,cancelable:true,...init});fireEvent(link,event);expect(event.defaultPrevented).toBe(false);expect(pushState).not.toHaveBeenCalled();expect(button).toHaveAttribute('aria-expanded','true');expect(link).not.toHaveClass('active');pushState.mockRestore();});
