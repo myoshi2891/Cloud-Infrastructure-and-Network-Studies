@@ -207,34 +207,43 @@ gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
 
 > 旧来の `gsutil cp` でも同じ結果になります。現在は `gcloud storage` の利用が推奨されています。
 
-**手順 2：展開して中身を確認**
+**手順 2：専用ディレクトリへ展開し、Dockerfile の場所を確認**
 
 ```bash
-tar -xzf echo-web-v2.tar.gz
-ls
+mkdir -p echo-web-v2
+tar -xzf echo-web-v2.tar.gz -C echo-web-v2
+# Dockerfile が見つからないまま dirname を呼ぶと "." になり、意図しないディレクトリでビルドしてしまうため先に確認する
+DOCKERFILE_PATH=$(find echo-web-v2 -name Dockerfile -print -quit)
+if [ -z "$DOCKERFILE_PATH" ]; then
+  echo "展開結果に Dockerfile が見つかりません。echo-web-v2.tar.gz の中身を確認してください。" >&2
+else
+  BUILD_DIR=$(dirname "$DOCKERFILE_PATH")
+  echo "BUILD_DIR=${BUILD_DIR}"
+fi
 ```
 
-`Dockerfile` が見える場所に移動します。展開結果がフォルダにまとまっていた場合は `cd` で入ってください。
+展開先を専用ディレクトリ `echo-web-v2` に分けることで、カレントディレクトリにある他のファイル（ダウンロードした `tar.gz` など）がビルドコンテキストに混ざりません。`BUILD_DIR=` が表示されない場合は、手順 3 に進まず展開結果を確認してください。
 
-| オプション | 意味 |
+| 部分 | 意味 |
 |---|---|
-| `x` | 展開（extract） |
-| `z` | gzip 圧縮を解く |
-| `f` | ファイル名を指定する |
+| `mkdir -p echo-web-v2` | 展開専用のディレクトリを作る（既にあってもエラーにしない） |
+| `tar -xzf ... -C echo-web-v2` | `x` 展開・`z` gzip 解凍・`f` ファイル指定。`-C` で展開先を専用ディレクトリにする |
+| `find ... -name Dockerfile -print -quit` | 展開結果から最初に見つかった Dockerfile のパスを取得する |
+| `dirname` | Dockerfile のあるディレクトリ（ビルドコンテキスト）を取り出す |
 
 **手順 3：ビルド（ホスト名つきのタグで）**
 
 ```bash
-docker build -t gcr.io/$PROJECT_ID/echo-app:v2 .
+docker build -t gcr.io/$PROJECT_ID/echo-app:v2 "$BUILD_DIR"
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `docker build` | Dockerfile からイメージを作る |
 | `-t` | イメージに名前とタグを付ける（tag） |
-| `.` | **ビルドコンテキスト**。Dockerfile とアプリ一式があるディレクトリ |
+| `"$BUILD_DIR"` | **ビルドコンテキスト**。手順 2 で特定した、Dockerfile とアプリ一式があるディレクトリだけを渡す |
 
-> **よくある失敗**：末尾の `.` を忘れると「引数が足りません」というエラーになります。
+> **よくある失敗**：ビルドコンテキストの引数を忘れると「引数が足りません」というエラーになります。`BUILD_DIR` が空のまま実行すると同じエラーになるため、手順 2 で `BUILD_DIR=` の表示を確認してから実行してください。
 
 ### 3.4 確認
 

@@ -1066,7 +1066,29 @@ export TARGET_PORT=8080                       # Dockerfile で確認した値に
 kubectl expose deployment helloweb -n "$NAMESPACE_NAME" \
   --type=LoadBalancer --name="$SERVICE_NAME" --port=8080 --target-port="$TARGET_PORT"
 
-kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
+# -w（watch）は自動で終了せずサブシェルが止まるため、外部 IP の割り当てを最大 10 分（10 秒 × 60 回）ポーリングする
+EXTERNAL_IP=""
+for attempt in $(seq 1 60); do
+  EXTERNAL_IP=$(kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" \
+    -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  [ -n "$EXTERNAL_IP" ] && break
+  echo "外部 IP の割り当て待ち... (${attempt}/60)"
+  sleep 10
+done
+if [ -z "$EXTERNAL_IP" ]; then
+  echo "外部 IP が割り当てられませんでした。kubectl describe service で原因を確認してください" >&2
+  exit 1
+fi
+echo "EXTERNAL_IP=${EXTERNAL_IP}"
+
+# Task 6 の確認（9.9 と同じ）: LB の準備中は一時的に失敗するため再試行し、Version: 2.0.0 を含むことを確かめる
+RESPONSE=$(curl -fsS --retry 12 --retry-delay 10 --retry-all-errors "http://${EXTERNAL_IP}:8080")
+echo "$RESPONSE"
+if ! printf '%s\n' "$RESPONSE" | grep -q "Version: 2.0.0"; then
+  echo "応答に Version: 2.0.0 が含まれていません。Deployment のイメージを確認してください" >&2
+  exit 1
+fi
+echo "Task 6 の確認が完了しました（Version: 2.0.0）"
 )
 ```
 
