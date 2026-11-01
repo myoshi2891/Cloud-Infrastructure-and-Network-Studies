@@ -713,14 +713,26 @@ gcloud compute firewall-rules describe default-allow-icmp --format="yaml(sourceR
 ```bash
 # 手順 2（手順 1 と上の確認の後に実行する）: default-allow-internal と default-allow-rdp を無効化し、新しいルールのロギングを有効にする
 # 2 つの無効化とロギング有効化の 3 つすべてが成功した場合だけ STEP2_OK=true にする。1 つでも失敗したら手順 3 以降に進まない
+# 途中で失敗した場合は、この手順で無効化したルール（実行前に有効だったもの）だけを有効に戻す
 STEP2_OK=false
-if gcloud compute firewall-rules update default-allow-internal --disabled &&
-  gcloud compute firewall-rules update default-allow-rdp --disabled &&
+STEP2_ROLLBACK_RULES=""
+step2_disable_rule() {
+  local rule=$1 was_disabled
+  was_disabled=$(gcloud compute firewall-rules describe "$rule" --format="value(disabled)") || return 1
+  gcloud compute firewall-rules update "$rule" --disabled || return 1
+  [ "$was_disabled" = "True" ] || STEP2_ROLLBACK_RULES="${STEP2_ROLLBACK_RULES} ${rule}"
+}
+if step2_disable_rule default-allow-internal &&
+  step2_disable_rule default-allow-rdp &&
   gcloud compute firewall-rules update allow-rdp-bastion-to-securehost --enable-logging; then
   STEP2_OK=true
   echo '手順 2 が完了しました。踏み台から新しい RDP セッションでセキュアホストへ接続してから、手順 3 のログ確認を実行してください。'
 else
-  echo '既定ルールの無効化またはロギングの有効化に失敗しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
+  for RULE in $STEP2_ROLLBACK_RULES; do
+    gcloud compute firewall-rules update "$RULE" --no-disabled ||
+      echo "${RULE} を有効に戻せませんでした。手動で --no-disabled を実行してください。" >&2
+  done
+  echo '既定ルールの無効化またはロギングの有効化に失敗しました。無効化済みのルールは元の有効状態へ戻しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
 fi
 ```
 
