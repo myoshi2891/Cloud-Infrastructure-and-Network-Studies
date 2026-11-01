@@ -231,9 +231,9 @@ flowchart TD
     Q1 -->|"両方とも はい"| PRI["private cloud"]
     Q1 -->|"いずれかが いいえ"| Q2{"共通要件をもつ<br/>特定グループだけで共有？"}
     Q2 -->|"はい"| COM["community cloud"]
-    Q2 -->|"いいえ"| PUB["public cloud<br/>（誰でも使える可能性）"]
-    PUB --> Q4{"2社以上の CSP の<br/>public を CSC が自分で束ねている？"}
+    Q2 -->|"いいえ"| Q4{"2社以上の CSP の<br/>public を CSC が自分で束ねている？"}
     Q4 -->|"はい"| MUL["multi-cloud"]
+    Q4 -->|"いいえ"| PUB["public cloud<br/>（誰でも使える可能性）"]
 ```
 
 ### 5-5. 組み合わせの関係図
@@ -625,7 +625,7 @@ flowchart LR
 | **設計書・提案書** | 「IaaS」「PaaS」「SaaS」「multi-cloud」などを、**22123-1 の定義で用語統一**する。冒頭に「用語は ISO/IEC 22123-1:2023 に従う」と書く |
 | **RFP・調達** | multi-cloud を求めるのか inter-cloud を求めるのかを区別して書く（Step 5-6） |
 | **契約・SLA レビュー** | SLO／SQO／remedy／failure notification policy の有無を**チェックリスト化**（Step 10） |
-| **移行計画** | portability の観点（形式・意味・ポリシー・振る舞い）を確認項目にする（Step 9） |
+| **移行計画** | portability の観点を、データとアプリケーションに分けて確認項目にする。データ: 形式・意味・ポリシー／アプリケーション: 形式・命令セット・メタデータ・振る舞い・ポリシー（Step 9） |
 | **データガバナンス** | customer data／derived data／provider data／account data の**管理権と保存範囲**を整理（Step 11） |
 | **教育・オンボーディング** | 役割（CSC / CSP / CSN）と party／role の違いから教える（Step 6） |
 

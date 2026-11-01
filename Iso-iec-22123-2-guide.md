@@ -350,7 +350,7 @@ flowchart LR
 | NaaS | Network as a Service | 5.4.5 | 3種すべて | ネットワーク接続・関連機能を提供 |
 | CaaS | Communications as a Service | 5.4.6 | プラットフォーム＋アプリ | 通信サービスを提供 |
 | CompaaS | Compute as a Service | 5.4.7 | （本文参照） | 計算資源を提供 |
-| DSaaS | Data storage as a Service | 5.4.8 | （本文参照） | データ保存を提供 |
+| DSaaS | Data storage as a Service | 5.4.8 | 3種のいずれも（構成による） | データ保存を提供 |
 
 ### 4.5 SaaS・PaaS・IaaS の詳細（確認済み本文に基づく）
 
@@ -562,7 +562,7 @@ flowchart TD
 
 ### 6.5 実務でのつまずきポイント
 
-- 「CSPが開発もする」場合、CSPが **CSP role と開発者の副役割**の両方を担っている
+- 「CSPが開発もする」場合、その関係者は **CSP role** に加えて **CSN role** も担い、開発はその CSN role の副役割である **cloud service developer** として行う（開発者の副役割は CSP role ではなく CSN role に属する）
 - SaaS の場合、**サービスを提供する主体とアプリ開発者が別**のこともある（4.5節）
 - 契約書やSLAでは、**誰がどの役割か**を明確にしておくと責任範囲の議論が楽になる
 
