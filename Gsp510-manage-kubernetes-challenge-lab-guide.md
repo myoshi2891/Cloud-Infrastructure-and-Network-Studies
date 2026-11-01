@@ -1040,6 +1040,25 @@ gcloud logging metrics create pod-image-errors \
   --description="Pod image errors" \
   --log-filter="resource.type=\"k8s_pod\" AND resource.labels.cluster_name=\"${CLUSTER_NAME}\" AND resource.labels.namespace_name=\"${NAMESPACE_NAME}\" AND log_id(\"events\") AND severity=WARNING AND jsonPayload.message:\"Failed to apply default image tag\""
 # アラートポリシー "Pod Error Alert" は Console で作成する(7.4 参照)
+)
+```
+
+ここでいったん止め、Console でアラートポリシー **Pod Error Alert** を作成し、作成されたことを確認します（7.4 参照）。Task 4 の **Check my progress** で緑のチェックを確認してから、次のブロックを実行します。前のブロックと同様に、先頭で環境変数を再設定し、`hello-app` ディレクトリへ移動します。
+
+```bash
+(
+set -euo pipefail
+
+############ 0. 環境変数(前のブロックと同じ値に置き換える) ############
+export PROJECT_ID="ラボのプロジェクトID"
+export CLUSTER_NAME="ラボで指定されたクラスタ名"
+export REGION="ラボで指定されたリージョン"
+export ZONE="ラボで指定されたゾーン"
+export NAMESPACE_NAME="ラボで指定されたnamespace名"
+export REPO_NAME="ラボで指定されたリポジトリ名"
+export SERVICE_NAME="ラボで指定されたサービス名"
+
+cd hello-app
 
 ############ Task 5: 修正して再デプロイ ############
 sed -i 's|image: <todo>|image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0|' manifests/helloweb-deployment.yaml
