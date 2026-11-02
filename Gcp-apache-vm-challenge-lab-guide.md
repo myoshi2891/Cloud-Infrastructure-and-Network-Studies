@@ -291,6 +291,10 @@ echo "FW_RULE_NAME=${FW_RULE_NAME:-（新規作成なし）}"
 ### 5.5 設定の確認方法
 
 ```bash
+# Cloud Console（4.2）で VM を作成した場合は PROJECT_ID が未設定のため、
+# 4.2 の手順 9 で控えたプロジェクト ID に VM_PROJECT_ID を置き換えて設定する（4.4 で記録済みならその値を使う）
+PROJECT_ID="${PROJECT_ID:-VM_PROJECT_ID}"
+echo "PROJECT_ID=$PROJECT_ID"
 gcloud compute firewall-rules describe default-allow-http --project="$PROJECT_ID" \
   --format="yaml(name,direction,allowed,sourceRanges,targetTags)"
 gcloud compute instances describe INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --format="get(tags.items)"
@@ -383,7 +387,7 @@ curl http://localhost
 
 | 結果 | 意味 | 次の一手 |
 |---|---|---|
-| HTML が返る | **Apache は正常** | 問題があるなら Task 2（ファイアウォール）側 |
+| HTML が返る | **VM 内では Apache が応答している**（外部から届くかは未確認） | 外部から見えない場合は、7.1 で VM の外部 IP を再確認し、Task 2（ファイアウォールルールとタグ）を確認する |
 | 接続拒否 | Apache が動いていない | `systemctl status apache2` を確認 |
 
 ここで **Check my progress** を押して Task 3 の判定を受けます。
@@ -398,7 +402,9 @@ curl http://localhost
 2. 対象 VM の **外部 IP** 列の値をコピーします。
 
 ```bash
-# gcloud で確認する場合（4.4 で記録した PROJECT_ID を明示し、選択中の別プロジェクトを参照しない）
+# gcloud で確認する場合（VM を作成したプロジェクトの ID を明示し、選択中の別プロジェクトを参照しない）
+# Cloud Console（4.2）で作成した場合は、4.2 の手順 9 で控えた ID に VM_PROJECT_ID を置き換える（4.4 で記録済みならその値を使う）
+PROJECT_ID="${PROJECT_ID:-VM_PROJECT_ID}"
 gcloud compute instances describe INSTANCE_NAME \
   --project="$PROJECT_ID" \
   --zone=ZONE \

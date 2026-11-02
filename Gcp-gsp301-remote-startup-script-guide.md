@@ -174,11 +174,18 @@ export VM_NAME="web-server"
 # VM とファイアウォールルールを置く VPC ネットワーク（Task 2・Task 3 で同じ値を使う）
 export NETWORK="default"
 
+# VM を接続するサブネット（NETWORK に属し、ZONE のリージョン REGION にあるもの）
+export SUBNET="default"
+
 # 変数の確認
-echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}  NETWORK=${NETWORK}"
+echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}  NETWORK=${NETWORK}  SUBNET=${SUBNET}"
+
+# SUBNET が NETWORK に属し REGION にあることを確認する（network 列の末尾が NETWORK と一致すれば OK）
+gcloud compute networks subnets describe "${SUBNET}" --project="${PROJECT_ID}" --region="${REGION}" \
+  --format="value(name,region.basename(),network.basename())"
 ```
 
-⚠️ **前提（ネットワーク）**: 本ガイドは、ラボのプロジェクトに自動モードの `default` VPC が存在することを前提に `NETWORK="default"` としています。`gcloud compute networks list --project="${PROJECT_ID}"` で `default` が表示されない場合や、ラボが別のネットワークを指定している場合は、`NETWORK` をその名前に置き換えてください（カスタムモードの VPC では、VM 作成時に `--subnet` でリージョン内のサブネットも指定します）。
+⚠️ **前提（ネットワーク）**: 本ガイドは、ラボのプロジェクトに自動モードの `default` VPC が存在することを前提に `NETWORK="default"`・`SUBNET="default"` としています（自動モードの VPC では、各リージョンにネットワークと同名のサブネットが作られます）。`gcloud compute networks list --project="${PROJECT_ID}"` で `default` が表示されない場合や、ラボが別のネットワークを指定している場合は、`NETWORK` をその名前に置き換え、`gcloud compute networks subnets list --project="${PROJECT_ID}" --network="${NETWORK}" --regions="${REGION}"` で表示されたサブネット名を `SUBNET` に設定してください。
 
 > 💡 **ベストプラクティス**: ゾーン・名前などの値を最初に変数へ入れておくと、入力ミスを減らせて、後から同じ手順を再実行しやすくなります。これは Infrastructure as Code（IaC）の第一歩でもあります。
 >
@@ -309,6 +316,7 @@ gcloud compute instances create "${VM_NAME}" \
   --image-family=debian-12 \
   --image-project=debian-cloud \
   --network="${NETWORK}" \
+  --subnet="${SUBNET}" \
   --tags=http-server \
   --service-account="${VM_SA}" \
   --scopes=storage-ro \
@@ -321,6 +329,7 @@ gcloud compute instances create "${VM_NAME}" \
 | `--machine-type` | マシンタイプ。Apache を動かすだけなら `e2-medium` 程度で十分 |
 | `--image-family` / `--image-project` | OS イメージ。Debian 12（`debian-cloud/debian-12`）のファミリーを使う |
 | `--network` | VM を接続する VPC ネットワーク。Task 3 のファイアウォールルールと同じ `NETWORK` を使う |
+| `--subnet` | VM を接続するサブネット。`NETWORK` に属し、`ZONE` のリージョンにある `SUBNET` を使う |
 | `--tags=http-server` | ネットワークタグ。Task 3 のルールの対象になる |
 | `--service-account` | VM が使うサービスアカウント。上で `roles/storage.objectViewer` を付与したものを明示する |
 | `--scopes=storage-ro` | Cloud Storage の読み取り専用スコープ。必要最小限の API アクセス |
@@ -334,7 +343,7 @@ gcloud compute instances create "${VM_NAME}" \
 2. **名前** を入力し、**リージョン** と **ゾーン** にラボ指定のゾーンを選びます。
 3. マシン構成は既定のまま、または `e2-medium` にします。
 4. 左メニューの **OS とストレージ** を開き、**ブートディスク** の **変更** をクリックして、オペレーティングシステムに **Debian GNU/Linux**、バージョンに **Debian GNU/Linux 12 (bookworm)**（`debian-cloud/debian-12`）を選び、**選択** をクリックします。手順 A の `--image-family=debian-12` と同じ OS にそろえるためです。
-5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。**ネットワーク インターフェース** のネットワークが 3 章で決めた `NETWORK`（通常は `default`）になっていることを確認します。
+5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。**ネットワーク インターフェース** のネットワークが 3 章で決めた `NETWORK`（通常は `default`）になっていることを確認し、**サブネットワーク** で 3 章の `SUBNET`（`NETWORK` に属し、選んだゾーンのリージョンにあるもの。通常は `default`）を選びます。
 6. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 3 点を設定します。
    - **サービスアカウント** に、手順 A で `roles/storage.objectViewer` を付与したサービスアカウント（ここでは Compute Engine の既定のサービスアカウント `プロジェクト番号-compute@developer.gserviceaccount.com`）を選びます。
    - **アクセススコープ** で、Cloud Storage の読み取りが許可されていることを確認します。
