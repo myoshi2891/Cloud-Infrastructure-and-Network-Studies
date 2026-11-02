@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 
-const htmlPath = 'Ccnp-security-guide.html';
+const htmlPath = fs.existsSync('Ccnp-security-guide.html')
+    ? 'Ccnp-security-guide.html'
+    : 'archive/Cisco/html/ccnp-security/Ccnp-security-guide.html';
 const html = fs.readFileSync(htmlPath, 'utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
@@ -23,43 +25,56 @@ if (targetPhase && targetPhase !== 'all' && !boundaries.some(b => b.name === tar
     process.exit(1);
 }
 
-function tokens(line, language) {
-    if (language === 'language-python') {
-        const regex = /#.*$|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?:\d+)\b/g;
-        let out = '';
-        let end = 0;
-        for (const m of line.matchAll(regex)) {
-            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-            const text = m[0];
-            const cls = text.startsWith('#')
-                ? 'hljs-comment'
-                : text.startsWith('"') || text.startsWith("'")
-                ? 'hljs-string'
-                : /^\d+$/.test(text)
-                ? 'hljs-number'
-                : 'hljs-keyword';
-            out += `<span className="${cls}">{${JSON.stringify(text)}}</span>`;
-            end = m.index + text.length;
-        }
-        return out + '{' + JSON.stringify(line.slice(end)) + '}';
+function renderStringWithSubst(str) {
+    if (!str.startsWith('f"') && !str.startsWith("f'")) {
+        return `<span className="hljs-string">{${JSON.stringify(str)}}</span>`;
     }
+    const parts = [];
+    let end = 0;
+    for (const m of str.matchAll(/\{[^}]+\}/g)) {
+        if (m.index > end) {
+            parts.push('{' + JSON.stringify(str.slice(end, m.index)) + '}');
+        }
+        parts.push(`<span className="hljs-subst">{${JSON.stringify(m[0])}}</span>`);
+        end = m.index + m[0].length;
+    }
+    if (end < str.length) {
+        parts.push('{' + JSON.stringify(str.slice(end)) + '}');
+    }
+    return `<span className="hljs-string">${parts.join('')}</span>`;
+}
 
-    // CLI / IOS XE / Splunk
-    const regex = /!.*$|#.*$|"(?:\\.|[^"\\])*"|\b(?:aaa|tacacs|radius|snmp-server|ip|dhcp|snooping|switchport|authentication|dot1x|stats|index|sourcetype)\b/g;
+function tokensPython(line) {
+    const regex = /#.*$|f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*'|\b(?:import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?:print)\b|\b(?:\d+)\b/g;
     let out = '';
     let end = 0;
     for (const m of line.matchAll(regex)) {
-        out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        if (m.index > end) {
+            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        }
         const text = m[0];
-        const cls = text.startsWith('!') || text.startsWith('#')
-            ? 'hljs-comment'
-            : text.startsWith('"')
-            ? 'hljs-string'
-            : 'hljs-keyword';
-        out += `<span className="${cls}">{${JSON.stringify(text)}}</span>`;
+        if (text.startsWith('#')) {
+            out += `<span className="hljs-comment">{${JSON.stringify(text)}}</span>`;
+        } else if (text.startsWith('"') || text.startsWith("'") || text.startsWith('f"') || text.startsWith("f'")) {
+            out += renderStringWithSubst(text);
+        } else if (/^\d+$/.test(text)) {
+            out += `<span className="hljs-number">{${JSON.stringify(text)}}</span>`;
+        } else if (text === 'print') {
+            out += `<span className="hljs-built_in">{${JSON.stringify(text)}}</span>`;
+        } else {
+            out += `<span className="hljs-keyword">{${JSON.stringify(text)}}</span>`;
+        }
         end = m.index + text.length;
     }
-    return out + '{' + JSON.stringify(line.slice(end)) + '}';
+    if (end < line.length) {
+        out += '{' + JSON.stringify(line.slice(end)) + '}';
+    }
+    return out;
+}
+
+function plainCodeLineToJsx(lineHtml) {
+    const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
+    return [...frag.childNodes].map(nodeToJsx).join('');
 }
 
 function nodeToJsx(node) {
@@ -88,12 +103,22 @@ function nodeToJsx(node) {
     if (node.tagName === 'PRE') {
         const code = node.querySelector('code');
         const lang = code?.className || 'plain';
-        const rawText = code ? code.textContent : node.textContent;
-        const lines = (rawText || '').replace(/^\n|\n$/g, '').split('\n');
+        if (lang === 'language-python') {
+            const rawText = code ? code.textContent : node.textContent;
+            const lines = (rawText || '').replace(/^\n|\n$/g, '').split('\n');
+            return (
+                `<div className="code-sample">` +
+                `<div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">` +
+                lines.map(line => `<div className="code-line">${tokensPython(line)}</div>`).join('') +
+                `</div></div>`
+            );
+        }
+        const rawHtml = code ? code.innerHTML : node.innerHTML;
+        const htmlLines = (rawHtml || '').replace(/^\r?\n|\r?\n$/g, '').split(/\r?\n/);
         return (
             `<div className="code-sample">` +
             `<div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">` +
-            lines.map(line => `<div className="code-line">${tokens(line, lang)}</div>`).join('') +
+            htmlLines.map(lineHtml => `<div className="code-line">${plainCodeLineToJsx(lineHtml)}</div>`).join('') +
             `</div></div>`
         );
     }
@@ -167,7 +192,11 @@ function nodeToJsx(node) {
 
     // href, target, rel
     if (node.getAttribute('href')) {
-        attrs.push(`href="${node.getAttribute('href')}"`);
+        const href = node.getAttribute('href');
+        attrs.push(`href="${href}"`);
+        if (href.startsWith('#') && node.closest('aside.sidebar')) {
+            attrs.push(`onClick={() => handleLinkClick(${JSON.stringify(href)})}`);
+        }
     }
     if (node.getAttribute('target')) {
         attrs.push(`target="${node.getAttribute('target')}"`);
@@ -283,6 +312,10 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             li.classList.add('active');
             const parent = li.parentElement && li.parentElement.closest('li');
             if (parent) parent.classList.add('active');
+            const a = li.querySelector('a');
+            if (a && typeof a.scrollIntoView === 'function') {
+                a.scrollIntoView({ block: 'nearest' });
+            }
         };
 
         const io = new IntersectionObserver((entries) => {
@@ -293,7 +326,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             update();
         }, { rootMargin: '-20% 0px -70% 0px' });
 
-        document.querySelectorAll('section[id], header.part[id]').forEach((s) => { io.observe(s); });
+        document.querySelectorAll('section[id]').forEach((s) => { io.observe(s); });
 
         return () => {
             io.disconnect();
@@ -301,7 +334,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     }, []);
 
     return (
-        \${sidebarJsx}
+        ${sidebarJsx}
     );
 }
 `;

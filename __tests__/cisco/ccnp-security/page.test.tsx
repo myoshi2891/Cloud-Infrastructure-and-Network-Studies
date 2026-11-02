@@ -35,7 +35,7 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
     it('モバイルメニューボタンに Tabler Icon (.ti-menu-2) が使用され、コードブロックに原本の .tk-c / .tk-p / .hljs-subst が保持されている', () => {
         const { container } = render(<CcnpSecurityGuide />);
         expect(container.querySelector('#menuBtn i.ti.ti-menu-2')).not.toBeNull();
-        expect(container.querySelectorAll('.code-block .tk-c').length).toBe(14);
+        expect(container.querySelectorAll('.code-block .tk-c').length).toBe(18);
         expect(container.querySelectorAll('.code-block .tk-p').length).toBe(8);
         expect(container.querySelectorAll('.code-block .hljs-subst').length).toBe(3);
     });

@@ -52,6 +52,10 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             li.classList.add('active');
             const parent = li.parentElement && li.parentElement.closest('li');
             if (parent) parent.classList.add('active');
+            const a = li.querySelector('a');
+            if (a && typeof a.scrollIntoView === 'function') {
+                a.scrollIntoView({ block: 'nearest' });
+            }
         };
 
         const io = new IntersectionObserver((entries) => {
@@ -62,7 +66,7 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             update();
         }, { rootMargin: '-20% 0px -70% 0px' });
 
-        document.querySelectorAll('section[id], header.part[id]').forEach((s) => { io.observe(s); });
+        document.querySelectorAll('section[id]').forEach((s) => { io.observe(s); });
 
         return () => {
             io.disconnect();

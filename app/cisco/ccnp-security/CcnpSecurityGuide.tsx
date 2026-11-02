@@ -32,7 +32,7 @@ export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) 
                 aria-controls="sidebar"
                 onClick={() => setIsNavOpen((prev) => !prev)}
             >
-                ☰
+                <i className="ti ti-menu-2" aria-hidden="true" />
             </button>
             <div
                 className="scrim"

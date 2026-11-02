@@ -208,9 +208,12 @@ export const applySvgFixups = (
     const parts = viewBox.split(/\s+/).map(Number);
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
 
-    const trimmed = chart.trim();
+    const bodyDsl = chart
+        .replace(/^\s*-{3}[\s\S]*?-{3}\s*/, '')
+        .replace(/^(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+        .trim();
     const isSequenceOrState =
-        trimmed.startsWith('sequenceDiagram') || trimmed.startsWith('stateDiagram');
+        bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
     const extraHeight = isSequenceOrState ? 110 : 15;
     const [x, y, w, h] = parts as [number, number, number, number];
     // ⚠️ SKILL.md「SVG 幅の鉄則」: viewBox 由来の自然 px 幅を基準にする。
