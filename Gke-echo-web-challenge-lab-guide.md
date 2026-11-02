@@ -780,7 +780,12 @@ docker push gcr.io/${PROJECT_ID}/echo-app:v1
 # ===== 4. デプロイと公開 =====
 kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
 kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
-kubectl get service echo-web --watch
+# Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
+WATCH_STATUS=0
+kubectl get service echo-web --watch || WATCH_STATUS=$?
+if [ "$WATCH_STATUS" -ne 0 ] && [ "$WATCH_STATUS" -ne 130 ]; then
+  exit "$WATCH_STATUS"
+fi
 )
 ```
 

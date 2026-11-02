@@ -430,7 +430,12 @@ kubectl get podmonitoring -n "$NAMESPACE_NAME"
 ```bash
 gcloud storage cp -r gs://spls/gsp510/hello-app/ .
 cd hello-app
+# Task 6 で同じディレクトリへ戻れるよう、ダウンロード先の絶対パスを記録する
+export HELLO_APP_DIR="$(pwd)"
+echo "HELLO_APP_DIR=${HELLO_APP_DIR}"
 ```
+
+> `HELLO_APP_DIR` はシェル変数のため、Cloud Shell の再接続後や別タブでは空になります。その場合は上で表示された値を `export HELLO_APP_DIR=...` で設定し直してください。
 
 `hello-app` ディレクトリの主な中身（このラボで触るもの）は次のとおりです。
 
@@ -478,7 +483,7 @@ else
   kubectl describe pod "$POD_NAME" -n "$NAMESPACE_NAME"
 fi
 
-# namespace のイベントを新しい順に見る
+# namespace のイベントを時刻順に見る（最も新しいイベントが末尾に表示される）
 kubectl get events -n "$NAMESPACE_NAME" --sort-by=.lastTimestamp
 ```
 
@@ -759,7 +764,7 @@ sequenceDiagram
 まず対象の行を確認します。
 
 ```bash
-cd && cd hello-app
+cd "${HELLO_APP_DIR:?6.2 で記録した hello-app のパスを HELLO_APP_DIR に設定してください}"
 grep -n "Version" main.go
 ```
 
@@ -810,7 +815,7 @@ gcloud auth configure-docker "${REGION}-docker.pkg.dev" -q
 `Dockerfile` がある `hello-app` ディレクトリで実行します。
 
 ```bash
-cd && cd hello-app
+cd "${HELLO_APP_DIR:?6.2 で記録した hello-app のパスを HELLO_APP_DIR に設定してください}"
 docker build -t "$IMAGE" .
 docker images | grep hello-app
 ```
