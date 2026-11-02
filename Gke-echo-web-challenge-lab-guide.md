@@ -195,9 +195,9 @@ gcloud container clusters create echo-cluster \
 
 ### 4-4. 作成中の待ち時間を活用する
 
-クラスタ作成には **約 3〜5 分**かかります。完了を待たずに進めたい場合は、`--async` を付けるか、**別の Cloud Shell タブ**を開いて Task 2 に進みます。
+クラスタ作成には **約 3〜5 分**かかります。完了を待たずに進めたい場合は、**別の Cloud Shell タブ**を開いて Task 2・3 に進みます。最初のタブの `clusters create` は作成完了まで戻らないため、**Task 4（4-5 の `get-credentials` と `kubectl`）は、最初のタブで作成完了が表示されてから**実行してください。
 
-> **注意（別タブの変数）**: 環境変数はタブごとに独立しているため、新しいタブでは 3-3 で設定した `PROJECT_ID` と `ZONE` が空のままです。Task 2 に進む前に、新しいタブで次を実行して値が表示されることを確認してください。`--async` を付けた場合は同じタブで続けられるため、この作業は不要です。
+> **注意（別タブの変数）**: 環境変数はタブごとに独立しているため、新しいタブでは 3-3 で設定した `PROJECT_ID` と `ZONE` が空のままです。Task 2 に進む前に、新しいタブで次を実行して値が表示されることを確認してください。
 
 ```bash
 export PROJECT_ID=$(gcloud config get-value project)
@@ -559,6 +559,7 @@ spec:
 # PROJECT_ID を置換して適用する場合（echo-web.yaml が保存済みであることを先に確認する）
 if [ ! -f echo-web.yaml ]; then
   echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" >&2
+  false  # シェルは閉じずに、この if 文の終了ステータスだけを失敗（0 以外）にする
 else
   sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
 fi

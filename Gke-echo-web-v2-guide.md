@@ -210,7 +210,8 @@ gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
 **手順 2：専用ディレクトリへ展開し、Dockerfile の場所を確認**
 
 ```bash
-mkdir -p echo-web-v2
+# 以前の実行や失敗した展開の残りファイルがビルドコンテキストに混ざらないよう、毎回空のディレクトリから展開する
+rm -rf echo-web-v2 && mkdir echo-web-v2
 tar -xzf echo-web-v2.tar.gz -C echo-web-v2
 # Dockerfile が見つからないまま dirname を呼ぶと "." になり、意図しないディレクトリでビルドしてしまうため先に確認する
 DOCKERFILE_PATH=$(find echo-web-v2 -name Dockerfile -print -quit)
@@ -222,11 +223,11 @@ else
 fi
 ```
 
-展開先を専用ディレクトリ `echo-web-v2` に分けることで、カレントディレクトリにある他のファイル（ダウンロードした `tar.gz` など）がビルドコンテキストに混ざりません。`BUILD_DIR=` が表示されない場合は、手順 3 に進まず展開結果を確認してください。
+展開先を毎回作り直す専用ディレクトリ `echo-web-v2` に分けることで、カレントディレクトリにある他のファイル（ダウンロードした `tar.gz` など）がビルドコンテキストに混ざりません。`BUILD_DIR=` が表示されない場合は、手順 3 に進まず展開結果を確認してください。
 
 | 部分 | 意味 |
 |---|---|
-| `mkdir -p echo-web-v2` | 展開専用のディレクトリを作る（既にあってもエラーにしない） |
+| `rm -rf echo-web-v2 && mkdir echo-web-v2` | 既存の展開先を削除してから空の展開専用ディレクトリを作る（前回の残りファイルを持ち込まない） |
 | `tar -xzf ... -C echo-web-v2` | `x` 展開・`z` gzip 解凍・`f` ファイル指定。`-C` で展開先を専用ディレクトリにする |
 | `find ... -name Dockerfile -print -quit` | 展開結果から最初に見つかった Dockerfile のパスを取得する |
 | `dirname` | Dockerfile のあるディレクトリ（ビルドコンテキスト）を取り出す |
@@ -637,7 +638,9 @@ fi
 
 # Task 1: ダウンロード・展開・ビルド
 gcloud storage cp gs://$BUCKET/echo-web-v2.tar.gz .
-mkdir -p echo-web-v2
+# 前回の残りファイルを持ち込まないよう、毎回空のディレクトリへ展開する
+rm -rf echo-web-v2
+mkdir echo-web-v2
 tar -xzf echo-web-v2.tar.gz -C echo-web-v2
 # Dockerfile が見つからないまま dirname を呼ぶと "." になり、意図しないディレクトリでビルドしてしまうため先に確認する
 DOCKERFILE_PATH=$(find echo-web-v2 -name Dockerfile -print -quit)

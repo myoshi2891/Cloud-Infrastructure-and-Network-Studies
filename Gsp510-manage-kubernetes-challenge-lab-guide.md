@@ -1114,7 +1114,9 @@ fi
 echo "EXTERNAL_IP=${EXTERNAL_IP}"
 
 # Task 6 の確認（9.9 と同じ）: LB の準備中は一時的に失敗するため再試行し、Version: 2.0.0 を含むことを確かめる
-RESPONSE=$(curl -fsS --retry 12 --retry-delay 10 --retry-all-errors "http://${EXTERNAL_IP}:8080")
+# 1 回の接続は 10 秒・1 リクエストは 30 秒で打ち切り、10 秒間隔で最大 10 分間（最大 60 回）再試行する
+RESPONSE=$(curl -fsS --connect-timeout 10 --max-time 30 \
+  --retry 60 --retry-delay 10 --retry-max-time 600 --retry-all-errors "http://${EXTERNAL_IP}:8080")
 echo "$RESPONSE"
 if ! printf '%s\n' "$RESPONSE" | grep -q "Version: 2.0.0"; then
   echo "応答に Version: 2.0.0 が含まれていません。Deployment のイメージを確認してください" >&2
