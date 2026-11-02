@@ -73,6 +73,14 @@ it('preserves every source CSS declaration and responsive rule', () => {
                 expect(resolve(actual[p] ?? '', globals)).toBe('#4a5a78');
                 continue;
             }
+            if (
+                p === 'color' &&
+                ['.callout-practice .label', '.practice-label'].includes(rule.selector)
+            ) {
+                // 原本の success (#14804a) は AA 未満のため、既存の濃い success 文字色へ補正する
+                expect(actual[p]).toBe('var(--color-aip-d1-success-text)');
+                continue;
+            }
             if (p === 'top' && selector.includes('sidebar')) {
                 expect(actual[p]).toContain('var(--header-h, 60px)');
                 continue;
@@ -98,4 +106,24 @@ it('preserves every source CSS declaration and responsive rule', () => {
             );
         }
     }
+});
+
+it('uses theme tokens instead of raw hex colors outside syntax highlighting', () => {
+    const offenders: string[] = [];
+    postcss.parse(css).walkDecls((d) => {
+        const parent = d.parent;
+        if (parent?.type === 'rule' && 'selector' in parent && String(parent.selector).includes('.hljs')) return;
+        if (/#[\da-f]{3,8}\b/i.test(d.value)) offenders.push(`${String((parent as postcss.Rule).selector)} ${d.prop}: ${d.value}`);
+    });
+    expect(offenders).toEqual([]);
+});
+
+it('highlights the NavBar aria-current link like the source .active link', () => {
+    const active = rules(css, '.scs-domain2-page .sidebar nav a.active');
+    expect(rules(css, ".scs-domain2-page .sidebar nav a[aria-current='location']")).toEqual(active);
+    expect(active).toEqual({
+        background: 'var(--color-scs-d2-accent-bg)',
+        color: 'var(--color-scs-d2-accent)',
+        'font-weight': '700',
+    });
 });

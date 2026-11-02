@@ -34,5 +34,21 @@ describe('Exam Preparation Section', () => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });
     });
+
+    it('groups each question with its own initially collapsed answer', () => {
+        const { container } = render(<ExamPrep />);
+        const cards = [...container.querySelectorAll('.quiz-card')];
+        expect(cards).toHaveLength(10);
+        cards.forEach((card, index) => {
+            const question = card.querySelector('.quiz-question');
+            expect(question?.textContent).toContain(`Q${index + 1}`);
+            expect(card.getAttribute('aria-labelledby')).toBe(question?.id);
+            const answer = card.querySelector('details');
+            expect(answer).not.toHaveAttribute('open');
+            expect(answer?.querySelector('summary')).toHaveTextContent('答え・解説を確認');
+            expect(answer?.querySelector('.quiz-answer-content')).toHaveTextContent('答え');
+        });
+        expect(cards[0].querySelectorAll('.quiz-options > span')).toHaveLength(4);
+    });
 });
 
