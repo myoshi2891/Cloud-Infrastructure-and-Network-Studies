@@ -590,7 +590,7 @@ flowchart TB
 
 | 用語 | 管理権 | 何のデータか |
 |---|---|---|
-| **cloud service customer data** | **CSC** | CSC が cloud service に入力した、または CSC（または代理）が公開インタフェースを通じてサービスの機能を使った結果として生じたデータ |
+| **cloud service customer data** | **CSC** | 法的その他の理由で CSC の管理下にあるデータのうち、CSC が cloud service に入力した、または CSC（または代理）が公開インタフェースを通じてサービスの機能を使った結果として生じたもの |
 | **cloud service derived data** | **CSP** | CSC が cloud service を使った**結果として派生**したデータ（利用ログ、設定・カスタマイズ情報など） |
 | **cloud service provider data** | **CSP** | cloud service の**運用に固有**のデータ（リソース構成・利用状況、仮想マシンの割り当てなど） |
 | **account data** | **CSP** | cloud service を**管理するために必要**な、CSC ごとに固有のデータ |
