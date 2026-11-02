@@ -479,7 +479,7 @@ IaaS の注記では、CSC は**基盤となる物理・仮想リソースを管
 | **interoperability（相互運用性）** | **つないで一緒に動かせる**か | 稼働中のシステム同士が情報を交換し、使い合えるか |
 | **portability（可搬性）** | **移して動かせる**か | データやアプリを別の環境へ移せるか |
 
-### 9-2. 相互運用性の5つのレベル
+### 9-2. 相互運用性の5つの観点
 
 | 用語 | 確認する観点 | たとえ |
 |---|---|---|
@@ -493,7 +493,7 @@ IaaS の注記では、CSC は**基盤となる物理・仮想リソースを管
 
 ### 9-3. 可搬性の整理
 
-可搬性は**データ**と**アプリケーション**の2系統で、それぞれに5つ前後の観点があります。
+可搬性は**データ**と**アプリケーション**の2系統です。観点は、data portability が **3つ**（syntactic・semantic・policy）、application portability が **5つ**（syntactic・instruction・metadata・behaviour・policy）です（下表の cloud data portability / cloud application portability は、クラウドサービス間に限定した一般用語です）。
 
 | 系統 | 用語 | 観点 |
 |---|---|---|
@@ -735,11 +735,11 @@ flowchart LR
     LI --> INTER["相互運用性<br/>interoperability<br/>（つなげるか）"]
     LI --> MULTI["multi-cloud<br/>（複数 CSP を使う）"]
     PORT --> P1["データ3観点・<br/>アプリ5観点で確認"]
-    INTER --> I1["transport から policy まで<br/>5レベルで確認"]
+    INTER --> I1["transport から policy まで<br/>5観点で確認"]
     MULTI --> M1["統合・管理の責任は<br/>CSC にある"]
 ```
 
-> 💡 **実務上のポイント**: 「マルチクラウドにすればロックインを回避できる」とは限りません。22123-1 の multi-cloud の注記は、**統合と管理の責任が CSC 側に移る**ことを明示しています。可搬性・相互運用性の5観点で**何を確保するか**を決めたうえで、コストと比べて判断するのが現実的です。
+> 💡 **実務上のポイント**: 「マルチクラウドにすればロックインを回避できる」とは限りません。22123-1 の multi-cloud の注記は、**統合と管理の責任が CSC 側に移る**ことを明示しています。相互運用性の5観点と可搬性の観点（データは3観点、アプリケーションは5観点）で**何を確保するか**を決めたうえで、コストと比べて判断するのが現実的です。
 
 Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hohpe 氏の連載の「ロックインの色合い（shades of lock-in）」の部分を必読として紹介しています。
 
@@ -768,7 +768,7 @@ Ivan Pepelnjak 氏（ネットワークエンジニア／ipSpace.net）も、Hoh
 - [ ] 複数 CSP 系の4モデル（multi-cloud / hybrid multi-cloud / federated cloud / inter-cloud）を区別できる
 - [ ] multi-cloud・hybrid multi-cloud・inter-cloud・federated cloud の違いを図で描ける
 - [ ] IaaS / PaaS / SaaS が能力タイプとどう対応するか説明できる
-- [ ] 相互運用性5レベルと可搬性の観点を、移行計画の確認項目に落とせる
+- [ ] 相互運用性の5観点と可搬性の観点（データ3・アプリケーション5）を、移行計画の確認項目に落とせる
 - [ ] SLA / SLO / SQO / remedy の関係を説明できる
 - [ ] customer data と derived data の違いを説明できる
 - [ ] 自社の設計書で hybrid cloud の定義をどれに合わせるか決められる
