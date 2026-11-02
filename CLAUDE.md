@@ -2,7 +2,7 @@
 
 ## 2026-11-03: CCNP Security 完全ガイド
 
-`app/cisco/ccnp-security/` に Server `page.tsx`、Client `CcnpSecurityGuide.tsx` / `NavBar.tsx`、`Diagram.tsx`、7分割の `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, Appendix）、定数 `constants.ts`、スコープCSS `page.css` を追加。全7パート・131表・53図・9コード例・701リスト項目（本文519・目次182）・305外部リンク出現・188目次を原本から移行。コード行（`.code-line`）・構文色・金色丸ドットおよびインディゴ数字バッジのリスト階層・各色コールアウト・Mermaid専用ライトテーマパレットを保持。ホーム・Headerの導線と明色フッターへ統合。`bun scripts/migrate-ccnp-security.mjs all` で再生成できる。原本HTML/Markdownは `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。
+`app/cisco/ccnp-security/` に Server `page.tsx`、Client `CcnpSecurityGuide.tsx` / `NavBar.tsx`、`Diagram.tsx`、7分割の `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, Appendix）、定数 `constants.ts`、全派生色 `render-theme.json`、スコープCSS `page.css` を追加。全7パート・131表・53図・9コード例・701リスト項目（本文519・目次182）・305外部リンク出現・188目次を原本から移行。コード行（`.code-line`）・原本トークン（`.tk-c` 18個・`.tk-p` 8個・`.hljs-*` 29個）・Tabler Icons・金色丸ドットおよびインディゴ数字バッジのリスト階層・各色コールアウト・Mermaid専用ライトテーマパレット（ラッパー透過・全53図 `viewBox` 一致）を保持。ホーム・Headerの導線と明色フッターへ統合。`bun scripts/migrate-ccnp-security.mjs all` で再生成できる。原本HTML/Markdownは `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。
 
 ## 2026-11-02: SCS-C03 Domain 2
 
