@@ -87,7 +87,7 @@ function jsx(n) {
         const code = pre?.querySelector('code');
         const codeText = code ? code.textContent : pre ? pre.textContent : '';
         const lines = codeText.replace(/^\n|\n$/g, '').split('\n');
-        return `<div className="code-block" tabIndex={0} role="group" aria-label="${lang} コード例"><div className="code-lang">${langEl?.textContent?.trim() ?? ''}</div><pre><code className="language-${lang} hljs">${lines.map((line) => '<div className="code-line">' + tokens(line, lang) + '</div>').join('')}</code></pre></div>`;
+        return `<div className="code-sample"><div className="code-lang">${langEl?.textContent?.trim() ?? ''}</div><div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">${lines.map((line) => '<div className="code-line">' + tokens(line, lang) + '</div>').join('')}</div></div>`;
     }
 
     if (n.matches('.checklist-card')) {

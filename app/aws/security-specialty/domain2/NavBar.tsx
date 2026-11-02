@@ -128,24 +128,22 @@ export default function NavBar() {
             </button>
             <aside id="sidebar" className={`sidebar${open ? ' open' : ''}`}>
                 <div className="sidebar-header">
-                    <span className="kicker">AWS Security Specialty</span>
-                    <h2>Domain 2 目次</h2>
+                    <div className="kicker">AWS SCS-C03</div>
+                    <h2>Domain 2: Incident Response</h2>
                 </div>
                 <nav id="sidebarNav" aria-label="SCS-C03 Domain 2 目次">
-                    <ul>
-                        {NAV_ITEMS.map((item) => (
-                            <li key={item.id}>
-                                <a
-                                    href={`#${item.id}`}
-                                    className={item.level === 3 ? 'lvl3' : ''}
-                                    aria-current={activeId === item.id ? 'location' : undefined}
-                                    onClick={() => handleLinkClick(item.id)}
-                                >
-                                    {item.label}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    {NAV_ITEMS.map((item) => (
+                        <Fragment key={item.id}>
+                            <a
+                                href={`#${item.id}`}
+                                className={item.level === 3 ? 'lvl3' : ''}
+                                aria-current={activeId === item.id ? 'location' : undefined}
+                                onClick={() => handleLinkClick(item.id)}
+                            >
+                                {item.label}
+                            </a>{' '}
+                        </Fragment>
+                    ))}
                 </nav>
             </aside>
         </Fragment>

@@ -101,7 +101,9 @@ describe('aws-scs-c03-domain2-guide — 移行元コンテンツの全量移行'
 
     it('コードブロックが件数・行数ともに移行元と一致する', () => {
         const container = renderPage();
-        const blocks = [...container.querySelectorAll(codeBlockSelector)];
+        const blocks = [...container.querySelectorAll(codeBlockSelector)].filter(
+            (element) => !element.parentElement?.closest(codeBlockSelector),
+        );
         expect(blocks).toHaveLength(inventory.counts.codeBlock);
         blocks.forEach((block, index) => {
             expect(codeLineCount(block)).toBe(inventory.structures.codeLines[index]);

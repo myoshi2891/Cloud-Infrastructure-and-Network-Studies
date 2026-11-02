@@ -44,12 +44,13 @@ describe('Task 2.2 Section (Responding to Security Events)', () => {
 
     it('renders code blocks for SQL queries, CLI commands, and policies', () => {
         const { container } = render(<Task22 />);
-        const blocks = container.querySelectorAll('.code-block');
-        expect(blocks.length).toBeGreaterThanOrEqual(6);
-        blocks.forEach((block) => {
-            expect(block).toHaveAttribute('role', 'group');
-            expect(block.querySelector('.code-lang')).not.toBeNull();
-            expect(block.querySelector('pre code')).not.toBeNull();
+        const samples = container.querySelectorAll('.code-sample');
+        expect(samples.length).toBeGreaterThanOrEqual(6);
+        samples.forEach((sample) => {
+            const block = sample.querySelector('.code-block');
+            expect(block).toHaveAttribute('role', 'region');
+            expect(sample.querySelector('.code-lang')).not.toBeNull();
+            expect(block?.querySelector('.code-line')).not.toBeNull();
         });
     });
 });

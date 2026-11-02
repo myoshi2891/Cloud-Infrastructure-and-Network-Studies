@@ -43,12 +43,13 @@ describe('Task 2.1 Section (Planning and Testing)', () => {
 
     it('renders code blocks for YAML, JSON, Bash, and Python', () => {
         const { container } = render(<Task21 />);
-        const blocks = container.querySelectorAll('.code-block');
-        expect(blocks.length).toBeGreaterThanOrEqual(5);
-        blocks.forEach((block) => {
-            expect(block).toHaveAttribute('role', 'group');
-            expect(block.querySelector('.code-lang')).not.toBeNull();
-            expect(block.querySelector('pre code')).not.toBeNull();
+        const samples = container.querySelectorAll('.code-sample');
+        expect(samples.length).toBeGreaterThanOrEqual(5);
+        samples.forEach((sample) => {
+            const block = sample.querySelector('.code-block');
+            expect(block).toHaveAttribute('role', 'region');
+            expect(sample.querySelector('.code-lang')).not.toBeNull();
+            expect(block?.querySelector('.code-line')).not.toBeNull();
         });
     });
 });

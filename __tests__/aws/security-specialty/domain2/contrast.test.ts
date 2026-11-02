@@ -30,7 +30,7 @@ function luminance(hex: string) {
 }
 
 it.each([
-    ['.scs-domain2-page .main code:not(pre code)', '#eef2fa'],
+    ['.scs-domain2-page .main code:not(.code-block code)', '#eef2fa'],
     ['.scs-domain2-page .callout-practice .label', '#e5f6ec'],
     ['.scs-domain2-page .checklist-card li:has(input:checked) label', '#ffffff'],
 ])('keeps %s at AA contrast on the original background', (selector, bg) => {
