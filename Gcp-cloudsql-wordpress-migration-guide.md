@@ -224,7 +224,6 @@ gcloud sql instances create $INSTANCE_NAME \
   --edition=ENTERPRISE \
   --cpu=1 \
   --memory=3840MiB \
-  --region=$REGION \
   --zone=$ZONE \
   --storage-type=SSD \
   --storage-size=10GB
@@ -241,7 +240,7 @@ gcloud sql users set-password root \
 | `--database-version` | MySQL のバージョン |
 | `--edition=ENTERPRISE` | 専用コアのカスタム構成（CPU・メモリ指定）を使うためのエディション指定 |
 | `--cpu` / `--memory` | 専用コアの vCPU 数とメモリ量（メモリは 256 MiB の倍数で、vCPU あたり 0.9〜6.5 GB の範囲） |
-| `--region` / `--zone` | 配置場所（問題文で指定された値） |
+| `--zone` | 配置場所（問題文で指定されたゾーン）。リージョンはゾーンから決まるため、`--region` は併せて指定しない |
 | `set-password root --prompt-for-password` | 管理者 `root` のパスワードを、画面に表示せず対話入力で設定する（コマンド引数やシェル履歴に残さない） |
 | `--storage-type` / `--storage-size` | ディスク種別と容量 |
 
@@ -548,7 +547,7 @@ mysql -h "$SQL_IP" -u blogadmin -p \
 
 > **TLS の指定**: `--ssl-mode=VERIFY_CA` は、6.3 でコピーした CA 証明書（`--ssl-ca`）でサーバー証明書を検証し、検証できない場合は接続を中止します。`REQUIRED` は暗号化するだけで証明書を検証しないため、なりすましを防げません。Cloud SQL のサーバー証明書は IP アドレスではなくインスタンスを識別するため、ホスト名まで照合する `VERIFY_IDENTITY` ではなく `VERIFY_CA` を使います。
 >
-> **MariaDB クライアントの場合**（`mysql --version` に MariaDB と表示される）: `--ssl` だけではサーバー証明書を検証しません。IP 直結は使わず、先に 7.3 の手順 0 で **Cloud SQL Auth Proxy** を起動し、`mysql -h 127.0.0.1 -P 3307 -u blogadmin -p --default-character-set=utf8mb4 wordpress < wordpress_backup.sql` で取り込みます。プロキシが証明書を検証したうえで暗号化します。
+> **MariaDB クライアントの場合**（`mysql --version` に MariaDB と表示される）: `--ssl` だけではサーバー証明書を検証しません。IP 直結は使わず、**プロキシ起動 → 取り込み → 接続確認**の順に進めます。まず 7.3 の手順 0 のうち **Cloud SQL Auth Proxy の起動（`systemctl status` まで）だけ**を先に行います（末尾の `wp_posts` の接続確認は、まだ取り込み前のためここでは実行しません）。次に `mysql -h 127.0.0.1 -P 3307 -u blogadmin -p --default-character-set=utf8mb4 wordpress < wordpress_backup.sql` で取り込み、接続確認は 6.6 で行います。プロキシが証明書を検証したうえで暗号化します。
 >
 > **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
 
@@ -683,6 +682,8 @@ sudo systemctl enable --now cloud-sql-proxy
 sudo systemctl status cloud-sql-proxy --no-pager
 
 # プロキシ経由で Cloud SQL に接続できることを確認する（パスワードは対話入力）
+# wp_posts はインポート後にしか存在しないため、6.5 の取り込みが済んでから実行する
+# （MariaDB で 6.5 より前にプロキシを起動した場合は、取り込み後の 6.6 の確認で代える）
 mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
 ```
 
@@ -963,7 +964,6 @@ gcloud sql instances create $INSTANCE_NAME \
   --edition=ENTERPRISE \
   --cpu=1 \
   --memory=3840MiB \
-  --region=$REGION \
   --zone=$ZONE \
   --storage-type=SSD \
   --storage-size=10GB
@@ -1060,12 +1060,15 @@ sudo grep -rn "wp-cron\|wp cron" /etc/crontab /etc/cron.d /var/spool/cron 2>/dev
 # ---------- Task 3: ダンプ → インポート ----------
 # MariaDB の場合は mysqldump の --set-gtid-purged=OFF を外し、下の 2 つの mysql は
 # 先に Task 4 の Auth Proxy を起動してから -h 127.0.0.1 -P 3307 で実行する（--ssl では証明書を検証しないため。6.5 参照）
+# 以降のダンプ・取り込み・確認のどれかが失敗したら、その時点で中止する（読み取り専用と WP-Cron 停止は維持され、DB_HOST は変更しない）
 mysqldump -u blogadmin -p --databases wordpress --hex-blob --no-tablespaces \
   --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
-  > wordpress_backup.sql
+  > wordpress_backup.sql || { echo "ダンプに失敗しました。移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
-  --default-character-set=utf8mb4 wordpress < wordpress_backup.sql
-mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SHOW TABLES;"
+  --default-character-set=utf8mb4 wordpress < wordpress_backup.sql \
+  || { echo "インポートに失敗しました。移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SHOW TABLES;" \
+  || { echo "取り込み結果を確認できません。移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 
 # ---------- Task 4: Auth Proxy を常駐させる（7.3 手順 0） ----------
 # ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示された CONNECTION_NAME に置き換える
@@ -1091,7 +1094,9 @@ WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now cloud-sql-proxy
-mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+# プロキシ経由で接続できない場合は、DB_HOST を変更する前に中止する
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;" \
+  || { echo "Auth Proxy 経由で接続できません。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 
 # ---------- Task 4: wp-config.php 更新（証明書の検証を無効にする MYSQL_CLIENT_FLAGS は設定しない） ----------
 sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak

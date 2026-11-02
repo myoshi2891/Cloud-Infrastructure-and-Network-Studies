@@ -177,6 +177,8 @@ echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAM
 
 > 💡 **ベストプラクティス**: ゾーン・名前などの値を最初に変数へ入れておくと、入力ミスを減らせて、後から同じ手順を再実行しやすくなります。これは Infrastructure as Code（IaC）の第一歩でもあります。
 >
+> 💡 **プロジェクトの明示**: 以降の gcloud のリソース操作には、ここで取得した `--project="${PROJECT_ID}"` を毎回付けます。途中で `gcloud config set project` が変わっても、別のプロジェクトにリソースを作ったり削除したりしないためです。
+>
 > ⚠️ **注意（チャレンジラボ特有）**: 採点は「ラボが指定する条件」で行われます。バケット名・VM 名・ネットワークタグなどの指定がラボ画面に書かれている場合は、本ガイドの例よりもラボの指定を優先してください。また、事前作成済みのリソース（特に `lab-monitor` インスタンス）は**変更・削除しない**でください。
 
 ---
@@ -196,6 +198,7 @@ flowchart LR
 
 ```bash
 gcloud storage buckets create "gs://${BUCKET_NAME}" \
+  --project="${PROJECT_ID}" \
   --location="${REGION}" \
   --uniform-bucket-level-access \
   --public-access-prevention
@@ -210,13 +213,13 @@ gcloud storage buckets create "gs://${BUCKET_NAME}" \
 **ステップ 2: スクリプトをコピーする**
 
 ```bash
-gcloud storage cp gs://spls/gsp301/install-web.sh "gs://${BUCKET_NAME}/install-web.sh"
+gcloud storage cp gs://spls/gsp301/install-web.sh "gs://${BUCKET_NAME}/install-web.sh" --project="${PROJECT_ID}"
 ```
 
 **ステップ 3: コピーできたか確認する**
 
 ```bash
-gcloud storage ls "gs://${BUCKET_NAME}/"
+gcloud storage ls "gs://${BUCKET_NAME}/" --project="${PROJECT_ID}"
 ```
 
 `gs://（バケット名）/install-web.sh` が表示されれば成功です。
@@ -235,7 +238,7 @@ gcloud storage ls "gs://${BUCKET_NAME}/"
 ### 4.4 スクリプトの中身を確認する習慣
 
 ```bash
-gcloud storage cat "gs://${BUCKET_NAME}/install-web.sh"
+gcloud storage cat "gs://${BUCKET_NAME}/install-web.sh" --project="${PROJECT_ID}"
 ```
 
 中身は、Apache をインストールする数行の bash スクリプトです。パッケージ更新（`apt-get update`）に続けて、Apache のパッケージを `apt-get install` する構成になっています。
@@ -246,7 +249,7 @@ gcloud storage cat "gs://${BUCKET_NAME}/install-web.sh"
 
 | 確認項目 | 期待される状態 |
 |---|---|
-| バケットが存在する | `gcloud storage buckets list` に自分のバケットが出る |
+| バケットが存在する | `gcloud storage buckets list --project="${PROJECT_ID}"` に自分のバケットが出る |
 | ファイルが入っている | `install-web.sh` がバケット直下にある |
 | ファイル名が変わっていない | `install-web.sh` のまま |
 
@@ -279,11 +282,13 @@ echo "VM_SA=${VM_SA}"
 
 # バケット単位で読み取りロールを付与する（プロジェクト全体には付与しない）
 gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
+  --project="${PROJECT_ID}" \
   --member="serviceAccount:${VM_SA}" \
   --role="roles/storage.objectViewer"
 
 # 付与されたことを確認する（VM_SA を含む行が表示されれば OK）
 gcloud storage buckets get-iam-policy "gs://${BUCKET_NAME}" \
+  --project="${PROJECT_ID}" \
   --flatten="bindings[].members" \
   --filter="bindings.role=roles/storage.objectViewer AND bindings.members=serviceAccount:${VM_SA}" \
   --format="value(bindings.members)"
@@ -293,6 +298,7 @@ gcloud storage buckets get-iam-policy "gs://${BUCKET_NAME}" \
 
 ```bash
 gcloud compute instances create "${VM_NAME}" \
+  --project="${PROJECT_ID}" \
   --zone="${ZONE}" \
   --machine-type=e2-medium \
   --image-family=debian-12 \
@@ -366,7 +372,7 @@ flowchart TD
 VM を作成してから、Apache がインストールされるまでに**1〜数分**かかります。この間に実行状況を確認できます。
 
 ```bash
-gcloud compute instances get-serial-port-output "${VM_NAME}" --zone="${ZONE}" \
+gcloud compute instances get-serial-port-output "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}" \
   | grep -iE "google_metadata_script_runner|startup-script|startup scripts"
 ```
 
@@ -381,9 +387,9 @@ gcloud compute instances get-serial-port-output "${VM_NAME}" --zone="${ZONE}" \
 
 | 確認項目 | 確認コマンド |
 |---|---|
-| VM が `RUNNING` | `gcloud compute instances list --filter="name=${VM_NAME}"` |
+| VM が `RUNNING` | `gcloud compute instances list --project="${PROJECT_ID}" --filter="name=${VM_NAME}"` |
 | ゾーンがラボ指定どおり | 同上（`ZONE` 列を確認） |
-| メタデータが設定されている | `gcloud compute instances describe "${VM_NAME}" --zone="${ZONE}" --format="value(metadata.items)"` |
+| メタデータが設定されている | `gcloud compute instances describe "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}" --format="value(metadata.items)"` |
 | 外部 IP がある | 一覧の `EXTERNAL_IP` 列 |
 
 ---
@@ -418,6 +424,7 @@ flowchart LR
 
 ```bash
 gcloud compute firewall-rules create allow-http \
+  --project="${PROJECT_ID}" \
   --network=default \
   --direction=INGRESS \
   --action=ALLOW \
@@ -435,7 +442,7 @@ gcloud compute firewall-rules create allow-http \
 | `--source-ranges=0.0.0.0/0` | 全世界のどこからでも | 公開 Web サーバーなのでこのラボでは必須 |
 | `--target-tags=http-server` | このタグを持つ VM だけに適用 | 他の VM に影響を与えない |
 
-> ⚠️ **ネットワーク名の確認**: ラボ環境で VM が `default` 以外のネットワークにある場合は、`--network` をその名前に変更してください。`gcloud compute instances describe "${VM_NAME}" --zone="${ZONE}" --format="value(networkInterfaces[0].network)"` で確認できます。
+> ⚠️ **ネットワーク名の確認**: ラボ環境で VM が `default` 以外のネットワークにある場合は、`--network` をその名前に変更してください。`gcloud compute instances describe "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}" --format="value(networkInterfaces[0].network)"` で確認できます。
 
 ### 6.4 手順 B: Google Cloud コンソール
 
@@ -462,6 +469,7 @@ gcloud compute firewall-rules create allow-http \
 
 ```bash
 gcloud compute firewall-rules describe allow-http \
+  --project="${PROJECT_ID}" \
   --format="yaml(name,direction,allowed,sourceRanges,targetTags)"
 ```
 
@@ -480,6 +488,7 @@ gcloud compute firewall-rules describe allow-http \
 
 ```bash
 export EXTERNAL_IP="$(gcloud compute instances describe "${VM_NAME}" \
+  --project="${PROJECT_ID}" \
   --zone="${ZONE}" \
   --format='get(networkInterfaces[0].accessConfigs[0].natIP)')"
 echo "${EXTERNAL_IP}"
@@ -550,7 +559,7 @@ flowchart TD
 
 | 症状 | 考えられる原因 | 確認方法 | 対処 |
 |---|---|---|---|
-| ブラウザがタイムアウトする | ファイアウォールで 80 番が未許可、またはタグ不一致 | `gcloud compute firewall-rules list` と VM のタグ確認 | ルール作成・タグ追加 |
+| ブラウザがタイムアウトする | ファイアウォールで 80 番が未許可、またはタグ不一致 | `gcloud compute firewall-rules list --project="${PROJECT_ID}"` と VM のタグ確認 | ルール作成・タグ追加 |
 | 接続拒否（Connection refused） | Apache が未インストール・未起動 | シリアルポート出力、VM 内で `systemctl status apache2` | スクリプト失敗の原因を修正 |
 | スクリプトが実行されない | メタデータのキー名が違う | `describe` でメタデータ確認 | `startup-script-url` に修正 |
 | ログに 403 / 権限エラー | スコープまたは IAM の不足 | シリアルポート出力 | `storage-ro` スコープ追加、`objectViewer` 付与 |
@@ -562,7 +571,7 @@ flowchart TD
 VM に SSH 接続します。
 
 ```bash
-gcloud compute ssh "${VM_NAME}" --zone="${ZONE}"
+gcloud compute ssh "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}"
 ```
 
 VM 内で次を実行します。
@@ -581,7 +590,7 @@ systemctl status apache2 --no-pager
 
 | 方法 | コマンド | 特徴 |
 |---|---|---|
-| VM を再起動（リセット） | `gcloud compute instances reset "${VM_NAME}" --zone="${ZONE}"` | 起動スクリプトが再度実行される |
+| VM を再起動（リセット） | `gcloud compute instances reset "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}"` | 起動スクリプトが再度実行される |
 | VM 内で手動実行 | `sudo google_metadata_script_runner startup` | 再起動せずに今すぐ試せる |
 
 ---
