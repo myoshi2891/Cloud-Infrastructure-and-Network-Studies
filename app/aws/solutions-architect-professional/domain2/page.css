@@ -565,3 +565,4 @@
 .sap-domain2-page .code-line { white-space: pre; min-height: 1.65em; }
 .sap-domain2-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d2-checkbox-border); }
 .sap-domain2-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d2-checked-label); }
+.sap-domain2-page .hljs-comment, .sap-domain2-page .hljs-quote { color: var(--color-sap-d2-hljs-comment-contrast); }

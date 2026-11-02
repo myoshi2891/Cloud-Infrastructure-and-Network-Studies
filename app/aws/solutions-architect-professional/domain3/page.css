@@ -400,3 +400,4 @@
 .sap-domain3-page .sidebar-header h2 { font-weight: 700; }
 .sap-domain3-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d3-checkbox-border); }
 .sap-domain3-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d3-checked-label); }
+.sap-domain3-page .hljs-comment { color: var(--color-sap-d3-hljs-comment-contrast); }

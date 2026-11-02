@@ -249,6 +249,8 @@
     --color-sap-d3-hljs-string: #0f7a4a;
     --color-sap-d3-hljs-number: #b45309;
     --color-sap-d3-hljs-comment: #6b7a99;
+    /* SAP-C02 Domain 3: code comment contrast (WCAG AA 4.5:1 on code-bg) */
+    --color-sap-d3-hljs-comment-contrast: #56647f;
     --color-sap-d3-hljs-title: #1d4ed8;
     --color-sap-d3-callout-practice-border: #b6e0c8;
     /* SAP-C02 Domain 2: original fixed colors */
@@ -259,6 +261,8 @@
     --color-sap-d2-inline-code: #9a4a00;
     --color-sap-d2-row-hover: rgba(53, 86, 214, 0.045);
     --color-sap-d2-hljs-comment: #6a737d;
+    /* SAP-C02 Domain 2: code comment contrast (WCAG AA 4.5:1 on bg-card-2) */
+    --color-sap-d2-hljs-comment-contrast: #586069;
     --color-sap-d2-hljs-keyword: #c0213f;
     --color-sap-d2-hljs-attr: #0b57c4;
     --color-sap-d2-hljs-string: #0a6b3a;

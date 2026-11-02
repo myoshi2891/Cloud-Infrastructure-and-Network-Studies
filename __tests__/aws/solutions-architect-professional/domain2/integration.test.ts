@@ -61,6 +61,15 @@ describe('SAP Domain 2 統合契約',()=>{
   for(const rule of [".sap-domain2-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d2-checkbox-border); }",".sap-domain2-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d2-checked-label); }"]){expect(css).toContain(rule);expect(script).toContain(rule);}
   expect(css.lastIndexOf(".sap-domain2-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d2-checked-label); }")).toBeGreaterThan(css.indexOf('li:has(input:checked) label {'));
  });
+ it('コードのコメント色は原本の対応を保ったまま、別トークンでコード背景に対しWCAG AA 4.5:1を満たし、再生成処理にも反映',()=>{
+  const globals=fs.readFileSync('app/globals.css','utf8');
+  expect(SAP_D2_COLOR_TOKENS['#6a737d']).toBe('hljs-comment');
+  expect(contrastRatio(themeColor(globals,'color-sap-d2-hljs-comment-contrast'),themeColor(globals,'color-sap-d2-bg-card-2'))).toBeGreaterThanOrEqual(4.5);
+  const rule='.sap-domain2-page .hljs-comment, .sap-domain2-page .hljs-quote { color: var(--color-sap-d2-hljs-comment-contrast); }';
+  const css=fs.readFileSync('app/aws/solutions-architect-professional/domain2/page.css','utf8');
+  expect(css).toContain(rule);expect(fs.readFileSync('scripts/migrate-sap-domain2.mjs','utf8')).toContain(rule);
+  expect(css.lastIndexOf(rule)).toBeGreaterThan(css.indexOf('color: var(--color-sap-d2-hljs-comment);'));
+ });
  it("本文はServer Componentで描画し、Client状態はチェック進捗のChecklistCardに限定し、再生成処理にも反映",()=>{
   // jsdomのrenderはServer/Clientを区別しないため、境界はソースで検証する
   const dir="app/aws/solutions-architect-professional/domain2";const isClient=(file:string)=>/^\s*([\x27"])use client\1;?/.test(fs.readFileSync(dir+"/"+file,"utf8"));
