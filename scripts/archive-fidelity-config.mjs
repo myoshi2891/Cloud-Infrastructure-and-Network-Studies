@@ -127,6 +127,23 @@ export const FIDELITY_PAGES = {
             updates: '8-2026年時点で特に注意したい変更点',
         },
     },
+    'aws-scs-c03-domain2-guide': {
+        source: 'Aws-scs-c03-domain2-incident-response-guide.html',
+        sourceCommit: 'efdbafb932e7317753b4025ee8498fa12cb1dcb7',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            hero: '',
+            task21: '3-task-21-インシデントレスポンス計画の設計とテスト',
+            task22: '4-task-22-セキュリティイベントへの対応',
+            scenarios: '5-実践シナリオ-3-本',
+            examprep: '6-試験対策',
+            checklist: '7-学習チェックリストと用語集',
+            appendix: '8-参考-url-一覧',
+        },
+    },
     "aws-ans-c01-domain4-guide": {
     "source": "Ans-c01-domain4-network-security-compliance-governance-guide.html",
     "sourceCommit": "c2b4535c7fdf4ec40872a9e093c184b22c0ac954",
