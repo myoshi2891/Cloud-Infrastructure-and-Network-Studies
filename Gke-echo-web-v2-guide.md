@@ -354,10 +354,20 @@ CONTAINER_NAME=$(kubectl get deployment echo-web -o jsonpath='{.spec.template.sp
 echo "CONTAINER_NAME=${CONTAINER_NAME}"
 ```
 
-**手順 2：イメージを更新**
+**手順 2：イメージを更新し、更新の完了を待つ**
+
+イメージの更新に失敗した場合は、ロールアウトの待機を実行せずにその場で止めます。`Task 3 が完了しました` と表示されない場合は、エラーを解消するまで Task 4 に進まないでください。
 
 ```bash
-kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"
+if [ -z "${CONTAINER_NAME:-}" ]; then
+  echo "CONTAINER_NAME が空です。手順 1 を再実行してください。Task 4 には進まないでください" >&2
+elif ! kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"; then
+  echo "イメージの更新に失敗しました。ロールアウトは待機しません。Task 4 には進まないでください" >&2
+elif ! kubectl rollout status deployment/echo-web --timeout=5m; then
+  echo "ロールアウトが完了しませんでした。原因を確認するまで Task 4 には進まないでください" >&2
+else
+  echo "Task 3 が完了しました"
+fi
 ```
 
 | 部分 | 意味 |
@@ -365,16 +375,11 @@ kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo
 | `deployment/echo-web` | 更新対象の Deployment |
 | `${CONTAINER_NAME}=` | 更新するコンテナ名（等号の左）。手順 1 で既存の Deployment から取得した名前 |
 | `gcr.io/.../echo-app:v2` | 新しいイメージ（等号の右） |
-
-**手順 3：更新の完了を待つ**
-
-```bash
-kubectl rollout status deployment/echo-web --timeout=5m
-```
+| `kubectl rollout status ... --timeout=5m` | 更新の完了を待つ。イメージ更新が成功した場合だけ実行される |
 
 `successfully rolled out` と出れば完了です。5 分以内に終わらない場合はタイムアウトして制御が戻るので、`kubectl describe deployment echo-web` と `kubectl get events` で原因を確認してください。
 
-**手順 4：イメージが v2 になったか確認**
+**手順 3：イメージが v2 になったか確認**
 
 ```bash
 kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[0].image}'

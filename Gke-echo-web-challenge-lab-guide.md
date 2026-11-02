@@ -152,12 +152,13 @@ echo "ZONE=${ZONE}"
 ラボ環境では有効済みのことが多いですが、エラー時に備えて覚えておきましょう。
 
 ```bash
-gcloud services enable container.googleapis.com
+gcloud services enable container.googleapis.com artifactregistry.googleapis.com
 ```
 
 | API | 用途 |
 |---|---|
 | `container.googleapis.com` | GKE（クラスタの作成・管理） |
+| `artifactregistry.googleapis.com` | Artifact Registry（`gcr.io` リポジトリの保存先。6-4 の確認と 12 の後片付けで使う `gcloud artifacts docker` コマンド） |
 
 ---
 
@@ -259,13 +260,10 @@ flowchart TD
 ### 5-3. アーカイブをダウンロードして展開
 
 ```bash
-# 作業用ディレクトリに移動
-cd ~
-
-# バケットからコピー
+# 現在の作業ディレクトリにダウンロードする（ディレクトリは移動しない）
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
 
-# 展開専用の空ディレクトリを作り、そこへ展開する（ホームディレクトリ全体をビルドコンテキストにしないため）
+# 展開専用の空ディレクトリを作り、そこへ展開する（作業ディレクトリ全体をビルドコンテキストにしないため）
 BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
 echo "BUILD_DIR=${BUILD_DIR}"
 tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
@@ -309,7 +307,7 @@ fi
 | `COPY` / `ADD` の取り込み元 | すべて `BUILD_DIR` の中に存在すること |
 | `.dockerignore` | `COPY` / `ADD` で必要なファイル（`main.go` など）を除外していないこと |
 
-> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。ホームディレクトリ（`~`）をコンテキストにすると、無関係なファイルや認証情報まで Docker に送られるうえ、ビルドも遅くなります。そのため、アーカイブだけを展開した `BUILD_DIR` をコンテキストにします。`BUILD_DIR` 直下に `Dockerfile` が見えない場合（サブディレクトリに展開された場合）は、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直してください。
+> **ポイント**: `docker build` は「ビルドコンテキスト」として指定したディレクトリを丸ごと Docker に渡します。作業ディレクトリ全体（ホームディレクトリなど）をコンテキストにすると、無関係なファイルや認証情報まで Docker に送られるうえ、ビルドも遅くなります。そのため、アーカイブだけを展開した `BUILD_DIR` をコンテキストにします。`BUILD_DIR` 直下に `Dockerfile` が見えない場合（サブディレクトリに展開された場合）は、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直してください。
 
 ### 5-5. Dockerfile の中身を読んでみる（任意・理解のため）
 
@@ -765,8 +763,7 @@ gcloud container clusters create echo-cluster \
   --machine-type e2-standard-2
 gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
 
-# ===== 2. ビルド =====
-cd ~
+# ===== 2. ビルド（現在の作業ディレクトリで実行する） =====
 gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
 BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
 tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
