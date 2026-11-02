@@ -189,10 +189,10 @@ sudo mysql -e "SELECT VERSION();"
 > **見方**: `8.0.xx` なら MySQL 8.0、`5.7.xx` なら MySQL 5.7、`10.x.xx-MariaDB` のように `MariaDB` を含む場合は MariaDB です。`mysql --version` はインストール済みクライアントの版であり、サーバーの版とは一致しない場合があるため、ここでは使いません。確認できたら `exit` で Cloud Shell に戻ります。
 > MariaDB の場合も、WordPress の標準的なテーブル程度であれば MySQL 8.0 へ取り込めます。
 >
-> **バージョンの前提**: 本ガイドのコマンドは、既存が **MySQL 8.0 以前（または MariaDB）** であることを前提に `MYSQL_8_0` を指定しています。既存が MySQL 8.4 など 8.0 より新しい場合は、新しい版から古い版へは取り込めないため、`DB_VERSION` を同じ版（例: `MYSQL_8_4`）に変更してください。
+> **バージョンの前提**: 本ガイドは、既存が **MySQL 8.0 以前（または MariaDB）** の場合だけを対象とし、`MYSQL_8_0` を指定します。既存が MySQL 8.4 など 8.0 より新しい場合は、新しい版から古い版へは取り込めず、また MySQL 8.4 の既定の認証方式（`caching_sha2_password`）に必要な公開鍵取得の設定を本ガイドの `mysql` コマンドと WordPress では扱っていないため、**本ガイドの手順は使わず**、Cloud SQL の公式ドキュメントで移行方法を確認してください。
 
 ```bash
-# 4.3 の結果に合わせて設定する（MySQL 8.0 以前／MariaDB → MYSQL_8_0、MySQL 8.4 → MYSQL_8_4）
+# 本ガイドは既存が MySQL 8.0 以前／MariaDB の場合だけを対象とするため、MYSQL_8_0 で固定する
 export DB_VERSION=MYSQL_8_0
 ```
 
@@ -207,7 +207,7 @@ export DB_VERSION=MYSQL_8_0
 |---|---|
 | インスタンス ID | `wordpress-sql` |
 | パスワード（root） | 任意の強いパスワード（控えておく） |
-| データベースのバージョン | 4.3 で確認した既存バージョンと互換のもの（既存が MySQL 8.0 以前または MariaDB なら MySQL 8.0、MySQL 8.4 なら MySQL 8.4） |
+| データベースのバージョン | **MySQL 8.0**（本ガイドは 4.3 で確認した既存が MySQL 8.0 以前または MariaDB の場合だけを対象とする） |
 | エディション | **Enterprise**（小さいマシンタイプを使うため） |
 | リージョン | ラボで指定された REGION |
 | ゾーンの可用性 | **シングルゾーン** → 指定された ZONE |
@@ -547,24 +547,31 @@ mysql -h "$SQL_IP" -u blogadmin -p \
 
 > **TLS の指定**: `--ssl-mode=VERIFY_CA` は、6.3 でコピーした CA 証明書（`--ssl-ca`）でサーバー証明書を検証し、検証できない場合は接続を中止します。`REQUIRED` は暗号化するだけで証明書を検証しないため、なりすましを防げません。Cloud SQL のサーバー証明書は IP アドレスではなくインスタンスを識別するため、ホスト名まで照合する `VERIFY_IDENTITY` ではなく `VERIFY_CA` を使います。
 >
-> **MariaDB クライアントの場合**（`mysql --version` に MariaDB と表示される）: `--ssl` だけではサーバー証明書を検証しません。IP 直結は使わず、**プロキシ起動 → 取り込み → 接続確認**の順に進めます。まず 7.3 の手順 0 のうち **Cloud SQL Auth Proxy の起動（`systemctl status` まで）だけ**を先に行います（末尾の `wp_posts` の接続確認は、まだ取り込み前のためここでは実行しません）。次に `mysql -h 127.0.0.1 -P 3307 -u blogadmin -p --default-character-set=utf8mb4 wordpress < wordpress_backup.sql` で取り込み、接続確認は 6.6 で行います。プロキシが証明書を検証したうえで暗号化します。
+> **MariaDB クライアントの場合**（`mysql --version` に MariaDB と表示される）: `--ssl` だけではサーバー証明書を検証しません。IP 直結は使わず、**プロキシ起動 → 取り込み → 接続確認**の順に進めます。まず 7.3 の手順 0 のうち **Cloud SQL Auth Proxy の起動（`systemctl status` まで）だけ**を先に行います（末尾の投稿テーブルの接続確認は、まだ取り込み前のためここでは実行しません）。次に `mysql -h 127.0.0.1 -P 3307 -u blogadmin -p --default-character-set=utf8mb4 wordpress < wordpress_backup.sql` で取り込み、接続確認は 6.6 で行います。プロキシが証明書を検証したうえで暗号化します。
 >
 > **ここが重要**: `blog` の外部 IP が承認済みネットワークに入っていないと、この接続は **タイムアウト（ERROR 2003 / 2002）** になります。つながらない場合は 6.2 に戻って確認してください。
 
 ### 6.6 取り込みの確認
 
 ```bash
+# WordPress のテーブル接頭辞を wp-config.php の $table_prefix から読み取る（既定は wp_ だが環境によって異なる）
+WP_TABLE_PREFIX=$(sudo sed -n -E "s/^[[:space:]]*\\\$table_prefix[[:space:]]*=[[:space:]]*['\"]([A-Za-z0-9_]+)['\"].*/\\1/p" /var/www/html/wordpress/wp-config.php)
+case "$WP_TABLE_PREFIX" in
+  ''|*[!A-Za-z0-9_]*) WP_TABLE_PREFIX=""; echo "テーブル接頭辞を読み取れません。wp-config.php の \$table_prefix を確認し、WP_TABLE_PREFIX に設定してください" >&2 ;;
+  *) echo "WP_TABLE_PREFIX=${WP_TABLE_PREFIX}" ;;
+esac
+
 # MySQL クライアントの場合
 mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SHOW TABLES;"
-mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem wordpress -e "SELECT COUNT(*) FROM ${WP_TABLE_PREFIX:?テーブル接頭辞が未設定です}posts;"
 
 # MariaDB クライアントの場合（--ssl では証明書を検証しないため、7.3 手順 0 の Auth Proxy 経由で確認する）
 mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SHOW TABLES;"
-mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM ${WP_TABLE_PREFIX:?テーブル接頭辞が未設定です}posts;"
 ```
 
-- `SHOW TABLES;` で `wp_posts` `wp_users` `wp_options` などが並んでいれば成功です。
-- テーブル接頭辞（`wp_`）は環境によって異なります。`SHOW TABLES;` の結果に合わせて読み替えてください。
+- `SHOW TABLES;` で `<接頭辞>posts` `<接頭辞>users` `<接頭辞>options`（既定の接頭辞なら `wp_posts` など）が並んでいれば成功です。
+- テーブル接頭辞は環境によって異なるため、固定の `wp_` ではなく、`wp-config.php` の `$table_prefix` から読み取った `WP_TABLE_PREFIX` を使います。読み取れない場合は、件数確認のコマンドは実行されずに止まります。
 
 確認できたら、ラボ画面で **Check my progress** を押します。
 
@@ -657,11 +664,13 @@ gcloud compute ssh blog --zone=$ZONE
 # ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示した CONNECTION_NAME（例: project:region:wordpress-sql）に置き換える
 CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
 
-curl -sSfL -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64
 # v2.26.3 のリリースノートに公開された linux.amd64 の SHA-256 と一致した場合だけインストールする
-echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
-  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+# ダウンロード・検証・インストールのどれかが失敗したら、systemd の設定へ進まずに中止する
+{ curl -sSfL -o cloud-sql-proxy \
+    https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64 \
+  && echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy; } \
+  || { echo "Auth Proxy のダウンロード・検証・インストールに失敗しました。移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 
 sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
 [Unit]
@@ -682,9 +691,15 @@ sudo systemctl enable --now cloud-sql-proxy
 sudo systemctl status cloud-sql-proxy --no-pager
 
 # プロキシ経由で Cloud SQL に接続できることを確認する（パスワードは対話入力）
-# wp_posts はインポート後にしか存在しないため、6.5 の取り込みが済んでから実行する
+# 投稿テーブルはインポート後にしか存在しないため、6.5 の取り込みが済んでから実行する
 # （MariaDB で 6.5 より前にプロキシを起動した場合は、取り込み後の 6.6 の確認で代える）
-mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;"
+# WordPress のテーブル接頭辞を wp-config.php の $table_prefix から読み取る（既定は wp_ だが環境によって異なる）
+WP_TABLE_PREFIX=$(sudo sed -n -E "s/^[[:space:]]*\\\$table_prefix[[:space:]]*=[[:space:]]*['\"]([A-Za-z0-9_]+)['\"].*/\\1/p" /var/www/html/wordpress/wp-config.php)
+case "$WP_TABLE_PREFIX" in
+  ''|*[!A-Za-z0-9_]*) WP_TABLE_PREFIX=""; echo "テーブル接頭辞を読み取れません。wp-config.php の \$table_prefix を確認し、WP_TABLE_PREFIX に設定してください" >&2 ;;
+  *) echo "WP_TABLE_PREFIX=${WP_TABLE_PREFIX}" ;;
+esac
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM ${WP_TABLE_PREFIX:?テーブル接頭辞が未設定です}posts;"
 ```
 
 **1. 必ず先にバックアップを取る**（引き続き `blog` の中で）
@@ -955,7 +970,7 @@ export INSTANCE_NAME=wordpress-sql
 export DB_NAME=wordpress
 export DB_USER=blogadmin
 # パスワードは変数に置かず、Task 2 で対話入力する
-export DB_VERSION=MYSQL_8_0        # ★既存 MySQL のバージョン（4.3）に合わせる。8.0 以前／MariaDB は MYSQL_8_0
+export DB_VERSION=MYSQL_8_0        # 既存が MySQL 8.0 以前／MariaDB の場合だけを対象とする（4.3 参照）
 
 # ---------- Task 1: インスタンス作成 ----------
 gcloud services enable sqladmin.googleapis.com
@@ -1018,6 +1033,15 @@ gcloud compute ssh blog --zone=$ZONE
 # ★ REPLACE_WITH_SQL_IP を、Cloud Shell の echo で表示された SQL_IP の値（例: 34.xx.xx.xx の形式）に置き換える
 export SQL_IP="REPLACE_WITH_SQL_IP"
 
+# ---------- テーブル接頭辞を wp-config.php から読み取る（読み取れなければ何も変更せずに中止） ----------
+WP_TABLE_PREFIX=$(sudo sed -n -E "s/^[[:space:]]*\\\$table_prefix[[:space:]]*=[[:space:]]*['\"]([A-Za-z0-9_]+)['\"].*/\\1/p" /var/www/html/wordpress/wp-config.php)
+case "$WP_TABLE_PREFIX" in
+  ''|*[!A-Za-z0-9_]*)
+    echo "テーブル接頭辞を読み取れません。wp-config.php の \$table_prefix を確認してください。移行を中止します（SSH セッションを終了します）" >&2
+    exit 1 ;;
+esac
+echo "WP_TABLE_PREFIX=${WP_TABLE_PREFIX}"
+
 # ---------- 移行中は読み取り専用にする ----------
 sudo tee /etc/apache2/conf-available/wp-readonly.conf > /dev/null <<'EOF'
 # 移行中は WordPress への書き込み系リクエストを拒否する（閲覧のみ許可）
@@ -1073,11 +1097,12 @@ mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem w
 # ---------- Task 4: Auth Proxy を常駐させる（7.3 手順 0） ----------
 # ★ REPLACE_WITH_CONNECTION_NAME を、Cloud Shell で表示された CONNECTION_NAME に置き換える
 CONNECTION_NAME="REPLACE_WITH_CONNECTION_NAME"
-curl -sSfL -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64
-# リリースノート公開の SHA-256 と一致した場合だけインストールする
-echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
-  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy
+# リリースノート公開の SHA-256 と一致した場合だけインストールし、どれかが失敗したら systemd の設定へ進まずに中止する
+{ curl -sSfL -o cloud-sql-proxy \
+    https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64 \
+  && echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  && sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy; } \
+  || { echo "Auth Proxy のダウンロード・検証・インストールに失敗しました。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 sudo tee /etc/systemd/system/cloud-sql-proxy.service > /dev/null <<EOF
 [Unit]
 Description=Cloud SQL Auth Proxy
@@ -1095,7 +1120,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now cloud-sql-proxy
 # プロキシ経由で接続できない場合は、DB_HOST を変更する前に中止する
-mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM wp_posts;" \
+mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM ${WP_TABLE_PREFIX}posts;" \
   || { echo "Auth Proxy 経由で接続できません。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 
 # ---------- Task 4: wp-config.php 更新（証明書の検証を無効にする MYSQL_CLIENT_FLAGS は設定しない） ----------
@@ -1103,9 +1128,24 @@ sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root
 sudo sed -i -E "s/define\( *['\"]DB_HOST['\"] *, *['\"][^'\"]*['\"] *\);/define( 'DB_HOST', '127.0.0.1:3307' );/" \
   /var/www/html/wordpress/wp-config.php
 grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
+# 置換後の DB_HOST が 127.0.0.1:3307 になっていない場合は、読み取り専用を解除せずに中止する
+if ! sudo grep -Eq "^[[:space:]]*define\( *['\"]DB_HOST['\"] *, *['\"]127\.0\.0\.1:3307['\"] *\);" \
+  /var/www/html/wordpress/wp-config.php; then
+  echo "DB_HOST が 127.0.0.1:3307 になっていません。移行を中止します（/root/wp-config.php.bak から戻せます。SSH セッションを終了します）" >&2
+  exit 1
+fi
 
 # ---------- Task 5: 動作確認 ----------
-curl -I http://localhost/wordpress/
+# 2xx／3xx だけを成功とし、それ以外の応答や接続失敗では読み取り専用と WP-Cron の停止を維持したまま中止する
+if ! HTTP_STATUS=$(curl -sS -I -o /dev/null -w '%{http_code}' http://localhost/wordpress/); then
+  HTTP_STATUS=000
+fi
+case "$HTTP_STATUS" in
+  2??|3??) echo "WordPress の応答: HTTP ${HTTP_STATUS}" ;;
+  *)
+    echo "WordPress の応答が正常ではありません（HTTP ${HTTP_STATUS}）。読み取り専用と WP-Cron の停止を維持したまま中止します（SSH セッションを終了します）" >&2
+    exit 1 ;;
+esac
 
 # ---------- 移行を確認できたら書き込みと WP-Cron を再開 ----------
 # 読み取り専用の解除・構文検査・再読み込みがすべて成功した場合だけ再開する（失敗時は停止したまま）
