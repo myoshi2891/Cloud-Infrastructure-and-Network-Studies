@@ -8,6 +8,7 @@ import PartB from './sections/PartB';
 import PartC from './sections/PartC';
 import PartD from './sections/PartD';
 import PartE from './sections/PartE';
+import Appendix from './sections/Appendix';
 
 interface CcnpSecurityGuideProps {
     children?: React.ReactNode;
@@ -47,6 +48,7 @@ export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) 
                 <PartC />
                 <PartD />
                 <PartE />
+                <Appendix />
                 {children}
             </main>
         </div>
