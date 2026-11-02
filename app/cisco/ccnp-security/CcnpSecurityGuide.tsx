@@ -5,6 +5,7 @@ import { NavBar } from './NavBar';
 import HeroIntro from './sections/HeroIntro';
 import PartA from './sections/PartA';
 import PartB from './sections/PartB';
+import PartC from './sections/PartC';
 
 interface CcnpSecurityGuideProps {
     children?: React.ReactNode;
@@ -41,6 +42,7 @@ export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) 
                 <HeroIntro />
                 <PartA />
                 <PartB />
+                <PartC />
                 {children}
             </main>
         </div>
