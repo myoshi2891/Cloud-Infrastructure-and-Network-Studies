@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import { NAV_GROUPS } from './constants';
+import { useEffect, useCallback } from 'react';
 
 interface NavBarProps {
     isOpen: boolean;
@@ -12,14 +11,11 @@ interface NavBarProps {
  * CCNP Security ガイド用のサイドバー目次コンポーネント。
  * ScrollSpy、キーボードフォーカス連動、モバイル開閉制御を提供します。
  */
-export function NavBar({ isOpen, onClose }: NavBarProps) {
-    const [activeId, setActiveId] = useState<string>('s1');
-
+export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     const handleLinkClick = useCallback((href: string) => {
         onClose();
         if (href.startsWith('#')) {
             const targetId = href.slice(1);
-            setActiveId(targetId);
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
                 targetEl.tabIndex = -1;
@@ -31,137 +27,49 @@ export function NavBar({ isOpen, onClose }: NavBarProps) {
     useEffect(() => {
         if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
 
-        const visible = new Set<Element>();
-        const itemOf = new Map<string, string>();
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
 
-        NAV_GROUPS.forEach((group) => {
-            group.items.forEach((item) => {
-                if (item.href.startsWith('#')) {
-                    itemOf.set(item.href.slice(1), item.href.slice(1));
-                }
-                item.subItems?.forEach((sub) => {
-                    if (sub.href.startsWith('#')) {
-                        itemOf.set(sub.href.slice(1), sub.href.slice(1));
-                    }
-                });
-            });
+        const itemOf = new Map<string, HTMLElement>();
+        sidebar.querySelectorAll('a[href^="#"]').forEach((a) => {
+            const li = a.closest('li');
+            const href = a.getAttribute('href');
+            if (li && href) {
+                itemOf.set(href.slice(1), li as HTMLElement);
+            }
         });
 
-        const updateActive = () => {
+        const visible = new Set<Element>();
+        const update = () => {
             if (!visible.size) return;
             const arr = Array.from(visible).sort((a, b) => {
                 return (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
             });
             const last = arr[arr.length - 1];
-            if (last?.id) {
-                setActiveId(last.id);
-            }
+            sidebar.querySelectorAll('li.active').forEach((l) => { l.classList.remove('active'); });
+            const li = last ? itemOf.get(last.id) : undefined;
+            if (!li) return;
+            li.classList.add('active');
+            const parent = li.parentElement && li.parentElement.closest('li');
+            if (parent) parent.classList.add('active');
         };
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        visible.add(entry.target);
-                    } else {
-                        visible.delete(entry.target);
-                    }
-                });
-                updateActive();
-            },
-            { rootMargin: '-20% 0px -70% 0px' },
-        );
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) visible.add(e.target);
+                else visible.delete(e.target);
+            });
+            update();
+        }, { rootMargin: '-20% 0px -70% 0px' });
 
-        document.querySelectorAll('section[id], header.part[id]').forEach((sec) => {
-            observer.observe(sec);
-        });
+        document.querySelectorAll('section[id], header.part[id]').forEach((s) => { io.observe(s); });
 
         return () => {
-            observer.disconnect();
+            io.disconnect();
         };
     }, []);
 
     return (
-        <aside className="sidebar" id="sidebar" aria-label="目次ナビゲーション">
-            <div className="brand">
-                <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
-                    <path
-                        d="M20 3 L35 9 V20 C35 28 28.500 34 20 37 C11.500 34 5 28 5 20 V9 Z"
-                        fill="#EEF1F8"
-                        stroke="#2E3F72"
-                        strokeWidth="2"
-                    />
-                    <path
-                        d="M13 20 L18 25 L27 15"
-                        fill="none"
-                        stroke="#B8802A"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
-                </svg>
-                <b>CCNP Security<br />学習ガイド</b>
-            </div>
-            <nav aria-label="ガイド目次">
-                {NAV_GROUPS.map((group, gIdx) => (
-                    <div key={gIdx}>
-                        <div className={`nav-group ${group.href ? '' : 'nav-plain'}`}>
-                            {group.href ? (
-                                <a
-                                    href={group.href}
-                                    onClick={() => group.href && handleLinkClick(group.href)}
-                                >
-                                    {group.title}
-                                </a>
-                            ) : (
-                                group.title
-                            )}
-                        </div>
-                        <ul>
-                            {group.items.map((item, iIdx) => {
-                                const itemId = item.href.slice(1);
-                                const isItemActive = activeId === itemId;
-                                const isSubActive = item.subItems?.some(
-                                    (sub) => activeId === sub.href.slice(1),
-                                );
-                                const isActive = isItemActive || isSubActive;
-
-                                return (
-                                    <li key={iIdx} className={isActive ? 'active' : ''}>
-                                        <a
-                                            href={item.href}
-                                            onClick={() => handleLinkClick(item.href)}
-                                        >
-                                            {item.title}
-                                        </a>
-                                        {item.subItems && (
-                                            <ul className="sub">
-                                                {item.subItems.map((sub, sIdx) => {
-                                                    const subId = sub.href.slice(1);
-                                                    const isSubItemActive = activeId === subId;
-                                                    return (
-                                                        <li
-                                                            key={sIdx}
-                                                            className={isSubItemActive ? 'active' : ''}
-                                                        >
-                                                            <a
-                                                                href={sub.href}
-                                                                onClick={() => handleLinkClick(sub.href)}
-                                                            >
-                                                                {sub.title}
-                                                            </a>
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        )}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                ))}
-            </nav>
-        </aside>
+        <aside className="sidebar" id="sidebar">{" "}<div className="brand">{" "}<svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 3 L35 9 V20 C35 28 28.500 34 20 37 C11.500 34 5 28 5 20 V9 Z" fill="#EEF1F8" stroke="#2E3F72" strokeWidth="2"></path><path d="M13 20 L18 25 L27 15" fill="none" stroke="#B8802A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"></path></svg>{" "}<b>{"CCNP Security"}<br></br>{"学習ガイド"}</b>{" "}</div>{" "}<nav>{" "}<div className="nav-group nav-plain">{"はじめに"}</div>{" "}<ul>{" "}<li><a href="#s1" onClick={() => handleLinkClick("#s1")}>{"0. このガイドの読み方"}</a>{" "}<ul className="sub">{" "}<li><a href="#t1" onClick={() => handleLinkClick("#t1")}>{"0.1 各トピックの書き方"}</a></li>{" "}<li><a href="#t2" onClick={() => handleLinkClick("#t2")}>{"0.2 根拠ラベル"}</a></li>{" "}<li><a href="#t3" onClick={() => handleLinkClick("#t3")}>{"0.3 注意事項"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s2" onClick={() => handleLinkClick("#s2")}>{"1. 【最重要】公式日本語ページと最新状況の差分"}</a>{" "}</li>{" "}<li><a href="#s3" onClick={() => handleLinkClick("#s3")}>{"2. 認定の全体像"}</a>{" "}<ul className="sub">{" "}<li><a href="#t4" onClick={() => handleLinkClick("#t4")}>{"2.1 取得要件"}</a></li>{" "}<li><a href="#t5" onClick={() => handleLinkClick("#t5")}>{"2.2 試験一覧（現行）"}</a></li>{" "}<li><a href="#t6" onClick={() => handleLinkClick("#t6")}>{"2.3 どのコンセントレーションを選ぶ？"}</a></li>{" "}<li><a href="#t7" onClick={() => handleLinkClick("#t7")}>{"2.4 有効期間・3 年ルール・再認定"}</a></li>{" "}<li><a href="#t8" onClick={() => handleLinkClick("#t8")}>{"2.5 学習ロードマップ（全体）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s4" onClick={() => handleLinkClick("#s4")}>{"3. 前提知識（初学者のための基礎）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t9" onClick={() => handleLinkClick("#t9")}>{"3.1 セキュリティの 3 要素（CIA）"}</a></li>{" "}<li><a href="#t10" onClick={() => handleLinkClick("#t10")}>{"3.2 AAA（認証・認可・アカウンティング）"}</a></li>{" "}<li><a href="#t11" onClick={() => handleLinkClick("#t11")}>{"3.3 暗号の基礎"}</a></li>{" "}<li><a href="#t12" onClick={() => handleLinkClick("#t12")}>{"3.4 試験で出やすいポート／プロトコル"}</a></li>{" "}<li><a href="#t13" onClick={() => handleLinkClick("#t13")}>{"3.5 ゼロトラストと多層防御（先取り）"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p1" onClick={() => handleLinkClick("#p1")}>{"Part A: コア試験 350-701 SCOR v2.0"}</a></div>{" "}<ul>{" "}<li><a href="#s5" onClick={() => handleLinkClick("#s5")}>{"A-1. ドメイン 1.0 Security Concepts（20%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t14" onClick={() => handleLinkClick("#t14")}>{"1.1 オンプレミス・ハイブリッド・クラウド環境への攻撃脅威"}</a></li>{" "}<li><a href="#t15" onClick={() => handleLinkClick("#t15")}>{"1.2 脆弱性とエクスプロイト（OWASP Top 10、CVE、CVSS）"}</a></li>{" "}<li><a href="#t16" onClick={() => handleLinkClick("#t16")}>{"1.3 AI／LLM モデルの脆弱性（新規）"}</a></li>{" "}<li><a href="#t17" onClick={() => handleLinkClick("#t17")}>{"1.4 フィッシング・ソーシャルエンジニアリング対策"}</a></li>{" "}<li><a href="#t18" onClick={() => handleLinkClick("#t18")}>{"1.5 暗号コンポーネント（ハッシュ、暗号化、PKI、TLS、QUIC、MASQUE、IPsec、PQC）"}</a></li>{" "}<li><a href="#t19" onClick={() => handleLinkClick("#t19")}>{"1.6 サイト間／リモートアクセス VPN の方式"}</a></li>{" "}<li><a href="#t20" onClick={() => handleLinkClick("#t20")}>{"1.7 セキュリティインテリジェンスの作成・共有・消費"}</a></li>{" "}<li><a href="#t21" onClick={() => handleLinkClick("#t21")}>{"1.8 ゼロトラストアーキテクチャ"}</a></li>{" "}<li><a href="#t22" onClick={() => handleLinkClick("#t22")}>{"1.9 多層防御と Cisco SAFE"}</a></li>{" "}<li><a href="#t23" onClick={() => handleLinkClick("#t23")}>{"1.10 セキュリティ機器 API を呼び出すスクリプトの読解（Python）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s6" onClick={() => handleLinkClick("#s6")}>{"A-2. ドメイン 2.0 Network Security（25%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t24" onClick={() => handleLinkClick("#t24")}>{"2.1 FW／IPS の導入形態（デプロイメントモデル）"}</a></li>{" "}<li><a href="#t25" onClick={() => handleLinkClick("#t25")}>{"2.2 セキュリティ監視とテレメトリ技術"}</a></li>{" "}<li><a href="#t26" onClick={() => handleLinkClick("#t26")}>{"2.3 ネットワークインフラのセキュリティ（VLAN／SGT、L2 防御）"}</a></li>{" "}<li><a href="#t27" onClick={() => handleLinkClick("#t27")}>{"2.4 ネットワークセキュリティ製品の管理方式の選択"}</a></li>{" "}<li><a href="#t28" onClick={() => handleLinkClick("#t28")}>{"2.5 CIS ベンチマークによる機器のハードニング"}</a></li>{" "}<li><a href="#t29" onClick={() => handleLinkClick("#t29")}>{"2.6 AAA（TACACS+／RADIUS）のトラブルシューティング"}</a></li>{" "}<li><a href="#t30" onClick={() => handleLinkClick("#t30")}>{"2.7 セキュアなネットワーク管理（SNMPv3、NETCONF、RESTCONF、API、セキュア syslog、NTP 認証）"}</a></li>{" "}<li><a href="#t31" onClick={() => handleLinkClick("#t31")}>{"2.8 FTD のアクセスコントロール、AVC、URL フィルタ、マルウェア防御、IPS"}</a></li>{" "}<li><a href="#t32" onClick={() => handleLinkClick("#t32")}>{"2.9 FTD と Cisco Secure Client によるサイト間／リモートアクセス VPN の構成"}</a></li>{" "}<li><a href="#t33" onClick={() => handleLinkClick("#t33")}>{"2.10 FTD の VPN トンネル確立のトラブルシューティング"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s7" onClick={() => handleLinkClick("#s7")}>{"A-3. ドメイン 3.0 Cloud Security（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t34" onClick={() => handleLinkClick("#t34")}>{"3.1 クラウドの責任共有モデル"}</a></li>{" "}<li><a href="#t35" onClick={() => handleLinkClick("#t35")}>{"3.2 クラウドセキュリティの機能・展開モデル・フレームワーク・ポリシー管理"}</a></li>{" "}<li><a href="#t36" onClick={() => handleLinkClick("#t36")}>{"3.3 クラウド環境のセキュリティソリューション選定（NIST SP 800-145、CASB）"}</a></li>{" "}<li><a href="#t37" onClick={() => handleLinkClick("#t37")}>{"3.4 クラウドのネットワーク・アプリ・データ保護（Multicloud Defense、Secure Workload）"}</a></li>{" "}<li><a href="#t38" onClick={() => handleLinkClick("#t38")}>{"3.5 Splunk によるクラウドログの取り込み"}</a></li>{" "}<li><a href="#t39" onClick={() => handleLinkClick("#t39")}>{"3.6 アプリケーションとワークロードのセキュリティ（eBPF を含む）"}</a></li>{" "}<li><a href="#t40" onClick={() => handleLinkClick("#t40")}>{"3.7 DevSecOps（IaC セキュリティ、CI/CD、コンテナオーケストレーション、安全な開発）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s8" onClick={() => handleLinkClick("#s8")}>{"A-4. ドメイン 4.0 Secure Service Edge（10%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t41" onClick={() => handleLinkClick("#t41")}>{"4.1 SSE と SASE"}</a></li>{" "}<li><a href="#t42" onClick={() => handleLinkClick("#t42")}>{"4.2 Cisco Secure Access：Secure Internet Access の構成"}</a></li>{" "}<li><a href="#t43" onClick={() => handleLinkClick("#t43")}>{"4.3 Cisco Secure Access：Secure Private Access の構成"}</a></li>{" "}<li><a href="#t44" onClick={() => handleLinkClick("#t44")}>{"4.4 データ損失防止（DLP）と AI ガードレールの設定"}</a></li>{" "}<li><a href="#t45" onClick={() => handleLinkClick("#t45")}>{"4.5 Secure Access Investigate のスコアと指標の読み方"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s9" onClick={() => handleLinkClick("#s9")}>{"A-5. ドメイン 5.0 Endpoint Protection and Detection（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t46" onClick={() => handleLinkClick("#t46")}>{"5.1 EPP と EDR の違い"}</a></li>{" "}<li><a href="#t47" onClick={() => handleLinkClick("#t47")}>{"5.2 モバイルデバイス管理（MDM）と資産インベントリ"}</a></li>{" "}<li><a href="#t48" onClick={() => handleLinkClick("#t48")}>{"5.3 ポスチャ評価と端末コンプライアンス"}</a></li>{" "}<li><a href="#t49" onClick={() => handleLinkClick("#t49")}>{"5.4 Cisco Secure Client と Secure Malware Analytics"}</a></li>{" "}<li><a href="#t50" onClick={() => handleLinkClick("#t50")}>{"5.5 Cisco Secure Endpoint のアンチマルウェア保護の設定"}</a></li>{" "}<li><a href="#t51" onClick={() => handleLinkClick("#t51")}>{"5.6 Secure Endpoint のマルウェアイベントの解釈"}</a></li>{" "}<li><a href="#t52" onClick={() => handleLinkClick("#t52")}>{"5.7 Cisco Secure Email Threat Defense によるメール脅威対策"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s10" onClick={() => handleLinkClick("#s10")}>{"A-6. ドメイン 6.0 Network Access, Visibility, and Enforcement（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t53" onClick={() => handleLinkClick("#t53")}>{"6.1 アイデンティティ管理とセキュアなネットワークアクセスの概念"}</a></li>{" "}<li><a href="#t54" onClick={() => handleLinkClick("#t54")}>{"6.2 端末コンプライアンスとアプリケーション制御"}</a></li>{" "}<li><a href="#t55" onClick={() => handleLinkClick("#t55")}>{"6.3 802.1X と MAB（ISE）"}</a></li>{" "}<li><a href="#t56" onClick={() => handleLinkClick("#t56")}>{"6.4 CoA（Change of Authorization）"}</a></li>{" "}<li><a href="#t57" onClick={() => handleLinkClick("#t57")}>{"6.5 データ持ち出し（エクスフィルトレーション）手法"}</a></li>{" "}<li><a href="#t58" onClick={() => handleLinkClick("#t58")}>{"6.6 テレメトリ・AI/ML・XDR／SIEM／SOAR による可視化と強制"}</a></li>{" "}<li><a href="#t59" onClick={() => handleLinkClick("#t59")}>{"6.7 ゼロトラストにおける Duo（Trust Monitor、MFA、Device Trust、適応型アクセス）"}</a></li>{" "}<li><a href="#t60" onClick={() => handleLinkClick("#t60")}>{"6.8 Splunk によるセキュリティ情報・イベントの管理・オーケストレーション・自動化"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p2" onClick={() => handleLinkClick("#p2")}>{"Part B: 300-710 SNCF v1.2（Securing Networks with Cisco Firewalls）"}</a></div>{" "}<ul>{" "}<li><a href="#s11" onClick={() => handleLinkClick("#s11")}>{"B-1. ドメイン 1.0 Deployment（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t61" onClick={() => handleLinkClick("#t61")}>{"1.1 ルーテッド／トランスペアレント配置"}</a></li>{" "}<li><a href="#t62" onClick={() => handleLinkClick("#t62")}>{"1.2 NGIPS のパッシブ／インライン配置"}</a></li>{" "}<li><a href="#t63" onClick={() => handleLinkClick("#t63")}>{"1.3 高可用性（HA）とスケーリング"}</a></li>{" "}<li><a href="#t64" onClick={() => handleLinkClick("#t64")}>{"1.4 仮想アプライアンスとクラウド上の管理"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s12" onClick={() => handleLinkClick("#s12")}>{"B-2. ドメイン 2.0 Configuration（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t65" onClick={() => handleLinkClick("#t65")}>{"2.1 FMC のシステム設定"}</a></li>{" "}<li><a href="#t66" onClick={() => handleLinkClick("#t66")}>{"2.2 各種ポリシー"}</a></li>{" "}<li><a href="#t67" onClick={() => handleLinkClick("#t67")}>{"2.3 ネットワーク検出・相関・EVE"}</a></li>{" "}<li><a href="#t68" onClick={() => handleLinkClick("#t68")}>{"2.4 オブジェクトと侵入防御ルール"}</a></li>{" "}<li><a href="#t69" onClick={() => handleLinkClick("#t69")}>{"2.5 デバイス管理：証明書、プラットフォーム設定、NAT、ルーティング、ネットワーク設定、セキュアアクセス"}</a></li>{" "}<li><a href="#t70" onClick={() => handleLinkClick("#t70")}>{"2.6 FTD のトラフィック処理の全体像（学習の要）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s13" onClick={() => handleLinkClick("#s13")}>{"B-3. ドメイン 3.0 Management and Troubleshooting（25%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t71" onClick={() => handleLinkClick("#t71")}>{"3.1 FMC と FTD CLI によるトラブルシューティング"}</a></li>{" "}<li><a href="#t72" onClick={() => handleLinkClick("#t72")}>{"3.2 ダッシュボードとレポート"}</a></li>{" "}<li><a href="#t73" onClick={() => handleLinkClick("#t73")}>{"3.3 トラブルシュートツール"}</a></li>{" "}<li><a href="#t74" onClick={() => handleLinkClick("#t74")}>{"3.4 イベントとネットワークマップ"}</a></li>{" "}<li><a href="#t75" onClick={() => handleLinkClick("#t75")}>{"3.5 管理ツールの選択"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s14" onClick={() => handleLinkClick("#s14")}>{"B-4. ドメイン 4.0 Integration（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t76" onClick={() => handleLinkClick("#t76")}>{"4.1 マルウェア防御（Malware Defense）"}</a></li>{" "}<li><a href="#t77" onClick={() => handleLinkClick("#t77")}>{"4.2 Secure Endpoint 連携"}</a></li>{" "}<li><a href="#t78" onClick={() => handleLinkClick("#t78")}>{"4.3 Threat Intelligence Director（TID）"}</a></li>{" "}<li><a href="#t79" onClick={() => handleLinkClick("#t79")}>{"4.4 Cisco XDR 連携"}</a></li>{" "}<li><a href="#t80" onClick={() => handleLinkClick("#t80")}>{"4.5 pxGrid と ISE"}</a></li>{" "}<li><a href="#t81" onClick={() => handleLinkClick("#t81")}>{"4.6 Rapid Threat Containment（RTC）"}</a></li>{" "}<li><a href="#t82" onClick={() => handleLinkClick("#t82")}>{"4.7 Security Analytics and Logging（SAL）"}</a></li>{" "}<li><a href="#t83" onClick={() => handleLinkClick("#t83")}>{"4.8 Splunk 連携"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p3" onClick={() => handleLinkClick("#p3")}>{"Part C: 300-715 SISE v1.2（Implementing and Configuring Cisco Identity Services Engine）"}</a></div>{" "}<ul>{" "}<li><a href="#s15" onClick={() => handleLinkClick("#s15")}>{"C-1. ドメイン 1.0 Architecture and Deployment（10%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t84" onClick={() => handleLinkClick("#t84")}>{"1.1 ペルソナ（ノードの役割）"}</a></li>{" "}<li><a href="#t85" onClick={() => handleLinkClick("#t85")}>{"1.2 展開形態と設計"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s16" onClick={() => handleLinkClick("#s16")}>{"C-2. ドメイン 2.0 Policy Enforcement（25%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t86" onClick={() => handleLinkClick("#t86")}>{"2.1 AD と LDAP の連携"}</a></li>{" "}<li><a href="#t87" onClick={() => handleLinkClick("#t87")}>{"2.2 ID ストアの選択肢とシーケンス"}</a></li>{" "}<li><a href="#t88" onClick={() => handleLinkClick("#t88")}>{"2.3 無線 LAN の 802.1X"}</a></li>{" "}<li><a href="#t89" onClick={() => handleLinkClick("#t89")}>{"2.4 有線 802.1X（IBNS 2.0）とホストモード"}</a></li>{" "}<li><a href="#t90" onClick={() => handleLinkClick("#t90")}>{"2.5 MAB"}</a></li>{" "}<li><a href="#t91" onClick={() => handleLinkClick("#t91")}>{"2.6 TrustSec（SGT）"}</a></li>{" "}<li><a href="#t92" onClick={() => handleLinkClick("#t92")}>{"2.7 認証・認可ポリシーとプロファイル"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s17" onClick={() => handleLinkClick("#s17")}>{"C-3. ドメイン 3.0 Web Auth and Guest Services（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t93" onClick={() => handleLinkClick("#t93")}>{"3.1 Web 認証の方式"}</a></li>{" "}<li><a href="#t94" onClick={() => handleLinkClick("#t94")}>{"3.2 ゲストアクセスのタイプ"}</a></li>{" "}<li><a href="#t95" onClick={() => handleLinkClick("#t95")}>{"3.3 ポータルの設定"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s18" onClick={() => handleLinkClick("#s18")}>{"C-4. ドメイン 4.0 Profiler（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t96" onClick={() => handleLinkClick("#t96")}>{"4.1 プローブ（情報の収集手段）"}</a></li>{" "}<li><a href="#t97" onClick={() => handleLinkClick("#t97")}>{"4.2 プロファイリングポリシー"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s19" onClick={() => handleLinkClick("#s19")}>{"C-5. ドメイン 5.0 BYOD（15%）"}</a>{" "}</li>{" "}<li><a href="#s20" onClick={() => handleLinkClick("#s20")}>{"C-6. ドメイン 6.0 Endpoint Compliance（10%）"}</a>{" "}</li>{" "}<li><a href="#s21" onClick={() => handleLinkClick("#s21")}>{"C-7. ドメイン 7.0 Network Access Device Administration（10%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t98" onClick={() => handleLinkClick("#t98")}>{"7.1 RADIUS と TACACS+ の使い分け"}</a></li>{" "}<li><a href="#t99" onClick={() => handleLinkClick("#t99")}>{"7.2 ISE の TACACS+ 設定の流れ"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p4" onClick={() => handleLinkClick("#p4")}>{"Part D: 300-740 SSCA v2.0（Designing and Implementing Secure Cloud Access for Users and Endpoints）"}</a></div>{" "}<ul>{" "}<li><a href="#s22" onClick={() => handleLinkClick("#s22")}>{"D-1. ドメイン 1.0 Concepts（10%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t100" onClick={() => handleLinkClick("#t100")}>{"1.1 ゼロトラストのフレームワーク"}</a></li>{" "}<li><a href="#t101" onClick={() => handleLinkClick("#t101")}>{"1.2 MITRE ATT&CK のクラウド攻撃"}</a></li>{" "}<li><a href="#t102" onClick={() => handleLinkClick("#t102")}>{"1.3 パブリッククラウドのセキュリティ要件"}</a></li>{" "}<li><a href="#t103" onClick={() => handleLinkClick("#t103")}>{"1.4 運用上の要件"}</a></li>{" "}<li><a href="#t104" onClick={() => handleLinkClick("#t104")}>{"1.5 プライベートクラウド"}</a></li>{" "}<li><a href="#t105" onClick={() => handleLinkClick("#t105")}>{"1.6 eBPF（Cilium／Tetragon）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s23" onClick={() => handleLinkClick("#s23")}>{"D-2. ドメイン 2.0 Identity（20%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t106" onClick={() => handleLinkClick("#t106")}>{"2.1 ID インテリジェンス（Cisco Identity Intelligence）"}</a></li>{" "}<li><a href="#t107" onClick={() => handleLinkClick("#t107")}>{"2.2 証明書による認証（ユーザー／デバイス）"}</a></li>{" "}<li><a href="#t108" onClick={() => handleLinkClick("#t108")}>{"2.3 MFA（ユーザーとデバイス）"}</a></li>{" "}<li><a href="#t109" onClick={() => handleLinkClick("#t109")}>{"2.4 端末ポスチャによるアクセス制御"}</a></li>{" "}<li><a href="#t110" onClick={() => handleLinkClick("#t110")}>{"2.5 SAML（モバイル／Web アプリ）"}</a></li>{" "}<li><a href="#t111" onClick={() => handleLinkClick("#t111")}>{"2.6 SSO と ID プロビジョニング（SCIM／SAML）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s24" onClick={() => handleLinkClick("#s24")}>{"D-3. ドメイン 3.0 Policies（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t112" onClick={() => handleLinkClick("#t112")}>{"3.1 暗号化（転送中・保存時）"}</a></li>{" "}<li><a href="#t113" onClick={() => handleLinkClick("#t113")}>{"3.2 IPS・DLP・マルウェア対策によるプライベートアクセスの保護"}</a></li>{" "}<li><a href="#t114" onClick={() => handleLinkClick("#t114")}>{"3.3 Cisco AI Defense"}</a></li>{" "}<li><a href="#t115" onClick={() => handleLinkClick("#t115")}>{"3.4 Secure Access の AI アクセス制御とガードレール"}</a></li>{" "}<li><a href="#t116" onClick={() => handleLinkClick("#t116")}>{"3.5 WAF と DDoS 対策"}</a></li>{" "}<li><a href="#t117" onClick={() => handleLinkClick("#t117")}>{"3.6 エッジのネットワークセキュリティポリシー（SSE と SD-WAN）"}</a></li>{" "}<li><a href="#t118" onClick={() => handleLinkClick("#t118")}>{"3.7 Cisco Secure Workload によるアプリケーション制御（マイクロセグメンテーション）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s25" onClick={() => handleLinkClick("#s25")}>{"D-4. ドメイン 4.0 Access（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t119" onClick={() => handleLinkClick("#t119")}>{"4.1 DNS セキュリティ"}</a></li>{" "}<li><a href="#t120" onClick={() => handleLinkClick("#t120")}>{"4.2 Secure Web Gateway（SWG）"}</a></li>{" "}<li><a href="#t121" onClick={() => handleLinkClick("#t121")}>{"4.3 DLP"}</a></li>{" "}<li><a href="#t122" onClick={() => handleLinkClick("#t122")}>{"4.4 CASB"}</a></li>{" "}<li><a href="#t123" onClick={() => handleLinkClick("#t123")}>{"4.5 プライベートアクセス（ワークロード・拠点）"}</a></li>{" "}<li><a href="#t124" onClick={() => handleLinkClick("#t124")}>{"4.6 VPN as a Service・DEM・ZTA"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s26" onClick={() => handleLinkClick("#s26")}>{"D-5. ドメイン 5.0 Operations（10%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t125" onClick={() => handleLinkClick("#t125")}>{"5.1 可視化とマイクロセグメンテーションのツール選択"}</a></li>{" "}<li><a href="#t126" onClick={() => handleLinkClick("#t126")}>{"5.2 フローとテレメトリの解釈"}</a></li>{" "}<li><a href="#t127" onClick={() => handleLinkClick("#t127")}>{"5.3 ダッシュボードとレポート"}</a></li>{" "}<li><a href="#t128" onClick={() => handleLinkClick("#t128")}>{"5.4 XDR と Splunk への連携"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p5" onClick={() => handleLinkClick("#p5")}>{"Part E: 300-745 SDSI v1.0（Designing Cisco Security Infrastructure）"}</a></div>{" "}<ul>{" "}<li><a href="#s27" onClick={() => handleLinkClick("#s27")}>{"E-1. ドメイン 1.0 Secure Infrastructure（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t129" onClick={() => handleLinkClick("#t129")}>{"1.1 領域別のセキュリティ方針（エンドポイント・ID・メール）"}</a></li>{" "}<li><a href="#t130" onClick={() => handleLinkClick("#t130")}>{"1.2 要件に応じたアーキテクチャの変更"}</a></li>{" "}<li><a href="#t131" onClick={() => handleLinkClick("#t131")}>{"1.3 VPN とトンネルの選択"}</a></li>{" "}<li><a href="#t132" onClick={() => handleLinkClick("#t132")}>{"1.4 管理プレーンと制御プレーンの保護"}</a></li>{" "}<li><a href="#t133" onClick={() => handleLinkClick("#t133")}>{"1.5 ファイアウォールの機能・アーキテクチャ選定"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s28" onClick={() => handleLinkClick("#s28")}>{"E-2. ドメイン 2.0 Applications（25%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t134" onClick={() => handleLinkClick("#t134")}>{"2.1 アプリの要件に基づくソリューション選定"}</a></li>{" "}<li><a href="#t135" onClick={() => handleLinkClick("#t135")}>{"2.2 クラウドネイティブアプリのセグメンテーション"}</a></li>{" "}<li><a href="#t136" onClick={() => handleLinkClick("#t136")}>{"2.3 新技術に対するポリシー（生成 AI・機械学習・量子）"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s29" onClick={() => handleLinkClick("#s29")}>{"E-3. ドメイン 3.0 Risk, Events, and Requirements（30%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t137" onClick={() => handleLinkClick("#t137")}>{"3.1 SOC とインシデント対応のツール"}</a></li>{" "}<li><a href="#t138" onClick={() => handleLinkClick("#t138")}>{"3.2 リスクを下げる設計変更"}</a></li>{" "}<li><a href="#t139" onClick={() => handleLinkClick("#t139")}>{"3.3 インシデント後の設計見直し"}</a></li>{" "}<li><a href="#t140" onClick={() => handleLinkClick("#t140")}>{"3.4 フレームワーク"}</a></li>{" "}<li><a href="#t141" onClick={() => handleLinkClick("#t141")}>{"3.5 規制・業界基準への適合"}</a></li>{" "}</ul>{" "}</li>{" "}<li><a href="#s30" onClick={() => handleLinkClick("#s30")}>{"E-4. ドメイン 4.0 AI, Automation, and DevSecOps（15%）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t142" onClick={() => handleLinkClick("#t142")}>{"4.1 AI がセキュリティインフラで果たす役割"}</a></li>{" "}<li><a href="#t143" onClick={() => handleLinkClick("#t143")}>{"4.2 自動化の要素"}</a></li>{" "}<li><a href="#t144" onClick={() => handleLinkClick("#t144")}>{"4.3 DevSecOps パイプラインの次の一手"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}<div className="nav-group"><a href="#p6" onClick={() => handleLinkClick("#p6")}>{"付録"}</a></div>{" "}<ul>{" "}<li><a href="#s31" onClick={() => handleLinkClick("#s31")}>{"付録 A. 旧コンセントレーション（受験終了）の位置づけ"}</a>{" "}</li>{" "}<li><a href="#s32" onClick={() => handleLinkClick("#s32")}>{"付録 B. 学習計画の例（12 週間）"}</a>{" "}</li>{" "}<li><a href="#s33" onClick={() => handleLinkClick("#s33")}>{"付録 C. 用語集"}</a>{" "}</li>{" "}<li><a href="#s34" onClick={() => handleLinkClick("#s34")}>{"付録 D. 参考 URL 一覧（根拠ソース）"}</a>{" "}<ul className="sub">{" "}<li><a href="#t145" onClick={() => handleLinkClick("#t145")}>{"D-1. Cisco 公式（認定・試験）"}</a></li>{" "}<li><a href="#t146" onClick={() => handleLinkClick("#t146")}>{"D-2. Cisco 製品ドキュメント"}</a></li>{" "}<li><a href="#t147" onClick={() => handleLinkClick("#t147")}>{"D-3. 標準・業界ガイダンス"}</a></li>{" "}<li><a href="#t148" onClick={() => handleLinkClick("#t148")}>{"D-4. 補足（第三者）"}</a></li>{" "}</ul>{" "}</li>{" "}</ul>{" "}</nav>{" "}</aside>
     );
 }

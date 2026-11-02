@@ -142,6 +142,19 @@ function nodeToJsx(node) {
     const tag = node.tagName.toLowerCase();
     const attrs = [];
 
+    // th には常に scope="col" を付与
+    if (tag === 'th') {
+        attrs.push('scope="col"');
+    }
+
+    // colspan, rowspan
+    if (node.getAttribute('colspan')) {
+        attrs.push(`colSpan={${node.getAttribute('colspan')}}`);
+    }
+    if (node.getAttribute('rowspan')) {
+        attrs.push(`rowSpan={${node.getAttribute('rowspan')}}`);
+    }
+
     // class -> className
     if (node.getAttribute('class')) {
         attrs.push(`className="${node.getAttribute('class')}"`);
@@ -212,10 +225,99 @@ ${jsxContent}
     console.log(`Generated ${outPath} (${b.name}: ${b.start}..${b.end})`);
 }
 
+function generateNavBar() {
+    const sidebar = doc.querySelector('aside.sidebar');
+    const sidebarJsx = nodeToJsx(sidebar);
+
+    const content = `'use client';
+
+import { useEffect, useCallback } from 'react';
+
+interface NavBarProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+/**
+ * CCNP Security ガイド用のサイドバー目次コンポーネント。
+ * ScrollSpy、キーボードフォーカス連動、モバイル開閉制御を提供します。
+ */
+export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
+    const handleLinkClick = useCallback((href: string) => {
+        onClose();
+        if (href.startsWith('#')) {
+            const targetId = href.slice(1);
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.tabIndex = -1;
+                targetEl.focus();
+            }
+        }
+    }, [onClose]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        const itemOf = new Map<string, HTMLElement>();
+        sidebar.querySelectorAll('a[href^="#"]').forEach((a) => {
+            const li = a.closest('li');
+            const href = a.getAttribute('href');
+            if (li && href) {
+                itemOf.set(href.slice(1), li as HTMLElement);
+            }
+        });
+
+        const visible = new Set<Element>();
+        const update = () => {
+            if (!visible.size) return;
+            const arr = Array.from(visible).sort((a, b) => {
+                return (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
+            });
+            const last = arr[arr.length - 1];
+            sidebar.querySelectorAll('li.active').forEach((l) => { l.classList.remove('active'); });
+            const li = last ? itemOf.get(last.id) : undefined;
+            if (!li) return;
+            li.classList.add('active');
+            const parent = li.parentElement && li.parentElement.closest('li');
+            if (parent) parent.classList.add('active');
+        };
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) visible.add(e.target);
+                else visible.delete(e.target);
+            });
+            update();
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        document.querySelectorAll('section[id], header.part[id]').forEach((s) => { io.observe(s); });
+
+        return () => {
+            io.disconnect();
+        };
+    }, []);
+
+    return (
+        \${sidebarJsx}
+    );
+}
+`;
+
+    fs.writeFileSync('app/cisco/ccnp-security/NavBar.tsx', content, 'utf8');
+    console.log('Generated app/cisco/ccnp-security/NavBar.tsx');
+}
+
 const targets = targetPhase && targetPhase !== 'all'
     ? boundaries.filter(b => b.name === targetPhase)
     : boundaries;
 
 for (const b of targets) {
     generateSection(b);
+}
+
+if (!targetPhase || targetPhase === 'all' || targetPhase === 'navbar') {
+    generateNavBar();
 }

@@ -3,9 +3,10 @@
 import { vi, describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { render } from '@testing-library/react';
 import inventory from '@/docs/migration-inventory/cisco-ccnp-security.json';
 import CcnpSecurityGuide from '@/app/cisco/ccnp-security/CcnpSecurityGuide';
-import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
+import { defineMigrationSuite, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
