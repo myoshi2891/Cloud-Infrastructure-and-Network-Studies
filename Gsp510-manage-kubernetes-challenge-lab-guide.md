@@ -860,8 +860,15 @@ echo "CONTAINER_NAME=${CONTAINER_NAME}"
 一般的には `hello-app` と表示されます。取得した名前を使って更新します。
 
 ```bash
-kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"
-kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
+# イメージ更新に失敗したら rollout status を実行しない（旧 Deployment のまま「完了」と表示されるのを防ぐ）
+# ( ) のサブシェル内で exit 1 するため、Cloud Shell は閉じずに終了ステータスだけが 0 以外になる
+(
+if ! kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"; then
+  echo "イメージの更新に失敗しました。コンテナ名と IMAGE を確認してください。ロールアウトは待機しません" >&2
+  exit 1
+fi
+kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME" || exit 1
+)
 ```
 
 | 部分 | 意味 |

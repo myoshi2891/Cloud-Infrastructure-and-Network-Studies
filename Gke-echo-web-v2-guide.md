@@ -295,7 +295,10 @@ docker push gcr.io/$PROJECT_ID/echo-app:v2
 
 **手順 3：確認**
 
+`gcloud artifacts` コマンドは Artifact Registry API を使います。gcr.io へ push できた環境では通常有効になっていますが、無効のままだと `API has not been used` などのエラーになるため、先に有効化しておきます（有効化済みなら何も変わりません）。
+
 ```bash
+gcloud services enable artifactregistry.googleapis.com --project="$PROJECT_ID"
 gcloud artifacts docker tags list us-docker.pkg.dev/$PROJECT_ID/gcr.io/echo-app
 ```
 
@@ -360,16 +363,24 @@ echo "CONTAINER_NAME=${CONTAINER_NAME}"
 イメージの更新に失敗した場合は、ロールアウトの待機を実行せずにその場で止めます。`Task 3 が完了しました` と表示されない場合は、エラーを解消するまで Task 4 に進まないでください。
 
 ```bash
+# ( ) のサブシェル内で exit 1 するため、Cloud Shell は閉じずに終了ステータスだけが 0 以外になる
+(
 if [ -z "${CONTAINER_NAME:-}" ]; then
   echo "CONTAINER_NAME が空です。手順 1 を再実行してください。Task 4 には進まないでください" >&2
+  exit 1
 elif ! kubectl set image deployment/echo-web "${CONTAINER_NAME}=gcr.io/$PROJECT_ID/echo-app:v2"; then
   echo "イメージの更新に失敗しました。ロールアウトは待機しません。Task 4 には進まないでください" >&2
+  exit 1
 elif ! kubectl rollout status deployment/echo-web --timeout=5m; then
   echo "ロールアウトが完了しませんでした。原因を確認するまで Task 4 には進まないでください" >&2
+  exit 1
 else
   echo "Task 3 が完了しました"
 fi
+)
 ```
+
+失敗した場合はコマンド全体の終了ステータスが 0 以外になります（`echo $?` で確認できます）。スクリプトや `&&` で Task 4 のコマンドをつないでいる場合も、そこで止まります。
 
 | 部分 | 意味 |
 |---|---|
@@ -390,10 +401,21 @@ kubectl get deployment echo-web -o jsonpath='{.spec.template.spec.containers[0].
 
 v1 のデプロイ時に作成した `echo-web` Service（LoadBalancer、80 → 8000）が**そのまま v2 の Pod にも通信を届けます**。Service は Pod の「ラベル」で対象を選ぶため、イメージを更新しても作り直す必要はありません。
 
-もし Service を誤って削除していた場合は、次で再作成します。
+もし Service を誤って削除していた場合は、次で再作成します。既存の Service があればそのまま使い、無い場合だけ作成するため、再実行しても `AlreadyExists` エラーにならず Task 5 の外部 IP 確認へ進めます。
 
 ```bash
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 確認自体が失敗した場合（認証切れなど）は「未作成」と誤認せず、作成せずに止める
+(
+if ! SERVICE=$(kubectl get service echo-web --ignore-not-found -o name); then
+  echo "Service の確認に失敗しました。Service は作成しません。" >&2
+  exit 1
+elif [ -z "$SERVICE" ]; then
+  kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000 || exit 1
+else
+  echo "既存の Service を使います: $SERVICE"
+fi
+kubectl get service echo-web
+)
 ```
 
 ### 5.5 ベストプラクティス：宣言的に管理する
