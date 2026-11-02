@@ -165,25 +165,34 @@ export REGION="${ZONE%-*}"
 # 現在のプロジェクト ID を取得
 export PROJECT_ID="$(gcloud config get-value project)"
 
-# バケット名（グローバルで一意にする必要があるため、プロジェクト ID を含める）
-export BUCKET_NAME="${PROJECT_ID}-startup-scripts"
+# プロジェクト ID が取得できなかった場合（空、または "(unset)"）は、以降の変数設定と gcloud コマンドを実行しない
+# （変数を現在のシェルに残すため exit やサブシェルは使わず、if/else で分岐する）
+if [ -z "${PROJECT_ID}" ] || [ "${PROJECT_ID}" = "(unset)" ]; then
+  echo "プロジェクト ID を取得できません。gcloud config set project <ラボのプロジェクト ID> を実行してから、このブロックを再実行してください。" >&2
+  unset PROJECT_ID
+else
+  # バケット名（グローバルで一意にする必要があるため、プロジェクト ID を含める）
+  export BUCKET_NAME="${PROJECT_ID}-startup-scripts"
 
-# VM 名
-export VM_NAME="web-server"
+  # VM 名
+  export VM_NAME="web-server"
 
-# VM とファイアウォールルールを置く VPC ネットワーク（Task 2・Task 3 で同じ値を使う）
-export NETWORK="default"
+  # VM とファイアウォールルールを置く VPC ネットワーク（Task 2・Task 3 で同じ値を使う）
+  export NETWORK="default"
 
-# VM を接続するサブネット（NETWORK に属し、ZONE のリージョン REGION にあるもの）
-export SUBNET="default"
+  # VM を接続するサブネット（NETWORK に属し、ZONE のリージョン REGION にあるもの）
+  export SUBNET="default"
 
-# 変数の確認
-echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}  NETWORK=${NETWORK}  SUBNET=${SUBNET}"
+  # 変数の確認
+  echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}  NETWORK=${NETWORK}  SUBNET=${SUBNET}"
 
-# SUBNET が NETWORK に属し REGION にあることを確認する（network 列の末尾が NETWORK と一致すれば OK）
-gcloud compute networks subnets describe "${SUBNET}" --project="${PROJECT_ID}" --region="${REGION}" \
-  --format="value(name,region.basename(),network.basename())"
+  # SUBNET が NETWORK に属し REGION にあることを確認する（network 列の末尾が NETWORK と一致すれば OK）
+  gcloud compute networks subnets describe "${SUBNET}" --project="${PROJECT_ID}" --region="${REGION}" \
+    --format="value(name,region.basename(),network.basename())"
+fi
 ```
+
+> ⚠️ **プロジェクト ID の確認**: 「プロジェクト ID を取得できません」と表示された場合は、`PROJECT=` を含む確認行が表示されません。プロジェクトを設定してブロックを再実行し、確認行が表示されてから Task 1 へ進んでください。
 
 ⚠️ **前提（ネットワーク）**: 本ガイドは、ラボのプロジェクトに自動モードの `default` VPC が存在することを前提に `NETWORK="default"`・`SUBNET="default"` としています（自動モードの VPC では、各リージョンにネットワークと同名のサブネットが作られます）。`gcloud compute networks list --project="${PROJECT_ID}"` で `default` が表示されない場合や、ラボが別のネットワークを指定している場合は、`NETWORK` をその名前に置き換え、`gcloud compute networks subnets list --project="${PROJECT_ID}" --network="${NETWORK}" --regions="${REGION}"` で表示されたサブネット名を `SUBNET` に設定してください。
 

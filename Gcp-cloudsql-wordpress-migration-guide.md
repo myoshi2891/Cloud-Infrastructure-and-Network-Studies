@@ -686,8 +686,13 @@ DynamicUser=yes
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo systemctl daemon-reload
-sudo systemctl enable --now cloud-sql-proxy
+# 定義の再読み込み・有効化・明示的な再起動・稼働確認のどれかが失敗したら移行を中止する
+# （enable --now は起動済みのプロキシを再起動しないため、設定変更を確実に反映するよう restart を分けて実行する）
+sudo systemctl daemon-reload \
+  && sudo systemctl enable cloud-sql-proxy \
+  && sudo systemctl restart cloud-sql-proxy \
+  && sudo systemctl is-active --quiet cloud-sql-proxy \
+  || { echo "Auth Proxy の有効化・再起動・稼働確認に失敗しました。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; sudo systemctl status cloud-sql-proxy --no-pager; exit 1; }
 sudo systemctl status cloud-sql-proxy --no-pager
 
 # プロキシ経由で Cloud SQL に接続できることを確認する（パスワードは対話入力）
@@ -705,7 +710,9 @@ mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM ${
 **1. 必ず先にバックアップを取る**（引き続き `blog` の中で）
 
 ```bash
-sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
+# バックアップに失敗したら wp-config.php を変更せずに中止する（新しいバックアップなしで以降の手順へ進まない）
+sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak \
+  || { echo "wp-config.php のバックアップに失敗しました。wp-config.php は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 ```
 
 > **ベストプラクティス**: 設定ファイルを触る前のバックアップは基本です。失敗してもすぐ戻せます。バックアップは Web ルート（`/var/www/html`）の外の `/root` に、所有者 root・権限 `0600` で保存します。Web ルート内に置くと、DB パスワードを含むファイルが HTTP 経由で取得されるおそれがあります。
@@ -1117,14 +1124,21 @@ DynamicUser=yes
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo systemctl daemon-reload
-sudo systemctl enable --now cloud-sql-proxy
+# 定義の再読み込み・有効化・明示的な再起動・稼働確認のどれかが失敗したら移行を中止する
+# （enable --now は起動済みのプロキシを再起動しないため、設定変更を確実に反映するよう restart を分けて実行する）
+sudo systemctl daemon-reload \
+  && sudo systemctl enable cloud-sql-proxy \
+  && sudo systemctl restart cloud-sql-proxy \
+  && sudo systemctl is-active --quiet cloud-sql-proxy \
+  || { echo "Auth Proxy の有効化・再起動・稼働確認に失敗しました。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; sudo systemctl status cloud-sql-proxy --no-pager; exit 1; }
 # プロキシ経由で接続できない場合は、DB_HOST を変更する前に中止する
 mysql -h 127.0.0.1 -P 3307 -u blogadmin -p wordpress -e "SELECT COUNT(*) FROM ${WP_TABLE_PREFIX}posts;" \
   || { echo "Auth Proxy 経由で接続できません。DB_HOST は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 
 # ---------- Task 4: wp-config.php 更新（証明書の検証を無効にする MYSQL_CLIENT_FLAGS は設定しない） ----------
-sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
+# バックアップに失敗したら wp-config.php を変更せずに中止する（新しいバックアップなしで以降の手順へ進まない）
+sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak \
+  || { echo "wp-config.php のバックアップに失敗しました。wp-config.php は変更せず移行を中止します（SSH セッションを終了します）" >&2; exit 1; }
 sudo sed -i -E "s/define\( *['\"]DB_HOST['\"] *, *['\"][^'\"]*['\"] *\);/define( 'DB_HOST', '127.0.0.1:3307' );/" \
   /var/www/html/wordpress/wp-config.php
 grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php
