@@ -1,20 +1,19 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 import ts from 'typescript';
+import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 
 const dir = 'app/aws/security-specialty/domain2';
-const html = fs.readFileSync('Aws-scs-c03-domain2-incident-response-guide.html', 'utf8');
+// 原本と区間境界は fidelity 設定を単一の正本とし、固定Gitリビジョンから読む
+const config = FIDELITY_PAGES['aws-scs-c03-domain2-guide'];
+const html = execFileSync('git', ['show', `${config.sourceCommit}:${config.source}`], {
+    encoding: 'utf8',
+    maxBuffer: 8 * 1024 * 1024,
+});
 const doc = new JSDOM(html).window.document;
 
-const boundaries = {
-    hero: '',
-    task21: '3-task-21-インシデントレスポンス計画の設計とテスト',
-    task22: '4-task-22-セキュリティイベントへの対応',
-    scenarios: '5-実践シナリオ-3-本',
-    examprep: '6-試験対策',
-    checklist: '7-学習チェックリストと用語集',
-    appendix: '8-参考-url-一覧',
-};
+const boundaries = config.guideBoundaries;
 
 const phase = process.argv[2];
 if (!phase || !Object.hasOwn(boundaries, phase)) {

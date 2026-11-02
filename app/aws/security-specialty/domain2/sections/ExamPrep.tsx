@@ -1,3 +1,5 @@
+import PracticeQuestions from './PracticeQuestions';
+
 /** 原本の examprep セクション本文。 */
 export default function ExamPrep() {
     return (<section className="guide-part" data-part="examprep">
@@ -11,49 +13,6 @@ export default function ExamPrep() {
     {"\n                "}
     <div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 62：6.2 ひっかけポイント集"}>{"\n                    "}<table><thead><tr className={"header"}><th scope="col">{"#"}</th><th scope="col">{"ひっかけ"}</th><th scope="col">{"正しい理解"}</th></tr></thead><tbody><tr className={"odd"}><td>{"1"}</td><td>{"SG を変えれば既存の接続も切れる"}</td><td><strong>{"切れない。"}</strong>{" 追跡済みの既存接続は継続する"}</td></tr><tr className={"even"}><td>{"2"}</td><td>{"SG と NACL で DNS も止まる"}</td><td>{"\n                                    "}<strong>{"止まらない。"}</strong>{" Route 53\n                                    へのトラフィックはフィルタされない\n                                "}</td></tr><tr className={"odd"}><td>{"3"}</td><td>{"EBS スナップショットでメモリも保全される"}</td><td>{"\n                                    "}<strong>{"されない。"}</strong>{" EBS\n                                    に書かれたデータのみ。メモリは別途取得\n                                "}</td></tr><tr className={"even"}><td>{"4"}</td><td>{"隔離してからメモリを取る"}</td><td><strong>{"逆。"}</strong>{" メモリは隔離・停止の前に取る"}</td></tr><tr className={"odd"}><td>{"5"}</td><td>{"IAM ユーザーの一時認証情報はコンソールで失効できる"}</td><td>{"\n                                    できない。トークン発行時刻ベースの拒否ポリシーか、ユーザー削除\n                                "}</td></tr><tr className={"even"}><td>{"6"}</td><td>{"Shield Advanced を購読すれば SRT がすぐ使える"}</td><td>{"\n                                    "}<strong>{"Business / Enterprise サポート"}</strong>{"と SRT\n                                    のアクセス許可が必要\n                                "}</td></tr><tr className={"odd"}><td>{"7"}</td><td>{"Incident Manager が IR 管理の第一候補"}</td><td><strong>{"新規受付は終了。"}</strong>{" OpsCenter を使う"}</td></tr><tr className={"even"}><td>{"8"}</td><td>{"FIS は停止条件なしで安全に使える"}</td><td>{"\n                                    停止条件 (CloudWatch アラーム)\n                                    を設定する。停止した実験は再開できない\n                                "}</td></tr><tr className={"odd"}><td>{"9"}</td><td>{"Detective が脅威を検出する"}</td><td>{"検出は GuardDuty。Detective は"}<strong>{"調査・相関"}</strong></td></tr><tr className={"even"}><td>{"10"}</td><td>{"CloudTrail の整合性検証を有効にすれば自動で検証される"}</td><td>{"\n                                    有効化はダイジェスト配信のみ。"}<strong>{"検証は別途実行"}</strong>{"\n                                "}</td></tr><tr className={"odd"}><td>{"11"}</td><td>{"侵害された EC2 は掃除して使い続けるのが安全"}</td><td>{"信頼できる AMI と IaC から"}<strong>{"作り直す"}</strong>{"のが原則"}</td></tr><tr className={"even"}><td>{"12"}</td><td>{"\n                                    AWS\n                                    マネージドキー暗号化のスナップショットを別アカウントへ共有できる\n                                "}</td><td>{"できない。カスタマーマネージドキーを使う"}</td></tr><tr className={"odd"}><td>{"13"}</td><td>{"ARC の準備チェックはフェイルオーバーの最中に実行する"}</td><td>{"\n                                    フェイルオーバー中の重要な経路では使わない。事前の準備確認用\n                                "}</td></tr><tr className={"even"}><td>{"14"}</td><td>{"自動修復は何でも自動で削除する設計がよい"}</td><td>{"破壊的操作は慎重に。隔離・無効化など可逆な操作から"}</td></tr></tbody></table>{"\n                "}</div>
     {"\n                "}
-    <h3 id={"63-練習問題-10-問"} tabIndex={-1}>{"6.3 練習問題 (10 問)"}</h3>
-    {"\n                "}
-    <p>{"答えは各問の直後に書いてあります。まず自分で考えてから確認してください。"}</p>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q1 (並べ替え)"}</strong>{" 侵害された疑いのある EC2\n                    インスタンスから、証拠を最大限保全するための正しい順序を選べ。"}<br />{"\n                    (a) セキュリティグループで隔離する (b) メモリイメージを取得する (c) EBS\n                    スナップショットを取得する (d) 終了保護とタグを設定する\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li><strong>{"答え"}</strong>{": (d) → (c) → (b) → (a)"}</li>{"\n                    "}<li>{"\n                        解説:\n                        保護とタグ、ディスク、メモリの順に取得し、メモリを失わないよう隔離はその後に行う。\n                    "}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q2"}</strong>{" 侵害された EC2\n                    に隔離用セキュリティグループを付与した。しかし攻撃者の既存の SSH\n                    セッションが続いている。原因は?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{":\n                        セキュリティグループは"}<strong>{"接続追跡"}</strong>{"しており、変更しても既存の追跡済み接続は切断されない。\n                    "}</li>{"\n                    "}<li>{"解説: 既存接続を切るには NACL による拒否などを併用する。"}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q3"}</strong>{" 漏えいした IAM ユーザーのアクセスキーで、攻撃者が STS\n                    の一時認証情報を作成した。最も適切な封じ込めは?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": キーを無効化し、IAM\n                        ユーザーにトークンの発行時刻より前の一時認証情報を拒否するインラインポリシーを付与する\n                        (またはユーザーを削除する)。\n                    "}</li>{"\n                    "}<li>{"解説: IAM ユーザーの一時認証情報はコンソールから直接失効できない。"}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q4"}</strong>{" Systems Manager Incident Manager\n                    を新規に使えない組織が、運用上の問題を集約し Automation\n                    ランブックで調査・解決したい。使うべきサービスは?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li><strong>{"答え"}</strong>{": Systems Manager OpsCenter。"}</li>{"\n                    "}<li>{"\n                        解説: Incident Manager は 2025 年 11 月 7\n                        日以降、新規顧客に非提供。OpsCenter が推奨される。\n                    "}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q5"}</strong>{" FIS\n                    で実験中にアプリケーションの性能が許容できないほど悪化したら、実験を自動で止めたい。どうする?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": 定常状態を基に CloudWatch\n                        アラームを作成し、"}<strong>{"停止条件"}</strong>{"として実験テンプレートに設定する。\n                    "}</li>{"\n                    "}<li>{"解説: 停止した実験は再開できない。"}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q6"}</strong>{" GuardDuty の複数の検出結果が、同じ IAM ロールと IP\n                    を共有している。これらをまとめて調査し根本原因を探したい。使うべきは?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li><strong>{"答え"}</strong>{": Amazon Detective の検出結果グループ。"}</li>{"\n                    "}<li>{"\n                        解説: Detective は関連する検出結果とエンティティをグラフ分析でまとめる。\n                    "}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q7"}</strong>{" ある企業が Shield Advanced を購読し、DDoS 発生時に AWS\n                    の専門チームに緩和を依頼したい。購読以外に必要な事前準備は?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": Business または Enterprise\n                        サポートプランへの加入と、SRT にアクセスを許可する IAM\n                        ロールの関連付け。プロアクティブエンゲージメントを使うなら連絡先の登録も行う。\n                    "}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q8"}</strong>{" Security Hub の重大度の高い検出結果に対して、自動で Lambda\n                    を実行し EC2 を隔離したい。最も適切な構成は?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": Security Hub の検出結果を EventBridge\n                        ルールで受け、Lambda を起動する。\n                    "}</li>{"\n                    "}<li>{"\n                        解説: 検出結果のフィールド更新・抑制だけなら Security Hub\n                        の自動化ルールだが、外部アクションは EventBridge。\n                    "}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q9"}</strong>{" 調査担当が、CloudTrail\n                    のログが保存後に変更されていないことを証明したい。事前に何を有効にし、事後に何を実行する?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": 事前にログファイル整合性検証を有効化\n                        (ダイジェストファイルの配信)。事後に\n                        "}<code>{"aws cloudtrail validate-logs"}</code>{" などで検証を実行する。\n                    "}</li>{"\n                    "}<li>{"解説: 有効化だけでは検証されない。"}</li>{"\n                "}</ul>
-    {"\n                "}
-    <p>{"\n                    "}<strong>{"Q10"}</strong>{" ある AZ に障害が発生した。マルチ AZ\n                    構成のアプリケーションのトラフィックを、一時的に正常な AZ\n                    に逃がしたい。使う機能は?\n                "}</p>
-    {"\n                "}
-    <ul>{"\n                    "}<li>{"\n                        "}<strong>{"答え"}</strong>{": ARC のゾーンシフト (自動で AWS\n                        に任せるならゾーンオートシフト)。\n                    "}</li>{"\n                    "}<li>{"\n                        解説: リージョン間のフェイルオーバーはルーティングコントロール (または\n                        Region switch)。\n                    "}</li>{"\n                "}</ul>
-    {"\n\n                "}
+    <PracticeQuestions />
         </section>);
 }

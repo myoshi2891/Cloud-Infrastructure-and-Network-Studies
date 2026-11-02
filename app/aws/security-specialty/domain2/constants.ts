@@ -1,6 +1,6 @@
 export type DiagramId = keyof typeof DIAGRAMS;
 
-export const DIAGRAMS: Record<string, string> = {
+export const DIAGRAMS = {
     "diag-0": "flowchart LR\nA[\"Task 2.1 備える\"] --> A1[\"2.1.1 計画とランブック\"]\nA --> A2[\"2.1.2 事前構成\"]\nA --> A3[\"2.1.3 テスト\"]\nA --> A4[\"2.1.4 自動修復\"]\nB[\"Task 2.2 対応する\"] --> B1[\"2.2.1 ログ保全\"]\nB --> B2[\"2.2.2 検索と相関\"]\nB --> B3[\"2.2.3 検出結果の検証\"]\nB --> B4[\"2.2.4 封じ込めと復旧\"]\nB --> B5[\"2.2.5 根本原因分析\"]\nA4 -.->|\"実行時に連動\"| B4\nA2 -.->|\"証拠の土台\"| B1",
     "diag-1": "flowchart LR\nP[\"準備 Preparation\"] --> D[\"検出\"]\nD --> A[\"分析\"]\nA --> C[\"封じ込め\"]\nC --> E[\"根絶\"]\nE --> R[\"復旧\"]\nR --> L[\"インシデント後の活動 教訓の反映\"]\nC -.->|\"効果を確認\"| A\nE -.->|\"再確認\"| A\nL -.->|\"計画を改善\"| P",
     "diag-2": "flowchart TD\nW[\"ワークロードアカウント群\"] -->|\"ログを配信\"| LA[\"ログアーカイブアカウント\"]\nW -->|\"検出結果を集約\"| ST[\"セキュリティツールアカウント\"]\nST -->|\"EventBridge で起動\"| AUTO[\"自動修復 Lambda と Step Functions\"]\nAUTO -->|\"封じ込め\"| W\nAUTO -->|\"証拠をコピー\"| FA[\"フォレンジックアカウント\"]\nST -->|\"調査\"| FA",
@@ -19,7 +19,7 @@ export const DIAGRAMS: Record<string, string> = {
     "diag-15": "flowchart LR\nA[\"封じ込め完了\"] --> B[\"根絶 足場と脆弱性の除去\"]\nB --> C[\"安全なバックアップと AMI を選ぶ\"]\nC --> D[\"隔離環境で検証\"]\nD --> E[\"本番へ復旧\"]\nE --> F[\"強化した監視を継続\"]\nF -.->|\"再発の兆候\"| B",
     "diag-16": "flowchart TD\nA[\"高重大度の GuardDuty の検出結果\"] --> B[\"Detective の検出結果グループを開く\"]\nB --> C[\"関与するエンティティを確認 IAM と IP と EC2\"]\nC --> D[\"エンティティのプロファイルで平時との差を確認\"]\nD --> E[\"最初の不審な活動を特定 いつどこから\"]\nE --> F[\"侵入経路を特定 例 漏えいキーと公開設定の不備\"]\nF --> G[\"なぜそうなっていたか 管理プロセスの欠陥まで掘る\"]\nG --> H[\"再発防止策を決定\"]",
     "diag-17": "flowchart TD\nA[\"検出 GuardDuty の Finding\"] --> B[\"検証 CloudTrail でロールの操作と送信元 IP を確認\"]\nB --> C{\"想定外の IP か\"}\nC -->|\"いいえ\"| Z[\"誤検知として記録\"]\nC -->|\"はい\"| D[\"証拠保全 EBS スナップショットとメモリ\"]\nD --> E[\"封じ込め ロールのセッションを失効し EC2 を隔離\"]\nE --> F[\"範囲評価 ロールで触れたリソースとデータを確認\"]\nF --> G[\"根絶 IMDSv2 を強制し脆弱性を修正し EC2 を再作成\"]\nG --> H[\"復旧 クリーンな AMI と IaC から再構築\"]\nH --> I[\"根本原因分析 Detective でなぜ盗まれたかを特定\"]"
-};
+} as const satisfies Record<string, string>;
 
 export const NAV_ITEMS = [
     {

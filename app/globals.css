@@ -149,6 +149,13 @@
     --color-scs-d2-warn-bg: #fff2dd;
     --color-scs-d2-success: #14804a;
     --color-scs-d2-success-bg: #e5f6ec;
+    --color-scs-d2-success-border: #9fd9b8;
+    --color-scs-d2-warn-border: #f0cf94;
+    --color-scs-d2-sidebar-bg: #fbfcfe;
+    --color-scs-d2-strong: #0e1830;
+    --color-scs-d2-code-inline: #a24a00;
+    --color-scs-d2-code-bg: #f3f6fc;
+    --color-scs-d2-on-accent: #ffffff;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
