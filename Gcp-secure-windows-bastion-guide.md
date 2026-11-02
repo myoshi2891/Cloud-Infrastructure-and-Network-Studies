@@ -124,7 +124,7 @@ flowchart TB
 
     Internet -->|RDP 3389| FW
     FW --> BH
-    BH -->|RDP| SH
+    BH2 -->|"RDP 3389（allow-rdp-bastion-to-securehost）"| SH2
     BH --- BH2
     SH --- SH2
     MON -.監視.- BH2
@@ -728,11 +728,19 @@ if step2_disable_rule default-allow-internal &&
   STEP2_OK=true
   echo '手順 2 が完了しました。踏み台から新しい RDP セッションでセキュアホストへ接続してから、手順 3 のログ確認を実行してください。'
 else
+  # 全ルールの復元に成功した場合だけ「戻した」と報告する
+  STEP2_ROLLBACK_FAILED=""
   for RULE in $STEP2_ROLLBACK_RULES; do
-    gcloud compute firewall-rules update "$RULE" --no-disabled ||
+    if ! gcloud compute firewall-rules update "$RULE" --no-disabled; then
+      STEP2_ROLLBACK_FAILED="${STEP2_ROLLBACK_FAILED} ${RULE}"
       echo "${RULE} を有効に戻せませんでした。手動で --no-disabled を実行してください。" >&2
+    fi
   done
-  echo '既定ルールの無効化またはロギングの有効化に失敗しました。無効化済みのルールは元の有効状態へ戻しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
+  if [ -z "$STEP2_ROLLBACK_FAILED" ]; then
+    echo '既定ルールの無効化またはロギングの有効化に失敗しました。無効化済みのルールは元の有効状態へ戻しました。原因を解消するまで手順 3 以降に進まないでください。' >&2
+  else
+    echo "既定ルールの無効化またはロギングの有効化に失敗し、次のルールが無効のまま残っています:${STEP2_ROLLBACK_FAILED}。手動で gcloud compute firewall-rules update <ルール名> --no-disabled を実行して復元するまで、手順 3 以降に進まないでください。" >&2
+  fi
 fi
 ```
 

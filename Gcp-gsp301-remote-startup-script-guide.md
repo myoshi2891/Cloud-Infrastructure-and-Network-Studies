@@ -171,9 +171,14 @@ export BUCKET_NAME="${PROJECT_ID}-startup-scripts"
 # VM 名
 export VM_NAME="web-server"
 
+# VM とファイアウォールルールを置く VPC ネットワーク（Task 2・Task 3 で同じ値を使う）
+export NETWORK="default"
+
 # 変数の確認
-echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}"
+echo "ZONE=${ZONE}  REGION=${REGION}  PROJECT=${PROJECT_ID}  BUCKET=${BUCKET_NAME}  NETWORK=${NETWORK}"
 ```
+
+⚠️ **前提（ネットワーク）**: 本ガイドは、ラボのプロジェクトに自動モードの `default` VPC が存在することを前提に `NETWORK="default"` としています。`gcloud compute networks list --project="${PROJECT_ID}"` で `default` が表示されない場合や、ラボが別のネットワークを指定している場合は、`NETWORK` をその名前に置き換えてください（カスタムモードの VPC では、VM 作成時に `--subnet` でリージョン内のサブネットも指定します）。
 
 > 💡 **ベストプラクティス**: ゾーン・名前などの値を最初に変数へ入れておくと、入力ミスを減らせて、後から同じ手順を再実行しやすくなります。これは Infrastructure as Code（IaC）の第一歩でもあります。
 >
@@ -303,6 +308,7 @@ gcloud compute instances create "${VM_NAME}" \
   --machine-type=e2-medium \
   --image-family=debian-12 \
   --image-project=debian-cloud \
+  --network="${NETWORK}" \
   --tags=http-server \
   --service-account="${VM_SA}" \
   --scopes=storage-ro \
@@ -314,6 +320,7 @@ gcloud compute instances create "${VM_NAME}" \
 | `--zone` | VM を作るゾーン（ラボ指定） |
 | `--machine-type` | マシンタイプ。Apache を動かすだけなら `e2-medium` 程度で十分 |
 | `--image-family` / `--image-project` | OS イメージ。Debian 12（`debian-cloud/debian-12`）のファミリーを使う |
+| `--network` | VM を接続する VPC ネットワーク。Task 3 のファイアウォールルールと同じ `NETWORK` を使う |
 | `--tags=http-server` | ネットワークタグ。Task 3 のルールの対象になる |
 | `--service-account` | VM が使うサービスアカウント。上で `roles/storage.objectViewer` を付与したものを明示する |
 | `--scopes=storage-ro` | Cloud Storage の読み取り専用スコープ。必要最小限の API アクセス |
@@ -327,7 +334,7 @@ gcloud compute instances create "${VM_NAME}" \
 2. **名前** を入力し、**リージョン** と **ゾーン** にラボ指定のゾーンを選びます。
 3. マシン構成は既定のまま、または `e2-medium` にします。
 4. 左メニューの **OS とストレージ** を開き、**ブートディスク** の **変更** をクリックして、オペレーティングシステムに **Debian GNU/Linux**、バージョンに **Debian GNU/Linux 12 (bookworm)**（`debian-cloud/debian-12`）を選び、**選択** をクリックします。手順 A の `--image-family=debian-12` と同じ OS にそろえるためです。
-5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。
+5. 左メニューの **ネットワーキング** を開き、**ネットワークタグ** に `http-server` を追加します。**ネットワーク インターフェース** のネットワークが 3 章で決めた `NETWORK`（通常は `default`）になっていることを確認します。
 6. 左メニューの **セキュリティ**（または「ID と API へのアクセス」）で、次の 3 点を設定します。
    - **サービスアカウント** に、手順 A で `roles/storage.objectViewer` を付与したサービスアカウント（ここでは Compute Engine の既定のサービスアカウント `プロジェクト番号-compute@developer.gserviceaccount.com`）を選びます。
    - **アクセススコープ** で、Cloud Storage の読み取りが許可されていることを確認します。
@@ -425,7 +432,7 @@ flowchart LR
 ```bash
 gcloud compute firewall-rules create allow-http \
   --project="${PROJECT_ID}" \
-  --network=default \
+  --network="${NETWORK}" \
   --direction=INGRESS \
   --action=ALLOW \
   --rules=tcp:80 \
@@ -442,7 +449,7 @@ gcloud compute firewall-rules create allow-http \
 | `--source-ranges=0.0.0.0/0` | 全世界のどこからでも | 公開 Web サーバーなのでこのラボでは必須 |
 | `--target-tags=http-server` | このタグを持つ VM だけに適用 | 他の VM に影響を与えない |
 
-> ⚠️ **ネットワーク名の確認**: ラボ環境で VM が `default` 以外のネットワークにある場合は、`--network` をその名前に変更してください。`gcloud compute instances describe "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}" --format="value(networkInterfaces[0].network)"` で確認できます。
+> ⚠️ **ネットワーク名の確認**: ルールは VM と同じ `NETWORK` に作成します。VM が接続しているネットワークは、`gcloud compute instances describe "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}" --format="value(networkInterfaces[0].network)"` で確認できます。
 
 ### 6.4 手順 B: Google Cloud コンソール
 
@@ -453,7 +460,7 @@ gcloud compute firewall-rules create allow-http \
 | 項目 | 設定値 |
 |---|---|
 | 名前 | `allow-http` |
-| ネットワーク | VM と同じネットワーク（通常は `default`） |
+| ネットワーク | 3 章で決めた `NETWORK`（VM と同じネットワーク。通常は `default`） |
 | 優先度 | `1000`（既定） |
 | トラフィックの方向 | 上り（Ingress） |
 | 一致したときのアクション | 許可 |
@@ -573,6 +580,10 @@ VM に SSH 接続します。
 ```bash
 gcloud compute ssh "${VM_NAME}" --project="${PROJECT_ID}" --zone="${ZONE}"
 ```
+
+> ⚠️ **このコマンドは直接 SSH です**: VM の外部 IP へ TCP 22 で接続するため、`NETWORK` に外部からの SSH を許可するルール（`default` VPC では既定の `default-allow-ssh`、ソース `0.0.0.0/0`）が必要です。9.1 で推奨している IAP 経由の接続とは異なり、22 番ポートをインターネットに公開している状態に依存します。
+>
+> IAP 経由にする場合は `--tunnel-through-iap` を付けて実行します。この場合は、①IAP の送信元範囲 `35.235.240.0/20` から TCP 22 を許可する Ingress ルール（例: `gcloud compute firewall-rules create allow-ssh-from-iap --project="${PROJECT_ID}" --network="${NETWORK}" --direction=INGRESS --action=ALLOW --rules=tcp:22 --source-ranges=35.235.240.0/20`）と、②接続するユーザーへの IAM ロール **IAP で保護されたトンネル ユーザー**（`roles/iap.tunnelResourceAccessor`）および SSH 鍵登録や OS Login に必要な Compute Engine 側の権限（例: `roles/compute.instanceAdmin.v1`、OS Login 有効時は `roles/compute.osLogin`）が必要です。外部 IP や `0.0.0.0/0` からの SSH 許可は不要になります。
 
 VM 内で次を実行します。
 

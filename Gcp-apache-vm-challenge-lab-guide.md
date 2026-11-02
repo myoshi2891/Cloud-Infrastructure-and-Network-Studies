@@ -157,6 +157,7 @@ flowchart TD
 6. **ブートディスク**：既定の **Debian GNU/Linux** のままで OK です（Linux であることが要件）。
 7. **ファイアウォール**：この画面で後述の Task 2 の設定を行います（次章参照）。
 8. **作成** をクリックし、一覧でインスタンス名の左に緑のチェックが付くまで待ちます。
+9. **プロジェクト ID を控える**（10 章の後片付けで使用）：画面上部のプロジェクト選択ツール（プロジェクト名の表示部分）をクリックし、VM を作成したプロジェクトの **ID** 列の値（名前ではなく ID）をメモします。ダッシュボードの「プロジェクト情報」カードの **プロジェクト ID** でも確認できます。
 
 ### 4.3 設定値の早見表
 
@@ -173,16 +174,21 @@ flowchart TD
 
 ```bash
 # 作成先のプロジェクト ID を記録する（10 章の後片付けで同じプロジェクトを明示指定するため）
-PROJECT_ID=$(gcloud config get-value project)
-echo "PROJECT_ID=${PROJECT_ID:?プロジェクトが未設定です。gcloud config set project を実行してください}"
-
-gcloud compute instances create INSTANCE_NAME \
-  --project="$PROJECT_ID" \
-  --zone=ZONE \
-  --machine-type=e2-medium \
-  --image-family=debian-12 \
-  --image-project=debian-cloud \
-  --tags=http-server
+# 未設定時は空文字または "(unset)" になるため、どちらでも VM を作成せずに止める
+PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "(unset)" ]; then
+  PROJECT_ID=""
+  echo "プロジェクトが未設定です。gcloud config set project を実行してから再実行してください" >&2
+else
+  echo "PROJECT_ID=$PROJECT_ID"
+  gcloud compute instances create INSTANCE_NAME \
+    --project="$PROJECT_ID" \
+    --zone=ZONE \
+    --machine-type=e2-medium \
+    --image-family=debian-12 \
+    --image-project=debian-cloud \
+    --tags=http-server
+fi
 ```
 
 | オプション | 意味 |
@@ -285,13 +291,14 @@ echo "FW_RULE_NAME=${FW_RULE_NAME:-（新規作成なし）}"
 ### 5.5 設定の確認方法
 
 ```bash
-gcloud compute firewall-rules list --project="$PROJECT_ID" --filter="name=default-allow-http"
+gcloud compute firewall-rules describe default-allow-http --project="$PROJECT_ID" \
+  --format="yaml(name,direction,allowed,sourceRanges,targetTags)"
 gcloud compute instances describe INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --format="get(tags.items)"
 ```
 
 | 確認項目 | 期待される結果 |
 |---|---|
-| ルール一覧 | `default-allow-http` が `tcp:80`・`http-server` で表示される |
+| ルールの内容 | `allowed` に `IPProtocol: tcp`・`ports: ['80']`、`targetTags` に `http-server` が表示される |
 | VM のタグ | `http-server` が含まれる |
 
 ここまで終えたら、ラボ画面の **Check my progress** で Task 1〜2 の判定を受けましょう。
@@ -391,8 +398,9 @@ curl http://localhost
 2. 対象 VM の **外部 IP** 列の値をコピーします。
 
 ```bash
-# gcloud で確認する場合
+# gcloud で確認する場合（4.4 で記録した PROJECT_ID を明示し、選択中の別プロジェクトを参照しない）
 gcloud compute instances describe INSTANCE_NAME \
+  --project="$PROJECT_ID" \
   --zone=ZONE \
   --format="get(networkInterfaces[0].accessConfigs[0].natIP)"
 ```
@@ -529,10 +537,10 @@ systemctl enable --now apache2'
 
 方法 A（VM 作成画面のチェックボックス）でルールが新規作成された場合、`FW_RULE_NAME` は記録されません（5.4 のスクリプトを経由しないため）。作業前に `default-allow-http` が存在せず、このラボで初めて作られたと確認できる場合に限り、VM の削除後に `gcloud compute firewall-rules delete default-allow-http --project="$PROJECT_ID" --quiet` で手動削除してください。
 
-後片付けのコマンドは、Cloud Shell で現在選択中のプロジェクトではなく、**4.4 で VM 作成時に記録した `PROJECT_ID`** を全コマンドに `--project` で明示指定します。別の Cloud Shell セッション（再接続後など）では `PROJECT_ID` も空になるため、VM を作成したプロジェクト ID を控えから設定し直してください（`gcloud config get-value project` の結果で代用しないでください）。`PROJECT_ID` が空のままでは何も削除しません。
+後片付けのコマンドは、Cloud Shell で現在選択中のプロジェクトではなく、**VM を作成したプロジェクトの ID**（gcloud で作成した場合は 4.4 で記録した `PROJECT_ID`、Cloud Console で作成した場合は 4.2 の手順 9 で控えた ID）を全コマンドに `--project` で明示指定します。別の Cloud Shell セッション（再接続後など）や Console だけで作業した場合は `PROJECT_ID` が空のため、控えから設定し直してください（`gcloud config get-value project` の結果で代用しないでください）。控えが無い場合は、Cloud Console の **Compute Engine → VM インスタンス** で対象 VM が表示されるプロジェクトを上部のプロジェクト選択ツールで選び、そのダイアログの **ID** 列で確認します。`PROJECT_ID` が空のままでは何も削除しません。
 
 ```bash
-# 4.4 で控えた、VM を作成したプロジェクト ID に置き換えて実行する
+# 4.2 の手順 9 または 4.4 で控えた、VM を作成したプロジェクト ID に置き換えて実行する
 PROJECT_ID=VM_PROJECT_ID
 ```
 
@@ -582,10 +590,17 @@ elif [ -z "$VM_FOUND" ]; then
     echo "VM の不在を確認できませんでした。ファイアウォールルールは削除しません" >&2
     printf '%s\n' "$DESCRIBE_ERR" >&2
   fi
-elif gcloud compute instances delete INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --quiet; then
-  VM_DELETED=true
 else
-  echo "VM の削除に失敗しました。ファイアウォールルールは削除しません" >&2
+  # 削除前に対象を表示し、4.2 / 4.4 で控えた値と一致することを利用者が確認した場合だけ削除する
+  echo "削除対象: PROJECT_ID=${PROJECT_ID}  ZONE=ZONE  INSTANCE_NAME=INSTANCE_NAME"
+  read -r -p "このラボで控えた PROJECT_ID・ZONE・INSTANCE_NAME と完全に一致すれば yes と入力: " VM_DELETE_CONFIRM
+  if [ "$VM_DELETE_CONFIRM" != yes ]; then
+    echo "削除対象を確認できませんでした。VM とファイアウォールルールは削除しません" >&2
+  elif gcloud compute instances delete INSTANCE_NAME --project="$PROJECT_ID" --zone=ZONE --quiet; then
+    VM_DELETED=true
+  else
+    echo "VM の削除に失敗しました。ファイアウォールルールは削除しません" >&2
+  fi
 fi
 
 # このラボで作成したルールが記録されていて、VM を削除できた場合だけ削除する
