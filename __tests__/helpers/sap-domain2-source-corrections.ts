@@ -18,4 +18,9 @@ export const SAP_DOMAIN2_DIAGRAM_CORRECTIONS: readonly Correction[] = [
         "flowchart LR\nU[\"ユーザー\"] --> CF[\"CloudFront<br/>エッジキャッシュ\"]\nCF --> ALB[\"ALB\"]\nALB --> APP[\"アプリ\"]\nAPP --> CACHE[\"ElastiCache<br/>アプリ側キャッシュ\"]\nAPP --> RP[\"RDS Proxy<br/>接続プール\"]\nRP --> W[\"DB ライター\"]\nRP --> RR[\"DB リードレプリカ\"]\nAPP --> Q[\"SQS または Kinesis<br/>バッファ\"]\n\nclassDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\nclassDef warnFill fill:#ffe8c7,stroke:#a85f0a,color:#4a2a00;\nclass CF highlightFill\nclass CACHE warnFill",
         "flowchart LR\nU[\"ユーザー\"] --> CF[\"CloudFront<br/>エッジキャッシュ\"]\nCF --> ALB[\"ALB\"]\nALB --> APP[\"アプリ\"]\nAPP --> CACHE[\"ElastiCache<br/>アプリ側キャッシュ\"]\nAPP -->|\"書き込み\"| RPW[\"RDS Proxy<br/>デフォルトエンドポイント<br/>読み書き\"]\nAPP -->|\"読み取り\"| RPR[\"RDS Proxy<br/>読み取り専用エンドポイント\"]\nsubgraph AUR[\"Aurora DB クラスター\"]\nW[\"ライターインスタンス\"]\nRR[\"Aurora レプリカ<br/>リーダー\"]\nend\nRPW --> W\nRPR --> RR\nAPP --> Q[\"SQS または Kinesis<br/>バッファ\"]\n\nclassDef highlightFill fill:#dbe6ff,stroke:#3556d6,color:#13204a;\nclassDef warnFill fill:#ffe8c7,stroke:#a85f0a,color:#4a2a00;\nclass CF highlightFill\nclass CACHE warnFill",
     ],
+    // https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html ライフサイクルの日数はオブジェクト作成からの経過日数で数える（直前のストレージクラスへの移行からではない）
+    [
+        "flowchart LR\nA[\"S3 Standard<br/>作成直後\"] -->|\"30日後<br/>128 KiB 以上のみ\"| B[\"Standard-IA\"]\nB -->|\"90日後\"| C[\"Glacier Flexible Retrieval\"]\nC -->|\"365日後\"| D[\"Glacier Deep Archive\"]\nD -->|\"7年後\"| E[\"削除\"]\nA -->|\"128 KiB 未満は既定で移行せず<br/>Standard のまま7年後\"| E",
+        "flowchart LR\nA[\"S3 Standard<br/>作成直後\"] -->|\"作成から30日後<br/>128 KiB 以上のみ\"| B[\"Standard-IA\"]\nB -->|\"作成から90日後\"| C[\"Glacier Flexible Retrieval\"]\nC -->|\"作成から365日後\"| D[\"Glacier Deep Archive\"]\nD -->|\"作成から7年後\"| E[\"削除\"]\nA -->|\"128 KiB 未満は既定で移行せず<br/>Standard のまま作成から7年後\"| E",
+    ],
 ];

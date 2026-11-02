@@ -197,7 +197,7 @@
             .sap-domain2-page .main p {
                 margin: 0 0 18px;
                 color: var(--color-sap-d2-text);
-                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
             }
             .sap-domain2-page .main ul, .sap-domain2-page .main ol {
                 margin: 0 0 18px;
@@ -206,7 +206,7 @@
             }
             .sap-domain2-page .main li {
                 margin-bottom: 8px;
-                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
             }
             .sap-domain2-page .main hr {
                 border: none;
@@ -232,7 +232,7 @@
                 padding: 1px 6px;
                 font-size: 0.9em;
                 color: var(--color-sap-d2-inline-code);
-                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
             }
 
             /* Tables */
@@ -430,7 +430,7 @@
                 font-size: 13px;
                 color: var(--color-sap-d2-text-dim);
                 min-width: 0;
-                overflow-wrap: break-word;
+                overflow-wrap: anywhere;
             }
             .sap-domain2-page .ref-card .txt a {
                 color: var(--color-sap-d2-accent);
