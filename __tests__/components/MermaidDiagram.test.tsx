@@ -216,6 +216,16 @@ describe('MermaidDiagram', () => {
             // Assert
             expect(svg.style.minWidth).toBe('');
         });
+
+        it('frontmatter または init ディレクティブ付きの sequenceDiagram / stateDiagram でも viewBox 高さを +110 拡張すること', () => {
+            const svg1 = makeSvg('0 0 600 400');
+            applySvgFixups(svg1, '---\nconfig: {"theme":"base"}\n---\nsequenceDiagram\nA->>B: Hello', true);
+            expect(svg1.getAttribute('viewBox')).toBe('0 0 600 510');
+
+            const svg2 = makeSvg('0 0 600 400');
+            applySvgFixups(svg2, '%%{init: {"theme":"base"}}%%\nstateDiagram-v2\n[*] --> A', true);
+            expect(svg2.getAttribute('viewBox')).toBe('0 0 600 510');
+        });
     });
 
     it('エラー表示時、各行の要素に安定したキーに基づいた data-key 属性が付与されること', async () => {
