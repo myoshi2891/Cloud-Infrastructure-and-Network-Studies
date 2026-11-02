@@ -6,6 +6,7 @@ import HeroIntro from './sections/HeroIntro';
 import PartA from './sections/PartA';
 import PartB from './sections/PartB';
 import PartC from './sections/PartC';
+import PartD from './sections/PartD';
 
 interface CcnpSecurityGuideProps {
     children?: React.ReactNode;
@@ -43,6 +44,7 @@ export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) 
                 <PartA />
                 <PartB />
                 <PartC />
+                <PartD />
                 {children}
             </main>
         </div>
