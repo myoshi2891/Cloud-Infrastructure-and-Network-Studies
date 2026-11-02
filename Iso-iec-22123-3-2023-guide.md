@@ -735,7 +735,8 @@ flowchart LR
 | 6 | エストニア規格協会 EVS-ISO/IEC 22123-3:2025 | https://www.evs.ee/en/evs-iso-iec-22123-3-2025 | 旧版（2026年4月15日に廃止済み。同日から EVS-EN ISO/IEC 22123-3:2026 が有効） |
 | 6a | エストニア規格協会 EVS-EN ISO/IEC 22123-3:2026 | https://www.evs.ee/en/evs-en-iso-iec-22123-3-2026 | 現行版（EN ISO/IEC 22123-3:2026 の国家採用。2026年4月15日から有効） |
 | 6b | CENELEC 月次公表一覧（2026年4月） | https://www.ceinorme.it/wp-content/uploads/2026/05/CENELEC-monthly-publications_042026.pdf | EN ISO/IEC 22123-3:2026 の公開（DAV 2026-04-08、CENELEC が定める DOW 2026-10-31。EVS 旧版の廃止日 2026-04-15 とは別） |
-| 7 | スロバキア規格 STN ISO/IEC 22123-3:2024 | https://normy.normoff.gov.sk/norma/138359/nahlad | 国家規格としての採用、17789置き換えと変更点 |
+| 7 | スロバキア規格 STN ISO/IEC 22123-3:2024（旧版・置き換え済み） | https://normy.normoff.gov.sk/norma/138359/nahlad | 国家規格としての採用、17789置き換えと変更点（旧版の内容） |
+| 7a | スロバキア規格 STN EN ISO/IEC 22123-3:2026 | https://normy.normoff.gov.sk/norma/142681/ | 現行版（2026年7月1日発行、EN ISO/IEC 22123-3:2026 と ISO/IEC 22123-3:2023 の一致採用） |
 | 8 | カナダ規格評議会 標準データベース | https://scc-ccn.ca/standardsdb/standards/8185211 | 発行日、ステータス |
 
 ### 15.2 旧規格・関連枠組み
