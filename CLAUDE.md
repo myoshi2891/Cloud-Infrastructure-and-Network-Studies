@@ -6,7 +6,7 @@
 
 ## 2026-11-02: SCS-C03 Domain 2
 
-`app/aws/security-specialty/domain2/` に Server `page.tsx` / `ScsDomain2Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、`Diagram.tsx`、7分割のServer `sections/`（Hero, Task21, Task22, Scenarios, ExamPrep, ChecklistSection, Appendix）、定数とテーマJSON、スコープCSSを追加。全68表・18図・12コード例・170リスト項目・21チェック項目・43目次を原本から移行。コード行・構文色・リスト階層・段落余白・チェック進捗カウンターを保持。ホーム・HeaderのDomain 2（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain2.mjs` で固定Git原本から本文を再生成できる。
+`app/aws/security-specialty/domain2/` に Server `page.tsx` / `ScsDomain2Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、`Diagram.tsx`、7分割のServer `sections/`（Hero, Task21, Task22, Scenarios, ExamPrep, ChecklistSection, Appendix）、定数とテーマJSON、スコープCSSを追加。全68表・18図・12コード例・170リスト項目・21チェック項目・43目次を原本から移行。コード行・構文色・リスト階層・段落余白・チェック進捗カウンターを保持。ホーム・HeaderのDomain 2（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain2.mjs <hero|task21|task22|scenarios|examprep|checklist|appendix>` で固定Git原本から本文を再生成できる。
 
 ## 2026-10-29: SAP-C02 Domain 3
 
