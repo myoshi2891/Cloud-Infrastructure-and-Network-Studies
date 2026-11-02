@@ -1,0 +1,612 @@
+/* app/cisco/ccnp-security/page.css */
+
+.ccnp-security-page {
+  --color-paper: #F6F7F9;
+  --color-ink: #161B26;
+  --color-indigo: #2E3F72;
+  --color-gold: #B8802A;
+  --color-forest: #1B6E6A;
+  --color-plum: #8C3A5C;
+  --ink-2: #3A4254;
+  --ink-3: #566074;
+  --line: #D5DAE5;
+  --line-2: #E6E9F0;
+  --card: #FFFFFF;
+  --tint-indigo: #EEF1F8;
+  --tint-gold: #FAF1DF;
+  --tint-forest: #E6F2F0;
+  --tint-plum: #F6E9EF;
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+  --sb: 288px;
+
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: 400 1rem/1.8 var(--font-sans);
+  min-height: 100vh;
+  position: relative;
+}
+
+.ccnp-security-page * {
+  box-sizing: border-box;
+}
+
+.ccnp-security-page a {
+  color: var(--color-indigo);
+}
+
+.ccnp-security-page .sidebar {
+  position: fixed;
+  top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+  bottom: 0;
+  left: 0;
+  width: var(--sb);
+  background: var(--card);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+  padding: 20px 16px 48px;
+  z-index: 30;
+  height: calc(100vh - var(--header-h, 60px) - var(--disclaimer-height, 0px));
+}
+
+.ccnp-security-page .brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 4px 8px 16px;
+  border-bottom: 1px solid var(--line-2);
+  margin-bottom: 8px;
+}
+
+.ccnp-security-page .brand b {
+  font: 600 1.05rem/1.4 var(--font-serif);
+  color: var(--color-indigo);
+}
+
+.ccnp-security-page .nav-group {
+  margin: 18px 0 4px;
+  padding: 0 8px;
+  font: 600 1rem/1.45 var(--font-serif);
+  color: var(--color-indigo);
+}
+
+.ccnp-security-page .nav-group a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ccnp-security-page .sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ccnp-security-page .sidebar li {
+  padding-left: 0;
+  margin: 0;
+}
+
+.ccnp-security-page .sidebar li::before {
+  content: none !important;
+}
+
+.ccnp-security-page .sidebar nav a {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: var(--ink-2);
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.ccnp-security-page .sidebar nav a:hover {
+  background: var(--tint-indigo);
+}
+
+.ccnp-security-page .sidebar li.active > a {
+  background: var(--tint-indigo);
+  color: var(--color-indigo);
+  font-weight: 500;
+}
+
+.ccnp-security-page .sidebar .sub {
+  display: none;
+  margin: 2px 0 6px 10px;
+  border-left: 2px solid var(--line);
+}
+
+.ccnp-security-page .sidebar li.active > .sub {
+  display: block;
+}
+
+.ccnp-security-page .sidebar .sub a {
+  padding: 4px 8px;
+  color: var(--ink-3);
+}
+
+.ccnp-security-page .sidebar .sub li.active > a {
+  background: transparent;
+  color: #7A5415;
+  font-weight: 500;
+}
+
+.ccnp-security-page main {
+  margin-left: var(--sb);
+  padding: 0 48px 80px;
+}
+
+.ccnp-security-page section[id],
+.ccnp-security-page header.part,
+.ccnp-security-page h1,
+.ccnp-security-page h2,
+.ccnp-security-page h3 {
+  scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
+}
+
+.ccnp-security-page .hero {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ccnp-security-page .hero h1 {
+  font: 600 2.25rem/1.4 var(--font-serif);
+  color: var(--color-indigo);
+  margin: 0 0 16px;
+}
+
+.ccnp-security-page .hero .meta {
+  color: var(--ink-2);
+}
+
+.ccnp-security-page .hero .meta p {
+  margin: 6px 0;
+}
+
+.ccnp-security-page .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.ccnp-security-page .chip {
+  padding: 2px 14px;
+  border-radius: 999px;
+  background: var(--tint-indigo);
+  border: 1px solid var(--line);
+  color: var(--color-indigo);
+  font-weight: 500;
+}
+
+.ccnp-security-page header.part h1 {
+  font: 600 1.9rem/1.45 var(--font-serif);
+  color: var(--color-indigo);
+  margin: 80px 0 16px;
+  padding-top: 24px;
+  border-top: 3px solid var(--color-gold);
+}
+
+.ccnp-security-page h2 {
+  font: 600 1.5rem/1.5 var(--font-serif);
+  margin: 48px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ccnp-security-page h3 {
+  font: 600 1.2rem/1.55 var(--font-serif);
+  margin: 32px 0 12px;
+  padding-left: 12px;
+  border-left: 4px solid var(--color-forest);
+}
+
+.ccnp-security-page p {
+  margin: 12px 0;
+}
+
+.ccnp-security-page strong {
+  font-weight: 600;
+}
+
+.ccnp-security-page .part-lead {
+  margin: 0 0 24px;
+  padding: 16px 20px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--color-indigo);
+  border-radius: 12px;
+  color: var(--ink-2);
+}
+
+.ccnp-security-page .part-lead p {
+  margin: 6px 0;
+}
+
+.ccnp-security-page .table-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.ccnp-security-page table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.ccnp-security-page th,
+.ccnp-security-page td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line-2);
+  min-width: 5em;
+}
+
+.ccnp-security-page th {
+  background: var(--tint-indigo);
+  color: var(--color-indigo);
+  font-weight: 600;
+}
+
+.ccnp-security-page tbody tr:nth-child(even) td {
+  background: #FAFBFD;
+}
+
+.ccnp-security-page tr:last-child td {
+  border-bottom: 0;
+}
+
+.ccnp-security-page code {
+  font: 400 1rem var(--font-mono);
+  background: var(--tint-indigo);
+  padding: 1px 6px;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+.ccnp-security-page pre {
+  margin: 16px 0;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+  font: 400 1rem/1.65 var(--font-mono);
+}
+
+.ccnp-security-page pre code {
+  font: inherit;
+  background: transparent;
+  padding: 0;
+  overflow-wrap: normal;
+}
+
+.ccnp-security-page .code-sample {
+  margin: 16px 0;
+}
+
+.ccnp-security-page .code-block {
+  margin: 0;
+  padding: 16px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+  font: 400 1rem/1.65 var(--font-mono);
+  outline: none;
+}
+
+.ccnp-security-page .code-line {
+  min-height: 1.65em;
+  white-space: pre;
+}
+
+.ccnp-security-page .hljs-comment {
+  color: #566074;
+  font-style: italic;
+}
+
+.ccnp-security-page .hljs-keyword {
+  color: #2E3F72;
+  font-weight: 600;
+}
+
+.ccnp-security-page .hljs-string {
+  color: #1B6E6A;
+}
+
+.ccnp-security-page .hljs-number {
+  color: #B8802A;
+}
+
+.ccnp-security-page .hljs-built_in {
+  color: #8C3A5C;
+}
+
+.ccnp-security-page .tk-c {
+  color: #566074;
+  font-style: italic;
+}
+
+.ccnp-security-page .tk-p {
+  color: #8A5F12;
+}
+
+.ccnp-security-page main ul,
+.ccnp-security-page main ol {
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ccnp-security-page main ul > li {
+  position: relative;
+  padding-left: 1.4em;
+  margin: 6px 0;
+}
+
+.ccnp-security-page main ul > li::before {
+  content: "";
+  position: absolute;
+  left: .35em;
+  top: .85em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold);
+}
+
+.ccnp-security-page main ol {
+  counter-reset: n;
+}
+
+.ccnp-security-page main ol > li {
+  position: relative;
+  padding-left: 2.4em;
+  margin: 8px 0;
+  counter-increment: n;
+}
+
+.ccnp-security-page main ol > li::before {
+  content: counter(n);
+  position: absolute;
+  left: 0;
+  top: .2em;
+  width: 1.7em;
+  height: 1.7em;
+  border-radius: 50%;
+  background: var(--color-indigo);
+  color: #fff;
+  text-align: center;
+  line-height: 1.7em;
+  font-size: 1rem;
+}
+
+.ccnp-security-page .callout {
+  margin: 20px 0;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 1px solid;
+  border-left-width: 5px;
+}
+
+.ccnp-security-page .callout .ch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.ccnp-security-page .callout p {
+  margin: 6px 0;
+}
+
+.ccnp-security-page .callout ul,
+.ccnp-security-page .callout ol {
+  margin: 8px 0 4px;
+}
+
+.ccnp-security-page .callout.practice {
+  background: var(--tint-gold);
+  border-color: #E6CFA0;
+  border-left-color: var(--color-gold);
+}
+
+.ccnp-security-page .callout.practice .ch {
+  color: #7A5415;
+}
+
+.ccnp-security-page .callout.source {
+  background: var(--tint-forest);
+  border-color: #B9DBD7;
+  border-left-color: var(--color-forest);
+}
+
+.ccnp-security-page .callout.source .ch {
+  color: #125551;
+}
+
+.ccnp-security-page .callout.note {
+  background: var(--tint-plum);
+  border-color: #E2C3D0;
+  border-left-color: var(--color-plum);
+}
+
+.ccnp-security-page .callout.note .ch {
+  color: #6E2A47;
+}
+
+.ccnp-security-page .srclist li {
+  padding-left: 0;
+  margin: 10px 0;
+}
+
+.ccnp-security-page .srclist li::before {
+  content: none !important;
+}
+
+.ccnp-security-page .tag {
+  display: inline-block;
+  padding: 0 10px;
+  margin-right: 8px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-weight: 500;
+  background: #fff;
+  vertical-align: baseline;
+}
+
+.ccnp-security-page .tag.official {
+  color: var(--color-indigo);
+  border-color: var(--color-indigo);
+}
+
+.ccnp-security-page .tag.std {
+  color: var(--color-forest);
+  border-color: var(--color-forest);
+}
+
+.ccnp-security-page .tag.doc {
+  color: #7A5415;
+  border-color: var(--color-gold);
+}
+
+.ccnp-security-page .tag.supp {
+  color: var(--color-plum);
+  border-color: var(--color-plum);
+}
+
+.ccnp-security-page .surls {
+  display: block;
+  margin-top: 2px;
+}
+
+.ccnp-security-page .surl {
+  display: block;
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  color: var(--color-indigo);
+}
+
+.ccnp-security-page .refs {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ccnp-security-page .ref {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.ccnp-security-page .ref .no {
+  flex: none;
+  width: 2.3em;
+  height: 2.3em;
+  border-radius: 50%;
+  background: var(--tint-indigo);
+  color: var(--color-indigo);
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+}
+
+.ccnp-security-page .ref .body {
+  min-width: 0;
+}
+
+.ccnp-security-page .diagram {
+  margin: 20px 0;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.ccnp-security-page .diagram .mm {
+  display: flex;
+  justify-content: center;
+  justify-content: safe center;
+  overflow-x: auto;
+}
+
+.ccnp-security-page .diagram .mm svg {
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ccnp-security-page .footer {
+  margin-top: 64px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+}
+
+.ccnp-security-page .menu-btn {
+  display: none;
+}
+
+.ccnp-security-page .scrim {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .ccnp-security-page .sidebar {
+    transform: translateX(-100%);
+    transition: transform .2s ease;
+  }
+  .ccnp-security-page.nav-open .sidebar {
+    transform: none;
+  }
+  .ccnp-security-page.nav-open .scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 27, 38, .45);
+    z-index: 20;
+  }
+  .ccnp-security-page main {
+    margin-left: 0;
+    padding: 0 20px 64px;
+  }
+  .ccnp-security-page .menu-btn {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: calc(var(--header-h, 60px) + 12px);
+    left: 12px;
+    z-index: 40;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--color-indigo);
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+  .ccnp-security-page .hero {
+    padding-top: 72px;
+  }
+  .ccnp-security-page .hero h1 {
+    font-size: 1.75rem;
+  }
+  .ccnp-security-page header.part h1 {
+    font-size: 1.5rem;
+  }
+  .ccnp-security-page h2 {
+    font-size: 1.3rem;
+  }
+}

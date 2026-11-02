@@ -1,0 +1,221 @@
+import fs from 'node:fs';
+import { JSDOM } from 'jsdom';
+
+const htmlPath = 'Ccnp-security-guide.html';
+const html = fs.readFileSync(htmlPath, 'utf8');
+const doc = new JSDOM(html).window.document;
+const main = doc.querySelector('main');
+const children = [...main.children];
+
+const boundaries = [
+    { name: 'hero-intro', start: 0, end: 5, file: 'HeroIntro.tsx', component: 'HeroIntro' },
+    { name: 'partA', start: 5, end: 16, file: 'PartA.tsx', component: 'PartA' },
+    { name: 'partB', start: 16, end: 25, file: 'PartB.tsx', component: 'PartB' },
+    { name: 'partC', start: 25, end: 37, file: 'PartC.tsx', component: 'PartC' },
+    { name: 'partD', start: 37, end: 47, file: 'PartD.tsx', component: 'PartD' },
+    { name: 'partE', start: 47, end: 56, file: 'PartE.tsx', component: 'PartE' },
+    { name: 'appendix', start: 56, end: children.length, file: 'Appendix.tsx', component: 'Appendix' },
+];
+
+const targetPhase = process.argv[2];
+if (targetPhase && targetPhase !== 'all' && !boundaries.some(b => b.name === targetPhase)) {
+    console.error('Specify one of: all, ' + boundaries.map(b => b.name).join(', '));
+    process.exit(1);
+}
+
+function tokens(line, language) {
+    if (language === 'language-python') {
+        const regex = /#.*$|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?:\d+)\b/g;
+        let out = '';
+        let end = 0;
+        for (const m of line.matchAll(regex)) {
+            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+            const text = m[0];
+            const cls = text.startsWith('#')
+                ? 'hljs-comment'
+                : text.startsWith('"') || text.startsWith("'")
+                ? 'hljs-string'
+                : /^\d+$/.test(text)
+                ? 'hljs-number'
+                : 'hljs-keyword';
+            out += `<span className="${cls}">{${JSON.stringify(text)}}</span>`;
+            end = m.index + text.length;
+        }
+        return out + '{' + JSON.stringify(line.slice(end)) + '}';
+    }
+
+    // CLI / IOS XE / Splunk
+    const regex = /!.*$|#.*$|"(?:\\.|[^"\\])*"|\b(?:aaa|tacacs|radius|snmp-server|ip|dhcp|snooping|switchport|authentication|dot1x|stats|index|sourcetype)\b/g;
+    let out = '';
+    let end = 0;
+    for (const m of line.matchAll(regex)) {
+        out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        const text = m[0];
+        const cls = text.startsWith('!') || text.startsWith('#')
+            ? 'hljs-comment'
+            : text.startsWith('"')
+            ? 'hljs-string'
+            : 'hljs-keyword';
+        out += `<span className="${cls}">{${JSON.stringify(text)}}</span>`;
+        end = m.index + text.length;
+    }
+    return out + '{' + JSON.stringify(line.slice(end)) + '}';
+}
+
+function nodeToJsx(node) {
+    if (node.nodeType === 3) {
+        // テキストノード
+        if (['TABLE', 'THEAD', 'TBODY', 'TR'].includes(node.parentElement?.tagName) && !node.textContent.trim()) {
+            return '';
+        }
+        return '{' + JSON.stringify(node.textContent) + '}';
+    }
+    if (node.nodeType !== 1) return '';
+
+    // Mermaid Diagram
+    if (node.classList?.contains('diagram')) {
+        const mm = node.querySelector('.mm[data-k]');
+        const id = mm ? mm.getAttribute('data-k') : '';
+        let prev = node.previousElementSibling;
+        while (prev && !prev.matches('h1, h2, h3, h4, header, .part-lead')) {
+            prev = prev.previousElementSibling;
+        }
+        const labelText = prev ? (prev.textContent || '').replace(/\s+/g, ' ').trim() : `図解 ${id}`;
+        return `<Diagram id="${id}" label={${JSON.stringify(labelText)}} />`;
+    }
+
+    // Code Block (pre)
+    if (node.tagName === 'PRE') {
+        const code = node.querySelector('code');
+        const lang = code?.className || 'plain';
+        const rawText = code ? code.textContent : node.textContent;
+        const lines = (rawText || '').replace(/^\n|\n$/g, '').split('\n');
+        return (
+            `<div className="code-sample">` +
+            `<div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">` +
+            lines.map(line => `<div className="code-line">${tokens(line, lang)}</div>`).join('') +
+            `</div></div>`
+        );
+    }
+
+    // Table 構造の正規化: thead の保証
+    if (node.tagName === 'TABLE') {
+        let thead = node.querySelector('thead');
+        let tbody = node.querySelector('tbody');
+        const rows = [...node.querySelectorAll('tr')];
+
+        let headContent = '';
+        let bodyContent = '';
+
+        if (thead) {
+            headContent = [...thead.childNodes].map(nodeToJsx).join('');
+        } else if (rows.length > 0 && rows[0].querySelector('th')) {
+            // 先頭行に th があればそれを thead にする
+            const firstRow = rows[0];
+            const ths = [...firstRow.querySelectorAll('th')];
+            headContent = `<tr>${ths.map(th => {
+                const attrs = [];
+                attrs.push('scope="col"');
+                if (th.getAttribute('colspan')) attrs.push(`colSpan={${th.getAttribute('colspan')}}`);
+                if (th.getAttribute('rowspan')) attrs.push(`rowSpan={${th.getAttribute('rowspan')}}`);
+                return `<th ${attrs.join(' ')}>${[...th.childNodes].map(nodeToJsx).join('')}</th>`;
+            }).join('')}</tr>`;
+        }
+
+        const bodyRows = rows.filter(r => !r.parentElement?.matches('thead') && (thead || r !== rows[0] || !r.querySelector('th')));
+        bodyContent = bodyRows.map(r => {
+            const cells = [...r.children].map(c => {
+                const tag = c.tagName.toLowerCase();
+                const attrs = [];
+                if (tag === 'th') attrs.push('scope="col"');
+                if (c.getAttribute('colspan')) attrs.push(`colSpan={${c.getAttribute('colspan')}}`);
+                if (c.getAttribute('rowspan')) attrs.push(`rowSpan={${c.getAttribute('rowspan')}}`);
+                return `<${tag}${attrs.length ? ' ' + attrs.join(' ') : ''}>${[...c.childNodes].map(nodeToJsx).join('')}</${tag}>`;
+            }).join('');
+            return `<tr>${cells}</tr>`;
+        }).join('');
+
+        return `<table><thead>${headContent}</thead><tbody>${bodyContent}</tbody></table>`;
+    }
+
+    // 通常要素
+    const tag = node.tagName.toLowerCase();
+    const attrs = [];
+
+    // class -> className
+    if (node.getAttribute('class')) {
+        attrs.push(`className="${node.getAttribute('class')}"`);
+    }
+
+    // id
+    if (node.getAttribute('id')) {
+        attrs.push(`id="${node.getAttribute('id')}"`);
+    }
+
+    // href, target, rel
+    if (node.getAttribute('href')) {
+        attrs.push(`href="${node.getAttribute('href')}"`);
+    }
+    if (node.getAttribute('target')) {
+        attrs.push(`target="${node.getAttribute('target')}"`);
+    }
+    if (node.getAttribute('rel')) {
+        attrs.push(`rel="${node.getAttribute('rel')}"`);
+    }
+
+    // aria-*
+    for (const attr of node.attributes) {
+        if (attr.name.startsWith('aria-')) {
+            attrs.push(`${attr.name}="${attr.value}"`);
+        }
+    }
+
+    // SVG 属性
+    if (['svg', 'path'].includes(tag)) {
+        for (const attr of node.attributes) {
+            if (['width', 'height', 'viewBox', 'd', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin'].includes(attr.name)) {
+                let name = attr.name;
+                if (name === 'stroke-width') name = 'strokeWidth';
+                if (name === 'stroke-linecap') name = 'strokeLinecap';
+                if (name === 'stroke-linejoin') name = 'strokeLinejoin';
+                attrs.push(`${name}="${attr.value}"`);
+            }
+        }
+    }
+
+    const attrStr = attrs.length > 0 ? ' ' + attrs.join(' ') : '';
+    const inner = [...node.childNodes].map(nodeToJsx).join('');
+    return `<${tag}${attrStr}>${inner}</${tag}>`;
+}
+
+function generateSection(b) {
+    const slice = children.slice(b.start, b.end);
+    const jsxContent = slice.map(nodeToJsx).join('\n');
+
+    const fileContent = `import { Diagram } from '../Diagram';
+
+/**
+ * ${b.name} セクションコンポーネント
+ */
+export default function ${b.component}() {
+    return (
+        <>
+${jsxContent}
+        </>
+    );
+}
+`;
+
+    const outPath = `app/cisco/ccnp-security/sections/${b.file}`;
+    fs.mkdirSync('app/cisco/ccnp-security/sections', { recursive: true });
+    fs.writeFileSync(outPath, fileContent, 'utf8');
+    console.log(`Generated ${outPath} (${b.name}: ${b.start}..${b.end})`);
+}
+
+const targets = targetPhase && targetPhase !== 'all'
+    ? boundaries.filter(b => b.name === targetPhase)
+    : boundaries;
+
+for (const b of targets) {
+    generateSection(b);
+}

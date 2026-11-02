@@ -23,13 +23,13 @@ describe('CCNP Security ガイド — リスト・スタイリング検証', () 
         const cssPath = resolve('app/cisco/ccnp-security/page.css');
         let css = '';
         try {
-            css = readFileSync(cssPath, 'utf8');
+            css = readFileSync(cssPath, 'utf8').replace(/\s+/g, '');
         } catch {
             css = '';
         }
         expect(css).toContain('.ccnp-security-page');
-        expect(css).toContain('main ul>li::before');
-        expect(css).toContain('main ol>li::before');
-        expect(css).toContain('.srclist li::before');
+        expect(css).toContain('mainul>li::before');
+        expect(css).toContain('mainol>li::before');
+        expect(css).toContain('.srclistli::before');
     });
 });

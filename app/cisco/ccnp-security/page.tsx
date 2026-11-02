@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import './page.css';
 import CcnpSecurityGuide from './CcnpSecurityGuide';
 
 export const metadata: Metadata = {
