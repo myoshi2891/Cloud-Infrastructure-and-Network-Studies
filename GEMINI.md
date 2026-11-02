@@ -1,5 +1,9 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-03: CCNP Security 完全ガイド
+
+`app/cisco/ccnp-security/` に Server `page.tsx`、Client `CcnpSecurityGuide.tsx` / `NavBar.tsx`、`Diagram.tsx`、7分割の `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, Appendix）、定数 `constants.ts`、スコープCSS `page.css` を追加。全7パート・131表・53図・9コード例・701リスト項目（本文519・目次182）・305外部リンク出現・188目次を原本から移行。コード行（`.code-line`）・構文色・金色丸ドットおよびインディゴ数字バッジのリスト階層・各色コールアウト・Mermaid専用ライトテーマパレットを保持。ホーム・Headerの導線と明色フッターへ統合。`bun scripts/migrate-ccnp-security.mjs all` で再生成できる。原本HTML/Markdownは `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。
+
 ## 2026-11-02: SCS-C03 Domain 2
 
 `app/aws/security-specialty/domain2/` に Server `page.tsx` / `ScsDomain2Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、`Diagram.tsx`、7分割のServer `sections/`（Hero, Task21, Task22, Scenarios, ExamPrep, ChecklistSection, Appendix）、定数とテーマJSON、スコープCSSを追加。全68表・18図・12コード例・170リスト項目・21チェック項目・43目次を原本から移行。コード行・構文色・リスト階層・段落余白・チェック進捗カウンターを保持。ホーム・HeaderのDomain 2（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain2.mjs` で固定Git原本から本文を再生成できる。
