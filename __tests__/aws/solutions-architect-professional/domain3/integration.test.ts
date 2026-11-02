@@ -24,7 +24,9 @@ describe('SAP Domain 3 統合契約',()=>{
  });
  it('原本単体の派生色を全量固定し、共有dark設定の混入を防ぐ',()=>{
   mermaid.initialize({...source,theme:'base',flowchart:{...source.flowchart,curve:'basis'},startOnLoad:false});const expected=Object.fromEntries(Object.entries(mermaid.mermaidAPI.getConfig().themeVariables??{}).map(([k,v])=>[k,typeof v==='string'&&/^(?:hsl|rgb)a?\(/.test(v)&&isValid(v)?toHex(v):v]));
-  expect(renderTheme.themeVariables).toEqual({...expected,fontFamily:'"Noto Sans JP Variable",sans-serif'});
+  // Mermaid 11 は quadrantPointFill の明度を NaN で導出するため、既存パレットの lineColor で置き換える
+  expect(renderTheme.themeVariables).toEqual({...expected,quadrantPointFill:expected.lineColor,fontFamily:'"Noto Sans JP Variable",sans-serif'});
+  expect(JSON.stringify(renderTheme)).not.toContain('NaN');
  });
  it('サイドバー背景・構文色などの固定色を@themeトークンで参照し、再生成処理にも反映',()=>{
   const css=fs.readFileSync('app/aws/solutions-architect-professional/domain3/page.css','utf8');const globals=fs.readFileSync('app/globals.css','utf8');const theme=globals.slice(globals.indexOf('@theme {'),globals.indexOf('\n}',globals.indexOf('@theme {')));
