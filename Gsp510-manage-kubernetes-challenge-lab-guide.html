@@ -1,0 +1,4233 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+            Manage Kubernetes in Google Cloud
+            チャレンジラボ（GSP510）完全ガイド【初学者向け・ステップバイステップ】
+        </title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.50.0/dist/tabler-icons.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/styles/atom-one-dark.min.css"
+        />
+        <style>
+            :root {
+                --bg-primary: #07111e;
+                --bg-secondary: #0c1a2d;
+                --bg-tertiary: #112340;
+                --bg-code: #0a1626;
+                --text-primary: #f3f5fa;
+                --text-secondary: #c6d0e3;
+                --text-tertiary: #93a1bd;
+                --border-1: #1e2f4d;
+                --border-2: #2d456e;
+                --border-3: #3e5c8f;
+                --accent: #7c9eff;
+                --accent-soft: #16264a;
+                --info: #7c9eff;
+                --success: #5fd3b0;
+                --warning: #f2b84b;
+                --danger: #ff8a7a;
+                --purple: #b79cff;
+                --font-sans:
+                    'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI',
+                    'Yu Gothic', Meiryo, system-ui, -apple-system, 'Segoe UI', sans-serif;
+                --font-mono:
+                    ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono',
+                    'Noto Sans Mono CJK JP', monospace;
+                --sidebar-w: 288px;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 24px;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                html {
+                    scroll-behavior: auto;
+                }
+                * {
+                    transition: none !important;
+                }
+            }
+            body {
+                margin: 0;
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                line-height: 1.7;
+                -webkit-text-size-adjust: 100%;
+            }
+            a {
+                color: var(--accent);
+            }
+            :focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+            .layout {
+                display: block;
+            }
+
+            /* sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: var(--bg-secondary);
+                border-right: 1px solid var(--border-1);
+                overflow-y: auto;
+                z-index: 30;
+                padding: 24px 16px 32px;
+            }
+            .brand {
+                padding: 0 8px 20px;
+                border-bottom: 1px solid var(--border-1);
+                margin-bottom: 16px;
+            }
+            .brand .code {
+                display: inline-block;
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                color: var(--accent);
+                border: 1px solid var(--border-3);
+                border-radius: 8px;
+                padding: 2px 10px;
+                margin-bottom: 10px;
+            }
+            .brand .name {
+                font-size: 1rem;
+                font-weight: 500;
+                line-height: 1.5;
+                color: var(--text-primary);
+            }
+            .brand .sub {
+                font-size: 1rem;
+                color: var(--text-tertiary);
+                line-height: 1.5;
+                margin-top: 4px;
+            }
+            .sidebar nav ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .sidebar nav li {
+                padding-left: 0;
+                margin: 2px 0;
+            }
+            .sidebar nav li::before {
+                content: none;
+            }
+            .sidebar nav a {
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+                padding: 8px 10px;
+                border-radius: 8px;
+                color: var(--text-secondary);
+                text-decoration: none;
+                line-height: 1.5;
+                border: 1px solid transparent;
+            }
+            .sidebar nav a:hover {
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+            }
+            .sidebar nav a.active {
+                background: var(--accent-soft);
+                border-color: var(--border-3);
+                color: var(--text-primary);
+            }
+            .sidebar nav .n {
+                flex: 0 0 1.9rem;
+                text-align: center;
+                font-family: var(--font-mono);
+                color: var(--text-tertiary);
+            }
+            .sidebar nav a.active .n {
+                color: var(--accent);
+            }
+
+            /* main */
+            main {
+                margin-left: var(--sidebar-w);
+                padding: 56px 64px 96px;
+            }
+            .hero {
+                padding-bottom: 32px;
+                border-bottom: 1px solid var(--border-1);
+                margin-bottom: 8px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+                line-height: 1.4;
+                font-weight: 500;
+                margin: 0 0 24px;
+                color: var(--text-primary);
+            }
+            .meta {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+                gap: 10px 24px;
+                margin: 0;
+                padding: 20px 24px;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-1);
+                border-radius: 12px;
+            }
+            .meta dt {
+                color: var(--text-tertiary);
+            }
+            .meta dd {
+                margin: 0;
+                color: var(--text-secondary);
+            }
+            .section {
+                padding-top: 56px;
+            }
+            .section > h2 {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                font-size: 1.5rem;
+                line-height: 1.4;
+                font-weight: 500;
+                margin: 0 0 24px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--border-2);
+            }
+            .h-num {
+                flex: 0 0 auto;
+                min-width: 2.6rem;
+                height: 2.6rem;
+                padding: 0 8px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--accent);
+                border-radius: 10px;
+                color: var(--accent);
+                font-family: var(--font-mono);
+                font-size: 1rem;
+            }
+            h3 {
+                font-size: 1.25rem;
+                line-height: 1.5;
+                font-weight: 500;
+                margin: 40px 0 14px;
+                color: var(--text-primary);
+            }
+            h4 {
+                font-size: 1rem;
+                line-height: 1.6;
+                font-weight: 600;
+                margin: 28px 0 10px;
+                color: var(--accent);
+            }
+            p {
+                margin: 0 0 16px;
+                color: var(--text-secondary);
+            }
+            strong {
+                color: var(--text-primary);
+                font-weight: 600;
+            }
+            ul,
+            ol {
+                margin: 0 0 18px;
+                padding-left: 1.6em;
+                color: var(--text-secondary);
+            }
+            li {
+                margin: 6px 0;
+            }
+            li::marker {
+                color: var(--accent);
+            }
+            li > p {
+                margin: 0 0 8px;
+            }
+            code {
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                background: var(--bg-tertiary);
+                color: #b4c8ff;
+                border: 1px solid var(--border-1);
+                border-radius: 6px;
+                padding: 1px 6px;
+                overflow-wrap: anywhere;
+            }
+            pre code,
+            .code-block code {
+                background: transparent;
+                border: 0;
+                padding: 0;
+                color: inherit;
+                overflow-wrap: normal;
+            }
+
+            /* code block */
+            .code-block {
+                margin: 0 0 22px;
+                border: 1px solid var(--border-2);
+                border-radius: 12px;
+                background: var(--bg-code);
+                overflow: hidden;
+            }
+            .code-head {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 6px 8px 6px 16px;
+                background: var(--bg-tertiary);
+                border-bottom: 1px solid var(--border-1);
+            }
+            .code-head .lang {
+                font-family: var(--font-mono);
+                color: var(--text-tertiary);
+            }
+            .copy {
+                display: inline-flex;
+                gap: 6px;
+                align-items: center;
+                font: inherit;
+                font-size: 1rem;
+                color: var(--text-secondary);
+                background: transparent;
+                border: 1px solid var(--border-2);
+                border-radius: 8px;
+                padding: 2px 10px;
+                cursor: pointer;
+            }
+            .copy:hover {
+                background: var(--accent-soft);
+                color: var(--text-primary);
+            }
+            .code-block pre {
+                margin: 0;
+                padding: 16px 20px;
+                overflow-x: auto;
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                line-height: 1.65;
+                color: #d6deef;
+                tab-size: 2;
+            }
+            .code-block pre code.hljs {
+                background: transparent;
+                padding: 0;
+            }
+            .code-block pre code {
+                white-space: pre;
+            }
+
+            /* tables */
+            .table-wrap {
+                overflow-x: auto;
+                margin: 0 0 24px;
+                border: 1px solid var(--border-2);
+                border-radius: 12px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 1rem;
+            }
+            th,
+            td {
+                padding: 10px 16px;
+                text-align: left;
+                vertical-align: top;
+                border-bottom: 1px solid var(--border-1);
+                line-height: 1.6;
+            }
+            th {
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+                font-weight: 500;
+                white-space: nowrap;
+            }
+            td {
+                color: var(--text-secondary);
+            }
+            tr:last-child td {
+                border-bottom: 0;
+            }
+            td code {
+                white-space: normal;
+            }
+            td:first-child {
+                color: var(--text-primary);
+            }
+
+            /* callouts */
+            .callout {
+                display: flex;
+                gap: 14px;
+                align-items: flex-start;
+                margin: 0 0 22px;
+                padding: 16px 20px;
+                border: 1px solid var(--border-2);
+                border-left-width: 4px;
+                border-radius: 12px;
+                background: var(--bg-secondary);
+            }
+            .callout .ci {
+                flex: 0 0 auto;
+                margin-top: 3px;
+                font-size: 1.25rem;
+                line-height: 1;
+            }
+            .callout .cb {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+            .callout .cb > :last-child {
+                margin-bottom: 0;
+            }
+            .callout.note {
+                border-left-color: var(--info);
+            }
+            .callout.note .ci {
+                color: var(--info);
+            }
+            .callout.warn {
+                border-left-color: var(--warning);
+            }
+            .callout.warn .ci {
+                color: var(--warning);
+            }
+            .callout.practice {
+                border-left-color: var(--success);
+            }
+            .callout.practice .ci {
+                color: var(--success);
+            }
+
+            /* diagrams */
+            .diagram-wrap {
+                margin: 8px 0 26px;
+                padding: 20px;
+                border: 1px solid var(--border-1);
+                border-radius: 12px;
+                background: var(--bg-secondary);
+            }
+            .diagram {
+                display: flex;
+                overflow-x: auto;
+            }
+            .diagram svg {
+                flex: 0 0 auto;
+                margin: 0 auto;
+                overflow: visible;
+                height: auto;
+            }
+            .diagram-loading {
+                color: var(--text-tertiary);
+            }
+            .diagram-error pre {
+                margin: 0;
+                white-space: pre-wrap;
+                color: var(--danger);
+            }
+
+            /* checklist */
+            .check-progress {
+                display: flex;
+                gap: 14px;
+                align-items: center;
+                margin: 0 0 16px;
+            }
+            .check-progress .bar {
+                flex: 1 1 auto;
+                height: 10px;
+                border-radius: 6px;
+                background: var(--bg-tertiary);
+                border: 1px solid var(--border-2);
+                overflow: hidden;
+            }
+            .check-progress .bar i {
+                display: block;
+                height: 100%;
+                width: 0;
+                background: var(--success);
+                transition: width 0.25s;
+            }
+            .check-progress .count {
+                font-family: var(--font-mono);
+                color: var(--text-secondary);
+                white-space: nowrap;
+            }
+            .checklist {
+                display: grid;
+                gap: 10px;
+                margin: 0 0 24px;
+            }
+            .check-item {
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+                padding: 14px 18px;
+                border: 1px solid var(--border-2);
+                border-radius: 12px;
+                background: var(--bg-secondary);
+                cursor: pointer;
+            }
+            .check-item:hover {
+                border-color: var(--border-3);
+            }
+            .check-item input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+            .check-item .box {
+                flex: 0 0 auto;
+                width: 1.6rem;
+                height: 1.6rem;
+                margin-top: 2px;
+                border: 2px solid var(--border-3);
+                border-radius: 8px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: transparent;
+                font-size: 1rem;
+            }
+            .check-item input:focus-visible + .box {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+            .check-item .no {
+                flex: 0 0 auto;
+                min-width: 2rem;
+                font-family: var(--font-mono);
+                color: var(--text-tertiary);
+                margin-top: 1px;
+            }
+            .check-item .body {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+            .check-item .title {
+                color: var(--text-primary);
+            }
+            .check-item .how {
+                color: var(--text-secondary);
+            }
+            .check-item:has(input:checked) {
+                border-color: var(--success);
+                background: #0b1f24;
+            }
+            .check-item:has(input:checked) .box {
+                background: var(--success);
+                border-color: var(--success);
+                color: #07111e;
+            }
+            .check-item:has(input:checked) .title {
+                text-decoration: line-through;
+                color: var(--text-tertiary);
+            }
+
+            /* references */
+            .refs {
+                display: grid;
+                gap: 10px;
+                margin: 0 0 24px;
+            }
+            .ref-card {
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                padding: 14px 18px;
+                border: 1px solid var(--border-2);
+                border-radius: 12px;
+                background: var(--bg-secondary);
+                text-decoration: none;
+                color: inherit;
+            }
+            .ref-card:hover {
+                border-color: var(--accent);
+                background: var(--accent-soft);
+            }
+            .ref-card .badge {
+                flex: 0 0 auto;
+                width: 2.2rem;
+                height: 2.2rem;
+                border-radius: 50%;
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-family: var(--font-mono);
+            }
+            .ref-card .rb {
+                min-width: 0;
+                flex: 1 1 auto;
+                display: block;
+            }
+            .ref-card .rt {
+                display: block;
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            .ref-card .ru {
+                display: block;
+                color: var(--text-tertiary);
+                font-family: var(--font-mono);
+                overflow-wrap: anywhere;
+            }
+            .ref-card .ti {
+                color: var(--text-tertiary);
+                font-size: 1.25rem;
+            }
+
+            /* mobile drawer */
+            .nav-toggle,
+            .backdrop {
+                display: none;
+            }
+            @media (max-width: 1024px) {
+                main {
+                    margin-left: 0;
+                    padding: 32px 24px 96px;
+                }
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    width: min(320px, 86vw);
+                    z-index: 50;
+                }
+                body.nav-open .sidebar {
+                    transform: translateX(0);
+                }
+                .backdrop {
+                    display: block;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(3, 8, 16, 0.72);
+                    opacity: 0;
+                    pointer-events: none;
+                    transition: opacity 0.25s;
+                    z-index: 40;
+                }
+                body.nav-open .backdrop {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+                body.nav-open {
+                    overflow: hidden;
+                }
+                .nav-toggle {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: fixed;
+                    right: 20px;
+                    bottom: 20px;
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    border: 1px solid var(--border-3);
+                    background: var(--accent);
+                    color: #07111e;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                    z-index: 60;
+                }
+                .hero h1 {
+                    font-size: 1.5rem;
+                }
+                .meta {
+                    grid-template-columns: 1fr;
+                    gap: 2px;
+                }
+                .meta dd {
+                    margin-bottom: 10px;
+                }
+                .section > h2 {
+                    font-size: 1.25rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layout">
+            <aside class="sidebar" id="sidebar" aria-label="目次">
+                <div class="brand">
+                    <span class="code">GSP510</span>
+                    <div class="name">Manage Kubernetes in Google Cloud</div>
+                    <div class="sub">チャレンジラボ完全ガイド</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="#s1"><span class="n">1</span><span>このラボの全体像</span></a>
+                        </li>
+                        <li>
+                            <a href="#s2"
+                                ><span class="n">2</span><span>事前準備（環境変数の設定）</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s3"
+                                ><span class="n">3</span
+                                ><span>最初に知っておきたい基礎用語</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s4"
+                                ><span class="n">4</span
+                                ><span>Task 1: GKE クラスタを作成する</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s5"
+                                ><span class="n">5</span
+                                ><span>Task 2: Managed Prometheus を有効化する</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s6"
+                                ><span class="n">6</span
+                                ><span
+                                    >Task 3: アプリケーションをデプロイしてエラーを確認する</span
+                                ></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s7"
+                                ><span class="n">7</span
+                                ><span
+                                    >Task 4: ログベースメトリクスとアラートポリシーを作成する</span
+                                ></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s8"
+                                ><span class="n">8</span
+                                ><span>Task 5: マニフェストを修正して再デプロイする</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s9"
+                                ><span class="n">9</span
+                                ><span
+                                    >Task 6: コンテナ化して Artifact Registry へ push
+                                    しクラスタへデプロイする</span
+                                ></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s10"
+                                ><span class="n">10</span><span>コマンド一括集（コピペ用）</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s11"
+                                ><span class="n">11</span><span>トラブルシューティング</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s12"
+                                ><span class="n">12</span
+                                ><span>本番運用に向けたベストプラクティスまとめ</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s13"
+                                ><span class="n">13</span><span>最終チェックリスト</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s14"
+                                ><span class="n">14</span><span>クリーンアップとコスト意識</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#s15"
+                                ><span class="n">15</span><span>参考ドキュメント</span></a
+                            >
+                        </li>
+                        <li>
+                            <a href="#appendix"
+                                ><span class="n">付</span
+                                ><span
+                                    >付録: このラボで使う kubectl / gcloud / docker
+                                    コマンド早見表</span
+                                ></a
+                            >
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <div class="backdrop" id="backdrop"></div>
+            <button
+                class="nav-toggle"
+                id="navToggle"
+                type="button"
+                aria-label="目次を開く"
+                aria-expanded="false"
+                aria-controls="sidebar"
+            >
+                <i class="ti ti-menu-2"></i>
+            </button>
+            <main>
+                <header class="hero">
+                    <h1>
+                        Manage Kubernetes in Google Cloud
+                        チャレンジラボ（GSP510）完全ガイド【初学者向け・ステップバイステップ】
+                    </h1>
+                    <dl class="meta">
+                        <dt>対象読者</dt>
+                        <dd>GKE（Google Kubernetes Engine）や Docker を学び始めたばかりの方</dd>
+                        <dt>このガイドのゴール</dt>
+                        <dd>
+                            チャレンジラボの全6タスクを「なぜそうするのか」を理解しながら、自力で完了できるようになること
+                        </dd>
+                        <dt>作成日</dt>
+                        <dd>2026年10月30日</dd>
+                        <dt>根拠資料</dt>
+                        <dd>
+                            ラボの手順書（Cymbal Shops
+                            シナリオ）。ラボごとに割り当てられる値（プロジェクトID、ゾーンなど）は異なるため、必ずご自身のラボ画面の値に置き換えてください。
+                        </dd>
+                    </dl>
+                </header>
+                <section class="section" id="s1">
+                    <h2><span class="h-num">1</span><span>このラボの全体像</span></h2>
+                    <h3 id="s1-1">1.1 シナリオ</h3>
+                    <p>
+                        あなたは Cymbal Shops（架空の EC
+                        企業）に入社したばかりのエンジニアです。開発チームから「新しい EC サイトを
+                        GKE
+                        上で安全にリリースできるか、サンドボックスで実力を見せてほしい」と依頼されています。
+                    </p>
+                    <p>
+                        チャレンジラボでは
+                        <strong>手順の答えは書かれていません</strong
+                        >。これまでのラボで学んだスキルを使い、自分でコマンドや画面操作を考えて進めます。このガイドは「考え方」と「具体的な実行例」の両方を示します。
+                    </p>
+                    <h3 id="s1-2">1.2 6つのタスクの流れ</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 1.2 6つのタスクの流れ"
+                            class="diagram"
+                            data-id="d0"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <aside class="callout warn">
+                        <i aria-hidden="true" class="ti ti-alert-triangle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>重要な順番の注意</strong>: Task
+                                4（メトリクスとアラート作成）は、<strong
+                                    >エラーを直す Task 5 より前</strong
+                                >に行います。エラーが出ている間にログベースメトリクスを作ることで、「同じ問題が再発したら検知できる」仕組みを実際に体験する設計になっているためです。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s1-3">1.3 各タスクで学ぶこと</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>タスク</th>
+                                    <th>目的</th>
+                                    <th>主な操作</th>
+                                    <th>使う主なツール</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Task 1</td>
+                                    <td>クラスタの構築</td>
+                                    <td>設定値どおりに GKE クラスタを作成</td>
+                                    <td><code>gcloud container clusters create</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 2</td>
+                                    <td>メトリクス監視の土台づくり</td>
+                                    <td>
+                                        Managed Prometheus 有効化、namespace 作成、アプリと
+                                        PodMonitoring のデプロイ
+                                    </td>
+                                    <td><code>gcloud</code>、<code>kubectl</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 3</td>
+                                    <td>デプロイと障害の観察</td>
+                                    <td>壊れたマニフェストをデプロイし、エラーを読む</td>
+                                    <td><code>kubectl</code>、Console の Workloads 画面</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 4</td>
+                                    <td>再発検知の仕組みづくり</td>
+                                    <td>ログベースメトリクスとアラートポリシー</td>
+                                    <td>Logs Explorer、Cloud Monitoring</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 5</td>
+                                    <td>障害の復旧</td>
+                                    <td>マニフェスト修正、Deployment 削除、再デプロイ</td>
+                                    <td><code>kubectl</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 6</td>
+                                    <td>リリースの一連の流れ</td>
+                                    <td>コード修正、Docker ビルド、push、イメージ更新、公開</td>
+                                    <td>
+                                        <code>docker</code>、<code>kubectl</code>、Artifact Registry
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s1-4">1.4 手順書の表記ゆれについて</h3>
+                    <p>
+                        手順書の冒頭に「Artifact Registry リポジトリ名は
+                        <em>cluster name</em>」と書かれている箇所がありますが、Task 6 では「<em
+                            >repo name</em
+                        >」と書かれています。これは<strong>表記の揺れ</strong>です。ラボ画面の左側に表示される値のうち、<strong>リポジトリ用の値（<code>REPO_NAME</code>）を使う</strong>と理解してください。
+                    </p>
+                </section>
+                <section class="section" id="s2">
+                    <h2><span class="h-num">2</span><span>事前準備（環境変数の設定）</span></h2>
+                    <h3 id="s2-1">2.1 なぜ環境変数を使うのか</h3>
+                    <p>
+                        ラボでは同じ値（プロジェクト ID、ゾーン、namespace
+                        名など）を何度も入力します。<strong>環境変数に入れておくと、入力ミスを防ぎ、コマンドをそのまま使い回せます</strong>。これは本番運用でもスクリプトの再利用性を高める基本的なベストプラクティスです。
+                    </p>
+                    <h3 id="s2-2">2.2 手順</h3>
+                    <ol>
+                        <li>
+                            ラボの
+                            <strong>Start Lab</strong>
+                            を押し、左側パネルに表示される値（Username、Password、プロジェクト
+                            ID、各種ラボ指定値）を確認します。
+                        </li>
+                        <li>
+                            <strong>シークレット（Incognito）ウィンドウ</strong>で Google Cloud
+                            コンソールを開き、<strong>ラボ用のStudentアカウント</strong>でログインします（個人アカウントと混ざらないようにするため）。
+                        </li>
+                        <li>
+                            コンソール右上の
+                            <strong>Cloud Shell をアクティブにする</strong> アイコンを押して Cloud
+                            Shell を起動します。
+                        </li>
+                        <li>
+                            次のコマンドの
+                            <code>"..."</code>
+                            の中身を、<strong>ラボ画面に表示されている値</strong>に置き換えて実行します。
+                        </li>
+                    </ol>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">export PROJECT_ID="ラボのプロジェクトID"
+export CLUSTER_NAME="ラボで指定されたクラスタ名"
+export REGION="ラボで指定されたリージョン"
+export ZONE="ラボで指定されたゾーン"
+export NAMESPACE_NAME="ラボで指定されたnamespace名"
+export REPO_NAME="ラボで指定されたリポジトリ名"
+export SERVICE_NAME="ラボで指定されたサービス名"
+</code></pre>
+                    </div>
+                    <ol start="5">
+                        <li>正しく設定できたか確認します。</li>
+                    </ol>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">echo "PROJECT_ID=$PROJECT_ID"
+echo "CLUSTER_NAME=$CLUSTER_NAME"
+echo "REGION=$REGION"
+echo "ZONE=$ZONE"
+echo "NAMESPACE_NAME=$NAMESPACE_NAME"
+echo "REPO_NAME=$REPO_NAME"
+echo "SERVICE_NAME=$SERVICE_NAME"
+</code></pre>
+                    </div>
+                    <ol start="6">
+                        <li>
+                            gcloud
+                            の既定プロジェクトとゾーンも合わせておくと、オプションの付け忘れによるエラーを減らせます。
+                        </li>
+                    </ol>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud config set project "$PROJECT_ID"
+gcloud config set compute/zone "$ZONE"
+gcloud config set compute/region "$REGION"
+</code></pre>
+                    </div>
+                    <h3 id="s2-3">2.3 環境変数に関する注意点</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>注意点</th>
+                                    <th>説明</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Cloud Shell が再接続されると変数が消える</td>
+                                    <td>
+                                        セッションが切れると <code>export</code> した値は失われます
+                                    </td>
+                                    <td>再接続したら 2.2 の <code>export</code> を再実行する</td>
+                                </tr>
+                                <tr>
+                                    <td>ゾーンとリージョンの混同</td>
+                                    <td>
+                                        ゾーンは
+                                        <code>us-central1-a</code> のような形式、リージョンは
+                                        <code>us-central1</code> の形式です
+                                    </td>
+                                    <td>ラボ画面の値をそのままコピーする</td>
+                                </tr>
+                                <tr>
+                                    <td>値の前後に空白が入る</td>
+                                    <td>コピー時に空白や改行が混入することがあります</td>
+                                    <td><code>echo</code> で確認し、変なときは再入力する</td>
+                                </tr>
+                                <tr>
+                                    <td>引用符を付ける</td>
+                                    <td>値に特殊文字が含まれても安全</td>
+                                    <td>
+                                        変数は <code>"$VAR"</code> のように二重引用符で囲んで使う
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s3">
+                    <h2><span class="h-num">3</span><span>最初に知っておきたい基礎用語</span></h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>一言でいうと</th>
+                                    <th>このラボでの登場場面</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>GKE</strong></td>
+                                    <td>Google が管理してくれる Kubernetes サービス</td>
+                                    <td>Task 1 で作成</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>クラスタ</strong></td>
+                                    <td>コンテナを動かすマシン群（ノード）と管理機能のまとまり</td>
+                                    <td>Task 1</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ノード</strong></td>
+                                    <td>コンテナが実際に動く仮想マシン</td>
+                                    <td>Task 1 の「Number of nodes」</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>リリースチャンネル</strong></td>
+                                    <td>GKE のバージョン更新の方針（Rapid / Regular / Stable）</td>
+                                    <td>Task 1 で Regular を選択</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>クラスタオートスケーラー</strong></td>
+                                    <td>負荷に応じてノード数を自動で増減する機能</td>
+                                    <td>Task 1 で最小2、最大6</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>namespace</strong></td>
+                                    <td>クラスタ内を論理的に分ける区画</td>
+                                    <td>Task 2 以降で利用</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pod</strong></td>
+                                    <td>コンテナを動かす最小単位</td>
+                                    <td>各タスク</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Deployment</strong></td>
+                                    <td>Pod の「あるべき数と状態」を宣言し維持する仕組み</td>
+                                    <td><code>helloweb</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Service</strong></td>
+                                    <td>Pod に安定したアクセス先（IP）を与える仕組み</td>
+                                    <td>Task 6 の LoadBalancer</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>マニフェスト</strong></td>
+                                    <td>Kubernetes のリソースを YAML で記述した設計書</td>
+                                    <td><code>*.yaml</code> ファイル</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Managed Prometheus</strong></td>
+                                    <td>Google が運用してくれる Prometheus 互換のメトリクス収集</td>
+                                    <td>Task 2</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>PodMonitoring</strong></td>
+                                    <td>
+                                        どの Pod
+                                        の、どのポートから、何秒ごとにメトリクスを集めるかの定義
+                                    </td>
+                                    <td>Task 2</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ログベースメトリクス</strong></td>
+                                    <td>ログの出現回数などを数値（メトリクス）に変える機能</td>
+                                    <td>Task 4</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>アラートポリシー</strong></td>
+                                    <td>メトリクスが条件を超えたら通知する仕組み</td>
+                                    <td>Task 4</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Artifact Registry</strong></td>
+                                    <td>コンテナイメージを保管する Google Cloud のレジストリ</td>
+                                    <td>Task 6</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>イメージタグ</strong></td>
+                                    <td>
+                                        イメージのバージョン名（例:
+                                        <code>v2</code>、<code>1.0</code>）
+                                    </td>
+                                    <td>Task 5、Task 6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s3-1">3.1 Kubernetes のリソースの親子関係</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 3.1 Kubernetes のリソースの親子関係"
+                            class="diagram"
+                            data-id="d1"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                Deployment を作ると、裏で ReplicaSet が作られ、その ReplicaSet が
+                                Pod を作ります。Service は
+                                <strong>ラベル（label）</strong> を使って「どの Pod
+                                に通信を流すか」を決めます。
+                            </p>
+                        </div>
+                    </aside>
+                </section>
+                <section class="section" id="s4">
+                    <h2><span class="h-num">4</span><span>Task 1: GKE クラスタを作成する</span></h2>
+                    <h3 id="s4-1">4.1 要件</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>設定</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>クラスタ名</td>
+                                    <td><code>CLUSTER_NAME</code></td>
+                                </tr>
+                                <tr>
+                                    <td>ゾーン</td>
+                                    <td><code>ZONE</code></td>
+                                </tr>
+                                <tr>
+                                    <td>リリースチャンネル</td>
+                                    <td>Regular</td>
+                                </tr>
+                                <tr>
+                                    <td>クラスタ / ターゲットバージョン</td>
+                                    <td>default（既定のまま）</td>
+                                </tr>
+                                <tr>
+                                    <td>クラスタオートスケーラー</td>
+                                    <td>有効</td>
+                                </tr>
+                                <tr>
+                                    <td>ノード数</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>最小ノード数</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>最大ノード数</td>
+                                    <td>6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s4-2">4.2 コマンドで作成する方法（推奨）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud container clusters create "$CLUSTER_NAME" \
+  --zone "$ZONE" \
+  --release-channel regular \
+  --num-nodes 3 \
+  --enable-autoscaling \
+  --min-nodes 2 \
+  --max-nodes 6
+</code></pre>
+                    </div>
+                    <p>
+                        クラスタ作成には
+                        <strong>数分（目安 5〜10 分）</strong> かかります。待っている間に Task 2
+                        以降の手順を読み進めておくと時間を有効に使えます。
+                    </p>
+                    <h3 id="s4-3">4.3 コマンドの意味</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>意味</th>
+                                    <th>ポイント</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--zone</code></td>
+                                    <td>クラスタを作るゾーン</td>
+                                    <td>ゾーンを指定すると<strong>ゾーンクラスタ</strong>になる</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--release-channel regular</code></td>
+                                    <td>リリースチャンネルを Regular に設定</td>
+                                    <td>
+                                        バージョンは「default」のまま。<code
+                                            >--cluster-version</code
+                                        >
+                                        は指定しない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>--num-nodes 3</code></td>
+                                    <td>初期ノード数</td>
+                                    <td>ゾーンクラスタでは、この数がそのまま総ノード数</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--enable-autoscaling</code></td>
+                                    <td>クラスタオートスケーラーを有効化</td>
+                                    <td>
+                                        <code>--min-nodes</code> と
+                                        <code>--max-nodes</code> とセットで使う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>--min-nodes 2</code> / <code>--max-nodes 6</code></td>
+                                    <td>自動増減の下限と上限</td>
+                                    <td>上限は予期せぬコスト増の防波堤になる</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s4-4">4.4 Console（GUI）で作成する場合</h3>
+                    <ol>
+                        <li>
+                            ナビゲーションメニュー → <strong>Kubernetes Engine</strong> →
+                            <strong>クラスタ</strong> → <strong>作成</strong>
+                        </li>
+                        <li><strong>Standard</strong> クラスタの「構成」を選ぶ</li>
+                        <li>
+                            名前に <code>CLUSTER_NAME</code>、ロケーションタイプは
+                            <strong>ゾーン</strong>、ゾーンに <code>ZONE</code> を指定
+                        </li>
+                        <li>
+                            「リリースチャンネル」が <strong>Regular channel</strong>、バージョンが
+                            <strong>既定</strong>であることを確認
+                        </li>
+                        <li>
+                            左メニューの <strong>default-pool</strong> で「ノード数」を
+                            3、「クラスタ オートスケーラーを有効にする」にチェックし、最小 2・最大 6
+                            を入力
+                        </li>
+                        <li><strong>作成</strong></li>
+                    </ol>
+                    <h3 id="s4-5">4.5 作成後の接続と確認</h3>
+                    <p>クラスタに <code>kubectl</code> をつなぐための認証情報を取得します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$ZONE"
+</code></pre>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># ノードが3台 Ready であること
+kubectl get nodes
+
+# 設定内容の確認（リリースチャンネルとオートスケーリング）
+gcloud container clusters describe "$CLUSTER_NAME" --zone "$ZONE" \
+  --format="yaml(releaseChannel,currentNodeCount,nodePools[].autoscaling)"
+</code></pre>
+                    </div>
+                    <p>期待される結果は次のとおりです。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>releaseChannel.channel</code></td>
+                                    <td><code>REGULAR</code></td>
+                                </tr>
+                                <tr>
+                                    <td>ノード数（<code>kubectl get nodes</code>）</td>
+                                    <td>3 台、STATUS が <code>Ready</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>autoscaling.minNodeCount</code></td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td><code>autoscaling.maxNodeCount</code></td>
+                                    <td>6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s4-6">4.6 ベストプラクティス</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>リリースチャンネルを使う</td>
+                                    <td>
+                                        手動でバージョンを固定せず、チャンネルに任せると安全なアップグレードが自動で行われる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>オートスケーラーに上限を付ける</td>
+                                    <td>想定外のスケールによる課金増を防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td>最小権限</td>
+                                    <td>
+                                        本番ではノードに専用のサービスアカウントを使い、広すぎる権限を与えない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>本番ではリージョンクラスタを検討</td>
+                                    <td>
+                                        ゾーン障害に強くなる（ただし料金と台数の考え方が変わる）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s4-7">4.7 つまずきポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>ZONE</code> が空でエラー</td>
+                                    <td>環境変数が未設定</td>
+                                    <td>2.2 を再実行</td>
+                                </tr>
+                                <tr>
+                                    <td>権限エラー</td>
+                                    <td>個人アカウントでログインしている</td>
+                                    <td>Student アカウントのシークレットウィンドウで実施</td>
+                                </tr>
+                                <tr>
+                                    <td>作成が長い</td>
+                                    <td>通常動作</td>
+                                    <td>
+                                        待つ。<code>gcloud container operations list</code>
+                                        で進行状況を確認できる
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s5">
+                    <h2>
+                        <span class="h-num">5</span
+                        ><span>Task 2: Managed Prometheus を有効化する</span>
+                    </h2>
+                    <h3 id="s5-1">5.1 Task 2 の全体像</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 5.1 Task 2 の全体像"
+                            class="diagram"
+                            data-id="d2"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部品</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>サンプルアプリ</td>
+                                    <td><code>/metrics</code> というURLでメトリクスを公開する</td>
+                                </tr>
+                                <tr>
+                                    <td>PodMonitoring</td>
+                                    <td>「どの Pod のどのポートを何秒ごとに見るか」を宣言する</td>
+                                </tr>
+                                <tr>
+                                    <td>Managed Prometheus</td>
+                                    <td>
+                                        PodMonitoring の宣言に従ってメトリクスを集める（Google
+                                        が運用）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Cloud Monitoring</td>
+                                    <td>集めたメトリクスを保存し、グラフやアラートに使える</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s5-2">5.2 手順 1: Managed Prometheus を有効化する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud container clusters update "$CLUSTER_NAME" \
+  --zone "$ZONE" \
+  --enable-managed-prometheus
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>補足</strong>: 新しいバージョンの GKE
+                                では、新規クラスタで既に有効になっていることがあります。その場合でも、<strong>手順どおりこのコマンドを実行して状態を確認する</strong>のが安全です（「変更なし」のような表示になっても問題ありません）。
+                            </p>
+                        </div>
+                    </aside>
+                    <p>確認コマンド:</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud container clusters describe "$CLUSTER_NAME" --zone "$ZONE" \
+  --format="value(monitoringConfig.managedPrometheusConfig.enabled)"
+</code></pre>
+                    </div>
+                    <p><code>True</code> と表示されれば有効です。</p>
+                    <h3 id="s5-3">5.3 手順 2: namespace を作成する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl create namespace "$NAMESPACE_NAME"
+kubectl get namespace "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <aside class="callout practice">
+                        <i aria-hidden="true" class="ti ti-bulb ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>ベストプラクティス</strong>: アプリやチームごとに namespace
+                                を分けると、権限・リソース上限・監視を区画ごとに管理できます。<code
+                                    >default</code
+                                >
+                                namespace に何でも入れる運用は避けましょう。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s5-4">5.4 手順 3: サンプルアプリのマニフェストをダウンロードする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud storage cp gs://spls/gsp510/prometheus-app.yaml .
+</code></pre>
+                    </div>
+                    <h3 id="s5-5">
+                        5.5 手順 4: <code>&lt;todo&gt;</code> を書き換える（35〜38行目）
+                    </h3>
+                    <p>まず <code>&lt;todo&gt;</code> の位置を確認します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">grep -n "&lt;todo&gt;" prometheus-app.yaml
+</code></pre>
+                    </div>
+                    <p>置き換える内容は次のとおりです。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>設定する値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>containers.image</code></td>
+                                    <td><code>nilebox/prometheus-example-app:latest</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>containers.name</code></td>
+                                    <td><code>prometheus-test</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>ports.name</code></td>
+                                    <td><code>metrics</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>方法 A: エディタで編集する（確実）</h4>
+                    <p>
+                        Cloud Shell の <strong>エディタを開く</strong> ボタン、または
+                        <code>nano prometheus-app.yaml</code> で 35〜38 行目を直接編集します。
+                    </p>
+                    <h4>方法 B: <code>sed</code> で置換する（速い）</h4>
+                    <p>
+                        <code>ports</code> の <code>- name:</code> を先に置換し、残った
+                        <code>name:</code> をコンテナ名に置換する順番がポイントです。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">sed -i 's|image: &lt;todo&gt;|image: nilebox/prometheus-example-app:latest|' prometheus-app.yaml
+sed -i 's|- name: &lt;todo&gt;|- name: metrics|' prometheus-app.yaml
+sed -i 's|name: &lt;todo&gt;|name: prometheus-test|' prometheus-app.yaml
+</code></pre>
+                    </div>
+                    <aside class="callout warn">
+                        <i aria-hidden="true" class="ti ti-alert-triangle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>注意</strong>: 実際のファイルの並びが異なる場合は、<code
+                                    >sed</code
+                                >
+                                ではなく方法 A で修正してください。置換後は必ず
+                                <code>grep -n "&lt;todo&gt;" prometheus-app.yaml</code> で
+                                <strong>何も表示されない</strong>ことを確認します。
+                            </p>
+                        </div>
+                    </aside>
+                    <p>編集後のイメージ（該当部分の例）:</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">yaml</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-yaml">      containers:
+      - image: nilebox/prometheus-example-app:latest
+        name: prometheus-test
+        ports:
+        - name: metrics
+          containerPort: 1234
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <code>containerPort</code>
+                                などの値はファイルに最初から書かれているものを変更しません。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s5-6">5.6 手順 5: namespace へデプロイする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl apply -f prometheus-app.yaml -n "$NAMESPACE_NAME"
+kubectl get pods -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <p>Pod の STATUS が <code>Running</code> になるまで待ちます（数十秒〜1分）。</p>
+                    <h3 id="s5-7">5.7 手順 6: pod-monitoring.yaml をダウンロードする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud storage cp gs://spls/gsp510/pod-monitoring.yaml .
+</code></pre>
+                    </div>
+                    <h3 id="s5-8">
+                        5.8 手順 7: <code>&lt;todo&gt;</code> を書き換える（18〜24行目）
+                    </h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>設定する値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>metadata.name</code></td>
+                                    <td><code>prometheus-test</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>labels.app.kubernetes.io/name</code></td>
+                                    <td><code>prometheus-test</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>matchLabels.app</code></td>
+                                    <td><code>prometheus-test</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>endpoints.interval</code></td>
+                                    <td>
+                                        <strong>ラボ画面に表示された interval の値</strong>（例:
+                                        <code>30s</code> の形式）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>編集後のイメージ（例）:</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">yaml</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-yaml">apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: prometheus-test
+  labels:
+    app.kubernetes.io/name: prometheus-test
+spec:
+  selector:
+    matchLabels:
+      app: prometheus-test
+  endpoints:
+  - port: metrics
+    interval: 30s
+</code></pre>
+                    </div>
+                    <aside class="callout warn">
+                        <i aria-hidden="true" class="ti ti-alert-triangle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>ここが重要</strong>: <code>matchLabels.app</code> は、手順 4
+                                でデプロイしたアプリの Pod ラベル（<code>app: prometheus-test</code
+                                >）と<strong>一致</strong>している必要があります。また
+                                <code>endpoints.port: metrics</code> は、手順 4 で付けた
+                                <code>ports.name: metrics</code>
+                                と対応しています。<strong>ラベルとポート名が噛み合わないと、メトリクスは収集されません</strong>。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s5-9">5.9 手順 8: PodMonitoring を適用する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl apply -f pod-monitoring.yaml -n "$NAMESPACE_NAME"
+kubectl get podmonitoring -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <h3 id="s5-10">5.10 Task 2 の確認ポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>コマンド</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Managed Prometheus が有効</td>
+                                    <td><code>gcloud container clusters describe</code></td>
+                                    <td><code>True</code></td>
+                                </tr>
+                                <tr>
+                                    <td>namespace がある</td>
+                                    <td><code>kubectl get ns "$NAMESPACE_NAME"</code></td>
+                                    <td><code>Active</code></td>
+                                </tr>
+                                <tr>
+                                    <td>アプリが動作中</td>
+                                    <td><code>kubectl get pods -n "$NAMESPACE_NAME"</code></td>
+                                    <td>
+                                        <code>prometheus-test-...</code> が <code>Running</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PodMonitoring がある</td>
+                                    <td>
+                                        <code>kubectl get podmonitoring -n "$NAMESPACE_NAME"</code>
+                                    </td>
+                                    <td><code>prometheus-test</code> が表示される</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s5-11">5.11 ベストプラクティス</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>収集間隔</td>
+                                    <td>
+                                        短すぎると取り込み量と費用が増える。必要十分な間隔にする
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ラベル設計</td>
+                                    <td>
+                                        <code>app.kubernetes.io/name</code>
+                                        など標準ラベルを使うと、ツール間で扱いやすい
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>latest</code> タグ</td>
+                                    <td>
+                                        手順書の指定なのでラボでは使うが、<strong>本番では固定タグかダイジェスト</strong>を使う（再現性のため）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s6">
+                    <h2>
+                        <span class="h-num">6</span
+                        ><span>Task 3: アプリケーションをデプロイしてエラーを確認する</span>
+                    </h2>
+                    <h3 id="s6-1">6.1 狙い</h3>
+                    <p>
+                        このタスクでは<strong>わざと壊れたマニフェスト</strong>をデプロイし、「エラーをどこでどう読むか」を体験します。
+                    </p>
+                    <h3 id="s6-2">6.2 手順 1: デモ用ファイルをダウンロードする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud storage cp -r gs://spls/gsp510/hello-app/ .
+cd hello-app
+</code></pre>
+                    </div>
+                    <p>
+                        <code>hello-app</code>
+                        ディレクトリの主な中身（このラボで触るもの）は次のとおりです。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>場所</th>
+                                    <th>内容</th>
+                                    <th>使うタスク</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>manifests/helloweb-deployment.yaml</code></td>
+                                    <td>Deployment のマニフェスト</td>
+                                    <td>Task 3、5</td>
+                                </tr>
+                                <tr>
+                                    <td><code>main.go</code></td>
+                                    <td>アプリのソースコード（Go 言語）</td>
+                                    <td>Task 6</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Dockerfile</code></td>
+                                    <td>イメージのビルド手順</td>
+                                    <td>Task 6</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">ls -la
+ls -la manifests
+</code></pre>
+                    </div>
+                    <h3 id="s6-3">6.3 手順 2: Deployment を作成する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl apply -f manifests/helloweb-deployment.yaml -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong><code>create</code> と <code>apply</code> の違い</strong>:
+                                <code>kubectl create</code> は「新規作成のみ」、<code
+                                    >kubectl apply</code
+                                >
+                                は「宣言どおりになるよう作成または更新」です。Kubernetes
+                                の運用では、再実行しても安全な
+                                <code>apply</code> が基本です。どちらでもこのラボは進められます。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s6-4">6.4 手順 3: エラーを確認する</h3>
+                    <h4>コマンドで確認</h4>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl get deployments -n "$NAMESPACE_NAME"
+kubectl get pods -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <p>
+                        <code>helloweb</code> の Pod が
+                        <code>InvalidImageName</code> と表示されます。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># Pod 名を取得して詳細（Events 欄）を見る（Pod の作成直後は名前が取れないことがあるため、数回再試行する）
+POD_NAME=""
+for attempt in 1 2 3 4 5 6; do
+  POD_NAME=$(kubectl get pods -n "$NAMESPACE_NAME" -l app=hello -o jsonpath='{.items[0].metadata.name}' 2&gt;/dev/null)
+  [ -n "$POD_NAME" ] &amp;&amp; break
+  sleep 5
+done
+if [ -z "$POD_NAME" ]; then
+  echo "app=hello の Pod が見つかりません。ラベルと Deployment を確認してください" &gt;&amp;2
+else
+  kubectl describe pod "$POD_NAME" -n "$NAMESPACE_NAME"
+fi
+
+# namespace のイベントを新しい順に見る
+kubectl get events -n "$NAMESPACE_NAME" --sort-by=.lastTimestamp
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                ラベル <code>app=hello</code> で Pod が見つからない場合は、<code
+                                    >kubectl get pods -n "$NAMESPACE_NAME" --show-labels</code
+                                >
+                                でラベルを確認してください。
+                            </p>
+                        </div>
+                    </aside>
+                    <h4>Console で確認</h4>
+                    <ol>
+                        <li><strong>Kubernetes Engine</strong> → <strong>ワークロード</strong></li>
+                        <li><code>helloweb</code> をクリック</li>
+                        <li>
+                            赤いバーに <strong>Pod errors: InvalidImageName</strong> と表示される
+                        </li>
+                        <li>
+                            <strong>View details</strong>（または Events セクション）で詳細を確認
+                        </li>
+                    </ol>
+                    <h3 id="s6-5">6.5 エラーの読み方</h3>
+                    <p>Events には次のようなメッセージが出ます。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">text</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="plain">Error: InvalidImageName
+Failed to apply default image tag "&lt;todo&gt;": couldn't parse image reference "&lt;todo&gt;": invalid reference format
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>メッセージの部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>InvalidImageName</code></td>
+                                    <td>
+                                        イメージ名の書式が不正で、イメージを取得しようとすらできない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code
+                                            >Failed to apply default image tag "&lt;todo&gt;"</code
+                                        >
+                                    </td>
+                                    <td>
+                                        <code>&lt;todo&gt;</code>
+                                        というイメージ名にタグを補おうとして失敗した
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>invalid reference format</code></td>
+                                    <td>
+                                        イメージ参照の書式（<code>レジストリ/パス/名前:タグ</code>）に合っていない
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        つまり原因は「<code>image:</code> に
+                        <code>&lt;todo&gt;</code>
+                        という<strong>プレースホルダのまま</strong>の文字列が入っている」ことです。
+                    </p>
+                    <h3 id="s6-6">6.6 Pod の異常を調べる基本の流れ</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 6.6 Pod の異常を調べる基本の流れ"
+                            class="diagram"
+                            data-id="d3"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <h3 id="s6-7">6.7 Task 3 の確認ポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Deployment <code>helloweb</code> が存在する</td>
+                                    <td>
+                                        <code>kubectl get deployments -n "$NAMESPACE_NAME"</code>
+                                        で表示される
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pod の状態</td>
+                                    <td>
+                                        <code>InvalidImageName</code
+                                        >（<strong>この時点では正常</strong>）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                このタスクの「チェック」は
+                                <strong>デプロイが作成されていること</strong
+                                >で、正常稼働までは求められていません。<strong
+                                    >エラー状態のまま Task 4 へ進みます</strong
+                                >。
+                            </p>
+                        </div>
+                    </aside>
+                </section>
+                <section class="section" id="s7">
+                    <h2>
+                        <span class="h-num">7</span
+                        ><span>Task 4: ログベースメトリクスとアラートポリシーを作成する</span>
+                    </h2>
+                    <h3 id="s7-1">7.1 狙い</h3>
+                    <p>
+                        「エラーログが出たら数値として数え、しきい値を超えたら気づける」仕組みを作ります。
+                    </p>
+                    <figure class="diagram-wrap">
+                        <div aria-label="図: 7.1 狙い" class="diagram" data-id="d4" role="img">
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <h3 id="s7-2">7.2 パート A: Logs Explorer でクエリを作る</h3>
+                    <ol>
+                        <li>
+                            ナビゲーションメニュー → <strong>Logging</strong> →
+                            <strong>ログ エクスプローラ</strong>
+                        </li>
+                        <li>クエリ欄に次を入力して <strong>クエリを実行</strong></li>
+                    </ol>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">text</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="plain">resource.type="k8s_pod"
+severity=WARNING
+</code></pre>
+                    </div>
+                    <p>または GUI で次のように選びます。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>選択</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>リソースタイプ</td>
+                                    <td><strong>Kubernetes Pod</strong>（1つだけ選ぶ）</td>
+                                </tr>
+                                <tr>
+                                    <td>重大度</td>
+                                    <td><strong>WARNING</strong>（1つだけ選ぶ）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        ヒントにあるとおり、<strong>リソースタイプ1つ・重大度1つ</strong>にします。正しければ、次のエラーが結果に表示されます。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">text</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="plain">Error: InvalidImageName
+Failed to apply default image tag "&lt;todo&gt;": couldn't parse image reference "&lt;todo&gt;": invalid reference format
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>結果が出ないとき</strong>:
+                                時間範囲（右上）を「過去1時間」などに広げる、Task 3
+                                のデプロイから数分待つ、<code
+                                    >kubectl get events -n "$NAMESPACE_NAME"</code
+                                >
+                                でエラーが出続けているか確認する、の順に試してください。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s7-3">7.3 パート B: ログベースメトリクスを作成する</h3>
+                    <ol>
+                        <li>
+                            クエリ結果の画面で <strong>アクション</strong> →
+                            <strong>指標を作成</strong>（Create metric）
+                        </li>
+                        <li>次のとおり入力</li>
+                    </ol>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>メトリクスの種類</td>
+                                    <td><strong>カウンタ（Counter）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>ログ指標名</td>
+                                    <td><code>pod-image-errors</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ol start="3">
+                        <li><strong>指標を作成</strong></li>
+                    </ol>
+                    <h4>参考: コマンドで作成する場合</h4>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud logging metrics create pod-image-errors \
+  --description="Pod image errors" \
+  --log-filter='resource.type="k8s_pod" severity=WARNING'
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <code>gcloud logging metrics create</code>
+                                で作られるのは既定でカウンタ型です。<strong>ラボの採点は結果（名前・種類）を見る</strong>ため、GUI
+                                でもコマンドでも構いません。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s7-4">7.4 パート C: アラートポリシーを作成する</h3>
+                    <ol>
+                        <li>
+                            ナビゲーションメニュー → <strong>Monitoring</strong> →
+                            <strong>アラート</strong> → <strong>ポリシーを作成</strong>
+                        </li>
+                        <li><strong>指標を選択</strong>をクリック</li>
+                        <li>
+                            絞り込みの
+                            <strong>有効</strong
+                            >（Active）フィルタのチェックを外す（新しいログベースメトリクスは、データが入るまで一覧に出ないことがあるため）
+                        </li>
+                        <li>
+                            <code>pod-image-errors</code
+                            >（<code>logging.googleapis.com/user/pod-image-errors</code>）を検索して選択
+                            → <strong>適用</strong>
+                        </li>
+                        <li>次の値を設定します。</li>
+                    </ol>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>設定項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rolling window（ローリング ウィンドウ）</td>
+                                    <td><strong>10 min</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Rolling window function（ローリング ウィンドウ関数）</td>
+                                    <td><strong>Count</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Time series aggregation（時系列の集計）</td>
+                                    <td><strong>Sum</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Condition type（条件タイプ）</td>
+                                    <td><strong>Threshold</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Alert trigger（アラートのトリガー）</td>
+                                    <td><strong>Any time series violates</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Threshold position（しきい値の位置）</td>
+                                    <td><strong>Above threshold</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Threshold value（しきい値）</td>
+                                    <td><strong>0</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Use notification channel（通知チャネル）</td>
+                                    <td><strong>無効（Disable）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Alert policy name（ポリシー名）</td>
+                                    <td><strong>Pod Error Alert</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ol start="6">
+                        <li><strong>ポリシーを作成</strong></li>
+                    </ol>
+                    <h3 id="s7-5">7.5 設定値の意味</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>設定</th>
+                                    <th>意味</th>
+                                    <th>初心者向けのたとえ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ローリング ウィンドウ 10 分</td>
+                                    <td>直近10分間のデータをまとめて見る</td>
+                                    <td>「直近10分の出来事」を毎回見直す</td>
+                                </tr>
+                                <tr>
+                                    <td>ウィンドウ関数 Count</td>
+                                    <td>10分間のデータ点の数を数える</td>
+                                    <td>件数を数える</td>
+                                </tr>
+                                <tr>
+                                    <td>時系列の集計 Sum</td>
+                                    <td>複数の時系列を合計する</td>
+                                    <td>全ての Pod の合計</td>
+                                </tr>
+                                <tr>
+                                    <td>しきい値 0 より大きい</td>
+                                    <td>1件でもエラーがあれば違反</td>
+                                    <td>「1件でも出たら教えて」</td>
+                                </tr>
+                                <tr>
+                                    <td>Any time series violates</td>
+                                    <td>どれか1つでも条件を満たしたら発火</td>
+                                    <td>1つでも異常なら警報</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s7-6">7.6 Task 4 の確認ポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>確認場所</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ログベースメトリクス</td>
+                                    <td>Logging → ログベースの指標</td>
+                                    <td><code>pod-image-errors</code>（カウンタ）がある</td>
+                                </tr>
+                                <tr>
+                                    <td>アラートポリシー</td>
+                                    <td>Monitoring → アラート</td>
+                                    <td><code>Pod Error Alert</code> がある</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s7-7">7.7 ベストプラクティス</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>通知チャネルを設定する</td>
+                                    <td>
+                                        このラボでは無効だが、<strong
+                                            >本番では必ず通知先（メール、Slack、PagerDuty
+                                            など）を設定</strong
+                                        >する。通知がないアラートは誰にも届かない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>フィルタは具体的に</td>
+                                    <td>広すぎるクエリはノイズになり、アラート疲れの原因になる</td>
+                                </tr>
+                                <tr>
+                                    <td>しきい値は実測で調整</td>
+                                    <td>
+                                        0
+                                        は「1件でも検知」で厳しい設定。本番では誤検知とのバランスを見て決める
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>アラートに対応手順を添える</td>
+                                    <td>
+                                        ドキュメント欄に切り分け手順（Runbook）へのリンクを書くと対応が速くなる
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s8">
+                    <h2>
+                        <span class="h-num">8</span
+                        ><span>Task 5: マニフェストを修正して再デプロイする</span>
+                    </h2>
+                    <h3 id="s8-1">8.1 手順 1: イメージを正しい値にする</h3>
+                    <p>
+                        <code>manifests/helloweb-deployment.yaml</code> の
+                        <code>image:</code> を次の値に置き換えます。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">text</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="plain">us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+</code></pre>
+                    </div>
+                    <h4>
+                        <code>sed</code> で置換する場合（<code>hello-app</code>
+                        ディレクトリ内で実行）
+                    </h4>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">sed -i 's|image: &lt;todo&gt;|image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0|' manifests/helloweb-deployment.yaml
+
+# 反映の確認
+grep -n "image:" manifests/helloweb-deployment.yaml
+</code></pre>
+                    </div>
+                    <p><code>&lt;todo&gt;</code> が残っていないことを確認します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">grep -n "&lt;todo&gt;" manifests/helloweb-deployment.yaml
+</code></pre>
+                    </div>
+                    <h3 id="s8-2">8.2 手順 2: Deployment を削除する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl delete deployment helloweb -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>補足</strong>: 実務では
+                                <code>kubectl apply</code>
+                                を再実行するだけでも更新できます。このラボは「削除して再作成する」手順を指示していますので、指示どおりに実施します。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s8-3">8.3 手順 3: 修正したマニフェストをデプロイする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl apply -f manifests/helloweb-deployment.yaml -n "$NAMESPACE_NAME"
+kubectl get pods -n "$NAMESPACE_NAME" -w
+</code></pre>
+                    </div>
+                    <p>
+                        <code>-w</code>（watch）で Pod が
+                        <code>Running</code> になるのを確認したら、<code>Ctrl + C</code>
+                        で監視を止めます。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <h3 id="s8-4">8.4 Task 5 の確認ポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Deployment <code>helloweb</code></td>
+                                    <td>
+                                        <code>READY</code> が
+                                        <code>1/1</code>（レプリカ数がマニフェスト値どおり）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pod の状態</td>
+                                    <td><code>Running</code>、エラー表示なし</td>
+                                </tr>
+                                <tr>
+                                    <td>Console の Workloads</td>
+                                    <td>緑のチェック（エラーの赤いバーが消えている）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s8-5">8.5 ベストプラクティス</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>マニフェストは Git で管理</td>
+                                    <td>誰がいつ何を変えたか追跡でき、ロールバックも容易になる</td>
+                                </tr>
+                                <tr>
+                                    <td>適用前に検証</td>
+                                    <td>
+                                        <code>kubectl apply --dry-run=server -f ...</code>
+                                        で事前チェックできる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>失敗したら戻せる準備</td>
+                                    <td>
+                                        <code>kubectl rollout undo deployment/helloweb</code>
+                                        で直前の状態に戻せる
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s9">
+                    <h2>
+                        <span class="h-num">9</span
+                        ><span
+                            >Task 6: コンテナ化して Artifact Registry へ push
+                            しクラスタへデプロイする</span
+                        >
+                    </h2>
+                    <h3 id="s9-1">9.1 全体の流れ</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 9.1 全体の流れ"
+                            class="diagram"
+                            data-id="d5"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <h3 id="s9-2">
+                        9.2 手順 1: <code>main.go</code> の Version を 2.0.0 にする（49行目）
+                    </h3>
+                    <p>まず対象の行を確認します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd &amp;&amp; cd hello-app
+grep -n "Version" main.go
+</code></pre>
+                    </div>
+                    <p>
+                        49 行目付近に <code>Version: 1.0.0</code> を含む行があるはずです。これを
+                        <code>Version: 2.0.0</code> にします。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">sed -i 's/Version: 1.0.0/Version: 2.0.0/' main.go
+grep -n "Version" main.go
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                エディタで 49 行目を直接編集しても構いません。<code>1.0.0</code> が
+                                <code>2.0.0</code> に変わったことを必ず確認してください。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s9-3">9.3 手順 2: Docker イメージ名を決める</h3>
+                    <p>Artifact Registry のイメージ名は、次の形式です。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>例</th>
+                                    <th>このラボでの値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ホスト名</td>
+                                    <td><code>REGION-docker.pkg.dev</code></td>
+                                    <td><code>${REGION}-docker.pkg.dev</code></td>
+                                </tr>
+                                <tr>
+                                    <td>プロジェクト ID</td>
+                                    <td>プロジェクトの識別子</td>
+                                    <td><code>${PROJECT_ID}</code></td>
+                                </tr>
+                                <tr>
+                                    <td>リポジトリ名</td>
+                                    <td>Artifact Registry のリポジトリ</td>
+                                    <td><code>${REPO_NAME}</code></td>
+                                </tr>
+                                <tr>
+                                    <td>イメージ名</td>
+                                    <td>アプリの名前</td>
+                                    <td><code>hello-app</code></td>
+                                </tr>
+                                <tr>
+                                    <td>タグ</td>
+                                    <td>バージョン</td>
+                                    <td><code>v2</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">export IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2"
+echo "$IMAGE"
+</code></pre>
+                    </div>
+                    <p>既存のイメージ名を確認したい場合は、次のコマンドが使えます。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud artifacts docker images list "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}"
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                リポジトリに既に <code>hello-app</code> イメージ（v1
+                                など）があるはずです。<strong
+                                    >同じイメージ名に <code>v2</code> タグを追加する</strong
+                                >形にすると整合性が取れます。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s9-4">9.4 手順 3: Docker を Artifact Registry に認証する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud auth configure-docker "${REGION}-docker.pkg.dev" -q
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                これは <code>push</code> する前に必要です。忘れると
+                                <code>unauthorized</code> や <code>denied</code> エラーになります。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s9-5">9.5 手順 4: イメージをビルドする</h3>
+                    <p>
+                        <code>Dockerfile</code> がある
+                        <code>hello-app</code> ディレクトリで実行します。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd &amp;&amp; cd hello-app
+docker build -t "$IMAGE" .
+docker images | grep hello-app
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>要素</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-t "$IMAGE"</code></td>
+                                    <td>イメージにフルネーム（タグ付き）を付ける</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.</code></td>
+                                    <td>現在のディレクトリをビルドの材料（コンテキスト）にする</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s9-6">9.6 手順 5: イメージを push する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">docker push "$IMAGE"
+</code></pre>
+                    </div>
+                    <p>確認します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud artifacts docker images list "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}" --include-tags
+</code></pre>
+                    </div>
+                    <p><code>v2</code> タグが一覧に表示されれば成功です。</p>
+                    <h3 id="s9-7">9.7 手順 6: Deployment のイメージを v2 に更新する</h3>
+                    <p>まず、Deployment 内の実際のコンテナ名を取得して変数に保存します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">CONTAINER_NAME=$(kubectl get deployment helloweb -n "$NAMESPACE_NAME" \
+  -o jsonpath='{.spec.template.spec.containers[0].name}')
+echo "CONTAINER_NAME=${CONTAINER_NAME}"
+</code></pre>
+                    </div>
+                    <p>
+                        一般的には
+                        <code>hello-app</code> と表示されます。取得した名前を使って更新します。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"
+kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>deployment/helloweb</code></td>
+                                    <td>更新する Deployment</td>
+                                </tr>
+                                <tr>
+                                    <td><code>${CONTAINER_NAME}=...</code></td>
+                                    <td>
+                                        「コンテナ名=新しいイメージ」の指定。コンテナ名は直前に
+                                        Deployment から取得した値
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>rollout status</code></td>
+                                    <td>ローリングアップデートが完了するまで待つ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>ローリングアップデート</strong>: 古い Pod
+                                を一度に全部止めず、新しい Pod
+                                を起動しながら少しずつ入れ替えます。そのためサービスを止めずに更新できます。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s9-8">9.8 手順 7: LoadBalancer サービスで公開する</h3>
+                    <p>まず、Dockerfile で指定されているコンテナのポートを確認します。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">grep -n -i "EXPOSE\|PORT" Dockerfile main.go
+</code></pre>
+                    </div>
+                    <p>
+                        <strong><code>8080</code> であることが多い</strong
+                        >ですが、ラボの環境の値をここで確認してください。確認した番号を
+                        <code>TARGET_PORT</code> に入れて使います。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">export TARGET_PORT=8080   # Dockerfile で確認した値に合わせる
+
+kubectl expose deployment helloweb \
+  -n "$NAMESPACE_NAME" \
+  --type=LoadBalancer \
+  --name="$SERVICE_NAME" \
+  --port=8080 \
+  --target-port="$TARGET_PORT"
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--type=LoadBalancer</code></td>
+                                    <td>外部 IP を持つロードバランサを作る</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--name</code></td>
+                                    <td>サービス名（ラボ指定値）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--port=8080</code></td>
+                                    <td>外部（サービス）側で受けるポート（ラボ指定）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--target-port</code></td>
+                                    <td>コンテナ側のポート（Dockerfile に書かれた値）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>port と targetPort の関係</h4>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 9.8 手順 7: LoadBalancer サービスで公開する"
+                            class="diagram"
+                            data-id="d6"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <h3 id="s9-9">9.9 手順 8: 外部 IP にアクセスして確認する</h3>
+                    <p>外部 IP が割り当てられるまで少し待ちます。</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
+</code></pre>
+                    </div>
+                    <p>
+                        <code>EXTERNAL-IP</code> が <code>&lt;pending&gt;</code> から実際の IP
+                        アドレスに変わったら <code>Ctrl + C</code> で止め、アクセスします。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">EXTERNAL_IP=$(kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "$EXTERNAL_IP"
+
+curl "http://${EXTERNAL_IP}:8080"
+</code></pre>
+                    </div>
+                    <p>期待される出力（Hostname の部分は Pod ごとに異なります）:</p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">text</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="plain">Hello, world!
+Version: 2.0.0
+Hostname: helloweb-6fc7476576-cvv5f
+</code></pre>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                ページが表示されるまで数分かかることがあります。すぐにつながらなくても、数十秒おいて再実行してください。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s9-10">9.10 Task 6 の確認ポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>期待値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Artifact Registry に <code>v2</code> タグがある</td>
+                                    <td><code>hello-app:v2</code> が一覧に表示</td>
+                                </tr>
+                                <tr>
+                                    <td>Deployment のイメージが v2</td>
+                                    <td>
+                                        <code
+                                            >kubectl describe deployment helloweb -n
+                                            "$NAMESPACE_NAME"</code
+                                        >
+                                        の Image 欄が <code>...:v2</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Service が LoadBalancer</td>
+                                    <td><code>EXTERNAL-IP</code> に実 IP が付いている</td>
+                                </tr>
+                                <tr>
+                                    <td>アクセス結果</td>
+                                    <td><code>Version: 2.0.0</code> が表示される</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s9-11">9.11 ベストプラクティス</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>不変なタグ運用</td>
+                                    <td>
+                                        <code>latest</code> に頼らず、<code>v2</code>
+                                        やコミットハッシュなど<strong>一意で変わらないタグ</strong>を使う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>リージョンを合わせる</td>
+                                    <td>
+                                        クラスタと同じリージョンのレジストリを使うと、pull
+                                        が速く、転送コストも抑えられる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>イメージの脆弱性スキャン</td>
+                                    <td>
+                                        Artifact Registry のスキャン機能で、既知の脆弱性を検出する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>イメージ更新はパイプライン化</td>
+                                    <td>
+                                        本番では Cloud Build などの CI/CD で「ビルド → push →
+                                        デプロイ」を自動化する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>公開範囲を絞る</td>
+                                    <td>
+                                        LoadBalancer は外部公開になる。本番では Ingress
+                                        や認証、ファイアウォールで制御する
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s10">
+                    <h2><span class="h-num">10</span><span>コマンド一括集（コピペ用）</span></h2>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>使い方</strong>:
+                                先頭で環境変数を設定し、<strong>コマンドを上から順に</strong>実行します。Task
+                                4（Console
+                                操作）の箇所は、コマンドではなく画面操作です。<strong>途中のコメントを読みながら進めてください</strong>。
+                            </p>
+                        </div>
+                    </aside>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">############ 0. 環境変数(ラボの値に置き換える) ############
+export PROJECT_ID="ラボのプロジェクトID"
+export CLUSTER_NAME="ラボで指定されたクラスタ名"
+export REGION="ラボで指定されたリージョン"
+export ZONE="ラボで指定されたゾーン"
+export NAMESPACE_NAME="ラボで指定されたnamespace名"
+export REPO_NAME="ラボで指定されたリポジトリ名"
+export SERVICE_NAME="ラボで指定されたサービス名"
+
+gcloud config set project "$PROJECT_ID"
+gcloud config set compute/zone "$ZONE"
+gcloud config set compute/region "$REGION"
+
+############ Task 1: クラスタ作成 ############
+gcloud container clusters create "$CLUSTER_NAME" \
+  --zone "$ZONE" \
+  --release-channel regular \
+  --num-nodes 3 \
+  --enable-autoscaling --min-nodes 2 --max-nodes 6
+
+gcloud container clusters get-credentials "$CLUSTER_NAME" --zone "$ZONE"
+
+############ Task 2: Managed Prometheus ############
+gcloud container clusters update "$CLUSTER_NAME" --zone "$ZONE" --enable-managed-prometheus
+kubectl create namespace "$NAMESPACE_NAME"
+
+gcloud storage cp gs://spls/gsp510/prometheus-app.yaml .
+grep -n "&lt;todo&gt;" prometheus-app.yaml          # 位置を確認
+sed -i 's|image: &lt;todo&gt;|image: nilebox/prometheus-example-app:latest|' prometheus-app.yaml
+sed -i 's|- name: &lt;todo&gt;|- name: metrics|' prometheus-app.yaml
+sed -i 's|name: &lt;todo&gt;|name: prometheus-test|' prometheus-app.yaml
+grep -n "&lt;todo&gt;" prometheus-app.yaml          # 何も出なければOK
+kubectl apply -f prometheus-app.yaml -n "$NAMESPACE_NAME"
+
+gcloud storage cp gs://spls/gsp510/pod-monitoring.yaml .
+# pod-monitoring.yaml の &lt;todo&gt;(18〜24行目)をエディタで編集する
+#   metadata.name: prometheus-test
+#   labels.app.kubernetes.io/name: prometheus-test
+#   matchLabels.app: prometheus-test
+#   endpoints.interval: ラボ画面の値
+kubectl apply -f pod-monitoring.yaml -n "$NAMESPACE_NAME"
+
+############ Task 3: デプロイしてエラーを確認 ############
+gcloud storage cp -r gs://spls/gsp510/hello-app/ .
+cd hello-app
+kubectl apply -f manifests/helloweb-deployment.yaml -n "$NAMESPACE_NAME"
+kubectl get pods -n "$NAMESPACE_NAME"          # InvalidImageName を確認
+
+############ Task 4: ログベースメトリクス(メトリクス部分のみコマンド可) ############
+gcloud logging metrics create pod-image-errors \
+  --description="Pod image errors" \
+  --log-filter='resource.type="k8s_pod" severity=WARNING'
+# アラートポリシー "Pod Error Alert" は Console で作成する(7.4 参照)
+
+############ Task 5: 修正して再デプロイ ############
+sed -i 's|image: &lt;todo&gt;|image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0|' manifests/helloweb-deployment.yaml
+kubectl delete deployment helloweb -n "$NAMESPACE_NAME"
+kubectl apply -f manifests/helloweb-deployment.yaml -n "$NAMESPACE_NAME"
+kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
+
+############ Task 6: コンテナ化・push・公開 ############
+sed -i 's/Version: 1.0.0/Version: 2.0.0/' main.go
+grep -n "Version" main.go
+
+export IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2"
+gcloud auth configure-docker "${REGION}-docker.pkg.dev" -q
+docker build -t "$IMAGE" .
+docker push "$IMAGE"
+
+CONTAINER_NAME=$(kubectl get deployment helloweb -n "$NAMESPACE_NAME" \
+  -o jsonpath='{.spec.template.spec.containers[0].name}')   # 実際のコンテナ名を取得
+kubectl set image deployment/helloweb "${CONTAINER_NAME}=${IMAGE}" -n "$NAMESPACE_NAME"
+kubectl rollout status deployment/helloweb -n "$NAMESPACE_NAME"
+
+grep -n -i "EXPOSE\|PORT" Dockerfile          # ターゲットポートを確認
+export TARGET_PORT=8080                       # Dockerfile で確認した値に合わせる
+kubectl expose deployment helloweb -n "$NAMESPACE_NAME" \
+  --type=LoadBalancer --name="$SERVICE_NAME" --port=8080 --target-port="$TARGET_PORT"
+
+kubectl get service "$SERVICE_NAME" -n "$NAMESPACE_NAME" -w
+</code></pre>
+                    </div>
+                </section>
+                <section class="section" id="s11">
+                    <h2><span class="h-num">11</span><span>トラブルシューティング</span></h2>
+                    <h3 id="s11-1">11.1 症状別の対処表</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>考えられる原因</th>
+                                    <th>確認コマンド / 対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>kubectl</code> が接続できない</td>
+                                    <td>認証情報を取得していない</td>
+                                    <td>
+                                        <code
+                                            >gcloud container clusters get-credentials
+                                            "$CLUSTER_NAME" --zone "$ZONE"</code
+                                        >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>namespace not found</code></td>
+                                    <td><code>-n</code> の指定ミス、namespace 未作成</td>
+                                    <td>
+                                        <code>kubectl get ns</code>、<code
+                                            >echo "$NAMESPACE_NAME"</code
+                                        >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>&lt;todo&gt;</code> が残っている</td>
+                                    <td>置換漏れ</td>
+                                    <td><code>grep -n "&lt;todo&gt;" ファイル名</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>InvalidImageName</code> が消えない</td>
+                                    <td>古い Pod が残っている、再 apply 漏れ</td>
+                                    <td>
+                                        <code>kubectl get pods -n ...</code>、再度
+                                        <code>kubectl apply</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>ImagePullBackOff</code></td>
+                                    <td>イメージ名の誤り、権限不足、タグが存在しない</td>
+                                    <td><code>kubectl describe pod ...</code> の Events を確認</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>docker push</code> が <code>denied</code> /
+                                        <code>unauthorized</code>
+                                    </td>
+                                    <td>Docker 認証未設定</td>
+                                    <td>
+                                        <code
+                                            >gcloud auth configure-docker "${REGION}-docker.pkg.dev"
+                                            -q</code
+                                        >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>docker push</code> が <code>name unknown</code></td>
+                                    <td>リポジトリ名またはパスの誤り</td>
+                                    <td>
+                                        <code>gcloud artifacts repositories list</code> で名前を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>set image</code> が
+                                        <code>unable to find container</code>
+                                    </td>
+                                    <td>コンテナ名の誤り</td>
+                                    <td>9.7 のコマンドでコンテナ名を確認</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code>EXTERNAL-IP</code> が
+                                        <code>&lt;pending&gt;</code> のまま
+                                    </td>
+                                    <td>ロードバランサ作成中</td>
+                                    <td>
+                                        1〜3 分待つ。長引く場合は
+                                        <code>kubectl describe service ...</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>curl</code> で応答がない</td>
+                                    <td>ポート不一致、起動途中</td>
+                                    <td>
+                                        <code>--target-port</code> が Dockerfile と一致するか、Pod
+                                        が Running か確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Logs Explorer に何も出ない</td>
+                                    <td>時間範囲が狭い、クエリ誤り</td>
+                                    <td>
+                                        時間範囲を広げ、<code>resource.type="k8s_pod"</code> と
+                                        <code>severity=WARNING</code> を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>アラートの指標が選べない</td>
+                                    <td>Active フィルタで隠れている</td>
+                                    <td><strong>Active のチェックを外す</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>PodMonitoring でデータが取れない</td>
+                                    <td>ラベルまたはポート名の不一致</td>
+                                    <td>
+                                        <code>matchLabels.app</code> と
+                                        <code>ports.name</code>/<code>endpoints.port</code> を確認
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s11-2">11.2 トラブル対応の基本の姿勢</h3>
+                    <figure class="diagram-wrap">
+                        <div
+                            aria-label="図: 11.2 トラブル対応の基本の姿勢"
+                            class="diagram"
+                            data-id="d7"
+                            role="img"
+                        >
+                            <span class="diagram-loading">図を読み込み中</span>
+                        </div>
+                    </figure>
+                    <aside class="callout practice">
+                        <i aria-hidden="true" class="ti ti-bulb ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>コツ</strong>: 一度に複数箇所を直さず、<strong
+                                    >1箇所ずつ修正 → 確認</strong
+                                >を繰り返すと、原因の切り分けが簡単になります。
+                            </p>
+                        </div>
+                    </aside>
+                    <h3 id="s11-3">11.3 時間配分の目安</h3>
+                    <p>ラボは時間制限があり、途中で一時停止できません。目安は次のとおりです。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>タスク</th>
+                                    <th>目安</th>
+                                    <th>ポイント</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>環境変数設定</td>
+                                    <td>2 分</td>
+                                    <td>先に済ませておく</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 1</td>
+                                    <td>待ち時間を含め 10 分</td>
+                                    <td><strong>作成中に Task 2 の手順を読み進める</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 2</td>
+                                    <td>10 分</td>
+                                    <td>YAML のラベルとポート名の対応に注意</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 3</td>
+                                    <td>5 分</td>
+                                    <td>エラーのままで OK</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 4</td>
+                                    <td>10 分</td>
+                                    <td>Console 操作が多い</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 5</td>
+                                    <td>5 分</td>
+                                    <td><code>sed</code> で素早く</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 6</td>
+                                    <td>15 分</td>
+                                    <td>ポート番号とコンテナ名の確認を忘れない</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s12">
+                    <h2>
+                        <span class="h-num">12</span
+                        ><span>本番運用に向けたベストプラクティスまとめ</span>
+                    </h2>
+                    <p>このラボは学習用に簡略化されています。実務では次の点を意識しましょう。</p>
+                    <h3 id="s12-1">12.1 ラボと本番の違い</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>観点</th>
+                                    <th>このラボ</th>
+                                    <th>本番でのベストプラクティス</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージタグ</td>
+                                    <td><code>latest</code> / <code>v2</code></td>
+                                    <td>
+                                        不変タグ（バージョン、コミットハッシュ）やダイジェスト固定
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>通知</td>
+                                    <td>通知チャネル無効</td>
+                                    <td>メール、チャット、オンコールツールに通知</td>
+                                </tr>
+                                <tr>
+                                    <td>公開</td>
+                                    <td>LoadBalancer で直接公開</td>
+                                    <td>Ingress、HTTPS、WAF、認証</td>
+                                </tr>
+                                <tr>
+                                    <td>デプロイ</td>
+                                    <td>手動の <code>kubectl</code></td>
+                                    <td>CI/CD（Cloud Build、Cloud Deploy など）で自動化</td>
+                                </tr>
+                                <tr>
+                                    <td>設定管理</td>
+                                    <td>ローカルの YAML 編集</td>
+                                    <td>Git 管理（GitOps）</td>
+                                </tr>
+                                <tr>
+                                    <td>リソース指定</td>
+                                    <td>指定なしまたは最小</td>
+                                    <td><code>requests</code> と <code>limits</code> を必ず設定</td>
+                                </tr>
+                                <tr>
+                                    <td>ヘルスチェック</td>
+                                    <td>なし</td>
+                                    <td>
+                                        <code>readinessProbe</code> /
+                                        <code>livenessProbe</code> を設定
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>権限</td>
+                                    <td>ラボ用の広い権限</td>
+                                    <td>
+                                        最小権限、Workload Identity でサービスアカウントを紐付け
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>可用性</td>
+                                    <td>単一ゾーン</td>
+                                    <td>リージョンクラスタ、複数レプリカ、PodDisruptionBudget</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s12-2">12.2 マニフェスト設計の基本</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">yaml</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-yaml"># 本番を意識した Deployment の例(学習用の抜粋)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloweb
+  labels:
+    app: hello
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello-app
+        image: REGION-docker.pkg.dev/PROJECT_ID/REPO_NAME/hello-app:v2
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>追加した設定</th>
+                                    <th>目的</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>replicas: 3</code></td>
+                                    <td>1つの Pod が落ちても全体が止まらない</td>
+                                </tr>
+                                <tr>
+                                    <td><code>resources.requests</code></td>
+                                    <td>スケジューラが適切なノードに配置できる</td>
+                                </tr>
+                                <tr>
+                                    <td><code>resources.limits</code></td>
+                                    <td>1つのアプリが資源を使い切るのを防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td><code>readinessProbe</code></td>
+                                    <td>準備ができた Pod にだけ通信を流す</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 id="s12-3">12.3 運用の安全装置</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>仕組み</th>
+                                    <th>コマンド / 機能</th>
+                                    <th>使いどころ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ロールバック</td>
+                                    <td>
+                                        <code>kubectl rollout undo deployment/helloweb -n ...</code>
+                                    </td>
+                                    <td>新バージョンで問題が出たとき</td>
+                                </tr>
+                                <tr>
+                                    <td>履歴の確認</td>
+                                    <td>
+                                        <code
+                                            >kubectl rollout history deployment/helloweb -n
+                                            ...</code
+                                        >
+                                    </td>
+                                    <td>どのリビジョンかを調べる</td>
+                                </tr>
+                                <tr>
+                                    <td>ドライラン</td>
+                                    <td><code>kubectl apply --dry-run=server -f ...</code></td>
+                                    <td>適用前の検証</td>
+                                </tr>
+                                <tr>
+                                    <td>差分確認</td>
+                                    <td><code>kubectl diff -f ...</code></td>
+                                    <td>変更内容の事前確認</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s13">
+                    <h2><span class="h-num">13</span><span>最終チェックリスト</span></h2>
+                    <p>提出（採点）前に、次を1つずつ確認しましょう。</p>
+                    <h3 id="s13-1">13.1 タスク別チェック</h3>
+                    <div class="check-progress">
+                        <div class="bar"><i></i></div>
+                        <div class="count">0 / 0</div>
+                    </div>
+                    <div class="checklist">
+                        <label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">1</span
+                            ><span class="body"
+                                ><span class="title"
+                                    >クラスタが Regular チャンネル、ノード 3、オートスケール
+                                    2〜6</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>gcloud container clusters describe</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">2</span
+                            ><span class="body"
+                                ><span class="title">Managed Prometheus が有効</span><br /><span
+                                    class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>describe</code> の
+                                    <code>managedPrometheusConfig.enabled</code> が
+                                    <code>True</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">3</span
+                            ><span class="body"
+                                ><span class="title">namespace が作成済み</span><br /><span
+                                    class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>kubectl get ns</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">4</span
+                            ><span class="body"
+                                ><span class="title">prometheus-test が Running</span><br /><span
+                                    class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>kubectl get pods -n "$NAMESPACE_NAME"</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">5</span
+                            ><span class="body"
+                                ><span class="title">PodMonitoring prometheus-test が存在</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code
+                                        >kubectl get podmonitoring -n "$NAMESPACE_NAME"</code
+                                    ></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">6</span
+                            ><span class="body"
+                                ><span class="title">helloweb を namespace にデプロイした</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>kubectl get deployments -n "$NAMESPACE_NAME"</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">7</span
+                            ><span class="body"
+                                ><span class="title"
+                                    >ログベースメトリクス pod-image-errors（カウンタ）</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span>Logging →
+                                    ログベースの指標</span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">8</span
+                            ><span class="body"
+                                ><span class="title">アラートポリシー Pod Error Alert</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span>Monitoring →
+                                    アラート</span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">9</span
+                            ><span class="body"
+                                ><span class="title"
+                                    >helloweb のイメージを 1.0 に修正し再デプロイ</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span>Workloads
+                                    にエラーなし</span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">10</span
+                            ><span class="body"
+                                ><span class="title">main.go が Version: 2.0.0</span><br /><span
+                                    class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>grep -n "Version" main.go</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">11</span
+                            ><span class="body"
+                                ><span class="title">hello-app:v2 を Artifact Registry に push</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>gcloud artifacts docker images list ...</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">12</span
+                            ><span class="body"
+                                ><span class="title">Deployment のイメージが v2</span><br /><span
+                                    class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>kubectl describe deployment helloweb -n ...</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">13</span
+                            ><span class="body"
+                                ><span class="title">サービスが LoadBalancer、ポート 8080</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>kubectl get svc "$SERVICE_NAME" -n ...</code></span
+                                ></span
+                            ></label
+                        ><label class="check-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="box">✓</span
+                            ><span class="no">14</span
+                            ><span class="body"
+                                ><span class="title">ブラウザ / curl で Version: 2.0.0 が出る</span
+                                ><br /><span class="how"
+                                    ><span class="how-label">確認方法: </span
+                                    ><code>curl http://EXTERNAL_IP:8080</code></span
+                                ></span
+                            ></label
+                        >
+                    </div>
+                    <h3 id="s13-2">13.2 「Check my progress」を押すタイミング</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>タイミング</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>各タスクの作業が<strong>終わった直後</strong></td>
+                                    <td>失敗した箇所を早く見つけられる</td>
+                                </tr>
+                                <tr>
+                                    <td>失敗したら</td>
+                                    <td>
+                                        画面のヒントを読み、上の確認表で修正する。<strong
+                                            >再確認は何度でもできる</strong
+                                        >
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s14">
+                    <h2><span class="h-num">14</span><span>クリーンアップとコスト意識</span></h2>
+                    <h3 id="s14-1">14.1 ラボ環境の場合</h3>
+                    <p>
+                        ラボの終了時に、割り当てられた一時プロジェクトとリソースは<strong>自動的に削除</strong>されます。通常、手動のクリーンアップは不要です。
+                    </p>
+                    <h3 id="s14-2">14.2 自分のプロジェクトで試した場合（重要）</h3>
+                    <p>
+                        GKE クラスタ、ロードバランサ、Artifact Registry
+                        のイメージは<strong>課金対象</strong>です。練習が終わったら、次の順序で削除しましょう。
+                    </p>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="lang">bash</span
+                            ><button aria-label="コードをコピー" class="copy" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># 1. LoadBalancer サービスを先に削除(外部 IP とロードバランサの課金を止める)
+kubectl delete service "$SERVICE_NAME" -n "$NAMESPACE_NAME"
+
+# 2. アプリや namespace を削除
+kubectl delete namespace "$NAMESPACE_NAME"
+
+# 3. クラスタを削除
+gcloud container clusters delete "$CLUSTER_NAME" --zone "$ZONE"
+
+# 4. 練習用に作ったイメージを削除(不要な場合)
+gcloud artifacts docker images delete "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/hello-app:v2"
+</code></pre>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>順序</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Service を先に削除</td>
+                                    <td>
+                                        クラスタ削除前にロードバランサ関連リソースを確実に片付けるため
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>クラスタ削除</td>
+                                    <td>最も課金が大きい</td>
+                                </tr>
+                                <tr>
+                                    <td>イメージ削除</td>
+                                    <td>ストレージ課金の削減</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="s15">
+                    <h2><span class="h-num">15</span><span>参考ドキュメント</span></h2>
+                    <div class="refs">
+                        <a
+                            class="ref-card"
+                            href="https://cloud.google.com/kubernetes-engine/docs"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">1</span
+                            ><span class="rb"
+                                ><span class="rt">GKE</span
+                                ><span class="ru"
+                                    >https://cloud.google.com/kubernetes-engine/docs</span
+                                ></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i></a
+                        ><a
+                            class="ref-card"
+                            href="https://cloud.google.com/stackdriver/docs/managed-prometheus"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">2</span
+                            ><span class="rb"
+                                ><span class="rt">Managed Prometheus</span
+                                ><span class="ru"
+                                    >https://cloud.google.com/stackdriver/docs/managed-prometheus</span
+                                ></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i></a
+                        ><a
+                            class="ref-card"
+                            href="https://cloud.google.com/artifact-registry/docs"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">3</span
+                            ><span class="rb"
+                                ><span class="rt">Artifact Registry</span
+                                ><span class="ru"
+                                    >https://cloud.google.com/artifact-registry/docs</span
+                                ></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i></a
+                        ><a
+                            class="ref-card"
+                            href="https://cloud.google.com/logging/docs"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">4</span
+                            ><span class="rb"
+                                ><span class="rt">Cloud Logging（ログベースメトリクス）</span
+                                ><span class="ru">https://cloud.google.com/logging/docs</span></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i></a
+                        ><a
+                            class="ref-card"
+                            href="https://cloud.google.com/monitoring/docs"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">5</span
+                            ><span class="rb"
+                                ><span class="rt">Cloud Monitoring（アラート）</span
+                                ><span class="ru"
+                                    >https://cloud.google.com/monitoring/docs</span
+                                ></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i></a
+                        ><a
+                            class="ref-card"
+                            href="https://kubernetes.io/docs/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            ><span class="badge">6</span
+                            ><span class="rb"
+                                ><span class="rt">Kubernetes（公式）</span
+                                ><span class="ru">https://kubernetes.io/docs/</span></span
+                            ><i aria-hidden="true" class="ti ti-external-link"></i
+                        ></a>
+                    </div>
+                    <aside class="callout note">
+                        <i aria-hidden="true" class="ti ti-info-circle ci"></i>
+                        <div class="cb">
+                            <p>
+                                <strong>補足</strong>:
+                                このガイドは、ラボの手順書に記載された内容を元に作成しています。Google
+                                Cloud
+                                の画面表示や既定値は更新されることがあります。<strong>ラボ画面に表示される指示と値を最優先</strong>し、細かな表記が違う場合は最新の公式ドキュメントを確認してください。
+                            </p>
+                        </div>
+                    </aside>
+                </section>
+                <section class="section" id="appendix">
+                    <h2>
+                        <span class="h-num">付</span
+                        ><span>付録: このラボで使う kubectl / gcloud / docker コマンド早見表</span>
+                    </h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コマンド</th>
+                                    <th>用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud container clusters create</code></td>
+                                    <td>GKE クラスタ作成</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud container clusters update</code></td>
+                                    <td>クラスタ設定の変更（Managed Prometheus 有効化など）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud container clusters get-credentials</code></td>
+                                    <td><code>kubectl</code> の接続先設定</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud storage cp</code></td>
+                                    <td>Cloud Storage からファイルをコピー</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud logging metrics create</code></td>
+                                    <td>ログベースメトリクス作成</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud auth configure-docker</code></td>
+                                    <td>Docker から Artifact Registry へ認証</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gcloud artifacts docker images list</code></td>
+                                    <td>レジストリ内のイメージ一覧</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl create namespace</code></td>
+                                    <td>namespace 作成</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl apply -f</code></td>
+                                    <td>マニフェストの適用（作成/更新）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl delete deployment</code></td>
+                                    <td>Deployment 削除</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl get pods / deployments / service</code></td>
+                                    <td>リソースの状態確認</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl describe</code></td>
+                                    <td>リソースの詳細と Events 確認</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl set image</code></td>
+                                    <td>コンテナイメージの更新</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl rollout status</code></td>
+                                    <td>ロールアウトの完了待ち</td>
+                                </tr>
+                                <tr>
+                                    <td><code>kubectl expose</code></td>
+                                    <td>Service を作成して公開</td>
+                                </tr>
+                                <tr>
+                                    <td><code>docker build -t</code></td>
+                                    <td>イメージのビルド</td>
+                                </tr>
+                                <tr>
+                                    <td><code>docker push</code></td>
+                                    <td>イメージのアップロード</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <script>
+            window.DIAGRAMS = {
+                d0: `flowchart TD
+S["環境変数を設定"] --> T1["Task 1: GKE クラスタを作成"]
+T1 --> T2["Task 2: Managed Prometheus を有効化し<br/>サンプルアプリを監視"]
+T2 --> T3["Task 3: helloweb をデプロイ<br/>InvalidImageName を確認"]
+T3 --> T4["Task 4: ログベースメトリクスと<br/>アラートポリシーを作成"]
+T4 --> T5["Task 5: イメージ名を修正し<br/>削除して再デプロイ"]
+T5 --> T6["Task 6: v2 をビルドして push<br/>イメージ更新と LoadBalancer 公開"]
+T6 --> E["Version: 2.0.0 が表示されれば完了"]`,
+                d1: `flowchart TD
+C["クラスタ"] --> NS["namespace"]
+NS --> D["Deployment"]
+D --> RS["ReplicaSet"]
+RS --> P["Pod"]
+P --> CT["コンテナ"]
+NS --> SV["Service"]
+SV -. "ラベルで選択" .-> P`,
+                d2: `flowchart LR
+A["サンプルアプリ<br/>prometheus-test の Pod"] -- "メトリクスを公開" --> B["PodMonitoring<br/>収集ルール"]
+B --> C["Managed Prometheus<br/>収集コンポーネント"]
+C --> D["Cloud Monitoring<br/>メトリクスとして保存"]`,
+                d3: `flowchart TD
+A["kubectl get pods で STATUS を見る"] --> B{"STATUS は?"}
+B -- "InvalidImageName" --> C["image: の書式を確認<br/>YAML を修正"]
+B -- "ImagePullBackOff<br/>ErrImagePull" --> D["イメージの存在<br/>レジストリ権限を確認"]
+B -- "CrashLoopBackOff" --> E["kubectl logs でアプリのログを確認"]
+B -- "Pending" --> F["kubectl describe で<br/>リソース不足などを確認"]
+B -- "Running" --> G["正常"]`,
+                d4: `flowchart LR
+A["Pod のエラー<br/>InvalidImageName"] --> B["Cloud Logging<br/>にログが出力される"]
+B --> C["ログベースメトリクス<br/>pod-image-errors で件数をカウント"]
+C --> D["アラートポリシー<br/>Pod Error Alert"]
+D --> E["しきい値 0 を超えたら<br/>インシデントを作成"]`,
+                d5: `sequenceDiagram
+participant You as あなた(Cloud Shell)
+participant D as Docker
+participant AR as Artifact Registry
+participant K as GKE クラスタ
+You->>You: main.go を Version 2.0.0 に修正
+You->>D: docker build でイメージをビルド(v2タグ)
+You->>AR: docker push でイメージを保存
+You->>K: kubectl set image でイメージ更新
+K->>AR: 新しいイメージを pull
+K-->>You: 新しい Pod が Running
+You->>K: kubectl expose で LoadBalancer 公開
+K-->>You: 外部 IP が割り当てられる`,
+                d6: `flowchart LR
+U["ブラウザ / curl"] -- "外部IP:8080" --> LB["Service<br/>port: 8080"]
+LB -- "targetPort" --> P["Pod のコンテナ<br/>Dockerfile のポート"]`,
+                d7: `flowchart TD
+A["エラーが出た"] --> B["エラーメッセージを最後まで読む"]
+B --> C["kubectl describe / events で詳細を確認"]
+C --> D{"原因が分かった?"}
+D -- "はい" --> E["最小限の修正を1つだけ行う"]
+D -- "いいえ" --> F["kubectl logs やコンソールの<br/>Events を確認"]
+F --> D
+E --> G["再実行して結果を確認"]
+G --> H{"解決した?"}
+H -- "はい" --> I["次のステップへ"]
+H -- "いいえ" --> B`,
+            };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.11.1/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+        <script>
+            (function () {
+                /* syntax highlight */
+                if (window.hljs) {
+                    document
+                        .querySelectorAll('pre code.language-bash, pre code.language-yaml')
+                        .forEach(function (el) {
+                            hljs.highlightElement(el);
+                        });
+                }
+
+                /* copy buttons */
+                document.querySelectorAll('.code-block .copy').forEach(function (btn) {
+                    btn.addEventListener('click', async function () {
+                        var code = btn.closest('.code-block').querySelector('code').textContent;
+                        try {
+                            await navigator.clipboard.writeText(code);
+                        } catch (e) {
+                            var ta = document.createElement('textarea');
+                            ta.value = code;
+                            document.body.appendChild(ta);
+                            ta.select();
+                            try {
+                                document.execCommand('copy');
+                            } catch (_) {}
+                            ta.remove();
+                        }
+                        var icon = btn.querySelector('i'),
+                            label = btn.querySelector('span');
+                        icon.className = 'ti ti-check';
+                        label.textContent = 'コピーしました';
+                        setTimeout(function () {
+                            icon.className = 'ti ti-copy';
+                            label.textContent = 'コピー';
+                        }, 1800);
+                    });
+                });
+
+                /* mobile drawer */
+                var toggle = document.getElementById('navToggle'),
+                    sidebar = document.getElementById('sidebar'),
+                    backdrop = document.getElementById('backdrop');
+                function setOpen(open) {
+                    document.body.classList.toggle('nav-open', open);
+                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    toggle.querySelector('i').className = open ? 'ti ti-x' : 'ti ti-menu-2';
+                }
+                toggle.addEventListener('click', function () {
+                    setOpen(!document.body.classList.contains('nav-open'));
+                });
+                backdrop.addEventListener('click', function () {
+                    setOpen(false);
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') setOpen(false);
+                });
+                sidebar.querySelectorAll('nav a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        setOpen(false);
+                    });
+                });
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 1024) setOpen(false);
+                });
+
+                /* active nav link */
+                var links = {};
+                sidebar.querySelectorAll('nav a').forEach(function (a) {
+                    links[a.getAttribute('href').slice(1)] = a;
+                });
+                function activate(id) {
+                    Object.keys(links).forEach(function (k) {
+                        links[k].classList.toggle('active', k === id);
+                    });
+                    var a = links[id];
+                    if (a) {
+                        var top = a.offsetTop,
+                            bottom = top + a.offsetHeight;
+                        if (top < sidebar.scrollTop + 80) sidebar.scrollTop = Math.max(0, top - 80);
+                        else if (bottom > sidebar.scrollTop + sidebar.clientHeight - 40)
+                            sidebar.scrollTop = bottom - sidebar.clientHeight + 40;
+                    }
+                }
+                var io = new IntersectionObserver(
+                    function (entries) {
+                        entries.forEach(function (en) {
+                            if (en.isIntersecting) activate(en.target.id);
+                        });
+                    },
+                    { rootMargin: '-20% 0px -70% 0px' },
+                );
+                document.querySelectorAll('section[id]').forEach(function (s) {
+                    io.observe(s);
+                });
+
+                /* checklist */
+                var items = document.querySelectorAll('.check-item input');
+                var key = 'gsp510-guide-checklist';
+                var saved = {};
+                try {
+                    saved = JSON.parse(localStorage.getItem(key) || '{}');
+                } catch (e) {
+                    saved = {};
+                }
+                var bar = document.querySelector('.check-progress .bar i'),
+                    count = document.querySelector('.check-progress .count');
+                function refresh() {
+                    var done = 0;
+                    items.forEach(function (i) {
+                        if (i.checked) done++;
+                    });
+                    if (bar)
+                        bar.style.width = (items.length ? (done / items.length) * 100 : 0) + '%';
+                    if (count) count.textContent = done + ' / ' + items.length;
+                }
+                items.forEach(function (inp, idx) {
+                    if (saved[idx]) inp.checked = true;
+                    inp.addEventListener('change', function () {
+                        saved[idx] = inp.checked;
+                        try {
+                            localStorage.setItem(key, JSON.stringify(saved));
+                        } catch (e) {}
+                        refresh();
+                    });
+                });
+                refresh();
+
+                /* mermaid */
+                var THEME = {
+                    background: '#07111e',
+                    fontFamily:
+                        '"Hiragino Sans","Noto Sans JP","Yu Gothic UI",Meiryo,system-ui,sans-serif',
+                    fontSize: '16px',
+                    primaryColor: '#1c2650',
+                    primaryTextColor: '#f3f5fa',
+                    primaryBorderColor: '#b79cff',
+                    secondaryColor: '#112340',
+                    secondaryTextColor: '#f3f5fa',
+                    secondaryBorderColor: '#7c9eff',
+                    tertiaryColor: '#0c1a2d',
+                    tertiaryTextColor: '#f3f5fa',
+                    tertiaryBorderColor: '#2d456e',
+                    lineColor: '#93a1bd',
+                    textColor: '#f3f5fa',
+                    mainBkg: '#1c2650',
+                    nodeBorder: '#b79cff',
+                    nodeTextColor: '#f3f5fa',
+                    edgeLabelBackground: '#0c1a2d',
+                    clusterBkg: '#0c1a2d',
+                    clusterBorder: '#2d456e',
+                    titleColor: '#f3f5fa',
+                    actorBkg: '#1c2650',
+                    actorBorder: '#b79cff',
+                    actorTextColor: '#f3f5fa',
+                    actorLineColor: '#93a1bd',
+                    signalColor: '#c6d0e3',
+                    signalTextColor: '#f3f5fa',
+                    labelBoxBkgColor: '#112340',
+                    labelBoxBorderColor: '#2d456e',
+                    labelTextColor: '#f3f5fa',
+                    loopTextColor: '#f3f5fa',
+                    noteBkgColor: '#2a2150',
+                    noteTextColor: '#f3f5fa',
+                    noteBorderColor: '#b79cff',
+                    activationBkgColor: '#112340',
+                    activationBorderColor: '#7c9eff',
+                    sequenceNumberColor: '#07111e',
+                };
+                function esc(s) {
+                    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                }
+                var MIN_SCALE = 0.78;
+                function fitDiagram(el) {
+                    var svg = el.querySelector('svg');
+                    if (!svg || !svg.dataset.natural) return;
+                    var natural = parseFloat(svg.dataset.natural),
+                        avail = el.clientWidth;
+                    var scale = Math.min(1, avail / natural);
+                    if (scale < MIN_SCALE)
+                        scale =
+                            MIN_SCALE; /* below this, scroll sideways instead of shrinking text */
+                    svg.style.width = Math.round(natural * scale) + 'px';
+                    svg.style.maxWidth = 'none';
+                }
+                window.addEventListener('resize', function () {
+                    document.querySelectorAll('.diagram').forEach(fitDiagram);
+                });
+                async function renderDiagrams() {
+                    var targets = document.querySelectorAll('.diagram[data-id]');
+                    if (typeof mermaid === 'undefined') {
+                        targets.forEach(function (el) {
+                            el.classList.add('diagram-error');
+                            el.innerHTML =
+                                '<pre>' + esc(window.DIAGRAMS[el.dataset.id] || '') + '</pre>';
+                        });
+                        return;
+                    }
+                    if (document.fonts && document.fonts.ready) {
+                        try {
+                            await document.fonts.ready;
+                        } catch (e) {}
+                    }
+                    mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'dark',
+                        securityLevel: 'loose',
+                        themeVariables: THEME,
+                        flowchart: {
+                            useMaxWidth: false,
+                            htmlLabels: true,
+                            nodeSpacing: 28,
+                            rankSpacing: 40,
+                            curve: 'basis',
+                            wrappingWidth: 320,
+                            padding: 12,
+                        },
+                        sequence: { useMaxWidth: false, actorMargin: 60, messageMargin: 36 },
+                    });
+                    for (var i = 0; i < targets.length; i++) {
+                        var el = targets[i],
+                            id = el.dataset.id,
+                            src = window.DIAGRAMS[id];
+                        try {
+                            var out = await mermaid.render('mmd-' + id, src);
+                            el.innerHTML = out.svg;
+                            var svg = el.querySelector('svg');
+                            var vb = svg.viewBox && svg.viewBox.baseVal;
+                            if (vb && vb.width) {
+                                var extra = /^\s*(sequenceDiagram|stateDiagram)/.test(src)
+                                    ? 110
+                                    : 15;
+                                svg.setAttribute(
+                                    'viewBox',
+                                    vb.x + ' ' + vb.y + ' ' + vb.width + ' ' + (vb.height + extra),
+                                );
+                                svg.removeAttribute('width');
+                                svg.removeAttribute('height');
+                                svg.dataset.natural = String(vb.width);
+                            }
+                            svg.style.height = 'auto';
+                            svg.style.overflow = 'visible';
+                            fitDiagram(el);
+                        } catch (err) {
+                            el.classList.add('diagram-error');
+                            el.innerHTML = '<pre>' + esc(src) + '</pre>';
+                            console.error('mermaid render failed for ' + id, err);
+                        }
+                    }
+                    document.documentElement.setAttribute('data-diagrams', 'done');
+                }
+                renderDiagrams();
+            })();
+        </script>
+    </body>
+</html>
