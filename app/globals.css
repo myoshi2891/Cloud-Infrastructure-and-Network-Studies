@@ -131,6 +131,24 @@
     --color-scs-32: #fbfcff;
     --color-scs-33: rgba(47, 95, 208, 0.08);
     --color-scs-34: rgba(20, 40, 90, 0.18);
+    /* SCS-C03 Domain 2: original light palette */
+    --color-scs-d2-bg: #f6f8fc;
+    --color-scs-d2-bg-card: #ffffff;
+    --color-scs-d2-bg-card-2: #eef2fa;
+    --color-scs-d2-border: #cfd9ea;
+    --color-scs-d2-border-soft: #e1e8f4;
+    --color-scs-d2-text: #1b2740;
+    --color-scs-d2-text-dim: #4a5a78;
+    --color-scs-d2-text-faint: #6b7a96;
+    --color-scs-d2-accent: #3557d6;
+    --color-scs-d2-accent-soft: #a9b9ea;
+    --color-scs-d2-accent-bg: #e8eefc;
+    --color-scs-d2-danger: #c0243f;
+    --color-scs-d2-danger-bg: #fde8ec;
+    --color-scs-d2-warn: #a65b00;
+    --color-scs-d2-warn-bg: #fff2dd;
+    --color-scs-d2-success: #14804a;
+    --color-scs-d2-success-bg: #e5f6ec;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;

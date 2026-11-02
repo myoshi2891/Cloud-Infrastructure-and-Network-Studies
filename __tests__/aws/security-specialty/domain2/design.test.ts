@@ -47,8 +47,6 @@ const map = (s: string) =>
                   part
                       .trim()
                       .replaceAll('pre.mermaid', '.mermaid-wrap')
-                      .replaceAll('.code-block', '.code-sample')
-                      .replaceAll('pre', '.code-block')
                       .replace('.main > h2:first-of-type', '.main > .guide-part:first-child > h2:first-of-type'),
         )
         .join(', ');
