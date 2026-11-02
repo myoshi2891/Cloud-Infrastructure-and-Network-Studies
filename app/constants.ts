@@ -916,6 +916,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Cisco',
     },
     {
+        id: 'ccnp-security',
+        label: 'CCNP Security',
+        abbr: 'CCNP Security',
+        level: 'Professional',
+        score: 'コア 120分 + コンセントレーション 90分',
+        color: 'card-ccna',
+        href: '/cisco/ccnp-security',
+        description:
+            'Ciscoセキュリティソリューションの設計・実装・運用プロフェッショナル認定。コア試験(350-701 SCOR)と各コンセントレーション試験を初学者向けに徹底解説。',
+        domains: [
+            {
+                label: '初学者向け完全ガイド',
+                href: '/cisco/ccnp-security',
+                pct: '完全解説',
+            },
+        ],
+        badge: 'Security プロフェッショナル',
+        icon: '🛡️',
+        provider: 'Cisco',
+    },
+    {
         id: 'comptia-network-plus',
         label: 'CompTIA Network+',
         abbr: 'Network+',

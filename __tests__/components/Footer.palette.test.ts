@@ -12,7 +12,7 @@ const LIGHT_PAGE_ROOTS = [
     'sap-domain1-page', 'sap-domain2-page', 'sap-domain3-page', 'scs-guide-page', 'scs-domain1-page', 'scs-domain2-page', 'ans-guide-page', 'sap-guide-page',
     'tcpip-page', 'agentic-guide-page', 'agentic-section1-page',
     'agentic-section2-page', 'agentic-section3-page', 'agentic-section4-page',
-    'agentic-section5-page',
+    'agentic-section5-page', 'ccnp-security-page',
 ];
 
 const squashSelector = (selector: string): string => selector.replace(/\s+/g, ' ').replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').trim();
