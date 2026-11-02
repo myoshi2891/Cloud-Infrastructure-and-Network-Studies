@@ -29,3 +29,4 @@ it('preserves source Mermaid themeVariables and flowchart settings over shared d
     );
     expect(config.flowchart).toEqual(fixture.guideInteractions.mermaidConfig.flowchart);
 });
+

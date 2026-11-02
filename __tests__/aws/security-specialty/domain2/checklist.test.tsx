@@ -45,3 +45,4 @@ describe('Checklist and Glossary Section', () => {
         expect(table?.querySelector('thead th[scope="col"]')).not.toBeNull();
     });
 });
+

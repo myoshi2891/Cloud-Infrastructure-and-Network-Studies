@@ -96,3 +96,4 @@ it('scroll spy keeps its active item visible inside the sidebar without moving p
     expect(sidebar.scrollTop).toBeCloseTo(1000 - 400 / 3);
     expect(document.activeElement).toBe(previousFocus);
 });
+

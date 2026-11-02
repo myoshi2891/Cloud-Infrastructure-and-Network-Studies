@@ -38,3 +38,4 @@ describe('SCS domain2 source-independent fixture', () => {
         30_000,
     );
 });
+
