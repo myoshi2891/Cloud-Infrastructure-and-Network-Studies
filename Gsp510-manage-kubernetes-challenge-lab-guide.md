@@ -471,13 +471,21 @@ kubectl get pods -n "$NAMESPACE_NAME"
 
 ```bash
 # Pod 名を取得して詳細（Events 欄）を見る（Pod の作成直後は名前が取れないことがあるため、数回再試行する）
+# kubectl 自体の失敗（認証・kubeconfig・API エラー）は「Pod なし」と区別し、エラー内容を表示して止める
 POD_NAME=""
+POD_LOOKUP_FAILED=false
 for attempt in 1 2 3 4 5 6; do
-  POD_NAME=$(kubectl get pods -n "$NAMESPACE_NAME" -l app=hello -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+  if ! POD_NAME=$(kubectl get pods -n "$NAMESPACE_NAME" -l app=hello -o jsonpath='{.items[0].metadata.name}'); then
+    POD_LOOKUP_FAILED=true
+    POD_NAME=""
+    break
+  fi
   [ -n "$POD_NAME" ] && break
   sleep 5
 done
-if [ -z "$POD_NAME" ]; then
+if [ "$POD_LOOKUP_FAILED" = true ]; then
+  echo "kubectl get pods が失敗しました（上のエラーを確認してください）。認証・kubeconfig・クラスタへの接続を確認してから再実行してください" >&2
+elif [ -z "$POD_NAME" ]; then
   echo "app=hello の Pod が見つかりません。ラベルと Deployment を確認してください" >&2
 else
   kubectl describe pod "$POD_NAME" -n "$NAMESPACE_NAME"
