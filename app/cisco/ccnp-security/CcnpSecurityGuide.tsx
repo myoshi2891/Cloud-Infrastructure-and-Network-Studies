@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { NavBar } from './NavBar';
 import HeroIntro from './sections/HeroIntro';
+import PartA from './sections/PartA';
 
 interface CcnpSecurityGuideProps {
     children?: React.ReactNode;
@@ -37,6 +38,7 @@ export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) 
             <NavBar isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
             <main>
                 <HeroIntro />
+                <PartA />
                 {children}
             </main>
         </div>
