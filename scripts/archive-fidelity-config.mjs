@@ -32,6 +32,35 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-domain3': {
+        source: 'Sap-c02-domain3-continuous-improvement-guide.html',
+        sourceCommit: '13e845fde4e37fbb2c99442ee9bdef4c2df78273',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task31: '3-task-31-運用上の優秀性を改善する',
+            task32: '4-task-32-セキュリティを改善する',
+            task33: '5-task-33-パフォーマンスを改善する',
+            task34: '6-task-34-信頼性を改善する',
+            task35: '7-task-35-コスト最適化の機会を見つける',
+            appendix: '8-横断-試験問題の読み解き方',
+        },
+    },
+    'aws-sap-c02-domain2': {
+        source: 'Aws-sap-c02-domain2-guide.html',
+        sourceCommit: '49e40e8b084cc377511a4249ea311ce522429c0c',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task21: '3-task-21-デプロイ戦略の設計',
+            task22: '4-task-22-ビジネス継続性の確保',
+            task23: '5-task-23-要件に基づくセキュリティ統制の決定',
+            task24: '6-task-24-信頼性要件を満たす戦略の設計',
+            task25: '7-task-25-パフォーマンス目標を満たすソリューション設計',
+            task26: '8-task-26-コスト最適化戦略の決定',
+            appendix: '9-横断-シナリオ別この要件ならこの答え早見表',
+        },
+    },
     'aws-sap-c02-guide': {
         source: 'Aws-sap-c02-guide.html',
         sourceCommit: 'f27f2e68c7608666ba3bf58e6eff83c0b6d3d1cc',

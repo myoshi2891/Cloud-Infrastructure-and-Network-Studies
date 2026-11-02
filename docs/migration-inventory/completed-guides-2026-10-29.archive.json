@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "8e8882475a0a4f9f685539025b2850b2c948683a",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Designing-data-intensive-applications-guide.html",
+      "archive": "archive/Books/html/Designing-data-intensive-applications-guide.html",
+      "route": "/recommended-books/designing-data-intensive-applications",
+      "bytes": 147633,
+      "sha256": "bd31373edef884c906a0681dd7cecb3c009c1881285aa8cc3681ec82e9ea7e28"
+    },
+    {
+      "source": "Designing-data-intensive-applications-guide.md",
+      "archive": "archive/Books/md/Designing-data-intensive-applications-guide.md",
+      "route": "/recommended-books/designing-data-intensive-applications",
+      "bytes": 69781,
+      "sha256": "d814f616247632e6778ee86cff7224f689bad399fbead41c931a28558ce238cb"
+    },
+    {
+      "source": "Aws-sap-c02-domain2-guide.html",
+      "archive": "archive/Aws/html/solutions-architect-professional/domain2/Aws-sap-c02-domain2-guide.html",
+      "route": "/aws/solutions-architect-professional/domain2",
+      "bytes": 312825,
+      "sha256": "bdba8ac018c8811314e0c75d176de4ba50b22fb327ce8b2bc6788709dfce6f0e"
+    },
+    {
+      "source": "Aws-sap-c02-domain2-guide.md",
+      "archive": "archive/Aws/md/solutions-architect-professional/domain2/Aws-sap-c02-domain2-guide.md",
+      "route": "/aws/solutions-architect-professional/domain2",
+      "bytes": 97726,
+      "sha256": "7d5646aa39c5ea8479ccd239a83b04a2086ab8ff72ee503194ba9edbd17937ba"
+    },
+    {
+      "source": "Aws-dva-c02-domain4-troubleshooting-optimization-guide.html",
+      "archive": "archive/Aws/html/developer-associate/domain4/Aws-dva-c02-domain4-troubleshooting-optimization-guide.html",
+      "route": "/aws/developer-associate/domain4",
+      "bytes": 323716,
+      "sha256": "692e2f41833ec629d66a44ff9027759eb1a20cdcee44b299178acd45246deb29"
+    },
+    {
+      "source": "Aws-dva-c02-domain4-troubleshooting-optimization-guide.md",
+      "archive": "archive/Aws/md/developer-associate/domain4/Aws-dva-c02-domain4-troubleshooting-optimization-guide.md",
+      "route": "/aws/developer-associate/domain4",
+      "bytes": 207142,
+      "sha256": "2374cb142c8373069c8096d7aba8cf9402d029378eaae50da045839b8a56a308"
+    },
+    {
+      "source": "Aws-scs-c03-guide.html",
+      "archive": "archive/Aws/html/security-specialty/Aws-scs-c03-guide.html",
+      "route": "/aws/security-specialty",
+      "bytes": 565993,
+      "sha256": "43f9d4d00e8df0affdaa1ccf6a1d08e290eea65448169622b15c386c84dc8e91"
+    },
+    {
+      "source": "Aws-scs-c03-guide.md",
+      "archive": "archive/Aws/md/security-specialty/Aws-scs-c03-guide.md",
+      "route": "/aws/security-specialty",
+      "bytes": 153092,
+      "sha256": "5debe15888000ca4483328a4e21a263d1d5f8618def7b7d8924a144e6a39be9a"
+    }
+  ]
+}
