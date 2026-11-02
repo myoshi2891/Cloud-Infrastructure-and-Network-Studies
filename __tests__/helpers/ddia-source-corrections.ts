@@ -11,4 +11,10 @@ export const DDIA_DIAGRAM_CORRECTIONS: readonly Correction[] = [
     ['subgraph P3["Part III: ', 'subgraph P3["本ガイドの区分 III: '],
     ['subgraph P4["Part IV: ', 'subgraph P4["本ガイドの区分 IV: '],
     ['subgraph P5["Part V: ', 'subgraph P5["本ガイドの区分 V: '],
+    // 過半数の承認を得られなくても、リーダーが稼働していれば同じリーダーが複製を再試行する。
+    // リーダーの再選出はリーダー障害時に限る。
+    [
+        'Vote -->|"いいえ"| Retry["リーダーを再選出し<br/>再試行"]\n    Retry --> Start',
+        'Vote -->|"いいえ"| Alive{"リーダーは<br/>稼働しているか?"}\n    Alive -->|"はい"| Retry["同じリーダーが<br/>複製を再試行"]\n    Retry --> Vote\n    Alive -->|"いいえ リーダー障害"| Elect["リーダーを再選出"]\n    Elect --> Start',
+    ],
 ];
