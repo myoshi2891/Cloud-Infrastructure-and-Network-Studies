@@ -531,7 +531,7 @@ Part 2 で明確に区別された重要点です。
 
 | Party（略称） | 意味 | 対応する Role |
 |---|---|---|
-| Cloud service customer（CSC） | クラウドサービスを**使う**目的で事業上の関係にある関係者（Party）として振る舞う者。組織に限らず個人もなり得る | CSC role：サービスを**使う**活動 |
+| Cloud service customer（CSC） | CSC role を担う関係者（Party）。自然人、法人、またはそれらの集まりが CSC になり得る | CSC role：サービスを**使う**活動 |
 | Cloud service provider（CSP） | クラウドサービスを**利用可能にする**関係者（Party）として振る舞う者 | CSP role：サービスを**利用可能にする**活動 |
 | Cloud service partner（CSN） | CSC・CSP のどちらか、または両方の活動を**支援・補助**する関係者（Party）として振る舞う者 | CSN role：支援・補助の活動 |
 
