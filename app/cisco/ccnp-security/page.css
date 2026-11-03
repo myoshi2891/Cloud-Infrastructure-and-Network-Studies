@@ -3,29 +3,9 @@
 
 .ccnp-security-page {
   color-scheme: light;
-  --color-paper: #F6F7F9;
-  --color-ink: #161B26;
-  --color-indigo: #2E3F72;
-  --color-gold: #B8802A;
-  --color-forest: #1B6E6A;
-  --color-plum: #8C3A5C;
-  --ink-2: #3A4254;
-  --ink-3: #566074;
-  --line: #D5DAE5;
-  --line-2: #E6E9F0;
-  --card: #FFFFFF;
-  --tint-indigo: #EEF1F8;
-  --tint-gold: #FAF1DF;
-  --tint-forest: #E6F2F0;
-  --tint-plum: #F6E9EF;
-  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
-  --font-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
-  --sb: 288px;
-
-  background: var(--color-paper);
-  color: var(--color-ink);
-  font: 400 1rem/1.8 var(--font-sans);
+  background: var(--color-ccnp-security-paper);
+  color: var(--color-ccnp-security-ink);
+  font: 400 1rem/1.8 var(--font-ccnp-security-sans);
   min-height: 100vh;
   position: relative;
 }
@@ -35,7 +15,7 @@
 }
 
 .ccnp-security-page a {
-  color: var(--color-indigo);
+  color: var(--color-ccnp-security-indigo);
   text-decoration: underline;
 }
 
@@ -44,9 +24,9 @@
   top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
   bottom: 0;
   left: 0;
-  width: var(--sb);
-  background: var(--card);
-  border-right: 1px solid var(--line);
+  width: 288px;
+  background: var(--color-ccnp-security-card);
+  border-right: 1px solid var(--color-ccnp-security-line);
   overflow-y: auto;
   padding: 20px 16px 48px;
   z-index: 30;
@@ -58,20 +38,20 @@
   gap: 12px;
   align-items: center;
   padding: 4px 8px 16px;
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--color-ccnp-security-line-2);
   margin-bottom: 8px;
 }
 
 .ccnp-security-page .brand b {
-  font: 600 1.05rem/1.4 var(--font-serif);
-  color: var(--color-indigo);
+  font: 600 1.05rem/1.4 var(--font-ccnp-security-serif);
+  color: var(--color-ccnp-security-indigo);
 }
 
 .ccnp-security-page .nav-group {
   margin: 18px 0 4px;
   padding: 0 8px;
-  font: 600 1rem/1.45 var(--font-serif);
-  color: var(--color-indigo);
+  font: 600 1rem/1.45 var(--font-ccnp-security-serif);
+  color: var(--color-ccnp-security-indigo);
 }
 
 .ccnp-security-page .nav-group a {
@@ -98,25 +78,25 @@
   display: block;
   padding: 6px 8px;
   border-radius: 8px;
-  color: var(--ink-2);
+  color: var(--color-ccnp-security-ink-2);
   text-decoration: none;
   line-height: 1.5;
 }
 
 .ccnp-security-page .sidebar nav a:hover {
-  background: var(--tint-indigo);
+  background: var(--color-ccnp-security-tint-indigo);
 }
 
 .ccnp-security-page .sidebar li.active > a {
-  background: var(--tint-indigo);
-  color: var(--color-indigo);
+  background: var(--color-ccnp-security-tint-indigo);
+  color: var(--color-ccnp-security-indigo);
   font-weight: 500;
 }
 
 .ccnp-security-page .sidebar .sub {
   display: none;
   margin: 2px 0 6px 10px;
-  border-left: 2px solid var(--line);
+  border-left: 2px solid var(--color-ccnp-security-line);
 }
 
 .ccnp-security-page .sidebar li.active > .sub {
@@ -125,18 +105,18 @@
 
 .ccnp-security-page .sidebar .sub a {
   padding: 4px 8px;
-  color: var(--ink-3);
+  color: var(--color-ccnp-security-ink-3);
 }
 
 .ccnp-security-page .sidebar .sub li.active > a {
   background: transparent;
-  color: #7A5415;
+  color: var(--color-ccnp-security-gold-text);
   font-weight: 500;
 }
 
 .ccnp-security-page main {
-  margin-left: var(--sb);
-  width: calc(100% - var(--sb));
+  margin-left: 288px;
+  width: calc(100% - 288px);
   max-width: none;
   padding: 0 48px 80px;
 }
@@ -151,17 +131,17 @@
 
 .ccnp-security-page .hero {
   padding: 56px 0 32px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--color-ccnp-security-line);
 }
 
 .ccnp-security-page .hero h1 {
-  font: 600 2.25rem/1.4 var(--font-serif);
-  color: var(--color-indigo);
+  font: 600 2.25rem/1.4 var(--font-ccnp-security-serif);
+  color: var(--color-ccnp-security-indigo);
   margin: 0 0 16px;
 }
 
 .ccnp-security-page .hero .meta {
-  color: var(--ink-2);
+  color: var(--color-ccnp-security-ink-2);
 }
 
 .ccnp-security-page .hero .meta p {
@@ -178,32 +158,32 @@
 .ccnp-security-page .chip {
   padding: 2px 14px;
   border-radius: 999px;
-  background: var(--tint-indigo);
-  border: 1px solid var(--line);
-  color: var(--color-indigo);
+  background: var(--color-ccnp-security-tint-indigo);
+  border: 1px solid var(--color-ccnp-security-line);
+  color: var(--color-ccnp-security-indigo);
   font-weight: 500;
 }
 
 .ccnp-security-page header.part h1 {
-  font: 600 1.9rem/1.45 var(--font-serif);
-  color: var(--color-indigo);
+  font: 600 1.9rem/1.45 var(--font-ccnp-security-serif);
+  color: var(--color-ccnp-security-indigo);
   margin: 80px 0 16px;
   padding-top: 24px;
-  border-top: 3px solid var(--color-gold);
+  border-top: 3px solid var(--color-ccnp-security-gold);
 }
 
 .ccnp-security-page h2 {
-  font: 600 1.5rem/1.5 var(--font-serif);
+  font: 600 1.5rem/1.5 var(--font-ccnp-security-serif);
   margin: 48px 0 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--color-ccnp-security-line);
 }
 
 .ccnp-security-page h3 {
-  font: 600 1.2rem/1.55 var(--font-serif);
+  font: 600 1.2rem/1.55 var(--font-ccnp-security-serif);
   margin: 32px 0 12px;
   padding-left: 12px;
-  border-left: 4px solid var(--color-forest);
+  border-left: 4px solid var(--color-ccnp-security-forest);
 }
 
 .ccnp-security-page p {
@@ -217,11 +197,11 @@
 .ccnp-security-page .part-lead {
   margin: 0 0 24px;
   padding: 16px 20px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-left: 5px solid var(--color-indigo);
+  background: var(--color-ccnp-security-card);
+  border: 1px solid var(--color-ccnp-security-line);
+  border-left: 5px solid var(--color-ccnp-security-indigo);
   border-radius: 12px;
-  color: var(--ink-2);
+  color: var(--color-ccnp-security-ink-2);
 }
 
 .ccnp-security-page .part-lead p {
@@ -231,9 +211,9 @@
 .ccnp-security-page .table-wrap {
   overflow-x: auto;
   margin: 16px 0;
-  border: 1px solid var(--line);
+  border: 1px solid var(--color-ccnp-security-line);
   border-radius: 12px;
-  background: var(--card);
+  background: var(--color-ccnp-security-card);
 }
 
 .ccnp-security-page table {
@@ -247,18 +227,18 @@
   padding: 10px 14px;
   text-align: left;
   vertical-align: top;
-  border-bottom: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--color-ccnp-security-line-2);
   min-width: 5em;
 }
 
 .ccnp-security-page th {
-  background: var(--tint-indigo);
-  color: var(--color-indigo);
+  background: var(--color-ccnp-security-tint-indigo);
+  color: var(--color-ccnp-security-indigo);
   font-weight: 600;
 }
 
 .ccnp-security-page tbody tr:nth-child(even) td {
-  background: #FAFBFD;
+  background: var(--color-ccnp-security-row-alt);
 }
 
 .ccnp-security-page tr:last-child td {
@@ -266,8 +246,8 @@
 }
 
 .ccnp-security-page code {
-  font: 400 1rem var(--font-mono);
-  background: var(--tint-indigo);
+  font: 400 1rem var(--font-ccnp-security-mono);
+  background: var(--color-ccnp-security-tint-indigo);
   padding: 1px 6px;
   border-radius: 6px;
   overflow-wrap: anywhere;
@@ -276,11 +256,11 @@
 .ccnp-security-page pre {
   margin: 16px 0;
   padding: 16px 18px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--color-ccnp-security-card);
+  border: 1px solid var(--color-ccnp-security-line);
   border-radius: 12px;
   overflow-x: auto;
-  font: 400 1rem/1.65 var(--font-mono);
+  font: 400 1rem/1.65 var(--font-ccnp-security-mono);
 }
 
 .ccnp-security-page pre code {
@@ -297,11 +277,11 @@
 .ccnp-security-page .code-block {
   margin: 0;
   padding: 16px 18px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--color-ccnp-security-card);
+  border: 1px solid var(--color-ccnp-security-line);
   border-radius: 12px;
   overflow-x: auto;
-  font: 400 1rem/1.65 var(--font-mono);
+  font: 400 1rem/1.65 var(--font-ccnp-security-mono);
   outline: none;
 }
 
@@ -364,7 +344,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-gold);
+  background: var(--color-ccnp-security-gold);
 }
 
 .ccnp-security-page main ol {
@@ -386,8 +366,8 @@
   width: 1.7em;
   height: 1.7em;
   border-radius: 50%;
-  background: var(--color-indigo);
-  color: #fff;
+  background: var(--color-ccnp-security-indigo);
+  color: var(--color-ccnp-security-on-indigo);
   text-align: center;
   line-height: 1.7em;
   font-size: 1rem;
@@ -419,33 +399,33 @@
 }
 
 .ccnp-security-page .callout.practice {
-  background: var(--tint-gold);
-  border-color: #E6CFA0;
-  border-left-color: var(--color-gold);
+  background: var(--color-ccnp-security-tint-gold);
+  border-color: var(--color-ccnp-security-practice-border);
+  border-left-color: var(--color-ccnp-security-gold);
 }
 
 .ccnp-security-page .callout.practice .ch {
-  color: #7A5415;
+  color: var(--color-ccnp-security-gold-text);
 }
 
 .ccnp-security-page .callout.source {
-  background: var(--tint-forest);
-  border-color: #B9DBD7;
-  border-left-color: var(--color-forest);
+  background: var(--color-ccnp-security-tint-forest);
+  border-color: var(--color-ccnp-security-source-border);
+  border-left-color: var(--color-ccnp-security-forest);
 }
 
 .ccnp-security-page .callout.source .ch {
-  color: #125551;
+  color: var(--color-ccnp-security-source-text);
 }
 
 .ccnp-security-page .callout.note {
-  background: var(--tint-plum);
-  border-color: #E2C3D0;
-  border-left-color: var(--color-plum);
+  background: var(--color-ccnp-security-tint-plum);
+  border-color: var(--color-ccnp-security-note-border);
+  border-left-color: var(--color-ccnp-security-plum);
 }
 
 .ccnp-security-page .callout.note .ch {
-  color: #6E2A47;
+  color: var(--color-ccnp-security-note-text);
 }
 
 .ccnp-security-page .srclist li {
@@ -464,28 +444,28 @@
   border-radius: 999px;
   border: 1px solid;
   font-weight: 500;
-  background: #fff;
+  background: var(--color-ccnp-security-card);
   vertical-align: baseline;
 }
 
 .ccnp-security-page .tag.official {
-  color: var(--color-indigo);
-  border-color: var(--color-indigo);
+  color: var(--color-ccnp-security-indigo);
+  border-color: var(--color-ccnp-security-indigo);
 }
 
 .ccnp-security-page .tag.std {
-  color: var(--color-forest);
-  border-color: var(--color-forest);
+  color: var(--color-ccnp-security-forest);
+  border-color: var(--color-ccnp-security-forest);
 }
 
 .ccnp-security-page .tag.doc {
-  color: #7A5415;
-  border-color: var(--color-gold);
+  color: var(--color-ccnp-security-gold-text);
+  border-color: var(--color-ccnp-security-gold);
 }
 
 .ccnp-security-page .tag.supp {
-  color: var(--color-plum);
-  border-color: var(--color-plum);
+  color: var(--color-ccnp-security-plum);
+  border-color: var(--color-ccnp-security-plum);
 }
 
 .ccnp-security-page .surls {
@@ -495,10 +475,10 @@
 
 .ccnp-security-page .surl {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-ccnp-security-mono);
   overflow-wrap: anywhere;
   word-break: break-all;
-  color: var(--color-indigo);
+  color: var(--color-ccnp-security-indigo);
 }
 
 .ccnp-security-page .refs {
@@ -512,8 +492,8 @@
   gap: 14px;
   align-items: flex-start;
   padding: 12px 16px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--color-ccnp-security-card);
+  border: 1px solid var(--color-ccnp-security-line);
   border-radius: 12px;
 }
 
@@ -522,8 +502,8 @@
   width: 2.3em;
   height: 2.3em;
   border-radius: 50%;
-  background: var(--tint-indigo);
-  color: var(--color-indigo);
+  background: var(--color-ccnp-security-tint-indigo);
+  color: var(--color-ccnp-security-indigo);
   display: grid;
   place-items: center;
   font-weight: 600;
@@ -536,8 +516,8 @@
 .ccnp-security-page .diagram {
   margin: 20px 0;
   padding: 16px;
-  background: var(--card);
-  border: 1px solid var(--line);
+  background: var(--color-ccnp-security-card);
+  border: 1px solid var(--color-ccnp-security-line);
   border-radius: 12px;
 }
 
@@ -578,8 +558,8 @@
 .ccnp-security-page .footer {
   margin-top: 64px;
   padding-top: 20px;
-  border-top: 1px solid var(--line);
-  color: var(--ink-3);
+  border-top: 1px solid var(--color-ccnp-security-line);
+  color: var(--color-ccnp-security-ink-3);
 }
 
 .ccnp-security-page .menu-btn {
@@ -620,9 +600,9 @@
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--color-indigo);
+    border: 1px solid var(--color-ccnp-security-line);
+    background: var(--color-ccnp-security-card);
+    color: var(--color-ccnp-security-indigo);
     cursor: pointer;
     font-size: 1.25rem;
   }

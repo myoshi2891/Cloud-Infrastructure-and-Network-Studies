@@ -20,9 +20,19 @@ const boundaries = [
 ];
 
 const targetPhase = process.argv[2];
-if (targetPhase && targetPhase !== 'all' && !boundaries.some(b => b.name === targetPhase)) {
-    console.error('Specify one of: all, ' + boundaries.map(b => b.name).join(', '));
+if (targetPhase && targetPhase !== 'all' && targetPhase !== 'navbar' && !boundaries.some(b => b.name === targetPhase)) {
+    console.error('Specify one of: all, navbar, ' + boundaries.map(b => b.name).join(', '));
     process.exit(1);
+}
+
+/**
+ * 円グラフの原本 DSL から title 行を取り出し、末尾の「(%)」を除いた短い図名を返す。
+ * 円グラフ以外、または title が無い場合は undefined。
+ */
+function pieChartTitle(id) {
+    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const match = html.match(new RegExp(`\\b${escapedId}: \`pie[^\`\\n]*\\n\\s*title\\s+([^\\n\`]+)`));
+    return match?.[1]?.replace(/\s*\(%\)\s*$/, '').trim() || undefined;
 }
 
 function renderStringWithSubst(str) {
@@ -95,7 +105,9 @@ function nodeToJsx(node) {
         while (prev && !prev.matches('h1, h2, h3, h4, header, .part-lead')) {
             prev = prev.previousElementSibling;
         }
-        const labelText = prev ? (prev.textContent || '').replace(/\s+/g, ' ').trim() : `図解 ${id}`;
+        // 円グラフは直前の part-lead（長い導入文）ではなく、図自身の title を読み上げ名にする
+        const labelText = pieChartTitle(id)
+            ?? (prev ? (prev.textContent || '').replace(/\s+/g, ' ').trim() : `図解 ${id}`);
         return `<Diagram id="${id}" label={${JSON.stringify(labelText)}} />`;
     }
 
@@ -255,12 +267,10 @@ ${jsxContent}
 }
 
 function generateNavBar() {
-    const sidebar = doc.querySelector('aside.sidebar');
-    const sidebarJsx = nodeToJsx(sidebar);
-
     const content = `'use client';
 
-import { useEffect, useCallback } from 'react';
+import { Fragment, useEffect, useCallback } from 'react';
+import { NAV_GROUPS } from './constants';
 
 interface NavBarProps {
     isOpen: boolean;
@@ -269,7 +279,7 @@ interface NavBarProps {
 
 /**
  * CCNP Security ガイド用のサイドバー目次コンポーネント。
- * ScrollSpy、キーボードフォーカス連動、モバイル開閉制御を提供します。
+ * 目次は constants.ts の NAV_GROUPS から描画し、ScrollSpy・キーボードフォーカス連動・モバイル開閉制御を提供します。
  */
 export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
     const handleLinkClick = useCallback((href: string) => {
@@ -333,8 +343,42 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
         };
     }, []);
 
+    // 原本の目次は項目間に空白テキストを持つため、{" "} で区切りを保持する（本文 fixture の annotation と一致させる）
     return (
-        ${sidebarJsx}
+        <aside className="sidebar" id="sidebar">
+            <div className="brand">
+                <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40"><path d="M20 3 L35 9 V20 C35 28 28.500 34 20 37 C11.500 34 5 28 5 20 V9 Z" fill="#EEF1F8" stroke="#2E3F72" strokeWidth="2"></path><path d="M13 20 L18 25 L27 15" fill="none" stroke="#B8802A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                <b>{"CCNP Security"}<br />{"学習ガイド"}</b>
+            </div>{" "}
+            <nav aria-label="CCNP Security 学習ガイド 目次">
+                {NAV_GROUPS.map((group) => {
+                    const groupHref = group.href;
+                    return (
+                        <Fragment key={groupHref ?? group.title}>
+                            {groupHref ? (
+                                <><div className="nav-group"><a href={groupHref} onClick={() => handleLinkClick(groupHref)}>{group.title}</a></div>{" "}</>
+                            ) : (
+                                <><div className="nav-group nav-plain">{group.title}</div>{" "}</>
+                            )}
+                            <ul>
+                                {group.items.map((item) => (
+                                    <li key={item.href}>
+                                        <a href={item.href} onClick={() => handleLinkClick(item.href)}>{item.title}</a>{" "}
+                                        {item.subItems ? (
+                                            <ul className="sub">
+                                                {item.subItems.map((sub) => (
+                                                    <li key={sub.href}><a href={sub.href} onClick={() => handleLinkClick(sub.href)}>{sub.title}</a>{" "}</li>
+                                                ))}
+                                            </ul>
+                                        ) : null}
+                                    </li>
+                                ))}
+                            </ul>
+                        </Fragment>
+                    );
+                })}
+            </nav>
+        </aside>
     );
 }
 `;

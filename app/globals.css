@@ -156,6 +156,30 @@
     --color-scs-d2-code-inline: #a24a00;
     --color-scs-d2-code-bg: #f3f6fc;
     --color-scs-d2-on-accent: #ffffff;
+    /* CCNP Security 完全ガイド（原本の配色をそのまま保持） */
+    --color-ccnp-security-paper: #F6F7F9;
+    --color-ccnp-security-ink: #161B26;
+    --color-ccnp-security-ink-2: #3A4254;
+    --color-ccnp-security-ink-3: #566074;
+    --color-ccnp-security-indigo: #2E3F72;
+    --color-ccnp-security-gold: #B8802A;
+    --color-ccnp-security-gold-text: #7A5415;
+    --color-ccnp-security-forest: #1B6E6A;
+    --color-ccnp-security-plum: #8C3A5C;
+    --color-ccnp-security-line: #D5DAE5;
+    --color-ccnp-security-line-2: #E6E9F0;
+    --color-ccnp-security-card: #FFFFFF;
+    --color-ccnp-security-on-indigo: #FFFFFF;
+    --color-ccnp-security-row-alt: #FAFBFD;
+    --color-ccnp-security-tint-indigo: #EEF1F8;
+    --color-ccnp-security-tint-gold: #FAF1DF;
+    --color-ccnp-security-tint-forest: #E6F2F0;
+    --color-ccnp-security-tint-plum: #F6E9EF;
+    --color-ccnp-security-practice-border: #E6CFA0;
+    --color-ccnp-security-source-border: #B9DBD7;
+    --color-ccnp-security-source-text: #125551;
+    --color-ccnp-security-note-border: #E2C3D0;
+    --color-ccnp-security-note-text: #6E2A47;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
@@ -1516,6 +1540,9 @@
     --font-ccna-automation-sans: 'Noto Sans JP Variable', 'Noto Sans JP', -apple-system, 'BlinkMacSystemFont', 'Hiragino Sans', sans-serif;
     --font-ccna-automation-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
     --font-ccna-app-mono: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+    --font-ccnp-security-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccnp-security-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --font-ccnp-security-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
     /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
