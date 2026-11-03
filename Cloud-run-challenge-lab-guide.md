@@ -112,7 +112,7 @@ flowchart LR
     IAM{{"IAM<br/>Frontend用SAに<br/>roles/run.invoker"}} -.許可.-> B
 ```
 
-> **ここが設計の肝**: 外部に公開するのは Frontend だけ。Billing（お金に関わるAPI）は **認証必須** にして、**Frontend用サービスアカウントだけ** が呼べるようにします。これが「Secure Access between components（コンポーネント間アクセスの保護）」の意味です。
+> **ここが設計の肝**: 外部に公開するのは Frontend だけ。Billing（お金に関わるAPI）は **認証必須** にして、このラボでは **Frontend用サービスアカウントに呼び出し権限（`roles/run.invoker`）を付与** します。認証必須のBillingを呼べるのは `run.routes.invoke` 権限を実効的に持つIDに限られますが、Frontend用SAが唯一の呼び出し元になるわけではありません（Owner・Editor など、ほかのロールでこの権限を持つIDも呼べます）。これが「Secure Access between components（コンポーネント間アクセスの保護）」の意味です。
 
 ---
 
@@ -530,6 +530,11 @@ ACCOUNT=$(gcloud config get-value account)
 } | sort -u | while read -r ROLE; do
   case "$ROLE" in
     projects/*/roles/*) PERMS=$(gcloud iam roles describe "${ROLE##*/}" --project "$PROJECT_ID" --format='value(includedPermissions)') ;;
+    organizations/*/roles/*)
+      # 組織のカスタムロール: organizations/<ORG_ID>/roles/<ROLE_ID> から組織IDとロールIDを取り出す
+      ORG_ID=${ROLE#organizations/}
+      ORG_ID=${ORG_ID%%/*}
+      PERMS=$(gcloud iam roles describe "${ROLE##*/}" --organization "$ORG_ID" --format='value(includedPermissions)') ;;
     *) PERMS=$(gcloud iam roles describe "$ROLE" --format='value(includedPermissions)') ;;
   esac
   case "$PERMS" in
@@ -539,7 +544,7 @@ ACCOUNT=$(gcloud config get-value account)
 done
 ```
 
-方法1でアクセスが許可と判定されない、または方法2で `OK:` の行が1つも出ない場合は、トークン付きでも 403 になります。ロール名（`roles/run.invoker` の有無など）だけで判断せず、`run.routes.invoke` が実際に付与されているかで判断してください。
+方法2で `OK:` の行が1つも出なくても、**それだけでは拒否の証拠になりません**。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。アクセスできるかどうかは、次の `curl` の実際の応答（`HTTP 200` か `HTTP 403` か）、または方法1の Policy Troubleshooter が拒否と判定した結果で判断してください。ロール名（`roles/run.invoker` の有無など）だけで判断せず、確認する権限は `run.routes.invoke` です。
 
 ```bash
 curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
@@ -827,7 +832,7 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
 
 ### 7.3.1 固定リビジョンの不具合を直す
 
-このリビジョンの本番Frontendには、そのままでは動かない箇所、またはBillingの失敗時に壊れる箇所が6つあります。
+このリビジョンの本番Frontendには、そのままでは動かない箇所、またはBillingの失敗時に壊れる箇所が7つあります。
 
 | ファイル | 問題 | 影響 |
 |---|---|---|
@@ -1229,7 +1234,7 @@ Billingサービスは他のGoogle Cloudリソースを使わないため。**�
 <details>
 <summary>答えを見る</summary>
 
-公開するのはユーザー向け画面だけで、**重要なデータを持つBillingは認証必須のまま** だから。しかもFrontendからBillingを呼べるのはFrontend用SAだけ。
+公開するのはユーザー向け画面だけで、**重要なデータを持つBillingは認証必須のまま** だから。そのうえで、FrontendがBillingを呼べるよう、このラボではFrontend用SAに本番Billingへの呼び出し権限を付与している（Frontend用SAが唯一の呼び出し元になるわけではない）。
 
 </details>
 

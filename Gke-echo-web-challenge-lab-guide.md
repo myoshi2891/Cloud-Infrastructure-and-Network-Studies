@@ -640,7 +640,9 @@ flowchart TD
     D -->|"いいえ"| E["数分待つ<br/>describe service で状況確認"]
     D -->|"はい"| F{"targetPort は<br/>8000 か？"}
     F -->|"いいえ"| G["Service を作り直す"]
-    F -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
+    F -->|"はい"| I{"Service の port は<br/>80 か？"}
+    I -->|"いいえ"| G
+    I -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
 ```
 
 ### 9-3. 使える診断コマンド
@@ -848,7 +850,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 | イメージ名の4要素は？ | ホスト名／プロジェクトID／イメージ名／タグ |
 | `port` と `targetPort` の違いは？ | 外部に見せるポート／コンテナが待ち受けるポート |
 | Deployment と Service の役割の違いは？ | Pod の数を維持する／Pod への入口を提供する |
-| `http://IP` につながらない主な原因は？ | 初期化待ち、またはポートの不一致（Service が 80 番を公開していない） |
+| `http://IP` につながらない主な原因は？ | 初期化待ち、またはポートの不一致（Service が 80 番を公開していない、または `targetPort` が 8000 でない） |
 | 今後イメージを保管するなら？ | Artifact Registry |
 
 ---
