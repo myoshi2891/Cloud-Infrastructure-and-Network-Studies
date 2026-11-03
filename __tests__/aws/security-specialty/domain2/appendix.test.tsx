@@ -30,7 +30,7 @@ describe('Appendix Section (Reference URLs and Notes)', () => {
     it('renders external links with valid http/https URLs', () => {
         const { container } = render(<Appendix />);
         const links = container.querySelectorAll('a[href^="http"]');
-        expect(links.length).toBeGreaterThanOrEqual(20);
+        expect(links).toHaveLength(47);
     });
 });
 

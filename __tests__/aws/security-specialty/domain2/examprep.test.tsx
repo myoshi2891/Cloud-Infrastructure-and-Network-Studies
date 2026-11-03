@@ -22,8 +22,9 @@ describe('Exam Preparation Section', () => {
         for (let i = 1; i <= 10; i++) {
             expect(text).toContain(`Q${i}`);
         }
-        const answerLists = container.querySelectorAll('ul');
-        expect(answerLists.length).toBeGreaterThanOrEqual(10);
+        // 解答以外のリストで件数が埋まらないよう、解答領域内のリストだけを数える
+        const answerLists = container.querySelectorAll('.quiz-answer-content ul');
+        expect(answerLists).toHaveLength(10);
     });
 
     it('renders quick reference and trap tables with thead and scope=col', () => {

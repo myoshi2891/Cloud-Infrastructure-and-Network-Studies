@@ -142,6 +142,10 @@ export interface ChecklistItem {
     label: ReactNode;
 }
 
+/**
+ * チェック項目の完了状態をカード単位で管理し、完了数を表示するチェックリスト。
+ * 状態はコンポーネント内のみで保持し、永続化しない。
+ */
 export function ChecklistCard({
     items,
     title = 'チェックリスト',
