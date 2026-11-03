@@ -53,6 +53,14 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
         expect(missing).toEqual([]);
     });
 
+    it('試験アイコン用の icon-theme-ccnp-security ユーティリティが Cisco テーマ配色で globals.css に定義されている', () => {
+        const globals = readFileSync(resolve('app/globals.css'), 'utf8');
+        const block = globals.match(/@utility icon-theme-ccnp-security\s*\{([^}]*)\}/)?.[1] ?? '';
+        expect(block.replace(/\s+/g, '')).toBe(
+            'background:var(--color-theme-cisco-bg);color:var(--color-theme-cisco-fg);',
+        );
+    });
+
     it('サイドバーの nav ランドマークに読み上げ名があり、目次は NAV_GROUPS と同じ順序・文言で描画される', () => {
         const { container } = render(<CcnpSecurityGuide />);
         const nav = container.querySelector('#sidebar nav');

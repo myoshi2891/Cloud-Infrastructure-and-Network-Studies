@@ -1754,6 +1754,11 @@ body {
     color: var(--color-theme-cisco-fg);
 }
 
+@utility icon-theme-ccnp-security {
+    background: var(--color-theme-cisco-bg);
+    color: var(--color-theme-cisco-fg);
+}
+
 @utility icon-theme-hands-on {
     background: var(--color-theme-ace-bg);
     color: var(--color-theme-ace-fg);
