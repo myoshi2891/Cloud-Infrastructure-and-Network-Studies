@@ -338,54 +338,252 @@
                 font-weight: 700;
                 padding: 10px 0;
             }
-            .checklist-card {
-                margin: 16px 0;
+            .checklist-card,
+            .quiz-wrap {
+                margin: 20px 0 28px;
                 background: var(--panel);
                 border: 1px solid var(--line);
-                border-radius: 12px;
-                padding: 14px 18px;
+                border-radius: 14px;
+                padding: 18px 20px;
             }
-            .checklist-card ul {
-                list-style: none;
-                padding-left: 0;
-                margin: 8px 0 0;
-            }
-            .checklist-card li.task {
+            .cl-head,
+            .quiz-head {
                 display: flex;
-                gap: 10px;
-                align-items: flex-start;
-                padding: 6px 0;
-                border-bottom: 1px dashed var(--line);
-            }
-            .checklist-card li.task:last-child {
-                border-bottom: 0;
-            }
-            .checklist-card input {
-                margin-top: 7px;
-                accent-color: var(--accent);
-                width: 16px;
-                height: 16px;
-                flex: none;
-            }
-            .checklist-progress {
-                display: flex;
+                flex-wrap: wrap;
                 align-items: center;
-                gap: 12px;
-                font-size: 13px;
-                color: var(--text-faint);
+                gap: 12px 16px;
+                margin-bottom: 16px;
+            }
+            .cl-title,
+            .quiz-title {
+                font-weight: 800;
+                color: #fff;
+                font-size: 15px;
             }
             .cl-bar {
                 flex: 1;
-                height: 8px;
+                min-width: 140px;
+                height: 10px;
                 background: var(--panel2);
                 border-radius: 999px;
                 overflow: hidden;
             }
-            .cl-fill {
+            .cl-fill,
+            .q-fill {
                 height: 100%;
                 width: 0;
                 background: linear-gradient(90deg, var(--accent), var(--accent2));
-                transition: width 0.2s;
+                transition: width 0.25s;
+            }
+            .cl-count,
+            .q-count {
+                font-size: 13.5px;
+                color: var(--text-dim);
+                font-variant-numeric: tabular-nums;
+                white-space: nowrap;
+            }
+            .cl-reset,
+            .qbtn {
+                font: inherit;
+                font-size: 12.5px;
+                color: var(--text-dim);
+                background: var(--panel2);
+                border: 1px solid var(--line);
+                border-radius: 8px;
+                padding: 5px 12px;
+                cursor: pointer;
+            }
+            .cl-reset:hover,
+            .qbtn:hover {
+                border-color: var(--accent);
+                color: #fff;
+            }
+            .quiz-btns {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .cl-grid,
+            .quiz-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+            .cl-item {
+                position: relative;
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                padding: 14px 16px;
+                background: var(--panel2);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                cursor: pointer;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .cl-item:hover {
+                border-color: var(--accent);
+            }
+            .cl-item:focus-within {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+            .cl-item input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+            .cl-num {
+                flex: none;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                font-weight: 800;
+                font-size: 13px;
+                color: var(--accent);
+                background: rgba(124, 158, 255, 0.14);
+                border: 1px solid rgba(124, 158, 255, 0.4);
+            }
+            .cl-item input:checked ~ .cl-num {
+                font-size: 0;
+                background: var(--accent2);
+                border-color: var(--accent2);
+            }
+            .cl-item input:checked ~ .cl-num::after {
+                content: '\2713';
+                font-size: 16px;
+                color: #06231f;
+            }
+            .cl-item:has(input:checked) {
+                border-color: rgba(95, 212, 196, 0.55);
+                background: rgba(95, 212, 196, 0.07);
+            }
+            .cl-text {
+                color: var(--text-dim);
+                line-height: 1.7;
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .cl-item input:checked ~ .cl-text {
+                color: var(--text-faint);
+            }
+            .cl-done {
+                display: none;
+                margin-top: 14px;
+                padding: 10px 14px;
+                border-radius: 10px;
+                background: rgba(95, 212, 196, 0.1);
+                border: 1px solid rgba(95, 212, 196, 0.4);
+                color: #bff3ea;
+                font-size: 14px;
+            }
+            .checklist-card.complete .cl-done {
+                display: block;
+            }
+            .q-card {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 14px 16px;
+                background: var(--panel2);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                min-width: 0;
+            }
+            .q-card.known {
+                border-color: rgba(95, 212, 196, 0.55);
+                background: rgba(95, 212, 196, 0.06);
+            }
+            .q-top {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            .q-badge {
+                flex: none;
+                min-width: 38px;
+                text-align: center;
+                padding: 3px 8px;
+                border-radius: 8px;
+                font-weight: 800;
+                font-size: 13px;
+                color: #06231f;
+                background: var(--accent);
+                letter-spacing: 0.02em;
+            }
+            .q-card.known .q-badge {
+                background: var(--accent2);
+            }
+            .q-text {
+                color: #e9f0ff;
+                line-height: 1.7;
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+            .q-ans {
+                margin: 0;
+                padding: 0;
+                background: transparent;
+                border: 1px dashed var(--line);
+                border-radius: 10px;
+            }
+            .q-ans summary {
+                cursor: pointer;
+                font-size: 13.5px;
+                font-weight: 700;
+                color: var(--accent);
+                padding: 8px 14px;
+                list-style: none;
+            }
+            .q-ans summary::-webkit-details-marker {
+                display: none;
+            }
+            .q-ans summary::before {
+                content: '\25B6';
+                display: inline-block;
+                margin-right: 8px;
+                font-size: 10px;
+                transition: transform 0.15s;
+            }
+            .q-ans[open] summary::before {
+                transform: rotate(90deg);
+            }
+            .q-ans[open] {
+                border-style: solid;
+                border-color: rgba(124, 158, 255, 0.4);
+                background: rgba(124, 158, 255, 0.06);
+            }
+            .q-body {
+                padding: 2px 14px 12px;
+                color: var(--text-dim);
+                font-size: 14.5px;
+                line-height: 1.75;
+                overflow-wrap: anywhere;
+            }
+            .q-know {
+                margin-top: auto;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                align-self: flex-start;
+                font-size: 13px;
+                color: var(--text-faint);
+                cursor: pointer;
+            }
+            .q-know input {
+                accent-color: var(--accent2);
+                width: 16px;
+                height: 16px;
+            }
+            @media (max-width: 1180px) {
+                .cl-grid,
+                .quiz-grid {
+                    grid-template-columns: minmax(0, 1fr);
+                }
             }
             .page-foot {
                 margin-top: 56px;
@@ -13647,70 +13845,95 @@
                     13.2 クラウド選定時のチェックリスト（本ガイドの整理）
                 </h3>
                 <div class="checklist-card">
-                    <div class="checklist-progress">
-                        <span class="cl-label">確認済み</span>
+                    <div class="cl-head">
+                        <span class="cl-title">選定前の確認 9項目</span>
                         <div class="cl-bar"><div class="cl-fill"></div></div>
-                        <span class="cl-count">0 / 9</span>
+                        <span class="cl-count">0 / 9</span
+                        ><button class="cl-reset" type="button">リセット</button>
                     </div>
-                    <ul class="task-list">
-                        <li>
-                            <label class="task"
-                                ><input
-                                    type="checkbox"
-                                />必要な<strong>能力タイプ</strong>（アプリ／プラットフォーム／インフラ）は何か</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input
-                                    type="checkbox"
-                                />どの<strong>サービスカテゴリ</strong>が合うか（SaaS／PaaS／IaaS／その他）</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong
-                                    >CSC として自分で管理する範囲</strong
-                                >はどこまでか（4.6節）</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>デプロイメントモデル</strong
-                                >（プライベート／パブリック／コミュニティ／ハイブリッド）は何か</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>誰がどの役割</strong
-                                >か（CSC、CSP、CSN）が契約上明確か</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>横断的側面</strong
-                                >（SLA、セキュリティ、可用性、可逆性、PII等）の要件は定義したか</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>データの所在</strong
-                                >（リージョン）と規制は確認したか</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>複数CSPを使う場合</strong
-                                >、IAM・ポリシー・管理・運用の方針はあるか</label
-                            >
-                        </li>
-                        <li>
-                            <label class="task"
-                                ><input type="checkbox" /><strong>終了時</strong
-                                >にデータを取り戻せるか（可逆性・移植性）</label
-                            >
-                        </li>
-                    </ul>
+                    <div class="cl-grid">
+                        <label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >1</span
+                            ><span class="cl-text"
+                                ><label
+                                    >必要な<strong>能力タイプ</strong>（アプリ／プラットフォーム／インフラ）は何か</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >2</span
+                            ><span class="cl-text"
+                                ><label
+                                    >どの<strong>サービスカテゴリ</strong>が合うか（SaaS／PaaS／IaaS／その他）</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >3</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>CSC として自分で管理する範囲</strong
+                                    >はどこまでか（4.6節）</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >4</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>デプロイメントモデル</strong
+                                    >（プライベート／パブリック／コミュニティ／ハイブリッド）は何か</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >5</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>誰がどの役割</strong
+                                    >か（CSC、CSP、CSN）が契約上明確か</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >6</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>横断的側面</strong
+                                    >（SLA、セキュリティ、可用性、可逆性、PII等）の要件は定義したか</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >7</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>データの所在</strong
+                                    >（リージョン）と規制は確認したか</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >8</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>複数CSPを使う場合</strong
+                                    >、IAM・ポリシー・管理・運用の方針はあるか</label
+                                ></span
+                            ></label
+                        ><label class="cl-item"
+                            ><input type="checkbox" /><span aria-hidden="true" class="cl-num"
+                                >9</span
+                            ><span class="cl-text"
+                                ><label
+                                    ><strong>終了時</strong
+                                    >にデータを取り戻せるか（可逆性・移植性）</label
+                                ></span
+                            ></label
+                        >
+                    </div>
+                    <div class="cl-done" role="status">すべての項目を確認しました。</div>
                 </div>
                 <h3 id="133-規格の使い方用途別">13.3 規格の使い方（用途別）</h3>
                 <div class="table-scroll">
@@ -13825,56 +14048,192 @@
 
                 <h2 id="15-理解度チェック">15. 理解度チェック</h2>
                 <p>次の問いに、本ガイドを見ずに答えられるか確認してください。</p>
-                <ol type="1">
-                    <li>ISO/IEC 22123-2 は、どの規格を（Part 1 と合わせて）置き換えたか。</li>
-                    <li>主要特性6つを挙げよ。NISTの5つに加わった特性はどれか。</li>
-                    <li>能力タイプ3つと、サービスカテゴリの違いを説明せよ。</li>
-                    <li>IaaS で CSC が制御できるものと、できないものを述べよ。</li>
-                    <li>Party と Role の違いを、CSC を例に説明せよ。</li>
-                    <li>横断的側面を5つ以上挙げよ。</li>
-                    <li>水平スケーリングと垂直スケーリングの違いは何か。</li>
-                    <li>リージョンとゾーン（障害ドメイン）の関係を説明せよ。</li>
-                    <li>複数CSPを使う時の4つの考慮事項は何か。</li>
-                    <li>
-                        Part 3 は Part 2
-                        の概念をどのような4つの視点（ビュー）で設計に使うか。そのうち本文で詳しく扱うのはどれか。
-                    </li>
-                </ol>
-                <details>
-                    <summary>解答の目安</summary>
-                    <ol type="1">
-                        <li>ISO/IEC 17788:2014。</li>
-                        <li>
-                            Broad network access、Measured service、Multi-tenancy、On-demand
-                            self-service、Rapid elasticity and scalability、Resource
-                            pooling。加わったのは Multi-tenancy（明示的な独立項目として）。
-                        </li>
-                        <li>
-                            能力タイプは「提供される機能を使われる資源で分類」した3つ（アプリ／インフラ／プラットフォーム）。サービスカテゴリは共通の性質を持つサービスのグループで、複数の能力タイプを含み得る。
-                        </li>
-                        <li>
-                            制御できる：OS、ストレージ、配備したアプリ、一部のネットワーク要素（ホストファイアウォール等）。できない：基盤となる物理・仮想資源の管理と制御（CSC
-                            はこれらを管理も制御もしない）。
-                        </li>
-                        <li>
-                            Party は「自然人、法人、またはそのいずれかの集まり」であり、CSC はその
-                            Party がサービスを使う CSC role を担うときの名前。Role
-                            は「サービスを使う活動の集まり（CSC role）」。
-                        </li>
-                        <li>
-                            監査可能性、可用性、ガバナンス、相互運用性、保守とバージョン管理、性能、移植性、PIIの保護、規制、回復力、可逆性、セキュリティ、SLA（7.2〜7.14
-                            の13項目から5つ以上）。
-                        </li>
-                        <li>水平は資源の数を増やす、垂直は1つの資源の大きさを増やす。</li>
-                        <li>
-                            リージョンはゾーンから成る独立した地理的エリア。ゾーンはリージョン内の単一の障害ドメイン。
-                        </li>
-                        <li>IAM、ポリシー、管理、運用。</li>
-                        <li>
-                            ユーザービュー・機能ビュー・実装ビュー・配備ビューの4つ。本文で詳しく扱うのはユーザービュー（関係者・役割・活動・クラウドサービス・デプロイメントモデル・横断的側面）と機能ビュー（ユーザー・アクセス・サービス・リソースの4層）で、実装ビューと配備ビューは本文の範囲外。
-                        </li>
-                    </ol>
-                </details>
+                <div class="quiz-wrap">
+                    <div class="quiz-head">
+                        <span class="quiz-title">理解度チェック 10問</span>
+                        <div class="cl-bar"><div class="q-fill"></div></div>
+                        <span class="q-count">0 / 10 理解できた</span>
+                        <div class="quiz-btns">
+                            <button class="qbtn" data-act="open" type="button">
+                                答えをすべて開く</button
+                            ><button class="qbtn" data-act="close" type="button">
+                                すべて閉じる</button
+                            ><button class="qbtn" data-act="reset" type="button">リセット</button>
+                        </div>
+                    </div>
+                    <div class="quiz-grid">
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q1</span>
+                                <div class="q-text">
+                                    ISO/IEC 22123-2 は、どの規格を（Part 1
+                                    と合わせて）置き換えたか。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">ISO/IEC 17788:2014。</div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q2</span>
+                                <div class="q-text">
+                                    主要特性6つを挙げよ。NISTの5つに加わった特性はどれか。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    Broad network access、Measured service、Multi-tenancy、On-demand
+                                    self-service、Rapid elasticity and scalability、Resource
+                                    pooling。加わったのは Multi-tenancy（明示的な独立項目として）。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q3</span>
+                                <div class="q-text">
+                                    能力タイプ3つと、サービスカテゴリの違いを説明せよ。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    能力タイプは「提供される機能を使われる資源で分類」した3つ（アプリ／インフラ／プラットフォーム）。サービスカテゴリは共通の性質を持つサービスのグループで、複数の能力タイプを含み得る。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q4</span>
+                                <div class="q-text">
+                                    IaaS で CSC が制御できるものと、できないものを述べよ。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    制御できる：OS、ストレージ、配備したアプリ、一部のネットワーク要素（ホストファイアウォール等）。できない：基盤となる物理・仮想資源の管理と制御（CSC
+                                    はこれらを管理も制御もしない）。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q5</span>
+                                <div class="q-text">
+                                    Party と Role の違いを、CSC を例に説明せよ。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    Party は「自然人、法人、またはそのいずれかの集まり」であり、CSC
+                                    はその Party がサービスを使う CSC role を担うときの名前。Role
+                                    は「サービスを使う活動の集まり（CSC role）」。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q6</span>
+                                <div class="q-text">横断的側面を5つ以上挙げよ。</div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    監査可能性、可用性、ガバナンス、相互運用性、保守とバージョン管理、性能、移植性、PIIの保護、規制、回復力、可逆性、セキュリティ、SLA（7.2〜7.14
+                                    の13項目から5つ以上）。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q7</span>
+                                <div class="q-text">
+                                    水平スケーリングと垂直スケーリングの違いは何か。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    水平は資源の数を増やす、垂直は1つの資源の大きさを増やす。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q8</span>
+                                <div class="q-text">
+                                    リージョンとゾーン（障害ドメイン）の関係を説明せよ。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    リージョンはゾーンから成る独立した地理的エリア。ゾーンはリージョン内の単一の障害ドメイン。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q9</span>
+                                <div class="q-text">複数CSPを使う時の4つの考慮事項は何か。</div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">IAM、ポリシー、管理、運用。</div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                        <article class="q-card">
+                            <div class="q-top">
+                                <span class="q-badge">Q10</span>
+                                <div class="q-text">
+                                    Part 3 は Part 2
+                                    の概念をどのような4つの視点（ビュー）で設計に使うか。そのうち本文で詳しく扱うのはどれか。
+                                </div>
+                            </div>
+                            <details class="q-ans">
+                                <summary>答えの目安を見る</summary>
+                                <div class="q-body">
+                                    ユーザービュー・機能ビュー・実装ビュー・配備ビューの4つ。本文で詳しく扱うのはユーザービュー（関係者・役割・活動・クラウドサービス・デプロイメントモデル・横断的側面）と機能ビュー（ユーザー・アクセス・サービス・リソースの4層）で、実装ビューと配備ビューは本文の範囲外。
+                                </div>
+                            </details>
+                            <label class="q-know"
+                                ><input type="checkbox" /><span>理解できた</span></label
+                            >
+                        </article>
+                    </div>
+                </div>
 
                 <h2 id="16-根拠ソース一覧url">16. 根拠ソース一覧（URL）</h2>
                 <h3 id="161-規格本体規格機関">16.1 規格本体・規格機関</h3>
@@ -14206,7 +14565,8 @@
                 document.querySelectorAll('.checklist-card').forEach(function (card) {
                     var boxes = card.querySelectorAll('input[type=checkbox]'),
                         fill = card.querySelector('.cl-fill'),
-                        cnt = card.querySelector('.cl-count');
+                        cnt = card.querySelector('.cl-count'),
+                        rs = card.querySelector('.cl-reset');
                     function upd() {
                         var n = 0;
                         boxes.forEach(function (b) {
@@ -14214,9 +14574,58 @@
                         });
                         cnt.textContent = n + ' / ' + boxes.length;
                         fill.style.width = (boxes.length ? (n * 100) / boxes.length : 0) + '%';
+                        card.classList.toggle('complete', n === boxes.length && n > 0);
                     }
                     boxes.forEach(function (b) {
                         b.addEventListener('change', upd);
+                    });
+                    rs.addEventListener('click', function () {
+                        boxes.forEach(function (b) {
+                            b.checked = false;
+                        });
+                        upd();
+                    });
+                    upd();
+                });
+                document.querySelectorAll('.quiz-wrap').forEach(function (w) {
+                    var know = w.querySelectorAll('.q-know input'),
+                        dets = w.querySelectorAll('.q-ans'),
+                        fill = w.querySelector('.q-fill'),
+                        cnt = w.querySelector('.q-count');
+                    function upd() {
+                        var n = 0;
+                        know.forEach(function (b) {
+                            var on = b.checked;
+                            if (on) n++;
+                            b.closest('.q-card').classList.toggle('known', on);
+                        });
+                        cnt.textContent = n + ' / ' + know.length + ' 理解できた';
+                        fill.style.width = (know.length ? (n * 100) / know.length : 0) + '%';
+                    }
+                    know.forEach(function (b) {
+                        b.addEventListener('change', upd);
+                    });
+                    w.querySelectorAll('.qbtn').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            var a = btn.getAttribute('data-act');
+                            if (a === 'open')
+                                dets.forEach(function (d) {
+                                    d.open = true;
+                                });
+                            else if (a === 'close')
+                                dets.forEach(function (d) {
+                                    d.open = false;
+                                });
+                            else {
+                                know.forEach(function (b) {
+                                    b.checked = false;
+                                });
+                                dets.forEach(function (d) {
+                                    d.open = false;
+                                });
+                                upd();
+                            }
+                        });
                     });
                     upd();
                 });
