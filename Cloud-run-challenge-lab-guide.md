@@ -505,20 +505,41 @@ curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
 
 **次に、IDトークン付きで呼ぶ（成功するのが正解）**
 
-IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスの呼び出し権限（`run.routes.invoke`。通常は `roles/run.invoker`、または Owner・Editor・`roles/run.admin` のようにこれを含むロール）を持っている場合だけです。ラボの学生アカウントは通常これを満たしますが、念のため先に確認します。
+IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスに対して **実効的に `run.routes.invoke` 権限** を持っている場合だけです。この権限は `roles/run.invoker` のほか `roles/run.servicesInvoker`・`roles/run.developer`・`roles/run.admin`・Owner・Editor・カスタムロール、さらにグループ経由や上位リソースからの継承でも付与されうるため、ロール名の一覧ではなく **権限そのもの** を確認します。ラボの学生アカウントは通常これを満たしますが、念のため先に確認します。
 
 ```bash
-# 現在のユーザーにプロジェクトで付与されているロールを確認する
-gcloud projects get-iam-policy "$PROJECT_ID" \
-  --flatten=bindings \
-  --filter="bindings.members:user:$(gcloud config get-value account)" \
-  --format='value(bindings.role)'
-
-# サービス単位で付与されている呼び出し権限も確認する
-gcloud run services get-iam-policy $PRIVATE_BILLING_SVC --region $REGION
+# 方法1（推奨）: Policy Troubleshooter で実効権限を直接評価する
+# グループ経由・フォルダ/組織からの継承・カスタムロールもまとめて評価される
+gcloud policy-intelligence troubleshoot-policy iam \
+  "//run.googleapis.com/projects/${PROJECT_ID}/locations/${REGION}/services/${PRIVATE_BILLING_SVC}" \
+  --principal-email="$(gcloud config get-value account)" \
+  --permission=run.routes.invoke
 ```
 
-上のどちらにも `roles/run.invoker` や、それを含むロール（`roles/owner` / `roles/editor` / `roles/run.admin` など）が無ければ、トークン付きでも 403 になります。
+```bash
+# 方法2（方法1が使えない場合）: 直接付与されたロールを展開し、run.routes.invoke を含むか調べる
+# グループ経由や上位リソースからの継承は拾えないため、該当なしでも直ちに権限なしとは断定しない
+ACCOUNT=$(gcloud config get-value account)
+{
+  gcloud projects get-iam-policy "$PROJECT_ID" \
+    --flatten=bindings --filter="bindings.members:user:${ACCOUNT}" \
+    --format='value(bindings.role)'
+  gcloud run services get-iam-policy "$PRIVATE_BILLING_SVC" --region "$REGION" \
+    --flatten=bindings --filter="bindings.members:user:${ACCOUNT}" \
+    --format='value(bindings.role)'
+} | sort -u | while read -r ROLE; do
+  case "$ROLE" in
+    projects/*/roles/*) PERMS=$(gcloud iam roles describe "${ROLE##*/}" --project "$PROJECT_ID" --format='value(includedPermissions)') ;;
+    *) PERMS=$(gcloud iam roles describe "$ROLE" --format='value(includedPermissions)') ;;
+  esac
+  case "$PERMS" in
+    *run.routes.invoke*) echo "OK: ${ROLE} は run.routes.invoke を含む" ;;
+    *) echo "--: ${ROLE} は run.routes.invoke を含まない" ;;
+  esac
+done
+```
+
+方法1でアクセスが許可と判定されない、または方法2で `OK:` の行が1つも出ない場合は、トークン付きでも 403 になります。ロール名（`roles/run.invoker` の有無など）だけで判断せず、`run.routes.invoke` が実際に付与されているかで判断してください。
 
 ```bash
 curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
@@ -547,7 +568,7 @@ sequenceDiagram
 
 | 症状 | 原因 | 対処 |
 |---|---|---|
-| トークン付きでも403 | 反映待ち、別アカウントで実行、または実行ユーザーに呼び出し権限（`run.invoker` を含むロール）がない | 少し待つ。`gcloud auth list` で学生アカウントか確認し、3.7 Step 5 のコマンドでロールを確認 |
+| トークン付きでも403 | 反映待ち、別アカウントで実行、または実行ユーザーに実効的な `run.routes.invoke` 権限がない | 少し待つ。`gcloud auth list` で学生アカウントか確認し、3.7 Step 5 のコマンドで `run.routes.invoke` の有無を確認 |
 | `Service not found` | サービス名の打ち間違い | `gcloud run services list` で名前を確認 |
 | 削除前にデプロイしてしまった | 順序ミス | 公開版が残っていれば削除してから再確認 |
 
@@ -675,7 +696,7 @@ curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' \
 
 > **なぜ POST なのか**: 本番Billingのコード（`prod-api-billing/index.js`）は `POST /` と `GET /billing` だけを受け付けます。既定の GET で `/` を呼ぶと、認証に成功しても 404 になります。`-d ''` は空の本文と `Content-Length: 0` を送り、本文なしの POST が 411 で拒否されるのを防ぎます。
 >
-> **権限の前提**: Task 3 と同じく、HTTP 200 になるのは現在の `gcloud` ユーザーが本番Billingの呼び出し権限（`roles/run.invoker` またはそれを含むロール）を持つ場合だけです。IDトークンの作成は権限を与えません。3.7 Step 5 のロール確認コマンドを、サービス名を `$PROD_BILLING_SVC` に替えて実行してから確認してください。
+> **権限の前提**: Task 3 と同じく、HTTP 200 になるのは現在の `gcloud` ユーザーが本番Billingに対する実効的な `run.routes.invoke` 権限を持つ場合だけです。IDトークンの作成は権限を与えません。3.7 Step 5 の権限確認コマンドを、サービス名を `$PROD_BILLING_SVC` に替えて実行してから確認してください。
 
 ### 5.5 SA紐付けの確認
 
@@ -815,6 +836,7 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
 | `render.js` | got v12 以降は `timeout` に数値を渡せない（`{ request: ミリ秒 }` 形式） | リクエスト作成時にエラーになる |
 | `index.js` | Billing呼び出しの失敗時に `res.status(800)` を返す（HTTPに存在しないステータス） | Expressが `Invalid status code` で例外を投げ、ブラウザへエラー応答が返らない |
 | `public/app.js` | `fetchLocalData` が `response.ok` を確認する前に本文を `JSON.parse` している | Frontendがエラー応答を返すと、ステータスを判定する前にJSONの解析で例外になる |
+| `public/app.js` | 失敗時の `console.log` が `response.text`（読み取り済みの本文ではなく関数そのもの）を出力している | ログにエラー本文ではなく関数定義が出て、失敗の原因を追えない |
 | `public/app.js` | `getPageInfo` が `info.bills[0]` を無条件に参照している | 取得失敗（空文字・`undefined`）や請求データ0件のとき `TypeError` で画面が止まる |
 
 ビルドの前に、次のコマンドで修正します（`perl -pi` はファイルをその場で書き換えます）。
@@ -835,6 +857,8 @@ perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: S
 # 4. response.ok を確認してから JSON として解析する（成功時の return でだけ解析する）
 perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
 perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+# 失敗時のログは、既に読み取った本文 text を出力する（response.text は関数で本文ではない）
+perl -pi -e 's/(console\.log\(.*?)\bresponse\.text\b(?!\s*\()/${1}text/' public/app.js
 
 # 5. 請求データがない・空のときは先頭要素を参照せずに表示を終える
 perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
@@ -843,10 +867,10 @@ perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  
 grep -n "node-fetch" index.js || echo "node-fetch の読み込みなし（OK）"
 grep -n "import('got')\|timeout" render.js
 grep -n "res.status(" index.js
-grep -n "response.ok\|JSON.parse\|info.bills" public/app.js
+grep -n "response.ok\|JSON.parse\|info.bills\|console.log" public/app.js
 ```
 
-`render.js` の `grep` で `await (await import('got')).default(serviceUrl, ...)` と `timeout: { request: 3000 }`、`index.js` で `res.status(500)`（`800` が残っていない）、`public/app.js` で `if (!response.ok)` が `return JSON.parse(text);` より前にあり、`info.bills.length === 0` のガードが表示されれば修正済みです。
+`render.js` の `grep` で `await (await import('got')).default(serviceUrl, ...)` と `timeout: { request: 3000 }`、`index.js` で `res.status(500)`（`800` が残っていない）、`public/app.js` で `if (!response.ok)` が `return JSON.parse(text);` より前にあり、その失敗分岐の `console.log` が `response.text` ではなく `text` を出力し、`info.bills.length === 0` のガードが表示されれば修正済みです。
 
 > **保護されたBillingへの直接アクセスは変わりません**: この修正はFrontend側の失敗時の扱いだけを変えます。Task 5 のとおり、本番BillingのURLをトークンなしで直接呼ぶと引き続き `HTTP 403` になります。
 
@@ -989,7 +1013,7 @@ gcloud run deploy $PRIVATE_BILLING_SVC \
   --region $REGION --no-allow-unauthenticated
 BILLING_URL=$(gcloud run services describe $PRIVATE_BILLING_SVC --region $REGION --format "value(status.url)")
 curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"   # HTTP 403（トークンなし）
-curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200（実行ユーザーに run.invoker を含むロールが必要）
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200（実行ユーザーに run.routes.invoke 権限が必要）
 
 # ===== Task 4: Billing用SA =====
 gcloud iam service-accounts create $BILLING_SA --display-name "Billing Service Cloud Run"
@@ -1003,7 +1027,7 @@ gcloud run deploy $PROD_BILLING_SVC \
   --service-account $BILLING_SA@$PROJECT_ID.iam.gserviceaccount.com
 PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC --region $REGION --format "value(status.url)")
 curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"   # HTTP 403（トークンなし）
-curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200（実行ユーザーに run.invoker を含むロールが必要）
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200（実行ユーザーに run.routes.invoke 権限が必要）
 
 # ===== Task 6: Frontend用SA + run.invoker =====
 gcloud iam service-accounts create $FRONTEND_SA --display-name "Billing Service Cloud Run Invoker"
@@ -1022,6 +1046,8 @@ perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(service
 perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: String(error && error.message || error) })/' index.js
 perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
 perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+# 失敗時のログは、既に読み取った本文 text を出力する（response.text は関数で本文ではない）
+perl -pi -e 's/(console\.log\(.*?)\bresponse\.text\b(?!\s*\()/${1}text/' public/app.js
 perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
 # render.js は BILLING_URL が未設定だと失敗するため、本番BillingのURLを渡す

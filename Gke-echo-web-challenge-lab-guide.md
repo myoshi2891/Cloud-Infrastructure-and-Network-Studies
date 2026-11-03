@@ -657,7 +657,7 @@ kubectl get endpoints echo-web
 | `describe pod` | イベント（イメージ取得失敗など）の履歴 |
 | `logs` | アプリの標準出力・エラー |
 | `describe service` | ポート設定と LB のイベント |
-| `get endpoints` | Service が **Pod に結びついているか**（空なら selector 不一致） |
+| `get endpoints` | Service が **Pod に結びついているか**（ready なアドレスが空なら selector 不一致、または一致する Pod が Ready でない。selector と Pod の READY を両方確認） |
 
 ### 9-4. Service を作り直す場合
 
