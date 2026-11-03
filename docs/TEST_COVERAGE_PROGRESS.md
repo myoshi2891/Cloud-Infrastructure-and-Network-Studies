@@ -8,7 +8,7 @@
 
 Inventory `015f505a`、Red `2354b45b`、基盤 `95972436`、Hero & Intro `8207cc85`、Part A `56d8d558`、Part B `62a2632b`、Part C `466cb740`、Part D `6fd0273d`、Part E `c5588774`、Appendix `e76eaeb6`、全量突合Green `2835bbdc`、導線・フッター統合 `c0482ab0`、アーカイブ退避 `35696b80` の段階別コミットを実施。原本固定インベントリで全文・表構造・リスト階層・配置順・コード行・CSS宣言値と、Mermaidの全53図DSL・テーマ変数を全量照合。CCNP Security関連テスト14件すべて成功（`bun run test -- cisco/ccnp-security`）、共通フッターテスト3件成功（`bun run test -- Footer.palette`）。型検査成功。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
 
-原本HTML（376553バイト・SHA-256 `3f36eee628a3e4e7e451c9633a090edca154ac81775c9aa7ab5021471d6acd41`）およびMarkdown（89157バイト・SHA-256 `e7f98ea553071cda3f973fdbe952ebc84af786a54d10990376c5c3f3265a4018`）を `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-security.mjs all` で再生成できる。
+原本HTML（376553バイト・SHA-256 `3f36eee628a3e4e7e451c9633a090edca154ac81775c9aa7ab5021471d6acd41`）およびMarkdown（89157バイト・SHA-256 `e7f98ea553071cda3f973fdbe952ebc84af786a54d10990376c5c3f3265a4018`）を `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-security.mjs all` で再生成できるが、実行前に `archive/Cisco/html/ccnp-security/Ccnp-security-guide.html` が存在している必要がある（archiveはGit管理外のため、クリーンなcloneでは先に原本を配置する）。配置したファイルは、上記および `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録したSHA-256（`3f36eee6…`）と `shasum -a 256` の結果を照合して検証できる。
 
 ## 2026-10-29: SAP-C02 Domain 3 移行
 
