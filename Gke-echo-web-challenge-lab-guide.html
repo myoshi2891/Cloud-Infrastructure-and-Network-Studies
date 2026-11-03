@@ -735,6 +735,24 @@ spec:
   ports:
     - port: 80
       targetPort: 8000</code></pre>
+            <div class="callout warn">
+                <strong>適用前に PROJECT_ID を置き換える</strong
+                ><code>image:</code> の <code>gcr.io/PROJECT_ID/echo-app:v1</code> の
+                <code>PROJECT_ID</code> は、自分のプロジェクト ID に置き換えてから適用します。イメージ名
+                <code>echo-app</code> とタグ <code>v1</code> は変えません。置き換えないと
+                <code>ImagePullBackOff</code> になります。
+            </div>
+            <p>
+                上の YAML を <code>echo-web.yaml</code> という名前で保存し（例:
+                <code>nano echo-web.yaml</code>）、<code>PROJECT_ID</code> を 3 章で設定した値へ置換して適用します。
+            </p>
+            <pre><code># PROJECT_ID を置換して適用する（echo-web.yaml が保存済みであることを先に確認する）
+if [ ! -f echo-web.yaml ]; then
+  echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" &gt;&amp;2
+  false
+else
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+fi</code></pre>
 
             <h2 id="s8">8. 動作確認</h2>
             <pre><code>export EXTERNAL_IP=$(kubectl get service echo-web \

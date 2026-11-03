@@ -239,10 +239,16 @@ gcloud services enable \
 
 ```bash
 git clone https://github.com/rosera/pet-theory.git && cd pet-theory/lab07
+
+# ラボのルートを固定する（以降のタスクは常にここを起点に移動する）
+export LAB_ROOT="$(pwd)"
+echo "LAB_ROOT=$LAB_ROOT"
 ls
 ```
 
 `ls` で、各タスクで使うフォルダが並んでいることを確認します。
+
+> **なぜ `LAB_ROOT` を使うのか**: `cd pet-theory/lab07/...` のような相対パスは、**今いるディレクトリ** によって成功・失敗が変わります（Task 1 でフォルダに入ったまま Task 2 の `cd` を打つと失敗します）。各タスクは `cd "$LAB_ROOT/<フォルダ>"` で始めれば、どこにいても同じ場所へ移動できます。Cloud Shell が再接続されて `LAB_ROOT` が消えた場合は、clone 先（`pet-theory/lab07`）へ移動して `export LAB_ROOT="$(pwd)"` をやり直してください。
 
 | フォルダ | 使うタスク | 内容 |
 |---|---|---|
@@ -291,7 +297,7 @@ ls
 ### 1.2 Step 1: ソースフォルダへ移動し、中身を確認する
 
 ```bash
-cd pet-theory/lab07/unit-api-billing
+cd "$LAB_ROOT/unit-api-billing"
 ls
 cat Dockerfile
 ```
@@ -338,10 +344,12 @@ PUBLIC_BILLING_URL=$(gcloud run services describe $PUBLIC_BILLING_SVC \
   --region $REGION \
   --format "value(status.url)")
 echo $PUBLIC_BILLING_URL
-curl $PUBLIC_BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$PUBLIC_BILLING_URL"
 ```
 
-**ここで確認すること**: トークン無しの `curl` で **応答が返ってくる**（403ではない）。これが「公開サービス」の正しい状態です。
+**ここで確認すること**: トークン無しの `curl` で、出力の最後の行が **`HTTP 200`** になる（`HTTP 403` ではない）。これが「公開サービス」の正しい状態です。
+
+> `-w '\nHTTP %{http_code}\n'` は、本文の後に **HTTPステータスコード** を1行で表示するオプションです。本文が表示されただけでは成功とは限らない（エラーページの本文も表示される）ため、**ステータスコードで判定** します。
 
 ### 1.6 つまずきポイント
 
@@ -369,7 +377,7 @@ curl $PUBLIC_BILLING_URL
 Task 1 とまったく同じ型です。**変わるのは、フォルダ・イメージ名・サービス名だけ** です。
 
 ```bash
-cd pet-theory/lab07/staging-frontend-billing
+cd "$LAB_ROOT/staging-frontend-billing"
 ls
 
 # ビルド
@@ -390,7 +398,7 @@ FRONTEND_STG_URL=$(gcloud run services describe $FRONTEND_STG_SVC \
   --region $REGION \
   --format "value(status.url)")
 echo $FRONTEND_STG_URL
-curl $FRONTEND_STG_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$FRONTEND_STG_URL"   # 最後の行が HTTP 200 なら成功
 ```
 
 ブラウザで `$FRONTEND_STG_URL` を開いても確認できます。
@@ -445,7 +453,7 @@ gcloud run services list --region $REGION
 ### 3.4 Step 2: 更新版をビルドする
 
 ```bash
-cd pet-theory/lab07/staging-api-billing
+cd "$LAB_ROOT/staging-api-billing"
 ls
 
 gcloud builds submit \
@@ -485,18 +493,18 @@ echo $BILLING_URL
 **まず、トークン無しで呼ぶ（失敗するのが正解）**
 
 ```bash
-curl $BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
 ```
 
-`403 Forbidden` が返ります。**これは「保護が効いている」証拠** です。
+最後の行が **`HTTP 403`**（Forbidden）になります。**これは「保護が効いている」証拠** です。
 
 **次に、IDトークン付きで呼ぶ（成功するのが正解）**
 
 ```bash
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
 ```
 
-応答が返れば成功です。
+最後の行が **`HTTP 200`** なら成功です。
 
 ```mermaid
 sequenceDiagram
@@ -596,7 +604,7 @@ billing-service-sa@PROJECT_ID.iam.gserviceaccount.com
 ### 5.2 Step 1: ビルド
 
 ```bash
-cd pet-theory/lab07/prod-api-billing
+cd "$LAB_ROOT/prod-api-billing"
 ls
 
 gcloud builds submit \
@@ -639,8 +647,8 @@ PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC \
   --format "value(status.url)")
 echo $PROD_BILLING_URL
 
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
-  $PROD_BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  "$PROD_BILLING_URL"   # 最後の行が HTTP 200 なら成功
 ```
 
 ### 5.5 SA紐付けの確認
@@ -656,10 +664,10 @@ gcloud run services describe $PROD_BILLING_SVC \
 ### 5.6 トークン無しでも確認する（保護の確認）
 
 ```bash
-curl $PROD_BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"
 ```
 
-`403` になることを確認します。**「通る確認」と「止まる確認」の両方をやる** のが、セキュリティ設定の基本です。
+最後の行が **`HTTP 403`** になることを確認します。**「通る確認」と「止まる確認」の両方をやる** のが、セキュリティ設定の基本です。
 
 ---
 
@@ -760,7 +768,7 @@ gcloud run services get-iam-policy $PROD_BILLING_SVC --region $REGION
 ### 7.3 Step 1: コードを確認する（重要）
 
 ```bash
-cd pet-theory/lab07/prod-frontend-billing
+cd "$LAB_ROOT/prod-frontend-billing"
 ls
 cat Dockerfile
 grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
@@ -879,17 +887,18 @@ export PROD_FRONTEND_SVC=frontend-prod-service
 
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
 git clone https://github.com/rosera/pet-theory.git && cd pet-theory/lab07
+export LAB_ROOT="$(pwd)"
 
 # ===== Task 1: 公開Billing =====
-cd pet-theory/lab07/unit-api-billing
+cd "$LAB_ROOT/unit-api-billing"
 gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-staging-api:0.1 .
 gcloud run deploy $PUBLIC_BILLING_SVC \
   --image gcr.io/$PROJECT_ID/billing-staging-api:0.1 \
   --region $REGION --allow-unauthenticated
-curl $(gcloud run services describe $PUBLIC_BILLING_SVC --region $REGION --format "value(status.url)")
+curl -sS -w '\nHTTP %{http_code}\n' "$(gcloud run services describe $PUBLIC_BILLING_SVC --region $REGION --format "value(status.url)")"   # HTTP 200
 
 # ===== Task 2: ステージングFrontend =====
-cd pet-theory/lab07/staging-frontend-billing
+cd "$LAB_ROOT/staging-frontend-billing"
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-staging:0.1 .
 gcloud run deploy $FRONTEND_STG_SVC \
   --image gcr.io/$PROJECT_ID/frontend-staging:0.1 \
@@ -897,26 +906,28 @@ gcloud run deploy $FRONTEND_STG_SVC \
 
 # ===== Task 3: 非公開Billing（置き換え）=====
 gcloud run services delete $PUBLIC_BILLING_SVC --region $REGION --quiet
-cd pet-theory/lab07/staging-api-billing
+cd "$LAB_ROOT/staging-api-billing"
 gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-staging-api:0.2 .
 gcloud run deploy $PRIVATE_BILLING_SVC \
   --image gcr.io/$PROJECT_ID/billing-staging-api:0.2 \
   --region $REGION --no-allow-unauthenticated
 BILLING_URL=$(gcloud run services describe $PRIVATE_BILLING_SVC --region $REGION --format "value(status.url)")
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"   # HTTP 403（トークンなし）
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200
 
 # ===== Task 4: Billing用SA =====
 gcloud iam service-accounts create $BILLING_SA --display-name "Billing Service Cloud Run"
 
 # ===== Task 5: 本番Billing =====
-cd pet-theory/lab07/prod-api-billing
+cd "$LAB_ROOT/prod-api-billing"
 gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-prod-api:0.1 .
 gcloud run deploy $PROD_BILLING_SVC \
   --image gcr.io/$PROJECT_ID/billing-prod-api:0.1 \
   --region $REGION --no-allow-unauthenticated \
   --service-account $BILLING_SA@$PROJECT_ID.iam.gserviceaccount.com
 PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC --region $REGION --format "value(status.url)")
-curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $PROD_BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"   # HTTP 403（トークンなし）
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200
 
 # ===== Task 6: Frontend用SA + run.invoker =====
 gcloud iam service-accounts create $FRONTEND_SA --display-name "Billing Service Cloud Run Invoker"
@@ -926,14 +937,17 @@ gcloud run services add-iam-policy-binding $PROD_BILLING_SVC \
   --role "roles/run.invoker"
 
 # ===== Task 7: 本番Frontend =====
-cd pet-theory/lab07/prod-frontend-billing
+cd "$LAB_ROOT/prod-frontend-billing"
 grep -rn "process.env" . --include=*.js --exclude-dir=node_modules   # 環境変数の要否を確認
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
+# 環境変数が不要なら空のまま。必要なら次の行のコメントを外し、変数名をコードで確認した名前にする
+ENV_FLAGS=()
+# ENV_FLAGS=(--set-env-vars "変数名=$PROD_BILLING_URL")
 gcloud run deploy $PROD_FRONTEND_SVC \
   --image gcr.io/$PROJECT_ID/frontend-prod:0.1 \
   --region $REGION --allow-unauthenticated \
-  --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com
-  # 環境変数が必要なら: --set-env-vars "変数名=$PROD_BILLING_URL"
+  --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com \
+  "${ENV_FLAGS[@]}"
 ```
 
 ### 完了チェックリスト
