@@ -29,6 +29,7 @@ describe('aws-scs-c03-domain2-guide — 移行元コンテンツの全量移行'
         ['h1', inventory.h1],
         ['h2', inventory.h2],
         ['h3', inventory.h3],
+        ['h4', inventory.h4],
     ])('%s の件数・順序・テキストが移行元と一致する', (selector, headings) => {
         const container = renderPage();
         const rendered = [...container.querySelectorAll(selector)].map((element) =>

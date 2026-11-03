@@ -89,7 +89,7 @@ const descriptions: Record<string, string> = {
     'diag-5': 'Shield Advanced の購読、保護対象リソースの追加、WAF の Web ACL の関連付け、アプリケーション層の自動緩和の有効化、Route 53 ヘルスチェックによるヘルスベース検出、SRT のアクセス許可ロールの設定、プロアクティブエンゲージメントの連絡先登録、CloudWatch による DDoS 検出の通知へと順に進む設定フロー。',
     'diag-6': '定常状態の定義から仮説の立案、FIS実験の実行、CloudWatchアラームによる停止条件の監視と実験結果の分析フロー。',
     'diag-7': '耐障害性ポリシーの定義からアプリケーション評価、復旧ギャップの特定と修正、テスト実施のResilience Hubサイクル。',
-    'diag-8': 'GuardDutyやConfig、Inspectorによる検出からEventBridge、Lambda・SSM Automationによる自動修復、SNS通知の流れ。',
+    'diag-8': 'GuardDuty・Config・Inspector の検出結果を Security Hub に集約し、EventBridge ルールから Lambda、Step Functions、Systems Manager Automation を起動して封じ込めなどのアクションを実行し、通知・OpsCenter・記録で締めくくる自動修復の流れ。',
     'diag-9': 'ConfigとGuardDutyの検出からStep Functionsが起動し、メモリダンプやEBSスナップショットを取得してフォレンジックアカウントへ転送するフロー。',
     'diag-10': '2.2.1 ログ保全から 2.2.2 ログ検索、2.2.3 検出結果検証、2.2.4 封じ込め・復旧、2.2.5 根本原因分析に至る対応フェーズの流れ。',
     'diag-11': '不審なEC2を特定後、保護タグ付与、EBSスナップショット取得、メモリ保全、隔離SG適用の順序で証拠を取得するフロー。',
@@ -97,8 +97,8 @@ const descriptions: Record<string, string> = {
     'diag-13': '検出結果の受領から重大度確認、誤検知判定、影響範囲評価、インシデント宣言に至る検証手順。',
     'diag-14': 'インシデントと判断した後、対象リソースの種類で封じ込めを分岐する。EC2 はメモリとディスクの証拠を取得してから隔離 SG を付与し既存接続と DNS にも注意、IAM アクセスキーはキーを無効化して一時認証情報をトークン発行時刻で拒否、IAM ロールは Revoke active sessions、S3 バケットはパブリックアクセスをブロック、Web への攻撃は WAF で送信元 IP をブロックし、いずれも封じ込めの効果を分析で確認する。',
     'diag-15': '封じ込め完了から根絶（足場と脆弱性の除去）、安全なバックアップと AMI の選択、隔離環境で検証、本番へ復旧、強化した監視の継続へと進み、再発の兆候があれば根絶へ戻る復旧フロー。',
-    'diag-16': '高重大度のGuardDuty検出結果からDetectiveが自動でエンティティグラフを生成し、関連する検出結果をグループ化して表示する流れ。',
-    'diag-17': 'GuardDutyによるUnauthorizedAccess検出から、インスタンスメタデータ記録、EBSスナップショット取得、隔離SG変更、ロールセッション失効に至るシナリオAの対応フロー。',
+    'diag-16': '高重大度の GuardDuty 検出結果を起点に、Detective の検出結果グループを開いて関与するエンティティ（IAM・IP・EC2）とプロファイル上の平時との差を手動で調べ、最初の不審な活動、侵入経路、管理プロセスの欠陥まで掘り下げて再発防止策を決める根本原因分析の流れ。',
+    'diag-17': 'GuardDuty の Finding を検出し、CloudTrail でロールの操作と送信元 IP を検証する。想定外の IP でなければ誤検知として記録し、想定外なら EBS スナップショットとメモリで証拠を保全、ロールのセッション失効と EC2 隔離で封じ込め、触れたリソースとデータの範囲評価、IMDSv2 強制・脆弱性修正・EC2 再作成による根絶、クリーンな AMI と IaC からの復旧、Detective による根本原因分析へ進むシナリオ A の対応フロー。',
 };
 
 /**
