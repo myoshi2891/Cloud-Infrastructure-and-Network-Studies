@@ -1,6 +1,6 @@
 {
   "theme": "base",
-  "fontFamily": "\"Noto Sans JP\",\"Hiragino Kaku Gothic ProN\",\"Yu Gothic\",Meiryo,sans-serif",
+  "fontFamily": "\"Noto Sans JP Variable\",\"Noto Sans JP\",\"Hiragino Kaku Gothic ProN\",\"Yu Gothic\",Meiryo,sans-serif",
   "flowchart": {
     "useMaxWidth": false,
     "htmlLabels": true,
@@ -28,7 +28,7 @@
     "THEME_COLOR_LIMIT": 12,
     "radius": 5,
     "strokeWidth": 1,
-    "fontFamily": "\"Noto Sans JP\",\"Hiragino Kaku Gothic ProN\",\"Yu Gothic\",Meiryo,sans-serif",
+    "fontFamily": "\"Noto Sans JP Variable\",\"Noto Sans JP\",\"Hiragino Kaku Gothic ProN\",\"Yu Gothic\",Meiryo,sans-serif",
     "fontSize": "16px",
     "useGradient": true,
     "dropShadow": "drop-shadow( 1px 2px 2px rgba(185,185,185,1))",

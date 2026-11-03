@@ -1540,7 +1540,7 @@
     --font-ccna-automation-sans: 'Noto Sans JP Variable', 'Noto Sans JP', -apple-system, 'BlinkMacSystemFont', 'Hiragino Sans', sans-serif;
     --font-ccna-automation-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
     --font-ccna-app-mono: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
-    --font-ccnp-security-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccnp-security-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
     --font-ccnp-security-serif: "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
     --font-ccnp-security-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
