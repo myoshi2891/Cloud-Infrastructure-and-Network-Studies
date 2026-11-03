@@ -1,12 +1,19 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import fixture from '../docs/migration-inventory/aws-scs-c03-domain2-guide.fidelity.json' with { type: 'json' };
+import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 
 const dir = 'app/aws/security-specialty/domain2';
 fs.mkdirSync(dir + '/sections', { recursive: true });
 
-const html = fs.readFileSync('Aws-scs-c03-domain2-incident-response-guide.html', 'utf8');
+// 原本は fidelity 設定を単一の正本とし、作業ツリーではなく固定Gitリビジョンから読む（migrate-scs-domain2.mjs と同じ方式）
+const config = FIDELITY_PAGES['aws-scs-c03-domain2-guide'];
+const html = execFileSync('git', ['show', `${config.sourceCommit}:${config.source}`], {
+    encoding: 'utf8',
+    maxBuffer: 8 * 1024 * 1024,
+});
 const doc = new JSDOM(html).window.document;
 
 // 1. constants.ts

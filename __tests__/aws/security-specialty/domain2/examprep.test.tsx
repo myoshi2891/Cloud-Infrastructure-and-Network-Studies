@@ -29,7 +29,7 @@ describe('Exam Preparation Section', () => {
     it('renders quick reference and trap tables with thead and scope=col', () => {
         const { container } = render(<ExamPrep />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(2);
+        expect(tables).toHaveLength(2);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });
@@ -48,7 +48,7 @@ describe('Exam Preparation Section', () => {
             expect(answer?.querySelector('summary')).toHaveTextContent('答え・解説を確認');
             expect(answer?.querySelector('.quiz-answer-content')).toHaveTextContent('答え');
         });
-        expect(cards[0].querySelectorAll('.quiz-options > span')).toHaveLength(4);
+        expect(cards[0]!.querySelectorAll('.quiz-options > span')).toHaveLength(4);
     });
 });
 

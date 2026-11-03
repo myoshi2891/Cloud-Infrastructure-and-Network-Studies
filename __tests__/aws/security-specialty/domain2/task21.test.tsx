@@ -35,7 +35,7 @@ describe('Task 2.1 Section (Planning and Testing)', () => {
     it('renders tables with thead and scope=col', () => {
         const { container } = render(<Task21 />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(15);
+        expect(tables).toHaveLength(20);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });
@@ -44,7 +44,7 @@ describe('Task 2.1 Section (Planning and Testing)', () => {
     it('renders code blocks for YAML, JSON, Bash, and Python', () => {
         const { container } = render(<Task21 />);
         const samples = container.querySelectorAll('.code-sample');
-        expect(samples.length).toBeGreaterThanOrEqual(5);
+        expect(samples).toHaveLength(5);
         samples.forEach((sample) => {
             const block = sample.querySelector('.code-block');
             expect(block).toHaveAttribute('role', 'region');

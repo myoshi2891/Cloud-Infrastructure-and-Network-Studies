@@ -31,7 +31,7 @@ describe('Scenarios Section (3 Practical Scenarios)', () => {
     it('renders scenario tables with thead and scope=col', () => {
         const { container } = render(<Scenarios />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(3);
+        expect(tables).toHaveLength(3);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });

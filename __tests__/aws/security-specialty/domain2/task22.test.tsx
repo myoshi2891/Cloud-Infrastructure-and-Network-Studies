@@ -36,7 +36,7 @@ describe('Task 2.2 Section (Responding to Security Events)', () => {
     it('renders tables with thead and scope=col', () => {
         const { container } = render(<Task22 />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(15);
+        expect(tables).toHaveLength(27);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });
@@ -45,7 +45,7 @@ describe('Task 2.2 Section (Responding to Security Events)', () => {
     it('renders code blocks for SQL queries, CLI commands, and policies', () => {
         const { container } = render(<Task22 />);
         const samples = container.querySelectorAll('.code-sample');
-        expect(samples.length).toBeGreaterThanOrEqual(6);
+        expect(samples).toHaveLength(7);
         samples.forEach((sample) => {
             const block = sample.querySelector('.code-block');
             expect(block).toHaveAttribute('role', 'region');

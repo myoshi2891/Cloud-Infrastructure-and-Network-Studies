@@ -27,7 +27,7 @@ describe('Hero & Foundation Section (Steps 0, 1, 2)', () => {
     it('renders tables in hero section with proper scope and region attributes', () => {
         const { container } = render(<Hero />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(10);
+        expect(tables).toHaveLength(10);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });

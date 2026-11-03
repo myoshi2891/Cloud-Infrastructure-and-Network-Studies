@@ -21,7 +21,7 @@ describe('Appendix Section (Reference URLs and Notes)', () => {
     it('renders reference tables with thead and scope=col', () => {
         const { container } = render(<Appendix />);
         const tables = container.querySelectorAll('table');
-        expect(tables.length).toBeGreaterThanOrEqual(4);
+        expect(tables).toHaveLength(5);
         tables.forEach((table) => {
             expect(table.querySelector('thead th[scope="col"]')).not.toBeNull();
         });
