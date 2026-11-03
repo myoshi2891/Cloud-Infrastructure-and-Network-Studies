@@ -620,7 +620,7 @@ kubectl get services
 
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…` か、`targetPort` が **8000** か確認 |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない） |
 | 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
 | `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web` |

@@ -806,13 +806,16 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
 
 ### 7.3.1 固定リビジョンの不具合を直す
 
-このリビジョンの本番Frontendには、そのままでは動かない箇所が3つあります。
+このリビジョンの本番Frontendには、そのままでは動かない箇所、またはBillingの失敗時に壊れる箇所が6つあります。
 
 | ファイル | 問題 | 影響 |
 |---|---|---|
 | `index.js` | 使っていない `node-fetch` を `require` しているが、`package.json` に依存がない | 起動時に `Cannot find module 'node-fetch'` で落ちる可能性がある |
 | `render.js` | `const got = import('got')` は **Promise** を返すため、`got(...)` を関数として呼べない | Billingの呼び出しが `got is not a function` で失敗する |
 | `render.js` | got v12 以降は `timeout` に数値を渡せない（`{ request: ミリ秒 }` 形式） | リクエスト作成時にエラーになる |
+| `index.js` | Billing呼び出しの失敗時に `res.status(800)` を返す（HTTPに存在しないステータス） | Expressが `Invalid status code` で例外を投げ、ブラウザへエラー応答が返らない |
+| `public/app.js` | `fetchLocalData` が `response.ok` を確認する前に本文を `JSON.parse` している | Frontendがエラー応答を返すと、ステータスを判定する前にJSONの解析で例外になる |
+| `public/app.js` | `getPageInfo` が `info.bills[0]` を無条件に参照している | 取得失敗（空文字・`undefined`）や請求データ0件のとき `TypeError` で画面が止まる |
 
 ビルドの前に、次のコマンドで修正します（`perl -pi` はファイルをその場で書き換えます）。
 
@@ -826,12 +829,26 @@ perl -ni -e "print unless /require\('node-fetch'\)/" index.js
 perl -ni -e "print unless /^const got = import\('got'\);/" render.js
 perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
 
+# 3. Billing失敗時は標準のサーバーエラー（500）を返す
+perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: String(error && error.message || error) })/' index.js
+
+# 4. response.ok を確認してから JSON として解析する（成功時の return でだけ解析する）
+perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
+perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+
+# 5. 請求データがない・空のときは先頭要素を参照せずに表示を終える
+perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
+
 # 確認: node-fetch が消え、got と timeout が修正されていること
 grep -n "node-fetch" index.js || echo "node-fetch の読み込みなし（OK）"
 grep -n "import('got')\|timeout" render.js
+grep -n "res.status(" index.js
+grep -n "response.ok\|JSON.parse\|info.bills" public/app.js
 ```
 
-最後の `grep` で `await (await import('got')).default(serviceUrl, ...)` と `timeout: { request: 3000 }` が表示されれば修正済みです。
+`render.js` の `grep` で `await (await import('got')).default(serviceUrl, ...)` と `timeout: { request: 3000 }`、`index.js` で `res.status(500)`（`800` が残っていない）、`public/app.js` で `if (!response.ok)` が `return JSON.parse(text);` より前にあり、`info.bills.length === 0` のガードが表示されれば修正済みです。
+
+> **保護されたBillingへの直接アクセスは変わりません**: この修正はFrontend側の失敗時の扱いだけを変えます。Task 5 のとおり、本番BillingのURLをトークンなしで直接呼ぶと引き続き `HTTP 403` になります。
 
 ### 7.4 Step 2: ビルド
 
@@ -1002,6 +1019,10 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules   # BILLING_U
 perl -ni -e "print unless /require\('node-fetch'\)/" index.js
 perl -ni -e "print unless /^const got = import\('got'\);/" render.js
 perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
+perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: String(error && error.message || error) })/' index.js
+perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
+perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
 # render.js は BILLING_URL が未設定だと失敗するため、本番BillingのURLを渡す
 ENV_FLAGS=(--set-env-vars "BILLING_URL=$PROD_BILLING_URL")
