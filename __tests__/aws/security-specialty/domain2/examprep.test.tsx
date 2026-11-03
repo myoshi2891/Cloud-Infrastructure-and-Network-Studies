@@ -51,5 +51,12 @@ describe('Exam Preparation Section', () => {
         });
         expect(cards[0]!.querySelectorAll('.quiz-options > span')).toHaveLength(4);
     });
+
+    it('exposes the labelled option list as a group so its aria-label is announced', () => {
+        const { container } = render(<ExamPrep />);
+        const options = container.querySelectorAll('.quiz-options[aria-label]');
+        expect(options).toHaveLength(1);
+        options.forEach((element) => expect(element).toHaveAttribute('role', 'group'));
+    });
 });
 

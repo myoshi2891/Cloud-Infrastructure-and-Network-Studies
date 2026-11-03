@@ -396,7 +396,7 @@ cssAst.walkDecls((d) => {
         return;
     }
     d.value = d.value.replace(/var\(--([\w-]+)\)/g, (_, k) => {
-        if (k === 'sidebar-w') return '300px';
+        if (k === 'sidebar-w') return '280px';
         if (k === 'font-jp') return 'var(--font-body)';
         return `var(--color-scs-d2-${k})`;
     });
@@ -426,7 +426,7 @@ cssAst.walkRules('.scs-domain2-page .main', (r) => {
         r.append({ prop: 'width', value: '100%' }, { prop: 'max-width', value: 'none' });
     } else {
         r.append(
-            { prop: 'width', value: 'calc(100% - 300px)' },
+            { prop: 'width', value: 'calc(100% - 280px)' },
             { prop: 'max-width', value: 'none' },
             { prop: 'box-sizing', value: 'border-box' },
         );
@@ -473,7 +473,7 @@ const pageCss =
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
     left: 0;
     bottom: 0;
-    width: 300px;
+    width: 280px;
     z-index: 38;
 }
 

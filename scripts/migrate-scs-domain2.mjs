@@ -30,6 +30,19 @@ function tableLabel(n) {
     return `比較表 ${tableScrolls.indexOf(n) + 1}：` + (heading?.textContent ?? '学習資料').replace(/\s+/g, ' ').trim();
 }
 
+const DOUBLE_QUOTED = String.raw`"(?:\\.|[^"\\])*"`;
+const SINGLE_QUOTED = String.raw`'(?:\\.|[^'\\])*'`;
+const COMMON = String.raw`\b(?:true|false)\b|\b\d+\b`;
+// 言語ごとの構文トークン。attr にするキーは名前付きグループ key で表す
+const TOKEN_PATTERNS = {
+    json: new RegExp(String.raw`(?<key>${DOUBLE_QUOTED}(?=\s*:))|${DOUBLE_QUOTED}|\b(?:true|false|null)\b|\b\d+\b`, 'g'),
+    // YAML のキーは行頭（インデントと任意のリスト記号 "- " の直後）で、直後が ": " か行末の場合だけ
+    yaml: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|(?<key>(?<=^\s*(?:-\s+)?)[\w-]+(?=:(?:\s|$)))|${COMMON}|!Ref\b`, 'g'),
+    python: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
+    sql: new RegExp(`${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
+    default: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${COMMON}`, 'g'),
+};
+
 function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
@@ -40,18 +53,17 @@ function tokens(line, language) {
         }
         return output + '{' + JSON.stringify(line.slice(end)) + '}';
     }
-    const regex = language === 'json'
-        ? /"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+\b/g
-        : /#.*$|"(?:\\.|[^"\\])*"|[\w]+(?=:)|\b(?:true|false)\b|\b\d+\b|!Ref\b/g;
+    const regex = TOKEN_PATTERNS[language] ?? TOKEN_PATTERNS.default;
     let out = '', end = 0;
     for (const m of line.matchAll(regex)) {
         out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
         const text = m[0];
-        const cls = text.startsWith('#')
-            ? 'comment'
-            : line.slice(m.index + text.length).trimStart().startsWith(':')
+        // attr は YAML / JSON のキー位置（名前付きグループ key）だけに限定する
+        const cls = m.groups?.key !== undefined
             ? 'attr'
-            : text.startsWith('"')
+            : text.startsWith('#')
+            ? 'comment'
+            : /^["']/.test(text)
             ? 'string'
             : /^\d/.test(text)
             ? 'number'

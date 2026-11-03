@@ -13,7 +13,7 @@ export default function PracticeQuestions() {
                     <span className="quiz-topic">証拠保全</span>
                     <div className="quiz-card-body">
                         <p id="quiz-question-1" className="quiz-question"><strong className="quiz-number">Q1 (並べ替え)</strong>{" 侵害された疑いのある EC2\n                    インスタンスから、証拠を最大限保全するための正しい順序を選べ。 "}
-                            <span className="quiz-options" aria-label="並べ替える操作">
+                            <span className="quiz-options" role="group" aria-label="並べ替える操作">
                                 <span><span>(a)</span>{" セキュリティグループで隔離する "}</span>
                                 <span><span>(b)</span>{" メモリイメージを取得する "}</span>
                                 <span><span>(c)</span>{" EBS スナップショットを取得する "}</span>

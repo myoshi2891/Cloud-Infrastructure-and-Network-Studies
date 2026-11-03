@@ -102,7 +102,7 @@ it('preserves every source CSS declaration and responsive rule', () => {
                 continue;
             }
             expect(resolve(actual[p] ?? '', pageVariables), selector + ' ' + p).toBe(
-                resolve(v.replace('var(--sidebar-w)', '300px'), source),
+                resolve(v.replace('var(--sidebar-w)', '280px'), source),
             );
         }
     }
