@@ -6,7 +6,7 @@
 
 ## 2026-11-02: SCS-C03 Domain 2
 
-`app/aws/security-specialty/domain2/` に Server `page.tsx` / `ScsDomain2Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、`Diagram.tsx`、7分割のServer `sections/`（Hero, Task21, Task22, Scenarios, ExamPrep, ChecklistSection, Appendix）、定数とテーマJSON、スコープCSSを追加。全68表・18図・12コード例・170リスト項目・21チェック項目・43目次を原本から移行。コード行・構文色・リスト階層・段落余白・チェック進捗カウンターを保持。ホーム・HeaderのDomain 2（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain2.mjs <hero|task21|task22|scenarios|examprep|checklist|appendix>` で固定Git原本から本文を再生成できる。ただし練習問題のカード表示を持つ `sections/ExamPrep.tsx`（`PracticeQuestions.tsx` を読み込む）と、その装飾を含む `page.css` は初回生成後に手動保守している。`examprep` フェーズの再生成や `scripts/scaffold-scs-domain2.mjs` の再実行はこの2ファイルを上書きし練習問題UIとCSSを失うため、再生成する場合は出力との差分を確認して手動で取り込む。
+`app/aws/security-specialty/domain2/` に Server `page.tsx` / `ScsDomain2Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、`Diagram.tsx`、7分割のServer `sections/`（Hero, Task21, Task22, Scenarios, ExamPrep, ChecklistSection, Appendix）、定数とテーマJSON、スコープCSSを追加。全68表・18図・12コード例・170リスト項目・21チェック項目・43目次を原本から移行。コード行・構文色・リスト階層・段落余白・チェック進捗カウンターを保持。ホーム・HeaderのDomain 2（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain2.mjs <hero|task21|task22|scenarios|examprep|checklist|appendix>` で固定Git原本から本文を再生成できる。ただし練習問題のカード表示を持つ `sections/ExamPrep.tsx`（`PracticeQuestions.tsx` を読み込む）と、その装飾を含む `page.css` は初回生成後に手動保守している。`examprep` フェーズを再生成すると `sections/ExamPrep.tsx` が上書きされ練習問題UIを失う。`scripts/scaffold-scs-domain2.mjs` を再実行すると `page.css`（ほかに `constants.ts`・`mermaid-theme.json`・`Diagram.tsx`・`Checklist.tsx`・`NavBar.tsx`・`ScsDomain2Guide.tsx`・`page.tsx`）が上書きされ練習問題の装飾CSSを失うが、既存の `sections/*.tsx` は置き換えない（存在しない場合だけ空の雛形を作る）。再生成する場合は出力との差分を確認して手動で取り込む。
 
 ## 2026-10-29: SAP-C02 Domain 3
 
