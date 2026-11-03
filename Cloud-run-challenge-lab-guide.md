@@ -238,7 +238,10 @@ gcloud services enable \
 ### 3.7 Step 6: コードを取得する
 
 ```bash
-git clone https://github.com/rosera/pet-theory.git && cd pet-theory/lab07
+# 内容を確認したリビジョンに固定して取得する（main は更新されうるため）
+git clone https://github.com/rosera/pet-theory.git \
+  && git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  && cd pet-theory/lab07
 
 # ラボのルートを固定する（以降のタスクは常にここを起点に移動する）
 export LAB_ROOT="$(pwd)"
@@ -247,6 +250,8 @@ ls
 ```
 
 `ls` で、各タスクで使うフォルダが並んでいることを確認します。
+
+**なぜコミットを固定するのか**: `main` ブランチは予告なく更新されるため、この文書の手順と中身がずれる可能性があります。ここで指定したコミット `d902c4d`（2025-05-03）は、本文書の作成時にソースコードを読んで確認したリビジョンです（ラボ全体の実行検証ではありません）。このリビジョンの本番Frontendには修正が必要な箇所があり、Task 7 で手順を示します。
 
 > **なぜ `LAB_ROOT` を使うのか**: `cd pet-theory/lab07/...` のような相対パスは、**今いるディレクトリ** によって成功・失敗が変わります（Task 1 でフォルダに入ったまま Task 2 の `cd` を打つと失敗します）。各タスクは `cd "$LAB_ROOT/<フォルダ>"` で始めれば、どこにいても同じ場所へ移動できます。Cloud Shell が再接続されて `LAB_ROOT` が消えた場合は、clone 先（`pet-theory/lab07`）へ移動して `export LAB_ROOT="$(pwd)"` をやり直してください。
 
@@ -500,6 +505,21 @@ curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
 
 **次に、IDトークン付きで呼ぶ（成功するのが正解）**
 
+IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスの呼び出し権限（`run.routes.invoke`。通常は `roles/run.invoker`、または Owner・Editor・`roles/run.admin` のようにこれを含むロール）を持っている場合だけです。ラボの学生アカウントは通常これを満たしますが、念のため先に確認します。
+
+```bash
+# 現在のユーザーにプロジェクトで付与されているロールを確認する
+gcloud projects get-iam-policy "$PROJECT_ID" \
+  --flatten=bindings \
+  --filter="bindings.members:user:$(gcloud config get-value account)" \
+  --format='value(bindings.role)'
+
+# サービス単位で付与されている呼び出し権限も確認する
+gcloud run services get-iam-policy $PRIVATE_BILLING_SVC --region $REGION
+```
+
+上のどちらにも `roles/run.invoker` や、それを含むロール（`roles/owner` / `roles/editor` / `roles/run.admin` など）が無ければ、トークン付きでも 403 になります。
+
 ```bash
 curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
 ```
@@ -527,7 +547,7 @@ sequenceDiagram
 
 | 症状 | 原因 | 対処 |
 |---|---|---|
-| トークン付きでも403 | 反映待ち、または別アカウントで実行 | 少し待つ。`gcloud auth list` で学生アカウントか確認 |
+| トークン付きでも403 | 反映待ち、別アカウントで実行、または実行ユーザーに呼び出し権限（`run.invoker` を含むロール）がない | 少し待つ。`gcloud auth list` で学生アカウントか確認し、3.7 Step 5 のコマンドでロールを確認 |
 | `Service not found` | サービス名の打ち間違い | `gcloud run services list` で名前を確認 |
 | 削除前にデプロイしてしまった | 順序ミス | 公開版が残っていれば削除してから再確認 |
 
@@ -647,9 +667,15 @@ PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC \
   --format "value(status.url)")
 echo $PROD_BILLING_URL
 
-curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+# 本番Billingは POST / で請求データを返す（GET / のルートは無い）
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
   "$PROD_BILLING_URL"   # 最後の行が HTTP 200 なら成功
 ```
+
+> **なぜ POST なのか**: 本番Billingのコード（`prod-api-billing/index.js`）は `POST /` と `GET /billing` だけを受け付けます。既定の GET で `/` を呼ぶと、認証に成功しても 404 になります。`-d ''` は空の本文と `Content-Length: 0` を送り、本文なしの POST が 411 で拒否されるのを防ぎます。
+>
+> **権限の前提**: Task 3 と同じく、HTTP 200 になるのは現在の `gcloud` ユーザーが本番Billingの呼び出し権限（`roles/run.invoker` またはそれを含むロール）を持つ場合だけです。IDトークンの作成は権限を与えません。3.7 Step 5 のロール確認コマンドを、サービス名を `$PROD_BILLING_SVC` に替えて実行してから確認してください。
 
 ### 5.5 SA紐付けの確認
 
@@ -664,7 +690,7 @@ gcloud run services describe $PROD_BILLING_SVC \
 ### 5.6 トークン無しでも確認する（保護の確認）
 
 ```bash
-curl -sS -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"
 ```
 
 最後の行が **`HTTP 403`** になることを確認します。**「通る確認」と「止まる確認」の両方をやる** のが、セキュリティ設定の基本です。
@@ -776,10 +802,36 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
 
 **なぜ確認するのか**: FrontendがBillingのURLを **環境変数で受け取る設計** の場合、デプロイ時にその値を渡さないと画面にデータが出ません。手順書に書かれていなくても、**コードが環境変数を読んでいるなら渡す** のがエンジニアの仕事です。
 
-| `grep` の結果 | 対応 |
-|---|---|
-| 環境変数（例: Billing URLを読む変数）が見つかる | 次のStep 3で `--set-env-vars` を付ける |
-| 何も見つからない | 付けなくてよい |
+固定したリビジョンでは、`render.js` が `process.env.BILLING_URL` を読み、未設定なら `BILLING_URL needs to be set.` というエラーで処理を止めます。したがって **`BILLING_URL` に本番BillingのURLを渡す必要があります**（`PORT` は Cloud Run が自動で設定します）。
+
+### 7.3.1 固定リビジョンの不具合を直す
+
+このリビジョンの本番Frontendには、そのままでは動かない箇所が3つあります。
+
+| ファイル | 問題 | 影響 |
+|---|---|---|
+| `index.js` | 使っていない `node-fetch` を `require` しているが、`package.json` に依存がない | 起動時に `Cannot find module 'node-fetch'` で落ちる可能性がある |
+| `render.js` | `const got = import('got')` は **Promise** を返すため、`got(...)` を関数として呼べない | Billingの呼び出しが `got is not a function` で失敗する |
+| `render.js` | got v12 以降は `timeout` に数値を渡せない（`{ request: ミリ秒 }` 形式） | リクエスト作成時にエラーになる |
+
+ビルドの前に、次のコマンドで修正します（`perl -pi` はファイルをその場で書き換えます）。
+
+```bash
+cd "$LAB_ROOT/prod-frontend-billing"
+
+# 1. 未使用の node-fetch の読み込みを削除する
+perl -ni -e "print unless /require\('node-fetch'\)/" index.js
+
+# 2. got（ESM 専用）を呼び出し時に動的 import し、timeout をオブジェクト形式にする
+perl -ni -e "print unless /^const got = import\('got'\);/" render.js
+perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
+
+# 確認: node-fetch が消え、got と timeout が修正されていること
+grep -n "node-fetch" index.js || echo "node-fetch の読み込みなし（OK）"
+grep -n "import('got')\|timeout" render.js
+```
+
+最後の `grep` で `await (await import('got')).default(serviceUrl, ...)` と `timeout: { request: 3000 }` が表示されれば修正済みです。
 
 ### 7.4 Step 2: ビルド
 
@@ -790,7 +842,7 @@ gcloud builds submit \
 
 ### 7.5 Step 3: デプロイ（公開＋サービスアカウント）
 
-**基本形**
+**基本形**（環境変数を読まないFrontendの場合の一般形。本ラボでは下の形を使う）
 
 ```bash
 gcloud run deploy $PROD_FRONTEND_SVC \
@@ -800,7 +852,9 @@ gcloud run deploy $PROD_FRONTEND_SVC \
   --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com
 ```
 
-**コードが環境変数でBilling URLを受け取る場合**（変数名はコードで確認した名前に置き換える）
+**本ラボの形（`BILLING_URL` を渡す）**
+
+`render.js` は `BILLING_URL` が無いと失敗するため、実際には次の形でデプロイします。
 
 ```bash
 PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC \
@@ -811,7 +865,7 @@ gcloud run deploy $PROD_FRONTEND_SVC \
   --region $REGION \
   --allow-unauthenticated \
   --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com \
-  --set-env-vars "変数名=$PROD_BILLING_URL"
+  --set-env-vars "BILLING_URL=$PROD_BILLING_URL"
 ```
 
 ### 7.6 Step 4: 動作確認（最終ゴール）
@@ -821,9 +875,12 @@ PROD_FRONTEND_URL=$(gcloud run services describe $PROD_FRONTEND_SVC \
   --region $REGION \
   --format "value(status.url)")
 echo $PROD_FRONTEND_URL
+
+# ブラウザと同じく POST / を呼び、Frontend経由でBillingのデータが返るか確認する
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_FRONTEND_URL"
 ```
 
-表示されたURLを **ブラウザで開き**、**Billing Service のページ（請求情報の画面）** が表示されれば完成です。
+最後の行が **`HTTP 200`** で、本文に `{"bills":[...]}` 形式の請求データが含まれれば、Frontend → Billing の認証付き呼び出しが成功しています。そのうえで表示されたURLを **ブラウザで開き**、**Billing Service のページ（請求情報の画面）** に請求データの表が表示されれば完成です。
 
 画面のデータは、FrontendがFrontend用SAの身元で、非公開の本番Billingから取得しています。
 
@@ -867,7 +924,7 @@ gcloud logging read \
 
 ## 11. 全タスク通しのコマンドまとめ
 
-> **使い方**: 各タスクの意味を理解したあとに、復習用として使ってください。**意味を理解せずにコピペするのは非推奨** です（名前の違いや、Task 7の環境変数など、確認が必要な箇所があるため）。
+> **使い方**: 各タスクの意味を理解したあとに、復習用として使ってください。**意味を理解せずにコピペするのは非推奨** です（名前の違いや、Task 7のコード修正と環境変数など、確認が必要な箇所があるため）。
 
 ```bash
 # ===== 環境準備 =====
@@ -886,7 +943,9 @@ export FRONTEND_SA=frontend-service-sa
 export PROD_FRONTEND_SVC=frontend-prod-service
 
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
-git clone https://github.com/rosera/pet-theory.git && cd pet-theory/lab07
+git clone https://github.com/rosera/pet-theory.git \
+  && git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  && cd pet-theory/lab07
 export LAB_ROOT="$(pwd)"
 
 # ===== Task 1: 公開Billing =====
@@ -913,7 +972,7 @@ gcloud run deploy $PRIVATE_BILLING_SVC \
   --region $REGION --no-allow-unauthenticated
 BILLING_URL=$(gcloud run services describe $PRIVATE_BILLING_SVC --region $REGION --format "value(status.url)")
 curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"   # HTTP 403（トークンなし）
-curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200（実行ユーザーに run.invoker を含むロールが必要）
 
 # ===== Task 4: Billing用SA =====
 gcloud iam service-accounts create $BILLING_SA --display-name "Billing Service Cloud Run"
@@ -926,8 +985,8 @@ gcloud run deploy $PROD_BILLING_SVC \
   --region $REGION --no-allow-unauthenticated \
   --service-account $BILLING_SA@$PROJECT_ID.iam.gserviceaccount.com
 PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC --region $REGION --format "value(status.url)")
-curl -sS -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"   # HTTP 403（トークンなし）
-curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"   # HTTP 403（トークンなし）
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200（実行ユーザーに run.invoker を含むロールが必要）
 
 # ===== Task 6: Frontend用SA + run.invoker =====
 gcloud iam service-accounts create $FRONTEND_SA --display-name "Billing Service Cloud Run Invoker"
@@ -938,16 +997,21 @@ gcloud run services add-iam-policy-binding $PROD_BILLING_SVC \
 
 # ===== Task 7: 本番Frontend =====
 cd "$LAB_ROOT/prod-frontend-billing"
-grep -rn "process.env" . --include=*.js --exclude-dir=node_modules   # 環境変数の要否を確認
+grep -rn "process.env" . --include=*.js --exclude-dir=node_modules   # BILLING_URL を読むことを確認
+# 固定リビジョンの不具合を修正（7.3.1 参照）
+perl -ni -e "print unless /require\('node-fetch'\)/" index.js
+perl -ni -e "print unless /^const got = import\('got'\);/" render.js
+perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
 gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
-# 環境変数が不要なら空のまま。必要なら次の行のコメントを外し、変数名をコードで確認した名前にする
-ENV_FLAGS=()
-# ENV_FLAGS=(--set-env-vars "変数名=$PROD_BILLING_URL")
+# render.js は BILLING_URL が未設定だと失敗するため、本番BillingのURLを渡す
+ENV_FLAGS=(--set-env-vars "BILLING_URL=$PROD_BILLING_URL")
 gcloud run deploy $PROD_FRONTEND_SVC \
   --image gcr.io/$PROJECT_ID/frontend-prod:0.1 \
   --region $REGION --allow-unauthenticated \
   --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com \
   "${ENV_FLAGS[@]}"
+PROD_FRONTEND_URL=$(gcloud run services describe $PROD_FRONTEND_SVC --region $REGION --format "value(status.url)")
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_FRONTEND_URL"   # HTTP 200 と請求データ
 ```
 
 ### 完了チェックリスト
@@ -1155,7 +1219,7 @@ Billingサービスは他のGoogle Cloudリソースを使わないため。**�
 ### 15.3 この文書の前提と限界
 
 - ラボの手順書テキストでは、一部の名前が **説明表記** になっているため、サービス名・SA名は一般的な命名で補っています。**ラボ画面の値が常に優先** です。
-- Task 7 のFrontendが環境変数でBilling URLを受け取るかどうかは、手順書テキストからは判断できません。**コードを確認して判断する手順** を載せています。
+- Task 7 のFrontendが `BILLING_URL` を読むこと、およびコード修正の内容は、固定コミット `d902c4d` のソースを読んで確認したものです。ラボ環境での実行検証は行っていません。**手順どおりにコードを確認してから進めてください。**
 - ラボの内容・画面・リポジトリは更新されることがあります。**差異があればラボ画面の指示に従ってください。**
 
 ---

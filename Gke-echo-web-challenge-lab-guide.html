@@ -677,7 +677,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
             <div class="callout ng">
                 <strong>よくあるミス</strong
                 ><code>--port 8000</code>
-                だけを指定すると、<code>http://IP</code>（80番）につながらず 504 の原因になります。
+                だけを指定すると、Service は 8000 番だけを公開するため、<code>http://IP</code>（80番）への接続は拒否またはタイムアウトして<strong>つながりません</strong>。LoadBalancer Service は L4 で転送するため、HTTP のエラー応答（504 など）は返りません。
             </div>
             <h3>7-2. Deployment を作成</h3>
             <pre><code>kubectl create deployment echo-web \
@@ -803,9 +803,9 @@ curl http://${EXTERNAL_IP}</code></pre>
                         <th>対処</th>
                     </tr>
                     <tr>
-                        <td>504 Gateway Timeout</td>
-                        <td>アプリ未起動、またはポート不一致</td>
-                        <td>1〜2分待つ。<code>targetPort</code> が 8000 か確認</td>
+                        <td><code>http://IP</code> に接続できない（接続拒否・タイムアウト）</td>
+                        <td>アプリ未起動、または Service が 80 番を公開していない（<code>--port 8000</code> のみ等）／<code>targetPort</code> が 8000 でない</td>
+                        <td>1〜2分待つ。<code>kubectl get service echo-web</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>targetPort</code> が 8000 か確認</td>
                     </tr>
                     <tr>
                         <td>後半の採点項目が通らない</td>
@@ -1001,8 +1001,8 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
                         <td>Pod 数を維持する／Pod への入口を提供する</td>
                     </tr>
                     <tr>
-                        <td>504 の主な原因は？</td>
-                        <td>初期化待ち、またはポート不一致</td>
+                        <td><code>http://IP</code> につながらない主な原因は？</td>
+                        <td>初期化待ち、またはポート不一致（Service が 80 番を公開していない）</td>
                     </tr>
                 </table>
             </div>

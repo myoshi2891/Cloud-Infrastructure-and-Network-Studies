@@ -456,7 +456,7 @@ flowchart LR
 | `--port`（`port`） | **Service** が外部に見せるポート | 80 |
 | `--target-port`（`targetPort`） | **コンテナ**が実際に待ち受けるポート | 8000 |
 
-> **よくあるミス**: `--port 8000` だけ指定すると、ブラウザで `http://IP`（80番）にアクセスしても**つながりません**。これがトラブルシューティングの「504 エラー」の主な原因です。
+> **よくあるミス**: `--port 8000` だけ指定すると、ブラウザで `http://IP`（80番）にアクセスしても**つながりません**。Service は 8000 番だけを公開するため、80 番への接続は拒否またはタイムアウトします。LoadBalancer Service は L4 で転送するため、HTTP のエラー応答（504 など）は返りません。
 
 ### 7-3. Deployment を作成
 
@@ -620,7 +620,7 @@ kubectl get services
 
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **504 Gateway Timeout** | アプリが未起動、またはポートの不一致 | 1〜2分待つ → `targetPort` が **8000** か確認 |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…` か、`targetPort` が **8000** か確認 |
 | 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
 | `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web` |
@@ -848,7 +848,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 | イメージ名の4要素は？ | ホスト名／プロジェクトID／イメージ名／タグ |
 | `port` と `targetPort` の違いは？ | 外部に見せるポート／コンテナが待ち受けるポート |
 | Deployment と Service の役割の違いは？ | Pod の数を維持する／Pod への入口を提供する |
-| 504 エラーの主な原因は？ | 初期化待ち、またはポートの不一致 |
+| `http://IP` につながらない主な原因は？ | 初期化待ち、またはポートの不一致（Service が 80 番を公開していない） |
 | 今後イメージを保管するなら？ | Artifact Registry |
 
 ---
