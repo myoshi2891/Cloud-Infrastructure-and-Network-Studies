@@ -1,11 +1,20 @@
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
+import archive from '../docs/migration-inventory/cisco-ccnp-security.archive.json' with { type: 'json' };
 
 // 原本は直下またはGit管理外のローカルarchiveにのみ存在する。クリーンなcloneでは実行前に archive へ原本を配置すること。
 const htmlPath = fs.existsSync('Ccnp-security-guide.html')
     ? 'Ccnp-security-guide.html'
     : 'archive/Cisco/html/ccnp-security/Ccnp-security-guide.html';
-const html = fs.readFileSync(htmlPath, 'utf8');
+// 記録済みダイジェストと同じ基準にするため、デコード前の原本バイト列でハッシュを取る
+const htmlBytes = fs.readFileSync(htmlPath);
+const actualSha256 = createHash('sha256').update(htmlBytes).digest('hex');
+if (actualSha256 !== archive.html.sha256) {
+    console.error(`原本の SHA-256 が記録値と一致しません。生成を中止します。\n  file: ${htmlPath}\n  expected: ${archive.html.sha256}\n  actual:   ${actualSha256}`);
+    process.exit(1);
+}
+const html = htmlBytes.toString('utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 const children = [...main.children];

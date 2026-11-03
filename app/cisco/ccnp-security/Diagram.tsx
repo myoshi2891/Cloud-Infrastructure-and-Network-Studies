@@ -25,7 +25,8 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
 
     return (
         <div id={`diag-${id}`} className="diagram" data-testid="mermaid-diagram" aria-label={effectiveLabel}>
-            <div className="mm">
+            {/* 横長の図はこのコンテナ内で横スクロールするため、キーボードで到達できる名前付き領域にする */}
+            <div className="mm" tabIndex={0} role="region" aria-label={`${effectiveLabel}（横スクロール可能な図）`}>
                 <MermaidDiagram
                     chart={chart}
                     ariaLabel={effectiveLabel}

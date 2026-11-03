@@ -6,7 +6,8 @@ import { resolve } from 'node:path';
 import { render } from '@testing-library/react';
 import inventory from '@/docs/migration-inventory/cisco-ccnp-security.json';
 import CcnpSecurityGuide from '@/app/cisco/ccnp-security/CcnpSecurityGuide';
-import { NAV_GROUPS } from '@/app/cisco/ccnp-security/constants';
+import { DIAGRAMS, NAV_GROUPS } from '@/app/cisco/ccnp-security/constants';
+import { withCcnpSecurityCorrections } from '@/__tests__/helpers/ccnp-security-source-corrections';
 import { defineMigrationSuite, extractBodyContent } from '@/__tests__/helpers/migration-test-utils';
 
 vi.mock('@/components/MermaidDiagram', async () => {
@@ -17,7 +18,7 @@ vi.mock('@/components/MermaidDiagram', async () => {
 defineMigrationSuite(
     'CCNP Security 完全ガイド — 全量移行検証',
     CcnpSecurityGuide,
-    inventory,
+    withCcnpSecurityCorrections(inventory),
 );
 
 describe('CCNP Security ガイド — リスト・スタイリング・図解・コード検証', () => {
@@ -141,5 +142,57 @@ describe('CCNP Security ガイド — モバイル目次のアクセシビリテ
         expect(button).toMatch(
             /top:\s*calc\(var\(--header-h, 60px\) \+ var\(--disclaimer-height, 0px\) \+ 12px\);/,
         );
+    });
+});
+
+describe('CCNP Security ガイド — 802.1X シーケンス図 (d27)', () => {
+    it('端末は Authenticator とだけ EAP を交換し、ISE とのやり取りは Authenticator が RADIUS で中継する', () => {
+        const dsl = DIAGRAMS.d27 ?? '';
+        const messages = dsl.split('\n').filter((line) => /->>|-->>/.test(line));
+        // 端末(S)と ISE(R)を直接結ぶメッセージは存在しない
+        expect(messages.filter((line) => /^S-+>>R:|^R-+>>S:/.test(line))).toEqual([]);
+        const exchange = messages.findIndex((line) => line.startsWith('S->>A: 認証情報の交換'));
+        expect(exchange).toBeGreaterThanOrEqual(0);
+        expect(messages[exchange + 1]).toMatch(/^A->>R: /);
+        // 既存の RADIUS のやり取りは保持する
+        expect(messages).toContain('A->>R: RADIUS Access-Request(EAP をカプセル化)');
+        expect(messages).toContain('R-->>A: Access-Challenge(EAP 方式のやり取り)');
+        expect(messages).toContain('R-->>A: Access-Accept(VLAN/dACL/SGT)');
+        expect(messages.at(-1)).toBe('A-->>S: EAP-Success・ポート開放');
+    });
+});
+
+describe('CCNP Security ガイド — FTD のトラフィック処理順 (d33)', () => {
+    it('受信時の宛先 NAT 逆変換をアクセスコントロールより前に置き、送出時の NAT と区別する', () => {
+        const nodes = [...(DIAGRAMS.d33 ?? '').matchAll(/\b[A-Z]\w*\["([^"]+)"\]/g)].map((m) => m[1] ?? '');
+        const indexOf = (text: string) => nodes.findIndex((label) => label.includes(text));
+        const unNat = indexOf('宛先 NAT の逆変換');
+        const acp = indexOf('アクセスコントロールルール');
+        const outboundNat = indexOf('送信元 NAT');
+        expect(unNat).toBeGreaterThanOrEqual(0);
+        expect(unNat).toBeLessThan(acp);
+        expect(outboundNat).toBeGreaterThan(acp);
+        // NAT を除く既存の処理順は保持する
+        const others = ['インタフェースで受信', 'プレフィルタ', 'セキュリティインテリジェンス', '復号', 'ID の解決', 'アクセスコントロールルール', '侵入防御/ファイルポリシー', '送出'];
+        const positions = others.map(indexOf);
+        expect(positions.every((p) => p >= 0)).toBe(true);
+        expect([...positions].sort((a, b) => a - b)).toEqual(positions);
+    });
+});
+
+describe('CCNP Security ガイド — 図の横スクロール領域', () => {
+    it('.mm コンテナ自体がキーボードでフォーカスでき、横スクロール可能な領域として読み上げ名を持つ', () => {
+        const { container } = render(<CcnpSecurityGuide />);
+        const scrollers = [...container.querySelectorAll('.diagram > .mm')];
+        expect(scrollers).toHaveLength(inventory.counts.diagram);
+        scrollers.forEach((scroller) => {
+            expect(scroller).toHaveAttribute('tabindex', '0');
+            expect(scroller).toHaveAttribute('role', 'region');
+            const label = scroller.getAttribute('aria-label') ?? '';
+            const diagramLabel = scroller.parentElement?.getAttribute('aria-label') ?? '';
+            expect(diagramLabel).not.toBe('');
+            expect(label).toContain(diagramLabel);
+            expect(label).toContain('横スクロール');
+        });
     });
 });
