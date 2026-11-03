@@ -104,3 +104,34 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
         expect(theme.themeVariables.clusterBkg).toBe('#F6F7F9');
     });
 });
+
+describe('CCNP Security ガイド — モバイル目次のアクセシビリティ', () => {
+    const css = readFileSync(resolve('app/cisco/ccnp-security/page.css'), 'utf8');
+    const mobile = css.slice(css.indexOf('@media (max-width: 1024px)'));
+    const ruleOf = (selector: string): string => {
+        const start = mobile.indexOf(`${selector} {`);
+        expect(start, `missing mobile rule: ${selector}`).toBeGreaterThanOrEqual(0);
+        return mobile.slice(start, mobile.indexOf('}', start));
+    };
+
+    it('閉じたサイドバーは visibility: hidden でフォーカス・読み上げ対象から外れ、スライド後に隠れる', () => {
+        const closed = ruleOf('.ccnp-security-page .sidebar');
+        expect(closed).toMatch(/transform:\s*translateX\(-100%\);/);
+        expect(closed).toMatch(/visibility:\s*hidden;/);
+        expect(closed).toMatch(/transition:\s*transform \.2s ease,\s*visibility 0s linear \.2s;/);
+    });
+
+    it('nav-open 時はサイドバーを即座に可視へ戻す', () => {
+        const open = ruleOf('.ccnp-security-page.nav-open .sidebar');
+        expect(open).toMatch(/transform:\s*none;/);
+        expect(open).toMatch(/visibility:\s*visible;/);
+        expect(open).toMatch(/transition:\s*transform \.2s ease,\s*visibility 0s;/);
+    });
+
+    it('目次ボタンは免責事項バナーの高さも含めて下へずらす', () => {
+        const button = ruleOf('.ccnp-security-page .menu-btn');
+        expect(button).toMatch(
+            /top:\s*calc\(var\(--header-h, 60px\) \+ var\(--disclaimer-height, 0px\) \+ 12px\);/,
+        );
+    });
+});

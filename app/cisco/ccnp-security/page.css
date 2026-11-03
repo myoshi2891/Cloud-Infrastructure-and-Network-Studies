@@ -24,7 +24,7 @@
   top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
   bottom: 0;
   left: 0;
-  width: 288px;
+  width: 280px;
   background: var(--color-ccnp-security-card);
   border-right: 1px solid var(--color-ccnp-security-line);
   overflow-y: auto;
@@ -115,9 +115,10 @@
 }
 
 .ccnp-security-page main {
-  margin-left: 288px;
-  width: calc(100% - 288px);
+  margin-left: 280px;
+  width: calc(100% - 280px);
   max-width: none;
+  box-sizing: border-box;
   padding: 0 48px 80px;
 }
 
@@ -571,12 +572,16 @@
 }
 
 @media (max-width: 1024px) {
+  /* 閉じた目次はスライド完了後に visibility: hidden でフォーカス・読み上げ対象から外す */
   .ccnp-security-page .sidebar {
     transform: translateX(-100%);
-    transition: transform .2s ease;
+    visibility: hidden;
+    transition: transform .2s ease, visibility 0s linear .2s;
   }
   .ccnp-security-page.nav-open .sidebar {
     transform: none;
+    visibility: visible;
+    transition: transform .2s ease, visibility 0s;
   }
   .ccnp-security-page.nav-open .scrim {
     display: block;
@@ -588,13 +593,14 @@
   .ccnp-security-page main {
     margin-left: 0;
     width: 100%;
+    max-width: none;
     padding: 0 20px 64px;
   }
   .ccnp-security-page .menu-btn {
     display: grid;
     place-items: center;
     position: fixed;
-    top: calc(var(--header-h, 60px) + 12px);
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px);
     left: 12px;
     z-index: 40;
     width: 44px;

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 
+// 原本は直下またはGit管理外のローカルarchiveにのみ存在する。クリーンなcloneでは実行前に archive へ原本を配置すること。
 const htmlPath = fs.existsSync('Ccnp-security-guide.html')
     ? 'Ccnp-security-guide.html'
     : 'archive/Cisco/html/ccnp-security/Ccnp-security-guide.html';
