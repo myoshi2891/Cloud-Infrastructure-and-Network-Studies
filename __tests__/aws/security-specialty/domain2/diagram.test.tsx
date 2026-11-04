@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { render } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { Diagram } from '@/app/aws/security-specialty/domain2/Diagram';
@@ -52,4 +53,26 @@ it('rejects unknown diagram IDs at compile time', () => {
     // @ts-expect-error 定義されていない図IDは DiagramId に含まれない
     const element = <Diagram id="diag-999" label="存在しない図" />;
     expect(element.props.id).toBe('diag-999');
+});
+
+it('describes every diagram with its own text instead of the label', () => {
+    const label = '図の見出し';
+    for (const id of Object.keys(DIAGRAMS) as (keyof typeof DIAGRAMS)[]) {
+        const { container, unmount } = render(<Diagram id={id} label={label} />);
+        const description = container.querySelector('.sr-only')!.textContent!.trim();
+        expect(description, id).not.toBe('');
+        expect(description, id).not.toBe(label);
+        unmount();
+    }
+});
+
+it.each([
+    ['Diagram.tsx', 'app/aws/security-specialty/domain2/Diagram.tsx'],
+    ['scaffold template', 'scripts/scaffold-scs-domain2.mjs'],
+])('requires a description for every DiagramId in %s', (_name, path) => {
+    // Vitest は型検査をしないため、説明文の網羅を型で強制する宣言をソースで検証する
+    const source = readFileSync(path, 'utf8');
+    expect(source).toContain('const descriptions: Record<DiagramId, string> = {');
+    expect(source).toContain('{descriptions[id]}');
+    expect(source).not.toContain('descriptions[id] ?? label');
 });

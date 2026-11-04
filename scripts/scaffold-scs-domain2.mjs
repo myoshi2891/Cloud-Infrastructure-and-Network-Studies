@@ -80,7 +80,7 @@ const renderConfig = {
 
 const themeFrontmatter = \`---\\nconfig: \${JSON.stringify(renderConfig)}\\n---\\n\`;
 
-const descriptions: Record<string, string> = {
+const descriptions: Record<DiagramId, string> = {
     'diag-0': 'Task 2.1 備える と Task 2.2 対応する の各スキル構成と、自動修復と封じ込め、事前構成とログ保全の連動関係を表すサービス地図。',
     'diag-1': '準備から検出、分析、封じ込め・根絶・復旧、そして事後対応に至るインシデントレスポンスのライフサイクルフロー。',
     'diag-2': 'ワークロードアカウント群がログアーカイブアカウントへログを配信し、検出結果をセキュリティツールアカウントへ集約する。セキュリティツールアカウントは EventBridge で自動修復（Lambda と Step Functions）を起動し、自動修復がワークロードを封じ込めて証拠をフォレンジックアカウントへコピーし、セキュリティツールアカウントからフォレンジックアカウントで調査する IR 向けマルチアカウント構成。',
@@ -125,7 +125,7 @@ export const Diagram = memo(function Diagram({
                 preserveNaturalScale={true}
             />
             <span id={descriptionId} className="sr-only">
-                {descriptions[id] ?? label}
+                {descriptions[id]}
             </span>
         </div>
     );
