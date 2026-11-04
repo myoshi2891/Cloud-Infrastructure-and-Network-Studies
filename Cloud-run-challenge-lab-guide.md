@@ -546,15 +546,21 @@ ACCOUNT=$(gcloud config get-value account)
     --flatten=bindings --filter="bindings.members:user:${ACCOUNT}" \
     --format='value(bindings.role)'
 } | sort -u | while read -r ROLE; do
+  PERMS_STATUS=0
   case "$ROLE" in
-    projects/*/roles/*) PERMS=$(gcloud iam roles describe "${ROLE##*/}" --project "$PROJECT_ID" --format='value(includedPermissions)') ;;
+    projects/*/roles/*) PERMS=$(gcloud iam roles describe "${ROLE##*/}" --project "$PROJECT_ID" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
     organizations/*/roles/*)
       # 組織のカスタムロール: organizations/<ORG_ID>/roles/<ROLE_ID> から組織IDとロールIDを取り出す
       ORG_ID=${ROLE#organizations/}
       ORG_ID=${ORG_ID%%/*}
-      PERMS=$(gcloud iam roles describe "${ROLE##*/}" --organization "$ORG_ID" --format='value(includedPermissions)') ;;
-    *) PERMS=$(gcloud iam roles describe "$ROLE" --format='value(includedPermissions)') ;;
+      PERMS=$(gcloud iam roles describe "${ROLE##*/}" --organization "$ORG_ID" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
+    *) PERMS=$(gcloud iam roles describe "$ROLE" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
   esac
+  # ロール定義を取得できない場合は、権限の有無を判定しない
+  if [ "$PERMS_STATUS" -ne 0 ]; then
+    echo "UNKNOWN: ${ROLE} のロール定義を取得できないため判定できない"
+    continue
+  fi
   case "$PERMS" in
     *run.routes.invoke*) echo "OK: ${ROLE} は run.routes.invoke を含む" ;;
     *) echo "--: ${ROLE} は run.routes.invoke を含まない" ;;
@@ -562,7 +568,7 @@ ACCOUNT=$(gcloud config get-value account)
 done
 ```
 
-方法2で `OK:` の行が1つも出なくても、**それだけでは拒否の証拠になりません**。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。方法1の判定（`Unknown` を含む）も診断の手掛かりです。アクセスできるかどうかは、次の `curl` の実際の応答（`HTTP 200` か `HTTP 403` か）を最終判定としてください。ロール名（`roles/run.invoker` の有無など）だけで判断せず、確認する権限は `run.routes.invoke` です。
+方法2で `OK:` の行が1つも出なくても、**それだけでは拒否の証拠になりません**。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。`UNKNOWN:` の行は、ロール定義を読めなかったことを示すだけで、権限の有無は判定していません。方法1の判定（`Unknown` を含む）も診断の手掛かりです。アクセスできるかどうかは、次の `curl` の実際の応答（`HTTP 200` か `HTTP 403` か）を最終判定としてください。ロール名（`roles/run.invoker` の有無など）だけで判断せず、確認する権限は `run.routes.invoke` です。
 
 ```bash
 curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
@@ -717,7 +723,7 @@ curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' \
   "$PROD_BILLING_URL"   # 最後の行が HTTP 200 なら成功
 ```
 
-> **なぜ POST なのか**: 本番Billingのコード（`prod-api-billing/index.js`）は `POST /` と `GET /billing` だけを受け付けます。既定の GET で `/` を呼ぶと、認証に成功しても 404 になります。`-d ''` は空の本文と `Content-Length: 0` を送り、本文なしの POST が 411 で拒否されるのを防ぎます。
+> **なぜ POST なのか**: 本番Billingのコード（`prod-api-billing/index.js`）が受け付けるのは `POST /`、`GET /billing`、`GET /billing/:ref` で、`GET /` のルートはありません。既定の GET で `/` を呼ぶと、認証に成功しても 404 になるため、この疎通確認では `POST /` を使います。`-d ''` は空の本文と `Content-Length: 0` を送り、本文なしの POST が 411 で拒否されるのを防ぎます。
 >
 > **権限の前提**: Task 3 と同じく、HTTP 200 になるのは現在の `gcloud` ユーザーが本番Billingに対する実効的な `run.routes.invoke` 権限を持つ場合だけです。IDトークンの作成は権限を与えません。3.7 Step 5 の権限確認コマンドを、サービス名を `$PROD_BILLING_SVC` に替えて実行してから確認してください。
 
