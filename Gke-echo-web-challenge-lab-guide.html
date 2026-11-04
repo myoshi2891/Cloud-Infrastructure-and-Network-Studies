@@ -910,6 +910,16 @@ kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8
                         <td>権限過多の防止</td>
                     </tr>
                     <tr>
+                        <td>更新</td>
+                        <td>リリースチャンネルでバージョンを自動更新</td>
+                        <td>セキュリティパッチを継続適用</td>
+                    </tr>
+                    <tr>
+                        <td>公開範囲</td>
+                        <td>本番では限定公開クラスタを検討</td>
+                        <td>ノードに外部 IP を持たせない</td>
+                    </tr>
+                    <tr>
                         <td>マニフェスト</td>
                         <td>
                             Git
@@ -1010,25 +1020,20 @@ export ZONE
 echo "PROJECT_ID=${PROJECT_ID}"
 echo "ZONE=${ZONE}"</code></pre>
             <p>
-                削除の前に、<code>echo-cluster</code>
-                がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、<code>ZONE</code>
-                を見直してください。
-            </p>
-            <pre><code>gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)"</code></pre>
-            <p>
                 <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
-                のコンテキストを選択してから、Service、Deployment の順に削除します。
+                がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが <code>echo-cluster</code>
+                であることをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は
+                <code>ZONE</code> と <code>PROJECT_ID</code> を見直してください。
             </p>
-            <pre><code># echo-cluster を選択し、コンテキストが一致した場合だけ削除する
-gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+            <pre><code># 3 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
+  &amp;&amp; gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   &amp;&amp; [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
   &amp;&amp; kubectl delete service echo-web --ignore-not-found \
-  &amp;&amp; kubectl delete deployment echo-web --ignore-not-found</code></pre>
-            <p>Service と Deployment を削除できたら、クラスタを削除します。</p>
-            <pre><code>gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
-
-# イメージ削除の前に、v1 と同じ DIGEST を指すタグが他にないか確認
-gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
+  &amp;&amp; kubectl delete deployment echo-web --ignore-not-found \
+  &amp;&amp; gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}</code></pre>
+            <p>イメージを削除する前に、<code>v1</code> と同じ DIGEST を指すタグが他にないか確認します。</p>
+            <pre><code>gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
             <div class="tw">
                 <table>
                     <tr>

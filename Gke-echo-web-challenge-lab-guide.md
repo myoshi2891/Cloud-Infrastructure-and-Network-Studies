@@ -809,26 +809,16 @@ echo "PROJECT_ID=${PROJECT_ID}"
 echo "ZONE=${ZONE}"
 ```
 
-削除の前に、`echo-cluster` がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、`ZONE` を見直してください。
+`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であることをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE` と `PROJECT_ID` を見直してください。
 
 ```bash
-gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)"
-```
-
-`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` のコンテキストを選択してから、Service、Deployment の順に削除します。
-
-```bash
-# echo-cluster を選択し、コンテキストが一致した場合だけ削除する
-gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+# 3 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
+  && gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   && [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
   && kubectl delete service echo-web --ignore-not-found \
-  && kubectl delete deployment echo-web --ignore-not-found
-```
-
-Service と Deployment を削除できたら、クラスタを削除します。
-
-```bash
-gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
+  && kubectl delete deployment echo-web --ignore-not-found \
+  && gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 ```
 
 イメージを削除する前に、`echo-app` のタグ一覧を表示し、**`v1` と同じ `DIGEST` を指すタグが他にないか**を確認します。`--delete-tags` は、そのイメージ（ダイジェスト）を指すタグをすべて削除するためです。
