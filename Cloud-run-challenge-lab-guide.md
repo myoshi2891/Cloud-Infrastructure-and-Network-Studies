@@ -513,11 +513,21 @@ curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
 
 **次に、IDトークン付きで呼ぶ（成功するのが正解）**
 
-IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスに対して **実効的に `run.routes.invoke` 権限** を持っている場合だけです。この権限は `roles/run.invoker` のほか `roles/run.servicesInvoker`・`roles/run.developer`・`roles/run.admin`・Owner・Editor・カスタムロール、さらにグループ経由や上位リソースからの継承でも付与されうるため、ロール名の一覧ではなく **権限そのもの** を確認します。ラボの学生アカウントは通常これを満たしますが、念のため先に確認します。
+IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスに対して **実効的に `run.routes.invoke` 権限** を持っている場合だけです。この権限は `roles/run.invoker` のほか `roles/run.servicesInvoker`・`roles/run.developer`・`roles/run.admin`・Owner・Editor・カスタムロール、さらにグループ経由や上位リソースからの継承でも付与されうるため、ロール名の一覧ではなく **権限そのもの** を確認します。ラボの学生アカウントは通常これを満たしますが、念のため先に確認できます。**最終判定は、後述の `curl` の実際の応答で行います。**
+
+方法1の Policy Troubleshooter は任意の診断手段です。実行するアカウントには次の権限が必要で、Student アカウントに付与されているとは限りません。
+
+| 必要な権限 | 付与先 | 用途 |
+|---|---|---|
+| `roles/iam.securityReviewer` | 対象リソースを含む組織 | 組織配下の許可ポリシーを読む |
+| `roles/serviceusage.serviceUsageConsumer` | 対象リソースを含む組織 | gcloud CLI から Policy Troubleshooter を使う |
+| Google Workspace Admin API の `groups.read` | Google Workspace の管理者ロール | グループのメンバーを評価する |
+
+権限が不足していると、判定が `Unknown` になることがあります。`Unknown` は許可でも拒否でもありません。権限を保証できない場合は方法1を省略してかまいません。
 
 ```bash
-# 方法1（推奨）: Policy Troubleshooter で実効権限を直接評価する
-# グループ経由・フォルダ/組織からの継承・カスタムロールもまとめて評価される
+# 方法1（任意の診断）: Policy Troubleshooter で実効権限を評価する
+# 必要な権限があれば、グループ経由・フォルダ/組織からの継承・カスタムロールもまとめて評価される
 gcloud policy-intelligence troubleshoot-policy iam \
   "//run.googleapis.com/projects/${PROJECT_ID}/locations/${REGION}/services/${PRIVATE_BILLING_SVC}" \
   --principal-email="$(gcloud config get-value account)" \
@@ -552,7 +562,7 @@ ACCOUNT=$(gcloud config get-value account)
 done
 ```
 
-方法2で `OK:` の行が1つも出なくても、**それだけでは拒否の証拠になりません**。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。アクセスできるかどうかは、次の `curl` の実際の応答（`HTTP 200` か `HTTP 403` か）、または方法1の Policy Troubleshooter が拒否と判定した結果で判断してください。ロール名（`roles/run.invoker` の有無など）だけで判断せず、確認する権限は `run.routes.invoke` です。
+方法2で `OK:` の行が1つも出なくても、**それだけでは拒否の証拠になりません**。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。方法1の判定（`Unknown` を含む）も診断の手掛かりです。アクセスできるかどうかは、次の `curl` の実際の応答（`HTTP 200` か `HTTP 403` か）を最終判定としてください。ロール名（`roles/run.invoker` の有無など）だけで判断せず、確認する権限は `run.routes.invoke` です。
 
 ```bash
 curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"

@@ -605,7 +605,7 @@ cat "$BUILD_DIR/.dockerignore" 2&gt;/dev/null || echo ".dockerignore なし"</co
                     </tr>
                     <tr>
                         <td>Dockerfile の場所</td>
-                        <td><code>BUILD_DIR</code> 直下にあること</td>
+                        <td><code>BUILD_DIR</code> 直下にあること。サブディレクトリに展開された場合は、<code>Dockerfile</code> のあるディレクトリを <code>BUILD_DIR</code> に設定し直してから 5-3 の <code>docker build</code> を実行する</td>
                     </tr>
                     <tr>
                         <td><code>COPY</code> / <code>ADD</code></td>
@@ -814,8 +814,8 @@ curl http://${EXTERNAL_IP}</code></pre>
                     </tr>
                     <tr>
                         <td><code>http://IP</code> に接続できない（接続拒否・タイムアウト）</td>
-                        <td>アプリ未起動、または Service が 80 番を公開していない（<code>--port 8000</code> のみ等）／<code>targetPort</code> が 8000 でない</td>
-                        <td>1〜2分待つ。<code>kubectl get service echo-web</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>kubectl describe service echo-web</code> で <code>TargetPort</code> が <code>8000/TCP</code> か確認（<code>get service</code> には <code>targetPort</code> が表示されない）</td>
+                        <td>アプリ未起動、または Service が 80 番を公開していない（<code>--port 8000</code> のみ等）／<code>targetPort</code> が 8000 でない／Ready な Endpoint がない</td>
+                        <td>1〜2分待つ。<code>kubectl get service echo-web</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>kubectl describe service echo-web</code> で <code>TargetPort</code> が <code>8000/TCP</code> か確認（<code>get service</code> には <code>targetPort</code> が表示されない）。<code>kubectl get endpoints echo-web</code> の <code>ENDPOINTS</code> が <code>&lt;none&gt;</code> なら、待つだけでは解消しないことがあるため、<code>kubectl get service echo-web -o jsonpath='{.spec.selector}'</code> の selector が <code>kubectl get pods --show-labels</code> で Ready の Pod のラベルと一致するか確認</td>
                     </tr>
                     <tr>
                         <td>後半の採点項目が通らない</td>
@@ -1000,11 +1000,9 @@ fi
                 ラボ環境は自動削除されますが、<strong>自分のプロジェクトで試した場合は課金されます</strong>。ロードバランサが課金対象のため、Service
                 から先に削除します。
             </p>
-            <pre><code>kubectl delete service echo-web
-kubectl delete deployment echo-web</code></pre>
             <p>
-                別タブや再接続後は <code>PROJECT_ID</code> と <code>ZONE</code> が空になるため、ラボ画面の
-                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直します。
+                削除の前に、対象のプロジェクトとゾーンを確認します。別タブや再接続後は <code>PROJECT_ID</code> と <code>ZONE</code> が空になるため、ラボ画面の
+                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直し、表示された値が削除対象と一致することを確認します。
             </p>
             <pre><code>export PROJECT_ID=$(gcloud config get-value project)
 read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
@@ -1017,7 +1015,16 @@ echo "ZONE=${ZONE}"</code></pre>
                 を見直してください。
             </p>
             <pre><code>gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"</code></pre>
-            <p>確認できたら、クラスタを削除します。</p>
+            <p>
+                <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
+                のコンテキストを選択してから、Service、Deployment の順に削除します。
+            </p>
+            <pre><code># echo-cluster を選択し、コンテキストが一致した場合だけ削除する
+gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+  &amp;&amp; [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
+  &amp;&amp; kubectl delete service echo-web --ignore-not-found \
+  &amp;&amp; kubectl delete deployment echo-web --ignore-not-found</code></pre>
+            <p>Service と Deployment を削除できたら、クラスタを削除します。</p>
             <pre><code>gcloud container clusters delete echo-cluster --zone ${ZONE}
 
 # イメージ削除の前に、v1 と同じ DIGEST を指すタグが他にないか確認

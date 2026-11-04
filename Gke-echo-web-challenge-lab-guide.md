@@ -620,7 +620,7 @@ kubectl get services
 
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない） |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --show-labels` で Ready の Pod のラベルと一致するか確認 |
 | 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
 | `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web` |
@@ -799,12 +799,7 @@ fi
 
 ラボ環境は終了時に自動削除されますが、**自分のプロジェクトで試した場合は料金が発生**するため、必ず削除してください。
 
-```bash
-kubectl delete service echo-web
-kubectl delete deployment echo-web
-```
-
-別タブや再接続後は `PROJECT_ID` と `ZONE` が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直します。
+削除の前に、対象のプロジェクトとゾーンを確認します。別タブや再接続後は `PROJECT_ID` と `ZONE` が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直し、表示された値が削除対象と一致することを確認します。
 
 ```bash
 export PROJECT_ID=$(gcloud config get-value project)
@@ -820,7 +815,17 @@ echo "ZONE=${ZONE}"
 gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"
 ```
 
-確認できたら、クラスタを削除します。
+`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` のコンテキストを選択してから、Service、Deployment の順に削除します。
+
+```bash
+# echo-cluster を選択し、コンテキストが一致した場合だけ削除する
+gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+  && [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
+  && kubectl delete service echo-web --ignore-not-found \
+  && kubectl delete deployment echo-web --ignore-not-found
+```
+
+Service と Deployment を削除できたら、クラスタを削除します。
 
 ```bash
 gcloud container clusters delete echo-cluster --zone ${ZONE}
