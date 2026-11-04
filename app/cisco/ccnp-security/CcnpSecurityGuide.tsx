@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavBar } from './NavBar';
 import HeroIntro from './sections/HeroIntro';
 import PartA from './sections/PartA';
@@ -20,10 +20,24 @@ interface CcnpSecurityGuideProps {
  */
 export default function CcnpSecurityGuide({ children }: CcnpSecurityGuideProps) {
     const [isNavOpen, setIsNavOpen] = useState(false);
+    const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+    // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
+    useEffect(() => {
+        if (!isNavOpen) return;
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key !== 'Escape') return;
+            setIsNavOpen(false);
+            menuButtonRef.current?.focus();
+        };
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
+    }, [isNavOpen]);
 
     return (
         <div className={`ccnp-security-page ${isNavOpen ? 'nav-open' : ''}`}>
             <button
+                ref={menuButtonRef}
                 type="button"
                 className="menu-btn"
                 id="menuBtn"

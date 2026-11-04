@@ -3,7 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import inventory from '@/docs/migration-inventory/cisco-ccnp-security.json';
 import CcnpSecurityGuide from '@/app/cisco/ccnp-security/CcnpSecurityGuide';
 import { DIAGRAMS, NAV_GROUPS } from '@/app/cisco/ccnp-security/constants';
@@ -208,5 +208,99 @@ describe('CCNP Security ガイド — 図の横スクロール領域', () => {
             expect(label).toContain(diagramLabel);
             expect(label).toContain('横スクロール');
         });
+    });
+});
+
+describe('CCNP Security ガイド — モバイル目次の Escape 操作', () => {
+    const keydownCalls = (spy: { mock: { calls: unknown[][] } }) =>
+        spy.mock.calls.filter(([type]) => type === 'keydown');
+
+    const renderGuide = () => {
+        const { container, unmount } = render(<CcnpSecurityGuide />);
+        const page = container.querySelector('.ccnp-security-page');
+        const button = container.querySelector<HTMLButtonElement>('#menuBtn');
+        if (!page || !button) throw new Error('目次の開閉要素が描画されていません');
+        return { page, button, unmount };
+    };
+
+    it('開いた目次を Escape で閉じ、フォーカスを開閉ボタンへ戻す', () => {
+        // Arrange
+        const { page, button } = renderGuide();
+        fireEvent.click(button);
+        expect(page).toHaveClass('nav-open');
+
+        // Act
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        // Assert
+        expect(page).not.toHaveClass('nav-open');
+        expect(button).toHaveAttribute('aria-expanded', 'false');
+        expect(document.activeElement).toBe(button);
+    });
+
+    it('Escape 以外のキーでは目次を閉じない', () => {
+        // Arrange
+        const { page, button } = renderGuide();
+        fireEvent.click(button);
+
+        // Act
+        fireEvent.keyDown(document, { key: 'Enter' });
+
+        // Assert
+        expect(page).toHaveClass('nav-open');
+        expect(button).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('閉じている間は keydown を購読せず、Escape でフォーカスを奪わない', () => {
+        // Arrange
+        const addSpy = vi.spyOn(document, 'addEventListener');
+        const { button } = renderGuide();
+
+        // Act
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        // Assert
+        expect(keydownCalls(addSpy)).toHaveLength(0);
+        expect(document.activeElement).not.toBe(button);
+        addSpy.mockRestore();
+    });
+
+    it.each([
+        ['ボタンで閉じたとき', (button: HTMLButtonElement) => { fireEvent.click(button); }],
+        ['Escape で閉じたとき', () => { fireEvent.keyDown(document, { key: 'Escape' }); }],
+    ])('%s に登録済みの keydown リスナーを解除する', (_label, close) => {
+        // Arrange
+        const addSpy = vi.spyOn(document, 'addEventListener');
+        const removeSpy = vi.spyOn(document, 'removeEventListener');
+        const { button } = renderGuide();
+        fireEvent.click(button);
+        const [registered] = keydownCalls(addSpy);
+        expect(registered).toBeDefined();
+
+        // Act
+        close(button);
+
+        // Assert
+        expect(keydownCalls(removeSpy).map(([, listener]) => listener)).toEqual([registered?.[1]]);
+        addSpy.mockRestore();
+        removeSpy.mockRestore();
+    });
+
+    it('開いたままアンマウントすると keydown リスナーを解除する', () => {
+        // Arrange
+        const addSpy = vi.spyOn(document, 'addEventListener');
+        const removeSpy = vi.spyOn(document, 'removeEventListener');
+        const { button, unmount } = renderGuide();
+        fireEvent.click(button);
+        const [registered] = keydownCalls(addSpy);
+        expect(registered).toBeDefined();
+
+        // Act
+        unmount();
+
+        // Assert
+        expect(keydownCalls(removeSpy).map(([, listener]) => listener)).toEqual([registered?.[1]]);
+        addSpy.mockRestore();
+        removeSpy.mockRestore();
     });
 });
