@@ -209,8 +209,9 @@ export const applySvgFixups = (
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
 
     const bodyDsl = chart
-        .replace(/^\s*-{3}[\s\S]*?-{3}\s*/, '')
-        .replace(/^(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+        .trimStart()
+        .replace(FRONTMATTER_PATTERN, '')
+        .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
         .trim();
     const isSequenceOrState =
         bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');

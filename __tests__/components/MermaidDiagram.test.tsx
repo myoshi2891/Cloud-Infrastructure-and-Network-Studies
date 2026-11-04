@@ -217,6 +217,18 @@ describe('MermaidDiagram', () => {
             expect(svg.style.minWidth).toBe('');
         });
 
+        it('frontmatter の値に --- を含んでも本文の図種別を判定し viewBox 高さを +110 拡張すること', () => {
+            // Arrange: 行頭以外の --- で frontmatter の除去が途中終了しないことを確認する
+            const svg = makeSvg('0 0 400 300');
+            const chart = '---\ntitle: before---after\n---\n%%{init: {"theme":"base"}}%%\nsequenceDiagram\nA->>B: Hello';
+
+            // Act
+            applySvgFixups(svg, chart, true);
+
+            // Assert
+            expect(svg.getAttribute('viewBox')).toBe('0 0 400 410');
+        });
+
         it('frontmatter または init ディレクティブ付きの sequenceDiagram / stateDiagram でも viewBox 高さを +110 拡張すること', () => {
             const svg1 = makeSvg('0 0 600 400');
             applySvgFixups(svg1, '---\nconfig: {"theme":"base"}\n---\nsequenceDiagram\nA->>B: Hello', true);
