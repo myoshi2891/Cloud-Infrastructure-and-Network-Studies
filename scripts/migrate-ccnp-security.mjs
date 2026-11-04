@@ -4,6 +4,20 @@ import { JSDOM } from 'jsdom';
 import archive from '../docs/migration-inventory/cisco-ccnp-security.archive.json' with { type: 'json' };
 import { CCNP_SECURITY_CORRECTIONS } from '../__tests__/helpers/ccnp-security-source-corrections.ts';
 
+const SECTION_PHASES = ['hero-intro', 'partA', 'partB', 'partC', 'partD', 'partE', 'appendix'];
+
+const targetPhase = process.argv[2];
+if (targetPhase && targetPhase !== 'all' && targetPhase !== 'navbar' && !SECTION_PHASES.includes(targetPhase)) {
+    console.error('Specify one of: all, navbar, ' + SECTION_PHASES.join(', '));
+    process.exit(1);
+}
+
+// NavBar は constants.ts から描画し原本を参照しないため、原本の読み込みと検証より前に生成する
+if (targetPhase === 'navbar') {
+    generateNavBar();
+    process.exit(0);
+}
+
 // 原本は直下またはGit管理外のローカルarchiveにのみ存在する。クリーンなcloneでは実行前に archive へ原本を配置すること。
 const htmlPath = fs.existsSync('Ccnp-security-guide.html')
     ? 'Ccnp-security-guide.html'
@@ -62,12 +76,6 @@ const boundaries = [
     { name: 'partE', start: 47, end: 56, file: 'PartE.tsx', component: 'PartE' },
     { name: 'appendix', start: 56, end: children.length, file: 'Appendix.tsx', component: 'Appendix' },
 ];
-
-const targetPhase = process.argv[2];
-if (targetPhase && targetPhase !== 'all' && targetPhase !== 'navbar' && !boundaries.some(b => b.name === targetPhase)) {
-    console.error('Specify one of: all, navbar, ' + boundaries.map(b => b.name).join(', '));
-    process.exit(1);
-}
 
 /**
  * 円グラフの原本 DSL から title 行を取り出し、末尾の「(%)」を除いた短い図名を返す。
@@ -439,6 +447,6 @@ for (const b of targets) {
     generateSection(b);
 }
 
-if (!targetPhase || targetPhase === 'all' || targetPhase === 'navbar') {
+if (!targetPhase || targetPhase === 'all') {
     generateNavBar();
 }
