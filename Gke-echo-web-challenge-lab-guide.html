@@ -494,6 +494,22 @@
             </p>
             <pre><code>gcloud auth list
 gcloud config list project</code></pre>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>確認項目</th>
+                        <th>期待する結果</th>
+                    </tr>
+                    <tr>
+                        <td>アカウント</td>
+                        <td>ラボ用の <code>student-...@qwiklabs.net</code> が ACTIVE</td>
+                    </tr>
+                    <tr>
+                        <td>プロジェクト</td>
+                        <td>ラボ用プロジェクトIDが表示される</td>
+                    </tr>
+                </table>
+            </div>
             <p>繰り返し使う値は環境変数にして、打ち間違いを防ぎます。</p>
             <pre><code>export PROJECT_ID=$(gcloud config get-value project)
 read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
@@ -1037,13 +1053,17 @@ echo "NAMESPACE=${NAMESPACE}"</code></pre>
             <p>
                 <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
                 がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが <code>echo-cluster</code>
-                であることをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は
-                <code>ZONE</code> と <code>PROJECT_ID</code> を見直してください。
+                であること、<code>echo-web</code> Service が <code>NAMESPACE</code> 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は
+                <code>ZONE</code>、<code>PROJECT_ID</code>、<code>NAMESPACE</code> を見直してください。<code>echo-web</code> Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
             </p>
-            <pre><code># 3 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+            <pre><code># 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+# 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   &amp;&amp; gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   &amp;&amp; [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
+  &amp;&amp; ECHO_WEB_NAMESPACES=$(kubectl get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  &amp;&amp; OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF &amp;&amp; $0 != ns') \
+  &amp;&amp; { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" &gt;&amp;2; false; }; } \
   &amp;&amp; kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
   &amp;&amp; kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   &amp;&amp; gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}</code></pre>

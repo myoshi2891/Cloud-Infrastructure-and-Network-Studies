@@ -1100,7 +1100,7 @@ curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_FRONTEND_URL"   # HTTP 
 | Task 2 | ステージングFrontendが応答 | ☐ |
 | Task 3 | 公開Billing削除済み。非公開Billingはトークン無し403、トークン付き成功 | ☐ |
 | Task 4 | Billing用SAが一覧に存在 | ☐ |
-| Task 5 | 本番BillingにBilling用SAが紐付き、トークン無し403 | ☐ |
+| Task 5 | 本番BillingにBilling用SAが紐付き、トークン無し403、トークン付き `POST /` がHTTP 200 | ☐ |
 | Task 6 | Frontend用SAが本番Billingの `run.invoker` に入っている | ☐ |
 | Task 7 | 本番Frontendのブラウザ表示でBillingのデータが見える | ☐ |
 

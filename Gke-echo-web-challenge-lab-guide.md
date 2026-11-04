@@ -824,13 +824,17 @@ echo "ZONE=${ZONE}"
 echo "NAMESPACE=${NAMESPACE}"
 ```
 
-`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であることをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE` と `PROJECT_ID` を見直してください。
+`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であること、`echo-web` Service が `NAMESPACE` 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE`、`PROJECT_ID`、`NAMESPACE` を見直してください。`echo-web` Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
 
 ```bash
-# 3 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+# 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+# 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   && gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   && [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
+  && ECHO_WEB_NAMESPACES=$(kubectl get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  && OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF && $0 != ns') \
+  && { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" >&2; false; }; } \
   && kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
   && kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   && gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
