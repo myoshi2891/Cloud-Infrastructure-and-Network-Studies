@@ -270,7 +270,11 @@
             }
             @media (max-width: 900px) {
                 .side {
-                    display: none;
+                    position: static;
+                    width: auto;
+                    overflow-y: visible;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--line);
                 }
                 .main {
                     margin-left: 0;
@@ -1113,11 +1117,13 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
   D6 -->|"いいえ"| D7["Service を作り直す"]
   D6 -->|"はい"| D9{"Service の port は 80 か"}
   D9 -->|"いいえ"| D7
-  D9 -->|"はい"| D8["初期化待ち<br/>1〜2分後に再試行"]
+  D9 -->|"はい"| D10{"Endpoints に Ready な<br/>アドレスはあるか"}
+  D10 -->|"いいえ"| D11["Service の selector と<br/>Pod の READY を確認"]
+  D10 -->|"はい"| D8["初期化待ち<br/>1〜2分後に再試行"]
   classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
   classDef q fill:#2a2350,stroke:#b79cff,color:#e6edf7
-  class D1,D3,D5,D7,D8 n
-  class D2,D4,D6,D9 q`,
+  class D1,D3,D5,D7,D8,D11 n
+  class D2,D4,D6,D9,D10 q`,
             };
             (async function () {
                 if (typeof mermaid === 'undefined') {

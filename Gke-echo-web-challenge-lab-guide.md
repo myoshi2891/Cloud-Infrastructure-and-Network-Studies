@@ -642,7 +642,9 @@ flowchart TD
     F -->|"いいえ"| G["Service を作り直す"]
     F -->|"はい"| I{"Service の port は<br/>80 か？"}
     I -->|"いいえ"| G
-    I -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
+    I -->|"はい"| J{"Endpoints に Ready な<br/>アドレスはあるか？"}
+    J -->|"いいえ"| K["Service の selector と<br/>Pod の READY を確認"]
+    J -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
 ```
 
 ### 9-3. 使える診断コマンド

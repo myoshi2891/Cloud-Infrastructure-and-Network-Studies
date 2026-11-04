@@ -239,7 +239,8 @@ echo "PROJECT_ID=$PROJECT_ID  REGION=$REGION"
 gcloud services enable \
   run.googleapis.com \
   cloudbuild.googleapis.com \
-  artifactregistry.googleapis.com
+  artifactregistry.googleapis.com \
+  policytroubleshooter.googleapis.com
 ```
 
 ### 3.7 Step 6: コードを取得する
@@ -997,7 +998,7 @@ export PROD_BILLING_SVC=billing-prod-service
 export FRONTEND_SA=frontend-service-sa
 export PROD_FRONTEND_SVC=frontend-prod-service
 
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com policytroubleshooter.googleapis.com
 git clone https://github.com/rosera/pet-theory.git \
   && git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
   && cd pet-theory/lab07
