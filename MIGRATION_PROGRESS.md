@@ -2243,17 +2243,17 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** SAP-C02 Domain 3の全文移行・導線統合・原本アーカイブ。
-- **最終更新日:** 2026-10-31
-- **最新実装 HEAD:** `cb662c92`（進捗同期直前HEAD。`ca2ef52e` 以降の実装として SAP Domain 2/3の上方向スクロール時の目次追従 `5e5fb65a`・`26f8eaca`、DDIA本文比較のインライン境界空白保持 `967dbc45`・`6d62a1bd`、DDIA目次判定の描画フレーム集約 `81cd0042`・`4f850f9a`、DDIA目次判定線と語間空白 `2cf75f83`、SAP Domain 2/3チェックリストのコントラスト `e8f7122c`、DDIA両方向スクロール追従 `d4874f20`・`7b7bf3f6`、Domain 3コスト配分タグ注記の訂正 `26d7f668`・`90f94bf5`、SAP生成器のレビュー指摘修正 `2d6caa7c`、Domain 2色リテラルの型付け `25471641` を含む。以前の実装: SAP-C02 Domain 2の固定色トークン化 `ca2ef52e`、SAP Domain 2/3の目次修飾クリック・コード/図のキーボードフォーカス `c916de3`・`b23e521`、Domain 3固定色トークン化 `2c4c171`、DDIAの@themeトークン化・目次クリック修正 `425b5e9`・`bdf6b5e` を含む。Domain 3導線統合 `93bf6256`、原本保存 `082d4c3d`）
-- **仕様同期コミット:** `b91b205e`（仕様・全体検証・静的集計・再開情報を同期）
-- **前回進捗同期コミット:** `7b3a438e`（最新実装 HEAD と再開プロンプトを `ca2ef52e` へ更新した最新の完了済み進捗同期）
-- **検証状態:** 原本不在下の全体Vitest472ファイル・4378件すべて成功。本文26件と共通契約を含む関連6ファイル・184件成功。最終型検査・全体ESLint・対象Markdown lint成功。原本インベントリと固定Git fixture再生成一致、HTML/Markdownのバイト一致・SHA-256一致も確認。静的集計1299ソース・416対応（32%）・493テストファイル・139ルート。
-- **ビルド状態:** `bun run build` はユーザー指定に従い未実行。`bun run lint`（全体ESLint）は成功。開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
-- **HTML残数:** 直下HTML7件、すべて未移行。移行済みの直下HTMLは0件。
-- **アーカイブ:** SAP Domain 3の保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはGit管理外のローカル保存先。
+- **最新完了タスク:** CCNP Security 完全ガイド（`/cisco/ccnp-security`）の全文移行・導線統合・原本アーカイブ。その前にSCS-C03 Domain 2（`/aws/security-specialty/domain2`）の移行も完了。
+- **最終更新日:** 2026-11-03
+- **最新実装 HEAD:** `d4f53e5e`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）
+- **仕様同期コミット:** `487920b5`（CLAUDE.md・GEMINI.mdをSCS-C03 Domain 2へ同期した最新の仕様同期。CCNP Security分は `d00ecf4d`）
+- **前回進捗同期コミット:** `9cb9c927`（CCNP Securityの図解・トークン修正を記録した最新の完了済み進捗同期）
+- **検証状態:** CCNP Security関連41件（関連16件＋MermaidDiagram 25件）と共通フッター3件が成功。Chrome実ブラウザで全53図の `viewBox`・背景透過・アイコン・コード構文トークン55個・リンク下線が原本HTMLと一致。SCS-C03関連51ファイル・339件成功。両移行とも型検査・ESLint成功。全体Vitestの最新記録はSAP-C02 Domain 3時点の472ファイル・4378件すべて成功で、両移行後の全体実行は記録がない。上記は各移行記録時点の結果で、記録後の実装コミットに対する再実行結果ではない。
+- **ビルド状態:** `bun run build`・npmは両移行とも未実行。ESLintは両移行で成功。SCS-C03 Domain 2は開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
+- **HTML残数:** 直下HTML17件（SAP Domain 3完了後に追加されたガイドを含む）、すべて未移行で対応インベントリなし。移行済みの直下HTMLは0件。
+- **アーカイブ:** CCNP Securityは `docs/migration-inventory/cisco-ccnp-security.archive.json`、SCS-C03 Domain 2は `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
 - **既存差分:** なし。
-- **次の作業:** `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。SAP Domain 3の移行・統合・原本保存は完了。
+- **次の作業:** `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。原本は直下に残り、`domain4` ルートは未作成。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3592,13 +3592,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `cb662c92`（`ca2ef52e` 以降の SAP Domain 2/3の上方向スクロール時の目次追従 `5e5fb65a`・`26f8eaca`、DDIA本文比較のインライン境界空白保持 `967dbc45`・`6d62a1bd`、DDIA目次判定の描画フレーム集約 `81cd0042`・`4f850f9a`、DDIA目次判定線と語間空白 `2cf75f83`、SAP Domain 2/3チェックリストのコントラスト `e8f7122c`、DDIA両方向スクロール追従 `d4874f20`・`7b7bf3f6`、Domain 3コスト配分タグ注記の訂正 `26d7f668`・`90f94bf5`、SAP生成器のレビュー指摘修正 `2d6caa7c`、Domain 2色リテラルの型付け `25471641` と、それ以前のSAP Domain 2/3・DDIAのアクセシビリティ修正と固定色トークン化を含む）。前回進捗同期コミット: `7b3a438e`。仕様同期コミット: `b91b205e`。最終更新日: 2026-10-31。SAP-C02 Domain 3（`/aws/solutions-architect-professional/domain3`）の全5タスク・77表・16図・3コード例・64リスト項目・90外部リンク出現・72目次・22チェック項目を全文移行済み。点・番号・階層・段落余白・コード装飾・図の原本配色を保持し、25%の共通導線と明色フッターへ統合した。
+最新実装 HEAD: `d4f53e5e`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）。前回進捗同期コミット: `9cb9c927`。仕様同期コミット: `487920b5`。最終更新日: 2026-11-03。CCNP Security（`/cisco/ccnp-security`）の全7パート・131表・53図・9コード例・701リスト項目・305外部リンク出現・188目次と、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の68表・18図・12コード例・170リスト項目・21チェック項目・43目次を全文移行済み。
 
-原本HTML/Markdownは `082d4c3d` でアーカイブ済み。保存先・サイズ・SHA-256・復元元Gitは `docs/migration-inventory/aws-sap-c02-domain3.archive.json` に記録。archiveはローカル専用・Git管理外。固定Git fixtureは `13e845fd` 時点の原本から再生成できる。
+原本HTML/Markdownはアーカイブ済み。保存先とハッシュは `docs/migration-inventory/cisco-ccnp-security.archive.json` と `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
-検証: 原本不在下の全体Vitest472ファイル・4378件すべて成功。関連6ファイル・184件、最終型検査・全体ESLint・対象Markdown lint成功。npm・ビルド・開発サーバー・ブラウザーE2Eは未実行、目視確認はユーザー担当。
+検証: CCNP Security関連41件（関連16件＋MermaidDiagram 25件）と共通フッター3件が成功。Chrome実ブラウザで全53図の `viewBox`・背景透過・アイコン・コード構文トークン55個・リンク下線が原本HTMLと一致。SCS-C03関連51ファイル・339件成功。両移行とも型検査・ESLint成功。全体Vitestの最新記録はSAP-C02 Domain 3時点の472ファイル・4378件すべて成功で、両移行後の全体実行は記録がない。上記は各移行記録時点の結果で、記録後の実装コミットに対する再実行結果ではない。`bun run build`・npmは両移行とも未実行。ESLintは両移行で成功。SCS-C03 Domain 2は開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
 
-次の作業: `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。直下HTML7件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。原本は直下に残り、`domain4` ルートは未作成。直下HTML17件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
