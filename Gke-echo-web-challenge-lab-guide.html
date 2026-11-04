@@ -295,8 +295,9 @@
             <a href="#s8">8. 動作確認</a>
             <a href="#s9">9. トラブルシューティング</a>
             <a href="#s10">10. ベストプラクティス</a>
-            <a href="#s11">11. クリーンアップ</a>
-            <a href="#s12">12. チェックリスト</a>
+            <a href="#s11">11. コマンド一括版</a>
+            <a href="#s12">12. クリーンアップ</a>
+            <a href="#s13">13. チェックリスト</a>
         </nav>
         <main class="main">
             <header class="hero">
@@ -923,7 +924,57 @@ kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8
                 ノード・ゾーンクラスタは<strong>テスト環境向けの最小構成</strong>で、本番設計と混同しないこと。
             </div>
 
-            <h2 id="s11">11. クリーンアップ</h2>
+            <h2 id="s11">11. コマンド一括版（復習用）</h2>
+            <div class="callout warn">
+                <strong>注意</strong
+                >まずは各 Task を理解しながら 1 つずつ実行してください。これは「理解後の復習用」です。<code>ZONE</code>
+                はラボの指定値に必ず置き換えます。
+            </div>
+            <pre><code># ===== 0. 変数 =====
+export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+
+# 以降はサブシェル内で実行し、必須コマンドが 1 つでも失敗したらその時点で止める
+# （set -e の影響を呼び出し元のシェルに残さないため、( ) で囲む）
+(
+set -euo pipefail
+
+# ===== 1. クラスタ作成 =====
+gcloud container clusters create echo-cluster \
+  --zone ${ZONE} \
+  --num-nodes 2 \
+  --machine-type e2-standard-2
+gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
+
+# ===== 2. ビルド（現在の作業ディレクトリで実行する） =====
+gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
+BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
+tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
+ls -la "$BUILD_DIR"   # Dockerfile と .dockerignore の内容を 5-2 のとおり確認する
+docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 "$BUILD_DIR"
+
+# ===== 3. push =====
+gcloud auth configure-docker
+docker push gcr.io/${PROJECT_ID}/echo-app:v1
+
+# ===== 4. デプロイと公開 =====
+kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
+WATCH_STATUS=0
+kubectl get service echo-web --watch || WATCH_STATUS=$?
+if [ "$WATCH_STATUS" -ne 0 ] &amp;&amp; [ "$WATCH_STATUS" -ne 130 ]; then
+  exit "$WATCH_STATUS"
+fi
+)</code></pre>
+            <div class="callout">
+                <strong>途中で失敗した場合</strong
+                >表示されたエラーを直してから、失敗したステップ以降を 1 つずつ実行してください（クラスタ作成済みのまま全体を再実行すると、<code>clusters create</code>
+                が「既に存在する」で止まります）。
+            </div>
+
+            <h2 id="s12">12. クリーンアップ</h2>
             <p>
                 ラボ環境は自動削除されますが、<strong>自分のプロジェクトで試した場合は課金されます</strong>。ロードバランサが課金対象のため、Service
                 から先に削除します。
@@ -966,7 +1017,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
                 は、そのイメージを指すタグをすべて削除するため、事前確認が必要です。
             </p>
 
-            <h2 id="s12">12. チェックリスト</h2>
+            <h2 id="s13">13. チェックリスト</h2>
             <ul class="chk">
                 <li>☐ <code>PROJECT_ID</code> と <code>ZONE</code>（ラボ指定値）を設定した</li>
                 <li>

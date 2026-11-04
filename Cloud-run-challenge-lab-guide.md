@@ -184,13 +184,20 @@ Google Cloud コンソール右上の **Cloud Shell を有効化** アイコン�
 
 ### 3.3 Step 2: プロジェクトを設定する
 
+まず、候補のプロジェクトを一覧表示します。
+
 ```bash
-gcloud config set project \
-$(gcloud projects list --format='value(PROJECT_ID)' \
---filter='qwiklabs-gcp')
+gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp'
 ```
 
-**何をしているか**: `gcloud projects list` でプロジェクトを一覧し、名前が `qwiklabs-gcp` を含むものだけを抽出してプロジェクトIDを取り出し、それを **既定プロジェクト** に設定します。
+一覧の中から、**ラボ画面のプロジェクトIDと一致するものを 1 つだけ** 選び、`SELECTED_PROJECT_ID` に入れて設定します。
+
+```bash
+export SELECTED_PROJECT_ID=一覧から選んだプロジェクトID
+gcloud config set project "$SELECTED_PROJECT_ID"
+```
+
+**何をしているか**: `gcloud projects list` で名前が `qwiklabs-gcp` を含むプロジェクトだけを一覧し、選んだ 1 つのIDを **既定プロジェクト** に設定します。一覧の結果をそのまま渡さないのは、候補が複数あると `gcloud config set project` の引数が多すぎてエラーになるためです。
 
 ### 3.4 Step 3: リージョンを設定する
 
@@ -974,8 +981,10 @@ gcloud logging read \
 
 ```bash
 # ===== 環境準備 =====
-gcloud config set project \
-$(gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp')
+# 一覧の中からラボ画面のプロジェクトIDと一致するものを 1 つ選ぶ
+gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp'
+export SELECTED_PROJECT_ID=一覧から選んだプロジェクトID
+gcloud config set project "$SELECTED_PROJECT_ID"
 export REGION=ラボ画面に表示されているリージョン
 gcloud config set run/region $REGION
 export PROJECT_ID=$(gcloud config get-value project)
