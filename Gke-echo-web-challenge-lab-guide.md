@@ -802,6 +802,27 @@ fi
 ```bash
 kubectl delete service echo-web
 kubectl delete deployment echo-web
+```
+
+別タブや再接続後は `PROJECT_ID` と `ZONE` が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直します。
+
+```bash
+export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"
+```
+
+削除の前に、`echo-cluster` がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、`ZONE` を見直してください。
+
+```bash
+gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"
+```
+
+確認できたら、クラスタを削除します。
+
+```bash
 gcloud container clusters delete echo-cluster --zone ${ZONE}
 ```
 
@@ -852,7 +873,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 | イメージ名の4要素は？ | ホスト名／プロジェクトID／イメージ名／タグ |
 | `port` と `targetPort` の違いは？ | 外部に見せるポート／コンテナが待ち受けるポート |
 | Deployment と Service の役割の違いは？ | Pod の数を維持する／Pod への入口を提供する |
-| `http://IP` につながらない主な原因は？ | 初期化待ち、またはポートの不一致（Service が 80 番を公開していない、または `targetPort` が 8000 でない） |
+| `http://IP` につながらない主な原因は？ | 初期化待ち、ポートの不一致（Service が 80 番を公開していない、または `targetPort` が 8000 でない）、または Ready な Endpoint がない（Service の `selector` 不一致、または Pod が Ready でない） |
 | 今後イメージを保管するなら？ | Artifact Registry |
 
 ---

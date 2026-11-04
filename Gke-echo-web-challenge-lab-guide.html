@@ -557,6 +557,7 @@ echo "ZONE=${ZONE}"</code></pre>
                 章の変数設定をやり直してください。Task 4
                 は、最初のタブで作成完了が表示されてから実行します。
             </p>
+            <div class="mermaid-diagram" id="mm-wait"></div>
             <h3>4-2. 認証情報の取得と確認</h3>
             <pre><code>gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
 kubectl get nodes</code></pre>
@@ -572,6 +573,7 @@ kubectl get nodes</code></pre>
                 <code>gs://プロジェクトID/echo-web.tar.gz</code>
                 にあります。ダウンロード→展開→ビルドの順に進めます。
             </p>
+            <div class="mermaid-diagram" id="mm-build"></div>
             <h3>5-1. ダウンロードと展開</h3>
             <pre><code>gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
 
@@ -641,6 +643,8 @@ docker images</code></pre>
             </p>
             <pre><code>gcloud auth configure-docker
 docker push gcr.io/${PROJECT_ID}/echo-app:v1</code></pre>
+            <p>期待する出力の流れは次のとおりです。</p>
+            <div class="mermaid-diagram" id="mm-push"></div>
             <p>
                 最後に
                 <code>v1: digest: sha256:...</code> と表示されれば成功です。確認は次のとおりです。
@@ -703,6 +707,7 @@ kubectl get service echo-web --watch</code></pre>
                 <code>EXTERNAL-IP</code> が <code>&lt;pending&gt;</code> から IP
                 アドレスに変わるまで約 1〜2 分待ち、<code>Ctrl+C</code> で watch を終了します。
             </p>
+            <div class="mermaid-diagram" id="mm-lb"></div>
             <h3>7-4. 参考：宣言的な方法（マニフェスト）</h3>
             <p>
                 実務では YAML を Git 管理する方法が<strong>推奨</strong>です。Service は
@@ -920,6 +925,18 @@ kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8
                     </tr>
                 </table>
             </div>
+            <pre><code># コンテナ定義への追記例（抜粋）
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    memory: "256Mi"
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8000
+  initialDelaySeconds: 5</code></pre>
             <div class="callout">
                 <strong>試験（PCA）の押さえどころ</strong>簡単にコンテナを動かす→GKE（さらに簡単なら
                 Cloud Run）／イメージ保管→Artifact
@@ -984,8 +1001,24 @@ fi
                 から先に削除します。
             </p>
             <pre><code>kubectl delete service echo-web
-kubectl delete deployment echo-web
-gcloud container clusters delete echo-cluster --zone ${ZONE}
+kubectl delete deployment echo-web</code></pre>
+            <p>
+                別タブや再接続後は <code>PROJECT_ID</code> と <code>ZONE</code> が空になるため、ラボ画面の
+                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直します。
+            </p>
+            <pre><code>export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"</code></pre>
+            <p>
+                削除の前に、<code>echo-cluster</code>
+                がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、<code>ZONE</code>
+                を見直してください。
+            </p>
+            <pre><code>gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"</code></pre>
+            <p>確認できたら、クラスタを削除します。</p>
+            <pre><code>gcloud container clusters delete echo-cluster --zone ${ZONE}
 
 # イメージ削除の前に、v1 と同じ DIGEST を指すタグが他にないか確認
 gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
@@ -1057,7 +1090,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
                     </tr>
                     <tr>
                         <td><code>http://IP</code> につながらない主な原因は？</td>
-                        <td>初期化待ち、またはポート不一致（Service が 80 番を公開していない、または <code>targetPort</code> が 8000 でない）</td>
+                        <td>初期化待ち、ポート不一致（Service が 80 番を公開していない、または <code>targetPort</code> が 8000 でない）、または Ready な Endpoint がない（Service の <code>selector</code> 不一致、または Pod が Ready でない）</td>
                     </tr>
                 </table>
             </div>
@@ -1083,6 +1116,25 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
   F5 --> F6["curl / ブラウザで確認"]
   classDef step fill:#112440,stroke:#7c9eff,color:#e6edf7
   class F1,F2,F3,F4,F5,F6 step`,
+                'mm-wait': `flowchart LR
+    S["クラスタ作成を開始"] --> W["作成中（3〜5分）"]
+    S --> T2["別タブで変数を再設定し<br/>Task 2・3を進める"]
+    W --> D["クラスタ完成"]
+    T2 --> D
+    D --> T4["Task 4 へ"]`,
+                'mm-build': `flowchart TD
+    A["Cloud Storage<br/>echo-web.tar.gz"] -->|"gsutil cp"| B["Cloud Shell に取得"]
+    B -->|"tar -xzf"| C["展開<br/>Dockerfile とソース"]
+    C -->|"docker build -t"| D["ローカルイメージ<br/>gcr.io/PROJECT_ID/echo-app:v1"]`,
+                'mm-push': `sequenceDiagram
+    participant D as Docker（Cloud Shell）
+    participant R as gcr.io
+    D->>R: レイヤーを1つずつアップロード（Pushed）
+    R-->>D: 受け取り完了
+    R-->>D: v1: digest: sha256:... size: ...`,
+                'mm-lb': `flowchart LR
+    A["作成直後<br/>EXTERNAL-IP: pending"] -->|"約1〜2分"| B["EXTERNAL-IP に<br/>IPアドレスが表示"]
+    B --> C["Ctrl+C で watch 終了"]`,
                 'mm-arch': `flowchart TB
   A1["利用者（ブラウザ）"] -->|"HTTP 80"| A2["Service<br/>LoadBalancer"]
   subgraph GKE["GKEクラスタ echo-cluster（2ノード）"]

@@ -847,7 +847,7 @@ grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
 | `index.js` | 使っていない `node-fetch` を `require` しているが、`package.json` に依存がない | 起動時に `Cannot find module 'node-fetch'` で落ちる可能性がある |
 | `render.js` | `const got = import('got')` は **Promise** を返すため、`got(...)` を関数として呼べない | Billingの呼び出しが `got is not a function` で失敗する |
 | `render.js` | got v12 以降は `timeout` に数値を渡せない（`{ request: ミリ秒 }` 形式） | リクエスト作成時にエラーになる |
-| `index.js` | Billing呼び出しの失敗時に `res.status(800)` を返す（HTTPに存在しないステータス） | Expressが `Invalid status code` で例外を投げ、ブラウザへエラー応答が返らない |
+| `index.js` | Billing呼び出しの失敗時に `res.status(800)` を返す（HTTPに存在しないステータス） | `800` は標準のHTTPステータスではないため、サーバーエラーとして確実に扱えるよう `500` に置き換える |
 | `public/app.js` | `fetchLocalData` が `response.ok` を確認する前に本文を `JSON.parse` している | Frontendがエラー応答を返すと、ステータスを判定する前にJSONの解析で例外になる |
 | `public/app.js` | 失敗時の `console.log` が `response.text`（読み取り済みの本文ではなく関数そのもの）を出力している | ログにエラー本文ではなく関数定義が出て、失敗の原因を追えない |
 | `public/app.js` | `getPageInfo` が `info.bills[0]` を無条件に参照している | 取得失敗（空文字・`undefined`）や請求データ0件のとき `TypeError` で画面が止まる |
