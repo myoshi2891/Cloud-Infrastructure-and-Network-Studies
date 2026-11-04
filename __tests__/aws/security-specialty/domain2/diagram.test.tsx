@@ -36,6 +36,9 @@ it.each([
     ['diag-3', ['CloudWatch アラーム', 'OpsItem', '類似', 'Automation ランブック', '承認'], ['Incident Manager']],
     ['diag-4', ['調査用ロール', '封じ込め用ロール', 'Security Hub', 'Detective', 'CloudTrail', 'SCP', '最小権限', 'Shield Advanced', 'WAF'], ['連絡先', 'エスカレーション']],
     ['diag-5', ['Shield Advanced', 'WAF', 'Web ACL', 'アプリケーション層の自動緩和', 'Route 53 ヘルスチェック', 'SRT', 'プロアクティブエンゲージメント', 'CloudWatch'], ['SRTサポート有効化']],
+    ['diag-9', ['Config と GuardDuty', 'Security Hub', 'EventBridge', 'DynamoDB', 'トリアージ', 'メモリ取得フロー', 'ディスク取得フロー', 'S3', 'SG で隔離', 'EBS スナップショット', 'フォレンジックアカウント', 'フォレンジック AMI', 'SSM ドキュメント', 'SNS', 'AppSync'], ['メモリダンプ', '転送']],
+    ['diag-11', ['メタデータを記録', '終了保護', 'タグ', 'EBS スナップショット', 'メモリイメージ', 'セキュリティグループで隔離', '暗号化', 'フォレンジックアカウント', 'ハッシュ', '証拠を保管', 'ボリュームをアタッチ'], ['保護タグ付与', 'メモリ保全']],
+    ['diag-13', ['重大度と対象リソース', '想定内', '誤検知として記録', '抑制ルール', '関連ログで裏付け', 'インシデントとして宣言', '影響範囲を評価', '封じ込め'], ['誤検知判定', '影響範囲評価、インシデント宣言']],
     ['diag-14', ['EC2', '隔離 SG', 'IAM アクセスキー', 'トークン発行時刻', 'IAM ロール', 'Revoke active sessions', 'S3 バケット', 'WAF', '効果'], ['RDS', 'コンテナ']],
     ['diag-15', ['根絶', 'バックアップと AMI', '隔離環境で検証', '本番へ復旧', '強化した監視', '再発の兆候'], ['事後レビュー', '段階的']],
 ] as const)('describes the actual nodes of %s for screen readers', (id, present, absent) => {
