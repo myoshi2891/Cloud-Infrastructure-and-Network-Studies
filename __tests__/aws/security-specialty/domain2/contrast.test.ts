@@ -35,6 +35,11 @@ it.each([
     ['.scs-domain2-page .practice-label', '#f6f8fc'],
     ['.scs-domain2-page .practice-label', '#ffffff'],
     ['.scs-domain2-page .checklist-card li:has(input:checked) label', '#ffffff'],
+    ['.scs-domain2-page .quiz-feedback', '#e5f6ec'],
+    ['.scs-domain2-page .quiz-feedback', '#fde8ec'],
+    ['.scs-domain2-page .quiz-feedback', '#fff2dd'],
+    ['.scs-domain2-page [data-state="correct"] > .quiz-mark', '#ffffff'],
+    ['.scs-domain2-page [data-state="incorrect"] > .quiz-mark', '#ffffff'],
 ])('keeps %s at AA contrast on the original background', (selector, bg) => {
     const text = color(selector);
     expect(text).toMatch(/^#[\da-f]{6}$/i);
