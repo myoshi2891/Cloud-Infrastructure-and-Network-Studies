@@ -812,7 +812,7 @@ echo "ZONE=${ZONE}"
 削除の前に、`echo-cluster` がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、`ZONE` を見直してください。
 
 ```bash
-gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"
+gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)"
 ```
 
 `kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` のコンテキストを選択してから、Service、Deployment の順に削除します。
@@ -828,7 +828,7 @@ gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project 
 Service と Deployment を削除できたら、クラスタを削除します。
 
 ```bash
-gcloud container clusters delete echo-cluster --zone ${ZONE}
+gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 ```
 
 イメージを削除する前に、`echo-app` のタグ一覧を表示し、**`v1` と同じ `DIGEST` を指すタグが他にないか**を確認します。`--delete-tags` は、そのイメージ（ダイジェスト）を指すタグをすべて削除するためです。

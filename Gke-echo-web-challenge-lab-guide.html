@@ -1014,7 +1014,7 @@ echo "ZONE=${ZONE}"</code></pre>
                 がそのゾーンに存在することを確認します。名前とゾーンが表示されなければ、<code>ZONE</code>
                 を見直してください。
             </p>
-            <pre><code>gcloud container clusters describe echo-cluster --zone ${ZONE} --format="value(name,location)"</code></pre>
+            <pre><code>gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)"</code></pre>
             <p>
                 <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
                 のコンテキストを選択してから、Service、Deployment の順に削除します。
@@ -1025,7 +1025,7 @@ gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project 
   &amp;&amp; kubectl delete service echo-web --ignore-not-found \
   &amp;&amp; kubectl delete deployment echo-web --ignore-not-found</code></pre>
             <p>Service と Deployment を削除できたら、クラスタを削除します。</p>
-            <pre><code>gcloud container clusters delete echo-cluster --zone ${ZONE}
+            <pre><code>gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 
 # イメージ削除の前に、v1 と同じ DIGEST を指すタグが他にないか確認
 gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
