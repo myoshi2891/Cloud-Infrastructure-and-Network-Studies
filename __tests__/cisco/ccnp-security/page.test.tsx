@@ -114,6 +114,20 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
     });
 });
 
+describe('CCNP Security ガイド — コードブロックのキーボードフォーカス', () => {
+    const css = readFileSync(resolve('app/cisco/ccnp-security/page.css'), 'utf8');
+
+    it('.code-block の outline を常時無効化せず、:focus-visible で可視の枠を表示する', () => {
+        const base = css.slice(css.indexOf('.ccnp-security-page .code-block {'));
+        expect(base.slice(0, base.indexOf('}'))).not.toMatch(/outline:\s*none/);
+
+        const focusStart = css.indexOf('.ccnp-security-page .code-block:focus-visible {');
+        expect(focusStart, 'missing .code-block:focus-visible rule').toBeGreaterThanOrEqual(0);
+        const focus = css.slice(focusStart, css.indexOf('}', focusStart));
+        expect(focus).toMatch(/outline:\s*2px solid var\(--color-ccnp-security-indigo\);/);
+    });
+});
+
 describe('CCNP Security ガイド — モバイル目次のアクセシビリティ', () => {
     const css = readFileSync(resolve('app/cisco/ccnp-security/page.css'), 'utf8');
     const mobile = css.slice(css.indexOf('@media (max-width: 1024px)'));

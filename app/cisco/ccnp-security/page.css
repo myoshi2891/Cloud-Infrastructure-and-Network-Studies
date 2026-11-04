@@ -283,7 +283,11 @@
   border-radius: 12px;
   overflow-x: auto;
   font: 400 1rem/1.65 var(--font-ccnp-security-mono);
-  outline: none;
+}
+
+.ccnp-security-page .code-block:focus-visible {
+  outline: 2px solid var(--color-ccnp-security-indigo);
+  outline-offset: 2px;
 }
 
 .ccnp-security-page .code-line {

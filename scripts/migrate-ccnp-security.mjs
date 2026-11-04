@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
 import archive from '../docs/migration-inventory/cisco-ccnp-security.archive.json' with { type: 'json' };
+import { CCNP_SECURITY_CORRECTIONS } from '../__tests__/helpers/ccnp-security-source-corrections.ts';
 
 // 原本は直下またはGit管理外のローカルarchiveにのみ存在する。クリーンなcloneでは実行前に archive へ原本を配置すること。
 const htmlPath = fs.existsSync('Ccnp-security-guide.html')
@@ -17,6 +18,39 @@ if (actualSha256 !== archive.html.sha256) {
 const html = htmlBytes.toString('utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
+
+/**
+ * 公式ドキュメントにもとづく訂正を、JSX 変換前の DOM へ適用する。原本ファイルとハッシュ検証の対象は変更しない。
+ * after 付きの訂正は直前の表セルで対象を特定し、追記分を強調要素の外へ置く（生成済み本文と一致させる）。
+ * 原本と一致しない訂正は静かに失われるため、適用できなければ生成を中止する。
+ */
+function applySourceCorrections(root) {
+    for (const [from, to, after] of CCNP_SECURITY_CORRECTIONS) {
+        if (after !== undefined) {
+            const cells = [...root.querySelectorAll('td')].filter(td =>
+                td.textContent.trim() === from && td.previousElementSibling?.textContent.trim() === after);
+            if (cells.length !== 1 || !to.startsWith(from)) {
+                throw new Error(`Correction not applicable: ${from}`);
+            }
+            cells[0].append(doc.createTextNode(to.slice(from.length)));
+            continue;
+        }
+        const walker = doc.createTreeWalker(root, doc.defaultView.NodeFilter.SHOW_TEXT);
+        let applied = false;
+        while (walker.nextNode()) {
+            const text = walker.currentNode;
+            if (text.textContent.includes(from)) {
+                text.textContent = text.textContent.replaceAll(from, to);
+                applied = true;
+            }
+        }
+        if (!applied) {
+            throw new Error(`Correction not found: ${from}`);
+        }
+    }
+}
+
+applySourceCorrections(main);
 const children = [...main.children];
 
 const boundaries = [
