@@ -689,16 +689,24 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
                 だけを指定すると、Service は 8000 番だけを公開するため、<code>http://IP</code>（80番）への接続は拒否またはタイムアウトして<strong>つながりません</strong>。LoadBalancer Service は L4 で転送するため、HTTP のエラー応答（504 など）は返りません。
             </div>
             <h3>7-2. Deployment を作成</h3>
-            <pre><code>kubectl create deployment echo-web \
+            <pre><code># 現在のコンテキストの Namespace を記録する（未設定なら Kubernetes の既定値 default）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+
+kubectl create deployment echo-web \
+  --namespace "$NAMESPACE" \
   --image=gcr.io/${PROJECT_ID}/echo-app:v1
 kubectl get deployment echo-web
 kubectl get pods</code></pre>
             <p>
                 <code>READY</code> が <code>1/1</code>、Pod の <code>STATUS</code> が
-                <code>Running</code> になれば成功です。
+                <code>Running</code> になれば成功です。表示された <code>NAMESPACE</code>
+                は公開・削除でも同じ値を使うため、控えておきます。
             </p>
             <h3>7-3. Service を作成して外部公開</h3>
             <pre><code>kubectl expose deployment echo-web \
+  --namespace "$NAMESPACE" \
   --type=LoadBalancer \
   --port 80 \
   --target-port 8000
@@ -860,8 +868,8 @@ kubectl describe service echo-web
 kubectl get endpoints echo-web   # 空なら selector 不一致、または一致する Pod が Ready でない（selector と Pod の READY を両方確認）
 
 # Service の作り直し
-kubectl delete service echo-web
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000</code></pre>
+kubectl delete service echo-web --namespace "$NAMESPACE"
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000</code></pre>
 
             <h2 id="s10">10. ベストプラクティス（実務・試験向け）</h2>
             <div class="tw">
@@ -990,8 +998,12 @@ gcloud auth configure-docker
 docker push gcr.io/${PROJECT_ID}/echo-app:v1
 
 # ===== 4. デプロイと公開 =====
-kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 現在のコンテキストの Namespace を記録し、以降の作成先を揃える（クリーンアップで使うので表示された値を控える）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl create deployment echo-web --namespace "$NAMESPACE" --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 # Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
 WATCH_STATUS=0
 kubectl get service echo-web --watch || WATCH_STATUS=$?
@@ -1011,14 +1023,17 @@ fi
                 から先に削除します。
             </p>
             <p>
-                削除の前に、対象のプロジェクトとゾーンを確認します。別タブや再接続後は <code>PROJECT_ID</code> と <code>ZONE</code> が空になるため、ラボ画面の
-                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直し、表示された値が削除対象と一致することを確認します。
+                削除の前に、対象のプロジェクト、ゾーン、Namespace を確認します。別タブや再接続後はこれらの変数が空になるため、ラボ画面の
+                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）と、7-2 で表示した <code>NAMESPACE</code> を設定し直し、表示された値が削除対象と一致することを確認します。
             </p>
             <pre><code>export PROJECT_ID=$(gcloud config get-value project)
 read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
 export ZONE
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
 echo "PROJECT_ID=${PROJECT_ID}"
-echo "ZONE=${ZONE}"</code></pre>
+echo "ZONE=${ZONE}"
+echo "NAMESPACE=${NAMESPACE}"</code></pre>
             <p>
                 <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
                 がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが <code>echo-cluster</code>
@@ -1029,8 +1044,8 @@ echo "ZONE=${ZONE}"</code></pre>
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   &amp;&amp; gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   &amp;&amp; [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
-  &amp;&amp; kubectl delete service echo-web --ignore-not-found \
-  &amp;&amp; kubectl delete deployment echo-web --ignore-not-found \
+  &amp;&amp; kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  &amp;&amp; kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   &amp;&amp; gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}</code></pre>
             <p>イメージを削除する前に、<code>v1</code> と同じ DIGEST を指すタグが他にないか確認します。</p>
             <pre><code>gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>

@@ -461,13 +461,20 @@ flowchart LR
 ### 7-3. Deployment を作成
 
 ```bash
+# 現在のコンテキストの Namespace を記録する（未設定なら Kubernetes の既定値 default）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+
 kubectl create deployment echo-web \
+  --namespace "$NAMESPACE" \
   --image=gcr.io/${PROJECT_ID}/echo-app:v1
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `create deployment echo-web` | `echo-web` という名前の Deployment を作る（**採点対象の名前**） |
+| `--namespace "$NAMESPACE"` | 作成先の Namespace。公開・削除でも同じ値を使う。**12 のクリーンアップで使うので、表示された値を控える** |
 | `--image=...` | Pod に使うコンテナイメージ。**push した v1 を指定** |
 
 確認します。
@@ -486,6 +493,7 @@ kubectl get pods
 
 ```bash
 kubectl expose deployment echo-web \
+  --namespace "$NAMESPACE" \
   --type=LoadBalancer \
   --port 80 \
   --target-port 8000
@@ -666,8 +674,8 @@ kubectl get endpoints echo-web
 ### 9-4. Service を作り直す場合
 
 ```bash
-kubectl delete service echo-web
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+kubectl delete service echo-web --namespace "$NAMESPACE"
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 ```
 
 ---
@@ -780,8 +788,12 @@ gcloud auth configure-docker
 docker push gcr.io/${PROJECT_ID}/echo-app:v1
 
 # ===== 4. デプロイと公開 =====
-kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 現在のコンテキストの Namespace を記録し、以降の作成先を揃える（クリーンアップで使うので表示された値を控える）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl create deployment echo-web --namespace "$NAMESPACE" --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 # Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
 WATCH_STATUS=0
 kubectl get service echo-web --watch || WATCH_STATUS=$?
@@ -799,14 +811,17 @@ fi
 
 ラボ環境は終了時に自動削除されますが、**自分のプロジェクトで試した場合は料金が発生**するため、必ず削除してください。
 
-削除の前に、対象のプロジェクトとゾーンを確認します。別タブや再接続後は `PROJECT_ID` と `ZONE` が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）を設定し直し、表示された値が削除対象と一致することを確認します。
+削除の前に、対象のプロジェクト、ゾーン、Namespace を確認します。別タブや再接続後はこれらの変数が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）と、7-3 で表示した `NAMESPACE` を設定し直し、表示された値が削除対象と一致することを確認します。
 
 ```bash
 export PROJECT_ID=$(gcloud config get-value project)
 read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
 export ZONE
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
 echo "PROJECT_ID=${PROJECT_ID}"
 echo "ZONE=${ZONE}"
+echo "NAMESPACE=${NAMESPACE}"
 ```
 
 `kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であることをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE` と `PROJECT_ID` を見直してください。
@@ -816,8 +831,8 @@ echo "ZONE=${ZONE}"
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   && gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
   && [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
-  && kubectl delete service echo-web --ignore-not-found \
-  && kubectl delete deployment echo-web --ignore-not-found \
+  && kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  && kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   && gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 ```
 
