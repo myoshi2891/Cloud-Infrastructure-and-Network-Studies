@@ -37,7 +37,7 @@ const COMMON = String.raw`\b(?:true|false)\b|\b\d+\b`;
 const TOKEN_PATTERNS = {
     json: new RegExp(String.raw`(?<key>${DOUBLE_QUOTED}(?=\s*:))|${DOUBLE_QUOTED}|\b(?:true|false|null)\b|\b\d+\b`, 'g'),
     // YAML のキーは行頭（インデントと任意のリスト記号 "- " の直後）で、直後が ": " か行末の場合だけ
-    yaml: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|(?<key>(?<=^\s*(?:-\s+)?)[\w-]+(?=:(?:\s|$)))|${COMMON}|!Ref\b`, 'g'),
+    yaml: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<key>(?<=^\s*(?:-\s+)?)[\w-]+(?=:(?:\s|$)))|${COMMON}|!Ref\b`, 'g'),
     python: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
     sql: new RegExp(`${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
     default: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${COMMON}`, 'g'),
@@ -46,7 +46,8 @@ const TOKEN_PATTERNS = {
 function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
-        for (const m of line.matchAll(/\baws\b|--[\w-]+|\b(?:\$|export|echo)\b/g)) {
+        // arn:aws:... や aws-cli のような語の一部は、単独の aws コマンドとして扱わない
+        for (const m of line.matchAll(/(?<![\w:-])aws(?![\w:-])|--[\w-]+|\b(?:\$|export|echo)\b/g)) {
             output += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
             output += '<span className="hljs-' + (m[0] === 'aws' ? 'built_in' : 'keyword') + '">{' + JSON.stringify(m[0]) + '}</span>';
             end = m.index + m[0].length;

@@ -24,6 +24,26 @@ describe('SCS-C03 Domain 2 — コードの構文色分類', () => {
         expect(attrs).not.toContain('aws');
     });
 
+    it('YAML では単一引用符の値を string とし、引用符内の数値を number にしない', () => {
+        const { container } = render(<Task21 />);
+        const strings = tokensOf(container, 'yaml', 'string');
+        expect(strings).toContain("'0.3'");
+        expect(strings).toContain("'{{ AutomationAssumeRole }}'");
+        expect(strings).toContain("'{{ IsolationSecurityGroupId }}'");
+        expect(tokensOf(container, 'yaml', 'number')).not.toContain('0');
+        expect(tokensOf(container, 'yaml', 'number')).not.toContain('3');
+    });
+
+    it('bash では単独の aws コマンドだけを built_in とし、ARN の一部を built_in にしない', () => {
+        const { container } = render(<><Task21 /><Task22 /></>);
+        const blocks = [...container.querySelectorAll('.code-block[aria-label="bash コード例"]')];
+        const arnLine = blocks
+            .flatMap((block) => [...block.querySelectorAll('.code-line')])
+            .find((line) => line.textContent?.includes('arn:aws:cloudtrail'));
+        expect(arnLine?.querySelector('.hljs-built_in')).toBeNull();
+        expect(new Set(tokensOf(container, 'bash', 'built_in'))).toEqual(new Set(['aws']));
+    });
+
     it('Python では数値を attr にせず、辞書のキーも含めて引用符付きトークンを string とする', () => {
         const { container } = render(<Task21 />);
         expect(tokensOf(container, 'python', 'attr')).toEqual([]);
