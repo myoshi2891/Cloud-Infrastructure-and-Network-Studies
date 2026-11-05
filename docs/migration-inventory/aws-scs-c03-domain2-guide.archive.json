@@ -1,0 +1,19 @@
+{
+  "sourceCommit": "efdbafb932e7317753b4025ee8498fa12cb1dcb7",
+  "archiveIsGitIgnored": true,
+  "files": [
+    {
+      "source": "Aws-scs-c03-domain2-incident-response-guide.html",
+      "archive": "archive/Aws/html/security-specialty/domain2/Aws-scs-c03-domain2-incident-response-guide.html",
+      "bytes": 358064,
+      "sha256": "bc5f4f56f6fa83bc923716718c0d07f771989dfbd722d0644567e3cb4720fdc7"
+    },
+    {
+      "source": "Aws-scs-c03-domain2-incident-response-guide.md",
+      "archive": "archive/Aws/md/security-specialty/domain2/Aws-scs-c03-domain2-incident-response-guide.md",
+      "bytes": 125689,
+      "sha256": "6b30f154eb8d2252c006d7c0ef972cce810b3d526fb01b6482620c50a5ca0653"
+    }
+  ]
+}
+

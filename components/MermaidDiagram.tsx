@@ -22,6 +22,8 @@ export interface MermaidDiagramProps {
     focusable?: boolean;
     /** role="img" の wrapper に関連付ける説明要素の ID（任意。aria-describedby） */
     ariaDescribedBy?: string;
+    /** ビューポートへ接近するまで描画を遅らせ、図の多いページの初期負荷を抑える（任意） */
+    deferUntilVisible?: boolean;
 }
 
 /**
@@ -87,8 +89,14 @@ export const LIGHT_THEME_DIRECTIVE = `%%{init: {
   }
 }}%%`;
 
-/** Mermaid の extractFrontMatter と同じ判定（frontmatter はチャート先頭でのみ有効） */
-const FRONTMATTER_PATTERN = /^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s;
+/** 字下げを残して先頭の空行だけを除く（frontmatter 判定には開始行の字下げが必要） */
+const LEADING_BLANK_LINES = /^(?:[^\S\n\r]*[\n\r])+/;
+
+/** Mermaid の extractFrontMatter と同じ判定（frontmatter はチャート先頭でのみ有効、開始・終了の字下げは一致必須） */
+const FRONTMATTER_PATTERN = /^([^\S\n\r]*)-{3}\s*[\n\r](.*?)[\n\r]\1-{3}\s*[\n\r]+/s;
+
+/** 目次ジャンプやスクロールで到達する前に描画を始めるための先読み距離 */
+const DEFER_ROOT_MARGIN = '800px 0px';
 
 /**
  * ライトテーマ用ディレクティブをチャートへ注入する。
@@ -96,7 +104,7 @@ const FRONTMATTER_PATTERN = /^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s;
  * - 既存の %%{init:} は残したまま前置する。Mermaid は複数 init を出現順にマージするため、作者指定が後勝ちで優先される
  */
 export function applyLightThemeDirective(chart: string): string {
-    const body = chart.trimStart();
+    const body = chart.replace(LEADING_BLANK_LINES, '');
     const frontmatter = body.match(FRONTMATTER_PATTERN)?.[0];
     if (!frontmatter) return `${LIGHT_THEME_DIRECTIVE}\n${chart}`;
     return `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body.slice(frontmatter.length)}`;
@@ -208,9 +216,14 @@ export const applySvgFixups = (
     const parts = viewBox.split(/\s+/).map(Number);
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
 
-    const trimmed = chart.trim();
+    // 図種別は frontmatter・init ディレクティブ・宣言前の %% コメント行を除いた本文の先頭で判定する
+    const bodyDsl = chart
+        .replace(LEADING_BLANK_LINES, '')
+        .replace(FRONTMATTER_PATTERN, '')
+        .replace(/^\s*(?:(?:%%\{[\s\S]*?\}%%|%%[^\n]*)\s*)+/, '')
+        .trim();
     const isSequenceOrState =
-        trimmed.startsWith('sequenceDiagram') || trimmed.startsWith('stateDiagram');
+        bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
     const extraHeight = isSequenceOrState ? 110 : 15;
     const [x, y, w, h] = parts as [number, number, number, number];
     // ⚠️ SKILL.md「SVG 幅の鉄則」: viewBox 由来の自然 px 幅を基準にする。
@@ -237,6 +250,7 @@ export const applySvgFixups = (
  *
  * - SSR / 初回マウント前は DSL を `<pre className="codeblock" aria-hidden>` として見せてハイドレーションエラーを防ぐ。
  * - jsdom 等 `getBBox` が無い環境ではフォールバック表示（DSL の `<pre>`）のまま描画しない。
+ * - `deferUntilVisible` 指定時は、接近するまでフォールバックのまま描画を開始しない。
  */
 export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     chart,
@@ -247,13 +261,19 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     preserveChartTheme = false,
     focusable = false,
     ariaDescribedBy,
+    deferUntilVisible = false,
 }) => {
     const reactId = useId();
     const [isMounted, setIsMounted] = useState(false);
+    const [isNearViewport, setIsNearViewport] = useState(false);
     const [rendered, setRendered] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [svgStr, setSvgStr] = useState<string>('');
     const targetRef = useRef<HTMLDivElement>(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    // 判定結果は effect 内でのみ使うため、SSR との差でハイドレーション不一致は生じない
+    const shouldDefer = deferUntilVisible && typeof IntersectionObserver !== 'undefined';
+    const isRenderAllowed = !shouldDefer || isNearViewport;
 
     // マウント状態のみを管理する Effect (ESLint の set-state-in-effect 回避)
     useEffect(() => {
@@ -262,7 +282,21 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
     }, []);
 
     useEffect(() => {
-        if (!isMounted || !canRenderInBrowser()) return;
+        const wrapper = wrapperRef.current;
+        if (isRenderAllowed || !wrapper) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            if (!entries.some((entry) => entry.isIntersecting)) return;
+            observer.disconnect();
+            setIsNearViewport(true);
+        }, { rootMargin: DEFER_ROOT_MARGIN });
+        observer.observe(wrapper);
+
+        return () => observer.disconnect();
+    }, [isRenderAllowed]);
+
+    useEffect(() => {
+        if (!isMounted || !isRenderAllowed || !canRenderInBrowser()) return;
 
         let cancelled = false;
         const renderChart = async () => {
@@ -295,7 +329,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
         return () => {
             cancelled = true;
         };
-    }, [chart, reactId, isMounted, theme, preserveChartTheme]);
+    }, [chart, reactId, isMounted, isRenderAllowed, theme, preserveChartTheme]);
 
     // SVG 注入後（svgStr 反映後）に、実 DOM の SVG へ下部見切れ対策を適用する
     useEffect(() => {
@@ -311,6 +345,7 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
 
     return (
         <div
+            ref={wrapperRef}
             className={cn(
                 styles.mermaidWrapper,
                 theme === 'light' && !preserveChartTheme && styles.lightWrapper,

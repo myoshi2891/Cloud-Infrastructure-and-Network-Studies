@@ -36,9 +36,15 @@ const RENDER_LOOP = `            // --- mermaid render pipeline (apply_render_pi
                 if (!viewBox) return;
                 const parts = viewBox.split(/\\s+/).map(Number);
                 if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
-                const trimmed = src.trim();
+                // 図種別は frontmatter・init ディレクティブ・宣言前の %% コメント行を除いた本文の先頭で判定する。
+                // Mermaid は開始・終了の字下げ一致を要求するため、除去前に字下げを削らない。
+                const bodyDsl = src
+                    .replace(/^(?:[^\\S\\n\\r]*[\\n\\r])+/, '')
+                    .replace(/^([^\\S\\n\\r]*)-{3}\\s*[\\n\\r](.*?)[\\n\\r]\\1-{3}\\s*[\\n\\r]+/s, '')
+                    .replace(/^\\s*(?:(?:%%\\{[\\s\\S]*?\\}%%|%%[^\\n]*)\\s*)+/, '')
+                    .trim();
                 const isSequenceOrState =
-                    trimmed.startsWith('sequenceDiagram') || trimmed.startsWith('stateDiagram');
+                    bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
                 const extraHeight = isSequenceOrState ? 110 : 15;
                 const [x, y, w, h] = parts;
                 // 自然幅で表示し拡大は抑制。親より広い図のみ maxWidth で縮小される。
@@ -88,7 +94,10 @@ const CENTERING_CSS = `        /* mermaid-center (apply_render_pipeline.mjs): �
         }
 `;
 
-const RENDER_LOOP_MARKER = 'function applySvgFixups';
+// 生成ループの先頭行。旧世代の生成ループもこの行で始まるため、検出して現行版へ置換する。
+const RENDER_LOOP_HEADER = '            // --- mermaid render pipeline (apply_render_pipeline.mjs) ---\n';
+// 生成ループの末尾（render IIFE の閉じ）。旧世代も同じ形で終わる。
+const RENDER_LOOP_FOOTER = '            })();\n';
 const CENTERING_MARKER = 'mermaid-center (apply_render_pipeline.mjs)';
 
 // --- 各ステップ (純粋関数・冪等) --------------------------------------------
@@ -248,10 +257,22 @@ function readPropertyNameBeforeColon(source, colonIndex) {
 
 /**
  * applySvgFixups + render ループを mermaid.initialize 後の </script> 直前に注入する。
- * 既に注入済み (マーカー検出) なら不変。
+ * 現行版を注入済みなら不変。旧世代の生成ループ (マーカー行で検出) は現行版へ置換する。
  */
 export function injectRenderLoop(html) {
-    if (html.includes(RENDER_LOOP_MARKER)) return html;
+    const existingStart = html.indexOf(RENDER_LOOP_HEADER);
+    if (existingStart !== -1) {
+        const footerIdx = html.indexOf(RENDER_LOOP_FOOTER, existingStart);
+        if (footerIdx === -1) {
+            throw new Error('生成済み render ループの終端 })(); が見つかりません。');
+        }
+        const existingEnd = footerIdx + RENDER_LOOP_FOOTER.length;
+        // 現行版と同一なら不変（冪等）。旧世代なら現行版へ置換する。
+        if (html.slice(existingStart, existingEnd) === RENDER_LOOP) return html;
+        return html.slice(0, existingStart) + RENDER_LOOP + html.slice(existingEnd);
+    }
+    // マーカー行を持たない手書きの applySvgFixups は生成物ではないため触らない
+    if (html.includes('function applySvgFixups')) return html;
     const initializeCall = findMermaidInitialize(html);
     if (!initializeCall) {
         throw new Error('mermaid.initialize( が見つかりません。初期化ブロックを先に用意してください。');

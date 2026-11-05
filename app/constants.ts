@@ -657,10 +657,11 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-scs',
         href: '/aws/security-specialty',
         overviewLabel: 'SCS-C03 完全ガイド',
-        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。ドメイン1詳細ガイドも収録。',
+        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。ドメイン1・2詳細ガイドも収録。',
         domains: [
             { label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' },
             { label: 'ドメイン1: 検出 (Detection)', href: '/aws/security-specialty/domain1', pct: '16%' },
+            { label: 'ドメイン2: インシデント対応 (Incident Response)', href: '/aws/security-specialty/domain2', pct: '14%' },
         ],
         badge: 'SCS-C03',
         icon: '🛡️',
@@ -912,6 +913,27 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: 'Automation プロフェッショナル',
         icon: '🚀',
+        provider: 'Cisco',
+    },
+    {
+        id: 'ccnp-security',
+        label: 'CCNP Security',
+        abbr: 'CCNP Security',
+        level: 'Professional',
+        score: 'コア 120分 + コンセントレーション 90分',
+        color: 'card-ccna',
+        href: '/cisco/ccnp-security',
+        description:
+            'Ciscoセキュリティソリューションの設計・実装・運用プロフェッショナル認定。コア試験(350-701 SCOR)と各コンセントレーション試験を初学者向けに徹底解説。',
+        domains: [
+            {
+                label: '初学者向け完全ガイド',
+                href: '/cisco/ccnp-security',
+                pct: '完全解説',
+            },
+        ],
+        badge: 'Security プロフェッショナル',
+        icon: '🛡️',
         provider: 'Cisco',
     },
     {

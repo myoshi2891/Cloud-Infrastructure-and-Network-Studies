@@ -16,6 +16,7 @@ type MermaidDiagramMockProps = {
     theme?: string;
     focusable?: boolean;
     ariaDescribedBy?: string;
+    deferUntilVisible?: boolean;
 };
 
 /**
@@ -31,6 +32,7 @@ export const MermaidDiagramMock = ({
     theme,
     focusable = false,
     ariaDescribedBy,
+    deferUntilVisible = false,
 }: MermaidDiagramMockProps) => (
     <div
         role="img"
@@ -39,6 +41,7 @@ export const MermaidDiagramMock = ({
         data-chart={chart}
         data-decorative={String(decorative === true)}
         data-preserve-natural-scale={String(preserveNaturalScale)}
+        data-defer-until-visible={String(deferUntilVisible)}
         data-theme={theme}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

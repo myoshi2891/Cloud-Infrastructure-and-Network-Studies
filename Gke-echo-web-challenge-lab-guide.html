@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>GKE チャレンジラボ解説ガイド：echo-web のビルド・push・デプロイ</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --bg: #07111e;
+                --card: #0d1b2e;
+                --line: #1e3350;
+                --text: #e6edf7;
+                --dim: #c7d6ec;
+                --faint: #9cb0cf;
+                --accent: #7c9eff;
+                --ok: #5ad19a;
+                --warn: #ffb454;
+                --ng: #ff7b8a;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                overflow-x: hidden;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--text);
+                font-family: 'Noto Sans JP', sans-serif;
+                line-height: 1.85;
+                font-size: 15.5px;
+                overflow-x: hidden;
+            }
+            .side {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 260px;
+                overflow-y: auto;
+                background: #050c16;
+                border-right: 1px solid var(--line);
+                padding: 22px 16px;
+            }
+            .side b {
+                display: block;
+                color: var(--accent);
+                font-size: 13px;
+                margin-bottom: 12px;
+                letter-spacing: 0.06em;
+            }
+            .side a {
+                display: block;
+                color: var(--dim);
+                text-decoration: none;
+                font-size: 13.5px;
+                padding: 5px 8px;
+                border-radius: 6px;
+            }
+            .side a:hover {
+                background: #12233b;
+                color: #fff;
+            }
+            .main {
+                margin-left: 260px;
+                padding: 40px 48px 80px;
+            }
+            .hero {
+                position: relative;
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                padding: 32px;
+                background: var(--card);
+                overflow: hidden;
+                margin-bottom: 36px;
+            }
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: -80px;
+                right: -80px;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(124, 158, 255, 0.28), transparent 70%);
+            }
+            .badge {
+                display: inline-block;
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                border-radius: 999px;
+                padding: 2px 14px;
+                font-size: 12px;
+                font-weight: 700;
+            }
+            .hero h1 {
+                font-size: 28px;
+                font-weight: 800;
+                color: #fff;
+                margin: 14px 0 8px;
+                line-height: 1.4;
+            }
+            .meta {
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 18px;
+            }
+            .meta div {
+                padding: 0 22px 0 0;
+                margin-right: 22px;
+                border-right: 1px solid var(--line);
+            }
+            .meta div:last-child {
+                border: 0;
+            }
+            .meta small {
+                display: block;
+                font-size: 11px;
+                color: var(--faint);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+            h2 {
+                font-size: 23px;
+                font-weight: 800;
+                color: #fff;
+                border-bottom: 2px solid var(--accent);
+                padding-bottom: 8px;
+                margin: 54px 0 18px;
+            }
+            h3 {
+                font-size: 17.5px;
+                color: var(--accent);
+                margin: 30px 0 10px;
+            }
+            p {
+                margin: 10px 0;
+            }
+            code {
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 13px;
+                background: #12233b;
+                color: #bcd0ff;
+                padding: 1px 6px;
+                border-radius: 5px;
+                overflow-wrap: anywhere;
+            }
+            pre {
+                background: #030912;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                padding: 16px 18px;
+                overflow-x: auto;
+                line-height: 1.65;
+            }
+            pre code {
+                background: none;
+                padding: 0;
+                color: #d9e6ff;
+                font-size: 13px;
+                overflow-wrap: normal;
+            }
+            .tw {
+                overflow-x: auto;
+                margin: 14px 0;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 14px;
+            }
+            th,
+            td {
+                border: 1px solid var(--line);
+                padding: 9px 12px;
+                text-align: left;
+                vertical-align: top;
+            }
+            th {
+                background: #112440;
+                color: #fff;
+                white-space: nowrap;
+            }
+            tr:nth-child(even) td {
+                background: #0a1626;
+            }
+            .mermaid-diagram {
+                display: block;
+                overflow-x: auto;
+                background: var(--card);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 18px;
+                margin: 16px 0;
+            }
+            .mermaid-diagram svg {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                max-width: none;
+            }
+            .mermaid-diagram foreignObject {
+                overflow: visible;
+            }
+            .mermaid-diagram foreignObject div,
+            .mermaid-diagram foreignObject span,
+            .mermaid-diagram foreignObject p {
+                white-space: normal !important;
+                margin: 0;
+            }
+            .mermaid-diagram .edgeLabel,
+            .mermaid-diagram .edgeLabel rect,
+            .mermaid-diagram .labelBkg {
+                background-color: #0d1b2e !important;
+                fill: #0d1b2e !important;
+                opacity: 1 !important;
+            }
+            .mermaid-diagram .edgeLabel p,
+            .mermaid-diagram .edgeLabel span {
+                background-color: #0d1b2e !important;
+                color: #e6edf7 !important;
+            }
+            .mermaid-diagram .cluster rect {
+                fill: #0a1626 !important;
+                stroke: #3b5a88 !important;
+            }
+            .mermaid-diagram .cluster-label,
+            .mermaid-diagram .cluster-label span,
+            .mermaid-diagram .cluster-label p {
+                color: #e6edf7 !important;
+            }
+            .mermaid-diagram .nodeLabel,
+            .mermaid-diagram .nodeLabel p {
+                color: #e6edf7;
+            }
+            .callout {
+                border-left: 4px solid var(--accent);
+                background: var(--card);
+                border-radius: 0 10px 10px 0;
+                padding: 12px 18px;
+                margin: 16px 0;
+            }
+            .callout.warn {
+                border-color: var(--warn);
+            }
+            .callout.ng {
+                border-color: var(--ng);
+            }
+            .callout.ok {
+                border-color: var(--ok);
+            }
+            .callout strong {
+                display: block;
+                margin-bottom: 2px;
+                color: #fff;
+            }
+            .chk li {
+                list-style: none;
+                margin: 6px 0;
+            }
+            .chk {
+                padding-left: 4px;
+            }
+            @media (max-width: 900px) {
+                .side {
+                    position: static;
+                    width: auto;
+                    overflow-y: visible;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--line);
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 22px 16px 60px;
+                }
+                .hero h1 {
+                    font-size: 23px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="side">
+            <b>目次</b>
+            <a href="#s1">1. 全体像</a>
+            <a href="#s2">2. 用語の整理</a>
+            <a href="#s3">3. 事前準備</a>
+            <a href="#s4">4. Task 1 クラスタ作成</a>
+            <a href="#s5">5. Task 2 イメージのビルド</a>
+            <a href="#s6">6. Task 3 gcr.io へ push</a>
+            <a href="#s7">7. Task 4 デプロイと公開</a>
+            <a href="#s8">8. 動作確認</a>
+            <a href="#s9">9. トラブルシューティング</a>
+            <a href="#s10">10. ベストプラクティス</a>
+            <a href="#s11">11. コマンド一括版</a>
+            <a href="#s12">12. クリーンアップ</a>
+            <a href="#s13">13. チェックリスト</a>
+        </nav>
+        <main class="main">
+            <header class="hero">
+                <span class="badge">Google Cloud チャレンジラボ</span>
+                <h1>コンテナイメージのビルド・push と GKE へのデプロイ（echo-web）</h1>
+                <p style="color: var(--dim); margin: 0">
+                    Go 製サンプルアプリ <code>echo-web</code> を、Docker
+                    でイメージ化し、Kubernetes（GKE）上で公開するまでを初学者向けに解説します。
+                </p>
+                <div class="meta">
+                    <div><small>対象読者</small>Docker・Kubernetes・Google Cloud 初学者</div>
+                    <div><small>関連資格</small>Professional Cloud Architect</div>
+                    <div><small>所要時間</small>30〜45 分</div>
+                </div>
+            </header>
+
+            <h2 id="s1">1. このラボで何をするのか（全体像）</h2>
+            <p>
+                開発チームから「<code>echo-web</code> をコンテナ化して Kubernetes
+                上で動かせるか確認してほしい」と依頼されたシナリオです。チャレンジラボは<strong>手順書が提示されない</strong>ため、コマンドの「なぜ」まで理解することが重要です。
+            </p>
+            <h3>1-1. 作業の流れ</h3>
+            <div class="mermaid-diagram" id="mm-flow"></div>
+            <div class="callout ok">
+                <strong>効率化のコツ</strong
+                >クラスタ作成は数分かかります。先に作成を開始し、待ち時間に Task 2・3 を進めます。
+            </div>
+            <h3>1-2. 最終的な構成</h3>
+            <div class="mermaid-diagram" id="mm-arch"></div>
+            <h3>1-3. 採点に影響する必須ネーミング</h3>
+            <div class="callout ng">
+                <strong>1文字でも違うと採点されません</strong>名前は必ず指定どおりに入力します。
+            </div>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>対象</th>
+                        <th>指定値</th>
+                        <th>備考</th>
+                    </tr>
+                    <tr>
+                        <td>イメージ名</td>
+                        <td><code>echo-app</code></td>
+                        <td>リポジトリ名として使用</td>
+                    </tr>
+                    <tr>
+                        <td>タグ</td>
+                        <td><code>v1</code></td>
+                        <td><code>latest</code> ではない</td>
+                    </tr>
+                    <tr>
+                        <td>クラスタ名</td>
+                        <td><code>echo-cluster</code></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>ゾーン</td>
+                        <td>ラボ画面の <code>ZONE</code></td>
+                        <td>別ゾーンだと採点されない</td>
+                    </tr>
+                    <tr>
+                        <td>ノード</td>
+                        <td><code>e2-standard-2</code> × 2</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Deployment 名</td>
+                        <td><code>echo-web</code></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Service 外部ポート</td>
+                        <td><code>80</code></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>アプリの待受ポート</td>
+                        <td><code>8000</code></td>
+                        <td>Dockerfile で設定済み</td>
+                    </tr>
+                    <tr>
+                        <td>レジストリのホスト名</td>
+                        <td><code>gcr.io</code></td>
+                        <td>組織ルール</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2 id="s2">2. 登場する用語を先に整理する</h2>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>用語</th>
+                        <th>ひとことで言うと</th>
+                        <th>このラボでの役割</th>
+                    </tr>
+                    <tr>
+                        <td>コンテナ</td>
+                        <td>アプリと必要なものをまとめた軽量な実行単位</td>
+                        <td>echo-web の入れ物</td>
+                    </tr>
+                    <tr>
+                        <td>Dockerfile</td>
+                        <td>イメージの作り方を書いたレシピ</td>
+                        <td>アーカイブに同梱</td>
+                    </tr>
+                    <tr>
+                        <td>イメージ</td>
+                        <td>コンテナの設計図（読み取り専用）</td>
+                        <td><code>echo-app:v1</code></td>
+                    </tr>
+                    <tr>
+                        <td>タグ</td>
+                        <td>イメージのバージョン名札</td>
+                        <td><code>v1</code></td>
+                    </tr>
+                    <tr>
+                        <td>レジストリ</td>
+                        <td>イメージの保管庫</td>
+                        <td><code>gcr.io</code></td>
+                    </tr>
+                    <tr>
+                        <td>GKE</td>
+                        <td>Google が管理する Kubernetes</td>
+                        <td><code>echo-cluster</code></td>
+                    </tr>
+                    <tr>
+                        <td>ノード</td>
+                        <td>クラスタを構成する 1 台の VM</td>
+                        <td>2 台</td>
+                    </tr>
+                    <tr>
+                        <td>Pod</td>
+                        <td>Kubernetes の最小単位</td>
+                        <td>echo-web が入る</td>
+                    </tr>
+                    <tr>
+                        <td>Deployment</td>
+                        <td>「Pod を N 個維持する」宣言</td>
+                        <td><code>echo-web</code></td>
+                    </tr>
+                    <tr>
+                        <td>Service</td>
+                        <td>Pod への安定した入口</td>
+                        <td>外部公開用 LoadBalancer</td>
+                    </tr>
+                </table>
+            </div>
+            <h3>2-1. イメージ名の読み方</h3>
+            <p>
+                イメージ名は <code>gcr.io/プロジェクトID/echo-app:v1</code> の形式で、<strong
+                    >この形式自体が push 先を決めます</strong
+                >。
+            </p>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>部分</th>
+                        <th>例</th>
+                        <th>意味</th>
+                    </tr>
+                    <tr>
+                        <td>ホスト名</td>
+                        <td><code>gcr.io</code></td>
+                        <td>どのレジストリか</td>
+                    </tr>
+                    <tr>
+                        <td>プロジェクトID</td>
+                        <td><code>my-project-123</code></td>
+                        <td>どのプロジェクトの保管庫か</td>
+                    </tr>
+                    <tr>
+                        <td>イメージ名</td>
+                        <td><code>echo-app</code></td>
+                        <td>アプリの名前</td>
+                    </tr>
+                    <tr>
+                        <td>タグ</td>
+                        <td><code>v1</code></td>
+                        <td>バージョン</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2 id="s3">3. 事前準備（Cloud Shell と変数の設定）</h2>
+            <p>
+                コンソール右上の
+                <strong>「Cloud Shell をアクティブにする」</strong
+                >（<code>&gt;_</code>）を開き、認証とプロジェクトを確認します。
+            </p>
+            <pre><code>gcloud auth list
+gcloud config list project</code></pre>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>確認項目</th>
+                        <th>期待する結果</th>
+                    </tr>
+                    <tr>
+                        <td>アカウント</td>
+                        <td>ラボ用の <code>student-...@qwiklabs.net</code> が ACTIVE</td>
+                    </tr>
+                    <tr>
+                        <td>プロジェクト</td>
+                        <td>ラボ用プロジェクトIDが表示される</td>
+                    </tr>
+                </table>
+            </div>
+            <p>繰り返し使う値は環境変数にして、打ち間違いを防ぎます。</p>
+            <pre><code>export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"</code></pre>
+            <div class="callout warn">
+                <strong>注意</strong
+                ><code>ZONE</code>
+                はラボ画面の値をそのままコピーします。例の値を使い回さないでください。
+            </div>
+            <p>
+                念のため、必要な API
+                の有効化方法も覚えておきましょう（ラボでは有効済みのことが多いです）。
+            </p>
+            <pre><code>gcloud services enable container.googleapis.com artifactregistry.googleapis.com</code></pre>
+
+            <h2 id="s4">4. Task 1: Kubernetes クラスタを作成する</h2>
+            <pre><code>gcloud container clusters create echo-cluster \
+  --zone ${ZONE} \
+  --num-nodes 2 \
+  --machine-type e2-standard-2</code></pre>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>オプション</th>
+                        <th>意味</th>
+                        <th>間違えると</th>
+                    </tr>
+                    <tr>
+                        <td><code>echo-cluster</code></td>
+                        <td>クラスタ名</td>
+                        <td>採点されない</td>
+                    </tr>
+                    <tr>
+                        <td><code>--zone</code></td>
+                        <td>作成場所（ゾーンクラスタ）</td>
+                        <td>別ゾーンだと採点されない</td>
+                    </tr>
+                    <tr>
+                        <td><code>--num-nodes 2</code></td>
+                        <td>ゾーンあたりのノード数</td>
+                        <td>多いと上限に注意</td>
+                    </tr>
+                    <tr>
+                        <td><code>--machine-type</code></td>
+                        <td>ノードのスペック（2 vCPU・8 GB）</td>
+                        <td>既定タイプになる</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="callout warn">
+                <strong>ノード数の考え方</strong
+                ><code>--region</code> でリージョンクラスタを作ると「ゾーン数 × 2
+                台」になり、「2台まで」の制約を破ります。今回は必ず <code>--zone</code> を使います。
+            </div>
+            <h3>4-1. 待ち時間の活用（別タブの注意）</h3>
+            <p>
+                作成には約 3〜5 分かかります。<strong>別の Cloud Shell タブ</strong>で Task 2・3
+                を進められますが、環境変数はタブごとに独立しているため、新しいタブで 3
+                章の変数設定をやり直してください。Task 4
+                は、最初のタブで作成完了が表示されてから実行します。
+            </p>
+            <div class="mermaid-diagram" id="mm-wait"></div>
+            <h3>4-2. 認証情報の取得と確認</h3>
+            <pre><code>gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
+kubectl get nodes</code></pre>
+            <p>
+                <code>STATUS</code> が <code>Ready</code> のノードが
+                <strong>2 台</strong>表示されれば成功です。<code>NotReady</code> は起動途中なので
+                1〜2 分待ちます。
+            </p>
+
+            <h2 id="s5">5. Task 2: タグ付き Docker イメージをビルドする</h2>
+            <p>
+                アプリ一式は Cloud Storage の
+                <code>gs://プロジェクトID/echo-web.tar.gz</code>
+                にあります。ダウンロード→展開→ビルドの順に進めます。
+            </p>
+            <div class="mermaid-diagram" id="mm-build"></div>
+            <h3>5-1. ダウンロードと展開</h3>
+            <pre><code>gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
+
+# 展開専用の空ディレクトリを作り、そこへ展開する
+BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
+echo "BUILD_DIR=${BUILD_DIR}"
+tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
+ls -la "$BUILD_DIR"</code></pre>
+            <div class="callout">
+                <strong>なぜ専用ディレクトリに展開するのか</strong
+                ><code>docker build</code> は指定ディレクトリを丸ごと「ビルドコンテキスト」として
+                Docker
+                に渡します。ホームディレクトリ全体を渡すと、無関係なファイルや認証情報まで送られ、ビルドも遅くなります。
+            </div>
+            <div class="callout warn">
+                <strong>変数の消失</strong
+                ><code>BUILD_DIR</code> は別タブや再接続で空になります。<code>echo</code>
+                で表示した値を設定し直してください。
+            </div>
+            <h3>5-2. 内容の確認</h3>
+            <pre><code>grep -nE '^[[:space:]]*(COPY|ADD)' "$BUILD_DIR/Dockerfile"
+cat "$BUILD_DIR/Dockerfile"
+cat "$BUILD_DIR/.dockerignore" 2&gt;/dev/null || echo ".dockerignore なし"</code></pre>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>観点</th>
+                        <th>確認内容</th>
+                    </tr>
+                    <tr>
+                        <td>Dockerfile の場所</td>
+                        <td><code>BUILD_DIR</code> 直下にあること。サブディレクトリに展開された場合は、<code>Dockerfile</code> のあるディレクトリを <code>BUILD_DIR</code> に設定し直してから 5-3 の <code>docker build</code> を実行する</td>
+                    </tr>
+                    <tr>
+                        <td><code>COPY</code> / <code>ADD</code></td>
+                        <td>取り込み元がすべて <code>BUILD_DIR</code> 内にあること</td>
+                    </tr>
+                    <tr>
+                        <td><code>.dockerignore</code></td>
+                        <td><code>main.go</code> など必要なファイルを除外していないこと</td>
+                    </tr>
+                    <tr>
+                        <td><code>EXPOSE</code></td>
+                        <td>
+                            待受ポート（8000）を示す<strong>メタデータ</strong>。ポートを開く機能ではない
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h3>5-3. ビルド</h3>
+            <pre><code>docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 "$BUILD_DIR"
+docker images</code></pre>
+            <p>
+                <code>-t</code> は tag の <code>t</code> で、名前とタグを付けます。末尾の
+                <code>"$BUILD_DIR"</code> を省略すると引数不足でエラーになります。<code
+                    >docker images</code
+                >
+                に <code>gcr.io/プロジェクトID/echo-app</code> の <code>v1</code> が出れば成功です。
+            </p>
+            <h3>5-4. 最初から完全な名前で作る理由</h3>
+            <div class="mermaid-diagram" id="mm-tag"></div>
+
+            <h2 id="s6">6. Task 3: イメージを gcr.io に push する</h2>
+            <p>
+                Docker はそのままでは Google のレジストリにログインできないため、<code>gcloud</code>
+                を認証ヘルパーとして登録します（途中の確認は <code>Y</code>）。
+            </p>
+            <pre><code>gcloud auth configure-docker
+docker push gcr.io/${PROJECT_ID}/echo-app:v1</code></pre>
+            <p>期待する出力の流れは次のとおりです。</p>
+            <div class="mermaid-diagram" id="mm-push"></div>
+            <p>
+                最後に
+                <code>v1: digest: sha256:...</code> と表示されれば成功です。確認は次のとおりです。
+            </p>
+            <pre><code>gcloud artifacts docker images list us-docker.pkg.dev/${PROJECT_ID}/gcr.io
+gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
+            <div class="callout">
+                <strong>Container Registry から Artifact Registry へ</strong>Container Registry
+                は非推奨で、後継は Artifact Registry です。<code>gcr.io</code> ドメインは Artifact
+                Registry 側で引き続き使えます。<strong
+                    >ラボでは指定どおり <code>gcr.io</code></strong
+                >、新規の実務や試験の解答では
+                <strong>Artifact Registry</strong
+                >（<code>REGION-docker.pkg.dev/...</code>）を選びます。
+            </div>
+
+            <h2 id="s7">7. Task 4: アプリをクラスタにデプロイして公開する</h2>
+            <h3>7-1. 最重要ポイント：2 つのポートを区別する</h3>
+            <div class="mermaid-diagram" id="mm-port"></div>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>名前</th>
+                        <th>誰のポートか</th>
+                        <th>このラボの値</th>
+                    </tr>
+                    <tr>
+                        <td><code>--port</code></td>
+                        <td>Service が外部に見せるポート</td>
+                        <td>80</td>
+                    </tr>
+                    <tr>
+                        <td><code>--target-port</code></td>
+                        <td>コンテナが実際に待ち受けるポート</td>
+                        <td>8000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="callout ng">
+                <strong>よくあるミス</strong
+                ><code>--port 8000</code>
+                だけを指定すると、Service は 8000 番だけを公開するため、<code>http://IP</code>（80番）への接続は拒否またはタイムアウトして<strong>つながりません</strong>。LoadBalancer Service は L4 で転送するため、HTTP のエラー応答（504 など）は返りません。
+            </div>
+            <h3>7-2. Deployment を作成</h3>
+            <pre><code># 現在のコンテキストの Namespace を記録する（未設定なら Kubernetes の既定値 default）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+
+kubectl create deployment echo-web \
+  --namespace "$NAMESPACE" \
+  --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl get deployment echo-web
+kubectl get pods</code></pre>
+            <p>
+                <code>READY</code> が <code>1/1</code>、Pod の <code>STATUS</code> が
+                <code>Running</code> になれば成功です。表示された <code>NAMESPACE</code>
+                は公開・削除でも同じ値を使うため、控えておきます。
+            </p>
+            <h3>7-3. Service を作成して外部公開</h3>
+            <pre><code>kubectl expose deployment echo-web \
+  --namespace "$NAMESPACE" \
+  --type=LoadBalancer \
+  --port 80 \
+  --target-port 8000
+kubectl get service echo-web --namespace "$NAMESPACE" --watch</code></pre>
+            <p>
+                <code>EXTERNAL-IP</code> が <code>&lt;pending&gt;</code> から IP
+                アドレスに変わるまで約 1〜2 分待ち、<code>Ctrl+C</code> で watch を終了します。
+            </p>
+            <div class="mermaid-diagram" id="mm-lb"></div>
+            <h3>7-4. 参考：宣言的な方法（マニフェスト）</h3>
+            <p>
+                実務では YAML を Git 管理する方法が<strong>推奨</strong>です。Service は
+                <code>selector</code> のラベルで Pod
+                を探すため、ラベルの一致が必須です（コマンド方式では自動で一致します）。
+            </p>
+            <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-web
+  template:
+    metadata:
+      labels:
+        app: echo-web
+    spec:
+      containers:
+        - name: echo-web
+          image: gcr.io/PROJECT_ID/echo-app:v1
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-web
+spec:
+  type: LoadBalancer
+  selector:
+    app: echo-web
+  ports:
+    - port: 80
+      targetPort: 8000</code></pre>
+            <div class="callout warn">
+                <strong>適用前に PROJECT_ID を置き換える</strong
+                ><code>image:</code> の <code>gcr.io/PROJECT_ID/echo-app:v1</code> の
+                <code>PROJECT_ID</code> は、自分のプロジェクト ID に置き換えてから適用します。イメージ名
+                <code>echo-app</code> とタグ <code>v1</code> は変えません。置き換えないと
+                <code>ImagePullBackOff</code> になります。
+            </div>
+            <p>
+                上の YAML を <code>echo-web.yaml</code> という名前で保存し（例:
+                <code>nano echo-web.yaml</code>）、<code>PROJECT_ID</code> を 3 章で設定した値へ置換して適用します。
+            </p>
+            <pre><code># PROJECT_ID を置換して適用する（echo-web.yaml が保存済みであることを先に確認する）
+if [ ! -f echo-web.yaml ]; then
+  echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" &gt;&amp;2
+  false
+else
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply --namespace "$NAMESPACE" -f -
+fi</code></pre>
+
+            <h2 id="s8">8. 動作確認</h2>
+            <pre><code>export EXTERNAL_IP=$(kubectl get service echo-web --namespace "$NAMESPACE" \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo ${EXTERNAL_IP}
+curl http://${EXTERNAL_IP}</code></pre>
+            <p>
+                ブラウザでは <code>https</code> ではなく <strong><code>http</code></strong
+                >://EXTERNAL-IP を開きます。
+            </p>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>採点項目</th>
+                        <th>確認内容</th>
+                        <th>対応</th>
+                    </tr>
+                    <tr>
+                        <td>Create the Kubernetes cluster</td>
+                        <td>指定ゾーンに <code>echo-cluster</code></td>
+                        <td>Task 1</td>
+                    </tr>
+                    <tr>
+                        <td>Image with a v1 tag pushed to gcr.io</td>
+                        <td><code>gcr.io</code> に <code>v1</code></td>
+                        <td>Task 3</td>
+                    </tr>
+                    <tr>
+                        <td>Application deployed to the cluster</td>
+                        <td>Deployment が動作</td>
+                        <td>Task 4</td>
+                    </tr>
+                    <tr>
+                        <td>Service responds to requests</td>
+                        <td>外部から応答</td>
+                        <td>Task 4</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2 id="s9">9. トラブルシューティング</h2>
+            <div class="mermaid-diagram" id="mm-diag"></div>
+            <div class="callout warn"><strong>注意</strong>この節の <code>kubectl</code> は、7-3 で記録した <code>NAMESPACE</code> を対象にします。別タブや再接続後は値が空になるため、診断の前に表の下にあるコマンドの先頭で設定し直してください。</div>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>症状</th>
+                        <th>原因</th>
+                        <th>対処</th>
+                    </tr>
+                    <tr>
+                        <td><code>http://IP</code> に接続できない（接続拒否・タイムアウト）</td>
+                        <td>アプリ未起動、または Service が 80 番を公開していない（<code>--port 8000</code> のみ等）／<code>targetPort</code> が 8000 でない／Ready な Endpoint がない</td>
+                        <td>1〜2分待つ。<code>kubectl get service echo-web --namespace "$NAMESPACE"</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>kubectl describe service echo-web --namespace "$NAMESPACE"</code> で <code>TargetPort</code> が <code>8000/TCP</code> か確認（<code>get service</code> には <code>targetPort</code> が表示されない）。<code>kubectl get endpoints echo-web --namespace "$NAMESPACE"</code> の <code>ENDPOINTS</code> が <code>&lt;none&gt;</code> なら、待つだけでは解消しないことがあるため、<code>kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'</code> の selector が <code>kubectl get pods --namespace "$NAMESPACE" --show-labels</code> で Ready の Pod のラベルと一致するか確認</td>
+                    </tr>
+                    <tr>
+                        <td>後半の採点項目が通らない</td>
+                        <td>別ゾーンでクラスタ作成</td>
+                        <td>指定の <code>ZONE</code> で作り直す</td>
+                    </tr>
+                    <tr>
+                        <td><code>EXTERNAL-IP</code> が pending</td>
+                        <td>LB 作成中、または割り当て不足</td>
+                        <td>2〜3分待つ。<code>kubectl describe service echo-web --namespace "$NAMESPACE"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ImagePullBackOff</code></td>
+                        <td>イメージ名・タグ・ID の誤り、push 漏れ</td>
+                        <td><code>kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web --show-events=true</code> で名前を確認し push を再実行</td>
+                    </tr>
+                    <tr>
+                        <td><code>CrashLoopBackOff</code></td>
+                        <td>アプリが起動直後に落ちる</td>
+                        <td><code>kubectl logs --namespace "$NAMESPACE" -l app=echo-web</code> で原因確認</td>
+                    </tr>
+                    <tr>
+                        <td>push 時の認証エラー</td>
+                        <td>認証ヘルパー未設定</td>
+                        <td><code>gcloud auth configure-docker</code></td>
+                    </tr>
+                    <tr>
+                        <td>build で Dockerfile がない</td>
+                        <td><code>BUILD_DIR</code> が空・違う場所</td>
+                        <td><code>ls -la "$BUILD_DIR"</code> で確認し設定し直す</td>
+                    </tr>
+                    <tr>
+                        <td>別クラスタにつながる</td>
+                        <td>コンテキスト未切替</td>
+                        <td><code>get-credentials</code> を再実行</td>
+                    </tr>
+                </table>
+            </div>
+            <pre><code># 別タブや再接続後は NAMESPACE が空になるため、7-3 で表示した値を設定し直す
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web
+kubectl logs --namespace "$NAMESPACE" -l app=echo-web
+kubectl describe service echo-web --namespace "$NAMESPACE"
+kubectl get endpoints echo-web --namespace "$NAMESPACE"   # 空なら selector 不一致、または一致する Pod が Ready でない（selector と Pod の READY を両方確認）
+
+# Service の作り直し
+kubectl delete service echo-web --namespace "$NAMESPACE"
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000</code></pre>
+
+            <h2 id="s10">10. ベストプラクティス（実務・試験向け）</h2>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>分野</th>
+                        <th>推奨</th>
+                        <th>理由</th>
+                    </tr>
+                    <tr>
+                        <td>タグ</td>
+                        <td>
+                            <code>latest</code>
+                            を避け、明示的バージョン。本番はダイジェスト固定も検討
+                        </td>
+                        <td>動作中の版を追跡でき、上書き事故を防ぐ</td>
+                    </tr>
+                    <tr>
+                        <td>レジストリ</td>
+                        <td>新規は Artifact Registry、脆弱性スキャンを有効化</td>
+                        <td>Container Registry は非推奨</td>
+                    </tr>
+                    <tr>
+                        <td>ベースイメージ</td>
+                        <td>軽量・最小（distroless など）</td>
+                        <td>攻撃対象領域とサイズを削減</td>
+                    </tr>
+                    <tr>
+                        <td>ビルド</td>
+                        <td>Cloud Build で自動化</td>
+                        <td>再現性・監査性</td>
+                    </tr>
+                    <tr>
+                        <td>運用モード</td>
+                        <td>運用負荷を下げるなら Autopilot</td>
+                        <td>ノード管理を Google に任せられる</td>
+                    </tr>
+                    <tr>
+                        <td>可用性</td>
+                        <td>本番はリージョンクラスタ＋レプリカ 2 以上</td>
+                        <td>ゾーン障害・単一障害点への備え</td>
+                    </tr>
+                    <tr>
+                        <td>権限</td>
+                        <td>Workload Identity、専用 SA＋最小権限</td>
+                        <td>権限過多の防止</td>
+                    </tr>
+                    <tr>
+                        <td>更新</td>
+                        <td>リリースチャンネルでバージョンを自動更新</td>
+                        <td>セキュリティパッチを継続適用</td>
+                    </tr>
+                    <tr>
+                        <td>公開範囲</td>
+                        <td>本番では限定公開クラスタを検討</td>
+                        <td>ノードに外部 IP を持たせない</td>
+                    </tr>
+                    <tr>
+                        <td>マニフェスト</td>
+                        <td>
+                            Git
+                            管理、<code>resources</code>、<code>readinessProbe</code>／<code>livenessProbe</code>、非
+                            root 実行
+                        </td>
+                        <td>再現性と安定運用</td>
+                    </tr>
+                    <tr>
+                        <td>公開</td>
+                        <td>複数サービスは Ingress／Gateway API、HTTPS と Cloud Armor。社内向けのみなら内部ロードバランサ</td>
+                        <td>今回の HTTP 全公開は検証用。内部ロードバランサは外部に公開しない</td>
+                    </tr>
+                </table>
+            </div>
+            <pre><code># コンテナ定義への追記例（抜粋）
+resources:
+  requests:
+    cpu: "100m"
+    memory: "128Mi"
+  limits:
+    memory: "256Mi"
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8000
+  initialDelaySeconds: 5</code></pre>
+            <div class="callout">
+                <strong>試験（PCA）の押さえどころ</strong>簡単にコンテナを動かす→GKE（さらに簡単なら
+                Cloud Run）／イメージ保管→Artifact
+                Registry／高可用性→リージョンクラスタ＋複数レプリカ／CI/CD→Cloud Build＋Cloud
+                Deploy。今回の 2
+                ノード・ゾーンクラスタは<strong>テスト環境向けの最小構成</strong>で、本番設計と混同しないこと。
+            </div>
+
+            <h2 id="s11">11. コマンド一括版（復習用）</h2>
+            <div class="callout warn">
+                <strong>注意</strong
+                >まずは各 Task を理解しながら 1 つずつ実行してください。これは「理解後の復習用」です。<code>ZONE</code>
+                はラボの指定値に必ず置き換えます。
+            </div>
+            <pre><code># ===== 0. 変数 =====
+export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+
+# 以降はサブシェル内で実行し、必須コマンドが 1 つでも失敗したらその時点で止める
+# （set -e の影響を呼び出し元のシェルに残さないため、( ) で囲む）
+(
+set -euo pipefail
+
+# ===== 1. クラスタ作成 =====
+gcloud container clusters create echo-cluster \
+  --zone ${ZONE} \
+  --num-nodes 2 \
+  --machine-type e2-standard-2
+gcloud container clusters get-credentials echo-cluster --zone ${ZONE}
+
+# ===== 2. ビルド（現在の作業ディレクトリで実行する） =====
+gsutil cp gs://${PROJECT_ID}/echo-web.tar.gz .
+BUILD_DIR=$(mktemp -d ./echo-web-build.XXXXXX)
+tar -xzf echo-web.tar.gz -C "$BUILD_DIR"
+ls -la "$BUILD_DIR"   # Dockerfile と .dockerignore の内容を 5-2 のとおり確認する
+docker build -t gcr.io/${PROJECT_ID}/echo-app:v1 "$BUILD_DIR"
+
+# ===== 3. push =====
+gcloud auth configure-docker
+docker push gcr.io/${PROJECT_ID}/echo-app:v1
+
+# ===== 4. デプロイと公開 =====
+# 現在のコンテキストの Namespace を記録し、以降の作成先を揃える（クリーンアップで使うので表示された値を控える）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl create deployment echo-web --namespace "$NAMESPACE" --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
+# Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
+WATCH_STATUS=0
+kubectl get service echo-web --namespace "$NAMESPACE" --watch || WATCH_STATUS=$?
+if [ "$WATCH_STATUS" -ne 0 ] &amp;&amp; [ "$WATCH_STATUS" -ne 130 ]; then
+  exit "$WATCH_STATUS"
+fi
+)</code></pre>
+            <div class="callout">
+                <strong>途中で失敗した場合</strong
+                >表示されたエラーを直してから、失敗したステップ以降を 1 つずつ実行してください（クラスタ作成済みのまま全体を再実行すると、<code>clusters create</code>
+                が「既に存在する」で止まります）。
+            </div>
+
+            <h2 id="s12">12. クリーンアップ</h2>
+            <p>
+                ラボ環境は自動削除されますが、<strong>自分のプロジェクトで試した場合は課金されます</strong>。ロードバランサが課金対象のため、Service
+                から先に削除します。
+            </p>
+            <p>
+                削除の前に、対象のプロジェクト、ゾーン、Namespace を確認します。別タブや再接続後はこれらの変数が空になるため、ラボ画面の
+                <code>ZONE</code>（自分のプロジェクトで試した場合はクラスタを作成したゾーン）と、7-2 で表示した <code>NAMESPACE</code> を設定し直し、表示された値が削除対象と一致することを確認します。
+            </p>
+            <pre><code>export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"
+echo "NAMESPACE=${NAMESPACE}"</code></pre>
+            <p>
+                <code>kubectl</code> は既定で現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
+                がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが <code>echo-cluster</code>
+                であること、<code>echo-web</code> Service が <code>NAMESPACE</code> 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は
+                <code>ZONE</code>、<code>PROJECT_ID</code>、<code>NAMESPACE</code> を見直してください。<code>echo-web</code> Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
+            </p>
+            <pre><code># 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+# 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
+# kubectl は --context で対象を固定し、確認後に現在のコンテキストが変わっても別のクラスタを操作しない
+EXPECTED_CONTEXT="gke_${PROJECT_ID}_${ZONE}_echo-cluster"
+gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
+  &amp;&amp; gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+  &amp;&amp; [ "$(kubectl config current-context)" = "$EXPECTED_CONTEXT" ] \
+  &amp;&amp; ECHO_WEB_NAMESPACES=$(kubectl --context "$EXPECTED_CONTEXT" get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  &amp;&amp; OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF &amp;&amp; $0 != ns') \
+  &amp;&amp; { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" &gt;&amp;2; false; }; } \
+  &amp;&amp; kubectl --context "$EXPECTED_CONTEXT" delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  &amp;&amp; kubectl --context "$EXPECTED_CONTEXT" delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  &amp;&amp; gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}</code></pre>
+            <p>イメージを削除する前に、<code>v1</code> と同じ DIGEST を指すタグが他にないか確認します。</p>
+            <pre><code>gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>確認結果</th>
+                        <th>実行するコマンド</th>
+                    </tr>
+                    <tr>
+                        <td><code>v1</code> のみがその DIGEST を指す</td>
+                        <td>
+                            <code
+                                >gcloud artifacts docker images delete
+                                us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app:v1
+                                --delete-tags</code
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>同じ DIGEST を指す別タグがある</td>
+                        <td>
+                            <code
+                                >gcloud artifacts docker tags delete
+                                us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app:v1</code
+                            >（タグだけ外す）
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <p>
+                <code>--delete-tags</code>
+                は、そのイメージを指すタグをすべて削除するため、事前確認が必要です。
+            </p>
+
+            <h2 id="s13">13. チェックリスト</h2>
+            <ul class="chk">
+                <li>☐ <code>PROJECT_ID</code> と <code>ZONE</code>（ラボ指定値）を設定した</li>
+                <li>
+                    ☐ <code>echo-cluster</code> を指定ゾーンに作成し、ノード 2 台が
+                    <code>Ready</code>
+                </li>
+                <li>
+                    ☐ <code>echo-web.tar.gz</code> を専用ディレクトリに展開し、Dockerfile を確認した
+                </li>
+                <li>☐ <code>gcr.io/PROJECT_ID/echo-app:v1</code> をビルドし、push に成功した</li>
+                <li>☐ Deployment <code>echo-web</code> が <code>1/1</code> で Running</li>
+                <li>☐ Service を <code>--port 80 --target-port 8000</code> で作成した</li>
+                <li>☐ <code>EXTERNAL-IP</code> に curl／ブラウザでアクセスできた</li>
+                <li>☐ すべての <strong>Check my progress</strong> が緑になった</li>
+            </ul>
+            <div class="tw">
+                <table>
+                    <tr>
+                        <th>振り返り</th>
+                        <th>答え</th>
+                    </tr>
+                    <tr>
+                        <td>イメージ名の 4 要素は？</td>
+                        <td>ホスト名／プロジェクトID／イメージ名／タグ</td>
+                    </tr>
+                    <tr>
+                        <td><code>port</code> と <code>targetPort</code> の違いは？</td>
+                        <td>外部に見せるポート／コンテナの待受ポート</td>
+                    </tr>
+                    <tr>
+                        <td>Deployment と Service の違いは？</td>
+                        <td>Pod 数を維持する／Pod への入口を提供する</td>
+                    </tr>
+                    <tr>
+                        <td><code>http://IP</code> につながらない主な原因は？</td>
+                        <td>初期化待ち、ポート不一致（Service が 80 番を公開していない、または <code>targetPort</code> が 8000 でない）、または Ready な Endpoint がない（Service の <code>selector</code> 不一致、または Pod が Ready でない）</td>
+                    </tr>
+                </table>
+            </div>
+            <p style="color: var(--dim); margin-top: 30px">
+                <strong>まとめ：</strong>ビルド → push → デプロイ → 公開は、コンテナアプリを Google
+                Cloud で動かす基本パターンです。この流れを再現できれば、CI/CD の自動化や Cloud
+                Run、Ingress の学習がスムーズになります。
+            </p>
+        </main>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"
+            integrity="sha384-o+g/BxPwhi0C3RK7oQBxQuNimeafQ3GE/ST4iT2BxVI4Wzt60SH4pq9iXVYujjaS"
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            const MERMAID_DIAGRAMS = {
+                'mm-flow': `flowchart LR
+  accTitle: ラボ全体の作業の流れ
+  accDescr: クラスタ作成、イメージのビルド、gcr.io への push、Deployment 作成、Service 公開、curl とブラウザでの確認の順に進める流れ。
+  F1["Task 1<br/>GKEクラスタ作成"] --> F2["Task 2<br/>イメージをビルド v1"]
+  F2 --> F3["Task 3<br/>gcr.io へ push"]
+  F3 --> F4["Task 4<br/>Deployment 作成"]
+  F4 --> F5["Service 公開<br/>外部80 → コンテナ8000"]
+  F5 --> F6["curl / ブラウザで確認"]
+  classDef step fill:#112440,stroke:#7c9eff,color:#e6edf7
+  class F1,F2,F3,F4,F5,F6 step`,
+                'mm-wait': `flowchart LR
+    accTitle: クラスタ作成の待ち時間の使い方
+    accDescr: クラスタ作成を開始したら、作成を待つ間に別タブで変数を再設定して Task 2 と 3 を進め、クラスタが完成してから Task 4 へ進む流れ。
+    S["クラスタ作成を開始"] --> W["作成中（3〜5分）"]
+    S --> T2["別タブで変数を再設定し<br/>Task 2・3を進める"]
+    W --> D["クラスタ完成"]
+    T2 --> D
+    D --> T4["Task 4 へ"]`,
+                'mm-build': `flowchart TD
+    accTitle: イメージのビルド手順
+    accDescr: Cloud Storage の echo-web.tar.gz を gsutil cp で Cloud Shell に取得し、tar で展開し、docker build でローカルイメージを作る流れ。
+    A["Cloud Storage<br/>echo-web.tar.gz"] -->|"gsutil cp"| B["Cloud Shell に取得"]
+    B -->|"tar -xzf"| C["展開<br/>Dockerfile とソース"]
+    C -->|"docker build -t"| D["ローカルイメージ<br/>gcr.io/PROJECT_ID/echo-app:v1"]`,
+                'mm-push': `sequenceDiagram
+    accTitle: docker push の出力の流れ
+    accDescr: Docker がレイヤーを 1 つずつ gcr.io へアップロードし、gcr.io が受け取り完了と v1 のダイジェストを返すやり取り。
+    participant D as Docker（Cloud Shell）
+    participant R as gcr.io
+    D->>R: レイヤーを1つずつアップロード（Pushed）
+    R-->>D: 受け取り完了
+    R-->>D: v1: digest: sha256:... size: ...`,
+                'mm-lb': `flowchart LR
+    accTitle: 外部 IP が割り当てられるまでの流れ
+    accDescr: 作成直後の EXTERNAL-IP は pending で、約 1〜2 分後に IP アドレスが表示されたら Ctrl+C で watch を終了する流れ。
+    A["作成直後<br/>EXTERNAL-IP: pending"] -->|"約1〜2分"| B["EXTERNAL-IP に<br/>IPアドレスが表示"]
+    B --> C["Ctrl+C で watch 終了"]`,
+                'mm-arch': `flowchart TB
+  accTitle: 最終的な構成
+  accDescr: 利用者が HTTP 80 番で LoadBalancer の Service に接続し、Service が GKE クラスタ echo-cluster 内の Pod の 8000 番へ転送する構成。Pod のイメージは gcr.io の echo-app:v1 から取得する。
+  A1["利用者（ブラウザ）"] -->|"HTTP 80"| A2["Service<br/>LoadBalancer"]
+  subgraph GKE["GKEクラスタ echo-cluster（2ノード）"]
+    A2 -->|"targetPort 8000"| A3["Pod<br/>echo-web コンテナ"]
+  end
+  A4[("gcr.io<br/>echo-app:v1")] -.->|"イメージ取得"| A3
+  classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
+  classDef db fill:#1b3a2d,stroke:#5ad19a,color:#e6edf7
+  class A1,A2,A3 n
+  class A4 db`,
+                'mm-tag': `flowchart LR
+  accTitle: 最初から完全な名前でビルドする理由
+  accDescr: 短い名前でビルドすると後から docker tag で付け替える手順が増えてミスの恐れがある。gcr.io を含む完全な名前でビルドすれば、そのまま push できる。
+  T1["build -t echo-app:v1"] --> T2["あとで docker tag で付け替え"] --> T3["ミスの恐れ"]
+  T4["build -t gcr.io/PROJECT_ID/echo-app:v1"] --> T5["そのまま push できる"]
+  classDef bad fill:#3a1a22,stroke:#ff7b8a,color:#e6edf7
+  classDef good fill:#1b3a2d,stroke:#5ad19a,color:#e6edf7
+  classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
+  class T1,T2 n
+  class T3 bad
+  class T4 n
+  class T5 good`,
+                'mm-port': `flowchart LR
+  accTitle: port と targetPort の関係
+  accDescr: 利用者は http://EXTERNAL-IP で Service の 80 番に接続し、Service は --target-port で指定したコンテナの 8000 番へ転送する。
+  P1["利用者"] -->|"http://EXTERNAL-IP"| P2["Service<br/>--port 80"]
+  P2 -->|"--target-port 8000"| P3["コンテナ<br/>8000で待受"]
+  classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
+  class P1,P2,P3 n`,
+                'mm-diag': `flowchart TD
+  accTitle: つながらないときの診断手順
+  accDescr: Pod が Running か、EXTERNAL-IP があるか、targetPort が 8000 か、Service の port が 80 か、Endpoints に Ready なアドレスがあるかを順に確認し、いいえの段階で対応する確認や Service の作り直しを行う。すべて、はいなら初期化を待って再試行する。
+  D1["つながらない"] --> D2{"Pod は Running か"}
+  D2 -->|"いいえ"| D3["describe pod / logs で<br/>イメージ名・起動エラーを確認"]
+  D2 -->|"はい"| D4{"EXTERNAL-IP はあるか"}
+  D4 -->|"いいえ"| D5["数分待つ<br/>describe service で確認"]
+  D4 -->|"はい"| D6{"targetPort は 8000 か"}
+  D6 -->|"いいえ"| D7["Service を作り直す"]
+  D6 -->|"はい"| D9{"Service の port は 80 か"}
+  D9 -->|"いいえ"| D7
+  D9 -->|"はい"| D10{"Endpoints に Ready な<br/>アドレスはあるか"}
+  D10 -->|"いいえ"| D11["Service の selector と<br/>Pod の READY を確認"]
+  D10 -->|"はい"| D8["初期化待ち<br/>1〜2分後に再試行"]
+  classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
+  classDef q fill:#2a2350,stroke:#b79cff,color:#e6edf7
+  class D1,D3,D5,D7,D8,D11 n
+  class D2,D4,D6,D9,D10 q`,
+            };
+            (async function () {
+                if (typeof mermaid === 'undefined') {
+                    Object.keys(MERMAID_DIAGRAMS).forEach(function (id) {
+                        document.getElementById(id).textContent =
+                            'mermaid を CDN から読み込めませんでした。';
+                    });
+                    return;
+                }
+                mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'base',
+                    securityLevel: 'loose',
+                    themeVariables: {
+                        fontFamily: '"Noto Sans JP",sans-serif',
+                        fontSize: '16px',
+                        lineColor: '#7c9eff',
+                        background: '#0d1b2e',
+                        mainBkg: '#112440',
+                        nodeBorder: '#7c9eff',
+                        primaryColor: '#112440',
+                        primaryTextColor: '#e6edf7',
+                        primaryBorderColor: '#7c9eff',
+                        secondaryColor: '#0d1b2e',
+                        tertiaryColor: '#0a1626',
+                        textColor: '#e6edf7',
+                        titleColor: '#e6edf7',
+                        edgeLabelBackground: '#0d1b2e',
+                        clusterBkg: '#0a1626',
+                        clusterBorder: '#3b5a88',
+                    },
+                    flowchart: {
+                        useMaxWidth: false,
+                        htmlLabels: true,
+                        nodeSpacing: 50,
+                        rankSpacing: 50,
+                        subGraphTitleMargin: { top: 12, bottom: 18 },
+                    },
+                });
+                if (document.fonts && document.fonts.ready) {
+                    try {
+                        await document.fonts.ready;
+                    } catch (e) {}
+                }
+                for (const id of Object.keys(MERMAID_DIAGRAMS)) {
+                    const box = document.getElementById(id);
+                    try {
+                        const r = await mermaid.render('svg-' + id, MERMAID_DIAGRAMS[id]);
+                        box.innerHTML = r.svg;
+                    } catch (err) {
+                        box.textContent = '図の描画に失敗: ' + err.message;
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>

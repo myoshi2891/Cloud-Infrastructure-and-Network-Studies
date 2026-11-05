@@ -456,18 +456,25 @@ flowchart LR
 | `--port`（`port`） | **Service** が外部に見せるポート | 80 |
 | `--target-port`（`targetPort`） | **コンテナ**が実際に待ち受けるポート | 8000 |
 
-> **よくあるミス**: `--port 8000` だけ指定すると、ブラウザで `http://IP`（80番）にアクセスしても**つながりません**。これがトラブルシューティングの「504 エラー」の主な原因です。
+> **よくあるミス**: `--port 8000` だけ指定すると、ブラウザで `http://IP`（80番）にアクセスしても**つながりません**。Service は 8000 番だけを公開するため、80 番への接続は拒否またはタイムアウトします。LoadBalancer Service は L4 で転送するため、HTTP のエラー応答（504 など）は返りません。
 
 ### 7-3. Deployment を作成
 
 ```bash
+# 現在のコンテキストの Namespace を記録する（未設定なら Kubernetes の既定値 default）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+
 kubectl create deployment echo-web \
+  --namespace "$NAMESPACE" \
   --image=gcr.io/${PROJECT_ID}/echo-app:v1
 ```
 
 | 部分 | 意味 |
 |---|---|
 | `create deployment echo-web` | `echo-web` という名前の Deployment を作る（**採点対象の名前**） |
+| `--namespace "$NAMESPACE"` | 作成先の Namespace。公開・削除でも同じ値を使う。**12 のクリーンアップで使うので、表示された値を控える** |
 | `--image=...` | Pod に使うコンテナイメージ。**push した v1 を指定** |
 
 確認します。
@@ -486,6 +493,7 @@ kubectl get pods
 
 ```bash
 kubectl expose deployment echo-web \
+  --namespace "$NAMESPACE" \
   --type=LoadBalancer \
   --port 80 \
   --target-port 8000
@@ -501,7 +509,7 @@ kubectl expose deployment echo-web \
 ### 7-5. 外部 IP が付くのを待つ
 
 ```bash
-kubectl get service echo-web --watch
+kubectl get service echo-web --namespace "$NAMESPACE" --watch
 ```
 
 ```mermaid
@@ -561,7 +569,7 @@ if [ ! -f echo-web.yaml ]; then
   echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" >&2
   false  # シェルは閉じずに、この if 文の終了ステータスだけを失敗（0 以外）にする
 else
-  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply --namespace "$NAMESPACE" -f -
 fi
 ```
 
@@ -581,7 +589,7 @@ fi
 ### 8-1. 外部 IP を取得して curl で確認
 
 ```bash
-export EXTERNAL_IP=$(kubectl get service echo-web \
+export EXTERNAL_IP=$(kubectl get service echo-web --namespace "$NAMESPACE" \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo ${EXTERNAL_IP}
 
@@ -607,9 +615,9 @@ curl http://${EXTERNAL_IP}
 
 ```bash
 kubectl get nodes
-kubectl get deployments
-kubectl get pods
-kubectl get services
+kubectl get deployments --namespace "$NAMESPACE"
+kubectl get pods --namespace "$NAMESPACE"
+kubectl get services --namespace "$NAMESPACE"
 ```
 
 ---
@@ -618,14 +626,15 @@ kubectl get services
 
 ### 9-1. 症状別の早見表
 
+> **注意**: この節の `kubectl` は、7-3 で記録した `NAMESPACE` を対象にします。別タブや再接続後は値が空になるため、診断の前に 9-3 の先頭のコマンドで設定し直してください。
+
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **504 Gateway Timeout** | アプリが未起動、またはポートの不一致 | 1〜2分待つ → `targetPort` が **8000** か確認 |
-| 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web --namespace "$NAMESPACE"` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web --namespace "$NAMESPACE"` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web --namespace "$NAMESPACE"` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --namespace "$NAMESPACE" --show-labels` で Ready の Pod のラベルと一致するか確認 → `--port 8000` だけで作成していた場合は、9-4 の手順で Service を作り直し、`--port 80 --target-port 8000` を指定する |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
-| `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web` |
-| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod` で名前を確認、push を再実行 |
-| Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名` で原因を確認 |
+| `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web --namespace "$NAMESPACE"` |
+| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web --show-events=true` で名前を確認、push を再実行 |
+| Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名 --namespace "$NAMESPACE"` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
 | `docker build` で `Dockerfile` がない | `BUILD_DIR` が空、または `Dockerfile` のあるディレクトリと違う | `echo "$BUILD_DIR"` と `ls -la "$BUILD_DIR"` で確認し、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直す |
 | `kubectl` が別クラスタにつながる | コンテキスト未切替 | `gcloud container clusters get-credentials ...` |
@@ -640,16 +649,24 @@ flowchart TD
     D -->|"いいえ"| E["数分待つ<br/>describe service で状況確認"]
     D -->|"はい"| F{"targetPort は<br/>8000 か？"}
     F -->|"いいえ"| G["Service を作り直す"]
-    F -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
+    F -->|"はい"| I{"Service の port は<br/>80 か？"}
+    I -->|"いいえ"| G
+    I -->|"はい"| J{"Endpoints に Ready な<br/>アドレスはあるか？"}
+    J -->|"いいえ"| K["Service の selector と<br/>Pod の READY を確認"]
+    J -->|"はい"| H["アプリ初期化待ち<br/>1〜2分後に再試行"]
 ```
 
 ### 9-3. 使える診断コマンド
 
 ```bash
-kubectl describe pod -l app=echo-web
-kubectl logs -l app=echo-web
-kubectl describe service echo-web
-kubectl get endpoints echo-web
+# 別タブや再接続後は NAMESPACE が空になるため、7-3 で表示した値を設定し直す
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web
+kubectl logs --namespace "$NAMESPACE" -l app=echo-web
+kubectl describe service echo-web --namespace "$NAMESPACE"
+kubectl get endpoints echo-web --namespace "$NAMESPACE"
 ```
 
 | コマンド | 分かること |
@@ -657,13 +674,13 @@ kubectl get endpoints echo-web
 | `describe pod` | イベント（イメージ取得失敗など）の履歴 |
 | `logs` | アプリの標準出力・エラー |
 | `describe service` | ポート設定と LB のイベント |
-| `get endpoints` | Service が **Pod に結びついているか**（空なら selector 不一致） |
+| `get endpoints` | Service が **Pod に結びついているか**（ready なアドレスが空なら selector 不一致、または一致する Pod が Ready でない。selector と Pod の READY を両方確認） |
 
 ### 9-4. Service を作り直す場合
 
 ```bash
-kubectl delete service echo-web
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+kubectl delete service echo-web --namespace "$NAMESPACE"
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 ```
 
 ---
@@ -776,11 +793,15 @@ gcloud auth configure-docker
 docker push gcr.io/${PROJECT_ID}/echo-app:v1
 
 # ===== 4. デプロイと公開 =====
-kubectl create deployment echo-web --image=gcr.io/${PROJECT_ID}/echo-app:v1
-kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
+# 現在のコンテキストの Namespace を記録し、以降の作成先を揃える（クリーンアップで使うので表示された値を控える）
+NAMESPACE=$(kubectl config view --minify -o jsonpath='{..namespace}')
+NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl create deployment echo-web --namespace "$NAMESPACE" --image=gcr.io/${PROJECT_ID}/echo-app:v1
+kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 # Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
 WATCH_STATUS=0
-kubectl get service echo-web --watch || WATCH_STATUS=$?
+kubectl get service echo-web --namespace "$NAMESPACE" --watch || WATCH_STATUS=$?
 if [ "$WATCH_STATUS" -ne 0 ] && [ "$WATCH_STATUS" -ne 130 ]; then
   exit "$WATCH_STATUS"
 fi
@@ -795,10 +816,35 @@ fi
 
 ラボ環境は終了時に自動削除されますが、**自分のプロジェクトで試した場合は料金が発生**するため、必ず削除してください。
 
+削除の前に、対象のプロジェクト、ゾーン、Namespace を確認します。別タブや再接続後はこれらの変数が空になるため、ラボ画面の `ZONE`（自分のプロジェクトで試した場合はクラスタを作成したゾーン）と、7-3 で表示した `NAMESPACE` を設定し直し、表示された値が削除対象と一致することを確認します。
+
 ```bash
-kubectl delete service echo-web
-kubectl delete deployment echo-web
-gcloud container clusters delete echo-cluster --zone ${ZONE}
+export PROJECT_ID=$(gcloud config get-value project)
+read -r -p "ラボ指定のゾーンを入力 (例: us-central1-a): " ZONE
+export ZONE
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "ZONE=${ZONE}"
+echo "NAMESPACE=${NAMESPACE}"
+```
+
+`kubectl` は既定で現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であること、`echo-web` Service が `NAMESPACE` 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE`、`PROJECT_ID`、`NAMESPACE` を見直してください。`echo-web` Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
+
+```bash
+# 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
+# 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
+# kubectl は --context で対象を固定し、確認後に現在のコンテキストが変わっても別のクラスタを操作しない
+EXPECTED_CONTEXT="gke_${PROJECT_ID}_${ZONE}_echo-cluster"
+gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
+  && gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
+  && [ "$(kubectl config current-context)" = "$EXPECTED_CONTEXT" ] \
+  && ECHO_WEB_NAMESPACES=$(kubectl --context "$EXPECTED_CONTEXT" get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  && OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF && $0 != ns') \
+  && { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" >&2; false; }; } \
+  && kubectl --context "$EXPECTED_CONTEXT" delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  && kubectl --context "$EXPECTED_CONTEXT" delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  && gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 ```
 
 イメージを削除する前に、`echo-app` のタグ一覧を表示し、**`v1` と同じ `DIGEST` を指すタグが他にないか**を確認します。`--delete-tags` は、そのイメージ（ダイジェスト）を指すタグをすべて削除するためです。
@@ -848,7 +894,7 @@ gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-ap
 | イメージ名の4要素は？ | ホスト名／プロジェクトID／イメージ名／タグ |
 | `port` と `targetPort` の違いは？ | 外部に見せるポート／コンテナが待ち受けるポート |
 | Deployment と Service の役割の違いは？ | Pod の数を維持する／Pod への入口を提供する |
-| 504 エラーの主な原因は？ | 初期化待ち、またはポートの不一致 |
+| `http://IP` につながらない主な原因は？ | 初期化待ち、ポートの不一致（Service が 80 番を公開していない、または `targetPort` が 8000 でない）、または Ready な Endpoint がない（Service の `selector` 不一致、または Pod が Ready でない） |
 | 今後イメージを保管するなら？ | Artifact Registry |
 
 ---
