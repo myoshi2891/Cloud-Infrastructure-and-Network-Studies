@@ -240,6 +240,7 @@ gcloud services enable \
   run.googleapis.com \
   cloudbuild.googleapis.com \
   artifactregistry.googleapis.com \
+  iam.googleapis.com \
   policytroubleshooter.googleapis.com
 ```
 
@@ -1016,7 +1017,7 @@ export PROD_BILLING_SVC=billing-prod-service
 export FRONTEND_SA=frontend-service-sa
 export PROD_FRONTEND_SVC=frontend-prod-service
 
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com policytroubleshooter.googleapis.com
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com iam.googleapis.com policytroubleshooter.googleapis.com
 git clone https://github.com/rosera/pet-theory.git \
   && git -C pet-theory checkout --detach 3a255117580ecda8ffd77becdba665081653dfec \
   && cd pet-theory/lab07
