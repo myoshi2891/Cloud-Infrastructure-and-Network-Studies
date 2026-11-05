@@ -123,3 +123,4 @@ describe('SCS-C03 Domain 3 — スタイル・デザイン完全移行', () => {
         expect(rules(css, '.scs-domain3-page .main ul ul ul')['list-style-type']).toBe('square');
     });
 });
+

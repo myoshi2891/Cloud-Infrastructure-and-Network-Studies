@@ -76,3 +76,4 @@ describe('SCS-C03 Domain 3 — コードブロック構造と構文ハイライ�
         expect(tokensOf(container, 'bash', 'variable')).toContain('$EXTERNAL_NET');
     });
 });
+

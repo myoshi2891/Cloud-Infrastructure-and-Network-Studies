@@ -2,9 +2,8 @@
             .scs-domain3-page * {
                 box-sizing: border-box;
             }
-            .scs-domain3-page,
-            .scs-domain3-page {
-                overflow-x: hidden;
+            .scs-domain3-page, .scs-domain3-page {
+                overflow-x: clip;
             }
             .scs-domain3-page {
                 margin: 0;
@@ -27,15 +26,15 @@
             }
             .scs-domain3-page .sidebar {
                 position: fixed;
-                top: 0;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
                 left: 0;
                 bottom: 0;
                 width: 280px;
-                background: #ffffff;
+                background: var(--color-scs-d3-sidebar-bg);
                 border-right: 1px solid var(--color-scs-d3-border-soft);
                 overflow-y: auto;
                 padding: 28px 0 40px;
-                z-index: 50;
+                z-index: 38;
             }
             .scs-domain3-page .sidebar-header {
                 padding: 0 24px 20px;
@@ -81,6 +80,11 @@
                 color: var(--color-scs-d3-accent);
                 font-weight: 700;
             }
+            .scs-domain3-page .sidebar nav a[aria-current='location'] {
+                background: var(--color-scs-d3-accent-bg);
+                color: var(--color-scs-d3-accent);
+                font-weight: 700;
+            }
             .scs-domain3-page .sidebar nav a.lvl3 {
                 padding-left: 28px;
                 font-size: 12.5px;
@@ -88,9 +92,9 @@
             .scs-domain3-page .sidebar-toggle {
                 display: none;
                 position: fixed;
-                top: 14px;
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
                 left: 14px;
-                z-index: 60;
+                z-index: 39;
                 width: 42px;
                 height: 42px;
                 border-radius: 10px;
@@ -124,7 +128,7 @@
                 font-size: clamp(28px, 3.6vw, 42px);
                 line-height: 1.35;
                 margin: 0 0 18px;
-                background: linear-gradient(135deg, #1b2640 0%, #2a4fd0 100%);
+                background: linear-gradient(135deg, var(--color-scs-d3-text) 0%, var(--color-scs-d3-accent) 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -158,9 +162,9 @@
                 color: var(--color-scs-d3-text);
                 font-weight: 800;
                 letter-spacing: -0.01em;
-                scroll-margin-top: 24px;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
             }
-            .scs-domain3-page .main > h2:first-of-type {
+            .scs-domain3-page .main > .guide-part:first-child > h2:first-of-type {
                 border-top: none;
                 padding-top: 0;
                 margin-top: 8px;
@@ -170,7 +174,7 @@
                 margin: 38px 0 16px;
                 color: var(--color-scs-d3-text);
                 font-weight: 700;
-                scroll-margin-top: 24px;
+                scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
             }
             .scs-domain3-page .main h3::before {
                 content: '';
@@ -193,8 +197,7 @@
                 color: var(--color-scs-d3-text);
                 overflow-wrap: break-word;
             }
-            .scs-domain3-page .main ul,
-            .scs-domain3-page .main ol {
+            .scs-domain3-page .main ul, .scs-domain3-page .main ol {
                 margin: 0 0 18px;
                 padding-left: 1.4em;
                 color: var(--color-scs-d3-text);
@@ -209,7 +212,7 @@
                 margin: 44px 0;
             }
             .scs-domain3-page .main strong {
-                color: #0c1630;
+                color: var(--color-scs-d3-strong);
                 font-weight: 700;
             }
             .scs-domain3-page .main code:not(pre code) {
@@ -218,9 +221,9 @@
                 border-radius: 5px;
                 padding: 1px 6px;
                 font-size: 0.9em;
-                color: #9a4208;
+                color: var(--color-scs-d3-code-inline);
                 overflow-wrap: break-word;
-                word-break: break-word;
+                overflow-wrap: anywhere;
             }
             .scs-domain3-page .table-scroll {
                 overflow-x: auto;
@@ -256,7 +259,7 @@
             .scs-domain3-page tbody tr:hover td {
                 background: rgba(42, 79, 208, 0.05);
             }
-            .scs-domain3-page pre.mermaid {
+            .scs-domain3-page .mermaid-wrap {
                 width: 100%;
                 display: flex;
                 justify-content: safe center;
@@ -267,15 +270,15 @@
                 padding: 28px 20px;
                 margin: 0 0 30px;
             }
-            .scs-domain3-page pre.mermaid svg {
+            .scs-domain3-page .mermaid-wrap svg {
                 flex-shrink: 0;
             }
-            .scs-domain3-page pre.mermaid p {
+            .scs-domain3-page .mermaid-wrap p {
                 color: inherit;
                 margin: 0;
             }
             .scs-domain3-page pre.code {
-                background: #f3f6fc;
+                background: var(--color-scs-d3-code-bg);
                 border: 1px solid var(--color-scs-d3-border);
                 border-radius: 12px;
                 padding: 16px 20px;
@@ -285,53 +288,35 @@
                 line-height: 1.7;
                 max-width: 100%;
             }
-            .scs-domain3-page pre.code code {
+            .scs-domain3-page pre.code .code-line {
                 font-family:
                     ui-monospace, SFMono-Regular, Menlo, Consolas, 'Noto Sans JP', monospace;
                 background: none;
                 border: none;
                 padding: 0;
-                color: #1b2640;
+                color: var(--color-scs-d3-text);
                 white-space: pre;
                 display: block;
             }
-            .scs-domain3-page .hljs-keyword,
-            .scs-domain3-page .hljs-selector-tag,
-            .scs-domain3-page .hljs-built_in,
-            .scs-domain3-page .hljs-type {
+            .scs-domain3-page .hljs-keyword, .scs-domain3-page .hljs-selector-tag, .scs-domain3-page .hljs-built_in, .scs-domain3-page .hljs-type {
                 color: #7a35c7;
             }
-            .scs-domain3-page .hljs-string,
-            .scs-domain3-page .hljs-regexp,
-            .scs-domain3-page .hljs-addition {
+            .scs-domain3-page .hljs-string, .scs-domain3-page .hljs-regexp, .scs-domain3-page .hljs-addition {
                 color: #17703f;
             }
-            .scs-domain3-page .hljs-number,
-            .scs-domain3-page .hljs-literal,
-            .scs-domain3-page .hljs-symbol {
+            .scs-domain3-page .hljs-number, .scs-domain3-page .hljs-literal, .scs-domain3-page .hljs-symbol {
                 color: #a4470a;
             }
-            .scs-domain3-page .hljs-attr,
-            .scs-domain3-page .hljs-attribute,
-            .scs-domain3-page .hljs-name,
-            .scs-domain3-page .hljs-tag,
-            .scs-domain3-page .hljs-section {
+            .scs-domain3-page .hljs-attr, .scs-domain3-page .hljs-attribute, .scs-domain3-page .hljs-name, .scs-domain3-page .hljs-tag, .scs-domain3-page .hljs-section {
                 color: #2a4fd0;
             }
-            .scs-domain3-page .hljs-title,
-            .scs-domain3-page .hljs-function,
-            .scs-domain3-page .hljs-meta,
-            .scs-domain3-page .hljs-params {
+            .scs-domain3-page .hljs-title, .scs-domain3-page .hljs-function, .scs-domain3-page .hljs-meta, .scs-domain3-page .hljs-params {
                 color: #1d4aa6;
             }
-            .scs-domain3-page .hljs-variable,
-            .scs-domain3-page .hljs-template-variable,
-            .scs-domain3-page .hljs-property {
+            .scs-domain3-page .hljs-variable, .scs-domain3-page .hljs-template-variable, .scs-domain3-page .hljs-property {
                 color: #8a5200;
             }
-            .scs-domain3-page .hljs-comment,
-            .scs-domain3-page .hljs-quote,
-            .scs-domain3-page .hljs-doctag {
+            .scs-domain3-page .hljs-comment, .scs-domain3-page .hljs-quote, .scs-domain3-page .hljs-doctag {
                 color: #5a6784;
                 font-style: italic;
             }
@@ -391,33 +376,52 @@
                 }
             }
         
+.scs-domain3-page {
+    overflow-x: clip;
+    color-scheme: light;
+}
+.scs-domain3-page .main ul {
+    list-style-type: disc;
+}
+.scs-domain3-page .main ol {
+    list-style-type: decimal;
+}
+.scs-domain3-page .main ul ul {
+    list-style-type: circle;
+}
+.scs-domain3-page .main ul ul ul {
+    list-style-type: square;
+}
+.scs-domain3-page nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 .scs-domain3-page .sidebar {
     position: fixed;
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
     left: 0;
     bottom: 0;
     width: 280px;
-    background: var(--color-scs-d3-sidebar-bg);
-    border-right: 1px solid var(--color-scs-d3-border-soft);
-    overflow-y: auto;
-    padding: 28px 0 40px;
-    z-index: 50;
+    z-index: 38;
+}
+.scs-domain3-page .sidebar-toggle {
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+    z-index: 39;
+}
+@media (max-width: 980px) {
+    .scs-domain3-page .sidebar:not(.open) {
+        visibility: hidden;
+        transition: transform 0.25s, visibility 0s linear 0.25s;
+    }
+}
+.scs-domain3-page .main h2,
+.scs-domain3-page .main h3,
+.scs-domain3-page .main h4 {
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
 .scs-domain3-page .main {
     min-width: 0;
-}
-@media (max-width: 900px) {
-    .scs-domain3-page .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-    }
-    .scs-domain3-page .sidebar.open {
-        transform: translateX(0);
-    }
-}
-.scs-domain3-page .code-line {
-    white-space: pre-wrap;
-    word-break: break-all;
 }
 .scs-domain3-page .mermaid-wrap > [role="img"] {
     background: transparent;
@@ -425,4 +429,13 @@
     padding: 0;
     margin: 0;
     width: 100%;
+}
+.scs-domain3-page .mermaid-wrap svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+.scs-domain3-page pre.code .code-line {
+    white-space: pre;
+    min-height: 1.7em;
 }

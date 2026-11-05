@@ -1,6 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
+import { isValid, toHex } from 'khroma';
+import mermaid from 'mermaid';
 import postcss from 'postcss';
 import ts from 'typescript';
 import fixture from '../docs/migration-inventory/aws-scs-c03-domain3-guide.fidelity.json' with { type: 'json' };
@@ -28,12 +30,13 @@ function tableLabel(n) {
 
 const DOUBLE_QUOTED = String.raw`"(?:\\.|[^"\\])*"`;
 const SINGLE_QUOTED = String.raw`'(?:\\.|[^'\\])*'`;
-const COMMON = String.raw`\b(?:true|false)\b|\b\d+\b`;
+const COMMON = String.raw`\b(?:true|false)\b|\b\d+(?:\.\d+)?\b`;
 
 const TOKEN_PATTERNS = {
     json: new RegExp(String.raw`(?<key>${DOUBLE_QUOTED}(?=\s*:))|${DOUBLE_QUOTED}|\b(?:true|false|null)\b|\b\d+\b`, 'g'),
     yaml: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<key>(?<=^\s*(?:-\s+)?)[\w-]+(?=:(?:\s|$)))|${COMMON}|!Ref\b`, 'g'),
-    python: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
+    python: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|\b(?<keyword>import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?<built_in>print)\b|${COMMON}`, 'g'),
+    dockerfile: new RegExp(String.raw`#.*$|(?<keyword>^(?:FROM|RUN|WORKDIR|COPY|USER|CMD|ENTRYPOINT|ENV|EXPOSE|ARG|ADD|LABEL|VOLUME|HEALTHCHECK))\b|--[\w-]+=[^\s]+|--[\w-]+|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
     sql: new RegExp(`${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
     default: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${COMMON}`, 'g'),
 };
@@ -41,10 +44,26 @@ const TOKEN_PATTERNS = {
 function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
-        for (const m of line.matchAll(/(?<![\w:-])aws(?![\w:-])|--[\w-]+|\b(?:\$|export|echo)\b/g)) {
+        const bashRegex = new RegExp(
+            String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<![\w:-])(?:aws|pass|drop)(?![\w:-])|--[\w-]+|\$[\w_]+|\b(?:export|echo)\b|\b\d+\b`,
+            'g',
+        );
+        for (const m of line.matchAll(bashRegex)) {
             output += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-            output += '<span className="hljs-' + (m[0] === 'aws' ? 'built_in' : 'keyword') + '">{' + JSON.stringify(m[0]) + '}</span>';
-            end = m.index + m[0].length;
+            const t = m[0];
+            const cls = t.startsWith('#')
+                ? 'comment'
+                : /^["']/.test(t)
+                ? 'string'
+                : t === 'aws'
+                ? 'built_in'
+                : t.startsWith('$')
+                ? 'variable'
+                : /^\d/.test(t)
+                ? 'number'
+                : 'keyword';
+            output += '<span className="hljs-' + cls + '">{' + JSON.stringify(t) + '}</span>';
+            end = m.index + t.length;
         }
         return output + '{' + JSON.stringify(line.slice(end)) + '}';
     }
@@ -55,8 +74,14 @@ function tokens(line, language) {
         const text = m[0];
         const cls = m.groups?.key !== undefined
             ? 'attr'
+            : m.groups?.keyword !== undefined
+            ? 'keyword'
+            : m.groups?.built_in !== undefined
+            ? 'built_in'
             : text.startsWith('#')
             ? 'comment'
+            : text.startsWith('--')
+            ? 'attr'
             : /^["']/.test(text)
             ? 'string'
             : /^\d/.test(text)
@@ -85,14 +110,16 @@ function jsx(n) {
         return `<Diagram id="diag-${i}" label={${JSON.stringify(label)}} />`;
     }
 
-    if (n.matches('pre.code') || n.matches('.code-block')) {
-        const langEl = n.querySelector('.code-lang');
-        const lang = langEl?.textContent?.trim().toLowerCase() ?? 'text';
-        const pre = n.matches('pre') ? n : n.querySelector('pre');
-        const code = pre?.querySelector('code');
-        const codeText = code ? code.textContent : pre ? pre.textContent : '';
-        const lines = codeText.replace(/^\n|\n$/g, '').split('\n');
-        return `<div className="code-sample"><div className="code-lang">${langEl?.textContent?.trim() ?? ''}</div><div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">${lines.map((line) => '<div className="code-line">' + tokens(line, lang) + '</div>').join('')}</div></div>`;
+    if (n.matches('pre.code') || n.matches('pre:not(.mermaid)')) {
+        const code = n.querySelector('code');
+        const lang = code?.className.replace('language-', '').trim().toLowerCase() || 'text';
+        const codeText = code ? code.textContent : n.textContent;
+        const lines = (codeText ?? '').replace(/^\r?\n|\r?\n$/g, '').split(/\r?\n/);
+        return (
+            `<pre className="code code-block" tabIndex={0} role="group" aria-label="${lang} コード例">` +
+            lines.map((line) => '<div className="code-line">' + tokens(line, lang) + '</div>').join('') +
+            '</pre>'
+        );
     }
 
     const attrs = [...n.attributes]
@@ -164,46 +191,42 @@ export const NAV_ITEMS = ${JSON.stringify(navItems, null, 4)} as const;
 `;
     fs.writeFileSync(`${dir}/constants.ts`, constantsContent);
 
-    // 2. mermaid-theme.json
+    // 2. mermaid-theme.json & render-theme.json
     const theme = fixture.guideInteractions.mermaidConfig;
     fs.writeFileSync(`${dir}/mermaid-theme.json`, JSON.stringify(theme, null, 4) + '\n');
 
+    mermaid.initialize({ ...theme, startOnLoad: false });
+    const vars = mermaid.mermaidAPI.getConfig().themeVariables;
+    fs.writeFileSync(
+        `${dir}/render-theme.json`,
+        JSON.stringify(
+            {
+                ...theme,
+                themeVariables: {
+                    ...Object.fromEntries(
+                        Object.entries(vars).map(([k, v]) => [
+                            k,
+                            typeof v === 'string' && /^(?:hsl|rgb)a?\(/.test(v) && isValid(v) ? toHex(v) : v,
+                        ]),
+                    ),
+                    quadrantPointFill: vars.lineColor,
+                    fontFamily: '"Noto Sans JP Variable",sans-serif',
+                },
+            },
+            null,
+            4,
+        ) + '\n',
+    );
+
     // 3. Diagram.tsx
-    const diagramComponent = `import { memo, useId } from 'react';
-import sourceTheme from './mermaid-theme.json';
+    const diagramComponent = `'use client';
+
+import { memo, useId } from 'react';
+import theme from './render-theme.json';
 import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { DIAGRAMS, DIAGRAM_DESCRIPTIONS, type DiagramId } from './constants';
 
-const { primaryColor, primaryBorderColor, primaryTextColor, lineColor, background, secondaryColor } =
-    sourceTheme.themeVariables;
-
-const renderConfig = {
-    ...sourceTheme,
-    themeVariables: {
-        ...sourceTheme.themeVariables,
-        mainBkg: primaryColor,
-        actorBkg: primaryColor,
-        stateBkg: primaryColor,
-        activationBkgColor: primaryColor,
-        actorBorder: primaryBorderColor,
-        stateBorder: primaryBorderColor,
-        activationBorderColor: primaryBorderColor,
-        actorTextColor: primaryTextColor,
-        stateLabelColor: primaryTextColor,
-        signalTextColor: primaryTextColor,
-        labelTextColor: primaryTextColor,
-        titleColor: primaryTextColor,
-        actorLineColor: lineColor,
-        signalColor: lineColor,
-        labelBoxBkgColor: background,
-        labelBoxBorderColor: primaryBorderColor,
-        noteBkgColor: secondaryColor,
-        noteTextColor: primaryTextColor,
-        noteBorderColor: primaryBorderColor,
-    },
-};
-
-const themeFrontmatter = \`---\\nconfig: \${JSON.stringify(renderConfig)}\\n---\\n\`;
+const themeFrontmatter = \`---\\nconfig: \${JSON.stringify(theme)}\\n---\\n\`;
 
 /**
  * 原本のライト配色・配置設定と自然倍率を保持する図。
@@ -399,91 +422,131 @@ export default function NavBar() {
     const rootNode = cssAst.nodes.find((n) => n.type === 'rule' && n.selector === ':root');
     if (rootNode) rootNode.remove();
 
-    const tokenMap = {
-        '--bg': 'var(--color-scs-d3-bg)',
-        '--bg-card': 'var(--color-scs-d3-bg-card)',
-        '--bg-card-2': 'var(--color-scs-d3-bg-card-2)',
-        '--border': 'var(--color-scs-d3-border)',
-        '--border-soft': 'var(--color-scs-d3-border-soft)',
-        '--text': 'var(--color-scs-d3-text)',
-        '--text-dim': 'var(--color-scs-d3-text-dim)',
-        '--text-faint': 'var(--color-scs-d3-text-faint)',
-        '--accent': 'var(--color-scs-d3-accent)',
-        '--accent-soft': 'var(--color-scs-d3-accent-soft)',
-        '--accent-bg': 'var(--color-scs-d3-accent-bg)',
-        '--danger': 'var(--color-scs-d3-danger)',
-        '--danger-bg': 'var(--color-scs-d3-danger-bg)',
-        '--warn': 'var(--color-scs-d3-warn)',
-        '--warn-bg': 'var(--color-scs-d3-warn-bg)',
-        '--success': 'var(--color-scs-d3-success)',
-        '--success-bg': 'var(--color-scs-d3-success-bg)',
-        '--font-jp': 'var(--font-body)',
-        '--sidebar-w': '280px',
+    const scope = '.scs-domain3-page';
+    cssAst.walkRules((r) => {
+        if (r.parent && r.parent.type === 'atrule' && r.parent.name === 'keyframes') return;
+        r.selector = r.selector
+            .split(',')
+            .map((s) => {
+                const trimmed = s.trim();
+                if (['html', 'body'].includes(trimmed)) return scope;
+                return (
+                    `${scope} ` +
+                    trimmed
+                        .replaceAll('pre.mermaid', '.mermaid-wrap')
+                        .replaceAll('pre.code code', 'pre.code .code-line')
+                        .replaceAll('pre:not(.mermaid) code', 'pre:not(.mermaid) .code-line')
+                        .replaceAll('.main > h2:first-of-type', '.main > .guide-part:first-child > h2:first-of-type')
+                );
+            })
+            .join(', ');
+    });
+
+    const hexTokens = {
+        '#ffffff': 'sidebar-bg',
+        '#1b2640': 'text',
+        '#2a4fd0': 'accent',
+        '#0c1630': 'strong',
+        '#9a4208': 'code-inline',
+        '#f3f6fc': 'code-bg',
     };
 
-    cssAst.walkDecls((decl) => {
-        let val = decl.value;
-        for (const [v, replacement] of Object.entries(tokenMap)) {
-            val = val.replaceAll(new RegExp(`var\\(${v}\\)`, 'g'), replacement);
+    cssAst.walkDecls((d) => {
+        if (!d.parent?.selector?.includes('.hljs')) {
+            d.value = d.value.replace(/#[0-9a-fA-F]{6}\b/g, (hex) => {
+                const token = hexTokens[hex.toLowerCase()];
+                if (!token) throw new Error(`未登録の hex 色: ${hex} (${d.parent?.selector})`);
+                return `var(--${token})`;
+            });
         }
-        decl.value = val;
-    });
-
-    const scope = '.scs-domain3-page';
-    cssAst.walkRules((rule) => {
-        if (rule.parent && rule.parent.type === 'atrule' && rule.parent.name === 'keyframes') return;
-        rule.selectors = rule.selectors.map((sel) => {
-            if (sel.startsWith('html') || sel.startsWith('body')) {
-                return sel.replace(/^(html|body)/, scope);
-            }
-            if (sel.startsWith(':root')) {
-                return sel.replace(/^:root/, scope);
-            }
-            return `${scope} ${sel}`;
+        d.value = d.value.replace(/var\(--([\w-]+)\)/g, (_, k) => {
+            if (k === 'sidebar-w') return '280px';
+            if (k === 'font-jp') return 'var(--font-body)';
+            return `var(--color-scs-d3-${k})`;
         });
-
-        // 契約テストと標準レイアウトに合わせて .main の宣言を調整
-        if (rule.selectors.some((s) => s.endsWith('.main'))) {
-            if (rule.parent && rule.parent.type === 'atrule' && rule.parent.name === 'media') {
-                rule.append({ prop: 'width', value: '100%' });
-                rule.append({ prop: 'max-width', value: 'none' });
-            } else {
-                rule.append({ prop: 'width', value: 'calc(100% - 280px)' });
-                rule.append({ prop: 'max-width', value: 'none' });
-                rule.append({ prop: 'box-sizing', value: 'border-box' });
-            }
+        if (d.prop === 'word-break') {
+            d.prop = 'overflow-wrap';
+            d.value = 'anywhere';
+        }
+        if (d.prop === 'overflow-x' && d.value === 'hidden') {
+            d.value = 'clip';
+        }
+        if (d.prop === 'scroll-margin-top') {
+            d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px)';
+        }
+        if (d.prop === 'top' && d.parent?.selector?.includes('.sidebar')) {
+            d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))';
+        }
+        if (d.prop === 'z-index' && d.parent?.selector?.includes('.sidebar-toggle')) {
+            d.value = '39';
+        } else if (d.prop === 'z-index' && d.parent?.selector?.includes('.sidebar')) {
+            d.value = '38';
         }
     });
 
-    // スコープ外のはみ出しを防ぎ、サイドバーレイアウト契約に合わせる
+    cssAst.walkRules(`${scope} .sidebar nav a.active`, (r) => {
+        r.cloneAfter({ selector: `${scope} .sidebar nav a[aria-current='location']` });
+    });
+
+    cssAst.walkRules(`${scope} .main`, (r) => {
+        if (r.parent?.type === 'atrule') {
+            r.append({ prop: 'width', value: '100%' }, { prop: 'max-width', value: 'none' });
+        } else {
+            r.append(
+                { prop: 'width', value: 'calc(100% - 280px)' },
+                { prop: 'max-width', value: 'none' },
+                { prop: 'box-sizing', value: 'border-box' },
+            );
+        }
+    });
+
     const additionalCss = `
+${scope} {
+    overflow-x: clip;
+    color-scheme: light;
+}
+${scope} .main ul {
+    list-style-type: disc;
+}
+${scope} .main ol {
+    list-style-type: decimal;
+}
+${scope} .main ul ul {
+    list-style-type: circle;
+}
+${scope} .main ul ul ul {
+    list-style-type: square;
+}
+${scope} nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 ${scope} .sidebar {
     position: fixed;
     top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
     left: 0;
     bottom: 0;
     width: 280px;
-    background: var(--color-scs-d3-sidebar-bg);
-    border-right: 1px solid var(--color-scs-d3-border-soft);
-    overflow-y: auto;
-    padding: 28px 0 40px;
-    z-index: 50;
+    z-index: 38;
+}
+${scope} .sidebar-toggle {
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+    z-index: 39;
+}
+@media (max-width: 980px) {
+    ${scope} .sidebar:not(.open) {
+        visibility: hidden;
+        transition: transform 0.25s, visibility 0s linear 0.25s;
+    }
+}
+${scope} .main h2,
+${scope} .main h3,
+${scope} .main h4 {
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
 ${scope} .main {
     min-width: 0;
-}
-@media (max-width: 900px) {
-    ${scope} .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-    }
-    ${scope} .sidebar.open {
-        transform: translateX(0);
-    }
-}
-${scope} .code-line {
-    white-space: pre-wrap;
-    word-break: break-all;
 }
 ${scope} .mermaid-wrap > [role="img"] {
     background: transparent;
@@ -491,6 +554,15 @@ ${scope} .mermaid-wrap > [role="img"] {
     padding: 0;
     margin: 0;
     width: 100%;
+}
+${scope} .mermaid-wrap svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+${scope} pre.code .code-line {
+    white-space: pre;
+    min-height: 1.7em;
 }
 `;
 
