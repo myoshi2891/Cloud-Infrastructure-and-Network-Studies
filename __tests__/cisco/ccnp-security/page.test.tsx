@@ -102,6 +102,56 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
         expect(container.querySelectorAll('.code-block .hljs-subst').length).toBe(3);
     });
 
+    it('全コードブロックの読み上げ名は実装上の言語クラスを含まず、直前の見出しを示して一意である', () => {
+        // Arrange & Act
+        const { container } = render(<CcnpSecurityGuide />);
+        const labels = [...container.querySelectorAll('.code-block')].map((block) => block.getAttribute('aria-label') ?? '');
+
+        // Assert
+        expect(labels).toHaveLength(inventory.counts.codeBlock);
+        labels.forEach((label) => {
+            expect(label).toMatch(/^.+ のコード例$/);
+            expect(label).not.toMatch(/language-|plain/);
+        });
+        expect(new Set(labels).size).toBe(labels.length);
+        expect(labels[0]).toBe('1.10 セキュリティ機器 API を呼び出すスクリプトの読解（Python） のコード例');
+    });
+
+    it('製品名は Cisco Defense Orchestrator に訂正されている', () => {
+        // Arrange & Act
+        const { container } = render(<CcnpSecurityGuide />);
+
+        // Assert
+        expect(container.textContent).toContain('Cisco Defense Orchestrator → Security Cloud Control');
+        expect(container.textContent).not.toContain('Defender Orchestrator');
+    });
+
+    it('Serif トークンは登録済みの可変フォント名を優先し、ページがそのフォントを読み込む', () => {
+        // Arrange
+        const globals = readFileSync(resolve('app/globals.css'), 'utf8');
+        const page = readFileSync(resolve('app/cisco/ccnp-security/page.tsx'), 'utf8');
+
+        // Act
+        const token = globals.match(/--font-ccnp-security-serif:\s*([^;]+);/)?.[1];
+
+        // Assert
+        expect(token).toBe('"Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif');
+        expect(page).toContain("import '@fontsource-variable/source-serif-4/index.css'");
+    });
+
+    it('生成器の NavBar テンプレートは現行のリンク操作ハンドラーと一致し、再生成で退行しない', () => {
+        // Arrange
+        const navBar = readFileSync(resolve('app/cisco/ccnp-security/NavBar.tsx'), 'utf8');
+        const generator = readFileSync(resolve('scripts/migrate-ccnp-security.mjs'), 'utf8');
+
+        // Act
+        const handler = navBar.slice(navBar.indexOf('const handleLinkClick'), navBar.indexOf('[onClose]);'));
+
+        // Assert
+        expect(handler).toContain('targetEl.focus({ preventScroll: true });');
+        expect(generator).toContain(handler);
+    });
+
     it('全53図がビューポート接近時の遅延描画を指定している', () => {
         const { container } = render(<CcnpSecurityGuide />);
         const diagrams = [...container.querySelectorAll('[data-chart]')];

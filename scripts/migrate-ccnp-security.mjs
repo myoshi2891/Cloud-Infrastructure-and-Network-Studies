@@ -142,6 +142,21 @@ function tokensPython(line) {
     return out;
 }
 
+/**
+ * コードブロックの読み上げ名を直前の見出しから作る。言語クラスは実装上の値で利用者に意味がなく、
+ * 通し番号はフェーズ単位の再生成で値が変わるため、どちらも使わない。
+ */
+function codeBlockLabel(node) {
+    let prev = node.previousElementSibling;
+    while (prev && !prev.matches('h1, h2, h3, h4')) {
+        prev = prev.previousElementSibling;
+    }
+    if (!prev) {
+        throw new Error('コードブロックの読み上げ名に使う見出しがありません');
+    }
+    return `${prev.textContent.replace(/\s+/g, ' ').trim()} のコード例`;
+}
+
 function plainCodeLineToJsx(lineHtml) {
     const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
     return [...frag.childNodes].map(nodeToJsx).join('');
@@ -180,7 +195,7 @@ function nodeToJsx(node) {
             const lines = (rawText || '').replace(/^\n|\n$/g, '').split('\n');
             return (
                 `<div className="code-sample">` +
-                `<div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">` +
+                `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(codeBlockLabel(node))}}>` +
                 lines.map(line => `<div className="code-line">${tokensPython(line)}</div>`).join('') +
                 `</div></div>`
             );
@@ -189,7 +204,7 @@ function nodeToJsx(node) {
         const htmlLines = (rawHtml || '').replace(/^\r?\n|\r?\n$/g, '').split(/\r?\n/);
         return (
             `<div className="code-sample">` +
-            `<div className="code-block" tabIndex={0} role="region" aria-label="${lang} コード例">` +
+            `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(codeBlockLabel(node))}}>` +
             htmlLines.map(lineHtml => `<div className="code-line">${plainCodeLineToJsx(lineHtml)}</div>`).join('') +
             `</div></div>`
         );
@@ -349,7 +364,9 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
                 targetEl.tabIndex = -1;
-                targetEl.focus();
+                // スムーズスクロールで通過した図が遅延描画されると着地先がずれるため、瞬時に移動する
+                targetEl.focus({ preventScroll: true });
+                targetEl.scrollIntoView?.({ behavior: 'instant' });
             }
         }
     }, [onClose]);
