@@ -36,9 +36,14 @@ const RENDER_LOOP = `            // --- mermaid render pipeline (apply_render_pi
                 if (!viewBox) return;
                 const parts = viewBox.split(/\\s+/).map(Number);
                 if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
-                const trimmed = src.trim();
+                // 図種別は frontmatter と init ディレクティブを除いた本文の先頭で判定する
+                const bodyDsl = src
+                    .trimStart()
+                    .replace(/^-{3}\\s*[\\n\\r](.*?)[\\n\\r]-{3}\\s*[\\n\\r]+/s, '')
+                    .replace(/^\\s*(?:%%\\{[\\s\\S]*?\\}%%\\s*)+/, '')
+                    .trim();
                 const isSequenceOrState =
-                    trimmed.startsWith('sequenceDiagram') || trimmed.startsWith('stateDiagram');
+                    bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
                 const extraHeight = isSequenceOrState ? 110 : 15;
                 const [x, y, w, h] = parts;
                 // 自然幅で表示し拡大は抑制。親より広い図のみ maxWidth で縮小される。

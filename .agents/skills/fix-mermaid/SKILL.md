@@ -242,7 +242,13 @@ const viewBoxStr = svgEl.getAttribute('viewBox');
 if (viewBoxStr) {
     const parts = viewBoxStr.split(' ').map(Number);
     if (parts.length === 4) {
-        const isSequenceOrState = src.trim().startsWith('sequenceDiagram') || src.trim().startsWith('stateDiagram');
+        // frontmatter と init ディレクティブを除いた本文の先頭で図種別を判定する
+        const bodyDsl = src
+            .trimStart()
+            .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
+            .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+            .trim();
+        const isSequenceOrState = bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
         // mirrorActors: true（上下両方のアクターボックス表示）の場合は縦幅が大きく伸びるため
         // 余裕を持って高さを増やす（シーケンス図等は +110px、その他は +15px 程度）
         const extraHeight = isSequenceOrState ? 110 : 15;
@@ -535,9 +541,13 @@ const applySvgFixups = (
     }
     const parts = viewBox.split(/\s+/).map(Number);
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
-    const trimmed = chart.trim();
+    const bodyDsl = chart
+        .trimStart()
+        .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
+        .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+        .trim();
     const isSequenceOrState =
-        trimmed.startsWith('sequenceDiagram') || trimmed.startsWith('stateDiagram');
+        bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
     const extraHeight = isSequenceOrState ? 110 : 15;
     const [x, y, w, h] = parts as [number, number, number, number];
 

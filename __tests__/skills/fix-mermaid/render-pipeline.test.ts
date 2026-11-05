@@ -43,6 +43,52 @@ describe('applyPipeline', () => {
     });
 });
 
+describe('injectRenderLoop の applySvgFixups', () => {
+    const FRONTMATTER = '---\ntitle: 図\n---\n';
+    const INIT = "%%{init: {'theme': 'base'}}%%\n";
+
+    /** 注入された関数を取り出し、viewBox 拡張後の高さを返す */
+    const fixedHeight = (src: string): string | undefined => {
+        const output = injectRenderLoop('<html><body><script>mermaid.initialize({});</script></body></html>');
+        const definition = output.match(/function applySvgFixups[\s\S]*?\n {12}}\n/)?.[0];
+        if (!definition) throw new Error('applySvgFixups が注入されていません');
+        const applySvgFixups = new Function(`${definition}; return applySvgFixups;`)() as (
+            svgEl: unknown,
+            chart: string,
+        ) => void;
+        let viewBox = '0 0 100 100';
+        applySvgFixups(
+            {
+                style: {},
+                removeAttribute: () => undefined,
+                getAttribute: () => viewBox,
+                setAttribute: (_name: string, value: string) => {
+                    viewBox = value;
+                },
+            },
+            src,
+        );
+        return viewBox.split(' ')[3];
+    };
+
+    test.each([
+        ['frontmatter', `${FRONTMATTER}sequenceDiagram\nA->>B: x`],
+        ['init ディレクティブ', `${INIT}stateDiagram-v2\n[*] --> A`],
+        ['複数の init', `${INIT}${INIT}sequenceDiagram\nA->>B: x`],
+        ['frontmatter と init の併用', `\n${FRONTMATTER}${INIT}sequenceDiagram\nA->>B: x`],
+    ])('%s の後ろにある sequence/state 図を判定して 110 拡張する', (_label, src) => {
+        expect(fixedHeight(src)).toBe('210');
+    });
+
+    test.each([
+        ['flowchart', 'flowchart TD\nA --> B'],
+        ['init 付き flowchart', `${INIT}flowchart TD\nA --> B`],
+        ['本文に sequenceDiagram を含む flowchart', `${FRONTMATTER}flowchart TD\nA["sequenceDiagram"] --> B`],
+    ])('%s は 15 だけ拡張する', (_label, src) => {
+        expect(fixedHeight(src)).toBe('115');
+    });
+});
+
 describe('JavaScript source scanning', () => {
     test('制御文の閉じ括弧後にある正規表現を飛ばして実宣言を抽出する', () => {
         const html = `<script>
