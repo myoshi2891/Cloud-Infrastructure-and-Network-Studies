@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
@@ -229,6 +229,18 @@ describe('MermaidDiagram', () => {
             expect(svg.getAttribute('viewBox')).toBe('0 0 400 410');
         });
 
+        it('字下げされた frontmatter でも開始・終了の字下げを照合して本文の図種別を判定すること', () => {
+            // Arrange: Mermaid は開始行の字下げを終了行にも要求する
+            const svg = makeSvg('0 0 600 400');
+            const chart = '  ---\n  title: 図\n  ---\n  sequenceDiagram\n  A->>B: Hello';
+
+            // Act
+            applySvgFixups(svg, chart, true);
+
+            // Assert
+            expect(svg.getAttribute('viewBox')).toBe('0 0 600 510');
+        });
+
         it('frontmatter または init ディレクティブ付きの sequenceDiagram / stateDiagram でも viewBox 高さを +110 拡張すること', () => {
             const svg1 = makeSvg('0 0 600 400');
             applySvgFixups(svg1, '---\nconfig: {"theme":"base"}\n---\nsequenceDiagram\nA->>B: Hello', true);
@@ -285,6 +297,131 @@ describe('MermaidDiagram', () => {
             prototype.getBBox = original;
             vi.restoreAllMocks();
         }
+    });
+
+    describe('deferUntilVisible — ビューポート接近時の遅延描画', () => {
+        const prototype = window.SVGElement.prototype as SVGGraphicsElement;
+        const originalGetBBox = prototype.getBBox;
+        const originalObserver = global.IntersectionObserver;
+        const mockRenderSuccess = async () => {
+            const mermaid = await import('mermaid');
+            return vi.spyOn(mermaid.default, 'render').mockResolvedValue({
+                svg: '<svg viewBox="0 0 100 50"></svg>',
+                diagramType: 'flowchart',
+            });
+        };
+        const stubObserver = () => {
+            const observers: {
+                callback: IntersectionObserverCallback;
+                options?: IntersectionObserverInit;
+                observe: ReturnType<typeof vi.fn>;
+                disconnect: ReturnType<typeof vi.fn>;
+            }[] = [];
+            global.IntersectionObserver = vi.fn().mockImplementation(function (
+                this: IntersectionObserver,
+                callback: IntersectionObserverCallback,
+                options?: IntersectionObserverInit,
+            ) {
+                const entry = { callback, options, observe: vi.fn(), disconnect: vi.fn() };
+                observers.push(entry);
+                Object.assign(this, entry);
+                return this;
+            }) as unknown as typeof IntersectionObserver;
+            return observers;
+        };
+        const notify = (
+            observer: { callback: IntersectionObserverCallback },
+            isIntersecting: boolean,
+        ) => {
+            act(() => {
+                observer.callback(
+                    [{ isIntersecting } as IntersectionObserverEntry],
+                    {} as IntersectionObserver,
+                );
+            });
+        };
+
+        beforeEach(() => {
+            prototype.getBBox = vi.fn();
+        });
+
+        afterEach(() => {
+            prototype.getBBox = originalGetBBox;
+            global.IntersectionObserver = originalObserver;
+            vi.restoreAllMocks();
+        });
+
+        it('接近前は描画せずフォールバックを保持し、接近後に一度だけ描画して監視を解除すること', async () => {
+            // Arrange
+            const spy = await mockRenderSuccess();
+            const observers = stubObserver();
+
+            // Act
+            const { container } = render(
+                <MermaidDiagram chart={sampleChart} ariaLabel="遅延図" deferUntilVisible />,
+            );
+
+            // Assert: 接近前
+            await waitFor(() => expect(observers).toHaveLength(1));
+            const [observer] = observers;
+            if (!observer) throw new Error('IntersectionObserver が生成されていません');
+            expect(observer.options?.rootMargin).toBe('800px 0px');
+            expect(observer.observe).toHaveBeenCalledWith(container.firstElementChild);
+            notify(observer, false);
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            expect(spy).not.toHaveBeenCalled();
+            expect(container.querySelector('pre.codeblock')).not.toBeNull();
+
+            // Act: 接近
+            notify(observer, true);
+
+            // Assert: 接近後
+            await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+            await waitFor(() => expect(container.querySelector('.mermaid-target svg')).not.toBeNull());
+            expect(container.querySelector('pre.codeblock')).toBeNull();
+            expect(observer.disconnect).toHaveBeenCalled();
+        });
+
+        it('IntersectionObserver が無い環境では即座に描画すること', async () => {
+            // Arrange
+            const spy = await mockRenderSuccess();
+            Reflect.deleteProperty(global, 'IntersectionObserver');
+
+            // Act
+            render(<MermaidDiagram chart={sampleChart} ariaLabel="非対応環境" deferUntilVisible />);
+
+            // Assert
+            await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+        });
+
+        it('未指定の既定動作では監視せずマウント直後に描画すること', async () => {
+            // Arrange
+            const spy = await mockRenderSuccess();
+            const observers = stubObserver();
+
+            // Act
+            render(<MermaidDiagram chart={sampleChart} ariaLabel="既定動作" />);
+
+            // Assert
+            await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+            expect(observers).toHaveLength(0);
+        });
+
+        it('アンマウント時に監視を解除すること', async () => {
+            // Arrange
+            await mockRenderSuccess();
+            const observers = stubObserver();
+            const { unmount } = render(
+                <MermaidDiagram chart={sampleChart} ariaLabel="解除" deferUntilVisible />,
+            );
+            await waitFor(() => expect(observers).toHaveLength(1));
+
+            // Act
+            unmount();
+
+            // Assert
+            expect(observers[0]?.disconnect).toHaveBeenCalled();
+        });
     });
 
     describe('ライトテーマ (theme="light") サポート契約', () => {
@@ -367,6 +504,14 @@ describe('MermaidDiagram', () => {
                 // Mermaid は複数 init を出現順にマージするため、作者側を後ろに置く
                 expect(result).toBe(`${LIGHT_THEME_DIRECTIVE}\n${chart}`);
                 expect(result.indexOf("'theme': 'base'")).toBeLessThan(result.indexOf("'curve': 'linear'"));
+            });
+
+            it('字下げされた frontmatter もチャート先頭に残し、その直後にディレクティブを挿入すること', () => {
+                const frontmatter = '  ---\n  title: x\n  ---\n';
+                const body = '  flowchart LR\n    A --> B';
+                expect(applyLightThemeDirective(`${frontmatter}${body}`)).toBe(
+                    `${frontmatter}${LIGHT_THEME_DIRECTIVE}\n${body}`,
+                );
             });
 
             it('frontmatter と既存 init が併存する場合も frontmatter を先頭に保つこと', () => {
