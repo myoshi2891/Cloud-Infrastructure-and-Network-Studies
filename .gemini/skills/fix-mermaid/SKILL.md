@@ -242,11 +242,11 @@ const viewBoxStr = svgEl.getAttribute('viewBox');
 if (viewBoxStr) {
     const parts = viewBoxStr.split(' ').map(Number);
     if (parts.length === 4) {
-        // frontmatter と init ディレクティブを除いた本文の先頭で図種別を判定する
+        // frontmatter・init ディレクティブ・宣言前の %% コメント行を除いた本文の先頭で図種別を判定する
         const bodyDsl = src
             .trimStart()
             .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
-            .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+            .replace(/^\s*(?:(?:%%\{[\s\S]*?\}%%|%%[^\n]*)\s*)+/, '')
             .trim();
         const isSequenceOrState = bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
         // mirrorActors: true（上下両方のアクターボックス表示）の場合は縦幅が大きく伸びるため
@@ -544,7 +544,7 @@ const applySvgFixups = (
     const bodyDsl = chart
         .trimStart()
         .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
-        .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+        .replace(/^\s*(?:(?:%%\{[\s\S]*?\}%%|%%[^\n]*)\s*)+/, '')
         .trim();
     const isSequenceOrState =
         bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');

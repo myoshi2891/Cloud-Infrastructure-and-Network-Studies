@@ -208,10 +208,11 @@ export const applySvgFixups = (
     const parts = viewBox.split(/\s+/).map(Number);
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
 
+    // 図種別は frontmatter・init ディレクティブ・宣言前の %% コメント行を除いた本文の先頭で判定する
     const bodyDsl = chart
         .trimStart()
         .replace(FRONTMATTER_PATTERN, '')
-        .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
+        .replace(/^\s*(?:(?:%%\{[\s\S]*?\}%%|%%[^\n]*)\s*)+/, '')
         .trim();
     const isSequenceOrState =
         bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
