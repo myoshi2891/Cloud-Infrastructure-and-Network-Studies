@@ -15,12 +15,12 @@ const source = execFileSync('git', ['show', `${fixture.sourceCommit}:${fixture.s
 
 // 本文訂正を原本の改行・字下げを保ったまま適用してから解析する。
 /** 文字列を正規表現のリテラルとして扱えるようエスケープする。 */
-const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const corrected = SAP_DOMAIN4_CORRECTIONS.reduce((html, [from, to]) => {
     const words = from.split(/\s+/),
         next = to.split(/\s+/);
     if (words.length !== next.length) throw new Error('Correction word count mismatch: ' + from);
-    const pattern = new RegExp(words.map(escape).join('(\\s+)'));
+    const pattern = new RegExp(words.map(escapeRegExp).join('(\\s+)'));
     if (!pattern.test(html)) throw new Error('Correction not found: ' + from);
     return html.replace(pattern, (...m) => next.map((w, i) => w + (i < next.length - 1 ? m[i + 1] : '')).join(''));
 }, source);
