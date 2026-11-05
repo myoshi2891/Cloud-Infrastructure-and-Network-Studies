@@ -1,0 +1,158 @@
+import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import mermaid from 'mermaid';
+import { EXAMS } from '@/app/constants';
+import source from '@/app/aws/solutions-architect-professional/domain4/mermaid-theme.json';
+import renderTheme from '@/app/aws/solutions-architect-professional/domain4/render-theme.json';
+import { isValid, toHex } from 'khroma';
+import fixture from '@/docs/migration-inventory/aws-sap-c02-domain4.fidelity.json';
+import { contrastRatio, themeColor } from '@/__tests__/helpers/color-contrast';
+import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
+import { SAP_D4_COLOR_LITERAL, SAP_D4_COLOR_TOKENS } from '@/scripts/sap-domain4-color-tokens.mjs';
+
+describe('SAP Domain 4 統合契約', () => {
+    it('ホームとHeaderの共通EXAMS導線はDomain 4と20%を表示', () => {
+        expect(EXAMS.find(e => e.id === 'aws-sap')?.domains).toContainEqual({
+            label: 'ドメイン4: ワークロードの移行とモダナイゼーションの加速',
+            href: '/aws/solutions-architect-professional/domain4',
+            pct: '20%',
+        });
+    });
+
+    it('原本ライトテーマと共有フッターが連動', () => {
+        expect(fs.readFileSync('components/Footer.module.css', 'utf8')).toContain('.sap-domain4-page');
+        expect(fs.readFileSync('app/aws/solutions-architect-professional/domain4/Diagram.tsx', 'utf8')).toMatch(/preserveChartTheme/);
+    });
+
+    it('原本の全ローカル色をグローバルテーマトークンに対応付け', () => {
+        const globals = fs.readFileSync('app/globals.css', 'utf8');
+        const root = fixture.guideDesign.rules.find(r => r.selector === ':root')!;
+        for (const [key, value] of Object.entries(root.declarations)) {
+            if (key.startsWith('--') && !['--sidebar-w', '--font-jp'].includes(key)) {
+                expect(globals).toContain(`--color-sap-d4-${key.slice(2)}: ${value};`);
+            }
+        }
+    });
+
+    it('原本単体の派生色を全量固定し、共有dark設定の混入を防ぐ', () => {
+        mermaid.initialize({ ...source, theme: 'base', flowchart: { ...source.flowchart, curve: 'basis' }, startOnLoad: false });
+        const expected = Object.fromEntries(
+            Object.entries(mermaid.mermaidAPI.getConfig().themeVariables ?? {}).map(([k, v]) => [
+                k,
+                typeof v === 'string' && /^(?:hsl|rgb)a?\(/.test(v) && isValid(v) ? toHex(v) : v,
+            ]),
+        );
+        expect(renderTheme.themeVariables).toEqual({
+            ...expected,
+            quadrantPointFill: expected.lineColor,
+            fontFamily: '"Noto Sans JP Variable",sans-serif',
+        });
+        expect(JSON.stringify(renderTheme)).not.toContain('NaN');
+    });
+
+    it('サイドバー背景・構文色などの固定色を@themeトークンで参照し、再生成処理にも反映', () => {
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        const globals = fs.readFileSync('app/globals.css', 'utf8');
+        const theme = globals.slice(globals.indexOf('@theme {'), globals.indexOf('\n}', globals.indexOf('@theme {')));
+        expect(SAP_D4_COLOR_TOKENS['#ffffff']).toBeDefined();
+        for (const literal of ['#7a1fa2', '#0b6b2a', '#a14400', '#566379', '#1d4fb8']) {
+            expect(SAP_D4_COLOR_TOKENS[literal], literal).toMatch(/^hljs-/);
+        }
+        for (const [literal, token] of Object.entries(SAP_D4_COLOR_TOKENS)) {
+            expect(theme).toContain(`--color-sap-d4-${token}: ${literal};`);
+            expect(css).toContain(`var(--color-sap-d4-${token})`);
+        }
+        expect(css.match(SAP_D4_COLOR_LITERAL)).toBeNull();
+        const sidebar = snapshotCssRules(css).find(r => r.selector === '.sap-domain4-page .sidebar');
+        expect(sidebar?.declarations).toContainEqual({
+            prop: 'background',
+            value: `var(--color-sap-d4-${SAP_D4_COLOR_TOKENS['#eaf0fa']})`,
+            important: false,
+        });
+        expect(fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8')).toContain("from './sap-domain4-color-tokens.mjs'");
+    });
+
+    it('固定目次・アンカー着地が共有ヘッダーの高さを含む', () => {
+        const rules = snapshotCssRules(fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8'));
+        const sidebar = rules.filter(r => r.selector === '.sap-domain4-page .sidebar');
+        expect(sidebar.at(-1)?.declarations).toContainEqual({
+            prop: 'top',
+            value: 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))',
+            important: false,
+        });
+    });
+
+    it('モバイルで閉じた目次をフォーカス・読み上げ対象から外し、再生成処理にも反映', () => {
+        const rule = '@media (max-width: 980px) { .sap-domain4-page .sidebar:not(.open) { visibility: hidden; transition: transform 0.25s, visibility 0s linear 0.25s; } }';
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        const rules = snapshotCssRules(css);
+        const closed = rules.find(r => r.selector === '.sap-domain4-page .sidebar:not(.open)' && r.media === '(max-width: 980px)');
+        expect(closed?.declarations).toContainEqual({ prop: 'visibility', value: 'hidden', important: false });
+        expect(closed?.declarations).toContainEqual({ prop: 'transition', value: 'transform 0.25s, visibility 0s linear 0.25s', important: false });
+        expect(rules.some(r => r.selector === '.sap-domain4-page .sidebar.open' && r.declarations.some(d => d.prop === 'visibility'))).toBe(false);
+        expect(css).toContain(rule);
+        expect(fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8')).toContain(rule);
+    });
+
+    it('目次を開いている間も開閉ボタンを目次より手前に保ち、再生成処理にも反映', () => {
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        const rules = snapshotCssRules(css);
+        const z = (selector: string) =>
+            Number(rules.filter(r => r.selector === selector && !r.media).flatMap(r => r.declarations).filter(d => d.prop === 'z-index').at(-1)?.value);
+        expect(z('.sap-domain4-page .sidebar-toggle')).toBeGreaterThan(z('.sap-domain4-page .sidebar'));
+        expect(z('.sap-domain4-page .sidebar-toggle')).toBeLessThan(50);
+        const script = fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8');
+        expect(script).toContain('.sap-domain4-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
+        expect(css).toContain('.sap-domain4-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }');
+    });
+
+    it('チェックボックス枠と完了項目の文字色は白背景に対しWCAGの非テキスト3:1・本文4.5:1を満たし、再生成処理にも反映', () => {
+        const globals = fs.readFileSync('app/globals.css', 'utf8');
+        const surface = themeColor(globals, 'color-sap-d4-surface');
+        expect(contrastRatio(themeColor(globals, 'color-sap-d4-checkbox-border'), surface)).toBeGreaterThanOrEqual(3);
+        expect(contrastRatio(themeColor(globals, 'color-sap-d4-checked-label'), surface)).toBeGreaterThanOrEqual(4.5);
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        const script = fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8');
+        for (const rule of [
+            ".sap-domain4-page .checklist-card input[type='checkbox']:not(:checked) { border-color: var(--color-sap-d4-checkbox-border); }",
+            ".sap-domain4-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d4-checked-label); }",
+        ]) {
+            expect(css).toContain(rule);
+            expect(script).toContain(rule);
+        }
+        expect(css.lastIndexOf(".sap-domain4-page .checklist-card li:has(input:checked) label { color: var(--color-sap-d4-checked-label); }")).toBeGreaterThan(
+            css.indexOf('li:has(input:checked) label {'),
+        );
+    });
+
+    it('コードのコメント色は原本の対応を保ったまま、別トークンでコード背景に対しWCAG AA 4.5:1を満たし、再生成処理にも反映', () => {
+        const globals = fs.readFileSync('app/globals.css', 'utf8');
+        expect(SAP_D4_COLOR_TOKENS['#566379']).toBe('hljs-comment');
+        expect(contrastRatio(themeColor(globals, 'color-sap-d4-hljs-comment-contrast'), themeColor(globals, 'color-sap-d4-code-bg'))).toBeGreaterThanOrEqual(4.5);
+        const rule = '.sap-domain4-page .hljs-comment { color: var(--color-sap-d4-hljs-comment-contrast); }';
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        expect(css).toContain(rule);
+        expect(fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8')).toContain(rule);
+        expect(css.lastIndexOf(rule)).toBeGreaterThan(css.indexOf('color: var(--color-sap-d4-hljs-comment);'));
+    });
+
+    it('本文はServer Componentで描画し、Client状態はチェック進捗のChecklistCardに限定し、再生成処理にも反映', () => {
+        const dir = 'app/aws/solutions-architect-professional/domain4';
+        const isClient = (file: string) => /^\s*([\x27"])use client\1;?/.test(fs.readFileSync(dir + '/' + file, 'utf8'));
+        const clients = fs.readdirSync(dir).filter(file => file.endsWith('.tsx')).filter(isClient).sort();
+        expect(clients).toEqual(['ChecklistCard.tsx', 'Diagram.tsx', 'NavBar.tsx']);
+        expect(fs.existsSync(dir + '/types.ts')).toBe(false);
+        for (const file of fs.readdirSync(dir + '/sections')) {
+            const code = fs.readFileSync(dir + '/sections/' + file, 'utf8');
+            expect(isClient('sections/' + file), file).toBe(false);
+            expect(code, file).not.toMatch(/\bon[A-Z]\w*=|ChecklistProps|progress/);
+            expect(code, file).toMatch(/export default function Content\(\)/);
+        }
+        const summary = fs.readFileSync(dir + '/sections/summary.tsx', 'utf8');
+        expect(summary.match(/<ChecklistCard>/g)).toHaveLength(1);
+        const script = fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8');
+        expect(script).toContain('<ChecklistCard>');
+        expect(script).toContain("write('ChecklistCard.tsx'");
+        expect(script).not.toMatch(/updateProgress|ChecklistProps|types\.ts/);
+    });
+});
