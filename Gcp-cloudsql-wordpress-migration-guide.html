@@ -266,6 +266,7 @@ gcloud sql connect $INSTANCE_NAME --user=root    # root のパスワードを入
 <pre><code>CREATE ROLE 'wordpress_app';
 GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress_app';
 exit</code></pre>
+<div class="warn"><p><strong>次の <code>set-password</code> では、<code>blog</code> の <code>wp-config.php</code> に現在設定されている <code>DB_PASSWORD</code> の値（ラボ画面の指定値）を必ず入力します。</strong> Task 4 で変更するのは <code>DB_HOST</code> だけなので、別の値にすると切り替え後に WordPress が DB へ接続できません。</p></div>
 <pre><code>gcloud sql users create $DB_USER --instance=$INSTANCE_NAME --host=% --database-roles=wordpress_app
 gcloud sql users set-password $DB_USER --instance=$INSTANCE_NAME --host=% --prompt-for-password
 gcloud sql connect $INSTANCE_NAME --user=root</code></pre>
@@ -284,7 +285,7 @@ gcloud sql ssl server-ca-certs list --instance=$INSTANCE_NAME --format='value(ce
 gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE</code></pre>
 <p><code>/32</code> は「その 1 台だけ」を許可する指定です。<code>--authorized-networks</code> は既存リストを<strong>上書き</strong>するので、複数ある場合はカンマ区切りで全部書きます。この手順が Task 3 の Check my progress の対象です。</p>
 <h3>3-2 ダンプ前にサイトを読み取り専用にする</h3>
-<p>ダンプ後に書き込まれた記事やコメントは Cloud SQL に移らず失われます。<code>blog</code> の Apache で POST 等と <code>wp-cron.php</code> を拒否し、<code>wp-config.php</code> に <code>DISABLE_WP_CRON</code> を true で追加して、検証が終わるまで書き込みを止めます（閲覧の GET / HEAD は可能です）。設定ファイルと途中で失敗した場合に中止する安全な手順は、配布している Markdown 版の 6.4 を使ってください。</p>
+<p>ダンプ後に書き込まれた記事やコメントは Cloud SQL に移らず失われます。<code>blog</code> の Apache で POST 等と <code>wp-cron.php</code> を拒否し、<code>wp-config.php</code> に <code>DISABLE_WP_CRON</code> を true で追加して、検証が終わるまで書き込みを止めます（閲覧の GET / HEAD は可能です）。設定ファイルと途中で失敗した場合に中止する安全な手順は、配布している Markdown 版 <code>Gcp-cloudsql-wordpress-migration-guide.md</code> の「6.4 手順 3-4」を使ってください。</p>
 <h3>3-3 ダンプと取り込み（blog 上で実行）</h3>
 <pre><code>mysqldump -u blogadmin -p --databases wordpress --hex-blob --no-tablespaces \
   --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
