@@ -5,6 +5,7 @@ import { NAV_ITEMS } from './constants';
 /** 見出しの scroll-margin-top（ヘッダー＋免責バナー＋24px）と同じ値。目次クリックの着地位置と現在位置の判定線を揃える。 */
 function headingOffset() {
     const style = getComputedStyle(document.documentElement);
+    /** CSS 変数を px 数値で返す。未定義なら fallback を返す。 */
     const px = (name: string, fallback: number) => {
         const v = Number.parseFloat(style.getPropertyValue(name));
         return Number.isFinite(v) ? v : fallback;
@@ -19,6 +20,7 @@ export default function NavBar() {
 
     useEffect(() => {
         // スクロール方向に関係なく、判定線（見出しの scroll-margin-top と同じ位置）より上にある最後の見出しを現在位置にする
+        /** 判定線より上にある最後の見出しを現在位置へ反映する。 */
         const update = () => {
             const doc = document.documentElement;
             if (doc.scrollHeight > window.innerHeight && window.scrollY + window.innerHeight >= doc.scrollHeight - 2) {
@@ -36,6 +38,7 @@ export default function NavBar() {
         };
         // scroll・resize は高頻度で届くため、見出し位置の読み取りは次の描画フレームで1回にまとめる
         let frame = 0;
+        /** 現在位置の更新を次の描画フレームへまとめる。 */
         const schedule = () => {
             if (frame !== 0) return;
             frame = window.requestAnimationFrame(() => {
@@ -44,6 +47,7 @@ export default function NavBar() {
             });
         };
         // 目次内にフォーカスがあるまま閉じると、非表示の要素にフォーカスが取り残されるため開閉ボタンへ戻す
+        /** Escape キーで目次を閉じ、目次内のフォーカスを開閉ボタンへ戻す。 */
         const onKey = (e: KeyboardEvent) => {
             if (e.key !== 'Escape') return;
             const focusInSidebar = document.getElementById('sidebar')?.contains(document.activeElement) ?? false;

@@ -47,6 +47,7 @@ it('preserves the indentation class for every source level-three navigation item
 });
 
 it('syncs aria-current from a valid fragment and history navigation, falling back to the first item', () => {
+    /** 現在位置として示されている目次リンクの href を返す。 */
     const current = (container: HTMLElement) =>
         container.querySelector('nav a[aria-current="location"]')?.getAttribute('href');
     const target = NAV_ITEMS[2]!.id;

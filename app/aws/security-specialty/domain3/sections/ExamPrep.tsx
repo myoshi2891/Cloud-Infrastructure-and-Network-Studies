@@ -2,6 +2,7 @@
 
 import { Children, isValidElement, useId, useState, type ReactNode } from 'react';
 
+/** 演習問題の選択肢を描画し、選択した回答の正誤を表示する。 */
 function PracticeOptions({ correctAnswer, children }: { correctAnswer: string; children: ReactNode }) {
     const [selected, setSelected] = useState<string | null>(null);
     const feedbackId = useId();

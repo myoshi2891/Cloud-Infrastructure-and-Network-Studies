@@ -19,6 +19,7 @@ vi.mock('@/components/MermaidDiagram', async () => ({
 const inventory = sourceInventory;
 
 describe('aws-scs-c03-domain3-guide — 移行元コンテンツの全量移行', () => {
+    /** ページを描画してコンテナを返す。 */
     const renderPage = () => {
         const { container } = render(<Page />);
         return container;
@@ -59,6 +60,7 @@ describe('aws-scs-c03-domain3-guide — 移行元コンテンツの全量移行'
 
     it('本文・注釈・画像 alt・コード全文が移行元の順序どおり一致する', () => {
         const container = renderPage();
+        /** 本文ブロックの書式由来の空白を正規化する。 */
         const normalize = (blocks: { kind: string; text: string }[]) =>
             blocks.map((block) => ({ ...block, text: normalizeSpaces(block.text) }));
         expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(

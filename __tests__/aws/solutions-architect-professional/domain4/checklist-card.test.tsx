@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ChecklistCard, ChecklistCount } from '@/app/aws/solutions-architect-professional/domain4/ChecklistCard';
 
+/** 指定のチェック状態を復元済みとしてカードを描画する。 */
 const renderCard = (restored: readonly boolean[]) => render(
     <ChecklistCard>
         <ChecklistCount total={restored.length} />

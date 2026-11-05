@@ -10,6 +10,7 @@ import Troubleshooting from './sections/Troubleshooting';
 import ExamPrep from './sections/ExamPrep';
 import Appendix from './sections/Appendix';
 
+/** Domain 3 本文の全セクションを原本の順序で構成する。 */
 export default function ScsDomain3Guide() {
     return (
         <div className="scs-domain3-page">

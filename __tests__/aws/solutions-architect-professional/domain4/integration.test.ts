@@ -97,6 +97,7 @@ describe('SAP Domain 4 統合契約', () => {
     it('目次を開いている間も開閉ボタンを目次より手前に保ち、再生成処理にも反映', () => {
         const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
         const rules = snapshotCssRules(css);
+        /** メディアクエリ外で最後に宣言された z-index を数値で返す。 */
         const z = (selector: string) =>
             Number(rules.filter(r => r.selector === selector && !r.media).flatMap(r => r.declarations).filter(d => d.prop === 'z-index').at(-1)?.value);
         expect(z('.sap-domain4-page .sidebar-toggle')).toBeGreaterThan(z('.sap-domain4-page .sidebar'));
@@ -138,6 +139,7 @@ describe('SAP Domain 4 統合契約', () => {
 
     it('本文はServer Componentで描画し、Client状態はチェック進捗のChecklistCardに限定し、再生成処理にも反映', () => {
         const dir = 'app/aws/solutions-architect-professional/domain4';
+        /** ファイル先頭に use client ディレクティブがあるかを判定する。 */
         const isClient = (file: string) => /^\s*([\x27"])use client\1;?/.test(fs.readFileSync(dir + '/' + file, 'utf8'));
         const clients = fs.readdirSync(dir).filter(file => file.endsWith('.tsx')).filter(isClient).sort();
         expect(clients).toEqual(['ChecklistCard.tsx', 'Diagram.tsx', 'NavBar.tsx']);

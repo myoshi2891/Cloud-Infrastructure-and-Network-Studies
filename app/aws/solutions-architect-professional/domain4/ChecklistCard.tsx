@@ -4,7 +4,9 @@ const CheckedCount = createContext(0);
 /** チェックリスト1枚。カード内の選択済み項目数だけをClient状態として持つ。 */
 export function ChecklistCard({ children }: {
     children: ReactNode;
-}) { const [count, setCount] = useState(0); const card = useCallback((node: HTMLDivElement | null) => { if (node)
+}) { const [count, setCount] = useState(0);
+    /** カードのマウント時に、復元済みのチェック状態を完了数へ反映する。 */
+    const card = useCallback((node: HTMLDivElement | null) => { if (node)
     setCount(node.querySelectorAll('input:checked').length); }, []); return <CheckedCount.Provider value={count}>
 <div ref={card} className="checklist-card" onChange={event => setCount(event.currentTarget.querySelectorAll('input:checked').length)}>
 {children}

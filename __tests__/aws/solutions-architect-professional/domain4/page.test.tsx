@@ -24,6 +24,7 @@ vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
 }));
 
+/** 描画結果を複製し、図を除いて比較用に分解する。 */
 function parts(c: HTMLElement) {
     const clone = c.cloneNode(true) as HTMLElement;
     clone.querySelectorAll('[data-chart]').forEach((e) => {
@@ -297,6 +298,7 @@ describe('SAP Domain 4 原本全量契約', () => {
         const { container: c, unmount } = render(<Page />);
         const links = [...c.querySelectorAll('nav a')];
         const targets = links.map((a) => document.getElementById(decodeURIComponent(a.getAttribute('href')!.slice(1)))!);
+        /** 2番目の見出しを指定位置へ置いたものとしてスクロールを発火する。 */
         const placeSecond = (top: number) => {
             targets.forEach((t, i) => {
                 t.getBoundingClientRect = () => ({ top: i === 0 ? -1000 : i === 1 ? top : 99999 } as DOMRect);

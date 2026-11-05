@@ -14,6 +14,7 @@ const dir = 'app/aws/solutions-architect-professional/domain4';
 const source = execFileSync('git', ['show', `${fixture.sourceCommit}:${fixture.source}`], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
 
 // 本文訂正を原本の改行・字下げを保ったまま適用してから解析する。
+/** 文字列を正規表現のリテラルとして扱えるようエスケープする。 */
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const corrected = SAP_DOMAIN4_CORRECTIONS.reduce((html, [from, to]) => {
     const words = from.split(/\s+/),
@@ -28,6 +29,7 @@ const doc = new JSDOM(corrected).window.document;
 
 // 図の訂正は原本の図全体と完全一致した場合だけ置き換える
 const unusedDiagramCorrections = new Set(SAP_DOMAIN4_DIAGRAM_CORRECTIONS.map(([from]) => from));
+/** 訂正対象の図 DSL を訂正後の内容へ置き換える。 */
 const correctDiagram = (chart) => {
     const hit = SAP_DOMAIN4_DIAGRAM_CORRECTIONS.find(([from]) => from === chart);
     if (!hit) return chart;
@@ -43,6 +45,7 @@ if (phase !== 'all' && !Object.hasOwn(boundaries, phase)) {
 
 fs.mkdirSync(dir + '/sections', { recursive: true });
 
+/** 生成物を整形して出力先へ書き込む。 */
 const write = (name, s) => {
     if (/\.tsx?$/.test(name)) {
         s = ts
@@ -55,12 +58,14 @@ const write = (name, s) => {
 
 const diagrams = [...doc.querySelectorAll('pre.mermaid')];
 
+/** コード1行の HTML を JSX 文字列へ変換する。空行は空文字式にする。 */
 function plainCodeLineToJsx(lineHtml) {
     if (!lineHtml) return '{""}';
     const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
     return [...frag.childNodes].map(nodeToJsx).join('');
 }
 
+/** コード行内のノードを JSX 文字列へ変換する。 */
 function nodeToJsx(node) {
     if (node.nodeType === 3) {
         return '{' + JSON.stringify(node.textContent) + '}';
@@ -72,12 +77,14 @@ function nodeToJsx(node) {
 }
 
 const tableScrolls = [...doc.querySelectorAll('.table-scroll')];
+/** 表の読み上げ名を直前の見出しから導出する。 */
 function tableLabel(n) {
     let heading = n.previousElementSibling;
     while (heading && !heading.matches('h2,h3,h4')) heading = heading.previousElementSibling;
     return `比較表 ${tableScrolls.indexOf(n) + 1}：` + (heading?.textContent ?? '学習資料').replace(/\s+/g, ' ').trim();
 }
 
+/** 原本の DOM ノードを JSX 文字列へ変換する。 */
 function jsx(n) {
     if (n.nodeType === 3) {
         if (['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR'].includes(n.parentElement?.tagName) && !n.textContent.trim()) return '';
@@ -122,6 +129,7 @@ for (const n of doc.querySelector('main').childNodes) {
     chunks[current].push(n);
 }
 
+/** 指定フェーズのセクションファイルを生成する。 */
 const generatePhase = (p) => {
     const body = chunks[p].map(jsx).join('');
     write(
@@ -141,7 +149,7 @@ if (phase === 'all') {
 }
 
 // 共通インフラファイルの生成
-write('ChecklistCard.tsx',`'use client';\nimport {createContext,useContext,useCallback,useState,type ReactNode} from 'react';\nconst CheckedCount=createContext(0);\n/** チェックリスト1枚。カード内の選択済み項目数だけをClient状態として持つ。 */\nexport function ChecklistCard({children}:{children:ReactNode}){const [count,setCount]=useState(0);const card=useCallback((node:HTMLDivElement|null)=>{if(node)setCount(node.querySelectorAll('input:checked').length);},[]);return <CheckedCount.Provider value={count}><div ref={card} className="checklist-card" onChange={event=>setCount(event.currentTarget.querySelectorAll('input:checked').length)}>{children}</div></CheckedCount.Provider>;}\n/** 所属するカードの完了数を表示する。 */\nexport function ChecklistCount({total}:{total:number}){const count=useContext(CheckedCount);return <span className="count">{\`\${count} / \${total} 完了\`}</span>;}`);
+write('ChecklistCard.tsx',`'use client';\nimport {createContext,useContext,useCallback,useState,type ReactNode} from 'react';\nconst CheckedCount=createContext(0);\n/** チェックリスト1枚。カード内の選択済み項目数だけをClient状態として持つ。 */\nexport function ChecklistCard({children}:{children:ReactNode}){const [count,setCount]=useState(0);\n/** カードのマウント時に、復元済みのチェック状態を完了数へ反映する。 */\nconst card=useCallback((node:HTMLDivElement|null)=>{if(node)setCount(node.querySelectorAll('input:checked').length);},[]);return <CheckedCount.Provider value={count}><div ref={card} className="checklist-card" onChange={event=>setCount(event.currentTarget.querySelectorAll('input:checked').length)}>{children}</div></CheckedCount.Provider>;}\n/** 所属するカードの完了数を表示する。 */\nexport function ChecklistCount({total}:{total:number}){const count=useContext(CheckedCount);return <span className="count">{\`\${count} / \${total} 完了\`}</span>;}`);
 
 const diagramCharts = Object.fromEntries(diagrams.map((e, i) => ['diag-' + i, correctDiagram(e.textContent.trim().split('\n').map((l) => l.trimStart()).join('\n'))]));
 if (unusedDiagramCorrections.size) throw new Error('Diagram correction not found: ' + [...unusedDiagramCorrections][0].split('\n')[1]);

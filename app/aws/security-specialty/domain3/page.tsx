@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     description: 'AWS Certified Security - Specialty (SCS-C03) Content Domain 3: Infrastructure Security 初学者向けステップバイステップガイド。エッジ、コンピュート、ネットワークのセキュリティ制御を体系的に解説。',
 };
 
+/** SCS-C03 Domain 3 ガイドのルートページ。 */
 export default function Page() {
     return <ScsDomain3Guide />;
 }

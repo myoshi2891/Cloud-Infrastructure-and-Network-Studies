@@ -8,6 +8,7 @@ vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
 }));
 
+/** data-chart の設定 frontmatter を除き、DIAGRAMS のキーへ戻す。 */
 const diagramIdOf = (chart: string): string | undefined => {
     const body = chart.slice(chart.indexOf('\n---\n') + 5);
     return Object.entries(DIAGRAMS).find(([, dsl]) => dsl === body)?.[0];

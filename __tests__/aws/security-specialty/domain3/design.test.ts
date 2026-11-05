@@ -5,6 +5,7 @@ import fixture from '@/docs/migration-inventory/aws-scs-c03-domain3-guide.fideli
 
 const css = readFileSync('app/aws/security-specialty/domain3/page.css', 'utf8');
 
+/** 指定セレクターと media に一致する規則の宣言を収集する。 */
 const rules = (text: string, selector: string, media = '') => {
     const result: Record<string, string> = {};
     postcss.parse(text).walkRules((r) => {
@@ -31,12 +32,14 @@ for (const [k, v] of Object.entries(fixture.guideDesign.rules.find((r) => r.sele
     if (typeof v === 'string') source[k] = v;
 }
 
+/** var() を再帰的に解決し、空白除去・小文字化した値を返す。未定義変数は MISSING として残す。 */
 const resolve = (v: string, vars: Record<string, string>): string =>
     v
         .replace(/var\((--[\w-]+)\)/g, (_, k: string) => (vars[k] ? resolve(vars[k]!, vars) : 'MISSING:' + k))
         .replace(/\s+/g, '')
         .toLowerCase();
 
+/** 原本のセレクターをページスコープ付きのセレクターへ変換する。 */
 const map = (s: string) =>
     s
         .split(',')

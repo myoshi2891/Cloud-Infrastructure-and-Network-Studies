@@ -27,6 +27,7 @@ export default function NavBar() {
     // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
     useEffect(() => {
         if (!open) return;
+        /** Escape キーで開いている目次を閉じる。 */
         const escape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
@@ -39,6 +40,7 @@ export default function NavBar() {
 
     // サーバー描画と一致させるため初期値は先頭項目とし、マウント後と履歴移動時に fragment から同期する
     useEffect(() => {
+        /** URL の fragment を現在位置へ反映する。 */
         const syncFromHash = () => setActiveId(idFromHash());
         syncFromHash();
         window.addEventListener('hashchange', syncFromHash);
@@ -73,6 +75,7 @@ export default function NavBar() {
             if (target) observer?.observe(target);
         }
 
+        /** ページ末尾まで到達したら最後の目次項目を現在位置にする。 */
         const endOfPage = () => {
             if (
                 window.scrollY > 0 &&
@@ -103,6 +106,7 @@ export default function NavBar() {
         }
     }, [activeId]);
 
+    /** 目次リンク選択時に目次を閉じ、選択先を現在位置へ反映する。 */
     const handleLinkClick = (id: string) => {
         setOpen(false);
         setActiveId(id);

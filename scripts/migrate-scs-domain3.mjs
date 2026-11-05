@@ -22,6 +22,7 @@ const boundaries = config.guideBoundaries;
 const diagrams = [...doc.querySelectorAll('pre.mermaid')];
 const tableScrolls = [...doc.querySelectorAll('.table-scroll')];
 
+/** 表の読み上げ名を直前の見出しから導出する。 */
 function tableLabel(n) {
     let heading = n.previousElementSibling;
     while (heading && !heading.matches('h2,h3,h4')) heading = heading.previousElementSibling;
@@ -41,6 +42,7 @@ const TOKEN_PATTERNS = {
     default: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${COMMON}`, 'g'),
 };
 
+/** コード1行を言語別の構文トークン付き JSX へ変換する。 */
 function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
@@ -93,6 +95,7 @@ function tokens(line, language) {
     return out + '{' + JSON.stringify(line.slice(end)) + '}';
 }
 
+/** 原本の DOM ノードを JSX 文字列へ変換する。 */
 function jsx(n) {
     if (n.nodeType === 3) {
         if (['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR'].includes(n.parentElement?.tagName) && !n.textContent.trim()) {
@@ -142,6 +145,7 @@ function jsx(n) {
 // ----------------------------------------------------
 // Scaffold core infrastructure
 // ----------------------------------------------------
+/** 定数・テーマ・共通コンポーネントなどセクション以外の土台を生成する。 */
 export function scaffoldCore() {
     // 1. constants.ts
     const diagramCharts = Object.fromEntries(
@@ -290,6 +294,7 @@ export default function NavBar() {
     // 開いている間だけ Escape を監視し、閉じた状態でのフォーカス奪取を防ぐ
     useEffect(() => {
         if (!open) return;
+        /** Escape キーで開いている目次を閉じる。 */
         const escape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
@@ -302,6 +307,7 @@ export default function NavBar() {
 
     // サーバー描画と一致させるため初期値は先頭項目とし、マウント後と履歴移動時に fragment から同期する
     useEffect(() => {
+        /** URL の fragment を現在位置へ反映する。 */
         const syncFromHash = () => setActiveId(idFromHash());
         syncFromHash();
         window.addEventListener('hashchange', syncFromHash);
@@ -336,6 +342,7 @@ export default function NavBar() {
             if (target) observer?.observe(target);
         }
 
+        /** ページ末尾まで到達したら最後の目次項目を現在位置にする。 */
         const endOfPage = () => {
             if (
                 window.scrollY > 0 &&
@@ -366,6 +373,7 @@ export default function NavBar() {
         }
     }, [activeId]);
 
+    /** 目次リンク選択時に目次を閉じ、選択先を現在位置へ反映する。 */
     const handleLinkClick = (id: string) => {
         setOpen(false);
         setActiveId(id);
@@ -578,6 +586,7 @@ export const metadata: Metadata = {
     description: 'AWS Certified Security - Specialty (SCS-C03) Content Domain 3: Infrastructure Security 初学者向けステップバイステップガイド。エッジ、コンピュート、ネットワークのセキュリティ制御を体系的に解説。',
 };
 
+/** SCS-C03 Domain 3 ガイドのルートページ。 */
 export default function Page() {
     return <ScsDomain3Guide />;
 }
@@ -597,6 +606,7 @@ import Troubleshooting from './sections/Troubleshooting';
 import ExamPrep from './sections/ExamPrep';
 import Appendix from './sections/Appendix';
 
+/** Domain 3 本文の全セクションを原本の順序で構成する。 */
 export default function ScsDomain3Guide() {
     return (
         <div className="scs-domain3-page">
@@ -636,6 +646,7 @@ const componentNames = {
     appendix: 'Appendix',
 };
 
+/** 指定フェーズのセクションを原本から生成する。 */
 export function migrateSection(phase) {
     const main = doc.querySelector('main');
     const chunks = Object.fromEntries(Object.keys(boundaries).map((k) => [k, []]));
