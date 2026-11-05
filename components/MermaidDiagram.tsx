@@ -277,7 +277,6 @@ export const MermaidDiagram: React.FC<MermaidDiagramProps> = memo(({
 
     // マウント状態のみを管理する Effect (ESLint の set-state-in-effect 回避)
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMounted(true);
     }, []);
 
