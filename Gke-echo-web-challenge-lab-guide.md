@@ -569,7 +569,7 @@ if [ ! -f echo-web.yaml ]; then
   echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" >&2
   false  # シェルは閉じずに、この if 文の終了ステータスだけを失敗（0 以外）にする
 else
-  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply --namespace "$NAMESPACE" -f -
 fi
 ```
 
@@ -630,8 +630,7 @@ kubectl get services --namespace "$NAMESPACE"
 
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web --namespace "$NAMESPACE"` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web --namespace "$NAMESPACE"` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web --namespace "$NAMESPACE"` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --namespace "$NAMESPACE" --show-labels` で Ready の Pod のラベルと一致するか確認 |
-| 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web --namespace "$NAMESPACE"` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web --namespace "$NAMESPACE"` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web --namespace "$NAMESPACE"` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --namespace "$NAMESPACE" --show-labels` で Ready の Pod のラベルと一致するか確認 → `--port 8000` だけで作成していた場合は、9-4 の手順で Service を作り直し、`--port 80 --target-port 8000` を指定する |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
 | `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web --namespace "$NAMESPACE"` |
 | Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web --show-events=true` で名前を確認、push を再実行 |
@@ -830,19 +829,21 @@ echo "ZONE=${ZONE}"
 echo "NAMESPACE=${NAMESPACE}"
 ```
 
-`kubectl` は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であること、`echo-web` Service が `NAMESPACE` 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE`、`PROJECT_ID`、`NAMESPACE` を見直してください。`echo-web` Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
+`kubectl` は既定で現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、`echo-cluster` がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが `echo-cluster` であること、`echo-web` Service が `NAMESPACE` 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は `ZONE`、`PROJECT_ID`、`NAMESPACE` を見直してください。`echo-web` Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
 
 ```bash
 # 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
 # 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
+# kubectl は --context で対象を固定し、確認後に現在のコンテキストが変わっても別のクラスタを操作しない
+EXPECTED_CONTEXT="gke_${PROJECT_ID}_${ZONE}_echo-cluster"
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   && gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
-  && [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
-  && ECHO_WEB_NAMESPACES=$(kubectl get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  && [ "$(kubectl config current-context)" = "$EXPECTED_CONTEXT" ] \
+  && ECHO_WEB_NAMESPACES=$(kubectl --context "$EXPECTED_CONTEXT" get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
   && OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF && $0 != ns') \
   && { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" >&2; false; }; } \
-  && kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
-  && kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  && kubectl --context "$EXPECTED_CONTEXT" delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  && kubectl --context "$EXPECTED_CONTEXT" delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   && gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}
 ```
 

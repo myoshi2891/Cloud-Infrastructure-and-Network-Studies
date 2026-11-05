@@ -785,7 +785,7 @@ if [ ! -f echo-web.yaml ]; then
   echo "echo-web.yaml がありません。上の YAML を保存してから再実行してください" &gt;&amp;2
   false
 else
-  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply -f -
+  sed "s/PROJECT_ID/${PROJECT_ID}/" echo-web.yaml | kubectl apply --namespace "$NAMESPACE" -f -
 fi</code></pre>
 
             <h2 id="s8">8. 動作確認</h2>
@@ -959,8 +959,8 @@ kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer 
                     </tr>
                     <tr>
                         <td>公開</td>
-                        <td>複数サービスは Ingress／Gateway API、HTTPS と Cloud Armor</td>
-                        <td>今回の HTTP 全公開は検証用</td>
+                        <td>複数サービスは Ingress／Gateway API、HTTPS と Cloud Armor。社内向けのみなら内部ロードバランサ</td>
+                        <td>今回の HTTP 全公開は検証用。内部ロードバランサは外部に公開しない</td>
                     </tr>
                 </table>
             </div>
@@ -1056,21 +1056,23 @@ echo "PROJECT_ID=${PROJECT_ID}"
 echo "ZONE=${ZONE}"
 echo "NAMESPACE=${NAMESPACE}"</code></pre>
             <p>
-                <code>kubectl</code> は現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
+                <code>kubectl</code> は既定で現在のコンテキストのクラスタを操作します。別のクラスタを操作しないよう、<code>echo-cluster</code>
                 がそのゾーンに存在すること、認証情報を取得できること、現在のコンテキストが <code>echo-cluster</code>
                 であること、<code>echo-web</code> Service が <code>NAMESPACE</code> 以外の Namespace にないことをすべて確認できた場合だけ、Service、Deployment、クラスタの順に削除します。どれか 1 つでも失敗すると、以降のコマンドは実行されず、0 以外の終了ステータスで止まります。その場合は
                 <code>ZONE</code>、<code>PROJECT_ID</code>、<code>NAMESPACE</code> を見直してください。<code>echo-web</code> Service がどの Namespace にもない場合は、再実行でもクラスタの削除まで進みます。
             </p>
             <pre><code># 4 つの確認がすべて成功した場合だけ、Service、Deployment、クラスタの順に削除する
 # 別の Namespace に echo-web Service が残ったままクラスタを削除すると、ロードバランサが削除されずに課金が続くおそれがある
+# kubectl は --context で対象を固定し、確認後に現在のコンテキストが変わっても別のクラスタを操作しない
+EXPECTED_CONTEXT="gke_${PROJECT_ID}_${ZONE}_echo-cluster"
 gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJECT_ID} --format="value(name,location)" \
   &amp;&amp; gcloud container clusters get-credentials echo-cluster --zone ${ZONE} --project ${PROJECT_ID} \
-  &amp;&amp; [ "$(kubectl config current-context)" = "gke_${PROJECT_ID}_${ZONE}_echo-cluster" ] \
-  &amp;&amp; ECHO_WEB_NAMESPACES=$(kubectl get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
+  &amp;&amp; [ "$(kubectl config current-context)" = "$EXPECTED_CONTEXT" ] \
+  &amp;&amp; ECHO_WEB_NAMESPACES=$(kubectl --context "$EXPECTED_CONTEXT" get service --all-namespaces --field-selector metadata.name=echo-web -o jsonpath='{range .items[*]}{.metadata.namespace}{"\n"}{end}') \
   &amp;&amp; OTHER_NAMESPACES=$(printf '%s\n' "$ECHO_WEB_NAMESPACES" | awk -v ns="$NAMESPACE" 'NF &amp;&amp; $0 != ns') \
   &amp;&amp; { [ -z "$OTHER_NAMESPACES" ] || { echo "echo-web Service が別の Namespace にあるため中止します: $OTHER_NAMESPACES" &gt;&amp;2; false; }; } \
-  &amp;&amp; kubectl delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
-  &amp;&amp; kubectl delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  &amp;&amp; kubectl --context "$EXPECTED_CONTEXT" delete service echo-web --namespace "$NAMESPACE" --ignore-not-found \
+  &amp;&amp; kubectl --context "$EXPECTED_CONTEXT" delete deployment echo-web --namespace "$NAMESPACE" --ignore-not-found \
   &amp;&amp; gcloud container clusters delete echo-cluster --zone ${ZONE} --project ${PROJECT_ID}</code></pre>
             <p>イメージを削除する前に、<code>v1</code> と同じ DIGEST を指すタグが他にないか確認します。</p>
             <pre><code>gcloud artifacts docker tags list us-docker.pkg.dev/${PROJECT_ID}/gcr.io/echo-app</code></pre>
