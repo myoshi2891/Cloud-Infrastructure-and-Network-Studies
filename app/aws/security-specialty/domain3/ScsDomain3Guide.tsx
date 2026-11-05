@@ -1,5 +1,3 @@
-'use client';
-
 import NavBar from './NavBar';
 import HeroIntro from './sections/HeroIntro';
 import Task31 from './sections/Task31';

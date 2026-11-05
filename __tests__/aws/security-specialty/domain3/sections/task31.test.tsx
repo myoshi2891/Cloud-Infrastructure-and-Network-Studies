@@ -67,9 +67,9 @@ describe('Task 3.1 Section (ネットワークエッジサービスのセキュ�
         const { container } = render(<Task31 />);
         const samples = container.querySelectorAll('pre.code.code-block');
         expect(samples).toHaveLength(part.codes.length);
-        samples.forEach((sample) => {
+        samples.forEach((sample, i) => {
             const lines = sample.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+            expect(lines).toHaveLength(part.codes[i]!.length);
         });
     });
 

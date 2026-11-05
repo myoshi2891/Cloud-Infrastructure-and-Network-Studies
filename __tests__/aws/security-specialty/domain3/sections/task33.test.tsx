@@ -67,9 +67,9 @@ describe('Task 3.3 Section (ネットワークセキュリティ制御の設計�
         const { container } = render(<Task33 />);
         const samples = container.querySelectorAll('pre.code.code-block');
         expect(samples).toHaveLength(part.codes.length);
-        samples.forEach((sample) => {
+        samples.forEach((sample, i) => {
             const lines = sample.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+            expect(lines).toHaveLength(part.codes[i]!.length);
         });
     });
 

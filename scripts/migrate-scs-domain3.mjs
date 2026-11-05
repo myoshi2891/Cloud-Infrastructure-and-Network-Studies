@@ -161,25 +161,25 @@ export function scaffoldCore() {
 
     const descriptions = {
         'diag-0': 'Task 3.1 ネットワークエッジ、Task 3.2 コンピュートワークロード、Task 3.3 ネットワークセキュリティ制御の3つのタスクと16のスキルの階層構造を表すDomain 3の全体像。',
-        'diag-1': '層1エッジ（Shield, WAF, CloudFront）、層2ネットワーク（Network Firewall, NACL, SG）、層3コンピュート（堅牢化AMI, ロール, Inspector）、層4データ・アプリ（KMS, Guardrails）を順に通過する多層防御の概念図。',
+        'diag-1': 'ユーザーや攻撃者からの通信が、層1エッジ（Shield, WAF, CloudFront）、層2ネットワーク境界（NACL, Network Firewall）、層3ワークロード境界（セキュリティグループ）、層4ホスト（堅牢化AMI, パッチ, Inspector）、層5アプリ・データ（実行ロール, 暗号化）を順に通過する多層防御の概念図。',
         'diag-2': 'Route 53、CloudFront、Shield/WAF、ALB、EC2、S3オリジンと連携するエッジ防御全体のアーキテクチャ図。',
         'diag-3': '脅威を特定し、攻撃の層（L3/L4かL7か）や要件に応じてShield Standard、Shield Advanced、WAF、レート制限、マネージドルールを選定するフロー。',
         'diag-4': 'カスタムヘッダー検証によるALBオリジン保護と、OACによるS3オリジン保護でCloudFrontの直接迂回を遮断する設計フロー。',
         'diag-5': 'リクエスト到着から優先度順のルール評価、カウント・ブロック・許可のアクション判定、およびデフォルトアクションへのフォールバックを示すWAF評価フロー。',
         'diag-6': 'CloudTrailやVPC Flow LogsなどのログをOCSF標準スキーマに変換してSecurity Lakeに集約し、サードパーティSIEMで分析する統合フロー。',
-        'diag-7': 'ビルド時の堅牢化AMIとコンテナイメージ、デプロイ時のロール権限付与、ランタイム時の脆弱性スキャン・パッチ・安全アクセス、パイプライン監視に至るコンピュートセキュリティの全体フロー。',
+        'diag-7': 'ビルド時の堅牢化AMIとコンテナイメージ、デプロイ時のロールによる権限付与、ランタイムのInspectorとGuardDuty、運用のPatch Manager、Session Managerによる管理アクセスへと進み、脆弱性を発見したらビルドに戻るコンピュートセキュリティの全体フロー。',
         'diag-8': 'ベースイメージからビルドコンポーネントによる堅牢化、テストコンポーネントによる検証、AMI配布・共有をパイプラインで自動化するEC2 Image Builderのワークフロー。',
-        'diag-9': 'EC2、Lambda、ECS、EKSの各コンピュート環境に応じたインスタンスプロファイル、サービスロール、実行ロールの選択決定木。',
+        'diag-9': 'EC2はインスタンスプロファイル、Lambdaは実行ロール、ECSはタスクロール（アプリ用）とタスク実行ロール（ECS基盤用）、EKSはIRSAまたはPod Identityを使うという、コンピュート環境ごとの権限付与の選択図。',
         'diag-10': '承認ルールを定めたパッチベースライン、パッチグループ、メンテナンスウィンドウによる自動適用とSystems Manager Patch Managerの実行フロー。',
         'diag-11': '管理者がIAM認証を経てSSMサービスとセッションを開始し、アウトバウンドHTTPS（443）経由のSSM Agentと通信してポート開放不要で接続するSession Managerの仕組み。',
         'diag-12': '開発者のIDE内スキャンからコミット・PRレビュー、CIパイプラインスキャン、レジストリスキャンを経て本番へ進むDevSecOpsシフトレフトの流れ。',
         'diag-13': 'ユーザー入力とモデル出力をBedrock Guardrailsがフィルタリングし、トピック拒否・有害語ブロック・機密情報マスキング・幻覚抑制を適用する保護フロー。',
         'diag-14': 'インターネットからIGW、サブネットのNACL、ENIのセキュリティグループを経てEC2へ至るインバウンドパケットの通過順序とステートフル/ステートレスの比較。',
         'diag-15': 'スポークVPC群からTransit Gatewayを経由し、集中インスペクションVPC内のAWS Network Firewallでドメイン・シグネチャ検査を行う中央集約型インスペクション構成。',
-        'diag-16': '接続要件（低コスト・迅速、大量・専用線、ゼロトラストWeb）に応じてSite-to-Site VPN、Direct Connect、Verified Accessを分岐して選ぶ接続方式決定木。',
+        'diag-16': '接続要件に応じて、迅速・低コストならSite-to-Site VPN、大容量・安定・閉域ならDirect Connect、高可用性ならDXとVPNのバックアップや複数ロケーションDXを選び、Direct Connectでは暗号化要件に応じてMACsec、DX上のSite-to-Site VPN、DXのみに分岐する接続方式決定木。',
         'diag-17': '社員がIdPで認証し、Verified Accessエンドポイントとセキュリティポリシー（Cedar）で評価されて社内プライベートアプリへセキュアにアクセスするゼロトラストフロー。',
         'diag-18': 'パブリックサブネット（ALB・NAT GW）、アプリケーションサブネット（EC2・SG）、データベース分離サブネット（RDS・SG）による3層ネットワークセグメンテーション構成。',
-        'diag-19': '構成上の到達可能性を検証するNetwork Access Analyzer、既知の攻撃経路・開いたポートを調べるInspector、実際のパケット通過を監視するVPC Flow Logsの使い分け決定木。',
+        'diag-19': '目的に応じて、あってはならない経路が存在しないかの確認にNetwork Access Analyzer、特定の2点間が通信できない原因の調査にReachability Analyzer、EC2の公開ポートの洗い出しにInspectorの到達性の検出結果、実際の通信の確認にVPC Flow Logsを選ぶ使い分け決定木。',
         'diag-20': 'ルートテーブルの経路確認からIGW/NAT GW、セキュリティグループ、NACL、OS内ファイアウォール・サービス起動確認へと段階的に進むトラブルシューティング決定フロー。',
     };
 
@@ -572,6 +572,157 @@ ${scope} pre.code .code-line {
     white-space: pre;
     min-height: 1.7em;
 }
+
+/* Section 9: question cards keep the original wording and native disclosure. */
+.scs-domain3-page [data-part='examprep'] .practice-card {
+    margin: 0 0 24px;
+    padding: clamp(20px, 3vw, 32px);
+    background: var(--color-scs-d3-bg-card);
+    border: 1px solid var(--color-scs-d3-border);
+    border-radius: 18px;
+    box-shadow: 0 4px 18px color-mix(in srgb, var(--color-scs-d3-text) 4%, transparent);
+    overflow-wrap: anywhere;
+}
+.scs-domain3-page .practice-card .practice-prompt {
+    margin: 0 0 22px;
+    color: var(--color-scs-d3-text);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.9;
+}
+.scs-domain3-page .practice-prompt > strong:first-child {
+    display: block;
+    width: fit-content;
+    margin-bottom: 14px;
+    padding: 3px 12px;
+    border: 1px solid var(--color-scs-d3-accent-soft);
+    border-radius: 8px;
+    background: var(--color-scs-d3-accent-bg);
+    color: var(--color-scs-d3-accent);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.8;
+}
+.scs-domain3-page .practice-options {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+.scs-domain3-page .practice-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 13px 18px 13px 2.75em;
+    text-indent: -1.45em;
+    border: 1px solid var(--color-scs-d3-border-soft);
+    border-radius: 10px;
+    background: var(--color-scs-d3-bg);
+    color: var(--color-scs-d3-text-dim);
+    font-size: 14px;
+    line-height: 1.85;
+}
+.scs-domain3-page .practice-option:hover {
+    border-color: var(--color-scs-d3-accent-soft);
+    background: var(--color-scs-d3-accent-bg);
+}
+.scs-domain3-page .practice-option:focus-visible {
+    outline: 2px solid var(--color-scs-d3-accent);
+    outline-offset: 3px;
+}
+.scs-domain3-page .practice-option[aria-pressed='true'] {
+    box-shadow: inset 3px 0 0 currentColor;
+}
+.scs-domain3-page .practice-option[data-result='correct'],
+.scs-domain3-page .practice-feedback[data-result='correct'] {
+    color: var(--color-scs-d3-success);
+    background: var(--color-scs-d3-success-bg);
+    border-color: var(--color-scs-d3-success);
+}
+.scs-domain3-page .practice-option[data-result='incorrect'],
+.scs-domain3-page .practice-feedback[data-result='incorrect'] {
+    color: var(--color-scs-d3-danger);
+    background: var(--color-scs-d3-danger-bg);
+    border-color: var(--color-scs-d3-danger);
+}
+.scs-domain3-page .practice-feedback {
+    padding: 12px 16px;
+    border: 1px solid;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-indent: 0;
+}
+.scs-domain3-page .practice-feedback:empty {
+    display: none;
+}
+.scs-domain3-page .practice-card details.answer {
+    margin: 0;
+    padding: 0;
+    border-color: var(--color-scs-d3-border-soft);
+    border-radius: 10px;
+    background: var(--color-scs-d3-bg-card);
+}
+.scs-domain3-page .practice-card details.answer summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 52px;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-size: 14px;
+    list-style: none;
+}
+.scs-domain3-page .practice-card details.answer summary::-webkit-details-marker {
+    display: none;
+}
+.scs-domain3-page .practice-card details.answer summary::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin-right: 3px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    flex-shrink: 0;
+}
+.scs-domain3-page .practice-card details.answer summary:hover {
+    background: var(--color-scs-d3-accent-bg);
+}
+.scs-domain3-page .practice-card details.answer summary:focus-visible {
+    outline: 2px solid var(--color-scs-d3-accent);
+    outline-offset: 4px;
+}
+.scs-domain3-page .practice-card details.answer[open] {
+    border-color: var(--color-scs-d3-accent-soft);
+    background: var(--color-scs-d3-accent-bg);
+}
+.scs-domain3-page .practice-card details.answer[open] summary {
+    margin: 0;
+    border-bottom: 1px solid var(--color-scs-d3-accent-soft);
+    border-radius: 9px 9px 0 0;
+}
+.scs-domain3-page .practice-card details.answer[open] summary::after {
+    transform: translateY(2px) rotate(225deg);
+}
+.scs-domain3-page .practice-card details.answer p {
+    margin: 0;
+    padding: 18px;
+    font-size: 14px;
+    line-height: 1.95;
+}
+@media (max-width: 540px) {
+    .scs-domain3-page [data-part='examprep'] .practice-card {
+        padding: 18px 14px;
+        border-radius: 14px;
+    }
+    .scs-domain3-page .practice-option {
+        padding-right: 12px;
+    }
+}
 `;
 
     fs.writeFileSync(`${dir}/page.css`, cssAst.toString() + additionalCss);
@@ -594,9 +745,7 @@ export default function Page() {
     fs.writeFileSync(`${dir}/page.tsx`, pageComponent);
 
     // 7. ScsDomain3Guide.tsx
-    const guideComponent = `'use client';
-
-import NavBar from './NavBar';
+    const guideComponent = `import NavBar from './NavBar';
 import HeroIntro from './sections/HeroIntro';
 import Task31 from './sections/Task31';
 import Task32 from './sections/Task32';
@@ -646,8 +795,16 @@ const componentNames = {
     appendix: 'Appendix',
 };
 
+// 採点 UI を持つため手動保守するセクション。再生成すると操作部品が失われる
+const HAND_MAINTAINED_PHASES = new Set(['examprep']);
+const generatedPhases = Object.keys(boundaries).filter((phase) => !HAND_MAINTAINED_PHASES.has(phase));
+
 /** 指定フェーズのセクションを原本から生成する。 */
 export function migrateSection(phase) {
+    if (HAND_MAINTAINED_PHASES.has(phase)) {
+        throw new Error(`${phase} は手動保守のため再生成できません: ${dir}/sections/${componentNames[phase]}.tsx を直接編集してください`);
+    }
+
     const main = doc.querySelector('main');
     const chunks = Object.fromEntries(Object.keys(boundaries).map((k) => [k, []]));
     let current = 'herointro';
@@ -688,12 +845,12 @@ if (target === 'core') {
     scaffoldCore();
 } else if (target === 'all') {
     scaffoldCore();
-    for (const p of Object.keys(boundaries)) {
+    for (const p of generatedPhases) {
         migrateSection(p);
     }
 } else if (Object.hasOwn(boundaries, target)) {
     migrateSection(target);
 } else {
-    console.error('Unknown target. Use: core, all, or ' + Object.keys(boundaries).join(', '));
+    console.error('Unknown target. Use: core, all, or ' + generatedPhases.join(', '));
     process.exit(1);
 }

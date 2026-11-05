@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/aws/security-specialty/domain3/page';
 import { DIAGRAMS, DIAGRAM_DESCRIPTIONS } from '@/app/aws/security-specialty/domain3/constants';
+import renderTheme from '@/app/aws/security-specialty/domain3/render-theme.json';
 
 vi.mock('@/components/MermaidDiagram', async () => ({
     MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
@@ -29,10 +30,7 @@ describe('SCS Domain 3 図のテキスト代替', () => {
             const chart = diagram.getAttribute('data-chart') ?? '';
             const configLine = chart.split('\n')[1] ?? '';
             const config = JSON.parse(configLine.slice('config: '.length));
-            expect(Object.keys(config.themeVariables).length).toBeGreaterThan(100);
-            expect(config.themeVariables.nodeBkg).toBe('#e7edff');
-            expect(config.themeVariables.clusterBkg).toBe('#f6f8fc');
-            expect(config.themeVariables.edgeLabelBackground).toBe('#ffffff');
+            expect(config).toEqual(renderTheme);
             const id = diagramIdOf(chart);
             const describedBy = diagram.getAttribute('aria-describedby');
             const description = describedBy
@@ -46,5 +44,33 @@ describe('SCS Domain 3 図のテキスト代替', () => {
             return description;
         });
         expect(new Set(texts).size).toBe(21);
+    });
+
+    it.each([
+        [
+            'diag-1',
+            ['層1', 'CloudFront', '層2', 'Network Firewall', '層3', 'セキュリティグループ', '層4', 'Inspector', '層5', '暗号化'],
+            ['KMS', 'Guardrails'],
+        ],
+        ['diag-7', ['GuardDuty', 'Patch Manager', 'Session Manager', 'ビルドに戻る'], ['パイプライン監視']],
+        [
+            'diag-9',
+            ['インスタンスプロファイル', '実行ロール', 'タスクロール', 'タスク実行ロール', 'IRSA', 'Pod Identity'],
+            ['サービスロール'],
+        ],
+        [
+            'diag-16',
+            ['Site-to-Site VPN', 'Direct Connect', 'MACsec', 'DX上のSite-to-Site VPN', 'DXのみ', '複数ロケーション'],
+            ['Verified Access', 'ゼロトラスト'],
+        ],
+        [
+            'diag-19',
+            ['Network Access Analyzer', 'Reachability Analyzer', 'Inspector', 'VPC Flow Logs'],
+            ['攻撃経路'],
+        ],
+    ] as const)('%s の説明が図の層・分岐だけを述べる', (id, shown, absent) => {
+        const description = DIAGRAM_DESCRIPTIONS[id];
+        shown.forEach((term) => expect(description).toContain(term));
+        absent.forEach((term) => expect(description).not.toContain(term));
     });
 });

@@ -26,25 +26,25 @@ export const DIAGRAMS = {
 
 export const DIAGRAM_DESCRIPTIONS: Record<DiagramId, string> = {
     "diag-0": "Task 3.1 ネットワークエッジ、Task 3.2 コンピュートワークロード、Task 3.3 ネットワークセキュリティ制御の3つのタスクと16のスキルの階層構造を表すDomain 3の全体像。",
-    "diag-1": "層1エッジ（Shield, WAF, CloudFront）、層2ネットワーク（Network Firewall, NACL, SG）、層3コンピュート（堅牢化AMI, ロール, Inspector）、層4データ・アプリ（KMS, Guardrails）を順に通過する多層防御の概念図。",
+    "diag-1": "ユーザーや攻撃者からの通信が、層1エッジ（Shield, WAF, CloudFront）、層2ネットワーク境界（NACL, Network Firewall）、層3ワークロード境界（セキュリティグループ）、層4ホスト（堅牢化AMI, パッチ, Inspector）、層5アプリ・データ（実行ロール, 暗号化）を順に通過する多層防御の概念図。",
     "diag-2": "Route 53、CloudFront、Shield/WAF、ALB、EC2、S3オリジンと連携するエッジ防御全体のアーキテクチャ図。",
     "diag-3": "脅威を特定し、攻撃の層（L3/L4かL7か）や要件に応じてShield Standard、Shield Advanced、WAF、レート制限、マネージドルールを選定するフロー。",
     "diag-4": "カスタムヘッダー検証によるALBオリジン保護と、OACによるS3オリジン保護でCloudFrontの直接迂回を遮断する設計フロー。",
     "diag-5": "リクエスト到着から優先度順のルール評価、カウント・ブロック・許可のアクション判定、およびデフォルトアクションへのフォールバックを示すWAF評価フロー。",
     "diag-6": "CloudTrailやVPC Flow LogsなどのログをOCSF標準スキーマに変換してSecurity Lakeに集約し、サードパーティSIEMで分析する統合フロー。",
-    "diag-7": "ビルド時の堅牢化AMIとコンテナイメージ、デプロイ時のロール権限付与、ランタイム時の脆弱性スキャン・パッチ・安全アクセス、パイプライン監視に至るコンピュートセキュリティの全体フロー。",
+    "diag-7": "ビルド時の堅牢化AMIとコンテナイメージ、デプロイ時のロールによる権限付与、ランタイムのInspectorとGuardDuty、運用のPatch Manager、Session Managerによる管理アクセスへと進み、脆弱性を発見したらビルドに戻るコンピュートセキュリティの全体フロー。",
     "diag-8": "ベースイメージからビルドコンポーネントによる堅牢化、テストコンポーネントによる検証、AMI配布・共有をパイプラインで自動化するEC2 Image Builderのワークフロー。",
-    "diag-9": "EC2、Lambda、ECS、EKSの各コンピュート環境に応じたインスタンスプロファイル、サービスロール、実行ロールの選択決定木。",
+    "diag-9": "EC2はインスタンスプロファイル、Lambdaは実行ロール、ECSはタスクロール（アプリ用）とタスク実行ロール（ECS基盤用）、EKSはIRSAまたはPod Identityを使うという、コンピュート環境ごとの権限付与の選択図。",
     "diag-10": "承認ルールを定めたパッチベースライン、パッチグループ、メンテナンスウィンドウによる自動適用とSystems Manager Patch Managerの実行フロー。",
     "diag-11": "管理者がIAM認証を経てSSMサービスとセッションを開始し、アウトバウンドHTTPS（443）経由のSSM Agentと通信してポート開放不要で接続するSession Managerの仕組み。",
     "diag-12": "開発者のIDE内スキャンからコミット・PRレビュー、CIパイプラインスキャン、レジストリスキャンを経て本番へ進むDevSecOpsシフトレフトの流れ。",
     "diag-13": "ユーザー入力とモデル出力をBedrock Guardrailsがフィルタリングし、トピック拒否・有害語ブロック・機密情報マスキング・幻覚抑制を適用する保護フロー。",
     "diag-14": "インターネットからIGW、サブネットのNACL、ENIのセキュリティグループを経てEC2へ至るインバウンドパケットの通過順序とステートフル/ステートレスの比較。",
     "diag-15": "スポークVPC群からTransit Gatewayを経由し、集中インスペクションVPC内のAWS Network Firewallでドメイン・シグネチャ検査を行う中央集約型インスペクション構成。",
-    "diag-16": "接続要件（低コスト・迅速、大量・専用線、ゼロトラストWeb）に応じてSite-to-Site VPN、Direct Connect、Verified Accessを分岐して選ぶ接続方式決定木。",
+    "diag-16": "接続要件に応じて、迅速・低コストならSite-to-Site VPN、大容量・安定・閉域ならDirect Connect、高可用性ならDXとVPNのバックアップや複数ロケーションDXを選び、Direct Connectでは暗号化要件に応じてMACsec、DX上のSite-to-Site VPN、DXのみに分岐する接続方式決定木。",
     "diag-17": "社員がIdPで認証し、Verified Accessエンドポイントとセキュリティポリシー（Cedar）で評価されて社内プライベートアプリへセキュアにアクセスするゼロトラストフロー。",
     "diag-18": "パブリックサブネット（ALB・NAT GW）、アプリケーションサブネット（EC2・SG）、データベース分離サブネット（RDS・SG）による3層ネットワークセグメンテーション構成。",
-    "diag-19": "構成上の到達可能性を検証するNetwork Access Analyzer、既知の攻撃経路・開いたポートを調べるInspector、実際のパケット通過を監視するVPC Flow Logsの使い分け決定木。",
+    "diag-19": "目的に応じて、あってはならない経路が存在しないかの確認にNetwork Access Analyzer、特定の2点間が通信できない原因の調査にReachability Analyzer、EC2の公開ポートの洗い出しにInspectorの到達性の検出結果、実際の通信の確認にVPC Flow Logsを選ぶ使い分け決定木。",
     "diag-20": "ルートテーブルの経路確認からIGW/NAT GW、セキュリティグループ、NACL、OS内ファイアウォール・サービス起動確認へと段階的に進むトラブルシューティング決定フロー。"
 } as const;
 
