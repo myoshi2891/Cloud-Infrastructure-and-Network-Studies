@@ -36,3 +36,4 @@ describe('SCS Domain 3 図のテキスト代替', () => {
         expect(new Set(texts).size).toBe(21);
     });
 });
+

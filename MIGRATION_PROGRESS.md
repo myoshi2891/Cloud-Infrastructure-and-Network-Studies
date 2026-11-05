@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-11-05)
 
+## 2026-11-05: SCS-C03 Domain 3 移行 & 原本アーカイブ退避
+
+`/aws/security-specialty/domain3` へ全3タスク（Task 3.1 ネットワークエッジ、Task 3.2 コンピュートワークロード、Task 3.3 ネットワークセキュリティ制御）、全体像、前提知識、横断まとめ、トラブルシューティング実践フロー、演習問題10問、参考URL一覧を完全移行。47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本どおり保持。明色配色（`--color-scs-d3-*` 22変数）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークンを完全復元した。目次の現在位置・開閉・hash/focus、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）、ホーム・Headerの18%導線と明色フッターへ統合。
+
+Inventory `06a1ee41`、Red/基盤 `e45b1d79`、HeroIntro `d96f4cd1`、Task 3.1 `a686c05c`、Task 3.2 `2965e940`、Task 3.3 `51afe1e6`、Summary & Troubleshooting `fcd94b67`、ExamPrep `4b7b5c57`、Appendix `d6fb9f81`、導線・全量突合Green `65797b71` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・CSS宣言値と、Mermaidの全21図DSL・アクセシビリティ代替テキストを全量照合。SCS-C03 Domain 3関連テスト13ファイル・64件すべて成功、ガイド幅契約テスト154件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（268893バイト・SHA-256 `713ed437796eca424041e3b23705582c770df5f5046a0127f00a1785961a4098`）およびMarkdown（101161バイト・SHA-256 `80310694a18086271a35b803897da397826b0bd144c4ce13bc6b49797f0d2c72`）を `archive/Aws/html/security-specialty/domain3/` と `archive/Aws/md/security-specialty/domain3/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-scs-domain3.mjs all` で再生成できる。直下の未移行HTML残数は15件。
+
 ## 2026-11-05: SAP-C02 Domain 4 移行 & 原本アーカイブ退避
 
 `/aws/solutions-architect-professional/domain4` へ全4タスク（Task 4.1〜4.4）、基礎用語、試験直前まとめ、参考URL一覧を完全移行。42表（th87・td461）・16図・7コード例（85行）・130リスト項目・10チェック項目・102外部リンク出現・45目次を原本どおり保持。明色配色（`#0d1d3a`, `#0073bb`, `#d13212`, `#1e8900`, `#ff9900`等）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文クラストークンを完全復元した。目次の現在位置・開閉・hash/focus、チェックリスト進捗カウンター、ホーム・Headerの20%導線と明色フッターへ統合。

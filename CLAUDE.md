@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## 2026-11-05: SCS-C03 Domain 3
+
+`app/aws/security-specialty/domain3/` に Server `page.tsx` / `ScsDomain3Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, Task31, Task32, Task33, Summary, Troubleshooting, ExamPrep, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、スコープCSS `page.css` を追加。全3タスク・47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本から完全移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`.code-line`）・原本構文トークン、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）を保持。ホーム・HeaderのDomain 3（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain3.mjs <herointro|task31|task32|task33|summary|troubleshooting|examprep|appendix|all>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/security-specialty/domain3/` と `archive/Aws/md/security-specialty/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json` に記録。直下の未移行HTML残数は15件。
+
 ## 2026-11-05: SAP-C02 Domain 4
 
 `app/aws/solutions-architect-professional/domain4/` に Server `page.tsx` / `SapDomain4Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（チェック進捗管理）、memo化した `Diagram.tsx`、6分割のServer `sections/`（foundation, task41, task42, task43, task44, summary, appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全4タスク・42表（th87・td461）・16図・7コード例（85行）・130リスト項目・10チェック項目・102外部リンク出現・45目次を原本から移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`.code-line`）・原本構文トークン、チェック進捗を保持。ホーム・HeaderのDomain 4（20%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain4.mjs <foundation|task41|task42|task43|task44|summary|appendix|all>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/solutions-architect-professional/domain4/` と `archive/Aws/md/solutions-architect-professional/domain4/` に保存し、復元情報は `docs/migration-inventory/aws-sap-c02-domain4.archive.json` に記録。直下の未移行HTML残数は16件。

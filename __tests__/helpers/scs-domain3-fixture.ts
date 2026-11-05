@@ -40,3 +40,4 @@ export function scsDomain3Part(id: keyof typeof fixture.guideParts) {
     const part = fixture.guideParts[id];
     return { ...part, diagrams: part.diagrams.map((chart) => prefix + chart) };
 }
+

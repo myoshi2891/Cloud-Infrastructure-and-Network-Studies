@@ -14,6 +14,7 @@ it('retains SCS-C03 complete guide and exposes Domain 1 from EXAMS and derived n
         { label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' },
         { label: 'ドメイン1: 検出 (Detection)', href: route, pct: '16%' },
         { label: 'ドメイン2: インシデント対応 (Incident Response)', href: '/aws/security-specialty/domain2', pct: '14%' },
+        { label: 'ドメイン3: インフラストラクチャセキュリティ (Infrastructure Security)', href: '/aws/security-specialty/domain3', pct: '18%' },
     ]);
     expect(JSON.stringify(toNavTree(EXAMS))).toContain(route);
 });

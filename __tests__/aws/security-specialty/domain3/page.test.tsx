@@ -110,3 +110,4 @@ describe('aws-scs-c03-domain3-guide — 移行元コンテンツの全量移行'
         });
     });
 });
+
