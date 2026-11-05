@@ -9,7 +9,7 @@ description: >
 
 # Mermaid 構文・描画修正スキル
 
-(最終更新日: 2026-10-10)
+(最終更新日: 2026-11-05)
 
 ## 前提バージョンと正準実装（推測禁止）
 
@@ -242,10 +242,11 @@ const viewBoxStr = svgEl.getAttribute('viewBox');
 if (viewBoxStr) {
     const parts = viewBoxStr.split(' ').map(Number);
     if (parts.length === 4) {
-        // frontmatter と init ディレクティブを除いた本文の先頭で図種別を判定する
+        // frontmatter と init ディレクティブを除いた本文の先頭で図種別を判定する。
+        // Mermaid は開始・終了の字下げ一致を要求するため、除去前に字下げを削らない
         const bodyDsl = src
-            .trimStart()
-            .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
+            .replace(/^(?:[^\S\n\r]*[\n\r])+/, '')
+            .replace(/^([^\S\n\r]*)-{3}\s*[\n\r](.*?)[\n\r]\1-{3}\s*[\n\r]+/s, '')
             .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
             .trim();
         const isSequenceOrState = bodyDsl.startsWith('sequenceDiagram') || bodyDsl.startsWith('stateDiagram');
@@ -542,8 +543,8 @@ const applySvgFixups = (
     const parts = viewBox.split(/\s+/).map(Number);
     if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
     const bodyDsl = chart
-        .trimStart()
-        .replace(/^-{3}\s*[\n\r](.*?)[\n\r]-{3}\s*[\n\r]+/s, '')
+        .replace(/^(?:[^\S\n\r]*[\n\r])+/, '')
+        .replace(/^([^\S\n\r]*)-{3}\s*[\n\r](.*?)[\n\r]\1-{3}\s*[\n\r]+/s, '')
         .replace(/^\s*(?:%%\{[\s\S]*?\}%%\s*)+/, '')
         .trim();
     const isSequenceOrState =

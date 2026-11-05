@@ -76,6 +76,8 @@ describe('injectRenderLoop の applySvgFixups', () => {
         ['init ディレクティブ', `${INIT}stateDiagram-v2\n[*] --> A`],
         ['複数の init', `${INIT}${INIT}sequenceDiagram\nA->>B: x`],
         ['frontmatter と init の併用', `\n${FRONTMATTER}${INIT}sequenceDiagram\nA->>B: x`],
+        ['字下げされた frontmatter', '  ---\n  title: 図\n  ---\n  sequenceDiagram\n  A->>B: x'],
+        ['空行に続く字下げされた frontmatter', '\n    ---\n    title: 図\n    ---\n    stateDiagram-v2\n    [*] --> A'],
     ])('%s の後ろにある sequence/state 図を判定して 110 拡張する', (_label, src) => {
         expect(fixedHeight(src)).toBe('210');
     });
@@ -84,6 +86,7 @@ describe('injectRenderLoop の applySvgFixups', () => {
         ['flowchart', 'flowchart TD\nA --> B'],
         ['init 付き flowchart', `${INIT}flowchart TD\nA --> B`],
         ['本文に sequenceDiagram を含む flowchart', `${FRONTMATTER}flowchart TD\nA["sequenceDiagram"] --> B`],
+        ['字下げされた frontmatter の flowchart', '  ---\n  title: 図\n  ---\n  flowchart TD\n  A --> B'],
     ])('%s は 15 だけ拡張する', (_label, src) => {
         expect(fixedHeight(src)).toBe('115');
     });

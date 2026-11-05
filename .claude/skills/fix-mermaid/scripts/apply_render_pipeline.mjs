@@ -36,10 +36,11 @@ const RENDER_LOOP = `            // --- mermaid render pipeline (apply_render_pi
                 if (!viewBox) return;
                 const parts = viewBox.split(/\\s+/).map(Number);
                 if (parts.length !== 4 || !parts.every((n) => Number.isFinite(n))) return;
-                // 図種別は frontmatter と init ディレクティブを除いた本文の先頭で判定する
+                // 図種別は frontmatter と init ディレクティブを除いた本文の先頭で判定する。
+                // Mermaid は開始・終了の字下げ一致を要求するため、除去前に字下げを削らない。
                 const bodyDsl = src
-                    .trimStart()
-                    .replace(/^-{3}\\s*[\\n\\r](.*?)[\\n\\r]-{3}\\s*[\\n\\r]+/s, '')
+                    .replace(/^(?:[^\\S\\n\\r]*[\\n\\r])+/, '')
+                    .replace(/^([^\\S\\n\\r]*)-{3}\\s*[\\n\\r](.*?)[\\n\\r]\\1-{3}\\s*[\\n\\r]+/s, '')
                     .replace(/^\\s*(?:%%\\{[\\s\\S]*?\\}%%\\s*)+/, '')
                     .trim();
                 const isSequenceOrState =
