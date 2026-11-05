@@ -2245,7 +2245,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Security 完全ガイド（`/cisco/ccnp-security`）の全文移行・導線統合・原本アーカイブ。その前にSCS-C03 Domain 2（`/aws/security-specialty/domain2`）の移行も完了。
 - **最終更新日:** 2026-11-03
-- **最新実装 HEAD:** `d4f53e5e`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）
+- **最新実装 HEAD:** `c7e50985`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22`、ガイド幅テストへのSCS Domain 2登録 `c7e50985` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）
 - **仕様同期コミット:** `487920b5`（CLAUDE.md・GEMINI.mdをSCS-C03 Domain 2へ同期した最新の仕様同期。CCNP Security分は `d00ecf4d`）
 - **前回進捗同期コミット:** `9cb9c927`（CCNP Securityの図解・トークン修正を記録した最新の完了済み進捗同期）
 - **検証状態:** CCNP Security関連41件（関連16件＋MermaidDiagram 25件）と共通フッター3件が成功。Chrome実ブラウザで全53図の `viewBox`・背景透過・アイコン・コード構文トークン55個・リンク下線が原本HTMLと一致。SCS-C03関連51ファイル・339件成功。両移行とも型検査・ESLint成功。全体Vitestの最新記録はSAP-C02 Domain 3時点の472ファイル・4378件すべて成功で、両移行後の全体実行は記録がない。上記は各移行記録時点の結果で、記録後の実装コミットに対する再実行結果ではない。
@@ -3592,7 +3592,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `d4f53e5e`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）。前回進捗同期コミット: `9cb9c927`。仕様同期コミット: `487920b5`。最終更新日: 2026-11-03。CCNP Security（`/cisco/ccnp-security`）の全7パート・131表・53図・9コード例・701リスト項目・305外部リンク出現・188目次と、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の68表・18図・12コード例・170リスト項目・21チェック項目・43目次を全文移行済み。
+最新実装 HEAD: `c7e50985`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22`、ガイド幅テストへのSCS Domain 2登録 `c7e50985` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）。前回進捗同期コミット: `9cb9c927`。仕様同期コミット: `487920b5`。最終更新日: 2026-11-03。CCNP Security（`/cisco/ccnp-security`）の全7パート・131表・53図・9コード例・701リスト項目・305外部リンク出現・188目次と、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の68表・18図・12コード例・170リスト項目・21チェック項目・43目次を全文移行済み。
 
 原本HTML/Markdownはアーカイブ済み。保存先とハッシュは `docs/migration-inventory/cisco-ccnp-security.archive.json` と `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 

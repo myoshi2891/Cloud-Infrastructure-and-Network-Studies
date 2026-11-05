@@ -36,6 +36,7 @@ const main = doc.querySelector('main');
 /**
  * 公式ドキュメントにもとづく訂正を、JSX 変換前の DOM へ適用する。原本ファイルとハッシュ検証の対象は変更しない。
  * after 付きの訂正は直前の表セルで対象を特定し、追記分を強調要素の外へ置く（生成済み本文と一致させる）。
+ * URL の訂正は表示テキストだけでなく href にも適用する。
  * 原本と一致しない訂正は静かに失われるため、適用できなければ生成を中止する。
  */
 function applySourceCorrections(root) {
@@ -55,6 +56,13 @@ function applySourceCorrections(root) {
             const text = walker.currentNode;
             if (text.textContent.includes(from)) {
                 text.textContent = text.textContent.replaceAll(from, to);
+                applied = true;
+            }
+        }
+        for (const anchor of root.querySelectorAll('a[href]')) {
+            const href = anchor.getAttribute('href');
+            if (href.includes(from)) {
+                anchor.setAttribute('href', href.replaceAll(from, to));
                 applied = true;
             }
         }
