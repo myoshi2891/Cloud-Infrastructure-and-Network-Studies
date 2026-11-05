@@ -15,6 +15,7 @@ import { snapshotGuideChecks } from '@/scripts/guide-interaction-extraction.mjs'
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 import { SAP_D4_COLOR_LITERAL, SAP_D4_COLOR_TOKENS } from '@/scripts/sap-domain4-color-tokens.mjs';
 import { codeLineCount, extractBodyContent, squash, withBlockBoundarySpaces } from '@/__tests__/helpers/migration-test-utils';
+import { normalizeCodeContainers } from '@/scripts/inventory-extraction.mjs';
 
 const inventory = withSourceCorrections(rawInventory, [...SAP_DOMAIN4_CORRECTIONS, ...SAP_DOMAIN4_DIAGRAM_CORRECTIONS]);
 const fixture = withSourceCorrections(rawFixture, [...SAP_DOMAIN4_CORRECTIONS, ...SAP_DOMAIN4_DIAGRAM_CORRECTIONS]);
@@ -124,7 +125,8 @@ describe('SAP Domain 4 原本全量契約', () => {
     });
 
     it('本文・注釈・コード全文と外部リンク102出現の順序', () => {
-        const c = render(<Page />).container;
+        const c = render(<Page />).container.cloneNode(true) as HTMLElement;
+        normalizeCodeContainers(c);
         expect(extractBodyContent(withBlockBoundarySpaces(c))).toEqual(inventory.bodyContent);
         expect([...c.querySelectorAll('a[href^="http"]')].map((e) => e.getAttribute('href'))).toEqual(
             inventory.links.map((e) => e.href),
@@ -150,7 +152,7 @@ describe('SAP Domain 4 原本全量契約', () => {
             expect(b.querySelector(':scope > .code-line')).not.toBeNull();
             expect([...b.children].filter((e) => !e.matches('.code-line'))).toEqual([]);
             expect([...b.childNodes].filter((n) => n.nodeType === 3 && n.textContent?.trim()).map((n) => n.textContent)).toEqual([]);
-            expect(b.querySelector('[class^="hljs-"]')).not.toBeNull();
+            expect(b.querySelector('span[class]')).not.toBeNull();
         });
     });
 

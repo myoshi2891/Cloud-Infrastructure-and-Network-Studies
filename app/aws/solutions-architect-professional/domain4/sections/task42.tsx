@@ -37,148 +37,289 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="python コード例">
 <div className="code-line">
-{""}
-<span className="hljs-keyword">
+<span className={"k"}>
 {"def"}
 </span>
-{" transfer_days(data_tb: "}
-<span className="hljs-built_in">
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nf"}>
+{"transfer_days"}
+</span>
+<span className={"p"}>
+{"("}
+</span>
+<span className={"n"}>
+{"data_tb"}
+</span>
+<span className={"p"}>
+{":"}
+</span>
+{" "}
+<span className={"nb"}>
 {"float"}
 </span>
-{", link_mbps: "}
-<span className="hljs-built_in">
+<span className={"p"}>
+{","}
+</span>
+{" "}
+<span className={"n"}>
+{"link_mbps"}
+</span>
+<span className={"p"}>
+{":"}
+</span>
+{" "}
+<span className={"nb"}>
 {"float"}
 </span>
-{", efficiency: "}
-<span className="hljs-built_in">
+<span className={"p"}>
+{","}
+</span>
+{" "}
+<span className={"n"}>
+{"efficiency"}
+</span>
+<span className={"p"}>
+{":"}
+</span>
+{" "}
+<span className={"nb"}>
 {"float"}
 </span>
-{" = "}
-<span className="hljs-number">
+{" "}
+<span className={"o"}>
+{"="}
+</span>
+{" "}
+<span className={"mf"}>
 {"0.7"}
 </span>
-{") -> "}
-<span className="hljs-built_in">
+<span className={"p"}>
+{")"}
+</span>
+{" "}
+<span className={"o"}>
+{"->"}
+</span>
+{" "}
+<span className={"nb"}>
 {"float"}
 </span>
+<span className={"p"}>
 {":"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"sd"}>
+{"\"\"\"データ量(TB)と回線速度(Mbps)から転送日数を概算する\"\"\""}
+</span>
 </div>
 <div className="code-line">
 {"    "}
-<span className="hljs-string">
-{"\"\""}
+<span className={"n"}>
+{"bits"}
 </span>
-{""}
-<span className="hljs-string">
-{"\"データ量(TB)と回線速度(Mbps)から転送日数を概算する\""}
+{" "}
+<span className={"o"}>
+{"="}
 </span>
-{""}
-<span className="hljs-string">
-{"\"\""}
+{" "}
+<span className={"n"}>
+{"data_tb"}
 </span>
-{""}
-</div>
-<div className="code-line">
-{"    bits = data_tb * "}
-<span className="hljs-number">
+{" "}
+<span className={"o"}>
+{"*"}
+</span>
+{" "}
+<span className={"mi"}>
 {"8"}
 </span>
-{" * "}
-<span className="hljs-number">
+{" "}
+<span className={"o"}>
+{"*"}
+</span>
+{" "}
+<span className={"mi"}>
 {"10"}
 </span>
+<span className={"o"}>
 {"**"}
-<span className="hljs-number">
+</span>
+<span className={"mi"}>
 {"12"}
 </span>
 {"            "}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# TB を bit に変換 (10 の 12 乗 = 1 TB)"}
 </span>
-{""}
-</div>
-<div className="code-line">
-{"    seconds = bits / (link_mbps * "}
-<span className="hljs-number">
-{"10"}
-</span>
-{"**"}
-<span className="hljs-number">
-{"6"}
-</span>
-{" * efficiency)"}
 </div>
 <div className="code-line">
 {"    "}
-<span className="hljs-keyword">
+<span className={"n"}>
+{"seconds"}
+</span>
+{" "}
+<span className={"o"}>
+{"="}
+</span>
+{" "}
+<span className={"n"}>
+{"bits"}
+</span>
+{" "}
+<span className={"o"}>
+{"/"}
+</span>
+{" "}
+<span className={"p"}>
+{"("}
+</span>
+<span className={"n"}>
+{"link_mbps"}
+</span>
+{" "}
+<span className={"o"}>
+{"*"}
+</span>
+{" "}
+<span className={"mi"}>
+{"10"}
+</span>
+<span className={"o"}>
+{"**"}
+</span>
+<span className={"mi"}>
+{"6"}
+</span>
+{" "}
+<span className={"o"}>
+{"*"}
+</span>
+{" "}
+<span className={"n"}>
+{"efficiency"}
+</span>
+<span className={"p"}>
+{")"}
+</span>
+</div>
+<div className="code-line">
+{"    "}
+<span className={"k"}>
 {"return"}
 </span>
-{" seconds / "}
-<span className="hljs-number">
+{" "}
+<span className={"n"}>
+{"seconds"}
+</span>
+{" "}
+<span className={"o"}>
+{"/"}
+</span>
+{" "}
+<span className={"mi"}>
 {"86400"}
 </span>
 {"                 "}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# 秒を日に変換"}
 </span>
-{""}
 </div>
 <div className="code-line">
 {""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
+<span className={"nb"}>
 {"print"}
 </span>
+<span className={"p"}>
 {"("}
-<span className="hljs-built_in">
+</span>
+<span className={"nb"}>
 {"round"}
 </span>
-{"(transfer_days("}
-<span className="hljs-number">
+<span className={"p"}>
+{"("}
+</span>
+<span className={"n"}>
+{"transfer_days"}
+</span>
+<span className={"p"}>
+{"("}
+</span>
+<span className={"mi"}>
 {"100"}
 </span>
-{", "}
-<span className="hljs-number">
+<span className={"p"}>
+{","}
+</span>
+{" "}
+<span className={"mi"}>
 {"1000"}
 </span>
-{"), "}
-<span className="hljs-number">
+<span className={"p"}>
+{"),"}
+</span>
+{" "}
+<span className={"mi"}>
 {"1"}
 </span>
-{"))  "}
-<span className="hljs-comment">
+<span className={"p"}>
+{"))"}
+</span>
+{"  "}
+<span className={"c1"}>
 {"# 100 TB を 1 Gbps で送ると約 13 日"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
+<span className={"nb"}>
 {"print"}
 </span>
+<span className={"p"}>
 {"("}
-<span className="hljs-built_in">
+</span>
+<span className={"nb"}>
 {"round"}
 </span>
-{"(transfer_days("}
-<span className="hljs-number">
+<span className={"p"}>
+{"("}
+</span>
+<span className={"n"}>
+{"transfer_days"}
+</span>
+<span className={"p"}>
+{"("}
+</span>
+<span className={"mi"}>
 {"100"}
 </span>
-{", "}
-<span className="hljs-number">
+<span className={"p"}>
+{","}
+</span>
+{" "}
+<span className={"mi"}>
 {"100"}
 </span>
-{"), "}
-<span className="hljs-number">
+<span className={"p"}>
+{"),"}
+</span>
+{" "}
+<span className={"mi"}>
 {"1"}
 </span>
-{"))   "}
-<span className="hljs-comment">
+<span className={"p"}>
+{"))"}
+</span>
+{"   "}
+<span className={"c1"}>
 {"# 100 TB を 100 Mbps で送ると約 132 日"}
 </span>
-{""}
 </div>
 </pre>
 {"\n                "}
@@ -406,61 +547,120 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="bash コード例">
 <div className="code-line">
-{""}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# 毎日 2 時刻に、検証付きで帯域を制限して転送するタスクを作成する例"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
 {"aws"}
+<span className={"w"}>
+{" "}
 </span>
-{" datasync create-task \\"}
+{"datasync"}
+<span className={"w"}>
+{" "}
+</span>
+{"create-task"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
 {"--source-location-arn"}
+<span className={"w"}>
+{" "}
 </span>
-{" arn:"}
-<span className="hljs-built_in">
-{"aws"}
+{"arn:aws:datasync:ap-northeast-1:111122223333:location/loc-xxxxxxxx"}
+<span className={"w"}>
+{" "}
 </span>
-{":datasync:ap-northeast-1:111122223333:location/loc-xxxxxxxx \\"}
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
 {"--destination-location-arn"}
+<span className={"w"}>
+{" "}
 </span>
-{" arn:"}
-<span className="hljs-built_in">
-{"aws"}
+{"arn:aws:datasync:ap-northeast-1:111122223333:location/loc-yyyyyyyy"}
+<span className={"w"}>
+{" "}
 </span>
-{":datasync:ap-northeast-1:111122223333:location/loc-yyyyyyyy \\"}
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
 {"--name"}
+<span className={"w"}>
+{" "}
 </span>
-{" nas-to-s3-daily \\"}
+{"nas-to-s3-daily"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
 {"--options"}
+<span className={"w"}>
+{" "}
 </span>
-{" VerifyMode=ONLY_FILES_TRANSFERRED,BytesPerSecond=125000000 \\"}
+<span className={"nv"}>
+{"VerifyMode"}
+</span>
+<span className={"o"}>
+{"="}
+</span>
+{"ONLY_FILES_TRANSFERRED,BytesPerSecond"}
+<span className={"o"}>
+{"="}
+</span>
+<span className={"m"}>
+{"125000000"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
-{"--schedule"}
 </span>
-{" ScheduleExpression=\"cron(0 2 * * ? *)\""}
+{"--schedule"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nv"}>
+{"ScheduleExpression"}
+</span>
+<span className={"o"}>
+{"="}
+</span>
+<span className={"s2"}>
+{"\"cron(0 2 * * ? *)\""}
+</span>
 </div>
 </pre>
 {"\n                "}
@@ -480,49 +680,89 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="bash コード例">
 <div className="code-line">
-{""}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# バケットで有効化"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
 {"aws"}
+<span className={"w"}>
+{" "}
 </span>
-{" s3api put-bucket-accelerate-configuration \\"}
+{"s3api"}
+<span className={"w"}>
+{" "}
+</span>
+{"put-bucket-accelerate-configuration"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
 {"--bucket"}
+<span className={"w"}>
+{" "}
 </span>
-{" my-migration-bucket \\"}
+{"my-migration-bucket"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
-{"--accelerate-configuration"}
 </span>
-{" Status=Enabled"}
+{"--accelerate-configuration"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nv"}>
+{"Status"}
+</span>
+<span className={"o"}>
+{"="}
+</span>
+{"Enabled"}
 </div>
 <div className="code-line">
 {""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# CLI がアクセラレーションエンドポイントを使うよう設定"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
 {"aws"}
+<span className={"w"}>
+{" "}
 </span>
-{" configure set default.s3.use_accelerate_endpoint true"}
+{"configure"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nb"}>
+{"set"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+{"default.s3.use_accelerate_endpoint"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nb"}>
+{"true"}
+</span>
 </div>
 </pre>
 {"\n                "}
@@ -753,54 +993,59 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="bash コード例">
 <div className="code-line">
-{""}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# リージョン固有のインストーラーを取得 (リージョンは環境に合わせて変更)"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-built_in">
 {"wget"}
+<span className={"w"}>
+{" "}
 </span>
-{" -O ./"}
-<span className="hljs-built_in">
-{"aws"}
+{"-O"}
+<span className={"w"}>
+{" "}
 </span>
-{"-replication-installer-init \\"}
+{"./aws-replication-installer-init"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"se"}>
+{"\\"}
+</span>
 </div>
 <div className="code-line">
-{"  https://"}
-<span className="hljs-built_in">
-{"aws"}
+<span className={"w"}>
+{"  "}
 </span>
-{"-application-migration-service-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latest/linux/"}
-<span className="hljs-built_in">
-{"aws"}
-</span>
-{"-replication-installer-init"}
+{"https://aws-application-migration-service-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latest/linux/aws-replication-installer-init"}
 </div>
 <div className="code-line">
 {""}
 </div>
 <div className="code-line">
-{""}
-<span className="hljs-comment">
+<span className={"c1"}>
 {"# 権限は AWSApplicationMigrationAgentInstallationPolicy を持つ最小権限の認証情報を使う"}
 </span>
-{""}
 </div>
 <div className="code-line">
-{"sudo bash "}
-<span className="hljs-built_in">
-{"aws"}
+{"sudo"}
+<span className={"w"}>
+{" "}
 </span>
-{"-replication-installer-init "}
-<span className="hljs-attr">
+{"bash"}
+<span className={"w"}>
+{" "}
+</span>
+{"aws-replication-installer-init"}
+<span className={"w"}>
+{" "}
+</span>
 {"--region"}
+<span className={"w"}>
+{" "}
 </span>
-{" ap-northeast-1"}
+{"ap-northeast-1"}
 </div>
 </pre>
 {"\n                "}
@@ -1110,102 +1355,194 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
+<span className={"p"}>
 {"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"rules\""}
 </span>
-{": ["}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"["}
+</span>
 </div>
 <div className="code-line">
-{"    {"}
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"rule-type\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"selection\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"rule-id\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"1\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"rule-name\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"include-hr-schema\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"object-locator\""}
 </span>
-{": {"}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"schema-name\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"HR\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"table-name\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"%\""}
 </span>
-{""}
 </div>
 <div className="code-line">
-{"      },"}
-</div>
-<div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"p"}>
+{"},"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"      "}
+</span>
+<span className={"nt"}>
 {"\"rule-action\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"include\""}
 </span>
-{""}
 </div>
 <div className="code-line">
-{"    }"}
-</div>
-<div className="code-line">
-{"  ]"}
-</div>
-<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
 {"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"  "}
+</span>
+<span className={"p"}>
+{"]"}
+</span>
+</div>
+<div className="code-line">
+<span className={"p"}>
+{"}"}
+</span>
 </div>
 </pre>
 {"\n                "}
@@ -1440,225 +1777,457 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
+<span className={"p"}>
 {"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Comment\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"新環境へ10%だけ振り向ける\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Changes\""}
 </span>
-{": ["}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"["}
+</span>
 </div>
 <div className="code-line">
-{"    {"}
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Action\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"UPSERT\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"ResourceRecordSet\""}
 </span>
-{": {"}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Name\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"app.example.com\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Type\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"CNAME\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"SetIdentifier\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"onprem\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Weight\""}
 </span>
-{": "}
-<span className="hljs-number">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"mi"}>
 {"90"}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"TTL\""}
 </span>
-{": "}
-<span className="hljs-number">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"mi"}>
 {"60"}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"ResourceRecords\""}
 </span>
-{": [{ "}
-<span className="hljs-attr">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"[{"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nt"}>
 {"\"Value\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"app.onprem.example.com\""}
 </span>
-{" }]"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"}]"}
+</span>
 </div>
 <div className="code-line">
-{"      }"}
-</div>
-<div className="code-line">
-{"    },"}
-</div>
-<div className="code-line">
-{"    {"}
-</div>
-<div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"p"}>
+{"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"},"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"      "}
+</span>
+<span className={"nt"}>
 {"\"Action\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"UPSERT\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"ResourceRecordSet\""}
 </span>
-{": {"}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Name\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"app.example.com\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Type\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"CNAME\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"SetIdentifier\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"aws\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Weight\""}
 </span>
-{": "}
-<span className="hljs-number">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"mi"}>
 {"10"}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"TTL\""}
 </span>
-{": "}
-<span className="hljs-number">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"mi"}>
 {"60"}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"ResourceRecords\""}
 </span>
-{": [{ "}
-<span className="hljs-attr">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"[{"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"nt"}>
 {"\"Value\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"app.aws.example.com\""}
 </span>
-{" }]"}
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"}]"}
+</span>
 </div>
 <div className="code-line">
-{"      }"}
-</div>
-<div className="code-line">
-{"    }"}
-</div>
-<div className="code-line">
-{"  ]"}
-</div>
-<div className="code-line">
+<span className={"w"}>
+{"      "}
+</span>
+<span className={"p"}>
 {"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"  "}
+</span>
+<span className={"p"}>
+{"]"}
+</span>
+</div>
+<div className="code-line">
+<span className={"p"}>
+{"}"}
+</span>
 </div>
 </pre>
 {"\n                "}
@@ -1897,136 +2466,285 @@ export default function Content() { return <>
 {"\n                    "}
 <pre className="code code-block" tabIndex={0} role="group" aria-label="json コード例">
 <div className="code-line">
+<span className={"p"}>
 {"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Version\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"2012-10-17\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"  "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Statement\""}
 </span>
-{": ["}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"["}
+</span>
 </div>
 <div className="code-line">
-{"    {"}
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Sid\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"DenyOutsideAllowedRegions\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Effect\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"Deny\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"NotAction\""}
 </span>
-{": ["}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"["}
+</span>
+<span className={"s2"}>
 {"\"iam:*\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"organizations:*\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"route53:*\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"cloudfront:*\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"support:*\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"budgets:*\""}
 </span>
+<span className={"p"}>
 {"],"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Resource\""}
 </span>
-{": "}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"*\""}
 </span>
+<span className={"p"}>
 {","}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"      "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"Condition\""}
 </span>
-{": {"}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"        "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"StringNotEquals\""}
 </span>
-{": {"}
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"{"}
+</span>
 </div>
 <div className="code-line">
+<span className={"w"}>
 {"          "}
-<span className="hljs-attr">
+</span>
+<span className={"nt"}>
 {"\"aws:RequestedRegion\""}
 </span>
-{": ["}
-<span className="hljs-string">
+<span className={"p"}>
+{":"}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"p"}>
+{"["}
+</span>
+<span className={"s2"}>
 {"\"ap-northeast-1\""}
 </span>
-{", "}
-<span className="hljs-string">
+<span className={"p"}>
+{","}
+</span>
+<span className={"w"}>
+{" "}
+</span>
+<span className={"s2"}>
 {"\"ap-northeast-3\""}
 </span>
+<span className={"p"}>
 {"]"}
+</span>
 </div>
 <div className="code-line">
-{"        }"}
-</div>
-<div className="code-line">
-{"      }"}
-</div>
-<div className="code-line">
-{"    }"}
-</div>
-<div className="code-line">
-{"  ]"}
-</div>
-<div className="code-line">
+<span className={"w"}>
+{"        "}
+</span>
+<span className={"p"}>
 {"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"      "}
+</span>
+<span className={"p"}>
+{"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"    "}
+</span>
+<span className={"p"}>
+{"}"}
+</span>
+</div>
+<div className="code-line">
+<span className={"w"}>
+{"  "}
+</span>
+<span className={"p"}>
+{"]"}
+</span>
+</div>
+<div className="code-line">
+<span className={"p"}>
+{"}"}
+</span>
 </div>
 </pre>
 {"\n                "}

@@ -55,67 +55,20 @@ const write = (name, s) => {
 
 const diagrams = [...doc.querySelectorAll('pre.mermaid')];
 
-function tokens(line, language) {
-    if (language === 'bash') {
-        let output = '',
-            end = 0;
-        for (const m of line.matchAll(/\b(?:aws|wget)\b|--[\w-]+|#.*$/g)) {
-            output += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-            const text = m[0];
-            const cls = text.startsWith('#')
-                ? 'comment'
-                : text.startsWith('--')
-                ? 'attr'
-                : text === 'aws' || text === 'wget'
-                ? 'built_in'
-                : 'keyword';
-            output += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
-            end = m.index + text.length;
-        }
-        return output + '{' + JSON.stringify(line.slice(end)) + '}';
+function plainCodeLineToJsx(lineHtml) {
+    if (!lineHtml) return '{""}';
+    const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
+    return [...frag.childNodes].map(nodeToJsx).join('');
+}
+
+function nodeToJsx(node) {
+    if (node.nodeType === 3) {
+        return '{' + JSON.stringify(node.textContent) + '}';
     }
-    if (language === 'python') {
-        let output = '',
-            end = 0;
-        for (const m of line.matchAll(/#.*$|"(?:\\.|[^"\\])*"|\b(?:def|return)\b|\b(?:print|round|float)\b|\b\d+(?:\.\d+)?\b/g)) {
-            output += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-            const text = m[0];
-            const cls = text.startsWith('#')
-                ? 'comment'
-                : text.startsWith('"')
-                ? 'string'
-                : text === 'def' || text === 'return'
-                ? 'keyword'
-                : text === 'print' || text === 'round' || text === 'float'
-                ? 'built_in'
-                : 'number';
-            output += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
-            end = m.index + text.length;
-        }
-        return output + '{' + JSON.stringify(line.slice(end)) + '}';
-    }
-    const regex =
-        language === 'json'
-            ? /"(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|\b(?:true|false|null)\b|\b\d+\b/g
-            : /#.*$|"(?:\\.|[^"\\])*"|[\w]+(?=:)|\b(?:true|false)\b|\b\d+\b|!Ref\b/g;
-    let out = '',
-        end = 0;
-    for (const m of line.matchAll(regex)) {
-        out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-        const text = m[0];
-        const cls = text.startsWith('#')
-            ? 'comment'
-            : line.slice(m.index + text.length).trimStart().startsWith(':')
-            ? 'attr'
-            : text.startsWith('"')
-            ? 'string'
-            : /^\d/.test(text)
-            ? 'number'
-            : 'literal';
-        out += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
-        end = m.index + text.length;
-    }
-    return out + '{' + JSON.stringify(line.slice(end)) + '}';
+    if (node.nodeType !== 1) return '';
+    const attrs = [...node.attributes].map((a) => `${{ class: 'className', for: 'htmlFor' }[a.name] || a.name}={${JSON.stringify(a.value)}}`);
+    const tag = node.tagName.toLowerCase();
+    return '<' + tag + ' ' + attrs.join(' ') + '>' + [...node.childNodes].map(nodeToJsx).join('') + '</' + tag + '>';
 }
 
 const tableScrolls = [...doc.querySelectorAll('.table-scroll')];
@@ -140,13 +93,11 @@ function jsx(n) {
     if (n.matches('pre')) {
         const code = n.querySelector('code');
         const language = code?.className.replace('language-', '') ?? 'text';
+        const rawHtml = code ? code.innerHTML : n.innerHTML;
+        const htmlLines = (rawHtml || '').replace(/^\r?\n|\r?\n$/g, '').split(/\r?\n/);
         return (
             `<pre className="code code-block" tabIndex={0} role="group" aria-label="${language} コード例">` +
-            n.textContent
-                .replace(/^\n|\n$/g, '')
-                .split('\n')
-                .map((line) => '<div className="code-line">' + tokens(line, language) + '</div>')
-                .join('') +
+            htmlLines.map((lineHtml) => '<div className="code-line">' + plainCodeLineToJsx(lineHtml) + '</div>').join('') +
             '</pre>'
         );
     }
