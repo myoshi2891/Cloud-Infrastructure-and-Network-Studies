@@ -76,6 +76,9 @@ describe('injectRenderLoop の applySvgFixups', () => {
         ['init ディレクティブ', `${INIT}stateDiagram-v2\n[*] --> A`],
         ['複数の init', `${INIT}${INIT}sequenceDiagram\nA->>B: x`],
         ['frontmatter と init の併用', `\n${FRONTMATTER}${INIT}sequenceDiagram\nA->>B: x`],
+        ['コメント行', `%% 説明\nsequenceDiagram\nA->>B: x`],
+        ['コメントと init の混在', `%% 説明\n${INIT}  %% 補足\nstateDiagram-v2\n[*] --> A`],
+        ['frontmatter 後のコメント', `${FRONTMATTER}%% 説明\nsequenceDiagram\nA->>B: x`],
     ])('%s の後ろにある sequence/state 図を判定して 110 拡張する', (_label, src) => {
         expect(fixedHeight(src)).toBe('210');
     });
@@ -84,6 +87,7 @@ describe('injectRenderLoop の applySvgFixups', () => {
         ['flowchart', 'flowchart TD\nA --> B'],
         ['init 付き flowchart', `${INIT}flowchart TD\nA --> B`],
         ['本文に sequenceDiagram を含む flowchart', `${FRONTMATTER}flowchart TD\nA["sequenceDiagram"] --> B`],
+        ['コメントに sequenceDiagram を含む flowchart', `%% sequenceDiagram\nflowchart TD\nA --> B`],
     ])('%s は 15 だけ拡張する', (_label, src) => {
         expect(fixedHeight(src)).toBe('115');
     });
@@ -141,4 +145,41 @@ describe('injectRenderLoop', () => {
             );
         },
     );
+});
+
+describe('injectRenderLoop の旧ループ移行', () => {
+    const BASE = '<html><body><script>mermaid.initialize({});</script></body></html>';
+    // 2c7fd40 より前の生成ループ（init ディレクティブを除去しない旧 applySvgFixups）
+    const OLD_LOOP = `            // --- mermaid render pipeline (apply_render_pipeline.mjs) ---
+            function applySvgFixups(svgEl, src) {
+                const isSequenceOrState =
+                    src.trim().startsWith('sequenceDiagram') || src.trim().startsWith('stateDiagram');
+            }
+
+            (async () => {
+                for (const [id, src] of Object.entries(DIAGRAMS)) {
+                    await mermaid.render('svg-' + id, src);
+                }
+            })();
+`;
+    const withOldLoop = BASE.replace('</script>', `\n${OLD_LOOP}        </script>`);
+
+    test('旧世代の生成ループを現行ループへ置換する', () => {
+        const out = injectRenderLoop(withOldLoop);
+        const current = injectRenderLoop(BASE);
+
+        expect(out).toBe(current);
+        expect(out.match(/function applySvgFixups/g)?.length).toBe(1);
+        expect(out).not.toContain("src.trim().startsWith('sequenceDiagram')");
+    });
+
+    test('移行後の再実行は冪等', () => {
+        const once = injectRenderLoop(withOldLoop);
+        expect(injectRenderLoop(once)).toBe(once);
+    });
+
+    test('マーカーのない手書きの applySvgFixups は書き換えない', () => {
+        const handWritten = BASE.replace('</script>', 'function applySvgFixups() {}</script>');
+        expect(injectRenderLoop(handWritten)).toBe(handWritten);
+    });
 });

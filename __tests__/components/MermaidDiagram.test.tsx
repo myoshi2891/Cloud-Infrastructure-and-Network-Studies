@@ -238,6 +238,24 @@ describe('MermaidDiagram', () => {
             applySvgFixups(svg2, '%%{init: {"theme":"base"}}%%\nstateDiagram-v2\n[*] --> A', true);
             expect(svg2.getAttribute('viewBox')).toBe('0 0 600 510');
         });
+
+        it('図宣言より前の %% コメント行を飛ばして sequenceDiagram / stateDiagram を判定すること', () => {
+            const svg1 = makeSvg('0 0 600 400');
+            applySvgFixups(svg1, '%% 概要コメント\nsequenceDiagram\nA->>B: Hello', true);
+            expect(svg1.getAttribute('viewBox')).toBe('0 0 600 510');
+
+            const svg2 = makeSvg('0 0 600 400');
+            applySvgFixups(
+                svg2,
+                '%% コメント1\n%%{init: {"theme":"base"}}%%\n  %% コメント2\nstateDiagram-v2\n[*] --> A',
+                true,
+            );
+            expect(svg2.getAttribute('viewBox')).toBe('0 0 600 510');
+
+            const svg3 = makeSvg('0 0 600 400');
+            applySvgFixups(svg3, '%% sequenceDiagram と書いたコメント\nflowchart TD\nA-->B', true);
+            expect(svg3.getAttribute('viewBox')).toBe('0 0 600 415');
+        });
     });
 
     it('エラー表示時、各行の要素に安定したキーに基づいた data-key 属性が付与されること', async () => {
