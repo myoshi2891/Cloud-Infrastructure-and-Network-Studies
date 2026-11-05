@@ -76,10 +76,15 @@ const RESULT_MESSAGES: Record<Result, string> = {
     incorrect: '不正解です。選び直すか、「答え・解説を確認」を開いて復習しましょう。',
 };
 
-/** 色だけに頼らないよう、記号でも正誤を示す。 */
-function QuizMark({ state }: { state: Result | undefined }) {
+/** 色だけに頼らないよう、記号でも正誤を示す。記号は装飾とし、支援技術には文字で伝える。 */
+function QuizMark({ id, state }: { id?: string | undefined; state: Result | undefined }) {
     if (!state) return null;
-    return <span className="quiz-mark" aria-hidden="true">{state === 'correct' ? '○' : '×'}</span>;
+    return (
+        <span id={id} className="quiz-mark">
+            <span aria-hidden="true">{state === 'correct' ? '○' : '×'}</span>
+            <span className="sr-only">{state === 'correct' ? '正解' : '不正解'}</span>
+        </span>
+    );
 }
 
 /** 空の状態でも DOM に残し、結果の変化を読み上げられるようにする。 */
@@ -134,6 +139,7 @@ function OrderQuestion() {
             <div className="quiz-order" role="group" aria-label="操作の順序を選択">
                 {CORRECT_ORDER.map((value, index) => {
                     const position = `${index + 1}番目`;
+                    const markId = `quiz-order-mark-${index + 1}`;
                     const state: Result | undefined = graded
                         ? (order[index] === value ? 'correct' : 'incorrect')
                         : undefined;
@@ -142,6 +148,7 @@ function OrderQuestion() {
                             <span className="quiz-order-position">{position}</span>
                             <select
                                 aria-label={position}
+                                aria-describedby={state ? markId : undefined}
                                 value={order[index]}
                                 onChange={(event) => {
                                     const next = event.target.value;
@@ -153,7 +160,7 @@ function OrderQuestion() {
                                     <option key={option.value} value={option.value}>{`(${option.value}) ${option.text}`}</option>
                                 ))}
                             </select>
-                            <QuizMark state={state} />
+                            <QuizMark id={markId} state={state} />
                         </label>
                     );
                 })}

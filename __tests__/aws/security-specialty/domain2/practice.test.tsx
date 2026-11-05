@@ -95,6 +95,52 @@ describe('練習問題の採点 (Q2〜Q10)', () => {
     });
 });
 
+describe('正誤マークの支援技術向け表現', () => {
+    it('単一選択の正誤を読み上げ用テキストで示し、記号だけを装飾として隠す', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        render(<PracticeQuestions />);
+        const [wrong] = within(card(4)).getAllByRole('radio').filter((radio) => !/OpsCenter/.test(radio.closest('label')?.textContent ?? ''));
+        if (!wrong) throw new Error('Q4 の誤答がありません');
+
+        // Act
+        await user.click(wrong);
+
+        // Assert
+        const mark = wrong.closest('label')?.querySelector('.quiz-mark');
+        expect(mark).not.toHaveAttribute('aria-hidden');
+        expect(mark?.querySelector('[aria-hidden="true"]')).toHaveTextContent('×');
+        expect(mark?.querySelector('.sr-only')).toHaveTextContent(/^不正解$/);
+    });
+
+    it('採点前の並べ替えは説明を参照せず、参照先のない id を作らない', async () => {
+        // Arrange
+        render(<PracticeQuestions />);
+
+        // Act
+        await selectOrder(['a', 'b', 'c']);
+
+        // Assert
+        [1, 2, 3, 4].forEach((position) => expect(slot(position)).not.toHaveAttribute('aria-describedby'));
+    });
+
+    it('採点後の各順番は自身の正誤を説明として参照し、アクセシブルネームを保つ', async () => {
+        // Arrange
+        render(<PracticeQuestions />);
+
+        // Act: 1・2番目だけ誤り、3・4番目は正解
+        await selectOrder(['c', 'd', 'b', 'a']);
+
+        // Assert: slot() は name で取得するため、名前が変わると失敗する
+        expect(slot(1)).toHaveAccessibleDescription('不正解');
+        expect(slot(2)).toHaveAccessibleDescription('不正解');
+        expect(slot(3)).toHaveAccessibleDescription('正解');
+        expect(slot(4)).toHaveAccessibleDescription('正解');
+        const ids = [1, 2, 3, 4].map((position) => slot(position).getAttribute('aria-describedby'));
+        expect(new Set(ids).size).toBe(4);
+    });
+});
+
 describe('Q1 の並べ替え採点', () => {
     it('4 つの順番それぞれで全操作を選べ、単一選択の入力を持たない', () => {
         render(<PracticeQuestions />);
