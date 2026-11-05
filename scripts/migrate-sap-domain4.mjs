@@ -182,6 +182,7 @@ write(
 const css = postcss.parse(doc.querySelector('style').textContent);
 const root = css.nodes.find((n) => n.type === 'rule' && n.selector === ':root');
 root.remove();
+css.walkComments((c) => c.remove());
 
 css.walkRules((r) => {
     r.selector = r.selector

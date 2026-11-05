@@ -24,8 +24,6 @@
             .sap-domain4-page .layout {
                 display: block;
             }
-
-            /* Sidebar */
             .sap-domain4-page .sidebar {
                 position: fixed;
                 top: 0;
@@ -106,8 +104,6 @@
                 justify-content: center;
                 cursor: pointer;
             }
-
-            /* Main content (full width beside the sidebar) */
             .sap-domain4-page .main {
                 margin-left: 300px;
                 padding: 56px 64px 120px;
@@ -228,8 +224,6 @@
                 color: var(--color-sap-d4-inline-code);
                 overflow-wrap: break-word;
             }
-
-            /* Tables */
             .sap-domain4-page .table-scroll {
                 overflow-x: auto;
                 margin: 0 0 26px;
@@ -264,8 +258,6 @@
             .sap-domain4-page tbody tr:hover td {
                 background: var(--color-sap-d4-row-hover);
             }
-
-            /* Mermaid */
             .sap-domain4-page .mermaid-wrap {
                 width: 100%;
                 display: flex;
@@ -288,8 +280,6 @@
             .sap-domain4-page .mermaidTooltip {
                 font-size: 1rem !important;
             }
-
-            /* Callouts */
             .sap-domain4-page .callout-practice {
                 display: flex;
                 gap: 14px;
@@ -355,8 +345,6 @@
                 content: '✓';
                 font-size: 1rem;
             }
-
-            /* Checklist */
             .sap-domain4-page .checklist-card {
                 background: var(--color-sap-d4-bg-card);
                 border: 1px solid var(--color-sap-d4-border);
@@ -438,8 +426,6 @@
                 text-decoration: line-through;
                 color: var(--color-sap-d4-text-faint);
             }
-
-            /* Code blocks (static syntax highlighting) */
             .sap-domain4-page .code-block {
                 border: 1px solid var(--color-sap-d4-border);
                 border-radius: 12px;
@@ -474,8 +460,6 @@
                 color: inherit;
                 white-space: pre;
             }
-
-            /* Responsive */
             @media (max-width: 980px) {
                 .sap-domain4-page .sidebar {
                     transform: translateX(-100%);
@@ -495,8 +479,6 @@
                     display: flex;
                 }
             }
-
-            /* Source (出典) cards */
             .sap-domain4-page .source-block {
                 background: var(--color-sap-d4-bg-card);
                 border: 1px solid var(--color-sap-d4-border);
@@ -619,8 +601,6 @@
                     grid-template-columns: 1fr;
                 }
             }
-
-            /* Token colors (contrast >= 4.5:1 on #f6f8fc) */
             .sap-domain4-page .code-block .c, .sap-domain4-page .code-block .c1, .sap-domain4-page .code-block .cm, .sap-domain4-page .code-block .cp, .sap-domain4-page .code-block .cs, .sap-domain4-page .code-block .ch, .sap-domain4-page .code-block .cpf {
                 color: var(--color-sap-d4-hljs-comment);
                 font-style: italic;
