@@ -829,6 +829,7 @@ curl http://${EXTERNAL_IP}</code></pre>
 
             <h2 id="s9">9. トラブルシューティング</h2>
             <div class="mermaid-diagram" id="mm-diag"></div>
+            <div class="callout warn"><strong>注意</strong>この節の <code>kubectl</code> は、7-3 で記録した <code>NAMESPACE</code> を対象にします。別タブや再接続後は値が空になるため、診断の前に表の下にあるコマンドの先頭で設定し直してください。</div>
             <div class="tw">
                 <table>
                     <tr>
@@ -839,7 +840,7 @@ curl http://${EXTERNAL_IP}</code></pre>
                     <tr>
                         <td><code>http://IP</code> に接続できない（接続拒否・タイムアウト）</td>
                         <td>アプリ未起動、または Service が 80 番を公開していない（<code>--port 8000</code> のみ等）／<code>targetPort</code> が 8000 でない／Ready な Endpoint がない</td>
-                        <td>1〜2分待つ。<code>kubectl get service echo-web</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>kubectl describe service echo-web</code> で <code>TargetPort</code> が <code>8000/TCP</code> か確認（<code>get service</code> には <code>targetPort</code> が表示されない）。<code>kubectl get endpoints echo-web</code> の <code>ENDPOINTS</code> が <code>&lt;none&gt;</code> なら、待つだけでは解消しないことがあるため、<code>kubectl get service echo-web -o jsonpath='{.spec.selector}'</code> の selector が <code>kubectl get pods --show-labels</code> で Ready の Pod のラベルと一致するか確認</td>
+                        <td>1〜2分待つ。<code>kubectl get service echo-web --namespace "$NAMESPACE"</code> で <code>PORT(S)</code> が <code>80:…</code> か、<code>kubectl describe service echo-web --namespace "$NAMESPACE"</code> で <code>TargetPort</code> が <code>8000/TCP</code> か確認（<code>get service</code> には <code>targetPort</code> が表示されない）。<code>kubectl get endpoints echo-web --namespace "$NAMESPACE"</code> の <code>ENDPOINTS</code> が <code>&lt;none&gt;</code> なら、待つだけでは解消しないことがあるため、<code>kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'</code> の selector が <code>kubectl get pods --namespace "$NAMESPACE" --show-labels</code> で Ready の Pod のラベルと一致するか確認</td>
                     </tr>
                     <tr>
                         <td>後半の採点項目が通らない</td>
@@ -849,17 +850,17 @@ curl http://${EXTERNAL_IP}</code></pre>
                     <tr>
                         <td><code>EXTERNAL-IP</code> が pending</td>
                         <td>LB 作成中、または割り当て不足</td>
-                        <td>2〜3分待つ。<code>kubectl describe service echo-web</code></td>
+                        <td>2〜3分待つ。<code>kubectl describe service echo-web --namespace "$NAMESPACE"</code></td>
                     </tr>
                     <tr>
                         <td><code>ImagePullBackOff</code></td>
                         <td>イメージ名・タグ・ID の誤り、push 漏れ</td>
-                        <td><code>kubectl describe pod</code> で名前を確認し push を再実行</td>
+                        <td><code>kubectl describe pod --namespace "$NAMESPACE"</code> で名前を確認し push を再実行</td>
                     </tr>
                     <tr>
                         <td><code>CrashLoopBackOff</code></td>
                         <td>アプリが起動直後に落ちる</td>
-                        <td><code>kubectl logs</code> で原因確認</td>
+                        <td><code>kubectl logs --namespace "$NAMESPACE"</code> で原因確認</td>
                     </tr>
                     <tr>
                         <td>push 時の認証エラー</td>
@@ -878,10 +879,14 @@ curl http://${EXTERNAL_IP}</code></pre>
                     </tr>
                 </table>
             </div>
-            <pre><code>kubectl describe pod -l app=echo-web
-kubectl logs -l app=echo-web
-kubectl describe service echo-web
-kubectl get endpoints echo-web   # 空なら selector 不一致、または一致する Pod が Ready でない（selector と Pod の READY を両方確認）
+            <pre><code># 別タブや再接続後は NAMESPACE が空になるため、7-3 で表示した値を設定し直す
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web
+kubectl logs --namespace "$NAMESPACE" -l app=echo-web
+kubectl describe service echo-web --namespace "$NAMESPACE"
+kubectl get endpoints echo-web --namespace "$NAMESPACE"   # 空なら selector 不一致、または一致する Pod が Ready でない（selector と Pod の READY を両方確認）
 
 # Service の作り直し
 kubectl delete service echo-web --namespace "$NAMESPACE"

@@ -515,11 +515,13 @@ curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
 
 IDトークンは「あなたが誰か」を証明するだけで、**呼び出し権限を与えるものではありません**。HTTP 200 になるのは、現在の `gcloud` ユーザーが対象サービスに対して **実効的に `run.routes.invoke` 権限** を持っている場合だけです。この権限は `roles/run.invoker` のほか `roles/run.servicesInvoker`・`roles/run.developer`・`roles/run.admin`・Owner・Editor・カスタムロール、さらにグループ経由や上位リソースからの継承でも付与されうるため、ロール名の一覧ではなく **権限そのもの** を確認します。ラボの学生アカウントは通常これを満たしますが、念のため先に確認できます。**最終判定は、後述の `curl` の実際の応答で行います。**
 
-方法1の Policy Troubleshooter は任意の診断手段です。実行するアカウントには次の権限が必要で、Student アカウントに付与されているとは限りません。
+方法1の Policy Troubleshooter は任意の診断手段です。実行するアカウントには次の権限が必要で（「条件付き」の行は、その条件に当てはまる評価でだけ必要です）、Student アカウントに付与されているとは限りません。
 
 | 必要な権限 | 付与先 | 用途 |
 |---|---|---|
 | `roles/iam.securityReviewer` | 対象リソースを含む組織 | 組織配下の許可ポリシーを読む |
+| `roles/iam.denyReviewer` | 対象リソースを含む組織 | 条件付き: 拒否ポリシーを評価する場合に必要 |
+| `roles/browser` | 対象リソースを含む組織 | 条件付き: ポリシーにサービスアカウントのプリンシパルセットが含まれる場合に、その評価で必要 |
 | `roles/serviceusage.serviceUsageConsumer` | 対象リソースを含む組織 | gcloud CLI から Policy Troubleshooter を使う |
 | Google Workspace Admin API の `groups.read` | Google Workspace の管理者ロール | グループのメンバーを評価する |
 

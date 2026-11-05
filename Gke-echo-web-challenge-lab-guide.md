@@ -626,14 +626,16 @@ kubectl get services
 
 ### 9-1. 症状別の早見表
 
+> **注意**: この節の `kubectl` は、7-3 で記録した `NAMESPACE` を対象にします。別タブや再接続後は値が空になるため、診断の前に 9-3 の先頭のコマンドで設定し直してください。
+
 | 症状 | 考えられる原因 | 対処 |
 |---|---|---|
-| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --show-labels` で Ready の Pod のラベルと一致するか確認 |
+| **`http://IP` に接続できない**（接続拒否・タイムアウト） | アプリが未起動、または Service が 80 番を公開していない（`--port 8000` のみ等）／`targetPort` が 8000 でない／Ready な Endpoint がない | 1〜2分待つ → `kubectl get service echo-web --namespace "$NAMESPACE"` で `PORT(S)` が `80:…/TCP` か、`kubectl describe service echo-web --namespace "$NAMESPACE"` で `TargetPort` が **`8000/TCP`** か確認（`get service` の出力には `targetPort` が表示されない）→ `kubectl get endpoints echo-web --namespace "$NAMESPACE"` の `ENDPOINTS` が `<none>` なら、待つだけでは解消しないことがあるため、`kubectl get service echo-web --namespace "$NAMESPACE" -o jsonpath='{.spec.selector}'` の selector が `kubectl get pods --namespace "$NAMESPACE" --show-labels` で Ready の Pod のラベルと一致するか確認 |
 | 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
-| `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web` |
-| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod` で名前を確認、push を再実行 |
-| Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名` で原因を確認 |
+| `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web --namespace "$NAMESPACE"` |
+| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod --namespace "$NAMESPACE"` で名前を確認、push を再実行 |
+| Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名 --namespace "$NAMESPACE"` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
 | `docker build` で `Dockerfile` がない | `BUILD_DIR` が空、または `Dockerfile` のあるディレクトリと違う | `echo "$BUILD_DIR"` と `ls -la "$BUILD_DIR"` で確認し、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直す |
 | `kubectl` が別クラスタにつながる | コンテキスト未切替 | `gcloud container clusters get-credentials ...` |
@@ -658,10 +660,14 @@ flowchart TD
 ### 9-3. 使える診断コマンド
 
 ```bash
-kubectl describe pod -l app=echo-web
-kubectl logs -l app=echo-web
-kubectl describe service echo-web
-kubectl get endpoints echo-web
+# 別タブや再接続後は NAMESPACE が空になるため、7-3 で表示した値を設定し直す
+read -r -p "echo-web を作成した Namespace を入力 (空欄なら default): " NAMESPACE
+export NAMESPACE=${NAMESPACE:-default}
+echo "NAMESPACE=${NAMESPACE}"
+kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web
+kubectl logs --namespace "$NAMESPACE" -l app=echo-web
+kubectl describe service echo-web --namespace "$NAMESPACE"
+kubectl get endpoints echo-web --namespace "$NAMESPACE"
 ```
 
 | コマンド | 分かること |
