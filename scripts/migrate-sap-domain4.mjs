@@ -226,6 +226,8 @@ fs.writeFileSync(
 .sap-domain4-page .main ul ul { list-style-type: circle; }
 .sap-domain4-page .main ul ul ul { list-style-type: square; }
 .sap-domain4-page .main .checklist-card ul { list-style: none; padding: 0; }
+.sap-domain4-page .main .source-grid { list-style: none; padding: 0; margin: 0; }
+.sap-domain4-page .main .source-grid li { list-style: none; }
 .sap-domain4-page nav ul { list-style: none; padding: 0; margin: 0; }
 .sap-domain4-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); z-index: 40; }
 .sap-domain4-page .sidebar-toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px); z-index: 41; }

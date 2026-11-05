@@ -155,4 +155,16 @@ describe('SAP Domain 4 統合契約', () => {
         expect(script).toContain("write('ChecklistCard.tsx'");
         expect(script).not.toMatch(/updateProgress|ChecklistProps|types\.ts/);
     });
+
+    it('出典リストの点は削除され、再生成処理にも反映', () => {
+        const css = fs.readFileSync('app/aws/solutions-architect-professional/domain4/page.css', 'utf8');
+        const script = fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8');
+        const ruleGrid = '.sap-domain4-page .main .source-grid { list-style: none; padding: 0; margin: 0; }';
+        const ruleLi = '.sap-domain4-page .main .source-grid li { list-style: none; }';
+        expect(css).toContain(ruleGrid);
+        expect(css).toContain(ruleLi);
+        expect(script).toContain(ruleGrid);
+        expect(script).toContain(ruleLi);
+        expect(css.lastIndexOf(ruleGrid)).toBeGreaterThan(css.lastIndexOf('.sap-domain4-page .main ul { list-style-type: disc; }'));
+    });
 });
