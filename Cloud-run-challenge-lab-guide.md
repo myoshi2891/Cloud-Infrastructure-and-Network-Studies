@@ -248,7 +248,7 @@ gcloud services enable \
 ```bash
 # 内容を確認したリビジョンに固定して取得する（main は更新されうるため）
 git clone https://github.com/rosera/pet-theory.git \
-  && git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  && git -C pet-theory checkout --detach 3a255117580ecda8ffd77becdba665081653dfec \
   && cd pet-theory/lab07
 
 # ラボのルートを固定する（以降のタスクは常にここを起点に移動する）
@@ -259,7 +259,7 @@ ls
 
 `ls` で、各タスクで使うフォルダが並んでいることを確認します。
 
-**なぜコミットを固定するのか**: `main` ブランチは予告なく更新されるため、この文書の手順と中身がずれる可能性があります。ここで指定したコミット `d902c4d`（2025-05-03）は、本文書の作成時にソースコードを読んで確認したリビジョンです（ラボ全体の実行検証ではありません）。このリビジョンの本番Frontendには修正が必要な箇所があり、Task 7 で手順を示します。
+**なぜコミットを固定するのか**: `main` ブランチは予告なく更新されるため、この文書の手順と中身がずれる可能性があります。ここで指定したコミット `3a25511`（2026-11-04）は、本文書の作成時にソースコードを読んで確認したリビジョンです（ラボ全体の実行検証ではありません）。以前の固定先 `d902c4d` のベースイメージ Node.js 20 は 2026-04-30 にサポートが終了しました。そのため、アプリのコードは同じまま Node.js 24 LTS、`package-lock.json`、`npm ci --omit=dev` へ更新されたこのコミットへ移しています。このリビジョンの本番Frontendには修正が必要な箇所があり、Task 7 で手順を示します。
 
 > **なぜ `LAB_ROOT` を使うのか**: `cd pet-theory/lab07/...` のような相対パスは、**今いるディレクトリ** によって成功・失敗が変わります（Task 1 でフォルダに入ったまま Task 2 の `cd` を打つと失敗します）。各タスクは `cd "$LAB_ROOT/<フォルダ>"` で始めれば、どこにいても同じ場所へ移動できます。Cloud Shell が再接続されて `LAB_ROOT` が消えた場合は、clone 先（`pet-theory/lab07`）へ移動して `export LAB_ROOT="$(pwd)"` をやり直してください。
 
@@ -1018,7 +1018,7 @@ export PROD_FRONTEND_SVC=frontend-prod-service
 
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com policytroubleshooter.googleapis.com
 git clone https://github.com/rosera/pet-theory.git \
-  && git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  && git -C pet-theory checkout --detach 3a255117580ecda8ffd77becdba665081653dfec \
   && cd pet-theory/lab07
 export LAB_ROOT="$(pwd)"
 
@@ -1299,7 +1299,7 @@ Billingサービスは他のGoogle Cloudリソースを使わないため。**�
 ### 15.3 この文書の前提と限界
 
 - ラボの手順書テキストでは、一部の名前が **説明表記** になっているため、サービス名・SA名は一般的な命名で補っています。**ラボ画面の値が常に優先** です。
-- Task 7 のFrontendが `BILLING_URL` を読むこと、およびコード修正の内容は、固定コミット `d902c4d` のソースを読んで確認したものです。ラボ環境での実行検証は行っていません。**手順どおりにコードを確認してから進めてください。**
+- Task 7 のFrontendが `BILLING_URL` を読むこと、およびコード修正の内容は、固定コミット `3a25511` のソースを読んで確認したものです。ラボ環境での実行検証は行っていません。**手順どおりにコードを確認してから進めてください。**
 - ラボの内容・画面・リポジトリは更新されることがあります。**差異があればラボ画面の指示に従ってください。**
 
 ---
