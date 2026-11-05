@@ -509,7 +509,7 @@ kubectl expose deployment echo-web \
 ### 7-5. 外部 IP が付くのを待つ
 
 ```bash
-kubectl get service echo-web --watch
+kubectl get service echo-web --namespace "$NAMESPACE" --watch
 ```
 
 ```mermaid
@@ -589,7 +589,7 @@ fi
 ### 8-1. 外部 IP を取得して curl で確認
 
 ```bash
-export EXTERNAL_IP=$(kubectl get service echo-web \
+export EXTERNAL_IP=$(kubectl get service echo-web --namespace "$NAMESPACE" \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo ${EXTERNAL_IP}
 
@@ -615,9 +615,9 @@ curl http://${EXTERNAL_IP}
 
 ```bash
 kubectl get nodes
-kubectl get deployments
-kubectl get pods
-kubectl get services
+kubectl get deployments --namespace "$NAMESPACE"
+kubectl get pods --namespace "$NAMESPACE"
+kubectl get services --namespace "$NAMESPACE"
 ```
 
 ---
@@ -802,7 +802,7 @@ kubectl create deployment echo-web --namespace "$NAMESPACE" --image=gcr.io/${PRO
 kubectl expose deployment echo-web --namespace "$NAMESPACE" --type=LoadBalancer --port 80 --target-port 8000
 # Ctrl+C で watch を止めたときの終了コード 130 だけを正常終了とみなし、それ以外の失敗は伝える
 WATCH_STATUS=0
-kubectl get service echo-web --watch || WATCH_STATUS=$?
+kubectl get service echo-web --namespace "$NAMESPACE" --watch || WATCH_STATUS=$?
 if [ "$WATCH_STATUS" -ne 0 ] && [ "$WATCH_STATUS" -ne 130 ]; then
   exit "$WATCH_STATUS"
 fi
