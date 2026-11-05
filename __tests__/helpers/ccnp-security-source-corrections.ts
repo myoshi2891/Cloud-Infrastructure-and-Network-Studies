@@ -13,10 +13,18 @@ const CORRECTED_NOTE = '手動 NAT のセクション 1・3 では、同じセ�
  * - 自動 NAT（セクション 2）は記述順ではなく、スタティックをダイナミックより先に、各グループ内はアドレスの具体性などで順序付けされる
  *   Secure Firewall Threat Defense コンフィグレーションガイド「NAT Rule Order」
  *   https://www.cisco.com/c/en/us/support/security/defense-center/products-installation-and-configuration-guides-list.html
+ * - `aaa accounting commands 15` が記録するのは権限レベル 15 のコマンドだけで、全コマンドの監査にはレベルごとの設定が要る
+ *   コード行数は fixture の数値と照合するため、設定行は足さず、例の範囲と追加方法を明記する
+ *   Cisco IOS Security Command Reference「aaa accounting」
  */
 export const CCNP_SECURITY_CORRECTIONS: readonly Correction[] = [
     [AUTO_NAT_CELL, `${AUTO_NAT_CELL}。${AUTO_NAT_ORDER}る`, 'セクション 2'],
     [ORIGINAL_NOTE, CORRECTED_NOTE],
+    ['! NAD（IOS XE）側の TACACS+ 設定例', '! NAD（IOS XE）側の TACACS+ 設定例（コマンドのアカウンティングは権限レベル 15 のみ）'],
+    [
+        'を有効にして監査可能にする。',
+        'を有効にして監査可能にする。上の例が記録するのは権限レベル 15 のコマンドだけのため、機器で使う他のレベル（既定のレベル 0・1 やカスタムレベル）も aaa accounting commands <レベル> default start-stop group ISE-TACACS で追加する。',
+    ],
 ];
 
 /** 空白を保持した inventory へ訂正を適用する。 */
