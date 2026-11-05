@@ -178,3 +178,39 @@ describe('SAP-C02 Domain 3 sidebar layout exception', () => {
         )).toBe(true);
     });
 });
+
+// SAP-C02 Domain 4 は 300px 目次を承認済み例外として優先する
+describe('SAP-C02 Domain 4 sidebar layout exception', () => {
+    const stylesheet = 'app/aws/solutions-architect-professional/domain4/page.css';
+    const sidebarSelector = '.sap-domain4-page .sidebar';
+    const mainSelector = '.sap-domain4-page .main';
+
+    it('fixes a 300px sidebar to the far left', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), sidebarSelector);
+
+        expect(rule).toMatch(/position:\s*fixed\s*;/);
+        expect(rule).toMatch(/left:\s*0\s*;/);
+        expect(rule).toMatch(/width:\s*300px\s*;/);
+    });
+
+    it('gives the main canvas all remaining width beside the 300px sidebar', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(rule).toMatch(/margin-left:\s*300px\s*;/);
+        expect(rule).toMatch(/width:\s*calc\(100%\s*-\s*300px\)\s*;/);
+        expect(rule).toMatch(/max-width:\s*none\s*;/);
+    });
+
+    it('restores a 100% main canvas inside its responsive media query', () => {
+        const responsiveRules = snapshotCssRules(readWorkspaceFile(stylesheet))
+            .filter((rule) => rule.selector === mainSelector && /max-width/.test(rule.media ?? ''));
+        const has = (declarations: readonly { prop: string; value: string }[], prop: string, value: string) =>
+            declarations.some((declaration) => declaration.prop === prop && declaration.value === value);
+
+        expect(responsiveRules.some(({ declarations }) =>
+            has(declarations, 'margin-left', '0')
+            && has(declarations, 'width', '100%')
+            && has(declarations, 'max-width', 'none'),
+        )).toBe(true);
+    });
+});

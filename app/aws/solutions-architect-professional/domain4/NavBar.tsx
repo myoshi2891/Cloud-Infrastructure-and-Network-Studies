@@ -85,7 +85,7 @@ export default function NavBar() {
                             <li key={i.id}>
                                 <a
                                     href={'#' + i.id}
-                                    className={`${i.level === 3 ? 'lvl3 ' : i.level === 4 ? 'lvl4 ' : ''}${active === i.id ? 'active' : ''}`}
+                                    className={`${i.level === 3 ? 'lvl3 ' : ''}${active === i.id ? 'active' : ''}`}
                                     aria-current={active === i.id ? 'location' : undefined}
                                     onClick={(e) => {
                                         if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
