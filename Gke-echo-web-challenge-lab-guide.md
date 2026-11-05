@@ -634,7 +634,7 @@ kubectl get services
 | 接続できない（タイムアウト） | `--port 8000` だけ指定した | Service を作り直し、`--port 80 --target-port 8000` |
 | 最後の3項目が採点されない | **別のゾーン**でクラスタを作った | ラボ指定の `ZONE` で作り直す |
 | `EXTERNAL-IP` がずっと `pending` | ロードバランサ作成中、または権限・割り当て不足 | 2〜3分待つ → `kubectl describe service echo-web --namespace "$NAMESPACE"` |
-| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod --namespace "$NAMESPACE"` で名前を確認、push を再実行 |
+| Pod が `ImagePullBackOff` | イメージ名・タグ・PROJECT_ID の誤り、または push 漏れ | `kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web --show-events=true` で名前を確認、push を再実行 |
 | Pod が `CrashLoopBackOff` | アプリが起動直後に落ちている | `kubectl logs POD名 --namespace "$NAMESPACE"` で原因を確認 |
 | `docker push` で認証エラー | 認証ヘルパー未設定 | `gcloud auth configure-docker` を実行 |
 | `docker build` で `Dockerfile` がない | `BUILD_DIR` が空、または `Dockerfile` のあるディレクトリと違う | `echo "$BUILD_DIR"` と `ls -la "$BUILD_DIR"` で確認し、`Dockerfile` のあるディレクトリを `BUILD_DIR` に設定し直す |

@@ -855,12 +855,12 @@ curl http://${EXTERNAL_IP}</code></pre>
                     <tr>
                         <td><code>ImagePullBackOff</code></td>
                         <td>イメージ名・タグ・ID の誤り、push 漏れ</td>
-                        <td><code>kubectl describe pod --namespace "$NAMESPACE"</code> で名前を確認し push を再実行</td>
+                        <td><code>kubectl describe pod --namespace "$NAMESPACE" -l app=echo-web --show-events=true</code> で名前を確認し push を再実行</td>
                     </tr>
                     <tr>
                         <td><code>CrashLoopBackOff</code></td>
                         <td>アプリが起動直後に落ちる</td>
-                        <td><code>kubectl logs --namespace "$NAMESPACE"</code> で原因確認</td>
+                        <td><code>kubectl logs --namespace "$NAMESPACE" -l app=echo-web</code> で原因確認</td>
                     </tr>
                     <tr>
                         <td>push 時の認証エラー</td>
