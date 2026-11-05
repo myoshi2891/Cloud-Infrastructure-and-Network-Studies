@@ -2,7 +2,11 @@
 
 ## 2026-11-05: SCS-C03 Domain 3
 
-`app/aws/security-specialty/domain3/` に Server `page.tsx` / `ScsDomain3Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, Task31, Task32, Task33, Summary, Troubleshooting, ExamPrep, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク・47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本から完全移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・原本構文トークン（JSON/YAML/Dockerfile/Python/Bash）、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）を保持。ホーム・HeaderのDomain 3（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain3.mjs <herointro|task31|task32|task33|summary|troubleshooting|examprep|appendix|all>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/security-specialty/domain3/` と `archive/Aws/md/security-specialty/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json` に記録。直下の未移行HTML残数は15件。
+`app/aws/security-specialty/domain3/` に Server `page.tsx` / `ScsDomain3Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、8分割の `sections/`（HeroIntro, Task31, Task32, Task33, Summary, Troubleshooting, Appendix はServer、ExamPrep はClient）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク・47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本から完全移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・原本構文トークン（JSON/YAML/Dockerfile/Python/Bash）、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）を保持。ホーム・HeaderのDomain 3（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain3.mjs <core|herointro|task31|task32|task33|summary|troubleshooting|appendix|all>` で固定Git原本から再生成できる。
+
+演習問題の採点UIを持つ `sections/ExamPrep.tsx`（Client）は手動保守で、`examprep` の単独指定は失敗終了し、`all` も対象外。カード装飾は生成スクリプトの `additionalCss` に保持して `page.css` の再生成後も残すため、装飾を変更するときは `page.css` と `additionalCss` を同じ内容に更新する（`__tests__/aws/security-specialty/domain3/regeneration.test.ts` が一致を検証）。
+
+原本HTML/Markdownは `archive/Aws/html/security-specialty/domain3/` と `archive/Aws/md/security-specialty/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json` に記録。直下の未移行HTML残数は15件。
 
 ## 2026-11-05: SAP-C02 Domain 4
 
