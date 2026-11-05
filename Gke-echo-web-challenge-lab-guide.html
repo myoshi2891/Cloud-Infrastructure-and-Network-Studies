@@ -1161,6 +1161,8 @@ gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJE
         <script>
             const MERMAID_DIAGRAMS = {
                 'mm-flow': `flowchart LR
+  accTitle: ラボ全体の作業の流れ
+  accDescr: クラスタ作成、イメージのビルド、gcr.io への push、Deployment 作成、Service 公開、curl とブラウザでの確認の順に進める流れ。
   F1["Task 1<br/>GKEクラスタ作成"] --> F2["Task 2<br/>イメージをビルド v1"]
   F2 --> F3["Task 3<br/>gcr.io へ push"]
   F3 --> F4["Task 4<br/>Deployment 作成"]
@@ -1169,25 +1171,35 @@ gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJE
   classDef step fill:#112440,stroke:#7c9eff,color:#e6edf7
   class F1,F2,F3,F4,F5,F6 step`,
                 'mm-wait': `flowchart LR
+    accTitle: クラスタ作成の待ち時間の使い方
+    accDescr: クラスタ作成を開始したら、作成を待つ間に別タブで変数を再設定して Task 2 と 3 を進め、クラスタが完成してから Task 4 へ進む流れ。
     S["クラスタ作成を開始"] --> W["作成中（3〜5分）"]
     S --> T2["別タブで変数を再設定し<br/>Task 2・3を進める"]
     W --> D["クラスタ完成"]
     T2 --> D
     D --> T4["Task 4 へ"]`,
                 'mm-build': `flowchart TD
+    accTitle: イメージのビルド手順
+    accDescr: Cloud Storage の echo-web.tar.gz を gsutil cp で Cloud Shell に取得し、tar で展開し、docker build でローカルイメージを作る流れ。
     A["Cloud Storage<br/>echo-web.tar.gz"] -->|"gsutil cp"| B["Cloud Shell に取得"]
     B -->|"tar -xzf"| C["展開<br/>Dockerfile とソース"]
     C -->|"docker build -t"| D["ローカルイメージ<br/>gcr.io/PROJECT_ID/echo-app:v1"]`,
                 'mm-push': `sequenceDiagram
+    accTitle: docker push の出力の流れ
+    accDescr: Docker がレイヤーを 1 つずつ gcr.io へアップロードし、gcr.io が受け取り完了と v1 のダイジェストを返すやり取り。
     participant D as Docker（Cloud Shell）
     participant R as gcr.io
     D->>R: レイヤーを1つずつアップロード（Pushed）
     R-->>D: 受け取り完了
     R-->>D: v1: digest: sha256:... size: ...`,
                 'mm-lb': `flowchart LR
+    accTitle: 外部 IP が割り当てられるまでの流れ
+    accDescr: 作成直後の EXTERNAL-IP は pending で、約 1〜2 分後に IP アドレスが表示されたら Ctrl+C で watch を終了する流れ。
     A["作成直後<br/>EXTERNAL-IP: pending"] -->|"約1〜2分"| B["EXTERNAL-IP に<br/>IPアドレスが表示"]
     B --> C["Ctrl+C で watch 終了"]`,
                 'mm-arch': `flowchart TB
+  accTitle: 最終的な構成
+  accDescr: 利用者が HTTP 80 番で LoadBalancer の Service に接続し、Service が GKE クラスタ echo-cluster 内の Pod の 8000 番へ転送する構成。Pod のイメージは gcr.io の echo-app:v1 から取得する。
   A1["利用者（ブラウザ）"] -->|"HTTP 80"| A2["Service<br/>LoadBalancer"]
   subgraph GKE["GKEクラスタ echo-cluster（2ノード）"]
     A2 -->|"targetPort 8000"| A3["Pod<br/>echo-web コンテナ"]
@@ -1198,6 +1210,8 @@ gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJE
   class A1,A2,A3 n
   class A4 db`,
                 'mm-tag': `flowchart LR
+  accTitle: 最初から完全な名前でビルドする理由
+  accDescr: 短い名前でビルドすると後から docker tag で付け替える手順が増えてミスの恐れがある。gcr.io を含む完全な名前でビルドすれば、そのまま push できる。
   T1["build -t echo-app:v1"] --> T2["あとで docker tag で付け替え"] --> T3["ミスの恐れ"]
   T4["build -t gcr.io/PROJECT_ID/echo-app:v1"] --> T5["そのまま push できる"]
   classDef bad fill:#3a1a22,stroke:#ff7b8a,color:#e6edf7
@@ -1208,11 +1222,15 @@ gcloud container clusters describe echo-cluster --zone ${ZONE} --project ${PROJE
   class T4 n
   class T5 good`,
                 'mm-port': `flowchart LR
+  accTitle: port と targetPort の関係
+  accDescr: 利用者は http://EXTERNAL-IP で Service の 80 番に接続し、Service は --target-port で指定したコンテナの 8000 番へ転送する。
   P1["利用者"] -->|"http://EXTERNAL-IP"| P2["Service<br/>--port 80"]
   P2 -->|"--target-port 8000"| P3["コンテナ<br/>8000で待受"]
   classDef n fill:#112440,stroke:#7c9eff,color:#e6edf7
   class P1,P2,P3 n`,
                 'mm-diag': `flowchart TD
+  accTitle: つながらないときの診断手順
+  accDescr: Pod が Running か、EXTERNAL-IP があるか、targetPort が 8000 か、Service の port が 80 か、Endpoints に Ready なアドレスがあるかを順に確認し、いいえの段階で対応する確認や Service の作り直しを行う。すべて、はいなら初期化を待って再試行する。
   D1["つながらない"] --> D2{"Pod は Running か"}
   D2 -->|"いいえ"| D3["describe pod / logs で<br/>イメージ名・起動エラーを確認"]
   D2 -->|"はい"| D4{"EXTERNAL-IP はあるか"}
