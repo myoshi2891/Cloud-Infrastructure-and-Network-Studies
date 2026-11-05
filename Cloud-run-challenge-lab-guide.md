@@ -1263,7 +1263,9 @@ Billingサービスは他のGoogle Cloudリソースを使わないため。**�
 <details>
 <summary>答えを見る</summary>
 
-公開するのはユーザー向け画面だけで、**重要なデータを持つBillingは認証必須のまま** だから。そのうえで、FrontendがBillingを呼べるよう、このラボではFrontend用SAに本番Billingへの呼び出し権限を付与している（Frontend用SAが唯一の呼び出し元になるわけではない）。
+公開するのはユーザー向け画面だけで、**Billingサービス自体は認証必須のまま** だから。そのうえで、FrontendがBillingを呼べるよう、このラボではFrontend用SAに本番Billingへの呼び出し権限を付与している（Frontend用SAが唯一の呼び出し元になるわけではない）。
+
+ただし、Billingが認証必須でも、データが保護されるとは限らない。このラボのBillingデータはリポジトリ同梱のテスト用（モック）データであり、公開Frontendを経由して誰でも取得できる。**実際の請求データを扱う場合は、Frontendでユーザーを認証・認可し、各ユーザーに閲覧権限があるデータだけを返す** 必要がある。
 
 </details>
 
