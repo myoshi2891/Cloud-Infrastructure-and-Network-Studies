@@ -20,7 +20,9 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
                 targetEl.tabIndex = -1;
-                targetEl.focus();
+                // スムーズスクロールで通過した図が遅延描画されると着地先がずれるため、瞬時に移動する
+                targetEl.focus({ preventScroll: true });
+                targetEl.scrollIntoView?.({ behavior: 'instant' });
             }
         }
     }, [onClose]);

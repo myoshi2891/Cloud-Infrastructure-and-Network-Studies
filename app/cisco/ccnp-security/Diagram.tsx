@@ -32,6 +32,7 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
                     ariaLabel={effectiveLabel}
                     preserveNaturalScale
                     preserveChartTheme
+                    deferUntilVisible
                     theme="light"
                 />
             </div>

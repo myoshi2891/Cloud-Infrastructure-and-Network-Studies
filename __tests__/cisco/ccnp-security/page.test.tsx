@@ -102,6 +102,15 @@ describe('CCNP Security ガイド — リスト・スタイリング・図解・
         expect(container.querySelectorAll('.code-block .hljs-subst').length).toBe(3);
     });
 
+    it('全53図がビューポート接近時の遅延描画を指定している', () => {
+        const { container } = render(<CcnpSecurityGuide />);
+        const diagrams = [...container.querySelectorAll('[data-chart]')];
+        expect(diagrams).toHaveLength(53);
+        diagrams.forEach((diagram) => {
+            expect(diagram.getAttribute('data-defer-until-visible')).toBe('true');
+        });
+    });
+
     it('Diagram コンポーネントが原本単体の全派生色を含む render-theme.json を使用している', () => {
         const themePath = resolve('app/cisco/ccnp-security/render-theme.json');
         const theme = JSON.parse(readFileSync(themePath, 'utf8'));
