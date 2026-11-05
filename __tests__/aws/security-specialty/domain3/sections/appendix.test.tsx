@@ -31,8 +31,8 @@ describe('Appendix Section (10. 参考 URL 根拠ソース一覧)', () => {
                 row.map((c) => c.text.replace(/\s+/g, ' ')),
             );
             const ths = [...table.querySelectorAll('th')];
-            const allCells = [...table.querySelectorAll('th, td')].map((c) =>
-                c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
+            const allCells = [...table.querySelectorAll('th, td')].map(
+                (c) => c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
             );
             expect(allCells).toEqual(expectedCells);
             ths.forEach((th) => {
@@ -70,4 +70,3 @@ describe('Appendix Section (10. 参考 URL 根拠ソース一覧)', () => {
         }
     });
 });
-

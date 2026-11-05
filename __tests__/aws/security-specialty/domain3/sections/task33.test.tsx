@@ -35,8 +35,8 @@ describe('Task 3.3 Section (ネットワークセキュリティ制御の設計�
                 row.map((c) => c.text.replace(/\s+/g, ' ')),
             );
             const ths = [...table.querySelectorAll('th')];
-            const allCells = [...table.querySelectorAll('th, td')].map((c) =>
-                c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
+            const allCells = [...table.querySelectorAll('th, td')].map(
+                (c) => c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
             );
             expect(allCells).toEqual(expectedCells);
             ths.forEach((th) => {
@@ -63,9 +63,9 @@ describe('Task 3.3 Section (ネットワークセキュリティ制御の設計�
         });
     });
 
-    it('renders code samples wrapped in .code-line', () => {
+    it('renders code samples as pre.code.code-block wrapped in .code-line', () => {
         const { container } = render(<Task33 />);
-        const samples = container.querySelectorAll('.code-sample');
+        const samples = container.querySelectorAll('pre.code.code-block');
         expect(samples).toHaveLength(part.codes.length);
         samples.forEach((sample) => {
             const lines = sample.querySelectorAll('.code-line');
@@ -82,4 +82,3 @@ describe('Task 3.3 Section (ネットワークセキュリティ制御の設計�
         }
     });
 });
-

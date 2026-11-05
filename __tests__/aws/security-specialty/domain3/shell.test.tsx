@@ -41,9 +41,9 @@ it('opens, closes with Escape, and cleans up its observer', () => {
 
 it('preserves the indentation class for every source level-three navigation item', () => {
     const { container } = render(<NavBar />);
-    expect([...container.querySelectorAll('nav a.lvl3')].map((a) => a.getAttribute('href')?.slice(1))).toEqual(
-        fixture.guideDesign.nav.filter((item) => item.level === 3).map((item) => item.id),
-    );
+    expect(
+        [...container.querySelectorAll('nav a.lvl3')].map((a) => a.getAttribute('href')?.slice(1)),
+    ).toEqual(fixture.guideDesign.nav.filter((item) => item.level === 3).map((item) => item.id));
 });
 
 it('syncs aria-current from a valid fragment and history navigation, falling back to the first item', () => {
@@ -60,4 +60,3 @@ it('syncs aria-current from a valid fragment and history navigation, falling bac
     expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
     unmount();
 });
-

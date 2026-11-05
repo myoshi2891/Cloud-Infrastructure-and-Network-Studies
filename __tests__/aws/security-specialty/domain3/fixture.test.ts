@@ -7,7 +7,9 @@ import fixture from '@/docs/migration-inventory/aws-scs-c03-domain3-guide.fideli
 
 let hasSource = false;
 try {
-    execFileSync('git', ['cat-file', '-e', `${fixture.sourceCommit}^{commit}`], { stdio: 'ignore' });
+    execFileSync('git', ['cat-file', '-e', `${fixture.sourceCommit}^{commit}`], {
+        stdio: 'ignore',
+    });
     hasSource = true;
 } catch (error) {
     if (process.env.CI)
@@ -24,11 +26,17 @@ describe('SCS domain3 source-independent fixture', () => {
             const sandbox = mkdtempSync(join(tmpdir(), 'scs-domain3-fixture-'));
             try {
                 mkdirSync(join(sandbox, 'docs/migration-inventory'), { recursive: true });
-                const gitDir = execFileSync('git', ['rev-parse', '--absolute-git-dir'], { encoding: 'utf8' }).trim();
-                execFileSync('bun', [resolve('scripts/gen-fidelity-fixture.mjs'), 'aws-scs-c03-domain3-guide'], {
-                    cwd: sandbox,
-                    env: { ...process.env, GIT_DIR: gitDir },
-                });
+                const gitDir = execFileSync('git', ['rev-parse', '--absolute-git-dir'], {
+                    encoding: 'utf8',
+                }).trim();
+                execFileSync(
+                    'bun',
+                    [resolve('scripts/gen-fidelity-fixture.mjs'), 'aws-scs-c03-domain3-guide'],
+                    {
+                        cwd: sandbox,
+                        env: { ...process.env, GIT_DIR: gitDir },
+                    },
+                );
                 const file = 'docs/migration-inventory/aws-scs-c03-domain3-guide.fidelity.json';
                 expect(readFileSync(join(sandbox, file), 'utf8')).toBe(readFileSync(file, 'utf8'));
             } finally {
@@ -38,4 +46,3 @@ describe('SCS domain3 source-independent fixture', () => {
         30_000,
     );
 });
-
