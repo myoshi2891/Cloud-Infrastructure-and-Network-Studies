@@ -1,6 +1,14 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-06)
+(最終更新日: 2026-11-07)
+
+## 2026-11-07: SCS-C03 Domain 5 移行 & 原本アーカイブ退避
+
+`/aws/security-specialty/domain5` へ全3タスク（Task 5.1 転送中のデータ、Task 5.2 保存中のデータ、Task 5.3 機密データ・認証情報・シークレット・暗号鍵の保護）、ガイドの使い方、全体像、基礎知識、試験対策（頻出パターンとひっかけポイント）、練習問題8問、最終チェックリスト、参考URL一覧、付録を完全移行。68表（th172・td964）・15図・21コード例・23チェック項目・68外部リンク出現・22目次・練習問題8問（`<details>`）を原本どおり保持。明色配色（`--color-scs-d5-*` 21変数）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークン（JSON/Bash/Python）を完全復元した。目次の現在位置・開閉・hash/focus、練習問題のアコーディオン、全15図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）、ホーム・Headerの18%導線と明色フッターへ統合。
+
+Inventory `1553b201`、Red/基盤 `934d98bb`、HeroIntro `80738f05`、Task 5.1 `ff0fb666`、Task 5.2 `f809c3c8`、Task 5.3 `f78fe747`、Summary `8691e961`、ExamPrep `c1680560`、Appendix `d6976b72`、総合テスト・再生成 `514e7e6b`、デザイン・トークン `6192344e`、導線・フッター・幅契約統合 `cb57397e` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・全CSS宣言値（`.mermaid-wrap`, `pre.code`, `list-style-type`, `aria-current="location"`）と、Mermaidの全15図DSL・全派生色（`render-theme.json` 269変数）・アクセシビリティ代替テキストを全量照合。SCS-C03 Domain 5関連テスト14ファイル・62件すべて成功、ガイド幅契約テスト160件・共通フッター4件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（344456バイト・SHA-256 `12c41560b4ed754cf8089d6599640a533830b28d7d3cd8217c68a795539609d4`）およびMarkdown（115199バイト・SHA-256 `fc191ac0f65b21d6f861be26f1b4e8dc401faf037b8dd7a37bfee83527220072`）を `archive/Aws/html/security-specialty/domain5/` と `archive/Aws/md/security-specialty/domain5/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-scs-domain5.mjs all` で再生成できる。直下の未移行HTML残数は18件（移行完了時点）。
 
 ## 2026-11-06: SCS-C03 Domain 4 移行 & 原本アーカイブ退避
 
