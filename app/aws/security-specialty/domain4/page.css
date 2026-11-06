@@ -500,6 +500,113 @@
 .scs-domain4-page .main {
     min-width: 0;
 }
+/* Practice questions: keep the original text and native disclosure behavior. */
+.scs-domain4-page .main [data-part="examprep"] > p {
+    position: relative;
+    margin: 24px 0 0;
+    padding: 26px 28px 24px 92px;
+    border: 1px solid var(--color-scs-d4-border);
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: var(--color-scs-d4-bg-card);
+    font-weight: 500;
+    line-height: 1.9;
+}
+.scs-domain4-page .main [data-part="examprep"] > p > strong {
+    position: absolute;
+    top: 26px;
+    left: 24px;
+    display: grid;
+    place-items: center;
+    min-width: 46px;
+    height: 38px;
+    border: 1px solid var(--color-scs-d4-accent-soft);
+    border-radius: 10px;
+    background: var(--color-scs-d4-accent-bg);
+    color: var(--color-scs-d4-accent);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1;
+}
+.scs-domain4-page .main [data-part="examprep"] > details {
+    margin: 0 0 24px;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-scs-d4-border);
+    border-top-color: var(--color-scs-d4-border-soft);
+    border-radius: 0 0 16px 16px;
+    background: var(--color-scs-d4-bg-card);
+}
+.scs-domain4-page .main [data-part="examprep"] > details > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    margin: 0;
+    padding: 14px 28px;
+    border: 0;
+    background: var(--color-scs-d4-bg-card-2);
+    font-size: 14px;
+    list-style: none;
+    transition: background-color 160ms ease;
+}
+.scs-domain4-page .main [data-part="examprep"] > details > summary::-webkit-details-marker {
+    display: none;
+}
+.scs-domain4-page .main [data-part="examprep"] > details > summary::after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    margin-right: 4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+}
+.scs-domain4-page .main [data-part="examprep"] > details > summary:hover {
+    background: var(--color-scs-d4-accent-bg);
+}
+.scs-domain4-page .main [data-part="examprep"] > details > summary:focus-visible {
+    outline: 2px solid var(--color-scs-d4-accent);
+    outline-offset: -5px;
+    border-radius: 8px;
+}
+.scs-domain4-page .main [data-part="examprep"] > details[open] > summary {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--color-scs-d4-border-soft);
+    background: var(--color-scs-d4-accent-bg);
+}
+.scs-domain4-page .main [data-part="examprep"] > details[open] > summary::after {
+    transform: rotate(225deg) translate(-2px, -2px);
+}
+.scs-domain4-page .main [data-part="examprep"] > details > p {
+    margin: 0;
+    padding: 24px 28px 26px;
+    color: var(--color-scs-d4-text-dim);
+    line-height: 1.95;
+}
+@media (max-width: 640px) {
+    .scs-domain4-page .main [data-part="examprep"] > p {
+        padding: 20px;
+    }
+    .scs-domain4-page .main [data-part="examprep"] > p > strong {
+        position: static;
+        width: fit-content;
+        margin-bottom: 14px;
+    }
+    .scs-domain4-page .main [data-part="examprep"] > details > summary {
+        padding: 14px 20px;
+    }
+    .scs-domain4-page .main [data-part="examprep"] > details > p {
+        padding: 20px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scs-domain4-page .main [data-part="examprep"] > details > summary {
+        transition: none;
+    }
+}
 .scs-domain4-page .mermaid-wrap > [role="img"] {
     background: transparent;
     border: 0;
