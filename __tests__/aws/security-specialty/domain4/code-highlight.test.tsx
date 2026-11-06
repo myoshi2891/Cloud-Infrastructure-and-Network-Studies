@@ -40,10 +40,26 @@ describe('SCS-C03 Domain 4 — コードブロック構造と構文ハイライ�
         expect(tokensOf(container, 'json', 'string')).toContain('"2012-10-17"');
     });
 
-    it('Bash ではコマンドやオプションを構文色付けする', () => {
+    it('Bash ではコマンドや制御構文・オプションを構文色付けする', () => {
         const { container } = render(<Task41 />);
         const builtins = tokensOf(container, 'bash', 'built_in');
         expect(builtins).toContain('aws');
+        expect(builtins).toContain('printf');
+        const keywords = tokensOf(container, 'bash', 'keyword');
+        expect(keywords).toContain('for');
+        expect(keywords).toContain('case');
+        expect(keywords).toContain('if');
+    });
+
+    it('SQL では SELECT / FROM / WHERE / ORDER BY / DESC などのキーワードを keyword とする', () => {
+        const { container } = render(<Task41 />);
+        const keywords = tokensOf(container, 'sql', 'keyword');
+        expect(keywords).toContain('SELECT');
+        expect(keywords).toContain('FROM');
+        expect(keywords).toContain('WHERE');
+        expect(keywords).toContain('ORDER');
+        expect(keywords).toContain('BY');
+        expect(keywords).toContain('DESC');
     });
 
     it('Cedar/Rust ではキーワード (permit, principal, action, resource) を keyword とする', () => {

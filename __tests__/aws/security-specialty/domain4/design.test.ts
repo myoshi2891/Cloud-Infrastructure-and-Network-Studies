@@ -122,10 +122,62 @@ describe('SCS-C03 Domain 4 — スタイル・デザイン完全移行', () => {
         }
     });
 
-    it('keeps list marker styling for unordered and ordered lists inside main', () => {
+    it('keeps list marker styling for unordered and ordered lists inside main, while suppressing bullets on checklist cards', () => {
         expect(rules(css, '.scs-domain4-page .main ul')['list-style-type']).toBe('disc');
         expect(rules(css, '.scs-domain4-page .main ol')['list-style-type']).toBe('decimal');
         expect(rules(css, '.scs-domain4-page .main ul ul')['list-style-type']).toBe('circle');
         expect(rules(css, '.scs-domain4-page .main ul ul ul')['list-style-type']).toBe('square');
+        expect(rules(css, '.scs-domain4-page .main .checklist-card ul')['list-style']).toBe('none');
+    });
+
+    it('neutralizes inner MermaidDiagram wrapper box and preserves natural SVG scale', () => {
+        expect(rules(css, '.scs-domain4-page .mermaid-wrap > [role="img"]')).toEqual({
+            background: 'transparent',
+            border: '0',
+            padding: '0',
+            margin: '0',
+            width: '100%',
+        });
+        expect(rules(css, '.scs-domain4-page .mermaid-wrap svg')).toEqual({
+            'flex-shrink': '0',
+            'max-width': 'none',
+            height: 'auto',
+        });
+        expect(rules(css, '.scs-domain4-page .main .mermaid-wrap p')).toEqual({
+            color: 'inherit',
+            margin: '0',
+        });
+    });
+
+    it('applies padding to the outer code-block pre and resets per-line .code-line padding', () => {
+        expect(rules(css, '.scs-domain4-page .main pre.code.code-block')).toEqual({
+            padding: '18px 20px',
+        });
+        expect(rules(css, '.scs-domain4-page .main pre:not(.mermaid) > .code-line')).toEqual({
+            padding: '0',
+            'min-height': '1.65em',
+            'white-space': 'pre',
+        });
+    });
+
+    it('defines GitHub Light highlight.js syntax token colors for all used token classes', () => {
+        const tokenColors: Record<string, string> = {};
+        postcss.parse(css).walkRules((r) => {
+            if (!r.selector.includes('.hljs-')) return;
+            r.walkDecls('color', (d) => {
+                for (const sel of r.selector.split(',').map((s) => s.trim())) {
+                    tokenColors[sel] = d.value.toLowerCase();
+                }
+            });
+        });
+
+        expect(tokenColors['.scs-domain4-page .hljs-keyword']).toBe('#d73a49');
+        expect(tokenColors['.scs-domain4-page .hljs-attr']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain4-page .hljs-literal']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain4-page .hljs-number']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain4-page .hljs-variable']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain4-page .hljs-string']).toBe('#032f62');
+        expect(tokenColors['.scs-domain4-page .hljs-built_in']).toBe('#e36209');
+        expect(tokenColors['.scs-domain4-page .hljs-comment']).toBe('#6a737d');
     });
 });
