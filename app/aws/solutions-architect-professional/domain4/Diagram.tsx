@@ -12,7 +12,7 @@ export const Diagram = memo(function Diagram({ id, label }: {
 }) { const descriptionId = useId(); const chart = DIAGRAMS[id]; const description = DIAGRAM_DESCRIPTIONS[id]; if (!chart)
     throw new Error('Missing diagram: ' + id); if (!description)
     throw new Error('Missing diagram description: ' + id); return <div className="mermaid-wrap">
-<MermaidDiagram chart={config + chart} theme="light" preserveChartTheme ariaLabel={label} ariaDescribedBy={descriptionId} preserveNaturalScale focusable/>
+<MermaidDiagram chart={config + chart} theme="light" preserveChartTheme ariaLabel={label} ariaDescribedBy={descriptionId} preserveNaturalScale focusable deferUntilVisible/>
 <span id={descriptionId} className="sr-only">
 {description}
 </span>

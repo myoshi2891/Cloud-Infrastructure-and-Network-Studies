@@ -185,6 +185,21 @@ describe('SAP Domain 4 原本全量契約', () => {
         expect(generator).toContain('preserveNaturalScale focusable');
     });
 
+    it('全16図がビューポート接近時の遅延描画を指定し、再生成でも保持する', () => {
+        // Arrange
+        const c = render(<Page />).container;
+        const generator = fs.readFileSync('scripts/migrate-sap-domain4.mjs', 'utf8');
+        const template = generator.match(/write\('Diagram\.tsx',`([\s\S]*?)`\);/)?.[1] ?? '';
+
+        // Act
+        const diagrams = [...c.querySelectorAll('[data-testid="mermaid-diagram"]')];
+
+        // Assert
+        expect(diagrams).toHaveLength(inventory.counts.diagram);
+        diagrams.forEach((d) => expect(d).toHaveAttribute('data-defer-until-visible', 'true'));
+        expect(template).toContain('deferUntilVisible');
+    });
+
     it('フォーカス可能なコード例はrole=groupでaria-labelの名前を支援技術へ公開し、再生成でも保持する', () => {
         const c = render(<Page />).container;
         const codes = [...c.querySelectorAll('pre.code-block')];
