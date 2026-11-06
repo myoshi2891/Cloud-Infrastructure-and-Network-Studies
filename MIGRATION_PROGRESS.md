@@ -2261,11 +2261,11 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** SCS-C03 Domain 3（`/aws/security-specialty/domain3`）の全文移行・導線統合・原本アーカイブと演習問題の採点UI追加。その前にSAP-C02 Domain 4（`/aws/solutions-architect-professional/domain4`）、CCNP Security 完全ガイド（`/cisco/ccnp-security`）、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の移行も完了。
 - **最終更新日:** 2026-11-06
-- **最新実装 HEAD:** `1ed1c9e6`（SCS-C03 Domain 3の演習問題採点UI。以後の `6fdf3c90` はコメント追記のみ）
+- **最新実装 HEAD:** `eec53479`（SCS-C03 Domain 3の図説明文改善とテスト拡充）
 - **仕様同期コミット:** `65ce3668`（最新の仕様同期。SCS-C03 Domain 3分は `c9c25def`・`00a4ee03`）
 - **前回進捗同期コミット:** `65ce3668`（SAP-C02 Domain 4の表セル数を記録した最新の完了済み進捗同期）
-- **検証状態:** SCS-C03 Domain 3の移行完了時は関連16ファイル・76件成功、ガイド幅契約154件・共通フッター4件成功。2026-11-06の再検証ではDomain 3関連18ファイル・98件中97件成功。失敗1件は `page.test.tsx` の本文全文照合で、`1ed1c9e6` が選択肢を `<p>` からボタンへ移した際に期待値を更新していないため（直前のコミットでは13件すべて成功）。`__tests__/components/Footer.palette.test.ts` の1件もHEADで失敗。SAP-C02 Domain 4関連5ファイル・63件成功。ESLint成功。TypeScript型検査は `sections/examprep.test.tsx` の `noUncheckedIndexedAccess` 違反5件で失敗。
-- **ビルド状態:** `bun run build` は上記の型エラー5件で失敗。同5件だけを一時修正した隔離worktreeでは成功し、`/aws/security-specialty/domain3` の静的生成とカード10枚・選択肢40個の配信を確認。ブラウザーE2Eは未実行、目視確認はユーザー担当。
+- **検証状態:** 2026-11-06にHEAD `eec53479` で再検証。SCS-C03 Domain 3関連18ファイル・103件、SAP-C02 Domain 4関連5ファイル・63件、ガイド幅契約154件すべて成功。TypeScript型検査・ESLint成功。以前記録した `page.test.tsx` の本文全文照合の失敗と `sections/examprep.test.tsx` の型エラー5件は解消済み。`__tests__/components/Footer.palette.test.ts` は3件中1件が失敗で、テストの期待一覧に実装済みの `.sap-domain4-page`・`.scs-domain3-page` がないため。全体Vitestは未実行。
+- **ビルド状態:** 2026-11-06にHEAD `eec53479` のクリーンな展開先で `bun run build` 成功、`/aws/security-specialty/domain3` の静的生成を確認。`bun run lint` 成功。ブラウザーE2Eは未実行、目視確認はユーザー担当。
 - **HTML残数:** 直下HTML20件、すべて未移行で対応インベントリなし。SCS-C03 Domain 3完了時点の15件に、2026-11-06に追加された5件（`4715e510` の4件、`4dbcf2a0` の1件）を加えた数。移行済みの直下HTMLは0件。
 - **アーカイブ:** SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json`、CCNP Securityは `docs/migration-inventory/cisco-ccnp-security.archive.json`、SCS-C03 Domain 2は `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
 - **既存差分:** なし。
