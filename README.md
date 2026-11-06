@@ -1,6 +1,8 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-10-29
+最終更新日: 2026-11-07
+
+AWS Security Specialty Domain 5の演習8問は、選択すると正誤と正解を即時表示します。問題3は複数選択に対応し、回答は選び直せます。
 
 ## 2026-10-29: SAP-C02 Domain 3 移行
 

@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## 2026-11-07: Domain 5 演習の即時採点
+
+`PracticeOptions.tsx`（Client）を `sections/ExamPrep.tsx`（Server）から使用。単一選択7問は即時判定、問題3はAとCの完全一致で判定し、1つ選択時は残数を案内する。正誤・正解を読み上げ可能なステータスに表示し、選び直しに追従。問題文・選択肢・解説は保持。Domain 5関連16ファイル・82件成功（採点回帰9件を含む）。移行スクリプトの原本再生成は手動追加の採点UIとCSSを上書きするため、再移行時はこれらを保持すること。
+
 ## 2026-11-07: SCS-C03 Domain 5
 
 `app/aws/security-specialty/domain5/` に Server `page.tsx` / `ScsDomain5Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、memo化した `Diagram.tsx`、7分割の `sections/`（HeroIntro, Task51, Task52, Task53, Summary, ExamPrep, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク（Task 5.1, 5.2, 5.3）・68表（th172・td964）・15図・21コード例・23チェック項目・68外部リンク出現・22目次・練習問題8問（`<details>`）を原本から完全移行。リストの点・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・構文トークン（JSON/Bash/Python）、図カードの装飾（`.mermaid-wrap`）と全派生色、全15図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・HeaderのDomain 5（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain5.mjs all` で固定Git原本から再生成できる。
