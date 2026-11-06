@@ -57,8 +57,9 @@ export const columnHeaderCount = (table) => {
     return firstRow === null ? 0 : firstRow.querySelectorAll('th').length;
 };
 
+// .practice-stem: 設問文と選択肢を 1 ブロックとして扱う（原本の段落に対応）
 export const bodySelector =
-    `p, aside, .annotation, [class*="callout"], img[alt], ${codeBlockSelector}`;
+    `p, .practice-stem, aside, .annotation, [class*="callout"], img[alt], ${codeBlockSelector}`;
 
 export const extractBodyContent = (container) =>
     [...container.querySelectorAll(bodySelector)]

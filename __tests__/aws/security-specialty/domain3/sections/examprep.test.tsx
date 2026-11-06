@@ -34,15 +34,15 @@ describe('ExamPrep Section (9. 理解度チェック 演習問題10問)', () => 
         const user = userEvent.setup();
         const { container } = render(<ExamPrep />);
         const cards = container.querySelectorAll('.practice-card');
-        const options = cards[0].querySelectorAll('button');
-        options[0].focus();
+        const options = cards[0]!.querySelectorAll('button');
+        options[0]!.focus();
         await user.keyboard('{Enter}');
-        expect(cards[0].querySelector('[role="status"]')).toHaveTextContent('不正解です。');
+        expect(cards[0]!.querySelector('[role="status"]')).toHaveTextContent('不正解です。');
         await user.tab();
         await user.keyboard(' ');
-        expect(options[1]).toHaveAttribute('aria-pressed', 'true');
-        expect(cards[0].querySelector('[role="status"]')).toHaveTextContent('正解です。');
-        expect(cards[1].querySelector('[role="status"]')).toBeEmptyDOMElement();
+        expect(options[1]!).toHaveAttribute('aria-pressed', 'true');
+        expect(cards[0]!.querySelector('[role="status"]')).toHaveTextContent('正解です。');
+        expect(cards[1]!.querySelector('[role="status"]')).toBeEmptyDOMElement();
     });
 
     it('renders heading matching fixture', () => {
