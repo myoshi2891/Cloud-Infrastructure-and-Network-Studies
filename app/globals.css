@@ -174,6 +174,27 @@
     --color-scs-d3-strong: #0c1630;
     --color-scs-d3-code-inline: #9a4208;
     --color-scs-d3-code-bg: #f3f6fc;
+    --color-scs-d4-bg: #f5f7fc;
+    --color-scs-d4-bg-card: #ffffff;
+    --color-scs-d4-bg-card-2: #f0f3fa;
+    --color-scs-d4-border: #d3dbeb;
+    --color-scs-d4-border-soft: #e3e8f3;
+    --color-scs-d4-text: #1c2740;
+    --color-scs-d4-text-dim: #4a5a78;
+    --color-scs-d4-text-faint: #6b7a96;
+    --color-scs-d4-accent: #2f55d4;
+    --color-scs-d4-accent-soft: #9db1ee;
+    --color-scs-d4-accent-bg: #e8eeff;
+    --color-scs-d4-danger: #c0364f;
+    --color-scs-d4-danger-bg: #fdecef;
+    --color-scs-d4-warn: #b4640a;
+    --color-scs-d4-warn-bg: #fff3e0;
+    --color-scs-d4-success: #1b7a46;
+    --color-scs-d4-success-bg: #e6f5ec;
+    --color-scs-d4-sidebar-bg: #ffffff;
+    --color-scs-d4-strong: #0f1a30;
+    --color-scs-d4-code-inline: #a3480b;
+    --color-scs-d4-code-bg: #f0f3fa;
     /* CCNP Security 完全ガイド（原本の配色をそのまま保持） */
     --color-ccnp-security-paper: #F6F7F9;
     --color-ccnp-security-ink: #161B26;
