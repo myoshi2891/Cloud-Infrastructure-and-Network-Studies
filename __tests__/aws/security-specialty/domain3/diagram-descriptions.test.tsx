@@ -68,6 +68,31 @@ describe('SCS Domain 3 図のテキスト代替', () => {
             ['Network Access Analyzer', 'Reachability Analyzer', 'Inspector', 'VPC Flow Logs'],
             ['攻撃経路'],
         ],
+        [
+            'diag-2',
+            ['Route 53', 'CloudFront', 'AWS WAF', 'ALB', 'プライベートサブネット', 'AWS Shield'],
+            ['EC2', 'S3'],
+        ],
+        [
+            'diag-11',
+            ['ssm:StartSession', 'SSM Agent', 'インバウンドポート0', 'CloudWatch Logs', 'CloudTrail'],
+            ['443', 'HTTPS'],
+        ],
+        [
+            'diag-13',
+            ['入力チェック', '定型文', 'Amazon Bedrock', '出力チェック', 'マスク'],
+            ['トピック', '有害', '幻覚'],
+        ],
+        [
+            'diag-15',
+            ['スポークVPC', 'Transit Gateway', '検査用VPC', 'Network Firewall', 'NATゲートウェイ', 'インターネットゲートウェイ'],
+            ['ドメイン', 'シグネチャ'],
+        ],
+        [
+            'diag-18',
+            ['パブリックサブネット', 'ALB', 'プライベートサブネット', 'アプリ層', '分離サブネット', 'データベース層', 'VPCエンドポイント'],
+            ['EC2', 'RDS'],
+        ],
     ] as const)('%s の説明が図の層・分岐だけを述べる', (id, shown, absent) => {
         const description = DIAGRAM_DESCRIPTIONS[id];
         shown.forEach((term) => expect(description).toContain(term));
