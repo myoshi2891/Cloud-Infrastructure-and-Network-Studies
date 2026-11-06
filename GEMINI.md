@@ -1,5 +1,11 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-06: SCS-C03 Domain 4
+
+`app/aws/security-specialty/domain4/` に Server `page.tsx` / `ScsDomain4Guide.tsx`、Client `NavBar.tsx` / `Checklist.tsx`（チェック進捗管理）、memo化した `Diagram.tsx`、7分割の `sections/`（HeroIntro, Task41, Task42Authz, Task42Policy, Summary, ExamPrep, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全2タスク（Task 4.1, 4.2）・70表（th170・td929）・16図・16コード例・11チェック項目（リスト項目）・108外部リンク出現・69目次・練習問題8問（`<details>`）を原本から完全移行。リストの点・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・構文トークン（JSON/Bash/SQL/Cedar）、図カードの装飾（`.mermaid-wrap`）と全派生色、全16図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・HeaderのDomain 4（20%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain4.mjs <core|herointro|task41|task42authz|task42policy|summary|examprep|appendix|all>` で固定Git原本から再生成できる。
+
+原本HTML/Markdownは `archive/Aws/html/security-specialty/domain4/` と `archive/Aws/md/security-specialty/domain4/` に保存し、復元情報は `docs/migration-inventory/aws-scs-c03-domain4-guide.archive.json` に記録。直下の未移行HTML残数は19件。
+
 ## 2026-11-05: SCS-C03 Domain 3
 
 `app/aws/security-specialty/domain3/` に Server `page.tsx` / `ScsDomain3Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、8分割の `sections/`（HeroIntro, Task31, Task32, Task33, Summary, Troubleshooting, Appendix はServer、ExamPrep はClient）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク・47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本から完全移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・原本構文トークン（JSON/YAML/Dockerfile/Python/Bash）、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）を保持。ホーム・HeaderのDomain 3（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain3.mjs <core|herointro|task31|task32|task33|summary|troubleshooting|appendix|all>` で固定Git原本から再生成できる。
