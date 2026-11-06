@@ -38,7 +38,7 @@ const TOKEN_PATTERNS = {
     yaml: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<key>(?<=^\s*(?:-\s+)?)[\w-]+(?=:(?:\s|$)))|${COMMON}|!Ref\b`, 'g'),
     python: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|\b(?<keyword>import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?<built_in>print)\b|${COMMON}`, 'g'),
     dockerfile: new RegExp(String.raw`#.*$|(?<keyword>^(?:FROM|RUN|WORKDIR|COPY|USER|CMD|ENTRYPOINT|ENV|EXPOSE|ARG|ADD|LABEL|VOLUME|HEALTHCHECK))\b|--[\w-]+=[^\s]+|--[\w-]+|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|${COMMON}`, 'g'),
-    sql: new RegExp(String.raw`--.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|\b(?<keyword>SELECT|FROM|WHERE|AND|OR|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|LIMIT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|DROP|NULL|NOT|IN|EXISTS)\b|${COMMON}`, 'gi'),
+    sql: new RegExp(String.raw`--.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|\b(?<keyword>SELECT|FROM|WHERE|AND|OR|JOIN|LEFT|RIGHT|INNER|ON|GROUP|BY|ORDER|LIMIT|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|DROP|NULL|NOT|IN|EXISTS|DESC|ASC)\b|${COMMON}`, 'gi'),
     rust: new RegExp(String.raw`//.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|\b(?<keyword>permit|forbid|when|unless|principal|action|resource|is|in|like|has|true|false)\b|${COMMON}`, 'g'),
     default: new RegExp(String.raw`#.*$|${DOUBLE_QUOTED}|${COMMON}`, 'g'),
 };
@@ -48,7 +48,7 @@ function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
         const bashRegex = new RegExp(
-            String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<![\w:-])(?:aws|pass|drop)(?![\w:-])|--[\w-]+|\$[\w_]+|\b(?:export|echo)\b|\b\d+\b`,
+            String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<![\w:-])(?<built_in>aws|echo|printf|exit|break|sleep|seq|base64)(?![\w:-])|--[\w-]+|\$[\w_]+|\b(?<keyword>for|in|do|done|case|esac|if|then|fi|else|elif|while|until|export|pass|drop)\b|\b\d+\b`,
             'g',
         );
         for (const m of line.matchAll(bashRegex)) {
@@ -58,7 +58,7 @@ function tokens(line, language) {
                 ? 'comment'
                 : /^["']/.test(t)
                 ? 'string'
-                : t === 'aws'
+                : m.groups?.built_in !== undefined
                 ? 'built_in'
                 : t.startsWith('$')
                 ? 'variable'
@@ -566,6 +566,11 @@ ${scope} .main ul ul {
 ${scope} .main ul ul ul {
     list-style-type: square;
 }
+${scope} .main .checklist-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 ${scope} nav ul {
     list-style: none;
     padding: 0;
@@ -599,9 +604,77 @@ ${scope} .main {
 }
 ${scope} .mermaid-wrap > [role="img"] {
     background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+${scope} .mermaid-wrap svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+${scope} .main .mermaid-wrap p {
+    color: inherit;
+    margin: 0;
 }
 ${scope} .mermaid-wrap {
     box-shadow: 0 2px 8px rgba(28, 39, 64, 0.04);
+}
+${scope} .main pre.code.code-block {
+    padding: 18px 20px;
+}
+${scope} .main pre:not(.mermaid) > .code-line {
+    padding: 0;
+    min-height: 1.65em;
+    white-space: pre;
+}
+${scope} .hljs-doctag,
+${scope} .hljs-keyword,
+${scope} .hljs-meta .hljs-keyword,
+${scope} .hljs-template-tag,
+${scope} .hljs-template-variable,
+${scope} .hljs-type,
+${scope} .hljs-variable.language_ {
+    color: #d73a49;
+}
+${scope} .hljs-title,
+${scope} .hljs-title.class_,
+${scope} .hljs-title.class_.inherited__,
+${scope} .hljs-title.function_ {
+    color: #6f42c1;
+}
+${scope} .hljs-attr,
+${scope} .hljs-attribute,
+${scope} .hljs-literal,
+${scope} .hljs-meta,
+${scope} .hljs-number,
+${scope} .hljs-operator,
+${scope} .hljs-selector-attr,
+${scope} .hljs-selector-class,
+${scope} .hljs-selector-id,
+${scope} .hljs-variable {
+    color: #005cc5;
+}
+${scope} .hljs-meta .hljs-string,
+${scope} .hljs-regexp,
+${scope} .hljs-string {
+    color: #032f62;
+}
+${scope} .hljs-built_in,
+${scope} .hljs-symbol {
+    color: #e36209;
+}
+${scope} .hljs-code,
+${scope} .hljs-comment,
+${scope} .hljs-formula {
+    color: #6a737d;
+}
+${scope} .hljs-name,
+${scope} .hljs-quote,
+${scope} .hljs-selector-pseudo,
+${scope} .hljs-selector-tag {
+    color: #22863a;
 }
 `;
 

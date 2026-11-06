@@ -464,6 +464,11 @@
 .scs-domain4-page .main ul ul ul {
     list-style-type: square;
 }
+.scs-domain4-page .main .checklist-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 .scs-domain4-page nav ul {
     list-style: none;
     padding: 0;
@@ -497,7 +502,75 @@
 }
 .scs-domain4-page .mermaid-wrap > [role="img"] {
     background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.scs-domain4-page .mermaid-wrap svg {
+    flex-shrink: 0;
+    max-width: none;
+    height: auto;
+}
+.scs-domain4-page .main .mermaid-wrap p {
+    color: inherit;
+    margin: 0;
 }
 .scs-domain4-page .mermaid-wrap {
     box-shadow: 0 2px 8px rgba(28, 39, 64, 0.04);
+}
+.scs-domain4-page .main pre.code.code-block {
+    padding: 18px 20px;
+}
+.scs-domain4-page .main pre:not(.mermaid) > .code-line {
+    padding: 0;
+    min-height: 1.65em;
+    white-space: pre;
+}
+.scs-domain4-page .hljs-doctag,
+.scs-domain4-page .hljs-keyword,
+.scs-domain4-page .hljs-meta .hljs-keyword,
+.scs-domain4-page .hljs-template-tag,
+.scs-domain4-page .hljs-template-variable,
+.scs-domain4-page .hljs-type,
+.scs-domain4-page .hljs-variable.language_ {
+    color: #d73a49;
+}
+.scs-domain4-page .hljs-title,
+.scs-domain4-page .hljs-title.class_,
+.scs-domain4-page .hljs-title.class_.inherited__,
+.scs-domain4-page .hljs-title.function_ {
+    color: #6f42c1;
+}
+.scs-domain4-page .hljs-attr,
+.scs-domain4-page .hljs-attribute,
+.scs-domain4-page .hljs-literal,
+.scs-domain4-page .hljs-meta,
+.scs-domain4-page .hljs-number,
+.scs-domain4-page .hljs-operator,
+.scs-domain4-page .hljs-selector-attr,
+.scs-domain4-page .hljs-selector-class,
+.scs-domain4-page .hljs-selector-id,
+.scs-domain4-page .hljs-variable {
+    color: #005cc5;
+}
+.scs-domain4-page .hljs-meta .hljs-string,
+.scs-domain4-page .hljs-regexp,
+.scs-domain4-page .hljs-string {
+    color: #032f62;
+}
+.scs-domain4-page .hljs-built_in,
+.scs-domain4-page .hljs-symbol {
+    color: #e36209;
+}
+.scs-domain4-page .hljs-code,
+.scs-domain4-page .hljs-comment,
+.scs-domain4-page .hljs-formula {
+    color: #6a737d;
+}
+.scs-domain4-page .hljs-name,
+.scs-domain4-page .hljs-quote,
+.scs-domain4-page .hljs-selector-pseudo,
+.scs-domain4-page .hljs-selector-tag {
+    color: #22863a;
 }
