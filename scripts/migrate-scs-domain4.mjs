@@ -126,6 +126,13 @@ function jsx(n) {
         );
     }
 
+    if (n.matches('.checklist-card')) {
+        return `<ChecklistCard>${[...n.childNodes].map(jsx).join('')}</ChecklistCard>`;
+    }
+    if (n.matches('.checklist-header .count')) {
+        return '<ChecklistCount total={11} />';
+    }
+
     const attrs = [...n.attributes]
         .filter((a) => !['style'].includes(a.name))
         .map((a) => `${{ class: 'className', for: 'htmlFor', crossorigin: 'crossOrigin', readonly: 'readOnly', autocomplete: 'autoComplete' }[a.name] || a.name}={${JSON.stringify(a.value)}}`);
@@ -681,18 +688,7 @@ export function migrateSection(phase) {
     let body = chunks[phase].map(jsx).join('\n');
     const componentName = componentNames[phase];
     const hasDiagram = body.includes('<Diagram ');
-    const hasChecklist = phase === 'appendix';
-
-    if (hasChecklist) {
-        body = body.replace(
-            /<div className={"checklist-card"}>([\s\S]*?)<\/div>/,
-            '<ChecklistCard>$1</ChecklistCard>',
-        );
-        body = body.replace(
-            /<span className={"count"}>\{"0 \/ 11 完了"\}<\/span>/,
-            '<ChecklistCount total={11} />',
-        );
-    }
+    const hasChecklist = body.includes('<ChecklistCard>');
 
     let output = '';
     if (hasDiagram) output += `import { Diagram } from '../Diagram';\n`;
