@@ -128,7 +128,7 @@ function jsx(n) {
 
     const attrs = [...n.attributes]
         .filter((a) => !['style'].includes(a.name))
-        .map((a) => `${{ class: 'className', for: 'htmlFor' }[a.name] || a.name}={${JSON.stringify(a.value)}}`);
+        .map((a) => `${{ class: 'className', for: 'htmlFor', crossorigin: 'crossOrigin', readonly: 'readOnly', autocomplete: 'autoComplete' }[a.name] || a.name}={${JSON.stringify(a.value)}}`);
 
     if (n.matches('th')) attrs.push('scope="col"');
     if (n.matches('h2[id],h3[id],h4[id]')) attrs.push('tabIndex={-1}');
@@ -654,78 +654,63 @@ export default function Page() {
 // ----------------------------------------------------
 // Section generator
 // ----------------------------------------------------
-const boundaryEntries = Object.entries(boundaries);
+const componentNames = {
+    herointro: 'HeroIntro',
+    task41: 'Task41',
+    task42authz: 'Task42Authz',
+    task42policy: 'Task42Policy',
+    summary: 'Summary',
+    examprep: 'ExamPrep',
+    appendix: 'Appendix',
+};
 
-/** 指定したセクションキーの JSX を生成する。 */
-export function generateSection(key) {
-    const idx = boundaryEntries.findIndex(([k]) => k === key);
-    if (idx === -1) throw new Error(`Unknown section key: ${key}`);
+/** 指定フェーズのセクションを原本から生成する。 */
+export function migrateSection(phase) {
+    const main = doc.querySelector('main');
+    const chunks = Object.fromEntries(Object.keys(boundaries).map((k) => [k, []]));
+    let current = 'herointro';
 
-    const [currentKey, currentId] = boundaryEntries[idx];
-    const nextId = boundaryEntries[idx + 1]?.[1];
-
-    let startNode = null;
-    let endNode = null;
-
-    if (!currentId) {
-        startNode = doc.body.firstElementChild;
-    } else {
-        startNode = doc.getElementById(currentId);
+    for (const n of main.childNodes) {
+        if (n.nodeType === 1) {
+            const found = Object.entries(boundaries).find(([, id]) => id && n.id === id)?.[0];
+            if (found) current = found;
+        }
+        chunks[current].push(n);
     }
 
-    if (nextId) {
-        endNode = doc.getElementById(nextId);
-    }
+    let body = chunks[phase].map(jsx).join('\n');
+    const componentName = componentNames[phase];
+    const hasDiagram = body.includes('<Diagram ');
+    const hasChecklist = phase === 'appendix';
 
-    const nodes = [];
-    let cur = startNode;
-    while (cur && cur !== endNode) {
-        nodes.push(cur);
-        cur = cur.nextElementSibling;
-    }
-
-    const componentName = {
-        herointro: 'HeroIntro',
-        task41: 'Task41',
-        task42authz: 'Task42Authz',
-        task42policy: 'Task42Policy',
-        summary: 'Summary',
-        examprep: 'ExamPrep',
-        appendix: 'Appendix',
-    }[key];
-
-    const needsDiagram = nodes.some((n) => n.querySelector('pre.mermaid') || n.matches('pre.mermaid'));
-    const needsChecklist = key === 'appendix';
-
-    const imports = [];
-    if (needsDiagram) imports.push("import { Diagram } from '../Diagram';");
-    if (needsChecklist) imports.push("import { ChecklistCard, ChecklistCount } from '../Checklist';");
-
-    let jsxContent = nodes.map(jsx).join('\n');
-
-    // 付録のチェックリストカードを ChecklistCard / ChecklistCount でラップ
-    if (key === 'appendix') {
-        jsxContent = jsxContent.replace(
+    if (hasChecklist) {
+        body = body.replace(
             /<div className={"checklist-card"}>([\s\S]*?)<\/div>/,
             '<ChecklistCard>$1</ChecklistCard>',
         );
-        jsxContent = jsxContent.replace(
+        body = body.replace(
             /<span className={"count"}>\{"0 \/ 11 完了"\}<\/span>/,
             '<ChecklistCount total={11} />',
         );
     }
 
-    const code = `${imports.join('\n')}${imports.length ? '\n\n' : ''}/** 原本の ${key} セクション本文。 */
-export default function ${componentName}() {
-    return (
-        <section className="guide-part" data-part="${key}">
-            ${jsxContent}
-        </section>
-    );
-}
-`;
+    let output = '';
+    if (hasDiagram) output += `import { Diagram } from '../Diagram';\n`;
+    if (hasChecklist) output += `import { ChecklistCard, ChecklistCount } from '../Checklist';\n`;
+    output += `\n/** 原本の ${phase} セクション本文。 */\nexport default function ${componentName}() {\n    return (\n        <section className="guide-part" data-part="${phase}">\n${body}\n        </section>\n    );\n}\n`;
 
-    fs.writeFileSync(`${dir}/sections/${componentName}.tsx`, code);
+    const sourceFile = ts.createSourceFile(
+        `${componentName}.tsx`,
+        output,
+        ts.ScriptTarget.Latest,
+        true,
+        ts.ScriptKind.TSX,
+    );
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    const formatted = printer.printFile(sourceFile);
+
+    fs.writeFileSync(`${dir}/sections/${componentName}.tsx`, formatted);
+    console.log(`Generated sections/${componentName}.tsx!`);
 }
 
 // ----------------------------------------------------
@@ -737,12 +722,12 @@ if (target === 'core') {
     console.log('scaffolded core files');
 } else if (target === 'all') {
     scaffoldCore();
-    for (const [key] of boundaryEntries) {
-        generateSection(key);
+    for (const k of Object.keys(boundaries)) {
+        migrateSection(k);
     }
     console.log('generated all sections');
-} else if (boundaryEntries.some(([k]) => k === target)) {
-    generateSection(target);
+} else if (boundaries[target] !== undefined) {
+    migrateSection(target);
     console.log(`generated section: ${target}`);
 } else {
     console.error(`unknown target: ${target}`);
