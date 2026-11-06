@@ -212,9 +212,12 @@ export const NAV_ITEMS = ${JSON.stringify(navItems, null, 4)} as const;
         JSON.stringify(
             {
                 ...theme,
-                themeVariables: Object.fromEntries(
-                    Object.entries(vars).map(([k, v]) => [k, isValid(v) ? toHex(v) : v]),
-                ),
+                themeVariables: {
+                    ...Object.fromEntries(
+                        Object.entries(vars).map(([k, v]) => [k, isValid(v) ? toHex(v) : v]),
+                    ),
+                    fontFamily: '"Noto Sans JP Variable",sans-serif',
+                },
             },
             null,
             4,
@@ -222,32 +225,18 @@ export const NAV_ITEMS = ${JSON.stringify(navItems, null, 4)} as const;
     );
 
     // 3. Diagram.tsx
-    const themeFrontmatter = `%%{init: ${JSON.stringify({
-        theme: 'base',
-        themeVariables: vars,
-    })}}%%\n`;
-
     const diagramComponent = `'use client';
 
 import { memo, useId } from 'react';
-import dynamic from 'next/dynamic';
+import theme from './render-theme.json';
+import { MermaidDiagram } from '@/components/MermaidDiagram';
 import { DIAGRAMS, DIAGRAM_DESCRIPTIONS, type DiagramId } from './constants';
 
-const MermaidDiagram = dynamic(
-    () => import('@/components/MermaidDiagram').then((mod) => mod.MermaidDiagram),
-    {
-        ssr: false,
-        loading: () => (
-            <div className="mermaid-placeholder" aria-busy="true">
-                図を読み込み中…
-            </div>
-        ),
-    },
-);
+const themeFrontmatter = \`---\\nconfig: \${JSON.stringify(theme)}\\n---\\n\`;
 
-const themeFrontmatter = ${JSON.stringify(themeFrontmatter)};
-
-/** SCS Domain 5 の Mermaid 図コンポーネント。 */
+/**
+ * 原本のライト配色・配置設定と自然倍率を保持する図。
+ */
 export const Diagram = memo(function Diagram({
     id,
     label,
@@ -265,12 +254,13 @@ export const Diagram = memo(function Diagram({
                 ariaLabel={label}
                 ariaDescribedBy={descriptionId}
                 theme="light"
+                preserveChartTheme
                 preserveNaturalScale={true}
                 deferUntilVisible={true}
             />
-            <p id={descriptionId} className="sr-only">
+            <span id={descriptionId} className="sr-only">
                 {DIAGRAM_DESCRIPTIONS[id]}
-            </p>
+            </span>
         </div>
     );
 });
