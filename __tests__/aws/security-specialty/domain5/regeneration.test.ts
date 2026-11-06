@@ -22,7 +22,10 @@ describe('SCS Domain 5 再生成の整合性', () => {
     });
 
     it('ガイド本体を Server Component に保ち、生成テンプレートも同じにする', () => {
-        const guide = readFileSync('app/aws/security-specialty/domain5/ScsDomain5Guide.tsx', 'utf8');
+        const guide = readFileSync(
+            'app/aws/security-specialty/domain5/ScsDomain5Guide.tsx',
+            'utf8',
+        );
         const template = script.slice(script.indexOf('const guideComponent ='));
 
         expect(guide).not.toContain('use client');

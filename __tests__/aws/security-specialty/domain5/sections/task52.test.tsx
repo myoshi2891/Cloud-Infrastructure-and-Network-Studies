@@ -35,8 +35,8 @@ describe('Task52 Section (Task 5.2 保存中のデータ: Data at Rest)', () => 
                 row.map((c) => c.text.replace(/\s+/g, ' ')),
             );
             const ths = [...table.querySelectorAll('th')];
-            const allCells = [...table.querySelectorAll('th, td')].map((c) =>
-                c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
+            const allCells = [...table.querySelectorAll('th, td')].map(
+                (c) => c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
             );
             expect(allCells).toEqual(expectedCells);
             ths.forEach((th) => {

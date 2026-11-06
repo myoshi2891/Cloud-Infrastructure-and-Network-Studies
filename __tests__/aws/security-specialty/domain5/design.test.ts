@@ -181,3 +181,4 @@ describe('SCS-C03 Domain 5 — スタイル・デザイン完全移行', () => {
         expect(tokenColors['.scs-domain5-page .hljs-comment']).toBe('#6a737d');
     });
 });
+

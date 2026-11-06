@@ -35,8 +35,8 @@ describe('Task53 Section (Task 5.3 機密データ・認証情報・シークレ
                 row.map((c) => c.text.replace(/\s+/g, ' ')),
             );
             const ths = [...table.querySelectorAll('th')];
-            const allCells = [...table.querySelectorAll('th, td')].map((c) =>
-                c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
+            const allCells = [...table.querySelectorAll('th, td')].map(
+                (c) => c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
             );
             expect(allCells).toEqual(expectedCells);
             ths.forEach((th) => {

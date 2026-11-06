@@ -46,8 +46,8 @@ describe('HeroIntro Section (Hero + 1. 使い方と全体像 + 2. 基礎知識)'
                 row.map((c) => c.text.replace(/\s+/g, ' ')),
             );
             const ths = [...table.querySelectorAll('th')];
-            const allCells = [...table.querySelectorAll('th, td')].map((c) =>
-                c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
+            const allCells = [...table.querySelectorAll('th, td')].map(
+                (c) => c.textContent?.trim().replace(/\s+/g, ' ') ?? '',
             );
             expect(allCells).toEqual(expectedCells);
             ths.forEach((th) => {
