@@ -2264,7 +2264,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **最新実装 HEAD:** `eec53479`（SCS-C03 Domain 3の図説明文改善とテスト拡充）
 - **仕様同期コミット:** `65ce3668`（最新の仕様同期。SCS-C03 Domain 3分は `c9c25def`・`00a4ee03`）
 - **前回進捗同期コミット:** `65ce3668`（SAP-C02 Domain 4の表セル数を記録した最新の完了済み進捗同期）
-- **検証状態:** 2026-11-06にHEAD `eec53479` で再検証。SCS-C03 Domain 3関連18ファイル・103件、SAP-C02 Domain 4関連5ファイル・63件、ガイド幅契約154件すべて成功。TypeScript型検査・ESLint成功。以前記録した `page.test.tsx` の本文全文照合の失敗と `sections/examprep.test.tsx` の型エラー5件は解消済み。`__tests__/components/Footer.palette.test.ts` は3件中1件が失敗で、テストの期待一覧に実装済みの `.sap-domain4-page`・`.scs-domain3-page` がないため。全体Vitestは未実行。
+- **検証状態:** 2026-11-06にHEAD `eec53479` で再検証。SCS-C03 Domain 3関連18ファイル・103件、SAP-C02 Domain 4関連5ファイル・63件、ガイド幅契約154件すべて成功。TypeScript型検査・ESLint成功。以前記録した `page.test.tsx` の本文全文照合の失敗と `sections/examprep.test.tsx` の型エラー5件は解消済み。`__tests__/components/Footer.palette.test.ts` は期待一覧へ実装済みの `.sap-domain4-page`・`.scs-domain3-page` を追加し、3件すべて成功（既存セレクターは保持）。全体Vitestは未実行。
 - **ビルド状態:** 2026-11-06にHEAD `eec53479` のクリーンな展開先で `bun run build` 成功、`/aws/security-specialty/domain3` の静的生成を確認。`bun run lint` 成功。ブラウザーE2Eは未実行、目視確認はユーザー担当。
 - **HTML残数:** 直下HTML20件、すべて未移行で対応インベントリなし。SCS-C03 Domain 3完了時点の15件に、2026-11-06に追加された5件（`4715e510` の4件、`4dbcf2a0` の1件）を加えた数。移行済みの直下HTMLは0件。
 - **アーカイブ:** SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json`、CCNP Securityは `docs/migration-inventory/cisco-ccnp-security.archive.json`、SCS-C03 Domain 2は `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
