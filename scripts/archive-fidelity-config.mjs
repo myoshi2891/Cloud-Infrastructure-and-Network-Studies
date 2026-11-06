@@ -32,6 +32,20 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'aws-sap-c02-domain4': {
+        source: 'Sap-c02-domain4-migration-modernization-guide.html',
+        sourceCommit: '852e6ed370e157d6a25b014f1fee7c2ef015eba6',
+        tables: true, codeBlocks: true, styledClasses: true, guideInteractions: true,
+        guideBoundaries: {
+            foundation: '',
+            task41: '2-task-41-移行対象となる既存ワークロードとプロセスの選定',
+            task42: '3-task-42-既存ワークロードに最適な移行アプローチの決定',
+            task43: '4-task-43-既存ワークロードの新しいアーキテクチャの決定',
+            task44: '5-task-44-モダナイゼーションと機能強化の機会の特定',
+            summary: '6-試験直前の総まとめ',
+            appendix: '7-参考-url-一覧-根拠となるソース',
+        },
+    },
     'aws-sap-c02-domain3': {
         source: 'Sap-c02-domain3-continuous-improvement-guide.html',
         sourceCommit: '13e845fde4e37fbb2c99442ee9bdef4c2df78273',
@@ -125,6 +139,24 @@ export const FIDELITY_PAGES = {
             checklist: '6-ベストプラクティス総チェックリスト',
             questions: '7-確認問題',
             updates: '8-2026年時点で特に注意したい変更点',
+        },
+    },
+    'aws-scs-c03-domain3-guide': {
+        source: 'Aws-scs-c03-domain3-infrastructure-security-guide.html',
+        sourceCommit: 'efdbafb932e7317753b4025ee8498fa12cb1dcb7',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            herointro: '',
+            task31: '4-task-31-ネットワークエッジサービスのセキュリティ制御',
+            task32: '5-task-32-コンピュートワークロードのセキュリティ制御',
+            task33: '6-task-33-ネットワークセキュリティ制御の設計とトラブルシューティング',
+            summary: '7-横断まとめ-サービス選択早見表とキーワード対応表',
+            troubleshooting: '8-トラブルシューティング実践フロー',
+            examprep: '9-理解度チェック演習問題',
+            appendix: '10-参考-url根拠ソース一覧',
         },
     },
     'aws-scs-c03-domain2-guide': {

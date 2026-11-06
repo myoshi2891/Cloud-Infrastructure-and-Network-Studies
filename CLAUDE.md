@@ -1,5 +1,17 @@
 # CLAUDE.md
 
+## 2026-11-05: SCS-C03 Domain 3
+
+`app/aws/security-specialty/domain3/` に Server `page.tsx` / `ScsDomain3Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、8分割の `sections/`（HeroIntro, Task31, Task32, Task33, Summary, Troubleshooting, Appendix はServer、ExamPrep はClient）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク・47表（th120・td807）・21図・14コード例・151リスト項目・49外部リンク出現・50目次・演習問題10問（`<details class="answer">`）を原本から完全移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・原本構文トークン（JSON/YAML/Dockerfile/Python/Bash）、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、演習問題のアコーディオン、全21図のアクセシビリティ代替テキスト（`aria-describedby`）を保持。ホーム・HeaderのDomain 3（18%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain3.mjs <core|herointro|task31|task32|task33|summary|troubleshooting|appendix|all>` で固定Git原本から再生成できる。
+
+演習問題の採点UIを持つ `sections/ExamPrep.tsx`（Client）は手動保守で、`examprep` の単独指定は失敗終了し、`all` も対象外。カード装飾は生成スクリプトの `additionalCss` に保持して `page.css` の再生成後も残すため、装飾を変更するときは `page.css` と `additionalCss` を同じ内容に更新する（`__tests__/aws/security-specialty/domain3/regeneration.test.ts` が一致を検証）。
+
+原本HTML/Markdownは `archive/Aws/html/security-specialty/domain3/` と `archive/Aws/md/security-specialty/domain3/` に保存し、復元情報は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json` に記録。直下の未移行HTML残数は15件。
+
+## 2026-11-05: SAP-C02 Domain 4
+
+`app/aws/solutions-architect-professional/domain4/` に Server `page.tsx` / `SapDomain4Guide.tsx`、Client `NavBar.tsx` / `ChecklistCard.tsx`（チェック進捗管理）、memo化した `Diagram.tsx`、7分割のServer `sections/`（foundation, task41, task42, task43, task44, summary, appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全4タスク・42表（th110・td671）・16図・7コード例（85行）・130リスト項目・10チェック項目・102外部リンク出現・45目次を原本から移行。リストの点・番号・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`.code-line`）・原本構文トークン、チェック進捗を保持。ホーム・HeaderのDomain 4（20%）導線と明色フッターへ統合。`bun scripts/migrate-sap-domain4.mjs <foundation|task41|task42|task43|task44|summary|appendix|all>` で固定Git原本から再生成できる。原本HTML/Markdownは `archive/Aws/html/solutions-architect-professional/domain4/` と `archive/Aws/md/solutions-architect-professional/domain4/` に保存し、復元情報は `docs/migration-inventory/aws-sap-c02-domain4.archive.json` に記録。直下の未移行HTML残数は16件。
+
 ## 2026-11-03: CCNP Security 完全ガイド
 
 `app/cisco/ccnp-security/` に Server `page.tsx`、Client `CcnpSecurityGuide.tsx` / `NavBar.tsx`、`Diagram.tsx`、7分割の `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, Appendix）、定数 `constants.ts`、全派生色 `render-theme.json`、スコープCSS `page.css` を追加。全7パート・131表・53図・9コード例・701リスト項目（本文519・目次182）・305外部リンク出現・188目次を原本から移行。コード行（`.code-line`）・原本トークン（`.tk-c` 18個・`.tk-p` 8個・`.hljs-*` 29個）・Tabler Icons・金色丸ドットおよびインディゴ数字バッジのリスト階層・各色コールアウト・Mermaid専用ライトテーマパレット（ラッパー透過・全53図 `viewBox` 一致）を保持。ホーム・Headerの導線と明色フッターへ統合。`bun scripts/migrate-ccnp-security.mjs all` で再生成できる。原本は直下またはGit管理外の `archive/Cisco/html/ccnp-security/Ccnp-security-guide.html` から読むため、クリーンなcloneでは実行前にローカルarchiveへ原本を配置しておく必要がある（テストはコミット済みfixtureのみを参照し、原本に依存しない）。サイドバーは共通の280px契約に従い、`__tests__/guide-content-widths.test.ts` に登録。モバイルで閉じた目次は `visibility: hidden` でフォーカス・読み上げ対象から外す。原本HTML/Markdownは `archive/Cisco/html/ccnp-security/` と `archive/Cisco/md/ccnp-security/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-security.archive.json` に記録。

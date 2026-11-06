@@ -3,18 +3,22 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { snapshotCssRules } from '@/scripts/tanenbaum-fidelity.mjs';
 
+/** リポジトリ内のファイルを UTF-8 で読み込む。 */
 const readWorkspaceFile = (path: string): string =>
     readFileSync(join(process.cwd(), path), 'utf8');
 
+/** 文字列を正規表現のリテラルとして扱えるようエスケープする。 */
 const escapeRegExp = (value: string): string =>
     value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+/** セレクターに最初に一致する規則の本文を返す。無ければテストを失敗させる。 */
 const firstRule = (css: string, selector: string): string => {
     const match = css.match(new RegExp(`${escapeRegExp(selector)}\\s*\\{([^}]*)\\}`));
     expect(match, `missing CSS rule: ${selector}`).not.toBeNull();
     return match?.[1] ?? '';
 };
 
+/** セレクターに一致する規則のうち、2件目以降の本文を返す。 */
 const rulesAfterFirst = (css: string, selector: string): string[] => {
     const matches = [...css.matchAll(new RegExp(`${escapeRegExp(selector)}\\s*\\{([^}]*)\\}`, 'g'))];
     return matches.slice(1).map((match) => match[1] ?? '');
@@ -28,6 +32,7 @@ const guideLayouts = [
     ['app/aws/solutions-architect-associate/page.css', '.aws-saa-page .sidebar', '.aws-saa-page .main'],
     ['app/aws/solutions-architect-professional/domain2/page.css', '.sap-domain2-page .sidebar', '.sap-domain2-page .main'],
     ['app/aws/security-specialty/domain2/page.css', '.scs-domain2-page .sidebar', '.scs-domain2-page .main'],
+    ['app/aws/security-specialty/domain3/page.css', '.scs-domain3-page .sidebar', '.scs-domain3-page .main'],
     ['app/aws/cloudops-engineer-associate/page.css', '.aws-cloudops-page .sidebar', '.aws-cloudops-page .main'],
     ['app/cisco/ccnp-security/page.css', '.ccnp-security-page .sidebar', '.ccnp-security-page main'],
     ['app/cisco/ccna/automation-api-guide/page.css', '.ccna-automation-api-page .sidebar', '.ccna-automation-api-page .main'],
@@ -168,6 +173,44 @@ describe('SAP-C02 Domain 3 sidebar layout exception', () => {
         // 後続のデスクトップ用ルールではなく、max-width メディアクエリ内の同一セレクタだけを判定対象にする
         const responsiveRules = snapshotCssRules(readWorkspaceFile(stylesheet))
             .filter((rule) => rule.selector === mainSelector && /max-width/.test(rule.media ?? ''));
+        /** 宣言一覧に指定のプロパティと値の組が含まれるかを判定する。 */
+        const has = (declarations: readonly { prop: string; value: string }[], prop: string, value: string) =>
+            declarations.some((declaration) => declaration.prop === prop && declaration.value === value);
+
+        expect(responsiveRules.some(({ declarations }) =>
+            has(declarations, 'margin-left', '0')
+            && has(declarations, 'width', '100%')
+            && has(declarations, 'max-width', 'none'),
+        )).toBe(true);
+    });
+});
+
+// SAP-C02 Domain 4 は 300px 目次を承認済み例外として優先する
+describe('SAP-C02 Domain 4 sidebar layout exception', () => {
+    const stylesheet = 'app/aws/solutions-architect-professional/domain4/page.css';
+    const sidebarSelector = '.sap-domain4-page .sidebar';
+    const mainSelector = '.sap-domain4-page .main';
+
+    it('fixes a 300px sidebar to the far left', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), sidebarSelector);
+
+        expect(rule).toMatch(/position:\s*fixed\s*;/);
+        expect(rule).toMatch(/left:\s*0\s*;/);
+        expect(rule).toMatch(/width:\s*300px\s*;/);
+    });
+
+    it('gives the main canvas all remaining width beside the 300px sidebar', () => {
+        const rule = firstRule(readWorkspaceFile(stylesheet), mainSelector);
+
+        expect(rule).toMatch(/margin-left:\s*300px\s*;/);
+        expect(rule).toMatch(/width:\s*calc\(100%\s*-\s*300px\)\s*;/);
+        expect(rule).toMatch(/max-width:\s*none\s*;/);
+    });
+
+    it('restores a 100% main canvas inside its responsive media query', () => {
+        const responsiveRules = snapshotCssRules(readWorkspaceFile(stylesheet))
+            .filter((rule) => rule.selector === mainSelector && /max-width/.test(rule.media ?? ''));
+        /** 宣言一覧に指定のプロパティと値の組が含まれるかを判定する。 */
         const has = (declarations: readonly { prop: string; value: string }[], prop: string, value: string) =>
             declarations.some((declaration) => declaration.prop === prop && declaration.value === value);
 

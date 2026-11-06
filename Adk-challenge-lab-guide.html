@@ -1,0 +1,3352 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+            Google Cloud チャレンジラボ完全ガイド：Cymbal Travel の AI
+            エージェントを修復・デプロイする（ADK 初学者向け）
+        </title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+        />
+        <style>
+            :root {
+                --bg-primary: #07111e;
+                --bg-secondary: #0d1b30;
+                --bg-tertiary: #122440;
+                --bg-code: #0a1526;
+                --color-text-primary: #f3f5fa;
+                --color-text-secondary: #c6d0e3;
+                --color-text-tertiary: #93a1bd;
+                --color-border-tertiary: #1e2f4d;
+                --color-border-secondary: #2d456e;
+                --color-border-primary: #3e5c8f;
+                --accent: #7c9eff;
+                --accent-soft: #172a52;
+                --color-background-info: #12264a;
+                --color-text-info: #a9c1ff;
+                --color-background-success: #0f2b26;
+                --color-text-success: #7fdcb4;
+                --color-background-warning: #2e2411;
+                --color-text-warning: #f2c970;
+                --color-background-danger: #33171a;
+                --color-text-danger: #ff9d92;
+                --font-sans:
+                    'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
+                    'Meiryo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+                --font-mono:
+                    ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono',
+                    monospace;
+                --border-radius-md: 8px;
+                --border-radius-lg: 12px;
+                --border-radius-xl: 16px;
+                --sidebar-w: 300px;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                scroll-padding-top: 24px;
+                -webkit-text-size-adjust: 100%;
+            }
+            body {
+                margin: 0;
+                background: var(--bg-primary);
+                color: var(--color-text-primary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                font-weight: 400;
+                line-height: 1.7;
+            }
+            a {
+                color: var(--accent);
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+            a:hover {
+                color: var(--color-text-primary);
+            }
+            a:focus-visible,
+            button:focus-visible,
+            summary:focus-visible,
+            input:focus-visible {
+                outline: 2px solid var(--accent);
+                outline-offset: 2px;
+            }
+            strong {
+                font-weight: 500;
+                color: var(--color-text-primary);
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                overflow-y: auto;
+                background: var(--bg-secondary);
+                border-right: 1px solid var(--color-border-tertiary);
+                padding: 24px 16px 32px;
+                z-index: 60;
+            }
+            .brand {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                padding: 0 8px 20px;
+                margin-bottom: 12px;
+                border-bottom: 1px solid var(--color-border-tertiary);
+            }
+            .brand i {
+                font-size: 1.5rem;
+                color: var(--accent);
+                margin-top: 2px;
+            }
+            .brand-text {
+                font-size: 1rem;
+                font-weight: 500;
+                line-height: 1.5;
+                color: var(--color-text-primary);
+            }
+            .brand-sub {
+                display: block;
+                font-size: 1rem;
+                font-weight: 400;
+                color: var(--color-text-tertiary);
+            }
+            .sidebar nav ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .sidebar nav li {
+                padding-left: 0;
+                margin: 2px 0;
+            }
+            .sidebar nav li::before {
+                content: none;
+            }
+            .sidebar nav a {
+                display: grid;
+                grid-template-columns: 28px 1fr;
+                gap: 8px;
+                align-items: start;
+                padding: 8px 12px;
+                border-radius: var(--border-radius-md);
+                color: var(--color-text-secondary);
+                text-decoration: none;
+                font-size: 1rem;
+                line-height: 1.5;
+                border-left: 3px solid transparent;
+            }
+            .sidebar nav a:hover {
+                background: var(--bg-tertiary);
+                color: var(--color-text-primary);
+            }
+            .sidebar nav a.active {
+                background: var(--accent-soft);
+                color: var(--color-text-primary);
+                border-left-color: var(--accent);
+            }
+            .nav-num {
+                color: var(--color-text-tertiary);
+                text-align: right;
+            }
+            .sidebar nav a.active .nav-num {
+                color: var(--accent);
+            }
+            .layout {
+                display: block;
+            }
+            main {
+                margin-left: var(--sidebar-w);
+                padding: 0 56px 80px;
+            }
+            .hero {
+                padding: 56px 0 32px;
+                border-bottom: 1px solid var(--color-border-secondary);
+            }
+            .hero h1 {
+                font-size: 2rem;
+                font-weight: 500;
+                line-height: 1.4;
+                margin: 0 0 20px;
+                color: var(--color-text-primary);
+            }
+            .lead {
+                font-size: 1.125rem;
+                color: var(--color-text-secondary);
+                margin: 0 0 28px;
+            }
+            .meta-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 12px;
+            }
+            .meta-card {
+                background: var(--bg-secondary);
+                border: 1px solid var(--color-border-tertiary);
+                border-radius: var(--border-radius-lg);
+                padding: 14px 18px;
+            }
+            .meta-label {
+                display: block;
+                color: var(--accent);
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+            .meta-card p {
+                margin: 0;
+                color: var(--color-text-secondary);
+            }
+            .section {
+                padding: 48px 0 8px;
+            }
+            .section + .section {
+                border-top: 1px solid var(--color-border-tertiary);
+                margin-top: 40px;
+            }
+            h2 {
+                font-size: 1.5rem;
+                font-weight: 500;
+                line-height: 1.45;
+                margin: 0 0 20px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--color-border-secondary);
+                color: var(--color-text-primary);
+            }
+            h3 {
+                font-size: 1.25rem;
+                font-weight: 500;
+                line-height: 1.5;
+                margin: 36px 0 14px;
+                color: var(--color-text-primary);
+            }
+            h4 {
+                font-size: 1rem;
+                font-weight: 500;
+                line-height: 1.6;
+                margin: 26px 0 10px;
+                color: var(--accent);
+            }
+            p {
+                margin: 0 0 16px;
+                color: var(--color-text-secondary);
+            }
+            .prose ul {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 16px;
+            }
+            .prose ul > li {
+                position: relative;
+                padding-left: 22px;
+                margin: 6px 0;
+                color: var(--color-text-secondary);
+            }
+            .prose ul > li::before {
+                content: '';
+                position: absolute;
+                left: 4px;
+                top: 0.8em;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--accent);
+            }
+            .prose ol {
+                padding-left: 1.6em;
+                margin: 0 0 16px;
+                color: var(--color-text-secondary);
+            }
+            .prose ol > li {
+                margin: 6px 0;
+                padding-left: 4px;
+            }
+            .prose ol > li::marker {
+                color: var(--accent);
+                font-weight: 500;
+            }
+            code {
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                background: var(--bg-tertiary);
+                color: #c3d2ff;
+                padding: 2px 6px;
+                border-radius: 6px;
+                overflow-wrap: anywhere;
+            }
+            pre {
+                background: var(--bg-code);
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                padding: 16px 20px;
+                margin: 16px 0;
+                overflow-x: auto;
+            }
+            pre code,
+            pre code.hljs {
+                display: block;
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                line-height: 1.65;
+                background: transparent;
+                padding: 0;
+                border-radius: 0;
+                color: #d7e0f2;
+                overflow-wrap: normal;
+                white-space: pre;
+            }
+            .table-wrap {
+                overflow-x: auto;
+                margin: 16px 0 20px;
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 1rem;
+            }
+            th,
+            td {
+                padding: 10px 14px;
+                text-align: left;
+                vertical-align: top;
+                border-bottom: 1px solid var(--color-border-tertiary);
+                line-height: 1.6;
+                color: var(--color-text-secondary);
+            }
+            th {
+                background: var(--bg-tertiary);
+                font-weight: 500;
+                color: var(--color-text-primary);
+                white-space: nowrap;
+            }
+            tr:last-child td {
+                border-bottom: none;
+            }
+            td {
+                min-width: 8em;
+            }
+            .callout {
+                border: 1px solid var(--color-border-secondary);
+                border-left-width: 4px;
+                border-radius: var(--border-radius-lg);
+                padding: 14px 20px 6px;
+                margin: 20px 0;
+            }
+            .callout-title {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                font-weight: 500;
+                margin-bottom: 6px;
+            }
+            .callout p {
+                margin: 0 0 10px;
+            }
+            .callout.note {
+                background: var(--color-background-info);
+                border-left-color: var(--color-text-info);
+            }
+            .callout.note .callout-title {
+                color: var(--color-text-info);
+            }
+            .callout.practice {
+                background: var(--color-background-success);
+                border-left-color: var(--color-text-success);
+            }
+            .callout.practice .callout-title {
+                color: var(--color-text-success);
+            }
+            .callout.warn {
+                background: var(--color-background-warning);
+                border-left-color: var(--color-text-warning);
+            }
+            .callout.warn .callout-title {
+                color: var(--color-text-warning);
+            }
+            .callout pre {
+                margin: 8px 0 14px;
+            }
+            .diagram-card {
+                margin: 24px 0;
+                background: var(--bg-secondary);
+                border: 1px solid var(--color-border-tertiary);
+                border-radius: var(--border-radius-xl);
+                padding: 20px 16px 14px;
+            }
+            .diagram {
+                display: flex;
+                justify-content: center;
+            }
+            .diagram svg {
+                overflow: visible;
+            }
+            .diagram-card figcaption {
+                text-align: center;
+                color: var(--color-text-tertiary);
+                margin-top: 12px;
+            }
+            .checklist {
+                list-style: none;
+                padding: 0;
+                margin: 16px 0 20px;
+                display: grid;
+                gap: 10px;
+                counter-reset: chk;
+            }
+            .checklist li {
+                counter-increment: chk;
+                background: var(--bg-secondary);
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                padding: 0;
+            }
+            .checklist label {
+                display: grid;
+                grid-template-columns: 32px 24px 1fr;
+                gap: 12px;
+                align-items: start;
+                padding: 12px 16px;
+                cursor: pointer;
+            }
+            .chk-num {
+                display: grid;
+                place-items: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--accent-soft);
+                color: var(--accent);
+                font-weight: 500;
+            }
+            .chk-num::before {
+                content: counter(chk);
+            }
+            .chk-text {
+                color: var(--color-text-secondary);
+                padding-top: 2px;
+            }
+            input.cb {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 24px;
+                height: 24px;
+                margin: 4px 0 0;
+                border: 2px solid var(--color-border-primary);
+                border-radius: 6px;
+                background: var(--bg-primary);
+                cursor: pointer;
+                position: relative;
+                flex: none;
+            }
+            input.cb:checked {
+                background: var(--color-text-success);
+                border-color: var(--color-text-success);
+            }
+            input.cb:checked::after {
+                content: '';
+                position: absolute;
+                left: 6px;
+                top: 1px;
+                width: 6px;
+                height: 12px;
+                border: solid var(--bg-primary);
+                border-width: 0 3px 3px 0;
+                transform: rotate(45deg);
+            }
+            .checklist li:has(input:checked) {
+                background: var(--color-background-success);
+                border-color: var(--color-text-success);
+            }
+            .checklist li:has(input:checked) .chk-text {
+                text-decoration: line-through;
+                color: var(--color-text-tertiary);
+            }
+            td input.cb {
+                margin: 0;
+            }
+            details.quiz {
+                background: var(--bg-secondary);
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                margin: 14px 0;
+                padding: 0;
+            }
+            details.quiz summary {
+                cursor: pointer;
+                padding: 14px 18px;
+                list-style: none;
+                color: var(--color-text-secondary);
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            details.quiz summary::-webkit-details-marker {
+                display: none;
+            }
+            details.quiz summary::before {
+                content: '\ea61';
+                font-family: 'tabler-icons';
+                color: var(--accent);
+                transition: transform 0.2s ease;
+            }
+            details.quiz[open] summary::before {
+                transform: rotate(90deg);
+            }
+            details.quiz .answer {
+                padding: 4px 22px 8px;
+                border-top: 1px solid var(--color-border-tertiary);
+            }
+            .quiz-q {
+                margin: 34px 0 8px;
+                font-size: 1.125rem;
+                font-weight: 500;
+                color: var(--color-text-primary);
+            }
+            .ref-list {
+                display: grid;
+                gap: 10px;
+                margin: 16px 0 24px;
+            }
+            .ref {
+                display: grid;
+                grid-template-columns: 36px 1fr;
+                gap: 14px;
+                align-items: start;
+                background: var(--bg-secondary);
+                border: 1px solid var(--color-border-secondary);
+                border-radius: var(--border-radius-lg);
+                padding: 14px 18px;
+            }
+            .ref-no {
+                display: grid;
+                place-items: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--accent-soft);
+                color: var(--accent);
+                font-weight: 500;
+            }
+            .ref-title {
+                display: block;
+                color: var(--color-text-primary);
+                margin-bottom: 2px;
+            }
+            .ref a {
+                word-break: break-all;
+            }
+            .footer {
+                margin-top: 56px;
+                padding-top: 20px;
+                border-top: 1px solid var(--color-border-secondary);
+                color: var(--color-text-tertiary);
+            }
+            .menu-btn {
+                display: none;
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: var(--accent);
+                color: var(--bg-primary);
+                border: 0;
+                z-index: 80;
+                font-size: 1.5rem;
+                cursor: pointer;
+                place-items: center;
+            }
+            .backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(7, 17, 30, 0.75);
+                z-index: 70;
+            }
+            @media (max-width: 1024px) {
+                .sidebar {
+                    width: min(320px, 85vw);
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    z-index: 75;
+                }
+                body.menu-open .sidebar {
+                    transform: translateX(0);
+                }
+                body.menu-open .backdrop {
+                    display: block;
+                }
+                .menu-btn {
+                    display: grid;
+                }
+                main {
+                    margin-left: 0;
+                    padding: 0 20px 96px;
+                }
+                .hero h1 {
+                    font-size: 1.5rem;
+                }
+                h2 {
+                    font-size: 1.25rem;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                html {
+                    scroll-behavior: auto;
+                }
+                .sidebar,
+                details.quiz summary::before {
+                    transition: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <aside class="sidebar" id="sidebar" aria-label="目次">
+            <div class="brand">
+                <i class="ti ti-robot"></i>
+                <div class="brand-text">
+                    ADK チャレンジラボ<span class="brand-sub">Cymbal Travel 完全ガイド</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#s0"
+                            ><span class="nav-num">0</span><span>最初に読む注意点</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s1"><span class="nav-num">1</span><span>ラボ全体像</span></a>
+                    </li>
+                    <li>
+                        <a href="#s2"><span class="nav-num">2</span><span>前提知識と用語</span></a>
+                    </li>
+                    <li>
+                        <a href="#s3"
+                            ><span class="nav-num">3</span><span>Task 1 ADK の環境構築</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s4"
+                            ><span class="nav-num">4</span><span>Task 2 Travel Scout</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s5"
+                            ><span class="nav-num">5</span><span>Task 3 CLI で検証</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s6"
+                            ><span class="nav-num">6</span><span>Task 4 構造化出力</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s7"
+                            ><span class="nav-num">7</span><span>Task 5 Brochure Auditor</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s8"
+                            ><span class="nav-num">8</span><span>トラブルシューティング</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s9"
+                            ><span class="nav-num">9</span><span>ベストプラクティス集</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s10"
+                            ><span class="nav-num">10</span><span>理解度チェック</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s11"
+                            ><span class="nav-num">11</span><span>最終チェックリスト</span></a
+                        >
+                    </li>
+                    <li>
+                        <a href="#s12"><span class="nav-num">12</span><span>参考文献</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="backdrop" id="backdrop"></div>
+        <button
+            class="menu-btn"
+            id="menuBtn"
+            type="button"
+            aria-label="目次を開く"
+            aria-expanded="false"
+            aria-controls="sidebar"
+        >
+            <i class="ti ti-menu-2"></i>
+        </button>
+        <div class="layout">
+            <main>
+                <header class="hero" id="top">
+                    <h1>
+                        Google Cloud チャレンジラボ完全ガイド：Cymbal Travel の AI
+                        エージェントを修復・デプロイする（ADK 初学者向け）
+                    </h1>
+                    <div class="meta-grid">
+                        <div class="meta-card">
+                            <span class="meta-label">対象ラボ</span>
+                            <p>
+                                Agent Development Kit (ADK) コース向けチャレンジラボ（Cymbal Travel
+                                シナリオ）
+                            </p>
+                        </div>
+                        <div class="meta-card">
+                            <span class="meta-label">想定読者</span>
+                            <p>
+                                Google Cloud と Python の基礎はあるが、ADK・AI
+                                エージェントは初めての方
+                            </p>
+                        </div>
+                        <div class="meta-card">
+                            <span class="meta-label">情報の基準日</span>
+                            <p>2026年10月30日（ウェブ情報を確認した時点。末尾に出典 URL を記載）</p>
+                        </div>
+                        <div class="meta-card">
+                            <span class="meta-label">この資料のゴール</span>
+                            <p>
+                                ラボの 5
+                                つのタスクを「なぜその操作をするのか」まで理解したうえで、迷わず
+                                100% スコアで完了できるようになること
+                            </p>
+                        </div>
+                    </div>
+                </header>
+                <section class="section prose" id="s0">
+                    <h2>0. 最初に読んでください（重要な注意点）</h2>
+                    <p>
+                        このラボは
+                        <strong>チャレンジラボ</strong>
+                        です。通常のラボと違い、「この通りに打てば終わり」という詳細手順は用意されていません。<strong
+                            >ラボで学んだ知識を使って自力で解く</strong
+                        >
+                        形式なので、本ガイドでは次の 3 点を重視します。
+                    </p>
+                    <ol>
+                        <li><strong>何をするのか</strong>（目的）</li>
+                        <li><strong>どうやるのか</strong>（具体的な操作とコード）</li>
+                        <li><strong>なぜそうするのか</strong>（ベストプラクティスと理由）</li>
+                    </ol>
+
+                    <h3>0.1 本ガイドの読み替えルール（超重要）</h3>
+                    <p>
+                        ラボの手順書には、次のように
+                        <strong>プレースホルダー（値が伏せられた箇所）</strong>
+                        があります。ラボ画面の「Lab setup and
+                        access」パネルや各タスクの本文で実際の値を必ず確認してください。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>手順書の表記</th>
+                                    <th>意味</th>
+                                    <th>あなたがやること</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>GOOGLE_CLOUD_PROJECT=</code></td>
+                                    <td>プロジェクト ID が空欄</td>
+                                    <td>
+                                        ラボパネルに表示される <strong>Project ID</strong> を入れる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>MODEL=model_name</code></td>
+                                    <td>モデル名が伏せられている</td>
+                                    <td>
+                                        ラボ本文で指定されたモデル名を入れる。「最新の Flash
+                                        モデル」と書かれている場合、2026年10月30日時点の最新 GA 版は
+                                        <strong><code>gemini-3.8-flash</code></strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>gs://-bucket/adk_project.zip</code></td>
+                                    <td>バケット名が伏せられている</td>
+                                    <td>
+                                        ラボ画面に表示される
+                                        <strong>正確なコマンドをコピー</strong> して使う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>「Agent Platform」</td>
+                                    <td>Vertex AI 系サービスの現行名称</td>
+                                    <td>
+                                        旧称 Vertex AI
+                                        と同じ系統のサービス。ドキュメントでは「Gemini Enterprise
+                                        Agent Platform」と表記される
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title"><i class="ti ti-alert-triangle"></i>注意</div>
+                        <p>
+                            ラボ本文に別のモデル名が明記されている場合は、<strong
+                                >ラボの指示を最優先</strong
+                            >
+                            にしてください。採点システムはラボ側の想定に合わせて作られています。
+                        </p>
+                    </div>
+
+                    <h3>0.2 絶対に守るルール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ルール</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>API キーを作らない・使わない</strong></td>
+                                    <td>
+                                        ラボが明示的に禁止している。認証は Agent
+                                        Platform（ADC：Application Default Credentials）で行う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ラボ用の学生アカウントだけを使う</strong></td>
+                                    <td>
+                                        個人アカウントを使うと、個人側に課金が発生する恐れがある
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>シークレットウィンドウで作業する</strong></td>
+                                    <td>個人アカウントとの競合を防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong
+                                            ><code>GOOGLE_CLOUD_LOCATION=global</code>
+                                            にする</strong
+                                        >
+                                    </td>
+                                    <td>ラボ成功の前提条件として明記されている</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>タイマーを意識する</strong></td>
+                                    <td>
+                                        ラボは一時停止できない。時間内に全タスクを完了しないと 100%
+                                        にならない
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section prose" id="s1">
+                    <h2>1. ラボ全体像</h2>
+                    <h3>1.1 シナリオ</h3>
+                    <p>
+                        あなたは旅行会社
+                        <strong>Cymbal Travel</strong>
+                        に入社した「エージェントエンジニア」です。前任者が作った 3 つの AI
+                        エージェントのプロトタイプが、設定ミス・未完成・故障の状態です。これを修復し、下流システムに
+                        <strong>一貫した正確なデータ</strong> を届けるのが仕事です。
+                    </p>
+
+                    <h3>1.2 3 つのエージェント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>エージェント（ディレクトリ名）</th>
+                                    <th>愛称</th>
+                                    <th>役割</th>
+                                    <th>現在の問題</th>
+                                    <th>直すこと</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>my_google_search_agent</code></td>
+                                    <td>Travel Scout</td>
+                                    <td>ウェブを検索して旅行イベントを探す</td>
+                                    <td>検索ツールが未設定で、検索できない</td>
+                                    <td><code>google_search</code> ツールを有効化</td>
+                                </tr>
+                                <tr>
+                                    <td><code>geo_validator</code></td>
+                                    <td>Destination Verifier</td>
+                                    <td>国の首都を答える</td>
+                                    <td>自由文で返すため、システム連携しづらい</td>
+                                    <td>Pydantic スキーマで JSON 出力を強制</td>
+                                </tr>
+                                <tr>
+                                    <td><code>llm_auditor</code></td>
+                                    <td>Brochure Auditor</td>
+                                    <td>パンフレットの主張を検証し修正する</td>
+                                    <td>「検証」だけで「修正」がない</td>
+                                    <td><code>reviser_agent</code> を復活</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>1.3 タスクの流れ</h3>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="overall"></div>
+                        <figcaption>ラボ全体のタスクの流れ</figcaption>
+                    </figure>
+
+                    <h3>1.4 採点（Check my progress）の対応表</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>タスク</th>
+                                    <th>採点される内容</th>
+                                    <th>確認方法</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Task 2</td>
+                                    <td>Dev UI で Google Search に基づく回答が得られること</td>
+                                    <td>Check my progress：Run the agent using the ADK's Web UI</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 3</td>
+                                    <td>CLI でエージェントと対話できること</td>
+                                    <td>
+                                        Check my progress：Chat with an agent via the command-line
+                                        interface
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Task 4</td>
+                                    <td>geo_validator が JSON を返すこと</td>
+                                    <td>Check my progress：Run an agent programmatically</td>
+                                </tr>
+                                <tr>
+                                    <td>Task 5</td>
+                                    <td>critic と reviser の両方が動くこと</td>
+                                    <td>Check my progress：Preview a multi-agent example</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout note">
+                        <div class="callout-title"><i class="ti ti-info-circle"></i>補足</div>
+                        <p>
+                            Task 1 には独立した採点ボタンはありませんが、<strong
+                                >後続すべてのタスクの土台</strong
+                            >
+                            です。ここでつまずくと全部が失敗します。
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section prose" id="s2">
+                    <h2>2. 前提知識：このラボで使う用語を先に理解する</h2>
+                    <p>先に用語を押さえると、手順の意味がぐっと分かりやすくなります。</p>
+
+                    <h3>2.1 用語集</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>一言で言うと</th>
+                                    <th>このラボでの出番</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ADK (Agent Development Kit)</strong></td>
+                                    <td>
+                                        Google 製の AI エージェント開発フレームワーク（Python 版は
+                                        <code>google-adk</code>）
+                                    </td>
+                                    <td>3 つのエージェントすべての土台</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Agent（エージェント）</strong></td>
+                                    <td>
+                                        指示（instruction）と道具（tools）を持ち、LLM
+                                        で考えて動くプログラム
+                                    </td>
+                                    <td><code>Agent(...)</code> で定義</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tool（ツール）</strong></td>
+                                    <td>エージェントが使える「道具」。検索や関数呼び出しなど</td>
+                                    <td><code>google_search</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Grounding（グラウンディング）</strong></td>
+                                    <td>モデルの回答を、検索結果など外部の事実に結びつけること</td>
+                                    <td>Travel Scout が最新情報を答えるため</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Structured Output（構造化出力）</strong></td>
+                                    <td>出力形式をスキーマで固定すること</td>
+                                    <td>geo_validator の <code>output_schema</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pydantic</strong></td>
+                                    <td>
+                                        Python のデータ検証ライブラリ。<code>BaseModel</code>
+                                        を継承してスキーマを定義
+                                    </td>
+                                    <td><code>CountryCapital</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SequentialAgent</strong></td>
+                                    <td>
+                                        子エージェントを
+                                        <strong>決まった順番で</strong> 実行する親エージェント
+                                    </td>
+                                    <td>llm_auditor（critic → reviser）</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Agent Platform</strong></td>
+                                    <td>
+                                        Google Cloud 上で Gemini などを使う基盤（旧 Vertex AI 系）
+                                    </td>
+                                    <td>API キーの代わりに使う</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ADC (Application Default Credentials)</strong></td>
+                                    <td>
+                                        環境に保存された認証情報を、ライブラリが自動で使う仕組み
+                                    </td>
+                                    <td><code>gcloud auth application-default login</code></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong><code>.env</code> ファイル</strong>
+                                    </td>
+                                    <td>環境変数を書いておく設定ファイル（隠しファイル）</td>
+                                    <td>各エージェントに配置</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong><code>adk web</code></strong>
+                                    </td>
+                                    <td>ブラウザで試せる開発用 UI を起動するコマンド</td>
+                                    <td>Task 2, 5</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong><code>adk run</code></strong>
+                                    </td>
+                                    <td>ターミナルで対話するコマンド</td>
+                                    <td>Task 3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>2.2 認証の仕組み：なぜ API キーを使わないのか</h3>
+                    <p>ADK から Gemini モデルを呼ぶ方法は大きく 2 つあります。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>方式</th>
+                                    <th>認証手段</th>
+                                    <th>このラボ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gemini Developer API</td>
+                                    <td>API キー</td>
+                                    <td><strong>禁止</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Agent Platform（Google Cloud）</td>
+                                    <td>ADC（IAM に基づく認証）</td>
+                                    <td><strong>使用する</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="auth"></div>
+                        <figcaption>API キー方式と Agent Platform 方式の違い</figcaption>
+                    </figure>
+                    <div class="callout practice">
+                        <div class="callout-title">
+                            <i class="ti ti-bulb"></i>ベストプラクティス
+                        </div>
+                        <p>
+                            キーを持たない認証（ADC /
+                            IAM）は、漏洩・ローテーション管理の負担を避けられるため、Google Cloud
+                            では推奨される方式です。
+                        </p>
+                    </div>
+
+                    <h3>2.3 <code>.env</code> に書く 4 つの変数の意味</h3>
+                    <pre><code class="language-ini">GOOGLE_GENAI_USE_ENTERPRISE=true
+GOOGLE_CLOUD_PROJECT=&lt;あなたの Project ID&gt;
+GOOGLE_CLOUD_LOCATION=global
+MODEL=&lt;モデル名&gt;</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>変数</th>
+                                    <th>意味</th>
+                                    <th>注意点</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>GOOGLE_GENAI_USE_ENTERPRISE</code></td>
+                                    <td>「API キーではなく Agent Platform を使う」スイッチ</td>
+                                    <td>
+                                        後述のとおり、旧名
+                                        <code>GOOGLE_GENAI_USE_VERTEXAI</code> と等価
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>GOOGLE_CLOUD_PROJECT</code></td>
+                                    <td>利用するプロジェクト</td>
+                                    <td>
+                                        ラボパネルの Project ID と <strong>完全一致</strong> させる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>GOOGLE_CLOUD_LOCATION</code></td>
+                                    <td>モデルを呼ぶエンドポイントの場所</td>
+                                    <td>
+                                        <strong>必ず <code>global</code></strong
+                                        >。global
+                                        エンドポイントは単一リージョンより可用性が高く、429（リソース枯渇）エラーを減らしやすい
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>MODEL</code></td>
+                                    <td>使うモデル名</td>
+                                    <td>
+                                        <code>MODEL</code> はラボ用の変数。コードが
+                                        <code>os.getenv("MODEL")</code> で読む想定
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout note">
+                        <div class="callout-title"><i class="ti ti-info-circle"></i>豆知識</div>
+                        <p>
+                            ADK の公式ドキュメントによると、<code>GOOGLE_GENAI_USE_ENTERPRISE</code>
+                            と <code>GOOGLE_GENAI_USE_VERTEXAI</code> は
+                            <strong>同じ働きをする別名</strong> です。もし前者を設定しても Agent
+                            Platform に接続されない場合は、ADK のバージョンが古いので、<strong
+                                >後者を使うか ADK を更新</strong
+                            >
+                            します。
+                        </p>
+                    </div>
+
+                    <h3>2.4 Google Search グラウンディングの仕組み</h3>
+                    <p>
+                        Travel Scout
+                        が「最新のイベント」を答えられるのは、次の流れで検索結果に基づいて回答するためです。
+                    </p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="grounding" data-type="seq"></div>
+                        <figcaption>Google Search グラウンディングのシーケンス</figcaption>
+                    </figure>
+                    <p>
+                        ポイントは、<strong
+                            >ツールを渡すだけで、使うかどうかはモデルが判断する</strong
+                        >
+                        ことです。だから Task 2
+                        には「実際に検索アクションが実行されているか確認すること」という注意書きがあります。
+                    </p>
+
+                    <h3>2.5 構造化出力とエージェント転送の制御</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>設定</th>
+                                    <th>役割</th>
+                                    <th>なぜ必要か</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>output_schema=CountryCapital</code></td>
+                                    <td>応答を Pydantic スキーマに沿った JSON に固定</td>
+                                    <td>下流のシステムが確実にパースできるようにする</td>
+                                </tr>
+                                <tr>
+                                    <td><code>disallow_transfer_to_parent=True</code></td>
+                                    <td>親エージェントへ制御を戻す転送を禁止</td>
+                                    <td>出力形式を崩す「別エージェントへの丸投げ」を防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td><code>disallow_transfer_to_peers=True</code></td>
+                                    <td>兄弟エージェントへの転送を禁止</td>
+                                    <td>同上</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        両方を <code>True</code> にすると、そのエージェントは
+                        <strong>単独で完結</strong> し、転送ツールが注入されなくなります（ADK
+                        公式ガイドの記述）。出力を厳密にしたいエージェントでは定石の設定です。
+                    </p>
+                    <div class="callout note">
+                        <div class="callout-title"><i class="ti ti-info-circle"></i>補足</div>
+                        <p>
+                            <code>output_schema</code> を指定すると、エージェントは
+                            <strong>ツールを使えなくなる</strong> のが ADK
+                            の仕様（バージョンによって挙動が異なる場合があります）。そのため
+                            geo_validator ではツールを持たせず、スキーマで出力を固定します。
+                        </p>
+                    </div>
+
+                    <h3>2.6 SequentialAgent：パイプラインの考え方</h3>
+                    <p>llm_auditor は「検証 → 修正」を順番に行うパイプラインです。</p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="sequential"></div>
+                        <figcaption>critic から reviser へ受け渡すパイプライン</figcaption>
+                    </figure>
+                    <p>
+                        <code>SequentialAgent</code> は <code>sub_agents</code> のリストを
+                        <strong>先頭から順に</strong>
+                        実行し、前の出力が次の入力に引き継がれます。つまり、<code>sub_agents</code>
+                        に
+                        <code>reviser_agent</code>
+                        が入っていなければ、<strong>検証だけで終わって修正されません</strong>。これがラボの故障箇所です。
+                    </p>
+                </section>
+                <section class="section prose" id="s3">
+                    <h2>3. Task 1：ADK をインストールして環境を整える</h2>
+                    <h3>3.1 やること</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>手順</th>
+                                    <th>目的</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>① Cloud Shell を開く</td>
+                                    <td>作業用ターミナルの準備</td>
+                                </tr>
+                                <tr>
+                                    <td>② PATH 設定と ADK インストール</td>
+                                    <td><code>adk</code> コマンドを使えるようにする</td>
+                                </tr>
+                                <tr>
+                                    <td>③ ADC で認証</td>
+                                    <td>Agent Platform（Gemini）を呼べるようにする</td>
+                                </tr>
+                                <tr>
+                                    <td>④ ラボのソースを取得して展開</td>
+                                    <td>修復対象のコードを手に入れる</td>
+                                </tr>
+                                <tr>
+                                    <td>⑤ 依存パッケージをインストール</td>
+                                    <td>プロジェクトが動く状態にする</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>3.2 手順 1：PATH を通して ADK をインストール</h3>
+                    <pre><code class="language-bash">export PATH="$PATH:$(python3 -m site --user-base)/bin"
+python3 -m pip install google-adk</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>export PATH=$PATH:...</code></td>
+                                    <td>
+                                        <code>pip</code>
+                                        がユーザー領域にインストールした実行ファイル（<code
+                                            >adk</code
+                                        >
+                                        など）を、コマンドとして呼べるようにする
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>python3 -m pip install google-adk</code></td>
+                                    <td>
+                                        <code>pip</code> を Python 経由で確実に呼び、ADK
+                                        本体をインストールする
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title">
+                            <i class="ti ti-alert-triangle"></i>つまずきポイント
+                        </div>
+                        <p>
+                            <code>adk: command not found</code> と出たら、ほぼ 100% PATH
+                            設定漏れです。新しいターミナルを開いた場合は
+                            <strong>もう一度 <code>export PATH=...</code> を実行</strong>
+                            してください。
+                        </p>
+                    </div>
+
+                    <h3>3.3 手順 2：ADC で認証する</h3>
+                    <pre><code class="language-bash">gcloud auth application-default login</code></pre>
+                    <p>
+                        ターミナルの質問に <code>Y</code> と入力して Enter
+                        を押します。続いて、次の流れで進めます。
+                    </p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="adclogin"></div>
+                        <figcaption>ADC 認証の流れ</figcaption>
+                    </figure>
+                    <p>
+                        <strong>重要</strong>：ここで選ぶのは
+                        <strong>必ずラボの学生アカウント</strong>（<code
+                            >student-...@qwiklabs.net</code
+                        >
+                        のような形式）です。個人アカウントを選ばないでください。
+                    </p>
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i class="ti ti-info-circle"></i>補足：<code>gcloud auth login</code>
+                            との違い
+                        </div>
+                        <p>
+                            <code>gcloud auth login</code> は
+                            <strong>gcloud コマンド自身</strong> の認証、<code
+                                >gcloud auth application-default login</code
+                            >
+                            は
+                            <strong>プログラム（ADK など）が使う認証情報（ADC）</strong>
+                            の作成です。ADK は後者を使うため、Task 1 では ADC
+                            側のコマンドを使います。
+                        </p>
+                    </div>
+
+                    <h3>3.4 手順 3：ラボのソースコードを取得</h3>
+                    <p>
+                        ラボ画面に表示されているコマンドを使います（バケット名が手順書では伏せられているため）。
+                    </p>
+                    <pre><code class="language-bash">gcloud storage cp gs://&lt;ラボ画面に表示されたバケット名&gt;/adk_project.zip .
+unzip adk_project.zip
+cd adk_project
+pip install -r requirements.txt</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コマンド</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud storage cp ... .</code></td>
+                                    <td>Cloud Storage から zip を現在のディレクトリへコピー</td>
+                                </tr>
+                                <tr>
+                                    <td><code>unzip adk_project.zip</code></td>
+                                    <td>zip を展開</td>
+                                </tr>
+                                <tr>
+                                    <td><code>cd adk_project</code></td>
+                                    <td>プロジェクトのルートへ移動</td>
+                                </tr>
+                                <tr>
+                                    <td><code>pip install -r requirements.txt</code></td>
+                                    <td>プロジェクトが必要とするライブラリを一括インストール</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>3.5 ディレクトリ構成の確認</h3>
+                    <p>
+                        展開すると
+                        <code>adk_project</code>
+                        ディレクトリができます。次のコマンドで確認できます。
+                    </p>
+                    <pre><code class="language-bash">ls -la adk_project
+ls -la adk_project/my_google_search_agent</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>場所</th>
+                                    <th>中身（想定）</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>adk_project/my_google_search_agent/</code></td>
+                                    <td>
+                                        <code>agent.py</code>、<code>__init__.py</code>、<code
+                                            >.env</code
+                                        >
+                                    </td>
+                                    <td>Travel Scout</td>
+                                </tr>
+                                <tr>
+                                    <td><code>adk_project/geo_validator/</code></td>
+                                    <td>
+                                        <code>agent.py</code>、<code>__init__.py</code>、<code
+                                            >.env</code
+                                        >
+                                    </td>
+                                    <td>Destination Verifier</td>
+                                </tr>
+                                <tr>
+                                    <td><code>adk_project/llm_auditor/</code></td>
+                                    <td>
+                                        <code>agent.py</code>、<code>sub_agents/</code> など、<code
+                                            >.env</code
+                                        >
+                                    </td>
+                                    <td>Brochure Auditor</td>
+                                </tr>
+                                <tr>
+                                    <td><code>adk_project/requirements.txt</code></td>
+                                    <td>依存パッケージ一覧</td>
+                                    <td><code>pip install -r</code> で使う</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title"><i class="ti ti-alert-triangle"></i>重要</div>
+                        <p>
+                            <code>.env</code> は
+                            <strong>隠しファイル</strong>（名前がドットで始まる）です。<code
+                                >ls</code
+                            >
+                            だけでは見えないので <code>ls -la</code> を使います。エディタでは
+                            <strong>View → Toggle hidden files</strong> で表示します。
+                        </p>
+                    </div>
+
+                    <h3>3.6 Task 1 のチェックリスト</h3>
+                    <ul class="checklist">
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>adk --version</code> でバージョンが表示される</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >ADC の認証が完了した（認証コードを貼り付けた）</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>adk_project</code> が存在する</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>pip install -r requirements.txt</code>
+                                    がエラーなく終わった</span
+                                ></label
+                            >
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section prose" id="s4">
+                    <h2>4. Task 2：Travel Scout を修復して起動する</h2>
+                    <h3>4.1 目的</h3>
+                    <p>
+                        <code>my_google_search_agent</code>
+                        は、前任者の作業が途中で、<strong>ツールが何も有効になっていません</strong>。ここでは次の
+                        3 点を行います。
+                    </p>
+                    <ol>
+                        <li><code>.env</code> を Agent Platform 用に設定する</li>
+                        <li>
+                            <code>agent.py</code> で <code>google_search</code> ツールを有効にする
+                        </li>
+                        <li><code>adk web</code> で動作確認する</li>
+                    </ol>
+
+                    <h3>4.2 手順 1：エディタを開き、隠しファイルを表示する</h3>
+                    <ol>
+                        <li>Cloud Shell で <strong>Open Editor</strong> を選択</li>
+                        <li>メニューの <strong>View → Toggle hidden files</strong> を選択</li>
+                        <li><code>adk_project/my_google_search_agent</code> を開く</li>
+                    </ol>
+
+                    <h3>4.3 手順 2：<code>.env</code> を設定する</h3>
+                    <p><code>my_google_search_agent/.env</code> を次の内容に編集します。</p>
+                    <pre><code class="language-ini">GOOGLE_GENAI_USE_ENTERPRISE=true
+GOOGLE_CLOUD_PROJECT=&lt;ラボパネルの Project ID&gt;
+GOOGLE_CLOUD_LOCATION=global
+MODEL=gemini-3.8-flash</code></pre>
+                    <div class="callout note">
+                        <div class="callout-title">
+                            <i class="ti ti-info-circle"></i>Project ID の調べ方
+                        </div>
+                        <p>
+                            ラボの「Lab setup and access」パネル、または次のコマンドで確認できます。
+                        </p>
+                        <pre><code class="language-bash">gcloud config get-value project</code></pre>
+                    </div>
+
+                    <h4>設定時のチェックポイント</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>チェック項目</th>
+                                    <th>NG 例</th>
+                                    <th>OK 例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>=</code> の前後に空白がない</td>
+                                    <td><code>GOOGLE_CLOUD_PROJECT = my-proj</code></td>
+                                    <td><code>GOOGLE_CLOUD_PROJECT=my-proj</code></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        値にクォートを付けない（付けても動く場合があるが、揃えるのが無難）
+                                    </td>
+                                    <td><code>MODEL="gemini-3.8-flash"</code></td>
+                                    <td><code>MODEL=gemini-3.8-flash</code></td>
+                                </tr>
+                                <tr>
+                                    <td>ロケーションは global</td>
+                                    <td><code>us-central1</code></td>
+                                    <td><code>global</code></td>
+                                </tr>
+                                <tr>
+                                    <td>Project ID が正確</td>
+                                    <td>手入力のミス</td>
+                                    <td>ラボパネルからコピー</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>
+                        4.4 手順 3：<code>agent.py</code> で <code>google_search</code> を有効にする
+                    </h3>
+                    <p>
+                        <code>my_google_search_agent/agent.py</code> を開き、Agent の定義に
+                        <code>tools=[google_search]</code> を追加します。
+                    </p>
+                    <h4>修正前（イメージ）</h4>
+                    <pre><code class="language-python">from google.adk.agents import Agent
+
+root_agent = Agent(
+    name="my_google_search_agent",
+    model=os.getenv("MODEL"),
+    instruction="...",
+    # tools が未設定 → 検索できない
+)</code></pre>
+                    <h4>修正後（イメージ）</h4>
+                    <pre><code class="language-python">from google.adk.agents import Agent
+from google.adk.tools import google_search   # ← ① ツールをインポート
+
+root_agent = Agent(
+    name="my_google_search_agent",
+    model=os.getenv("MODEL"),
+    instruction="...",
+    tools=[google_search],                    # ← ② ツールを渡す
+)</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>変更点</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        ① <code>from google.adk.tools import google_search</code>
+                                    </td>
+                                    <td>ADK が用意する組み込みの検索ツールを読み込む</td>
+                                </tr>
+                                <tr>
+                                    <td>② <code>tools=[google_search]</code></td>
+                                    <td>
+                                        エージェントに検索ツールを持たせる。<strong
+                                            >リスト形式</strong
+                                        >
+                                        で渡す点に注意
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout note">
+                        <div class="callout-title"><i class="ti ti-info-circle"></i>ポイント</div>
+                        <p>
+                            既存コードの <code>model=</code> や <code>instruction=</code> は
+                            <strong>書き換えず、差分だけ追加</strong> するのが安全です。ラボの
+                            <code>agent.py</code> の既存の書き方（例：<code
+                                >os.getenv("MODEL")</code
+                            >
+                            を使っているか）に合わせてください。
+                        </p>
+                    </div>
+
+                    <h4>ベストプラクティス：Google Search ツールを使うときの注意</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>単独利用</td>
+                                    <td>
+                                        ADK 公式ドキュメントでは、<code>google_search</code> は
+                                        <strong
+                                            >同じエージェント内で他のツールと併用できない</strong
+                                        >
+                                        制約があると説明されている（<code>one tool one agent</code
+                                        >）。このラボは検索ツール 1 つだけなので問題なし
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>検索候補の表示</td>
+                                    <td>
+                                        本番アプリでは、グラウンディング時に返される
+                                        <strong>Search suggestions を表示する義務</strong>
+                                        がある。ラボでは不要だが、実務では必ず考慮する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>instruction の工夫</td>
+                                    <td>
+                                        「必要に応じて Google Search
+                                        を使い、出典を示すこと」のように指示すると、検索の実行が安定しやすい
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>4.5 手順 4：Dev UI（<code>adk web</code>）を起動する</h3>
+                    <pre><code class="language-bash">cd adk_project
+adk web --allow_origins "regex:https://.*\.cloudshell\.dev"</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>cd adk_project</code></td>
+                                    <td>
+                                        <strong>プロジェクトのルート</strong> へ移動。<code
+                                            >adk web</code
+                                        >
+                                        はここにあるエージェント（サブディレクトリ）を一覧表示する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>adk web</code></td>
+                                    <td>ブラウザ用の開発 UI を起動</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--allow_origins "regex:..."</code></td>
+                                    <td>
+                                        Cloud Shell のプレビュー
+                                        URL（<code>*.cloudshell.dev</code>）からのアクセスを許可する
+                                        <strong>CORS 設定</strong>。これがないと UI
+                                        が正しく動かないことがある
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        起動後、ターミナルに表示される
+                        <code>http://127.0.0.1:8000</code> のリンクを選択して開きます。
+                    </p>
+
+                    <h3>4.6 手順 5：質問して、検索が実行されたか確認する</h3>
+                    <ol>
+                        <li>
+                            左上のエージェント選択で
+                            <strong><code>my_google_search_agent</code></strong> を選ぶ
+                        </li>
+                        <li>次の質問を入力する</li>
+                    </ol>
+                    <pre><code class="nohighlight">What are some major events in Tokyo in 2025?</code></pre>
+                    <ol start="3">
+                        <li>回答を確認する</li>
+                    </ol>
+                    <h4>「本当に検索されたか」を見分ける方法</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認ポイント</th>
+                                    <th>見方</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>回答に出典や検索候補が付いている</td>
+                                    <td>グラウンディングされている証拠</td>
+                                </tr>
+                                <tr>
+                                    <td>UI の <strong>Events / Trace</strong> タブ</td>
+                                    <td><code>google_search</code> が呼ばれた形跡を確認できる</td>
+                                </tr>
+                                <tr>
+                                    <td>回答が具体的で最新の情報を含む</td>
+                                    <td>検索結果が反映されている</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title">
+                            <i class="ti ti-alert-triangle"></i>エラーが出たら
+                        </div>
+                        <p>
+                            画面右上の
+                            <strong>+ New Session</strong>
+                            を選んで、もう一度質問します。これはラボの本文に明記された対処法です。
+                        </p>
+                    </div>
+
+                    <h3>4.7 手順 6：Web サーバーを停止して Check my progress</h3>
+                    <ol>
+                        <li>
+                            Cloud Shell のターミナルで <strong>Ctrl + C</strong> を押して
+                            <code>adk web</code> を停止
+                        </li>
+                        <li>ラボ画面の <strong>Check my progress</strong> をクリックして採点</li>
+                    </ol>
+
+                    <h3>4.8 Task 2 のチェックリスト</h3>
+                    <ul class="checklist">
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>.env</code> の 4
+                                    変数を設定した（<code>LOCATION=global</code>）</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>agent.py</code> に
+                                    <code>google_search</code> のインポートと
+                                    <code>tools=[google_search]</code> を追加した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>adk web</code> を
+                                    <strong>プロジェクトのルート</strong> から起動した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >検索結果に基づく回答が得られた</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >Ctrl + C で停止し、Check my progress を押した</span
+                                ></label
+                            >
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section prose" id="s5">
+                    <h2>5. Task 3：CLI でエージェントを検証する</h2>
+                    <h3>5.1 目的</h3>
+                    <p>
+                        <code>adk web</code> のようなブラウザ UI だけでなく、<strong
+                            >ターミナルだけでもエージェントを試せる</strong
+                        >
+                        ことを確認します。CI（自動テスト）や SSH 環境などでは、CLI が役立ちます。
+                    </p>
+
+                    <h3>5.2 手順</h3>
+                    <pre><code class="language-bash">cd adk_project
+adk run my_google_search_agent</code></pre>
+                    <p>対話画面が起動したら、次のように質問します。</p>
+                    <pre><code class="nohighlight">What is the currency exchange rate for Japan?</code></pre>
+                    <p>
+                        （日本語で「日本の為替レートを教えて」と聞いても構いません。ラボの文面は「通貨の為替レートについて尋ねる」です。）
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コマンド</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>adk run &lt;エージェント名&gt;</code></td>
+                                    <td>
+                                        指定したエージェントを
+                                        <strong>ターミナルで対話実行</strong> する。引数は
+                                        <strong>ディレクトリ名</strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        終わったら <strong>Ctrl + C</strong> で終了し、<strong
+                            >Check my progress</strong
+                        >
+                        を押します。
+                    </p>
+
+                    <h3>5.3 <code>adk web</code> と <code>adk run</code> の比較</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th><code>adk web</code></th>
+                                    <th><code>adk run</code></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>インターフェース</td>
+                                    <td>ブラウザの UI</td>
+                                    <td>ターミナル</td>
+                                </tr>
+                                <tr>
+                                    <td>複数エージェントの切り替え</td>
+                                    <td>UI 上で選択可能</td>
+                                    <td>起動時に 1 つ指定</td>
+                                </tr>
+                                <tr>
+                                    <td>内部動作の可視化</td>
+                                    <td>Events / Trace を見やすい</td>
+                                    <td>簡易的</td>
+                                </tr>
+                                <tr>
+                                    <td>向いている場面</td>
+                                    <td>開発・デバッグ</td>
+                                    <td>動作確認・自動化・軽い検証</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>5.4 Task 3 のチェックリスト</h3>
+                    <ul class="checklist">
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>adk run my_google_search_agent</code>
+                                    で対話を開始できた</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >為替レートについて質問し、回答が返った</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >Ctrl + C で終了し、Check my progress を押した</span
+                                ></label
+                            >
+                        </li>
+                    </ul>
+                </section>
+                <section class="section prose" id="s6">
+                    <h2>6. Task 4：構造化出力を強制する（geo_validator）</h2>
+                    <h3>6.1 目的</h3>
+                    <p>
+                        Booking Engine チーム（下流システム）は、<strong
+                            >「首都名だけを含む厳密な JSON」</strong
+                        >
+                        を必要としています。ところが現在は「パリです。」のような自由文を返してしまいます。これをスキーマで固定します。
+                    </p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="geo"></div>
+                        <figcaption>修復前と修復後の出力の違い</figcaption>
+                    </figure>
+
+                    <h3>6.2 手順 1：<code>.env</code> を設定する</h3>
+                    <p>
+                        <code>geo_validator/.env</code> も、Task 2 と同じ形式で設定します。<strong
+                            >エージェントごとに <code>.env</code> は別ファイル</strong
+                        >
+                        なので、忘れずに編集してください。
+                    </p>
+                    <pre><code class="language-ini">GOOGLE_GENAI_USE_ENTERPRISE=true
+GOOGLE_CLOUD_PROJECT=&lt;ラボパネルの Project ID&gt;
+GOOGLE_CLOUD_LOCATION=global
+MODEL=gemini-3.8-flash</code></pre>
+                    <div class="callout note">
+                        <div class="callout-title"><i class="ti ti-info-circle"></i>ラボの指示</div>
+                        <p>
+                            「最新の Flash モデルを使うこと」とあります。2026年10月30日時点で、Agent
+                            Platform の最新の Flash は
+                            <code>gemini-3.8-flash</code>（2026年9月2日リリース、GA）です。ただし
+                            <strong>ラボ本文で別のモデル名が指定されていれば、そちらを優先</strong>
+                            してください。
+                        </p>
+                    </div>
+
+                    <h3>6.3 手順 2：<code>agent.py</code> を修正する</h3>
+                    <p><code>geo_validator/agent.py</code> に、次の 3 つの変更を加えます。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>変更内容</th>
+                                    <th>目的</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <code>CountryCapital</code> モデルを定義（<code
+                                            >BaseModel</code
+                                        >
+                                        を継承、<code>capital: str</code>）
+                                    </td>
+                                    <td>出力の「型」を決める</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>
+                                        Agent に <code>output_schema=CountryCapital</code> を指定
+                                    </td>
+                                    <td>モデルの出力をスキーマに沿った JSON に強制</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>
+                                        <code>disallow_transfer_to_parent=True</code> と
+                                        <code>disallow_transfer_to_peers=True</code> を指定
+                                    </td>
+                                    <td>別エージェントへの転送を禁止</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>モデルを最新の Flash（<code>MODEL</code> の値）にする</td>
+                                    <td>ラボの指示</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>完成形（リファレンス）</h4>
+                    <pre><code class="language-python">import os
+
+from pydantic import BaseModel, Field
+from google.adk.agents import Agent
+
+
+# ① 出力スキーマ：首都名だけを持つ
+class CountryCapital(BaseModel):
+    capital: str = Field(description="The capital city of the given country")
+
+
+# ② Agent 定義
+root_agent = Agent(
+    name="geo_validator",
+    model=os.getenv("MODEL", "gemini-3.8-flash"),
+    description="Returns the capital city of a country as strict JSON.",
+    instruction=(
+        "You are a destination verifier. "
+        "When the user names a country, answer only with its capital city "
+        "in the required JSON format."
+    ),
+    output_schema=CountryCapital,            # ← スキーマを強制
+    disallow_transfer_to_parent=True,        # ← 親への転送を禁止
+    disallow_transfer_to_peers=True,         # ← 兄弟への転送を禁止
+)</code></pre>
+                    <div class="callout warn">
+                        <div class="callout-title"><i class="ti ti-alert-triangle"></i>注意</div>
+                        <p>
+                            これは <strong>理解のためのリファレンス</strong> です。ラボの
+                            <code>agent.py</code> には、既に Runner・セッション・実行用コード（<code
+                                >python3 geo_validator/agent.py</code
+                            >
+                            で動かすための部分）が含まれている可能性が高いです。<strong
+                                >既存コードは消さず、上の 3
+                                点（スキーマ定義・<code>output_schema</code>・転送禁止）とモデル名だけを反映</strong
+                            >
+                            してください。
+                        </p>
+                    </div>
+
+                    <h4>コードの読み解き</h4>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>コード</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>class CountryCapital(BaseModel)</code></td>
+                                    <td>Pydantic モデルの定義。JSON の「設計図」</td>
+                                </tr>
+                                <tr>
+                                    <td><code>capital: str</code></td>
+                                    <td><code>capital</code> という文字列フィールドが必須</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Field(description=...)</code></td>
+                                    <td>
+                                        フィールドの説明。<strong>モデルへのヒント</strong>
+                                        としても働くため、書くと精度が上がる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>output_schema=CountryCapital</code></td>
+                                    <td>応答を <code>{"capital": "..."}</code> 形式に固定</td>
+                                </tr>
+                                <tr>
+                                    <td><code>disallow_transfer_to_*</code></td>
+                                    <td>出力が崩れる原因となる転送を封じる</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>6.4 手順 3：プログラムから実行する</h3>
+                    <pre><code class="language-bash">cd adk_project
+python3 geo_validator/agent.py</code></pre>
+                    <p>期待される出力の例：</p>
+                    <pre><code class="language-json">{"capital": "Paris"}</code></pre>
+                    <p>
+                        文章（<code>The capital of France is Paris.</code>）ではなく、<strong
+                            >JSON オブジェクト</strong
+                        >
+                        であれば成功です。
+                    </p>
+
+                    <h4>参考：Runner を使った実行コードの全体像</h4>
+                    <p>
+                        ラボの
+                        <code>agent.py</code>
+                        に既に含まれている想定ですが、仕組みを理解するための参考として載せます。
+                    </p>
+                    <pre><code class="language-python">import asyncio
+
+from google.adk.runners import Runner
+from google.adk.sessions import InMemorySessionService
+from google.genai import types
+
+APP_NAME = "geo_validator"
+USER_ID = "user1"
+
+
+async def main():
+    session_service = InMemorySessionService()
+    session = await session_service.create_session(app_name=APP_NAME, user_id=USER_ID)
+
+    runner = Runner(agent=root_agent, app_name=APP_NAME, session_service=session_service)
+
+    message = types.Content(role="user", parts=[types.Part(text="France")])
+
+    async for event in runner.run_async(
+        user_id=USER_ID, session_id=session.id, new_message=message
+    ):
+        if event.is_final_response():
+            print(event.content.parts[0].text)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部品</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>InMemorySessionService</code></td>
+                                    <td>会話の状態をメモリ上に保持（開発・テスト用）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Runner</code></td>
+                                    <td>エージェントを実際に実行するエンジン</td>
+                                </tr>
+                                <tr>
+                                    <td><code>types.Content</code></td>
+                                    <td>ユーザーのメッセージ</td>
+                                </tr>
+                                <tr>
+                                    <td><code>event.is_final_response()</code></td>
+                                    <td>最終回答のイベントかどうかの判定</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title">
+                            <i class="ti ti-alert-triangle"></i>つまずきポイント
+                        </div>
+                        <p>
+                            <code>python3 geo_validator/agent.py</code> のように
+                            <strong>直接スクリプトとして実行</strong> すると、<code>adk web</code>
+                            のように <code>.env</code> を自動で読んでくれない場合があります。<code
+                                >Missing key inputs</code
+                            >
+                            のようなエラーが出たら、次のように環境変数を読み込んでから実行してください。
+                        </p>
+                        <pre><code class="language-bash">set -a
+source geo_validator/.env
+set +a
+python3 geo_validator/agent.py</code></pre>
+                    </div>
+
+                    <h3>6.5 Task 4 のチェックリスト</h3>
+                    <ul class="checklist">
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>geo_validator/.env</code> を設定した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>CountryCapital</code>（<code>BaseModel</code> 継承、<code
+                                        >capital: str</code
+                                    >）を定義した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>output_schema=CountryCapital</code> を指定した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>disallow_transfer_to_parent=True</code> と
+                                    <code>disallow_transfer_to_peers=True</code> を指定した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>python3 geo_validator/agent.py</code> の出力が JSON
+                                    になった</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >Check my progress を押した</span
+                                ></label
+                            >
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="section prose" id="s7">
+                    <h2>7. Task 5：Brochure Auditor をデプロイする（llm_auditor）</h2>
+                    <h3>7.1 目的</h3>
+                    <p>
+                        <code>llm_auditor</code> は「<strong>批評（Critic）→ 修正（Reviser）</strong
+                        >」の 2 段階で動くはずのパイプラインです。ところが前任者が
+                        <code>reviser_agent</code> のコードを
+                        <strong>コメントアウト</strong>
+                        したため、批評で止まり、修正されません。コメントを外して復活させます。
+                    </p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="auditor"></div>
+                        <figcaption>故障中のパイプラインと修復後のパイプライン</figcaption>
+                    </figure>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>エージェント</th>
+                                    <th>役割</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Critic Agent</strong></td>
+                                    <td>主張をウェブで事実確認し、正しいか誤りかを評価する</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Reviser Agent</strong></td>
+                                    <td>Critic の指摘をもとに、文章を最小限の修正で正確にする</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>7.2 手順 1：<code>.env</code> を設定する</h3>
+                    <p><code>llm_auditor/.env</code> を設定します（Task 2・4 と同じ形式）。</p>
+                    <pre><code class="language-ini">GOOGLE_GENAI_USE_ENTERPRISE=true
+GOOGLE_CLOUD_PROJECT=&lt;ラボパネルの Project ID&gt;
+GOOGLE_CLOUD_LOCATION=global
+MODEL=gemini-3.8-flash</code></pre>
+
+                    <h3>
+                        7.3 手順 2：<code>agent.py</code> で <code>reviser_agent</code> を有効にする
+                    </h3>
+                    <p>
+                        <code>llm_auditor/agent.py</code> に、次の
+                        <strong>2 か所の変更</strong> を加えます。
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>変更箇所</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>import 文</td>
+                                    <td>
+                                        コメントアウトされている
+                                        <code>reviser_agent</code> のインポートを
+                                        <strong>コメント解除</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><code>sub_agents</code> リスト</td>
+                                    <td>
+                                        <code>reviser_agent</code> を
+                                        <strong><code>critic_agent</code> の後ろ</strong> に追加
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>修正前（イメージ）</h4>
+                    <pre><code class="language-python">from google.adk.agents import SequentialAgent
+
+from .sub_agents.critic import critic_agent
+# from .sub_agents.reviser import reviser_agent      # ← コメントアウトされている
+
+llm_auditor = SequentialAgent(
+    name="llm_auditor",
+    description="Evaluates and corrects marketing claims.",
+    sub_agents=[critic_agent],                        # ← critic しかいない
+)
+
+root_agent = llm_auditor</code></pre>
+                    <h4>修正後（イメージ）</h4>
+                    <pre><code class="language-python">from google.adk.agents import SequentialAgent
+
+from .sub_agents.critic import critic_agent
+from .sub_agents.reviser import reviser_agent         # ← コメントを外す
+
+llm_auditor = SequentialAgent(
+    name="llm_auditor",
+    description="Evaluates and corrects marketing claims.",
+    sub_agents=[critic_agent, reviser_agent],         # ← 順番が重要
+)
+
+root_agent = llm_auditor</code></pre>
+                    <div class="callout warn">
+                        <div class="callout-title"><i class="ti ti-alert-triangle"></i>注意</div>
+                        <p>
+                            実際のファイルの書き方（変数名や import のパス）は、ラボの
+                            <code>agent.py</code> に従ってください。上は ADK 公式サンプル（<code
+                                >adk-samples</code
+                            >
+                            の <code>llm-auditor</code>）の構造に基づくイメージです。
+                        </p>
+                    </div>
+
+                    <h4>なぜ順番が重要なのか</h4>
+                    <p>
+                        <code>SequentialAgent</code> は、<code>sub_agents</code> を
+                        <strong>リストの先頭から順に</strong> 実行します。Reviser は Critic
+                        の結果を受け取って修正するので、<strong>必ず Critic の後ろ</strong>
+                        に置きます。逆にすると、検証前の文章を修正することになり、意味をなしません。
+                    </p>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="order"></div>
+                        <figcaption>sub_agents の順序の違い</figcaption>
+                    </figure>
+
+                    <h4>補足：Reviser の仕組み（ADK 公式サンプルより）</h4>
+                    <p>
+                        公式サンプルの Reviser
+                        は、プロンプトで「出力の末尾に特別なマーカーを付ける」ように指示し、<code
+                            >after_model_callback</code
+                        >
+                        というコールバックでそのマーカーを除去して、<strong>最終出力をきれいに整えます</strong>。このラボでは触る必要はありませんが、「コールバックで出力を後処理する」という
+                        ADK の定番パターンとして知っておくと役立ちます。
+                    </p>
+
+                    <h3>7.4 手順 3：Dev UI で動作確認する</h3>
+                    <pre><code class="language-bash">cd adk_project
+adk web --allow_origins "regex:https://.*\.cloudshell\.dev"</code></pre>
+                    <p>
+                        ブラウザで開き、エージェントに
+                        <strong><code>llm_auditor</code></strong>
+                        を選択して、次の「誤った主張」を送信します。
+                    </p>
+                    <pre><code class="nohighlight">Double check this: You can take a direct train from Hawaii to Japan.</code></pre>
+
+                    <h4>期待される動き</h4>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="auditorseq" data-type="seq"></div>
+                        <figcaption>llm_auditor が critic と reviser を順に呼ぶ流れ</figcaption>
+                    </figure>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認ポイント</th>
+                                    <th>期待される結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Critic が呼ばれた</td>
+                                    <td>主張が誤りだと指摘される</td>
+                                </tr>
+                                <tr>
+                                    <td>Reviser が呼ばれた</td>
+                                    <td>正しい事実に書き直した文章が出力される</td>
+                                </tr>
+                                <tr>
+                                    <td>UI 上の表示</td>
+                                    <td>
+                                        Events / Trace に
+                                        <strong>2 つのエージェントの実行</strong> が見える
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title">
+                            <i class="ti ti-alert-triangle"></i>エラーが出たら
+                        </div>
+                        <p><strong>+ New Session</strong> を選んで、もう一度送信します。</p>
+                    </div>
+
+                    <h3>7.5 手順 4：停止して採点</h3>
+                    <ol>
+                        <li>
+                            ターミナルで <strong>Ctrl + C</strong> を押して
+                            <code>adk web</code> を停止
+                        </li>
+                        <li><strong>Check my progress</strong> をクリック</li>
+                    </ol>
+
+                    <h3>7.6 Task 5 のチェックリスト</h3>
+                    <ul class="checklist">
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>llm_auditor/.env</code> を設定した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>reviser_agent</code> の import をコメント解除した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    ><code>sub_agents=[critic_agent, reviser_agent]</code>
+                                    の順で指定した</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >誤った主張を送り、Critic と Reviser の両方が動いた</span
+                                ></label
+                            >
+                        </li>
+                        <li>
+                            <label
+                                ><span class="chk-num"></span
+                                ><input class="cb" type="checkbox" /><span class="chk-text"
+                                    >Check my progress を押した</span
+                                ></label
+                            >
+                        </li>
+                    </ul>
+                </section>
+                <section class="section prose" id="s8">
+                    <h2>8. トラブルシューティング</h2>
+                    <h3>8.1 症状別早見表</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>主な原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>adk: command not found</code></td>
+                                    <td>PATH 未設定</td>
+                                    <td>
+                                        <code
+                                            >export PATH="$PATH:$(python3 -m site
+                                            --user-base)/bin"</code
+                                        >
+                                        を再実行
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>.env</code> が見つからない・見えない</td>
+                                    <td>隠しファイル</td>
+                                    <td>
+                                        エディタで <strong>Toggle hidden files</strong>、または
+                                        <code>ls -la</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>PERMISSION_DENIED</code> / 403</td>
+                                    <td>ADC 未設定、または別アカウントで認証した</td>
+                                    <td>
+                                        <code>gcloud auth application-default login</code>
+                                        をやり直し、学生アカウントを選ぶ
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>404 / model not found</td>
+                                    <td>モデル名やロケーションの誤り</td>
+                                    <td>
+                                        <code>MODEL</code> の綴りと
+                                        <code>LOCATION=global</code> を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>429 / リソース枯渇</td>
+                                    <td>一時的な負荷</td>
+                                    <td><strong>+ New Session</strong>、少し待ってから再実行</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Missing key inputs argument</code> 系</td>
+                                    <td>
+                                        環境変数が読めていない／Agent Platform に切り替わっていない
+                                    </td>
+                                    <td>
+                                        <code>.env</code> の内容を確認。直接
+                                        <code>python3</code> 実行なら
+                                        <code>source .env</code> する。それでも駄目なら
+                                        <code>GOOGLE_GENAI_USE_VERTEXAI=true</code> を使う
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>adk web</code> の UI が真っ白・動かない</td>
+                                    <td>CORS 設定漏れ</td>
+                                    <td>
+                                        <code
+                                            >--allow_origins
+                                            "regex:https://.*\.cloudshell\.dev"</code
+                                        >
+                                        を付けて再起動
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>エージェント一覧に何も出ない</td>
+                                    <td>実行ディレクトリが違う</td>
+                                    <td><code>cd adk_project</code>（ルート）から起動する</td>
+                                </tr>
+                                <tr>
+                                    <td>検索されず、古い情報で答える</td>
+                                    <td>ツール未設定、または質問が検索不要と判断された</td>
+                                    <td>
+                                        <code>tools=[google_search]</code>
+                                        を確認。質問を最新情報が必要な内容にする
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>geo_validator が文章を返す</td>
+                                    <td><code>output_schema</code> 未指定</td>
+                                    <td><code>output_schema=CountryCapital</code> を確認</td>
+                                </tr>
+                                <tr>
+                                    <td>geo_validator でエラー</td>
+                                    <td>スキーマ定義やインポートの誤り</td>
+                                    <td>
+                                        <code>BaseModel</code> の import と
+                                        <code>capital: str</code> を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Reviser が動かない</td>
+                                    <td>
+                                        <code>sub_agents</code> に未追加、または import
+                                        のコメントが残っている
+                                    </td>
+                                    <td>両方を確認</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ImportError</code></td>
+                                    <td>インポートパスの誤り</td>
+                                    <td>
+                                        既存のコメントアウトされた行を
+                                        <strong>そのまま</strong> 解除する
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>8.2 トラブル時の判断フロー</h3>
+                    <figure class="diagram-card">
+                        <div class="diagram" data-diagram="trouble"></div>
+                        <figcaption>エラーの種類を切り分ける判断フロー</figcaption>
+                    </figure>
+
+                    <h3>8.3 エラーメッセージの読み方（チャレンジラボのコツ）</h3>
+                    <p>
+                        チャレンジラボの冒頭に「エラーメッセージを読み、調べて、自分で直すスキルを使う」とあります。次の手順で読むと早く解決できます。
+                    </p>
+                    <ol>
+                        <li><strong>最後の行</strong> を読む（例外の種類と要約）</li>
+                        <li>
+                            <strong>ファイル名と行番号</strong> を探す（自分が編集したファイルか？）
+                        </li>
+                        <li>
+                            <strong>キーワード</strong> を拾う（<code>PERMISSION</code>、<code
+                                >not found</code
+                            >、<code>validation</code> など）
+                        </li>
+                        <li>直近で変えた箇所 <strong>だけ</strong> を疑う</li>
+                    </ol>
+                </section>
+
+                <section class="section prose" id="s9">
+                    <h2>9. ベストプラクティス集（実務に持ち帰ろう）</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>プラクティス</th>
+                                    <th>このラボでの具体例</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><strong>キーレス認証（ADC / IAM）を使う</strong></td>
+                                    <td>API キーを作らず Agent Platform を使う</td>
+                                    <td>鍵の漏洩・管理コストを避けられる</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><strong>シークレットは Git に入れない</strong></td>
+                                    <td><code>.env</code> は <code>.gitignore</code> に追加する</td>
+                                    <td>
+                                        設定ファイルの流出を防ぐ（ADK
+                                        の公式ガイドも「ソース管理に入れない」と注記）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><strong>ロケーションは global を基本に</strong></td>
+                                    <td><code>GOOGLE_CLOUD_LOCATION=global</code></td>
+                                    <td>
+                                        可用性が高く、429
+                                        を減らしやすい。ただしデータレジデンシー要件があるなら地域指定を検討
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><strong>出力はスキーマで固定する</strong></td>
+                                    <td><code>output_schema=CountryCapital</code></td>
+                                    <td>下流システムの連携が壊れにくい</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><strong>不要な転送は禁止する</strong></td>
+                                    <td><code>disallow_transfer_to_*=True</code></td>
+                                    <td>動作が予測可能になる</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td><strong>段階的パイプラインで責務を分ける</strong></td>
+                                    <td>Critic と Reviser を分離</td>
+                                    <td>各エージェントを単純に保て、テストしやすい</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td><strong>ツールで根拠を取る（グラウンディング）</strong></td>
+                                    <td><code>google_search</code></td>
+                                    <td>ハルシネーション（もっともらしい誤り）を減らす</td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td><strong>モデル名は設定で外出しする</strong></td>
+                                    <td><code>MODEL</code> を <code>.env</code> で管理</td>
+                                    <td>モデル更新時にコードを変えずに済む</td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td><strong>モデルの世代交代を意識する</strong></td>
+                                    <td>旧モデルは廃止予定日がある</td>
+                                    <td>
+                                        例：<code>gemini-2.5-flash-lite</code> は
+                                        2026年10月16日に廃止予定と公式に記載
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td><strong>本番では ADK Web UI を使わない</strong></td>
+                                    <td>あくまで開発用</td>
+                                    <td>本番は Cloud Run や Agent Runtime などへデプロイする</td>
+                                </tr>
+                                <tr>
+                                    <td>11</td>
+                                    <td><strong>検索グラウンディングの表示義務</strong></td>
+                                    <td>Search suggestions の表示</td>
+                                    <td>本番アプリではライセンス上の要件</td>
+                                </tr>
+                                <tr>
+                                    <td>12</td>
+                                    <td><strong>使い終わったらリソースを片付ける</strong></td>
+                                    <td>ラボ終了で自動削除</td>
+                                    <td>実務の検証環境では課金・権限の残存に注意</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section prose" id="s10">
+                    <h2>10. 理解度チェック</h2>
+                    <p class="quiz-q">
+                        Q1. このラボで API キーを使わない理由と、代わりに使う認証方式は？
+                    </p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <p>
+                                ラボが禁止しているため、そして鍵の漏洩・管理リスクを避けるためです。代わりに
+                                <strong>ADC（Application Default Credentials）</strong>
+                                を使い、<code>.env</code> で
+                                <strong>Agent Platform</strong> を有効にします。
+                            </p>
+                        </div>
+                    </details>
+                    <p class="quiz-q">Q2. <code>GOOGLE_CLOUD_LOCATION</code> は何にする？ なぜ？</p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <p>
+                                <strong><code>global</code></strong>
+                                です。ラボの成功条件として明記されており、グローバルエンドポイントは単一リージョンより可用性が高く
+                                429 エラーを減らしやすいためです。
+                            </p>
+                        </div>
+                    </details>
+                    <p class="quiz-q">
+                        Q3. Travel Scout に Google 検索を使わせる 2 つのコード変更は？
+                    </p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <p>
+                                <code>from google.adk.tools import google_search</code>
+                                でインポートし、Agent の定義に
+                                <code>tools=[google_search]</code> を渡します。
+                            </p>
+                        </div>
+                    </details>
+                    <p class="quiz-q">Q4. geo_validator に必要な 3 つの変更は？</p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <ol>
+                                <li>
+                                    <code>BaseModel</code> を継承した
+                                    <code>CountryCapital</code>（<code>capital: str</code>）を定義
+                                </li>
+                                <li><code>output_schema=CountryCapital</code> を指定</li>
+                                <li>
+                                    <code>disallow_transfer_to_parent=True</code> と
+                                    <code>disallow_transfer_to_peers=True</code> を指定
+                                </li>
+                            </ol>
+                        </div>
+                    </details>
+                    <p class="quiz-q">Q5. llm_auditor が「検証だけで修正しない」原因と直し方は？</p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <p>
+                                <code>reviser_agent</code> の import がコメントアウトされ、<code
+                                    >sub_agents</code
+                                >
+                                にも入っていなかったためです。import のコメントを外し、<code
+                                    >sub_agents=[critic_agent, reviser_agent]</code
+                                >
+                                の順で指定します。
+                            </p>
+                        </div>
+                    </details>
+                    <p class="quiz-q">
+                        Q6. <code>adk web</code> と <code>adk run</code> の違いは？
+                    </p>
+                    <details class="quiz">
+                        <summary>答えを見る</summary>
+                        <div class="answer">
+                            <p>
+                                <code>adk web</code> はブラウザの開発 UI（Events や Trace
+                                も見られる）、<code>adk run</code> はターミナルでの対話実行です。
+                            </p>
+                        </div>
+                    </details>
+                </section>
+
+                <section class="section prose" id="s11">
+                    <h2>11. 全体の最終チェックリスト</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>区分</th>
+                                    <th>確認項目</th>
+                                    <th>完了</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>共通</td>
+                                    <td>学生アカウントで認証し、API キーは作っていない</td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>共通</td>
+                                    <td>3 つのエージェントすべての <code>.env</code> を設定した</td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 2</td>
+                                    <td>
+                                        <code>google_search</code> を有効化し、Web UI
+                                        で検索に基づく回答を得た
+                                    </td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 3</td>
+                                    <td><code>adk run</code> で為替レートを質問できた</td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 4</td>
+                                    <td>
+                                        <code>python3 geo_validator/agent.py</code> の出力が JSON
+                                        になった
+                                    </td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Task 5</td>
+                                    <td>critic と reviser の両方が動いた</td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                                <tr>
+                                    <td>採点</td>
+                                    <td>すべての Check my progress が緑になった</td>
+                                    <td><input class="cb" type="checkbox" aria-label="完了" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section prose" id="s12">
+                    <h2>12. 参考文献（2026年10月30日時点で確認）</h2>
+                    <div class="ref-list">
+                        <div class="ref">
+                            <span class="ref-no">1</span>
+                            <div>
+                                <span class="ref-title"
+                                    >ADK：Google Cloud と Agent Platform
+                                    への接続（環境変数、ADC）</span
+                                ><a
+                                    href="https://adk.dev/get-started/google-cloud/"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://adk.dev/get-started/google-cloud/</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">2</span>
+                            <div>
+                                <span class="ref-title">ADK：Google Search グラウンディング</span
+                                ><a
+                                    href="https://adk.dev/grounding/google_search_grounding/"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://adk.dev/grounding/google_search_grounding/</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">3</span>
+                            <div>
+                                <span class="ref-title"
+                                    >ADK：Google Search
+                                    ツール（単独利用の制約、検索候補の表示）</span
+                                ><a
+                                    href="https://adk.dev/integrations/google-search/"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://adk.dev/integrations/google-search/</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">4</span>
+                            <div>
+                                <span class="ref-title"
+                                    >Gemini Enterprise Agent Platform：Gen AI SDK の概要</span
+                                ><a
+                                    href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/sdks/overview</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">5</span>
+                            <div>
+                                <span class="ref-title"
+                                    >Gemini 3.8 Flash（モデル ID・GA・リリース日）</span
+                                ><a
+                                    href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-8-flash"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-8-flash</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">6</span>
+                            <div>
+                                <span class="ref-title"
+                                    >Gemini 3.8 Flash 開発者ガイド（Agent Platform
+                                    での呼び出し例）</span
+                                ><a
+                                    href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">7</span>
+                            <div>
+                                <span class="ref-title">モデルのバージョンと廃止予定</span
+                                ><a
+                                    href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions.md.txt"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions.md.txt</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">8</span>
+                            <div>
+                                <span class="ref-title">グローバルエンドポイントとロケーション</span
+                                ><a
+                                    href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">9</span>
+                            <div>
+                                <span class="ref-title"
+                                    >Codelab：構造化出力と転送禁止（<code>output_schema</code>、<code>disallow_transfer_*</code>）</span
+                                ><a
+                                    href="https://codelabs.developers.google.com/codelabs/production-ready-ai-roadshow/1-building-a-multi-agent-system/building-a-multi-agent-system"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://codelabs.developers.google.com/codelabs/production-ready-ai-roadshow/1-building-a-multi-agent-system/building-a-multi-agent-system</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">10</span>
+                            <div>
+                                <span class="ref-title"
+                                    >ADK LlmAgent の仕様（転送制御と
+                                    <code>output_schema</code>）</span
+                                ><a
+                                    href="https://codehalwell.github.io/AgentGuides/google-adk-guide/python/agents/"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://codehalwell.github.io/AgentGuides/google-adk-guide/python/agents/</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref">
+                            <span class="ref-no">11</span>
+                            <div>
+                                <span class="ref-title"
+                                    >ADK 公式サンプル解析：llm-auditor（SequentialAgent、critic と
+                                    reviser）</span
+                                ><a
+                                    href="https://code-repo.d4science.org/D4Science/dave_agent/src/branch/refactoring/docs/adk-samples-analysis/analysis_llm-auditor.md"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >https://code-repo.d4science.org/D4Science/dave_agent/src/branch/refactoring/docs/adk-samples-analysis/analysis_llm-auditor.md</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="callout warn">
+                        <div class="callout-title"><i class="ti ti-alert-triangle"></i>免責</div>
+                        <p>
+                            ラボの <code>agent.py</code> や
+                            <code>.env</code> の実際の中身（変数名、import
+                            パス、既存の実行コード）は、ラボ環境で配布されるファイルが正です。本ガイドのコードは、公式ドキュメントと公式サンプルに基づく
+                            <strong>理解用のリファレンス</strong>
+                            なので、必ず手元の既存コードに合わせて
+                            <strong>差分のみ</strong>
+                            反映してください。モデル名・環境変数名などは変更される場合があるため、ラボ本文の記載を最優先してください。
+                        </p>
+                    </div>
+                </section>
+                <footer class="footer">
+                    <p>
+                        Google Cloud チャレンジラボ完全ガイド（ADK
+                        初学者向け）。情報の基準日は2026年10月30日です。
+                    </p>
+                </footer>
+            </main>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+        <script>
+            window.DIAGRAMS = {
+                overall: `flowchart TD
+A["Task 1 ADK のインストールと認証"] --> B["Task 2 Travel Scout の修復 - .env と google_search"]
+B --> C["Task 3 CLI で動作確認 - adk run"]
+C --> D["Task 4 geo_validator の修復 - output_schema と転送禁止"]
+D --> E["Task 5 llm_auditor の修復 - reviser_agent を有効化"]
+E --> F["ラボ完了 - 全ての Check my progress が緑"]
+classDef proc fill:#3C3489,stroke:#CECBF6,color:#EEEDFE
+classDef done fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class A,B,C,D,E proc
+class F done`,
+                auth: `flowchart TD
+subgraph NG["API キー方式 (禁止)"]
+direction TB
+K1["API キーを発行"] --> K2["コードや .env に保存"] --> K3["漏洩リスクが高い"]
+end
+subgraph OK["Agent Platform (採用)"]
+direction TB
+A1["gcloud auth application-default login"] --> A2["ADC がローカルに保存"] --> A3["ADK が自動で利用 - IAM で権限管理"]
+end
+NG ~~~ OK
+classDef bad fill:#712B13,stroke:#F5C4B3,color:#FAECE7
+classDef good fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class K1,K2,K3 bad
+class A1,A2,A3 good`,
+                grounding: `sequenceDiagram
+participant U as ユーザー
+participant A as Travel Scout
+participant M as Gemini モデル
+participant G as Google Search
+U->>A: 東京の主要イベントは?
+A->>M: 質問と利用可能なツール一覧
+M->>M: 最新情報が必要か判断
+M->>G: google_search を呼び出す
+G-->>M: 検索結果と出典情報
+M-->>A: 検索結果に基づく回答
+A-->>U: 回答と出典`,
+                sequential: `flowchart TD
+IN["入力 - ハワイから日本へ直通電車で行ける"] --> C["critic_agent - ウェブで事実確認"]
+C -->|"検証結果を引き継ぐ"| R["reviser_agent - 検証結果に基づき修正"]
+R --> OUT["出力 - 正しい事実に書き直した文章"]
+classDef proc fill:#3C3489,stroke:#CECBF6,color:#EEEDFE
+classDef done fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class C,R proc
+class OUT done`,
+                adclogin: `flowchart TD
+A["Y を入力して Enter"] --> B["表示された URL を Ctrl か Cmd を押しながらクリック"]
+B --> C{"外部サイトを開くか確認されたか"}
+C -->|"はい"| D["Open をクリック"]
+C -->|"いいえ"| E["そのまま次へ"]
+D --> F["学生アカウントを選択"]
+E --> F
+F --> G["Continue をクリック"]
+G --> H["Allow をクリック"]
+H --> I["認証コードが表示される - Copy をクリック"]
+I --> J["ターミナルに貼り付けて Enter"]
+classDef proc fill:#3C3489,stroke:#CECBF6,color:#EEEDFE
+classDef done fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class C proc
+class J done`,
+                geo: `flowchart TD
+subgraph Before["修復前"]
+direction TB
+B1["質問 - フランスの首都は?"] --> B2["自由文 - The capital of France is Paris."]
+B2 --> B3["システム側で文章を解析する必要がある"]
+end
+subgraph After["修復後"]
+direction TB
+A1["質問 - フランスの首都は?"] --> A2["JSON - capital Paris"]
+A2 --> A3["そのままシステムがパースできる"]
+end
+Before ~~~ After
+classDef bad fill:#712B13,stroke:#F5C4B3,color:#FAECE7
+classDef good fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class B1,B2,B3 bad
+class A1,A2,A3 good`,
+                auditor: `flowchart TD
+subgraph Broken["現在 (故障中)"]
+direction TB
+X1["入力"] --> X2["critic_agent - 検証"] --> X3["出力は検証結果のみ - 修正された文章がない"]
+end
+subgraph Fixed["修復後"]
+direction TB
+Y1["入力"] --> Y2["critic_agent - 検証"] --> Y3["reviser_agent - 修正"] --> Y4["正しい事実に直した文章"]
+end
+Broken ~~~ Fixed
+classDef bad fill:#712B13,stroke:#F5C4B3,color:#FAECE7
+classDef good fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class X1,X2,X3 bad
+class Y1,Y2,Y3,Y4 good`,
+                order: `flowchart TD
+subgraph Right["正しい順序"]
+direction TB
+O1["critic_agent"] --> O2["reviser_agent"]
+end
+subgraph Wrong["誤った順序"]
+direction TB
+N1["reviser_agent - 検証結果がまだない"] --> N2["critic_agent"]
+end
+Right ~~~ Wrong
+classDef bad fill:#712B13,stroke:#F5C4B3,color:#FAECE7
+classDef good fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class O1,O2 good
+class N1,N2 bad`,
+                auditorseq: `sequenceDiagram
+participant U as ユーザー
+participant S as llm_auditor
+participant C as critic_agent
+participant R as reviser_agent
+U->>S: ハワイから日本へ直通電車で行ける
+S->>C: 主張を検証
+C->>C: ウェブで事実確認
+C-->>S: 誤り - ハワイと日本は海で隔てられ直通鉄道はない
+S->>R: 元の主張と検証結果を渡す
+R-->>S: 修正した文章
+S-->>U: 正しい事実に直した回答`,
+                trouble: `flowchart TD
+S["エラーが出た"] --> Q1{"コマンドが見つからない?"}
+Q1 -->|"はい"| F1["PATH を再設定"]
+Q1 -->|"いいえ"| Q2{"認証系のエラー? 403 や credentials"}
+Q2 -->|"はい"| F2["ADC を学生アカウントでやり直す"]
+Q2 -->|"いいえ"| Q3{"モデルが見つからない?"}
+Q3 -->|"はい"| F3["MODEL の綴りと LOCATION=global を確認"]
+Q3 -->|"いいえ"| Q4{"環境変数が読めていない?"}
+Q4 -->|"はい"| F4[".env の配置と内容を確認 - 必要なら source で読み込む"]
+Q4 -->|"いいえ"| Q5{"UI のエラー?"}
+Q5 -->|"はい"| F5["+ New Session を試す - 駄目なら adk web を再起動"]
+Q5 -->|"いいえ"| F6["エラーメッセージを読み該当箇所のコードを確認"]
+classDef proc fill:#3C3489,stroke:#CECBF6,color:#EEEDFE
+classDef good fill:#085041,stroke:#9FE1CB,color:#E1F5EE
+class Q1,Q2,Q3,Q4,Q5 proc
+class F1,F2,F3,F4,F5,F6 good`,
+            };
+        </script>
+        <script>
+            (function () {
+                function init() {
+                    if (window.hljs) {
+                        document.querySelectorAll('pre code').forEach(function (el) {
+                            if (el.classList.contains('nohighlight')) {
+                                return;
+                            }
+                            window.hljs.highlightElement(el);
+                        });
+                    }
+                }
+                init();
+                var body = document.body;
+                var btn = document.getElementById('menuBtn');
+                var backdrop = document.getElementById('backdrop');
+                var sidebar = document.getElementById('sidebar');
+                function setMenu(open) {
+                    body.classList.toggle('menu-open', open);
+                    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    btn.setAttribute('aria-label', open ? '目次を閉じる' : '目次を開く');
+                }
+                btn.addEventListener('click', function () {
+                    setMenu(!body.classList.contains('menu-open'));
+                });
+                backdrop.addEventListener('click', function () {
+                    setMenu(false);
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        setMenu(false);
+                    }
+                });
+                sidebar.querySelectorAll('a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        setMenu(false);
+                    });
+                });
+                var links = {};
+                sidebar.querySelectorAll('nav a').forEach(function (a) {
+                    links[a.getAttribute('href').slice(1)] = a;
+                });
+                function setActive(id) {
+                    Object.keys(links).forEach(function (k) {
+                        links[k].classList.toggle('active', k === id);
+                    });
+                }
+                if ('IntersectionObserver' in window) {
+                    var io = new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(function (en) {
+                                if (en.isIntersecting) {
+                                    setActive(en.target.id);
+                                }
+                            });
+                        },
+                        { rootMargin: '-20% 0px -70% 0px' },
+                    );
+                    document.querySelectorAll('section[id]').forEach(function (s) {
+                        io.observe(s);
+                    });
+                }
+            })();
+        </script>
+        <script>
+            (async function () {
+                if (!window.mermaid) {
+                    return;
+                }
+                if (document.fonts && document.fonts.ready) {
+                    await document.fonts.ready;
+                }
+                window.mermaid.initialize({
+                    startOnLoad: false,
+                    theme: 'dark',
+                    securityLevel: 'loose',
+                    fontFamily:
+                        '"Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",system-ui,sans-serif',
+                    flowchart: {
+                        useMaxWidth: false,
+                        htmlLabels: true,
+                        nodeSpacing: 40,
+                        rankSpacing: 48,
+                        curve: 'basis',
+                        padding: 12,
+                        subGraphTitleMargin: { top: 10, bottom: 16 },
+                    },
+                    sequence: {
+                        useMaxWidth: false,
+                        wrap: true,
+                        width: 160,
+                        actorMargin: 40,
+                        messageMargin: 36,
+                        noteMargin: 12,
+                    },
+                    themeVariables: {
+                        darkMode: true,
+                        background: '#0d1b30',
+                        fontSize: '16px',
+                        primaryColor: '#14264a',
+                        primaryTextColor: '#f3f5fa',
+                        primaryBorderColor: '#7c9eff',
+                        secondaryColor: '#122440',
+                        secondaryTextColor: '#f3f5fa',
+                        secondaryBorderColor: '#3e5c8f',
+                        tertiaryColor: '#0d1b30',
+                        tertiaryTextColor: '#f3f5fa',
+                        tertiaryBorderColor: '#3e5c8f',
+                        lineColor: '#93a1bd',
+                        textColor: '#f3f5fa',
+                        edgeLabelBackground: '#0d1b30',
+                        clusterBkg: '#0a1526',
+                        clusterBorder: '#3e5c8f',
+                        titleColor: '#f3f5fa',
+                        actorBkg: '#14264a',
+                        actorBorder: '#7c9eff',
+                        actorTextColor: '#f3f5fa',
+                        actorLineColor: '#93a1bd',
+                        signalColor: '#c6d0e3',
+                        signalTextColor: '#f3f5fa',
+                        labelBoxBkgColor: '#122440',
+                        labelBoxBorderColor: '#3e5c8f',
+                        labelTextColor: '#f3f5fa',
+                        loopTextColor: '#f3f5fa',
+                        noteBkgColor: '#122440',
+                        noteBorderColor: '#3e5c8f',
+                        noteTextColor: '#f3f5fa',
+                        activationBkgColor: '#172a52',
+                        activationBorderColor: '#7c9eff',
+                        sequenceNumberColor: '#07111e',
+                    },
+                });
+                var D = window.DIAGRAMS || {};
+                var targets = document.querySelectorAll('.diagram[data-diagram]');
+                var n = 0;
+                for (var i = 0; i < targets.length; i++) {
+                    var el = targets[i];
+                    var key = el.getAttribute('data-diagram');
+                    var src = D[key];
+                    if (!src) {
+                        continue;
+                    }
+                    try {
+                        var out = await window.mermaid.render('mmd-' + n++, src);
+                        el.innerHTML = out.svg;
+                        var svg = el.querySelector('svg');
+                        if (svg) {
+                            var vb = svg.viewBox && svg.viewBox.baseVal;
+                            if (vb && vb.width) {
+                                var extra = el.getAttribute('data-type') === 'seq' ? 110 : 15;
+                                svg.removeAttribute('width');
+                                svg.removeAttribute('height');
+                                svg.setAttribute(
+                                    'viewBox',
+                                    vb.x + ' ' + vb.y + ' ' + vb.width + ' ' + (vb.height + extra),
+                                );
+                                svg.style.width = vb.width + 'px';
+                                svg.style.maxWidth = '100%';
+                                svg.style.height = 'auto';
+                                svg.style.overflow = 'visible';
+                            }
+                        }
+                    } catch (err) {
+                        console.error('mermaid render failed', key, err);
+                        el.textContent = '図の描画に失敗しました（' + key + '）';
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>

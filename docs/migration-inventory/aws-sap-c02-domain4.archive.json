@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "852e6ed370e157d6a25b014f1fee7c2ef015eba6",
+  "archiveDate": "2026-11-05",
+  "files": [
+    {
+      "originalPath": "Sap-c02-domain4-migration-modernization-guide.html",
+      "archivePath": "archive/Aws/html/solutions-architect-professional/domain4/Sap-c02-domain4-migration-modernization-guide.html",
+      "size": 272899,
+      "sha256": "f8c4698cf0cc888316a909bfcfe9b23b7dec52b6c8b8ce7b7bf6b33f36b5b9a6"
+    },
+    {
+      "originalPath": "Sap-c02-domain4-migration-modernization-guide.md",
+      "archivePath": "archive/Aws/md/solutions-architect-professional/domain4/Sap-c02-domain4-migration-modernization-guide.md",
+      "size": 67880,
+      "sha256": "0e9ec167e9833e2cc1680d9ed8815a5b7aff18fd3c07e2c1c7cac3191c2c1ca6"
+    }
+  ]
+}

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud SQL 移行チャレンジラボ完全ガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07111e;--card:#0d1b2e;--line:#1c3150;--text:#e6edf7;--dim:#c7d6ec;--acc:#7c9eff;--warn:#ffb86b;--ok:#6ee7a8}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans JP",sans-serif;line-height:1.85;font-size:15.5px}
+nav{position:fixed;left:0;top:0;bottom:0;width:250px;padding:24px 16px;background:#050d17;border-right:1px solid var(--line);overflow-y:auto}
+nav b{color:var(--acc);display:block;margin-bottom:14px}
+nav a{display:block;color:var(--dim);text-decoration:none;padding:6px 10px;border-radius:6px;font-size:14px}
+nav a:hover{background:var(--card);color:#fff}
+main{margin-left:250px;padding:40px 48px 80px}
+.badge{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;padding:2px 14px;font-size:12px}
+h1{font-size:28px;font-weight:800;color:#fff;margin:12px 0}
+h2{font-size:22px;margin:56px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);color:#fff}
+h3{font-size:17px;margin:28px 0 8px;color:var(--acc)}
+p,li{color:var(--dim)}
+code{font-family:"JetBrains Mono",monospace;font-size:13px;background:#12233b;padding:1px 6px;border-radius:4px;color:#cfe0ff}
+pre{background:#050d17;border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;line-height:1.65}
+pre code{background:none;padding:0;color:#d6e4ff}
+table{display:block;overflow-x:auto;border-collapse:collapse;margin:12px 0}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top;font-size:14px}
+th{background:var(--card);color:#fff}
+.note,.warn{border-left:4px solid var(--acc);background:var(--card);padding:10px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.warn{border-color:var(--warn)}
+.note p,.warn p{margin:4px 0}
+.mermaid-diagram{display:block;overflow-x:auto;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:16px;margin:16px 0}
+.mermaid-diagram svg{display:block;margin-left:auto;margin-right:auto;max-width:none;flex-shrink:0}
+.mermaid-diagram p{color:inherit;margin:0}
+.mermaid-diagram foreignObject{overflow:visible}
+.mermaid-diagram foreignObject div,.mermaid-diagram foreignObject span,.mermaid-diagram foreignObject p{white-space:normal !important}
+@media(max-width:860px){nav{display:none}main{margin-left:0;padding:24px 16px}}
+</style>
+</head>
+<body>
+<nav><b>目次</b>
+<a href="#s1">1. 全体像</a><a href="#s2">2. 事前準備</a><a href="#t1">Task 1 インスタンス作成</a><a href="#t2">Task 2 DB とユーザー</a><a href="#t3">Task 3 ダンプとインポート</a><a href="#t4">Task 4 WordPress 再設定</a><a href="#t5">Task 5 検証</a><a href="#bp">ベストプラクティス</a><a href="#ck">最終チェックリスト</a></nav>
+<main>
+<span class="badge">Google Cloud チャレンジラボ ／ PCA 対策</span>
+<h1>WordPress のローカル MySQL を Cloud SQL へ移行する</h1>
+<p>初学者向けステップバイステップ解説。ゴールは、<code>blog</code> 上の WordPress がローカル MySQL ではなく <strong>Cloud SQL</strong> を使って動く状態にすることです（全 5 タスク）。</p>
+
+<h2 id="s1">1. 全体像</h2>
+<table><tr><th>項目</th><th>内容</th></tr>
+<tr><td>現状</td><td>VM <code>blog</code> に WordPress と MySQL が同居（<code>/var/www/html/wordpress</code>）</td></tr>
+<tr><td>既存 DB / ユーザー</td><td><code>wordpress</code> ／ <code>blogadmin</code>（パスワードはラボ画面の指定値）</td></tr>
+<tr><td>目標</td><td>DB をマネージドな Cloud SQL へ移し、接続先だけ差し替える</td></tr></table>
+<h3>移行後の構成</h3>
+<div class="mermaid-diagram" id="d1"><svg id="md1" width="1164.765625" xmlns="http://www.w3.org/2000/svg" class="flowchart" height="99.5699462890625" viewBox="0 0.000003814697265625 1164.765625 99.5699462890625" role="graphics-document document" aria-roledescription="flowchart-v2">
+<style>#md1{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;fill:#e6edf7;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#md1 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#md1 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#md1 .error-icon{fill:#0d1b2e;}#md1 .error-text{fill:#e6edf7;stroke:#e6edf7;}#md1 .edge-thickness-normal{stroke-width:1px;}#md1 .edge-thickness-thick{stroke-width:3.5px;}#md1 .edge-pattern-solid{stroke-dasharray:0;}#md1 .edge-thickness-invisible{stroke-width:0;fill:none;}#md1 .edge-pattern-dashed{stroke-dasharray:3;}#md1 .edge-pattern-dotted{stroke-dasharray:2;}#md1 .marker{fill:#7c9eff;stroke:#7c9eff;}#md1 .marker.cross{stroke:#7c9eff;}#md1 svg{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;}#md1 p{margin:0;}#md1 .label{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;color:#e6edf7;}#md1 .cluster-label text{fill:#e6edf7;}#md1 .cluster-label span{color:#e6edf7;}#md1 .cluster-label span p{background-color:transparent;}#md1 .label text,#md1 span{fill:#e6edf7;color:#e6edf7;}#md1 .node rect,#md1 .node circle,#md1 .node ellipse,#md1 .node polygon,#md1 .node path{fill:#12233b;stroke:#7c9eff;stroke-width:1px;}#md1 .rough-node .label text,#md1 .node .label text,#md1 .image-shape .label,#md1 .icon-shape .label{text-anchor:middle;}#md1 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#md1 .rough-node .label,#md1 .node .label,#md1 .image-shape .label,#md1 .icon-shape .label{text-align:center;}#md1 .node.clickable{cursor:pointer;}#md1 .root .anchor path{fill:#7c9eff!important;stroke-width:0;stroke:#7c9eff;}#md1 .arrowheadPath{fill:#0b0b0b;}#md1 .edgePath .path{stroke:#7c9eff;stroke-width:2.0px;}#md1 .flowchart-link{stroke:#7c9eff;fill:none;}#md1 .edgeLabel{background-color:#07111e;text-align:center;}#md1 .edgeLabel p{background-color:#07111e;}#md1 .edgeLabel rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md1 .labelBkg{background-color:rgba(7, 17, 30, 0.5);}#md1 .cluster rect{fill:#0d1b2e;stroke:hsl(214.5454545455, 15.9322033898%, 1.568627451%);stroke-width:1px;}#md1 .cluster text{fill:#e6edf7;}#md1 .cluster span{color:#e6edf7;}#md1 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:12px;background:#0d1b2e;border:1px solid hsl(214.5454545455, 15.9322033898%, 1.568627451%);border-radius:2px;pointer-events:none;z-index:100;}#md1 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#e6edf7;}#md1 rect.text{fill:none;stroke-width:0;}#md1 .icon-shape,#md1 .image-shape{background-color:#07111e;text-align:center;}#md1 .icon-shape p,#md1 .image-shape p{background-color:#07111e;padding:2px;}#md1 .icon-shape rect,#md1 .image-shape rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md1 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#md1 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#md1 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style>
+<g>
+<marker id="md1_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md1_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md1_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md1_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md1_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md1_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<g class="root">
+<g class="clusters">
+</g>
+<g class="edgePaths">
+<path d="M136.016,49.785L140.182,49.785C144.349,49.785,152.682,49.785,160.349,49.785C168.016,49.785,175.016,49.785,178.516,49.785L182.016,49.785" id="L_a1_a2_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_a1_a2_0" data-points="W3sieCI6MTM2LjAxNTYyNSwieSI6NDkuNzg0OTY5MzI5ODMzOTg0fSx7IngiOjE2MS4wMTU2MjUsInkiOjQ5Ljc4NDk2OTMyOTgzMzk4NH0seyJ4IjoxODYuMDE1NjI1LCJ5Ijo0OS43ODQ5NjkzMjk4MzM5ODR9XQ==" marker-end="url(#md1_flowchart-v2-pointEnd)">
+</path>
+<path d="M408.031,49.785L421.081,49.785C434.13,49.785,460.229,49.785,485.661,49.785C511.094,49.785,535.859,49.785,548.242,49.785L560.625,49.785" id="L_a2_a3_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_a2_a3_0" data-points="W3sieCI6NDA4LjAzMTI1LCJ5Ijo0OS43ODQ5NjkzMjk4MzM5ODR9LHsieCI6NDg2LjMyODEyNSwieSI6NDkuNzg0OTY5MzI5ODMzOTg0fSx7IngiOjU2NC42MjUsInkiOjQ5Ljc4NDk2OTMyOTgzMzk4NH1d" marker-end="url(#md1_flowchart-v2-pointEnd)">
+</path>
+<path d="M790.484,49.785L806.568,49.785C822.651,49.785,854.818,49.785,886.318,49.785C917.818,49.785,948.651,49.785,964.068,49.785L979.484,49.785" id="L_a3_a4_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_a3_a4_0" data-points="W3sieCI6NzkwLjQ4NDM3NSwieSI6NDkuNzg0OTY5MzI5ODMzOTg0fSx7IngiOjg4Ni45ODQzNzUsInkiOjQ5Ljc4NDk2OTMyOTgzMzk4NH0seyJ4Ijo5ODMuNDg0Mzc1LCJ5Ijo0OS43ODQ5NjkzMjk4MzM5ODR9XQ==" marker-end="url(#md1_flowchart-v2-pointEnd)">
+</path>
+</g>
+<g class="edgeLabels">
+<g class="edgeLabel">
+<g class="label" data-id="L_a1_a2_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(486.328125, 49.784969329833984)">
+<g class="label" data-id="L_a2_a3_0" transform="translate(-53.296875, -12)"><foreignObject width="106.59375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>127.0.0.1:3307</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(886.984375, 49.784969329833984)">
+<g class="label" data-id="L_a3_a4_0" transform="translate(-71.5, -12)"><foreignObject width="143" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>証明書検証つき TLS</p></span></div></foreignObject></g>
+</g>
+</g>
+<g class="nodes">
+<g class="node default" id="flowchart-a1-0" transform="translate(72.0078125, 49.784969329833984)">
+<rect class="basic label-container" style="" x="-64.0078125" y="-28" width="128.015625" height="56">
+</rect>
+<g class="label" style="" transform="translate(-32.0078125, -12)">
+<rect>
+</rect><foreignObject width="64.015625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>ブラウザ</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-a2-1" transform="translate(297.0234375, 49.784969329833984)">
+<rect class="basic label-container" style="" x="-111.0078125" y="-40" width="222.015625" height="80">
+</rect>
+<g class="label" style="" transform="translate(-79.0078125, -24)">
+<rect>
+</rect><foreignObject width="158.015625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Apache と WordPress<br>blog VM</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-a3-3" transform="translate(677.5546875, 49.784969329833984)">
+<rect class="basic label-container" style="" x="-112.9296875" y="-40" width="225.859375" height="80">
+</rect>
+<g class="label" style="" transform="translate(-80.9296875, -24)">
+<rect>
+</rect><foreignObject width="161.859375" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Cloud SQL Auth Proxy<br>blog 上で常駐</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-a4-5" transform="translate(1070.125, 49.784969329833984)">
+<path d="M0,14.523310633839706 a86.640625,14.523310633839706 0,0,0 173.28125,0 a86.640625,14.523310633839706 0,0,0 -173.28125,0 l0,54.523310633839706 a86.640625,14.523310633839706 0,0,0 173.28125,0 l0,-54.523310633839706" class="basic label-container" style="" transform="translate(-86.640625, -41.784965950759556)">
+</path>
+<g class="label" style="" transform="translate(-78.640625, -1.333333333333334)">
+<rect>
+</rect><foreignObject width="157.28125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Cloud SQL for MySQL</p></span></div></foreignObject></g>
+</g>
+</g>
+</g>
+</g>
+</svg></div>
+<p>WordPress は同じ VM 上の Cloud SQL Auth Proxy（<code>127.0.0.1:3307</code>）に接続します。プロキシが Cloud SQL のサーバー証明書を検証したうえで暗号化し、IAM で認可します。</p>
+<h3>5 つのタスクの流れ</h3>
+<div class="mermaid-diagram" id="d2"><svg id="md2" width="280" xmlns="http://www.w3.org/2000/svg" class="flowchart" height="712" viewBox="0 0 280 712" role="graphics-document document" aria-roledescription="flowchart-v2">
+<style>#md2{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;fill:#e6edf7;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#md2 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#md2 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#md2 .error-icon{fill:#0d1b2e;}#md2 .error-text{fill:#e6edf7;stroke:#e6edf7;}#md2 .edge-thickness-normal{stroke-width:1px;}#md2 .edge-thickness-thick{stroke-width:3.5px;}#md2 .edge-pattern-solid{stroke-dasharray:0;}#md2 .edge-thickness-invisible{stroke-width:0;fill:none;}#md2 .edge-pattern-dashed{stroke-dasharray:3;}#md2 .edge-pattern-dotted{stroke-dasharray:2;}#md2 .marker{fill:#7c9eff;stroke:#7c9eff;}#md2 .marker.cross{stroke:#7c9eff;}#md2 svg{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;}#md2 p{margin:0;}#md2 .label{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;color:#e6edf7;}#md2 .cluster-label text{fill:#e6edf7;}#md2 .cluster-label span{color:#e6edf7;}#md2 .cluster-label span p{background-color:transparent;}#md2 .label text,#md2 span{fill:#e6edf7;color:#e6edf7;}#md2 .node rect,#md2 .node circle,#md2 .node ellipse,#md2 .node polygon,#md2 .node path{fill:#12233b;stroke:#7c9eff;stroke-width:1px;}#md2 .rough-node .label text,#md2 .node .label text,#md2 .image-shape .label,#md2 .icon-shape .label{text-anchor:middle;}#md2 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#md2 .rough-node .label,#md2 .node .label,#md2 .image-shape .label,#md2 .icon-shape .label{text-align:center;}#md2 .node.clickable{cursor:pointer;}#md2 .root .anchor path{fill:#7c9eff!important;stroke-width:0;stroke:#7c9eff;}#md2 .arrowheadPath{fill:#0b0b0b;}#md2 .edgePath .path{stroke:#7c9eff;stroke-width:2.0px;}#md2 .flowchart-link{stroke:#7c9eff;fill:none;}#md2 .edgeLabel{background-color:#07111e;text-align:center;}#md2 .edgeLabel p{background-color:#07111e;}#md2 .edgeLabel rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md2 .labelBkg{background-color:rgba(7, 17, 30, 0.5);}#md2 .cluster rect{fill:#0d1b2e;stroke:hsl(214.5454545455, 15.9322033898%, 1.568627451%);stroke-width:1px;}#md2 .cluster text{fill:#e6edf7;}#md2 .cluster span{color:#e6edf7;}#md2 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:12px;background:#0d1b2e;border:1px solid hsl(214.5454545455, 15.9322033898%, 1.568627451%);border-radius:2px;pointer-events:none;z-index:100;}#md2 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#e6edf7;}#md2 rect.text{fill:none;stroke-width:0;}#md2 .icon-shape,#md2 .image-shape{background-color:#07111e;text-align:center;}#md2 .icon-shape p,#md2 .image-shape p{background-color:#07111e;padding:2px;}#md2 .icon-shape rect,#md2 .image-shape rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md2 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#md2 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#md2 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style>
+<g>
+<marker id="md2_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md2_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md2_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md2_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md2_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md2_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<g class="root">
+<g class="clusters">
+</g>
+<g class="edgePaths">
+<path d="M140,112L140,116.167C140,120.333,140,128.667,140,136.333C140,144,140,151,140,154.5L140,158" id="L_b1_b2_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_b1_b2_0" data-points="W3sieCI6MTQwLCJ5IjoxMTJ9LHsieCI6MTQwLCJ5IjoxMzd9LHsieCI6MTQwLCJ5IjoxNjJ9XQ==" marker-end="url(#md2_flowchart-v2-pointEnd)">
+</path>
+<path d="M140,242L140,246.167C140,250.333,140,258.667,140,266.333C140,274,140,281,140,284.5L140,288" id="L_b2_b3_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_b2_b3_0" data-points="W3sieCI6MTQwLCJ5IjoyNDJ9LHsieCI6MTQwLCJ5IjoyNjd9LHsieCI6MTQwLCJ5IjoyOTJ9XQ==" marker-end="url(#md2_flowchart-v2-pointEnd)">
+</path>
+<path d="M140,420L140,424.167C140,428.333,140,436.667,140,444.333C140,452,140,459,140,462.5L140,466" id="L_b3_b4_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_b3_b4_0" data-points="W3sieCI6MTQwLCJ5Ijo0MjB9LHsieCI6MTQwLCJ5Ijo0NDV9LHsieCI6MTQwLCJ5Ijo0NzB9XQ==" marker-end="url(#md2_flowchart-v2-pointEnd)">
+</path>
+<path d="M140,574L140,578.167C140,582.333,140,590.667,140,598.333C140,606,140,613,140,616.5L140,620" id="L_b4_b5_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_b4_b5_0" data-points="W3sieCI6MTQwLCJ5Ijo1NzR9LHsieCI6MTQwLCJ5Ijo1OTl9LHsieCI6MTQwLCJ5Ijo2MjR9XQ==" marker-end="url(#md2_flowchart-v2-pointEnd)">
+</path>
+</g>
+<g class="edgeLabels">
+<g class="edgeLabel">
+<g class="label" data-id="L_b1_b2_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel">
+<g class="label" data-id="L_b2_b3_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel">
+<g class="label" data-id="L_b3_b4_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel">
+<g class="label" data-id="L_b4_b5_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+</g>
+<g class="nodes">
+<g class="node default" id="flowchart-b1-0" transform="translate(140, 60)">
+<rect class="basic label-container" style="" x="-132" y="-52" width="264" height="104">
+</rect>
+<g class="label" style="" transform="translate(-100, -36)">
+<rect>
+</rect><foreignObject width="200" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel"><p>Task 1<br>Cloud SQL インスタンス作成</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-b2-1" transform="translate(140, 202)">
+<rect class="basic label-container" style="" x="-124.3984375" y="-40" width="248.796875" height="80">
+</rect>
+<g class="label" style="" transform="translate(-92.3984375, -24)">
+<rect>
+</rect><foreignObject width="184.796875" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Task 2<br>DB と専用ユーザーを作成</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-b3-3" transform="translate(140, 356)">
+<rect class="basic label-container" style="" x="-132" y="-64" width="264" height="128">
+</rect>
+<g class="label" style="" transform="translate(-100, -48)">
+<rect>
+</rect><foreignObject width="200" height="96"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel"><p>Task 3<br>IP 承認 と TLS<br>読み取り専用化 ダンプ インポート</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-b4-5" transform="translate(140, 522)">
+<rect class="basic label-container" style="" x="-94.171875" y="-52" width="188.34375" height="104">
+</rect>
+<g class="label" style="" transform="translate(-62.171875, -36)">
+<rect>
+</rect><foreignObject width="124.34375" height="72"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Task 4<br>Auth Proxy 起動<br>DB_HOST を変更</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-b5-7" transform="translate(140, 664)">
+<rect class="basic label-container" style="" x="-113.796875" y="-40" width="227.59375" height="80">
+</rect>
+<g class="label" style="" transform="translate(-81.796875, -24)">
+<rect>
+</rect><foreignObject width="163.59375" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Task 5<br>表示確認 書き込み再開</p></span></div></foreignObject></g>
+</g>
+</g>
+</g>
+</g>
+</svg></div>
+
+<h2 id="s2">2. 事前準備</h2>
+<p>ラボ左パネルの <strong>Region / Zone</strong> を確認し、Cloud Shell で変数を設定します（指定値以外を使うとチェックに通らないことがあります）。</p>
+<pre><code>export REGION=us-central1   # ★ラボ指定の値
+export ZONE=us-central1-a   # ★ラボ指定の値
+export INSTANCE_NAME=wordpress-sql DB_NAME=wordpress DB_USER=blogadmin
+export DB_VERSION=MYSQL_8_0
+gcloud services enable sqladmin.googleapis.com</code></pre>
+<div class="warn"><p><strong>パスワードはコマンドに書かない。</strong> <code>--prompt-for-password</code> で対話入力します（履歴やプロセス一覧に残りません）。Cloud Shell を再接続したら変数をもう一度設定してください。</p></div>
+
+<h2 id="t1">Task 1: Cloud SQL インスタンスを作成する</h2>
+<table><tr><th>判断</th><th>選択</th><th>理由</th></tr>
+<tr><td>エンジン</td><td>Cloud SQL for MySQL</td><td>WordPress は MySQL / MariaDB 前提</td></tr>
+<tr><td>バージョン</td><td>既存と同じか新しい版</td><td>新しい版へは取り込めるが、逆は失敗しやすい</td></tr>
+<tr><td>場所</td><td>ラボ指定の Region / Zone</td><td>問題文の指示</td></tr>
+<tr><td>接続</td><td>パブリック IP ＋ 承認済みネットワーク</td><td>ラボでは最も簡単（本番は Private IP）</td></tr></table>
+<p>先に <code>blog</code> に SSH して既存の版を確認します。<code>mysql --version</code> はクライアントの版なので使いません。</p>
+<pre><code>gcloud compute ssh blog --zone=$ZONE
+sudo mysql -e "SELECT VERSION();"    # 8.0.x / 5.7.x / MariaDB を確認
+exit    # Cloud Shell に戻ってから次のブロックへ進む</code></pre>
+<div class="note"><p>本ガイドは既存が <strong>MySQL 8.0 以前または MariaDB</strong> の場合だけが対象で、<code>MYSQL_8_0</code> を指定します。MySQL 8.4 など新しい場合は公式ドキュメントで移行方法を確認してください。</p></div>
+<pre><code>gcloud sql instances create $INSTANCE_NAME \
+  --database-version=$DB_VERSION --edition=ENTERPRISE \
+  --cpu=1 --memory=3840MiB --zone=$ZONE \
+  --storage-type=SSD --storage-size=10GB
+gcloud sql users set-password root --instance=$INSTANCE_NAME --host=% --prompt-for-password
+gcloud sql instances list    # STATUS が RUNNABLE なら成功</code></pre>
+<p>作成には 5〜10 分かかります。エディションと構成の組み合わせでエラーになったら、メッセージを読んで <code>--edition</code> と <code>--cpu</code> / <code>--memory</code> を調整します。完了したら <strong>Check my progress</strong> を押します。</p>
+
+<h2 id="t2">Task 2: データベースとユーザーを設定する</h2>
+<p>既存と<strong>同じ名前</strong>の DB とユーザーを作ると、Task 4 の変更箇所が <code>DB_HOST</code> だけで済みます。ただしコンソールや <code>--database-roles</code> なしで作ったユーザーには管理者相当の <code>cloudsqlsuperuser</code> が付くため、<code>wordpress.*</code> だけに絞ったロールを使います。</p>
+<pre><code>gcloud sql databases create $DB_NAME --instance=$INSTANCE_NAME
+gcloud sql connect $INSTANCE_NAME --user=root    # root のパスワードを入力</code></pre>
+<pre><code>CREATE ROLE 'wordpress_app';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress_app';
+exit</code></pre>
+<div class="warn"><p><strong>次の <code>set-password</code> では、<code>blog</code> の <code>wp-config.php</code> に現在設定されている <code>DB_PASSWORD</code> の値（ラボ画面の指定値）を必ず入力します。</strong> Task 4 で変更するのは <code>DB_HOST</code> だけなので、別の値にすると切り替え後に WordPress が DB へ接続できません。</p></div>
+<pre><code>gcloud sql users create $DB_USER --instance=$INSTANCE_NAME --host=% --database-roles=wordpress_app
+gcloud sql users set-password $DB_USER --instance=$INSTANCE_NAME --host=% --prompt-for-password
+gcloud sql connect $INSTANCE_NAME --user=root</code></pre>
+<pre><code>SET DEFAULT ROLE 'wordpress_app' TO 'blogadmin'@'%';
+SHOW GRANTS FOR 'blogadmin'@'%';    -- cloudsqlsuperuser が無く wordpress_app だけなら成功
+exit</code></pre>
+<div class="warn"><p>既定ロールを設定しないと、ログイン時にロールが有効にならず、Task 3 のインポートが Access denied で失敗します。</p></div>
+
+<h2 id="t3">Task 3: ダンプを取得してインポートする</h2>
+<h3>3-1 承認済みネットワークと TLS</h3>
+<pre><code>export BLOG_IP=$(gcloud compute instances describe blog --zone=$ZONE \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+gcloud sql instances patch $INSTANCE_NAME --authorized-networks=${BLOG_IP}/32 --quiet
+gcloud sql instances patch $INSTANCE_NAME --ssl-mode=ENCRYPTED_ONLY --quiet
+export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME --format='get(ipAddresses[0].ipAddress)')
+gcloud sql ssl server-ca-certs list --instance=$INSTANCE_NAME --format='value(cert)' &gt; server-ca.pem
+gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE
+echo "SQL_IP=$SQL_IP"    # blog で使うので控える</code></pre>
+<p><code>/32</code> は「その 1 台だけ」を許可する指定です。<code>--authorized-networks</code> は既存リストを<strong>上書き</strong>するので、複数ある場合はカンマ区切りで全部書きます。この手順が Task 3 の Check my progress の対象です。</p>
+<h3>3-2 ダンプ前にサイトを読み取り専用にする</h3>
+<p>ダンプ後に書き込まれた記事やコメントは Cloud SQL に移らず失われます。<code>blog</code> の Apache で POST 等と <code>wp-cron.php</code> を拒否し、<code>wp-config.php</code> に <code>DISABLE_WP_CRON</code> を true で追加して、検証が終わるまで書き込みを止めます（閲覧の GET / HEAD は可能です）。設定ファイルと途中で失敗した場合に中止する安全な手順は、配布している Markdown 版 <code>Gcp-cloudsql-wordpress-migration-guide.md</code> の「6.4 手順 3-4」を使ってください。</p>
+<h3>3-3 ダンプと取り込み（blog 上で実行）</h3>
+<pre><code>mysqldump -u blogadmin -p --databases wordpress --hex-blob --no-tablespaces \
+  --single-transaction --set-gtid-purged=OFF --default-character-set=utf8mb4 \
+  &gt; wordpress_backup.sql
+grep -c "CREATE TABLE" wordpress_backup.sql    # 約 12 個前後
+
+SQL_IP="★Cloud Shell で表示された値"
+mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
+  --default-character-set=utf8mb4 wordpress &lt; wordpress_backup.sql</code></pre>
+<table><tr><th>オプション</th><th>意味</th></tr>
+<tr><td><code>-p</code></td><td>パスワードを対話入力（引数に書かない）</td></tr>
+<tr><td><code>--hex-blob</code></td><td>バイナリ列を 16 進で書き出し、破損を防ぐ</td></tr>
+<tr><td><code>--single-transaction</code></td><td>InnoDB をロックせず一貫した時点で取得</td></tr>
+<tr><td><code>--set-gtid-purged=OFF</code></td><td>GTID 文を出さない（MariaDB では外す）</td></tr>
+<tr><td><code>VERIFY_CA</code></td><td>CA 証明書でサーバーを検証（<code>REQUIRED</code> は検証しない）</td></tr></table>
+<div class="note"><p><strong>MariaDB クライアントの場合</strong>は <code>--ssl</code> が証明書を検証しないため、IP 直結はせず、Task 4 の Auth Proxy を先に起動して <code>-h 127.0.0.1 -P 3307</code> で取り込みます。このときプロキシが TLS を担うため、IP 直結用の <code>--ssl-mode</code> と <code>--ssl-ca</code> は付けません。つながらずタイムアウト（ERROR 2003）になる場合は、承認済みネットワークを確認します。</p></div>
+<p>取り込み後は <code>SHOW TABLES;</code> と投稿テーブルの件数で確認します。テーブル接頭辞は <code>wp_</code> とは限らないため、<code>wp-config.php</code> の <code>$table_prefix</code> に合わせます。</p>
+
+<h2 id="t4">Task 4: WordPress の接続先を変更する</h2>
+<p>WordPress 本体は証明書の CA を指定できず、パブリック IP への TLS 直結では検証を無効にするしかありません。そこで <code>blog</code> 上で <strong>Cloud SQL Auth Proxy</strong> を動かし、<code>DB_HOST</code> を <code>127.0.0.1:3307</code> にします。ローカル MySQL が 3306 を使うため、プロキシは 3307 です。</p>
+<div class="warn"><p>問題文は「DB_HOST を Cloud SQL の IP に」と求めています。本ガイドは安全性を優先したプロキシ構成です。採点で IP の値が必要な場合はラボ画面の指示に従ってください。</p></div>
+<h3>4-1 権限を付与する（Cloud Shell）</h3>
+<pre><code>export BLOG_SA=$(gcloud compute instances describe blog --zone=$ZONE \
+  --format='value(serviceAccounts[0].email)')
+export CONNECTION_NAME=$(gcloud sql instances describe $INSTANCE_NAME --format='value(connectionName)')
+gcloud projects add-iam-policy-binding "$(gcloud config get-value project)" \
+  --member="serviceAccount:${BLOG_SA}" --role=roles/cloudsql.client
+gcloud compute instances describe blog --zone=$ZONE --format='value(serviceAccounts[0].scopes)'
+echo "CONNECTION_NAME=$CONNECTION_NAME"    # blog で使うので控える</code></pre>
+<p>スコープに <code>cloud-platform</code> か <code>sqlservice.admin</code> が無い場合は、VM を停止してスコープを変更します（外部 IP が変わっても、プロキシ接続は承認済みネットワークに依存しません）。</p>
+<h3>4-2 プロキシを常駐させる（blog 上）</h3>
+<pre><code>CONNECTION_NAME="★Cloud Shell で表示された値"
+curl -sSfL -o cloud-sql-proxy \
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64 \
+  &amp;&amp; echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  &amp;&amp; sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy</code></pre>
+<p>ダウンロードまたは SHA-256 の検証に失敗すると <code>sudo install</code> は実行されません。エラーが出たら、ここで移行を中止します。成功した場合だけ、続けて systemd のユニットを作ります。</p>
+<pre><code>sudo tee /etc/systemd/system/cloud-sql-proxy.service &gt; /dev/null &lt;&lt;EOF
+[Unit]
+Description=Cloud SQL Auth Proxy
+Wants=network-online.target
+After=network-online.target
+[Service]
+ExecStart=/usr/local/bin/cloud-sql-proxy --address 127.0.0.1 --port 3307 ${CONNECTION_NAME}
+Restart=always
+DynamicUser=yes
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload &amp;&amp; sudo systemctl enable cloud-sql-proxy \
+  &amp;&amp; sudo systemctl restart cloud-sql-proxy &amp;&amp; sudo systemctl is-active cloud-sql-proxy</code></pre>
+<h3>4-3 wp-config.php を更新する</h3>
+<table><tr><th>定数</th><th>変更</th><th>理由</th></tr>
+<tr><td><code>DB_NAME</code> / <code>DB_USER</code> / <code>DB_PASSWORD</code></td><td>不要</td><td>Task 2 で同じ値を作成済み</td></tr>
+<tr><td><code>DB_HOST</code></td><td><strong>必要</strong></td><td><code>localhost</code> → <code>127.0.0.1:3307</code></td></tr></table>
+<pre><code># バックアップは Web ルートの外（/root）に 0600 で保存する
+sudo install -m 0600 -o root -g root /var/www/html/wordpress/wp-config.php /root/wp-config.php.bak
+sudo sed -i -E "s/define\( *['\"]DB_HOST['\"] *, *['\"][^'\"]*['\"] *\);/define( 'DB_HOST', '127.0.0.1:3307' );/" \
+  /var/www/html/wordpress/wp-config.php
+grep -E "DB_HOST|MYSQL_CLIENT_FLAGS" /var/www/html/wordpress/wp-config.php</code></pre>
+<p><code>DB_PASSWORD</code> を画面に出さないよう、確認は <code>DB_HOST</code> など必要な行だけにします。<code>MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT</code> を含む行があれば削除します。完了したら Check my progress を押します。</p>
+
+<h2 id="t5">Task 5: 検証とトラブルシューティング</h2>
+<pre><code>curl -I http://localhost/wordpress/    # HTTP/1.1 200 OK なら正常</code></pre>
+<p>ブラウザで <code>http://&lt;blog の外部 IP&gt;</code> も開きます。任意で、ローカル MySQL（サービス名は <code>mysql</code> / <code>mysqld</code> / <code>mariadb</code>）を止めても表示されれば、確実に Cloud SQL を参照しています。確認後は <code>sudo systemctl start</code> で戻せます。</p>
+<p>移行を確認できたら、<code>sudo a2disconf wp-readonly</code>、構文検査、<code>sudo systemctl reload apache2</code> が全て成功した場合だけ、追加した <code>DISABLE_WP_CRON</code> の行を消して書き込みを再開します。確認できない場合は <code>/root/wp-config.php.bak</code> に戻します。</p>
+<h3>エラー診断フロー</h3>
+<div class="mermaid-diagram" id="d3"><svg id="md3" width="1019.625" xmlns="http://www.w3.org/2000/svg" class="flowchart" height="870.0625" viewBox="0 0 1019.625 870.0625" role="graphics-document document" aria-roledescription="flowchart-v2">
+<style>#md3{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;fill:#e6edf7;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#md3 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#md3 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#md3 .error-icon{fill:#0d1b2e;}#md3 .error-text{fill:#e6edf7;stroke:#e6edf7;}#md3 .edge-thickness-normal{stroke-width:1px;}#md3 .edge-thickness-thick{stroke-width:3.5px;}#md3 .edge-pattern-solid{stroke-dasharray:0;}#md3 .edge-thickness-invisible{stroke-width:0;fill:none;}#md3 .edge-pattern-dashed{stroke-dasharray:3;}#md3 .edge-pattern-dotted{stroke-dasharray:2;}#md3 .marker{fill:#7c9eff;stroke:#7c9eff;}#md3 .marker.cross{stroke:#7c9eff;}#md3 svg{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:16px;}#md3 p{margin:0;}#md3 .label{font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;color:#e6edf7;}#md3 .cluster-label text{fill:#e6edf7;}#md3 .cluster-label span{color:#e6edf7;}#md3 .cluster-label span p{background-color:transparent;}#md3 .label text,#md3 span{fill:#e6edf7;color:#e6edf7;}#md3 .node rect,#md3 .node circle,#md3 .node ellipse,#md3 .node polygon,#md3 .node path{fill:#12233b;stroke:#7c9eff;stroke-width:1px;}#md3 .rough-node .label text,#md3 .node .label text,#md3 .image-shape .label,#md3 .icon-shape .label{text-anchor:middle;}#md3 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#md3 .rough-node .label,#md3 .node .label,#md3 .image-shape .label,#md3 .icon-shape .label{text-align:center;}#md3 .node.clickable{cursor:pointer;}#md3 .root .anchor path{fill:#7c9eff!important;stroke-width:0;stroke:#7c9eff;}#md3 .arrowheadPath{fill:#0b0b0b;}#md3 .edgePath .path{stroke:#7c9eff;stroke-width:2.0px;}#md3 .flowchart-link{stroke:#7c9eff;fill:none;}#md3 .edgeLabel{background-color:#07111e;text-align:center;}#md3 .edgeLabel p{background-color:#07111e;}#md3 .edgeLabel rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md3 .labelBkg{background-color:rgba(7, 17, 30, 0.5);}#md3 .cluster rect{fill:#0d1b2e;stroke:hsl(214.5454545455, 15.9322033898%, 1.568627451%);stroke-width:1px;}#md3 .cluster text{fill:#e6edf7;}#md3 .cluster span{color:#e6edf7;}#md3 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"Noto Sans JP","Noto Sans CJK JP",sans-serif;font-size:12px;background:#0d1b2e;border:1px solid hsl(214.5454545455, 15.9322033898%, 1.568627451%);border-radius:2px;pointer-events:none;z-index:100;}#md3 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#e6edf7;}#md3 rect.text{fill:none;stroke-width:0;}#md3 .icon-shape,#md3 .image-shape{background-color:#07111e;text-align:center;}#md3 .icon-shape p,#md3 .image-shape p{background-color:#07111e;padding:2px;}#md3 .icon-shape rect,#md3 .image-shape rect{opacity:0.5;background-color:#07111e;fill:#07111e;}#md3 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#md3 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#md3 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style>
+<g>
+<marker id="md3_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md3_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto">
+<path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md3_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md3_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;">
+</circle>
+</marker>
+<marker id="md3_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<marker id="md3_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto">
+<path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;">
+</path>
+</marker>
+<g class="root">
+<g class="clusters">
+</g>
+<g class="edgePaths">
+<path d="M706.641,64L706.641,68.167C706.641,72.333,706.641,80.667,706.641,88.333C706.641,96,706.641,103,706.641,106.5L706.641,110" id="L_c1_c2_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c1_c2_0" data-points="W3sieCI6NzA2LjY0MDYyNSwieSI6NjR9LHsieCI6NzA2LjY0MDYyNSwieSI6ODl9LHsieCI6NzA2LjY0MDYyNSwieSI6MTE0fV0=" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M632,239.047L570.971,259.654C509.943,280.26,387.885,321.474,326.857,349.581C265.828,377.688,265.828,392.688,265.828,400.188L265.828,407.688" id="L_c2_c3_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c2_c3_0" data-points="W3sieCI6NjMxLjk5OTg5NDgzNDExOTUsInkiOjIzOS4wNDY3Njk4MzQxMTk0Nn0seyJ4IjoyNjUuODI4MTI1LCJ5IjozNjIuNjg3NX0seyJ4IjoyNjUuODI4MTI1LCJ5Ijo0MTEuNjg3NX1d" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M658.638,265.685L643.669,281.852C628.699,298.019,598.76,330.353,583.79,370.052C568.82,409.75,568.82,456.813,568.82,480.344L568.82,503.875" id="L_c2_c4_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c2_c4_0" data-points="W3sieCI6NjU4LjYzODQ1NTgxOTIyOTksInkiOjI2NS42ODUzMzA4MTkyMjk4fSx7IngiOjU2OC44MjAzMTI1LCJ5IjozNjIuNjg3NX0seyJ4Ijo1NjguODIwMzEyNSwieSI6NTA3Ljg3NX1d" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M760.307,260.021L780.193,277.132C800.08,294.243,839.852,328.465,859.739,367.108C879.625,405.75,879.625,448.813,879.625,470.344L879.625,491.875" id="L_c2_c5_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c2_c5_0" data-points="W3sieCI6NzYwLjMwNzE4NTk2NzYxNjYsInkiOjI2MC4wMjA5MzkwMzIzODMzNX0seyJ4Ijo4NzkuNjI1LCJ5IjozNjIuNjg3NX0seyJ4Ijo4NzkuNjI1LCJ5Ijo0OTUuODc1fV0=" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M208.587,602.821L195.157,618.528C181.727,634.235,154.868,665.649,141.438,690.856C128.008,716.063,128.008,735.063,128.008,744.563L128.008,754.063" id="L_c3_c6_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c3_c6_0" data-points="W3sieCI6MjA4LjU4Njk0NDg1OTk1MzUsInkiOjYwMi44MjEzMTk4NTk5NTM1fSx7IngiOjEyOC4wMDc4MTI1LCJ5Ijo2OTcuMDYyNX0seyJ4IjoxMjguMDA3ODEyNSwieSI6NzU4LjA2MjV9XQ==" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M323.069,602.821L336.499,618.528C349.929,634.235,376.789,665.649,390.219,690.856C403.648,716.063,403.648,735.063,403.648,744.563L403.648,754.063" id="L_c3_c7_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c3_c7_0" data-points="W3sieCI6MzIzLjA2OTMwNTE0MDA0NjUsInkiOjYwMi44MjEzMTk4NTk5NTM1fSx7IngiOjQwMy42NDg0Mzc1LCJ5Ijo2OTcuMDYyNX0seyJ4Ijo0MDMuNjQ4NDM3NSwieSI6NzU4LjA2MjV9XQ==" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+<path d="M355.893,569.997L411.791,591.175C467.689,612.352,579.485,654.707,635.383,681.385C691.281,708.063,691.281,719.063,691.281,724.563L691.281,730.063" id="L_c3_c8_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_c3_c8_0" data-points="W3sieCI6MzU1Ljg5MzQxODMxNDY4OTAzLCJ5Ijo1NjkuOTk3MjA2Njg1MzExfSx7IngiOjY5MS4yODEyNSwieSI6Njk3LjA2MjV9LHsieCI6NjkxLjI4MTI1LCJ5Ijo3MzQuMDYyNX1d" marker-end="url(#md3_flowchart-v2-pointEnd)">
+</path>
+</g>
+<g class="edgeLabels">
+<g class="edgeLabel">
+<g class="label" data-id="L_c1_c2_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(265.828125, 362.6875)">
+<g class="label" data-id="L_c2_c3_0" transform="translate(-100, -24)"><foreignObject width="200" height="48"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="edgeLabel"><p>database connection エラー</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(568.8203125, 362.6875)">
+<g class="label" data-id="L_c2_c4_0" transform="translate(-39.1171875, -12)"><foreignObject width="78.234375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>白画面 500</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(879.625, 362.6875)">
+<g class="label" data-id="L_c2_c5_0" transform="translate(-32.0078125, -12)"><foreignObject width="64.015625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>記事が空</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(128.0078125, 697.0625)">
+<g class="label" data-id="L_c3_c6_0" transform="translate(-47.84375, -12)"><foreignObject width="95.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>タイムアウト</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(403.6484375, 697.0625)">
+<g class="label" data-id="L_c3_c7_0" transform="translate(-52.21875, -12)"><foreignObject width="104.4375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>Access denied</p></span></div></foreignObject></g>
+</g>
+<g class="edgeLabel" transform="translate(691.28125, 697.0625)">
+<g class="label" data-id="L_c3_c8_0" transform="translate(-39.84375, -12)"><foreignObject width="79.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>接続できる</p></span></div></foreignObject></g>
+</g>
+</g>
+<g class="nodes">
+<g class="node default" id="flowchart-c1-0" transform="translate(706.640625, 36)">
+<rect class="basic label-container" style="" x="-112.0078125" y="-28" width="224.015625" height="56">
+</rect>
+<g class="label" style="" transform="translate(-80.0078125, -12)">
+<rect>
+</rect><foreignObject width="160.015625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>ブログが表示されない</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c2-1" transform="translate(706.640625, 213.84375)">
+<polygon points="99.84375,0 199.6875,-99.84375 99.84375,-199.6875 0,-99.84375" class="label-container" transform="translate(-99.34375, 99.84375)">
+</polygon>
+<g class="label" style="" transform="translate(-71.84375, -12)">
+<rect>
+</rect><foreignObject width="143.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>画面のメッセージは</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c3-3" transform="translate(265.828125, 535.875)">
+<polygon points="124.1875,0 248.375,-124.1875 124.1875,-248.375 0,-124.1875" class="label-container" transform="translate(-123.6875, 124.1875)">
+</polygon>
+<g class="label" style="" transform="translate(-96.1875, -12)">
+<rect>
+</rect><foreignObject width="192.375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>mysql で直接接続できるか</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c4-5" transform="translate(568.8203125, 535.875)">
+<rect class="basic label-container" style="" x="-128.8046875" y="-28" width="257.609375" height="56">
+</rect>
+<g class="label" style="" transform="translate(-96.8046875, -12)">
+<rect>
+</rect><foreignObject width="193.609375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>Apache の error.log を確認</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c5-7" transform="translate(879.625, 535.875)">
+<rect class="basic label-container" style="" x="-132" y="-40" width="264" height="80">
+</rect>
+<g class="label" style="" transform="translate(-100, -24)">
+<rect>
+</rect><foreignObject width="200" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel"><p>テーブルと件数を確認して再インポート</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c6-9" transform="translate(128.0078125, 798.0625)">
+<rect class="basic label-container" style="" x="-120.0078125" y="-40" width="240.015625" height="80">
+</rect>
+<g class="label" style="" transform="translate(-88.0078125, -24)">
+<rect>
+</rect><foreignObject width="176.015625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>承認済みネットワークに<br>blog の IP/32 があるか</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c7-11" transform="translate(403.6484375, 798.0625)">
+<rect class="basic label-container" style="" x="-105.6328125" y="-40" width="211.265625" height="80">
+</rect>
+<g class="label" style="" transform="translate(-73.6328125, -24)">
+<rect>
+</rect><foreignObject width="147.265625" height="48"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>ユーザー パスワード<br>既定ロールを確認</p></span></div></foreignObject></g>
+</g>
+<g class="node default" id="flowchart-c8-13" transform="translate(691.28125, 798.0625)">
+<rect class="basic label-container" style="" x="-132" y="-64" width="264" height="128">
+</rect>
+<g class="label" style="" transform="translate(-100, -48)">
+<rect>
+</rect><foreignObject width="200" height="96"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: break-spaces; line-height: 1.5; max-width: 200px; text-align: center; width: 200px;"><span class="nodeLabel"><p>DB_HOST が 127.0.0.1:3307 か<br>cloud-sql-proxy が稼働中か</p></span></div></foreignObject></g>
+</g>
+</g>
+</g>
+</g>
+</svg></div>
+<table><tr><th>症状</th><th>主な原因</th><th>対処</th></tr>
+<tr><td><code>ERROR 2003</code> タイムアウト</td><td>承認済みネットワーク未設定</td><td><code>blog</code> の外部 IP を <code>/32</code> で登録</td></tr>
+<tr><td><code>ERROR 1045 Access denied</code></td><td>パスワード違い／既定ロール未設定</td><td><code>gcloud sql users list</code>、<code>SET DEFAULT ROLE</code> を確認</td></tr>
+<tr><td><code>ERROR 1049 Unknown database</code></td><td>DB 未作成</td><td><code>gcloud sql databases create wordpress</code></td></tr>
+<tr><td>Error establishing a database connection</td><td><code>DB_HOST</code> の誤り／プロキシ停止</td><td><code>systemctl status cloud-sql-proxy</code> と <code>DB_HOST</code> を確認</td></tr>
+<tr><td>記事が空</td><td>インポート漏れ</td><td><code>SHOW TABLES;</code> と件数を確認して再インポート</td></tr>
+<tr><td>blog の IP が変わった</td><td>エフェメラル IP</td><td>承認リストを更新（恒久策は静的 IP の予約）</td></tr></table>
+
+<h2 id="bp">ベストプラクティス（本番ならこうする）</h2>
+<table><tr><th>方式</th><th>概要</th><th>適した場面</th></tr>
+<tr><td>パブリック IP ＋ 承認済みネットワーク</td><td>IP 許可リストで制御</td><td>学習・検証</td></tr>
+<tr><td>Cloud SQL Auth Proxy</td><td>IAM 認可＋自動暗号化</td><td>推奨</td></tr>
+<tr><td>Private IP</td><td>VPC 内で完結</td><td>本番の推奨構成</td></tr></table>
+<p><code>0.0.0.0/0</code> は使わない、TLS を必須にする、パスワードは Secret Manager に保管する、アプリ用ユーザーは最小権限にする、高可用性・自動バックアップ・PITR・削除保護を有効にする、といった点も押さえます。停止時間を最小化したい場合は、ダンプ＆インポートではなく <strong>Database Migration Service</strong> を選びます。</p>
+
+<h2 id="ck">最終チェックリスト</h2>
+<table><tr><th>#</th><th>確認項目</th><th>確認方法</th></tr>
+<tr><td>1</td><td>インスタンスが RUNNABLE、Region / Zone が指定どおり</td><td><code>gcloud sql instances describe</code></td></tr>
+<tr><td>2</td><td><code>wordpress</code> DB と <code>blogadmin</code> が存在</td><td><code>gcloud sql databases list</code> / <code>users list</code></td></tr>
+<tr><td>3</td><td><code>blog</code> の外部 IP が承認済み</td><td>コンソールの接続設定</td></tr>
+<tr><td>4</td><td>インポート済みでテーブルが存在</td><td><code>SHOW TABLES;</code></td></tr>
+<tr><td>5</td><td><code>DB_HOST</code> が <code>127.0.0.1:3307</code>、プロキシ稼働中</td><td><code>grep DB_HOST</code> / <code>systemctl status</code></td></tr>
+<tr><td>6</td><td>ブログが表示される、各 Check my progress が緑</td><td>ブラウザ・ラボ画面</td></tr></table>
+</main>
+</body>
+</html>

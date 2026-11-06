@@ -1,0 +1,114 @@
+// @vitest-environment jsdom
+import { render } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import sourceInventory from '@/docs/migration-inventory/aws-scs-c03-domain3-guide.json';
+import Page from '@/app/aws/security-specialty/domain3/page';
+import {
+    codeBlockSelector,
+    codeLineCount,
+    extractBodyContent,
+    normalizeSpaces,
+    squash,
+    withBlockBoundarySpaces,
+} from '@/__tests__/helpers/migration-test-utils';
+
+vi.mock('@/components/MermaidDiagram', async () => ({
+    MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock,
+}));
+
+const inventory = sourceInventory;
+
+describe('aws-scs-c03-domain3-guide — 移行元コンテンツの全量移行', () => {
+    /** ページを描画してコンテナを返す。 */
+    const renderPage = () => {
+        const { container } = render(<Page />);
+        return container;
+    };
+
+    it.each([
+        ['h1', inventory.h1],
+        ['h2', inventory.h2],
+        ['h3', inventory.h3],
+        ['h4', inventory.h4],
+    ])('%s の件数・順序・テキストが移行元と一致する', (selector, headings) => {
+        const container = renderPage();
+        const rendered = [...container.querySelectorAll(selector)].map((element) =>
+            squash(element.textContent ?? ''),
+        );
+        expect(rendered).toEqual(headings.map(squash));
+    });
+
+    it.each([
+        ['th', inventory.th],
+        ['td', inventory.td],
+        ['li', inventory.listItems],
+    ])('%s の件数・順序・テキストが移行元と一致する', (selector, items) => {
+        const container = renderPage();
+        const rendered = [...container.querySelectorAll(selector)].map((element) =>
+            squash(element.textContent ?? ''),
+        );
+        expect(rendered).toEqual(items.map(squash));
+    });
+
+    it('外部リンクが件数・順序・URL まで移行元と一致する', () => {
+        const container = renderPage();
+        const rendered = [...container.querySelectorAll('a[href^="http"]')].map((anchor) =>
+            anchor.getAttribute('href'),
+        );
+        expect(rendered).toEqual(inventory.links.map((link) => link.href));
+    });
+
+    it('本文・注釈・画像 alt・コード全文が移行元の順序どおり一致する', () => {
+        const container = renderPage();
+        /** 本文ブロックの書式由来の空白を正規化する。 */
+        const normalize = (blocks: { kind: string; text: string }[]) =>
+            blocks.map((block) => ({ ...block, text: normalizeSpaces(block.text) }));
+        expect(normalize(extractBodyContent(withBlockBoundarySpaces(container)))).toEqual(
+            normalize(inventory.bodyContent),
+        );
+    });
+
+    it('全形式の図が件数どおり存在し、説明または装飾指定と自然スケールを持つ', () => {
+        const container = renderPage();
+        const diagramSelector = '[data-testid="mermaid-diagram"], .mermaid, [id^="diag-"]';
+        const diagrams = [...container.querySelectorAll(diagramSelector)].filter(
+            (element) => !element.querySelector(diagramSelector),
+        );
+        expect(diagrams).toHaveLength(inventory.counts.diagram);
+        diagrams.forEach((element) => {
+            const hasLabel = Boolean(element.getAttribute('aria-label')?.trim());
+            const isDecorative =
+                element.getAttribute('data-decorative') === 'true' ||
+                element.getAttribute('aria-hidden') === 'true';
+            expect(hasLabel || isDecorative).toBe(true);
+            expect(element.getAttribute('data-preserve-natural-scale')).toBe('true');
+        });
+    });
+
+    it('静的な画像と SVG が移行元の件数と一致する', () => {
+        const container = renderPage();
+        expect(container.querySelectorAll('img, svg')).toHaveLength(inventory.counts.figure);
+    });
+
+    it('テーブルが件数どおり存在し、thead と th[scope=col] を持つ', () => {
+        const container = renderPage();
+        const tables = [...container.querySelectorAll('table')];
+        expect(tables).toHaveLength(inventory.counts.table);
+        tables.forEach((table, index) => {
+            expect(table.querySelector('thead')).not.toBeNull();
+            const cols = table.querySelectorAll('thead th[scope="col"]');
+            expect(cols).toHaveLength(inventory.structures.tableColumnHeaders[index]!);
+        });
+    });
+
+    it('コードブロックが件数・行数ともに移行元と一致する', () => {
+        const container = renderPage();
+        const blocks = [...container.querySelectorAll(codeBlockSelector)].filter(
+            (element) => !element.parentElement?.closest(codeBlockSelector),
+        );
+        expect(blocks).toHaveLength(inventory.counts.codeBlock);
+        blocks.forEach((block, index) => {
+            expect(codeLineCount(block)).toBe(inventory.structures.codeLines[index]);
+        });
+    });
+});

@@ -156,6 +156,24 @@
     --color-scs-d2-code-inline: #a24a00;
     --color-scs-d2-code-bg: #f3f6fc;
     --color-scs-d2-on-accent: #ffffff;
+    --color-scs-d3-bg: #f6f8fc;
+    --color-scs-d3-bg-card: #ffffff;
+    --color-scs-d3-bg-card-2: #eef2fa;
+    --color-scs-d3-border: #d3dbeb;
+    --color-scs-d3-border-soft: #e4e9f3;
+    --color-scs-d3-text: #1b2640;
+    --color-scs-d3-text-dim: #46546f;
+    --color-scs-d3-accent: #2a4fd0;
+    --color-scs-d3-accent-soft: #a3b4ee;
+    --color-scs-d3-accent-bg: #e7edff;
+    --color-scs-d3-danger: #c0233f;
+    --color-scs-d3-danger-bg: #fde8ec;
+    --color-scs-d3-success: #1b7a45;
+    --color-scs-d3-success-bg: #e6f6ed;
+    --color-scs-d3-sidebar-bg: #ffffff;
+    --color-scs-d3-strong: #0c1630;
+    --color-scs-d3-code-inline: #9a4208;
+    --color-scs-d3-code-bg: #f3f6fc;
     /* CCNP Security 完全ガイド（原本の配色をそのまま保持） */
     --color-ccnp-security-paper: #F6F7F9;
     --color-ccnp-security-ink: #161B26;
@@ -274,6 +292,52 @@
     --color-ddia-checklist-hover: rgba(124, 158, 255, 0.05);
     --color-ddia-check-mark: #08101f;
     --color-ddia-sidebar-shadow: rgba(0, 0, 0, 0.5);
+    /* SAP-C02 Domain 4: original light palette */
+    --color-sap-d4-bg: #f5f7fb;
+    --color-sap-d4-bg-card: #ffffff;
+    --color-sap-d4-bg-card-2: #eef2f9;
+    --color-sap-d4-border: #cfd9ea;
+    --color-sap-d4-border-soft: #e1e8f3;
+    --color-sap-d4-text: #1b2538;
+    --color-sap-d4-text-dim: #44546f;
+    --color-sap-d4-text-faint: #5b6b86;
+    --color-sap-d4-accent: #2f55c8;
+    --color-sap-d4-accent-soft: #8aa0e0;
+    --color-sap-d4-accent-bg: #e6edfc;
+    --color-sap-d4-danger: #b4233c;
+    --color-sap-d4-danger-bg: #fdecef;
+    --color-sap-d4-warn: #8a5200;
+    --color-sap-d4-warn-bg: #fff3e0;
+    --color-sap-d4-success: #1b7a45;
+    --color-sap-d4-success-bg: #e8f6ee;
+    /* SAP-C02 Domain 4: checklist contrast (WCAG 3:1 / 4.5:1 on white) */
+    --color-sap-d4-checkbox-border: #7c8ab0;
+    --color-sap-d4-checked-label: #5f6f8c;
+    /* SAP-C02 Domain 4: code comment contrast (WCAG AA 4.5:1 on code-bg) */
+    --color-sap-d4-hljs-comment-contrast: #56647f;
+    /* SAP-C02 Domain 4: original fixed colors */
+    --color-sap-d4-sidebar-bg: #eaf0fa;
+    --color-sap-d4-sidebar-active: #d9e4fb;
+    --color-sap-d4-hero-gradient-start: #1b2538;
+    --color-sap-d4-hero-gradient-end: #2f55c8;
+    --color-sap-d4-strong: #0c1426;
+    --color-sap-d4-inline-code: #9a4a00;
+    --color-sap-d4-row-hover: rgba(47, 85, 200, 0.05);
+    --color-sap-d4-callout-practice-border: #a9d8bf;
+    --color-sap-d4-surface: #ffffff;
+    --color-sap-d4-checklist-hover: rgba(47, 85, 200, 0.06);
+    --color-sap-d4-code-bg: #f6f8fc;
+    --color-sap-d4-sidebar-shadow: rgba(20, 30, 60, 0.25);
+    --color-sap-d4-src-card-hover-shadow: rgba(47, 85, 200, 0.12);
+    --color-sap-d4-hljs-comment: #566379;
+    --color-sap-d4-hljs-keyword: #7a1fa2;
+    --color-sap-d4-hljs-string: #0b6b2a;
+    --color-sap-d4-hljs-number: #a14400;
+    --color-sap-d4-hljs-built_in: #0a5fb4;
+    --color-sap-d4-hljs-attr: #1d4fb8;
+    --color-sap-d4-hljs-variable: #8a2c6d;
+    --color-sap-d4-hljs-punctuation: #44546f;
+    --color-sap-d4-hljs-err: #b4233c;
     /* SAP-C02 Domain 3: original light palette */
     --color-sap-d3-bg: #f5f7fb;
     --color-sap-d3-bg-card: #fff;

@@ -1,0 +1,4149 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Develop Serverless Applications on Cloud Run: Challenge Lab 完全解説ガイド</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+        />
+        <style>
+            :root {
+                --bg-primary: #07111e;
+                --bg-secondary: #0d1b30;
+                --bg-tertiary: #13243f;
+                --code-bg: #0a1626;
+                --text-primary: #f3f5fa;
+                --text-secondary: #c6d0e3;
+                --text-tertiary: #93a1bd;
+                --border-tertiary: #1e2f4d;
+                --border-secondary: #2d456e;
+                --border-primary: #3e5c8f;
+                --accent: #7c9eff;
+                --accent-soft: #16284a;
+                --success: #5fd3a0;
+                --warning: #f0c36a;
+                --radius-md: 8px;
+                --radius-lg: 12px;
+                --sidebar-w: 300px;
+                --font-sans:
+                    -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+                    'Noto Sans JP', 'Yu Gothic UI', 'Yu Gothic', Meiryo, 'Segoe UI', sans-serif;
+                --font-mono:
+                    ui-monospace, SFMono-Regular, Menlo, Consolas, 'Noto Sans Mono CJK JP',
+                    'Liberation Mono', monospace;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+                -webkit-text-size-adjust: 100%;
+            }
+            body {
+                margin: 0;
+                background: var(--bg-primary);
+                color: var(--text-secondary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                line-height: 1.8;
+                font-weight: 400;
+            }
+            body.nav-open {
+                overflow: hidden;
+            }
+            a {
+                color: var(--accent);
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+            a:hover {
+                color: var(--text-primary);
+            }
+            strong {
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--sidebar-w);
+                background: var(--bg-secondary);
+                border-right: 1px solid var(--border-tertiary);
+                overflow-y: auto;
+                z-index: 50;
+                display: flex;
+                flex-direction: column;
+            }
+            .brand {
+                padding: 24px 24px 18px;
+                border-bottom: 1px solid var(--border-tertiary);
+            }
+            .brand-title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-primary);
+                font-weight: 500;
+                line-height: 1.4;
+            }
+            .brand-title i {
+                color: var(--accent);
+                font-size: 1.5rem;
+            }
+            .brand-sub {
+                margin-top: 8px;
+                color: var(--text-tertiary);
+                line-height: 1.5;
+            }
+            .sidebar nav {
+                padding: 14px 12px 28px;
+            }
+            .sidebar nav ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .sidebar nav li {
+                padding-left: 0;
+                margin: 2px 0;
+            }
+            .sidebar nav li::before {
+                content: none;
+            }
+            .sidebar nav a {
+                display: block;
+                padding: 8px 12px;
+                border-radius: var(--radius-md);
+                color: var(--text-secondary);
+                text-decoration: none;
+                line-height: 1.5;
+                border-left: 3px solid transparent;
+            }
+            .sidebar nav a:hover {
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+            }
+            .sidebar nav a.active {
+                background: var(--accent-soft);
+                color: var(--text-primary);
+                border-left-color: var(--accent);
+                font-weight: 500;
+            }
+
+            .nav-toggle {
+                display: none;
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 70;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 20px;
+                border: 1px solid var(--accent);
+                border-radius: 999px;
+                background: var(--accent);
+                color: var(--bg-primary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+            }
+            .nav-toggle i {
+                font-size: 1.25rem;
+            }
+            .backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: var(--bg-primary);
+                opacity: 0.72;
+                z-index: 40;
+            }
+            .backdrop.show {
+                display: block;
+            }
+
+            .main {
+                margin-left: var(--sidebar-w);
+                padding: 0 56px 96px;
+            }
+            .hero {
+                padding: 56px 0 24px;
+                border-bottom: 1px solid var(--border-secondary);
+            }
+            .hero h1 {
+                margin: 0 0 20px;
+                color: var(--text-primary);
+                font-size: 1.75rem;
+                font-weight: 500;
+                line-height: 1.45;
+            }
+            .hero-meta blockquote {
+                margin: 0;
+            }
+            .section {
+                padding-top: 56px;
+            }
+            .section > h2 {
+                margin: 0 0 20px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid var(--border-secondary);
+                color: var(--text-primary);
+                font-size: 1.375rem;
+                font-weight: 500;
+                line-height: 1.5;
+            }
+            .section h3 {
+                margin: 40px 0 14px;
+                color: var(--text-primary);
+                font-size: 1.125rem;
+                font-weight: 500;
+                line-height: 1.5;
+                padding-left: 12px;
+                border-left: 3px solid var(--accent);
+            }
+            .section h4 {
+                margin: 28px 0 10px;
+                color: var(--text-primary);
+                font-size: 1rem;
+                font-weight: 500;
+            }
+            h2,
+            h3 {
+                scroll-margin-top: 24px;
+            }
+            p {
+                margin: 0 0 1.1rem;
+            }
+
+            ul,
+            ol {
+                margin: 0 0 1.2rem;
+                padding: 0;
+                list-style: none;
+            }
+            ul > li {
+                position: relative;
+                padding-left: 1.5rem;
+                margin: 0.45rem 0;
+            }
+            ul > li::before {
+                content: '';
+                position: absolute;
+                left: 0.35rem;
+                top: 0.85em;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--accent);
+            }
+            ol {
+                counter-reset: item;
+            }
+            ol > li {
+                position: relative;
+                padding-left: 2rem;
+                margin: 0.45rem 0;
+                counter-increment: item;
+            }
+            ol > li::before {
+                content: counter(item);
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: var(--accent);
+                font-weight: 500;
+            }
+
+            code {
+                font-family: var(--font-mono);
+                font-size: 1rem;
+                background: var(--bg-tertiary);
+                border: 1px solid var(--border-tertiary);
+                border-radius: 4px;
+                padding: 0.05em 0.4em;
+                color: var(--text-primary);
+                overflow-wrap: anywhere;
+            }
+            blockquote {
+                margin: 1.4rem 0;
+                padding: 14px 20px;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-tertiary);
+                border-left: 4px solid var(--accent);
+                border-radius: var(--radius-md);
+            }
+            blockquote p {
+                margin: 0 0 0.7rem;
+            }
+            blockquote p:last-child {
+                margin-bottom: 0;
+            }
+
+            .code-block {
+                margin: 1.2rem 0 1.5rem;
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+                background: var(--code-bg);
+                overflow: hidden;
+            }
+            .code-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 8px 14px;
+                background: var(--bg-secondary);
+                border-bottom: 1px solid var(--border-tertiary);
+            }
+            .code-lang {
+                color: var(--text-tertiary);
+                font-family: var(--font-mono);
+            }
+            .copy-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 12px;
+                border: 1px solid var(--border-primary);
+                border-radius: var(--radius-md);
+                background: transparent;
+                color: var(--text-secondary);
+                font-family: var(--font-sans);
+                font-size: 1rem;
+                cursor: pointer;
+            }
+            .copy-btn:hover {
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+            }
+            .code-block pre {
+                margin: 0;
+                padding: 16px 18px;
+                overflow-x: auto;
+            }
+            .code-block pre code {
+                display: block;
+                background: transparent;
+                border: 0;
+                padding: 0;
+                border-radius: 0;
+                font-size: 1rem;
+                line-height: 1.65;
+                white-space: pre;
+                overflow-wrap: normal;
+                color: var(--text-secondary);
+            }
+            pre code.hljs {
+                background: transparent;
+                padding: 0;
+            }
+
+            .table-wrap {
+                margin: 1.2rem 0 1.6rem;
+                overflow-x: auto;
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 1rem;
+                line-height: 1.65;
+            }
+            th,
+            td {
+                padding: 10px 16px;
+                text-align: left;
+                vertical-align: top;
+                border-bottom: 1px solid var(--border-tertiary);
+            }
+            th {
+                background: var(--bg-tertiary);
+                color: var(--text-primary);
+                font-weight: 500;
+                white-space: nowrap;
+            }
+            tbody tr:last-child td {
+                border-bottom: 0;
+            }
+            tbody tr:hover td {
+                background: var(--bg-secondary);
+            }
+            td code {
+                white-space: normal;
+            }
+
+            .diagram {
+                margin: 1.5rem 0 1.8rem;
+                padding: 24px 20px;
+                border: 1px solid var(--border-tertiary);
+                border-radius: var(--radius-lg);
+                background: var(--bg-secondary);
+                overflow-x: auto;
+            }
+            .mermaid {
+                display: flex;
+                justify-content: center;
+            }
+            .mermaid svg {
+                overflow: visible;
+            }
+            .mermaid foreignObject {
+                overflow: visible;
+            }
+            .mermaid .nodeLabel,
+            .mermaid .edgeLabel,
+            .mermaid .cluster-label span,
+            .mermaid .cluster-label div {
+                white-space: nowrap;
+            }
+            .mermaid text.sequenceNumber {
+                font-size: 1rem !important;
+            }
+            .diagram-error {
+                margin: 0;
+                white-space: pre-wrap;
+                color: var(--text-tertiary);
+            }
+
+            details {
+                margin: 0 0 1.4rem;
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+                background: var(--bg-secondary);
+            }
+            summary {
+                padding: 12px 18px;
+                color: var(--accent);
+                font-weight: 500;
+                cursor: pointer;
+            }
+            details[open] > summary {
+                border-bottom: 1px solid var(--border-tertiary);
+            }
+            details > p {
+                margin: 0;
+                padding: 14px 18px;
+            }
+
+            .check-list {
+                counter-reset: chk;
+                display: grid;
+                gap: 12px;
+                margin: 1.2rem 0 1.6rem;
+            }
+            .check-card {
+                counter-increment: chk;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 16px;
+                align-items: center;
+                padding: 14px 18px;
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+                background: var(--bg-secondary);
+                cursor: pointer;
+            }
+            .check-card::before {
+                content: counter(chk);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--bg-tertiary);
+                border: 1px solid var(--border-primary);
+                color: var(--accent);
+                font-weight: 500;
+            }
+            .check-title {
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            .check-card input {
+                appearance: none;
+                -webkit-appearance: none;
+                display: grid;
+                place-content: center;
+                width: 26px;
+                height: 26px;
+                margin: 0;
+                border: 2px solid var(--border-primary);
+                border-radius: 6px;
+                background: transparent;
+                cursor: pointer;
+            }
+            .check-card input::after {
+                content: '';
+                width: 12px;
+                height: 6px;
+                border-left: 3px solid var(--bg-primary);
+                border-bottom: 3px solid var(--bg-primary);
+                transform: rotate(-45deg) translate(1px, -1px);
+                opacity: 0;
+            }
+            .check-card input:checked {
+                background: var(--accent);
+                border-color: var(--accent);
+            }
+            .check-card input:checked::after {
+                opacity: 1;
+            }
+            .check-card:has(input:checked) {
+                border-color: var(--success);
+            }
+            .check-card:has(input:checked) .check-body {
+                text-decoration: line-through;
+                color: var(--text-tertiary);
+            }
+
+            .ref-list {
+                display: grid;
+                gap: 12px;
+                margin: 1rem 0 1.6rem;
+            }
+            .ref-card {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 16px;
+                align-items: start;
+                padding: 14px 18px;
+                border: 1px solid var(--border-secondary);
+                border-radius: var(--radius-md);
+                background: var(--bg-secondary);
+            }
+            .ref-num {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--bg-tertiary);
+                border: 1px solid var(--border-primary);
+                color: var(--accent);
+                font-weight: 500;
+            }
+            .ref-title {
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            .ref-url {
+                display: block;
+                margin-top: 2px;
+                overflow-wrap: anywhere;
+            }
+
+            @media (max-width: 1024px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.25s ease;
+                    width: min(340px, 86vw);
+                }
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+                .nav-toggle {
+                    display: inline-flex;
+                }
+                .main {
+                    margin-left: 0;
+                    padding: 0 24px 120px;
+                }
+                .hero {
+                    padding-top: 40px;
+                }
+            }
+            @media (max-width: 600px) {
+                .main {
+                    padding: 0 16px 120px;
+                }
+                .hero h1 {
+                    font-size: 1.5rem;
+                }
+                .diagram {
+                    padding: 16px 10px;
+                }
+                .check-card {
+                    grid-template-columns: auto 1fr auto;
+                    gap: 12px;
+                    padding: 12px 14px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button
+            class="nav-toggle"
+            id="navToggle"
+            type="button"
+            aria-label="目次を開閉"
+            aria-expanded="false"
+            aria-controls="sidebar"
+        >
+            <i class="ti ti-list"></i><span class="nav-toggle-label">目次</span>
+        </button>
+        <div class="backdrop" id="backdrop"></div>
+        <div class="layout">
+            <aside class="sidebar" id="sidebar" aria-label="目次">
+                <div class="brand">
+                    <div class="brand-title">
+                        <i class="ti ti-cloud-computing"></i><span>Cloud Run Challenge Lab</span>
+                    </div>
+                    <div class="brand-sub">Pet Theory 請求アプリ 全7タスク</div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#sec-0">0. この文書の使い方</a></li>
+                        <li><a href="#sec-1">1. ラボの全体像</a></li>
+                        <li><a href="#sec-2">2. 先に押さえる基礎知識</a></li>
+                        <li><a href="#sec-3">3. 環境準備（Provision the lab environment）</a></li>
+                        <li><a href="#sec-4">Task 1: 公開Billingサービスをデプロイする</a></li>
+                        <li>
+                            <a href="#sec-5">Task 2: ステージングのフロントエンドをデプロイする</a>
+                        </li>
+                        <li><a href="#sec-6">Task 3: 非公開Billingサービスへ置き換える</a></li>
+                        <li><a href="#sec-7">Task 4: Billing用サービスアカウントを作る</a></li>
+                        <li><a href="#sec-8">Task 5: 本番Billingサービスをデプロイする</a></li>
+                        <li>
+                            <a href="#sec-9"
+                                >Task 6: Frontend用サービスアカウントを作り権限を付ける</a
+                            >
+                        </li>
+                        <li><a href="#sec-10">Task 7: 本番Frontendを再デプロイする</a></li>
+                        <li><a href="#sec-11">11. 全タスク通しのコマンドまとめ</a></li>
+                        <li><a href="#sec-12">12. トラブルシューティング</a></li>
+                        <li><a href="#sec-13">13. ベストプラクティス解説（本番運用の視点）</a></li>
+                        <li><a href="#sec-14">14. 理解度チェック</a></li>
+                        <li><a href="#sec-15">15. 参考情報</a></li>
+                    </ul>
+                </nav>
+            </aside>
+            <main class="main">
+                <header class="hero">
+                    <h1>
+                        Develop Serverless Applications on Cloud Run: Challenge Lab 完全解説ガイド
+                    </h1>
+                    <div class="hero-meta">
+                        <blockquote>
+                            <p>
+                                <strong
+                                    >Pet Theory 請求アプリ（Billing）をCloud Runでサーバーレス化する
+                                    全7タスク</strong
+                                ><br />
+                                初学者向け・ステップバイステップ・ベストプラクティス準拠版
+                            </p>
+                            <p>
+                                作成日: 2026-10-30 ／ 想定読者: Google Cloud初学者、Cloud
+                                Runコース受講者
+                            </p>
+                        </blockquote>
+                    </div>
+                </header>
+                <section class="section" id="sec-0">
+                    <h2>0. この文書の使い方</h2>
+                    <h3>0.1 チャレンジラボとは</h3>
+                    <p>
+                        通常のラボは「この通りに打てばOK」という手順書がありますが、<strong>チャレンジラボは手順が書かれていません</strong>。コースで学んだスキルを使い、自分でコマンドを組み立てて課題をクリアします。採点は自動で、<strong
+                            >制限時間内に全タスクを完了すると100%</strong
+                        >
+                        になります。
+                    </p>
+
+                    <p>
+                        この文書は、手順書が無い部分を埋める
+                        <strong>「考え方 → コマンド → 確認方法 → つまずきポイント」</strong>
+                        の4点セットで解説します。
+                    </p>
+
+                    <h3>0.2 重要な注意: 名前の「表記ゆれ」について</h3>
+                    <p>
+                        ラボの手順書テキストには、<code>Billing service account</code> や
+                        <code>Private billing service</code> のように
+                        <strong>人間向けの説明表記</strong>
+                        で書かれた値があります。実際のラボ画面（左パネルの表）では、<code
+                            >private-billing-service</code
+                        >
+                        のような <strong>実際に使う名前</strong> が書かれているのが一般的です。
+                    </p>
+
+                    <blockquote>
+                        <p>
+                            <strong>鉄則: ラボ画面に表示されている値を最優先する。</strong>
+                            この文書では、命名規則（小文字・数字・ハイフンのみ）に沿った一般的な名前を使います。画面の値と違う場合は、<strong
+                                >画面の値に置き換えて</strong
+                            >
+                            ください。後述の「名前の対応表」と「変数」を使えば、1か所の修正で全コマンドに反映できます。
+                        </p>
+                    </blockquote>
+
+                    <h3>0.3 学習の進め方</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ステップ</th>
+                                    <th>やること</th>
+                                    <th>目安</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>第1〜2章で全体像と用語をつかむ</td>
+                                    <td>10分</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>第3章で環境を整える</td>
+                                    <td>5分</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>
+                                        Task 1〜7を順に実施し、各タスク後に
+                                        <strong>Check my progress</strong> を押す
+                                    </td>
+                                    <td>各5〜10分</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>つまずいたら第12章を見る</td>
+                                    <td>随時</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>終わったら第13〜14章で「なぜそうするのか」を復習</td>
+                                    <td>15分</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="sec-1">
+                    <h2>1. ラボの全体像</h2>
+                    <h3>1.1 シナリオ</h3>
+                    <p>
+                        動物病院 <strong>Pet Theory</strong> は、既存のモノリシック（一枚岩）な
+                        <strong>請求（Billing）アプリ</strong>
+                        をサーバーレス化したいと考えています。あなたは開発チームの一員として、<strong
+                            >開発チームから渡されたコードとイメージ</strong
+                        >
+                        を Cloud Run にデプロイし、<strong>ステージング環境 → 本番環境</strong>
+                        へ段階的に移行します。
+                    </p>
+
+                    <h3>1.2 完了条件（Definition of Done）</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ref</th>
+                                    <th>完了条件</th>
+                                    <th>対応タスク</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>ステージング構成をデプロイする</td>
+                                    <td>Task 1, 2, 3</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>本番構成をデプロイする</td>
+                                    <td>Task 4, 5, 7</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>本番構成のコンポーネント間アクセスを保護する</td>
+                                    <td>Task 4, 5, 6, 7</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>1.3 7タスクの一覧</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>内容</th>
+                                    <th>成果物</th>
+                                    <th>認証</th>
+                                    <th>ポイント</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>公開Billing APIを作る</td>
+                                    <td><code>billing-staging-api:0.1</code> を Cloud Run へ</td>
+                                    <td>なし（公開）</td>
+                                    <td>ビルド → デプロイ → 疎通確認</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>ステージングFrontendを作る</td>
+                                    <td><code>frontend-staging:0.1</code> を Cloud Run へ</td>
+                                    <td>なし（公開）</td>
+                                    <td>Task 1と同じ型の繰り返し</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Billingを非公開版へ置き換える</td>
+                                    <td><code>billing-staging-api:0.2</code> を Cloud Run へ</td>
+                                    <td><strong>あり</strong></td>
+                                    <td>既存サービス削除、IDトークンで呼ぶ</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Billing用サービスアカウントを作る</td>
+                                    <td>サービスアカウント</td>
+                                    <td>-</td>
+                                    <td>ロールは付けない（N/A）</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>本番Billingをデプロイ</td>
+                                    <td><code>billing-prod-api:0.1</code> を Cloud Run へ</td>
+                                    <td><strong>あり</strong></td>
+                                    <td>専用サービスアカウントを紐付け</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Frontend用サービスアカウントを作る</td>
+                                    <td>サービスアカウント＋権限</td>
+                                    <td>-</td>
+                                    <td><code>run.invoker</code> をBillingに付与</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>本番Frontendを再デプロイ</td>
+                                    <td><code>frontend-prod:0.1</code> を Cloud Run へ</td>
+                                    <td>なし（公開）</td>
+                                    <td>Frontend用サービスアカウントを紐付け</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>1.4 タスクの流れ（フローチャート）</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm0" role="img" aria-label="図1"></div>
+                    </div>
+
+                    <h3>1.5 最終的に完成する本番構成</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm1" role="img" aria-label="図2"></div>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>ここが設計の肝</strong>: 外部に公開するのは Frontend
+                            だけ。Billing（お金に関わるAPI）は
+                            <strong>認証必須</strong> にして、このラボでは
+                            <strong
+                                >Frontend用サービスアカウントに呼び出し権限（<code>roles/run.invoker</code>）を付与</strong
+                            >
+                            します。認証必須のBillingを呼べるのは
+                            <code>run.routes.invoke</code>
+                            権限を実効的に持つIDに限られますが、Frontend用SAが唯一の呼び出し元になるわけではありません（Owner・Editor
+                            など、ほかのロールでこの権限を持つIDも呼べます）。これが「Secure Access
+                            between components（コンポーネント間アクセスの保護）」の意味です。
+                        </p>
+                    </blockquote>
+                </section>
+                <section class="section" id="sec-2">
+                    <h2>2. 先に押さえる基礎知識</h2>
+                    <h3>2.1 用語集</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>用語</th>
+                                    <th>一言で言うと</th>
+                                    <th>本ラボでの登場場面</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Cloud Run</strong></td>
+                                    <td>
+                                        コンテナをサーバー管理なしで動かすサービス。リクエストが無いときは0台まで縮退する
+                                    </td>
+                                    <td>全タスクのデプロイ先</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>コンテナイメージ</strong></td>
+                                    <td>アプリと実行環境をひとまとめにした「配布物」</td>
+                                    <td><code>billing-staging-api:0.1</code> など</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Dockerfile</strong></td>
+                                    <td>イメージの作り方を書いたレシピ</td>
+                                    <td>各コードのフォルダに入っている</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cloud Build</strong></td>
+                                    <td>クラウド上でイメージをビルドするサービス</td>
+                                    <td><code>gcloud builds submit</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>gcr.io</strong></td>
+                                    <td>
+                                        イメージ保管先のドメイン。現在は
+                                        <strong>Artifact Registry</strong> が裏で保管する
+                                    </td>
+                                    <td>イメージ名 <code>gcr.io/PROJECT_ID/名前:タグ</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>サービス（Service）</strong></td>
+                                    <td>Cloud Runで動くアプリの単位。URLが1つ払い出される</td>
+                                    <td><code>public-billing-service</code> など</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>リビジョン</strong></td>
+                                    <td>サービスのデプロイごとに作られる不変のスナップショット</td>
+                                    <td>再デプロイで増える</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>サービスアカウント（SA）</strong></td>
+                                    <td>人ではなく <strong>プログラムが使う身元（ID）</strong></td>
+                                    <td>Task 4, 6</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IAMロール</strong></td>
+                                    <td>「何をしてよいか」の権限セット</td>
+                                    <td><code>roles/run.invoker</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>roles/run.invoker</strong></td>
+                                    <td>Cloud Runサービスを <strong>呼び出せる</strong> 権限</td>
+                                    <td>Task 6</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>認証なし / 認証あり</strong></td>
+                                    <td>誰でも呼べる / 許可されたIDだけ呼べる</td>
+                                    <td>Task 1, 2, 7 / Task 3, 5</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IDトークン</strong></td>
+                                    <td>「私は誰か」を証明する短命のトークン</td>
+                                    <td><code>gcloud auth print-identity-token</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ステージング / 本番</strong></td>
+                                    <td>動作確認用環境 / 実際にユーザーが使う環境</td>
+                                    <td>Task 1〜3 / Task 4〜7</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>2.2 「認証なし」とは実は何をしているのか</h3>
+                    <p>
+                        Cloud Run の「認証なし（unauthenticated）」は、内部的には
+                        <strong
+                            ><code>allUsers</code>（全員）に
+                            <code>roles/run.invoker</code> を付与</strong
+                        >
+                        している状態です。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>実際の意味</th>
+                                    <th>呼び出し時</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--allow-unauthenticated</code></td>
+                                    <td>全員に呼び出し権限を付ける</td>
+                                    <td>そのまま <code>curl URL</code> で応答する</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--no-allow-unauthenticated</code></td>
+                                    <td>誰にも付けない（許可したIDだけ）</td>
+                                    <td>トークン無しだと <strong>403 Forbidden</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>2.3 イメージ作成からサービス公開までの流れ</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm2" role="img" aria-label="図3"></div>
+                    </div>
+
+                    <p>
+                        <strong
+                            >この「ビルド → デプロイ → 疎通確認」の3段が、Task 1, 2, 3, 5, 7
+                            で繰り返し出てきます。</strong
+                        >
+                        一度型を覚えれば、残りは「フォルダ・イメージ名・サービス名・オプション」を差し替えるだけです。
+                    </p>
+
+                    <h3>2.4 gcr.io に関する最新の注意点（2026-10-30時点）</h3>
+                    <ul>
+                        <li>
+                            旧
+                            <strong>Container Registry は2025年3月18日にシャットダウン済み</strong>
+                            で、既存の旧形式イメージには依存できません。
+                        </li>
+                        <li>
+                            一方、<strong
+                                >Artifact Registry 上の <code>gcr.io</code> リポジトリ</strong
+                            >
+                            は引き続き利用でき、<code>gcr.io/...</code>
+                            という従来のイメージ名のまま使えます。
+                        </li>
+                        <li>
+                            過去にContainer
+                            Registryを使っていないプロジェクト（ラボ用の新規プロジェクトなど）では、<code
+                                >gcr.io</code
+                            >
+                            は最初から <strong>Artifact Registry がホスト</strong> します。
+                        </li>
+                    </ul>
+
+                    <p>
+                        つまり、ラボで
+                        <code>gcr.io/$PROJECT_ID/...</code> と書いても問題ありません。ただし
+                        <strong
+                            >本番運用では <code>REGION-docker.pkg.dev</code> 形式の Artifact
+                            Registry リポジトリが推奨</strong
+                        >
+                        です（第13章で解説）。
+                    </p>
+                </section>
+                <section class="section" id="sec-3">
+                    <h2>3. 環境準備（Provision the lab environment）</h2>
+                    <h3>3.1 前提チェックリスト</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>確認項目</th>
+                                    <th>OK条件</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ブラウザ</td>
+                                    <td>
+                                        <strong>シークレットウィンドウ</strong>
+                                        を使っている（個人アカウントとの混線を防ぐ）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>アカウント</td>
+                                    <td>
+                                        ラボ画面の
+                                        <strong>Student用アカウント</strong> のみでログインしている
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>課金</td>
+                                    <td>個人のGoogle Cloudアカウントでログインしていない</td>
+                                </tr>
+                                <tr>
+                                    <td>タイマー</td>
+                                    <td>ラボは一時停止できない。時間配分を意識する</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>3.2 Step 1: Cloud Shell を開く</h3>
+                    <p>
+                        Google Cloud コンソール右上の
+                        <strong>Cloud Shell を有効化</strong>
+                        アイコンをクリックします。ブラウザ内にLinuxターミナルが開きます。<code
+                            >gcloud</code
+                        >
+                        や <code>git</code> は最初から入っています。
+                    </p>
+
+                    <h3>3.3 Step 2: プロジェクトを設定する</h3>
+                    <p>まず、候補のプロジェクトを一覧表示します。</p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp'
+</code></pre>
+                    </div>
+
+                    <p>
+                        一覧の中から、<strong
+                            >ラボ画面のプロジェクトIDと一致するものを 1 つだけ</strong
+                        >
+                        選び、<code>SELECTED_PROJECT_ID</code> に入れて設定します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">export SELECTED_PROJECT_ID=一覧から選んだプロジェクトID
+gcloud config set project "$SELECTED_PROJECT_ID"
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>何をしているか</strong>: <code>gcloud projects list</code> で名前が
+                        <code>qwiklabs-gcp</code> を含むプロジェクトだけを一覧し、選んだ 1 つのIDを
+                        <strong>既定プロジェクト</strong>
+                        に設定します。一覧の結果をそのまま渡さないのは、候補が複数あると
+                        <code>gcloud config set project</code>
+                        の引数が多すぎてエラーになるためです。
+                    </p>
+
+                    <h3>3.4 Step 3: リージョンを設定する</h3>
+                    <p>
+                        ラボ画面に書かれている <strong>リージョン名</strong> を、<code>REGION</code>
+                        の部分にそのまま使います（例: <code>us-central1</code> のような値。<strong
+                            >必ずラボ画面の値</strong
+                        >
+                        を使う）。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">export REGION=ラボ画面に表示されているリージョン
+gcloud config set run/region $REGION
+</code></pre>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <code>export</code> で変数にしておくと、以降のコマンドで
+                            <code>$REGION</code>
+                            と書くだけで済み、<strong>打ち間違いを防げます</strong>。
+                        </p>
+                    </blockquote>
+
+                    <h3>3.5 Step 4: 共通変数を一括設定する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># プロジェクトID
+export PROJECT_ID=$(gcloud config get-value project)
+
+# サービス名・サービスアカウント名（ラボ画面の値と違う場合はここだけ直す）
+export PUBLIC_BILLING_SVC=public-billing-service
+export FRONTEND_STG_SVC=frontend-staging-service
+export PRIVATE_BILLING_SVC=private-billing-service
+export BILLING_SA=billing-service-sa
+export PROD_BILLING_SVC=billing-prod-service
+export FRONTEND_SA=frontend-service-sa
+export PROD_FRONTEND_SVC=frontend-prod-service
+
+# 確認
+echo "PROJECT_ID=$PROJECT_ID  REGION=$REGION"
+</code></pre>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>注意</strong>: Cloud Shell は一定時間操作がないと
+                            <strong>再接続</strong> され、<code>export</code>
+                            した変数が消えます。コマンドが急に失敗したら、まず
+                            <code>echo $PROJECT_ID $REGION</code>
+                            で変数が残っているか確認し、消えていたらこの章をやり直してください。
+                        </p>
+                    </blockquote>
+
+                    <h3>3.6 Step 5: 必要なAPIの有効化（念のため）</h3>
+                    <p>
+                        ラボ環境では有効化済みのことが多いですが、<strong
+                            >何度実行しても安全（冪等）</strong
+                        >
+                        なので念のため実行します。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud services enable \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  artifactregistry.googleapis.com \
+  policytroubleshooter.googleapis.com
+</code></pre>
+                    </div>
+
+                    <h3>3.7 Step 6: コードを取得する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># 内容を確認したリビジョンに固定して取得する（main は更新されうるため）
+git clone https://github.com/rosera/pet-theory.git \
+  &amp;&amp; git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  &amp;&amp; cd pet-theory/lab07
+
+# ラボのルートを固定する（以降のタスクは常にここを起点に移動する）
+export LAB_ROOT="$(pwd)"
+echo "LAB_ROOT=$LAB_ROOT"
+ls
+</code></pre>
+                    </div>
+
+                    <p><code>ls</code> で、各タスクで使うフォルダが並んでいることを確認します。</p>
+
+                    <p>
+                        <strong>なぜコミットを固定するのか</strong>:
+                        <code>main</code>
+                        ブランチは予告なく更新されるため、この文書の手順と中身がずれる可能性があります。ここで指定したコミット
+                        <code>d902c4d</code
+                        >（2025-05-03）は、本文書の作成時にソースコードを読んで確認したリビジョンです（ラボ全体の実行検証ではありません）。このリビジョンの本番Frontendには修正が必要な箇所があり、Task
+                        7 で手順を示します。
+                    </p>
+
+                    <blockquote>
+                        <p>
+                            <strong>なぜ <code>LAB_ROOT</code> を使うのか</strong>:
+                            <code>cd pet-theory/lab07/...</code> のような相対パスは、<strong
+                                >今いるディレクトリ</strong
+                            >
+                            によって成功・失敗が変わります（Task 1 でフォルダに入ったまま Task 2 の
+                            <code>cd</code> を打つと失敗します）。各タスクは
+                            <code>cd &quot;$LAB_ROOT/&lt;フォルダ&gt;&quot;</code>
+                            で始めれば、どこにいても同じ場所へ移動できます。Cloud Shell
+                            が再接続されて <code>LAB_ROOT</code> が消えた場合は、clone
+                            先（<code>pet-theory/lab07</code>）へ移動して
+                            <code>export LAB_ROOT=&quot;$(pwd)&quot;</code> をやり直してください。
+                        </p>
+                    </blockquote>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>フォルダ</th>
+                                    <th>使うタスク</th>
+                                    <th>内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>unit-api-billing</code></td>
+                                    <td>Task 1</td>
+                                    <td>公開Billing API（初版）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>staging-frontend-billing</code></td>
+                                    <td>Task 2</td>
+                                    <td>ステージング用Frontend</td>
+                                </tr>
+                                <tr>
+                                    <td><code>staging-api-billing</code></td>
+                                    <td>Task 3</td>
+                                    <td>更新版Billing API（非公開用）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>prod-api-billing</code></td>
+                                    <td>Task 5</td>
+                                    <td>本番用Billing API</td>
+                                </tr>
+                                <tr>
+                                    <td><code>prod-frontend-billing</code></td>
+                                    <td>Task 7</td>
+                                    <td>本番用Frontend</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>3.8 名前の対応表（ここだけ見れば迷わない）</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>手順書の表記</th>
+                                    <th>この文書で使う値</th>
+                                    <th>用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Billing Service</td>
+                                    <td><code>public-billing-service</code></td>
+                                    <td>公開Billingサービス名</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Billing Image</td>
+                                    <td><code>billing-staging-api:0.1</code></td>
+                                    <td>イメージ名:タグ</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Frontend staging service</td>
+                                    <td><code>frontend-staging-service</code></td>
+                                    <td>ステージングFrontend名</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Image Name</td>
+                                    <td><code>frontend-staging:0.1</code></td>
+                                    <td>イメージ名:タグ</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Private billing service</td>
+                                    <td><code>private-billing-service</code></td>
+                                    <td>非公開Billingサービス名</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Image Name</td>
+                                    <td><code>billing-staging-api:0.2</code></td>
+                                    <td>イメージ名:タグ</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Billing service account</td>
+                                    <td><code>billing-service-sa</code></td>
+                                    <td>SAのID</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Display Name</td>
+                                    <td><code>Billing Service Cloud Run</code></td>
+                                    <td>SAの表示名</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Billing production service</td>
+                                    <td><code>billing-prod-service</code></td>
+                                    <td>本番Billing名</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Image Name</td>
+                                    <td><code>billing-prod-api:0.1</code></td>
+                                    <td>イメージ名:タグ</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Frontend service account</td>
+                                    <td><code>frontend-service-sa</code></td>
+                                    <td>SAのID</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Display Name</td>
+                                    <td><code>Billing Service Cloud Run Invoker</code></td>
+                                    <td>SAの表示名</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Frontend production service</td>
+                                    <td><code>frontend-prod-service</code></td>
+                                    <td>本番Frontend名</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Image Name</td>
+                                    <td><code>frontend-prod:0.1</code></td>
+                                    <td>イメージ名:タグ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>再確認</strong>:
+                            上記のサービス名・SA名は「一般的な命名」です。ラボ画面に別の指定があれば
+                            <strong>そちらが正</strong> です。特に
+                            <strong
+                                >イメージ名とタグ（<code>0.1</code> /
+                                <code>0.2</code>）は採点に関わりやすい</strong
+                            >
+                            ので、一文字も変えないでください。
+                        </p>
+                    </blockquote>
+                </section>
+                <section class="section" id="sec-4">
+                    <h2>Task 1: 公開Billingサービスをデプロイする</h2>
+                    <h3>1.1 ゴール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージ</td>
+                                    <td><code>billing-staging-api:0.1</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービス</td>
+                                    <td>公開Billingサービス</td>
+                                </tr>
+                                <tr>
+                                    <td>認証</td>
+                                    <td><strong>なし（unauthenticated）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>コード</td>
+                                    <td><code>pet-theory/lab07/unit-api-billing</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        <strong>採点される3点</strong>: ① Cloud Buildでイメージをビルド ②
+                        認証なしでCloud Runにデプロイ ③ エンドポイントにアクセスして応答がある
+                    </p>
+
+                    <h3>1.2 Step 1: ソースフォルダへ移動し、中身を確認する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/unit-api-billing"
+ls
+cat Dockerfile
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>なぜ中身を見るのか</strong>:
+                        チャレンジラボでは「何が入っているか」を自分で確認する習慣が大切です。<code
+                            >Dockerfile</code
+                        >
+                        があれば、そのフォルダがビルド対象だと分かります。
+                    </p>
+
+                    <h3>1.3 Step 2: Cloud Buildでイメージをビルドする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud builds submit \
+  --tag gcr.io/$PROJECT_ID/billing-staging-api:0.1 .
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud builds submit</code></td>
+                                    <td>現在のフォルダをCloud Buildに送ってビルドする</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <code
+                                            >--tag gcr.io/$PROJECT_ID/billing-staging-api:0.1</code
+                                        >
+                                    </td>
+                                    <td>完成したイメージの <strong>名前:タグ</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>末尾の <code>.</code></td>
+                                    <td>
+                                        ビルド対象は
+                                        <strong>現在のフォルダ</strong>（ピリオドの付け忘れに注意）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>成功すると、最後に <code>SUCCESS</code> と表示されます。</p>
+
+                    <h3>1.4 Step 3: Cloud Runにデプロイする（認証なし）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run deploy $PUBLIC_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-staging-api:0.1 \
+  --region $REGION \
+  --allow-unauthenticated
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud run deploy サービス名</code></td>
+                                    <td>サービスを作成（既にあれば新リビジョンで更新）</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--image</code></td>
+                                    <td>Step 2で作ったイメージを指定</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--region</code></td>
+                                    <td>デプロイ先リージョン</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--allow-unauthenticated</code></td>
+                                    <td><strong>認証なし（全員が呼べる）</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            途中で対話的に質問された場合（APIの有効化やリージョン選択など）は、ラボ画面のリージョンを選び、有効化は
+                            <code>y</code> で進めます。
+                        </p>
+                    </blockquote>
+
+                    <h3>1.5 Step 4: 疎通確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">PUBLIC_BILLING_URL=$(gcloud run services describe $PUBLIC_BILLING_SVC \
+  --region $REGION \
+  --format "value(status.url)")
+echo $PUBLIC_BILLING_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$PUBLIC_BILLING_URL"
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>ここで確認すること</strong>: トークン無しの
+                        <code>curl</code> で、出力の最後の行が
+                        <strong><code>HTTP 200</code></strong> になる（<code>HTTP 403</code>
+                        ではない）。これが「公開サービス」の正しい状態です。
+                    </p>
+
+                    <blockquote>
+                        <p>
+                            <code>-w '\nHTTP %{http_code}\n'</code> は、本文の後に
+                            <strong>HTTPステータスコード</strong>
+                            を1行で表示するオプションです。本文が表示されただけでは成功とは限らない（エラーページの本文も表示される）ため、<strong
+                                >ステータスコードで判定</strong
+                            >
+                            します。
+                        </p>
+                    </blockquote>
+
+                    <h3>1.6 つまずきポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>curl</code> が <strong>403</strong></td>
+                                    <td><code>--allow-unauthenticated</code> を付け忘れた</td>
+                                    <td>
+                                        同じ <code>deploy</code> コマンドを
+                                        <code>--allow-unauthenticated</code> 付きで再実行
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ビルドで <code>Dockerfile</code> が見つからない</td>
+                                    <td>別のフォルダでコマンドを実行した</td>
+                                    <td>
+                                        <code>pwd</code> で場所を確認し、正しいフォルダへ
+                                        <code>cd</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>進捗チェックが通らない</td>
+                                    <td>反映待ち</td>
+                                    <td><strong>30秒待って</strong> 再度 Check my progress</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="sec-5">
+                    <h2>Task 2: ステージングのフロントエンドをデプロイする</h2>
+                    <h3>2.1 ゴール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージ</td>
+                                    <td><code>frontend-staging:0.1</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービス</td>
+                                    <td>ステージングFrontendサービス</td>
+                                </tr>
+                                <tr>
+                                    <td>認証</td>
+                                    <td><strong>なし（unauthenticated）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>コード</td>
+                                    <td><code>pet-theory/lab07/staging-frontend-billing</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>2.2 手順</h3>
+                    <p>
+                        Task 1 とまったく同じ型です。<strong
+                            >変わるのは、フォルダ・イメージ名・サービス名だけ</strong
+                        >
+                        です。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/staging-frontend-billing"
+ls
+
+# ビルド
+gcloud builds submit \
+  --tag gcr.io/$PROJECT_ID/frontend-staging:0.1 .
+
+# デプロイ（認証なし）
+gcloud run deploy $FRONTEND_STG_SVC \
+  --image gcr.io/$PROJECT_ID/frontend-staging:0.1 \
+  --region $REGION \
+  --allow-unauthenticated
+</code></pre>
+                    </div>
+
+                    <h3>2.3 疎通確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">FRONTEND_STG_URL=$(gcloud run services describe $FRONTEND_STG_SVC \
+  --region $REGION \
+  --format "value(status.url)")
+echo $FRONTEND_STG_URL
+curl -sS -w '\nHTTP %{http_code}\n' "$FRONTEND_STG_URL"   # 最後の行が HTTP 200 なら成功
+</code></pre>
+                    </div>
+
+                    <p>ブラウザで <code>$FRONTEND_STG_URL</code> を開いても確認できます。</p>
+
+                    <h3>2.4 ポイント</h3>
+                    <ul>
+                        <li>
+                            Frontendは
+                            <strong>ユーザーのブラウザから直接開かれる</strong>
+                            ため、「認証なし（公開）」が正しい設計です。
+                        </li>
+                        <li>
+                            「Frontendは公開、Billing（お金のAPI）は非公開」という
+                            <strong>役割による使い分け</strong> が、このラボ全体のテーマです。
+                        </li>
+                    </ul>
+                </section>
+                <section class="section" id="sec-6">
+                    <h2>Task 3: 非公開Billingサービスへ置き換える</h2>
+                    <h3>3.1 状況の整理</h3>
+                    <p>
+                        開発チームがアプリを更新しました。<strong
+                            >更新版（<code>0.2</code>）を、今度は認証必須でデプロイ</strong
+                        >
+                        します。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージ</td>
+                                    <td><code>billing-staging-api:0.2</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービス</td>
+                                    <td>非公開Billingサービス</td>
+                                </tr>
+                                <tr>
+                                    <td>リポジトリ</td>
+                                    <td><code>gcr.io</code></td>
+                                </tr>
+                                <tr>
+                                    <td>認証</td>
+                                    <td><strong>あり（authenticated）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>コード</td>
+                                    <td><code>pet-theory/lab07/staging-api-billing</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        <strong>採点される4点</strong>: ① 既存Billingサービスの削除 ② Cloud
+                        Buildでビルド ③ 認証ありでデプロイ ④ サービスURLを環境変数に入れて疎通確認
+                    </p>
+
+                    <h3>3.2 なぜ既存サービスを削除するのか</h3>
+                    <p>
+                        Task 1
+                        で作った公開Billingサービスは、<strong>誰でも呼べる状態でインターネットに残っています</strong>。非公開版に置き換えるなら、公開版を残しておく理由はありません。放置すると
+                        <strong>セキュリティ上の穴</strong> になります。
+                    </p>
+
+                    <div class="diagram">
+                        <div class="mermaid" id="mm3" role="img" aria-label="図4"></div>
+                    </div>
+
+                    <h3>3.3 Step 1: 既存の公開Billingサービスを削除する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run services delete $PUBLIC_BILLING_SVC \
+  --region $REGION \
+  --quiet
+</code></pre>
+                    </div>
+
+                    <p>
+                        <code>--quiet</code>
+                        は確認プロンプトを省略するオプションです。削除は取り消せないので、<strong
+                            >サービス名が正しいか</strong
+                        >
+                        を事前に <code>gcloud run services list</code> で確認してください。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run services list --region $REGION
+</code></pre>
+                    </div>
+
+                    <h3>3.4 Step 2: 更新版をビルドする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/staging-api-billing"
+ls
+
+gcloud builds submit \
+  --tag gcr.io/$PROJECT_ID/billing-staging-api:0.2 .
+</code></pre>
+                    </div>
+
+                    <h3>3.5 Step 3: 認証必須でデプロイする</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run deploy $PRIVATE_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-staging-api:0.2 \
+  --region $REGION \
+  --no-allow-unauthenticated
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>Task 1との違いはたった1つ</strong>:
+                        <code>--allow-unauthenticated</code> が
+                        <code>--no-allow-unauthenticated</code> に変わっただけです。
+                    </p>
+
+                    <h3>3.6 Step 4: URLを環境変数に入れる</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">BILLING_URL=$(gcloud run services describe $PRIVATE_BILLING_SVC \
+  --region $REGION \
+  --format "value(status.url)")
+echo $BILLING_URL
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud run services describe サービス名</code></td>
+                                    <td>サービスの詳細情報を取得</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--format &quot;value(status.url)&quot;</code></td>
+                                    <td>詳細のうち <strong>URLの値だけ</strong> を取り出す</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BILLING_URL=$(...)</code></td>
+                                    <td>出力をシェル変数に保存</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>注意（手順書の表記について）</strong>: 手順書の
+                            <code>describe</code> の後ろには
+                            <code>Private billing service</code>
+                            と書かれていますが、これは説明表記です。<strong>実際のサービス名</strong>（<code>$PRIVATE_BILLING_SVC</code>）を指定してください。スペースを含む名前はCloud
+                            Runのサービス名にできません。
+                        </p>
+                    </blockquote>
+
+                    <h3>3.7 Step 5: 疎通確認（2パターンで理解する）</h3>
+                    <p><strong>まず、トークン無しで呼ぶ（失敗するのが正解）</strong></p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"
+</code></pre>
+                    </div>
+
+                    <p>
+                        最後の行が <strong><code>HTTP 403</code></strong
+                        >（Forbidden）になります。<strong>これは「保護が効いている」証拠</strong>
+                        です。
+                    </p>
+
+                    <p><strong>次に、IDトークン付きで呼ぶ（成功するのが正解）</strong></p>
+
+                    <p>
+                        IDトークンは「あなたが誰か」を証明するだけで、<strong>呼び出し権限を与えるものではありません</strong>。HTTP
+                        200 になるのは、現在の <code>gcloud</code> ユーザーが対象サービスに対して
+                        <strong>実効的に <code>run.routes.invoke</code> 権限</strong>
+                        を持っている場合だけです。この権限は <code>roles/run.invoker</code> のほか
+                        <code>roles/run.servicesInvoker</code
+                        >・<code>roles/run.developer</code>・<code>roles/run.admin</code>・Owner・Editor・カスタムロール、さらにグループ経由や上位リソースからの継承でも付与されうるため、ロール名の一覧ではなく
+                        <strong>権限そのもの</strong>
+                        を確認します。ラボの学生アカウントは通常これを満たしますが、念のため先に確認できます。<strong
+                            >最終判定は、後述の <code>curl</code> の実際の応答で行います。</strong
+                        >
+                    </p>
+
+                    <p>
+                        方法1の Policy Troubleshooter
+                        は任意の診断手段です。実行するアカウントには次の権限が必要で（「条件付き」の行は、その条件に当てはまる評価でだけ必要です）、Student
+                        アカウントに付与されているとは限りません。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>必要な権限</th>
+                                    <th>付与先</th>
+                                    <th>用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>roles/iam.securityReviewer</code></td>
+                                    <td>対象リソースを含む組織</td>
+                                    <td>組織配下の許可ポリシーを読む</td>
+                                </tr>
+                                <tr>
+                                    <td><code>roles/iam.denyReviewer</code></td>
+                                    <td>対象リソースを含む組織</td>
+                                    <td>条件付き: 拒否ポリシーを評価する場合に必要</td>
+                                </tr>
+                                <tr>
+                                    <td><code>roles/browser</code></td>
+                                    <td>対象リソースを含む組織</td>
+                                    <td>
+                                        条件付き:
+                                        ポリシーにサービスアカウントのプリンシパルセットが含まれる場合に、その評価で必要
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>roles/serviceusage.serviceUsageConsumer</code></td>
+                                    <td>対象リソースを含む組織</td>
+                                    <td>gcloud CLI から Policy Troubleshooter を使う</td>
+                                </tr>
+                                <tr>
+                                    <td>Google Workspace Admin API の <code>groups.read</code></td>
+                                    <td>Google Workspace の管理者ロール</td>
+                                    <td>グループのメンバーを評価する</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        権限が不足していると、判定が
+                        <code>Unknown</code> になることがあります。<code>Unknown</code>
+                        は許可でも拒否でもありません。権限を保証できない場合は方法1を省略してかまいません。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># 方法1（任意の診断）: Policy Troubleshooter で実効権限を評価する
+# 必要な権限があれば、グループ経由・フォルダ/組織からの継承・カスタムロールもまとめて評価される
+gcloud policy-intelligence troubleshoot-policy iam \
+  "//run.googleapis.com/projects/${PROJECT_ID}/locations/${REGION}/services/${PRIVATE_BILLING_SVC}" \
+  --principal-email="$(gcloud config get-value account)" \
+  --permission=run.routes.invoke
+</code></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># 方法2（方法1が使えない場合）: 直接付与されたロールを展開し、run.routes.invoke を含むか調べる
+# グループ経由や上位リソースからの継承は拾えないため、該当なしでも直ちに権限なしとは断定しない
+ACCOUNT=$(gcloud config get-value account)
+{
+  gcloud projects get-iam-policy "$PROJECT_ID" \
+    --flatten=bindings --filter="bindings.members:user:${ACCOUNT}" \
+    --format='value(bindings.role)'
+  gcloud run services get-iam-policy "$PRIVATE_BILLING_SVC" --region "$REGION" \
+    --flatten=bindings --filter="bindings.members:user:${ACCOUNT}" \
+    --format='value(bindings.role)'
+} | sort -u | while read -r ROLE; do
+  PERMS_STATUS=0
+  case "$ROLE" in
+    projects/*/roles/*) PERMS=$(gcloud iam roles describe "${ROLE##*/}" --project "$PROJECT_ID" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
+    organizations/*/roles/*)
+      # 組織のカスタムロール: organizations/&lt;ORG_ID&gt;/roles/&lt;ROLE_ID&gt; から組織IDとロールIDを取り出す
+      ORG_ID=${ROLE#organizations/}
+      ORG_ID=${ORG_ID%%/*}
+      PERMS=$(gcloud iam roles describe "${ROLE##*/}" --organization "$ORG_ID" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
+    *) PERMS=$(gcloud iam roles describe "$ROLE" --format='value(includedPermissions)') || PERMS_STATUS=$? ;;
+  esac
+  # ロール定義を取得できない場合は、権限の有無を判定しない
+  if [ "$PERMS_STATUS" -ne 0 ]; then
+    echo "UNKNOWN: ${ROLE} のロール定義を取得できないため判定できない"
+    continue
+  fi
+  case "$PERMS" in
+    *run.routes.invoke*) echo "OK: ${ROLE} は run.routes.invoke を含む" ;;
+    *) echo "--: ${ROLE} は run.routes.invoke を含まない" ;;
+  esac
+done
+</code></pre>
+                    </div>
+
+                    <p>
+                        方法2で
+                        <code>OK:</code>
+                        の行が1つも出なくても、<strong>それだけでは拒否の証拠になりません</strong>。方法2はグループ経由や上位リソースからの継承を拾えないため、実際には権限を持っている場合があります。<code
+                            >UNKNOWN:</code
+                        >
+                        の行は、ロール定義を読めなかったことを示すだけで、権限の有無は判定していません。方法1の判定（<code
+                            >Unknown</code
+                        >
+                        を含む）も診断の手掛かりです。アクセスできるかどうかは、次の
+                        <code>curl</code> の実際の応答（<code>HTTP 200</code> か
+                        <code>HTTP 403</code> か）を最終判定としてください。ロール名（<code
+                            >roles/run.invoker</code
+                        >
+                        の有無など）だけで判断せず、確認する権限は
+                        <code>run.routes.invoke</code> です。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"
+</code></pre>
+                    </div>
+
+                    <p>
+                        最後の行が <strong><code>HTTP 200</code></strong> なら成功です。
+                    </p>
+
+                    <div class="diagram">
+                        <div class="mermaid" id="mm4" role="img" aria-label="図5"></div>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>補足</strong>: 手順書では
+                            <code>curl -X get</code> と小文字で書かれていますが、<code>curl</code>
+                            は <strong>何も指定しなければGETで送る</strong> ため
+                            <code>-X</code>
+                            は不要です。HTTPメソッド名は本来大文字（<code>GET</code>）なので、明示するなら
+                            <code>-X GET</code> とします。
+                        </p>
+                    </blockquote>
+
+                    <h3>3.8 つまずきポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>トークン付きでも403</td>
+                                    <td>
+                                        反映待ち、別アカウントで実行、または実行ユーザーに実効的な
+                                        <code>run.routes.invoke</code> 権限がない
+                                    </td>
+                                    <td>
+                                        少し待つ。<code>gcloud auth list</code>
+                                        で学生アカウントか確認し、3.7 Step 5 のコマンドで
+                                        <code>run.routes.invoke</code> の有無を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>Service not found</code></td>
+                                    <td>サービス名の打ち間違い</td>
+                                    <td><code>gcloud run services list</code> で名前を確認</td>
+                                </tr>
+                                <tr>
+                                    <td>削除前にデプロイしてしまった</td>
+                                    <td>順序ミス</td>
+                                    <td>公開版が残っていれば削除してから再確認</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="sec-7">
+                    <h2>Task 4: Billing用サービスアカウントを作る</h2>
+                    <h3>4.1 そもそもなぜサービスアカウントが必要か</h3>
+                    <p>
+                        Cloud Runのサービスは、デプロイ時に特に指定しないと
+                        <strong>デフォルトのサービスアカウント</strong>（Compute
+                        Engineのデフォルトアカウント）で動きます。このアカウントは
+                        <strong>広い権限を持っていることが多く</strong
+                        >、アプリが乗っ取られた場合の被害が大きくなります。
+                    </p>
+
+                    <p>
+                        <strong
+                            >ベストプラクティスは「サービスごとに専用のサービスアカウントを作り、必要最小限の権限だけを付ける」</strong
+                        >
+                        ことです。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>方式</th>
+                                    <th>権限</th>
+                                    <th>リスク</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>デフォルトSAを使う</td>
+                                    <td>広い（プロジェクトの編集権限を持つ場合もある）</td>
+                                    <td>高い</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>専用SAを使う</strong></td>
+                                    <td><strong>必要なものだけ</strong></td>
+                                    <td><strong>低い</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>4.2 ゴール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>サービスアカウント</td>
+                                    <td>Billing用サービスアカウント</td>
+                                </tr>
+                                <tr>
+                                    <td>表示名（Display Name）</td>
+                                    <td><code>Billing Service Cloud Run</code></td>
+                                </tr>
+                                <tr>
+                                    <td>ロール</td>
+                                    <td><strong>N/A（付けない）</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>4.3 手順</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud iam service-accounts create $BILLING_SA \
+  --display-name "Billing Service Cloud Run"
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>部分</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gcloud iam service-accounts create ID</code></td>
+                                    <td>
+                                        サービスアカウントを作成。<strong>ID</strong>
+                                        は後で変更できない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>--display-name</code></td>
+                                    <td>コンソールに表示される分かりやすい名前</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>4.4 確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud iam service-accounts list
+</code></pre>
+                    </div>
+
+                    <p>作成したSAのメールアドレスは次の形式になります。</p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">text</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code>billing-service-sa@PROJECT_ID.iam.gserviceaccount.com
+</code></pre>
+                    </div>
+
+                    <h3>4.5 「ロール N/A」の意味</h3>
+                    <p>
+                        <strong
+                            >Billingサービスは他のGoogle Cloudリソース（Cloud
+                            Storageなど）を使わない</strong
+                        >
+                        ため、追加のロールは不要です。「何も付けない」のが
+                        <strong>最小権限の原則</strong> に沿った正しい姿です。
+                    </p>
+
+                    <blockquote>
+                        <p>
+                            <strong>よくある誤解</strong>:
+                            「SAを作ったらEditorなどを付けておこう」は
+                            <strong>NG</strong>
+                            です。必要になった時点で、必要なロールだけを付けます。
+                        </p>
+                    </blockquote>
+                </section>
+                <section class="section" id="sec-8">
+                    <h2>Task 5: 本番Billingサービスをデプロイする</h2>
+                    <h3>5.1 ゴール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージ</td>
+                                    <td><code>billing-prod-api:0.1</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービス</td>
+                                    <td>本番Billingサービス</td>
+                                </tr>
+                                <tr>
+                                    <td>リポジトリ</td>
+                                    <td><code>gcr.io</code></td>
+                                </tr>
+                                <tr>
+                                    <td>認証</td>
+                                    <td><strong>あり（authenticated）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>コード</td>
+                                    <td><code>pet-theory/lab07/prod-api-billing</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービスアカウント</td>
+                                    <td>Task 4 で作ったBilling用SA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        <strong>採点される4点</strong>: ① デプロイ ② 認証有効 ③
+                        サービスアカウント紐付け ④ 応答確認
+                    </p>
+
+                    <h3>5.2 Step 1: ビルド</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/prod-api-billing"
+ls
+
+gcloud builds submit \
+  --tag gcr.io/$PROJECT_ID/billing-prod-api:0.1 .
+</code></pre>
+                    </div>
+
+                    <h3>5.3 Step 2: デプロイ（認証あり＋サービスアカウント）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run deploy $PROD_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-prod-api:0.1 \
+  --region $REGION \
+  --no-allow-unauthenticated \
+  --service-account $BILLING_SA@$PROJECT_ID.iam.gserviceaccount.com
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>意味</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>--no-allow-unauthenticated</code></td>
+                                    <td>認証必須</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--service-account</code></td>
+                                    <td>
+                                        <strong>このサービスが実行時に使う身元</strong
+                                        >。メールアドレス形式で指定
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>ポイント</strong>: <code>--service-account</code> は
+                            <strong>「このサービス自身が何者として動くか」</strong>
+                            を決めるオプションです。「誰がこのサービスを呼べるか」とは
+                            <strong>別の話</strong> です（呼べる人は
+                            <code>run.invoker</code> で決まります。Task 6 で扱います）。
+                        </p>
+                    </blockquote>
+
+                    <div class="diagram">
+                        <div class="mermaid" id="mm5" role="img" aria-label="図6"></div>
+                    </div>
+
+                    <h3>5.4 Step 3: 疎通確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC \
+  --region $REGION \
+  --format "value(status.url)")
+echo $PROD_BILLING_URL
+
+# 本番Billingは POST / で請求データを返す（GET / のルートは無い）
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' \
+  -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  "$PROD_BILLING_URL"   # 最後の行が HTTP 200 なら成功
+</code></pre>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>なぜ POST なのか</strong>:
+                            本番Billingのコード（<code>prod-api-billing/index.js</code>）が受け付けるのは
+                            <code>POST /</code>、<code>GET /billing</code>、<code
+                                >GET /billing/:ref</code
+                            >
+                            で、<code>GET /</code> のルートはありません。既定の GET で
+                            <code>/</code> を呼ぶと、認証に成功しても 404
+                            になるため、この疎通確認では <code>POST /</code> を使います。<code
+                                >-d ''</code
+                            >
+                            は空の本文と <code>Content-Length: 0</code> を送り、本文なしの POST が
+                            411 で拒否されるのを防ぎます。
+                        </p>
+                        <p>
+                            <strong>権限の前提</strong>: Task 3 と同じく、HTTP 200 になるのは現在の
+                            <code>gcloud</code> ユーザーが本番Billingに対する実効的な
+                            <code>run.routes.invoke</code>
+                            権限を持つ場合だけです。IDトークンの作成は権限を与えません。3.7 Step 5
+                            の権限確認コマンドを、サービス名を
+                            <code>$PROD_BILLING_SVC</code> に替えて実行してから確認してください。
+                        </p>
+                    </blockquote>
+
+                    <h3>5.5 SA紐付けの確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run services describe $PROD_BILLING_SVC \
+  --region $REGION \
+  --format "value(spec.template.spec.serviceAccountName)"
+</code></pre>
+                    </div>
+
+                    <p>
+                        <code>billing-service-sa@...</code>
+                        と表示されれば、期待通りに紐付いています。
+                    </p>
+
+                    <h3>5.6 トークン無しでも確認する（保護の確認）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"
+</code></pre>
+                    </div>
+
+                    <p>
+                        最後の行が
+                        <strong><code>HTTP 403</code></strong> になることを確認します。<strong
+                            >「通る確認」と「止まる確認」の両方をやる</strong
+                        >
+                        のが、セキュリティ設定の基本です。
+                    </p>
+                </section>
+                <section class="section" id="sec-9">
+                    <h2>Task 6: Frontend用サービスアカウントを作り権限を付ける</h2>
+                    <h3>6.1 状況の整理</h3>
+                    <p>
+                        Task 5 で本番Billingを
+                        <strong>認証必須</strong>
+                        にしたため、そのままではFrontendもBillingを呼べません。そこで
+                        <strong
+                            >Frontend専用のサービスアカウントを作り、本番Billingを呼べる権限だけを付けます</strong
+                        >。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>サービスアカウント</td>
+                                    <td>Frontend用サービスアカウント</td>
+                                </tr>
+                                <tr>
+                                    <td>表示名</td>
+                                    <td><code>Billing Service Cloud Run Invoker</code></td>
+                                </tr>
+                                <tr>
+                                    <td>ロール</td>
+                                    <td><code>run.invoker</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        <strong>採点される4点</strong>: ① SA作成 ② Frontendサービスで使う準備 ③
+                        <code>run.invoker</code> 付与 ④ サービスへのバインド
+                    </p>
+
+                    <h3>6.2 Step 1: サービスアカウントを作成する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud iam service-accounts create $FRONTEND_SA \
+  --display-name "Billing Service Cloud Run Invoker"
+</code></pre>
+                    </div>
+
+                    <h3>6.3 Step 2: 本番Billingサービスに <code>run.invoker</code> を付与する</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run services add-iam-policy-binding $PROD_BILLING_SVC \
+  --region $REGION \
+  --member "serviceAccount:$FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com" \
+  --role "roles/run.invoker"
+</code></pre>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>オプション</th>
+                                    <th>意味</th>
+                                    <th>本ラボの値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>add-iam-policy-binding</code></td>
+                                    <td>
+                                        既存のポリシーに
+                                        <strong>1件追加</strong> する（他の権限は消えない）
+                                    </td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>対象（位置引数）</td>
+                                    <td><strong>どのリソースに</strong> 権限を付けるか</td>
+                                    <td>本番Billingサービス</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--member</code></td>
+                                    <td><strong>誰に</strong> 付けるか</td>
+                                    <td>Frontend用SA</td>
+                                </tr>
+                                <tr>
+                                    <td><code>--role</code></td>
+                                    <td><strong>どの権限を</strong> 付けるか</td>
+                                    <td><code>roles/run.invoker</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>6.4 「誰に・何を・どこに」を図で理解する</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm6" role="img" aria-label="図7"></div>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            <strong>ベストプラクティス</strong>: 権限は
+                            <strong>プロジェクト全体ではなく、サービス単位</strong>
+                            で付けます。プロジェクト全体に
+                            <code>run.invoker</code> を付けると、他のすべてのCloud
+                            Runサービスも呼べてしまいます（権限が広すぎる）。今回の「Bind Account to
+                            Service」は、まさに
+                            <strong>サービス単位のバインド</strong> を指しています。
+                        </p>
+                    </blockquote>
+
+                    <h3>6.5 Step 3: 確認</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run services get-iam-policy $PROD_BILLING_SVC --region $REGION
+</code></pre>
+                    </div>
+
+                    <p>出力に、次のような部分があれば成功です。</p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">text</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code>- members:
+  - serviceAccount:frontend-service-sa@PROJECT_ID.iam.gserviceaccount.com
+  role: roles/run.invoker
+</code></pre>
+                    </div>
+
+                    <h3>6.6 つまずきポイント</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Service account ... does not exist</code></td>
+                                    <td>SA作成直後で反映待ち</td>
+                                    <td>数十秒待ってから再実行</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Service not found</code></td>
+                                    <td>Billing本番サービスが未作成</td>
+                                    <td>Task 5 を先に完了する</td>
+                                </tr>
+                                <tr>
+                                    <td>付与したのに後で403</td>
+                                    <td>付与先サービスの取り違え</td>
+                                    <td>
+                                        <code>get-iam-policy</code> で
+                                        <strong>本番Billing</strong> に付いているか確認
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="sec-10">
+                    <h2>Task 7: 本番Frontendを再デプロイする</h2>
+                    <h3>7.1 ゴール</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>値</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>イメージ</td>
+                                    <td><code>frontend-prod:0.1</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービス</td>
+                                    <td>本番Frontendサービス</td>
+                                </tr>
+                                <tr>
+                                    <td>リポジトリ</td>
+                                    <td><code>gcr.io</code></td>
+                                </tr>
+                                <tr>
+                                    <td>認証</td>
+                                    <td><strong>なし（unauthenticated）</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>コード</td>
+                                    <td><code>pet-theory/lab07/prod-frontend-billing</code></td>
+                                </tr>
+                                <tr>
+                                    <td>サービスアカウント</td>
+                                    <td>Task 6 で作ったFrontend用SA</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>7.2 「認証なし」と「Enable Authentication」は矛盾しない</h3>
+                    <p>
+                        手順書の表は認証が <strong>unauthenticated</strong>、評価項目には
+                        <strong>Enable Authentication</strong>
+                        と書かれていて混乱しやすい箇所です。次のように整理します。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>通信の区間</th>
+                                    <th>認証</th>
+                                    <th>理由</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ユーザーのブラウザ → Frontend</td>
+                                    <td><strong>なし（公開）</strong></td>
+                                    <td>ブラウザからトークン無しで画面を開けるようにするため</td>
+                                </tr>
+                                <tr>
+                                    <td>Frontend → Billing</td>
+                                    <td><strong>あり（IDトークン）</strong></td>
+                                    <td>Billingは非公開。Frontend用SAの身元で呼ぶ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <blockquote>
+                        <p>
+                            表の <code>unauthenticated</code> は
+                            <strong>Frontend自身の公開設定</strong>、<code
+                                >Enable Authentication</code
+                            >
+                            は
+                            <strong
+                                >FrontendがBillingへ認証付きでアクセスする仕組み（SAの利用）</strong
+                            >
+                            を指していると読み取れます。デプロイ時は
+                            <strong>表の値（認証なし）</strong> に従ってください。
+                        </p>
+                    </blockquote>
+
+                    <h3>7.3 Step 1: コードを確認する（重要）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/prod-frontend-billing"
+ls
+cat Dockerfile
+grep -rn "process.env" . --include=*.js --exclude-dir=node_modules
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>なぜ確認するのか</strong>: FrontendがBillingのURLを
+                        <strong>環境変数で受け取る設計</strong>
+                        の場合、デプロイ時にその値を渡さないと画面にデータが出ません。手順書に書かれていなくても、<strong
+                            >コードが環境変数を読んでいるなら渡す</strong
+                        >
+                        のがエンジニアの仕事です。
+                    </p>
+
+                    <p>
+                        固定したリビジョンでは、<code>render.js</code> が
+                        <code>process.env.BILLING_URL</code> を読み、未設定なら
+                        <code>BILLING_URL needs to be set.</code>
+                        というエラーで処理を止めます。したがって
+                        <strong
+                            ><code>BILLING_URL</code> に本番BillingのURLを渡す必要があります</strong
+                        >（<code>PORT</code> は Cloud Run が自動で設定します）。
+                    </p>
+
+                    <h3>7.3.1 固定リビジョンの不具合を直す</h3>
+                    <p>
+                        このリビジョンの本番Frontendには、そのままでは動かない箇所、またはBillingの失敗時に壊れる箇所が7つあります。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ファイル</th>
+                                    <th>問題</th>
+                                    <th>影響</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>index.js</code></td>
+                                    <td>
+                                        使っていない <code>node-fetch</code> を
+                                        <code>require</code> しているが、<code>package.json</code>
+                                        に依存がない
+                                    </td>
+                                    <td>
+                                        起動時に
+                                        <code>Cannot find module 'node-fetch'</code>
+                                        で落ちる可能性がある
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>render.js</code></td>
+                                    <td>
+                                        <code>const got = import('got')</code> は
+                                        <strong>Promise</strong> を返すため、<code>got(...)</code>
+                                        を関数として呼べない
+                                    </td>
+                                    <td>
+                                        Billingの呼び出しが
+                                        <code>got is not a function</code> で失敗する
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>render.js</code></td>
+                                    <td>
+                                        got v12 以降は <code>timeout</code> に数値を渡せない（<code
+                                            >{ request: ミリ秒 }</code
+                                        >
+                                        形式）
+                                    </td>
+                                    <td>リクエスト作成時にエラーになる</td>
+                                </tr>
+                                <tr>
+                                    <td><code>index.js</code></td>
+                                    <td>
+                                        Billing呼び出しの失敗時に
+                                        <code>res.status(800)</code>
+                                        を返す（HTTPに存在しないステータス）
+                                    </td>
+                                    <td>
+                                        <code>800</code>
+                                        は標準のHTTPステータスではないため、サーバーエラーとして確実に扱えるよう
+                                        <code>500</code> に置き換える
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>public/app.js</code></td>
+                                    <td>
+                                        <code>fetchLocalData</code> が
+                                        <code>response.ok</code> を確認する前に本文を
+                                        <code>JSON.parse</code> している
+                                    </td>
+                                    <td>
+                                        Frontendがエラー応答を返すと、ステータスを判定する前にJSONの解析で例外になる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>public/app.js</code></td>
+                                    <td>
+                                        失敗時の <code>console.log</code> が
+                                        <code>response.text</code
+                                        >（読み取り済みの本文ではなく関数そのもの）を出力している
+                                    </td>
+                                    <td>
+                                        ログにエラー本文ではなく関数定義が出て、失敗の原因を追えない
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>public/app.js</code></td>
+                                    <td>
+                                        <code>getPageInfo</code> が
+                                        <code>info.bills[0]</code> を無条件に参照している
+                                    </td>
+                                    <td>
+                                        取得失敗（空文字・<code>undefined</code>）や請求データ0件のとき
+                                        <code>TypeError</code> で画面が止まる
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        ビルドの前に、次のコマンドで修正します（<code>perl -pi</code>
+                        はファイルをその場で書き換えます）。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">cd "$LAB_ROOT/prod-frontend-billing"
+
+# 1. 未使用の node-fetch の読み込みを削除する
+perl -ni -e "print unless /require\('node-fetch'\)/" index.js
+
+# 2. got（ESM 専用）を呼び出し時に動的 import し、timeout をオブジェクト形式にする
+perl -ni -e "print unless /^const got = import\('got'\);/" render.js
+perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
+
+# 3. Billing失敗時は標準のサーバーエラー（500）を返す
+perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: String(error &amp;&amp; error.message || error) })/' index.js
+
+# 4. response.ok を確認してから JSON として解析する（成功時の return でだけ解析する）
+perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
+perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+# 失敗時のログは、既に読み取った本文 text を出力する（response.text は関数で本文ではない）
+perl -pi -e 's/(console\.log\(.*?)\bresponse\.text\b(?!\s*\()/${1}text/' public/app.js
+
+# 5. 請求データがない・空のときは先頭要素を参照せずに表示を終える
+perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
+
+# 確認: node-fetch が消え、got と timeout が修正されていること
+grep -n "node-fetch" index.js || echo "node-fetch の読み込みなし（OK）"
+grep -n "import('got')\|timeout" render.js
+grep -n "res.status(" index.js
+grep -n "response.ok\|JSON.parse\|info.bills\|console.log" public/app.js
+</code></pre>
+                    </div>
+
+                    <p>
+                        <code>render.js</code> の <code>grep</code> で
+                        <code>await (await import('got')).default(serviceUrl, ...)</code> と
+                        <code>timeout: { request: 3000 }</code>、<code>index.js</code> で
+                        <code>res.status(500)</code>（<code>800</code> が残っていない）、<code
+                            >public/app.js</code
+                        >
+                        で <code>if (!response.ok)</code> が
+                        <code>return JSON.parse(text);</code> より前にあり、その失敗分岐の
+                        <code>console.log</code> が <code>response.text</code> ではなく
+                        <code>text</code> を出力し、<code>info.bills.length === 0</code>
+                        のガードが表示されれば修正済みです。
+                    </p>
+
+                    <blockquote>
+                        <p>
+                            <strong>保護されたBillingへの直接アクセスは変わりません</strong>:
+                            この修正はFrontend側の失敗時の扱いだけを変えます。Task 5
+                            のとおり、本番BillingのURLをトークンなしで直接呼ぶと引き続き
+                            <code>HTTP 403</code> になります。
+                        </p>
+                    </blockquote>
+
+                    <h3>7.4 Step 2: ビルド</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud builds submit \
+  --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
+</code></pre>
+                    </div>
+
+                    <h3>7.5 Step 3: デプロイ（公開＋サービスアカウント）</h3>
+                    <p>
+                        <strong>基本形</strong
+                        >（環境変数を読まないFrontendの場合の一般形。本ラボでは下の形を使う）
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud run deploy $PROD_FRONTEND_SVC \
+  --image gcr.io/$PROJECT_ID/frontend-prod:0.1 \
+  --region $REGION \
+  --allow-unauthenticated \
+  --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com
+</code></pre>
+                    </div>
+
+                    <p>
+                        <strong>本ラボの形（<code>BILLING_URL</code> を渡す）</strong>
+                    </p>
+
+                    <p>
+                        <code>render.js</code> は
+                        <code>BILLING_URL</code>
+                        が無いと失敗するため、実際には次の形でデプロイします。
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC \
+  --region $REGION --format "value(status.url)")
+
+gcloud run deploy $PROD_FRONTEND_SVC \
+  --image gcr.io/$PROJECT_ID/frontend-prod:0.1 \
+  --region $REGION \
+  --allow-unauthenticated \
+  --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com \
+  --set-env-vars "BILLING_URL=$PROD_BILLING_URL"
+</code></pre>
+                    </div>
+
+                    <h3>7.6 Step 4: 動作確認（最終ゴール）</h3>
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">PROD_FRONTEND_URL=$(gcloud run services describe $PROD_FRONTEND_SVC \
+  --region $REGION \
+  --format "value(status.url)")
+echo $PROD_FRONTEND_URL
+
+# ブラウザと同じく POST / を呼び、Frontend経由でBillingのデータが返るか確認する
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_FRONTEND_URL"
+</code></pre>
+                    </div>
+
+                    <p>
+                        最後の行が <strong><code>HTTP 200</code></strong> で、本文に
+                        <code>{&quot;bills&quot;:[...]}</code>
+                        形式の請求データが含まれれば、Frontend → Billing
+                        の認証付き呼び出しが成功しています。そのうえで表示されたURLを
+                        <strong>ブラウザで開き</strong>、<strong
+                            >Billing Service のページ（請求情報の画面）</strong
+                        >
+                        に請求データの表が表示されれば完成です。
+                    </p>
+
+                    <p>
+                        画面のデータは、FrontendがFrontend用SAの身元で、非公開の本番Billingから取得しています。
+                    </p>
+
+                    <div class="diagram">
+                        <div class="mermaid" id="mm7" role="img" aria-label="図8"></div>
+                    </div>
+
+                    <h3>7.7 画面にデータが出ないときの切り分け</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm8" role="img" aria-label="図9"></div>
+                    </div>
+
+                    <p>ログの確認コマンド:</p>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash">gcloud logging read \
+  "resource.type=cloud_run_revision AND resource.labels.service_name=$PROD_FRONTEND_SVC" \
+  --limit 20 \
+  --format "value(timestamp, textPayload)"
+</code></pre>
+                    </div>
+                </section>
+                <section class="section" id="sec-11">
+                    <h2>11. 全タスク通しのコマンドまとめ</h2>
+                    <blockquote>
+                        <p>
+                            <strong>使い方</strong>:
+                            各タスクの意味を理解したあとに、復習用として使ってください。<strong
+                                >意味を理解せずにコピペするのは非推奨</strong
+                            >
+                            です（名前の違いや、Task
+                            7のコード修正と環境変数など、確認が必要な箇所があるため）。
+                        </p>
+                    </blockquote>
+
+                    <div class="code-block">
+                        <div class="code-head">
+                            <span class="code-lang">bash</span
+                            ><button class="copy-btn" type="button">
+                                <i class="ti ti-copy"></i><span>コピー</span>
+                            </button>
+                        </div>
+                        <pre><code class="language-bash"># ===== 環境準備 =====
+# 一覧の中からラボ画面のプロジェクトIDと一致するものを 1 つ選ぶ
+gcloud projects list --format='value(PROJECT_ID)' --filter='qwiklabs-gcp'
+export SELECTED_PROJECT_ID=一覧から選んだプロジェクトID
+gcloud config set project "$SELECTED_PROJECT_ID"
+export REGION=ラボ画面に表示されているリージョン
+gcloud config set run/region $REGION
+export PROJECT_ID=$(gcloud config get-value project)
+
+export PUBLIC_BILLING_SVC=public-billing-service
+export FRONTEND_STG_SVC=frontend-staging-service
+export PRIVATE_BILLING_SVC=private-billing-service
+export BILLING_SA=billing-service-sa
+export PROD_BILLING_SVC=billing-prod-service
+export FRONTEND_SA=frontend-service-sa
+export PROD_FRONTEND_SVC=frontend-prod-service
+
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com policytroubleshooter.googleapis.com
+git clone https://github.com/rosera/pet-theory.git \
+  &amp;&amp; git -C pet-theory checkout --detach d902c4d253a6c55fec6cfcdd95740d17faeec7a9 \
+  &amp;&amp; cd pet-theory/lab07
+export LAB_ROOT="$(pwd)"
+
+# ===== Task 1: 公開Billing =====
+cd "$LAB_ROOT/unit-api-billing"
+gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-staging-api:0.1 .
+gcloud run deploy $PUBLIC_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-staging-api:0.1 \
+  --region $REGION --allow-unauthenticated
+curl -sS -w '\nHTTP %{http_code}\n' "$(gcloud run services describe $PUBLIC_BILLING_SVC --region $REGION --format "value(status.url)")"   # HTTP 200
+
+# ===== Task 2: ステージングFrontend =====
+cd "$LAB_ROOT/staging-frontend-billing"
+gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-staging:0.1 .
+gcloud run deploy $FRONTEND_STG_SVC \
+  --image gcr.io/$PROJECT_ID/frontend-staging:0.1 \
+  --region $REGION --allow-unauthenticated
+
+# ===== Task 3: 非公開Billing（置き換え）=====
+gcloud run services delete $PUBLIC_BILLING_SVC --region $REGION --quiet
+cd "$LAB_ROOT/staging-api-billing"
+gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-staging-api:0.2 .
+gcloud run deploy $PRIVATE_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-staging-api:0.2 \
+  --region $REGION --no-allow-unauthenticated
+BILLING_URL=$(gcloud run services describe $PRIVATE_BILLING_SVC --region $REGION --format "value(status.url)")
+curl -sS -w '\nHTTP %{http_code}\n' "$BILLING_URL"   # HTTP 403（トークンなし）
+curl -sS -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$BILLING_URL"   # HTTP 200（実行ユーザーに run.routes.invoke 権限が必要）
+
+# ===== Task 4: Billing用SA =====
+gcloud iam service-accounts create $BILLING_SA --display-name "Billing Service Cloud Run"
+
+# ===== Task 5: 本番Billing =====
+cd "$LAB_ROOT/prod-api-billing"
+gcloud builds submit --tag gcr.io/$PROJECT_ID/billing-prod-api:0.1 .
+gcloud run deploy $PROD_BILLING_SVC \
+  --image gcr.io/$PROJECT_ID/billing-prod-api:0.1 \
+  --region $REGION --no-allow-unauthenticated \
+  --service-account $BILLING_SA@$PROJECT_ID.iam.gserviceaccount.com
+PROD_BILLING_URL=$(gcloud run services describe $PROD_BILLING_SVC --region $REGION --format "value(status.url)")
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_BILLING_URL"   # HTTP 403（トークンなし）
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' -H "Authorization: Bearer $(gcloud auth print-identity-token)" "$PROD_BILLING_URL"   # HTTP 200（実行ユーザーに run.routes.invoke 権限が必要）
+
+# ===== Task 6: Frontend用SA + run.invoker =====
+gcloud iam service-accounts create $FRONTEND_SA --display-name "Billing Service Cloud Run Invoker"
+gcloud run services add-iam-policy-binding $PROD_BILLING_SVC \
+  --region $REGION \
+  --member "serviceAccount:$FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com" \
+  --role "roles/run.invoker"
+
+# ===== Task 7: 本番Frontend =====
+cd "$LAB_ROOT/prod-frontend-billing"
+grep -rn "process.env" . --include=*.js --exclude-dir=node_modules   # BILLING_URL を読むことを確認
+# 固定リビジョンの不具合を修正（7.3.1 参照）
+perl -ni -e "print unless /require\('node-fetch'\)/" index.js
+perl -ni -e "print unless /^const got = import\('got'\);/" render.js
+perl -pi -e "s/await got\(serviceUrl/await (await import('got')).default(serviceUrl/; s/timeout: 3000/timeout: { request: 3000 }/" render.js
+perl -pi -e 's/res\.status\(800\)\.send\(error\)/res.status(500).send({ error: String(error &amp;&amp; error.message || error) })/' index.js
+perl -ni -e 'print unless /^\s*let test = JSON\.parse\(text\);/' public/app.js
+perl -pi -e 's/^(\s*)return test;/${1}return JSON.parse(text);/' public/app.js
+# 失敗時のログは、既に読み取った本文 text を出力する（response.text は関数で本文ではない）
+perl -pi -e 's/(console\.log\(.*?)\bresponse\.text\b(?!\s*\()/${1}text/' public/app.js
+perl -0pi -e 's/(htmlContent = document\.querySelector\(\x27#info\x27\);)/$1\n  if (!info || !Array.isArray(info.bills) || info.bills.length === 0) {\n    htmlContent.textContent = \x27No billing data available.\x27;\n    return;\n  }/' public/app.js
+gcloud builds submit --tag gcr.io/$PROJECT_ID/frontend-prod:0.1 .
+# render.js は BILLING_URL が未設定だと失敗するため、本番BillingのURLを渡す
+ENV_FLAGS=(--set-env-vars "BILLING_URL=$PROD_BILLING_URL")
+gcloud run deploy $PROD_FRONTEND_SVC \
+  --image gcr.io/$PROJECT_ID/frontend-prod:0.1 \
+  --region $REGION --allow-unauthenticated \
+  --service-account $FRONTEND_SA@$PROJECT_ID.iam.gserviceaccount.com \
+  "${ENV_FLAGS[@]}"
+PROD_FRONTEND_URL=$(gcloud run services describe $PROD_FRONTEND_SVC --region $REGION --format "value(status.url)")
+curl -sS -X POST -d '' -w '\nHTTP %{http_code}\n' "$PROD_FRONTEND_URL"   # HTTP 200 と請求データ
+</code></pre>
+                    </div>
+
+                    <h3>完了チェックリスト</h3>
+                    <div class="check-list">
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 1</div>
+                                <div class="check-desc">公開Billingがトークン無しで応答</div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 2</div>
+                                <div class="check-desc">ステージングFrontendが応答</div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 3</div>
+                                <div class="check-desc">
+                                    公開Billing削除済み。非公開Billingはトークン無し403、トークン付き成功
+                                </div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 4</div>
+                                <div class="check-desc">Billing用SAが一覧に存在</div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 5</div>
+                                <div class="check-desc">
+                                    本番BillingにBilling用SAが紐付き、トークン無し403、トークン付き
+                                    <code>POST /</code> がHTTP 200
+                                </div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 6</div>
+                                <div class="check-desc">
+                                    Frontend用SAが本番Billingの
+                                    <code>run.invoker</code> に入っている
+                                </div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                        <label class="check-card"
+                            ><div class="check-body">
+                                <div class="check-title">Task 7</div>
+                                <div class="check-desc">
+                                    本番Frontendのブラウザ表示でBillingのデータが見える
+                                </div>
+                            </div>
+                            <input type="checkbox" aria-label="完了"
+                        /></label>
+                    </div>
+                </section>
+                <section class="section" id="sec-12">
+                    <h2>12. トラブルシューティング</h2>
+                    <h3>12.1 エラー別の早見表</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>症状</th>
+                                    <th>主な原因</th>
+                                    <th>対処</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>curl</code> が <strong>403 Forbidden</strong></td>
+                                    <td>認証必須サービスにトークン無しで呼んだ / 権限不足</td>
+                                    <td>
+                                        非公開サービスなら正常。呼びたいなら
+                                        <code
+                                            >Authorization: Bearer $(gcloud auth
+                                            print-identity-token)</code
+                                        >
+                                        を付ける
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>curl</code> が <strong>401 Unauthorized</strong></td>
+                                    <td>トークンが無効・期限切れ</td>
+                                    <td>トークンを再取得して再実行</td>
+                                </tr>
+                                <tr>
+                                    <td><code>curl</code> が <strong>404</strong></td>
+                                    <td>URLのパスが違う / アプリ側の仕様</td>
+                                    <td><code>curl -i URL</code> でヘッダと本文を確認</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PERMISSION_DENIED</code>（デプロイ時）</td>
+                                    <td>学生アカウント以外でログインしている</td>
+                                    <td><code>gcloud auth list</code> で確認</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Image not found</code></td>
+                                    <td>ビルドが失敗した / イメージ名・タグの打ち間違い</td>
+                                    <td>
+                                        <code>gcloud builds list</code> と、イメージ名の
+                                        <code>0.1</code> / <code>0.2</code> を確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>Service account ... does not exist</code></td>
+                                    <td>SA作成直後、またはメールアドレスの綴りミス</td>
+                                    <td>
+                                        数十秒待つ。<code>gcloud iam service-accounts list</code>
+                                        で確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>デプロイは成功したが起動しない</td>
+                                    <td>アプリがポートで待ち受けていない</td>
+                                    <td>
+                                        Cloud Runは環境変数
+                                        <code>PORT</code> で受け付ける。ログを確認
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>変数が空（<code>echo</code> で何も出ない）</td>
+                                    <td>Cloud Shellが再接続された</td>
+                                    <td>第3章の変数設定をやり直す</td>
+                                </tr>
+                                <tr>
+                                    <td>Check my progress が通らない</td>
+                                    <td>反映待ち / 名前・タグの不一致</td>
+                                    <td>
+                                        <strong>30秒待つ</strong> →
+                                        名前・タグ・認証設定をラボ画面と照合
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>12.2 切り分けフローチャート</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm9" role="img" aria-label="図10"></div>
+                    </div>
+
+                    <h3>12.3 エラーメッセージを読む習慣（チャレンジラボの本質）</h3>
+                    <p>
+                        チャレンジラボでは、<strong
+                            >エラーメッセージの調査と修正が学習の一部</strong
+                        >
+                        として想定されています。次の順で読むと、原因にたどり着きやすくなります。
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>順番</th>
+                                    <th>見る場所</th>
+                                    <th>例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>エラーの <strong>1行目</strong></td>
+                                    <td><code>ERROR: (gcloud.run.deploy) ...</code></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><strong>どのリソース</strong> の話か</td>
+                                    <td>サービス名、イメージ名、SA名</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><strong>何が足りない・違う</strong> と言っているか</td>
+                                    <td>
+                                        <code>not found</code> / <code>permission denied</code> /
+                                        <code>invalid</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><code>gcloud ... --help</code></td>
+                                    <td>オプション名の確認</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="section" id="sec-13">
+                    <h2>13. ベストプラクティス解説（本番運用の視点）</h2>
+                    <p>
+                        このラボは学習用に簡略化されています。実際の本番運用では、次の観点を加えます。
+                    </p>
+
+                    <h3>13.1 本ラボで実践している良い設計</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>実践項目</th>
+                                    <th>内容</th>
+                                    <th>効果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>公開範囲の最小化</strong></td>
+                                    <td>公開するのはFrontendだけ。Billingは認証必須</td>
+                                    <td>攻撃対象領域を縮小</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>専用サービスアカウント</strong></td>
+                                    <td>サービスごとに別のSAを使う</td>
+                                    <td>被害の影響範囲を限定</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>最小権限</strong></td>
+                                    <td>
+                                        Billing用SAにはロールなし。Frontend用SAには
+                                        <code>run.invoker</code> のみ
+                                    </td>
+                                    <td>権限の過剰付与を防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>サービス単位のIAM</strong></td>
+                                    <td>プロジェクト全体ではなく特定サービスにバインド</td>
+                                    <td>横展開を防ぐ</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>段階的なリリース</strong></td>
+                                    <td>ステージング → 本番</td>
+                                    <td>本番前に問題を検出</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>不要リソースの削除</strong></td>
+                                    <td>公開Billingを削除</td>
+                                    <td>放置された公開口をなくす</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>13.2 本番運用で追加したいこと</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>観点</th>
+                                    <th>推奨事項</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>イメージの保管先</strong></td>
+                                    <td>
+                                        新規には
+                                        <code>REGION-docker.pkg.dev/PROJECT/REPO/IMAGE:TAG</code>
+                                        形式のArtifact Registryを推奨。<code>gcr.io</code>
+                                        は互換のために残された形式
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>イメージのバージョン固定</strong></td>
+                                    <td>
+                                        <code>latest</code>
+                                        を避け、タグ固定やダイジェスト（<code>@sha256:...</code>）で指定し、再現性を確保
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>環境の分離</strong></td>
+                                    <td>
+                                        ステージングと本番を
+                                        <strong>別プロジェクト</strong>
+                                        に分ける。IAMや課金も分離できる
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>秘密情報</strong></td>
+                                    <td>
+                                        パスワードやAPIキーは環境変数に直書きせず
+                                        <strong>Secret Manager</strong>
+                                        を使う（URLのような非機密値は環境変数で可）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CI/CD</strong></td>
+                                    <td>
+                                        手動の <code>gcloud</code> ではなく、Cloud
+                                        Buildトリガーなどで自動化し、再現性と監査性を確保
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ネットワーク制御</strong></td>
+                                    <td>
+                                        バックエンド側は Ingress 制限の利用を検討（Cloud
+                                        Run同士で内部限定にする場合は、VPC経由の接続設計が別途必要）
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>監視</strong></td>
+                                    <td>
+                                        Cloud Logging / Cloud Monitoring
+                                        でエラー率・レイテンシのアラートを設定
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>スケール設定</strong></td>
+                                    <td>
+                                        <code>--min-instances</code
+                                        >（コールドスタート対策）、<code>--max-instances</code>（コスト上限）、<code
+                                            >--concurrency</code
+                                        >
+                                        を要件に合わせて調整
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ロールバック</strong></td>
+                                    <td>
+                                        リビジョンは残るため、問題発生時は
+                                        <strong>過去リビジョンにトラフィックを戻す</strong>
+                                        だけで復旧できる
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>13.3 認証方式の整理</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>シナリオ</th>
+                                    <th>推奨される認証</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>人間が検証でCloud Shellから呼ぶ</td>
+                                    <td><code>gcloud auth print-identity-token</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cloud Run → Cloud Run（本ラボ）</strong></td>
+                                    <td>
+                                        <strong
+                                            >サービスアカウントのIDトークン＋<code
+                                                >run.invoker</code
+                                            ></strong
+                                        >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>外部の一般ユーザー向けAPI</td>
+                                    <td>
+                                        公開 ＋ アプリ層での認証（API Gateway、Identity
+                                        Platformなど）
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>13.4 設計判断の理由（なぜこうするのか）</h3>
+                    <div class="diagram">
+                        <div class="mermaid" id="mm10" role="img" aria-label="図11"></div>
+                    </div>
+                </section>
+                <section class="section" id="sec-14">
+                    <h2>14. 理解度チェック</h2>
+                    <h3>
+                        Q1.
+                        <code>--allow-unauthenticated</code>
+                        を付けたサービスは、内部的には何をしている？
+                    </h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            <code>allUsers</code>（全員）に
+                            <code>roles/run.invoker</code>
+                            を付与している。そのため誰でもトークン無しで呼び出せる。
+                        </p>
+                    </details>
+
+                    <h3>
+                        Q2. 認証必須のサービスにトークン無しで
+                        <code>curl</code> したときのステータスは？ それは失敗？
+                    </h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            <code>403 Forbidden</code
+                            >。<strong>失敗ではなく、保護が正しく効いている状態</strong>。
+                        </p>
+                    </details>
+
+                    <h3>
+                        Q3. <code>--service-account</code> と
+                        <code>roles/run.invoker</code> の違いは？
+                    </h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            <code>--service-account</code> は
+                            <strong>そのサービスが実行時に使う身元（外へ出るときの身元）</strong
+                            >。<code>run.invoker</code> は
+                            <strong>そのサービスを呼び出せる権限（入ってくる側の許可）</strong
+                            >。向きが逆。
+                        </p>
+                    </details>
+
+                    <h3>Q4. Task 4 でBilling用SAにロールを付けない理由は？</h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            Billingサービスは他のGoogle Cloudリソースを使わないため。<strong
+                                >最小権限の原則</strong
+                            >
+                            により、必要になるまで何も付けない。
+                        </p>
+                    </details>
+
+                    <h3>
+                        Q5.
+                        <code>run.invoker</code> をプロジェクト全体ではなくサービスに付ける理由は？
+                    </h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            プロジェクト全体に付けると、そのSAが
+                            <strong>すべてのCloud Runサービスを呼べてしまう</strong>
+                            ため。必要な呼び先（本番Billing）だけに限定する。
+                        </p>
+                    </details>
+
+                    <h3>Q6. Task 3 で公開Billingを削除する理由は？</h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            認証なしの公開サービスを残すと、請求APIが
+                            <strong>誰でも呼べる状態で放置される</strong>
+                            ため。非公開版へ置き換え、攻撃対象を減らす。
+                        </p>
+                    </details>
+
+                    <h3>Q7. 本番Frontendを公開（認証なし）にするのに、安全といえる理由は？</h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            公開するのはユーザー向け画面だけで、<strong
+                                >重要なデータを持つBillingは認証必須のまま</strong
+                            >
+                            だから。そのうえで、FrontendがBillingを呼べるよう、このラボではFrontend用SAに本番Billingへの呼び出し権限を付与している（Frontend用SAが唯一の呼び出し元になるわけではない）。
+                        </p>
+                    </details>
+
+                    <h3>Q8. 本番運用でイメージを <code>latest</code> タグで管理しないのはなぜ？</h3>
+                    <details>
+                        <summary>答えを見る</summary>
+
+                        <p>
+                            <code>latest</code> は中身が変わるため、<strong
+                                >どのバージョンが動いているか追跡できず、再現性とロールバックが難しくなる</strong
+                            >
+                            ため。タグ固定やダイジェスト指定が望ましい。
+                        </p>
+                    </details>
+                </section>
+                <section class="section" id="sec-15">
+                    <h2>15. 参考情報</h2>
+                    <h3>15.1 2026-10-30にウェブで確認した情報</h3>
+                    <div class="ref-list">
+                        <div class="ref-card">
+                            <span class="ref-num">1</span>
+                            <div>
+                                <div class="ref-title">
+                                    Container Registryの廃止とシャットダウン
+                                </div>
+                                <a
+                                    class="ref-url"
+                                    href="https://docs.cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://docs.cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref-card">
+                            <span class="ref-num">2</span>
+                            <div>
+                                <div class="ref-title">
+                                    Container
+                                    Registryシャットダウンへの備え（2025年3月18日以降の段階）
+                                </div>
+                                <a
+                                    class="ref-url"
+                                    href="https://docs.cloud.google.com/artifact-registry/docs/transition/prepare-gcr-shutdown"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://docs.cloud.google.com/artifact-registry/docs/transition/prepare-gcr-shutdown</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref-card">
+                            <span class="ref-num">3</span>
+                            <div>
+                                <div class="ref-title">
+                                    Artifact Registry の gcr.io リポジトリ概要
+                                </div>
+                                <a
+                                    class="ref-url"
+                                    href="https://docs.cloud.google.com/artifact-registry/docs/transition/gcr-repositories"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://docs.cloud.google.com/artifact-registry/docs/transition/gcr-repositories</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>15.2 公式ドキュメント（最新の仕様は必ずここで確認）</h3>
+                    <div class="ref-list">
+                        <div class="ref-card">
+                            <span class="ref-num">1</span>
+                            <div>
+                                <div class="ref-title">Cloud Run ドキュメント</div>
+                                <a
+                                    class="ref-url"
+                                    href="https://cloud.google.com/run/docs"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://cloud.google.com/run/docs</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref-card">
+                            <span class="ref-num">2</span>
+                            <div>
+                                <div class="ref-title">Cloud Run のサービス間認証</div>
+                                <a
+                                    class="ref-url"
+                                    href="https://cloud.google.com/run/docs/authenticating/service-to-service"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://cloud.google.com/run/docs/authenticating/service-to-service</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref-card">
+                            <span class="ref-num">3</span>
+                            <div>
+                                <div class="ref-title">Cloud Run のアクセス管理（IAM）</div>
+                                <a
+                                    class="ref-url"
+                                    href="https://cloud.google.com/run/docs/securing/managing-access"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://cloud.google.com/run/docs/securing/managing-access</a
+                                >
+                            </div>
+                        </div>
+                        <div class="ref-card">
+                            <span class="ref-num">4</span>
+                            <div>
+                                <div class="ref-title">Cloud Build ドキュメント</div>
+                                <a
+                                    class="ref-url"
+                                    href="https://cloud.google.com/build/docs"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    >https://cloud.google.com/build/docs</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>15.3 この文書の前提と限界</h3>
+                    <ul>
+                        <li>
+                            ラボの手順書テキストでは、一部の名前が
+                            <strong>説明表記</strong>
+                            になっているため、サービス名・SA名は一般的な命名で補っています。<strong
+                                >ラボ画面の値が常に優先</strong
+                            >
+                            です。
+                        </li>
+                        <li>
+                            Task 7 のFrontendが
+                            <code>BILLING_URL</code>
+                            を読むこと、およびコード修正の内容は、固定コミット
+                            <code>d902c4d</code>
+                            のソースを読んで確認したものです。ラボ環境での実行検証は行っていません。<strong
+                                >手順どおりにコードを確認してから進めてください。</strong
+                            >
+                        </li>
+                        <li>
+                            ラボの内容・画面・リポジトリは更新されることがあります。<strong
+                                >差異があればラボ画面の指示に従ってください。</strong
+                            >
+                        </li>
+                    </ul>
+
+                    <p>
+                        <strong>お疲れさまでした。</strong> このラボで身につく型は、<strong
+                            >「ビルド → デプロイ → 疎通確認」</strong
+                        >
+                        と
+                        <strong>「公開は最小限、内部は認証必須＋専用SA＋最小権限」</strong>
+                        の2つです。この2つを説明できれば、Cloud
+                        Runの基礎設計は十分に理解できています。
+                    </p>
+                </section>
+            </main>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.min.js"></script>
+        <script>
+            window.DIAGRAMS = {
+                mm0: `flowchart TD
+S["環境準備<br/>プロジェクト・リージョン設定、リポジトリをclone"] --> T1
+subgraph STG["ステージング環境(Ref 1)"]
+T1["Task 1<br/>公開Billing APIをデプロイ"] --> T2["Task 2<br/>公開Frontendをデプロイ"]
+T2 --> T3["Task 3<br/>公開Billingを削除し<br/>非公開Billingをデプロイ"]
+end
+T3 --> T4
+subgraph PRD["本番環境(Ref 2・Ref 3)"]
+T4["Task 4<br/>Billing用サービスアカウント作成"] --> T5["Task 5<br/>本番Billingをデプロイ<br/>認証あり＋SA紐付け"]
+T5 --> T6["Task 6<br/>Frontend用サービスアカウント作成<br/>run.invokerを付与"]
+T6 --> T7["Task 7<br/>本番Frontendをデプロイ<br/>公開＋SA紐付け"]
+end
+T7 --> E["本番FrontendのURLを開いて<br/>請求画面を確認"]`,
+                mm1: `flowchart LR
+U["ユーザー<br/>(ブラウザ)"] -->|"HTTPS(誰でもアクセス可)"| F
+subgraph CR["Cloud Run"]
+F["Frontend 本番サービス<br/>実行SA: Frontend用SA"]
+B["Billing 本番サービス<br/>認証必須<br/>実行SA: Billing用SA"]
+end
+F -->|"IDトークン付きリクエスト"| B
+IAM{{"IAM<br/>Frontend用SAに<br/>roles/run.invoker"}} -.許可.-> B`,
+                mm2: `flowchart LR
+A["ソースコード<br/>＋Dockerfile"] -->|"gcloud builds submit"| B["Cloud Build<br/>イメージをビルド"]
+B -->|"push"| C["gcr.io<br/>(Artifact Registryが保管)"]
+C -->|"gcloud run deploy"| D["Cloud Run<br/>サービス＋URL"]
+D --> E["curlなどで疎通確認"]`,
+                mm3: `flowchart LR
+A["公開Billing<br/>認証なし<br/>(Task 1で作成)"] -->|"削除"| X["(なし)"]
+X --> B["非公開Billing<br/>認証あり<br/>(Task 3で作成)"]`,
+                mm4: `sequenceDiagram
+autonumber
+participant You as あなた(Cloud Shell)
+participant GC as gcloud
+participant B as 非公開Billingサービス
+You->>B: curl(トークンなし)
+B-->>You: 403 Forbidden
+You->>GC: gcloud auth print-identity-token
+GC-->>You: IDトークン(あなたの身元証明)
+You->>B: curl + Authorization: Bearer トークン
+B->>B: IAMでrun.invokerを確認
+B-->>You: 200 OK`,
+                mm5: `flowchart TB
+subgraph W["2つの権限の向きを区別する"]
+direction TB
+A["実行SA(--service-account)<br/>このサービスが外へ出るときの身元"]
+B["呼び出し権限(run.invoker)<br/>このサービスを呼べる人"]
+end
+A --- N1["Task 5 で設定<br/>(Billing用SAを紐付け)"]
+B --- N2["Task 6 で設定<br/>(Frontend用SAに付与)"]`,
+                mm6: `flowchart LR
+M["誰に(member)<br/>Frontend用SA"] -->|"何を(role)<br/>roles/run.invoker"| R["どこに(resource)<br/>本番Billingサービス"]`,
+                mm7: `sequenceDiagram
+autonumber
+actor U as ユーザー(ブラウザ)
+participant F as 本番Frontend(公開)
+participant M as メタデータサーバー
+participant B as 本番Billing(非公開)
+U->>F: ページを開く(認証なし)
+F->>M: IDトークンを要求(宛先はBillingのURL)
+M-->>F: Frontend用SAのIDトークン
+F->>B: Authorization: Bearer IDトークン
+B->>B: IAM確認(run.invokerあり？)
+B-->>F: 200 請求データ
+F-->>U: 画面を表示`,
+                mm8: `flowchart TD
+A["Frontendの画面は開くが<br/>請求データが出ない"] --> B{"FrontendのログにBillingへの<br/>呼び出しエラーがある？"}
+B -->|"403"| C["Task 6のrun.invokerを確認<br/>付与先は本番Billingか？<br/>メンバーはFrontend用SAか？"]
+B -->|"401"| D["IDトークンの宛先が違う可能性<br/>Billing URLを確認"]
+B -->|"接続できない / URL未設定"| E["環境変数でBilling URLを<br/>渡す設計かコードを確認"]
+B -->|"エラーなし"| F["Frontendに紐付いたSAが<br/>Frontend用SAか確認"]`,
+                mm9: `flowchart TD
+A["エラーが出た"] --> B{"どの段階？"}
+B -->|"ビルド<br/>gcloud builds submit"| C["フォルダは正しいか？pwd / ls<br/>Dockerfileはあるか？<br/>末尾のピリオドはあるか？"]
+B -->|"デプロイ<br/>gcloud run deploy"| D["イメージ名とタグは<br/>ビルド時と完全一致か？<br/>SAのメールは正しいか？"]
+B -->|"呼び出し<br/>curl"| E{"HTTPステータスは？"}
+E -->|"403"| F["サービスは認証必須か？<br/>トークンを付けたか？<br/>run.invokerが付いているか？"]
+E -->|"401"| G["トークンを取り直す"]
+E -->|"5xx"| H["ログを確認<br/>gcloud logging read"]
+B -->|"採点が通らない"| I["30秒待つ<br/>名前・タグ・認証設定を再確認"]`,
+                mm10: `flowchart TD
+Q1{"インターネットから<br/>直接呼ばれる必要がある？"} -->|"はい(画面など)"| P["公開<br/>--allow-unauthenticated"]
+Q1 -->|"いいえ(内部API)"| N["認証必須<br/>--no-allow-unauthenticated"]
+N --> Q2{"誰が呼ぶ？"}
+Q2 -->|"他のCloud Runサービス"| SA["呼び出し元の専用SAに<br/>run.invokerを付与"]
+Q2 -->|"人間(検証)"| ID["IDトークン付きで呼ぶ"]`,
+            };
+        </script>
+        <script>
+            (function () {
+                var body = document.body;
+                var sidebar = document.getElementById('sidebar');
+                var toggle = document.getElementById('navToggle');
+                var backdrop = document.getElementById('backdrop');
+
+                function setOpen(open) {
+                    sidebar.classList.toggle('open', open);
+                    backdrop.classList.toggle('show', open);
+                    body.classList.toggle('nav-open', open);
+                    toggle.setAttribute('aria-expanded', String(open));
+                    toggle.querySelector('.nav-toggle-label').textContent = open
+                        ? '閉じる'
+                        : '目次';
+                    toggle.querySelector('i').className = open ? 'ti ti-x' : 'ti ti-list';
+                }
+                toggle.addEventListener('click', function () {
+                    setOpen(!sidebar.classList.contains('open'));
+                });
+                backdrop.addEventListener('click', function () {
+                    setOpen(false);
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        setOpen(false);
+                    }
+                });
+                sidebar.querySelectorAll('a').forEach(function (a) {
+                    a.addEventListener('click', function () {
+                        setOpen(false);
+                    });
+                });
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 1024) {
+                        setOpen(false);
+                    }
+                });
+
+                var links = Array.prototype.slice.call(sidebar.querySelectorAll('nav a'));
+                var linkById = {};
+                links.forEach(function (a) {
+                    linkById[a.getAttribute('href').slice(1)] = a;
+                });
+                var nav = sidebar.querySelector('nav');
+                function activate(id) {
+                    links.forEach(function (a) {
+                        a.classList.remove('active');
+                    });
+                    var a = linkById[id];
+                    if (!a) {
+                        return;
+                    }
+                    a.classList.add('active');
+                    var top = a.offsetTop - sidebar.clientHeight / 2;
+                    sidebar.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+                }
+                if ('IntersectionObserver' in window) {
+                    var io = new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(function (en) {
+                                if (en.isIntersecting) {
+                                    activate(en.target.id);
+                                }
+                            });
+                        },
+                        { rootMargin: '-20% 0px -70% 0px' },
+                    );
+                    document.querySelectorAll('section[id]').forEach(function (s) {
+                        io.observe(s);
+                    });
+                }
+
+                document.querySelectorAll('.copy-btn').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var code = btn.closest('.code-block').querySelector('code');
+                        var text = code.textContent;
+                        var label = btn.querySelector('span');
+                        function done() {
+                            label.textContent = 'コピーしました';
+                            setTimeout(function () {
+                                label.textContent = 'コピー';
+                            }, 1600);
+                        }
+                        function fallback() {
+                            var ta = document.createElement('textarea');
+                            ta.value = text;
+                            ta.style.position = 'fixed';
+                            ta.style.opacity = '0';
+                            document.body.appendChild(ta);
+                            ta.select();
+                            try {
+                                document.execCommand('copy');
+                                done();
+                            } catch (e) {}
+                            document.body.removeChild(ta);
+                        }
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(text).then(done, fallback);
+                        } else {
+                            fallback();
+                        }
+                    });
+                });
+
+                if (window.hljs) {
+                    document
+                        .querySelectorAll('pre code[class*="language-"]')
+                        .forEach(function (el) {
+                            try {
+                                window.hljs.highlightElement(el);
+                            } catch (e) {}
+                        });
+                }
+
+                async function renderDiagrams() {
+                    var ids = Object.keys(window.DIAGRAMS || {});
+                    if (!ids.length) {
+                        return;
+                    }
+                    if (typeof window.mermaid === 'undefined') {
+                        ids.forEach(function (id) {
+                            var t = document.getElementById(id);
+                            var pre = document.createElement('pre');
+                            pre.className = 'diagram-error';
+                            pre.textContent = window.DIAGRAMS[id];
+                            t.appendChild(pre);
+                        });
+                        return;
+                    }
+                    window.mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'dark',
+                        securityLevel: 'loose',
+                        fontFamily:
+                            '-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif',
+                        flowchart: {
+                            useMaxWidth: false,
+                            htmlLabels: true,
+                            nodeSpacing: 45,
+                            rankSpacing: 50,
+                            curve: 'basis',
+                            padding: 12,
+                            wrappingWidth: 420,
+                        },
+                        sequence: {
+                            useMaxWidth: false,
+                            wrap: false,
+                            actorMargin: 50,
+                            messageMargin: 36,
+                        },
+                        themeVariables: {
+                            fontFamily:
+                                '-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif',
+                            fontSize: '16px',
+                            primaryColor: '#1b2f55',
+                            primaryTextColor: '#f3f5fa',
+                            primaryBorderColor: '#7c9eff',
+                            secondaryColor: '#13243f',
+                            secondaryTextColor: '#f3f5fa',
+                            secondaryBorderColor: '#3e5c8f',
+                            tertiaryColor: '#0d1b30',
+                            tertiaryTextColor: '#f3f5fa',
+                            tertiaryBorderColor: '#3e5c8f',
+                            mainBkg: '#1b2f55',
+                            nodeBorder: '#7c9eff',
+                            lineColor: '#93a1bd',
+                            textColor: '#f3f5fa',
+                            titleColor: '#f3f5fa',
+                            clusterBkg: '#0d1b30',
+                            clusterBorder: '#3e5c8f',
+                            edgeLabelBackground: '#0d1b30',
+                            actorBkg: '#1b2f55',
+                            actorBorder: '#7c9eff',
+                            actorTextColor: '#f3f5fa',
+                            actorLineColor: '#3e5c8f',
+                            signalColor: '#c6d0e3',
+                            signalTextColor: '#f3f5fa',
+                            labelBoxBkgColor: '#13243f',
+                            labelBoxBorderColor: '#3e5c8f',
+                            labelTextColor: '#f3f5fa',
+                            loopTextColor: '#f3f5fa',
+                            noteBkgColor: '#13243f',
+                            noteTextColor: '#f3f5fa',
+                            noteBorderColor: '#3e5c8f',
+                            activationBkgColor: '#16284a',
+                            activationBorderColor: '#7c9eff',
+                            sequenceNumberColor: '#07111e',
+                        },
+                    });
+                    try {
+                        await document.fonts.ready;
+                    } catch (e) {}
+                    for (var i = 0; i < ids.length; i++) {
+                        var id = ids[i];
+                        var src = window.DIAGRAMS[id];
+                        var target = document.getElementById(id);
+                        try {
+                            var out = await window.mermaid.render('svg-' + id, src);
+                            target.innerHTML = out.svg;
+                            var svg = target.querySelector('svg');
+                            svg.removeAttribute('width');
+                            svg.removeAttribute('height');
+                            var vb = (svg.getAttribute('viewBox') || '')
+                                .split(/[\s,]+/)
+                                .map(Number);
+                            if (vb.length === 4 && !vb.some(isNaN)) {
+                                var extra = /^\s*(sequenceDiagram|stateDiagram)/.test(src)
+                                    ? 110
+                                    : 15;
+                                vb[3] = vb[3] + extra;
+                                svg.setAttribute('viewBox', vb.join(' '));
+                                svg.style.width = vb[2] + 'px';
+                            }
+                            svg.style.maxWidth = '100%';
+                            svg.style.height = 'auto';
+                            svg.style.overflow = 'visible';
+                            target.setAttribute('data-rendered', 'true');
+                        } catch (err) {
+                            target.innerHTML = '';
+                            var pre = document.createElement('pre');
+                            pre.className = 'diagram-error';
+                            pre.textContent = '図を表示できませんでした。ソース:\n' + src;
+                            target.appendChild(pre);
+                            target.setAttribute('data-rendered', 'error');
+                            console.error('mermaid render failed', id, err);
+                        }
+                    }
+                    document.body.setAttribute('data-diagrams-done', 'true');
+                }
+                renderDiagrams();
+            })();
+        </script>
+    </body>
+</html>
