@@ -451,12 +451,13 @@ export function ChecklistCount({ total }: { total: number }) {
     const rawCss = doc.querySelector('style')?.textContent ?? '';
     const cssAst = postcss.parse(rawCss);
 
-    cssAst.walkRules((rule) => {
-        if (rule.selector.includes(':root')) {
-            rule.selector = scope;
-            return;
-        }
-        rule.selector = rule.selectors
+    const rootNode = cssAst.nodes.find((n) => n.type === 'rule' && n.selector === ':root');
+    if (rootNode) rootNode.remove();
+
+    cssAst.walkRules((r) => {
+        if (r.parent && r.parent.type === 'atrule' && r.parent.name === 'keyframes') return;
+        r.selector = r.selector
+            .split(',')
             .map((s) => {
                 const trimmed = s.trim();
                 if (['html', 'body'].includes(trimmed)) return scope;
@@ -472,94 +473,115 @@ export function ChecklistCount({ total }: { total: number }) {
             .join(', ');
     });
 
-    const additionalCss = `/* Additional layout and interactive tokens */
+    const hexTokens = {
+        '#ffffff': 'sidebar-bg',
+        '#1b2740': 'text',
+        '#2f5bd9': 'accent',
+        '#0e1a31': 'strong',
+        '#a54a00': 'code-inline',
+        '#b4dec6': 'practice-border',
+        '#f3f6fc': 'code-bg',
+        '#24292f': 'code-line',
+    };
+
+    cssAst.walkDecls((d) => {
+        d.value = d.value.replace(/var\(--([\w-]+)\)/g, (_, k) => {
+            if (k === 'sidebar-w') return '280px';
+            if (k === 'font-jp') return 'var(--font-body)';
+            return `var(--color-scs-d5-${k})`;
+        });
+        if (!d.parent?.selector?.includes('.hljs')) {
+            d.value = d.value.replace(/#[0-9a-fA-F]{6}\b/g, (hex) => {
+                const token = hexTokens[hex.toLowerCase()];
+                if (token) return `var(--color-scs-d5-${token})`;
+                return hex;
+            });
+        }
+        if (d.prop === 'word-break') {
+            d.prop = 'overflow-wrap';
+            d.value = 'anywhere';
+        }
+        if (d.prop === 'overflow-x' && d.value === 'hidden') {
+            d.value = 'clip';
+        }
+        if (d.prop === 'scroll-margin-top') {
+            d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px)';
+        }
+        if (d.prop === 'top' && d.parent?.selector?.includes('.sidebar')) {
+            d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))';
+        }
+        if (d.prop === 'z-index' && d.parent?.selector?.includes('.sidebar-toggle')) {
+            d.value = '39';
+        } else if (d.prop === 'z-index' && d.parent?.selector?.includes('.sidebar')) {
+            d.value = '38';
+        }
+    });
+
+    cssAst.walkRules(`${scope} .sidebar nav a.active`, (r) => {
+        r.cloneAfter({ selector: `${scope} .sidebar nav a[aria-current='location']` });
+    });
+
+    cssAst.walkRules(`${scope} .main`, (r) => {
+        if (r.parent?.type === 'atrule') {
+            r.append({ prop: 'width', value: '100%' }, { prop: 'max-width', value: 'none' });
+        } else {
+            r.append(
+                { prop: 'width', value: 'calc(100% - 280px)' },
+                { prop: 'max-width', value: 'none' },
+                { prop: 'box-sizing', value: 'border-box' },
+            );
+        }
+    });
+
+    const additionalCss = `
 ${scope} {
-    --color-scs-d5-bg: #f5f7fb;
-    --color-scs-d5-bg-card: #ffffff;
-    --color-scs-d5-bg-card-2: #eef2fa;
-    --color-scs-d5-border: #d3dcee;
-    --color-scs-d5-border-soft: #e2e8f4;
-    --color-scs-d5-text: #1b2740;
-    --color-scs-d5-text-dim: #4d5d7d;
-    --color-scs-d5-text-faint: #7384a3;
-    --color-scs-d5-accent: #2f5bd9;
-    --color-scs-d5-accent-soft: #a9bbea;
-    --color-scs-d5-accent-bg: #e8eefc;
-    --color-scs-d5-danger: #c8324f;
-    --color-scs-d5-danger-bg: #fde8ec;
-    --color-scs-d5-warn: #b36a00;
-    --color-scs-d5-warn-bg: #fff1dc;
-    --color-scs-d5-success: #1d7a4a;
-    --color-scs-d5-success-bg: #e6f5ec;
-    --color-scs-d5-sidebar-bg: #ffffff;
-    --color-scs-d5-strong: #0f1a30;
-    --color-scs-d5-code-inline: #a3480b;
-    --color-scs-d5-code-bg: #eef2fa;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    background: var(--color-scs-d5-bg);
-    color: var(--color-scs-d5-text);
+    overflow-x: clip;
+    color-scheme: light;
+}
+${scope} .main ul {
+    list-style-type: disc;
+}
+${scope} .main ol {
+    list-style-type: decimal;
+}
+${scope} .main ul ul {
+    list-style-type: circle;
+}
+${scope} .main ul ul ul {
+    list-style-type: square;
+}
+${scope} .main .checklist-card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+${scope} nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+${scope} .sidebar {
+    position: fixed;
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 38;
 }
 ${scope} .sidebar-toggle {
-    display: none;
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 100;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--color-scs-d5-accent);
-    color: #ffffff;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(47, 91, 217, 0.35);
+    top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 14px);
+    z-index: 39;
 }
-@media (max-width: 1024px) {
-    ${scope} .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-    }
-    ${scope} .sidebar.open {
-        transform: translateX(0);
-    }
-    ${scope} .sidebar-toggle {
-        display: grid;
-        place-items: center;
-    }
-    ${scope} .main {
-        margin-left: 0 !important;
-        max-width: 100% !important;
-        padding: 24px 20px 80px !important;
+@media (max-width: 980px) {
+    ${scope} .sidebar:not(.open) {
+        visibility: hidden;
+        transition: transform 0.25s, visibility 0s linear 0.25s;
     }
 }
-${scope} .sidebar nav a[aria-current="location"] {
-    background: var(--color-scs-d5-accent-bg);
-    color: var(--color-scs-d5-accent);
-    font-weight: 700;
-}
-${scope} .sidebar nav a.lvl3 {
-    padding-left: 28px;
-    font-size: 13px;
-}
-${scope} .table-scroll {
-    overflow-x: auto;
-    margin: 20px 0;
-}
-${scope} .table-scroll:focus-visible {
-    outline: 2px solid var(--color-scs-d5-accent);
-    outline-offset: 2px;
-}
-${scope} .main h2[tabindex="-1"],
-${scope} .main h3[tabindex="-1"],
-${scope} .main h4[tabindex="-1"] {
-    outline: none;
-}
-${scope} .main h2:focus-visible,
-${scope} .main h3:focus-visible,
-${scope} .main h4:focus-visible {
-    outline: 2px solid var(--color-scs-d5-accent);
-    outline-offset: 4px;
+${scope} .main h2,
+${scope} .main h3,
+${scope} .main h4 {
+    scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 24px);
 }
 ${scope} .main {
     min-width: 0;
@@ -705,13 +727,13 @@ ${scope} .hljs-template-tag,
 ${scope} .hljs-template-variable,
 ${scope} .hljs-type,
 ${scope} .hljs-variable.language_ {
-    color: #a31515;
+    color: #d73a49;
 }
 ${scope} .hljs-title,
 ${scope} .hljs-title.class_,
 ${scope} .hljs-title.class_.inherited__,
 ${scope} .hljs-title.function_ {
-    color: #795e26;
+    color: #6f42c1;
 }
 ${scope} .hljs-attr,
 ${scope} .hljs-attribute,
@@ -723,21 +745,27 @@ ${scope} .hljs-selector-attr,
 ${scope} .hljs-selector-class,
 ${scope} .hljs-selector-id,
 ${scope} .hljs-variable {
-    color: #001080;
+    color: #005cc5;
 }
-${scope} .hljs-string,
-${scope} .hljs-regexp {
-    color: #098658;
+${scope} .hljs-meta .hljs-string,
+${scope} .hljs-regexp,
+${scope} .hljs-string {
+    color: #032f62;
 }
 ${scope} .hljs-built_in,
 ${scope} .hljs-symbol {
-    color: #0451a5;
+    color: #e36209;
 }
-${scope} .hljs-comment,
 ${scope} .hljs-code,
+${scope} .hljs-comment,
 ${scope} .hljs-formula {
-    color: #7384a3;
-    font-style: italic;
+    color: #6a737d;
+}
+${scope} .hljs-name,
+${scope} .hljs-quote,
+${scope} .hljs-selector-tag,
+${scope} .hljs-deletion {
+    color: #22863a;
 }
 `;
     fs.writeFileSync(`${dir}/page.css`, cssAst.toString() + '\n' + additionalCss);
