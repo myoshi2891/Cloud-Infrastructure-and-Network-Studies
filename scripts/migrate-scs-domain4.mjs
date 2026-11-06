@@ -403,8 +403,8 @@ export default function NavBar() {
             </button>
             <aside id="sidebar" className={\`sidebar\${open ? ' open' : ''}\`}>
                 <div className="sidebar-header">
-                    <div className="kicker">AWS SCS-C03</div>
-                    <h2>Domain 4: Identity and Access Management</h2>
+                    <div className="kicker">AWS Security Specialty</div>
+                    <h2>Domain 4: IAM</h2>
                 </div>
                 <nav id="sidebarNav" aria-label="SCS-C03 Domain 4 目次">
                     {NAV_ITEMS.map((item) => (
