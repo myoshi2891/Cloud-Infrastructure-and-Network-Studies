@@ -141,6 +141,23 @@ export const FIDELITY_PAGES = {
             updates: '8-2026年時点で特に注意したい変更点',
         },
     },
+    'aws-scs-c03-domain4-guide': {
+        source: 'Aws-scs-c03-domain4-iam-guide.html',
+        sourceCommit: 'efdbafb932e7317753b4025ee8498fa12cb1dcb7',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            herointro: '',
+            task41: 'task-41-認証戦略の設計実装トラブルシュート',
+            task42authz: 'task-42-認可戦略の設計実装トラブルシュート',
+            task42policy: '8-skill-423-最小権限の-iam-ポリシーを設計解釈実装する',
+            summary: '11-サービス横断の整理',
+            examprep: '13-練習問題-確認テスト',
+            appendix: '14-参考ソース一覧-公式ドキュメント',
+        },
+    },
     'aws-scs-c03-domain3-guide': {
         source: 'Aws-scs-c03-domain3-infrastructure-security-guide.html',
         sourceCommit: 'efdbafb932e7317753b4025ee8498fa12cb1dcb7',
