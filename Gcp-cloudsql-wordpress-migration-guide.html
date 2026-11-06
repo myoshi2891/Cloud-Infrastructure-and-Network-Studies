@@ -249,7 +249,8 @@ gcloud services enable sqladmin.googleapis.com</code></pre>
 <tr><td>接続</td><td>パブリック IP ＋ 承認済みネットワーク</td><td>ラボでは最も簡単（本番は Private IP）</td></tr></table>
 <p>先に <code>blog</code> に SSH して既存の版を確認します。<code>mysql --version</code> はクライアントの版なので使いません。</p>
 <pre><code>gcloud compute ssh blog --zone=$ZONE
-sudo mysql -e "SELECT VERSION();"    # 8.0.x / 5.7.x / MariaDB を確認して exit</code></pre>
+sudo mysql -e "SELECT VERSION();"    # 8.0.x / 5.7.x / MariaDB を確認
+exit    # Cloud Shell に戻ってから次のブロックへ進む</code></pre>
 <div class="note"><p>本ガイドは既存が <strong>MySQL 8.0 以前または MariaDB</strong> の場合だけが対象で、<code>MYSQL_8_0</code> を指定します。MySQL 8.4 など新しい場合は公式ドキュメントで移行方法を確認してください。</p></div>
 <pre><code>gcloud sql instances create $INSTANCE_NAME \
   --database-version=$DB_VERSION --edition=ENTERPRISE \
@@ -283,7 +284,8 @@ gcloud sql instances patch $INSTANCE_NAME --authorized-networks=${BLOG_IP}/32 --
 gcloud sql instances patch $INSTANCE_NAME --ssl-mode=ENCRYPTED_ONLY --quiet
 export SQL_IP=$(gcloud sql instances describe $INSTANCE_NAME --format='get(ipAddresses[0].ipAddress)')
 gcloud sql ssl server-ca-certs list --instance=$INSTANCE_NAME --format='value(cert)' &gt; server-ca.pem
-gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE</code></pre>
+gcloud compute scp server-ca.pem blog:server-ca.pem --zone=$ZONE
+echo "SQL_IP=$SQL_IP"    # blog で使うので控える</code></pre>
 <p><code>/32</code> は「その 1 台だけ」を許可する指定です。<code>--authorized-networks</code> は既存リストを<strong>上書き</strong>するので、複数ある場合はカンマ区切りで全部書きます。この手順が Task 3 の Check my progress の対象です。</p>
 <h3>3-2 ダンプ前にサイトを読み取り専用にする</h3>
 <p>ダンプ後に書き込まれた記事やコメントは Cloud SQL に移らず失われます。<code>blog</code> の Apache で POST 等と <code>wp-cron.php</code> を拒否し、<code>wp-config.php</code> に <code>DISABLE_WP_CRON</code> を true で追加して、検証が終わるまで書き込みを止めます（閲覧の GET / HEAD は可能です）。設定ファイルと途中で失敗した場合に中止する安全な手順は、配布している Markdown 版 <code>Gcp-cloudsql-wordpress-migration-guide.md</code> の「6.4 手順 3-4」を使ってください。</p>
@@ -314,15 +316,16 @@ mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
 export CONNECTION_NAME=$(gcloud sql instances describe $INSTANCE_NAME --format='value(connectionName)')
 gcloud projects add-iam-policy-binding "$(gcloud config get-value project)" \
   --member="serviceAccount:${BLOG_SA}" --role=roles/cloudsql.client
-gcloud compute instances describe blog --zone=$ZONE --format='value(serviceAccounts[0].scopes)'</code></pre>
+gcloud compute instances describe blog --zone=$ZONE --format='value(serviceAccounts[0].scopes)'
+echo "CONNECTION_NAME=$CONNECTION_NAME"    # blog で使うので控える</code></pre>
 <p>スコープに <code>cloud-platform</code> か <code>sqlservice.admin</code> が無い場合は、VM を停止してスコープを変更します（外部 IP が変わっても、プロキシ接続は承認済みネットワークに依存しません）。</p>
 <h3>4-2 プロキシを常駐させる（blog 上）</h3>
 <pre><code>CONNECTION_NAME="★Cloud Shell で表示された値"
 curl -sSfL -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64
-echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c -
-sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy</code></pre>
-<p>SHA-256 が一致しなければ中止します。続けて systemd のユニットを作ります。</p>
+  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.26.3/cloud-sql-proxy.linux.amd64 \
+  &amp;&amp; echo "5533a05cdbf12f8a0cb46db34c775847a496e181d47f863284d3d02b0fad49fa  cloud-sql-proxy" | sha256sum -c - \
+  &amp;&amp; sudo install -m 0755 cloud-sql-proxy /usr/local/bin/cloud-sql-proxy</code></pre>
+<p>ダウンロードまたは SHA-256 の検証に失敗すると <code>sudo install</code> は実行されません。エラーが出たら、ここで移行を中止します。成功した場合だけ、続けて systemd のユニットを作ります。</p>
 <pre><code>sudo tee /etc/systemd/system/cloud-sql-proxy.service &gt; /dev/null &lt;&lt;EOF
 [Unit]
 Description=Cloud SQL Auth Proxy
