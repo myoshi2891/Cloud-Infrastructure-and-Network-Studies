@@ -271,7 +271,8 @@ exit</code></pre>
 gcloud sql users set-password $DB_USER --instance=$INSTANCE_NAME --host=% --prompt-for-password
 gcloud sql connect $INSTANCE_NAME --user=root</code></pre>
 <pre><code>SET DEFAULT ROLE 'wordpress_app' TO 'blogadmin'@'%';
-SHOW GRANTS FOR 'blogadmin'@'%';    -- cloudsqlsuperuser が無く wordpress_app だけなら成功</code></pre>
+SHOW GRANTS FOR 'blogadmin'@'%';    -- cloudsqlsuperuser が無く wordpress_app だけなら成功
+exit</code></pre>
 <div class="warn"><p>既定ロールを設定しないと、ログイン時にロールが有効にならず、Task 3 のインポートが Access denied で失敗します。</p></div>
 
 <h2 id="t3">Task 3: ダンプを取得してインポートする</h2>
@@ -301,7 +302,7 @@ mysql -h "$SQL_IP" -u blogadmin -p --ssl-mode=VERIFY_CA --ssl-ca=server-ca.pem \
 <tr><td><code>--single-transaction</code></td><td>InnoDB をロックせず一貫した時点で取得</td></tr>
 <tr><td><code>--set-gtid-purged=OFF</code></td><td>GTID 文を出さない（MariaDB では外す）</td></tr>
 <tr><td><code>VERIFY_CA</code></td><td>CA 証明書でサーバーを検証（<code>REQUIRED</code> は検証しない）</td></tr></table>
-<div class="note"><p><strong>MariaDB クライアントの場合</strong>は <code>--ssl</code> が証明書を検証しないため、IP 直結はせず、Task 4 の Auth Proxy を先に起動して <code>-h 127.0.0.1 -P 3307</code> で取り込みます。つながらずタイムアウト（ERROR 2003）になる場合は、承認済みネットワークを確認します。</p></div>
+<div class="note"><p><strong>MariaDB クライアントの場合</strong>は <code>--ssl</code> が証明書を検証しないため、IP 直結はせず、Task 4 の Auth Proxy を先に起動して <code>-h 127.0.0.1 -P 3307</code> で取り込みます。このときプロキシが TLS を担うため、IP 直結用の <code>--ssl-mode</code> と <code>--ssl-ca</code> は付けません。つながらずタイムアウト（ERROR 2003）になる場合は、承認済みネットワークを確認します。</p></div>
 <p>取り込み後は <code>SHOW TABLES;</code> と投稿テーブルの件数で確認します。テーブル接頭辞は <code>wp_</code> とは限らないため、<code>wp-config.php</code> の <code>$table_prefix</code> に合わせます。</p>
 
 <h2 id="t4">Task 4: WordPress の接続先を変更する</h2>
