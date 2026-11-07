@@ -49,10 +49,11 @@ describe('SCS-C03 Domain 6 — 基盤ルーティング・テーマ設定', () =
             '--color-scs-d6-success': '#1f7a4d',
             '--color-scs-d6-success-bg': '#e6f6ee',
             '--color-scs-d6-sidebar-bg': '#ffffff',
-            '--color-scs-d6-strong': '#0f1a30',
-            '--color-scs-d6-code-inline': '#a54a00',
-            '--color-scs-d6-code-bg': '#f3f6fc',
-            '--color-scs-d6-code-line': '#24292f',
+            '--color-scs-d6-strong': '#0c1630',
+            '--color-scs-d6-code-inline': '#8a4208',
+            '--color-scs-d6-code-bg': '#fff3e2',
+            '--color-scs-d6-code-border': '#f1d6ad',
+            '--color-scs-d6-code-line': '#24292e',
         };
 
         for (const [k, v] of Object.entries(expectedTokens)) {

@@ -100,7 +100,9 @@ describe('SCS-C03 Domain 6 — スタイル・デザイン完全移行', () => {
                     expect(actual['overflow-wrap']).toBe('anywhere');
                     continue;
                 }
-                expect(actual[p], `${selector} { ${p} } in media "${rule.media}"`).toBe(v);
+                expect(resolve(actual[p] ?? '', pageVariables), selector + ' ' + p).toBe(
+                    resolve(v.replace('var(--sidebar-w)', '280px'), source),
+                );
             }
         }
     });
@@ -136,5 +138,87 @@ describe('SCS-C03 Domain 6 — スタイル・デザイン完全移行', () => {
     it('defines .scs-domain6-page in components/Footer.module.css light theme selector', () => {
         const footerCss = readFileSync('components/Footer.module.css', 'utf8');
         expect(footerCss).toContain('.scs-domain6-page');
+    });
+
+    it('uses theme tokens instead of raw hex colors outside syntax highlighting', () => {
+        const offenders: string[] = [];
+        postcss.parse(css).walkDecls((d) => {
+            const parent = d.parent;
+            if (parent?.type === 'rule' && 'selector' in parent && String(parent.selector).includes('.hljs')) return;
+            if (/#[\da-f]{3,8}\b/i.test(d.value)) offenders.push(`${String((parent as postcss.Rule).selector)} ${d.prop}: ${d.value}`);
+        });
+        expect(offenders).toEqual([]);
+    });
+
+    it('highlights the NavBar aria-current link like the source .active link', () => {
+        const active = rules(css, '.scs-domain6-page .sidebar nav a.active');
+        expect(rules(css, ".scs-domain6-page .sidebar nav a[aria-current='location']")).toEqual(active);
+    });
+
+    it('retains source root color variables in @theme tokens', () => {
+        for (const [k, v] of Object.entries(source)) {
+            if (['--sidebar-w', '--font-jp', '--font-mono', 'color-scheme'].includes(k)) continue;
+            const token = `--color-scs-d6-${k.replace(/^--/, '')}`;
+            expect(themeTokens[token], `missing ${token}`).toBe(v);
+        }
+    });
+
+    it('keeps list marker styling for unordered and ordered lists inside main', () => {
+        expect(rules(css, '.scs-domain6-page .main ul')['list-style-type']).toBe('disc');
+        expect(rules(css, '.scs-domain6-page .main ol')['list-style-type']).toBe('decimal');
+        expect(rules(css, '.scs-domain6-page .main ul ul')['list-style-type']).toBe('circle');
+        expect(rules(css, '.scs-domain6-page .main ul ul ul')['list-style-type']).toBe('square');
+    });
+
+    it('neutralizes inner MermaidDiagram wrapper box and preserves natural SVG scale', () => {
+        expect(rules(css, '.scs-domain6-page .mermaid-wrap > [role="img"]')).toEqual({
+            background: 'transparent',
+            border: '0',
+            padding: '0',
+            margin: '0',
+            width: '100%',
+        });
+        expect(rules(css, '.scs-domain6-page .mermaid-wrap svg')).toEqual({
+            'flex-shrink': '0',
+            'max-width': 'none',
+            height: 'auto',
+        });
+        expect(rules(css, '.scs-domain6-page .main .mermaid-wrap p')).toEqual({
+            color: 'inherit',
+            margin: '0',
+        });
+    });
+
+    it('applies padding to the outer code-block pre and resets per-line .code-line padding', () => {
+        expect(rules(css, '.scs-domain6-page .main pre.code.code-block')).toEqual({
+            padding: '18px 20px',
+        });
+        expect(rules(css, '.scs-domain6-page .main pre:not(.mermaid) > .code-line')).toEqual({
+            padding: '0',
+            'min-height': '1.65em',
+            'white-space': 'pre',
+            'font-family': 'var(--font-mono)',
+        });
+    });
+
+    it('defines GitHub Light highlight.js syntax token colors for all used token classes', () => {
+        const tokenColors: Record<string, string> = {};
+        postcss.parse(css).walkRules((r) => {
+            if (!r.selector.includes('.hljs-')) return;
+            r.walkDecls('color', (d) => {
+                for (const sel of r.selector.split(',').map((s) => s.trim())) {
+                    tokenColors[sel] = d.value.toLowerCase();
+                }
+            });
+        });
+
+        expect(tokenColors['.scs-domain6-page .hljs-keyword']).toBe('#d73a49');
+        expect(tokenColors['.scs-domain6-page .hljs-attr']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-literal']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-number']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-variable']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-string']).toBe('#032f62');
+        expect(tokenColors['.scs-domain6-page .hljs-built_in']).toBe('#e36209');
+        expect(tokenColors['.scs-domain6-page .hljs-comment']).toBe('#6a737d');
     });
 });
