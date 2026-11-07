@@ -46,12 +46,54 @@ defineMigrationSuite(
 describe('CCIE Service Provider ガイド — リスト・スタイリング・図解・コード検証', () => {
     it('スコープCSSに金色ドットリストと数字バッジ、Tabler Icons、図解ラッパー透過、リンク下線が定義されている', () => {
         const cssPath = resolve('app/cisco/ccie/service-provider/page.css');
-        const css = readFileSync(cssPath, 'utf8').replace(/\s+/g, '');
+        const rawCss = readFileSync(cssPath, 'utf8');
+        const css = rawCss.replace(/\s+/g, '');
         expect(css).toContain("@import'@tabler/icons-webfont/tabler-icons.min.css'");
         expect(css).toContain('.ccie-sp-page');
-        expect(css).toContain('.ccie-sp-page.diagram.mm>[role="img"]');
+        // .diagram の子孫 .mm 直下の [role="img"] を透過・リセットしていること（.diagram.mm のタイポでないこと）
+        expect(rawCss).toMatch(/\.ccie-sp-page\s+\.diagram\s+\.mm\s*>\s*\[role=["']img["']\]/);
+        expect(css).toContain('.ccie-sp-page.diagram.mm.mermaid-target');
+        expect(css).toContain('.ccie-sp-page.diagram.mmsvg');
         expect(css).toContain('background:transparent!important;');
         expect(css).toContain('.ccie-sp-pagea{color:var(--color-ccie-sp-indigo);text-decoration:underline');
+    });
+
+    it('サイドバーとmainに重複する旧288px/top:0ルールが存在せず、ヘッダー高連動の280pxレイアウトと階層展開スタイルが定義されている', () => {
+        const css = readFileSync(resolve('app/cisco/ccie/service-provider/page.css'), 'utf8');
+        expect(css).not.toMatch(/width:\s*288px/);
+        expect(css).not.toMatch(/margin-left:\s*288px/);
+        // デスクトップ .sidebar に top: 0 が残っていないこと
+        const sidebarRules = [...css.matchAll(/\.ccie-sp-page\s+\.sidebar\s*\{([^}]*)\}/g)].map((m) => m[1] ?? '');
+        expect(sidebarRules.length).toBeGreaterThan(0);
+        for (const body of sidebarRules) {
+            expect(body).not.toMatch(/\btop:\s*0\s*;/);
+            expect(body).not.toMatch(/\bposition:\s*static\s*;/);
+        }
+        // コードブロックとコード行の等幅・インデント保持スタイルが定義されていること
+        expect(css).toMatch(/\.ccie-sp-page\s+\.code-block\s*\{[^}]*font-family:\s*var\(--font-ccie-sp-mono\)/);
+        expect(css).toMatch(/\.ccie-sp-page\s+\.code-line\s*\{[^}]*white-space:\s*pre/);
+    });
+
+    it('コードブロックに IOS XR / Python / YAML の構文ハイライトトークン（.hljs-*）が適用されている', () => {
+        const { container } = render(<CcieSpGuide />);
+        expect(container.querySelectorAll('.code-block .hljs-keyword').length).toBeGreaterThan(100);
+        expect(container.querySelectorAll('.code-block .hljs-built_in').length).toBeGreaterThan(20);
+        expect(container.querySelectorAll('.code-block .hljs-number').length).toBeGreaterThan(50);
+        expect(container.querySelectorAll('.code-block .hljs-comment').length).toBeGreaterThan(10);
+        expect(container.querySelectorAll('.code-block .hljs-meta').length).toBeGreaterThan(3);
+        expect(container.querySelectorAll('.code-block .hljs-string').length).toBeGreaterThan(5);
+    });
+
+    it('サイドバー目次リンクをクリックすると active クラス・aria-current="location"・親 li.open が付与されサブ階層が展開される', () => {
+        const { container } = render(<CcieSpGuide />);
+        const subLink = container.querySelector('#sidebar nav a[href="#s4-1"]') as HTMLAnchorElement;
+        expect(subLink).not.toBeNull();
+        fireEvent.click(subLink);
+        expect(subLink.classList.contains('active')).toBe(true);
+        expect(subLink.getAttribute('aria-current')).toBe('location');
+        const parentCh = subLink.closest('li.ch');
+        expect(parentCh?.classList.contains('open')).toBe(true);
+        expect(parentCh?.classList.contains('active')).toBe(true);
     });
 
     it('ページCSSはローカルのカスタムプロパティを定義せず、構文ハイライト以外に生の hex を残さない', () => {
