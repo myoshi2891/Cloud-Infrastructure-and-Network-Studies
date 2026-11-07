@@ -153,6 +153,63 @@ function jsx(n) {
 // ----------------------------------------------------
 /** 定数・テーマ・共通コンポーネントなどセクション以外の土台を生成する。 */
 export function scaffoldCore() {
+    // 確認問題の対話UIも再生成時に保持する。
+    const quizComponent = `"use client";
+
+import { Children, isValidElement, useState, type ReactNode } from "react";
+
+type ContentElement = { children?: ReactNode };
+
+export default function QuizQuestion({ number, correctAnswers, children }: {
+    number: number;
+    correctAnswers: number[];
+    children: ReactNode;
+}) {
+    const [selected, setSelected] = useState<number[]>([]);
+    const elements = Children.toArray(children).filter(isValidElement<ContentElement>);
+    const prompt = elements[0];
+    const options = Children.toArray(elements[1]?.props.children)
+        .filter(isValidElement<ContentElement>);
+    const multiple = correctAnswers.length > 1;
+    const wrong = selected.some((index) => !correctAnswers.includes(index));
+    const correct = !wrong && selected.length === correctAnswers.length;
+    const status = selected.length === 0 ? "" : wrong ? "不正解" : correct ? "正解" : "あと1つ選択してください";
+
+    function choose(index: number) {
+        setSelected((previous) => multiple
+            ? previous.includes(index) ? previous.filter((value) => value !== index) : [...previous, index]
+            : [index]);
+    }
+
+    return (
+        <div className="d6-quiz-card" role="group" aria-labelledby={\`d6-question-\${number}\`}>
+            <div className="d6-quiz-prompt" id={\`d6-question-\${number}\`}>{prompt}</div>
+            <ul className="d6-quiz-options">
+                {options.map((option, index) => {
+                    const active = selected.includes(index);
+                    const state = active ? correctAnswers.includes(index) ? "correct" : "incorrect" : "idle";
+                    return (
+                        <li key={index}>
+                            <button type="button" className="d6-quiz-option" data-state={state}
+                                aria-pressed={active} onClick={() => choose(index)}>
+                                <span className="d6-quiz-indicator" aria-hidden="true">{active ? state === "correct" ? "✓" : "×" : ""}</span>
+                                <span>{option.props.children}</span>
+                                {active && <span className="d6-quiz-option-result">{state === "correct" ? "正解" : "不正解"}</span>}
+                            </button>
+                        </li>
+                    );
+                })}
+            </ul>
+            <div className="d6-quiz-feedback" role="status" aria-live="polite"
+                data-state={selected.length === 0 ? "idle" : wrong ? "incorrect" : correct ? "correct" : "pending"}>
+                {status && <><span aria-hidden="true">{wrong ? "×" : correct ? "✓" : "○"}</span> {status}</>}
+            </div>
+        </div>
+    );
+}
+`;
+    fs.writeFileSync(`${dir}/QuizQuestion.tsx`, quizComponent);
+
     // 1. constants.ts
     const diagramCharts = Object.fromEntries(
         diagrams.map((e, i) => [
@@ -655,7 +712,129 @@ ${scope} .hljs-formula {
 }
 `;
 
-    fs.writeFileSync(`${dir}/page.css`, cssAst.toString() + additionalCss);
+    const quizCss = `.scs-domain6-page .main .d6-quiz-card {
+    margin: 24px 0;
+    padding: clamp(20px, 3vw, 32px);
+    background: var(--color-scs-d6-bg-card);
+    border: 1px solid var(--color-scs-d6-border);
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(28, 39, 64, 0.04);
+}
+.scs-domain6-page .main .d6-quiz-prompt p {
+    margin: 0 0 22px;
+    color: var(--color-scs-d6-text);
+    font-weight: 600;
+    line-height: 1.9;
+}
+.scs-domain6-page .main .d6-quiz-prompt strong {
+    display: block;
+    margin-bottom: 12px;
+    color: var(--color-scs-d6-accent);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.06em;
+}
+.scs-domain6-page .main ul.d6-quiz-options {
+    display: grid;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.scs-domain6-page .main .d6-quiz-options li {
+    margin: 0;
+    padding: 0;
+}
+.scs-domain6-page .main .d6-quiz-option {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    width: 100%;
+    min-height: 56px;
+    padding: 14px 16px;
+    border: 1px solid var(--color-scs-d6-border);
+    border-radius: 10px;
+    background: var(--color-scs-d6-bg);
+    color: var(--color-scs-d6-text);
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.8;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+.scs-domain6-page .main .d6-quiz-option > span:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.scs-domain6-page .main .d6-quiz-option:hover {
+    border-color: var(--color-scs-d6-accent);
+    box-shadow: 0 2px 8px rgba(28, 39, 64, 0.06);
+}
+.scs-domain6-page .main .d6-quiz-option:focus-visible {
+    outline: 3px solid var(--color-scs-d6-accent);
+    outline-offset: 3px;
+}
+.scs-domain6-page .main .d6-quiz-indicator {
+    display: inline-flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--color-scs-d6-border);
+    border-radius: 6px;
+    background: var(--color-scs-d6-bg-card);
+    font-weight: 800;
+    line-height: 1;
+}
+.scs-domain6-page .main .d6-quiz-option[data-state="correct"] {
+    border-color: var(--color-scs-d6-success);
+    background: var(--color-scs-d6-success-bg);
+    color: var(--color-scs-d6-success);
+}
+.scs-domain6-page .main .d6-quiz-option[data-state="incorrect"] {
+    border-color: var(--color-scs-d6-danger);
+    background: var(--color-scs-d6-danger-bg);
+    color: var(--color-scs-d6-danger);
+}
+.scs-domain6-page .main .d6-quiz-option[data-state="correct"] .d6-quiz-indicator {
+    border-color: var(--color-scs-d6-success);
+    background: var(--color-scs-d6-success);
+    color: white;
+}
+.scs-domain6-page .main .d6-quiz-option[data-state="incorrect"] .d6-quiz-indicator {
+    border-color: var(--color-scs-d6-danger);
+    background: var(--color-scs-d6-danger);
+    color: white;
+}
+.scs-domain6-page .main .d6-quiz-option-result {
+    align-self: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 800;
+}
+.scs-domain6-page .main .d6-quiz-feedback {
+    min-height: 28px;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-scs-d6-text-dim);
+}
+.scs-domain6-page .main .d6-quiz-feedback[data-state="correct"] { color: var(--color-scs-d6-success); }
+.scs-domain6-page .main .d6-quiz-feedback[data-state="incorrect"] { color: var(--color-scs-d6-danger); }
+@media (max-width: 480px) {
+    .scs-domain6-page .main .d6-quiz-option {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+    .scs-domain6-page .main .d6-quiz-option-result { margin-left: 30px; }
+}
+`;
+    fs.writeFileSync(`${dir}/page.css`, quizCss + cssAst.toString() + additionalCss);
 
     // 6. ScsDomain6Guide.tsx
     const guideComponent = `import NavBar from './NavBar';
@@ -736,7 +915,18 @@ export function generateSection(partKey, componentName) {
     let innerJsx = nodes.map(jsx).join('\n');
     innerJsx = innerJsx.replace(/<div className="table-scroll"[^>]*>(\s*)<div className="table-scroll"/g, '<div className="table-scroll"$1<div');
 
-    const code = `import { Diagram } from "../Diagram";
+    if (partKey === 'examprep') {
+        const answers = [[1], [1], [2], [1], [1], [0, 1], [1], [0], [1], [1]];
+        let question = 0;
+        innerJsx = innerJsx.replace(/<p >[\s\S]*?<\/ul>/g, (body) => {
+            const correct = JSON.stringify(answers[question++]);
+            return `<QuizQuestion number={${question}} correctAnswers={${correct}}>\n${body}\n</QuizQuestion>`;
+        });
+    }
+    const sectionImport = partKey === 'examprep'
+        ? 'import QuizQuestion from "../QuizQuestion";'
+        : 'import { Diagram } from "../Diagram";';
+    const code = `${sectionImport}
 
 /** 原本の ${partKey} セクション本文。 */
 export default function ${componentName}() {
