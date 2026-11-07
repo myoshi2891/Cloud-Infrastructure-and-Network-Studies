@@ -17,12 +17,12 @@ describe('CCIE Service Provider — CoreRouting セクション', () => {
 
         const h3s = [...container.querySelectorAll('h3')].map(h => h.textContent?.trim());
         expect(h3s.length).toBe(6);
-        expect(h3s[0]).toContain('4.1 IS-IS');
-        expect(h3s[1]).toContain('4.2 OSPFv2 / OSPFv3');
-        expect(h3s[2]).toContain('4.3 BGP（MP-BGP）');
-        expect(h3s[3]).toContain('4.4 BGP ポリシー制御');
-        expect(h3s[4]).toContain('4.5 MPLS 基礎と LDP');
-        expect(h3s[5]).toContain('4.6 セグメントルーティング');
+        expect(h3s[0]).toContain('4.1 IGP');
+        expect(h3s[1]).toContain('4.2 BGP');
+        expect(h3s[2]).toContain('4.3 Multicast');
+        expect(h3s[3]).toContain('4.4 MPLS と LDP');
+        expect(h3s[4]).toContain('4.5 MPLS Traffic Engineering');
+        expect(h3s[5]).toContain('4.6 Segment Routing');
     });
 
     it('全30個のテーブルが存在し、すべて thead と th[scope="col"] を持つ', () => {
