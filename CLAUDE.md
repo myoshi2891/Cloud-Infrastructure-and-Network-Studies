@@ -2,7 +2,7 @@
 
 ## 2026-11-07: Domain 5 演習の即時採点
 
-`PracticeOptions.tsx`（Client）を `sections/ExamPrep.tsx`（Server）から使用。単一選択7問は即時判定、問題3はAとCの完全一致で判定し、1つ選択時は残数を案内する。正誤・正解を読み上げ可能なステータスに表示し、選び直しに追従。問題文・選択肢・解説は保持。Domain 5関連16ファイル・82件成功（採点回帰9件を含む）。移行スクリプトの原本再生成は手動追加の採点UIとCSSを上書きするため、再移行時はこれらを保持すること。
+`PracticeOptions.tsx`（Client）を `sections/ExamPrep.tsx`（Server）から使用。単一選択7問は即時判定、問題3はAとCの完全一致で判定し、1つ選択時は残数を案内する。正誤・正解を読み上げ可能なステータスに表示し、選び直しに追従。問題文・選択肢・解説は保持。Domain 5関連16ファイル・82件成功（採点回帰9件を含む）。`bun scripts/migrate-scs-domain5.mjs all` は原本の解答欄から `PracticeOptions` の問題IDと正解を導出し、採点UIのCSSとともに再生成する（`__tests__/aws/security-specialty/domain5/regeneration.test.ts` が全生成物の完全一致を検証）。`PracticeOptions.tsx` 本体は手動保守。
 
 ## 2026-11-07: SCS-C03 Domain 5
 
