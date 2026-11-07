@@ -265,6 +265,22 @@
     --color-ccnp-security-source-text: #125551;
     --color-ccnp-security-note-border: #E2C3D0;
     --color-ccnp-security-note-text: #6E2A47;
+    /* CCIE Service Provider 完全ガイド（原本の配色をそのまま保持） */
+    --color-ccie-sp-paper: #F6F7F9;
+    --color-ccie-sp-ink: #161B26;
+    --color-ccie-sp-indigo: #2E3F72;
+    --color-ccie-sp-gold: #B8802A;
+    --color-ccie-sp-forest: #1B6E6A;
+    --color-ccie-sp-plum: #8C3A5C;
+    --color-ccie-sp-surface: #FFFFFF;
+    --color-ccie-sp-ink-2: #434B5E;
+    --color-ccie-sp-ink-3: #5F687C;
+    --color-ccie-sp-line: #DADEE8;
+    --color-ccie-sp-line-2: #C3CADA;
+    --color-ccie-sp-tint-indigo: #EEF1F8;
+    --color-ccie-sp-tint-gold: #FAF1DF;
+    --color-ccie-sp-tint-forest: #E8F3F2;
+    --color-ccie-sp-tint-plum: #F6E9EF;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
@@ -1674,6 +1690,9 @@
     --font-ccnp-security-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
     --font-ccnp-security-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
     --font-ccnp-security-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    --font-ccie-sp-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccie-sp-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --font-ccie-sp-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
     /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
@@ -1886,6 +1905,11 @@ body {
 }
 
 @utility icon-theme-ccnp-security {
+    background: var(--color-theme-cisco-bg);
+    color: var(--color-theme-cisco-fg);
+}
+
+@utility icon-theme-ccie-sp {
     background: var(--color-theme-cisco-bg);
     color: var(--color-theme-cisco-fg);
 }
