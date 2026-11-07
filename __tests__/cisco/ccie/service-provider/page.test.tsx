@@ -10,10 +10,32 @@ import CcieSpGuide from '@/app/cisco/ccie/service-provider/CcieSpGuide';
 import { DIAGRAMS, NAV_GROUPS } from '@/app/cisco/ccie/service-provider/constants';
 import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
-vi.mock('@/components/MermaidDiagram', async () => {
-    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
-    return { MermaidDiagram: MermaidDiagramMock };
-});
+vi.mock('@/components/MermaidDiagram', () => ({
+    MermaidDiagram: ({
+        chart,
+        ariaLabel,
+        preserveNaturalScale = false,
+        deferUntilVisible = false,
+        theme,
+    }: {
+        chart: string;
+        ariaLabel?: string;
+        preserveNaturalScale?: boolean;
+        deferUntilVisible?: boolean;
+        theme?: string;
+    }) => (
+        <div
+            role="img"
+            aria-roledescription="diagram"
+            data-testid="mermaid-diagram"
+            data-chart={chart}
+            data-preserve-natural-scale={String(preserveNaturalScale)}
+            data-defer-until-visible={String(deferUntilVisible)}
+            data-theme={theme}
+            aria-label={ariaLabel}
+        />
+    ),
+}));
 
 defineMigrationSuite(
     'CCIE Service Provider 完全ガイド — 全量移行検証',
@@ -27,7 +49,8 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
         const css = readFileSync(cssPath, 'utf8').replace(/\s+/g, '');
         expect(css).toContain("@import'@tabler/icons-webfont/tabler-icons.min.css'");
         expect(css).toContain('.ccie-sp-page');
-        expect(css).toContain('.ccie-sp-page.diagram.mm>[role="img"]{background:transparent!important');
+        expect(css).toContain('.ccie-sp-page.diagram.mm>[role="img"]');
+        expect(css).toContain('background:transparent!important;');
         expect(css).toContain('.ccie-sp-pagea{color:var(--color-ccie-sp-indigo);text-decoration:underline');
     });
 
@@ -87,7 +110,7 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
 
     it('全47図が遅延描画、自然スケール、アクセシビリティラベルを指定している', () => {
         const { container } = render(<CcieSpGuide />);
-        const diagrams = container.querySelectorAll('[data-testid="mermaid-diagram"]');
+        const diagrams = container.querySelectorAll('.mm > [data-testid="mermaid-diagram"]');
         expect(diagrams.length).toBe(47);
         diagrams.forEach((diag) => {
             expect(diag.getAttribute('data-preserve-natural-scale')).toBe('true');

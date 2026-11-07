@@ -375,7 +375,7 @@
                 border-bottom: 0;
             }
             .ccie-sp-page tbody tr:hover td {
-                background: #fafbfd;
+                background: var(--color-ccie-sp-row-hover);
             }
             .ccie-sp-page td:first-child {
                 font-weight: 500;
@@ -462,7 +462,7 @@
                 background: var(--color-ccie-sp-tint-gold);
             }
             .ccie-sp-page .callout.practice .callout-head {
-                color: #7a5317;
+                color: var(--color-ccie-sp-gold-text);
             }
             .ccie-sp-page .callout.source {
                 border-left-color: var(--color-ccie-sp-forest);

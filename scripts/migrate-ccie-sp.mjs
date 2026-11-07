@@ -71,7 +71,6 @@ function escapeJsxText(text) {
 }
 
 function plainCodeLineToJsx(lineText) {
-    if (!lineText) return '{" "}';
     return '{' + JSON.stringify(lineText) + '}';
 }
 
@@ -142,7 +141,7 @@ function nodeToJsx(node) {
                 if (c.getAttribute('colspan')) attrs.push(`colSpan={${c.getAttribute('colspan')}}`);
                 if (c.getAttribute('rowspan')) attrs.push(`rowSpan={${c.getAttribute('rowspan')}}`);
                 const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
-                return `<${tag}${attrStr}>${[...c.childNodes].map(nodeToJsx).join('')}</${tag}>`;
+                return `<${tag}${attrStr}>${[...c.childNodes].map(nodeToJsx).join('')}{" "}</${tag}>`;
             }).join('');
             return `<tr>${cells}</tr>`;
         }).join('');
@@ -229,7 +228,10 @@ function nodeToJsx(node) {
     }
 
     const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
-    const childrenJsx = [...node.childNodes].map(nodeToJsx).join('');
+    let childrenJsx = [...node.childNodes].map(nodeToJsx).join('');
+    if (['th', 'td'].includes(tag)) {
+        childrenJsx += '{" "}';
+    }
     return `<${tag}${attrStr}>${childrenJsx}</${tag}>`;
 }
 

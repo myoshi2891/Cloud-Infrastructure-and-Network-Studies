@@ -281,6 +281,8 @@
     --color-ccie-sp-tint-gold: #FAF1DF;
     --color-ccie-sp-tint-forest: #E8F3F2;
     --color-ccie-sp-tint-plum: #F6E9EF;
+    --color-ccie-sp-row-hover: #FAFBFD;
+    --color-ccie-sp-gold-text: #7A5317;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
