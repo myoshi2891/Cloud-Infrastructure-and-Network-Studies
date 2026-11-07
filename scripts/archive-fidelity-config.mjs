@@ -175,6 +175,23 @@ export const FIDELITY_PAGES = {
             appendix: '8-最終チェックリスト',
         },
     },
+    'aws-scs-c03-domain6-guide': {
+        source: 'Aws-scs-c03-domain6-security-foundations-and-governance-guide.html',
+        sourceCommit: '3a8bdd53a9806f3c1401613fb9d64bccfd370c49',
+        tables: true,
+        codeBlocks: true,
+        styledClasses: true,
+        guideInteractions: true,
+        guideBoundaries: {
+            herointro: '',
+            task61: 'part-a-task-61-アカウントを一元的にデプロイ管理する戦略',
+            task62: 'part-b-task-62-安全で一貫したリソースのデプロイ戦略',
+            task63: 'part-c-task-63-リソースのコンプライアンス評価',
+            summary: 'part-d-総まとめ',
+            examprep: '17-確認問題10問',
+            appendix: '18-用語集',
+        },
+    },
     'aws-scs-c03-domain3-guide': {
         source: 'Aws-scs-c03-domain3-infrastructure-security-guide.html',
         sourceCommit: 'efdbafb932e7317753b4025ee8498fa12cb1dcb7',
