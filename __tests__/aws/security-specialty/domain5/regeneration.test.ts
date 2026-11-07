@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { DIAGRAM_DESCRIPTIONS } from '@/app/aws/security-specialty/domain5/constants';
+import renderTheme from '@/app/aws/security-specialty/domain5/render-theme.json';
 
 const scriptPath = 'scripts/migrate-scs-domain5.mjs';
 const script = readFileSync(scriptPath, 'utf8');
@@ -30,6 +31,24 @@ describe('SCS Domain 5 再生成の整合性', () => {
 
         expect(guide).not.toContain('use client');
         expect(template.slice(0, template.indexOf('import NavBar'))).not.toContain('use client');
+    });
+
+    it('目次の実装を生成テンプレートと同一に保つ', () => {
+        const template = script.match(/const navBarComponent = `([\s\S]*?)`;\n/)?.[1] ?? '';
+        const generated = template.replaceAll('\\`', '`').replaceAll('\\$', '$');
+
+        expect(generated).toBe(readFileSync('app/aws/security-specialty/domain5/NavBar.tsx', 'utf8'));
+    });
+
+    it('色以外のテーマ値を文字列へ壊さず保持し、生成スクリプトも同じ変換に限定する', () => {
+        expect(renderTheme.themeVariables).toMatchObject({
+            THEME_COLOR_LIMIT: 12,
+            radius: 5,
+            strokeWidth: 1,
+            useGradient: true,
+        });
+        expect(JSON.stringify(renderTheme)).not.toContain('#undefined');
+        expect(script).toContain("typeof v === 'string' && isValid(v) ? toHex(v) : v");
     });
 
     it('Page コンポーネントを Server Component に保つ', () => {

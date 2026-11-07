@@ -4,8 +4,13 @@ import NavBar from '@/app/aws/security-specialty/domain5/NavBar';
 import { NAV_ITEMS } from '@/app/aws/security-specialty/domain5/constants';
 import fixture from '@/docs/migration-inventory/aws-scs-c03-domain5-guide.fidelity.json';
 
+/** 現在位置として示されている目次リンクの href を返す。 */
+const current = (container: HTMLElement) =>
+    container.querySelector('nav a[aria-current="location"]')?.getAttribute('href');
+
 afterEach(() => {
     vi.unstubAllGlobals();
+    window.history.replaceState(null, '', window.location.pathname);
 });
 
 it('retains every source navigation label and target in order', () => {
@@ -47,9 +52,6 @@ it('preserves the indentation class for every source level-three navigation item
 });
 
 it('syncs aria-current from a valid fragment and history navigation, falling back to the first item', () => {
-    /** 現在位置として示されている目次リンクの href を返す。 */
-    const current = (container: HTMLElement) =>
-        container.querySelector('nav a[aria-current="location"]')?.getAttribute('href');
     const target = NAV_ITEMS[2]!.id;
     window.history.replaceState(null, '', `#${target}`);
     const { container, unmount } = render(<NavBar />);
@@ -59,5 +61,33 @@ it('syncs aria-current from a valid fragment and history navigation, falling bac
         window.dispatchEvent(new PopStateEvent('popstate'));
     });
     expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
+    unmount();
+});
+
+it('falls back to the first item when mounted with a malformed fragment', () => {
+    window.history.replaceState(null, '', '#%E0%A4%A');
+    const { container, unmount } = render(<NavBar />);
+    expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
+    unmount();
+});
+
+it.each([
+    ['hashchange', () => new HashChangeEvent('hashchange')],
+    ['popstate', () => new PopStateEvent('popstate')],
+])('keeps tracking history after a malformed fragment arrives via %s', (_name, createEvent) => {
+    const target = NAV_ITEMS[2]!.id;
+    window.history.replaceState(null, '', `#${target}`);
+    const { container, unmount } = render(<NavBar />);
+    expect(current(container)).toBe(`#${target}`);
+    act(() => {
+        window.history.replaceState(null, '', '#%E0%A4%A');
+        window.dispatchEvent(createEvent());
+    });
+    expect(current(container)).toBe(`#${NAV_ITEMS[0]!.id}`);
+    act(() => {
+        window.history.replaceState(null, '', `#${target}`);
+        window.dispatchEvent(createEvent());
+    });
+    expect(current(container)).toBe(`#${target}`);
     unmount();
 });

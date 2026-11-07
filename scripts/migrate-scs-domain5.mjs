@@ -214,7 +214,7 @@ export const NAV_ITEMS = ${JSON.stringify(navItems, null, 4)} as const;
                 ...theme,
                 themeVariables: {
                     ...Object.fromEntries(
-                        Object.entries(vars).map(([k, v]) => [k, isValid(v) ? toHex(v) : v]),
+                        Object.entries(vars).map(([k, v]) => [k, typeof v === 'string' && isValid(v) ? toHex(v) : v]),
                     ),
                     fontFamily: '"Noto Sans JP Variable",sans-serif',
                 },
@@ -280,7 +280,14 @@ const idFromHash = (): string => {
     if (typeof window === 'undefined') return DEFAULT_ID;
     const hash = window.location.hash.replace(/^#/, '');
     if (!hash) return DEFAULT_ID;
-    const decoded = decodeURIComponent(hash);
+    let decoded: string;
+    try {
+        decoded = decodeURIComponent(hash);
+    } catch (error) {
+        // 外部リンクや手入力の不正な fragment で目次の同期を止めないよう先頭項目へ戻す
+        if (!(error instanceof URIError)) throw error;
+        return DEFAULT_ID;
+    }
     return NAV_ITEMS.some((item) => item.id === decoded) ? decoded : DEFAULT_ID;
 };
 
