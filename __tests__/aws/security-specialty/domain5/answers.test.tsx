@@ -50,7 +50,7 @@ describe('Domain 5 instant practice feedback', () => {
     it('assigns every source choice the answer-key letter shown in its label', () => {
         const { container } = render(<ExamPrep />);
         const pairs = choices(container);
-        expect(pairs.length).toBeGreaterThan(8);
+        expect(pairs).toHaveLength(33);
         pairs.forEach(([value, label]) => expect(label?.startsWith(`${value}. `), label).toBe(true));
     });
 
