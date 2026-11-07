@@ -13,12 +13,19 @@ describe('SCS Domain 4 再生成の整合性', () => {
         });
     });
 
-    it('Mermaid・コードブロック・構文ハイライトの追加CSSを生成スクリプトが保持する', () => {
-        const tailCss = css.slice(css.indexOf('.scs-domain4-page .mermaid-wrap > [role="img"]'));
-        expect(tailCss).toContain('.hljs-keyword');
-        expect(tailCss).toContain('pre.code.code-block');
-        const normalizedScript = script.replaceAll('${scope}', '.scs-domain4-page');
-        expect(normalizedScript).toContain(tailCss.trimEnd());
+    it('additionalCss の全ブロックが page.css の末尾と完全に一致する', () => {
+        const block = script.match(/const additionalCss = `([\s\S]*?)`;\n/)?.[1];
+        expect(block, 'additionalCss が生成スクリプトに見つからない').toBeDefined();
+        const expected = (block ?? '').replaceAll('${scope}', '.scs-domain4-page');
+        const anchor = expected.slice(0, expected.indexOf('}') + 1);
+        const start = css.lastIndexOf(anchor);
+
+        expect(anchor).toContain('color-scheme: light;');
+        expect(start).toBeGreaterThanOrEqual(0);
+        expect(css.slice(start)).toBe(expected);
+        ['.main ul {', '.sidebar {', '[data-part="examprep"] > details {', '.hljs-keyword', 'pre.code.code-block'].forEach(
+            (rule) => expect(expected).toContain(rule),
+        );
     });
 
     it('ガイド本体を Server Component に保ち、生成テンプレートも同じにする', () => {
