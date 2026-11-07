@@ -1,6 +1,14 @@
 import { fireEvent, render, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import PracticeOptions from '@/app/aws/security-specialty/domain5/PracticeOptions';
 import ExamPrep from '@/app/aws/security-specialty/domain5/sections/ExamPrep';
+
+/** 各入力の値と、ラベルに表示された選択肢の文面を組にして返す。 */
+const choices = (container: HTMLElement) =>
+    [...container.querySelectorAll('input')].map((input) => [
+        input.value,
+        input.closest('label')?.textContent?.trim().replace(/\s+/g, ' '),
+    ]);
 
 describe('Domain 5 instant practice feedback', () => {
     it.each([[0, 1], [1, 1], [3, 2], [4, 2], [5, 1], [6, 1], [7, 1]])(
@@ -37,6 +45,36 @@ describe('Domain 5 instant practice feedback', () => {
         fireEvent.click(inputs[0]!);
         fireEvent.click(inputs[2]!);
         expect(status).toBeEmptyDOMElement();
+    });
+
+    it('assigns every source choice the answer-key letter shown in its label', () => {
+        const { container } = render(<ExamPrep />);
+        const pairs = choices(container);
+        expect(pairs.length).toBeGreaterThan(8);
+        pairs.forEach(([value, label]) => expect(label?.startsWith(`${value}. `), label).toBe(true));
+    });
+
+    it('keeps letters aligned when non-li elements or fragments appear among the choices', () => {
+        const { container } = render(
+            <PracticeOptions questionId="question" answers={['C']}>
+                {'\n'}
+                <li>A. first</li>
+                <hr />
+                <>
+                    <li>B. second</li>
+                    <li>C. third</li>
+                </>
+                <li>D. fourth</li>
+            </PracticeOptions>,
+        );
+        expect(choices(container)).toEqual([
+            ['A', 'A. first'],
+            ['B', 'B. second'],
+            ['C', 'C. third'],
+            ['D', 'D. fourth'],
+        ]);
+        fireEvent.click(container.querySelector('input[value="C"]')!);
+        expect(container.querySelector('[role="status"]')).toHaveTextContent(/^正解です/);
     });
 
     it('keeps questions independent and labels every input with the original choice', () => {

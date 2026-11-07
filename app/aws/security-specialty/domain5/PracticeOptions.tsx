@@ -1,6 +1,15 @@
 'use client';
 
-import { Children, isValidElement, useId, useState, type ReactNode } from 'react';
+import { Children, Fragment, isValidElement, useId, useState, type ReactElement, type ReactNode } from 'react';
+
+/** 選択肢の li だけを順に取り出す。Fragment は展開し、li 以外は回答記号をずらさないよう除外する。 */
+function choiceItems(children: ReactNode): ReactElement<{ children?: ReactNode }>[] {
+    return Children.toArray(children).flatMap(child => {
+        if (!isValidElement<{ children?: ReactNode }>(child)) return [];
+        if (child.type === Fragment) return choiceItems(child.props.children);
+        return child.type === 'li' ? [child] : [];
+    });
+}
 
 /** 原文の選択肢を保持し、選択した時点で正誤を表示する。 */
 export default function PracticeOptions({ questionId, answers, children }: {
@@ -13,7 +22,7 @@ export default function PracticeOptions({ questionId, answers, children }: {
     const multiple = answers.length > 1;
     const graded = selected.length >= answers.length;
     const correct = selected.length === answers.length && answers.every(answer => selected.includes(answer));
-    const options = Children.toArray(children).filter(isValidElement<{ children?: ReactNode }>);
+    const options = choiceItems(children);
 
     function choose(value: string) {
         setSelected(previous => multiple
