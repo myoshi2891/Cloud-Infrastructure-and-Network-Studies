@@ -49,6 +49,6 @@ describe('CCIE Service Provider — Appendix セクション', () => {
         const { container } = render(<Appendix />);
         const footer = container.querySelector('footer.footer');
         expect(footer).not.toBeNull();
-        expect(footer?.textContent).toContain('各章は「概念 → 仕組み → 設定例 → 確認コマンド → ベストプラクティス」の順で構成しています');
+        expect(footer?.textContent?.replace(/\s+/g, ' ')).toContain('各章は「概念 → 仕組み → 設定例 → 確認コマンド → ベストプラクティス」の順で構成しています');
     });
 });
