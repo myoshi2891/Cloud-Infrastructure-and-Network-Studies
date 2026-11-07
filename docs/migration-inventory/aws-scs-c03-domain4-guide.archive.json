@@ -1,0 +1,18 @@
+{
+    "sourceCommit": "efdbafb932e7317753b4025ee8498fa12cb1dcb7",
+    "archiveIsGitIgnored": true,
+    "files": [
+        {
+            "source": "Aws-scs-c03-domain4-iam-guide.html",
+            "archive": "archive/Aws/html/security-specialty/domain4/Aws-scs-c03-domain4-iam-guide.html",
+            "bytes": 302072,
+            "sha256": "7c1a607ca3b7ca47f47de739608eb8e86dd5e5120d9871d3df64a5c48aabcc7f"
+        },
+        {
+            "source": "Aws-scs-c03-domain4-iam-guide.md",
+            "archive": "archive/Aws/md/security-specialty/domain4/Aws-scs-c03-domain4-iam-guide.md",
+            "bytes": 97094,
+            "sha256": "7e7c4c083c005851a8482f298e6d84240ddbbb6de4785d4acb9b994d22436719"
+        }
+    ]
+}

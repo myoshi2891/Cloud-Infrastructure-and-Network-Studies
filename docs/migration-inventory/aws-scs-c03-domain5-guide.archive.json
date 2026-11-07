@@ -1,0 +1,18 @@
+{
+    "sourceCommit": "efdbafb932e7317753b4025ee8498fa12cb1dcb7",
+    "archiveIsGitIgnored": true,
+    "files": [
+        {
+            "source": "Aws-scs-c03-domain5-dataprotection-guide.html",
+            "archive": "archive/Aws/html/security-specialty/domain5/Aws-scs-c03-domain5-dataprotection-guide.html",
+            "bytes": 344456,
+            "sha256": "12c41560b4ed754cf8089d6599640a533830b28d7d3cd8217c68a795539609d4"
+        },
+        {
+            "source": "Aws-scs-c03-domain5-dataprotection-guide.md",
+            "archive": "archive/Aws/md/security-specialty/domain5/Aws-scs-c03-domain5-dataprotection-guide.md",
+            "bytes": 115199,
+            "sha256": "fc191ac0f65b21d6f861be26f1b4e8dc401faf037b8dd7a37bfee83527220072"
+        }
+    ]
+}

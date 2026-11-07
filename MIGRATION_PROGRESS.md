@@ -1,6 +1,26 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-06)
+(最終更新日: 2026-11-07)
+
+## 2026-11-07: Domain 5 演習の即時採点
+
+実装 `a383f221`、失敗テスト `85de8975`。単一選択7問と複数選択1問に選択直後の正誤・正解表示を追加。問題3はAとCの完全一致で判定し、1つ選択時は残数を案内。選び直し、問題間の独立性、読み上げ名を検証。問題文・選択肢・解説のソースは操作用タグを除き完全一致。関連16ファイル・82件成功。型検査・対象ESLint成功。単体コンポーネントを実行したChromeで1440/768/390pxの全8問の正誤・選び直し・キーボード操作・横はみ出しなしを確認。全体テスト・ビルド・実ページでのブラウザー検証は今回未実行。
+
+## 2026-11-07: SCS-C03 Domain 5 移行 & 原本アーカイブ退避
+
+`/aws/security-specialty/domain5` へ全3タスク（Task 5.1 転送中のデータ、Task 5.2 保存中のデータ、Task 5.3 機密データ・認証情報・シークレット・暗号鍵の保護）、ガイドの使い方、全体像、基礎知識、試験対策（頻出パターンとひっかけポイント）、練習問題8問、最終チェックリスト、参考URL一覧、付録を完全移行。68表（th172・td964）・15図・21コード例・23チェック項目・68外部リンク出現・22目次・練習問題8問（`<details>`）を原本どおり保持。明色配色（`--color-scs-d5-*` 21変数）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークン（JSON/Bash/Python）を完全復元した。目次の現在位置・開閉・hash/focus、練習問題のアコーディオン、全15図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）、ホーム・Headerの18%導線と明色フッターへ統合。
+
+Inventory `1553b201`、Red/基盤 `934d98bb`、HeroIntro `80738f05`、Task 5.1 `ff0fb666`、Task 5.2 `f809c3c8`、Task 5.3 `f78fe747`、Summary `8691e961`、ExamPrep `c1680560`、Appendix `d6976b72`、総合テスト・再生成 `514e7e6b`、デザイン・トークン `6192344e`、導線・フッター・幅契約統合 `cb57397e` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・全CSS宣言値（`.mermaid-wrap`, `pre.code`, `list-style-type`, `aria-current="location"`）と、Mermaidの全15図DSL・全派生色（`render-theme.json` 269変数）・アクセシビリティ代替テキストを全量照合。SCS-C03 Domain 5関連テスト14ファイル・62件すべて成功、ガイド幅契約テスト160件・共通フッター4件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（344456バイト・SHA-256 `12c41560b4ed754cf8089d6599640a533830b28d7d3cd8217c68a795539609d4`）およびMarkdown（115199バイト・SHA-256 `fc191ac0f65b21d6f861be26f1b4e8dc401faf037b8dd7a37bfee83527220072`）を `archive/Aws/html/security-specialty/domain5/` と `archive/Aws/md/security-specialty/domain5/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-scs-domain5.mjs all` で再生成できる。直下の未移行HTML残数は18件（移行完了時点）。
+
+## 2026-11-06: SCS-C03 Domain 4 移行 & 原本アーカイブ退避
+
+`/aws/security-specialty/domain4` へ全2タスク（Task 4.1 認証戦略、Task 4.2 認可戦略）、ガイドの使い方、全体像、サービス横断整理、試験頻出パターン、練習問題8問、参考URL一覧、学習チェックリストを完全移行。70表（th170・td929）・16図・16コード例・11チェック項目（リスト項目）・108外部リンク出現・69目次・練習問題8問（`<details>`）を原本どおり保持。明色配色（`--color-scs-d4-*` 21変数）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークン（JSON/Bash/SQL/Cedar）を完全復元した。目次の現在位置・開閉・hash/focus、練習問題のアコーディオン、全16図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）、ホーム・Headerの20%導線と明色フッターへ統合。
+
+Inventory `29b64d62`、Red/基盤 `9c962bc2`、HeroIntro `8dbd33db`、Task 4.1 `9d169d99`、Task 4.2 Part 1 (Authz/ABAC) `ee55b10c`、Task 4.2 Part 2 (Policy/Troubleshooting) `c9a27288`、Summary `e0d0565d`、ExamPrep `0947b821`、Appendix `2add437f`、総合テスト `08f99fec`、導線・フッター・幅契約統合 `5f41e051` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・全CSS宣言値（`.mermaid-wrap`, `pre.code`, `list-style-type`, `aria-current="location"`）と、Mermaidの全16図DSL・全派生色（`render-theme.json` 269変数）・アクセシビリティ代替テキストを全量照合。SCS-C03 Domain 4関連テスト14ファイル・57件すべて成功、ガイド幅契約テスト157件・共通フッター3件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（302072バイト・SHA-256 `7c1a607ca3b7ca47f47de739608eb8e86dd5e5120d9871d3df64a5c48aabcc7f`）およびMarkdown（97094バイト・SHA-256 `7e7c4c083c005851a8482f298e6d84240ddbbb6de4785d4acb9b994d22436719`）を `archive/Aws/html/security-specialty/domain4/` と `archive/Aws/md/security-specialty/domain4/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-scs-c03-domain4-guide.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-scs-domain4.mjs all` で再生成できる。直下の未移行HTML残数は19件（移行完了時点）。
 
 ## 2026-11-05: SCS-C03 Domain 3 移行 & 原本アーカイブ退避
 
@@ -2259,17 +2279,16 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** SCS-C03 Domain 3（`/aws/security-specialty/domain3`）の全文移行・導線統合・原本アーカイブと演習問題の採点UI追加。その前にSAP-C02 Domain 4（`/aws/solutions-architect-professional/domain4`）、CCNP Security 完全ガイド（`/cisco/ccnp-security`）、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の移行も完了。
-- **最終更新日:** 2026-11-06
-- **最新実装 HEAD:** `eec53479`（SCS-C03 Domain 3の図説明文改善とテスト拡充）
-- **仕様同期コミット:** `65ce3668`（最新の仕様同期。SCS-C03 Domain 3分は `c9c25def`・`00a4ee03`）
-- **前回進捗同期コミット:** `65ce3668`（SAP-C02 Domain 4の表セル数を記録した最新の完了済み進捗同期）
-- **検証状態:** 2026-11-06にHEAD `eec53479` で再検証。SCS-C03 Domain 3関連18ファイル・103件、SAP-C02 Domain 4関連5ファイル・63件、ガイド幅契約154件すべて成功。TypeScript型検査・ESLint成功。以前記録した `page.test.tsx` の本文全文照合の失敗と `sections/examprep.test.tsx` の型エラー5件は解消済み。`__tests__/components/Footer.palette.test.ts` は期待一覧へ実装済みの `.sap-domain4-page`・`.scs-domain3-page` を追加し、3件すべて成功（既存セレクターは保持）。全体Vitestは未実行。
-- **ビルド状態:** 2026-11-06にHEAD `eec53479` のクリーンな展開先で `bun run build` 成功、`/aws/security-specialty/domain3` の静的生成を確認。`bun run lint` 成功。ブラウザーE2Eは未実行、目視確認はユーザー担当。
-- **HTML残数:** 直下HTML20件、すべて未移行で対応インベントリなし。SCS-C03 Domain 3完了時点の15件に、2026-11-06に追加された5件（`4715e510` の4件、`4dbcf2a0` の1件）を加えた数。移行済みの直下HTMLは0件。
-- **アーカイブ:** SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json`、CCNP Securityは `docs/migration-inventory/cisco-ccnp-security.archive.json`、SCS-C03 Domain 2は `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **既存差分:** なし。
-- **次の作業:** 直下に残る未移行ガイド（SCS-C03 Domain 4〜6、Cisco CCIE/CCNP系、GCP系、ISO/IEC系など）から次の対象を選択して移行を進める。
+- **最新完了タスク:** SCS-C03 Domain 5（`/aws/security-specialty/domain5`）の全文移行・導線統合・原本アーカイブと、練習問題8問の即時採点。その前にSCS-C03 Domain 4（`/aws/security-specialty/domain4`）、SCS-C03 Domain 3（`/aws/security-specialty/domain3`）、SAP-C02 Domain 4（`/aws/solutions-architect-professional/domain4`）の移行も完了。
+- **最終更新日:** 2026-11-07
+- **最新実装 HEAD:** `726dcaea`（進捗同期直前HEAD。bashトークン誤分類修正のコード例再生成 `726dcaea`・`86f52eb9`、その検証 `d229fd54`、再生成スクリプトの採点UI対応 `43ff7dd3`、Domain 4 CSS一致検証 `444afd5b`、Domain 5検証強化 `d7884ca6`、図の説明修正 `2f425cb1`、選択肢のfragment対応 `9adda9ac` を含む）
+- **仕様同期コミット:** `e7a59eff`（Domain 5練習問題UIの再生成手順の仕様同期）
+- **前回進捗同期コミット:** `ed5f2167`（最新の完了済み進捗同期）
+- **検証状態:** 2026-11-07に `726dcaea` と未コミットのテスト厳密化を含む作業ツリーで全体Vitest 547ファイル・4946件中4943件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。
+- **HTML残数:** 直下HTML18件、すべて未移行で対応インベントリなし。直下の移行済み原本は0件。
+- **アーカイブ:** SCS-C03 Domain 5は `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json`、SCS-C03 Domain 4は `docs/migration-inventory/aws-scs-c03-domain4-guide.archive.json`、SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
+- **既存差分:** `__tests__/aws/security-specialty/domain5/answers.test.tsx` の選択肢件数の厳密化（33件）と本進捗同期が未コミット。それ以前のレビュー対応は `726dcaea` までにコミット済み。
+- **次の作業:** `Aws-scs-c03-domain6-security-foundations-and-governance-guide.html` を `/aws/security-specialty/domain6`（`app/aws/security-specialty/domain6/`）へ移行する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3608,13 +3627,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `c7e50985`（進捗同期直前HEAD。移行記録以降の実装として SCS Domain 2の練習問題UI `6a892a26`、テスト・生成器の更新 `3feed826`・`e0014676`、チェックリスト `6d50bdf0`、Diagramと生成器 `9fea855d`・`d4f53e5e`、コード強調 `a8da98d4`、CCNP Securityのトークン化 `9a956037`、サイドバー幅契約・モバイル表示 `cc531825`、テーマトークン検証 `60494989`、render-theme `be1ac440`、原本訂正 `af5e2636`、Mermaid共通 `applySvgFixups` の修正 `4ca13c22`、ガイド幅テストへのSCS Domain 2登録 `c7e50985` を含む。CCNP Security導線統合 `c0482ab0`、原本保存 `35696b80`、図解復元 `e34713bb`。SCS Domain 2導線統合 `08c506ab`、原本保存 `5ebb0797`）。前回進捗同期コミット: `9cb9c927`。仕様同期コミット: `487920b5`。最終更新日: 2026-11-03。CCNP Security（`/cisco/ccnp-security`）の全7パート・131表・53図・9コード例・701リスト項目・305外部リンク出現・188目次と、SCS-C03 Domain 2（`/aws/security-specialty/domain2`）の68表・18図・12コード例・170リスト項目・21チェック項目・43目次を全文移行済み。
+最新実装 HEAD: `726dcaea`（進捗同期直前HEAD。bashトークン誤分類修正のコード例再生成 `726dcaea`・`86f52eb9`、その検証 `d229fd54`、再生成スクリプトの採点UI対応 `43ff7dd3`、Domain 4 CSS一致検証 `444afd5b`、Domain 5検証強化 `d7884ca6`、図の説明修正 `2f425cb1`、選択肢のfragment対応 `9adda9ac` を含む）。前回進捗同期コミット: `ed5f2167`。
 
-原本HTML/Markdownはアーカイブ済み。保存先とハッシュは `docs/migration-inventory/cisco-ccnp-security.archive.json` と `docs/migration-inventory/aws-scs-c03-domain2-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
+原本HTML/Markdownはアーカイブ済み。Domain 5の保存先とハッシュは `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
-検証: CCNP Security関連41件（関連16件＋MermaidDiagram 25件）と共通フッター3件が成功。Chrome実ブラウザで全53図の `viewBox`・背景透過・アイコン・コード構文トークン55個・リンク下線が原本HTMLと一致。SCS-C03関連51ファイル・339件成功。両移行とも型検査・ESLint成功。全体Vitestの最新記録はSAP-C02 Domain 3時点の472ファイル・4378件すべて成功で、両移行後の全体実行は記録がない。上記は各移行記録時点の結果で、記録後の実装コミットに対する再実行結果ではない。`bun run build`・npmは両移行とも未実行。ESLintは両移行で成功。SCS-C03 Domain 2は開発サーバー・ブラウザーE2Eも未実行、目視確認はユーザー担当。
+検証: 2026-11-07に `726dcaea` と未コミットのテスト厳密化を含む作業ツリーで全体Vitest 547ファイル・4946件中4943件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。`726dcaea` までのレビュー対応はコミット済みで、未コミット分は「現在地」の既存差分を参照する。
 
-次の作業: `Sap-c02-domain4-migration-modernization-guide.html` を `/aws/solutions-architect-professional/domain4`（`app/aws/solutions-architect-professional/domain4/`）へ移行する。原本は直下に残り、`domain4` ルートは未作成。直下HTML17件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: `Aws-scs-c03-domain6-security-foundations-and-governance-guide.html` を `/aws/security-specialty/domain6`（`app/aws/security-specialty/domain6/`）へ移行する。原本は直下に残り、`domain6` ルートとインベントリは未作成。直下HTML18件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
