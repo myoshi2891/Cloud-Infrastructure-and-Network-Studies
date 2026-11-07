@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { normalizeSpaces } from '@/__tests__/helpers/migration-test-utils';
 import ExamPrep from '@/app/aws/security-specialty/domain5/sections/ExamPrep';
 import fixture from '@/docs/migration-inventory/aws-scs-c03-domain5-guide.fidelity.json';
 
@@ -26,10 +27,13 @@ describe('ExamPrep Section (7. 理解度チェック演習問題)', () => {
         const { container } = render(<ExamPrep />);
         const details = container.querySelectorAll('details');
         expect(details).toHaveLength(8);
-        details.forEach((d) => {
+        // body は導入文のあとに「問題文・解説」の順で交互に並ぶ
+        const explanations = part.body.filter((_, index) => index > 0 && index % 2 === 0);
+        expect(explanations).toHaveLength(8);
+        details.forEach((d, index) => {
             const summary = d.querySelector('summary');
             expect(summary?.textContent?.trim()).toBe('答えと解説');
-            expect(d.textContent?.trim()).toBeTruthy();
+            expect(normalizeSpaces(d.textContent ?? '')).toContain(normalizeSpaces(explanations[index]!.text));
         });
         const h3s = [...container.querySelectorAll('h3')];
         expect(h3s).toHaveLength(8);

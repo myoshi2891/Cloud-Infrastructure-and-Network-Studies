@@ -22,6 +22,14 @@ const globals: Record<string, string> = {};
 postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls((d) => {
     globals[d.prop] = d.value;
 });
+// トークンの定義場所を検証するため、ルート直下の @theme の宣言だけを別に集める
+const themeTokens: Record<string, string> = {};
+postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls((d) => {
+    const parent = d.parent;
+    if (parent?.type === 'atrule' && (parent as postcss.AtRule).name === 'theme' && parent.parent?.type === 'root') {
+        themeTokens[d.prop] = d.value;
+    }
+});
 const pageVariables = {
     ...globals,
     ...rules(css, '.scs-domain5-page'),
@@ -118,7 +126,7 @@ describe('SCS-C03 Domain 5 — スタイル・デザイン完全移行', () => {
         for (const [k, v] of Object.entries(source)) {
             if (['--sidebar-w', '--font-jp', 'color-scheme'].includes(k)) continue;
             const token = `--color-scs-d5-${k.replace(/^--/, '')}`;
-            expect(globals[token], `missing ${token}`).toBe(v);
+            expect(themeTokens[token], `missing ${token}`).toBe(v);
         }
     });
 

@@ -21,12 +21,15 @@ describe('SCS-C03 Domain 5 — コードブロック構造と構文ハイライ�
         const { container } = render(<Page />);
         const blocks = [...container.querySelectorAll('pre.code.code-block')];
         expect(blocks).toHaveLength(inventory.counts.codeBlock);
-        blocks.forEach((block) => {
+        blocks.forEach((block, index) => {
             expect(block).toHaveAttribute('tabindex', '0');
             expect(block).toHaveAttribute('role', 'group');
             const label = block.getAttribute('aria-label') ?? '';
             expect(label).toMatch(/^(json|bash|python) コード例$/);
-            expect(block.querySelector(':scope > .code-line')).not.toBeNull();
+            // 直下は .code-line だけとし、素の改行テキストに依存する行を残さない
+            expect([...block.childNodes].filter((node) => !(node as Element).matches?.('.code-line'))).toEqual([]);
+            expect(block.children).toHaveLength(inventory.structures.codeLines[index]!);
+            expect([...block.children].filter((line) => line.textContent?.includes('\n'))).toEqual([]);
             expect(block.querySelector('span[class^="hljs-"]')).not.toBeNull();
         });
     });

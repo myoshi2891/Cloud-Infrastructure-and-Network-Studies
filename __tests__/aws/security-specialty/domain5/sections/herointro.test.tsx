@@ -22,6 +22,17 @@ describe('HeroIntro Section (Hero + 1. 使い方と全体像 + 2. 基礎知識)'
         );
     });
 
+    it('renders every hero metadata pill matching fixture, including the exam weighting', () => {
+        const { container } = render(<HeroIntro />);
+        const pills = [...container.querySelectorAll('.meta-row .pill')];
+        expect(pills).toHaveLength(4);
+        expect(pills.map((pill) => pill.querySelector('strong')?.textContent)).toEqual(
+            part.inline.slice(0, 4).map((item) => item.text),
+        );
+        const rendered = pills.map((pill) => pill.textContent?.trim().replace(/\s+/g, ' ')).join(' ');
+        expect(part.text).toContain(`ステップバイステップ) ${rendered} 対象試験:`);
+    });
+
     it('renders all headings matching fixture', () => {
         const { container } = render(<HeroIntro />);
         const renderedHeadings = [...container.querySelectorAll('h1, h2, h3, h4')].map((el) => ({
