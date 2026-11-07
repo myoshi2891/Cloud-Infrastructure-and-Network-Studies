@@ -163,6 +163,27 @@ function nodeToJsx(node) {
     const tag = node.tagName.toLowerCase();
     const attrs = [];
 
+    // th のアクセシビリティ scope 保証
+    if (tag === 'th') {
+        const inThead = node.closest('thead') !== null;
+        const currentScope = node.getAttribute('scope');
+        if (currentScope) {
+            attrs.push(`scope="${currentScope}"`);
+        } else if (inThead) {
+            attrs.push('scope="col"');
+        } else {
+            attrs.push('scope="row"');
+        }
+    }
+
+    // colspan / rowspan
+    if (node.getAttribute('colspan')) {
+        attrs.push(`colSpan={${node.getAttribute('colspan')}}`);
+    }
+    if (node.getAttribute('rowspan')) {
+        attrs.push(`rowSpan={${node.getAttribute('rowspan')}}`);
+    }
+
     // class -> className
     if (node.className && typeof node.className === 'string') {
         attrs.push(`className="${node.className}"`);

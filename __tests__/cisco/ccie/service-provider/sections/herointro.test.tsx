@@ -51,6 +51,6 @@ describe('CCIE Service Provider — HeroIntro セクション', () => {
         const { container } = render(<HeroIntro />);
         const codeBlocks = container.querySelectorAll('.code-block');
         expect(codeBlocks.length).toBe(1);
-        expect(codeBlocks[0].textContent).toContain('RP/0/RP0/CPU0:PE1# configure');
+        expect(codeBlocks[0]?.textContent).toContain('RP/0/RP0/CPU0:PE1# configure');
     });
 });
