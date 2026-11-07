@@ -2281,13 +2281,13 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** SCS-C03 Domain 5（`/aws/security-specialty/domain5`）の全文移行・導線統合・原本アーカイブと、練習問題8問の即時採点。その前にSCS-C03 Domain 4（`/aws/security-specialty/domain4`）、SCS-C03 Domain 3（`/aws/security-specialty/domain3`）、SAP-C02 Domain 4（`/aws/solutions-architect-professional/domain4`）の移行も完了。
 - **最終更新日:** 2026-11-07
-- **最新実装 HEAD:** `1e4c2177`（進捗同期直前HEAD。Domain 5導線統合 `cb57397e`、原本アーカイブ `56904041`、即時採点 `a383f221`、テスト整形 `8946a0b4`、Domain 4練習問題の装飾 `e5337fd3` を含む）
-- **仕様同期コミット:** `1e4c2177`（Domain 5即時採点の仕様同期）
-- **前回進捗同期コミット:** `1e4c2177`（最新の完了済み進捗同期）
-- **検証状態:** 2026-11-07にレビュー対応後の作業ツリーで全体Vitest 547ファイル・4938件中4935件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。
+- **最新実装 HEAD:** `726dcaea`（進捗同期直前HEAD。bashトークン誤分類修正のコード例再生成 `726dcaea`・`86f52eb9`、その検証 `d229fd54`、再生成スクリプトの採点UI対応 `43ff7dd3`、Domain 4 CSS一致検証 `444afd5b`、Domain 5検証強化 `d7884ca6`、図の説明修正 `2f425cb1`、選択肢のfragment対応 `9adda9ac` を含む）
+- **仕様同期コミット:** `e7a59eff`（Domain 5練習問題UIの再生成手順の仕様同期）
+- **前回進捗同期コミット:** `ed5f2167`（最新の完了済み進捗同期）
+- **検証状態:** 2026-11-07に `726dcaea` と未コミットのテスト厳密化を含む作業ツリーで全体Vitest 547ファイル・4946件中4943件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。
 - **HTML残数:** 直下HTML18件、すべて未移行で対応インベントリなし。直下の移行済み原本は0件。
 - **アーカイブ:** SCS-C03 Domain 5は `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json`、SCS-C03 Domain 4は `docs/migration-inventory/aws-scs-c03-domain4-guide.archive.json`、SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **既存差分:** レビュー対応が未コミット。Domain 5の目次の不正fragment対応と生成テンプレート同期、`render-theme.json` の非色値復元と生成スクリプト修正、Footerパレット期待値、SAP Domain 4の `deferUntilVisible` 検証、Domain 4の `--color-scs-d4-*` 定義検証。
+- **既存差分:** `__tests__/aws/security-specialty/domain5/answers.test.tsx` の選択肢件数の厳密化（33件）と本進捗同期が未コミット。それ以前のレビュー対応は `726dcaea` までにコミット済み。
 - **次の作業:** `Aws-scs-c03-domain6-security-foundations-and-governance-guide.html` を `/aws/security-specialty/domain6`（`app/aws/security-specialty/domain6/`）へ移行する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
@@ -3627,11 +3627,11 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `1e4c2177`（進捗同期直前HEAD。Domain 5導線統合 `cb57397e`、原本アーカイブ `56904041`、即時採点 `a383f221`、テスト整形 `8946a0b4`、Domain 4練習問題の装飾 `e5337fd3` を含む）。前回進捗同期コミット: `1e4c2177`。
+最新実装 HEAD: `726dcaea`（進捗同期直前HEAD。bashトークン誤分類修正のコード例再生成 `726dcaea`・`86f52eb9`、その検証 `d229fd54`、再生成スクリプトの採点UI対応 `43ff7dd3`、Domain 4 CSS一致検証 `444afd5b`、Domain 5検証強化 `d7884ca6`、図の説明修正 `2f425cb1`、選択肢のfragment対応 `9adda9ac` を含む）。前回進捗同期コミット: `ed5f2167`。
 
 原本HTML/Markdownはアーカイブ済み。Domain 5の保存先とハッシュは `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
-検証: 2026-11-07にレビュー対応後の作業ツリーで全体Vitest 547ファイル・4938件中4935件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。レビュー対応は未コミットで、内容は「現在地」の既存差分を参照する。
+検証: 2026-11-07に `726dcaea` と未コミットのテスト厳密化を含む作業ツリーで全体Vitest 547ファイル・4946件中4943件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。`726dcaea` までのレビュー対応はコミット済みで、未コミット分は「現在地」の既存差分を参照する。
 
 次の作業: `Aws-scs-c03-domain6-security-foundations-and-governance-guide.html` を `/aws/security-specialty/domain6`（`app/aws/security-specialty/domain6/`）へ移行する。原本は直下に残り、`domain6` ルートとインベントリは未作成。直下HTML18件はすべて未移行で、移行済み原本の残留は0件。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
