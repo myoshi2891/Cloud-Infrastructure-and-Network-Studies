@@ -1,5 +1,11 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-08: CCIE Service Provider 完全ガイド
+
+`app/cisco/ccie/service-provider/` に Server `page.tsx`、Client `CcieSpGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, CoreRouting, ArchitecturesServices, AccessConnectivity, HighAvailability, Security, AssuranceAutomation, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全5ドメイン・125表（th310・td1485）・47図・43コード例・124リスト（本文74・目次50）・254外部リンク出現・50目次を原本から完全移行。リストの点・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・構文トークン、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、全47図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`.ccie-sp-page`）へ統合。`bun scripts/migrate-ccie-sp.mjs all` で固定Git原本から再生成できる。
+
+原本HTML/Markdownは `archive/Cisco/html/ccie/` と `archive/Cisco/md/ccie/` に保存し、復元情報は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。直下の未移行HTML残数は16件。
+
 ## 2026-11-07: SCS-C03 Domain 6
 
 `app/aws/security-specialty/domain6/` に Server `page.tsx` / `ScsDomain6Guide.tsx`、Client `NavBar.tsx`、memo化した `Diagram.tsx`、7分割のServer `sections/`（HeroIntro, Task61, Task62, Task63, Summary, ExamPrep, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全3タスク（Task 6.1, 6.2, 6.3）・98表（th245・td1333）・19図・19コード例・58外部リンク出現・40目次・練習問題10問（設問・選択肢リスト・解答解説テーブル）を原本から完全移行。リストの点・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・構文トークン（JSON/Bash/Ruby）、図カードの装飾（`.mermaid-wrap`）と全派生色、全19図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・HeaderのDomain 6（14%）導線と明色フッターへ統合。`bun scripts/migrate-scs-domain6.mjs all` で固定Git原本から再生成できる。

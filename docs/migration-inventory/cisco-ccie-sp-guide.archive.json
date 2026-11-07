@@ -1,0 +1,17 @@
+{
+  "title": "CCIE Service Provider 完全ガイド（初学者向け・ステップバイステップ）",
+  "slug": "cisco-ccie-service-provider",
+  "archivedAt": "2026-11-08T00:27:00.000Z",
+  "html": {
+    "originalPath": "Ccie-sp-guide.html",
+    "archivePath": "archive/Cisco/html/ccie/Ccie-sp-guide.html",
+    "bytes": 492851,
+    "sha256": "25f5477e20daf208d835168be051d5161d8e3219a4fcce93980ab44eb8a88ced"
+  },
+  "markdown": {
+    "originalPath": "Ccie-sp-guide.md",
+    "archivePath": "archive/Cisco/md/ccie/Ccie-sp-guide.md",
+    "bytes": 139871,
+    "sha256": "1c1c99575647c267cc8dda357db98048870ccac2aa05bb9e9445f31b27e83695"
+  }
+}

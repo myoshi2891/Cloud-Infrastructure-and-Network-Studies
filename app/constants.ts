@@ -900,6 +900,28 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Cisco',
     },
     {
+        id: 'cisco-ccie-service-provider',
+        label: 'Cisco Certified Internetwork Expert Service Provider',
+        abbr: 'CCIE SP',
+        level: 'Expert',
+        score: 'SPCOR 120分 / 実技 8時間',
+        color: 'card-ccna',
+        href: '/cisco/ccie/service-provider',
+        overviewLabel: '完全解説ガイド',
+        description:
+            'Cisco最高峰のサービスプロバイダー資格。SPCOR(350-501)と8時間実技ラボ試験を網羅し、Core Routing・MPLS/SR・VPN・Automationを徹底解説。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/cisco/ccie/service-provider',
+                pct: '完全解説',
+            },
+        ],
+        badge: '最上位SPネットワーク資格',
+        icon: '⚡',
+        provider: 'Cisco',
+    },
+    {
         id: 'cisco-devnet-professional',
         label: 'CCNP Automation',
         abbr: 'CCNP Automation',
