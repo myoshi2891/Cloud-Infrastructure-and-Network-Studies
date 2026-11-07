@@ -64,3 +64,4 @@ describe('Summary Section (Part D: 14. リファレンス構成, 15. 比較表, 
         });
     });
 });
+

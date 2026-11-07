@@ -57,3 +57,4 @@ describe('SCS-C03 Domain 6 — コードブロック構造と構文ハイライ�
         expect(keywords).toContain('when');
     });
 });
+

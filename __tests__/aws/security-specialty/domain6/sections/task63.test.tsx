@@ -77,3 +77,4 @@ describe('Task63 Section (Part C: Task 6.3 リソースのコンプライアン�
         });
     });
 });
+

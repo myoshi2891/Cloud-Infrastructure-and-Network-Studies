@@ -91,3 +91,4 @@ it.each([
     expect(current(container)).toBe(`#${target}`);
     unmount();
 });
+
