@@ -49,6 +49,20 @@ describe('SCS-C03 Domain 5 — コードブロック構造と構文ハイライ�
         expect(builtins).toContain('aws');
     });
 
+    it('Bash のハイフン・コロンで連結された語の一部を keyword / number と誤判定しない', () => {
+        const { container } = render(<Page />);
+        const embedded = [
+            ...container.querySelectorAll('pre.code-block[aria-label="bash コード例"] :is(.hljs-keyword, .hljs-number)'),
+        ].flatMap((token) => {
+            const before = token.previousSibling?.textContent ?? '';
+            const after = token.nextSibling?.textContent ?? '';
+            return /[\w:-]$/.test(before) || /^[\w:-]/.test(after) ? [token.parentElement?.textContent ?? ''] : [];
+        });
+        expect(embedded).toEqual([]);
+        // 独立した数値は引き続き number として色付けする
+        expect(tokensOf(container, 'bash', 'number')).toEqual(expect.arrayContaining(['32', '180', '365']));
+    });
+
     it('Python では import / from / def / return 等のキーワードを keyword とする', () => {
         const { container } = render(<Task53 />);
         const keywords = tokensOf(container, 'python', 'keyword');
