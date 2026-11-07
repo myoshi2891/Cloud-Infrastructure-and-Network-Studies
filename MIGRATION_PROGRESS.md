@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-11-07)
 
+## 2026-11-07: SCS-C03 Domain 6 移行 & 原本アーカイブ退避
+
+`/aws/security-specialty/domain6` へ全3タスク（Task 6.1 マルチアカウント環境・ガバナンス、Task 6.2 セキュリティ自動化・リソースデプロイ、Task 6.3 コンプライアンス・監査・ポスチャ管理）、ガイドの使い方、全体像、サービス横断比較・シナリオ別アーキテクチャ、練習問題10問、用語集・参考URL一覧を完全移行。98表（th245・td1333）・19図・19コード例・58外部リンク出現・40目次・練習問題10問（設問・選択肢リスト・解答解説テーブル）を原本どおり保持。明色配色（`--color-scs-d6-*` 26変数）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークン（JSON/Bash/Ruby）を完全復元した。目次の現在位置・開閉・hash/focus、全19図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）、ホーム・Headerの14%導線と明色フッターへ統合。
+
+Inventory `51d4e49d`、Red/トークン・導線 `9c986e08`、基盤・シェル `d2d665b6`、HeroIntro `30b0398d`、Task 6.1 `ab9f7f02`、Task 6.2 `5237be78`、Task 6.3 `6af5ef77`、Summary `cd6006eb`、ExamPrep `37ffc28b`、Appendix `1a3a54fd`、総合テスト・再生成 `832b1333` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・全CSS宣言値（`.mermaid-wrap`, `pre.code`, `list-style-type`, `aria-current="location"`）と、Mermaidの全19図DSL・全派生色（`render-theme.json` 269変数）・アクセシビリティ代替テキストを全量照合。SCS-C03 Domain 6関連テスト14ファイル・72件すべて成功、ガイド幅契約テスト・共通フッター・回帰テスト成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（432451バイト・SHA-256 `22b452dac6f00032655d431e4a9185c972de919c22ead05072e72c549ef65118`）およびMarkdown（146502バイト・SHA-256 `801a1a2ccc5d0a217fbfa5f4989c23dfc826e3e8d8a8b732dc349d706272237c`）を `archive/Aws/html/security-specialty/domain6/` と `archive/Aws/md/security-specialty/domain6/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/aws-scs-c03-domain6-guide.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-scs-domain6.mjs all` で再生成できる。直下の未移行HTML残数は17件（移行完了時点）。
+
 ## 2026-11-07: Domain 5 演習の即時採点
 
 実装 `a383f221`、失敗テスト `85de8975`。単一選択7問と複数選択1問に選択直後の正誤・正解表示を追加。問題3はAとCの完全一致で判定し、1つ選択時は残数を案内。選び直し、問題間の独立性、読み上げ名を検証。問題文・選択肢・解説のソースは操作用タグを除き完全一致。関連16ファイル・82件成功。型検査・対象ESLint成功。単体コンポーネントを実行したChromeで1440/768/390pxの全8問の正誤・選び直し・キーボード操作・横はみ出しなしを確認。全体テスト・ビルド・実ページでのブラウザー検証は今回未実行。

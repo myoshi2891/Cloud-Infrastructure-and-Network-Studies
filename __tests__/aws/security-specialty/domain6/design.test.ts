@@ -1,0 +1,224 @@
+import { readFileSync } from 'node:fs';
+import postcss from 'postcss';
+import { describe, expect, it } from 'vitest';
+import fixture from '@/docs/migration-inventory/aws-scs-c03-domain6-guide.fidelity.json';
+
+const css = readFileSync('app/aws/security-specialty/domain6/page.css', 'utf8');
+
+/** 指定セレクターと media に一致する規則の宣言を収集する。 */
+const rules = (text: string, selector: string, media = '') => {
+    const result: Record<string, string> = {};
+    postcss.parse(text).walkRules((r) => {
+        if (r.selector === selector && (r.parent?.type === 'atrule' ? r.parent.params : '') === media) {
+            r.walkDecls((d) => {
+                result[d.prop] = d.value;
+            });
+        }
+    });
+    return result;
+};
+
+const globals: Record<string, string> = {};
+postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls((d) => {
+    globals[d.prop] = d.value;
+});
+// トークンの定義場所を検証するため、ルート直下の @theme の宣言だけを別に集める
+const themeTokens: Record<string, string> = {};
+postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls((d) => {
+    const parent = d.parent;
+    if (parent?.type === 'atrule' && (parent as postcss.AtRule).name === 'theme' && parent.parent?.type === 'root') {
+        themeTokens[d.prop] = d.value;
+    }
+});
+const pageVariables = {
+    ...globals,
+    ...rules(css, '.scs-domain6-page'),
+};
+
+const source: Record<string, string> = {};
+for (const [k, v] of Object.entries(fixture.guideDesign.rules.find((r) => r.selector === ':root')!.declarations)) {
+    if (typeof v === 'string') source[k] = v;
+}
+
+/** var() を再帰的に解決し、空白除去・小文字化した値を返す。未定義変数は MISSING として残す。 */
+const resolve = (v: string, vars: Record<string, string>): string =>
+    v
+        .replace(/var\((--[\w-]+)\)/g, (_, k: string) => (vars[k] ? resolve(vars[k]!, vars) : 'MISSING:' + k))
+        .replace(/\s+/g, '')
+        .toLowerCase();
+
+/** 原本のセレクターをページスコープ付きのセレクターへ変換する。 */
+const map = (s: string) =>
+    s
+        .split(',')
+        .map((part) =>
+            ['html', 'body'].includes(part.trim())
+                ? '.scs-domain6-page'
+                : '.scs-domain6-page ' +
+                  part
+                      .trim()
+                      .replaceAll('pre.mermaid', '.mermaid-wrap')
+                      .replaceAll('pre.code code', 'pre.code .code-line')
+                      .replaceAll('pre:not(.mermaid) code', 'pre:not(.mermaid) .code-line')
+                      .replace('.main > h2:first-of-type', '.main > .guide-part:first-child > h2:first-of-type'),
+        )
+        .join(', ');
+
+describe('SCS-C03 Domain 6 — スタイル・デザイン完全移行', () => {
+    it('preserves every source CSS declaration and responsive rule (including .mermaid-wrap and pre.code)', () => {
+        for (const rule of fixture.guideDesign.rules) {
+            if (rule.selector === ':root') continue;
+            const selector = map(rule.selector);
+            const actual = rules(css, selector, rule.media);
+            for (const [p, v] of Object.entries(rule.declarations)) {
+                if (typeof v !== 'string') continue;
+                const effective = Object.assign(
+                    {},
+                    ...fixture.guideDesign.rules
+                        .filter((r) => r.selector === rule.selector && r.media === rule.media)
+                        .map((r) => r.declarations),
+                );
+                if (effective[p as keyof typeof effective] !== v) continue;
+                if (p === 'font-family') continue;
+                if (p === 'top' && selector.includes('sidebar')) {
+                    expect(actual[p]).toContain('var(--header-h, 60px)');
+                    continue;
+                }
+                if (p === 'z-index') {
+                    expect(Number(actual[p])).toBeLessThan(45);
+                    continue;
+                }
+                if (p === 'scroll-margin-top') {
+                    expect(actual[p]).toContain('var(--header-h, 60px)');
+                    continue;
+                }
+                if (p === 'overflow-x' && selector.split(',').every((s) => s.trim() === '.scs-domain6-page')) {
+                    expect(actual[p]).toBe('clip');
+                    continue;
+                }
+                if (p === 'word-break' || (p === 'overflow-wrap' && 'word-break' in rule.declarations)) {
+                    expect(actual['overflow-wrap']).toBe('anywhere');
+                    continue;
+                }
+                expect(resolve(actual[p] ?? '', pageVariables), selector + ' ' + p).toBe(
+                    resolve(v.replace('var(--sidebar-w)', '280px'), source),
+                );
+            }
+        }
+    });
+
+    it('binds page variables to @theme tokens and preserves every resolved color', () => {
+        const expectedTokens: Record<string, string> = {
+            '--bg': '--color-scs-d6-bg',
+            '--bg-card': '--color-scs-d6-bg-card',
+            '--bg-card-2': '--color-scs-d6-bg-card-2',
+            '--border': '--color-scs-d6-border',
+            '--border-soft': '--color-scs-d6-border-soft',
+            '--text': '--color-scs-d6-text',
+            '--text-dim': '--color-scs-d6-text-dim',
+            '--text-faint': '--color-scs-d6-text-faint',
+            '--accent': '--color-scs-d6-accent',
+            '--accent-soft': '--color-scs-d6-accent-soft',
+            '--accent-bg': '--color-scs-d6-accent-bg',
+            '--danger': '--color-scs-d6-danger',
+            '--danger-bg': '--color-scs-d6-danger-bg',
+            '--warn': '--color-scs-d6-warn',
+            '--warn-bg': '--color-scs-d6-warn-bg',
+            '--success': '--color-scs-d6-success',
+            '--success-bg': '--color-scs-d6-success-bg',
+        };
+        const pageRules = rules(css, '.scs-domain6-page');
+        for (const [v, expectedToken] of Object.entries(expectedTokens)) {
+            expect(pageRules[v], `${v} should reference ${expectedToken}`).toBe(`var(${expectedToken})`);
+            expect(themeTokens[expectedToken], `${expectedToken} must be declared in root @theme`).toBe(source[v]);
+            expect(resolve(pageRules[v]!, pageVariables)).toBe(resolve(source[v]!, source));
+        }
+    });
+
+    it('defines .scs-domain6-page in components/Footer.module.css light theme selector', () => {
+        const footerCss = readFileSync('components/Footer.module.css', 'utf8');
+        expect(footerCss).toContain('.scs-domain6-page');
+    });
+
+    it('uses theme tokens instead of raw hex colors outside syntax highlighting', () => {
+        const offenders: string[] = [];
+        postcss.parse(css).walkDecls((d) => {
+            const parent = d.parent;
+            if (parent?.type === 'rule' && 'selector' in parent && String(parent.selector).includes('.hljs')) return;
+            if (/#[\da-f]{3,8}\b/i.test(d.value)) offenders.push(`${String((parent as postcss.Rule).selector)} ${d.prop}: ${d.value}`);
+        });
+        expect(offenders).toEqual([]);
+    });
+
+    it('highlights the NavBar aria-current link like the source .active link', () => {
+        const active = rules(css, '.scs-domain6-page .sidebar nav a.active');
+        expect(rules(css, ".scs-domain6-page .sidebar nav a[aria-current='location']")).toEqual(active);
+    });
+
+    it('retains source root color variables in @theme tokens', () => {
+        for (const [k, v] of Object.entries(source)) {
+            if (['--sidebar-w', '--font-jp', '--font-mono', 'color-scheme'].includes(k)) continue;
+            const token = `--color-scs-d6-${k.replace(/^--/, '')}`;
+            expect(themeTokens[token], `missing ${token}`).toBe(v);
+        }
+    });
+
+    it('keeps list marker styling for unordered and ordered lists inside main', () => {
+        expect(rules(css, '.scs-domain6-page .main ul')['list-style-type']).toBe('disc');
+        expect(rules(css, '.scs-domain6-page .main ol')['list-style-type']).toBe('decimal');
+        expect(rules(css, '.scs-domain6-page .main ul ul')['list-style-type']).toBe('circle');
+        expect(rules(css, '.scs-domain6-page .main ul ul ul')['list-style-type']).toBe('square');
+    });
+
+    it('neutralizes inner MermaidDiagram wrapper box and preserves natural SVG scale', () => {
+        expect(rules(css, '.scs-domain6-page .mermaid-wrap > [role="img"]')).toEqual({
+            background: 'transparent',
+            border: '0',
+            padding: '0',
+            margin: '0',
+            width: '100%',
+        });
+        expect(rules(css, '.scs-domain6-page .mermaid-wrap svg')).toEqual({
+            'flex-shrink': '0',
+            'max-width': 'none',
+            height: 'auto',
+        });
+        expect(rules(css, '.scs-domain6-page .main .mermaid-wrap p')).toEqual({
+            color: 'inherit',
+            margin: '0',
+        });
+    });
+
+    it('applies padding to the outer code-block pre and resets per-line .code-line padding', () => {
+        expect(rules(css, '.scs-domain6-page .main pre.code.code-block')).toEqual({
+            padding: '18px 20px',
+        });
+        expect(rules(css, '.scs-domain6-page .main pre:not(.mermaid) > .code-line')).toEqual({
+            padding: '0',
+            'min-height': '1.65em',
+            'white-space': 'pre',
+            'font-family': 'var(--font-mono)',
+        });
+    });
+
+    it('defines GitHub Light highlight.js syntax token colors for all used token classes', () => {
+        const tokenColors: Record<string, string> = {};
+        postcss.parse(css).walkRules((r) => {
+            if (!r.selector.includes('.hljs-')) return;
+            r.walkDecls('color', (d) => {
+                for (const sel of r.selector.split(',').map((s) => s.trim())) {
+                    tokenColors[sel] = d.value.toLowerCase();
+                }
+            });
+        });
+
+        expect(tokenColors['.scs-domain6-page .hljs-keyword']).toBe('#d73a49');
+        expect(tokenColors['.scs-domain6-page .hljs-attr']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-literal']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-number']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-variable']).toBe('#005cc5');
+        expect(tokenColors['.scs-domain6-page .hljs-string']).toBe('#032f62');
+        expect(tokenColors['.scs-domain6-page .hljs-built_in']).toBe('#e36209');
+        expect(tokenColors['.scs-domain6-page .hljs-comment']).toBe('#6a737d');
+    });
+});

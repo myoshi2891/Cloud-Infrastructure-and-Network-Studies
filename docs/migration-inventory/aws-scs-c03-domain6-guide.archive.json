@@ -1,0 +1,19 @@
+{
+    "sourceCommit": "3a8bdd53a9806f3c1401613fb9d64bccfd370c49",
+    "archiveIsGitIgnored": true,
+    "files": [
+        {
+            "source": "Aws-scs-c03-domain6-security-foundations-and-governance-guide.html",
+            "archive": "archive/Aws/html/security-specialty/domain6/Aws-scs-c03-domain6-security-foundations-and-governance-guide.html",
+            "bytes": 432451,
+            "sha256": "22b452dac6f00032655d431e4a9185c972de919c22ead05072e72c549ef65118"
+        },
+        {
+            "source": "Aws-scs-c03-domain6-security-foundations-and-governance-guide.md",
+            "archive": "archive/Aws/md/security-specialty/domain6/Aws-scs-c03-domain6-security-foundations-and-governance-guide.md",
+            "bytes": 146502,
+            "sha256": "801a1a2ccc5d0a217fbfa5f4989c23dfc826e3e8d8a8b732dc349d706272237c"
+        }
+    ]
+}
+
