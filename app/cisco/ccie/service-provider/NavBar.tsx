@@ -10,13 +10,50 @@ interface NavBarProps {
 
 /**
  * CCIE Service Provider ガイド用のサイドバー目次コンポーネント。
- * 目次は constants.ts の NAV_GROUPS から描画し、ScrollSpy・キーボードフォーカス連動・モバイル開閉制御を提供します。
+ * 目次は constants.ts の NAV_GROUPS から描画し、ScrollSpy・サブ階層展開（li.open）・キーボードフォーカス連動・モバイル開閉制御を提供します。
  */
 export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
+    const activateTargetId = useCallback((id: string, scrollIntoSidebarView = false) => {
+        if (typeof document === 'undefined') return;
+        const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
+
+        const targetAnchor = sidebar.querySelector<HTMLAnchorElement>(`nav a[href="#${CSS.escape(id)}"]`);
+        if (!targetAnchor) return;
+
+        sidebar.querySelectorAll('nav a.active').forEach((a) => {
+            a.classList.remove('active');
+            a.removeAttribute('aria-current');
+        });
+        sidebar.querySelectorAll('nav li.active, nav li.open').forEach((li) => {
+            li.classList.remove('active', 'open');
+        });
+
+        targetAnchor.classList.add('active');
+        targetAnchor.setAttribute('aria-current', 'location');
+
+        const ownLi = targetAnchor.closest('li');
+        if (ownLi) ownLi.classList.add('active');
+
+        const parentCh = targetAnchor.closest('li.ch');
+        if (parentCh) {
+            parentCh.classList.add('open', 'active');
+            const chAnchor = parentCh.querySelector<HTMLAnchorElement>(':scope > a');
+            if (chAnchor && chAnchor !== targetAnchor) {
+                chAnchor.classList.add('active');
+            }
+        }
+
+        if (scrollIntoSidebarView && typeof targetAnchor.scrollIntoView === 'function') {
+            targetAnchor.scrollIntoView({ block: 'nearest' });
+        }
+    }, []);
+
     const handleLinkClick = useCallback((href: string) => {
         onClose();
         if (href.startsWith('#')) {
             const targetId = href.slice(1);
+            activateTargetId(targetId, false);
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
                 targetEl.tabIndex = -1;
@@ -24,20 +61,28 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
                 targetEl.scrollIntoView?.({ behavior: 'instant' });
             }
         }
-    }, [onClose]);
+    }, [onClose, activateTargetId]);
 
     useEffect(() => {
-        if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+        if (typeof window === 'undefined') return;
+
+        const initialHash = window.location.hash.replace(/^#/, '');
+        if (initialHash) {
+            activateTargetId(initialHash, true);
+        } else {
+            activateTargetId('s1', false);
+        }
+
+        if (typeof IntersectionObserver === 'undefined') return;
 
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        const itemOf = new Map<string, HTMLElement>();
-        sidebar.querySelectorAll('a[href^="#"]').forEach((a) => {
-            const li = a.closest('li');
+        const knownIds = new Set<string>();
+        sidebar.querySelectorAll<HTMLAnchorElement>('nav a[href^="#"]').forEach((a) => {
             const href = a.getAttribute('href');
-            if (li && href) {
-                itemOf.set(href.slice(1), li as HTMLElement);
+            if (href && href.length > 1) {
+                knownIds.add(href.slice(1));
             }
         });
 
@@ -48,15 +93,8 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
                 return (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
             });
             const last = arr[arr.length - 1];
-            sidebar.querySelectorAll('li.active').forEach((l) => { l.classList.remove('active'); });
-            const li = last ? itemOf.get(last.id) : undefined;
-            if (!li) return;
-            li.classList.add('active');
-            const parent = li.parentElement && li.parentElement.closest('li');
-            if (parent) parent.classList.add('active');
-            const a = li.querySelector('a');
-            if (a && typeof a.scrollIntoView === 'function') {
-                a.scrollIntoView({ block: 'nearest' });
+            if (last?.id) {
+                activateTargetId(last.id, true);
             }
         };
 
@@ -66,14 +104,18 @@ export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
                 else visible.delete(e.target);
             });
             update();
-        }, { rootMargin: '-20% 0px -70% 0px' });
+        }, { rootMargin: '-18% 0px -70% 0px' });
 
-        document.querySelectorAll('section[id], h2[id], h3[id]').forEach((s) => { io.observe(s); });
+        document.querySelectorAll('main .chapter > h2[id], main h3[id], section[id]').forEach((s) => {
+            if (s.id && knownIds.has(s.id)) {
+                io.observe(s);
+            }
+        });
 
         return () => {
             io.disconnect();
         };
-    }, []);
+    }, [activateTargetId]);
 
     return (
         <aside className="sidebar" id="sidebar">

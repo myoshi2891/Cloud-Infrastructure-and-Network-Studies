@@ -74,6 +74,102 @@ function plainCodeLineToJsx(lineText) {
     return '{' + JSON.stringify(lineText) + '}';
 }
 
+function tokensIosxr(line) {
+    if (!line) return '{""}';
+    if (/^\s*!.*$/.test(line)) {
+        return `<span className="hljs-comment">{${JSON.stringify(line)}}</span>`;
+    }
+    const regex = /^RP\/\d+\/\S+#|^\s*[a-z][a-z0-9-]*|\b(?:Loopback|Bundle-Ether|HundredGigE|TenGigE|GigabitEthernet|tunnel-te|tunnel-ip)[0-9/.]*|\b\d{1,3}(?:\.\d{1,3}){3}(?:\/\d+)?\b|\b[0-9a-f]{1,4}(?::[0-9a-f]{0,4}){2,}(?:\/\d+)?|\b\d+(?::\d+)*\b|\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*\b/g;
+    let out = '';
+    let end = 0;
+    for (const m of line.matchAll(regex)) {
+        if (m.index > end) {
+            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        }
+        const text = m[0];
+        let cls = 'number';
+        if (/^RP\/\d+\/\S+#/.test(text)) {
+            cls = 'meta';
+        } else if (/^\s*[a-z][a-z0-9-]*$/.test(text)) {
+            cls = 'keyword';
+        } else if (/^(?:Loopback|Bundle-Ether|HundredGigE|TenGigE|GigabitEthernet|tunnel-te|tunnel-ip)/.test(text)) {
+            cls = 'built_in';
+        } else if (/^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*$/.test(text)) {
+            cls = 'title';
+        }
+        out += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
+        end = m.index + text.length;
+    }
+    if (end < line.length) {
+        out += '{' + JSON.stringify(line.slice(end)) + '}';
+    }
+    return out || '{""}';
+}
+
+function tokensPython(line) {
+    if (!line) return '{""}';
+    const regex = /#.*$|f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*'|\b(?:import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None)\b|\b(?:print|len|str|int|dict|list)\b|\b(?:\d+)\b/g;
+    let out = '';
+    let end = 0;
+    for (const m of line.matchAll(regex)) {
+        if (m.index > end) {
+            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        }
+        const text = m[0];
+        let cls = 'keyword';
+        if (text.startsWith('#')) {
+            cls = 'comment';
+        } else if (text.startsWith('"') || text.startsWith("'") || text.startsWith('f"') || text.startsWith("f'")) {
+            cls = 'string';
+        } else if (/^\d+$/.test(text)) {
+            cls = 'number';
+        } else if (['True', 'False', 'None'].includes(text)) {
+            cls = 'literal';
+        } else if (['print', 'len', 'str', 'int', 'dict', 'list'].includes(text)) {
+            cls = 'built_in';
+        }
+        out += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
+        end = m.index + text.length;
+    }
+    if (end < line.length) {
+        out += '{' + JSON.stringify(line.slice(end)) + '}';
+    }
+    return out || '{""}';
+}
+
+function tokensYaml(line) {
+    if (!line) return '{""}';
+    if (/^\s*#.*$/.test(line)) {
+        return `<span className="hljs-comment">{${JSON.stringify(line)}}</span>`;
+    }
+    if (/^---\s*$/.test(line)) {
+        return `<span className="hljs-meta">{${JSON.stringify(line)}}</span>`;
+    }
+    const regex = /"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|^(\s*-\s+|\s*)[a-zA-Z0-9_.-]+(?=:)|\b(?:true|false|yes|no|null)\b|\b\d+(?:\.\d+)?\b/g;
+    let out = '';
+    let end = 0;
+    for (const m of line.matchAll(regex)) {
+        if (m.index > end) {
+            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
+        }
+        const text = m[0];
+        let cls = 'attr';
+        if (text.startsWith('"') || text.startsWith("'")) {
+            cls = 'string';
+        } else if (/^(?:true|false|yes|no|null)$/.test(text)) {
+            cls = 'literal';
+        } else if (/^\d/.test(text)) {
+            cls = 'number';
+        }
+        out += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
+        end = m.index + text.length;
+    }
+    if (end < line.length) {
+        out += '{' + JSON.stringify(line.slice(end)) + '}';
+    }
+    return out || '{""}';
+}
+
 function nodeToJsx(node) {
     if (node.nodeType === 3) {
         // テキストノード
@@ -100,12 +196,19 @@ function nodeToJsx(node) {
     // Code Block (pre)
     if (node.tagName === 'PRE') {
         const code = node.querySelector('code');
+        const langClass = code?.className || '';
         const rawText = code ? code.textContent : node.textContent;
         const lines = (rawText || '').replace(/^\r?\n|\r?\n$/g, '').split(/\r?\n/);
+        const renderLine = (line) => {
+            if (langClass.includes('language-iosxr')) return tokensIosxr(line);
+            if (langClass.includes('language-python')) return tokensPython(line);
+            if (langClass.includes('language-yaml')) return tokensYaml(line);
+            return plainCodeLineToJsx(line);
+        };
         return (
             `<div className="code-sample">` +
             `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(codeBlockLabel(node))}}>` +
-            lines.map(line => `<div className="code-line">${plainCodeLineToJsx(line)}</div>`).join('') +
+            lines.map(line => `<div className="code-line">${renderLine(line)}</div>`).join('') +
             `</div></div>`
         );
     }

@@ -51,3 +51,4 @@ describe('CCIE Service Provider — AccessConnectivity セクション', () => {
         expect(codeBlocks[0]?.querySelectorAll('.code-line').length).toBeGreaterThan(0);
     });
 });
+
