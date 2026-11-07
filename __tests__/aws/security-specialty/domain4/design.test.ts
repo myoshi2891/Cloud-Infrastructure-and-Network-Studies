@@ -122,6 +122,12 @@ describe('SCS-C03 Domain 4 — スタイル・デザイン完全移行', () => {
         }
     });
 
+    it('defines every --color-scs-d4-* token referenced by page.css in globals.css', () => {
+        const referenced = [...new Set(css.match(/--color-scs-d4-[\w-]+/g))];
+        expect(referenced).not.toEqual([]);
+        expect(referenced.filter((token) => !(token in globals))).toEqual([]);
+    });
+
     it('keeps list marker styling for unordered and ordered lists inside main, while suppressing bullets on checklist cards', () => {
         expect(rules(css, '.scs-domain4-page .main ul')['list-style-type']).toBe('disc');
         expect(rules(css, '.scs-domain4-page .main ol')['list-style-type']).toBe('decimal');
