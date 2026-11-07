@@ -46,6 +46,20 @@ describe('SCS Domain 5 図のテキスト代替', () => {
         expect(new Set(texts).size).toBe(15);
     });
 
+    it('diag-2 の説明は図に描かれたサービスだけを挙げる', () => {
+        const chart = DIAGRAMS['diag-2'].replace(/\s+/g, '');
+        const description = DIAGRAM_DESCRIPTIONS['diag-2'];
+
+        ['VPCエンドポイント', 'PrivateLink', 'Client VPN', 'Verified Access'].forEach((service) => {
+            expect(chart).toContain(service.replace(/\s+/g, ''));
+            expect(description).toContain(service);
+        });
+        ['Site-to-Site VPN', 'Direct Connect'].forEach((service) => {
+            expect(chart).not.toContain(service.replace(/\s+/g, ''));
+            expect(description).not.toContain(service);
+        });
+    });
+
     it('各図が自然倍率と遅延描画を指定されている', () => {
         const { container } = render(<Page />);
         const diagrams = [...container.querySelectorAll('[data-testid="mermaid-diagram"]')];

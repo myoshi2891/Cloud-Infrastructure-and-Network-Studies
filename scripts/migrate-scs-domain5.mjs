@@ -174,7 +174,7 @@ export function scaffoldCore() {
     const descriptions = {
         'diag-0': 'アプリがKMSのGenerateDataKeyを呼び出し、平文データキーで大きなデータを暗号化し平文キーをメモリから破棄するエンベロープ暗号化の基本フロー。',
         'diag-1': 'クライアントからALB・CloudFront等の入口でのTLS強制、PrivateLink等の閉域アクセスを経てAWSリソースへ安全に通信するTask 5.1の全体像。',
-        'diag-2': 'VPCエンドポイント、PrivateLink、Site-to-Site VPN、Direct Connect、Client VPN、Verified Accessの通信要件に応じた全体マップ。',
+        'diag-2': 'VPCエンドポイント、PrivateLink、Client VPN、Verified Accessの通信要件に応じた全体マップ。',
         'diag-3': '既存VPCでMonitorモードを有効化し、Flow Logsで平文通信を特定してTLS化やNitro対応へ移行するVPC Encryption Controlsの導入ステップ。',
         'diag-4': '専有HSMの要件やAWSサービス暗号化利用の有無に応じてKMS、CloudHSM、カスタムキーストア、XKSを選択する判断フロー。',
         'diag-5': 'ポリシー仮適用（InProgress 24時間）を経て確定・変更不可にするS3 Glacier Vault Lockの確定ステップ。',
