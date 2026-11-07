@@ -48,7 +48,7 @@ function tokens(line, language) {
     if (['bash', 'shell'].includes(language)) {
         let output = '', end = 0;
         const bashRegex = new RegExp(
-            String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<![\w:-])(?<built_in>aws|echo|printf|exit|break|sleep|seq|base64)(?![\w:-])|--[\w-]+|\$[\w_]+|\b(?<keyword>for|in|do|done|case|esac|if|then|fi|else|elif|while|until|export|pass|drop)\b|\b\d+\b`,
+            String.raw`#.*$|${DOUBLE_QUOTED}|${SINGLE_QUOTED}|(?<![\w:-])(?<built_in>aws|echo|printf|exit|break|sleep|seq|base64)(?![\w:-])|--[\w-]+|\$[\w_]+|(?<![\w:-])(?<keyword>for|in|do|done|case|esac|if|then|fi|else|elif|while|until|export|pass|drop)(?![\w:-])|(?<![\w:-])\d+(?![\w:-])`,
             'g',
         );
         for (const m of line.matchAll(bashRegex)) {
