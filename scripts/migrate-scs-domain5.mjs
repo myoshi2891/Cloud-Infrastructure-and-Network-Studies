@@ -98,6 +98,15 @@ function tokens(line, language) {
     return output + '{' + JSON.stringify(line.slice(end)) + '}';
 }
 
+/** 原本の解答欄から正解記号を読み取り、演習の選択肢を採点コンポーネントで包む。 */
+function practiceOptions(n) {
+    let heading = n.previousElementSibling;
+    while (heading && !heading.matches('h3')) heading = heading.previousElementSibling;
+    const answers = n.nextElementSibling.querySelector('p > strong').textContent.split('と').map((answer) => answer.trim());
+    const options = [...n.childNodes].map(jsx).join('');
+    return `<PracticeOptions questionId=${JSON.stringify(heading.id)} answers={${JSON.stringify(answers)}}>${options}</PracticeOptions>`;
+}
+
 /** 単一の HTML/DOM ノードを JSX 文字列へ変換する。 */
 function jsx(n) {
     if (n.nodeType === 3) {
@@ -126,6 +135,10 @@ function jsx(n) {
             lines.map((line) => '<div className="code-line">' + tokens(line, lang) + '</div>').join('') +
             '</pre>'
         );
+    }
+
+    if (n.matches('ul') && n.nextElementSibling?.matches('details')) {
+        return practiceOptions(n);
     }
 
     if (n.matches('.checklist-card')) {
@@ -594,32 +607,61 @@ ${scope} .main {
     min-width: 0;
 }
 /* Practice questions: keep the original text and native disclosure behavior. */
-${scope} .main [data-part="examprep"] > p {
-    position: relative;
-    margin: 24px 0 0;
-    padding: 26px 28px 24px 92px;
+${scope} .main [data-part="examprep"] > h2 + p {
+    margin: 0 0 28px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--color-scs-d5-accent);
+    border-radius: 0 10px 10px 0;
+    background: var(--color-scs-d5-accent-bg);
+    color: var(--color-scs-d5-text-dim);
+    font-size: 14px;
+}
+${scope} .main [data-part="examprep"] > h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 28px 0 0;
+    padding: 20px 28px 12px;
     border: 1px solid var(--color-scs-d5-border);
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
     background: var(--color-scs-d5-bg-card);
+    color: var(--color-scs-d5-accent);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+}
+${scope} .main [data-part="examprep"] > h3::before {
+    width: 8px;
+    height: 8px;
+    margin: 0;
+    border-radius: 50%;
+}
+${scope} .main [data-part="examprep"] > h3 + p {
+    margin: 0;
+    padding: 0 28px 20px;
+    border-inline: 1px solid var(--color-scs-d5-border);
+    background: var(--color-scs-d5-bg-card);
     font-weight: 500;
     line-height: 1.9;
 }
-${scope} .main [data-part="examprep"] > p > strong {
-    position: absolute;
-    top: 26px;
-    left: 24px;
+${scope} .main [data-part="examprep"] > ul {
     display: grid;
-    place-items: center;
-    min-width: 46px;
-    height: 38px;
-    border: 1px solid var(--color-scs-d5-accent-soft);
+    gap: 10px;
+    margin: 0;
+    padding: 0 28px 24px;
+    border-inline: 1px solid var(--color-scs-d5-border);
+    background: var(--color-scs-d5-bg-card);
+    list-style: none;
+}
+${scope} .main [data-part="examprep"] > ul > li {
+    margin: 0;
+    padding: 13px 16px;
+    border: 1px solid var(--color-scs-d5-border-soft);
     border-radius: 10px;
-    background: var(--color-scs-d5-accent-bg);
-    color: var(--color-scs-d5-accent);
-    font-family: var(--font-mono);
+    background: var(--color-scs-d5-bg);
     font-size: 14px;
-    line-height: 1;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
 }
 ${scope} .main [data-part="examprep"] > details {
     margin: 0 0 24px;
@@ -680,13 +722,17 @@ ${scope} .main [data-part="examprep"] > details > p {
     line-height: 1.95;
 }
 @media (max-width: 640px) {
-    ${scope} .main [data-part="examprep"] > p {
-        padding: 20px;
+    ${scope} .main [data-part="examprep"] > h3 {
+        padding: 18px 18px 12px;
     }
-    ${scope} .main [data-part="examprep"] > p > strong {
-        position: static;
-        width: fit-content;
-        margin-bottom: 14px;
+    ${scope} .main [data-part="examprep"] > h3 + p {
+        padding: 0 18px 18px;
+    }
+    ${scope} .main [data-part="examprep"] > ul {
+        padding: 0 18px 20px;
+    }
+    ${scope} .main [data-part="examprep"] > ul > li {
+        padding: 12px;
     }
     ${scope} .main [data-part="examprep"] > details > summary {
         padding: 14px 20px;
@@ -694,6 +740,60 @@ ${scope} .main [data-part="examprep"] > details > p {
     ${scope} .main [data-part="examprep"] > details > p {
         padding: 20px;
     }
+}
+${scope} .main [data-part="examprep"] > .practice-options > li {
+    padding: 0;
+}
+${scope} .practice-options label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+}
+${scope} .practice-options input {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin-top: 4px;
+    accent-color: var(--color-scs-d5-accent);
+    cursor: pointer;
+}
+${scope} .practice-options label > span {
+    min-width: 0;
+}
+${scope} .practice-options li:focus-within {
+    outline: 2px solid var(--color-scs-d5-accent);
+    outline-offset: 2px;
+}
+${scope} .main .practice-options > li[data-selected="true"] {
+    border-color: var(--color-scs-d5-accent);
+    background: var(--color-scs-d5-accent-bg);
+}
+${scope} .main .practice-options > li[data-result="correct"] {
+    border-color: var(--color-scs-d5-success);
+    background: var(--color-scs-d5-success-bg);
+}
+${scope} .main .practice-options > li[data-result="wrong"] {
+    border-color: var(--color-scs-d5-danger);
+    background: var(--color-scs-d5-danger-bg);
+}
+${scope} .practice-feedback {
+    padding: 0 28px 20px;
+    border-inline: 1px solid var(--color-scs-d5-border);
+    background: var(--color-scs-d5-bg-card);
+    color: var(--color-scs-d5-text-dim);
+    font-size: 14px;
+    font-weight: 700;
+}
+${scope} .practice-feedback:empty {
+    padding-block: 0;
+}
+${scope} .practice-feedback[data-result="correct"] {
+    color: var(--color-scs-d5-success);
+}
+${scope} .practice-feedback[data-result="wrong"] {
+    color: var(--color-scs-d5-danger);
 }
 @media (prefers-reduced-motion: reduce) {
     ${scope} .main [data-part="examprep"] > details > summary {
@@ -868,10 +968,12 @@ export function migrateSection(phase) {
     const componentName = componentNames[phase];
     const hasDiagram = body.includes('<Diagram ');
     const hasChecklist = body.includes('<ChecklistCard>');
+    const hasPractice = body.includes('<PracticeOptions ');
 
     let output = '';
     if (hasDiagram) output += `import { Diagram } from '../Diagram';\n`;
     if (hasChecklist) output += `import { ChecklistCard, ChecklistCount } from '../Checklist';\n`;
+    if (hasPractice) output += `import PracticeOptions from "../PracticeOptions";\n`;
     output += `\n/** 原本の ${phase} セクション本文。 */\nexport default function ${componentName}() {\n    return (\n        <section className="guide-part" data-part="${phase}">\n${body}\n        </section>\n    );\n}\n`;
 
     const sourceFile = ts.createSourceFile(

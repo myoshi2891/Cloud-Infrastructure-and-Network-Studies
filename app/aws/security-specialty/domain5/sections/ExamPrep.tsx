@@ -1,5 +1,4 @@
 import PracticeOptions from "../PracticeOptions";
-
 /** 原本の examprep セクション本文。 */
 export default function ExamPrep() {
     return (<section className="guide-part" data-part="examprep">
@@ -27,7 +26,7 @@ export default function ExamPrep() {
     {"\n                "}
     <p>{"\n                    規制により、"}<strong>{"ルートユーザーを含む誰も"}</strong>{"、7年間は S3\n                    オブジェクトを削除・上書きできないようにする必要がある。設定として正しいものは?(2つ選択)\n                "}</p>
     {"\n                "}
-    <PracticeOptions questionId="問題-3" answers={["A","C"]}>{"\n                    "}<li>{"\n                        A. バケットで\n                        "}<strong>{"S3 Object Lock"}</strong>{" を有効にする(バージョニングが前提)\n                    "}</li>{"\n                    "}<li>{"B. "}<strong>{"ガバナンスモード"}</strong>{"で 7年の保持期間を設定する"}</li>{"\n                    "}<li>{"C. "}<strong>{"コンプライアンスモード"}</strong>{"で 7年の保持期間を設定する"}</li>{"\n                    "}<li>{"D. MFA Delete のみを有効にする"}</li>{"\n                    "}<li>{"E. バケットポリシーで Delete を Deny する"}</li>{"\n                "}</PracticeOptions>
+    <PracticeOptions questionId="問題-3" answers={["A", "C"]}>{"\n                    "}<li>{"\n                        A. バケットで\n                        "}<strong>{"S3 Object Lock"}</strong>{" を有効にする(バージョニングが前提)\n                    "}</li>{"\n                    "}<li>{"B. "}<strong>{"ガバナンスモード"}</strong>{"で 7年の保持期間を設定する"}</li>{"\n                    "}<li>{"C. "}<strong>{"コンプライアンスモード"}</strong>{"で 7年の保持期間を設定する"}</li>{"\n                    "}<li>{"D. MFA Delete のみを有効にする"}</li>{"\n                    "}<li>{"E. バケットポリシーで Delete を Deny する"}</li>{"\n                "}</PracticeOptions>
     {"\n                "}
     <details>{"\n                    "}<summary>{"答えと解説"}</summary>{"\n                    "}<p>{"\n                        "}<strong>{"A と C"}</strong>{"。ルートユーザーも削除不可にできるのは"}<strong>{"コンプライアンスモード"}</strong>{"だけです。ガバナンスモードは特別権限で解除可能、バケットポリシーは変更可能なため\n                        WORM 要件を満たしません。\n                    "}</p>{"\n                "}</details>
     {"\n                "}
