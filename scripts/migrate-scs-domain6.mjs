@@ -7,6 +7,7 @@ import postcss from 'postcss';
 import ts from 'typescript';
 import fixture from '../docs/migration-inventory/aws-scs-c03-domain6-guide.fidelity.json' with { type: 'json' };
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
+import { normalizeCodeContainers } from './inventory-extraction.mjs';
 
 const dir = 'app/aws/security-specialty/domain6';
 fs.mkdirSync(`${dir}/sections`, { recursive: true });
@@ -17,6 +18,7 @@ const html = execFileSync('git', ['show', `${config.sourceCommit}:${config.sourc
     maxBuffer: 8 * 1024 * 1024,
 });
 const doc = new JSDOM(html).window.document;
+normalizeCodeContainers(doc);
 const boundaries = config.guideBoundaries;
 
 const diagrams = [...doc.querySelectorAll('pre.mermaid')];
@@ -378,7 +380,7 @@ export default function NavBar() {
             </button>
             <aside id="sidebar" className={\`sidebar\${open ? ' open' : ''}\`}>
                 <div className="sidebar-header">
-                    <div className="kicker">AWS Security Specialty</div>
+                    <div className="kicker">AWS SCS-C03</div>
                     <h2>Domain 6: Security Foundations and Governance</h2>
                 </div>
                 <nav id="sidebarNav" aria-label="SCS-C03 Domain 6 目次">
@@ -582,6 +584,27 @@ ${scope} .mermaid-wrap {
 }
 ${scope} .main pre.code.code-block {
     padding: 18px 20px;
+}
+${scope} .code-sample {
+    margin: 0 0 26px;
+    border: 1px solid var(--color-scs-d6-border);
+    border-radius: 12px;
+    background: var(--color-scs-d6-bg-card);
+    overflow: hidden;
+}
+${scope} .code-sample .code-lang {
+    padding: 7px 16px;
+    background: var(--color-scs-d6-bg-card-2);
+    border-bottom: 1px solid var(--color-scs-d6-border);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-scs-d6-text-dim);
+}
+${scope} .code-sample pre {
+    margin: 0;
+    overflow-x: auto;
 }
 ${scope} .main pre:not(.mermaid) > .code-line {
     padding: 0;

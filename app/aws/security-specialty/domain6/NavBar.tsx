@@ -112,7 +112,7 @@ export default function NavBar() {
             </button>
             <aside id="sidebar" className={`sidebar${open ? ' open' : ''}`}>
                 <div className="sidebar-header">
-                    <div className="kicker">AWS Security Specialty</div>
+                    <div className="kicker">AWS SCS-C03</div>
                     <h2>Domain 6: Security Foundations and Governance</h2>
                 </div>
                 <nav id="sidebarNav" aria-label="SCS-C03 Domain 6 目次">

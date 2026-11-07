@@ -478,6 +478,27 @@
 .scs-domain6-page .main pre.code.code-block {
     padding: 18px 20px;
 }
+.scs-domain6-page .code-sample {
+    margin: 0 0 26px;
+    border: 1px solid var(--color-scs-d6-border);
+    border-radius: 12px;
+    background: var(--color-scs-d6-bg-card);
+    overflow: hidden;
+}
+.scs-domain6-page .code-sample .code-lang {
+    padding: 7px 16px;
+    background: var(--color-scs-d6-bg-card-2);
+    border-bottom: 1px solid var(--color-scs-d6-border);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-scs-d6-text-dim);
+}
+.scs-domain6-page .code-sample pre {
+    margin: 0;
+    overflow-x: auto;
+}
 .scs-domain6-page .main pre:not(.mermaid) > .code-line {
     padding: 0;
     min-height: 1.65em;
