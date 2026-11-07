@@ -197,7 +197,7 @@ describe('SAP Domain 4 原本全量契約', () => {
         // Assert
         expect(diagrams).toHaveLength(inventory.counts.diagram);
         diagrams.forEach((d) => expect(d).toHaveAttribute('data-defer-until-visible', 'true'));
-        expect(template).toContain('deferUntilVisible');
+        expect(template).toMatch(/\bdeferUntilVisible(?:=\{true\})?(?=[\s/>])/);
     });
 
     it('フォーカス可能なコード例はrole=groupでaria-labelの名前を支援技術へ公開し、再生成でも保持する', () => {
