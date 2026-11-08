@@ -2,22 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { NavBar } from './NavBar';
-import HeroIntro from './sections/HeroIntro';
-import CoreRouting from './sections/CoreRouting';
-import ArchitecturesServices from './sections/ArchitecturesServices';
-import AccessConnectivity from './sections/AccessConnectivity';
-import HighAvailability from './sections/HighAvailability';
-import Security from './sections/Security';
-import AssuranceAutomation from './sections/AssuranceAutomation';
-import Appendix from './sections/Appendix';
 
 interface CcieSpGuideProps {
-    children?: React.ReactNode;
+    children: React.ReactNode;
 }
 
 /**
  * CCIE Service Provider ガイドのクライアント側ルートコンポーネント。
- * サイドバー開閉、ScrollSpy、レイアウトを提供します。
+ * サイドバー開閉、ScrollSpy、レイアウトを提供し、本文は Server の page.tsx から children で受け取ります。
  */
 export default function CcieSpGuide({ children }: CcieSpGuideProps) {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -56,18 +48,8 @@ export default function CcieSpGuide({ children }: CcieSpGuideProps) {
                 aria-hidden="true"
             />
             <div className="layout">
-                <NavBar isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
-                <main>
-                    <HeroIntro />
-                    <CoreRouting />
-                    <ArchitecturesServices />
-                    <AccessConnectivity />
-                    <HighAvailability />
-                    <Security />
-                    <AssuranceAutomation />
-                    <Appendix />
-                    {children}
-                </main>
+                <NavBar onClose={() => setIsNavOpen(false)} />
+                <main>{children}</main>
             </div>
         </div>
     );

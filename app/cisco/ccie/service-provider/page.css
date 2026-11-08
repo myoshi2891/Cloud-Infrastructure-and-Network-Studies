@@ -292,7 +292,7 @@
   color: var(--color-ccie-sp-indigo);
   padding: 1px 6px;
   border-radius: 4px;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .ccie-sp-page pre code,
@@ -300,7 +300,7 @@
   background: transparent;
   padding: 0;
   color: var(--color-ccie-sp-ink);
-  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* テーブル */
@@ -481,7 +481,10 @@
   color: var(--color-ccie-sp-plum);
 }
 
-/* 図解カード & Mermaid ラッパー透過（黒塗り防止） */
+/*
+ * 図解カード & Mermaid ラッパー透過（黒塗り防止）
+ * justify-content の center → safe center の二重宣言は、safe 非対応ブラウザ向けの意図的なフォールバック。
+ */
 .ccie-sp-page .diagram {
   margin: 24px 0;
   padding: 24px 16px;

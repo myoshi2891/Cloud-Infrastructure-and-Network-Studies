@@ -4,7 +4,6 @@ import { useEffect, useCallback } from 'react';
 import { NAV_GROUPS } from './constants';
 
 interface NavBarProps {
-    isOpen: boolean;
     onClose: () => void;
 }
 
@@ -12,13 +11,15 @@ interface NavBarProps {
  * CCIE Service Provider ガイド用のサイドバー目次コンポーネント。
  * 目次は constants.ts の NAV_GROUPS から描画し、ScrollSpy・サブ階層展開（li.open）・キーボードフォーカス連動・モバイル開閉制御を提供します。
  */
-export function NavBar({ isOpen: _isOpen, onClose }: NavBarProps) {
+export function NavBar({ onClose }: NavBarProps) {
     const activateTargetId = useCallback((id: string, scrollIntoSidebarView = false) => {
         if (typeof document === 'undefined') return;
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
 
-        const targetAnchor = sidebar.querySelector<HTMLAnchorElement>(`nav a[href="#${CSS.escape(id)}"]`);
+        const targetAnchor = [...sidebar.querySelectorAll<HTMLAnchorElement>('nav a')].find(
+            (anchor) => anchor.getAttribute('href') === `#${id}`,
+        );
         if (!targetAnchor) return;
 
         sidebar.querySelectorAll('nav a.active').forEach((a) => {

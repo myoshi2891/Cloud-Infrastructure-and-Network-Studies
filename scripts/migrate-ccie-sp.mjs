@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { JSDOM } from 'jsdom';
+import { CCIE_SP_SOURCE_CORRECTIONS } from './ccie-sp-source-corrections.mjs';
 
 const SECTION_PHASES = [
     'herointro',
@@ -36,9 +37,35 @@ if (!main) {
     process.exit(1);
 }
 
+/** 原本 DOM のテキストノードへ本文訂正を適用する。各訂正が1か所にだけ当たらなければ中止する。 */
+function applySourceCorrections(root) {
+    for (const [from, to] of CCIE_SP_SOURCE_CORRECTIONS) {
+        const walker = doc.createTreeWalker(root, 4); // 4 = NodeFilter.SHOW_TEXT
+        let applied = 0;
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (!node.data.includes(from)) continue;
+            node.data = node.data.replaceAll(from, to);
+            applied += 1;
+        }
+        if (applied !== 1) {
+            console.error(`本文訂正の適用箇所が1件ではありません（${applied}件）: ${from}`);
+            process.exit(1);
+        }
+    }
+}
+
+applySourceCorrections(main);
+
+const allTables = [...main.querySelectorAll('table')];
+
 // scriptからDIAGRAMSを取得
 const scriptMatch = html.match(/window\.DIAGRAMS\s*=\s*\{([\s\S]*?)\};\s*(?:\(function|<script|<\/script)/);
-const fn = new Function('return {' + (scriptMatch ? scriptMatch[1] : '') + '}');
+if (!scriptMatch) {
+    console.error('window.DIAGRAMS ブロックが見つかりません');
+    process.exit(1);
+}
+// 注意: アーカイブ済み原本 HTML から取り出したスクリプト文字列をそのまま実行する
+const fn = new Function('return {' + scriptMatch[1] + '}');
 const diagrams = fn();
 
 function pieChartTitle(id) {
@@ -58,12 +85,20 @@ function codeBlockLabel(preNode) {
 }
 
 function tableLabel(tableNode) {
-    let prev = tableNode.previousElementSibling;
-    while (prev && !prev.matches('h1, h2, h3, h4, .callout-head, header')) {
-        prev = prev.previousElementSibling;
+    // 表は .table-wrap の唯一の子のため、ラッパーから祖先へ遡って直近の見出しを探す
+    let scope = tableNode.closest('.table-wrap') ?? tableNode;
+    let heading = null;
+    while (scope && scope !== main && !heading) {
+        let prev = scope.previousElementSibling;
+        while (prev && !prev.matches('h1, h2, h3, h4, .callout-head, header')) {
+            prev = prev.previousElementSibling;
+        }
+        heading = prev;
+        scope = scope.parentElement;
     }
-    const label = prev?.textContent?.replace(/\s+/g, ' ').trim() || '比較・仕様表';
-    return `${label}（表）`;
+    const label = heading?.textContent?.replace(/\s+/g, ' ').trim() || '比較・仕様表';
+    // 同じ見出しの下に複数の表があっても読み上げ名が重複しないよう、ページ内の通し番号を付ける
+    return `${label}（表 ${allTables.indexOf(tableNode) + 1}）`;
 }
 
 function escapeJsxText(text) {

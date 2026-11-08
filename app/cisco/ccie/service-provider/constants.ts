@@ -81,7 +81,7 @@ export const NAV_GROUPS: NavGroup[] = [
       },
       {
         "href": "#s4-2",
-        "title": "4.2 BGP（Border Gateway Protocol）（Lab 1.2 / SPCOR\n                                        2.3・2.4）"
+        "title": "4.2 BGP（Border Gateway Protocol）（Lab 1.2 / SPCOR 2.3・2.4）"
       },
       {
         "href": "#s4-3",
@@ -107,11 +107,11 @@ export const NAV_GROUPS: NavGroup[] = [
     "items": [
       {
         "href": "#s5-1",
-        "title": "5.1 モバイルインフラのアーキテクチャ（Lab 2.1 / SPCOR\n                                        1.1.c）"
+        "title": "5.1 モバイルインフラのアーキテクチャ（Lab 2.1 / SPCOR 1.1.c）"
       },
       {
         "href": "#s5-2",
-        "title": "5.2 光アーキテクチャ: Routed Optical Networking（Lab 2.2 /\n                                        SPCOR 1.1.d）"
+        "title": "5.2 光アーキテクチャ: Routed Optical Networking（Lab 2.2 / SPCOR 1.1.d）"
       },
       {
         "href": "#s5-3",
@@ -163,7 +163,7 @@ export const NAV_GROUPS: NavGroup[] = [
       },
       {
         "href": "#s7-2",
-        "title": "7.2 ルーティング / 高速収束（Lab 4.2 / SPCOR\n                                        2.8.c・3.2.c・3.3.d）"
+        "title": "7.2 ルーティング / 高速収束（Lab 4.2 / SPCOR 2.8.c・3.2.c・3.3.d）"
       }
     ]
   },
@@ -173,7 +173,7 @@ export const NAV_GROUPS: NavGroup[] = [
     "items": [
       {
         "href": "#s8-1",
-        "title": "8.1 コントロールプレーンのセキュリティ（Lab 5.1 / SPCOR\n                                        1.5）"
+        "title": "8.1 コントロールプレーンのセキュリティ（Lab 5.1 / SPCOR 1.5）"
       },
       {
         "href": "#s8-2",
@@ -181,7 +181,7 @@ export const NAV_GROUPS: NavGroup[] = [
       },
       {
         "href": "#s8-3",
-        "title": "8.3\n                                        インフラストラクチャ（データプレーン）のセキュリティ（Lab\n                                        5.3 / SPCOR 1.7）"
+        "title": "8.3 インフラストラクチャ（データプレーン）のセキュリティ（Lab 5.3 / SPCOR 1.7）"
       }
     ]
   },
@@ -191,7 +191,7 @@ export const NAV_GROUPS: NavGroup[] = [
     "items": [
       {
         "href": "#s9-1",
-        "title": "9.1 ネットワークアシュアランス（Lab 6.1 / SPCOR\n                                        5.8・5.10）"
+        "title": "9.1 ネットワークアシュアランス（Lab 6.1 / SPCOR 5.8・5.10）"
       },
       {
         "href": "#s9-2",

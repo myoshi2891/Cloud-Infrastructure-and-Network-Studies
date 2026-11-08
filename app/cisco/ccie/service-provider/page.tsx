@@ -2,6 +2,14 @@ import type { Metadata } from 'next';
 import '@fontsource-variable/source-serif-4/index.css';
 import './page.css';
 import CcieSpGuide from './CcieSpGuide';
+import HeroIntro from './sections/HeroIntro';
+import CoreRouting from './sections/CoreRouting';
+import ArchitecturesServices from './sections/ArchitecturesServices';
+import AccessConnectivity from './sections/AccessConnectivity';
+import HighAvailability from './sections/HighAvailability';
+import Security from './sections/Security';
+import AssuranceAutomation from './sections/AssuranceAutomation';
+import Appendix from './sections/Appendix';
 
 export const metadata: Metadata = {
     title: 'CCIE Service Provider 完全ガイド（初学者向け・ステップバイステップ）',
@@ -10,6 +18,17 @@ export const metadata: Metadata = {
 };
 
 export default function CcieServiceProviderPage() {
-    return <CcieSpGuide />;
+    return (
+        <CcieSpGuide>
+            <HeroIntro />
+            <CoreRouting />
+            <ArchitecturesServices />
+            <AccessConnectivity />
+            <HighAvailability />
+            <Security />
+            <AssuranceAutomation />
+            <Appendix />
+        </CcieSpGuide>
+    );
 }
 
