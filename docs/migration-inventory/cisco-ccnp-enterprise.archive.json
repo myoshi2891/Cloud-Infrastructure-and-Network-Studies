@@ -1,0 +1,17 @@
+{
+  "title": "CCNP Enterprise 認定 初学者向け完全ガイド",
+  "slug": "cisco-ccnp-enterprise",
+  "archivedAt": "2026-11-08T14:46:50.383Z",
+  "html": {
+    "originalPath": "Ccnp-enterprise-guide.html",
+    "archivePath": "archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html",
+    "bytes": 460613,
+    "sha256": "8cadae92c1790f603694c787ee0e3ac9315a08daf1294784fdff3a2fa8d7e516"
+  },
+  "markdown": {
+    "originalPath": "Ccnp-enterprise-guide.md",
+    "archivePath": "archive/Cisco/md/ccnp-enterprise/Ccnp-enterprise-guide.md",
+    "bytes": 129226,
+    "sha256": "534776f9f42428a0d75f318797ad45e9e667a275c9d01b0e9eb68c1ec564f1d9"
+  }
+}
