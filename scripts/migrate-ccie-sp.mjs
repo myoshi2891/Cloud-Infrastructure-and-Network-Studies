@@ -43,9 +43,10 @@ function applySourceCorrections(root) {
         const walker = doc.createTreeWalker(root, 4); // 4 = NodeFilter.SHOW_TEXT
         let applied = 0;
         for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-            if (!node.data.includes(from)) continue;
+            const count = node.data.split(from).length - 1;
+            if (count === 0) continue;
             node.data = node.data.replaceAll(from, to);
-            applied += 1;
+            applied += count;
         }
         if (applied !== 1) {
             console.error(`本文訂正の適用箇所が1件ではありません（${applied}件）: ${from}`);
