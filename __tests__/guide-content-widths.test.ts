@@ -37,6 +37,7 @@ const guideLayouts = [
     ['app/aws/security-specialty/domain5/page.css', '.scs-domain5-page .sidebar', '.scs-domain5-page .main'],
     ['app/aws/cloudops-engineer-associate/page.css', '.aws-cloudops-page .sidebar', '.aws-cloudops-page .main'],
     ['app/cisco/ccnp-security/page.css', '.ccnp-security-page .sidebar', '.ccnp-security-page main'],
+    ['app/cisco/ccnp-collaboration/page.css', '.ccnp-collab-page .sidebar', '.ccnp-collab-page .main'],
     ['app/cisco/ccie/service-provider/page.css', '.ccie-sp-page .sidebar', '.ccie-sp-page main'],
     ['app/cisco/ccna/automation-api-guide/page.css', '.ccna-automation-api-page .sidebar', '.ccna-automation-api-page .main'],
     ['app/cisco/ccna/automation-application-deployment-security/page.css', '.ccna-app-deployment-security-page .sidebar', '.ccna-app-deployment-security-page .main'],
