@@ -19,7 +19,12 @@ export function collectSectionNodes(doc, startId, nextId) {
 
     const nodes = [];
     for (let curr = startNode; curr; curr = curr.nextElementSibling) {
-        if (nextId && curr.id === nextId) return nodes;
+        if (nextId && curr.id === nextId) {
+            if (nodes.length === 0) {
+                throw new Error(`次セクションの開始 ID ${nextId} が開始要素と同じ位置にあり、本文が空になります（開始: ${startId || '.main 先頭'}）`);
+            }
+            return nodes;
+        }
         nodes.push(curr);
     }
     if (nextId) {
