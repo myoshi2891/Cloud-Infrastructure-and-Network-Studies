@@ -71,7 +71,10 @@ export function NavBar({ onClose }: NavBarProps) {
         if (initialHash) {
             activateTargetId(initialHash, true);
         } else {
-            activateTargetId('s1', false);
+            const firstHref = NAV_GROUPS[0]?.href;
+            if (firstHref?.startsWith('#') && firstHref.length > 1) {
+                activateTargetId(firstHref.slice(1), false);
+            }
         }
 
         if (typeof IntersectionObserver === 'undefined') return;
