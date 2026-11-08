@@ -37,4 +37,8 @@ describe('collectSectionNodes — 見出し境界によるセクション抽出'
     it('次の境界が開始位置より前にあり到達できなければ失敗する', () => {
         expect(() => collectSectionNodes(buildDoc(SOURCE), 'b', 'a')).toThrow(/a/);
     });
+
+    it('開始 ID が空文字で先頭要素が次の境界の見出しなら失敗する', () => {
+        expect(() => collectSectionNodes(buildDoc(SOURCE), '', 'a')).toThrow(/本文が空/);
+    });
 });
