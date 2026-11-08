@@ -964,6 +964,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Cisco',
     },
     {
+        id: 'ccnp-collaboration',
+        label: 'CCNP Collaboration',
+        abbr: 'CCNP Collaboration',
+        level: 'Professional',
+        score: 'コア 120分 + コンセントレーション 90分',
+        color: 'card-ccna',
+        href: '/cisco/ccnp-collaboration',
+        description:
+            'Ciscoコラボレーションソリューション（呼制御・音声/ビデオ・モビリティ・Webex・自動化）のプロフェッショナル認定。コア試験(350-801 CLCOR)と各コンセントレーション試験を体系的に解説。',
+        domains: [
+            {
+                label: '初学者向け完全ガイド',
+                href: '/cisco/ccnp-collaboration',
+                pct: '完全解説',
+            },
+        ],
+        badge: 'Collaboration プロフェッショナル',
+        icon: '📞',
+        provider: 'Cisco',
+    },
+    {
         id: 'comptia-network-plus',
         label: 'CompTIA Network+',
         abbr: 'Network+',
