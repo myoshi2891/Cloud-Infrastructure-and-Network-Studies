@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@fontsource-variable/source-serif-4/index.css';
 import './page.css';
 import CcnpCollaborationGuide from './CcnpCollaborationGuide';
 import HeroIntro from './sections/HeroIntro';

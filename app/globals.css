@@ -286,22 +286,23 @@
     /* CCNP Collaboration 完全ガイド（原本の配色をそのまま保持） */
     --color-ccnp-collab-paper: #F6F7F9;
     --color-ccnp-collab-ink: #161B26;
-    --color-ccnp-collab-ink-2: #3A4254;
+    --color-ccnp-collab-ink-2: #4A5263;
     --color-ccnp-collab-ink-3: #566074;
     --color-ccnp-collab-indigo: #2E3F72;
     --color-ccnp-collab-gold: #B8802A;
     --color-ccnp-collab-gold-text: #7A5415;
     --color-ccnp-collab-forest: #1B6E6A;
     --color-ccnp-collab-plum: #8C3A5C;
-    --color-ccnp-collab-line: #D5DAE5;
-    --color-ccnp-collab-line-2: #E6E9F0;
+    --color-ccnp-collab-surface: #FFFFFF;
+    --color-ccnp-collab-line: #D9DDE6;
+    --color-ccnp-collab-line-2: #B9C0CF;
     --color-ccnp-collab-card: #FFFFFF;
     --color-ccnp-collab-on-indigo: #FFFFFF;
     --color-ccnp-collab-row-alt: #FAFBFD;
     --color-ccnp-collab-tint-indigo: #EEF1F8;
     --color-ccnp-collab-tint-gold: #FAF1DF;
-    --color-ccnp-collab-tint-forest: #E6F2F0;
-    --color-ccnp-collab-tint-plum: #F6E9EF;
+    --color-ccnp-collab-tint-forest: #E3F1EF;
+    --color-ccnp-collab-tint-plum: #F6E7EE;
     --color-ccnp-collab-practice-border: #E6CFA0;
     --color-ccnp-collab-source-border: #B9DBD7;
     --color-ccnp-collab-source-text: #125551;
