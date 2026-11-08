@@ -657,7 +657,7 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-aws-scs',
         href: '/aws/security-specialty',
         overviewLabel: 'SCS-C03 完全ガイド',
-        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。ドメイン1・2・3・4・5詳細ガイドも収録。',
+        description: 'SCS-C03の全6ドメイン・16タスクを101表・40図・27コード・確認問題8問で体系的に学ぶ。ドメイン1・2・3・4・5・6詳細ガイドも収録。',
         domains: [
             { label: 'SCS-C03 完全ガイド', href: '/aws/security-specialty', pct: '全6ドメイン' },
             { label: 'ドメイン1: 検出 (Detection)', href: '/aws/security-specialty/domain1', pct: '16%' },
@@ -665,6 +665,7 @@ const ALL_EXAMS: Exam[] = [
             { label: 'ドメイン3: インフラストラクチャセキュリティ (Infrastructure Security)', href: '/aws/security-specialty/domain3', pct: '18%' },
             { label: 'ドメイン4: アイデンティティとアクセス管理 (IAM)', href: '/aws/security-specialty/domain4', pct: '20%' },
             { label: 'ドメイン5: データ保護 (Data Protection)', href: '/aws/security-specialty/domain5', pct: '18%' },
+            { label: 'ドメイン6: セキュリティ基盤とガバナンス (Security Foundations and Governance)', href: '/aws/security-specialty/domain6', pct: '14%' },
         ],
         badge: 'SCS-C03',
         icon: '🛡️',
@@ -896,6 +897,28 @@ const ALL_EXAMS: Exam[] = [
         ],
         badge: '最上位ネットワーク資格',
         icon: '🏗️',
+        provider: 'Cisco',
+    },
+    {
+        id: 'cisco-ccie-service-provider',
+        label: 'Cisco Certified Internetwork Expert Service Provider',
+        abbr: 'CCIE SP',
+        level: 'Expert',
+        score: 'SPCOR 120分 / 実技 8時間',
+        color: 'card-ccna',
+        href: '/cisco/ccie/service-provider',
+        overviewLabel: '完全解説ガイド',
+        description:
+            'Cisco最高峰のサービスプロバイダー資格。SPCOR(350-501)と8時間実技ラボ試験を網羅し、Core Routing・MPLS/SR・VPN・Automationを徹底解説。',
+        domains: [
+            {
+                label: '完全解説ガイド',
+                href: '/cisco/ccie/service-provider',
+                pct: '完全解説',
+            },
+        ],
+        badge: '最上位SPネットワーク資格',
+        icon: '⚡',
         provider: 'Cisco',
     },
     {

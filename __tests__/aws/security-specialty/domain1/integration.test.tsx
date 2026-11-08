@@ -15,6 +15,9 @@ it('retains SCS-C03 complete guide and exposes Domain 1 from EXAMS and derived n
         { label: 'ドメイン1: 検出 (Detection)', href: route, pct: '16%' },
         { label: 'ドメイン2: インシデント対応 (Incident Response)', href: '/aws/security-specialty/domain2', pct: '14%' },
         { label: 'ドメイン3: インフラストラクチャセキュリティ (Infrastructure Security)', href: '/aws/security-specialty/domain3', pct: '18%' },
+        { label: 'ドメイン4: アイデンティティとアクセス管理 (IAM)', href: '/aws/security-specialty/domain4', pct: '20%' },
+        { label: 'ドメイン5: データ保護 (Data Protection)', href: '/aws/security-specialty/domain5', pct: '18%' },
+        { label: 'ドメイン6: セキュリティ基盤とガバナンス (Security Foundations and Governance)', href: '/aws/security-specialty/domain6', pct: '14%' },
     ]);
     expect(JSON.stringify(toNavTree(EXAMS))).toContain(route);
 });

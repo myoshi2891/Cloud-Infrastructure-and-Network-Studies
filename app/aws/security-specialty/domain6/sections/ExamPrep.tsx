@@ -1,0 +1,53 @@
+import QuizQuestion from "../QuizQuestion";
+
+/** 原本の examprep セクション本文。 */
+export default function ExamPrep() {
+    return (
+        <section className="guide-part" data-part="examprep">
+            <h2 id={"17-確認問題10問"} tabIndex={-1}>{"17. 確認問題(10問)"}</h2>
+<QuizQuestion number={1} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q1."}</strong>{"\n                    ある企業が組織内の全メンバーアカウントで、組織外のプリンシパルから自社の S3\n                    バケットへのアクセスを、バケットポリシーの内容に関わらず拒否したい。最適な手段はどれか。\n                "}</p>
+<ul >{"\n                    "}<li >{"A. SCP で "}<code >{"s3:*"}</code>{" を拒否する"}</li>{"\n                    "}<li >{"\n                        B. RCP で "}<code >{"aws:PrincipalOrgID"}</code>{" を使い、組織外のアクセスを拒否する\n                    "}</li>{"\n                    "}<li >{"C. 各バケットにバケットポリシーを設定する"}</li>{"\n                    "}<li >{"D. IAM ポリシーに Deny を追加する"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={2} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q2."}</strong>{" 管理アカウントに SCP\n                    を適用しても制限されない。原因として最も適切なものは?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. SCP のサイズ超過"}</li>{"\n                    "}<li >{"B. 管理アカウントは SCP の対象外"}</li>{"\n                    "}<li >{"C. All features が未有効"}</li>{"\n                    "}<li >{"D. 信頼されたアクセスが未有効"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={3} correctAnswers={[2]}>
+<p >{"\n                    "}<strong >{"Q3."}</strong>{" Control Tower で、CloudFormation\n                    テンプレートからのデプロイ前に非準拠リソースを検出してデプロイを止めたい。どのコントロールか。\n                "}</p>
+<ul >{"\n                    "}<li >{"A. 予防コントロール"}</li>{"\n                    "}<li >{"B. 検出コントロール"}</li>{"\n                    "}<li >{"C. プロアクティブコントロール"}</li>{"\n                    "}<li >{"D. 必須コントロール"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={4} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q4."}</strong>{"\n                    数百のメンバーアカウントのルート認証情報の管理負担を減らしたい。誤って全アクセス拒否の\n                    S3 バケットポリシーを作成した場合も、安全に復旧したい。最適な手段は?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. 各アカウントのルートパスワードを共有金庫に保管する"}</li>{"\n                    "}<li >{"\n                        B. 集中ルートアクセスを有効化し、"}<code >{"sts:AssumeRoot"}</code>{" と\n                        "}<code >{"S3UnlockBucketPolicy"}</code>{" を使う\n                    "}</li>{"\n                    "}<li >{"C. SCP でルートを全拒否する"}</li>{"\n                    "}<li >{"D. 各アカウントでルートのアクセスキーを作成する"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={5} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q5."}</strong>{" 新しいアカウントが OU\n                    に追加されたら、自動で標準のセキュリティスタックを展開したい。最適な方法は?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. 自己管理権限の StackSets を手動実行"}</li>{"\n                    "}<li >{"B. サービスマネージド権限の StackSets で自動デプロイを有効化"}</li>{"\n                    "}<li >{"C. Lambda で定期的にスタックを作成"}</li>{"\n                    "}<li >{"D. Service Catalog にテンプレートを登録"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={6} correctAnswers={[0,1]}>
+<p >{"\n                    "}<strong >{"Q6."}</strong>{" 組織内の全 ALB と CloudFront に同じ WAF\n                    ルールを配布し、新規リソースにも自動適用したい。動作の前提条件はどれか(2 つ)。\n                "}</p>
+<ul >{"\n                    "}<li >{"A. 全アカウントで AWS Config を有効化"}</li>{"\n                    "}<li >{"B. Firewall Manager の管理者アカウントを指定"}</li>{"\n                    "}<li >{"C. 全アカウントに Shield Advanced を購入(WAF ポリシーの場合)"}</li>{"\n                    "}<li >{"D. 全アカウントに GuardDuty を有効化"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={7} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q7."}</strong>{" 開発者に強い IAM 権限を与えず、承認済みの構成の EC2\n                    だけを作成できるようにしたい。最適なサービスは?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. AWS RAM"}</li>{"\n                    "}<li >{"B. AWS Service Catalog(起動制約)"}</li>{"\n                    "}<li >{"C. AWS Config"}</li>{"\n                    "}<li >{"D. IAM Access Analyzer"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={8} correctAnswers={[0]}>
+<p >{"\n                    "}<strong >{"Q8."}</strong>{" 全 Region・全アカウントの Config\n                    準拠状況を一元的に確認したい。最適な手段は?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. Config アグリゲーター"}</li>{"\n                    "}<li >{"B. CloudTrail Lake"}</li>{"\n                    "}<li >{"C. Trusted Advisor"}</li>{"\n                    "}<li >{"D. Well-Architected Tool"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={9} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q9."}</strong>{" HIPAA 対象データを扱うため、AWS と BAA を締結し、AWS の SOC\n                    2 レポートも取得したい。使うサービスは?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. AWS Audit Manager"}</li>{"\n                    "}<li >{"B. AWS Artifact"}</li>{"\n                    "}<li >{"C. AWS Security Hub"}</li>{"\n                    "}<li >{"D. AWS Config"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<QuizQuestion number={10} correctAnswers={[1]}>
+<p >{"\n                    "}<strong >{"Q10."}</strong>{"\n                    「タグが付いていないリソースを作成させない」要件を満たすのに最も適切なものは?\n                "}</p>
+<ul >{"\n                    "}<li >{"A. タグポリシーのみ"}</li>{"\n                    "}<li >{"\n                        B. SCP で "}<code >{"aws:RequestTag"}</code>{" / "}<code >{"Null"}</code>{" 条件を使って拒否\n                    "}</li>{"\n                    "}<li >{"C. Config "}<code >{"required-tags"}</code>{" ルールのみ"}</li>{"\n                    "}<li >{"D. Cost Explorer"}</li>{"\n                "}</ul>
+</QuizQuestion>
+<h3 id={"解答と解説"} tabIndex={-1}>{"解答と解説"}</h3>
+<div className={"table-scroll"} tabIndex={0} role="region" aria-label={"比較表 93：解答と解説"}>{"\n                    "}<table ><thead ><tr className={"header"}><th scope="col">{"問"}</th><th scope="col">{"答"}</th><th scope="col">{"解説"}</th></tr></thead><tbody ><tr className={"odd"}><td >{"Q1"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    組織外プリンシパルの制御は "}<strong >{"RCP"}</strong>{" の役割。SCP\n                                    は組織外のプリンシパルを制御できない\n                                "}</td></tr><tr className={"even"}><td >{"Q2"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    管理アカウントは SCP / RCP\n                                    の対象外。ワークロードを置かない設計にする\n                                "}</td></tr><tr className={"odd"}><td >{"Q3"}</td><td ><strong >{"C"}</strong></td><td >{"\n                                    "}<strong >{"プロアクティブ"}</strong>{"コントロール(CloudFormation\n                                    Hooks)がデプロイ前に検査・ブロックする\n                                "}</td></tr><tr className={"even"}><td >{"Q4"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    集中ルートアクセスで認証情報を排除し、"}<code >{"AssumeRoot"}</code>{"\n                                    のタスクポリシーで復旧。C は復旧作業ができなくなる\n                                "}</td></tr><tr className={"odd"}><td >{"Q5"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    サービスマネージド権限 + 自動デプロイが OU\n                                    への新規アカウント追加に追従する\n                                "}</td></tr><tr className={"even"}><td >{"Q6"}</td><td ><strong >{"A, B"}</strong></td><td >{"\n                                    Config の有効化と管理者アカウントの指定が前提。C は Shield\n                                    Advanced ポリシーの場合のみ\n                                "}</td></tr><tr className={"odd"}><td >{"Q7"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    Service Catalog\n                                    の起動制約で、利用者に直接の権限を与えずに承認済み構成を払い出せる\n                                "}</td></tr><tr className={"even"}><td >{"Q8"}</td><td ><strong >{"A"}</strong></td><td >{"\n                                    組織のアグリゲーターで、マルチアカウント・マルチ Region\n                                    の構成と準拠状態を集約\n                                "}</td></tr><tr className={"odd"}><td >{"Q9"}</td><td ><strong >{"B"}</strong></td><td >{"AWS 側のレポートと契約(BAA)は Artifact"}</td></tr><tr className={"even"}><td >{"Q10"}</td><td ><strong >{"B"}</strong></td><td >{"\n                                    作成時の強制は SCP。タグポリシーは付けるなら正しい形式、Config\n                                    は検出のみ\n                                "}</td></tr></tbody></table>{"\n                "}</div>
+<hr  />
+        </section>
+    );
+}
