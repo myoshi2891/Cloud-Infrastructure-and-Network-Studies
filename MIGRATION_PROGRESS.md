@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-11-08)
 
+## 2026-11-08: CCNP Collaboration 完全ガイド移行 & 原本アーカイブ退避
+
+`/cisco/ccnp-collaboration` へ全6パート+序章・付録（HeroIntro: 0.使い方〜3.ロードマップ、Part A: 350-801 CLCOR 第1〜6章、Part B: 300-810 CLICA B1〜B4、Part C: 300-815 CLACCM C1〜C6、Part D: 300-820 CLCEI D1〜D4、Part E: 300-835 CLAUTO E1〜E5、Part F: 試験対策・トラブルシュート・用語集 F1〜F5、付録 参考URL一覧・フッター注釈）を完全移行。178表（th437・td1810）・83図・21コード例（全行 `.code-line` ラップ）・266リスト項目・107外部リンク出現・41目次を原本どおり保持。明色配色（`--color-ccnp-collab-*` 22変数、紙色 `#f6f7f9`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、Hero、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）を完全復元した。目次の現在位置・開閉・hash/focus・Escapeキー復帰、Mermaid ダイアグラムの全83図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-collaboration` 追加）、共通フッター（`.ccnp-collab-page`）へ統合。
+
+Inventory `33fc2da4`、Red テスト `50bd59ee`、基盤実装 `5a9f1a21`、HeroIntro `5e1c80c3`、PartA `c2d26f0d`、PartB `6cadbeda`、PartC `894e7036`、PartD `940db784`、PartE `b635efb2`、PartF・Appendix・全量Green `d7915b90`、ナビゲーション統合 `8d1d2941`、原本アーカイブ退避 `cbf5be32` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・アクセシビリティラベルと、Mermaidの全83図DSL・アクセシビリティ代替テキストを全量照合。CCNP Collaboration 関連テスト10ファイル・103件すべて成功、共通フッターテスト成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（817220バイト・SHA-256 `5714d74dc16d7f14caef192fea4a208e9375bda30ce60c3a4eb49901ff2fbbe1`）およびMarkdown（235205バイト・SHA-256 `8d57033f8e7c6496acccb2f7dbaee7cc595a103840c141a316dd624d3339e810`）を `archive/Cisco/html/ccnp-collaboration/` と `archive/Cisco/md/ccnp-collaboration/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-collaboration.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-collaboration.mjs all` で再生成できる。直下の未移行HTML残数は15件（移行完了時点）。
+
 ## 2026-11-08: CCIE Service Provider 完全ガイド移行 & 原本アーカイブ退避
 
 `/cisco/ccie/service-provider` へ全6ドメイン（Hero/Intro、Domain 1: Core Routing、Domain 2: Architectures and Services、Domain 3: Access Connectivity、Domain 4: High Availability and Fast Convergence、Domain 5: Security、Domain 6: Assurance and Automation、付録 A〜E）を完全移行。125表（th310・td1485）・47図・43コード例・124リスト（本文74・目次50）・254外部リンク出現・50目次を原本どおり保持。明色配色（`--color-ccie-sp-*` 18変数、紙色 `#f8fafc`、文字 `#0f172a`、インディゴ `#1e3a8a`、ゴールド `#b45309`、フォレスト `#047857`、プラム `#831843`、行ホバー `#fafbfd`、practice コールアウト文字色 `#7a5317`）、Hero、表、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）・構文トークンを完全復元した。目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全47図（Mermaid構文エラー0件、全派生色269変数固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `cisco-ccie-service-provider` 追加）、共通フッター（`.ccie-sp-page`）へ統合。
@@ -2295,16 +2303,12 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）の全文移行・導線統合・原本アーカイブ。その前にSCS-C03 Domain 6（`/aws/security-specialty/domain6`）も完了。
+- **最新完了タスク:** CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）の全文移行・導線統合・原本アーカイブ。その前に CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
 - **最終更新日:** 2026-11-08
-- **最新実装 HEAD:** `64e2cee8`（CCIE SP のテスト厳密化。ナビ初期選択修正 `8629eca2`、本文訂正の適用 `493afeb2` を含む）
-- **仕様同期コミット:** `d883cfaf`（ドメイン数の仕様同期）
-- **前回進捗同期コミット:** `372b45ce`（CCIE SP 導線統合・アーカイブ・仕様同期）
-- **検証状態:** 2026-11-07に `726dcaea` と未コミットのテスト厳密化を含む作業ツリーで全体Vitest 547ファイル・4946件中4943件成功、`bun run build`・TypeScript型検査・ESLint成功。失敗3件はSCS-C03 Domain 1とSAP-C02 Domain 1のintegrationテストのナビ期待値未追従で、未変更の `1e4c2177` でも同じ3件が失敗する既存事象。Playwright E2Eと実ページのブラウザー検証は未実行。
-- **HTML残数:** 直下HTML16件、すべて未移行。直下の移行済み原本は0件。
-- **アーカイブ:** SCS-C03 Domain 5は `docs/migration-inventory/aws-scs-c03-domain5-guide.archive.json`、SCS-C03 Domain 4は `docs/migration-inventory/aws-scs-c03-domain4-guide.archive.json`、SCS-C03 Domain 3は `docs/migration-inventory/aws-scs-c03-domain3-guide.archive.json`、SAP-C02 Domain 4は `docs/migration-inventory/aws-sap-c02-domain4.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **既存差分:** `scripts/migrate-ccie-sp.mjs` の本文訂正カウント修正と本進捗同期が未コミット。
-- **次の作業:** `Ccnp-collaboration-guide.html` など直下の未移行HTML16件から次の対象を指定して移行する（`/cisco/ccie/service-provider` と SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。
+- **最新実装 HEAD:** CCNP Collaboration 移行完了コミット群（Green `d7915b90`、ナビ統合 `8d1d2941`、アーカイブ `cbf5be32`）
+- **HTML残数:** 直下HTML15件、すべて未移行。直下の移行済み原本は0件。
+- **アーカイブ:** CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
+- **次の作業:** 直下の未移行HTML15件から次の対象を指定して移行する。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3649,7 +3653,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 検証: 2026-11-08に `scripts/migrate-ccie-sp.mjs` 修正後のCCIE SP関連テストを実行（`bunx vitest run __tests__/cisco` 30ファイル・337件すべて成功）。npm・Playwright E2E・実ページのブラウザー検証は未実行。
 
-次の作業: `Ccnp-collaboration-guide.html` など直下の未移行HTML16件から次の対象を指定して移行する（`/cisco/ccie/service-provider` と SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: 直下の未移行HTML15件から次の対象を指定して移行する（`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider`、SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

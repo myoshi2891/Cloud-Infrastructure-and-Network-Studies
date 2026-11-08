@@ -1,5 +1,11 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-08: CCNP Collaboration 完全ガイド
+
+`app/cisco/ccnp-collaboration/` に Server `page.tsx`、Client `CcnpCollaborationGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, PartF, Appendix）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全6パート+序章・付録、178表（th437・td1810）・83図・21コード例（全行 `.code-line` ラップ）・266リスト項目・107外部リンク出現・41目次を原本から完全移行。リストの点（金色ドット）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全83図のアクセシビリティ代替テキスト（`aria-label` / `aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`.ccnp-collab-page`）へ統合。`bun scripts/migrate-ccnp-collaboration.mjs all` で固定原本から再生成できる。
+
+原本HTML/Markdownは `archive/Cisco/html/ccnp-collaboration/` と `archive/Cisco/md/ccnp-collaboration/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json` に記録。直下の未移行HTML残数は15件。
+
 ## 2026-11-08: CCIE Service Provider 完全ガイド
 
 `app/cisco/ccie/service-provider/` に Server `page.tsx`、Client `CcieSpGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, CoreRouting, ArchitecturesServices, AccessConnectivity, HighAvailability, Security, AssuranceAutomation, Appendix）、定数 `constants.ts`、原本テーマJSON `mermaid-theme.json`、全派生色JSON `render-theme.json`、スコープCSS `page.css` を追加。全6ドメイン・125表（th310・td1485）・47図・43コード例・124リスト（本文74・目次50）・254外部リンク出現・50目次を原本から完全移行。リストの点・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造（`pre.code.code-block > .code-line`）・構文トークン、図カードの装飾（`.mermaid-wrap`）と全派生色（269変数）、全47図のアクセシビリティ代替テキスト（`aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`.ccie-sp-page`）へ統合。`bun scripts/migrate-ccie-sp.mjs all` で固定Git原本から再生成できる。
