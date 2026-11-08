@@ -52,101 +52,10 @@ function tableLabel(tableNode) {
     return `${label}（表 ${allTables.indexOf(tableNode) + 1}）`;
 }
 
-const IOS_KEYWORDS = new Set(
-    'dial-peer voice voip pots class-map policy-map service-policy match-all match-any match priority bandwidth fair-queue shape interface session destination-pattern incoming called-number answer-address codec preference translation-rule translation-profile translate rule voice-class dtmf-relay rtp-nte sip-kpml sip-notify crypto pki trustpoint enrollment revocation-check signaling default transport srtp fallback bind control media source-interface registrar server credentials tenant sip sip-ua mode border-element allow-connections request response modify show debug test trace summary call-id register global pool dn number username password id type max-dn max-pool create profile srst cme vrf definition ip route router ospf bgp eigrp spanning-tree ntp monitor flow record nbar access-list permit deny event manager applet action'.split(' '),
-);
-const IOS_LITERALS = new Set(
-    'no tcp tls ef af41 cs3 dscp output input ipv4 ipv6 sipv2 vad both source destination any eq'.split(' '),
-);
-
-function tokensIos(line) {
-    if (!line) return '{""}';
-    if (/^\s*!.*$/.test(line)) {
-        return `<span className="hljs-comment">{${JSON.stringify(line)}}</span>`;
-    }
-    const regex = /"(?:\\.|[^"\\])*"|\b\d{1,3}(?:\.\d{1,3}){3}\b|\b\d+\b|[\w-]+/g;
-    let out = '';
-    let end = 0;
-    for (const m of line.matchAll(regex)) {
-        if (m.index > end) {
-            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-        }
-        const text = m[0];
-        if (text.startsWith('"')) {
-            out += `<span className="hljs-string">{${JSON.stringify(text)}}</span>`;
-        } else if (/^\d/.test(text)) {
-            out += `<span className="hljs-number">{${JSON.stringify(text)}}</span>`;
-        } else if (IOS_KEYWORDS.has(text)) {
-            out += `<span className="hljs-keyword">{${JSON.stringify(text)}}</span>`;
-        } else if (IOS_LITERALS.has(text)) {
-            out += `<span className="hljs-literal">{${JSON.stringify(text)}}</span>`;
-        } else {
-            out += '{' + JSON.stringify(text) + '}';
-        }
-        end = m.index + text.length;
-    }
-    if (end < line.length) {
-        out += '{' + JSON.stringify(line.slice(end)) + '}';
-    }
-    return out || '{""}';
-}
-
-function tokensPython(line) {
-    if (!line) return '{""}';
-    const regex = /#.*$|f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*'|\b(?:import|from|def|class|return|if|else|elif|try|except|with|as|for|in|while|pass|raise|True|False|None|and|or|not)\b|\b(?:print|len|str|int|dict|list)\b|\b(?:\d+)\b/g;
-    let out = '';
-    let end = 0;
-    for (const m of line.matchAll(regex)) {
-        if (m.index > end) {
-            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-        }
-        const text = m[0];
-        let cls = 'keyword';
-        if (text.startsWith('#')) {
-            cls = 'comment';
-        } else if (text.startsWith('"') || text.startsWith("'") || text.startsWith('f"') || text.startsWith("f'")) {
-            cls = 'string';
-        } else if (/^\d+$/.test(text)) {
-            cls = 'number';
-        } else if (['True', 'False', 'None'].includes(text)) {
-            cls = 'literal';
-        } else if (['print', 'len', 'str', 'int', 'dict', 'list'].includes(text)) {
-            cls = 'built_in';
-        }
-        out += `<span className="hljs-${cls}">{${JSON.stringify(text)}}</span>`;
-        end = m.index + text.length;
-    }
-    if (end < line.length) {
-        out += '{' + JSON.stringify(line.slice(end)) + '}';
-    }
-    return out || '{""}';
-}
-
-function tokensJson(line) {
-    if (!line) return '{""}';
-    const regex = /"(?:\\.|[^"\\])*"(?:\s*:)?|\b(?:true|false|null)\b|-?\d+(?:\.\d+)?/g;
-    let out = '';
-    let end = 0;
-    for (const m of line.matchAll(regex)) {
-        if (m.index > end) {
-            out += '{' + JSON.stringify(line.slice(end, m.index)) + '}';
-        }
-        const text = m[0];
-        if (text.endsWith(':')) {
-            out += `<span className="hljs-keyword">{${JSON.stringify(text)}}</span>`;
-        } else if (text.startsWith('"')) {
-            out += `<span className="hljs-string">{${JSON.stringify(text)}}</span>`;
-        } else if (['true', 'false', 'null'].includes(text)) {
-            out += `<span className="hljs-literal">{${JSON.stringify(text)}}</span>`;
-        } else {
-            out += `<span className="hljs-number">{${JSON.stringify(text)}}</span>`;
-        }
-        end = m.index + text.length;
-    }
-    if (end < line.length) {
-        out += '{' + JSON.stringify(line.slice(end)) + '}';
-    }
-    return out || '{""}';
+function plainCodeLineToJsx(lineHtml) {
+    if (!lineHtml) return '{""}';
+    const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
+    return [...frag.childNodes].map(nodeToJsx).join('') || '{""}';
 }
 
 function nodeToJsx(node) {
@@ -172,8 +81,9 @@ function nodeToJsx(node) {
 
     // Code Block (pre)
     if (node.tagName === 'PRE') {
-        const rawText = node.textContent || '';
-        const lines = rawText.split('\n');
+        const codeNode = node.querySelector('code') || node;
+        const rawHtml = codeNode.innerHTML || '';
+        const lines = rawHtml.split(/\r?\n/);
         // 末尾の空行を除去
         if (lines.length > 0 && lines[lines.length - 1] === '') {
             lines.pop();
@@ -184,16 +94,7 @@ function nodeToJsx(node) {
         }
         const labelText = prev?.textContent?.replace(/\s+/g, ' ').trim() || 'コマンド例';
 
-        const isPython = rawText.includes('import ') || rawText.includes('from ') || rawText.includes('def ');
-        const isJson = rawText.trim().startsWith('{') || rawText.trim().startsWith('[');
-
-        const renderLine = (line) => {
-            if (isPython) return tokensPython(line);
-            if (isJson) return tokensJson(line);
-            return tokensIos(line);
-        };
-
-        const linesJsx = lines.map((line) => `<div className="code-line">${renderLine(line)}</div>`).join('');
+        const linesJsx = lines.map((lineHtml) => `<div className="code-line">${plainCodeLineToJsx(lineHtml)}</div>`).join('');
         return (
             `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
             linesJsx +

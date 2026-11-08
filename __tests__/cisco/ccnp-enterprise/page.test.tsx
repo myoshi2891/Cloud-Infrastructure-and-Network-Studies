@@ -28,7 +28,7 @@ describe('CCNP Enterprise ガイド — リスト・スタイリング・図解�
 
     it('スコープCSSにサイドバーブランドロゴ48px、アコーディオン目次、Heroメタグリッド、金色ドットリスト、Tabler Icons、図解カード透過、コールアウト、コードブロック、参照ソースカードがすべて定義されている', () => {
         const css = readFileSync('app/cisco/ccnp-enterprise/page.css', 'utf8');
-        const squashed = css.replace(/\s+/g, '');
+        const squashed = css.replace(/\s+/g, '').replace(/;\}/g, '}');
 
         expect(css).toContain('@import');
         expect(css).toContain('@tabler/icons-webfont/tabler-icons.min.css');

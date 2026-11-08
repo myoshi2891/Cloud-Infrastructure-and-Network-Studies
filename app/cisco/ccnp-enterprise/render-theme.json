@@ -42,5 +42,17 @@
     "pieTitleTextColor": "#161B26",
     "pieLegendTextColor": "#161B26",
     "pieOpacity": "1"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "nodeSpacing": 40,
+    "rankSpacing": 45
+  },
+  "sequence": {
+    "useMaxWidth": false
+  },
+  "pie": {
+    "useMaxWidth": false
   }
 }
