@@ -73,7 +73,7 @@ describe('Task63 Section (Part C: Task 6.3 リソースのコンプライアン�
             expect(block).toHaveAttribute('tabIndex', '0');
             expect(block.getAttribute('aria-label')).toContain('コード例');
             const lines = block.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+            expect(lines).toHaveLength(part.codes[i]!.length);
         });
     });
 });
