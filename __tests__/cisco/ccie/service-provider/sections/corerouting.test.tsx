@@ -3,6 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import CoreRouting from '@/app/cisco/ccie/service-provider/sections/CoreRouting';
+import { defineCcieSpSectionSuite } from '@/__tests__/helpers/ccie-sp-section-suite';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -10,19 +11,18 @@ vi.mock('@/components/MermaidDiagram', async () => {
 });
 
 describe('CCIE Service Provider — CoreRouting セクション', () => {
-    it('H2 見出しと 6 個の H3 見出しが正しく描画される', () => {
+    it('コード例で隣接へ適用する route-policy はすべて同じセクション内で定義されている', () => {
+        // Arrange
         const { container } = render(<CoreRouting />);
-        const h2 = container.querySelector('h2');
-        expect(h2?.textContent?.trim()).toBe('4. Core Routing（25%）');
+        const code = [...container.querySelectorAll('.code-line')].map((line) => line.textContent ?? '').join('\n');
 
-        const h3s = [...container.querySelectorAll('h3')].map(h => h.textContent?.trim());
-        expect(h3s.length).toBe(6);
-        expect(h3s[0]).toContain('4.1 IGP');
-        expect(h3s[1]).toContain('4.2 BGP');
-        expect(h3s[2]).toContain('4.3 Multicast');
-        expect(h3s[3]).toContain('4.4 MPLS と LDP');
-        expect(h3s[4]).toContain('4.5 MPLS Traffic Engineering');
-        expect(h3s[5]).toContain('4.6 Segment Routing');
+        // Act
+        const attached = [...code.matchAll(/^\s+route-policy (\S+) (?:in|out)$/gm)].map((match) => match[1]);
+        const defined = new Set([...code.matchAll(/^route-policy (\S+)$/gm)].map((match) => match[1]));
+
+        // Assert
+        expect(attached).toContain('PEER-OUT');
+        expect(attached.filter((name) => !defined.has(name))).toEqual([]);
     });
 
     it('全30個のテーブルが存在し、すべて thead と th[scope="col"] を持つ', () => {
@@ -44,7 +44,7 @@ describe('CCIE Service Provider — CoreRouting セクション', () => {
         expectedIds.forEach((id) => {
             const diag = container.querySelector(`#diag-${id}`);
             expect(diag).not.toBeNull();
-            expect(diag?.getAttribute('aria-label')?.trim()).toBeTruthy();
+            expect(diag?.querySelector('[role="img"]')?.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
     });
 
@@ -57,3 +57,5 @@ describe('CCIE Service Provider — CoreRouting セクション', () => {
         });
     });
 });
+
+defineCcieSpSectionSuite(CoreRouting);

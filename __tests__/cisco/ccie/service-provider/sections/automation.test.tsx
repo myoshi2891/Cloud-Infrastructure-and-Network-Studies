@@ -3,6 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import AssuranceAutomation from '@/app/cisco/ccie/service-provider/sections/AssuranceAutomation';
+import { defineCcieSpSectionSuite } from '@/__tests__/helpers/ccie-sp-section-suite';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -10,15 +11,10 @@ vi.mock('@/components/MermaidDiagram', async () => {
 });
 
 describe('CCIE Service Provider — AssuranceAutomation セクション', () => {
-    it('H2 見出しと 2 個の H3 見出しが正しく描画される', () => {
+    it('SNMP の限界の説明が MDT を解説する 9.2.4 節を参照する', () => {
         const { container } = render(<AssuranceAutomation />);
-        const h2 = container.querySelector('h2');
-        expect(h2?.textContent?.trim()).toBe('9. Assurance and Automation（20%）');
-
-        const h3s = [...container.querySelectorAll('h3')].map(h => h.textContent?.trim());
-        expect(h3s.length).toBe(2);
-        expect(h3s[0]).toContain('9.1 ネットワークアシュアランス');
-        expect(h3s[1]).toContain('9.2 ネットワーク自動化');
+        const paragraph = [...container.querySelectorAll('p')].find((element) => element.textContent?.includes('SNMP の限界'));
+        expect(paragraph?.textContent).toContain('（9.2.4 節）');
     });
 
     it('全13個のテーブルが存在し、すべて thead と th[scope="col"] を持つ', () => {
@@ -40,7 +36,7 @@ describe('CCIE Service Provider — AssuranceAutomation セクション', () => 
         expectedIds.forEach((id) => {
             const diag = container.querySelector(`#diag-${id}`);
             expect(diag).not.toBeNull();
-            expect(diag?.getAttribute('aria-label')?.trim()).toBeTruthy();
+            expect(diag?.querySelector('[role="img"]')?.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
     });
 
@@ -54,3 +50,4 @@ describe('CCIE Service Provider — AssuranceAutomation セクション', () => 
     });
 });
 
+defineCcieSpSectionSuite(AssuranceAutomation);

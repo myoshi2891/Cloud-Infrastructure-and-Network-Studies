@@ -3,6 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import ArchitecturesServices from '@/app/cisco/ccie/service-provider/sections/ArchitecturesServices';
+import { defineCcieSpSectionSuite } from '@/__tests__/helpers/ccie-sp-section-suite';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -10,21 +11,19 @@ vi.mock('@/components/MermaidDiagram', async () => {
 });
 
 describe('CCIE Service Provider — ArchitecturesServices セクション', () => {
-    it('H2 見出しと 8 個の H3 見出しが正しく描画される', () => {
+    it('共有サービス VRF の RT 設計は、顧客ごとの戻り経路用 RT を共有 VRF だけが import する', () => {
+        // Arrange
         const { container } = render(<ArchitecturesServices />);
-        const h2 = container.querySelector('h2');
-        expect(h2?.textContent?.trim()).toBe('5. Architectures and Services（25%）');
+        const row = [...container.querySelectorAll('tr')].find((tr) => tr.textContent?.includes('共有サービス VRF'));
 
-        const h3s = [...container.querySelectorAll('h3')].map(h => h.textContent?.trim());
-        expect(h3s.length).toBe(8);
-        expect(h3s[0]).toContain('5.1 モバイルインフラ');
-        expect(h3s[1]).toContain('5.2 光アーキテクチャ');
-        expect(h3s[2]).toContain('5.3 大規模 MPLS');
-        expect(h3s[3]).toContain('5.4 Carrier Ethernet');
-        expect(h3s[4]).toContain('5.5 L3VPN');
-        expect(h3s[5]).toContain('5.6 インターネットサービス');
-        expect(h3s[6]).toContain('5.7 マルチキャスト VPN');
-        expect(h3s[7]).toContain('5.8 QoS');
+        // Act
+        const guidance = (row?.querySelectorAll('td')[1]?.textContent ?? '').replace(/\s+/g, ' ');
+
+        // Assert: 顧客 VRF が共有サービス用 RT を export すると、その経路が他顧客の import に一致してしまう
+        expect(guidance).toContain('共有サービス専用 RT を全顧客 VRF に import');
+        expect(guidance).toContain('各顧客 VRF は顧客ごとに異なる戻り経路用の RT を export');
+        expect(guidance).toContain('共有 VRF だけがそれらを import');
+        expect(guidance).not.toContain('共有 VRF の RT のみを export');
     });
 
     it('全33個のテーブルが存在し、すべて thead と th[scope="col"] を持つ', () => {
@@ -46,7 +45,7 @@ describe('CCIE Service Provider — ArchitecturesServices セクション', () =
         expectedIds.forEach((id) => {
             const diag = container.querySelector(`#diag-${id}`);
             expect(diag).not.toBeNull();
-            expect(diag?.getAttribute('aria-label')?.trim()).toBeTruthy();
+            expect(diag?.querySelector('[role="img"]')?.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
     });
 
@@ -60,3 +59,4 @@ describe('CCIE Service Provider — ArchitecturesServices セクション', () =
     });
 });
 
+defineCcieSpSectionSuite(ArchitecturesServices);

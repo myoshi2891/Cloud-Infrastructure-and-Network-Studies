@@ -5,42 +5,20 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render } from '@testing-library/react';
 import mermaid from 'mermaid';
-import inventory from '@/docs/migration-inventory/cisco-ccie-service-provider.json';
-import CcieSpGuide from '@/app/cisco/ccie/service-provider/CcieSpGuide';
+import CcieServiceProviderPage from '@/app/cisco/ccie/service-provider/page';
 import { DIAGRAMS, NAV_GROUPS } from '@/app/cisco/ccie/service-provider/constants';
+import { ccieSpInventory } from '@/__tests__/helpers/ccie-sp-inventory';
 import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 
-vi.mock('@/components/MermaidDiagram', () => ({
-    MermaidDiagram: ({
-        chart,
-        ariaLabel,
-        preserveNaturalScale = false,
-        deferUntilVisible = false,
-        theme,
-    }: {
-        chart: string;
-        ariaLabel?: string;
-        preserveNaturalScale?: boolean;
-        deferUntilVisible?: boolean;
-        theme?: string;
-    }) => (
-        <div
-            role="img"
-            aria-roledescription="diagram"
-            data-testid="mermaid-diagram"
-            data-chart={chart}
-            data-preserve-natural-scale={String(preserveNaturalScale)}
-            data-defer-until-visible={String(deferUntilVisible)}
-            data-theme={theme}
-            aria-label={ariaLabel}
-        />
-    ),
-}));
+vi.mock('@/components/MermaidDiagram', async () => {
+    const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
+    return { MermaidDiagram: MermaidDiagramMock };
+});
 
 defineMigrationSuite(
     'CCIE Service Provider 完全ガイド — 全量移行検証',
-    CcieSpGuide,
-    inventory,
+    CcieServiceProviderPage,
+    ccieSpInventory,
 );
 
 describe('CCIE Service Provider ガイド — リスト・スタイリング・図解・コード検証', () => {
@@ -64,7 +42,7 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
         expect(css).not.toMatch(/margin-left:\s*288px/);
         // デスクトップ .sidebar に top: 0 が残っていないこと
         const sidebarRules = [...css.matchAll(/\.ccie-sp-page\s+\.sidebar\s*\{([^}]*)\}/g)].map((m) => m[1] ?? '');
-        expect(sidebarRules.length).toBeGreaterThan(0);
+        expect(sidebarRules.length).toBe(2);
         for (const body of sidebarRules) {
             expect(body).not.toMatch(/\btop:\s*0\s*;/);
             expect(body).not.toMatch(/\bposition:\s*static\s*;/);
@@ -75,17 +53,18 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
     });
 
     it('コードブロックに IOS XR / Python / YAML の構文ハイライトトークン（.hljs-*）が適用されている', () => {
-        const { container } = render(<CcieSpGuide />);
-        expect(container.querySelectorAll('.code-block .hljs-keyword').length).toBeGreaterThan(100);
-        expect(container.querySelectorAll('.code-block .hljs-built_in').length).toBeGreaterThan(20);
-        expect(container.querySelectorAll('.code-block .hljs-number').length).toBeGreaterThan(50);
-        expect(container.querySelectorAll('.code-block .hljs-comment').length).toBeGreaterThan(10);
-        expect(container.querySelectorAll('.code-block .hljs-meta').length).toBeGreaterThan(3);
-        expect(container.querySelectorAll('.code-block .hljs-string').length).toBeGreaterThan(5);
+        const { container } = render(<CcieServiceProviderPage />);
+        // PEER-OUT 定義の訂正で keyword +9・number +1・comment +2 を含む
+        expect(container.querySelectorAll('.code-block .hljs-keyword').length).toBe(440);
+        expect(container.querySelectorAll('.code-block .hljs-built_in').length).toBe(33);
+        expect(container.querySelectorAll('.code-block .hljs-number').length).toBe(178);
+        expect(container.querySelectorAll('.code-block .hljs-comment').length).toBe(180);
+        expect(container.querySelectorAll('.code-block .hljs-meta').length).toBe(7);
+        expect(container.querySelectorAll('.code-block .hljs-string').length).toBe(11);
     });
 
     it('サイドバー目次リンクをクリックすると active クラス・aria-current="location"・親 li.open が付与されサブ階層が展開される', () => {
-        const { container } = render(<CcieSpGuide />);
+        const { container } = render(<CcieServiceProviderPage />);
         const subLink = container.querySelector('#sidebar nav a[href="#s4-1"]') as HTMLAnchorElement;
         expect(subLink).not.toBeNull();
         fireEvent.click(subLink);
@@ -98,6 +77,10 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
 
     it('ページCSSはローカルのカスタムプロパティを定義せず、構文ハイライト以外に生の hex を残さない', () => {
         const css = readFileSync(resolve('app/cisco/ccie/service-provider/page.css'), 'utf8');
+        // 非推奨の word-break: break-word を使わず、インライン code の折り返しは overflow-wrap で行う
+        expect(css).not.toMatch(/word-break:\s*break-word/);
+        expect(css).toMatch(/\.ccie-sp-page code \{[^}]*overflow-wrap:\s*anywhere/);
+        expect(css).toMatch(/\.ccie-sp-page pre code\.hljs \{[^}]*overflow-wrap:\s*normal/);
         expect(css.match(/^\s*--[A-Za-z0-9_-]+\s*:/gm)).toBeNull();
         // 構文ハイライト等のルールを除外して生 hex を検出する
         const nonHighlightRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
@@ -111,7 +94,7 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
         const css = readFileSync(resolve('app/cisco/ccie/service-provider/page.css'), 'utf8');
         const globals = readFileSync(resolve('app/globals.css'), 'utf8');
         const referenced = [...new Set([...css.matchAll(/var\((--(?:color|font)-ccie-sp-[\w-]+)\)/g)].map((m) => m[1]))];
-        expect(referenced.length).toBeGreaterThan(0);
+        expect(referenced.length).toBe(20);
         const missing = referenced.filter((name) => !new RegExp(`^\\s*${name}\\s*:`, 'm').test(globals));
         expect(missing).toEqual([]);
     });
@@ -125,7 +108,7 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
     });
 
     it('サイドバーの nav ランドマークに読み上げ名があり、目次は NAV_GROUPS と同じ順序・文言で描画される', () => {
-        const { container } = render(<CcieSpGuide />);
+        const { container } = render(<CcieServiceProviderPage />);
         const nav = container.querySelector('#sidebar nav');
         expect(nav?.getAttribute('aria-label')?.trim()).toBeTruthy();
 
@@ -144,14 +127,16 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
 
     it('全47図の Mermaid DSL が構文解析をパスする', async () => {
         mermaid.initialize({ startOnLoad: false });
-        for (const [id, chart] of Object.entries(DIAGRAMS)) {
+        const charts = Object.values(DIAGRAMS);
+        expect(charts).toHaveLength(ccieSpInventory.counts.diagram);
+        for (const chart of charts) {
             const result = await mermaid.parse(chart);
             expect(result).toBeTruthy();
         }
     });
 
     it('全47図が遅延描画、自然スケール、アクセシビリティラベルを指定している', () => {
-        const { container } = render(<CcieSpGuide />);
+        const { container } = render(<CcieServiceProviderPage />);
         const diagrams = container.querySelectorAll('.mm > [data-testid="mermaid-diagram"]');
         expect(diagrams.length).toBe(47);
         diagrams.forEach((diag) => {
@@ -160,10 +145,33 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
             expect(diag.getAttribute('data-theme')).toBe('light');
             expect(diag.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
+        // role を持たない外側ラッパーには読み上げ名を付けない（内側の region と img が名前を持つ）
+        expect(container.querySelectorAll('.diagram[aria-label]')).toHaveLength(0);
+    });
+
+    it('全125表が見出し由来の固有の読み上げ名を持つ', () => {
+        const { container } = render(<CcieServiceProviderPage />);
+        const labels = [...container.querySelectorAll('table')].map((table) => table.getAttribute('aria-label') ?? '');
+        expect(labels).toHaveLength(ccieSpInventory.counts.table);
+        expect(new Set(labels).size).toBe(labels.length);
+        expect(labels.filter((label) => label.startsWith('比較・仕様表'))).toEqual([]);
+    });
+
+    it('目次の文言に原本 HTML の整形改行・連続空白を残さない', () => {
+        const titles = NAV_GROUPS.flatMap((group) => [group.title, ...group.items.map((item) => item.title)]);
+        expect(titles.filter((title) => /\n|\s{2,}/.test(title) || title !== title.trim())).toEqual([]);
+    });
+
+    it('本文セクションをクライアント境界の外（Server の page.tsx）で組み立てる', () => {
+        const guide = readFileSync(resolve('app/cisco/ccie/service-provider/CcieSpGuide.tsx'), 'utf8');
+        const page = readFileSync(resolve('app/cisco/ccie/service-provider/page.tsx'), 'utf8');
+        expect(guide).not.toContain('./sections/');
+        expect(page).not.toContain('use client');
+        expect(page.match(/from '\.\/sections\//g)).toHaveLength(8);
     });
 
     it('開いた目次を Escape で閉じ、フォーカスを開閉ボタンへ戻す', () => {
-        const { container } = render(<CcieSpGuide />);
+        const { container } = render(<CcieServiceProviderPage />);
         const btn = container.querySelector('#menuBtn') as HTMLButtonElement;
         expect(btn).not.toBeNull();
 
@@ -174,5 +182,24 @@ describe('CCIE Service Provider ガイド — リスト・スタイリング・�
         // Escape キーで閉じる
         fireEvent.keyDown(document, { key: 'Escape' });
         expect(container.querySelector('.ccie-sp-page')?.classList.contains('nav-open')).toBe(false);
+        expect(document.activeElement).toBe(btn);
+    });
+});
+
+describe('CCIE Service Provider ガイド — Mermaid 描画テーマ', () => {
+    it('render-theme.json は算出不能な NaN 色を含まず、quadrantPointFill は線色を使う', () => {
+        // Arrange
+        const raw = readFileSync(resolve('app/cisco/ccie/service-provider/render-theme.json'), 'utf8');
+        const theme: unknown = JSON.parse(raw);
+
+        // Act
+        const variables =
+            typeof theme === 'object' && theme !== null && 'themeVariables' in theme
+                ? (theme.themeVariables as Record<string, unknown>)
+                : {};
+
+        // Assert
+        expect(raw).not.toContain('NaN');
+        expect(variables.quadrantPointFill).toBe(variables.lineColor);
     });
 });

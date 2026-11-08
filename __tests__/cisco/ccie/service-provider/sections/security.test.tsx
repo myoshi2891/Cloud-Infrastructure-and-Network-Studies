@@ -3,6 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import Security from '@/app/cisco/ccie/service-provider/sections/Security';
+import { defineCcieSpSectionSuite } from '@/__tests__/helpers/ccie-sp-section-suite';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -10,18 +11,6 @@ vi.mock('@/components/MermaidDiagram', async () => {
 });
 
 describe('CCIE Service Provider — Security セクション', () => {
-    it('H2 見出しと 3 個の H3 見出しが正しく描画される', () => {
-        const { container } = render(<Security />);
-        const h2 = container.querySelector('h2');
-        expect(h2?.textContent?.trim()).toBe('8. Security（10%）');
-
-        const h3s = [...container.querySelectorAll('h3')].map(h => h.textContent?.trim());
-        expect(h3s.length).toBe(3);
-        expect(h3s[0]).toContain('8.1 コントロールプレーン');
-        expect(h3s[1]).toContain('8.2 管理プレーン');
-        expect(h3s[2]).toContain('8.3 インフラストラクチャ');
-    });
-
     it('全12個のテーブルが存在し、すべて thead と th[scope="col"] を持つ', () => {
         const { container } = render(<Security />);
         const tables = container.querySelectorAll('table');
@@ -41,8 +30,19 @@ describe('CCIE Service Provider — Security セクション', () => {
         expectedIds.forEach((id) => {
             const diag = container.querySelector(`#diag-${id}`);
             expect(diag).not.toBeNull();
-            expect(diag?.getAttribute('aria-label')?.trim()).toBeTruthy();
+            expect(diag?.querySelector('[role="img"]')?.getAttribute('aria-label')?.trim()).toBeTruthy();
         });
+    });
+
+    it('RPKI-IN ポリシーを隣接の IPv4 unicast へ入力方向で適用する', () => {
+        const { container } = render(<Security />);
+        const block = [...container.querySelectorAll('.code-block')].find((element) =>
+            element.textContent?.includes('origin-as validation enable'),
+        );
+        const lines = [...(block?.querySelectorAll('.code-line') ?? [])].map((line) => line.textContent ?? '');
+        const validation = lines.indexOf('   origin-as validation enable');
+        expect(validation).toBeGreaterThan(-1);
+        expect(lines[validation + 1]).toBe('   route-policy RPKI-IN in');
     });
 
     it('全7個のコードブロックが存在し、それぞれ .code-line を持つ', () => {
@@ -55,3 +55,4 @@ describe('CCIE Service Provider — Security セクション', () => {
     });
 });
 
+defineCcieSpSectionSuite(Security);
