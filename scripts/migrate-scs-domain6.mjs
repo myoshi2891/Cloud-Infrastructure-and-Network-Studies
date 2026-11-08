@@ -7,6 +7,7 @@ import postcss from 'postcss';
 import ts from 'typescript';
 import fixture from '../docs/migration-inventory/aws-scs-c03-domain6-guide.fidelity.json' with { type: 'json' };
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
+import { collectSectionNodes } from './collect-section-nodes.mjs';
 import { normalizeCodeContainers } from './inventory-extraction.mjs';
 
 const dir = 'app/aws/security-specialty/domain6';
@@ -160,6 +161,10 @@ import { Children, isValidElement, useState, type ReactNode } from "react";
 
 type ContentElement = { children?: ReactNode };
 
+/**
+ * 原本の設問（先頭要素）と選択肢リスト（2番目の要素）を受け取り、選択肢をボタンとして即時採点する確認問題。
+ * 正解が1つなら単一選択、複数なら選択を切り替えて正解集合との完全一致で判定し、結果を読み上げ可能なステータスへ表示する。
+ */
 export default function QuizQuestion({ number, correctAnswers, children }: {
     number: number;
     correctAnswers: number[];
@@ -269,7 +274,10 @@ export const NAV_ITEMS = ${JSON.stringify(navItems, null, 4)} as const;
                 ...theme,
                 themeVariables: {
                     ...Object.fromEntries(
-                        Object.entries(vars).map(([k, v]) => [k, typeof v === 'string' && isValid(v) ? toHex(v) : v]),
+                        Object.entries(vars)
+                            // 算出不能な派生色（NaN を含む hsl）は不正な CSS になるため出力しない
+                            .filter(([, v]) => !(typeof v === 'string' && v.includes('NaN')))
+                            .map(([k, v]) => [k, typeof v === 'string' && isValid(v) ? toHex(v) : v]),
                     ),
                     fontFamily: '"Noto Sans JP Variable",sans-serif',
                 },
@@ -353,14 +361,14 @@ export default function NavBar() {
 
     useEffect(() => {
         if (!open) return;
-        const escape = (event: KeyboardEvent) => {
+        const closeOnEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
                 toggleRef.current?.focus();
             }
         };
-        document.addEventListener('keydown', escape);
-        return () => document.removeEventListener('keydown', escape);
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
     }, [open]);
 
     useEffect(() => {
@@ -514,6 +522,7 @@ export default function NavBar() {
             });
         }
         if (d.prop === 'word-break') {
+            d.parent?.walkDecls('overflow-wrap', (duplicate) => duplicate.remove());
             d.prop = 'overflow-wrap';
             d.value = 'anywhere';
         }
@@ -553,27 +562,6 @@ export default function NavBar() {
 ${scope} {
     overflow-x: clip;
     color-scheme: light;
-}
-
-${scope} {
-    --bg: var(--color-scs-d6-bg);
-    --bg-card: var(--color-scs-d6-bg-card);
-    --bg-card-2: var(--color-scs-d6-bg-card-2);
-    --border: var(--color-scs-d6-border);
-    --border-soft: var(--color-scs-d6-border-soft);
-    --text: var(--color-scs-d6-text);
-    --text-dim: var(--color-scs-d6-text-dim);
-    --text-faint: var(--color-scs-d6-text-faint);
-    --accent: var(--color-scs-d6-accent);
-    --accent-soft: var(--color-scs-d6-accent-soft);
-    --accent-bg: var(--color-scs-d6-accent-bg);
-    --danger: var(--color-scs-d6-danger);
-    --danger-bg: var(--color-scs-d6-danger-bg);
-    --warn: var(--color-scs-d6-warn);
-    --warn-bg: var(--color-scs-d6-warn-bg);
-    --success: var(--color-scs-d6-success);
-    --success-bg: var(--color-scs-d6-success-bg);
-    --sidebar-w: 280px;
 }
 
 ${scope} .main ul {
@@ -896,21 +884,7 @@ export function generateSection(partKey, componentName) {
     if (idx === -1) throw new Error(`Unknown partKey: ${partKey}`);
     const startId = boundaryEntries[idx][1];
     const nextId = boundaryEntries[idx + 1]?.[1];
-
-    let startNode = null;
-    if (startId === '') {
-        startNode = doc.querySelector('.main > :first-child');
-    } else {
-        startNode = doc.getElementById(startId);
-    }
-
-    const nodes = [];
-    let curr = startNode;
-    while (curr) {
-        if (nextId && curr.id === nextId) break;
-        nodes.push(curr);
-        curr = curr.nextElementSibling;
-    }
+    const nodes = collectSectionNodes(doc, startId, nextId);
 
     let innerJsx = nodes.map(jsx).join('\n');
     innerJsx = innerJsx.replace(/<div className="table-scroll"[^>]*>(\s*)<div className="table-scroll"/g, '<div className="table-scroll"$1<div');
@@ -939,7 +913,14 @@ export default function ${componentName}() {
 `;
 
     // TypeScript 構文チェック
-    ts.transpileModule(code, { compilerOptions: { jsx: ts.JsxEmit.ReactJSX } });
+    const { diagnostics = [] } = ts.transpileModule(code, {
+        reportDiagnostics: true,
+        compilerOptions: { jsx: ts.JsxEmit.ReactJSX },
+    });
+    if (diagnostics.length > 0) {
+        const messages = diagnostics.map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n')).join('\n');
+        throw new Error(`${componentName} の生成 JSX に構文エラーがあります:\n${messages}`);
+    }
 
     fs.writeFileSync(`${dir}/sections/${componentName}.tsx`, code);
     console.log(`generated ${dir}/sections/${componentName}.tsx (${nodes.length} root elements)`);

@@ -386,7 +386,6 @@
                 font-size: 0.9em;
                 font-family: var(--font-mono);
                 color: var(--color-scs-d6-code-inline);
-                overflow-wrap: break-word;
                 overflow-wrap: anywhere;
             }
 
@@ -510,27 +509,6 @@
 .scs-domain6-page {
     overflow-x: clip;
     color-scheme: light;
-}
-
-.scs-domain6-page {
-    --bg: var(--color-scs-d6-bg);
-    --bg-card: var(--color-scs-d6-bg-card);
-    --bg-card-2: var(--color-scs-d6-bg-card-2);
-    --border: var(--color-scs-d6-border);
-    --border-soft: var(--color-scs-d6-border-soft);
-    --text: var(--color-scs-d6-text);
-    --text-dim: var(--color-scs-d6-text-dim);
-    --text-faint: var(--color-scs-d6-text-faint);
-    --accent: var(--color-scs-d6-accent);
-    --accent-soft: var(--color-scs-d6-accent-soft);
-    --accent-bg: var(--color-scs-d6-accent-bg);
-    --danger: var(--color-scs-d6-danger);
-    --danger-bg: var(--color-scs-d6-danger-bg);
-    --warn: var(--color-scs-d6-warn);
-    --warn-bg: var(--color-scs-d6-warn-bg);
-    --success: var(--color-scs-d6-success);
-    --success-bg: var(--color-scs-d6-success-bg);
-    --sidebar-w: 280px;
 }
 
 .scs-domain6-page .main ul {

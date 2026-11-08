@@ -64,7 +64,14 @@ describe('SCS Domain 6 再生成の整合性', () => {
             useGradient: true,
         });
         expect(JSON.stringify(renderTheme)).not.toContain('#undefined');
+        expect(JSON.stringify(renderTheme)).not.toContain('NaN');
         expect(script).toContain("typeof v === 'string' && isValid(v) ? toHex(v) : v");
+    });
+
+    it('生成 JSX の構文エラーを書き出し前に失敗として扱う', () => {
+        const check = script.indexOf('reportDiagnostics: true');
+        expect(check).toBeGreaterThan(-1);
+        expect(check).toBeLessThan(script.indexOf('fs.writeFileSync(`${dir}/sections/${componentName}.tsx`, code);'));
     });
 
     it('Page コンポーネントを Server Component に保つ', () => {

@@ -46,7 +46,7 @@ describe('SCS Domain 6 図のテキスト代替', () => {
         expect(new Set(texts).size).toBe(19);
     });
 
-    it('各図が自然倍率と遅延描画を指定されている', () => {
+    it('各図が MermaidDiagram へ自然倍率と遅延描画の props を渡している（モック経由で検証）', () => {
         const { container } = render(<Page />);
         const diagrams = [...container.querySelectorAll('[data-testid="mermaid-diagram"]')];
         expect(diagrams).toHaveLength(19);

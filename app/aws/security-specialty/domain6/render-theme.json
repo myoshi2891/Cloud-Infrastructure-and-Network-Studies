@@ -245,7 +245,6 @@
         "quadrant2TextFill": "#16223b",
         "quadrant3TextFill": "#111d36",
         "quadrant4TextFill": "#0c1831",
-        "quadrantPointFill": "hsl(222.8571428571, 77.7777777778%, NaN%)",
         "quadrantPointTextFill": "#1b2740",
         "quadrantXAxisTextFill": "#1b2740",
         "quadrantYAxisTextFill": "#1b2740",

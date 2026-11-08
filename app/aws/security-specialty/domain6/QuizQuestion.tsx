@@ -4,6 +4,10 @@ import { Children, isValidElement, useState, type ReactNode } from "react";
 
 type ContentElement = { children?: ReactNode };
 
+/**
+ * 原本の設問（先頭要素）と選択肢リスト（2番目の要素）を受け取り、選択肢をボタンとして即時採点する確認問題。
+ * 正解が1つなら単一選択、複数なら選択を切り替えて正解集合との完全一致で判定し、結果を読み上げ可能なステータスへ表示する。
+ */
 export default function QuizQuestion({ number, correctAnswers, children }: {
     number: number;
     correctAnswers: number[];

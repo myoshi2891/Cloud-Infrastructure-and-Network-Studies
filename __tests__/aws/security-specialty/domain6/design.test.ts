@@ -107,37 +107,23 @@ describe('SCS-C03 Domain 6 — スタイル・デザイン完全移行', () => {
         }
     });
 
-    it('binds page variables to @theme tokens and preserves every resolved color', () => {
-        const expectedTokens: Record<string, string> = {
-            '--bg': '--color-scs-d6-bg',
-            '--bg-card': '--color-scs-d6-bg-card',
-            '--bg-card-2': '--color-scs-d6-bg-card-2',
-            '--border': '--color-scs-d6-border',
-            '--border-soft': '--color-scs-d6-border-soft',
-            '--text': '--color-scs-d6-text',
-            '--text-dim': '--color-scs-d6-text-dim',
-            '--text-faint': '--color-scs-d6-text-faint',
-            '--accent': '--color-scs-d6-accent',
-            '--accent-soft': '--color-scs-d6-accent-soft',
-            '--accent-bg': '--color-scs-d6-accent-bg',
-            '--danger': '--color-scs-d6-danger',
-            '--danger-bg': '--color-scs-d6-danger-bg',
-            '--warn': '--color-scs-d6-warn',
-            '--warn-bg': '--color-scs-d6-warn-bg',
-            '--success': '--color-scs-d6-success',
-            '--success-bg': '--color-scs-d6-success-bg',
-        };
-        const pageRules = rules(css, '.scs-domain6-page');
-        for (const [v, expectedToken] of Object.entries(expectedTokens)) {
-            expect(pageRules[v], `${v} should reference ${expectedToken}`).toBe(`var(${expectedToken})`);
-            expect(themeTokens[expectedToken], `${expectedToken} must be declared in root @theme`).toBe(source[v]);
-            expect(resolve(pageRules[v]!, pageVariables)).toBe(resolve(source[v]!, source));
+    it('does not define local custom properties in page CSS and resolves colors through @theme tokens', () => {
+        expect(css.match(/^\s*--[\w-]+\s*:/gm)).toBeNull();
+        for (const [variable, value] of Object.entries(source)) {
+            if (!value.startsWith('#')) continue;
+            const token = `--color-scs-d6-${variable.replace(/^--/, '')}`;
+            expect(resolve(`var(${token})`, themeTokens), token).toBe(resolve(value, source));
         }
     });
 
     it('defines .scs-domain6-page in components/Footer.module.css light theme selector', () => {
-        const footerCss = readFileSync('components/Footer.module.css', 'utf8');
-        expect(footerCss).toContain('.scs-domain6-page');
+        const selectors: string[] = [];
+        postcss.parse(readFileSync('components/Footer.module.css', 'utf8')).walkRules((rule) => {
+            if (rule.selector.endsWith('~ .footer')) selectors.push(rule.selector);
+        });
+        expect(selectors).toHaveLength(1);
+        const roots = selectors[0]?.match(/:is\(([^)]*)\)/)?.[1]?.split(',').map((root) => root.trim());
+        expect(roots).toContain('.scs-domain6-page');
     });
 
     it('uses theme tokens instead of raw hex colors outside syntax highlighting', () => {
@@ -148,6 +134,16 @@ describe('SCS-C03 Domain 6 — スタイル・デザイン完全移行', () => {
             if (/#[\da-f]{3,8}\b/i.test(d.value)) offenders.push(`${String((parent as postcss.Rule).selector)} ${d.prop}: ${d.value}`);
         });
         expect(offenders).toEqual([]);
+    });
+
+    it('keeps a single overflow-wrap declaration for inline code', () => {
+        let declarations = 0;
+        postcss.parse(css).walkRules('.scs-domain6-page .main code:not(pre code)', (rule) => {
+            rule.walkDecls('overflow-wrap', () => {
+                declarations += 1;
+            });
+        });
+        expect(declarations).toBe(1);
     });
 
     it('highlights the NavBar aria-current link like the source .active link', () => {

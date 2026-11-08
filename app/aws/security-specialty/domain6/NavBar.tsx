@@ -28,14 +28,14 @@ export default function NavBar() {
 
     useEffect(() => {
         if (!open) return;
-        const escape = (event: KeyboardEvent) => {
+        const closeOnEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
                 toggleRef.current?.focus();
             }
         };
-        document.addEventListener('keydown', escape);
-        return () => document.removeEventListener('keydown', escape);
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
     }, [open]);
 
     useEffect(() => {
