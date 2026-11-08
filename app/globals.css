@@ -308,6 +308,31 @@
     --color-ccnp-collab-source-text: #125551;
     --color-ccnp-collab-note-border: #E2C3D0;
     --color-ccnp-collab-note-text: #6E2A47;
+    /* CCNP Enterprise 完全ガイド（原本の配色をそのまま保持） */
+    --color-ccnp-enterprise-paper: #F6F7F9;
+    --color-ccnp-enterprise-ink: #161B26;
+    --color-ccnp-enterprise-ink-2: #4A5367;
+    --color-ccnp-enterprise-ink-3: #566074;
+    --color-ccnp-enterprise-indigo: #2E3F72;
+    --color-ccnp-enterprise-gold: #B8802A;
+    --color-ccnp-enterprise-gold-text: #7A5415;
+    --color-ccnp-enterprise-forest: #1B6E6A;
+    --color-ccnp-enterprise-plum: #8C3A5C;
+    --color-ccnp-enterprise-surface: #FFFFFF;
+    --color-ccnp-enterprise-line: #DDE1EA;
+    --color-ccnp-enterprise-line-2: #B9C0CF;
+    --color-ccnp-enterprise-card: #FFFFFF;
+    --color-ccnp-enterprise-on-indigo: #FFFFFF;
+    --color-ccnp-enterprise-row-alt: #FAFBFD;
+    --color-ccnp-enterprise-tint-indigo: #EEF1F8;
+    --color-ccnp-enterprise-tint-gold: #FAF1DF;
+    --color-ccnp-enterprise-tint-forest: #E4F1EF;
+    --color-ccnp-enterprise-tint-plum: #F6E9EF;
+    --color-ccnp-enterprise-practice-border: #E6CFA0;
+    --color-ccnp-enterprise-source-border: #B9DBD7;
+    --color-ccnp-enterprise-source-text: #125551;
+    --color-ccnp-enterprise-note-border: #E2C3D0;
+    --color-ccnp-enterprise-note-text: #6E2A47;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
@@ -1723,6 +1748,9 @@
     --font-ccnp-collab-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
     --font-ccnp-collab-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
     --font-ccnp-collab-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    --font-ccnp-enterprise-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccnp-enterprise-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --font-ccnp-enterprise-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
     /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
@@ -1945,6 +1973,11 @@ body {
 }
 
 @utility icon-theme-ccnp-collab {
+    background: var(--color-theme-cisco-bg);
+    color: var(--color-theme-cisco-fg);
+}
+
+@utility icon-theme-ccnp-enterprise {
     background: var(--color-theme-cisco-bg);
     color: var(--color-theme-cisco-fg);
 }
