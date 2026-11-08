@@ -430,6 +430,7 @@
   .ccnp-enterprise-page .main {
     margin-left: 0;
     width: 100%;
+    max-width: none;
     padding: 0 16px 48px;
   }
 }

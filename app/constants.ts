@@ -985,6 +985,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Cisco',
     },
     {
+        id: 'ccnp-enterprise',
+        label: 'CCNP Enterprise',
+        abbr: 'CCNP Enterprise',
+        level: 'Professional',
+        score: 'コア 120分 + コンセントレーション 90分',
+        color: 'card-ccna',
+        href: '/cisco/ccnp-enterprise',
+        description:
+            'エンタープライズ有線・無線・SD-WAN・自動化のプロフェッショナル認定。コア試験(350-401 ENCOR)と8つのコンセントレーション試験を初学者向けに体系的かつ網羅的に解説。',
+        domains: [
+            {
+                label: '初学者向け完全ガイド',
+                href: '/cisco/ccnp-enterprise',
+                pct: '完全解説',
+            },
+        ],
+        badge: 'Enterprise プロフェッショナル',
+        icon: '🏢',
+        provider: 'Cisco',
+    },
+    {
         id: 'comptia-network-plus',
         label: 'CompTIA Network+',
         abbr: 'Network+',
