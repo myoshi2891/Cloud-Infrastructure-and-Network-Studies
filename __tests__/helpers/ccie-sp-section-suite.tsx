@@ -31,7 +31,11 @@ const TEXT_KINDS = ['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const;
 type TextKind = (typeof TEXT_KINDS)[number];
 
 /** セクションを単独描画し、種別ごとの描画値（テキストは空白除去、リンクは href）を出現順に返す。 */
+const renderedCache = new Map<ComponentType, Record<TextKind | 'links', string[]>>();
+
 function renderedValues(Section: ComponentType): Record<TextKind | 'links', string[]> {
+    const cached = renderedCache.get(Section);
+    if (cached) return cached;
     const { container, unmount } = render(<Section />);
     const texts = Object.fromEntries(
         TEXT_KINDS.map((kind) => [
@@ -43,7 +47,46 @@ function renderedValues(Section: ComponentType): Record<TextKind | 'links', stri
         (anchor) => anchor.getAttribute('href') ?? '',
     );
     unmount();
-    return { ...texts, links };
+    const result = { ...texts, links };
+    renderedCache.set(Section, result);
+    return result;
+}
+
+/** セクション単独描画での表（列見出し数）とコードブロック（行数）を出現順に返す。 */
+const structureCache = new Map<ComponentType, { tableColumnHeaders: number[]; codeLines: number[] }>();
+
+function renderedStructures(Section: ComponentType): { tableColumnHeaders: number[]; codeLines: number[] } {
+    const cached = structureCache.get(Section);
+    if (cached) return cached;
+    const { container, unmount } = render(<Section />);
+    const result = {
+        tableColumnHeaders: [...container.querySelectorAll('table')].map(
+            (table) => table.querySelectorAll('th[scope="col"]').length,
+        ),
+        codeLines: [...container.querySelectorAll('.code-block')].map(
+            (block) => block.querySelectorAll('.code-line').length,
+        ),
+    };
+    unmount();
+    structureCache.set(Section, result);
+    return result;
+}
+
+/** インベントリ structures のうち、指定セクションが担う表の列見出し数とコード行数の期待値。 */
+export function expectedStructures(Section: SectionComponent): { tableColumnHeaders: number[]; codeLines: number[] } {
+    const index = SECTIONS.indexOf(Section);
+    const before = SECTIONS.slice(0, index).map(renderedStructures);
+    const own = renderedStructures(Section);
+    const offset = (key: 'tableColumnHeaders' | 'codeLines'): number =>
+        before.reduce((sum, item) => sum + item[key].length, 0);
+    const { tableColumnHeaders, codeLines } = ccieSpInventory.structures;
+    return {
+        tableColumnHeaders: tableColumnHeaders.slice(
+            offset('tableColumnHeaders'),
+            offset('tableColumnHeaders') + own.tableColumnHeaders.length,
+        ),
+        codeLines: codeLines.slice(offset('codeLines'), offset('codeLines') + own.codeLines.length),
+    };
 }
 
 const EXPECTED: Record<TextKind | 'links', readonly string[]> = {

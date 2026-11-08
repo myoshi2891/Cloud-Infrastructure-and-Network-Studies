@@ -3,7 +3,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import AccessConnectivity from '@/app/cisco/ccie/service-provider/sections/AccessConnectivity';
-import { defineCcieSpSectionSuite } from '@/__tests__/helpers/ccie-sp-section-suite';
+import { defineCcieSpSectionSuite, expectedStructures } from '@/__tests__/helpers/ccie-sp-section-suite';
 
 vi.mock('@/components/MermaidDiagram', async () => {
     const { MermaidDiagramMock } = await import('@/__tests__/helpers/migration-test-utils');
@@ -16,11 +16,11 @@ describe('CCIE Service Provider — AccessConnectivity セクション', () => {
         const tables = container.querySelectorAll('table');
         expect(tables.length).toBe(5);
 
-        tables.forEach((table) => {
+        tables.forEach((table, tableIndex) => {
             const thead = table.querySelector('thead');
             expect(thead).not.toBeNull();
             const ths = table.querySelectorAll('th[scope="col"]');
-            expect(ths.length).toBeGreaterThan(0);
+            expect(ths.length).toBe(expectedStructures(AccessConnectivity).tableColumnHeaders[tableIndex]);
         });
     });
 
@@ -38,7 +38,7 @@ describe('CCIE Service Provider — AccessConnectivity セクション', () => {
         const { container } = render(<AccessConnectivity />);
         const codeBlocks = container.querySelectorAll('.code-block');
         expect(codeBlocks.length).toBe(1);
-        expect(codeBlocks[0]?.querySelectorAll('.code-line').length).toBeGreaterThan(0);
+        expect(codeBlocks[0]?.querySelectorAll('.code-line').length).toBe(expectedStructures(AccessConnectivity).codeLines[0]);
     });
 });
 
