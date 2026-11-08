@@ -26,3 +26,4 @@ describe('CCNP Collaboration — Appendix セクション', () => {
 });
 
 defineCcnpCollabSectionSuite(Appendix);
+

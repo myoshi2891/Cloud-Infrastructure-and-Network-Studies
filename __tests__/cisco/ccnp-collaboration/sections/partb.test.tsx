@@ -36,3 +36,4 @@ describe('CCNP Collaboration — PartB (300-810 CLICA) セクション', () => {
 });
 
 defineCcnpCollabSectionSuite(PartB);
+

@@ -94,7 +94,7 @@ const EXPECTED: Record<TextKind | 'links', readonly string[]> = {
         TextKind,
         string[]
     >),
-    links: ccnpCollabInventory.links.map((link) => link.href),
+    links: ccnpCollabInventory.links.map((link) => link.href ?? ''),
 };
 
 /**

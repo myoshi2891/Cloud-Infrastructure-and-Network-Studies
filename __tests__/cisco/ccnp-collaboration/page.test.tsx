@@ -216,3 +216,4 @@ describe('CCNP Collaboration ガイド — Mermaid 描画テーマ', () => {
         expect(raw).not.toContain('undefined');
     });
 });
+

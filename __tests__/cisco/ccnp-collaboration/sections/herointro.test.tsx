@@ -36,3 +36,4 @@ describe('CCNP Collaboration — HeroIntro セクション', () => {
 });
 
 defineCcnpCollabSectionSuite(HeroIntro);
+
