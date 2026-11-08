@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-11-08)
 
+## 2026-11-08: CCNP Enterprise 完全ガイド移行 & 原本アーカイブ退避
+
+`/cisco/ccnp-enterprise` へ全7章（HeroIntro: Hero + 第1章 認定の全体像 1.1〜1.5、Chapter2: 第2章 コア試験 350-401 ENCOR 2.1〜2.6、Chapter3: 第3章 コンセントレーション試験 8種 3.1〜3.7、Chapter4: 第4章 横断ベストプラクティス集 4.1〜4.4、Chapter5: 第5章 学習計画と試験対策 5.1〜5.5、Chapter6: 第6章 用語集、Chapter7: 第7章 参照ソースURL 7.1〜7.5 & フッター）を完全移行。84表（th208・td1089）・29図・41コード例（全行 `.code-line` ラップ）・138リスト項目・71外部リンク出現・40目次・1静的SVGアイコンを原本どおり保持。明色配色（`--color-ccnp-enterprise-*` 22変数、紙色 `#f6f7f9`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、Hero、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト、金色丸ドットと番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）を完全復元した。目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全29図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-enterprise` 追加）、共通フッター（`.ccnp-enterprise-page`）へ統合。
+
+Inventory `145142bf`、Red テスト `02423f00`、基盤実装 `c9df6053`、HeroIntro `65c0a2af`、Chapter2 (ENCOR) `f18ba29b`、Chapter3 (Concentration) `c226a194`、Chapter4 & 5 `1469d22c`、Chapter6 & 7・全量Green `bba82413`、ナビゲーション統合 `2c5e6a48`、原本アーカイブ退避 `5a570d93` の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・アクセシビリティラベルと、Mermaidの全29図DSL・アクセシビリティ代替テキストを全量照合。CCNP Enterprise 関連テスト8ファイル・81件すべて成功、ガイド幅契約テスト169件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（460613バイト・SHA-256 `6a655cefe9326e8e815617ff5cf32ef8531aa7cb721a36e9d72492f2fc27a3c7`）およびMarkdown（129226バイト・SHA-256 `a3d46698dc92ebf68e2172f3fa147ec1f79a9d28e75dbd162cb06a099a80e1b6`）を `archive/Cisco/html/ccnp-enterprise/` と `archive/Cisco/md/ccnp-enterprise/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-enterprise.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-enterprise.mjs all` で再生成できる。直下の未移行HTML残数は14件。
+
 ## 2026-11-08: CCNP Collaboration 完全ガイド移行 & 原本アーカイブ退避
 
 `/cisco/ccnp-collaboration` へ全6パート+序章・付録（HeroIntro: 0.使い方〜3.ロードマップ、Part A: 350-801 CLCOR 第1〜6章、Part B: 300-810 CLICA B1〜B4、Part C: 300-815 CLACCM C1〜C6、Part D: 300-820 CLCEI D1〜D4、Part E: 300-835 CLAUTO E1〜E5、Part F: 試験対策・トラブルシュート・用語集 F1〜F5、付録 参考URL一覧・フッター注釈）を完全移行。178表（th437・td1810）・83図・21コード例（全行 `.code-line` ラップ）・266リスト項目・107外部リンク出現・41目次を原本どおり保持。明色配色（`--color-ccnp-collab-*` 22変数、紙色 `#f6f7f9`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、Hero、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト、点と番号・入れ子・字下げ、コードブロックの行構造（`.code-line`）を完全復元した。目次の現在位置・開閉・hash/focus・Escapeキー復帰、Mermaid ダイアグラムの全83図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-collaboration` 追加）、共通フッター（`.ccnp-collab-page`）へ統合。
@@ -2303,12 +2311,12 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）の全文移行・導線統合・原本アーカイブ。その前に CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
+- **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
 - **最終更新日:** 2026-11-08
-- **最新実装 HEAD:** CCNP Collaboration 移行完了コミット群（Green `d7915b90`、ナビ統合 `8d1d2941`、アーカイブ `cbf5be32`）
-- **HTML残数:** 直下HTML15件、すべて未移行。直下の移行済み原本は0件。
-- **アーカイブ:** CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **次の作業:** 直下の未移行HTML15件から次の対象を指定して移行する。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+- **最新実装 HEAD:** CCNP Enterprise 移行完了コミット群（Green `bba82413`、ナビ統合 `2c5e6a48`、アーカイブ `5a570d93`）
+- **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
+- **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
+- **次の作業:** 直下の未移行HTML14件から次の対象を指定して移行する。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 

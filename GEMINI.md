@@ -1,5 +1,11 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-08: CCNP Enterprise 完全ガイド
+
+`app/cisco/ccnp-enterprise/` に Server `page.tsx`、Client `CcnpEnterpriseGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、7分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5, Chapter6, Chapter7）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全7章、84表（th208・td1089）・29図・41コード例（全行 `.code-line` ラップ）・138リスト項目・71外部リンク出現・40目次・1静的SVGアイコンを原本から完全移行。リストの点（金色ドット）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全29図のアクセシビリティ代替テキスト（`aria-label` / `aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`.ccnp-enterprise-page`）へ統合。`bun scripts/migrate-ccnp-enterprise.mjs all` で固定原本から再生成できる。
+
+原本HTML/Markdownは `archive/Cisco/html/ccnp-enterprise/` と `archive/Cisco/md/ccnp-enterprise/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json` に記録。直下の未移行HTML残数は14件。
+
 ## 2026-11-08: CCNP Collaboration 完全ガイド
 
 `app/cisco/ccnp-collaboration/` に Server `page.tsx`、Client `CcnpCollaborationGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、8分割のServer `sections/`（HeroIntro, PartA, PartB, PartC, PartD, PartE, PartF, Appendix）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全6パート+序章・付録、178表（th437・td1810）・83図・21コード例（全行 `.code-line` ラップ）・266リスト項目・107外部リンク出現・41目次を原本から完全移行。リストの点（金色ドット）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全83図のアクセシビリティ代替テキスト（`aria-label` / `aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`.ccnp-collab-page`）へ統合。`bun scripts/migrate-ccnp-collaboration.mjs all` で固定原本から再生成できる。

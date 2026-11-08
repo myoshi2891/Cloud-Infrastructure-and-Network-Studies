@@ -36,3 +36,4 @@ describe('CCNP Enterprise — HeroIntro セクション', () => {
 });
 
 defineCcnpEnterpriseSectionSuite(HeroIntro);
+

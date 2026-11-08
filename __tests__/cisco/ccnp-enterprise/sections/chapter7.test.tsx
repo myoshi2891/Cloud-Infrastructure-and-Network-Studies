@@ -19,3 +19,4 @@ describe('CCNP Enterprise — Chapter7 セクション', () => {
 });
 
 defineCcnpEnterpriseSectionSuite(Chapter7);
+
