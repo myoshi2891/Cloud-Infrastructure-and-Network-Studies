@@ -108,7 +108,20 @@ function nodeToJsx(node) {
         let bodyContent = '';
 
         if (thead) {
-            headContent = [...thead.childNodes].map(nodeToJsx).join('');
+            const headRows = [...thead.querySelectorAll('tr')];
+            headContent = headRows.map((r) => {
+                const cells = [...r.children];
+                return `<tr>${cells.map((c) => {
+                    const isTh = c.tagName === 'TH';
+                    const tag = isTh ? 'th' : 'td';
+                    const attrs = [];
+                    if (isTh) attrs.push('scope="col"');
+                    if (c.getAttribute('colspan')) attrs.push(`colSpan={${c.getAttribute('colspan')}}`);
+                    if (c.getAttribute('rowspan')) attrs.push(`rowSpan={${c.getAttribute('rowspan')}}`);
+                    const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
+                    return `<${tag}${attrStr}>${[...c.childNodes].map(nodeToJsx).join('')}{" "}</${tag}>`;
+                }).join('')}</tr>`;
+            }).join('');
         } else if (rows.length > 0 && rows[0].querySelector('th')) {
             const firstRow = rows[0];
             const ths = [...firstRow.querySelectorAll('th')];
@@ -138,7 +151,11 @@ function nodeToJsx(node) {
         const theadJsx = headContent ? `<thead>${headContent}</thead>` : '';
         const tbodyJsx = tbody ? `<tbody>${bodyContent}</tbody>` : bodyContent ? `<tbody>${bodyContent}</tbody>` : '';
 
-        return `<div className="table-wrap"><table aria-label={${JSON.stringify(lbl)}}>${theadJsx}${tbodyJsx}</table></div>`;
+        const tableJsx = `<table aria-label={${JSON.stringify(lbl)}}>${theadJsx}${tbodyJsx}</table>`;
+        if (node.parentElement?.classList?.contains('table-wrap')) {
+            return tableJsx;
+        }
+        return `<div className="table-wrap">${tableJsx}</div>`;
     }
 
     const tag = node.tagName.toLowerCase();
