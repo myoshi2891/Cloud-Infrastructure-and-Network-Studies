@@ -26,10 +26,10 @@
 /* 280px サイドバーレイアウト（ヘッダー・免責バナー連動） */
 .ccnp-collab-page .sidebar {
   position: fixed;
+  width: 280px;
   top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
   bottom: 0;
   left: 0;
-  width: 280px;
   background: var(--color-ccnp-collab-card);
   border-right: 1px solid var(--color-ccnp-collab-line);
   overflow-y: auto;

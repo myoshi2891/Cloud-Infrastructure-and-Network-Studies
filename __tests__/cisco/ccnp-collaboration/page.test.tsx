@@ -149,7 +149,7 @@ describe('CCNP Collaboration ガイド — リスト・スタイリング・図�
             expect(code).toBeDefined();
             if (code) {
                 const parseResult = await mermaid.parse(code, { suppressErrors: true });
-                expect(parseResult).toBe(true);
+                expect(parseResult).toBeTruthy();
             }
         }
     });
