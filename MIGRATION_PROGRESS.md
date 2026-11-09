@@ -8,7 +8,7 @@
 
 Inventory `145142bf`、Red テスト `02423f00`、基盤実装 `c9df6053`、HeroIntro `65c0a2af`、Chapter2 (ENCOR) `f18ba29b`、Chapter3 (Concentration) `c226a194`、Chapter4 & 5 `1469d22c`、Chapter6 & 7・全量Green `bba82413`、ナビゲーション統合 `2c5e6a48`、原本アーカイブ退避 `5a570d93`、デザイン・共通フッター完全忠実化（Red `9b3a85d0` → Green `b578f43d`）の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・アクセシビリティラベルと、Mermaidの全29図DSL・アクセシビリティ代替テキストを全量照合。CCNP Enterprise 関連テスト9ファイル・83件すべて成功、ガイド幅契約テスト169件成功（計10ファイル・252件成功）。最終型検査・全体ESLint成功。npm・ビルドは未実行。
 
-原本HTML（460613バイト・SHA-256 `6a655cefe9326e8e815617ff5cf32ef8531aa7cb721a36e9d72492f2fc27a3c7`）およびMarkdown（129226バイト・SHA-256 `a3d46698dc92ebf68e2172f3fa147ec1f79a9d28e75dbd162cb06a099a80e1b6`）を `archive/Cisco/html/ccnp-enterprise/` と `archive/Cisco/md/ccnp-enterprise/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-enterprise.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-enterprise.mjs all` で再生成できる。直下の未移行HTML残数は14件。
+原本HTML（460613バイト・SHA-256 `8cadae92c1790f603694c787ee0e3ac9315a08daf1294784fdff3a2fa8d7e516`）およびMarkdown（129226バイト・SHA-256 `534776f9f42428a0d75f318797ad45e9e667a275c9d01b0e9eb68c1ec564f1d9`）を `archive/Cisco/html/ccnp-enterprise/` と `archive/Cisco/md/ccnp-enterprise/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-enterprise.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-enterprise.mjs all` で再生成できる。直下の未移行HTML残数は14件。
 
 ## 2026-11-08: CCNP Collaboration 完全ガイド移行 & 原本アーカイブ退避
 
@@ -2313,10 +2313,10 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
 - **最終更新日:** 2026-11-08
-- **最新実装 HEAD:** CCNP Enterprise 移行完了コミット群（Green `bba82413`、ナビ統合 `2c5e6a48`、アーカイブ `5a570d93`）
+- **最新実装 HEAD:** `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green。前回進捗同期コミット: `a00d0c93`。移行コミット群: Green `bba82413`、ナビ統合 `2c5e6a48`、アーカイブ `5a570d93`）
 - **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
 - **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **次の作業:** 直下の未移行HTML14件から次の対象を指定して移行する。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+- **次の作業:** 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（移行・アーカイブ済みの `/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3655,13 +3655,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `64e2cee8`（CCIE SP のテスト厳密化。ナビ初期選択修正 `8629eca2`、本文訂正の適用 `493afeb2` を含む）。前回進捗同期コミット: `372b45ce`。
+最新実装 HEAD: `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green。移行コミット群 `bba82413`・`2c5e6a48`・`5a570d93` を含む）。前回進捗同期コミット: `a00d0c93`。
 
-原本HTML/Markdownはアーカイブ済み。CCIE SP の保存先とハッシュは `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
+原本HTML/Markdownはアーカイブ済み。CCNP Enterprise の保存先とハッシュは `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
 検証: 2026-11-08に `scripts/migrate-ccie-sp.mjs` 修正後のCCIE SP関連テストを実行（`bunx vitest run __tests__/cisco` 30ファイル・337件すべて成功）。npm・Playwright E2E・実ページのブラウザー検証は未実行。
 
-次の作業: 直下の未移行HTML15件から次の対象を指定して移行する（`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider`、SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（`/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider`、SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
