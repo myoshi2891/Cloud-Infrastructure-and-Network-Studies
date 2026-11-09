@@ -110,10 +110,10 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
                         <circle className="core" cx="22" cy="23" r="2.5" />
                     </svg>
                     <div>
-                        <div className="brand-title">CCNP Service Provider</div>
-                        <div className="brand-sub">初学者向け完全ガイド</div>
+                        <div className="brand-title">CCNP Service Provider</div>{" "}
+                        <div className="brand-sub">初学者向け完全ガイド</div>{" "}
                     </div>
-                </div>
+                </div>{" "}
 
                 <nav className="nav" aria-label="目次">
                     <ul>
@@ -127,7 +127,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
                                         onClick={(e) => handleLinkClick(e, `#${item.id}`)}
                                     >
                                         {item.label}
-                                    </a>
+                                    </a>{" "}
                                 </li>
                             );
                         })}

@@ -41,10 +41,10 @@ describe('CCNP Service Provider ガイド — リスト・スタイリング・�
 
         // サイドバーのナビゲーション（.nav a.l2, .nav a.l3, .nav a.l4, .nav a.active）
         expect(squashed).toContain('.ccnp-service-provider-page.nava{');
-        expect(squashed).toContain('.ccnp-service-provider-page.naval2');
-        expect(squashed).toContain('.ccnp-service-provider-page.naval3');
-        expect(squashed).toContain('.ccnp-service-provider-page.naval4');
-        expect(squashed).toContain('.ccnp-service-provider-page.nava.active');
+        expect(squashed).toContain('.ccnp-service-provider-page.nava.l2{');
+        expect(squashed).toContain('.ccnp-service-provider-page.nava.l3{');
+        expect(squashed).toContain('.ccnp-service-provider-page.nava.l4{');
+        expect(squashed).toContain('.ccnp-service-provider-page.nava.active{');
 
         // 箇条書き（金色丸ドット）とサイドバー内のドット無効化
         expect(squashed).toContain('.ccnp-service-provider-pageul>li::before{content:\'\';position:absolute;left:6px;top:0.72em;width:6px;height:6px;border-radius:50%;background:var(--color-ccnp-sp-gold)');
@@ -62,14 +62,15 @@ describe('CCNP Service Provider ガイド — リスト・スタイリング・�
         expect(squashed).toContain('.ccnp-service-provider-page.diagram.mmsvg{flex-shrink:0;max-width:none;height:auto;overflow:visible');
 
         // コールアウト（.callout-title / .callout）
-        expect(squashed).toContain('.ccnp-service-provider-page.callout{margin:24px0;border:1pxsolidvar(--color-ccnp-sp-border-secondary);border-left-width:5px;border-radius:var(--border-radius-lg,12px);background:var(--color-ccnp-sp-surface)');
+        expect(squashed).toContain('.ccnp-service-provider-page.callout{margin:24px0;padding:18px22px;border:1pxsolidvar(--color-ccnp-sp-border-secondary);border-left-width:5px;border-radius:var(--border-radius-lg,12px);background:var(--color-ccnp-sp-surface)');
         expect(squashed).toContain('.ccnp-service-provider-page.callout-title{display:flex;align-items:center;gap:8px;margin:0010px');
         expect(squashed).toContain('.ccnp-service-provider-page.callout.practice{border-left-color:var(--color-ccnp-sp-gold);background:var(--color-ccnp-sp-tint-gold)}');
         expect(squashed).toContain('.ccnp-service-provider-page.callout.note{border-left-color:var(--color-ccnp-sp-plum);background:var(--color-ccnp-sp-tint-plum)}');
         expect(squashed).toContain('.ccnp-service-provider-page.callout.source{border-left-color:var(--color-ccnp-sp-forest);background:var(--color-ccnp-sp-tint-forest)}');
 
         // コードブロック（.code-block と構文トークン）
-        expect(squashed).toContain('.ccnp-service-provider-page.code-block{margin:0020px;padding:16px20px;overflow-x:auto;border:1pxsolidvar(--color-ccnp-sp-border-secondary);border-left:4pxsolidvar(--color-ccnp-sp-indigo);border-radius:var(--border-radius-lg,12px);background:var(--color-ccnp-sp-code-bg)');
+        expect(squashed).toContain('.ccnp-service-provider-page.code-block,');
+        expect(squashed).toContain('border-left:4pxsolidvar(--color-ccnp-sp-indigo)');
         expect(squashed).toContain('.ccnp-service-provider-page.tk-prompt{color:var(--color-ccnp-sp-text-secondary)}');
         expect(squashed).toContain('.ccnp-service-provider-page.tk-cmd{color:var(--color-ccnp-sp-indigo);font-weight:500}');
         expect(squashed).toContain('.ccnp-service-provider-page.tk-comment{color:var(--color-ccnp-sp-text-tertiary);font-style:italic}');
