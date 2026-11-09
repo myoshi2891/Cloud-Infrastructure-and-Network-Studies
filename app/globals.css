@@ -334,6 +334,25 @@
     --color-ccnp-enterprise-source-text: #125551;
     --color-ccnp-enterprise-note-border: #E2C3D0;
     --color-ccnp-enterprise-note-text: #6E2A47;
+
+    --color-ccnp-sp-paper: #F6F7F9;
+    --color-ccnp-sp-ink: #161B26;
+    --color-ccnp-sp-text-primary: #161B26;
+    --color-ccnp-sp-text-secondary: #454E63;
+    --color-ccnp-sp-text-tertiary: #5A647C;
+    --color-ccnp-sp-indigo: #2E3F72;
+    --color-ccnp-sp-gold: #B8802A;
+    --color-ccnp-sp-forest: #1B6E6A;
+    --color-ccnp-sp-plum: #8C3A5C;
+    --color-ccnp-sp-surface: #FFFFFF;
+    --color-ccnp-sp-code-bg: #F0F2F7;
+    --color-ccnp-sp-border-primary: #A9B4CB;
+    --color-ccnp-sp-border-secondary: #CBD2E0;
+    --color-ccnp-sp-border-tertiary: #E2E6EE;
+    --color-ccnp-sp-tint-indigo: #EEF1F8;
+    --color-ccnp-sp-tint-gold: #FAF1DF;
+    --color-ccnp-sp-tint-forest: #E3F0EE;
+    --color-ccnp-sp-tint-plum: #F5E8EE;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
@@ -1752,6 +1771,9 @@
     --font-ccnp-enterprise-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
     --font-ccnp-enterprise-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
     --font-ccnp-enterprise-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    --font-ccnp-sp-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccnp-sp-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --font-ccnp-sp-mono: ui-monospace, 'SF Mono', Menlo, Consolas, "Noto Sans Mono CJK JP", "Noto Sans JP", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
     /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
@@ -1979,6 +2001,11 @@ body {
 }
 
 @utility icon-theme-ccnp-enterprise {
+    background: var(--color-theme-cisco-bg);
+    color: var(--color-theme-cisco-fg);
+}
+
+@utility icon-theme-ccnp-service-provider {
     background: var(--color-theme-cisco-bg);
     color: var(--color-theme-cisco-fg);
 }

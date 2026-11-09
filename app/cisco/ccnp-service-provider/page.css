@@ -1,0 +1,598 @@
+/* app/cisco/ccnp-service-provider/page.css */
+@import '@tabler/icons-webfont/tabler-icons.min.css';
+
+.ccnp-service-provider-page {
+  color-scheme: light;
+  margin: 0;
+  background: var(--color-ccnp-sp-paper);
+  color: var(--color-ccnp-sp-text-primary);
+  font: 400 16px/1.7 var(--font-ccnp-sp-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  position: relative;
+}
+
+.ccnp-service-provider-page * {
+  box-sizing: border-box;
+}
+
+.ccnp-service-provider-page a {
+  color: var(--color-ccnp-sp-indigo);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ccnp-service-provider-page a:hover {
+  color: var(--color-ccnp-sp-forest);
+}
+
+.ccnp-service-provider-page .layout {
+  display: block;
+}
+
+/* 280px サイドバーレイアウト（ヘッダー・免責バナー連動） */
+.ccnp-service-provider-page .sidebar {
+  position: fixed;
+  width: 280px;
+  top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px));
+  left: 0;
+  bottom: 0;
+  height: calc(100vh - var(--header-h, 60px) - var(--disclaimer-height, 0px));
+  background: var(--color-ccnp-sp-surface);
+  border-right: 1px solid var(--color-ccnp-sp-border-secondary);
+  overflow-y: auto;
+  padding: 20px 16px 32px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+
+.ccnp-service-provider-page .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px 16px;
+  border-bottom: 1px solid var(--color-ccnp-sp-border-tertiary);
+  margin-bottom: 16px;
+}
+
+.ccnp-service-provider-page .brand svg {
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+
+.ccnp-service-provider-page .crest .ring {
+  fill: none;
+  stroke: var(--color-ccnp-sp-indigo);
+  stroke-width: 1.5;
+}
+
+.ccnp-service-provider-page .crest .ring2 {
+  fill: none;
+  stroke: var(--color-ccnp-sp-gold);
+  stroke-width: 1;
+}
+
+.ccnp-service-provider-page .crest .link {
+  fill: none;
+  stroke: var(--color-ccnp-sp-indigo);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.ccnp-service-provider-page .crest .node {
+  fill: var(--color-ccnp-sp-indigo);
+}
+
+.ccnp-service-provider-page .crest .core {
+  fill: var(--color-ccnp-sp-gold);
+}
+
+.ccnp-service-provider-page .brand-title {
+  font-family: var(--font-ccnp-sp-serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--color-ccnp-sp-indigo);
+}
+
+.ccnp-service-provider-page .brand-sub {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--color-ccnp-sp-text-secondary);
+}
+
+.ccnp-service-provider-page .sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ccnp-service-provider-page .sidebar nav li {
+  padding-left: 0;
+  margin: 0;
+}
+
+.ccnp-service-provider-page .sidebar nav li::before {
+  content: none !important;
+}
+
+.ccnp-service-provider-page .nav a {
+  display: block;
+  padding: 6px 10px;
+  border-left: 3px solid transparent;
+  border-radius: var(--border-radius-md, 8px);
+  color: var(--color-ccnp-sp-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.ccnp-service-provider-page .nav a.l2 {
+  margin-top: 8px;
+  color: var(--color-ccnp-sp-ink);
+  font-weight: 600;
+}
+
+.ccnp-service-provider-page .nav a.l3 {
+  padding-left: 18px;
+}
+
+.ccnp-service-provider-page .nav a.l4 {
+  padding-left: 28px;
+  font-size: 0.85rem;
+  color: var(--color-ccnp-sp-text-tertiary);
+}
+
+.ccnp-service-provider-page .nav a:hover {
+  background: var(--color-ccnp-sp-tint-indigo);
+  color: var(--color-ccnp-sp-indigo);
+}
+
+.ccnp-service-provider-page .nav a.active {
+  background: var(--color-ccnp-sp-tint-indigo);
+  border-left-color: var(--color-ccnp-sp-indigo);
+  color: var(--color-ccnp-sp-indigo);
+  font-weight: 600;
+}
+
+/* メインコンテンツ（280px サイドバー分の余白と全幅展開） */
+.ccnp-service-provider-page .main {
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  max-width: none;
+  box-sizing: border-box;
+  padding: 40px 48px 80px;
+}
+
+/* Hero セクション */
+.ccnp-service-provider-page .hero {
+  background: var(--color-ccnp-sp-surface);
+  border: 1px solid var(--color-ccnp-sp-border-secondary);
+  border-radius: var(--border-radius-lg, 12px);
+  padding: 32px 36px;
+  margin-bottom: 32px;
+}
+
+.ccnp-service-provider-page .hero h1 {
+  margin: 0 0 20px;
+  font-family: var(--font-ccnp-sp-serif);
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.35;
+  color: var(--color-ccnp-sp-indigo);
+}
+
+.ccnp-service-provider-page .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.ccnp-service-provider-page .meta-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+}
+
+.ccnp-service-provider-page .meta-label {
+  flex: none;
+  padding: 2px 12px;
+  border: 1px solid var(--color-ccnp-sp-border-primary);
+  border-radius: var(--border-radius-md, 8px);
+  background: var(--color-ccnp-sp-tint-indigo);
+  color: var(--color-ccnp-sp-indigo);
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.ccnp-service-provider-page .meta-val {
+  color: var(--color-ccnp-sp-text-secondary);
+  font-size: 0.95rem;
+}
+
+/* セクションブロック */
+.ccnp-service-provider-page section {
+  scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px);
+}
+
+.ccnp-service-provider-page .section.intro {
+  margin-bottom: 32px;
+}
+
+.ccnp-service-provider-page .section.lvl2 {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid var(--color-ccnp-sp-border-secondary);
+}
+
+.ccnp-service-provider-page .section.lvl3 {
+  margin-top: 32px;
+}
+
+.ccnp-service-provider-page .section.lvl4 {
+  margin-top: 28px;
+}
+
+.ccnp-service-provider-page h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-ccnp-sp-serif);
+  font-weight: 600;
+  font-size: 1.6rem;
+  line-height: 1.35;
+  color: var(--color-ccnp-sp-indigo);
+}
+
+.ccnp-service-provider-page h3 {
+  margin: 0 0 14px;
+  font-family: var(--font-ccnp-sp-serif);
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--color-ccnp-sp-ink);
+}
+
+.ccnp-service-provider-page h4 {
+  margin: 0 0 12px;
+  font-family: var(--font-ccnp-sp-sans);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.45;
+  color: var(--color-ccnp-sp-forest);
+}
+
+.ccnp-service-provider-page p {
+  margin: 0 0 16px;
+  line-height: 1.7;
+}
+
+/* 箇条書き（金色丸ドット） */
+.ccnp-service-provider-page ul {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.ccnp-service-provider-page ul > li {
+  position: relative;
+  padding-left: 22px;
+  margin: 6px 0;
+  line-height: 1.65;
+}
+
+.ccnp-service-provider-page ul > li::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ccnp-sp-gold);
+}
+
+/* 番号付きリスト（インディゴ数字バッジ） */
+.ccnp-service-provider-page ol {
+  counter-reset: item;
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.ccnp-service-provider-page ol > li {
+  counter-increment: item;
+  position: relative;
+  padding-left: 36px;
+  margin: 10px 0;
+  line-height: 1.65;
+}
+
+.ccnp-service-provider-page ol > li::before {
+  content: counter(item);
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-ccnp-sp-tint-indigo);
+  color: var(--color-ccnp-sp-indigo);
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 26px;
+  text-align: center;
+}
+
+.ccnp-service-provider-page li > ul,
+.ccnp-service-provider-page li > ol {
+  margin: 6px 0 0;
+}
+
+/* インラインコード */
+.ccnp-service-provider-page code:not(pre code) {
+  padding: 2px 6px;
+  font-family: var(--font-ccnp-sp-mono);
+  font-size: 0.9em;
+  border: 1px solid var(--color-ccnp-sp-border-tertiary);
+  border-radius: 6px;
+  background: var(--color-ccnp-sp-code-bg);
+  color: var(--color-ccnp-sp-ink);
+  overflow-wrap: anywhere;
+}
+
+/* コードブロック */
+.ccnp-service-provider-page .code-block,
+.ccnp-service-provider-page pre {
+  margin: 0 0 20px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  border: 1px solid var(--color-ccnp-sp-border-secondary);
+  border-left: 4px solid var(--color-ccnp-sp-indigo);
+  border-radius: var(--border-radius-lg, 12px);
+  background: var(--color-ccnp-sp-code-bg);
+  font-family: var(--font-ccnp-sp-mono);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.ccnp-service-provider-page .code-line {
+  min-height: 1.5em;
+  white-space: pre;
+}
+
+/* 構文ハイライトトークン */
+.ccnp-service-provider-page .tk-comment {
+  color: var(--color-ccnp-sp-text-tertiary);
+  font-style: italic;
+}
+
+.ccnp-service-provider-page .tk-prompt {
+  color: var(--color-ccnp-sp-text-secondary);
+}
+
+.ccnp-service-provider-page .tk-cmd {
+  color: var(--color-ccnp-sp-indigo);
+  font-weight: 500;
+}
+
+.ccnp-service-provider-page .tk-ip {
+  color: var(--color-ccnp-sp-forest);
+}
+
+.ccnp-service-provider-page .tk-kw {
+  color: var(--color-ccnp-sp-plum);
+  font-weight: 500;
+}
+
+.ccnp-service-provider-page .tk-num {
+  color: var(--color-ccnp-sp-plum);
+}
+
+/* テーブル */
+.ccnp-service-provider-page .table-wrap {
+  margin: 20px 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-ccnp-sp-border-secondary);
+  border-radius: var(--border-radius-lg, 12px);
+  background: var(--color-ccnp-sp-surface);
+}
+
+.ccnp-service-provider-page table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.ccnp-service-provider-page th {
+  padding: 12px 14px;
+  border-bottom: 2px solid var(--color-ccnp-sp-border-secondary);
+  background: var(--color-ccnp-sp-tint-indigo);
+  color: var(--color-ccnp-sp-indigo);
+  font-weight: 600;
+  text-align: left;
+}
+
+.ccnp-service-provider-page td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-ccnp-sp-border-tertiary);
+  vertical-align: top;
+}
+
+.ccnp-service-provider-page tr:last-child td {
+  border-bottom: 0;
+}
+
+.ccnp-service-provider-page tbody tr:nth-child(even) td {
+  background: var(--color-ccnp-sp-paper);
+}
+
+/* コールアウト */
+.ccnp-service-provider-page .callout {
+  margin: 24px 0;
+  padding: 18px 22px;
+  border: 1px solid var(--color-ccnp-sp-border-secondary);
+  border-left-width: 5px;
+  border-radius: var(--border-radius-lg, 12px);
+  background: var(--color-ccnp-sp-surface);
+}
+
+.ccnp-service-provider-page .callout > *:last-child {
+  margin-bottom: 6px;
+}
+
+.ccnp-service-provider-page .callout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-family: var(--font-ccnp-sp-serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-ccnp-sp-ink);
+}
+
+.ccnp-service-provider-page .callout-title i {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.ccnp-service-provider-page .callout.practice {
+  border-left-color: var(--color-ccnp-sp-gold);
+  background: var(--color-ccnp-sp-tint-gold);
+}
+
+.ccnp-service-provider-page .callout.practice .callout-title i {
+  color: var(--color-ccnp-sp-gold);
+}
+
+.ccnp-service-provider-page .callout.source {
+  border-left-color: var(--color-ccnp-sp-forest);
+  background: var(--color-ccnp-sp-tint-forest);
+}
+
+.ccnp-service-provider-page .callout.source .callout-title i {
+  color: var(--color-ccnp-sp-forest);
+}
+
+.ccnp-service-provider-page .callout.source ul > li::before {
+  background: var(--color-ccnp-sp-forest);
+}
+
+.ccnp-service-provider-page .callout.note {
+  border-left-color: var(--color-ccnp-sp-plum);
+  background: var(--color-ccnp-sp-tint-plum);
+}
+
+.ccnp-service-provider-page .callout.note .callout-title i {
+  color: var(--color-ccnp-sp-plum);
+}
+
+.ccnp-service-provider-page .callout.note ul > li::before {
+  background: var(--color-ccnp-sp-plum);
+}
+
+/* ダイアグラムカード装飾 */
+.ccnp-service-provider-page .diagram {
+  margin: 24px 0;
+  padding: 20px;
+  overflow-x: auto;
+  border: 1px solid var(--color-ccnp-sp-border-secondary);
+  border-radius: var(--border-radius-lg, 12px);
+  background: var(--color-ccnp-sp-surface);
+}
+
+.ccnp-service-provider-page .diagram.mm {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.ccnp-service-provider-page .diagram .mm > [role="img"] {
+  background: transparent !important;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.ccnp-service-provider-page .diagram .mm .mermaid-target {
+  display: flex;
+  justify-content: center;
+  justify-content: safe center;
+  width: 100%;
+}
+
+.ccnp-service-provider-page .diagram .mm svg {
+  flex-shrink: 0;
+  max-width: none;
+  height: auto;
+  overflow: visible;
+}
+
+/* モバイルトグルボタン & バックドロップ */
+.ccnp-service-provider-page .sidebar-toggle {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  padding: 10px 16px;
+  border: 1px solid var(--color-ccnp-sp-border-primary);
+  border-radius: 999px;
+  background: var(--color-ccnp-sp-indigo);
+  color: var(--color-ccnp-sp-surface);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  align-items: center;
+  gap: 8px;
+}
+
+.ccnp-service-provider-page .sidebar-backdrop {
+  display: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) {
+  .ccnp-service-provider-page .sidebar-toggle {
+    display: flex;
+  }
+
+  .ccnp-service-provider-page .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .ccnp-service-provider-page .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .ccnp-service-provider-page .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 25;
+  }
+
+  .ccnp-service-provider-page .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 20px 60px;
+  }
+}
