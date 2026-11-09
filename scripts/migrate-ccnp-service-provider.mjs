@@ -39,6 +39,11 @@ if (!main) {
 
 const allTables = [...main.querySelectorAll('table')];
 
+/**
+ * 直前の見出しと原本内の表番号から、表の読み上げ名を組み立てる。
+ * @param {Element} tableNode - 原本HTML内の表要素。
+ * @returns {string} 見出しと一意の表番号を含むラベル。
+ */
 function tableLabel(tableNode) {
     let scope = tableNode.closest('.table-wrap') ?? tableNode;
     let heading = null;
@@ -54,12 +59,22 @@ function tableLabel(tableNode) {
     return `${label}（表 ${allTables.indexOf(tableNode) + 1}）`;
 }
 
+/**
+ * コード1行のHTMLを、構文色のspanと空行を保持したJSXへ変換する。
+ * @param {string} lineHtml - 改行を含まないコード行のHTML。
+ * @returns {string} JSXの子ノードとして使うソース文字列。
+ */
 function plainCodeLineToJsx(lineHtml) {
     if (!lineHtml) return '{""}';
     const frag = JSDOM.fragment(`<div>${lineHtml}</div>`).firstChild;
     return [...frag.childNodes].map(nodeToJsx).join('') || '{""}';
 }
 
+/**
+ * 原本DOMを再帰的にJSXへ変換し、図・コード行・表の構造と読み上げ名を補う。
+ * @param {Node} node - 変換対象のDOMノード。
+ * @returns {string} 対応するJSX。未対応のノード種別は空文字列。
+ */
 function nodeToJsx(node) {
     if (node.nodeType === 3) {
         // テキストノード
@@ -238,6 +253,12 @@ if (children.length !== expectedChildren) {
     process.exit(1);
 }
 
+/**
+ * 検証済みの固定境界で原本を分割し、指定セクションをリポジトリ内へ書き出す。
+ * @param {string} phaseKey - SECTION_PHASESに定義されたセクション識別子。
+ * @returns {void}
+ * @throws {Error} セクション識別子が未定義の場合。
+ */
 export function generateSection(phaseKey) {
     const b = BOUNDARIES[phaseKey];
     if (!b) throw new Error(`Unknown phase: ${phaseKey}`);
@@ -265,6 +286,11 @@ ${jsxContent}
     console.log(`Generated ${b.name} (${b.file}) from children[${b.start}..${b.end}]`);
 }
 
+/**
+ * 指定セクション、またはallで全セクションの生成を実行する。
+ * @param {string} phase - セクション識別子、またはall。
+ * @returns {void}
+ */
 export function runMigration(phase) {
     if (phase === 'all') {
         for (const p of SECTION_PHASES) {
