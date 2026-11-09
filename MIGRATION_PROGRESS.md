@@ -2338,7 +2338,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Service Provider 完全ガイド（`/cisco/ccnp-service-provider`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Enterprise、CCNP Collaboration、CCIE Service Provider も完了。
 - **最終更新日:** 2026-11-09
-- **最新実装 HEAD:** `24cc5ce5`（CCNP Service Provider のグローバルナビゲーション導線登録と幅契約）
+- **最新実装 HEAD:** `938d8c58`（CCNP Service Provider のCSSとレイアウト構造を原本HTMLに合わせて復元）
 - **前回進捗同期コミット:** `f78a99a7`
 - **HTML残数:** 直下HTML13件、すべて未移行。直下の移行済み原本は0件。
 - **アーカイブ:** CCNP Service Provider は `docs/migration-inventory/cisco-ccnp-service-provider.archive.json`、CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
@@ -3681,7 +3681,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `f78a99a7`（CCNP Enterprise のページメタデータと試験定数の説明からコンセントレーション試験数を削除）。
+最新実装 HEAD: `938d8c58`（CCNP Service Provider のCSSとレイアウト構造を原本HTMLに合わせて復元）。
 
 前回進捗同期コミット: `a00d0c93`。
 
