@@ -18,14 +18,16 @@ export default function CcnpServiceProviderGuide({ children }: CcnpServiceProvid
 
     return (
         <div className="ccnp-service-provider-page">
-            <NavBar
-                isOpen={sidebarOpen}
-                onClose={handleClose}
-                onToggle={handleToggle}
-            />
-            <main className="main">
-                {children}
-            </main>
+            <div className="layout">
+                <NavBar
+                    isOpen={sidebarOpen}
+                    onClose={handleClose}
+                    onToggle={handleToggle}
+                />
+                <main className="main">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 }

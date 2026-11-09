@@ -22,6 +22,13 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         });
         anchor.classList.add("active");
         anchor.setAttribute("aria-current", "location");
+        const nav = sidebar.querySelector<HTMLElement>(".nav");
+        if (nav && anchor instanceof HTMLElement) {
+            const top = anchor.offsetTop;
+            if (top < nav.scrollTop + 40 || top > nav.scrollTop + nav.clientHeight - 80) {
+                nav.scrollTop = Math.max(0, top - nav.clientHeight / 3);
+            }
+        }
     }, []);
 
     const handleLinkClick = useCallback((e: MouseEvent<HTMLAnchorElement>, href: string) => {
