@@ -993,7 +993,7 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-ccna',
         href: '/cisco/ccnp-enterprise',
         description:
-            'エンタープライズ有線・無線・SD-WAN・自動化のプロフェッショナル認定。コア試験(350-401 ENCOR)と8つのコンセントレーション試験を初学者向けに体系的かつ網羅的に解説。',
+            'エンタープライズ有線・無線・SD-WAN・自動化のプロフェッショナル認定。コア試験(350-401 ENCOR)とコンセントレーション試験を初学者向けに体系的かつ網羅的に解説。',
         domains: [
             {
                 label: '初学者向け完全ガイド',
