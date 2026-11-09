@@ -278,3 +278,4 @@ export function runMigration(phase) {
 if (targetPhase) {
     runMigration(targetPhase);
 }
+

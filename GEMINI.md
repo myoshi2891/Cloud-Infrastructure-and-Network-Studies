@@ -1,18 +1,27 @@
 # Project Overview: Cloud Infrastructure Studies
 
-## CCNP Enterprise / Collaboration 再生成の前提
+## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
-両ジェネレーター（`bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+各ジェネレーター（`bun scripts/migrate-ccnp-service-provider.mjs all` / `bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{service-provider,enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
 
 ```bash
-mkdir -p archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+mkdir -p archive/Cisco/html/ccnp-service-provider archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+git show 'HEAD~1:Ccnp-service-provider-guide.html' > archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html
 git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
 git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-wc -c archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-shasum -a 256 archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 ```
 
 各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、上記の再生成コマンドを実行する。ジェネレーターは直下の同名HTMLを優先するため、そこにファイルがある場合も同じ照合が必要。移行テストはコミット済みインベントリを使うため、この復元は不要。
+
+## 2026-11-09: CCNP Service Provider 完全ガイド
+
+`app/cisco/ccnp-service-provider/` に Server `page.tsx`、Client `CcnpServiceProviderGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、5分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全5章、28表（th82・td342）・12図・8コード例（全行 `.code-line` ラップ・原本構文トークン `.tk-prompt`・`.tk-cmd`・`.tk-comment`・`.tk-kw`・`.tk-num`・`.tk-ip` 保持）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本から完全移行。サイドバーのブランドロゴ（44x44px SVG）と目次（`.nav a.l2`, `.l3`, `.l4`）、Heroの `.meta` リスト、リストの点（金色ドット）・番号（インディゴ数字バッジ）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造と構文トークン、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全12図のアクセシビリティ代替テキスト（`aria-label`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-service-provider-page`）へ統合。`bun scripts/migrate-ccnp-service-provider.mjs all` で固定原本から再生成できる。
+
+Server `page.tsx` が HeroIntro と Chapter2〜Chapter5 を組み立て、Client `CcnpServiceProviderGuide.tsx` へ `children` として渡す。クライアント側は本文をimportせず、サイドバー開閉と配置を担当する。
+
+原本HTML/Markdownは `archive/Cisco/html/ccnp-service-provider/` と `archive/Cisco/md/ccnp-service-provider/` に保存し、復元情報は `docs/migration-inventory/cisco-ccnp-service-provider.archive.json` に記録。直下の未移行HTML残数は13件。
 
 ## 2026-11-08: CCNP Enterprise 完全ガイド
 

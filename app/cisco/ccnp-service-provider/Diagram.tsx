@@ -39,3 +39,4 @@ export const Diagram = memo(function Diagram({ id, label }: DiagramProps) {
         </div>
     );
 });
+

@@ -2,19 +2,29 @@
 
 (最終更新日: 2026-11-09)
 
-## CCNP Enterprise / Collaboration 再生成の前提
+## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
-両ジェネレーター（`bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+各ジェネレーター（`bun scripts/migrate-ccnp-service-provider.mjs all` / `bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{service-provider,enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
 
 ```bash
-mkdir -p archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+mkdir -p archive/Cisco/html/ccnp-service-provider archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+git show 'HEAD~1:Ccnp-service-provider-guide.html' > archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html
 git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
 git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-wc -c archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-shasum -a 256 archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 ```
 
 各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、上記の再生成コマンドを実行する。ジェネレーターは直下の同名HTMLを優先するため、そこにファイルがある場合も同じ照合が必要。移行テストはコミット済みインベントリを使うため、この復元は不要。
+
+## 2026-11-09: CCNP Service Provider 完全ガイド移行 & 原本アーカイブ退避
+
+`/cisco/ccnp-service-provider` へ全5章（HeroIntro: Hero + 第1章 このガイドの使い方 1.1〜1.3、Chapter2: 第2章 認定の全体像 2.1〜2.4、Chapter3: 第3章 前提知識：SP ネットワークの基本用語 3.1〜3.3、Chapter4: 第4章 学習ロードマップ 4.1〜4.4、Chapter5: 第5章 Part A：コア試験 350-501 SPCOR 5.1 アーキテクチャ・セキュリティ 5.1.1〜5.1.7）を完全移行。28表（th82・td342）・12図・8コード例（全行 `.code-line` ラップ、原本構文トークン `.tk-prompt`・`.tk-cmd`・`.tk-comment`・`.tk-kw`・`.tk-num`・`.tk-ip` 保持）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本どおり保持。明色配色（`--color-ccnp-sp-*` 17変数、紙色 `#f6f7f9`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、サイドバーのブランドロゴ（44x44px SVG・タイトル/サブ）と目次（`.nav a.l2`, `.l3`, `.l4`）、Heroの `.meta` リスト、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト（`.callout.practice`, `.callout.source`, `.callout.note`）、金色丸ドットと番号・入れ子・字下げ、コードブロック（`.code-block`）を完全復元した。
+目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全12図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-service-provider` 追加）、共通フッター（`components/Footer.module.css` に `.ccnp-service-provider-page` 登録）へ統合。
+
+Inventory & Script（Commit 1: `6332be8c`）、Red テスト（Commit 2: `018bb006`）、基盤実装（Commit 3: `315c8c99`）、HeroIntro（Commit 4: `989ae2a5`）、Chapter2（Commit 5: `9b4ac8f7`）、Chapter3（Commit 6: `d5d40073`）、Chapter4（Commit 7: `37d12517`）、Chapter5（Commit 8: `2841ae1d`）、ページ統合（Commit 9: `41be4c77`）、グローバル導線・幅契約・スクリプトテスト（Commit 10: `24cc5ce5`）の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・アクセシビリティラベルと、Mermaidの全12図DSL・アクセシビリティ代替テキストを全量照合。CCNP Service Provider 関連テスト7ファイル・68件すべて成功、ガイド幅契約テスト172件成功、スクリプトテスト4件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（173672バイト・SHA-256 `567ad7dd95f120f27b677c381f55adabf32ae39c8337d23f1a5cf7ced9bd7218`）およびMarkdown（46526バイト・SHA-256 `9e5883525dd1090cfeef3e8494e3d51a78a25df13943bcf7673aeb5a712480e2`）を `archive/Cisco/html/ccnp-service-provider/` と `archive/Cisco/md/ccnp-service-provider/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-service-provider.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-service-provider.mjs all` で再生成できる。直下の未移行HTML残数は13件。
 
 ## 2026-11-08: CCNP Enterprise 完全ガイド移行 & 原本アーカイブ退避
 
@@ -2326,13 +2336,13 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
+- **最新完了タスク:** CCNP Service Provider 完全ガイド（`/cisco/ccnp-service-provider`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Enterprise、CCNP Collaboration、CCIE Service Provider も完了。
 - **最終更新日:** 2026-11-09
-- **最新実装 HEAD:** `f78a99a7`（CCNP Enterprise のページメタデータと試験定数の説明からコンセントレーション試験数を削除）
-- **前回進捗同期コミット:** `a00d0c93`
-- **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
-- **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **次の作業:** 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（移行・アーカイブ済みの `/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+- **最新実装 HEAD:** `24cc5ce5`（CCNP Service Provider のグローバルナビゲーション導線登録と幅契約）
+- **前回進捗同期コミット:** `f78a99a7`
+- **HTML残数:** 直下HTML13件、すべて未移行。直下の移行済み原本は0件。
+- **アーカイブ:** CCNP Service Provider は `docs/migration-inventory/cisco-ccnp-service-provider.archive.json`、CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
+- **次の作業:** 直下の未移行HTML13件から移行対象を選定し着手する（移行・アーカイブ済みの `/cisco/ccnp-service-provider`、`/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 

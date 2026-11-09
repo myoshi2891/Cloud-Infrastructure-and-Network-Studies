@@ -14,3 +14,4 @@ it('registers CCNP Service Provider light page for the shared footer', () => {
     const roots = selectors[0]?.match(/:is\(([^)]*)\)/)?.[1]?.split(',').map((root) => root.trim());
     expect(roots).toContain('.ccnp-service-provider-page');
 });
+
