@@ -22,6 +22,7 @@ defineMigrationSuite(
 );
 
 describe('CCNP Service Provider ガイド — リスト・スタイリング・図解・コード検証', () => {
+    /** 原本との全量照合に使うページ全体のDOMを描画する。 */
     const renderPage = () => {
         const { container } = render(<Page />);
         return container;

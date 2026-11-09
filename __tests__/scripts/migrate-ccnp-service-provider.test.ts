@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 const scriptPath = resolve('scripts/migrate-ccnp-service-provider.mjs');
 
+/** 原本と出力を隔離して生成器を実行できる一時リポジトリを作る。 */
 function createRepository(directory: string) {
     mkdirSync(join(directory, 'scripts'));
     copyFileSync(scriptPath, join(directory, 'scripts/migrate-ccnp-service-provider.mjs'));

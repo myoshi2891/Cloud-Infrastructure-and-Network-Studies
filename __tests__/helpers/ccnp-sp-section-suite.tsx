@@ -24,9 +24,9 @@ type SectionComponent = (typeof SECTIONS)[number];
 const TEXT_KINDS = ['h1', 'h2', 'h3', 'h4', 'th', 'td'] as const;
 type TextKind = (typeof TEXT_KINDS)[number];
 
-/** セクションを単独描画し、種別ごとの描画値（テキストは空白除去、リンクは href）を出現順に返す。 */
 const renderedCache = new Map<ComponentType, Record<TextKind | 'links', string[]>>();
 
+/** セクションを単独描画し、種別ごとの描画値（テキストは空白除去、リンクは href）を出現順に返す。 */
 function renderedValues(Section: ComponentType): Record<TextKind | 'links', string[]> {
     const cached = renderedCache.get(Section);
     if (cached) return cached;
@@ -46,9 +46,9 @@ function renderedValues(Section: ComponentType): Record<TextKind | 'links', stri
     return result;
 }
 
-/** セクション単独描画での表（列見出し数）とコードブロック（行数）を出現順に返す。 */
 const structureCache = new Map<ComponentType, { tableColumnHeaders: number[]; codeLines: number[] }>();
 
+/** セクション単独描画での表（列見出し数）とコードブロック（行数）を出現順に返す。 */
 function renderedStructures(Section: ComponentType): { tableColumnHeaders: number[]; codeLines: number[] } {
     const cached = structureCache.get(Section);
     if (cached) return cached;
@@ -71,6 +71,7 @@ export function expectedStructures(Section: SectionComponent): { tableColumnHead
     const index = SECTIONS.indexOf(Section);
     const before = SECTIONS.slice(0, index).map(renderedStructures);
     const own = renderedStructures(Section);
+    /** 先行セクションが占める構造データの件数を合計する。 */
     const offset = (key: 'tableColumnHeaders' | 'codeLines'): number =>
         before.reduce((sum, item) => sum + item[key].length, 0);
     const { tableColumnHeaders, codeLines } = ccnpServiceProviderInventory.structures;
