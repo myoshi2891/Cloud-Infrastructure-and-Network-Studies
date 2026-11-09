@@ -75,6 +75,7 @@ describe('Task63 Section (Part C: Task 6.3 リソースのコンプライアン�
             const lines = block.querySelectorAll(':scope > .code-line');
             expect(lines).toHaveLength(part.codes[i]!.length);
             expect([...block.querySelectorAll('.code-line')]).toEqual([...lines]);
+            expect([...block.childNodes]).toEqual([...lines]);
             expect(block.textContent).not.toMatch(/[\r\n]/);
             expect([...lines].map((line) => line.textContent)).toEqual(part.codes[i]);
         });
