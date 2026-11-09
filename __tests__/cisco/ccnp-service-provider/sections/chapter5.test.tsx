@@ -51,6 +51,16 @@ describe('CCNP Service Provider — Chapter 5 セクション', () => {
         const h2 = container.querySelector('h2');
         expect(h2?.textContent?.trim()).toBe('5. Part A：コア試験 350-501 SPCOR');
     });
+
+    it('Chapter 5 内の全19個の h5 見出しが存在し、テキストが順序どおり一致する', () => {
+        const { container } = render(<Chapter5 />);
+        const h5s = [...container.querySelectorAll('h5')].map((el) =>
+            (el.textContent ?? '').replace(/\s+/g, ' ').trim(),
+        );
+        expect(h5s).toHaveLength(19);
+        expect(h5s[0]).toBe('① 1.1.a コアアーキテクチャ');
+        expect(h5s[18]).toBe('④ 1.7.d MACsec');
+    });
 });
 
 defineCcnpServiceProviderSectionSuite(Chapter5);
