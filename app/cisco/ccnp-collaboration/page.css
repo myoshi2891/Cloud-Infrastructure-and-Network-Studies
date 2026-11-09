@@ -358,6 +358,7 @@
 /* center → safe center のフォールバックを保持するため、biome.json ではこのファイルの noDuplicateProperties のみ除外する。 */
 .ccnp-collab-page .diagram .mm {
   display: flex;
+  padding-top: 0;
   justify-content: center;
   justify-content: safe center;
   overflow-x: auto;
