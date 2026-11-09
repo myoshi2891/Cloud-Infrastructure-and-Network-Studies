@@ -19,7 +19,9 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
             l.classList.remove("active");
             l.removeAttribute("aria-current");
         });
-        sidebar.querySelectorAll(".g").forEach((g) => g.classList.remove("open"));
+        sidebar.querySelectorAll(".g").forEach((g) => {
+            g.classList.remove("open");
+        });
         anchor.classList.add("active");
         anchor.setAttribute("aria-current", "location");
         const g = anchor.closest(".g");
@@ -65,7 +67,9 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
             { rootMargin: "-20% 0px -70% 0px" },
         );
 
-        document.querySelectorAll("section[id]").forEach((s) => io.observe(s));
+        document.querySelectorAll("section[id]").forEach((s) => {
+            io.observe(s);
+        });
 
         return () => io.disconnect();
     }, [activateLink]);
