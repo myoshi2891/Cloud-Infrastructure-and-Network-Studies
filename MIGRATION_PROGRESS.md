@@ -2328,7 +2328,8 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
 - **最終更新日:** 2026-11-09
-- **最新実装 HEAD:** `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green。前回進捗同期コミット: `a00d0c93`。移行コミット群: Green `bba82413`、ナビ統合 `2c5e6a48`、アーカイブ `5a570d93`）
+- **最新実装 HEAD:** `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green）
+- **前回進捗同期コミット:** `a00d0c93`
 - **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
 - **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
 - **次の作業:** 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（移行・アーカイブ済みの `/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
@@ -3670,7 +3671,9 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green。移行コミット群 `bba82413`・`2c5e6a48`・`5a570d93` を含む）。前回進捗同期コミット: `a00d0c93`。
+最新実装 HEAD: `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green）。
+
+前回進捗同期コミット: `a00d0c93`。
 
 原本HTML/Markdownはアーカイブ済み。CCNP Enterprise の保存先とハッシュは `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
