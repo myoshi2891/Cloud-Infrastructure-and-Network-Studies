@@ -2327,7 +2327,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
-- **最終更新日:** 2026-11-08
+- **最終更新日:** 2026-11-09
 - **最新実装 HEAD:** `b578f43d`（CCNP Enterprise のサイドバー・CSS・構文トークン・明色フッター忠実化 Green。前回進捗同期コミット: `a00d0c93`。移行コミット群: Green `bba82413`、ナビ統合 `2c5e6a48`、アーカイブ `5a570d93`）
 - **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
 - **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
