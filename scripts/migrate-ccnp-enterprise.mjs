@@ -242,6 +242,11 @@ const BOUNDARIES = {
 };
 
 const children = [...main.children];
+const expectedChildren = 42;
+if (children.length !== expectedChildren) {
+    console.error(`main の子要素数が一致しません。生成を中止します。expected: ${expectedChildren}, actual: ${children.length}`);
+    process.exit(1);
+}
 
 export function generateSection(phaseKey) {
     const b = BOUNDARIES[phaseKey];
