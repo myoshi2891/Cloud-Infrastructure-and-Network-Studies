@@ -6,7 +6,7 @@
 
 ```bash
 mkdir -p archive/Cisco/html/ccnp-service-provider archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
-git show 'HEAD~1:Ccnp-service-provider-guide.html' > archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html
+git show '25722201^:Ccnp-service-provider-guide.html' > archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html
 git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
 git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
@@ -17,7 +17,7 @@ shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-gui
 
 ## 2026-11-09: CCNP Service Provider 完全ガイド
 
-`app/cisco/ccnp-service-provider/` に Server `page.tsx`、Client `CcnpServiceProviderGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、5分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全5章、28表（th82・td342）・12図・8コード例（全行 `.code-line` ラップ・原本構文トークン `.tk-prompt`・`.tk-cmd`・`.tk-comment`・`.tk-kw`・`.tk-num`・`.tk-ip` 保持）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本から完全移行。サイドバーのブランドロゴ（44x44px SVG）と目次（`.nav a.l2`, `.l3`, `.l4`）、Heroの `.meta` リスト、リストの点（金色ドット）・番号（インディゴ数字バッジ）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造と構文トークン、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全12図のアクセシビリティ代替テキスト（`aria-label`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-service-provider-page`）へ統合。`bun scripts/migrate-ccnp-service-provider.mjs all` で固定原本から再生成できる。
+`app/cisco/ccnp-service-provider/` に Server `page.tsx`、Client `CcnpServiceProviderGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、5分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全5章（見出し `h1` 1・`h2` 5・`h3` 15・`h4` 7・`h5` 19）、28表（th82・td342・セル間縦罫線 `th + th, td + td`）・12図・8コード例（全行 `.code-line` ラップ・原本構文トークン `.tk-comment` 5・`.tk-prompt` 9・`.tk-kw` 35・`.tk-cmd` 9・`.tk-ip` 4・`.tk-ph` 4・`.tk-num` 24 保持）・41コールアウト（`.practice` 18・`.source` 19・`.note` 4・Tabler Icons 41）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本から完全移行。サイドバーのブランドロゴ（44x44px SVG・`.crest .ring` 塗色）と目次（`.nav a.l2`, `.l3`, `.l4`・アクティブ項目への自動スクロール追従 `keepVisible`）、Heroの `.hero-meta` / `.meta-row` / `.meta-label` / `.meta-text` リスト、リストの点（金色ドット）・番号（インディゴ数字バッジ）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造と構文トークン、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全12図のアクセシビリティ代替テキスト（`aria-label`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-service-provider-page`）へ統合。`bun scripts/migrate-ccnp-service-provider.mjs all` で固定原本から再生成できる。
 
 Server `page.tsx` が HeroIntro と Chapter2〜Chapter5 を組み立て、Client `CcnpServiceProviderGuide.tsx` へ `children` として渡す。クライアント側は本文をimportせず、サイドバー開閉と配置を担当する。
 
