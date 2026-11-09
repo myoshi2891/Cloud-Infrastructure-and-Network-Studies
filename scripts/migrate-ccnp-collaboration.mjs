@@ -221,9 +221,10 @@ function nodeToJsx(node) {
 
         const linesJsx = lines.map((line) => `<div className="code-line">${renderLine(line)}</div>`).join('');
         return (
-            `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
+            `\n{/* biome-ignore lint/a11y/noNoninteractiveTabindex: 横スクロール可能なコードをキーボードで操作できるようにする */}\n` +
+            `<section className="code-block" tabIndex={0} aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
             linesJsx +
-            `</div>`
+            `</section>`
         );
     }
 
@@ -373,6 +374,11 @@ const BOUNDARIES = {
 };
 
 const children = [...main.children];
+const expectedChildren = 43;
+if (children.length !== expectedChildren) {
+    console.error(`main の子要素数が一致しません。生成を中止します。expected: ${expectedChildren}, actual: ${children.length}`);
+    process.exit(1);
+}
 
 function generateSection(phaseKey) {
     const b = BOUNDARIES[phaseKey];

@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
 
 const SECTION_PHASES = [
@@ -17,9 +19,11 @@ if (targetPhase && targetPhase !== 'all' && !SECTION_PHASES.includes(targetPhase
     process.exit(1);
 }
 
-const htmlPath = fs.existsSync('Ccnp-enterprise-guide.html')
-    ? 'Ccnp-enterprise-guide.html'
-    : 'archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html';
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+const primaryHtmlPath = resolve(repositoryRoot, 'Ccnp-enterprise-guide.html');
+const htmlPath = fs.existsSync(primaryHtmlPath)
+    ? primaryHtmlPath
+    : resolve(repositoryRoot, 'archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html');
 
 if (!fs.existsSync(htmlPath)) {
     console.error(`原本ファイルが見つかりません: ${htmlPath}`);
@@ -269,8 +273,9 @@ ${jsxContent}
 }
 `;
 
-    fs.mkdirSync('app/cisco/ccnp-enterprise/sections', { recursive: true });
-    fs.writeFileSync(b.file, fileContent);
+    const outputPath = resolve(repositoryRoot, b.file);
+    fs.mkdirSync(dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, fileContent);
     console.log(`Generated ${b.name} (${b.file}) from children[${b.start}..${b.end}]`);
 }
 
