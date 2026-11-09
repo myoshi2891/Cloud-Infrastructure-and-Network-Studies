@@ -14,7 +14,9 @@ describe('CCNP Collaboration — Appendix セクション', () => {
     it('外部リンクがレンダリングされている', () => {
         const { container } = render(<Appendix />);
         const links = container.querySelectorAll('a[href^="http"]');
-        expect(links.length).toBeGreaterThan(0);
+        const nums = [...container.querySelectorAll('.src-num')].map((el) => el.textContent?.trim());
+        expect(nums).toEqual(Array.from({ length: 24 }, (_, i) => String(i + 1)));
+        expect(links.length).toBe(24);
     });
 
     it('原本の注釈フッターが含まれている', () => {

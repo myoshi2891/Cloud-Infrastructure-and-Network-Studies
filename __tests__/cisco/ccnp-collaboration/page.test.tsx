@@ -90,16 +90,17 @@ describe('CCNP Collaboration ガイド — リスト・スタイリング・図�
         const container = renderPage();
         const codeBlocks = container.querySelectorAll('.code-block');
         expect(codeBlocks.length).toBe(ccnpCollabInventory.counts.codeBlock);
-        codeBlocks.forEach((block) => {
-            const lines = block.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+        const expectedLines = ccnpCollabInventory.structures.codeLines;
+        expect(expectedLines.length).toBe(codeBlocks.length);
+        codeBlocks.forEach((block, index) => {
+            expect(block.querySelectorAll('.code-line').length).toBe(expectedLines[index]);
         });
     });
 
     it('サイドバー目次リンクをクリックすると active クラス・aria-current="location" が付与される', () => {
         const { container } = render(<CcnpCollaborationGuide />);
         const links = container.querySelectorAll('#sidebar a[href^="#"]');
-        expect(links.length).toBeGreaterThan(0);
+        expect(links.length).toBe(NAV_ITEMS.length);
 
         const target = links[0];
         expect(target).toBeDefined();
@@ -147,9 +148,9 @@ describe('CCNP Collaboration ガイド — リスト・スタイリング・図�
         });
     });
 
-    it('試験アイコン用の icon-theme-ccnp-collab ユーティリティが Cisco テーマ配色で globals.css に定義されている', () => {
+    it('試験アイコン用の icon-theme-ccnp-collaboration ユーティリティが Cisco テーマ配色で globals.css に定義されている', () => {
         const globalsCss = readFileSync('app/globals.css', 'utf8');
-        expect(globalsCss).toMatch(/@utility\s+icon-theme-ccnp-collab\s*\{/);
+        expect(globalsCss).toMatch(/@utility\s+icon-theme-ccnp-collaboration\s*\{/);
     });
 
     it('サイドバーの nav ランドマークに読み上げ名があり、目次は NAV_ITEMS と同じ順序・文言で描画される', () => {

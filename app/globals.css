@@ -1973,7 +1973,7 @@ body {
     color: var(--color-theme-cisco-fg);
 }
 
-@utility icon-theme-ccnp-collab {
+@utility icon-theme-ccnp-collaboration {
     background: var(--color-theme-cisco-bg);
     color: var(--color-theme-cisco-fg);
 }
