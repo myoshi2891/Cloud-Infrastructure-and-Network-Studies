@@ -1006,6 +1006,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Cisco',
     },
     {
+        id: 'ccnp-service-provider',
+        label: 'CCNP Service Provider',
+        abbr: 'CCNP SP',
+        level: 'Professional',
+        score: 'コア 120分 + コンセントレーション 90分',
+        color: 'card-ccna',
+        href: '/cisco/ccnp-service-provider',
+        description:
+            'サービスプロバイダーインフラ（コアルーティング、MPLS、セグメントルーティング、VPN、QoS、セキュリティ、自動化）のプロフェッショナル認定。コア試験(350-501 SPCOR)とコンセントレーション試験を初学者向けに体系的かつ網羅的に解説。',
+        domains: [
+            {
+                label: '初学者向け完全ガイド',
+                href: '/cisco/ccnp-service-provider',
+                pct: '完全解説',
+            },
+        ],
+        badge: 'Service Provider プロフェッショナル',
+        icon: '🌐',
+        provider: 'Cisco',
+    },
+    {
         id: 'comptia-network-plus',
         label: 'CompTIA Network+',
         abbr: 'Network+',
