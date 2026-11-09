@@ -102,9 +102,9 @@ describe('CCNP Enterprise ガイド — リスト・スタイリング・図解�
         const container = renderPage();
         const codeBlocks = container.querySelectorAll('.code-block');
         expect(codeBlocks.length).toBe(ccnpEnterpriseInventory.counts.codeBlock);
-        codeBlocks.forEach((block) => {
+        codeBlocks.forEach((block, index) => {
             const lines = block.querySelectorAll('.code-line');
-            expect(lines.length).toBeGreaterThan(0);
+            expect(lines.length).toBe(ccnpEnterpriseInventory.structures.codeLines[index]);
         });
 
         // 原本の構文ハイライト span 件数と構造クラス件数の完全一致
