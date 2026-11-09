@@ -41,8 +41,10 @@ describe('CCNP Enterprise — Chapter3 セクション', () => {
         const { container } = render(<Chapter3 />);
         const blocks = container.querySelectorAll('.code-block');
         expect(blocks.length).toBe(12);
-        blocks.forEach((block) => {
-            expect(block.querySelectorAll('.code-line').length).toBeGreaterThan(0);
+        const expectedLines = expectedStructures(Chapter3).codeLines;
+        expect(expectedLines.length).toBe(blocks.length);
+        blocks.forEach((block, index) => {
+            expect(block.querySelectorAll('.code-line').length).toBe(expectedLines[index]);
         });
     });
 });

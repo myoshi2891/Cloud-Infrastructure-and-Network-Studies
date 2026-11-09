@@ -611,8 +611,13 @@
   }
 
   .ccnp-enterprise-page .sidebar nav {
+    display: none;
     max-height: 320px;
     overflow-y: auto;
+  }
+
+  .ccnp-enterprise-page .sidebar.open nav {
+    display: block;
   }
 
   .ccnp-enterprise-page .main {
