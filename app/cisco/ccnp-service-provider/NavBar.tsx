@@ -13,6 +13,7 @@ interface NavBarProps {
  * CCNP Service Provider ガイド用のサイドバー目次コンポーネント。
  */
 export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
+    /** 現在地の目次リンクを更新し、必要に応じて目次内のスクロール位置を合わせる。 */
     const activateLink = useCallback((anchor: Element) => {
         const sidebar = document.getElementById("sidebar");
         if (!sidebar) return;
@@ -31,6 +32,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         }
     }, []);
 
+    /** 目次を閉じて現在地・URLハッシュ・移動先のフォーカスを同期する。 */
     const handleLinkClick = useCallback((e: MouseEvent<HTMLAnchorElement>, href: string) => {
         e.preventDefault();
         onClose();
