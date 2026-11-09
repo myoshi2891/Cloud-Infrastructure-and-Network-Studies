@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
 
 const SECTION_PHASES = [
@@ -18,9 +20,11 @@ if (targetPhase && targetPhase !== 'all' && !SECTION_PHASES.includes(targetPhase
     process.exit(1);
 }
 
-const htmlPath = fs.existsSync('Ccnp-collaboration-guide.html')
-    ? 'Ccnp-collaboration-guide.html'
-    : 'archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html';
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+const primaryHtmlPath = resolve(repositoryRoot, 'Ccnp-collaboration-guide.html');
+const htmlPath = fs.existsSync(primaryHtmlPath)
+    ? primaryHtmlPath
+    : resolve(repositoryRoot, 'archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html');
 
 if (!fs.existsSync(htmlPath)) {
     console.error(`原本ファイルが見つかりません: ${htmlPath}`);
@@ -401,7 +405,9 @@ ${jsxContent}
 }
 `;
 
-    fs.writeFileSync(b.file, fileContent);
+    const outputPath = resolve(repositoryRoot, b.file);
+    fs.mkdirSync(dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, fileContent);
     console.log(`Generated ${b.name} (${b.file}) from children[${b.start}..${b.end}]`);
 }
 
