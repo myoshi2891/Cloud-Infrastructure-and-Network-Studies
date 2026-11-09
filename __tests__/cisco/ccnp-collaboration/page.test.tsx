@@ -93,7 +93,13 @@ describe('CCNP Collaboration ガイド — リスト・スタイリング・図�
         const expectedLines = ccnpCollabInventory.structures.codeLines;
         expect(expectedLines.length).toBe(codeBlocks.length);
         codeBlocks.forEach((block, index) => {
-            expect(block.querySelectorAll('.code-line').length).toBe(expectedLines[index]);
+            expect(block.tagName).toBe('SECTION');
+            expect(block).toHaveAttribute('tabIndex', '0');
+            expect(block.getAttribute('aria-label')).toContain('コードブロック');
+            const lines = block.querySelectorAll(':scope > .code-line');
+            expect(lines).toHaveLength(expectedLines[index]!);
+            expect([...block.childNodes]).toEqual([...lines]);
+            expect(block.textContent).not.toMatch(/[\r\n]/);
         });
     });
 
