@@ -72,8 +72,11 @@ describe('Task62 Section (Part B: Task 6.2 安全で一貫したリソースの�
             expect(block).toHaveAttribute('role', 'group');
             expect(block).toHaveAttribute('tabIndex', '0');
             expect(block.getAttribute('aria-label')).toContain('コード例');
-            const lines = block.querySelectorAll('.code-line');
+            const lines = block.querySelectorAll(':scope > .code-line');
             expect(lines).toHaveLength(part.codes[i]!.length);
+            expect([...block.querySelectorAll('.code-line')]).toEqual([...lines]);
+            expect(block.textContent).not.toMatch(/[\r\n]/);
+            expect([...lines].map((line) => line.textContent)).toEqual(part.codes[i]);
         });
     });
 });
