@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+## CCNP Enterprise / Collaboration 再生成の前提
+
+両ジェネレーター（`bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+
+```bash
+mkdir -p archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
+git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+wc -c archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+shasum -a 256 archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+```
+
+各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、上記の再生成コマンドを実行する。ジェネレーターは直下の同名HTMLを優先するため、そこにファイルがある場合も同じ照合が必要。移行テストはコミット済みインベントリを使うため、この復元は不要。
+
 ## 2026-11-08: CCNP Enterprise 完全ガイド
 
 `app/cisco/ccnp-enterprise/` に Server `page.tsx`、Client `CcnpEnterpriseGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、7分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5, Chapter6, Chapter7）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全7章、84表（th208・td1089）・29図・41コード例（全行 `.code-line` ラップ・原本構文トークン `.t-kw` 114個・`.t-sub` 171個・`.t-cm` 50個等保持）・138リスト項目・71外部リンク出現・40目次・1静的SVGアイコンを原本から完全移行。サイドバーのブランドロゴ（48x48px SVG）と章別アコーディオン目次（`.g.open > .sub`）、Heroの `.meta` グリッドカード、リストの点（金色ドット）・階層と段落余白、表の構造空白除去・読み上げ名、コードのライト背景（`.codeblock` / `.code-label`）と行構造、第7章の参照ソースカード（`.refs` / `.ref` / `.badge` / `.ref-tag`）、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全29図のアクセシビリティ代替テキスト（`aria-label` / `aria-describedby`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-enterprise-page`）へ統合。`bun scripts/migrate-ccnp-enterprise.mjs all` で固定原本から再生成できる。
@@ -78,7 +92,7 @@
 
 `app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
 
-Updated 2026-10-29
+Updated 2026-11-09
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
 

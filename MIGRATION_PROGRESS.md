@@ -1,10 +1,25 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-08)
+(最終更新日: 2026-11-09)
+
+## CCNP Enterprise / Collaboration 再生成の前提
+
+両ジェネレーター（`bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+
+```bash
+mkdir -p archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
+git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+wc -c archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+shasum -a 256 archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+```
+
+各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、上記の再生成コマンドを実行する。ジェネレーターは直下の同名HTMLを優先するため、そこにファイルがある場合も同じ照合が必要。移行テストはコミット済みインベントリを使うため、この復元は不要。
 
 ## 2026-11-08: CCNP Enterprise 完全ガイド移行 & 原本アーカイブ退避
 
-`/cisco/ccnp-enterprise` へ全7章（HeroIntro: Hero + 第1章 認定の全体像 1.1〜1.5、Chapter2: 第2章 コア試験 350-401 ENCOR 2.1〜2.6、Chapter3: 第3章 コンセントレーション試験 8種 3.1〜3.7、Chapter4: 第4章 横断ベストプラクティス集 4.1〜4.4、Chapter5: 第5章 学習計画と試験対策 5.1〜5.5、Chapter6: 第6章 用語集、Chapter7: 第7章 参照ソースURL 7.1〜7.5 & フッター）を完全移行。84表（th208・td1089）・29図・41コード例（全行 `.code-line` ラップ、原本構文トークン `.t-kw` 114個・`.t-sub` 171個・`.t-cm` 50個・`.t-n` 65個・`.t-ph` 10個・`.t-s` 5個・Python/JSONトークン保持）・138リスト項目・71外部リンク出現・40目次・1静的SVGアイコンを原本どおり保持。明色配色（`--color-ccnp-enterprise-*` 23変数、紙色 `#f6f7f9`、コード背景 `#fbfbfd`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、ゴールドテキスト `#7a5212`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、サイドバーのブランドロゴ（48x48px SVG・縦積みタイトル）と章別アコーディオン目次（`.g.open > .sub`）、Heroの `.meta` グリッドカード、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト（`.callout-head` / `.callout-body`）、金色丸ドットと番号・入れ子・字下げ、コードブロック（`.codeblock` / `.code-label`）、第7章の参照ソースカード（`.refs` / `.ref` / `.badge` / `.ref-title` / `.ref-tag`）を完全復元した。目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全29図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-enterprise` 追加）、共通フッター（`components/Footer.module.css` に `.ccnp-enterprise-page` 登録）へ統合。
+`/cisco/ccnp-enterprise` へ全7章（HeroIntro: Hero + 第1章 認定の全体像 1.1〜1.5、Chapter2: 第2章 コア試験 350-401 ENCOR 2.1〜2.6、Chapter3: 第3章 コンセントレーション試験 8種 3.1〜3.7、Chapter4: 第4章 横断ベストプラクティス集 4.1〜4.4、Chapter5: 第5章 学習計画と試験対策 5.1〜5.5、Chapter6: 第6章 用語集、Chapter7: 第7章 参照ソースURL 7.1〜7.5 & フッター）を完全移行。84表（th208・td1089）・29図・41コード例（全行 `.code-line` ラップ、原本構文トークン `.t-kw` 114個・`.t-sub` 171個・`.t-cm` 50個・`.t-n` 65個・`.t-ph` 10個・`.t-s` 5個・Python/JSONトークン保持）・138リスト項目・71外部リンク出現・40目次・1静的SVGアイコンを原本どおり保持。明色配色（`--color-ccnp-enterprise-*` 23変数、紙色 `#f6f7f9`、コード背景 `#fbfbfd`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、ゴールドテキスト `#7a5212`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、サイドバーのブランドロゴ（48x48px SVG・縦積みタイトル）と章別アコーディオン目次（`.g.open > .sub`）、Heroの `.meta` グリッドカード、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト（`.callout-head` / `.callout-body`）、金色丸ドットと番号・入れ子・字下げ、コードブロック（`.codeblock` / `.code-label`）、第7章の参照ソースカード（`.refs` / `.ref` / `.badge` / `.ref-title` / `.ref-tag`）を完全復元した。
+目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全29図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-enterprise` 追加）、共通フッター（`components/Footer.module.css` に `.ccnp-enterprise-page` 登録）へ統合。
 
 Inventory `145142bf`、Red テスト `02423f00`、基盤実装 `c9df6053`、HeroIntro `65c0a2af`、Chapter2 (ENCOR) `f18ba29b`、Chapter3 (Concentration) `c226a194`、Chapter4 & 5 `1469d22c`、Chapter6 & 7・全量Green `bba82413`、ナビゲーション統合 `2c5e6a48`、原本アーカイブ退避 `5a570d93`、デザイン・共通フッター完全忠実化（Red `9b3a85d0` → Green `b578f43d`）の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・アクセシビリティラベルと、Mermaidの全29図DSL・アクセシビリティ代替テキストを全量照合。CCNP Enterprise 関連テスト9ファイル・83件すべて成功、ガイド幅契約テスト169件成功（計10ファイル・252件成功）。最終型検査・全体ESLint成功。npm・ビルドは未実行。
 
