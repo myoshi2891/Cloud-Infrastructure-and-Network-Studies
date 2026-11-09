@@ -493,6 +493,7 @@
 
 .ccnp-enterprise-page .diagram .mm {
   width: 100%;
+  padding-top: 0;
 }
 
 .ccnp-enterprise-page .diagram .mm > [role="img"] {
@@ -505,12 +506,14 @@
   overflow: visible;
 }
 
+/* biome-ignore-start lint/suspicious/noDuplicateProperties: safe center 非対応環境では center をフォールバックとして使う。 */
 .ccnp-enterprise-page .diagram .mm .mermaid-target {
   display: flex;
   justify-content: center;
   justify-content: safe center;
   width: 100%;
 }
+/* biome-ignore-end lint/suspicious/noDuplicateProperties: フォールバックを使う図解の中央寄せルールのみ除外する。 */
 
 .ccnp-enterprise-page .diagram .mm svg {
   flex-shrink: 0;

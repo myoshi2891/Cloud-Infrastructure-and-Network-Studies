@@ -108,8 +108,9 @@ describe('CCNP Enterprise ガイド — リスト・スタイリング・図解�
         });
 
         // 原本の構文ハイライト span 件数と構造クラス件数の完全一致
-        expect(container.querySelectorAll('main .codeblock').length).toBe(41);
-        expect(container.querySelectorAll('main .code-label').length).toBe(41);
+        expect(container.querySelectorAll('main .codeblock').length).toBe(ccnpEnterpriseInventory.counts.codeBlock);
+        expect(container.querySelectorAll('main .code-label').length).toBe(ccnpEnterpriseInventory.counts.codeBlock);
+        // インベントリにない構文トークン・装飾クラスの件数は、移行元を固定するリテラルを保持する。
         expect(container.querySelectorAll('main .t-kw').length).toBe(114);
         expect(container.querySelectorAll('main .t-sub').length).toBe(171);
         expect(container.querySelectorAll('main .t-cm').length).toBe(50);
