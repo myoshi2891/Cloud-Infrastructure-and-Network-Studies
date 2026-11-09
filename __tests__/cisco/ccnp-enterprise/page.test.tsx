@@ -5,6 +5,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/cisco/ccnp-enterprise/page';
 import CcnpEnterpriseGuide from '@/app/cisco/ccnp-enterprise/CcnpEnterpriseGuide';
+import { NAV_ITEMS } from '@/app/cisco/ccnp-enterprise/constants';
 import theme from '@/app/cisco/ccnp-enterprise/render-theme.json';
 import { ccnpEnterpriseInventory } from '@/__tests__/helpers/ccnp-enterprise-inventory';
 import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
@@ -144,6 +145,44 @@ describe('CCNP Enterprise ガイド — リスト・スタイリング・図解�
             sequence: { useMaxWidth: false },
             pie: { useMaxWidth: false },
         });
+    });
+
+    it('目次が NAV_ITEMS の順序・文言・章グループを保持する', () => {
+        const { container } = render(<CcnpEnterpriseGuide />);
+        const links = [...container.querySelectorAll('#sidebar nav a')];
+        expect(links.map((link) => ({ href: link.getAttribute('href'), text: link.textContent }))).toEqual(
+            NAV_ITEMS.map(({ href, text }) => ({ href, text })),
+        );
+
+        const groups = [...container.querySelectorAll('#sidebar nav > ul > .g')];
+        expect(groups).toHaveLength(NAV_ITEMS.filter((item) => item.isChapter).length);
+        let groupIndex = -1;
+        for (const item of NAV_ITEMS) {
+            if (item.isChapter) {
+                groupIndex++;
+                expect(groups[groupIndex]?.querySelector(':scope > a')?.getAttribute('href')).toBe(item.href);
+                expect(groups[groupIndex]?.querySelector(':scope > .sub')).not.toBeNull();
+            } else {
+                const groupHrefs = [...(groups[groupIndex]?.querySelectorAll(':scope > .sub > li > a') ?? [])]
+                    .map((link) => link.getAttribute('href'));
+                expect(groupHrefs).toContain(item.href);
+            }
+        }
+    });
+
+    it('NAV_ITEMS の対象だけを順番に監視し、目次にない section を監視しない', () => {
+        const observer = { observe: vi.fn<(element: Element) => void>(), disconnect: vi.fn() };
+        vi.stubGlobal('IntersectionObserver', vi.fn(function () { return observer; }));
+        try {
+            const { unmount } = render(<><section id="outside-guide" /><Page /></>);
+            expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(
+                NAV_ITEMS.map((item) => item.href.slice(1)),
+            );
+            unmount();
+            expect(observer.disconnect).toHaveBeenCalledOnce();
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 
     it('サイドバーの初期状態で第1章の .g が open になり、別章のリンクをクリックすると該当 .g が open かつリンクが active になる', () => {
