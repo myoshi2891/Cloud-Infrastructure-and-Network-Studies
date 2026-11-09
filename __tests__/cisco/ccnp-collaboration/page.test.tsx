@@ -135,13 +135,12 @@ describe('CCNP Collaboration ガイド — リスト・スタイリング・図�
 
         const referencedTokens = new Set<string>();
         const regex = /var\((--(?:color|font)-ccnp-collab-[a-z0-9-]+)\)/g;
-        let match: RegExpExecArray | null;
-        while ((match = regex.exec(pageCss)) !== null) {
+        for (const match of pageCss.matchAll(regex)) {
             const token = match[1];
             if (token) referencedTokens.add(token);
         }
 
-        expect(referencedTokens.size).toBeGreaterThan(0);
+        expect(referencedTokens.size).toBe(17);
         referencedTokens.forEach((token) => {
             const pattern = new RegExp(`${token}\\s*:`, 'm');
             expect(globalsCss).toMatch(pattern);

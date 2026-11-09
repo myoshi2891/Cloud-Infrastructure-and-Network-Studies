@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.11/schema.json",
   "css": {
     "parser": {
       "tailwindDirectives": true
@@ -23,5 +23,17 @@
         }
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["app/cisco/ccnp-collaboration/page.css"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noDuplicateProperties": "off"
+          }
+        }
+      }
+    }
+  ]
 }
