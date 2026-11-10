@@ -26,7 +26,7 @@
   },
   "overrides": [
     {
-      "includes": ["app/cisco/ccnp-collaboration/page.css"],
+      "includes": ["app/cisco/ccnp-collaboration/page.css", "app/cisco/ccnp-service-provider/page.css"],
       "linter": {
         "rules": {
           "suspicious": {
