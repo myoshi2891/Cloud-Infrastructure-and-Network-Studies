@@ -21,6 +21,11 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
         expect(container.querySelectorAll('table')).toHaveLength(37);
         expect(container.querySelectorAll('.mermaid-diagram')).toHaveLength(15);
         expect(snapshotSvgDiagrams(container)).toEqual(fixture.svg);
+        for (const diagram of container.querySelectorAll('.mermaid-diagram')) {
+            expect(diagram.tagName).toBe('SECTION');
+            expect(diagram).toHaveAttribute('tabIndex', '0');
+            expect(diagram).toHaveAttribute('role', 'region');
+        }
         expect(snapshotGuideChecks(container)).toEqual(fixture.checks);
     });
 
