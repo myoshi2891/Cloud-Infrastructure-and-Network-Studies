@@ -10,7 +10,7 @@ export function snapshotSvgDiagrams(root) {
     function snapshot(node) {
         if (node.nodeType === 3) return normalize(node.textContent) || null;
         if (node.nodeType !== 1) return null;
-        const attributes = [...node.attributes].map(({ name, value }) => [name,
+        const attributes = [...node.attributes].filter(({ name }) => name !== 'style' || node.style.length > 0).map(({ name, value }) => [name,
             name === 'style'
                 ? Array.from({ length: node.style.length }, (_, index) => node.style.item(index))
                     .sort().map(property => [property, node.style.getPropertyValue(property).trim(), node.style.getPropertyPriority(property)])

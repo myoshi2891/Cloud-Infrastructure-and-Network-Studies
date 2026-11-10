@@ -29,6 +29,13 @@ function jsx(node) {
         return '{' + JSON.stringify(node.textContent) + '}';
     }
     if (node.nodeType !== 1) return '';
+    if (node.localName === 'svg') {
+        // Reactのstyleオブジェクトは!importantを保持できないため、固定SVGをそのまま埋め込む。
+        if (node.querySelector('script,iframe,object,embed') || [...node.querySelectorAll('*')].some(element => [...element.attributes].some(attr => /^on/i.test(attr.name) || (/^(?:xlink:)?href$/i.test(attr.name) && !attr.value.startsWith('#'))))) {
+            throw new Error('実行可能な内容または外部参照を含むSVGは生成できません。');
+        }
+        return `<OriginalSvg markup={${JSON.stringify(node.outerHTML)}} />`;
+    }
     if (node.classList.contains('checklist-card')) {
         const labels = [...node.querySelectorAll('label')].map(label => '<>' + [...label.childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('') + '</>');
         return `<Checklist labels={[${labels.join(',')}]} />`;
@@ -82,7 +89,7 @@ if (phase === 'assets') {
 }
 `);
     write('theme-tokens.json', JSON.stringify(tokens, null, 2) + '\n');
-    write('constants.ts', '/** 原本の18項目の目次。監視対象もこの配列から導出する。 */\nexport const NAV_ITEMS = ' + JSON.stringify([...doc.querySelectorAll('.sidebar a')].map(a => ({ id: a.hash.slice(1), text: a.textContent.replace(/\s+/g, ' ').trim() })), null, 2) + ' as const;\n');
+    write('constants.ts', '/** 原本の18項目の目次。監視対象もこの配列から導出する。 */\nexport const NAV_ITEMS = ' + JSON.stringify([...doc.querySelectorAll('.sidebar a')].map(a => ({ id: a.getAttribute('href').slice(1), text: a.textContent.replace(/\s+/g, ' ').trim() })), null, 2) + ' as const;\n');
 } else {
     const groups = Object.fromEntries(Object.keys(PARTS).map(name => [name, []]));
     let name = Object.keys(PARTS)[0];
@@ -92,6 +99,6 @@ if (phase === 'assets') {
         groups[name].push(node);
     }
     const body = groups[phase].map(jsx).join('\n');
-    write(`sections/${phase}.tsx`, `${phase === 'Appendix' ? "import Checklist from '../Checklist';\n" : ''}/** 原本の${phase}ブロック。本文と描画済みSVGをサーバーで描画する。 */\nexport default function ${phase}() { return <>\n${body}\n</>; }\n`);
+    write(`sections/${phase}.tsx`, `${groups[phase].some(node => node.nodeType === 1 && (node.matches('svg') || node.querySelector('svg'))) ? "import OriginalSvg from '../OriginalSvg';\n" : ''}${phase === 'Appendix' ? "import Checklist from '../Checklist';\n" : ''}/** 原本の${phase}ブロック。本文と描画済みSVGをサーバーで描画する。 */\nexport default function ${phase}() { return <>\n${body}\n</>; }\n`);
 }
 console.log('Generated ISO 22123 phase: ' + phase);
