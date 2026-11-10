@@ -2,6 +2,7 @@
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs';
 import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import Page from '@/app/cisco/ccnp-service-provider/page';
 import CcnpServiceProviderGuide from '@/app/cisco/ccnp-service-provider/CcnpServiceProviderGuide';
@@ -249,10 +250,37 @@ describe('CCNP Service Provider ガイド — リスト・スタイリング・�
 
     it('目次リンクのクリックで active クラスと aria-current が付与され、モバイル閉鎖コールバックが呼ばれる', () => {
         const container = renderPage();
+        const toggle = container.querySelector('.sidebar-toggle') as HTMLButtonElement;
+        const sidebar = container.querySelector('#sidebar');
+        fireEvent.click(toggle);
+        expect(sidebar).toHaveClass('open');
+        expect(toggle).toHaveAttribute('aria-expanded', 'true');
         const firstLink = container.querySelector('.nav a[href="#s1"]') as HTMLAnchorElement;
         expect(firstLink).not.toBeNull();
         fireEvent.click(firstLink);
+        expect(sidebar).not.toHaveClass('open');
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(firstLink.classList.contains('active')).toBe(true);
         expect(firstLink.getAttribute('aria-current')).toBe('location');
+    });
+
+    it.each([
+        ['Enter', '{Enter}'],
+        ['Space', ' '],
+        ['Escape', '{Escape}'],
+    ] as const)('背景ボタンは %s キーで開いた目次を閉じる', async (_name, key) => {
+        const user = userEvent.setup();
+        const { container, getByRole, queryByRole } = render(<CcnpServiceProviderGuide />);
+        const toggle = getByRole('button', { name: '目次を開閉' });
+        await user.click(toggle);
+        expect(container.querySelector('#sidebar')).toHaveClass('open');
+
+        const backdrop = getByRole('button', { name: '目次を閉じる' });
+        backdrop.focus();
+        await user.keyboard(key);
+
+        expect(container.querySelector('#sidebar')).not.toHaveClass('open');
+        expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        expect(queryByRole('button', { name: '目次を閉じる' })).not.toBeInTheDocument();
     });
 });
