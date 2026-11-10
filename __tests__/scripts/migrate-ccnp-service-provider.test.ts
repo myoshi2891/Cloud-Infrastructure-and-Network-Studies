@@ -14,6 +14,33 @@ function createRepository(directory: string) {
     mkdirSync(join(directory, 'working-directory'));
 }
 
+describe('CCNP Service Provider 移行の引数検証', () => {
+    it('フェーズ未指定の場合は使い方を表示して失敗終了し、何も生成しない', () => {
+        // Arrange
+        const directory = mkdtempSync(join(tmpdir(), 'ccnp-sp-args-'));
+        try {
+            createRepository(directory);
+            writeFileSync(
+                join(directory, 'Ccnp-service-provider-guide.html'),
+                `<main>${'<p>section</p>'.repeat(29)}</main>`,
+            );
+
+            // Act
+            const result = spawnSync(process.execPath, [join(directory, 'scripts/migrate-ccnp-service-provider.mjs')], {
+                cwd: join(directory, 'working-directory'),
+                encoding: 'utf8',
+            });
+
+            // Assert
+            expect(result.status).toBe(1);
+            expect(result.stderr).toContain('Specify one of: all, herointro');
+            expect(existsSync(join(directory, 'app'))).toBe(false);
+        } finally {
+            rmSync(directory, { recursive: true, force: true });
+        }
+    });
+});
+
 describe('CCNP Service Provider 移行の要素数検証', () => {
     it.each([28, 30])('main が %i 要素の場合は生成前に停止する', (count) => {
         const directory = mkdtempSync(join(tmpdir(), 'ccnp-sp-boundaries-'));
