@@ -7,6 +7,7 @@ test('原本15 SVGの自然寸法・目次移動・全チェック進捗を保�
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(route);
     await expect(page.locator('.hero-title')).toContainText('ISO/IEC 22123-1:2023');
+    await page.evaluate(() => document.fonts.ready);
     const diagrams = page.locator('.mermaid-diagram svg');
     await expect(diagrams).toHaveCount(15);
     for (const diagram of await diagrams.all()) {
@@ -20,8 +21,7 @@ test('原本15 SVGの自然寸法・目次移動・全チェック進捗を保�
     await page.locator('.sidebar a[href="#理解度チェック"]').click();
     const heading = page.locator('h2#理解度チェック');
     await expect(heading).toBeInViewport();
-    const position = await heading.boundingBox();
-    expect(position?.y).toBeGreaterThanOrEqual(60);
+    await expect.poll(async () => (await heading.boundingBox())?.y ?? -1).toBeGreaterThanOrEqual(60);
     const boxes = page.getByRole('checkbox');
     await expect(boxes).toHaveCount(10);
     for (const box of await boxes.all()) await box.check();

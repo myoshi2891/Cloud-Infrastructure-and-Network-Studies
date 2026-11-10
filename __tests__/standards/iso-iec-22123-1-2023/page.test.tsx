@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { readFileSync } from 'node:fs';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import postcss from 'postcss';
 import Page from '@/app/standards/iso-iec-22123-1-2023/page';
 import inventory from '@/docs/migration-inventory/iso-iec-22123-1-2023.json';
@@ -15,6 +15,24 @@ import { snapshotGuideChecks } from '@/scripts/guide-interaction-extraction.mjs'
 defineMigrationSuite('ISO/IEC 22123-1:2023 全量移行', Page, inventory);
 
 describe('SVG・原本CSS・リストとインタラクション', () => {
+    it('原本のscroll spyと目次内の自動スクロールを保持し、18項目だけを監視する', () => {
+        let notify: IntersectionObserverCallback | undefined;
+        const observer = { observe: vi.fn<(element: Element) => void>(), disconnect: vi.fn() };
+        vi.stubGlobal('IntersectionObserver', vi.fn(function (callback: IntersectionObserverCallback) { notify = callback; return observer; }));
+        try {
+            const { container, unmount } = render(<Page />);
+            expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(fixture.nav.map(item => item.href.slice(1)));
+            const link = container.querySelector('.sidebar li:last-child a') as HTMLAnchorElement;
+            const scroll = vi.fn();
+            link.scrollIntoView = scroll;
+            const target = container.querySelector('h2#参考ソース一覧url')!;
+            act(() => notify?.([{ target, isIntersecting: true } as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
+            expect(link).toHaveAttribute('aria-current', 'location');
+            expect(scroll).toHaveBeenCalledWith({ block: 'nearest' });
+            unmount();
+            expect(observer.disconnect).toHaveBeenCalledOnce();
+        } finally { vi.unstubAllGlobals(); }
+    });
     it('全文、表の結合、順序、リスト階層、装飾要素とリンクが原本と一致する', () => {
         const { container } = render(<Page />);
         expect(snapshotGuidePart(container.querySelector('main'))).toEqual(fixture.main);
