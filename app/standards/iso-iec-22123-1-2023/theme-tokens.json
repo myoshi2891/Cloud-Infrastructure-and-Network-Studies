@@ -1,0 +1,16 @@
+{
+  "--color-iso-22123-bg": "#07111e",
+  "--color-iso-22123-panel": "#0d1b2e",
+  "--color-iso-22123-panel2": "#11233a",
+  "--color-iso-22123-border": "#1f3556",
+  "--color-iso-22123-text": "#e6eefc",
+  "--color-iso-22123-text-dim": "#c7d6ec",
+  "--color-iso-22123-text-faint": "#9cb0cf",
+  "--color-iso-22123-accent": "#7c9eff",
+  "--color-iso-22123-accent2": "#4fd1c5",
+  "--color-iso-22123-warn": "#f5c26b",
+  "--color-iso-22123-hex-091524": "#091524",
+  "--color-iso-22123-hex-fff": "#fff",
+  "--color-iso-22123-hex-0c1a2e": "#0c1a2e",
+  "--color-iso-22123-hex-0a1626": "#0a1626"
+}
