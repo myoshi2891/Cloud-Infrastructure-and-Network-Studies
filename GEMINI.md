@@ -1,5 +1,15 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド
+
+`/standards/iso-iec-22123-1-2023` に原本全体を移行。見出し60件（h1:1 / h2:18 / h3:41）、37表（th109・td602）、リスト38項目、外部リンク24出現、描画済みSVG15図、自己点検10項目を保持した。原本のSVGにはMermaid定義がないため、座標・階層・文字・自然寸法・埋め込みCSS・`!important` を固定したSVGリテラルとしてServer Componentで描画する。図の横スクロール領域はキーボードで操作できる。点と番号、表の罫線、暗色配色、Hero、コールアウト、参考文献と免責文を省略せず移行し、原本300pxの目次幅だけを共通契約280pxへ対応付けた。
+
+Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`、Client `IsoGuide.tsx` / `NavBar.tsx` / `Checklist.tsx`、18項目の `constants.ts`、`page.css` / `theme-tokens.json` で構成。`Standards`（国際規格）カテゴリを追加し、ホームと自動生成Headerへ統合。資格試験数の統計には含めない。目次の開閉・Escape・hash/focus・scroll spyと目次内スクロール、チェック件数・進捗バーを保持する。
+
+インベントリと固定Git `4bab76a0` 由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets|Foundation|Models|Services|Data|Practice|Appendix`、fixture再生成は `bun scripts/gen-iso-iec-22123-fixture.mjs`。HTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
+
+最終関連13ファイル・230件、開発サーバー3107のChromium E2E 2件（1440px / 390px）が成功。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。統合時の全体Vitestは611ファイル・5468件中5465件成功、既存失敗3件（SAP-C02 Domain 1のDomain 4期待値2件、共通FooterのCCNP明色ルート期待値1件）。移行前の登録データとCSS・テストが同一であること、SAPの2件は移行前の定数でも再現することを確認した。npm・本番ビルドはユーザー指定に従い未実行。目視確認はユーザー担当。
+
 ## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
 各ジェネレーター（`bun scripts/migrate-ccnp-service-provider.mjs all` / `bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{service-provider,enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
@@ -17,7 +27,9 @@ shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-gui
 
 ## 2026-11-09: CCNP Service Provider 完全ガイド
 
-`app/cisco/ccnp-service-provider/` に Server `page.tsx`、Client `CcnpServiceProviderGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、5分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全5章（見出し `h1` 1・`h2` 5・`h3` 15・`h4` 7・`h5` 19）、28表（th82・td342・セル間縦罫線 `th + th, td + td`）・12図・8コード例（全行 `.code-line` ラップ・原本構文トークン `.tk-comment` 5・`.tk-prompt` 9・`.tk-kw` 35・`.tk-cmd` 9・`.tk-ip` 4・`.tk-ph` 4・`.tk-num` 24 保持）・41コールアウト（`.practice` 18・`.source` 19・`.note` 4・Tabler Icons 41）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本から完全移行。サイドバーのブランドロゴ（44x44px SVG・`.crest .ring` 塗色）と目次（`.nav a.l2`, `.l3`, `.l4`・アクティブ項目への自動スクロール追従 `keepVisible`）、Heroの `.hero-meta` / `.meta-row` / `.meta-label` / `.meta-text` リスト、リストの点（金色ドット）・番号（インディゴ数字バッジ）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造と構文トークン、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全12図のアクセシビリティ代替テキスト（`aria-label`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-service-provider-page`）へ統合。`bun scripts/migrate-ccnp-service-provider.mjs all` で固定原本から再生成できる。
+`app/cisco/ccnp-service-provider/` に Server `page.tsx`、Client `CcnpServiceProviderGuide.tsx` / `NavBar.tsx`、memo化した `Diagram.tsx`、5分割のServer `sections/`（HeroIntro, Chapter2, Chapter3, Chapter4, Chapter5）、定数 `constants.ts`、原本テーマJSON `render-theme.json`、スコープCSS `page.css` を追加。全5章（見出し `h1` 1・`h2` 5・`h3` 15・`h4` 7・`h5` 19）、28表（th82・td342・セル間縦罫線 `th + th, td + td`）・12図・8コード例（全行 `.code-line` ラップ・原本構文トークン `.tk-comment` 5・`.tk-prompt` 9・`.tk-kw` 35・`.tk-cmd` 9・`.tk-ip` 4・`.tk-ph` 4・`.tk-num` 24 保持）・41コールアウト（`.practice` 18・`.source` 19・`.note` 4・Tabler Icons 41）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本から完全移行。
+
+サイドバーのブランドロゴ（44x44px SVG・`.crest .ring` 塗色）と目次（`.nav a.l2`, `.l3`, `.l4`・アクティブ項目への自動スクロール追従 `keepVisible`）、Heroの `.hero-meta` / `.meta-row` / `.meta-label` / `.meta-text` リスト、リストの点（金色ドット）・番号（インディゴ数字バッジ）・階層と段落余白、表の構造空白除去・読み上げ名、コードの行構造と構文トークン、図カードの装飾（`.diagram` / `.mm` 透過）と全派生色、全12図のアクセシビリティ代替テキスト（`aria-label`）、自然倍率（`preserveNaturalScale`）と遅延描画（`deferUntilVisible`）を保持。ホーム・Headerの導線（`app/constants.ts`）と明色フッター（`components/Footer.module.css` の `.ccnp-service-provider-page`）へ統合。`bun scripts/migrate-ccnp-service-provider.mjs all` で固定原本から再生成できる。
 
 Server `page.tsx` が HeroIntro と Chapter2〜Chapter5 を組み立て、Client `CcnpServiceProviderGuide.tsx` へ `children` として渡す。クライアント側は本文をimportせず、サイドバー開閉と配置を担当する。
 
@@ -103,7 +115,7 @@ Server `page.tsx` が HeroIntro と Chapter2〜Chapter7 を組み立て、Client
 
 `app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
 
-Updated 2026-11-09
+Updated 2026-11-10
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
 
@@ -214,6 +226,8 @@ Red `cc139326` / Green `00a04e3c`。修正前はDOM1件とブラウザー3件で
 - **ゾンビプロセス診断:** `bun run test:check-zombies`（`bun test` 誤用・長時間ハングプロセス・`while true` 残骸ループを自動検出。異常を感じたら最初に実行する）
 
 ## プロジェクト構造
+
+- `/app/standards/iso-iec-22123-1-2023`: ISO/IEC用語ガイド。Server本文6分割・固定SVG、Client目次・チェック進捗、原本配色の `page.css`。
 
 - `/app/aws/solutions-architect-professional`: SAP-C02総合。Server `page.tsx` / `SolutionsArchitectProfessionalGuide.tsx` / 6区画sections、Client `NavBar.tsx` / `Quiz.tsx`、50図・167目次の`constants.ts` / `Diagram.tsx`、全CSS・280px目次・リスト装飾の`page.css`。143表・練習問題12問・105参考文献。
 
