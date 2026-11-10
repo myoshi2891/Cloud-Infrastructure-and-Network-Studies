@@ -12,7 +12,8 @@ const SECTION_PHASES = [
 ];
 
 const targetPhase = process.argv[2];
-if (targetPhase && targetPhase !== 'all' && !SECTION_PHASES.includes(targetPhase)) {
+// 未指定・不正なフェーズは、原本の読み込み前に使い方を表示して失敗終了する
+if (!targetPhase || (targetPhase !== 'all' && !SECTION_PHASES.includes(targetPhase))) {
     console.error('Specify one of: all, ' + SECTION_PHASES.join(', '));
     process.exit(1);
 }
@@ -301,7 +302,5 @@ export function runMigration(phase) {
     }
 }
 
-if (targetPhase) {
-    runMigration(targetPhase);
-}
+runMigration(targetPhase);
 
