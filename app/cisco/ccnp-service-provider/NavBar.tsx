@@ -97,12 +97,11 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
             </button>
 
             {isOpen && (
-                <div
+                <button
+                    type="button"
                     className="sidebar-backdrop"
                     onClick={onClose}
                     onKeyDown={(e) => e.key === "Escape" && onClose()}
-                    role="button"
-                    tabIndex={0}
                     aria-label="目次を閉じる"
                 />
             )}
