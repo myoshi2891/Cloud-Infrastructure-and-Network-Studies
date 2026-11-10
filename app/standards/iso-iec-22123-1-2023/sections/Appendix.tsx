@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Checklist from '../Checklist';
 /** 原本のAppendixブロック。本文と描画済みSVGをサーバーで描画する。 */
 export default function Appendix() { return <>
@@ -7,7 +8,7 @@ export default function Appendix() { return <>
 {"\n"}
 <h3 id={"自己点検チェックリスト"}>{"自己点検チェックリスト"}</h3>
 {"\n"}
-<Checklist labels={[<>{"規格が「用語集型」であり、準拠認証の対象ではないことを説明できる"}</>,<>{"party と role\nの違いを例で説明できる"}</>,<>{"基本の4モデル（private / public /\ncommunity / hybrid）を区別できる"}</>,<>{"複数 CSP 系の4モデル（multi-cloud /\nhybrid multi-cloud / federated cloud /\ninter-cloud）を区別できる"}</>,<>{"multi-cloud・hybrid\nmulti-cloud・inter-cloud・federated cloud\nの違いを図で描ける"}</>,<>{"IaaS / PaaS / SaaS\nが能力タイプとどう対応するか説明できる"}</>,<>{"相互運用性の5観点と可搬性の観点（データ3・アプリケーション5）を、移行計画の確認項目に落とせる"}</>,<>{"SLA / SLO / SQO / remedy\nの関係を説明できる"}</>,<>{"customer data と derived data\nの違いを説明できる"}</>,<>{"自社の設計書で hybrid cloud\nの定義をどれに合わせるか決められる"}</>]} />
+<Checklist labels={[<Fragment key={0}>{"規格が「用語集型」であり、準拠認証の対象ではないことを説明できる"}</Fragment>,<Fragment key={1}>{"party と role\nの違いを例で説明できる"}</Fragment>,<Fragment key={2}>{"基本の4モデル（private / public /\ncommunity / hybrid）を区別できる"}</Fragment>,<Fragment key={3}>{"複数 CSP 系の4モデル（multi-cloud /\nhybrid multi-cloud / federated cloud /\ninter-cloud）を区別できる"}</Fragment>,<Fragment key={4}>{"multi-cloud・hybrid\nmulti-cloud・inter-cloud・federated cloud\nの違いを図で描ける"}</Fragment>,<Fragment key={5}>{"IaaS / PaaS / SaaS\nが能力タイプとどう対応するか説明できる"}</Fragment>,<Fragment key={6}>{"相互運用性の5観点と可搬性の観点（データ3・アプリケーション5）を、移行計画の確認項目に落とせる"}</Fragment>,<Fragment key={7}>{"SLA / SLO / SQO / remedy\nの関係を説明できる"}</Fragment>,<Fragment key={8}>{"customer data と derived data\nの違いを説明できる"}</Fragment>,<Fragment key={9}>{"自社の設計書で hybrid cloud\nの定義をどれに合わせるか決められる"}</Fragment>]} />
 {"\n\n"}
 <h2 id={"調査の限界と注意点"}>{"調査の限界と注意点"}</h2>
 {"\n"}

@@ -37,7 +37,7 @@ function jsx(node) {
         return `<OriginalSvg markup={${JSON.stringify(node.outerHTML)}} />`;
     }
     if (node.classList.contains('checklist-card')) {
-        const labels = [...node.querySelectorAll('label')].map(label => '<>' + [...label.childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('') + '</>');
+        const labels = [...node.querySelectorAll('label')].map((label, index) => `<Fragment key={${index}}>` + [...label.childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('') + '</Fragment>');
         return `<Checklist labels={[${labels.join(',')}]} />`;
     }
     const diagram = node.classList.contains('mermaid-diagram');
@@ -101,6 +101,6 @@ if (phase === 'assets') {
         groups[name].push(node);
     }
     const body = groups[phase].map(jsx).join('\n');
-    write(`sections/${phase}.tsx`, `${groups[phase].some(node => node.nodeType === 1 && (node.matches('svg') || node.querySelector('svg'))) ? "import OriginalSvg from '../OriginalSvg';\n" : ''}${phase === 'Appendix' ? "import Checklist from '../Checklist';\n" : ''}/** 原本の${phase}ブロック。本文と描画済みSVGをサーバーで描画する。 */\nexport default function ${phase}() { return <>\n${body}\n</>; }\n`);
+    write(`sections/${phase}.tsx`, `${groups[phase].some(node => node.nodeType === 1 && (node.matches('svg') || node.querySelector('svg'))) ? "import OriginalSvg from '../OriginalSvg';\n" : ''}${phase === 'Appendix' ? "import { Fragment } from 'react';\nimport Checklist from '../Checklist';\n" : ''}/** 原本の${phase}ブロック。本文と描画済みSVGをサーバーで描画する。 */\nexport default function ${phase}() { return <>\n${body}\n</>; }\n`);
 }
 console.log('Generated ISO 22123 phase: ' + phase);
