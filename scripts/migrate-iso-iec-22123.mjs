@@ -11,8 +11,10 @@ if (!phase || !['assets', ...Object.keys(PARTS)].includes(phase)) {
     process.exit(1);
 }
 const root = fileURLToPath(new URL('../', import.meta.url));
-const primary = resolve(root, SOURCE);
-const html = fs.readFileSync(fs.existsSync(primary) ? primary : resolve(root, 'archive/Standards/html/iso-iec-22123-1-2023', SOURCE), 'utf8');
+const candidates = [resolve(root, SOURCE), resolve(root, 'archive/Standards/html/iso-iec-22123-1-2023', SOURCE)];
+const sourcePath = candidates.find(path => fs.existsSync(path));
+if (!sourcePath) throw new Error('原本HTMLが見つかりません。確認した場所: ' + candidates.join(', '));
+const html = fs.readFileSync(sourcePath, 'utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 if (!main || main.children.length !== 165 || doc.querySelectorAll('.mermaid-diagram svg').length !== 15) throw new Error('原本の165要素・15 SVGが一致しません。生成を中止します。');
@@ -31,7 +33,10 @@ function jsx(node) {
     if (node.nodeType !== 1) return '';
     if (node.localName === 'svg') {
         // Reactのstyleオブジェクトは!importantを保持できないため、固定SVGをそのまま埋め込む。
-        if (node.querySelector('script,iframe,object,embed') || [...node.querySelectorAll('*')].some(element => [...element.attributes].some(attr => /^on/i.test(attr.name) || (/^(?:xlink:)?href$/i.test(attr.name) && !attr.value.startsWith('#'))))) {
+        // url(#id) 以外の url(...) と @import は外部リソースの読み込みとして扱う。
+        const external = text => /url\(\s*(?!['"]?#)/i.test(text) || /@import/i.test(text);
+        const unsafeAttr = attr => /^on/i.test(attr.name) || /^(?:src|action|formaction)$/i.test(attr.name) || (/^(?:xlink:)?href$/i.test(attr.name) && !attr.value.startsWith('#')) || external(attr.value);
+        if (node.querySelector('script,iframe,object,embed') || [node, ...node.querySelectorAll('*')].some(element => [...element.attributes].some(unsafeAttr)) || [...node.querySelectorAll('style')].some(style => external(style.textContent))) {
             throw new Error('実行可能な内容または外部参照を含むSVGは生成できません。');
         }
         return `<OriginalSvg markup={${JSON.stringify(node.outerHTML)}} />`;
