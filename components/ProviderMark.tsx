@@ -82,6 +82,18 @@ export function ProviderMark({ provider, compact = false }: ProviderMarkProps) {
         );
     }
 
+    if (provider === 'Standards') {
+        return (
+            <span className="provider-mark provider-mark-standards" data-compact={compact || undefined} aria-hidden="true">
+                <svg viewBox="0 0 32 24" fill="none">
+                    <rect x="7" y="2" width="18" height="20" rx="2" stroke="currentColor" strokeWidth="1.8" />
+                    <path d="M11 8h10M11 12h10M11 16h7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+                <span>ISO/IEC</span>
+            </span>
+        );
+    }
+
     if (provider === 'Tools') {
         return (
             <span

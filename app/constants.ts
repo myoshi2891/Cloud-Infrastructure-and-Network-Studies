@@ -2,7 +2,7 @@
 
 import { HANDS_ON_ENABLED } from '@/lib/featureFlags';
 
-export type Provider = 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools';
+export type Provider = 'GCP' | 'AWS' | 'Cisco' | 'CompTIA' | 'Books' | 'Tools' | 'Standards';
 
 export interface ExamDomain {
     label: string;
@@ -147,6 +147,13 @@ export const providerMeta: Record<
         countUnit: { en: 'books', ja: '冊' },
         ctaLabel: 'この書籍を読む',
     },
+    Standards: {
+        label: '国際規格',
+        kicker: 'ISO / IEC Standards',
+        description: 'クラウド・ITの国際規格を用語と実務の視点から学ぶ',
+        countUnit: { en: 'guides', ja: 'ガイド' },
+        ctaLabel: 'この規格を学ぶ',
+    },
     Tools: {
         label: '運用ツール資格学習共通ガイド',
         kicker: 'Operations & Tooling',
@@ -156,7 +163,7 @@ export const providerMeta: Record<
     },
 };
 
-export const providerOrder: Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools'];
+export const providerOrder: Provider[] = ['GCP', 'AWS', 'Cisco', 'CompTIA', 'Books', 'Tools', 'Standards'];
 
 const ALL_EXAMS: Exam[] = [
     {
@@ -1417,6 +1424,21 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Tools',
         overviewLabel: '完全実践ガイド',
     },
+    {
+        id: 'iso-iec-22123-1-2023',
+        label: 'ISO/IEC 22123-1:2023',
+        abbr: 'ISO/IEC 22123-1',
+        level: 'クラウドコンピューティング用語',
+        score: '用語・14カテゴリ',
+        color: 'card-cli',
+        href: '/standards/iso-iec-22123-1-2023',
+        description: 'クラウド用語、配備モデル、役割、相互運用性・可搬性、SLA、データ分類を原本の図と表で学ぶステップバイステップガイド。',
+        domains: [],
+        badge: '国際規格ガイド',
+        icon: '📐',
+        provider: 'Standards',
+        overviewLabel: '用語ガイド',
+    },
 ];
 
 export const EXAMS: Exam[] = HANDS_ON_ENABLED
@@ -1435,7 +1457,8 @@ export const STATS: Stat[] = [
                 (exam) =>
                     exam.status !== 'coming-soon'
                     && exam.provider !== 'Books'
-                    && exam.provider !== 'Tools',
+                    && exam.provider !== 'Tools'
+                    && exam.provider !== 'Standards',
             ).length,
         ),
         label: '対応試験数',
