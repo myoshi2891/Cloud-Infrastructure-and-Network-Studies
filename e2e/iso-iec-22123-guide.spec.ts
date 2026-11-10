@@ -16,8 +16,13 @@ test('原本15 SVGの自然寸法・目次移動・全チェック進捗を保�
     }
     const firstRegion = page.locator('.mermaid-diagram').first();
     await firstRegion.focus();
+    await firstRegion.evaluate(el => {
+        el.setAttribute('data-scrolling', 'true');
+        el.addEventListener('scrollend', () => el.removeAttribute('data-scrolling'), { once: true });
+    });
     await page.keyboard.press('ArrowRight');
     await expect.poll(() => firstRegion.evaluate(el => el.scrollLeft)).toBeGreaterThan(0);
+    await expect(firstRegion).not.toHaveAttribute('data-scrolling', 'true');
     await page.locator('.sidebar a[href="#理解度チェック"]').click();
     const heading = page.locator('h2#理解度チェック');
     await expect(heading).toBeInViewport();
