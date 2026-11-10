@@ -28,9 +28,9 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
     }, []);
     useEffect(() => {
         /** Escapeで開いた目次を閉じ、開閉ボタンへフォーカスを返す。 */
-        function escape(event: KeyboardEvent) { if (open && event.key === 'Escape') { onClose(); toggle.current?.focus(); } }
-        window.addEventListener('keydown', escape);
-        return () => window.removeEventListener('keydown', escape);
+        function onKeyDown(event: KeyboardEvent) { if (open && event.key === 'Escape') { onClose(); toggle.current?.focus(); } }
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
     }, [open, onClose]);
     /** 目次の選択・URLハッシュ・移動先のフォーカスを一度の操作で更新する。 */
     function navigate(event: MouseEvent<HTMLAnchorElement>, id: string) {
