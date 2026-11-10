@@ -1433,7 +1433,13 @@ const ALL_EXAMS: Exam[] = [
         color: 'card-cli',
         href: '/standards/iso-iec-22123-1-2023',
         description: 'クラウド用語、配備モデル、役割、相互運用性・可搬性、SLA、データ分類を原本の図と表で学ぶステップバイステップガイド。',
-        domains: [],
+        domains: [
+            {
+                label: '用語ガイド',
+                href: '/standards/iso-iec-22123-1-2023',
+                pct: '完全解説',
+            },
+        ],
         badge: '国際規格ガイド',
         icon: '📐',
         provider: 'Standards',
