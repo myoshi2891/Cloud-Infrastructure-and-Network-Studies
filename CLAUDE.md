@@ -2,6 +2,8 @@
 
 ## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド
 
+追試ではブラウザーのconsole errorも0件であることを検査する。RSC境界を越えるチェックリストFragmentへ安定したkeyを付与（`bcd6d834`）し、scroll spyはサイドバー自身のscrollTopだけを変更して本文のアンカー着地を動かさない（`d245eb9c`）。関連230件とE2E2件を再実行して成功。
+
 `/standards/iso-iec-22123-1-2023` に原本全体を移行。見出し60件（h1:1 / h2:18 / h3:41）、37表（th109・td602）、リスト38項目、外部リンク24出現、描画済みSVG15図、自己点検10項目を保持した。原本のSVGにはMermaid定義がないため、座標・階層・文字・自然寸法・埋め込みCSS・`!important` を固定したSVGリテラルとしてServer Componentで描画する。図の横スクロール領域はキーボードで操作できる。点と番号、表の罫線、暗色配色、Hero、コールアウト、参考文献と免責文を省略せず移行し、原本300pxの目次幅だけを共通契約280pxへ対応付けた。
 
 Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`、Client `IsoGuide.tsx` / `NavBar.tsx` / `Checklist.tsx`、18項目の `constants.ts`、`page.css` / `theme-tokens.json` で構成。`Standards`（国際規格）カテゴリを追加し、ホームと自動生成Headerへ統合。資格試験数の統計には含めない。目次の開閉・Escape・hash/focus・scroll spyと目次内スクロール、チェック件数・進捗バーを保持する。
