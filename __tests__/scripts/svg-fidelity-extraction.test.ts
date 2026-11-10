@@ -10,6 +10,10 @@ function mount(markup: string) {
 }
 
 describe('描画済みSVGの忠実性スナップショット', () => {
+    it('空のstyle属性の有無は、描画に影響しない同一の図として扱う', () => {
+        expect(snapshotSvgDiagrams(mount('<svg><path style="" d="M0 0L1 1"/></svg>')))
+            .toEqual(snapshotSvgDiagrams(mount('<svg><path d="M0 0L1 1"/></svg>')));
+    });
     it('属性順とstyle宣言順を正規化し、同じ図を同じ値として比較する', () => {
         const a = mount('<svg width="400" viewBox="0 0 400 200"><path d="M0 0L1 1" style="fill: red; stroke: blue"/></svg>');
         const b = mount('<svg viewBox="0 0 400 200" width="400"><path style="stroke: blue; fill: red" d="M0 0L1 1"/></svg>');

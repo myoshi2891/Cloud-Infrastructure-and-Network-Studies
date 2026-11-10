@@ -35,7 +35,7 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
         await user.click(link);
         expect(container.querySelector('.sidebar')).not.toHaveClass('open');
         expect(link).toHaveAttribute('aria-current', 'location');
-        expect(document.activeElement?.id).toBe(link.hash.slice(1));
+        expect(document.activeElement?.id).toBe(link.getAttribute('href')!.slice(1));
     });
 
     it('10項目の全チェック・解除で件数と進捗バーを正確に更新する', () => {
