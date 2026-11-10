@@ -1,6 +1,6 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-09)
+(最終更新日: 2026-11-10)
 
 ## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
@@ -2337,7 +2337,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 
 - **ブランチ:** dev
 - **最新完了タスク:** CCNP Service Provider 完全ガイド（`/cisco/ccnp-service-provider`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Enterprise、CCNP Collaboration、CCIE Service Provider も完了。
-- **最終更新日:** 2026-11-09
+- **最終更新日:** 2026-11-10
 - **最新実装 HEAD:** `938d8c58`（CCNP Service Provider のCSSとレイアウト構造を原本HTMLに合わせて復元）
 - **前回進捗同期コミット:** `f78a99a7`
 - **HTML残数:** 直下HTML13件、すべて未移行。直下の移行済み原本は0件。
@@ -3683,13 +3683,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 最新実装 HEAD: `938d8c58`（CCNP Service Provider のCSSとレイアウト構造を原本HTMLに合わせて復元）。
 
-前回進捗同期コミット: `a00d0c93`。
+前回進捗同期コミット: `f78a99a7`。
 
 原本HTML/Markdownはアーカイブ済み。CCNP Enterprise の保存先とハッシュは `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
 
 検証: 2026-11-08に `scripts/migrate-ccie-sp.mjs` 修正後のCCIE SP関連テストを実行（`bunx vitest run __tests__/cisco` 30ファイル・337件すべて成功）。npm・Playwright E2E・実ページのブラウザー検証は未実行。
 
-次の作業: 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（`/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider`、SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: 直下の未移行HTML13件から移行対象を選定し着手する（移行・アーカイブ済みの `/cisco/ccnp-service-provider`、`/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
