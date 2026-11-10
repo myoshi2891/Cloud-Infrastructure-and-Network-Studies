@@ -14,7 +14,13 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
                 setActive(entry.target.id);
                 const link = [...(sidebar.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [])]
                     .find(anchor => anchor.dataset.target === entry.target.id);
-                link?.scrollIntoView?.({ block: 'nearest' });
+                const viewport = sidebar.current;
+                if (link && viewport) {
+                    if (link.offsetTop < viewport.scrollTop) viewport.scrollTop = link.offsetTop;
+                    else if (link.offsetTop + link.offsetHeight > viewport.scrollTop + viewport.clientHeight) {
+                        viewport.scrollTop = link.offsetTop + link.offsetHeight - viewport.clientHeight;
+                    }
+                }
             }
         }, { rootMargin: '-15% 0px -75% 0px' });
         for (const { id } of NAV_ITEMS) { const target = document.getElementById(id); if (target) observer.observe(target); }
