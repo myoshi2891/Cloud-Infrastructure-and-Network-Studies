@@ -114,9 +114,10 @@ function nodeToJsx(node) {
 
         const linesJsx = lines.map((lineHtml) => `<div className="code-line">${plainCodeLineToJsx(lineHtml)}</div>`).join('');
         return (
-            `<div className="code-block" tabIndex={0} role="region" aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
+            `\n{/* biome-ignore lint/a11y/noNoninteractiveTabindex: 横スクロール可能なコードの名前付き領域にキーボードで到達して操作できるようにする */}\n` +
+            `<section className="code-block" tabIndex={0} aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
             linesJsx +
-            `</div>`
+            `</section>`
         );
     }
 
@@ -266,10 +267,11 @@ export function generateSection(phaseKey) {
 
     const slice = children.slice(b.start, b.end);
     const jsxContent = slice.map(nodeToJsx).join('\n');
+    const diagramImport = slice.some(node => node.matches('.diagram') || node.querySelector('.diagram'))
+        ? "import { Diagram } from '../Diagram';\n\n"
+        : '';
 
-    const fileContent = `import { Diagram } from '../Diagram';
-
-/**
+    const fileContent = `${diagramImport}/**
  * ${b.name} セクションコンポーネント
  */
 export default function ${b.name}() {

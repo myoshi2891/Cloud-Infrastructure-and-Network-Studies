@@ -1,5 +1,3 @@
-import { Diagram } from '../Diagram';
-
 /**
  * HeroIntro セクションコンポーネント
  */
