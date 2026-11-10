@@ -40,7 +40,8 @@ function jsx(node) {
         const labels = [...node.querySelectorAll('label')].map(label => '<>' + [...label.childNodes].filter(n => n.nodeName !== 'INPUT').map(jsx).join('') + '</>');
         return `<Checklist labels={[${labels.join(',')}]} />`;
     }
-    const tag = node.localName;
+    const diagram = node.classList.contains('mermaid-diagram');
+    const tag = diagram ? 'section' : node.localName;
     const attributes = [];
     for (const { name, value } of node.attributes) {
         if (name === 'style') {
@@ -50,9 +51,10 @@ function jsx(node) {
             attributes.push('{...'+JSON.stringify({ xmlns: value })+'}');
         } else {
             const key = { class: 'className', for: 'htmlFor', tabindex: 'tabIndex', colspan: 'colSpan', rowspan: 'rowSpan', 'xlink:href': 'xlinkHref', 'xmlns:xlink': 'xmlnsXlink' }[name] ?? (name.startsWith('data-') || name.startsWith('aria-') ? name : camel(name));
-            attributes.push(key + '={' + JSON.stringify(value) + '}');
+            attributes.push(key + '={' + JSON.stringify(diagram && name === 'role' ? 'region' : value) + '}');
         }
     }
+    if (diagram) attributes.push('tabIndex={0}');
     if (tag === 'th' && !node.hasAttribute('scope')) attributes.push('scope="col"');
     if (tag === 'table') attributes.push(`aria-label={${JSON.stringify('用語・比較表 ' + ([...main.querySelectorAll('table')].indexOf(node) + 1))}}`);
     const attrs = attributes.length ? ' ' + attributes.join(' ') : '';
