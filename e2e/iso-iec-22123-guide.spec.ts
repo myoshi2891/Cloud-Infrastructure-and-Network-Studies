@@ -5,9 +5,11 @@ const route = '/standards/iso-iec-22123-1-2023';
 test('原本15 SVGの自然寸法・目次移動・全チェック進捗を保持する', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     await page.goto(route);
     await expect(page.locator('.hero-title')).toContainText('ISO/IEC 22123-1:2023');
     await page.evaluate(() => document.fonts.ready);
+    expect(errors).toEqual([]);
     const diagrams = page.locator('.mermaid-diagram svg');
     await expect(diagrams).toHaveCount(15);
     for (const diagram of await diagrams.all()) {

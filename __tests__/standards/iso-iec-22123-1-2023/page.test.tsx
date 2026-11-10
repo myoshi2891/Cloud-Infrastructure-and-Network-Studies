@@ -23,12 +23,17 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
             const { container, unmount } = render(<Page />);
             expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(fixture.nav.map(item => item.href.slice(1)));
             const link = container.querySelector('.sidebar li:last-child a') as HTMLAnchorElement;
+            const sidebar = container.querySelector('.sidebar') as HTMLElement;
+            Object.defineProperty(sidebar, 'clientHeight', { value: 300 });
+            Object.defineProperty(link, 'offsetTop', { value: 600 });
+            Object.defineProperty(link, 'offsetHeight', { value: 40 });
             const scroll = vi.fn();
             link.scrollIntoView = scroll;
             const target = container.querySelector('h2#参考ソース一覧url')!;
             act(() => notify?.([{ target, isIntersecting: true } as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
             expect(link).toHaveAttribute('aria-current', 'location');
-            expect(scroll).toHaveBeenCalledWith({ block: 'nearest' });
+            expect(sidebar.scrollTop).toBe(340);
+            expect(scroll).not.toHaveBeenCalled();
             unmount();
             expect(observer.disconnect).toHaveBeenCalledOnce();
         } finally { vi.unstubAllGlobals(); }
