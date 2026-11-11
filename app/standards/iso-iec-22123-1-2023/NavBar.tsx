@@ -7,14 +7,29 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
     const [active, setActive] = useState<string>(NAV_ITEMS[0].id);
     const toggle = useRef<HTMLButtonElement>(null);
     const sidebar = useRef<HTMLElement>(null);
+    // 目次から移動した見出しと着地位置。利用者のスクロールで位置が変わるまで選択を保つ。
+    const pinned = useRef<{ id: string; top: number } | null>(null);
     useEffect(() => {
         const targets = NAV_ITEMS.map(({ id }) => document.getElementById(id))
             .filter((target): target is HTMLElement => target !== null);
+        /** 見出しのscroll-margin-top（目次移動の着地位置）を読み始めの境界とする。1pxの着地誤差を許容する。 */
+        function readingBoundary() {
+            const first = targets[0];
+            const margin = first ? Number.parseFloat(window.getComputedStyle(first).scrollMarginTop) : Number.NaN;
+            return Number.isFinite(margin) ? margin + 1 : window.innerHeight * 0.15;
+        }
         function updateActive() {
+            const pin = pinned.current;
+            if (pin) {
+                const landed = document.getElementById(pin.id);
+                if (landed && Math.abs(landed.getBoundingClientRect().top - pin.top) < 1) return;
+                pinned.current = null;
+            }
             // 読み始めの境界を最後に通過した見出しを選ぶ。長い節内の逆スクロールにも対応する。
+            const boundary = readingBoundary();
             let current = targets[0];
             for (const target of targets) {
-                if (target.getBoundingClientRect().top <= window.innerHeight * 0.15) current = target;
+                if (target.getBoundingClientRect().top <= boundary) current = target;
             }
             if (current) {
                 setActive(current.id);
@@ -32,12 +47,19 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
         const observer = typeof IntersectionObserver === 'undefined' ? null
             : new IntersectionObserver(updateActive, { rootMargin: '-15% 0px -75% 0px' });
         targets.forEach(target => observer?.observe(target));
-        window.addEventListener('scroll', updateActive, { passive: true });
+        // 連続するscrollは1フレームにつき1回だけ見出し位置を読む。
+        let frame = 0;
+        function scheduleUpdate() {
+            if (frame) return;
+            frame = window.requestAnimationFrame(() => { frame = 0; updateActive(); });
+        }
+        window.addEventListener('scroll', scheduleUpdate, { passive: true });
         window.addEventListener('resize', updateActive);
         updateActive();
         return () => {
             observer?.disconnect();
-            window.removeEventListener('scroll', updateActive);
+            if (frame) window.cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', scheduleUpdate);
             window.removeEventListener('resize', updateActive);
         };
     }, []);
@@ -52,7 +74,8 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
         event.preventDefault(); setActive(id); onClose();
         window.history.pushState(null, '', '#' + id);
         const target = document.getElementById(id);
-        if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); target.scrollIntoView?.({ behavior: 'instant' }); }
+        if (target) { target.tabIndex = -1; target.focus({ preventScroll: true }); target.scrollIntoView?.({ behavior: 'instant' });
+            pinned.current = { id, top: target.getBoundingClientRect().top }; }
     }
     return <>
         <button className="toggle" id="toggle" type="button" ref={toggle} aria-label="目次を開閉" aria-expanded={open} aria-controls="sidebar" onClick={onToggle}>☰ 目次</button>
