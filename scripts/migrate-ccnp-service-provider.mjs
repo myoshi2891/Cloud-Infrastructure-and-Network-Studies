@@ -39,6 +39,51 @@ if (!main) {
 }
 
 const allTables = [...main.querySelectorAll('table')];
+const SUBHEADING_SELECTOR = 'h1, h2, h3, h4, h5, h6';
+
+/**
+ * 直前の兄弟要素から、指定セレクターに一致する最も近い要素を探す。
+ * @param {Element} node - 探索の起点。
+ * @param {string} selector - 一致させる見出し等のセレクター。
+ * @returns {Element | null} 見つかった要素。無い場合は null。
+ */
+function nearestPrevious(node, selector) {
+    let prev = node.previousElementSibling;
+    while (prev && !prev.matches(selector)) {
+        prev = prev.previousElementSibling;
+    }
+    return prev;
+}
+
+/**
+ * コードブロック直前の最も近い小見出し（h5・h6を含む）またはコードラベルの文字列を返す。
+ * @param {Element} pre - 原本のpre要素。
+ * @returns {string} 見出し文字列。見つからない場合は既定名。
+ */
+function codeHeading(pre) {
+    const prev = nearestPrevious(pre, `${SUBHEADING_SELECTOR}, .code-label, .callout-head`);
+    return prev?.textContent?.replace(/\s+/g, ' ').trim() || 'コマンド例';
+}
+
+// 同じ見出しの下に複数のコードブロックがある場合だけ連番を付け、読み上げ名を一意にする。
+const allPres = [...main.querySelectorAll('pre')];
+const codeHeadingCounts = new Map();
+for (const pre of allPres) {
+    const heading = codeHeading(pre);
+    codeHeadingCounts.set(heading, (codeHeadingCounts.get(heading) ?? 0) + 1);
+}
+
+/**
+ * コードブロックの一意な読み上げ名を返す。
+ * @param {Element} pre - 原本のpre要素。
+ * @returns {string} 見出しと、重複時は見出し内の連番を含むラベル。
+ */
+function codeLabel(pre) {
+    const heading = codeHeading(pre);
+    if ((codeHeadingCounts.get(heading) ?? 0) <= 1) return `${heading}（コードブロック）`;
+    const ordinal = allPres.filter(other => codeHeading(other) === heading).indexOf(pre) + 1;
+    return `${heading}（コードブロック ${ordinal}）`;
+}
 
 /**
  * 直前の見出しと原本内の表番号から、表の読み上げ名を組み立てる。
@@ -89,10 +134,7 @@ function nodeToJsx(node) {
     // Mermaid Diagram
     if (node.classList?.contains('diagram')) {
         const id = node.getAttribute('data-diagram') || node.id || node.getAttribute('data-d') || '';
-        let prev = node.previousElementSibling;
-        while (prev && !prev.matches('h1, h2, h3, h4, header, .callout-head')) {
-            prev = prev.previousElementSibling;
-        }
+        const prev = nearestPrevious(node, `${SUBHEADING_SELECTOR}, header, .callout-head`);
         const labelText = prev ? (prev.textContent || '').replace(/\s+/g, ' ').trim() : `図解 ${id}`;
         return `<Diagram id="${id}" label={${JSON.stringify(labelText)}} />`;
     }
@@ -106,16 +148,10 @@ function nodeToJsx(node) {
         if (lines.length > 0 && lines[lines.length - 1] === '') {
             lines.pop();
         }
-        let prev = node.previousElementSibling;
-        while (prev && !prev.matches('h1, h2, h3, h4, .code-label, .callout-head')) {
-            prev = prev.previousElementSibling;
-        }
-        const labelText = prev?.textContent?.replace(/\s+/g, ' ').trim() || 'コマンド例';
-
         const linesJsx = lines.map((lineHtml) => `<div className="code-line">${plainCodeLineToJsx(lineHtml)}</div>`).join('');
         return (
             `\n{/* biome-ignore lint/a11y/noNoninteractiveTabindex: 横スクロール可能なコードの名前付き領域にキーボードで到達して操作できるようにする */}\n` +
-            `<section className="code-block" tabIndex={0} aria-label={${JSON.stringify(`${labelText}（コードブロック）`)}}>` +
+            `<section className="code-block" tabIndex={0} aria-label={${JSON.stringify(codeLabel(node))}}>` +
             linesJsx +
             `</section>`
         );
