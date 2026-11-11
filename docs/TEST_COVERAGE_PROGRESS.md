@@ -12,7 +12,7 @@ Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`�
 
 インベントリと訂正済みHTML由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets`（他のフェーズ: `Foundation`、`Models`、`Services`、`Data`、`Practice`、`Appendix`。1回の実行につき1フェーズを指定）。
 
-現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。スクリプトの入出力とGit操作はリポジトリルート基準で、任意の作業ディレクトリから実行できる。
+現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。上記コマンドの `scripts/...` は作業ディレクトリからの相対パスのため、必ずリポジトリルートから実行する。スクリプト内部の入出力とGit操作はリポジトリルート基準である。
 
 移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
 
