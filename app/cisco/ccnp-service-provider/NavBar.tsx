@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, type MouseEvent } from "react";
+import { useEffect, useCallback, useRef, type MouseEvent } from "react";
 import { NAV_ITEMS } from "./constants";
 
 interface NavBarProps {
@@ -13,6 +13,20 @@ interface NavBarProps {
  * CCNP Service Provider ガイド用のサイドバー目次コンポーネント。
  */
 export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
+    const toggleRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        /** 開いた目次はフォーカス位置に関係なくEscapeで閉じ、開閉ボタンへフォーカスを戻す。 */
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== "Escape") return;
+            onClose();
+            toggleRef.current?.focus();
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [isOpen, onClose]);
+
     /** 現在地の目次リンクを更新し、必要に応じて目次内のスクロール位置を合わせる。 */
     const activateLink = useCallback((anchor: Element) => {
         const sidebar = document.getElementById("sidebar");
@@ -86,6 +100,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         <>
             <button
                 type="button"
+                ref={toggleRef}
                 className="sidebar-toggle"
                 onClick={onToggle}
                 aria-expanded={isOpen}
@@ -101,7 +116,6 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
                     type="button"
                     className="sidebar-backdrop"
                     onClick={onClose}
-                    onKeyDown={(e) => e.key === "Escape" && onClose()}
                     aria-label="目次を閉じる"
                 />
             )}

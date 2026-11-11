@@ -25,3 +25,29 @@ describe('CCNP Service Provider 目次の自動スクロール', () => {
         expect(container.querySelectorAll('a.active')).toHaveLength(1);
     });
 });
+
+describe('CCNP Service Provider 目次のEscape操作', () => {
+    it.each([
+        ['目次リンク', '.nav li:first-child a'],
+        ['背景ボタン', '.sidebar-backdrop'],
+    ])('開いた目次は%sにフォーカスがあってもEscapeで閉じ、開閉ボタンへフォーカスを戻す', (_label, selector) => {
+        const onClose = vi.fn();
+        const { container } = render(<NavBar isOpen onClose={onClose} onToggle={vi.fn()} />);
+        const focused = container.querySelector(selector) as HTMLElement;
+        focused.focus();
+
+        fireEvent.keyDown(focused, { key: 'Escape' });
+
+        expect(onClose).toHaveBeenCalledOnce();
+        expect(container.querySelector('.sidebar-toggle')).toHaveFocus();
+    });
+
+    it('閉じた目次ではEscapeでonCloseを呼ばない', () => {
+        const onClose = vi.fn();
+        const { container } = render(<NavBar isOpen={false} onClose={onClose} onToggle={vi.fn()} />);
+
+        fireEvent.keyDown(container.querySelector('.nav a') as HTMLElement, { key: 'Escape' });
+
+        expect(onClose).not.toHaveBeenCalled();
+    });
+});
