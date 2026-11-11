@@ -173,8 +173,10 @@ export function defineMigrationSuite(
                 const isDecorative = element.getAttribute('data-decorative') === 'true'
                     || element.getAttribute('aria-hidden') === 'true';
                 expect(hasLabel || isDecorative).toBe(true);
+                const scaleSource = element.querySelector('.svg-source') ?? element;
+                expect(scaleSource.getAttribute('data-preserve-natural-scale')).toBe('true');
                 if (element.matches('.mermaid-diagram')) {
-                    // 固定SVGはpropを持たないため、viewBoxと実寸属性の1:1対応を検証する。
+                    // OriginalSvgが公開する自然スケール契約に加え、viewBoxと実寸属性の1:1対応を検証する。
                     const svg = element.querySelector('svg');
                     expect(svg).not.toBeNull();
                     const viewBox = svg!.getAttribute('viewBox')?.trim().split(/\s+/).map(Number);
@@ -185,8 +187,6 @@ export function defineMigrationSuite(
                     expect(height).toBeGreaterThan(0);
                     expect(width).toBe(viewBox![2]);
                     expect(height).toBe(viewBox![3]);
-                } else {
-                    expect(element.getAttribute('data-preserve-natural-scale')).toBe('true');
                 }
             });
         });
