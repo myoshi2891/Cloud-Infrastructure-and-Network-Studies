@@ -8,12 +8,18 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
     const toggle = useRef<HTMLButtonElement>(null);
     const sidebar = useRef<HTMLElement>(null);
     useEffect(() => {
-        if (typeof IntersectionObserver === 'undefined') return;
-        const observer = new IntersectionObserver(entries => {
-            for (const entry of entries) if (entry.isIntersecting) {
-                setActive(entry.target.id);
+        const targets = NAV_ITEMS.map(({ id }) => document.getElementById(id))
+            .filter((target): target is HTMLElement => target !== null);
+        function updateActive() {
+            // 読み始めの境界を最後に通過した見出しを選ぶ。長い節内の逆スクロールにも対応する。
+            let current = targets[0];
+            for (const target of targets) {
+                if (target.getBoundingClientRect().top <= window.innerHeight * 0.15) current = target;
+            }
+            if (current) {
+                setActive(current.id);
                 const link = [...(sidebar.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [])]
-                    .find(anchor => anchor.dataset.target === entry.target.id);
+                    .find(anchor => anchor.dataset.target === current.id);
                 const viewport = sidebar.current;
                 if (link && viewport) {
                     if (link.offsetTop < viewport.scrollTop) viewport.scrollTop = link.offsetTop;
@@ -22,9 +28,18 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
                     }
                 }
             }
-        }, { rootMargin: '-15% 0px -75% 0px' });
-        for (const { id } of NAV_ITEMS) { const target = document.getElementById(id); if (target) observer.observe(target); }
-        return () => observer.disconnect();
+        }
+        const observer = typeof IntersectionObserver === 'undefined' ? null
+            : new IntersectionObserver(updateActive, { rootMargin: '-15% 0px -75% 0px' });
+        targets.forEach(target => observer?.observe(target));
+        window.addEventListener('scroll', updateActive, { passive: true });
+        window.addEventListener('resize', updateActive);
+        updateActive();
+        return () => {
+            observer?.disconnect();
+            window.removeEventListener('scroll', updateActive);
+            window.removeEventListener('resize', updateActive);
+        };
     }, []);
     useEffect(() => {
         /** Escapeで開いた目次を閉じ、開閉ボタンへフォーカスを返す。 */

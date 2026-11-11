@@ -30,6 +30,9 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
             const scroll = vi.fn();
             link.scrollIntoView = scroll;
             const target = container.querySelector('h2#参考ソース一覧url')!;
+            for (const [heading] of observer.observe.mock.calls) {
+                vi.spyOn(heading, 'getBoundingClientRect').mockReturnValue({ top: heading === target ? 0 : 1000 } as DOMRect);
+            }
             act(() => notify?.([{ target, isIntersecting: true } as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
             expect(link).toHaveAttribute('aria-current', 'location');
             expect(sidebar.scrollTop).toBe(340);
