@@ -17,6 +17,22 @@ const renderAll = () => render(<>
 </>).container;
 
 describe('CCNP Service Provider 図・コードの読み上げ名', () => {
+    it('各表のスクロール領域はキーボードでフォーカスでき、表に対応する名前を持つ', () => {
+        const container = renderAll();
+        const wrappers = [...container.querySelectorAll<HTMLElement>('.table-wrap')];
+
+        expect(wrappers.length).toBeGreaterThan(0);
+        expect(wrappers).toHaveLength(container.querySelectorAll('table').length);
+        for (const wrapper of wrappers) {
+            const table = wrapper.querySelector('table');
+            expect(wrapper).toHaveAttribute('tabindex', '0');
+            expect(wrapper).toHaveRole('region');
+            expect(wrapper).toHaveAccessibleName(table!.getAttribute('aria-label')!);
+            wrapper.focus();
+            expect(wrapper).toHaveFocus();
+        }
+    });
+
     it('各図は直前の最も近い見出し（h5を含む）の名前を持つ', () => {
         const labels = [...renderAll().querySelectorAll('[data-testid="mermaid-diagram"]')]
             .map(diagram => diagram.getAttribute('aria-label'));
