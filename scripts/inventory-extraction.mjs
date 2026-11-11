@@ -21,7 +21,7 @@ export function normalizeCodeContainers(root) {
 }
 
 export const diagramSelector =
-    '[data-testid="mermaid-diagram"], .mermaid, [id^="diag-"], .diagram-container, .diagram-wrapper, .diagram-wrap, .mermaid-target, .diagram, .diagram-canvas, [data-diagram-id]';
+    '[data-testid="mermaid-diagram"], .mermaid, .mermaid-diagram, [id^="diag-"], .diagram-container, .diagram-wrapper, .diagram-wrap, .mermaid-target, .diagram, .diagram-canvas, [data-diagram-id]';
 
 export const normalize = (value) => value.replace(/\s+/g, ' ').trim();
 

@@ -49,6 +49,8 @@ function jsx(node) {
     const tag = diagram ? 'section' : node.localName;
     const attributes = [];
     for (const { name, value } of node.attributes) {
+        // aria-label付きsectionは暗黙のregionになるため、冗長なroleを出力しない。
+        if (diagram && name === 'role') continue;
         if (name === 'style') {
             const style = Object.fromEntries(Array.from({ length: node.style.length }, (_, i) => node.style.item(i)).map(key => [camel(key), node.style.getPropertyValue(key)]));
             attributes.push('style={' + JSON.stringify(style) + '}');
@@ -56,7 +58,7 @@ function jsx(node) {
             attributes.push('{...'+JSON.stringify({ xmlns: value })+'}');
         } else {
             const key = { class: 'className', for: 'htmlFor', tabindex: 'tabIndex', colspan: 'colSpan', rowspan: 'rowSpan', 'xlink:href': 'xlinkHref', 'xmlns:xlink': 'xmlnsXlink' }[name] ?? (name.startsWith('data-') || name.startsWith('aria-') ? name : camel(name));
-            attributes.push(key + '={' + JSON.stringify(diagram && name === 'role' ? 'region' : value) + '}');
+            attributes.push(key + '={' + JSON.stringify(value) + '}');
         }
     }
     if (diagram) attributes.push('tabIndex={0}');
@@ -65,7 +67,8 @@ function jsx(node) {
     const attrs = attributes.length ? ' ' + attributes.join(' ') : '';
     if (['br', 'hr', 'img', 'input', 'wbr'].includes(tag)) return `<${tag}${attrs} />`;
     const content = [...node.childNodes].map(jsx).join('') + (['th', 'td'].includes(tag) ? '{" "}' : '');
-    return `<${tag}${attrs}>${content}</${tag}>`;
+    const scrollComment = diagram ? '{/* biome-ignore lint/a11y/noNoninteractiveTabindex: Keyboard users need focus to scroll the diagram horizontally. */}\n' : '';
+    return `${scrollComment}<${tag}${attrs}>${content}</${tag}>`;
 }
 
 if (phase === 'assets') {
