@@ -18,9 +18,13 @@ export function snapshotSvgDiagrams(root) {
         ]).sort(([a], [b]) => a.localeCompare(b));
         return { tag: node.localName, attributes, children: [...node.childNodes].map(snapshot).filter(value => value !== null) };
     }
-    return [...root.querySelectorAll('.mermaid-diagram')].map(element => ({
-        id: element.id,
-        label: element.getAttribute('aria-label'),
-        svg: snapshot(element.querySelector('svg')),
-    }));
+    return [...root.querySelectorAll('.mermaid-diagram')].map(element => {
+        const svg = element.querySelector('svg');
+        if (!svg) throw new Error(`Missing SVG in diagram: ${element.id}`);
+        return {
+            id: element.id,
+            label: element.getAttribute('aria-label'),
+            svg: snapshot(svg),
+        };
+    });
 }

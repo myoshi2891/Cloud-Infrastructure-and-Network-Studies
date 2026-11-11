@@ -10,6 +10,12 @@ function mount(markup: string) {
 }
 
 describe('描画済みSVGの忠実性スナップショット', () => {
+    it('SVGが欠落している図のIDをエラーに含める', () => {
+        const root = mount('<svg/>');
+        root.insertAdjacentHTML('beforeend', '<div class="mermaid-diagram" id="mmd-2"></div>');
+        expect(() => snapshotSvgDiagrams(root)).toThrow('Missing SVG in diagram: mmd-2');
+    });
+
     it('空のstyle属性の有無は、描画に影響しない同一の図として扱う', () => {
         expect(snapshotSvgDiagrams(mount('<svg><path style="" d="M0 0L1 1"/></svg>')))
             .toEqual(snapshotSvgDiagrams(mount('<svg><path d="M0 0L1 1"/></svg>')));
