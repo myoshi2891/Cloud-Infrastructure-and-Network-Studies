@@ -27,6 +27,38 @@ describe('CCNP Service Provider 目次の自動スクロール', () => {
 });
 
 describe('CCNP Service Provider 目次のEscape操作', () => {
+    it('背景ボタンで閉じると開閉ボタンへフォーカスを戻す', () => {
+        const onClose = vi.fn();
+        const { container, rerender } = render(<NavBar isOpen onClose={onClose} onToggle={vi.fn()} />);
+        const backdrop = container.querySelector('.sidebar-backdrop') as HTMLElement;
+        backdrop.focus();
+
+        fireEvent.click(backdrop);
+        rerender(<NavBar isOpen={false} onClose={onClose} onToggle={vi.fn()} />);
+
+        expect(onClose).toHaveBeenCalledOnce();
+        expect(container.querySelector('.sidebar-toggle')).toHaveFocus();
+    });
+
+    it('目次リンクで閉じると移動先へフォーカスする', () => {
+        const onClose = vi.fn();
+        const { container, rerender } = render(<>
+            <NavBar isOpen onClose={onClose} onToggle={vi.fn()} />
+            <section id="s1">移動先</section>
+        </>);
+        const link = container.querySelector('.nav a[href="#s1"]') as HTMLElement;
+        link.focus();
+
+        fireEvent.click(link);
+        rerender(<>
+            <NavBar isOpen={false} onClose={onClose} onToggle={vi.fn()} />
+            <section id="s1">移動先</section>
+        </>);
+
+        expect(onClose).toHaveBeenCalledOnce();
+        expect(container.querySelector('#s1')).toHaveFocus();
+    });
+
     it.each([
         ['目次リンク', '.nav li:first-child a'],
         ['背景ボタン', '.sidebar-backdrop'],

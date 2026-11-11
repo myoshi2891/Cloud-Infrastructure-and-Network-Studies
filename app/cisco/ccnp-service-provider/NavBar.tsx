@@ -115,7 +115,10 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
                 <button
                     type="button"
                     className="sidebar-backdrop"
-                    onClick={onClose}
+                    onClick={() => {
+                        onClose();
+                        toggleRef.current?.focus();
+                    }}
                     aria-label="目次を閉じる"
                 />
             )}
