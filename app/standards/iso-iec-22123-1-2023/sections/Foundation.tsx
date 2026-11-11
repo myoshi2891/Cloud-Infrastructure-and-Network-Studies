@@ -30,7 +30,7 @@ export default function Foundation() { return <>
 {"\n\n"}
 <h2 id={"step-2-2023年版で何が変わったか"}>{"Step 2:\n2023年版で何が変わったか"}</h2>
 {"\n"}
-<p>{"規格の「まえがき」には、主な変更点が8つ書かれています。初学者は**「何が\"言葉の整理\"として変わったのか」**を押さえると理解が速いです。"}</p>
+<p>{"規格の「まえがき」には、主な変更点が8つ書かれています。初学者は"}<strong>{"「何が\"言葉の整理\"として変わったのか」"}</strong>{"を押さえると理解が速いです。"}</p>
 {"\n"}
 <div className={"table-scroll"}><table aria-label={"用語・比較表 4"}><thead><tr className={"header"}><th scope="col">{"#"}{" "}</th><th scope="col">{"変更点（要約）"}{" "}</th><th scope="col">{"初学者向けの意味"}{" "}</th></tr></thead><tbody><tr className={"odd"}><td>{"1"}{" "}</td><td>{"hybrid cloud の定義を変更"}{" "}</td><td>{"「プライベート＋パブリックを使う形」に整理された"}{" "}</td></tr><tr className={"even"}><td>{"2"}{" "}</td><td>{"CSC role / CSP role / CSN role を追加"}{" "}</td><td>{"「誰か」と「何をするか」を分けて考えられるようになった"}{" "}</td></tr><tr className={"odd"}><td>{"3"}{" "}</td><td>{"CSC / CSP / CSN の定義を role ベースに改訂"}{" "}</td><td>{"「party が role を担う」という構造に統一"}{" "}</td></tr><tr className={"even"}><td>{"4"}{" "}</td><td>{"ISO/IEC 27000\n由来の「機密性・完全性・情報セキュリティ」の定義を削除"}{" "}</td><td>{"セキュリティ用語は 27000 側を参照する方針"}{" "}</td></tr><tr className={"odd"}><td>{"5"}{" "}</td><td>{"inter-cloud の定義を変更"}{" "}</td><td>{"「プライマリ CSP が他 CSP のサービスを使って提供する形」に整理"}{" "}</td></tr><tr className={"even"}><td>{"6"}{" "}</td><td>{"multi-cloud 関連用語を追加"}{" "}</td><td>{"マルチクラウドが"}<strong>{"正式な用語"}</strong>{"として定義された"}{" "}</td></tr><tr className={"odd"}><td>{"7"}{" "}</td><td>{"peer cloud service(provider) → secondary cloud service(provider)\nに名称変更"}{" "}</td><td>{"「対等」ではなく「二次的（裏で使われる側）」という意味が明確に"}{" "}</td></tr><tr className={"even"}><td>{"8"}{" "}</td><td>{"「複数性と構成」に関する用語を新しい節（3.14）に追加"}{" "}</td><td>{"複数 CSP をまたぐ構成用語が独立した"}{" "}</td></tr></tbody></table></div>
 {"\n"}

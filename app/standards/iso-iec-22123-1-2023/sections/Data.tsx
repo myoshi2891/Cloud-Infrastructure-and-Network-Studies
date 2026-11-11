@@ -5,7 +5,7 @@ export default function Data() { return <>
 {"\n"}
 <p><strong>{"対応節: 3.9"}</strong>{"（本文で確認できた範囲:\n3.9.1〜3.9.4）"}</p>
 {"\n"}
-<p>{"クラウド上のデータを**「誰が管理権をもつか」"}<strong>{"と"}</strong>{"「どこから生じたか」**で分類しています。"}</p>
+<p>{"クラウド上のデータを"}<strong>{"「誰が管理権をもつか」"}</strong>{"と"}<strong>{"「どこから生じたか」"}</strong>{"で分類しています。"}</p>
 {"\n"}
 <div className={"table-scroll"}><table aria-label={"用語・比較表 23"}><thead><tr className={"header"}><th scope="col">{"用語"}{" "}</th><th scope="col">{"管理権"}{" "}</th><th scope="col">{"何のデータか"}{" "}</th></tr></thead><tbody><tr className={"odd"}><td><strong>{"cloud service customer data"}</strong>{" "}</td><td><strong>{"CSC"}</strong>{" "}</td><td>{"法的その他の理由で CSC の管理下にあるデータのうち、CSC が cloud\nservice に入力した、または\nCSC（または代理）が公開インタフェースを通じてサービスの機能を使った結果として生じたもの"}{" "}</td></tr><tr className={"even"}><td><strong>{"cloud service derived data"}</strong>{" "}</td><td><strong>{"CSP"}</strong>{" "}</td><td>{"CSC が cloud service\nを使った"}<strong>{"結果として派生"}</strong>{"したデータ（利用ログ、設定・カスタマイズ情報など）"}{" "}</td></tr><tr className={"odd"}><td><strong>{"cloud service provider data"}</strong>{" "}</td><td><strong>{"CSP"}</strong>{" "}</td><td>{"cloud service\nの"}<strong>{"運用に固有"}</strong>{"のデータ（リソース構成・利用状況、仮想マシンの割り当てなど）"}{" "}</td></tr><tr className={"even"}><td><strong>{"account data"}</strong>{" "}</td><td><strong>{"CSP"}</strong>{" "}</td><td>{"cloud service を"}<strong>{"管理するために必要"}</strong>{"な、CSC\nごとに固有のデータ"}{" "}</td></tr></tbody></table></div>
 {"\n"}

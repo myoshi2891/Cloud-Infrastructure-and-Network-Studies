@@ -33,7 +33,7 @@ export default function Practice() { return <>
 {"\n\n"}
 <h2 id={"開発者アーキテクトの視点ロックインの議論"}>{"開発者・アーキテクトの視点（ロックインの議論）"}</h2>
 {"\n"}
-<p>{"22123-1 の multi-cloud／portability／interoperability\nは、実務の**ロックイン（囲い込み）**の議論と強く結びつきます。"}</p>
+<p>{"22123-1 の multi-cloud／portability／interoperability\nは、実務の"}<strong>{"ロックイン（囲い込み）"}</strong>{"の議論と強く結びつきます。"}</p>
 {"\n"}
 <h3 id={"gregor-hohpe-氏the-software-architect-elevator著者の整理"}>{"Gregor\nHohpe 氏（『The Software Architect Elevator』著者）の整理"}</h3>
 {"\n"}
