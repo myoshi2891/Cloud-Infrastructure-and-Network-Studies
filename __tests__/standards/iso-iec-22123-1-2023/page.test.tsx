@@ -47,7 +47,7 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
         for (const diagram of container.querySelectorAll('.mermaid-diagram')) {
             expect(diagram.tagName).toBe('SECTION');
             expect(diagram).toHaveAttribute('tabIndex', '0');
-            expect(diagram).toHaveAttribute('role', 'region');
+            expect(diagram).toHaveRole('region');
         }
         expect(snapshotGuideChecks(container)).toEqual(fixture.checks);
     });
@@ -70,7 +70,7 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
         const { container, getAllByRole } = render(<Page />);
         const boxes = getAllByRole('checkbox');
         expect(boxes).toHaveLength(10);
-        boxes.forEach(box => fireEvent.click(box));
+        boxes.forEach(box => { fireEvent.click(box); });
         expect(container.querySelector('.cp-count')).toHaveTextContent('10 / 10');
         expect(container.querySelector('.cp-fill')).toHaveStyle({ width: '100%' });
         fireEvent.click(boxes[0]!);
@@ -93,6 +93,9 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
             rule.walkDecls(decl => { declarations[decl.prop] = decl.value; });
             actual.push({ selector: rule.selector, media: rule.parent?.type === 'atrule' ? (rule.parent as postcss.AtRule).params : '', declarations });
         });
+        // 固定SVGは実寸のまま描画し、広い図を領域内で横スクロールする。
+        expect(actual.find(rule => rule.selector === '.iso-22123-page .mermaid-diagram')?.declarations).toMatchObject({ 'overflow-x': 'auto' });
+        expect(actual.find(rule => rule.selector === '.iso-22123-page .mermaid-diagram svg')?.declarations).toMatchObject({ 'max-width': 'none', 'flex-shrink': '0' });
         original.walkRules(rule => {
             if (rule.selector === ':root') return;
             const selector = rule.selectors.map(s => ['html', 'body'].includes(s) ? '.iso-22123-page' : `.iso-22123-page ${s}`).join(',');
