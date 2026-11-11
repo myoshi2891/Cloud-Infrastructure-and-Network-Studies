@@ -1,6 +1,6 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-10)
+(最終更新日: 2026-11-11)
 
 ## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド移行
 
@@ -10,7 +10,9 @@ Inventory `4c544b1b`、SVG検証Red `e11054f8` → Green `a7831fcc`、固定fixt
 
 最終関連13ファイル・230件成功。開発サーバー3107のChromiumで1440px / 390pxの2件成功（15 SVGの自然寸法、横スクロールのキー操作、アンカー着地、全チェック進捗、モバイル開閉・フォーカス・横はみ出しなし）。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。型検査・全体ESLint・最終変更箇所ESLint・仕様書Markdown lint成功。統合時の全体Vitestは611ファイル・5468件中5465件成功で、既存失敗3件はSAP-C02 Domain 1のDomain 4期待値2件と、Footer明色ルートのCCNP期待値1件。SAP登録・Footer CSS・既存テストは移行前 `4bab76a0` と同一で、SAP2件は移行前の定数でも再現する。今回の移行に由来する失敗はない。
 
-HTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、比較用の原本も直下に保持した。`docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に保存先・ハッシュ・固定Gitを記録。本文・図・CSSの期待値はコミット済みfixtureを使い、実行時にarchiveへ依存しない。静的集計は1466ソース・546対応（37%）・629テストファイル。npm・本番ビルドはユーザー指定に従い未実行、目視確認はユーザー担当。
+移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、比較用の原本も直下に保持した。`docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に保存先・ハッシュ・固定Gitを記録。本文・図・CSSの期待値はコミット済みfixtureを使い、実行時にarchiveへ依存しない。静的集計は1466ソース・546対応（37%）・629テストファイル。npm・本番ビルドはユーザー指定に従い未実行、目視確認はユーザー担当。
+
+現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。スクリプトの入出力とGit操作はリポジトリルート基準で、任意の作業ディレクトリから実行できる。
 
 ## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
@@ -3696,7 +3698,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 前回進捗同期コミット: `4db5a23e`。
 
-ISO/IEC 22123-1:2023 は全文移行・厳密SVG/CSS照合・導線統合・原本コピー・仕様同期まで完了。再移行は不要。原本HTML/Markdownは比較用に保持し、保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に記録。archiveはローカル専用で、テストは固定Git由来のコミット済みfixtureを使用する。
+ISO/IEC 22123-1:2023 は全文移行・厳密SVG/CSS照合・導線統合・原本コピー・仕様同期まで完了。再移行は不要。原本HTML/Markdownは比較用に保持し、保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に記録。archiveはローカル専用で、テストは訂正済みHTML由来のコミット済みfixtureを使用する。再生成は `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` を使う。
 
 検証: 最終関連230件・Chromium E2E2件・型検査・lint成功。統合時の全体は611ファイル・5468件中5465件成功、既存3件（SAP期待値2件・Footer期待値1件）が失敗。原本・archive HTML不在下でもISO関連27件成功。npm・本番ビルドは未実行。目視確認はユーザー担当。
 

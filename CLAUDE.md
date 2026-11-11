@@ -8,7 +8,11 @@
 
 Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`、Client `IsoGuide.tsx` / `NavBar.tsx` / `Checklist.tsx`、18項目の `constants.ts`、`page.css` / `theme-tokens.json` で構成。`Standards`（国際規格）カテゴリを追加し、ホームと自動生成Headerへ統合。資格試験数の統計には含めない。目次の開閉・Escape・hash/focus・scroll spyと目次内スクロール、チェック件数・進捗バーを保持する。
 
-インベントリと固定Git `4bab76a0` 由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets`（他のフェーズ: `Foundation`、`Models`、`Services`、`Data`、`Practice`、`Appendix`。1回の実行につき1フェーズを指定）、fixture再生成は `bun scripts/gen-iso-iec-22123-fixture.mjs`。HTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
+インベントリと訂正済みHTML由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets`（他のフェーズ: `Foundation`、`Models`、`Services`、`Data`、`Practice`、`Appendix`。1回の実行につき1フェーズを指定）。
+
+現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。スクリプトの入出力とGit操作はリポジトリルート基準で、任意の作業ディレクトリから実行できる。
+
+移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
 
 最終関連13ファイル・230件、開発サーバー3107のChromium E2E 2件（1440px / 390px）が成功。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。統合時の全体Vitestは611ファイル・5468件中5465件成功、既存失敗3件（SAP-C02 Domain 1のDomain 4期待値2件、共通FooterのCCNP明色ルート期待値1件）。移行前の登録データとCSS・テストが同一であること、SAPの2件は移行前の定数でも再現することを確認した。npm・本番ビルドはユーザー指定に従い未実行。目視確認はユーザー担当。
 
@@ -117,7 +121,7 @@ Server `page.tsx` が HeroIntro と Chapter2〜Chapter7 を組み立て、Client
 
 `app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
 
-Updated 2026-11-10
+Updated 2026-11-11
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
 

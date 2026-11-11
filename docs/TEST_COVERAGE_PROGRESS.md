@@ -1,6 +1,6 @@
 # テストカバレッジ・網羅性進捗レポート
 
-最終更新日: 2026-11-10
+最終更新日: 2026-11-11
 
 ## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド
 
@@ -10,7 +10,11 @@
 
 Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`、Client `IsoGuide.tsx` / `NavBar.tsx` / `Checklist.tsx`、18項目の `constants.ts`、`page.css` / `theme-tokens.json` で構成。`Standards`（国際規格）カテゴリを追加し、ホームと自動生成Headerへ統合。資格試験数の統計には含めない。目次の開閉・Escape・hash/focus・scroll spyと目次内スクロール、チェック件数・進捗バーを保持する。
 
-インベントリと固定Git `4bab76a0` 由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets`（他のフェーズ: `Foundation`、`Models`、`Services`、`Data`、`Practice`、`Appendix`。1回の実行につき1フェーズを指定）、fixture再生成は `bun scripts/gen-iso-iec-22123-fixture.mjs`。HTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
+インベントリと訂正済みHTML由来fixtureを正本として、本文全量・表結合・リスト階層・リンク順・全CSS宣言・全SVGツリーを照合する。生成は `bun scripts/migrate-iso-iec-22123.mjs assets`（他のフェーズ: `Foundation`、`Models`、`Services`、`Data`、`Practice`、`Appendix`。1回の実行につき1フェーズを指定）。
+
+現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。スクリプトの入出力とGit操作はリポジトリルート基準で、任意の作業ディレクトリから実行できる。
+
+移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
 
 最終関連13ファイル・230件、開発サーバー3107のChromium E2E 2件（1440px / 390px）が成功。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。統合時の全体Vitestは611ファイル・5468件中5465件成功、既存失敗3件（SAP-C02 Domain 1のDomain 4期待値2件、共通FooterのCCNP明色ルート期待値1件）。移行前の登録データとCSS・テストが同一であること、SAPの2件は移行前の定数でも再現することを確認した。npm・本番ビルドはユーザー指定に従い未実行。目視確認はユーザー担当。
 
