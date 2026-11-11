@@ -11,7 +11,7 @@ import Chapter5 from './sections/Chapter5';
 export const metadata: Metadata = {
     title: 'CCNP Service Provider 認定 初学者向け完全ガイド | Cloud Infrastructure Studies',
     description:
-        'サービスプロバイダーインフラ（コアルーティング、MPLS、セグメントルーティング、VPN、QoS、セキュリティ、自動化）のプロフェッショナル認定。コア試験(350-501 SPCOR)とコンセントレーション試験を初学者向けに体系的かつ網羅的に解説。',
+        'CCNP Service Provider 認定の取得要件・試験構成・基本用語・学習ロードマップと、コア試験 350-501 SPCOR のアーキテクチャ領域（15%）を初学者向けに解説。ルーティング、MPLS・セグメントルーティング、VPN、自動化などその他のコア領域とコンセントレーション試験の詳細解説は未収録。',
 };
 
 /**
