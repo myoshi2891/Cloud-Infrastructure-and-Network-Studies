@@ -25,7 +25,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         anchor.setAttribute("aria-current", "location");
         const nav = sidebar.querySelector<HTMLElement>(".nav");
         if (nav && anchor instanceof HTMLElement) {
-            const top = anchor.offsetTop;
+            const top = anchor.getBoundingClientRect().top - nav.getBoundingClientRect().top + nav.scrollTop;
             if (top < nav.scrollTop + 40 || top > nav.scrollTop + nav.clientHeight - 80) {
                 nav.scrollTop = Math.max(0, top - nav.clientHeight / 3);
             }
