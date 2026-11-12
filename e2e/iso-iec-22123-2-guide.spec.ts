@@ -21,6 +21,12 @@ test('14 SVG自然寸法、リスト装飾、チェック・クイズの全操�
         expect(marker.type).toBe(marker.tag === 'OL' ? 'decimal' : 'disc');
         expect(marker.padding).toBeGreaterThan(0);
     }
+    const paragraph = page.locator('main > p').first();
+    await expect(paragraph).toHaveCSS('margin-top', '16px');
+    await expect(paragraph).toHaveCSS('margin-bottom', '16px');
+    await expect(page.locator('main > ul').first()).toHaveCSS('margin-top', '16px');
+    await expect(page.locator('main > ol').first()).toHaveCSS('margin-bottom', '16px');
+    await expect(page.locator('main a[href^="http"]').first()).toHaveCSS('text-decoration-line', 'underline');
     const checklist = page.locator('.checklist-card');
     for (const label of await checklist.locator('.cl-item').all()) await label.click();
     await expect(checklist.locator('.cl-count')).toHaveText('9 / 9');
