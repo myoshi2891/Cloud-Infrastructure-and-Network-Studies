@@ -103,7 +103,7 @@ export function defineCcnpServiceProviderSectionSuite(Section: SectionComponent)
             const { container } = render(<Section />);
             expect({
                 tableColumnHeaders: [...container.querySelectorAll('table')].map(
-                    table => table.querySelectorAll('th[scope="col"]').length,
+                    table => table.querySelectorAll('thead th[scope="col"]').length,
                 ),
                 codeLines: [...container.querySelectorAll('.code-block')].map(
                     block => block.querySelectorAll(':scope > .code-line').length,
