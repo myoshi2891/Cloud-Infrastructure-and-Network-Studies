@@ -26,6 +26,20 @@ describe('描画済みSVGの忠実性スナップショット', () => {
         expect(snapshotSvgDiagrams(a)).toEqual(snapshotSvgDiagrams(b));
     });
 
+    it.each([
+        ['<svg><text><tspan>cloud</tspan> <tspan>service</tspan></text></svg>', '> <'],
+        ['<svg><foreignObject><div><span>cloud </span><span>service</span></div></foreignObject></svg>', 'cloud '],
+        ['<svg><foreignObject><div><span>cloud</span> <span>service</span></div></foreignObject></svg>', '> <'],
+    ])('inlineラベルの語間を保持する: %s', (markup, boundary) => {
+        expect(snapshotSvgDiagrams(mount(markup)))
+            .not.toEqual(snapshotSvgDiagrams(mount(markup.replace(boundary, boundary.replace(' ', '')))));
+    });
+
+    it('図形間のインデントはラベルに影響しない', () => {
+        expect(snapshotSvgDiagrams(mount('<svg>\n  <path d="M0 0"/>\n</svg>')))
+            .toEqual(snapshotSvgDiagrams(mount('<svg><path d="M0 0"/></svg>')));
+    });
+
     it('座標・自然寸法・階層・ラベル・埋め込みCSSの欠落や変更を検出する', () => {
         const original = '<svg width="400" viewBox="0 0 400 200"><style>.node{fill:red}</style><g><path d="M0 0L1 1"/><foreignObject><div>クラウドサービス</div></foreignObject></g></svg>';
         const expected = snapshotSvgDiagrams(mount(original));

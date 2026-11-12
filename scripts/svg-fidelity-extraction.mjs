@@ -6,9 +6,15 @@ import { normalize } from './inventory-extraction.mjs';
  * @returns {object[]} 図のID・読み上げ名とSVGツリー。
  */
 export function snapshotSvgDiagrams(root) {
-    /** 空白ノードを除き、属性とinline styleを正規化したノードツリーを返す。 */
+    /** ラベル内の語間を保持し、描画に影響しない空白と属性順を正規化する。 */
     function snapshot(node) {
-        if (node.nodeType === 3) return normalize(node.textContent) || null;
+        if (node.nodeType === 3) {
+            // Inline labels can split words across text nodes, tspan, or HTML spans.
+            // Keep boundary spaces in rendered text; discard indentation between SVG shapes.
+            const parent = node.parentElement;
+            const isLabel = parent?.namespaceURI === 'http://www.w3.org/1999/xhtml' || parent?.closest('text, tspan, textPath') || parent?.localName === 'foreignObject';
+            return (isLabel ? node.textContent : normalize(node.textContent)) || null;
+        }
         if (node.nodeType !== 1) return null;
         const attributes = [...node.attributes].filter(({ name }) => name !== 'style' || node.style.length > 0).map(({ name, value }) => [name,
             name === 'style'
