@@ -137,12 +137,14 @@ describe('原本の構造・装飾・操作を保持する', () => {
     it('章の本文・表セル・リスト・SVGの削除をそれぞれ検出する', () => {
         const { container } = render(<Page />);
         const main = container.querySelector('main')!;
+        const baseline = correctedPreviewLinks(fixture.main);
+        expect(snapshotGuidePart(main)).toEqual(baseline);
         for (const selector of ['.sec p', 'td', 'main > section li']) {
             const clone = main.cloneNode(true) as HTMLElement;
             const target = clone.querySelector(selector === 'main > section li' ? '.sec li' : selector);
             expect(target, selector).not.toBeNull();
             target!.remove();
-            expect(snapshotGuidePart(clone)).not.toEqual(fixture.main);
+            expect(snapshotGuidePart(clone)).not.toEqual(baseline);
         }
         const clone = main.cloneNode(true) as HTMLElement;
         clone.querySelector('.mermaid-diagram')!.remove();
