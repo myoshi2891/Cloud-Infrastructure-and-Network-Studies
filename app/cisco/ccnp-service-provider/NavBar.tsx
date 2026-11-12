@@ -48,6 +48,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
 
     /** 目次を閉じて現在地・URLハッシュ・移動先のフォーカスを同期する。 */
     const handleLinkClick = useCallback((e: MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (e.ctrlKey || e.metaKey) return;
         e.preventDefault();
         onClose();
         activateLink(e.currentTarget);

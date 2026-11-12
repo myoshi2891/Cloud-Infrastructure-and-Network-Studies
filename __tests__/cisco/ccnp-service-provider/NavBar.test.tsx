@@ -83,3 +83,21 @@ describe('CCNP Service Provider 目次のEscape操作', () => {
         expect(onClose).not.toHaveBeenCalled();
     });
 });
+
+
+describe('目次リンクのブラウザー標準操作', () => {
+    it.each([{ ctrlKey: true }, { metaKey: true }])('修飾クリックを妨げない: %j', options => {
+        const onClose = vi.fn();
+        const { container } = render(<NavBar isOpen onClose={onClose} onToggle={vi.fn()} />);
+        const link = container.querySelector('.nav a') as HTMLAnchorElement;
+        const pushState = vi.spyOn(window.history, 'pushState');
+        const event = new MouseEvent('click', { bubbles: true, cancelable: true, ...options });
+
+        fireEvent(link, event);
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(onClose).not.toHaveBeenCalled();
+        expect(pushState).not.toHaveBeenCalled();
+        pushState.mockRestore();
+    });
+});

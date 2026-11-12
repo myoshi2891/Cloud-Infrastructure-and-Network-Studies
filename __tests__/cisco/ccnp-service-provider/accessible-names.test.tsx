@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { ccnpServiceProviderInventory } from '@/__tests__/helpers/ccnp-service-provider-inventory';
 import HeroIntro from '@/app/cisco/ccnp-service-provider/sections/HeroIntro';
 import Chapter2 from '@/app/cisco/ccnp-service-provider/sections/Chapter2';
 import Chapter3 from '@/app/cisco/ccnp-service-provider/sections/Chapter3';
@@ -21,8 +22,8 @@ describe('CCNP Service Provider 図・コードの読み上げ名', () => {
         const container = renderAll();
         const wrappers = [...container.querySelectorAll<HTMLElement>('.table-wrap')];
 
-        expect(wrappers.length).toBeGreaterThan(0);
-        expect(wrappers).toHaveLength(container.querySelectorAll('table').length);
+        expect(wrappers).toHaveLength(ccnpServiceProviderInventory.counts.table);
+        expect(container.querySelectorAll('table')).toHaveLength(ccnpServiceProviderInventory.counts.table);
         for (const wrapper of wrappers) {
             const table = wrapper.querySelector('table');
             expect(wrapper).toHaveAttribute('tabindex', '0');
