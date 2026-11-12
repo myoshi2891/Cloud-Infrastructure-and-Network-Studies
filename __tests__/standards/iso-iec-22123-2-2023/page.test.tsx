@@ -82,6 +82,27 @@ describe('原本の構造・装飾・操作を保持する', () => {
         boxes.forEach(box => expect(box).not.toBeChecked());
     });
 
+    it('10問のチェックボックスを問題文と「理解できた」の名前で個別に識別できる', () => {
+        const { container, getByRole } = render(<Page />);
+        const cards = [...container.querySelectorAll('.q-card')];
+        expect(cards).toHaveLength(10);
+        const ids: string[] = [];
+        for (const card of cards) {
+            const question = card.querySelector('.q-text')!;
+            const status = card.querySelector('.q-know span')!;
+            const checkbox = card.querySelector('input')!;
+            const name = `${question.textContent!.replace(/\s+/g, ' ').trim()} 理解できた`;
+            expect(question.id).not.toBe('');
+            expect(status.id).not.toBe('');
+            ids.push(question.id, status.id);
+            expect(checkbox).toHaveAttribute('aria-labelledby', `${question.id} ${status.id}`);
+            expect(checkbox).toHaveAccessibleName(name);
+            fireEvent.click(getByRole('checkbox', { name, exact: true }));
+            expect(checkbox).toBeChecked();
+        }
+        expect(new Set(ids).size).toBe(20);
+    });
+
     it('10問の答えを一括開閉し、理解度・既知装飾・リセットを同期する', () => {
         const { container } = render(<Page />);
         const quiz = container.querySelector('.quiz-wrap')!;
