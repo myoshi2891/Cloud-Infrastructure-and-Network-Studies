@@ -169,3 +169,21 @@ describe('ISO目次の現在地', () => {
         expect(links[1]).toHaveAttribute('aria-current', 'location');
     });
 });
+
+
+describe('目次リンクのブラウザー標準操作', () => {
+    it.each([{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { button: 2 }])('修飾クリックを妨げない: %j', options => {
+        const onClose = vi.fn();
+        const { container } = render(<NavBar open onClose={onClose} onToggle={vi.fn()} />);
+        const link = container.querySelector('.sidebar a') as HTMLAnchorElement;
+        const pushState = vi.spyOn(window.history, 'pushState');
+        const event = new MouseEvent('click', { bubbles: true, cancelable: true, ...options });
+
+        fireEvent(link, event);
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(onClose).not.toHaveBeenCalled();
+        expect(pushState).not.toHaveBeenCalled();
+        pushState.mockRestore();
+    });
+});

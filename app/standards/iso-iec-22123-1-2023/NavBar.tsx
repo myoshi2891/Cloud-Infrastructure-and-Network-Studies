@@ -71,6 +71,7 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
     }, [open, onClose]);
     /** 目次の選択・URLハッシュ・移動先のフォーカスを一度の操作で更新する。 */
     function navigate(event: MouseEvent<HTMLAnchorElement>, id: string) {
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
         event.preventDefault(); setActive(id); onClose();
         window.history.pushState(null, '', '#' + id);
         const target = document.getElementById(id);
