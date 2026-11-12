@@ -106,8 +106,8 @@
                 display: none;
                 position: fixed;
                 top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px);
-                left: 12px;
-                z-index: 40;
+                right: 12px;
+                z-index: 41;
                 background: var(--color-iso-22123-3-card-2);
                 color: var(--color-iso-22123-3-text);
                 border: 1px solid var(--color-iso-22123-3-line);
