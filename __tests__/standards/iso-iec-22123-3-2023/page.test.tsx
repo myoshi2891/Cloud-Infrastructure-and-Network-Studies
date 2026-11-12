@@ -6,12 +6,21 @@ import postcss from 'postcss';
 import { JSDOM } from 'jsdom';
 import Page from '@/app/standards/iso-iec-22123-3-2023/page';
 import inventory from '@/docs/migration-inventory/iso-iec-22123-3-2023.json';
-import fixture from '@/docs/migration-inventory/iso-iec-22123-3-2023.fidelity.json';
+import sourceFixture from '@/docs/migration-inventory/iso-iec-22123-3-2023.fidelity.json';
 import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
 import { snapshotSvgDiagrams } from '@/scripts/svg-fidelity-extraction.mjs';
 import type { ComponentType } from 'react';
 import { renderToString } from 'react-dom/server';
+
+// 原本は保持し、最初のSVGに限って自己ホストフォントの追加を期待する。
+const sourceSvgStyle = sourceFixture.main.text.match(/#mm0 \{.*?#mm0 :root \{[^}]*\}/)![0];
+const selfHostedSvgStyle = sourceSvgStyle.replaceAll(
+    "'Noto Sans JP', 'Noto Sans CJK JP', sans-serif",
+    "'Noto Sans JP Variable', 'Noto Sans JP', 'Noto Sans CJK JP', sans-serif",
+);
+const fixture: typeof sourceFixture = JSON.parse(JSON.stringify(sourceFixture), (_key, value: unknown) =>
+    typeof value === 'string' ? value.replaceAll(sourceSvgStyle, selfHostedSvgStyle) : value);
 
 // 原本にある2件の途切れたPDFリンクだけ、レビューで修正した完全なURLを期待する。
 function correctedPreviewLinks<T extends { links: { href: string | null; text: string }[] }>(expected: T): T {
