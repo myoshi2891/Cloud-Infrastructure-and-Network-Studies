@@ -14,7 +14,7 @@ Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`�
 
 移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、元ファイルも比較用に保持。保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json`。
 
-最終関連13ファイル・230件、開発サーバー3107のChromium E2E 2件（1440px / 390px）が成功。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。統合時の全体Vitestは611ファイル・5468件中5465件成功、既存失敗3件（SAP-C02 Domain 1のDomain 4期待値2件、共通FooterのCCNP明色ルート期待値1件）。移行前の登録データとCSS・テストが同一であること、SAPの2件は移行前の定数でも再現することを確認した。npm・本番ビルドはユーザー指定に従い未実行。目視確認はユーザー担当。
+最終関連13ファイル・230件、開発サーバー3107のChromium E2E 2件（1440px / 390px）が成功。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。統合時の全体Vitestは611ファイル・5468件中5465件成功、既存失敗3件（SAP-C02 Domain 1のDomain 4期待値2件、共通FooterのCCNP明色ルート期待値1件）。移行前の登録データが同一であること、SAPの2件は移行前の定数でも再現することを確認した。FooterはISO移行直前の `4bab76a0` と現行でCSS・テストが同一であり、ISO移行によるセレクター追加や不一致の拡大はない。PRベース `5bab30fa` には2ルート（`ccnp-collab-page`・`ccnp-enterprise-page`）の期待値漏れがあり、ISO移行前の `315c8c99` で追加された `ccnp-service-provider-page` を含む現行の3ルート不一致とは比較範囲が異なる。npm・本番ビルドはユーザー指定に従い未実行。目視確認はユーザー担当。
 
 ## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
 
@@ -22,9 +22,16 @@ Server `page.tsx` と6分割の `sections/`、固定SVG専用 `OriginalSvg.tsx`�
 
 ```bash
 mkdir -p archive/Cisco/html/ccnp-service-provider archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
-git show '25722201^:Ccnp-service-provider-guide.html' > archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html
-git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
-git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+restore_archive() (
+    archive_file=$2
+    restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
+    trap 'rm -f "$restore_tmp"' EXIT
+    git show "$1" > "$restore_tmp" || exit 1
+    mv "$restore_tmp" "$archive_file"
+)
+restore_archive '25722201^:Ccnp-service-provider-guide.html' archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html || exit 1
+restore_archive '5a570d93^:Ccnp-enterprise-guide.html' archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html || exit 1
+restore_archive 'cbf5be32^:Ccnp-collaboration-guide.html' archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html || exit 1
 wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 ```
@@ -121,7 +128,7 @@ Server `page.tsx` が HeroIntro と Chapter2〜Chapter7 を組み立て、Client
 
 `app/recommended-books/designing-data-intensive-applications/` に Server `page.tsx`、Client `DdiaGuide.tsx` / `NavBar.tsx`、`constants.ts`、スコープ付き `page.css` を追加。原本の12章立て・14図・13チェック項目を保持し、Books導線へ統合。固定Git由来fixtureで本文・属性・階層・CSS値・図DSLを全量照合する。
 
-Updated 2026-11-11
+Updated 2026-11-12
 
 2026-10-29 DVA-C02 Domain 4付録A: 原文を保持した13問のカード表示と、各設問で回答を選ぶ即時採点を実装。12問はラジオボタン、問11はチェックボックスで2つ以上の選択時に集合の完全一致を判定する。選択変更・解除と設問ごとの独立状態に対応。正誤は色と記号で示し、各問の直下へ既存の正解・解説を同じ文言で表示する。元の解答一覧も保持。選択前の全文は空白・句読点・コード・リンクまで固定fixtureと完全一致する。`PracticeQuestion.tsx` と付録専用 `practice.css` を追加し、再生成処理にも反映した。
 
