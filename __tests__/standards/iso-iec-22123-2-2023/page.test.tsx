@@ -52,16 +52,24 @@ describe('原本の構造・装飾・操作を保持する', () => {
         let callback: IntersectionObserverCallback | undefined;
         const observer = { observe: vi.fn(), disconnect: vi.fn() };
         vi.stubGlobal('IntersectionObserver', vi.fn(function (cb: IntersectionObserverCallback) { callback = cb; return observer; }));
+        let moved = false;
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+            const index = observer.observe.mock.calls.findIndex(([element]) => element === this);
+            return { top: index === 0 || moved ? 0 : 1000 } as DOMRect;
+        });
         try {
             const { container, unmount } = render(<Page />);
             const anchors = [...container.querySelectorAll<HTMLAnchorElement>('.sidebar a')];
             expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(anchors.map(a => a.getAttribute('href')!.slice(1)));
+            expect(anchors[0]).toHaveAttribute('aria-current', 'location');
+            expect(anchors.at(-1)).not.toHaveAttribute('aria-current');
+            moved = true;
             const target = document.getElementById(anchors.at(-1)!.getAttribute('href')!.slice(1))!;
             act(() => callback?.([{ target, isIntersecting: true } as unknown as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
             expect(anchors.at(-1)).toHaveAttribute('aria-current', 'location');
             unmount();
             expect(observer.disconnect).toHaveBeenCalledOnce();
-        } finally { vi.unstubAllGlobals(); }
+        } finally { vi.restoreAllMocks(); vi.unstubAllGlobals(); }
     });
 
     it('選定用9項目を全選択・一部解除・リセットし、進捗と完了通知を更新する', () => {
