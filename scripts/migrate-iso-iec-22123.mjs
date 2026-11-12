@@ -34,7 +34,7 @@ function jsx(node) {
     if (node.localName === 'svg') {
         // Reactのstyleオブジェクトは!importantを保持できないため、固定SVGをそのまま埋め込む。
         // url(#id) 以外の url(...) と @import は外部リソースの読み込みとして扱う。
-        const external = text => /url\(\s*(?!['"]?#)/i.test(text) || /@import/i.test(text);
+        const external = text => [...text.matchAll(/url\(\s*['"]?\s*([^)]*)\)/gi)].some(([, target]) => !target.startsWith('#')) || /@import/i.test(text);
         const unsafeAttr = attr => /^on/i.test(attr.name) || /^(?:src|action|formaction)$/i.test(attr.name) || (/^(?:xlink:)?href$/i.test(attr.name) && !attr.value.startsWith('#')) || external(attr.value);
         if (node.querySelector('script,iframe,object,embed') || [node, ...node.querySelectorAll('*')].some(element => [...element.attributes].some(unsafeAttr)) || [...node.querySelectorAll('style')].some(style => external(style.textContent))) {
             throw new Error('実行可能な内容または外部参照を含むSVGは生成できません。');
@@ -82,18 +82,33 @@ if (phase === 'assets') {
     css.walkDecls(decl => {
         decl.value = decl.value.replace(/var\(--sidebar\)/g, '280px').replace(/var\(--([\w-]+)\)/g, (_all, key) => `var(--color-iso-22123-${key})`)
             .replace(/#[0-9a-fA-F]{3,8}\b/g, color => { const key = '--color-iso-22123-hex-' + color.slice(1).toLowerCase(); tokens[key] = color; return `var(${key})`; })
+            .replace(/rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/g, (color, r, g, b, alpha) => {
+                const base = { '124,158,255': 'accent', '31,53,86': 'border', '79,209,197': 'accent2', '245,194,107': 'warn' }[[r, g, b].join(',')];
+                if (!base) throw new Error('Unknown translucent color: ' + color);
+                const key = '--color-iso-22123-' + base + '-' + String(Math.round(Number(alpha) * 100)).padStart(2, '0');
+                tokens[key] = color;
+                return `var(${key})`;
+            })
             .replace(/"Noto Sans JP"/g, 'var(--font-body)').replace(/"JetBrains Mono"/g, 'var(--font-mono)');
+    });
+    css.walkDecls(decl => {
+        if (decl.prop === 'line-height' && decl.value === '1.85') decl.value = 'var(--leading-iso-22123)';
+        if (decl.parent.selector !== '.toggle') return;
+        if (decl.prop === 'border') decl.value = decl.value.replace('1px', 'var(--spacing-iso-22123-toggle-border)');
+        if (decl.prop === 'padding') decl.value = 'var(--spacing-iso-22123-toggle-padding) 12px';
+        if (decl.prop === 'font-size') decl.value = 'var(--text-iso-22123-toggle)';
     });
     css.walkRules(rule => { rule.selectors = rule.selectors.map(s => ['html', 'body'].includes(s) ? '.iso-22123-page' : '.iso-22123-page ' + s); });
     write('page.css', css.toString() + `\n/* サイト共通Headerと免責事項、280px目次、Tailwindのリセットへ対応 */
 .iso-22123-page .main { width: calc(100% - 280px); max-width: none; }
 .iso-22123-page .sidebar { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px)); }
-.iso-22123-page .toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 12px); }
+.iso-22123-page .toggle { top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + var(--spacing-iso-22123-toggle-offset)); }
 .iso-22123-page .main h2, .iso-22123-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 20px); }
 .iso-22123-page .main ul:not(.checklist) { list-style-type: disc; }
 .iso-22123-page .main ol { list-style-type: decimal; }
 @media (max-width:960px) {
  .iso-22123-page .main { width: 100%; }
+ .iso-22123-page .main h2, .iso-22123-page .main h3 { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + var(--spacing-iso-22123-toggle-offset) + var(--text-iso-22123-toggle) * var(--leading-iso-22123) + 2 * var(--spacing-iso-22123-toggle-padding) + 2 * var(--spacing-iso-22123-toggle-border) + var(--spacing-iso-22123-toggle-offset)); }
  .iso-22123-page .sidebar { visibility: hidden; transition: transform .25s, visibility 0s .25s; }
  .iso-22123-page .sidebar.open { visibility: visible; transition-delay: 0s; }
 }

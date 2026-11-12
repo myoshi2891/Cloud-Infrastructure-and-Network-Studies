@@ -18301,7 +18301,7 @@
                                                         "attributes": [],
                                                         "children": []
                                                       },
-                                                      "CSC role / CSP role / CSN",
+                                                      "CSC role / CSP role / CSN ",
                                                       {
                                                         "tag": "br",
                                                         "attributes": [],
@@ -26158,7 +26158,7 @@
                                             "tag": "p",
                                             "attributes": [],
                                             "children": [
-                                              "private cloud と public",
+                                              "private cloud と public ",
                                               {
                                                 "tag": "br",
                                                 "attributes": [],
@@ -52269,7 +52269,7 @@
                                             "tag": "p",
                                             "attributes": [],
                                             "children": [
-                                              "cloud service customer",
+                                              "cloud service customer ",
                                               {
                                                 "tag": "br",
                                                 "attributes": [],
@@ -52700,7 +52700,7 @@
                                             "tag": "p",
                                             "attributes": [],
                                             "children": [
-                                              "cloud service provider",
+                                              "cloud service provider ",
                                               {
                                                 "tag": "br",
                                                 "attributes": [],
