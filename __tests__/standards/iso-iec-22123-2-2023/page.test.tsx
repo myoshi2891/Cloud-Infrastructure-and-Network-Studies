@@ -97,7 +97,7 @@ describe('原本の構造・装飾・操作を保持する', () => {
             ids.push(question.id, status.id);
             expect(checkbox).toHaveAttribute('aria-labelledby', `${question.id} ${status.id}`);
             expect(checkbox).toHaveAccessibleName(name);
-            fireEvent.click(getByRole('checkbox', { name, exact: true }));
+            fireEvent.click(getByRole('checkbox', { name }));
             expect(checkbox).toBeChecked();
         }
         expect(new Set(ids).size).toBe(20);
