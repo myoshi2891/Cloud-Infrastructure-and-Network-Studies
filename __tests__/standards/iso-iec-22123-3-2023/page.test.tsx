@@ -64,12 +64,32 @@ describe('原本の構造・装飾・操作を保持する', () => {
         } finally { vi.unstubAllGlobals(); }
     });
 
+    it('末尾見出しが交差領域へ届かなくても文書末尾では最後の目次を選ぶ', () => {
+        let callback: IntersectionObserverCallback | undefined;
+        const observer = { observe: vi.fn(), disconnect: vi.fn() };
+        vi.stubGlobal('IntersectionObserver', vi.fn(function (cb: IntersectionObserverCallback) { callback = cb; return observer; }));
+        try {
+            const { container } = render(<Page />);
+            const links = [...container.querySelectorAll<HTMLAnchorElement>('.sidebar a')];
+            for (const [index, link] of links.entries()) {
+                const heading = document.getElementById(link.getAttribute('href')!.slice(1))!;
+                vi.spyOn(heading, 'getBoundingClientRect').mockReturnValue({ top: index === 0 ? -100 : 500 } as DOMRect);
+            }
+            vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(2000);
+            vi.stubGlobal('innerHeight', 800);
+            vi.stubGlobal('scrollY', 1200);
+            const target = document.getElementById(links.at(-1)!.getAttribute('href')!.slice(1))!;
+            act(() => callback?.([{ target, isIntersecting: false } as unknown as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
+            expect(links.at(-1)).toHaveAttribute('aria-current', 'location');
+        } finally { vi.restoreAllMocks(); vi.unstubAllGlobals(); }
+    });
+
     it.each(Object.entries(fixture.parts))('%s の章単位でも全文・表結合・配置順・リスト階層を一致させる', (name, expected) => {
         const modules = import.meta.glob<{ default: ComponentType }>('@/app/standards/iso-iec-22123-3-2023/sections/*.tsx', { eager: true });
-        const module = Object.entries(modules).find(([path]) => path.endsWith('/' + name + '.tsx'))?.[1];
-        expect(module, name).toBeDefined();
-        if (!module) throw new Error('Missing section: ' + name);
-        const Section = module.default;
+        const sectionModule = Object.entries(modules).find(([path]) => path.endsWith('/' + name + '.tsx'))?.[1];
+        expect(sectionModule, name).toBeDefined();
+        if (!sectionModule) throw new Error('Missing section: ' + name);
+        const Section = sectionModule.default;
         const { container } = render(<Section />);
         expect(snapshotGuidePart(container.firstElementChild)).toEqual(expected);
     });
