@@ -46,41 +46,33 @@ function renderedValues(Section: ComponentType): Record<TextKind | 'links', stri
     return result;
 }
 
-const structureCache = new Map<ComponentType, { tableColumnHeaders: number[]; codeLines: number[] }>();
+/**
+ * 固定原本 25722201^:Ccnp-service-provider-guide.html の main.children を
+ * [0,6), [6,11), [11,15), [15,20), [20,29) に分けて抽出した件数。
+ * 描画件数から境界を推定しない。原本更新時だけ再抽出する。
+ */
+const SOURCE_COUNTS = [
+    { h1: 1, h2: 1, h3: 3, h4: 0, th: 2, td: 10, links: 0, tableColumnHeaders: 1, codeLines: 0 },
+    { h1: 0, h2: 1, h3: 4, h4: 0, th: 10, td: 37, links: 0, tableColumnHeaders: 3, codeLines: 0 },
+    { h1: 0, h2: 1, h3: 3, h4: 0, th: 6, td: 48, links: 0, tableColumnHeaders: 2, codeLines: 0 },
+    { h1: 0, h2: 1, h3: 4, h4: 0, th: 9, td: 38, links: 0, tableColumnHeaders: 3, codeLines: 0 },
+    { h1: 0, h2: 1, h3: 1, h4: 7, th: 55, td: 209, links: 43, tableColumnHeaders: 19, codeLines: 8 },
+] as const;
 
-/** セクション単独描画での表（列見出し数）とコードブロック（行数）を出現順に返す。 */
-function renderedStructures(Section: ComponentType): { tableColumnHeaders: number[]; codeLines: number[] } {
-    const cached = structureCache.get(Section);
-    if (cached) return cached;
-    const { container, unmount } = render(<Section />);
-    const result = {
-        tableColumnHeaders: [...container.querySelectorAll('table')].map(
-            (table) => table.querySelectorAll('th[scope="col"]').length,
-        ),
-        codeLines: [...container.querySelectorAll('.code-block')].map(
-            (block) => block.querySelectorAll('.code-line').length,
-        ),
-    };
-    unmount();
-    structureCache.set(Section, result);
-    return result;
+type InventoryKind = keyof (typeof SOURCE_COUNTS)[number];
+
+function sourceRange(Section: SectionComponent, kind: InventoryKind): [number, number] {
+    const index = SECTIONS.indexOf(Section);
+    const offset = SOURCE_COUNTS.slice(0, index).reduce((sum, counts) => sum + counts[kind], 0);
+    return [offset, offset + SOURCE_COUNTS[index]![kind]];
 }
 
-/** インベントリ structures のうち、指定セクションが担う表の列見出し数とコード行数の期待値。 */
+/** 指定セクションの全表と全コードブロックの期待値を原本の固定境界で取得する。 */
 export function expectedStructures(Section: SectionComponent): { tableColumnHeaders: number[]; codeLines: number[] } {
-    const index = SECTIONS.indexOf(Section);
-    const before = SECTIONS.slice(0, index).map(renderedStructures);
-    const own = renderedStructures(Section);
-    /** 先行セクションが占める構造データの件数を合計する。 */
-    const offset = (key: 'tableColumnHeaders' | 'codeLines'): number =>
-        before.reduce((sum, item) => sum + item[key].length, 0);
     const { tableColumnHeaders, codeLines } = ccnpServiceProviderInventory.structures;
     return {
-        tableColumnHeaders: tableColumnHeaders.slice(
-            offset('tableColumnHeaders'),
-            offset('tableColumnHeaders') + own.tableColumnHeaders.length,
-        ),
-        codeLines: codeLines.slice(offset('codeLines'), offset('codeLines') + own.codeLines.length),
+        tableColumnHeaders: tableColumnHeaders.slice(...sourceRange(Section, 'tableColumnHeaders')),
+        codeLines: codeLines.slice(...sourceRange(Section, 'codeLines')),
     };
 }
 
@@ -94,21 +86,29 @@ const EXPECTED: Record<TextKind | 'links', readonly string[]> = {
 
 /**
  * CCNP Service Provider ガイドの個別セクションを単独で検証する。
- * 全セクションの描画結果を連結したとき原本インベントリと一致する前提のもと、
- * 本セクションが担う範囲をインデックスで特定して部分一致を検証する。
+ * 原本で固定したセクション境界から全期待値を取り出し、末尾を含めて比較する。
  */
 export function defineCcnpServiceProviderSectionSuite(Section: SectionComponent): void {
     describe(`${Section.name || 'Section'} — インベントリ全量との整合`, () => {
         const kinds: readonly (TextKind | 'links')[] = [...TEXT_KINDS, 'links'];
 
         it.each(kinds)('%s が全体インベントリの連続する部分配列と一致する', (kind) => {
-            const index = SECTIONS.indexOf(Section);
-            const before = SECTIONS.slice(0, index).map(renderedValues);
             const own = renderedValues(Section);
-            const offset = before.reduce((sum, item) => sum + item[kind].length, 0);
-            const expectedSlice = EXPECTED[kind].slice(offset, offset + own[kind].length);
+            const expectedSlice = EXPECTED[kind].slice(...sourceRange(Section, kind));
 
             expect(own[kind]).toEqual(expectedSlice);
+        });
+
+        it('全表の列見出し数と全コードブロックの行数が原本と一致する', () => {
+            const { container } = render(<Section />);
+            expect({
+                tableColumnHeaders: [...container.querySelectorAll('table')].map(
+                    table => table.querySelectorAll('th[scope="col"]').length,
+                ),
+                codeLines: [...container.querySelectorAll('.code-block')].map(
+                    block => block.querySelectorAll(':scope > .code-line').length,
+                ),
+            }).toEqual(expectedStructures(Section));
         });
     });
 }
