@@ -184,12 +184,16 @@ function nodeToJsx(node) {
             }).join('');
         } else if (rows.length > 0 && rows[0].querySelector('th')) {
             const firstRow = rows[0];
-            const ths = [...firstRow.querySelectorAll('th')];
-            headContent = `<tr>${ths.map((th) => {
-                const attrs = ['scope="col"'];
-                if (th.getAttribute('colspan')) attrs.push(`colSpan={${th.getAttribute('colspan')}}`);
-                if (th.getAttribute('rowspan')) attrs.push(`rowSpan={${th.getAttribute('rowspan')}}`);
-                return `<th ${attrs.join(' ')}>${[...th.childNodes].map(nodeToJsx).join('')}{" "}</th>`;
+            const cells = [...firstRow.children];
+            headContent = `<tr>${cells.map((c) => {
+                const isTh = c.tagName === 'TH';
+                const tag = isTh ? 'th' : 'td';
+                const attrs = [];
+                if (isTh) attrs.push('scope="col"');
+                if (c.getAttribute('colspan')) attrs.push(`colSpan={${c.getAttribute('colspan')}}`);
+                if (c.getAttribute('rowspan')) attrs.push(`rowSpan={${c.getAttribute('rowspan')}}`);
+                const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
+                return `<${tag}${attrStr}>${[...c.childNodes].map(nodeToJsx).join('')}{" "}</${tag}>`;
             }).join('')}</tr>`;
         }
 

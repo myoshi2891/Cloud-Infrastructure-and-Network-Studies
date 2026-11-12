@@ -41,8 +41,12 @@ describe('CCNP Service Provider — Chapter 5 セクション', () => {
 
         const expected = expectedStructures(Chapter5).codeLines;
         codeBlocks.forEach((block, index) => {
-            const lines = block.querySelectorAll('.code-line');
+            const lines = [...block.children];
             expect(lines.length).toBe(expected[index]);
+            lines.forEach((line) => expect(line).toHaveClass('code-line'));
+            block.childNodes.forEach((node) => {
+                if (node.nodeType === Node.TEXT_NODE) expect(node.textContent?.trim()).toBe('');
+            });
         });
     });
 

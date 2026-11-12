@@ -42,6 +42,23 @@ describe('CCNP Service Provider 移行の引数検証', () => {
 });
 
 describe('CCNP Service Provider 移行の要素数検証', () => {
+    it.each([false, true])('混在ヘッダーのセル・結合・内容を保持する（thead: %s）', (withThead) => {
+        const directory = mkdtempSync(join(tmpdir(), 'ccnp-sp-table-'));
+        try {
+            createRepository(directory);
+            const header = '<tr><th colspan="2">header <em>label</em></th><td rowspan="2">data <strong>label</strong></td></tr>';
+            const table = `<table>${withThead ? `<thead>${header}</thead>` : header}<tbody><tr><td>body</td></tr></tbody></table>`;
+            writeFileSync(join(directory, 'Ccnp-service-provider-guide.html'), `<main>${table}${'<p>section</p>'.repeat(28)}</main>`);
+            const result = spawnSync(process.execPath, [join(directory, 'scripts/migrate-ccnp-service-provider.mjs'), 'all'], { encoding: 'utf8' });
+            expect(result.status).toBe(0);
+            const output = readFileSync(join(directory, 'app/cisco/ccnp-service-provider/sections/HeroIntro.tsx'), 'utf8');
+            expect(output).toContain('<thead><tr><th scope="col" colSpan={2}>{"header "}<em>{"label"}</em>{" "}</th><td rowSpan={2}>{"data "}<strong>{"label"}</strong>{" "}</td></tr></thead>');
+            expect(output).toContain('<tbody><tr><td>{"body"}{" "}</td></tr></tbody>');
+        } finally {
+            rmSync(directory, { recursive: true, force: true });
+        }
+    });
+
     it.each([28, 30])('main が %i 要素の場合は生成前に停止する', (count) => {
         const directory = mkdtempSync(join(tmpdir(), 'ccnp-sp-boundaries-'));
         try {
