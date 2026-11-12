@@ -39,6 +39,7 @@ const guideLayouts = [
     ['app/cisco/ccnp-security/page.css', '.ccnp-security-page .sidebar', '.ccnp-security-page main'],
     ['app/cisco/ccnp-collaboration/page.css', '.ccnp-collab-page .sidebar', '.ccnp-collab-page .main'],
     ['app/cisco/ccnp-enterprise/page.css', '.ccnp-enterprise-page .sidebar', '.ccnp-enterprise-page .main'],
+    ['app/cisco/ccnp-service-provider/page.css', '.ccnp-service-provider-page .sidebar', '.ccnp-service-provider-page .main'],
     ['app/cisco/ccie/service-provider/page.css', '.ccie-sp-page .sidebar', '.ccie-sp-page main'],
     ['app/cisco/ccna/automation-api-guide/page.css', '.ccna-automation-api-page .sidebar', '.ccna-automation-api-page .main'],
     ['app/cisco/ccna/automation-application-deployment-security/page.css', '.ccna-app-deployment-security-page .sidebar', '.ccna-app-deployment-security-page .main'],

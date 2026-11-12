@@ -1,0 +1,30 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "\"Noto Sans JP\",\"Hiragino Sans\",\"Yu Gothic\",system-ui,sans-serif",
+    "fontSize": "16px",
+    "background": "#FFFFFF",
+    "primaryColor": "#EEF1F8",
+    "primaryBorderColor": "#2E3F72",
+    "primaryTextColor": "#161B26",
+    "secondaryColor": "#FAF1DF",
+    "tertiaryColor": "#EAF4EC",
+    "lineColor": "#2E3F72",
+    "textColor": "#161B26",
+    "mainBkg": "#EEF1F8",
+    "nodeBorder": "#2E3F72",
+    "clusterBkg": "#F6F7F9",
+    "clusterBorder": "#A9B4CB",
+    "titleColor": "#161B26",
+    "edgeLabelBackground": "#FFFFFF"
+  },
+  "flowchart": {
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "wrappingWidth": 360,
+    "nodeSpacing": 40,
+    "rankSpacing": 45,
+    "curve": "basis"
+  }
+}
+

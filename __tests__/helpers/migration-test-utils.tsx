@@ -163,7 +163,7 @@ export function defineMigrationSuite(
 
         it('全形式の図が件数どおり存在し、説明または装飾指定と自然スケールを持つ', () => {
             const container = renderPage();
-            const diagramSelector = '[data-testid="mermaid-diagram"], .mermaid, [id^="diag-"]';
+            const diagramSelector = '[data-testid="mermaid-diagram"], .mermaid, .mermaid-diagram, [id^="diag-"]';
             const diagrams = [...container.querySelectorAll(diagramSelector)].filter(
                 (element) => !element.querySelector(diagramSelector),
             );
@@ -173,7 +173,21 @@ export function defineMigrationSuite(
                 const isDecorative = element.getAttribute('data-decorative') === 'true'
                     || element.getAttribute('aria-hidden') === 'true';
                 expect(hasLabel || isDecorative).toBe(true);
-                expect(element.getAttribute('data-preserve-natural-scale')).toBe('true');
+                const scaleSource = element.querySelector('.svg-source') ?? element;
+                expect(scaleSource.getAttribute('data-preserve-natural-scale')).toBe('true');
+                if (element.matches('.mermaid-diagram')) {
+                    // OriginalSvgが公開する自然スケール契約に加え、viewBoxと実寸属性の1:1対応を検証する。
+                    const svg = element.querySelector('svg');
+                    expect(svg).not.toBeNull();
+                    const viewBox = svg!.getAttribute('viewBox')?.trim().split(/\s+/).map(Number);
+                    expect(viewBox).toHaveLength(4);
+                    const width = Number(svg!.getAttribute('width'));
+                    const height = Number(svg!.getAttribute('height'));
+                    expect(width).toBeGreaterThan(0);
+                    expect(height).toBeGreaterThan(0);
+                    expect(width).toBe(viewBox![2]);
+                    expect(height).toBe(viewBox![3]);
+                }
             });
         });
 

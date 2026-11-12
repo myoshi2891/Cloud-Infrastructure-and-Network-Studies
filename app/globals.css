@@ -14,6 +14,39 @@
  */
 
 @theme {
+    --spacing-iso-22123-toggle-offset: 12px;
+    --text-iso-22123-toggle: 14px;
+    --spacing-iso-22123-toggle-padding: 8px;
+    --spacing-iso-22123-toggle-border: 1px;
+    --leading-iso-22123: 1.85;
+    /* ISO/IEC 22123-1:2023 原本ダーク配色 */
+    --color-iso-22123-bg: #07111e;
+    --color-iso-22123-panel: #0d1b2e;
+    --color-iso-22123-panel2: #11233a;
+    --color-iso-22123-border: #1f3556;
+    --color-iso-22123-text: #e6eefc;
+    --color-iso-22123-text-dim: #c7d6ec;
+    --color-iso-22123-text-faint: #9cb0cf;
+    --color-iso-22123-accent: #7c9eff;
+    --color-iso-22123-accent2: #4fd1c5;
+    --color-iso-22123-warn: #f5c26b;
+    --color-iso-22123-hex-091524: #091524;
+    --color-iso-22123-hex-fff: #fff;
+    --color-iso-22123-hex-0c1a2e: #0c1a2e;
+    --color-iso-22123-hex-0a1626: #0a1626;
+    --color-iso-22123-accent-22: rgba(124,158,255,.22);
+    --color-iso-22123-accent-12: rgba(124,158,255,.12);
+    --color-iso-22123-accent-35: rgba(124,158,255,.35);
+    --color-iso-22123-accent-10: rgba(124,158,255,.1);
+    --color-iso-22123-border-70: rgba(31,53,86,.7);
+    --color-iso-22123-accent-05: rgba(124,158,255,.05);
+    --color-iso-22123-accent2-45: rgba(79,209,197,.45);
+    --color-iso-22123-accent2-07: rgba(79,209,197,.07);
+    --color-iso-22123-warn-50: rgba(245,194,107,.5);
+    --color-iso-22123-warn-08: rgba(245,194,107,.08);
+    --color-iso-22123-accent-40: rgba(124,158,255,.4);
+    --color-iso-22123-accent-07: rgba(124,158,255,.07);
+
     /* DVA Domain 4 原本テーマ */
     --color-dva-troubleshooting-fbf8f1: #fbf8f1;
     --color-dva-troubleshooting-f2ecdd: #f2ecdd;
@@ -334,6 +367,25 @@
     --color-ccnp-enterprise-source-text: #125551;
     --color-ccnp-enterprise-note-border: #E2C3D0;
     --color-ccnp-enterprise-note-text: #6E2A47;
+
+    --color-ccnp-sp-paper: #F6F7F9;
+    --color-ccnp-sp-ink: #161B26;
+    --color-ccnp-sp-text-primary: #161B26;
+    --color-ccnp-sp-text-secondary: #454E63;
+    --color-ccnp-sp-text-tertiary: #5A647C;
+    --color-ccnp-sp-indigo: #2E3F72;
+    --color-ccnp-sp-gold: #B8802A;
+    --color-ccnp-sp-forest: #1B6E6A;
+    --color-ccnp-sp-plum: #8C3A5C;
+    --color-ccnp-sp-surface: #FFFFFF;
+    --color-ccnp-sp-code-bg: #F0F2F7;
+    --color-ccnp-sp-border-primary: #A9B4CB;
+    --color-ccnp-sp-border-secondary: #CBD2E0;
+    --color-ccnp-sp-border-tertiary: #E2E6EE;
+    --color-ccnp-sp-tint-indigo: #EEF1F8;
+    --color-ccnp-sp-tint-gold: #FAF1DF;
+    --color-ccnp-sp-tint-forest: #E3F0EE;
+    --color-ccnp-sp-tint-plum: #F5E8EE;
     /* SCS-C03 Domain 1: original light palette */
     --color-scs-d1-bg: #f7f8fb;
     --color-scs-d1-bg-card: #ffffff;
@@ -1752,6 +1804,9 @@
     --font-ccnp-enterprise-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
     --font-ccnp-enterprise-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
     --font-ccnp-enterprise-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, "Noto Sans Mono CJK JP", monospace;
+    --font-ccnp-sp-sans: "Noto Sans JP Variable", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, system-ui, sans-serif;
+    --font-ccnp-sp-serif: "Source Serif 4 Variable", "Source Serif 4", "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+    --font-ccnp-sp-mono: ui-monospace, 'SF Mono', Menlo, Consolas, "Noto Sans Mono CJK JP", "Noto Sans JP", monospace;
     --font-ccna-network-mono: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
 
     /* ホームとグローバルナビゲーションの共通コンテンツ幅 */
@@ -1983,6 +2038,11 @@ body {
     color: var(--color-theme-cisco-fg);
 }
 
+@utility icon-theme-ccnp-service-provider {
+    background: var(--color-theme-cisco-bg);
+    color: var(--color-theme-cisco-fg);
+}
+
 @utility icon-theme-hands-on {
     background: var(--color-theme-ace-bg);
     color: var(--color-theme-ace-fg);
@@ -2066,6 +2126,11 @@ body {
 @utility icon-theme-cli {
     background: var(--color-theme-cli-bg);
     color: var(--color-theme-cli-fg);
+}
+
+@utility icon-theme-iso-iec-22123-1-2023 {
+    background: var(--color-iso-22123-panel2);
+    color: var(--color-iso-22123-accent);
 }
 
 @utility icon-theme-tcpip-illustrated-vol1 {
@@ -2183,7 +2248,8 @@ body {
     height: 22px;
 }
 
-.provider-mark-tools {
+.provider-mark-tools,
+.provider-mark-standards {
     width: 46px;
     height: 34px;
     flex-direction: column;
@@ -2195,7 +2261,8 @@ body {
     letter-spacing: 0.16em;
 }
 
-.provider-mark-tools svg {
+.provider-mark-tools svg,
+.provider-mark-standards svg {
     width: 28px;
     height: 20px;
 }

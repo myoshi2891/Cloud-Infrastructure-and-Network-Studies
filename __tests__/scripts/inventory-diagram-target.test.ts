@@ -10,4 +10,10 @@ describe('script-rendered Mermaid inventory', () => {
         );
         expect(diagrams.map(element => element.id)).toEqual(['diagram-architecture', 'diagram-sequence']);
     });
+
+    it('counts rendered SVG diagrams alongside Mermaid targets', () => {
+        const root = document.createElement('div');
+        root.innerHTML = '<div class="mermaid-diagram" id="mmd-1"><svg></svg></div><div class="mermaid-diagram" id="mmd-2"><svg></svg></div>';
+        expect([...root.querySelectorAll(diagramSelector)].map(element => element.id)).toEqual(['mmd-1', 'mmd-2']);
+    });
 });

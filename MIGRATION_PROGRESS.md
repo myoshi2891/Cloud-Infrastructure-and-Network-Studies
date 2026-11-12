@@ -1,20 +1,53 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-09)
+(最終更新日: 2026-11-12)
 
-## CCNP Enterprise / Collaboration 再生成の前提
+## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド移行
 
-両ジェネレーター（`bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+`/standards/iso-iec-22123-1-2023` に、見出し60件・37表（th109 / td602）・リスト38項目・外部リンク24出現・描画済みSVG15図・チェック10項目を全量移行した。図はMermaid定義の復元で置き換えず、原本のSVGツリー・自然寸法・埋め込みCSS・`!important` を保持。原本配色14トークン、Hero・表・コールアウト・点と番号、18項目の目次、チェック件数と進捗、hash/focus、Escape、scroll spyと目次内スクロールを維持した。新しい「国際規格」カテゴリからホームとHeaderへ接続し、資格試験数からは除外する。
+
+Inventory `4c544b1b`、SVG検証Red `e11054f8` → Green `a7831fcc`、固定fixture `8177bb0e`、ページRed `2a049368`、操作Red `33753827` → 基盤 `a129977d`、Foundation `a070080c`、Models `b259fbcf`、Services `1ac8d3f7`、Data `4bf55920`、Practice `5d8b3063`、Appendix `e3c5586e`、全体構成・SVG優先度 `21f80897`、導線Red `f9aaaac4` → Green `5b031678`、保存情報 `2313e1c0`、ブラウザー検証 `61a2081f`、SVGキーボード `073be8df`、scroll spy追試Red `5ea87e1b` → Green `d07fd4c4`、仕様同期 `4baa129a` の段階別コミットを実施。
+
+最終関連13ファイル・230件成功。開発サーバー3107のChromiumで1440px / 390pxの2件成功（15 SVGの自然寸法、横スクロールのキー操作、アンカー着地、全チェック進捗、モバイル開閉・フォーカス・横はみ出しなし）。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。型検査・全体ESLint・最終変更箇所ESLint・仕様書Markdown lint成功。統合時の全体Vitestは611ファイル・5468件中5465件成功で、既存失敗3件はSAP-C02 Domain 1のDomain 4期待値2件と、Footer明色ルートのCCNP期待値1件。SAP2件は移行前の定数でも再現する。FooterはISO移行直前の `4bab76a0` と現行でCSS・テストが同一であり、ISO移行によるセレクター追加や不一致の拡大はない。PRベース `5bab30fa` には2ルート（`ccnp-collab-page`・`ccnp-enterprise-page`）の期待値漏れがあり、ISO移行前の `315c8c99` で追加された `ccnp-service-provider-page` を含む現行の3ルート不一致とは比較範囲が異なる。
+
+移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、比較用の原本も直下に保持した。`docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に保存先・ハッシュ・固定Gitを記録。本文・図・CSSの期待値はコミット済みfixtureを使い、実行時にarchiveへ依存しない。静的集計は1466ソース・546対応（37%）・629テストファイル。npm・本番ビルドはユーザー指定に従い未実行、目視確認はユーザー担当。
+
+現在のfixtureは、太字指定を訂正したリポジトリ直下の `Iso-iec-22123-1-2023-guide.html` から `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` で再生成する。`sourceCommit` は `null`、`sourceSha256` は入力HTMLのSHA-256となる。オプションなしは固定Git `4bab76a0` の訂正前HTMLを使うため、現行fixtureの再生成には使わない。上記コマンドの `scripts/...` は作業ディレクトリからの相対パスのため、必ずリポジトリルートから実行する。スクリプト内部の入出力とGit操作はリポジトリルート基準である。
+
+## CCNP Service Provider / Enterprise / Collaboration 再生成の前提
+
+各ジェネレーター（`bun scripts/migrate-ccnp-service-provider.mjs all` / `bun scripts/migrate-ccnp-enterprise.mjs all` / `bun scripts/migrate-ccnp-collaboration.mjs all`）は、検証済みの原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。実行前に各 `docs/migration-inventory/cisco-ccnp-{service-provider,enterprise,collaboration}.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
 
 ```bash
-mkdir -p archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
-git show '5a570d93^:Ccnp-enterprise-guide.html' > archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html
-git show 'cbf5be32^:Ccnp-collaboration-guide.html' > archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-wc -c archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
-shasum -a 256 archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+mkdir -p archive/Cisco/html/ccnp-service-provider archive/Cisco/html/ccnp-enterprise archive/Cisco/html/ccnp-collaboration
+restore_archive() (
+    archive_file=$2
+    restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
+    trap 'rm -f "$restore_tmp"' EXIT
+    git show "$1" > "$restore_tmp" || exit 1
+    restore_bytes=$(wc -c < "$restore_tmp") || exit 1
+    restore_hash=$(shasum -a 256 "$restore_tmp") || exit 1
+    restore_hash=${restore_hash%% *}
+    [ "$restore_bytes" -eq "$3" ] && [ "$restore_hash" = "$4" ] || exit 1
+    mv "$restore_tmp" "$archive_file"
+)
+restore_archive '25722201^:Ccnp-service-provider-guide.html' archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html 173672 567ad7dd95f120f27b677c381f55adabf32ae39c8337d23f1a5cf7ced9bd7218 || exit 1
+restore_archive '5a570d93^:Ccnp-enterprise-guide.html' archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html 460613 8cadae92c1790f603694c787ee0e3ac9315a08daf1294784fdff3a2fa8d7e516 || exit 1
+restore_archive 'cbf5be32^:Ccnp-collaboration-guide.html' archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html 817220 5714d74dc16d7f14caef192fea4a208e9375bda30ce60c3a4eb49901ff2fbbe1 || exit 1
+wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
+shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 ```
 
 各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、上記の再生成コマンドを実行する。ジェネレーターは直下の同名HTMLを優先するため、そこにファイルがある場合も同じ照合が必要。移行テストはコミット済みインベントリを使うため、この復元は不要。
+
+## 2026-11-09: CCNP Service Provider 完全ガイド移行 & 原本アーカイブ退避
+
+`/cisco/ccnp-service-provider` へ全5章（HeroIntro: Hero + 第1章 このガイドの使い方 1.1〜1.3、Chapter2: 第2章 認定の全体像 2.1〜2.4、Chapter3: 第3章 前提知識：SP ネットワークの基本用語 3.1〜3.3、Chapter4: 第4章 学習ロードマップ 4.1〜4.4、Chapter5: 第5章 Part A：コア試験 350-501 SPCOR 5.1 アーキテクチャ・セキュリティ 5.1.1〜5.1.7）を完全移行。見出し（`h1` 1・`h2` 5・`h3` 15・`h4` 7・`h5` 19）・28表（th82・td342・セル間縦罫線 `th + th, td + td`）・12図・8コード例（全行 `.code-line` ラップ、原本構文トークン `.tk-comment` 5・`.tk-prompt` 9・`.tk-kw` 35・`.tk-cmd` 9・`.tk-ip` 4・`.tk-ph` 4・`.tk-num` 24 保持）・41コールアウト（`.practice` 18・`.source` 19・`.note` 4・Tabler Icons 41）・112リスト項目・43外部リンク出現・27目次・1静的SVGアイコンを原本どおり保持。明色配色（`--color-ccnp-sp-*` 17変数、紙色 `#f6f7f9`、文字 `#161b26`、インディゴ `#2e3f72`、ゴールド `#b8802a`、フォレスト `#1b6e6a`、プラム `#8c3a5c`、行ホバー `#fafbfd`、コールアウト各色）、サイドバーのブランドロゴ（44x44px SVG・`.crest .ring` 塗色・タイトル/サブ）と目次（`.nav a.l2`, `.l3`, `.l4`・アクティブ項目への自動スクロール追従 `keepVisible`）、Heroの `.hero-meta` / `.meta-row` / `.meta-label` / `.meta-text` リスト、表（`thead` / `th[scope="col"]` 100% 完備）、コールアウト（`.callout.practice`, `.callout.source`, `.callout.note`）、金色丸ドットと番号・入れ子・字下げ、コードブロック（`.code-block`）を完全復元した。
+目次の現在位置・開閉・hash/focus、Mermaid ダイアグラムの全12図（Mermaid構文エラー0件、全派生色固定、自然倍率 `preserveNaturalScale={true}`、遅延描画 `deferUntilVisible={true}`）、ホーム・Header導線（`app/constants.ts` に `ccnp-service-provider` 追加）、共通フッター（`components/Footer.module.css` に `.ccnp-service-provider-page` 登録）へ統合。
+
+Inventory & Script（Commit 1: `6332be8c`）、Red テスト（Commit 2: `018bb006`）、基盤実装（Commit 3: `315c8c99`）、HeroIntro（Commit 4: `989ae2a5`）、Chapter2（Commit 5: `9b4ac8f7`）、Chapter3（Commit 6: `d5d40073`）、Chapter4（Commit 7: `37d12517`）、Chapter5（Commit 8: `2841ae1d`）、ページ統合（Commit 9: `41be4c77`）、グローバル導線・幅契約・スクリプトテスト（Commit 10: `24cc5ce5`）、アーカイブ退避（Commit 11: `25722201`）、CSS・DOM構造完全一致監査（Red `ecd6c0dd` → Green `938d8c58`）の段階別コミットを実施。原本固定インベントリで全文・表セル・リスト階層・配置順・コード行・構文トークン・アクセシビリティラベルと、Mermaidの全12図DSL・アクセシビリティ代替テキストを全量照合。CCNP Service Provider 関連テスト8ファイル・75件すべて成功、ガイド幅契約テスト172件成功。最終型検査・全体ESLint成功。npm・ビルドは未実行。
+
+原本HTML（173672バイト・SHA-256 `567ad7dd95f120f27b677c381f55adabf32ae39c8337d23f1a5cf7ced9bd7218`）およびMarkdown（46526バイト・SHA-256 `9e5883525dd1090cfeef3e8494e3d51a78a25df13943bcf7673aeb5a712480e2`）を `archive/Cisco/html/ccnp-service-provider/` と `archive/Cisco/md/ccnp-service-provider/` へバイト一致・SHA-256一致で移動・退避し、直下から原本を削除。保存先とハッシュを `docs/migration-inventory/cisco-ccnp-service-provider.archive.json` に記録。原本不在下で全量移行テストが100%成功することを検証。`bun scripts/migrate-ccnp-service-provider.mjs all` で再生成できる。直下の未移行HTML残数は13件。
 
 ## 2026-11-08: CCNP Enterprise 完全ガイド移行 & 原本アーカイブ退避
 
@@ -2326,13 +2359,14 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** CCNP Enterprise 完全ガイド（`/cisco/ccnp-enterprise`）の全文移行・導線統合・原本アーカイブ。その前に CCNP Collaboration 完全ガイド（`/cisco/ccnp-collaboration`）および CCIE Service Provider 完全ガイド（`/cisco/ccie/service-provider`）も完了。
-- **最終更新日:** 2026-11-09
-- **最新実装 HEAD:** `f78a99a7`（CCNP Enterprise のページメタデータと試験定数の説明からコンセントレーション試験数を削除）
-- **前回進捗同期コミット:** `a00d0c93`
-- **HTML残数:** 直下HTML14件、すべて未移行。直下の移行済み原本は0件。
-- **アーカイブ:** CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
-- **次の作業:** 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（移行・アーカイブ済みの `/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider` は再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+- **最新完了タスク:** ISO/IEC 22123-1:2023 の全文・SVG・スタイル・操作移行、国際規格カテゴリとホーム/Header導線、原本コピーと仕様同期。CCNP各ガイドも完了済み。
+- **最終更新日:** 2026-11-12
+- **最新実装 HEAD:** `9db77221`（直近の進捗編集 `85391ace` の直前の実装。ISO目次scroll更新のフレーム集約・scroll-margin境界判定、CCNP SPのラベル改善・Escapeフォーカス復帰まで反映）
+- **前回進捗同期コミット:** `4db5a23e`
+- **HTML残数:** 直下HTML13件のうち未移行12件。移行済みISO/IEC 22123-1原本1件は比較用に保持。
+- **検証状態:** 関連230件・E2E2件・型検査・lint成功。統合時の全体は5465成功 / 3失敗（FooterのCSS・テストはISO移行前後で同一）。npm・本番ビルドは指定により未実行。
+- **アーカイブ:** ISOは `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` にコピー先・SHA-256を記録。原本は保持。 CCNP Service Provider は `docs/migration-inventory/cisco-ccnp-service-provider.archive.json`、CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
+- **次の作業:** 未移行12件の次候補は `Iso-iec-22123-2-guide.html`。ユーザーの次の指定に従って着手し、ISO/IEC 22123-1・CCNP各ガイド等の移行済み教材は再移行しない。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3671,15 +3705,15 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `f78a99a7`（CCNP Enterprise のページメタデータと試験定数の説明からコンセントレーション試験数を削除）。
+最新実装 HEAD: `9db77221`（直近の進捗編集 `85391ace` の直前の実装。ISO目次scroll更新のフレーム集約・scroll-margin境界判定、CCNP SPのラベル改善・Escapeフォーカス復帰まで反映）。
 
-前回進捗同期コミット: `a00d0c93`。
+前回進捗同期コミット: `4db5a23e`。
 
-原本HTML/Markdownはアーカイブ済み。CCNP Enterprise の保存先とハッシュは `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に記録。archiveはローカル専用・Git管理外。
+ISO/IEC 22123-1:2023 は全文移行・厳密SVG/CSS照合・導線統合・原本コピー・仕様同期まで完了。再移行は不要。原本HTML/Markdownは比較用に保持し、保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に記録。archiveはローカル専用で、テストは訂正済みHTML由来のコミット済みfixtureを使用する。再生成はリポジトリルートから `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` を実行する。
 
-検証: 2026-11-08に `scripts/migrate-ccie-sp.mjs` 修正後のCCIE SP関連テストを実行（`bunx vitest run __tests__/cisco` 30ファイル・337件すべて成功）。npm・Playwright E2E・実ページのブラウザー検証は未実行。
+検証: 最終関連230件・Chromium E2E2件・型検査・lint成功。統合時の全体は611ファイル・5468件中5465件成功、3件（SAP期待値2件・Footer期待値1件）が失敗。FooterのCSS・テストはISO移行前後で同一。原本・archive HTML不在下でもISO関連27件成功。npm・本番ビルドは未実行。目視確認はユーザー担当。
 
-次の作業: 直下の未移行HTML14件のうち `Ccnp-service-provider-guide.html` から移行を開始する（`/cisco/ccnp-enterprise`、`/cisco/ccnp-collaboration`、`/cisco/ccie/service-provider`、SCS-C03 Domain 6 は移行・アーカイブ済みで再移行不要）。次の移行もInventory → Red → Green → 統合 → 仕様同期の段階別コミットを厳守する。
+次の作業: 未移行12件の次候補は `Iso-iec-22123-2-guide.html`。ユーザーの次の指定に従って着手し、ISO/IEC 22123-1・CCNP各ガイド等の移行済み教材は再移行しない。直下HTMLは13件（未移行12件と、比較用に保持したISO原本1件）。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
