@@ -22,6 +22,19 @@ if (createHash('sha256').update(html).digest('hex') !== fixture.sourceSha256) th
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 if (!main || doc.querySelectorAll('.mermaid-diagram svg').length !== 20) throw new Error('原本のmain要素・20 SVGが一致しません。生成を中止します。');
+// 原本でリンクの外へ分離している2件のPDF末尾を、URLとリンク文字列へ戻す。
+for (const url of [
+    'https://www.vde-verlag.de/iec-normen/preview-pdf/info_isoiec22123-3',
+    'https://vde-verlag.de/iec-normen/preview-pdf/info_isoiec17789',
+]) {
+    const anchor = main.querySelector(`a[href="${url}"]`);
+    const suffix = '{ed1.0}en.pdf';
+    const trailing = anchor?.nextSibling;
+    if (!anchor || trailing?.nodeType !== 3 || !trailing.textContent.startsWith(suffix)) throw new Error('PDFリンク末尾が原本と一致しません: ' + url);
+    anchor.setAttribute('href', url + suffix);
+    anchor.textContent += suffix;
+    trailing.textContent = trailing.textContent.slice(suffix.length);
+}
 const output = resolve(root, 'app/standards/iso-iec-22123-3-2023');
 
 /** 出力先ディレクトリを作り、リポジトリ基準で生成物を書き出す。 */
