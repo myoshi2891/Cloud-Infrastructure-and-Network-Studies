@@ -11,6 +11,7 @@ import { defineMigrationSuite } from '@/__tests__/helpers/migration-test-utils';
 import { snapshotGuidePart } from '@/scripts/guide-fidelity-extraction.mjs';
 import { snapshotSvgDiagrams } from '@/scripts/svg-fidelity-extraction.mjs';
 import type { ComponentType } from 'react';
+import { renderToString } from 'react-dom/server';
 
 defineMigrationSuite('ISO/IEC 22123-3:2023 全量移行', Page, inventory);
 
@@ -46,6 +47,15 @@ describe('原本の構造・装飾・操作を保持する', () => {
         fireEvent.keyDown(window, { key: 'Escape' });
         expect(toggle).toHaveFocus();
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('原本の目次アイコンを保持し、ハイドレーション前の操作を無効化する', () => {
+        const html = renderToString(<Page />);
+        const server = new JSDOM(html).window.document;
+        expect(server.querySelector('#navToggle')?.textContent).toBe('☰ 目次');
+        expect(server.querySelector('#navToggle')).toHaveAttribute('disabled');
+        const { getByRole } = render(<Page />);
+        expect(getByRole('button', { name: '目次を開閉' })).toBeEnabled();
     });
 
     it('全目次だけを監視し、scroll spy更新とcleanupを行う', () => {
