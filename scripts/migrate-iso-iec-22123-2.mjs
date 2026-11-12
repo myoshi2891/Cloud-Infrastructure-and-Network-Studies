@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
@@ -17,6 +18,8 @@ const candidates = [resolve(root, SOURCE), resolve(root, 'archive/Standards/html
 const sourcePath = candidates.find(path => fs.existsSync(path));
 if (!sourcePath) throw new Error('原本HTMLが見つかりません。確認した場所: ' + candidates.join(', '));
 const html = fs.readFileSync(sourcePath, 'utf8');
+const sourceSha256 = createHash('sha256').update(html).digest('hex');
+if (sourceSha256 !== fixture.sourceSha256) throw new Error('原本HTMLのSHA-256がfixture.sourceSha256と一致しません。生成を中止します。');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 if (!main || doc.querySelectorAll('.mermaid-diagram svg').length !== 14) throw new Error('原本のmain要素・14 SVGが一致しません。生成を中止します。');
