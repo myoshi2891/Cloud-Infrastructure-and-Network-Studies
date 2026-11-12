@@ -37,7 +37,10 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
                     .find(anchor => anchor.dataset.target === current.id);
                 const viewport = sidebar.current;
                 if (link && viewport) {
-                    if (link.offsetTop < viewport.scrollTop) viewport.scrollTop = link.offsetTop;
+                    const topInset = window.innerWidth <= 960 && toggle.current
+                        ? Math.max(0, toggle.current.getBoundingClientRect().bottom - viewport.getBoundingClientRect().top)
+                        : 0;
+                    if (link.offsetTop < viewport.scrollTop + topInset) viewport.scrollTop = Math.max(0, link.offsetTop - topInset);
                     else if (link.offsetTop + link.offsetHeight > viewport.scrollTop + viewport.clientHeight) {
                         viewport.scrollTop = link.offsetTop + link.offsetHeight - viewport.clientHeight;
                     }

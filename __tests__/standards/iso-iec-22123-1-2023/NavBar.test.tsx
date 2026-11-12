@@ -171,6 +171,32 @@ describe('ISO目次の現在地', () => {
 });
 
 
+describe('ISO目次の自動スクロール', () => {
+    it.each([
+        [960, 200, 132],
+        [960, 150, 132],
+        [961, 200, 180],
+        [961, 150, 150],
+    ])('幅%i・スクロール位置%iで上方のリンクを表示する', (width, scrollTop, expected) => {
+        vi.stubGlobal('innerWidth', width);
+        const { container } = renderWithHeadings(1);
+        const viewport = container.querySelector('.sidebar') as HTMLElement;
+        const link = viewport.querySelector('a')!;
+        const toggle = container.querySelector('.toggle')!;
+        vi.spyOn(viewport, 'getBoundingClientRect').mockReturnValue({ top: 80 } as DOMRect);
+        vi.spyOn(toggle, 'getBoundingClientRect').mockReturnValue({ bottom: 128 } as DOMRect);
+        Object.defineProperty(viewport, 'clientHeight', { value: 400 });
+        Object.defineProperty(link, 'offsetTop', { value: 180 });
+        Object.defineProperty(link, 'offsetHeight', { value: 30 });
+        viewport.scrollTop = scrollTop;
+
+        fireEvent.resize(window);
+
+        expect(viewport.scrollTop).toBe(expected);
+        expect(link).toHaveAttribute('aria-current', 'location');
+    });
+});
+
 describe('目次リンクのブラウザー標準操作', () => {
     it.each([{ ctrlKey: true }, { metaKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { button: 2 }])('修飾クリックを妨げない: %j', options => {
         const onClose = vi.fn();
