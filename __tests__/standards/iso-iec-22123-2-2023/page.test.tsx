@@ -18,7 +18,7 @@ describe('原本の構造・装飾・操作を保持する', () => {
     it('全文・表結合・強調・リンク・リスト階層・配置順と14図のSVGツリーが完全一致する', () => {
         const { container } = render(<Page />);
         expect(snapshotGuidePart(container.querySelector('main'))).toEqual(fixture.main);
-        expect(snapshotSvgDiagrams(container).map(({ label: _label, ...svg }) => svg)).toEqual(fixture.svg.map(({ label: _label, ...svg }) => svg));
+        expect(snapshotSvgDiagrams(container).map(diagram => Object.fromEntries(Object.entries(diagram).filter(([key]) => key !== 'label')))).toEqual(fixture.svg.map(diagram => Object.fromEntries(Object.entries(diagram).filter(([key]) => key !== 'label'))));
         expect(snapshotGuideChecks(container)).toEqual(fixture.checks);
         container.querySelectorAll('.mermaid-diagram').forEach(diagram => {
             expect(diagram).toHaveAttribute('tabindex', '0');
@@ -57,7 +57,7 @@ describe('原本の構造・装飾・操作を保持する', () => {
             const anchors = [...container.querySelectorAll<HTMLAnchorElement>('.sidebar a')];
             expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(anchors.map(a => a.getAttribute('href')!.slice(1)));
             const target = document.getElementById(anchors.at(-1)!.getAttribute('href')!.slice(1))!;
-            act(() => callback?.([{ target, isIntersecting: true } as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
+            act(() => callback?.([{ target, isIntersecting: true } as unknown as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
             expect(anchors.at(-1)).toHaveAttribute('aria-current', 'location');
             unmount();
             expect(observer.disconnect).toHaveBeenCalledOnce();
