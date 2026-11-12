@@ -48,6 +48,7 @@ describe('SVG・原本CSS・リストとインタラクション', () => {
         expect(container.querySelectorAll('.mermaid-diagram')).toHaveLength(15);
         expect(snapshotSvgDiagrams(container)).toEqual(fixture.svg);
         for (const diagram of container.querySelectorAll('.mermaid-diagram')) {
+            expect(diagram.querySelector('.svg-source')).toHaveAttribute('data-preserve-natural-scale', 'true');
             expect(diagram.tagName).toBe('SECTION');
             expect(diagram).toHaveAttribute('tabIndex', '0');
             expect(diagram).toHaveRole('region');
