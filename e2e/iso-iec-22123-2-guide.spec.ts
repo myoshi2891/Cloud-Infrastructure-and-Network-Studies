@@ -63,5 +63,9 @@ test('390pxで目次の開閉・hash/focus・Escapeと横はみ出しを検証�
     await expect(page.locator('h2').first()).toBeFocused();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     const top = await page.locator('h2').first().boundingBox();
-    expect(top!.y).toBeGreaterThanOrEqual(60);
+    const offset = await page.evaluate(() => {
+        const style = getComputedStyle(document.documentElement);
+        return parseFloat(style.getPropertyValue('--header-h')) + parseFloat(style.getPropertyValue('--disclaimer-height') || '0');
+    });
+    expect(top!.y).toBeGreaterThanOrEqual(offset);
 });
