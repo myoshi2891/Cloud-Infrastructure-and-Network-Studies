@@ -18,6 +18,31 @@ describe('CCNP Service Provider 現在地', () => {
         }
     });
 
+    it('節を選択した後、Backでヒーローに戻ると最初の目次を現在地にする', async () => {
+        const originalUrl = window.location.href;
+        window.history.replaceState(null, '', window.location.pathname);
+        const { container, unmount } = render(<NavBar isOpen={false} onClose={vi.fn()} onToggle={vi.fn()} />);
+        try {
+            fireEvent.click(container.querySelector('a[href="#s3"]')!);
+            expect(window.location.hash).toBe('#s3');
+            expect(container.querySelector('a.active')).toHaveAttribute('href', '#s3');
+
+            await act(async () => {
+                const returned = new Promise<void>(resolve => window.addEventListener('hashchange', () => resolve(), { once: true }));
+                window.history.back();
+                await returned;
+            });
+
+            expect(window.location.hash).toBe('');
+            expect(container.querySelectorAll('a.active')).toHaveLength(1);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', '#s1');
+            expect(container.querySelector('a[aria-current="location"]')).toHaveAttribute('href', '#s1');
+        } finally {
+            unmount();
+            window.history.replaceState(null, '', originalUrl);
+        }
+    });
+
     it('s3が退出してs2が交差したままの逆スクロールでs2へ戻る', () => {
         let notify: IntersectionObserverCallback;
         const observer = { observe: vi.fn(), disconnect: vi.fn() };

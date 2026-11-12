@@ -11,7 +11,11 @@ interface NavBarProps {
 
 function subscribeToHash(onChange: () => void) {
     window.addEventListener("hashchange", onChange);
-    return () => window.removeEventListener("hashchange", onChange);
+    window.addEventListener("popstate", onChange);
+    return () => {
+        window.removeEventListener("hashchange", onChange);
+        window.removeEventListener("popstate", onChange);
+    };
 }
 
 function initialActiveId() {
@@ -27,6 +31,9 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
     const initialId = useSyncExternalStore(subscribeToHash, initialActiveId, () => NAV_ITEMS[0]!.id);
     const [selectedId, setActiveId] = useState<string | null>(null);
     const activeId = selectedId ?? initialId;
+
+    // pushStateでの直接選択は保ち、履歴・ハッシュ移動時はURLの現在地へ戻す。
+    useEffect(() => subscribeToHash(() => setActiveId(null)), []);
 
     useEffect(() => {
         if (!isOpen) return;
