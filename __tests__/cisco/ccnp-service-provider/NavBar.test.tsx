@@ -2,6 +2,51 @@ import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { NavBar } from '@/app/cisco/ccnp-service-provider/NavBar';
 
+describe('CCNP Service Provider scroll spyの監視範囲', () => {
+    it('横長画面でも正の高さで監視し、リサイズで再監視して終了時に解除する', () => {
+        const observers: { observe: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> }[] = [];
+        const createObserver = vi.fn(function () {
+            const observer = { observe: vi.fn(), disconnect: vi.fn() };
+            observers.push(observer);
+            return observer;
+        });
+        vi.stubGlobal('IntersectionObserver', createObserver);
+        vi.stubGlobal('innerWidth', 1440);
+        vi.stubGlobal('innerHeight', 390);
+        const removeListener = vi.spyOn(window, 'removeEventListener');
+        try {
+            const { unmount } = render(<>
+                <NavBar isOpen={false} onClose={vi.fn()} onToggle={vi.fn()} />
+                <section id="s1">移動先</section>
+            </>);
+            const expectRegion = (height: number) => {
+                const options = (createObserver.mock.calls.at(-1) as unknown as [unknown, IntersectionObserverInit])[1];
+                const margins = options.rootMargin!.split(' ');
+                expect(margins.every(margin => margin.endsWith('px'))).toBe(true);
+                expect(parseFloat(margins[0]!)).toBeCloseTo(-height * 0.2);
+                expect(parseFloat(margins[2]!)).toBeCloseTo(-height * 0.7);
+                expect(height + parseFloat(margins[0]!) + parseFloat(margins[2]!)).toBeGreaterThan(0);
+            };
+            expectRegion(390);
+            expect(observers[0]!.observe).toHaveBeenCalledWith(document.getElementById('s1'));
+            vi.stubGlobal('innerHeight', 768);
+            fireEvent.resize(window);
+            expect(observers[0]!.disconnect).toHaveBeenCalledOnce();
+            expect(createObserver).toHaveBeenCalledTimes(2);
+            expectRegion(768);
+            expect(observers[1]!.observe).toHaveBeenCalledWith(document.getElementById('s1'));
+            unmount();
+            expect(observers[1]!.disconnect).toHaveBeenCalledOnce();
+            expect(removeListener).toHaveBeenCalledWith('resize', expect.any(Function));
+            fireEvent.resize(window);
+            expect(createObserver).toHaveBeenCalledTimes(2);
+        } finally {
+            removeListener.mockRestore();
+            vi.unstubAllGlobals();
+        }
+    });
+});
+
 describe('CCNP Service Provider 目次の自動スクロール', () => {
     it.each([
         ['下方のリンク', 750, 550],

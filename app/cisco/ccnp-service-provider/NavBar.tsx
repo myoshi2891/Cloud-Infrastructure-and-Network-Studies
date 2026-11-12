@@ -75,26 +75,36 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
             links.map((a) => [(a.getAttribute("href") ?? "").slice(1), a]),
         );
 
-        const io = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const target = map.get(entry.target.id);
-                        if (target) {
-                            activateLink(target);
+        let io: IntersectionObserver;
+        const observeSections = () => {
+            io?.disconnect();
+            const height = window.innerHeight;
+            io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            const target = map.get(entry.target.id);
+                            if (target) {
+                                activateLink(target);
+                            }
                         }
-                    }
-                });
-            },
-            { rootMargin: "-20% 0px -70% 0px" },
-        );
+                    });
+                },
+                { rootMargin: `${-height * 0.2}px 0px ${-height * 0.7}px 0px` },
+            );
 
-        NAV_ITEMS.forEach((item) => {
-            const el = document.getElementById(item.id);
-            if (el) io.observe(el);
-        });
+            NAV_ITEMS.forEach((item) => {
+                const el = document.getElementById(item.id);
+                if (el) io.observe(el);
+            });
+        };
 
-        return () => io.disconnect();
+        observeSections();
+        window.addEventListener("resize", observeSections);
+        return () => {
+            window.removeEventListener("resize", observeSections);
+            io.disconnect();
+        };
     }, [activateLink]);
 
     return (
