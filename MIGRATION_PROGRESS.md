@@ -1,6 +1,6 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-11)
+(最終更新日: 2026-11-12)
 
 ## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド移行
 
@@ -8,7 +8,7 @@
 
 Inventory `4c544b1b`、SVG検証Red `e11054f8` → Green `a7831fcc`、固定fixture `8177bb0e`、ページRed `2a049368`、操作Red `33753827` → 基盤 `a129977d`、Foundation `a070080c`、Models `b259fbcf`、Services `1ac8d3f7`、Data `4bf55920`、Practice `5d8b3063`、Appendix `e3c5586e`、全体構成・SVG優先度 `21f80897`、導線Red `f9aaaac4` → Green `5b031678`、保存情報 `2313e1c0`、ブラウザー検証 `61a2081f`、SVGキーボード `073be8df`、scroll spy追試Red `5ea87e1b` → Green `d07fd4c4`、仕様同期 `4baa129a` の段階別コミットを実施。
 
-最終関連13ファイル・230件成功。開発サーバー3107のChromiumで1440px / 390pxの2件成功（15 SVGの自然寸法、横スクロールのキー操作、アンカー着地、全チェック進捗、モバイル開閉・フォーカス・横はみ出しなし）。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。型検査・全体ESLint・最終変更箇所ESLint・仕様書Markdown lint成功。統合時の全体Vitestは611ファイル・5468件中5465件成功で、既存失敗3件はSAP-C02 Domain 1のDomain 4期待値2件と、Footer明色ルートのCCNP期待値1件。SAP登録・Footer CSS・既存テストは移行前 `4bab76a0` と同一で、SAP2件は移行前の定数でも再現する。今回の移行に由来する失敗はない。
+最終関連13ファイル・230件成功。開発サーバー3107のChromiumで1440px / 390pxの2件成功（15 SVGの自然寸法、横スクロールのキー操作、アンカー着地、全チェック進捗、モバイル開閉・フォーカス・横はみ出しなし）。原本とarchiveのHTMLを参照できない状態でもISO関連27件成功。型検査・全体ESLint・最終変更箇所ESLint・仕様書Markdown lint成功。統合時の全体Vitestは611ファイル・5468件中5465件成功で、既存失敗3件はSAP-C02 Domain 1のDomain 4期待値2件と、Footer明色ルートのCCNP期待値1件。SAP2件は移行前の定数でも再現する。Footerのセレクター比較をPRベース `5bab30fa` のCSS・テストで再実行すると、期待値に `ccnp-collab-page` と `ccnp-enterprise-page` がないため既に失敗する。`315c8c99` はCSSに `ccnp-service-provider-page` を追加した一方でテスト期待値を更新しておらず、現行では不一致が3ルートへ拡大している。Footerの失敗自体はベースにも存在するが、本PRにも期待値追従漏れがあるため、移行による差分がないとは断定しない。
 
 移行時にHTML/Markdownはバイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-1-2023/` へコピーし、比較用の原本も直下に保持した。`docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に保存先・ハッシュ・固定Gitを記録。本文・図・CSSの期待値はコミット済みfixtureを使い、実行時にarchiveへ依存しない。静的集計は1466ソース・546対応（37%）・629テストファイル。npm・本番ビルドはユーザー指定に従い未実行、目視確認はユーザー担当。
 
@@ -2349,11 +2349,11 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 
 - **ブランチ:** dev
 - **最新完了タスク:** ISO/IEC 22123-1:2023 の全文・SVG・スタイル・操作移行、国際規格カテゴリとホーム/Header導線、原本コピーと仕様同期。CCNP各ガイドも完了済み。
-- **最終更新日:** 2026-11-11
-- **最新実装 HEAD:** `d07fd4c4`（ISOガイドの原本scroll spyと目次内自動スクロールを保持）
+- **最終更新日:** 2026-11-12
+- **最新実装 HEAD:** `9db77221`（直近の進捗編集 `85391ace` の直前の実装。ISO目次scroll更新のフレーム集約・scroll-margin境界判定、CCNP SPのラベル改善・Escapeフォーカス復帰まで反映）
 - **前回進捗同期コミット:** `4db5a23e`
 - **HTML残数:** 直下HTML13件のうち未移行12件。移行済みISO/IEC 22123-1原本1件は比較用に保持。
-- **検証状態:** 関連230件・E2E2件・型検査・lint成功。統合時の全体は5465成功 / 既存3失敗。npm・本番ビルドは指定により未実行。
+- **検証状態:** 関連230件・E2E2件・型検査・lint成功。統合時の全体は5465成功 / 3失敗（Footerはベースでも失敗し、本PRで不一致が拡大）。npm・本番ビルドは指定により未実行。
 - **アーカイブ:** ISOは `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` にコピー先・SHA-256を記録。原本は保持。 CCNP Service Provider は `docs/migration-inventory/cisco-ccnp-service-provider.archive.json`、CCNP Enterprise は `docs/migration-inventory/cisco-ccnp-enterprise.archive.json`、CCNP Collaboration は `docs/migration-inventory/cisco-ccnp-collaboration.archive.json`、CCIE SP は `docs/migration-inventory/cisco-ccie-sp-guide.archive.json` に保存先・ハッシュを記録。archiveはGit管理外のローカル保存先。
 - **次の作業:** 未移行12件の次候補は `Iso-iec-22123-2-guide.html`。ユーザーの次の指定に従って着手し、ISO/IEC 22123-1・CCNP各ガイド等の移行済み教材は再移行しない。
 
@@ -3694,13 +3694,13 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `d07fd4c4`（ISOガイドの原本scroll spyと目次内自動スクロールを保持）。
+最新実装 HEAD: `9db77221`（直近の進捗編集 `85391ace` の直前の実装。ISO目次scroll更新のフレーム集約・scroll-margin境界判定、CCNP SPのラベル改善・Escapeフォーカス復帰まで反映）。
 
 前回進捗同期コミット: `4db5a23e`。
 
 ISO/IEC 22123-1:2023 は全文移行・厳密SVG/CSS照合・導線統合・原本コピー・仕様同期まで完了。再移行は不要。原本HTML/Markdownは比較用に保持し、保存情報は `docs/migration-inventory/iso-iec-22123-1-2023.archive.json` に記録。archiveはローカル専用で、テストは訂正済みHTML由来のコミット済みfixtureを使用する。再生成はリポジトリルートから `bun scripts/gen-iso-iec-22123-fixture.mjs --working-tree` を実行する。
 
-検証: 最終関連230件・Chromium E2E2件・型検査・lint成功。統合時の全体は611ファイル・5468件中5465件成功、既存3件（SAP期待値2件・Footer期待値1件）が失敗。原本・archive HTML不在下でもISO関連27件成功。npm・本番ビルドは未実行。目視確認はユーザー担当。
+検証: 最終関連230件・Chromium E2E2件・型検査・lint成功。統合時の全体は611ファイル・5468件中5465件成功、3件（SAP期待値2件・Footer期待値1件）が失敗。FooterはPRベースでも失敗し、本PRのCCNP SP登録で不一致が拡大。原本・archive HTML不在下でもISO関連27件成功。npm・本番ビルドは未実行。目視確認はユーザー担当。
 
 次の作業: 未移行12件の次候補は `Iso-iec-22123-2-guide.html`。ユーザーの次の指定に従って着手し、ISO/IEC 22123-1・CCNP各ガイド等の移行済み教材は再移行しない。直下HTMLは13件（未移行12件と、比較用に保持したISO原本1件）。
 
