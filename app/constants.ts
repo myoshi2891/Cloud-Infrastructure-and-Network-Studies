@@ -1466,6 +1466,27 @@ const ALL_EXAMS: Exam[] = [
         provider: 'Standards',
         overviewLabel: '概念ガイド',
     },
+    {
+        id: 'iso-iec-22123-3-2023',
+        label: 'ISO/IEC 22123-3:2023',
+        abbr: 'ISO/IEC 22123-3',
+        level: 'クラウド リファレンスアーキテクチャ',
+        score: 'CCRA・4つのビュー',
+        color: 'card-cli',
+        href: '/standards/iso-iec-22123-3-2023',
+        description: 'クラウドのユーザービューと機能ビュー、4層と横断的側面、パーティとロールを29表・20図で学ぶリファレンスアーキテクチャガイド。',
+        domains: [
+            {
+                label: 'リファレンスアーキテクチャ',
+                href: '/standards/iso-iec-22123-3-2023',
+                pct: '完全解説',
+            },
+        ],
+        badge: '国際規格ガイド',
+        icon: '📐',
+        provider: 'Standards',
+        overviewLabel: 'リファレンスアーキテクチャ',
+    },
 ];
 
 export const EXAMS: Exam[] = HANDS_ON_ENABLED

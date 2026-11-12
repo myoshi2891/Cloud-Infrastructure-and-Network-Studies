@@ -1,9 +1,13 @@
 'use client';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore, type MouseEvent } from 'react';
 import { NAV_ITEMS } from './constants';
+
+/** ハイドレーション完了の参照に使う購読契約。 */
+const subscribeHydration = () => () => {};
 
 /** 原本の目次とscroll spyを保持し、URL・フォーカス・モバイル開閉を同期する。 */
 export default function NavBar({ open, onClose, onToggle }: { open: boolean; onClose: () => void; onToggle: () => void }) {
+    const hydrated = useSyncExternalStore(subscribeHydration, () => true, () => false);
     const [active, setActive] = useState<string>(NAV_ITEMS[0].id);
     const toggle = useRef<HTMLButtonElement>(null);
     const sidebar = useRef<HTMLElement>(null);
@@ -31,6 +35,9 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
             for (const target of targets) {
                 if (target.getBoundingClientRect().top <= boundary) current = target;
             }
+            // 末尾見出しが読み始めの境界まで上がらない短い最終節にも対応する。
+            const height = document.documentElement.scrollHeight;
+            if (height > window.innerHeight && window.scrollY + window.innerHeight >= height - 2) current = targets.at(-1);
             if (current) {
                 setActive(current.id);
                 const link = [...(sidebar.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [])]
@@ -86,7 +93,7 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
         return <a href={'#' + item.id} data-target={item.id} className={active === item.id ? 'active' : undefined} aria-current={active === item.id ? 'location' : undefined} onClick={event => navigate(event, item.id)}>{item.text}</a>;
     }
     return <>
-        <button className="nav-toggle" id="navToggle" type="button" ref={toggle} aria-label="目次を開閉" aria-expanded={open} aria-controls="sidebar" onClick={onToggle}>目次</button>
+        <button className="nav-toggle" id="navToggle" type="button" ref={toggle} aria-label="目次を開閉" aria-expanded={open} aria-controls="sidebar" disabled={!hydrated} onClick={onToggle}>☰ 目次</button>
         <aside ref={sidebar} className={`sidebar${open ? ' open' : ''}`} id="sidebar"><div className="brand">ISO規格ガイドシリーズ</div>{'\n'}<div className="brand-title">ISO/IEC 22123-3:2023<br />リファレンスアーキテクチャ</div>{'\n'}<nav aria-label="目次"><ul>{NAV_ITEMS.filter(item => !item.sub).map(item => {
             const start = NAV_ITEMS.indexOf(item);
             const children = NAV_ITEMS.slice(start + 1).filter((child, index, rest) => child.sub && rest.slice(0, index).every(previous => previous.sub));
