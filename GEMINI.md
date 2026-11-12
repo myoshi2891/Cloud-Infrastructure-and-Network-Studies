@@ -1,5 +1,13 @@
 # Project Overview: Cloud Infrastructure Studies
 
+## 2026-11-12: ISO/IEC 22123-2:2023 概念ガイド
+
+`app/standards/iso-iec-22123-2-2023/page.tsx` を追加。見出し89件、39表、描画済みSVG14図、79目次、選定チェック9項目と理解度クイズ10問を原本から全量移行した。Serverの `page.tsx`・`sections/` 18分割・`OriginalSvg.tsx`、Clientの `IsoGuide.tsx`・`NavBar.tsx`・`LearningPanel.tsx`、`constants.ts`・`page.css`・`theme-tokens.json` で構成する。原本のSVGツリー・実寸・埋め込みCSS・`!important`、本文の点・番号・入れ子・字下げ、表・Hero・コールアウトを保持。元300pxの目次幅は共通280pxへ対応付け、共通Header下へ固定する。図へ読み上げ名とキーボードスクロール用フォーカスを追加した。
+
+目次の階層・開閉・Escape・hash/focus・scroll spy、チェック進捗・完了通知・リセット、答えの一括開閉と理解済み装飾を保持。ホームとHeaderの「国際規格」から開け、資格試験数には含めない。固定fixtureで全文・表結合・リスト階層・強調・リンク順・配置順・全SVGツリー・全CSS宣言を照合する。テスト実行は原本やarchiveに依存しない。
+
+再生成はリポジトリルートで `bun scripts/migrate-iso-iec-22123-2.mjs assets`、本文は同スクリプトへ `Intro` または `Section1`〜`Section17` を1つずつ渡す。期待値は原本から `bun scripts/gen-iso-iec-22123-2-fixture.mjs` で採取済み（実装に合わせて変更しない）。HTML/Markdownは直下に保持し、コピー先とSHA-256は `docs/migration-inventory/iso-iec-22123-2-2023.archive.json` に記録。npm・本番ビルドは依頼に従い未実行、目視確認はユーザー担当。
+
 ## 2026-11-10: ISO/IEC 22123-1:2023 用語ガイド
 
 追試ではブラウザーのconsole errorも0件であることを検査する。RSC境界を越えるチェックリストFragmentへ安定したkeyを付与（`bcd6d834`）し、scroll spyはサイドバー自身のscrollTopだけを変更して本文のアンカー着地を動かさない（`d245eb9c`）。関連230件とE2E2件を再実行して成功。
@@ -244,6 +252,7 @@ Red `cc139326` / Green `00a04e3c`。修正前はDOM1件とブラウザー3件で
 
 ## プロジェクト構造
 
+- `/app/standards/iso-iec-22123-2-2023`: ISO概念ガイド。Server本文18分割・固定SVG14図、Client階層目次・選定チェック・理解度クイズ、原本配色の `page.css`。
 - `/app/standards/iso-iec-22123-1-2023`: ISO/IEC用語ガイド。Server本文6分割・固定SVG、Client目次・チェック進捗、原本配色の `page.css`。
 
 - `/app/aws/solutions-architect-professional`: SAP-C02総合。Server `page.tsx` / `SolutionsArchitectProfessionalGuide.tsx` / 6区画sections、Client `NavBar.tsx` / `Quiz.tsx`、50図・167目次の`constants.ts` / `Diagram.tsx`、全CSS・280px目次・リスト装飾の`page.css`。143表・練習問題12問・105参考文献。

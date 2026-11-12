@@ -19,7 +19,7 @@ if (!sourcePath) throw new Error('原本HTMLが見つかりません。確認し
 const html = fs.readFileSync(sourcePath, 'utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
-if (!main || doc.querySelectorAll('.mermaid-diagram svg').length !== 14) throw new Error('原本の165要素・15 SVGが一致しません。生成を中止します。');
+if (!main || doc.querySelectorAll('.mermaid-diagram svg').length !== 14) throw new Error('原本のmain要素・14 SVGが一致しません。生成を中止します。');
 const output = resolve(root, 'app/standards/iso-iec-22123-2-2023');
 
 /** 出力先ディレクトリを作り、リポジトリ基準で生成物を書き出す。 */
@@ -94,11 +94,15 @@ if (phase === 'assets') {
             .replace(/rgba\([^)]*\)/g, color => { const key = '--color-iso-22123-2-rgba-' + color.replace(/[^0-9.]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').replace(/\./g, '_'); tokens[key] = color; return `var(${key})`; })
             .replace(/'Noto Sans JP'/g, 'var(--font-body)').replace(/'JetBrains Mono'/g, 'var(--font-mono)');
         if (d.prop === 'word-break' && d.value === 'break-word') { d.prop = 'overflow-wrap'; d.value = 'anywhere'; }
-        if (d.prop === 'top' && ['.sidebar', '.nav-toggle'].includes(d.parent.selector)) d.value = `calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + ${d.value})`;
+        if (d.prop === 'top' && ['.sidebar', '.nav-toggle'].includes(d.parent.selector)) d.value = `calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + ${d.value === '0' ? '0px' : d.value})`;
         if (d.prop === 'scroll-margin-top') d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 72px)';
     });
     css.walkRules(rule => { rule.selectors = rule.selectors.map(s => ['html', 'body'].includes(s) ? '.iso-22123-2-page' : '.iso-22123-2-page ' + s); });
-    write('page.css', css.toString() + `
+    write('page.css', `/* 原本のブラウザー既定値をTailwind reset後に復元する。個別装飾は後続規則で優先する。 */
+.iso-22123-2-page p { margin: 1em 0; }
+.iso-22123-2-page ul, .iso-22123-2-page ol { margin-block: 1em; }
+.iso-22123-2-page a { text-decoration: underline; }
+` + css.toString() + `
 /* Tailwind reset後も原本の点・番号・開閉マーカーを保持する。 */
 .iso-22123-2-page .main { width: calc(100% - 280px); max-width: none; min-width: 0; }
 .iso-22123-2-page .main ul { list-style-type: disc; }

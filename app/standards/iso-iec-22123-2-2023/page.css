@@ -1,3 +1,7 @@
+/* 原本のブラウザー既定値をTailwind reset後に復元する。個別装飾は後続規則で優先する。 */
+.iso-22123-2-page p { margin: 1em 0; }
+.iso-22123-2-page ul, .iso-22123-2-page ol { margin-block: 1em; }
+.iso-22123-2-page a { text-decoration: underline; }
 
             .iso-22123-2-page * {
                 box-sizing: border-box;
@@ -25,7 +29,7 @@
             .iso-22123-2-page .sidebar {
                 position: fixed;
                 left: 0;
-                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0);
+                top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0px);
                 bottom: 0;
                 width: 280px;
                 background: var(--color-iso-22123-2-panel);
