@@ -25,11 +25,15 @@ restore_archive() (
     restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
     trap 'rm -f "$restore_tmp"' EXIT
     git show "$1" > "$restore_tmp" || exit 1
+    restore_bytes=$(wc -c < "$restore_tmp") || exit 1
+    restore_hash=$(shasum -a 256 "$restore_tmp") || exit 1
+    restore_hash=${restore_hash%% *}
+    [ "$restore_bytes" -eq "$3" ] && [ "$restore_hash" = "$4" ] || exit 1
     mv "$restore_tmp" "$archive_file"
 )
-restore_archive '25722201^:Ccnp-service-provider-guide.html' archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html || exit 1
-restore_archive '5a570d93^:Ccnp-enterprise-guide.html' archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html || exit 1
-restore_archive 'cbf5be32^:Ccnp-collaboration-guide.html' archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html || exit 1
+restore_archive '25722201^:Ccnp-service-provider-guide.html' archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html 173672 567ad7dd95f120f27b677c381f55adabf32ae39c8337d23f1a5cf7ced9bd7218 || exit 1
+restore_archive '5a570d93^:Ccnp-enterprise-guide.html' archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html 460613 8cadae92c1790f603694c787ee0e3ac9315a08daf1294784fdff3a2fa8d7e516 || exit 1
+restore_archive 'cbf5be32^:Ccnp-collaboration-guide.html' archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html 817220 5714d74dc16d7f14caef192fea4a208e9375bda30ce60c3a4eb49901ff2fbbe1 || exit 1
 wc -c archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 shasum -a 256 archive/Cisco/html/ccnp-service-provider/Ccnp-service-provider-guide.html archive/Cisco/html/ccnp-enterprise/Ccnp-enterprise-guide.html archive/Cisco/html/ccnp-collaboration/Ccnp-collaboration-guide.html
 ```
