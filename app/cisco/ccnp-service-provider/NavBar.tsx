@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef, type MouseEvent } from "react";
+import { useEffect, useCallback, useRef, useState, useSyncExternalStore, type MouseEvent } from "react";
 import { NAV_ITEMS } from "./constants";
 
 interface NavBarProps {
@@ -9,11 +9,24 @@ interface NavBarProps {
     onToggle: () => void;
 }
 
+function subscribeToHash(onChange: () => void) {
+    window.addEventListener("hashchange", onChange);
+    return () => window.removeEventListener("hashchange", onChange);
+}
+
+function initialActiveId() {
+    const fragment = window.location.hash.slice(1);
+    return NAV_ITEMS.find(item => item.id === fragment)?.id ?? NAV_ITEMS[0]!.id;
+}
+
 /**
  * CCNP Service Provider ガイド用のサイドバー目次コンポーネント。
  */
 export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
     const toggleRef = useRef<HTMLButtonElement>(null);
+    const initialId = useSyncExternalStore(subscribeToHash, initialActiveId, () => NAV_ITEMS[0]!.id);
+    const [selectedId, setActiveId] = useState<string | null>(null);
+    const activeId = selectedId ?? initialId;
 
     useEffect(() => {
         if (!isOpen) return;
@@ -37,6 +50,7 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         });
         anchor.classList.add("active");
         anchor.setAttribute("aria-current", "location");
+        setActiveId((anchor.getAttribute("href") ?? "").slice(1));
         const nav = sidebar.querySelector<HTMLElement>(".nav");
         if (nav && anchor instanceof HTMLElement) {
             const top = anchor.getBoundingClientRect().top - nav.getBoundingClientRect().top + nav.scrollTop;
@@ -65,8 +79,6 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
     }, [onClose, activateLink]);
 
     useEffect(() => {
-        if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") return;
-
         const sidebar = document.getElementById("sidebar");
         if (!sidebar) return;
 
@@ -74,29 +86,34 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
         const map = new Map<string, Element>(
             links.map((a) => [(a.getAttribute("href") ?? "").slice(1), a]),
         );
+        if (typeof IntersectionObserver === "undefined") return;
 
         let io: IntersectionObserver;
         const observeSections = () => {
             io?.disconnect();
+            const intersecting = new Set<Element>();
+            const sections = NAV_ITEMS.flatMap(item => {
+                const element = document.getElementById(item.id);
+                return element ? [element] : [];
+            }).sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
             const height = window.innerHeight;
             io = new IntersectionObserver(
                 (entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
-                            const target = map.get(entry.target.id);
-                            if (target) {
-                                activateLink(target);
-                            }
+                            intersecting.add(entry.target);
+                        } else {
+                            intersecting.delete(entry.target);
                         }
                     });
+                    const section = sections.find(element => intersecting.has(element));
+                    const target = section && map.get(section.id);
+                    if (target) activateLink(target);
                 },
                 { rootMargin: `${-height * 0.2}px 0px ${-height * 0.7}px 0px` },
             );
 
-            NAV_ITEMS.forEach((item) => {
-                const el = document.getElementById(item.id);
-                if (el) io.observe(el);
-            });
+            sections.forEach(element => io.observe(element));
         };
 
         observeSections();
@@ -159,7 +176,8 @@ export function NavBar({ isOpen, onClose, onToggle }: NavBarProps) {
                                 <li key={item.id}>
                                     <a
                                         href={`#${item.id}`}
-                                        className={levelClass}
+                                        className={`${levelClass}${activeId === item.id ? " active" : ""}`}
+                                        aria-current={activeId === item.id ? "location" : undefined}
                                         onClick={(e) => handleLinkClick(e, `#${item.id}`)}
                                     >
                                         {item.label}

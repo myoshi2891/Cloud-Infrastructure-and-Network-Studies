@@ -1,6 +1,56 @@
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { NavBar } from '@/app/cisco/ccnp-service-provider/NavBar';
+
+describe('CCNP Service Provider 現在地', () => {
+    it.each([['', 's1'], ['#unknown', 's1'], ['#s3', 's3']])('初期フラグメント %s から有効な現在地 %s を選ぶ', (hash, expected) => {
+        const originalUrl = window.location.href;
+        window.history.replaceState(null, '', window.location.pathname + hash);
+        try {
+            const { container, rerender } = render(<NavBar isOpen={false} onClose={vi.fn()} onToggle={vi.fn()} />);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', `#${expected}`);
+            expect(container.querySelector('a[aria-current="location"]')).toHaveAttribute('href', `#${expected}`);
+            rerender(<NavBar isOpen onClose={vi.fn()} onToggle={vi.fn()} />);
+            expect(container.querySelectorAll('a.active')).toHaveLength(1);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', `#${expected}`);
+        } finally {
+            window.history.replaceState(null, '', originalUrl);
+        }
+    });
+
+    it('s3が退出してs2が交差したままの逆スクロールでs2へ戻る', () => {
+        let notify: IntersectionObserverCallback;
+        const observer = { observe: vi.fn(), disconnect: vi.fn() };
+        vi.stubGlobal('IntersectionObserver', vi.fn(function (callback: IntersectionObserverCallback) {
+            notify = callback;
+            return observer;
+        }));
+        try {
+            // NAV_ITEMS順と異なるDOM順でも文書順で判定する。
+            const { container, rerender } = render(<>
+                <NavBar isOpen={false} onClose={vi.fn()} onToggle={vi.fn()} />
+                <section id="s3" /><section id="s2" />
+            </>);
+            const update = (states: [string, boolean][]) => act(() => notify(
+                states.map(([id, isIntersecting]) => ({ target: container.querySelector(`#${id}`)!, isIntersecting }) as IntersectionObserverEntry),
+                observer as unknown as IntersectionObserver,
+            ));
+            update([['s2', true], ['s3', true]]);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', '#s3');
+            update([['s3', false]]);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', '#s2');
+            expect(container.querySelector('a[aria-current="location"]')).toHaveAttribute('href', '#s2');
+            rerender(<>
+                <NavBar isOpen onClose={vi.fn()} onToggle={vi.fn()} />
+                <section id="s3" /><section id="s2" />
+            </>);
+            update([['s2', false]]);
+            expect(container.querySelector('a.active')).toHaveAttribute('href', '#s2');
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+});
 
 describe('CCNP Service Provider scroll spyの監視範囲', () => {
     it('横長画面でも正の高さで監視し、リサイズで再監視して終了時に解除する', () => {
