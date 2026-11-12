@@ -58,6 +58,10 @@ for (const width of [960, 768, 390]) {
         await expect(sidebar).toBeHidden();
         await toggle.click();
         await expect(sidebar).toBeVisible();
+        await toggle.click();
+        await expect(sidebar).toBeHidden();
+        await toggle.click();
+        await expect(sidebar).toBeVisible();
         await page.keyboard.press('Escape');
         await expect(sidebar).toBeHidden();
         await expect(toggle).toBeFocused();

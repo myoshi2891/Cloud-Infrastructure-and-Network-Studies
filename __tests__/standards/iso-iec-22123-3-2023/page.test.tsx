@@ -13,12 +13,22 @@ import { snapshotSvgDiagrams } from '@/scripts/svg-fidelity-extraction.mjs';
 import type { ComponentType } from 'react';
 import { renderToString } from 'react-dom/server';
 
-defineMigrationSuite('ISO/IEC 22123-3:2023 全量移行', Page, inventory);
+// 原本にある2件の途切れたPDFリンクだけ、レビューで修正した完全なURLを期待する。
+function correctedPreviewLinks<T extends { links: { href: string | null; text: string }[] }>(expected: T): T {
+    const urls = [
+        'https://www.vde-verlag.de/iec-normen/preview-pdf/info_isoiec22123-3',
+        'https://vde-verlag.de/iec-normen/preview-pdf/info_isoiec17789',
+    ];
+    return { ...expected, links: expected.links.map(link => urls.includes(link.href ?? '')
+        ? { ...link, href: link.href + '{ed1.0}en.pdf', text: link.text + '{ed1.0}en.pdf' } : link) };
+}
+
+defineMigrationSuite('ISO/IEC 22123-3:2023 全量移行', Page, correctedPreviewLinks(inventory));
 
 describe('原本の構造・装飾・操作を保持する', () => {
     it('全文・表結合・強調・リンク・リスト階層・配置順と20図のSVGツリーが完全一致する', () => {
         const { container } = render(<Page />);
-        expect(snapshotGuidePart(container.querySelector('main'))).toEqual(fixture.main);
+        expect(snapshotGuidePart(container.querySelector('main'))).toEqual(correctedPreviewLinks(fixture.main));
         expect(snapshotSvgDiagrams(container).map(diagram => Object.fromEntries(Object.entries(diagram).filter(([key]) => key !== 'label')))).toEqual(fixture.svg.map(diagram => Object.fromEntries(Object.entries(diagram).filter(([key]) => key !== 'label'))));
 
         container.querySelectorAll('.mermaid-diagram').forEach(diagram => {
@@ -62,16 +72,36 @@ describe('原本の構造・装飾・操作を保持する', () => {
         let callback: IntersectionObserverCallback | undefined;
         const observer = { observe: vi.fn(), disconnect: vi.fn() };
         vi.stubGlobal('IntersectionObserver', vi.fn(function (cb: IntersectionObserverCallback) { callback = cb; return observer; }));
+        let moved = false;
+        vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+            const index = observer.observe.mock.calls.findIndex(([element]) => element === this);
+            return { top: index === 0 || moved ? 0 : 1000 } as DOMRect;
+        });
         try {
             const { container, unmount } = render(<Page />);
             const anchors = [...container.querySelectorAll<HTMLAnchorElement>('.sidebar a')];
             expect(observer.observe.mock.calls.map(([element]) => element.id)).toEqual(anchors.map(a => a.getAttribute('href')!.slice(1)));
+            expect(anchors[0]).toHaveAttribute('aria-current', 'location');
+            expect(anchors.at(-1)).not.toHaveAttribute('aria-current');
+            moved = true;
             const target = document.getElementById(anchors.at(-1)!.getAttribute('href')!.slice(1))!;
             act(() => callback?.([{ target, isIntersecting: true } as unknown as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
             expect(anchors.at(-1)).toHaveAttribute('aria-current', 'location');
+            // 交差中の末尾見出しでも、読み始め境界を通過していなければ選ばない。
+            moved = false;
+            act(() => callback?.([{ target, isIntersecting: true } as unknown as IntersectionObserverEntry], observer as unknown as IntersectionObserver));
+            expect(anchors[0]).toHaveAttribute('aria-current', 'location');
+            fireEvent.click(anchors.at(-1)!);
+            act(() => callback?.([], observer as unknown as IntersectionObserver));
+            expect(anchors.at(-1)).toHaveAttribute('aria-current', 'location');
+            // 着地位置から動いたらpinを解除し、同じ境界で再選択する。
+            fireEvent.click(anchors[1]!);
+            moved = true;
+            act(() => callback?.([], observer as unknown as IntersectionObserver));
+            expect(anchors.at(-1)).toHaveAttribute('aria-current', 'location');
             unmount();
             expect(observer.disconnect).toHaveBeenCalledOnce();
-        } finally { vi.unstubAllGlobals(); }
+        } finally { vi.restoreAllMocks(); vi.unstubAllGlobals(); }
     });
 
     it('末尾見出しが交差領域へ届かなくても文書末尾では最後の目次を選ぶ', () => {
@@ -101,7 +131,7 @@ describe('原本の構造・装飾・操作を保持する', () => {
         if (!sectionModule) throw new Error('Missing section: ' + name);
         const Section = sectionModule.default;
         const { container } = render(<Section />);
-        expect(snapshotGuidePart(container.firstElementChild)).toEqual(expected);
+        expect(snapshotGuidePart(container.firstElementChild)).toEqual(correctedPreviewLinks(expected));
     });
 
     it('章の本文・表セル・リスト・SVGの削除をそれぞれ検出する', () => {
@@ -133,7 +163,7 @@ describe('原本の構造・装飾・操作を保持する', () => {
             const selector = r.selectors.map(s => ['html', 'body'].includes(s) ? '.iso-22123-3-page' : '.iso-22123-3-page ' + s).join(',');
             const matches = actual.filter(a => a.selector === selector && a.media === (r.parent?.type === 'atrule' ? (r.parent as postcss.AtRule).params : ''));
             r.walkDecls(d => {
-                if ((d.prop === 'z-index' && ['.sidebar', '.nav-toggle'].includes(r.selector)) || (d.prop === 'max-width' && r.selector === '.mermaid-diagram svg') || d.prop === 'font-family' || d.prop === 'scroll-margin-top' || (d.prop === 'top' && ['.sidebar', '.nav-toggle'].includes(r.selector))) return;
+                if ((d.prop === 'left' && r.selector === '.nav-toggle') || (d.prop === 'z-index' && ['.sidebar', '.nav-toggle'].includes(r.selector)) || (d.prop === 'max-width' && r.selector === '.mermaid-diagram svg') || d.prop === 'font-family' || d.prop === 'scroll-margin-top' || (d.prop === 'top' && ['.sidebar', '.nav-toggle'].includes(r.selector))) return;
                 const prop = d.prop === 'word-break' && d.value === 'break-word' ? 'overflow-wrap' : d.prop;
                 const expected = prop !== d.prop ? 'anywhere' : resolve(d.value);
                 expect(matches.some(a => a.values[prop] !== undefined && resolve(a.values[prop]!) === expected), selector + ' ' + prop).toBe(true);
@@ -144,6 +174,10 @@ describe('原本の構造・装飾・操作を保持する', () => {
         expect(css).toContain('max-width: none');
         expect(actual.find(rule => rule.selector === '.iso-22123-3-page .sidebar')?.values.top).toBe('calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 0px)');
         expect(actual.find(rule => rule.selector === '.iso-22123-3-page .sidebar')?.values['z-index']).toBe('40');
+        const toggleStyle = actual.find(rule => rule.selector === '.iso-22123-3-page .nav-toggle')!.values;
+        expect(toggleStyle['z-index']).toBe('41');
+        expect(toggleStyle.right).toBe('12px');
+        expect(toggleStyle.left).toBeUndefined();
         expect(css).toContain('var(--header-h, 60px)');
         expect(css).toContain('visibility: hidden');
         expect(css).not.toMatch(/^[\t ]*--[\w-]+\s*:/m);
