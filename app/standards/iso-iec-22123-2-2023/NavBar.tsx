@@ -48,7 +48,7 @@ export default function NavBar({ open, onClose, onToggle }: { open: boolean; onC
             }
         }
         const observer = typeof IntersectionObserver === 'undefined' ? null
-            : new IntersectionObserver(entries => { const last = entries.filter(entry => entry.isIntersecting).at(-1); if (last && !pinned.current) setActive(last.target.id); else updateActive(); }, { rootMargin: '-15% 0px -75% 0px' });
+            : new IntersectionObserver(updateActive, { rootMargin: '-15% 0px -75% 0px' });
         targets.forEach(target => observer?.observe(target));
         // 連続するscrollは1フレームにつき1回だけ見出し位置を読む。
         let frame = 0;

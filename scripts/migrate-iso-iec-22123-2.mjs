@@ -21,6 +21,16 @@ const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 if (!main || doc.querySelectorAll('.mermaid-diagram svg').length !== 14) throw new Error('原本のmain要素・14 SVGが一致しません。生成を中止します。');
 const output = resolve(root, 'app/standards/iso-iec-22123-2-2023');
+// 同じ操作文を持つクイズを、問題文と操作文の組で個別に識別できるようにする。
+doc.querySelectorAll('.quiz-wrap .q-card').forEach((card, index) => {
+    const question = card.querySelector('.q-text');
+    const status = card.querySelector('.q-know > span');
+    const checkbox = card.querySelector('.q-know input');
+    if (!question || !status || !checkbox) throw new Error('クイズの問題文またはラベルがありません。');
+    question.id = `iso-22123-2-q${index + 1}-text`;
+    status.id = `iso-22123-2-q${index + 1}-known`;
+    checkbox.setAttribute('aria-labelledby', `${question.id} ${status.id}`);
+});
 
 /** 出力先ディレクトリを作り、リポジトリ基準で生成物を書き出す。 */
 function write(name, value) { const path = resolve(output, name); fs.mkdirSync(dirname(path), { recursive: true }); fs.writeFileSync(path, value); }
