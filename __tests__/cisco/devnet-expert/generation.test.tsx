@@ -11,6 +11,7 @@ import { expect, it, vi } from 'vitest';
 import { FIDELITY_PAGES } from '@/scripts/archive-fidelity-config.mjs';
 import Part2 from '@/app/cisco/devnet-expert/sections/Part2';
 import Part4 from '@/app/cisco/devnet-expert/sections/Part4';
+import Part5 from '@/app/cisco/devnet-expert/sections/Part5';
 import Part6 from '@/app/cisco/devnet-expert/sections/Part6';
 import Part7 from '@/app/cisco/devnet-expert/sections/Part7';
 import Part8 from '@/app/cisco/devnet-expert/sections/Part8';
@@ -41,7 +42,7 @@ it('regenerates reviewed examples and TLS instructions from the fixed source rev
             tokens: [...container.querySelectorAll('.code-line span')].map(span => [span.className, span.textContent]),
             links: [...container.querySelectorAll('p a')].map(link => link.getAttribute('href')),
         });
-        for (const [part, Current] of [[2, Part2], [4, Part4], [6, Part6], [7, Part7], [8, Part8]] as const) {
+        for (const [part, Current] of [[2, Part2], [4, Part4], [5, Part5], [6, Part6], [7, Part7], [8, Part8]] as const) {
             const source = readFileSync(join(workspace, `app/cisco/devnet-expert/sections/Part${part}.tsx`), 'utf8');
             const { outputText } = transpileModule(source, { compilerOptions: { module: ModuleKind.CommonJS, jsx: JsxEmit.ReactJSX } });
             const generated = { exports: { default: Current } };

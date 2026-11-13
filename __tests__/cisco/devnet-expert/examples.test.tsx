@@ -1,6 +1,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import Part4 from '@/app/cisco/devnet-expert/sections/Part4';
+import Part5 from '@/app/cisco/devnet-expert/sections/Part5';
 import Part7 from '@/app/cisco/devnet-expert/sections/Part7';
 import { render } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
@@ -11,6 +12,50 @@ vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await imp
 
 // ast.unparse in the embedded validator requires Python 3.9 or later.
 const python = spawnSync('python3', ['-c', 'import sys; sys.exit(sys.version_info < (3, 9))']);
+
+it('builds RESTCONF lists, escapes XML text, and selects a namespaced interface', (context) => {
+    if (python.error || python.status !== 0) context.skip('Requires python3');
+    const { container } = render(<Part5 />);
+    const blocks = [...container.querySelectorAll('.code-block')].map(b => b.textContent ?? '');
+    const restconf = blocks.find(b => b.includes('# 部分更新（PATCH）'))!;
+    const payload = blocks.find(b => b.includes('def build_payload('))!;
+    const xpath = blocks.find(b => b.includes('filter=("xpath",'))!;
+    const result = execFileSync('python3', ['-c', `
+import ast, json, sys, types
+import xml.etree.ElementTree as ET
+from unittest.mock import MagicMock, patch
+restconf, payload, xpath = json.load(sys.stdin)
+tree = ast.parse(restconf)
+body = next(n.value for n in tree.body if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'body' for t in n.targets))
+assert ast.literal_eval(body) == {'ietf-interfaces:interface': [{'name': 'GigabitEthernet1', 'description': 'managed by automation'}]}
+manager = MagicMock()
+sys.modules['ncclient'] = types.SimpleNamespace(manager=manager)
+ns = {'HOST': 'example.test', 'USER': 'user', 'PASS': 'pass'}
+with patch('builtins.print'):
+    exec(payload, ns)
+    exec(xpath, ns)
+interface_ns = 'urn:ietf:params:xml:ns:yang:ietf-interfaces'
+for enabled in (True, False):
+    name = 'Gi1 & <test>'
+    description = 'core & edge <backup> "quoted" café'
+    root = ET.fromstring(ns['build_payload'](name, {'description': description, 'enabled': enabled}))
+    interface = root.find('{%s}interfaces/{%s}interface' % (interface_ns, interface_ns))
+    assert interface.find('{%s}name' % interface_ns).text == name
+    assert interface.find('{%s}description' % interface_ns).text == description
+    assert interface.find('{%s}enabled' % interface_ns).text == str(enabled).lower()
+    assert len(interface) == 4
+    assert interface.find('{%s}type' % interface_ns).text == 'ianaift:ethernetCsmacd'
+call = manager.connect.return_value.__enter__.return_value.get_config.call_args
+kind, (namespaces, expression) = call.kwargs['filter']
+assert kind == 'xpath'
+data = ET.fromstring('<data><interfaces xmlns="' + interface_ns + '"><interface><name>GigabitEthernet1</name></interface><interface><name>GigabitEthernet2</name></interface></interfaces></data>')
+selected = data.findall('.' + expression, namespaces)
+assert len(selected) == 1
+assert selected[0].find('{%s}name' % interface_ns).text == 'GigabitEthernet1'
+print('validation passed')
+`], { input: JSON.stringify([restconf, payload, xpath]), encoding: 'utf8' });
+    expect(result.trim()).toBe('validation passed');
+});
 
 it('executes the displayed OSPF and ping validators against missing neighbors and option injection', (context) => {
     if (python.error || python.status !== 0) {
