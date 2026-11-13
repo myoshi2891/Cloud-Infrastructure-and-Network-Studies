@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { NAV_ITEMS } from './constants';
 import Brand from './Brand';
 
@@ -48,13 +49,14 @@ export default function NavBar() {
         <button className="toc-toggle" type="button" aria-expanded={open} aria-controls="devnet-expert-toc" onClick={() => setOpen(!open)}><i className="ti ti-list" aria-hidden="true" /><span>目次</span></button>
         <nav id="devnet-expert-toc" aria-label="DevNet Expert 目次" hidden={!open}><ul>
             {NAV_ITEMS.map(item => <li key={item.id}><a href={`#${item.id}`} className={`nav-link l${item.level}${activeId === item.id ? ' active' : ''}`} aria-current={activeId === item.id ? 'location' : undefined} onClick={event => {
+                if (event.ctrlKey || event.metaKey) return;
                 event.preventDefault();
                 navigationTarget.current = item.id;
                 history.pushState(null, '', `#${item.id}`);
+                if (window.matchMedia?.('(max-width:1024px)').matches) flushSync(() => setOpen(false));
                 document.getElementById(item.id)?.focus();
                 document.getElementById(item.id)?.scrollIntoView?.({ block: 'start' });
                 setActiveId(item.id);
-                if (window.matchMedia?.('(max-width:1024px)').matches) setOpen(false);
             }}>{item.label}</a></li>)}
         </ul></nav>
     </div></aside>;

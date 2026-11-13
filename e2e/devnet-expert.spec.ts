@@ -46,19 +46,25 @@ test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({
     expect(errors).toEqual([]);
 });
 
-test('DevNet Expert: モバイル目次・チェック操作・横はみ出し', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/cisco/devnet-expert');
-    const root = page.locator('.devnet-expert-page');
-    const toggle = root.getByRole('button', { name: '目次' });
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    await root.locator('nav a[href="#s-10-4"]').click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    const check = root.getByRole('checkbox').first();
-    await check.check();
-    await expect(check).toBeChecked();
-    expect(await root.locator('.checklist').evaluate(el => getComputedStyle(el).counterReset)).toBe('chk 0');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-});
+for (const width of [390, 1024]) {
+    test(`DevNet Expert: ${width}px 目次・チェック操作・横はみ出し`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 844 });
+        await page.goto('/cisco/devnet-expert');
+        const root = page.locator('.devnet-expert-page');
+        const toggle = root.getByRole('button', { name: '目次' });
+        await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        await root.locator('nav a[href="#s-3"]').click();
+        await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+        const target = root.locator('#s-3');
+        await expect(target).toBeFocused();
+        await expect(root.locator('nav a[href="#s-3"]')).toHaveAttribute('aria-current', 'location');
+        await expect.poll(() => target.evaluate(el => Math.abs(el.getBoundingClientRect().top - parseFloat(getComputedStyle(el).scrollMarginTop)))).toBeLessThan(2);
+        const check = root.getByRole('checkbox').first();
+        await check.check();
+        await expect(check).toBeChecked();
+        expect(await root.locator('.checklist').evaluate(el => getComputedStyle(el).counterReset)).toBe('chk 0');
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    });
+}
