@@ -1,5 +1,39 @@
 # CLAUDE.md
 
+## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
+
+移行済みである ISO/IEC 22123 シリーズ（Part 1 用語ガイド、Part 2 概念ガイド、Part 3 リファレンスアーキテクチャ）の原本HTML 3件（`Iso-iec-22123-1-2023-guide.html` 356738バイト・SHA-256 `12c7ae70…`、`Iso-iec-22123-2-guide.html` 837997バイト・SHA-256 `c76e31b1…`、`Iso-iec-22123-3-2023-guide.html` 1061148バイト・SHA-256 `fc5d254f…`）およびMarkdown 3件（`Iso-iec-22123-1-2023-guide.md` 56414バイト・SHA-256 `361d9c0e…`、`Iso-iec-22123-2-guide.md` 62653バイト・SHA-256 `3a7b7fa5…`、`Iso-iec-22123-3-2023-guide.md` 47533バイト・SHA-256 `9417ee51…`）を、バイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-{1,2,3}-2023/` へ保存・同期し、リポジトリ直下から削除した。直下の未移行HTML残数は13件から10件（Devnet Expert、GCP 4件、GKE 3件、Cloud Run、ADK）となった。各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` に保存先・サイズ・ハッシュ・復元用Gitコミットを記録。直下に原本が存在しない環境でも、各再生成スクリプト（`bun scripts/migrate-iso-iec-22123*.mjs`）および fixture 生成スクリプトは `archive/Standards/` の原本を自動参照して動作する。
+
+## ISO/IEC 22123-1 / 2 / 3 再生成の前提
+
+各ジェネレーター（`bun scripts/migrate-iso-iec-22123.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-2.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-3.mjs assets|...`）は、原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。ローカルに `archive/` が存在する場合は自動参照されるが、存在しない環境では実行前に各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+
+```bash
+mkdir -p archive/Standards/html/iso-iec-22123-1-2023 archive/Standards/html/iso-iec-22123-2-2023 archive/Standards/html/iso-iec-22123-3-2023 \
+         archive/Standards/md/iso-iec-22123-1-2023 archive/Standards/md/iso-iec-22123-2-2023 archive/Standards/md/iso-iec-22123-3-2023
+restore_archive() (
+    archive_file=$2
+    restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
+    trap 'rm -f "$restore_tmp"' EXIT
+    git show "$1" > "$restore_tmp" || exit 1
+    restore_bytes=$(wc -c < "$restore_tmp") || exit 1
+    restore_hash=$(shasum -a 256 "$restore_tmp") || exit 1
+    restore_hash=${restore_hash%% *}
+    [ "$restore_bytes" -eq "$3" ] && [ "$restore_hash" = "$4" ] || exit 1
+    mv "$restore_tmp" "$archive_file"
+)
+restore_archive '0aa236f4:Iso-iec-22123-1-2023-guide.html' archive/Standards/html/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.html 356738 12c7ae70748549d18828568c3755e23b70a329d39e281376f10804bfe7051326 || exit 1
+restore_archive '0b98dab8:Iso-iec-22123-1-2023-guide.md' archive/Standards/md/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.md 56414 361d9c0e57eeba7820f43e880f1b6fd3c9a3e1df50cdd67c58bbd1b6d0965caf || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.html' archive/Standards/html/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.html 837997 c76e31b1a36c8d0ea586d7dc7a5df25c17e76a1c03dc7fcd2b0134a038f3d601 || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.md' archive/Standards/md/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.md 62653 3a7b7fa556e5f06a0be4d858f93e3910f0f21a4104a7ca6a31f7e92aacf0b867 || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.html' archive/Standards/html/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.html 1061148 fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.md' archive/Standards/md/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.md 47533 9417ee51a5456c90ac76524be889d99f1e67469d9170c7749fdeed061123852a || exit 1
+wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+shasum -a 256 archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+```
+
+各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。移行テストはコミット済みfixtureを使うため、この復元は不要。
+
 ## 2026-11-12: ISO/IEC 22123-3:2023 リファレンスアーキテクチャ
 
 `app/standards/iso-iec-22123-3-2023/page.tsx` を追加。全15章・序章・末尾注記、見出し49件（h1:1 / h2:15 / h3:30 / h4:3）、29表（th86 / td448）、リスト58項目（本文13 / 目次45）、外部リンク16出現、描画済みSVG20図を全量移行。Serverの `page.tsx`・`sections/` 17分割・`OriginalSvg.tsx` と、Clientの `IsoGuide.tsx`・`NavBar.tsx`、`constants.ts`・`page.css`・`theme-tokens.json` で構成する。SVGの階層・座標・文字・埋め込みCSS・`!important`、Hero・コールアウト・表・点・番号文字列・字下げ・余白・リンク装飾を保持した。共通280px目次・固定Header下の配置へ対応付け、SVGは自然寸法の横スクロールと読み上げ名を補う。

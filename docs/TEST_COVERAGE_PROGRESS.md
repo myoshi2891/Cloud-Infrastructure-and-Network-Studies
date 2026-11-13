@@ -1,6 +1,10 @@
 # テストカバレッジ・網羅性進捗レポート
 
-最終更新日: 2026-11-12
+最終更新日: 2026-11-13
+
+## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
+
+移行済みである ISO/IEC 22123 シリーズ（Part 1 用語ガイド、Part 2 概念ガイド、Part 3 リファレンスアーキテクチャ）の原本HTML 3件（`Iso-iec-22123-1-2023-guide.html` 356738バイト・SHA-256 `12c7ae70…`、`Iso-iec-22123-2-guide.html` 837997バイト・SHA-256 `c76e31b1…`、`Iso-iec-22123-3-2023-guide.html` 1061148バイト・SHA-256 `fc5d254f…`）およびMarkdown 3件（`Iso-iec-22123-1-2023-guide.md` 56414バイト・SHA-256 `361d9c0e…`、`Iso-iec-22123-2-guide.md` 62653バイト・SHA-256 `3a7b7fa5…`、`Iso-iec-22123-3-2023-guide.md` 47533バイト・SHA-256 `9417ee51…`）を、バイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-{1,2,3}-2023/` へ保存・同期し、リポジトリ直下から削除した。直下の未移行HTML残数は13件から10件（Devnet Expert、GCP 4件、GKE 3件、Cloud Run、ADK）となった。各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` に保存先・サイズ・ハッシュ・復元用Gitコミットを記録。直下に原本が存在しない環境でも、各再生成スクリプト（`bun scripts/migrate-iso-iec-22123*.mjs`）および fixture 生成スクリプトは `archive/Standards/` の原本を自動参照して動作する。
 
 2026-11-12 Part 2レビュー修正: 交差通知もscrollも `updateActive()` の読み始め境界で判定し、10問のチェックボックスを問題文＋「理解できた」の名前で識別する。Red `729b6879`、修正 `4926871d`。関連23件・Chrome E2E2件・型検査（8GB）・対象ESLint成功。生成スクリプトにも反映し、再生成後のバイト一致を確認。全文/SVG/CSSの固定fixtureは変更していない。全体テストは今回は再実行せず、直近の全体結果は下記Part 3記録を参照する。
 
