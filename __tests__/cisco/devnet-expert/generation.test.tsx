@@ -38,6 +38,8 @@ it('regenerates reviewed examples and TLS instructions from the fixed source rev
                 [...block.children].map(line => line.textContent)),
             paragraphs: [...container.querySelectorAll('p')].map(p => p.textContent),
             cells: [...container.querySelectorAll('td')].map(td => td.textContent),
+            tokens: [...container.querySelectorAll('.code-line span')].map(span => [span.className, span.textContent]),
+            links: [...container.querySelectorAll('p a')].map(link => link.getAttribute('href')),
         });
         for (const [part, Current] of [[2, Part2], [4, Part4], [6, Part6], [7, Part7], [8, Part8]] as const) {
             const source = readFileSync(join(workspace, `app/cisco/devnet-expert/sections/Part${part}.tsx`), 'utf8');

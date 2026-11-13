@@ -45,6 +45,16 @@ const draw = () => {
 };
 
 describe('DevNet Expert 全量移行', () => {
+    it('rejects lost highlighting on an edited line before restoration', () => {
+        const { container } = render(<Page />);
+        const line = [...container.querySelectorAll('.code-line')].find(line => line.textContent?.startsWith('openssl verify -verify_hostname'))!;
+        const text = line.textContent;
+        line.textContent = text;
+        expect(() => restoreReviewedCorrections(container)).toThrow();
+        expect(line.textContent).toBe(text);
+        expect(line.querySelector('span')).toBeNull();
+    });
+
     it('rejects corrected code collapsed into one multiline child before restoration', () => {
         const { container } = render(<Page />);
         const block = [...container.querySelectorAll('.code-block')].find(b => b.textContent?.startsWith('import os\nfrom netmiko'))!;

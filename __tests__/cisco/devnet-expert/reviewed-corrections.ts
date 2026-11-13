@@ -1,6 +1,6 @@
 import originalBlocks from './__fixtures__/reviewed-code-blocks.json';
 import { expect } from 'vitest';
-import { corrections, addedParagraphs, textCorrections } from '@/scripts/devnet-expert-corrections.mjs';
+import { corrections, addedParagraphs, textCorrections, gitlabRunnerNote, gitlabRunnerDocs } from '@/scripts/devnet-expert-corrections.mjs';
 
 // Reviewed corrections are asserted exactly before restoring archived markup for
 // the existing full fidelity checks. The fixture preserves original highlight markup
@@ -21,6 +21,12 @@ export function restoreReviewedCorrections(container: HTMLElement) {
         expect(block.children.length).toBeGreaterThan(0);
         expect([...block.children].every(child => child.matches('.code-line'))).toBe(true);
         expect([...block.children].map(line => line.textContent)).toEqual(after.split('\n'));
+        const originalLines = before.split('\n');
+        for (const line of block.children) {
+            if (line.textContent?.trim() && !originalLines.includes(line.textContent)) {
+                expect(line.querySelector('span[class]'), line.textContent).not.toBeNull();
+            }
+        }
         block.innerHTML = '';
         originals[index]!.code.innerHTML.replace(/^\n|\n$/g, '').split('\n').forEach((html, i) => {
             if (i) block.append('\n');
@@ -30,6 +36,11 @@ export function restoreReviewedCorrections(container: HTMLElement) {
             block.append(line);
         });
     }
+    const runnerNote = [...container.querySelectorAll('p')].find(p => p.textContent?.startsWith(gitlabRunnerNote));
+    expect(runnerNote).toBeDefined();
+    expect(runnerNote!.previousElementSibling?.textContent).toContain('build-image:');
+    expect(runnerNote!.querySelector('a')).toHaveAttribute('href', gitlabRunnerDocs);
+    runnerNote!.remove();
     for (const text of addedParagraphs) {
         const paragraph = [...container.querySelectorAll('p')].find(p => p.textContent === text);
         expect(paragraph).toBeDefined();
