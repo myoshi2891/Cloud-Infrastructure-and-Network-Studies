@@ -5,6 +5,7 @@ import postcss from 'postcss';
 import { extractDiagramsDefinition } from '../.agents/skills/fix-mermaid/scripts/restore_diagrams.mjs';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
 import { extractMermaidConfig } from './guide-interaction-extraction.mjs';
+import { applyReviewedExampleCorrections } from './devnet-expert-corrections.mjs';
 
 // Reproducible JSX conversion from the same fixed revision used by the fixtures.
 const config = FIDELITY_PAGES['devnet-expert'];
@@ -44,7 +45,10 @@ const retakeRow = [...doc.querySelectorAll('tr')].find(row => row.cells[0]?.text
 if (!retakeRow) throw new Error('Missing retake waiting-period row');
 retakeRow.cells[1].textContent = '不合格の翌日から5暦日';
 const sections = [...doc.querySelector('main').children];
-sections.forEach((element, i) => write(`sections/Part${i}.tsx`, `import { Diagram } from '../Diagram';\n/** Original guide block ${i}; generated without content summarization. */\nexport default function Part${i}() { return (${jsx(element)}); }\n`));
+sections.forEach((element, i) => {
+    applyReviewedExampleCorrections(element);
+    write(`sections/Part${i}.tsx`, `import { Diagram } from '../Diagram';\n/** Original guide block ${i}; generated without content summarization. */\nexport default function Part${i}() { return (${jsx(element)}); }\n`);
+});
 const diagrams = extractDiagramsDefinition(html.replace('window.DIAGRAMS =', 'const DIAGRAMS =')).diagrams;
 const nav = [...doc.querySelectorAll('nav a')].map(a => ({ id: a.hash.slice(1), label: a.textContent, level: a.classList.contains('l3') ? 3 : 2 }));
 write('constants.ts', `export const DIAGRAMS = ${JSON.stringify(diagrams, null, 2)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;\nexport const NAV_ITEMS = ${JSON.stringify(nav, null, 2)} as const;\n`);
