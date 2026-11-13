@@ -4,6 +4,7 @@ import { JSDOM } from 'jsdom';
 import postcss from 'postcss';
 import { extractDiagramsDefinition } from '../.agents/skills/fix-mermaid/scripts/restore_diagrams.mjs';
 import { FIDELITY_PAGES } from './archive-fidelity-config.mjs';
+import { extractMermaidConfig } from './guide-interaction-extraction.mjs';
 
 // Reproducible JSX conversion from the same fixed revision used by the fixtures.
 const config = FIDELITY_PAGES['devnet-expert'];
@@ -45,20 +46,32 @@ const nav = [...doc.querySelectorAll('nav a')].map(a => ({ id: a.hash.slice(1), 
 write('constants.ts', `export const DIAGRAMS = ${JSON.stringify(diagrams, null, 2)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;\nexport const NAV_ITEMS = ${JSON.stringify(nav, null, 2)} as const;\n`);
 write('DevNetExpertGuide.tsx', `import NavBar from './NavBar';\n${sections.map((_, i) => `import Part${i} from './sections/Part${i}';`).join('\n')}\n/** Complete guide with isolated interactive navigation and native checkboxes. */\nexport default function DevNetExpertGuide() { return <div className="devnet-expert-page"><NavBar /><main className="main">${sections.map((_, i) => `<Part${i} />`).join('')}</main></div>; }\n`);
 write('Brand.tsx', `/** Original decorative certification emblem and guide label. */\nexport default function Brand() { return (${jsx(doc.querySelector('.brand'))}); }\n`);
-const tokens = { paper: 'color-background', ink: 'color-foreground', indigo: 'color-google-blue', gold: 'color-google-yellow', forest: 'color-google-green', plum: 'color-gcp-purple', surface: 'color-card', line: 'color-gcp-border', muted: 'color-muted-foreground', 'indigo-t': 'color-gcp-card-hover', 'gold-t': 'color-card', 'forest-t': 'color-card', 'plum-t': 'color-card', serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
-const css = postcss.parse(doc.querySelector('style').textContent);
+const sourceCss = postcss.parse(doc.querySelector('style').textContent);
+const colors = {};
+sourceCss.nodes.find(rule => rule.selector === ':root').walkDecls(decl => {
+    if (!['--serif', '--sans', '--mono'].includes(decl.prop)) colors[decl.prop.slice(2)] = decl.value;
+});
+const tokens = { ...Object.fromEntries(Object.keys(colors).map(key => [key, `color-devnet-expert-${key}`])), serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
+const palette = '    /* DevNet Expert original light palette */\n' + Object.entries(colors).map(([key, value]) => `    --color-devnet-expert-${key}: ${value};`).join('\n') + '\n    /* End DevNet Expert palette */';
+const globals = readFileSync('app/globals.css', 'utf8');
+writeFileSync('app/globals.css', globals.includes('/* DevNet Expert original light palette */')
+    ? globals.replace(/    \/\* DevNet Expert original light palette \*\/[\s\S]*?    \/\* End DevNet Expert palette \*\//, palette)
+    : globals.replace('@theme {', '@theme {\n' + palette));
+write('mermaid-theme.json', JSON.stringify({ ...extractMermaidConfig(html), sequence: { useMaxWidth: false }, pie: { useMaxWidth: false } }, null, 2) + '\n');
+const css = sourceCss;
 css.walkRules(rule => {
+    const local = Object.fromEntries(rule.nodes.filter(d => d.type === 'decl' && d.prop.startsWith('--')).map(d => [d.prop, d.value]));
     if (rule.selector === ':root') { rule.remove(); return; }
     rule.walkDecls(decl => {
         if (decl.prop.startsWith('--')) { decl.remove(); return; }
         decl.value = decl.value.replace(/var\(--([\w-]+)\)/g, (all, key) => tokens[key] ? `var(--${tokens[key]})` : all);
-        if (decl.value.includes('var(--c)')) decl.value = decl.value.replace('var(--c)', 'var(--color-google-yellow)');
-        if (decl.value.includes('var(--bg)')) decl.value = decl.value.replace('var(--bg)', 'var(--color-card)');
+        if (decl.value.includes('var(--c)')) decl.value = decl.value.replace('var(--c)', 'var(--color-devnet-expert-gold)');
+        if (decl.value.includes('var(--bg)')) decl.value = decl.value.replace('var(--bg)', 'var(--color-devnet-expert-surface)');
     });
     if (rule.selector.startsWith('.callout.')) {
-        const color = rule.selector.endsWith('source') ? 'google-green' : rule.selector.endsWith('note') ? 'gcp-purple' : 'google-yellow';
-        rule.append({ prop: 'border-left-color', value: `var(--color-${color})` });
-        rule.append({ prop: 'background', value: 'var(--color-card)' });
+        const color = rule.selector.endsWith('source') ? 'forest' : rule.selector.endsWith('note') ? 'plum' : 'gold';
+        rule.append({ prop: 'border-left-color', value: `var(--color-devnet-expert-${color})` });
+        rule.append({ prop: 'background', value: local['--bg'].replace(/var\(--([\w-]+)\)/g, (_, key) => `var(--${tokens[key]})`) });
     }
     if (rule.selector === '.sidebar' && rule.parent.type !== 'atrule') {
         rule.nodes.find(d => d.prop === 'top').value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px))';
