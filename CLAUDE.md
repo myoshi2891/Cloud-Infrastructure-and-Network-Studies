@@ -54,7 +54,7 @@ wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards
 shasum -a 256 archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
 ```
 
-各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。移行テストはコミット済みfixtureを使うため、この復元は不要。
+復元したHTMLファイルのみを対象に、サイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。Markdownファイルはこの再生成ゲートの照合対象に含めない。移行テストはコミット済みfixtureを使うため、この復元は不要。
 
 ## 2026-11-12: ISO/IEC 22123-3:2023 リファレンスアーキテクチャ
 
