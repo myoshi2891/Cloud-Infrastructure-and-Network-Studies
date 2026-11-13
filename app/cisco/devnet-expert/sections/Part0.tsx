@@ -1,0 +1,3 @@
+import { Diagram } from '../Diagram';
+/** Original guide block 0; generated without content summarization. */
+export default function Part0() { return (<header className="hero"><div className="eyebrow">{"Cisco certification study guide"}</div><h1>{"Cisco Certified DevNet Expert（現 CCIE Automation）初学者向け完全ガイド"}</h1><div className="hero-meta"><p><strong>{"対象読者"}</strong>{"：ネットワーク自動化・NetDevOps をこれから体系的に学ぶ方"}<br />{"\n"}<strong>{"作成基準日"}</strong>{"：2026年10月3日"}<br />{"\n"}<strong>{"主な根拠"}</strong>{"：Cisco 公式の認定ページ、CCIE Automation v1.1 ラボ試験ブループリント（公式 PDF）、350-901 AUTOCOR 試験情報"}</p></div></header>); }
