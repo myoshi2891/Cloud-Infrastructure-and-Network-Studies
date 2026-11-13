@@ -1,5 +1,19 @@
 # CLAUDE.md
 
+Updated 2026-11-13
+
+## 2026-11-13: DevNet Expert / CCIE Automation 全量移行
+
+`/cisco/devnet-expert` に `Devnet-expert-guide.html` を移行。見出し102件（h1:1 / h2:13 / h3:49 / h4:39）、63表（th161 / td812）、リスト105項目、コード43個、Mermaid23図、外部リンク32件、チェック8項目、参照番号1〜32、目次62項目を保持。リストの点・チェック連番・余白・書体を原本CSSと照合し、配色は既存のダークテーマトークンへ対応付けた。
+
+- `app/cisco/devnet-expert/page.tsx` はServerルートとmetadata、`DevNetExpertGuide.tsx` と `sections/Part0.tsx`〜`Part13.tsx` はHeroと13章の本文。`page.css` はページ内にスコープした原本装飾。
+- `NavBar.tsx` はモバイル開閉、hash/focus、IntersectionObserverによる現在地追跡。クリック先は遅延した子節通知で上書きせず、手動スクロールで追跡へ戻る。
+- `Diagram.tsx` はmemo化し共通 `MermaidDiagram` を自然倍率で再利用。`constants.ts` は原本DSLと単一の `NAV_ITEMS`。Source Serif 4は自己ホストする。
+- ホームとHeaderは `app/constants.ts` の `EXAMS`（`cisco-devnet-expert`、Cisco / Expert、既存 `card-ccna` 配色）から導出する。
+- 固定Git原本 `cf3d3063` から `bun scripts/migrate-devnet-expert.mjs` で再生成。期待値は `docs/migration-inventory/devnet-expert{,.fidelity,.design}.json`。本文・表結合・コード各行と全色クラス・図DSL・リスト構造・全CSS宣言を照合し、テスト実行時に原本/archiveを読まない。
+- 検証結果: 全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）が失敗。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後に追加した回帰も含む最終関連236件は成功。全体ESLint・Markdown lint・8GB設定の型検査成功。本文・表セル・図・リスト点の4欠落を意図的に作り、各テストがAssertionErrorで失敗することを確認して復元後32件成功。
+- 検証: `bun run test -- __tests__/cisco/devnet-expert`。Chrome E2Eは `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test e2e/devnet-expert.spec.ts --project=chromium --workers=1`。npm・本番ビルドはユーザー指定により未実行、目視確認はユーザー担当。原本HTML/Markdownは保持。
+
 ## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
 
 移行済みである ISO/IEC 22123 シリーズ（Part 1 用語ガイド、Part 2 概念ガイド、Part 3 リファレンスアーキテクチャ）の原本HTML 3件（`Iso-iec-22123-1-2023-guide.html` 356738バイト・SHA-256 `12c7ae70…`、`Iso-iec-22123-2-guide.html` 837997バイト・SHA-256 `c76e31b1…`、`Iso-iec-22123-3-2023-guide.html` 1061148バイト・SHA-256 `fc5d254f…`）およびMarkdown 3件（`Iso-iec-22123-1-2023-guide.md` 56414バイト・SHA-256 `361d9c0e…`、`Iso-iec-22123-2-guide.md` 62653バイト・SHA-256 `3a7b7fa5…`、`Iso-iec-22123-3-2023-guide.md` 47533バイト・SHA-256 `9417ee51…`）を、バイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-{1,2,3}-2023/` へ保存・同期し、リポジトリ直下から削除した。直下の未移行HTML残数は13件から10件（Devnet Expert、GCP 4件、GKE 3件、Cloud Run、ADK）となった。各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` に保存先・サイズ・ハッシュ・復元用Gitコミットを記録。直下に原本が存在しない環境でも、各再生成スクリプト（`bun scripts/migrate-iso-iec-22123*.mjs`）および fixture 生成スクリプトは `archive/Standards/` の原本を自動参照して動作する。

@@ -45,7 +45,7 @@ const nav = [...doc.querySelectorAll('nav a')].map(a => ({ id: a.hash.slice(1), 
 write('constants.ts', `export const DIAGRAMS = ${JSON.stringify(diagrams, null, 2)} as const;\nexport type DiagramId = keyof typeof DIAGRAMS;\nexport const NAV_ITEMS = ${JSON.stringify(nav, null, 2)} as const;\n`);
 write('DevNetExpertGuide.tsx', `import NavBar from './NavBar';\n${sections.map((_, i) => `import Part${i} from './sections/Part${i}';`).join('\n')}\n/** Complete guide with isolated interactive navigation and native checkboxes. */\nexport default function DevNetExpertGuide() { return <div className="devnet-expert-page"><NavBar /><main className="main">${sections.map((_, i) => `<Part${i} />`).join('')}</main></div>; }\n`);
 write('Brand.tsx', `/** Original decorative certification emblem and guide label. */\nexport default function Brand() { return (${jsx(doc.querySelector('.brand'))}); }\n`);
-const tokens = { paper: 'color-background', ink: 'color-foreground', indigo: 'color-google-blue', gold: 'color-google-yellow', forest: 'color-google-green', plum: 'color-gcp-purple', surface: 'color-card', line: 'color-gcp-border', muted: 'color-muted-foreground', 'indigo-t': 'color-gcp-card-hover', 'gold-t': 'color-card', 'forest-t': 'color-card', 'plum-t': 'color-card', serif: 'font-display', sans: 'font-body', mono: 'font-mono' };
+const tokens = { paper: 'color-background', ink: 'color-foreground', indigo: 'color-google-blue', gold: 'color-google-yellow', forest: 'color-google-green', plum: 'color-gcp-purple', surface: 'color-card', line: 'color-gcp-border', muted: 'color-muted-foreground', 'indigo-t': 'color-gcp-card-hover', 'gold-t': 'color-card', 'forest-t': 'color-card', 'plum-t': 'color-card', serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
 const css = postcss.parse(doc.querySelector('style').textContent);
 css.walkRules(rule => {
     if (rule.selector === ':root') { rule.remove(); return; }
@@ -65,6 +65,6 @@ css.walkRules(rule => {
         rule.nodes.find(d => d.prop === 'width').value = '280px';
     }
     if (rule.selector === '.main' && rule.parent.type !== 'atrule') rule.nodes.find(d => d.prop === 'margin-left').value = '280px';
-    rule.selector = rule.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s}`).join(',');
+    rule.selector = rule.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s === 'pre.hl' ? '.hl.code-block' : s}`).join(',');
 });
 write('page.css', css.toString() + '\n' + readFileSync('scripts/devnet-expert-additions.css', 'utf8'));
