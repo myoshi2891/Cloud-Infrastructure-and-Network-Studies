@@ -7,10 +7,10 @@ import { DIAGRAMS, NAV_ITEMS } from '@/app/cisco/devnet-expert/constants';
 import inventory from '@/docs/migration-inventory/devnet-expert.json';
 import fidelity from '@/docs/migration-inventory/devnet-expert.fidelity.json';
 import design from '@/docs/migration-inventory/devnet-expert.design.json';
-import { MermaidDiagramMock, squash, extractBodyContent, codeLineCount } from '@/__tests__/helpers/migration-test-utils';
+import { squash, extractBodyContent, codeLineCount } from '@/__tests__/helpers/migration-test-utils';
 import { snapshotTables, snapshotMigratedCodeBlocks, snapshotInlineCode, snapshotRefUrls, snapshotPlacement } from '@/scripts/archive-fidelity-extraction.mjs';
 
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: MermaidDiagramMock }));
+vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 const draw = () => render(<Page />);
 
 describe('DevNet Expert 全量移行', () => {
@@ -27,7 +27,10 @@ describe('DevNet Expert 全量移行', () => {
         const { container } = draw();
         const main = container.querySelector('main')!;
         // 原本の先頭annotationは本文外のaside（目次）。目次は別の全件検査で照合する。
-        expect(extractBodyContent(main)).toEqual(inventory.bodyContent.slice(1));
+        // React disallows formatting whitespace under table/tr. Compare annotation
+        // whitespace independently; code lines and table cells stay exact below.
+        const bodyText = (items: { kind: string; text: string }[]) => items.map(item => item.kind === 'annotation' ? { ...item, text: squash(item.text) } : item);
+        expect(bodyText(extractBodyContent(main))).toEqual(bodyText(inventory.bodyContent.slice(1)));
         expect(snapshotPlacement(main, 'table, pre, .code-block, figure, .callout')).toEqual(fidelity.placements);
         expect(snapshotTables(main)).toEqual(fidelity.tables);
         expect(snapshotInlineCode(main)).toEqual(fidelity.inlineCode);
@@ -96,12 +99,13 @@ describe('DevNet Expert 全量移行', () => {
         const mapValue = (v: string) => v.replace(/var\(--([\w-]+)\)/g, (all, key: string) => tokens[key] ? `var(--${key === 'serif' || key === 'sans' || key === 'mono' ? '' : 'color-'}${tokens[key]})` : all);
         design.rules.filter(r => r.selector !== ':root' && !r.selector.startsWith('.callout.')).forEach(source => {
             const selector = source.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s}`).join(',');
-            const target = rules.find(r => r.selector === selector && r.media === source.media);
-            expect(target, source.selector).toBeDefined();
+            const targets = rules.filter(r => r.selector === selector && r.media === source.media);
+            expect(targets.length, source.selector).not.toBe(0);
+            const declarations = Object.assign({}, ...targets.map(r => r.declarations)) as Record<string, string>;
             Object.entries(source.declarations).forEach(([prop, value]) => {
                 if ((source.selector === '.sidebar' && ['top','width'].includes(prop)) || (source.selector === '.main' && prop === 'margin-left')) return;
                 if (['border-left','background','color'].includes(prop) && value.includes('var(--c)') || value.includes('var(--bg)')) return;
-                expect(target?.declarations[prop], `${source.selector} ${prop}`).toBe(mapValue(value));
+                expect(declarations[prop], `${source.selector} ${prop}`).toBe(mapValue(value));
             });
         });
         expect(readFileSync('app/cisco/devnet-expert/page.css', 'utf8')).not.toMatch(/--[\w-]+\s*:/);
