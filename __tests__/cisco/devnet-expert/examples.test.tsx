@@ -146,9 +146,14 @@ def check(events, waits, error=None, retries=5):
     for args in requests.get.call_args_list:
         assert args == call('https://example.test', headers={'Accept': 'application/json'}, timeout=10)
 check([Timeout(), ConnectionError(), response(503), response(200)], [1, 2, 4])
-for failure in (Timeout, ConnectionError):
-    check([failure() for _ in range(5)], [1, 2, 4, 8, 16], RuntimeError)
-check([Timeout(), ConnectionError()], [1, 2], RuntimeError, retries=2)
+for failure, waits in ((Timeout, [1, 2, 4, 8]), (ConnectionError, [1, 2, 4, 8]),
+    (lambda: response(503), [1, 2, 4, 8]),
+    (lambda: response(429, {'Retry-After': '7'}), [7, 7, 7, 7])):
+    check([failure() for _ in range(5)], waits, RuntimeError)
+    check([failure()], [], RuntimeError, retries=1)
+check([Timeout(), ConnectionError()], [1], RuntimeError, retries=2)
+check([], [], RuntimeError, retries=0)
+check([Timeout(), response(200)], [1], retries=2)
 check([response(429, {'Retry-After': '7'}), response(200)], [7])
 check([response(429), response(200)], [1])
 with patch('time.time', return_value=0):
