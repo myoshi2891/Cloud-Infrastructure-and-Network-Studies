@@ -1,6 +1,7 @@
 // Reviewed changes relative to the fixed original guide revision.
 /** @type {[string, string][]} */
 export const corrections = [
+    ["# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と CA 証明書（ca.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -CAfile ca.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -connect app.example.com:443 -servername app.example.com -CAfile ca.crt","# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と CA 証明書（ca.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -verify_hostname app.example.com -CAfile ca.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -verify_hostname app.example.com -verify_return_error -connect app.example.com:443 -servername app.example.com -CAfile ca.crt"],
     [
         "from netmiko import ConnectHandler\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config)\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))",
         "import os\nfrom netmiko import ConnectHandler\n\nUSER = os.environ[\"IOS_XE_USER\"]\nPASS = os.environ[\"IOS_XE_PASS\"]\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"exit\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config, error_pattern=r\"% (?:Invalid input|Incomplete command|Ambiguous command)\")\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))"
@@ -55,6 +56,23 @@ const additionalCodeCorrections = [
     ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/'],
 ];
 
+export const gitlabRunnerNote = 'この Docker-in-Docker 例では、Runner の privileged モードを有効にし、ジョブと docker:27-dind サービスで /certs/client ボリュームを共有マウントする必要があります。';
+export const gitlabRunnerDocs = 'https://docs.gitlab.com/ci/docker/docker_in_docker/#docker-in-docker-with-tls-enabled-in-the-docker-executor-recommended';
+
+// Reuse the source's token classes for edited lines, including newly added code.
+function highlightLine(doc, line, tokens) {
+    const fragment = doc.createElement('span');
+    for (const [token] of line.matchAll(/#[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b\d+\b|[A-Za-z_][\w]*|\s+|./g)) {
+        const className = tokens.get(token) ?? (/^#/.test(token) ? 'c1' : /^["']/.test(token) ? 's2' : /^\d/.test(token) ? 'mi' : /^[A-Za-z_]/.test(token) ? 'n' : /^\s+$/.test(token) ? '' : 'p');
+        if (!className) { fragment.append(token); continue; }
+        const span = doc.createElement('span');
+        span.className = className;
+        span.textContent = token;
+        fragment.append(span);
+    }
+    return fragment.innerHTML;
+}
+
 /** Apply reviewed examples before JSX serialization, retaining unchanged highlight lines. */
 export function applyReviewedExampleCorrections(element) {
     const doc = element.ownerDocument;
@@ -70,12 +88,11 @@ export function applyReviewedExampleCorrections(element) {
         if (after === before) continue;
         const lines = before.split('\n');
         const markup = code.innerHTML.replace(/^\n|\n$/g, '').split('\n');
+        const tokens = new Map([...code.querySelectorAll('span[class]')].map(span => [span.textContent, span.className]));
         code.innerHTML = after.split('\n').map(line => {
             const original = lines.indexOf(line);
             if (original >= 0) return markup[original];
-            const plain = doc.createElement('span');
-            plain.textContent = line;
-            return plain.innerHTML;
+            return highlightLine(doc, line, tokens);
         }).join('\n');
     }
     ['#s-6-1 .code', '#s-7-5 .code', '#s-7-5 .code'].forEach((selector, i) => {
@@ -85,4 +102,16 @@ export function applyReviewedExampleCorrections(element) {
         paragraph.textContent = addedParagraphs[i];
         anchor.before(paragraph);
     });
+    const gitlab = element.querySelector('#s-3-3 .code');
+    if (gitlab) {
+        const paragraph = doc.createElement('p');
+        paragraph.append(gitlabRunnerNote, ' ');
+        const link = doc.createElement('a');
+        link.href = gitlabRunnerDocs;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'GitLab の Docker-in-Docker 設定手順';
+        paragraph.append(link);
+        gitlab.after(paragraph);
+    }
 }
