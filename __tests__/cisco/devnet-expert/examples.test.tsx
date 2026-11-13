@@ -65,6 +65,19 @@ assert connect.call_args.kwargs['username'] == 'test-user'
 assert connect.call_args.kwargs['password'] == 'test-pass'
 # Verify the displayed startup uses required environment paths for both TLS files.
 tree = ast.parse(bearer)
+health = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'health')
+assert len(health.decorator_list) == 1
+route = health.decorator_list[0]
+assert ast.unparse(route.func) == 'app.get'
+assert ast.literal_eval(route.args[0]) == '/health'
+assert {k.arg: ast.literal_eval(k.value) for k in route.keywords} == {'status_code': 200}
+assert not health.args.args
+health.decorator_list = []
+health_ns = {}
+exec(compile(ast.Module(body=[health], type_ignores=[]), '<health>', 'exec'), health_ns)
+assert health_ns['health']() == {'status': 'ok'}
+devices = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == 'list_devices')
+assert ast.unparse(devices.decorator_list[0]) == "app.get('/devices', dependencies=[Depends(require_token)])"
 startup = next(n for n in tree.body if isinstance(n, ast.If))
 call = next(n for n in ast.walk(startup) if isinstance(n, ast.Call))
 assert ast.unparse(call.func) == 'uvicorn.run'

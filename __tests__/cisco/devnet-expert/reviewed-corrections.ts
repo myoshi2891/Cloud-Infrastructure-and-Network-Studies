@@ -1,8 +1,9 @@
-import { readFileSync } from 'node:fs';
+import originalBlocks from './__fixtures__/reviewed-code-blocks.json';
 import { expect } from 'vitest';
 
 // Reviewed corrections are asserted exactly before restoring archived markup for
-// the existing full fidelity checks. The archive and baseline fixtures stay fixed.
+// the existing full fidelity checks. The fixture preserves original highlight markup
+// from cf3d30636c7136f722a1422587ceae87aa165aa5:Devnet-expert-guide.html.
 const corrections: [string, string][] = [
     [
         "from netmiko import ConnectHandler\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config)\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))",
@@ -18,11 +19,11 @@ const corrections: [string, string][] = [
     ],
     [
         "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -v devdata:/app/data device-api:1.0",
-        "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
+        "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -e API_TOKEN -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
     ],
     [
         "# compose.yaml\nservices:\n  api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    environment:\n      DB_HOST: db\n    depends_on:\n      db:\n        condition: service_healthy\n    networks:\n      - backend\n\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD_FILE: /run/secrets/db_password\n    secrets:\n      - db_password\n    volumes:\n      - dbdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      retries: 5\n    networks:\n      - backend\n\nnetworks:\n  backend:\n\nvolumes:\n  dbdata:\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt",
-        "# compose.yaml\nservices:\n  api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    volumes:\n      - ./secrets/tls:/run/tls:ro\n    environment:\n      DB_HOST: db\n    depends_on:\n      db:\n        condition: service_healthy\n    networks:\n      - backend\n\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD_FILE: /run/secrets/db_password\n    secrets:\n      - db_password\n    volumes:\n      - dbdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      retries: 5\n    networks:\n      - backend\n\nnetworks:\n  backend:\n\nvolumes:\n  dbdata:\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt"
+        "# compose.yaml\nservices:\n  api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    volumes:\n      - ./secrets/tls:/run/tls:ro\n    environment:\n      API_TOKEN: ${API_TOKEN:?API_TOKEN is required}\n      DB_HOST: db\n    depends_on:\n      db:\n        condition: service_healthy\n    networks:\n      - backend\n\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD_FILE: /run/secrets/db_password\n    secrets:\n      - db_password\n    volumes:\n      - dbdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      retries: 5\n    networks:\n      - backend\n\nnetworks:\n  backend:\n\nvolumes:\n  dbdata:\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt"
     ],
     [
         "apiVersion: v1\nkind: Namespace\nmetadata:\n  name: netauto\n---\napiVersion: v1\nkind: Secret\nmetadata:\n  name: api-secret\n  namespace: netauto\ntype: Opaque\nstringData:\n  API_TOKEN: \"ここには実運用で値を直書きしない\"\n---\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: device-api\n  namespace: netauto\nspec:\n  replicas: 3\n  selector:\n    matchLabels: { app: device-api }\n  template:\n    metadata:\n      labels: { app: device-api }\n    spec:\n      containers:\n        - name: api\n          image: registry.example.com/device-api:1.0\n          ports:\n            - containerPort: 8000\n          envFrom:\n            - secretRef: { name: api-secret }\n          readinessProbe:\n            httpGet: { path: /health, port: 8000 }\n            initialDelaySeconds: 3\n            periodSeconds: 5\n          livenessProbe:\n            httpGet: { path: /health, port: 8000 }\n            initialDelaySeconds: 10\n            periodSeconds: 10\n---\napiVersion: v1\nkind: Service\nmetadata:\n  name: device-api\n  namespace: netauto\nspec:\n  selector: { app: device-api }\n  ports:\n    - port: 80\n      targetPort: 8000\n---\napiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: device-api\n  namespace: netauto\nspec:\n  rules:\n    - host: api.example.com\n      http:\n        paths:\n          - path: /\n            pathType: Prefix\n            backend:\n              service:\n                name: device-api\n                port: { number: 80 }",
@@ -30,7 +31,7 @@ const corrections: [string, string][] = [
     ],
     [
         "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\ndocker run -d --name api  --network appnet -p 8000:8000 device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認",
-        "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\ndocker run -d --name api  --network appnet -p 8000:8000 -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認"
+        "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\ndocker run -d --name api  --network appnet -p 8000:8000 -e API_TOKEN -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認"
     ],
     [
         "import re\nimport subprocess\n\n# 悪い例：入力をそのままシェルに渡す（インジェクションの危険）\n# subprocess.run(f\"ping -c 1 {host}\", shell=True)\n\nHOST_RE = re.compile(r\"^[A-Za-z0-9.-]{1,253}$\")   # 許可リスト方式の検証\n\ndef safe_ping(host: str) -> int:\n    if not HOST_RE.fullmatch(host):\n        raise ValueError(\"不正なホスト名です\")\n    # 引数はリストで渡し、shell=True を使わない\n    return subprocess.run([\"ping\", \"-c\", \"1\", host], check=False).returncode",
@@ -38,7 +39,7 @@ const corrections: [string, string][] = [
     ],
     [
         "import hmac\nimport os\nfrom fastapi import Depends, FastAPI, HTTPException, Request\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\n\napp = FastAPI()\nbearer = HTTPBearer()\nEXPECTED = os.environ[\"API_TOKEN\"]\n\ndef require_token(cred: HTTPAuthorizationCredentials = Depends(bearer)):\n    # 比較は定数時間で行い、タイミング攻撃を避ける\n    if not hmac.compare_digest(cred.credentials, EXPECTED):\n        raise HTTPException(status_code=401, detail=\"invalid token\",\n                            headers={\"WWW-Authenticate\": \"Bearer\"})\n\n@app.middleware(\"http\")\nasync def security_headers(request: Request, call_next):\n    resp = await call_next(request)\n    resp.headers[\"X-Content-Type-Options\"] = \"nosniff\"\n    resp.headers[\"Strict-Transport-Security\"] = \"max-age=31536000; includeSubDomains\"\n    resp.headers[\"Cache-Control\"] = \"no-store\"\n    return resp\n\n@app.get(\"/devices\", dependencies=[Depends(require_token)])\ndef list_devices():\n    return []",
-        "import hmac\nimport os\nfrom fastapi import Depends, FastAPI, HTTPException, Request\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\n\napp = FastAPI()\nbearer = HTTPBearer()\nEXPECTED = os.environ[\"API_TOKEN\"]\n\ndef require_token(cred: HTTPAuthorizationCredentials = Depends(bearer)):\n    # 比較は定数時間で行い、タイミング攻撃を避ける\n    if not hmac.compare_digest(cred.credentials, EXPECTED):\n        raise HTTPException(status_code=401, detail=\"invalid token\",\n                            headers={\"WWW-Authenticate\": \"Bearer\"})\n\n@app.middleware(\"http\")\nasync def security_headers(request: Request, call_next):\n    resp = await call_next(request)\n    resp.headers[\"X-Content-Type-Options\"] = \"nosniff\"\n    resp.headers[\"Strict-Transport-Security\"] = \"max-age=31536000; includeSubDomains\"\n    resp.headers[\"Cache-Control\"] = \"no-store\"\n    return resp\n\n@app.get(\"/devices\", dependencies=[Depends(require_token)])\ndef list_devices():\n    return []\n\n# CA 署名済み証明書と秘密鍵のパスを環境変数で指定する\nif __name__ == \"__main__\":\n    import uvicorn\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000,\n                ssl_certfile=os.environ[\"TLS_CERT_FILE\"],\n                ssl_keyfile=os.environ[\"TLS_KEY_FILE\"])"
+        "import hmac\nimport os\nfrom fastapi import Depends, FastAPI, HTTPException, Request\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\n\napp = FastAPI()\nbearer = HTTPBearer()\nEXPECTED = os.environ[\"API_TOKEN\"]\n\ndef require_token(cred: HTTPAuthorizationCredentials = Depends(bearer)):\n    # 比較は定数時間で行い、タイミング攻撃を避ける\n    if not hmac.compare_digest(cred.credentials, EXPECTED):\n        raise HTTPException(status_code=401, detail=\"invalid token\",\n                            headers={\"WWW-Authenticate\": \"Bearer\"})\n\n@app.middleware(\"http\")\nasync def security_headers(request: Request, call_next):\n    resp = await call_next(request)\n    resp.headers[\"X-Content-Type-Options\"] = \"nosniff\"\n    resp.headers[\"Strict-Transport-Security\"] = \"max-age=31536000; includeSubDomains\"\n    resp.headers[\"Cache-Control\"] = \"no-store\"\n    return resp\n\n@app.get(\"/health\", status_code=200)\ndef health():\n    return {\"status\": \"ok\"}\n\n@app.get(\"/devices\", dependencies=[Depends(require_token)])\ndef list_devices():\n    return []\n\n# CA 署名済み証明書と秘密鍵のパスを環境変数で指定する\nif __name__ == \"__main__\":\n    import uvicorn\n    uvicorn.run(app, host=\"0.0.0.0\", port=8000,\n                ssl_certfile=os.environ[\"TLS_CERT_FILE\"],\n                ssl_keyfile=os.environ[\"TLS_KEY_FILE\"])"
     ]
 ];
 const addedParagraphs = [
@@ -47,17 +48,21 @@ const addedParagraphs = [
 ];
 
 export function restoreReviewedCorrections(container: HTMLElement) {
-    const source = document.createElement('div');
-    source.innerHTML = readFileSync('archive/Cisco/html/devnet-expert/Devnet-expert-guide.html', 'utf8');
-    const originals = [...source.querySelectorAll('pre.hl code')];
+    const originals = originalBlocks.map(({ index, html }) => {
+        const code = document.createElement('code');
+        code.innerHTML = html;
+        return { index, code };
+    });
     const blocks = [...container.querySelectorAll('.code-block')];
     for (const [before, after] of corrections) {
-        const index = originals.findIndex(block => block.textContent?.replace(/^\n|\n$/g, '') === before);
+        const index = originals.findIndex(({ code }) => code.textContent?.replace(/^\n|\n$/g, '') === before);
         expect(index, before.slice(0, 80)).toBeGreaterThanOrEqual(0);
-        const block = blocks[index]!;
+        const block = blocks[originals[index]!.index]!;
         expect(block.textContent).toBe(after);
+        expect(block.children.length).toBeGreaterThan(0);
+        expect([...block.children].every(child => child.matches('.code-line'))).toBe(true);
         block.innerHTML = '';
-        originals[index]!.innerHTML.replace(/^\n|\n$/g, '').split('\n').forEach((html, i) => {
+        originals[index]!.code.innerHTML.replace(/^\n|\n$/g, '').split('\n').forEach((html, i) => {
             if (i) block.append('\n');
             const line = document.createElement('div');
             line.className = 'code-line';
