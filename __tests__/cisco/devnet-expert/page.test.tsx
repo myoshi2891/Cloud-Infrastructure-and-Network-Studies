@@ -1,3 +1,4 @@
+import { restoreReviewedCorrections } from './reviewed-corrections';
 import { readFileSync } from 'node:fs';
 import { render, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -13,10 +14,11 @@ import { snapshotTables, snapshotMigratedCodeBlocks, snapshotInlineCode, snapsho
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 const ORIGINAL_WAIT_LINE = "<div class=\"code-line\">            <span class=\"n\">wait</span> <span class=\"o\">=</span> <span class=\"nb\">int</span><span class=\"p\">(</span><span class=\"n\">r</span><span class=\"o\">.</span><span class=\"n\">headers</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span><span class=\"s2\">\"Retry-After\"</span><span class=\"p\">,</span> <span class=\"mi\">2</span> <span class=\"o\">**</span> <span class=\"n\">attempt</span><span class=\"p\">))</span></div>";
 
-// Keep the source fixtures immutable. Check the three reviewed corrections exactly,
+// Keep the source fixtures immutable. Check the reviewed corrections exactly,
 // then restore only those lines in the test DOM for the original fidelity checks.
 const draw = () => {
     const view = render(<Page />);
+    restoreReviewedCorrections(view.container);
     const replacements: [string, string][] = [
         ['import random\nimport time\nimport requests', 'import random\nimport time\nfrom email.utils import parsedate_to_datetime\nimport requests'],
         ['            wait = int(r.headers.get("Retry-After", 2 ** attempt))', [
