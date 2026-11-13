@@ -11,7 +11,53 @@ import { squash, extractBodyContent, codeLineCount } from '@/__tests__/helpers/m
 import { snapshotTables, snapshotMigratedCodeBlocks, snapshotInlineCode, snapshotRefUrls, snapshotPlacement } from '@/scripts/archive-fidelity-extraction.mjs';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
-const draw = () => render(<Page />);
+const ORIGINAL_WAIT_LINE = "<div class=\"code-line\">            <span class=\"n\">wait</span> <span class=\"o\">=</span> <span class=\"nb\">int</span><span class=\"p\">(</span><span class=\"n\">r</span><span class=\"o\">.</span><span class=\"n\">headers</span><span class=\"o\">.</span><span class=\"n\">get</span><span class=\"p\">(</span><span class=\"s2\">\"Retry-After\"</span><span class=\"p\">,</span> <span class=\"mi\">2</span> <span class=\"o\">**</span> <span class=\"n\">attempt</span><span class=\"p\">))</span></div>";
+
+// Keep the source fixtures immutable. Check the three reviewed corrections exactly,
+// then restore only those lines in the test DOM for the original fidelity checks.
+const draw = () => {
+    const view = render(<Page />);
+    const replacements: [string, string][] = [
+        ['import random\nimport time\nimport requests', 'import random\nimport time\nfrom email.utils import parsedate_to_datetime\nimport requests'],
+        ['            wait = int(r.headers.get("Retry-After", 2 ** attempt))', [
+            '            retry_after = r.headers.get("Retry-After", 2 ** attempt)',
+            '            try:',
+            '                wait = int(retry_after)',
+            '            except ValueError:',
+            '                wait = max(0, parsedate_to_datetime(retry_after).timestamp() - time.time())',
+        ].join('\n')],
+        ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-playbook -i inventory/prod site.yml'],
+        ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/'],
+    ];
+    const blocks = [...view.container.querySelectorAll('.code-block')];
+    fidelity.codeBlocks.forEach((lines, index) => {
+        const original = lines.join('\n');
+        const corrected = replacements.reduce((text, [from, to]) => text.replace(from, to), original);
+        if (corrected === original) return;
+        const block = blocks[index]!;
+        expect(block.textContent).toBe(corrected);
+        for (const line of block.querySelectorAll('.code-line')) {
+            const text = line.textContent ?? '';
+            if (text === '                wait = int(retry_after)') {
+                line.outerHTML = ORIGINAL_WAIT_LINE;
+            } else if ([
+                'from email.utils import parsedate_to_datetime',
+                '            retry_after = r.headers.get("Retry-After", 2 ** attempt)',
+                '            try:',
+                '            except ValueError:',
+                '                wait = max(0, parsedate_to_datetime(retry_after).timestamp() - time.time())',
+                '    - pip install ansible-core',
+                'secrets/',
+            ].includes(text)) {
+                // Each generated line is separated by a standalone newline node.
+                if (line.nextSibling?.textContent === '\n') line.nextSibling.remove();
+                else if (line.previousSibling?.textContent === '\n') line.previousSibling.remove();
+                line.remove();
+            }
+        }
+    });
+    return view;
+};
 
 describe('DevNet Expert 全量移行', () => {
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td', 'li'] as const)('%s 全件の件数・順序・全文', tag => {
