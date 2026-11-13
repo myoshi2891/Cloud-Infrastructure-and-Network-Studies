@@ -1,0 +1,46 @@
+{
+  "source": "Iso-iec-22123-3-2023-guide.html",
+  "sourceSha256": "fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f",
+  "sourceViolations": [
+    {
+      "id": "link-in-text-block",
+      "nodes": [
+        "<a href=\"#11-他の著名なモデルとの比較nistaws\">第11章</a>"
+      ]
+    },
+    {
+      "id": "role-img-alt",
+      "nodes": [
+        "<div class=\"mermaid-diagram\" id=\"mmd-0\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-1\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-2\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-3\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-4\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-5\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-6\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-7\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-8\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-9\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-10\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-11\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-12\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-13\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-14\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-15\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-16\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-17\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-18\" role=\"img\">",
+        "<div class=\"mermaid-diagram\" id=\"mmd-19\" role=\"img\">"
+      ]
+    }
+  ],
+  "retainedSourceFindings": [
+    {
+      "id": "link-in-text-block",
+      "nodes": [
+        "<a href=\"#11-他の著名なモデルとの比較nistaws\">第11章</a>"
+      ]
+    }
+  ],
+  "reason": "原本の下線なし装飾を保持する。リンク識別性の既存1件は固定し、全20図の読み上げ名不足は移行で解消する。新しい指摘や対象ノードの増加は認めない。"
+}

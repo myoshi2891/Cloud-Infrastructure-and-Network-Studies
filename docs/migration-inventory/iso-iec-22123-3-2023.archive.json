@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "99ca00a0592ffbcfdf356baef27371f4705c8b95",
+  "html": {
+    "source": "Iso-iec-22123-3-2023-guide.html",
+    "archivePath": "archive/Standards/html/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.html",
+    "bytes": 1061148,
+    "sha256": "fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f"
+  },
+  "md": {
+    "source": "Iso-iec-22123-3-2023-guide.md",
+    "archivePath": "archive/Standards/md/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.md",
+    "bytes": 47533,
+    "sha256": "9417ee51a5456c90ac76524be889d99f1e67469d9170c7749fdeed061123852a"
+  }
+}

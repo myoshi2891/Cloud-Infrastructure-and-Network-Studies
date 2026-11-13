@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "e6dd8d7290e1c5ae0f4ae813a53fbd35c099c429",
+  "html": {
+    "source": "Iso-iec-22123-2-guide.html",
+    "archivePath": "archive/Standards/html/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.html",
+    "bytes": 837997,
+    "sha256": "c76e31b1a36c8d0ea586d7dc7a5df25c17e76a1c03dc7fcd2b0134a038f3d601"
+  },
+  "md": {
+    "source": "Iso-iec-22123-2-guide.md",
+    "archivePath": "archive/Standards/md/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.md",
+    "bytes": 62653,
+    "sha256": "3a7b7fa556e5f06a0be4d858f93e3910f0f21a4104a7ca6a31f7e92aacf0b867"
+  }
+}

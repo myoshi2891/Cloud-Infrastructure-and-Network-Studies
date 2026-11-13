@@ -14,6 +14,69 @@
  */
 
 @theme {
+    /* ISO/IEC 22123-3:2023 原本ダーク配色 */
+    --color-iso-22123-3-bg: #07111e;
+    --color-iso-22123-3-bg-2: #0b1a2d;
+    --color-iso-22123-3-card: #0f2038;
+    --color-iso-22123-3-card-2: #12233d;
+    --color-iso-22123-3-line: #22385a;
+    --color-iso-22123-3-text: #e8eef8;
+    --color-iso-22123-3-text-dim: #c7d6ec;
+    --color-iso-22123-3-text-faint: #9cb0cf;
+    --color-iso-22123-3-accent: #7c9eff;
+    --color-iso-22123-3-accent-2: #5fd0c4;
+    --color-iso-22123-3-warn: #f2c14e;
+    --color-iso-22123-3-hex-050d18: #050d18;
+    --color-iso-22123-3-hex-0c1c31: #0c1c31;
+    --color-iso-22123-3-hex-fff: #fff;
+    --color-iso-22123-3-hex-11284a: #11284a;
+    --color-iso-22123-3-rgba-124-158-255-0_22: rgba(124, 158, 255, 0.22);
+    --color-iso-22123-3-rgba-124-158-255-0_12: rgba(124, 158, 255, 0.12);
+    --color-iso-22123-3-rgba-124-158-255-0_35: rgba(124, 158, 255, 0.35);
+    --color-iso-22123-3-hex-dfe9ff: #dfe9ff;
+    --color-iso-22123-3-hex-12233d: #12233d;
+    --color-iso-22123-3-hex-112440: #112440;
+    --color-iso-22123-3-hex-1b1a0f: #1b1a0f;
+    --color-iso-22123-3-hex-0b2229: #0b2229;
+    --color-iso-22123-3-hex-b48bff: #b48bff;
+    --color-iso-22123-3-hex-17142b: #17142b;
+    --color-iso-22123-3-hex-091729: #091729;
+    --color-iso-22123-3-rgba-0-0-0-0_6: rgba(0, 0, 0, 0.6);
+
+  /* ISO/IEC 22123-2 原本の配色 */
+  --color-iso-22123-2-bg: #07111e;
+  --color-iso-22123-2-panel: #0d1b30;
+  --color-iso-22123-2-panel2: #12243f;
+  --color-iso-22123-2-line: #1f3558;
+  --color-iso-22123-2-text: #e6edf8;
+  --color-iso-22123-2-text-dim: #c7d6ec;
+  --color-iso-22123-2-text-faint: #9cb0cf;
+  --color-iso-22123-2-accent: #7c9eff;
+  --color-iso-22123-2-accent2: #5fd4c4;
+  --color-iso-22123-2-warn: #f2b866;
+  --color-iso-22123-2-hex-fff: #fff;
+  --color-iso-22123-2-rgba-124-158-255-0_14: rgba(124, 158, 255, 0.14);
+  --color-iso-22123-2-rgba-124-158-255-0_22: rgba(124, 158, 255, 0.22);
+  --color-iso-22123-2-rgba-124-158-255-0_45: rgba(124, 158, 255, 0.45);
+  --color-iso-22123-2-rgba-124-158-255-0_1: rgba(124, 158, 255, 0.1);
+  --color-iso-22123-2-hex-dbe6ff: #dbe6ff;
+  --color-iso-22123-2-hex-cfe0ff: #cfe0ff;
+  --color-iso-22123-2-rgba-124-158-255-0_08: rgba(124, 158, 255, 0.08);
+  --color-iso-22123-2-rgba-124-158-255-0_3: rgba(124, 158, 255, 0.3);
+  --color-iso-22123-2-rgba-242-184-102-0_08: rgba(242, 184, 102, 0.08);
+  --color-iso-22123-2-rgba-242-184-102-0_35: rgba(242, 184, 102, 0.35);
+  --color-iso-22123-2-rgba-124-158-255-0_4: rgba(124, 158, 255, 0.4);
+  --color-iso-22123-2-hex-06231f: #06231f;
+  --color-iso-22123-2-rgba-95-212-196-0_55: rgba(95, 212, 196, 0.55);
+  --color-iso-22123-2-rgba-95-212-196-0_07: rgba(95, 212, 196, 0.07);
+  --color-iso-22123-2-rgba-95-212-196-0_1: rgba(95, 212, 196, 0.1);
+  --color-iso-22123-2-rgba-95-212-196-0_4: rgba(95, 212, 196, 0.4);
+  --color-iso-22123-2-hex-bff3ea: #bff3ea;
+  --color-iso-22123-2-rgba-95-212-196-0_06: rgba(95, 212, 196, 0.06);
+  --color-iso-22123-2-hex-e9f0ff: #e9f0ff;
+  --color-iso-22123-2-rgba-124-158-255-0_06: rgba(124, 158, 255, 0.06);
+  --color-iso-22123-2-rgba-0-0-0-0_6: rgba(0, 0, 0, 0.6);
+
     --spacing-iso-22123-toggle-offset: 12px;
     --text-iso-22123-toggle: 14px;
     --spacing-iso-22123-toggle-padding: 8px;
