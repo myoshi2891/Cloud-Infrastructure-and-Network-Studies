@@ -39,6 +39,10 @@ function jsx(node) {
     const extra = tag === 'th' ? ' scope="col"' : tag === 'section' ? ' tabIndex={-1}' : '';
     return voidTags.has(tag) ? `<${tag}${attrs}${extra} />` : `<${tag}${attrs}${extra}>${[...node.childNodes].map(jsx).join('')}</${tag}>`;
 }
+// Preserve the reviewed written-exam retake interval when regenerating Part2.
+const retakeRow = [...doc.querySelectorAll('tr')].find(row => row.cells[0]?.textContent === '不合格後の待機');
+if (!retakeRow) throw new Error('Missing retake waiting-period row');
+retakeRow.cells[1].textContent = '不合格の翌日から5暦日';
 const sections = [...doc.querySelector('main').children];
 sections.forEach((element, i) => write(`sections/Part${i}.tsx`, `import { Diagram } from '../Diagram';\n/** Original guide block ${i}; generated without content summarization. */\nexport default function Part${i}() { return (${jsx(element)}); }\n`));
 const diagrams = extractDiagramsDefinition(html.replace('window.DIAGRAMS =', 'const DIAGRAMS =')).diagrams;
