@@ -62,6 +62,19 @@ const draw = () => {
 };
 
 describe('DevNet Expert 全量移行', () => {
+    it('rejects corrected code collapsed into one multiline child before restoration', () => {
+        const { container } = render(<Page />);
+        const block = [...container.querySelectorAll('.code-block')].find(b => b.textContent?.startsWith('import os\nfrom netmiko'))!;
+        const text = block.textContent;
+        const line = document.createElement('div');
+        line.className = 'code-line';
+        line.textContent = text;
+        block.replaceChildren(line);
+        expect(() => restoreReviewedCorrections(container)).toThrow();
+        expect(block.textContent).toBe(text);
+        expect(block.children).toHaveLength(1);
+    });
+
     it.each(['h1', 'h2', 'h3', 'h4', 'th', 'td', 'li'] as const)('%s 全件の件数・順序・全文', tag => {
         const { container } = draw();
         const expected = tag === 'li' ? inventory.listItems : inventory[tag];

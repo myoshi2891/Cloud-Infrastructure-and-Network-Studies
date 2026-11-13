@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { render } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import Part6 from '@/app/cisco/devnet-expert/sections/Part6';
@@ -6,7 +6,13 @@ import Part8 from '@/app/cisco/devnet-expert/sections/Part8';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 
-it('executes the displayed OSPF and ping validators against missing neighbors and option injection', () => {
+// ast.unparse in the embedded validator requires Python 3.9 or later.
+const python = spawnSync('python3', ['-c', 'import sys; sys.exit(sys.version_info < (3, 9))']);
+
+it('executes the displayed OSPF and ping validators against missing neighbors and option injection', (context) => {
+    if (python.error || python.status !== 0) {
+        context.skip('Requires python3 (Python 3.9 or later) for ast.unparse');
+    }
     const { container } = render(<><Part6 /><Part8 /></>);
     const blocks = [...container.querySelectorAll('.code-block')].map(b => b.textContent ?? '');
     const ospf = blocks.find(b => b.startsWith('# test_ospf.py'))!;
