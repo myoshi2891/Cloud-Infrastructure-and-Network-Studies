@@ -1,6 +1,7 @@
 // Reviewed changes relative to the fixed original guide revision.
 /** @type {[string, string][]} */
 export const corrections = [
+    ["show telemetry ietf subscription 101 detail     # 購読の状態\nshow telemetry ietf subscription 101 receiver   # 受信先との接続状態", "show telemetry ietf subscription 101 detail\nshow telemetry ietf subscription 101 receiver"],
     ["# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と CA 証明書（ca.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -CAfile ca.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -connect app.example.com:443 -servername app.example.com -CAfile ca.crt","# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と CA 証明書（ca.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -verify_hostname app.example.com -CAfile ca.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -verify_hostname app.example.com -verify_return_error -connect app.example.com:443 -servername app.example.com -CAfile ca.crt"],
     [
         "from netmiko import ConnectHandler\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config)\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))",
@@ -43,9 +44,10 @@ export const corrections = [
     ["from genie.testbed import load\n\ntestbed = load(\"testbed.yaml\")\ndev = testbed.devices[\"csr1\"]\ndev.connect(log_stdout=False)\n\nparsed = dev.parse(\"show ip interface brief\")    # 構造化された辞書が返る\nfor ifname, info in parsed[\"interface\"].items():\n    print(ifname, info[\"ip_address\"], info[\"status\"])","from genie.testbed import load\n\ntestbed = load(\"testbed.yaml\")\ndev = testbed.devices[\"R1\"]\ndev.connect(log_stdout=False)\n\nparsed = dev.parse(\"show ip interface brief\")    # 構造化された辞書が返る\nfor ifname, info in parsed[\"interface\"].items():\n    print(ifname, info[\"ip_address\"], info[\"status\"])"]
 ];
 export const addedParagraphs = [
-    "Part8 の Bearer 認証 API は TLS 必須です。CA 署名済みの証明書チェーン tls.crt と秘密鍵 tls.key を secrets/tls に用意し、非 root の appuser が読める権限で読み取り専用マウントします。証明書はイメージに含めません。HTTP リスナーは起動せず、クライアントは HTTPS と証明書検証を必須にします。Kubernetes の新規クラスタでは、最初に kubectl create namespace netauto で名前空間を作成し、次に kubectl -n netauto create secret tls api-tls --cert=./secrets/tls/tls.crt --key=./secrets/tls/tls.key で同じ証明書を api-tls Secret として事前作成します。Ingress は ingress-nginx 用で、HTTPS のバックエンドへ接続します。api-secret の API_TOKEN は ASCII のプレースホルダーを自分だけの秘密トークンに置き換え、実値をコミットしません。api-tls の証明書は SAN に api.example.com を含めます。信頼する発行元 CA の PEM 証明書 ca.crt を secrets/tls/ca.crt に用意し、kubectl -n netauto create secret generic api-backend-ca --from-file=ca.crt=./secrets/tls/ca.crt で事前作成します。両方の Secret の作成後に kubectl apply -f manifest.yaml で残りのリソースを反映します。Ingress はこの CA でバックエンド証明書を検証し、検証名と SNI を api.example.com に揃えます。コントローラの HTTP ポートはロードバランサとファイアウォールで公開を禁止し、HTTP のリダイレクトにも依存しません。",
+    "Part8 の Bearer 認証 API は TLS 必須です。CA 署名済みの証明書チェーン tls.crt と秘密鍵 tls.key を secrets/tls に用意し、非 root の appuser が読める権限で読み取り専用マウントします。証明書はイメージに含めません。HTTP リスナーは起動せず、クライアントは HTTPS と証明書検証を必須にします。Kubernetes の新規クラスタでは、最初に kubectl create namespace netauto で名前空間を作成し、次に kubectl -n netauto create secret tls api-tls --cert=./secrets/tls/tls.crt --key=./secrets/tls/tls.key で同じ証明書を api-tls Secret として事前作成します。この Ingress は ingress-nginx を使う隔離された旧構成ラボ専用の例で、本番環境には使用しません。本番では保守されているコントローラを選び、以下と同じ TLS とバックエンド証明書検証の要件を満たす設定を用意します。このラボでも HTTPS のバックエンドへ接続します。api-secret の API_TOKEN は ASCII のプレースホルダーを自分だけの秘密トークンに置き換え、実値をコミットしません。api-tls の証明書は SAN に api.example.com を含めます。信頼する発行元 CA の PEM 証明書 ca.crt を secrets/tls/ca.crt に用意し、kubectl -n netauto create secret generic api-backend-ca --from-file=ca.crt=./secrets/tls/ca.crt で事前作成します。両方の Secret の作成後に kubectl apply -f manifest.yaml で残りのリソースを反映します。Ingress はこの CA でバックエンド証明書を検証し、検証名と SNI を api.example.com に揃えます。コントローラの HTTP ポートはロードバランサとファイアウォールで公開を禁止し、HTTP のリダイレクトにも依存しません。",
     "この例は HTTPS 専用です。python main.py、または Part7 の TLS オプション付き Uvicorn で起動し、平文 HTTP のリスナーは公開しません。クライアントは最初のリクエストから https:// を使い、CA とホスト名を検証します。HSTS だけでは初回 HTTP 通信や非ブラウザクライアントを保護できません。",
-    "この例の require_token は共有トークンとの一致を検証するだけです。スコープに基づく認可チェックや、権限不足で 403 を返す処理は実装していません。"
+    "この例の require_token は共有トークンとの一致を検証するだけです。スコープに基づく認可チェックや、権限不足で 403 を返す処理は実装していません。",
+    "show telemetry ietf subscription 101 detail で購読の状態を、show telemetry ietf subscription 101 receiver で受信先との接続状態を確認します。"
 ];
 
 /** @type {[string, string][]} */
@@ -102,6 +104,12 @@ export function applyReviewedExampleCorrections(element) {
         paragraph.textContent = addedParagraphs[i];
         anchor.before(paragraph);
     });
+    const telemetry = [...element.querySelectorAll('#s-5-5 .code')].at(-1);
+    if (telemetry) {
+        const paragraph = doc.createElement('p');
+        paragraph.textContent = addedParagraphs[3];
+        telemetry.after(paragraph);
+    }
     const gitlab = element.querySelector('#s-3-3 .code');
     if (gitlab) {
         const paragraph = doc.createElement('p');
