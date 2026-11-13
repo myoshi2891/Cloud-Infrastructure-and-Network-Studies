@@ -2,6 +2,14 @@
 
 (最終更新日: 2026-11-13)
 
+## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
+
+DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
+
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。原本/archiveがない環境でもテストはfixtureだけで動作する。
+
+関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
+
 ## 2026-11-13: DevNet Expert / CCIE Automation 移行
 
 - [x] Inventory `20dd3d9e`: 原本 `cf3d3063` から本文・構造・図DSL・CSSの固定fixtureを抽出。
@@ -2435,14 +2443,14 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** DevNet Expert / CCIE Automation 全量移行・装飾保持・導線統合・自動検証。ISO Part 1〜3も移行済み。
+- **最新完了タスク:** DevNet Expertの原本ライト配色復元とHTML/Markdownのアーカイブ退避。
 - **最終更新日:** 2026-11-13
-- **最新実装 HEAD:** `71388434`（DevNet Expert導線・書体・コード装飾・目次競合の統合修正）
-- **前回進捗同期コミット:** `cf3d3063`
-- **HTML残数:** 直下HTML10件のうち未移行9件。DevNet Expert原本1件は比較用に保持。ISO Part 1〜3原本はarchive退避済み。
-- **検証状態:** 関連236件・復元後32件・Chrome E2E2件・型検査・全体ESLint・Markdown lint成功。全体5605成功/既存3不一致。npm・本番ビルドは依頼に従い未実行。
-- **原本とfixture:** DevNet原本HTML/Markdownは保持。固定Git原本から再生成可能。テストはコミット済みfixtureを使い原本/archiveを実行時に読まない。
-- **次の作業:** 次の具体的な移行対象HTMLはユーザー指定待ち（未移行9件）。DevNet ExpertとISO Part 1〜3は再移行しない。
+- **最新実装 HEAD:** `b8a6d93d`（ライト配色修正 `8b03b328` 後の原本退避・復元情報記録）
+- **前回進捗同期コミット:** `3ee54af7`
+- **HTML残数:** 直下HTML9件すべて未移行。DevNetとISO Part 1〜3の原本はarchive退避済み。
+- **検証状態:** 原本退避後の関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行せず、前回5605成功/既存3不一致。npm・本番ビルドは未実行。
+- **原本とfixture:** `docs/migration-inventory/devnet-expert.archive.json` にHTML/Markdownの保存先・サイズ・SHA-256・Git復元元を記録。archiveはGit管理外。再生成は固定Gitを使用、テストはコミット済みfixtureのみを使用する。
+- **次の作業:** 次の具体的な移行対象HTMLはユーザー指定待ち（未移行9件）。DevNetとISO Part 1〜3は再移行しない。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3781,15 +3789,15 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `71388434`（DevNet Expert導線・書体・コード装飾・目次競合の統合修正）。
+最新実装 HEAD: `b8a6d93d`（原本ライト配色 `8b03b328` とHTML/Markdown退避）。
 
-前回進捗同期コミット: `cf3d3063`。
+前回進捗同期コミット: `3ee54af7`。
 
-DevNet Expert / CCIE Automationは全量移行済み。`/cisco/devnet-expert` の13章・63表・43コード・23図・62目次・8チェックと点/番号/書体/余白を保持している。再移行しない。ISO/IEC 22123 Part 1〜3も移行済み。
+DevNet Expert / CCIE Automationは全量移行・ライト配色復元・原本アーカイブ済み。原本の13色とMermaidの背景/文字/ノード色を保持する。共通ダーク設定を適用し直さない。原本は `archive/Cisco/html|md/devnet-expert/`、復元情報は `docs/migration-inventory/devnet-expert.archive.json` にある。再生成スクリプトは固定Gitを使い、テストは原本/archiveへ依存しない。
 
-検証: 関連236件・復元後32件・原本一時退避下31件・Chrome E2E2件・8GB設定の型検査・全体ESLint・Markdown lint成功。本文・表セル・図・リスト点の4欠落を検出して原状復帰。全体実行は5608件中5605成功・既存3不一致（SAP Domain 1の2件・Footerの1件）、その後の追加回帰も関連テストで成功。npm・本番ビルドは未実行、目視確認はユーザー担当。
+最新検証は関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行していない（前回5605成功/既存3不一致）。npm・本番ビルドは引き続き禁止指定に従い未実行。目視確認はユーザー担当。
 
-原本HTML/Markdownは比較用に保持し、再生成は `bun scripts/migrate-devnet-expert.mjs`。テストは固定fixtureを使用する。直下HTML10件のうち未移行9件、次に移行する具体的なHTMLはユーザー指定待ち。
+直下HTML9件はすべて未移行。次の具体的な移行対象はユーザー指定待ち。DevNetとISO/IEC 22123 Part 1〜3は再移行しない。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 
