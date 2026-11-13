@@ -1,6 +1,6 @@
 import originalBlocks from './__fixtures__/reviewed-code-blocks.json';
 import { expect } from 'vitest';
-import { corrections, addedParagraphs } from '@/scripts/devnet-expert-corrections.mjs';
+import { corrections, addedParagraphs, textCorrections } from '@/scripts/devnet-expert-corrections.mjs';
 
 // Reviewed corrections are asserted exactly before restoring archived markup for
 // the existing full fidelity checks. The fixture preserves original highlight markup
@@ -34,6 +34,11 @@ export function restoreReviewedCorrections(container: HTMLElement) {
         const paragraph = [...container.querySelectorAll('p')].find(p => p.textContent === text);
         expect(paragraph).toBeDefined();
         paragraph!.remove();
+    }
+    for (const [before, after] of textCorrections) {
+        const cell = [...container.querySelectorAll('td')].find(td => td.textContent === after);
+        expect(cell).toBeDefined();
+        cell!.textContent = before;
     }
     const row = [...container.querySelectorAll('tr')].find(tr => tr.cells[0]?.textContent === '不合格後の待機')!;
     expect(row.cells[1]!.textContent).toBe('不合格の翌日から5暦日');
