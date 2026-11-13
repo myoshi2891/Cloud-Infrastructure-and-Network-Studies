@@ -4,6 +4,37 @@ import NavBar from '@/app/cisco/devnet-expert/NavBar';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 describe('目次の交差通知とクリック競合', () => {
+    it('uses viewport-height pixel margins and replaces the observer on resize', () => {
+        const observers: { notify: IntersectionObserverCallback; options: IntersectionObserverInit; observe: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> }[] = [];
+        vi.stubGlobal('innerHeight', 1000);
+        vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(10000);
+        vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+        vi.stubGlobal('IntersectionObserver', class {
+            observe = vi.fn();
+            disconnect = vi.fn();
+            constructor(notify: IntersectionObserverCallback, options: IntersectionObserverInit) {
+                observers.push({ notify, options, observe: this.observe, disconnect: this.disconnect });
+            }
+        });
+        const { container, unmount } = render(<><NavBar /><section id="s-12" /><section id="s-12-1" /></>);
+        const notify = (index: number, id: string) => act(() => observers[index]!.notify([
+            { target: container.querySelector(`#${id}`)!, isIntersecting: true } as IntersectionObserverEntry,
+        ], {} as IntersectionObserver));
+        expect(observers[0]!.options.rootMargin).toBe('-200px 0px -700px 0px');
+        notify(0, 's-12-1');
+        vi.stubGlobal('innerHeight', 500);
+        fireEvent.resize(window);
+        expect(observers[0]!.disconnect).toHaveBeenCalledOnce();
+        expect(observers[1]!.options.rootMargin).toBe('-100px 0px -350px 0px');
+        expect(observers[1]!.observe).toHaveBeenCalledTimes(2);
+        notify(1, 's-12');
+        expect(container.querySelector('a[href="#s-12"]')).toHaveAttribute('aria-current', 'location');
+        unmount();
+        expect(observers[1]!.disconnect).toHaveBeenCalledOnce();
+        fireEvent.resize(window);
+        expect(observers).toHaveLength(2);
+    });
+
     it.each(['ctrlKey', 'metaKey'])('%s付きクリックはブラウザーの標準動作を保つ', modifier => {
         vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
         const pushState = vi.spyOn(history, 'pushState');

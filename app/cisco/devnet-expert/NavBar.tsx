@@ -23,11 +23,20 @@ export default function NavBar() {
             if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) setActiveId(NAV_ITEMS.at(-1)!.id);
             else if (current) setActiveId(current.id);
         };
-        const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(entries => {
-            entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id));
-            update();
-        }, { rootMargin: '-20% 0px -70% 0px' });
-        NAV_ITEMS.forEach(item => { const el = document.getElementById(item.id); if (el) observer?.observe(el); });
+        let observer: IntersectionObserver | null = null;
+        const observe = () => {
+            observer?.disconnect();
+            visible.clear();
+            if (typeof IntersectionObserver === 'undefined') return;
+            const height = window.innerHeight;
+            observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id));
+                update();
+            }, { rootMargin: `-${height * 0.2}px 0px -${height * 0.7}px 0px` });
+            NAV_ITEMS.forEach(item => { const el = document.getElementById(item.id); if (el) observer?.observe(el); });
+        };
+        observe();
+        window.addEventListener('resize', observe);
         const release = () => { navigationTarget.current = null; };
         const releaseKey = (event: KeyboardEvent) => {
             if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) release();
@@ -39,6 +48,7 @@ export default function NavBar() {
         window.addEventListener('keydown', releaseKey);
         window.addEventListener('popstate', release);
         return () => {
+            window.removeEventListener('resize', observe);
             observer?.disconnect(); mq.removeEventListener('change', sync);
             window.removeEventListener('scroll', update); window.removeEventListener('wheel', release);
             window.removeEventListener('touchstart', release); window.removeEventListener('pointerdown', release);
