@@ -102,7 +102,7 @@ describe('DevNet Expert 全量移行', () => {
         const tokens: Record<string, string> = { paper: 'background', ink: 'foreground', indigo: 'google-blue', gold: 'google-yellow', forest: 'google-green', plum: 'gcp-purple', surface: 'card', line: 'gcp-border', muted: 'muted-foreground', 'indigo-t': 'gcp-card-hover', 'gold-t': 'card', 'forest-t': 'card', 'plum-t': 'card', serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
         const mapValue = (v: string) => v.replace(/var\(--([\w-]+)\)/g, (all, key: string) => tokens[key] ? `var(--${key === 'serif' || key === 'sans' || key === 'mono' ? '' : 'color-'}${tokens[key]})` : all);
         design.rules.filter(r => r.selector !== ':root' && !r.selector.startsWith('.callout.')).forEach(source => {
-            const selector = source.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s}`).join(',');
+            const selector = source.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s === 'pre.hl' ? '.hl.code-block' : s}`).join(',');
             const targets = rules.filter(r => r.selector === selector && r.media === source.media);
             expect(targets.length, source.selector).not.toBe(0);
             const declarations = Object.assign({}, ...targets.map(r => r.declarations)) as Record<string, string>;
@@ -113,6 +113,8 @@ describe('DevNet Expert 全量移行', () => {
             });
         });
         expect(readFileSync('app/cisco/devnet-expert/page.css', 'utf8')).not.toMatch(/--[\w-]+\s*:/);
+        expect(rules.find(r => r.selector === '.devnet-expert-page .sidebar')?.declarations.width).toBe('280px');
+        expect(rules.find(r => r.selector === '.devnet-expert-page .main')?.declarations['margin-left']).toBe('280px');
         design.rules.filter(r => r.selector.startsWith('.callout.')).forEach(source => {
             const target = rules.find(r => r.selector === `.devnet-expert-page ${source.selector}`);
             expect(target?.declarations['border-left-color']).toBe(mapValue(source.declarations['--c'] ?? ''));

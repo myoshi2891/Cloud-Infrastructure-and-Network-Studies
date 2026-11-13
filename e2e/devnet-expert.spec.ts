@@ -9,6 +9,9 @@ test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({
     await page.goto('/cisco/devnet-expert');
     const root = page.locator('.devnet-expert-page');
     expect(await root.locator('h1').evaluate(el => getComputedStyle(el).fontFamily)).toContain('Source Serif 4');
+    const codeStyles = await root.locator('.code-block').evaluateAll(elements => elements.map(el => ({ padding: getComputedStyle(el).padding, font: getComputedStyle(el).fontFamily, overflow: getComputedStyle(el).overflowX })));
+    expect(codeStyles).toHaveLength(43);
+    codeStyles.forEach(s => { expect(s.padding).toBe('16px'); expect(s.font).toContain('JetBrains Mono'); expect(s.overflow).toBe('auto'); });
     await expect(root.locator('.diagram svg')).toHaveCount(23, { timeout: 120000 });
     await expect(root).not.toContainText('Diagram error');
     const metrics = await root.locator('.diagram svg').evaluateAll(elements => elements.map(svg => {
