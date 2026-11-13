@@ -32,6 +32,14 @@
 
 /** @type {Readonly<Record<string, FidelityPageConfig>>} */
 export const FIDELITY_PAGES = {
+    'devnet-expert': {
+        source: 'Devnet-expert-guide.html',
+        sourceCommit: 'cf3d30636c7136f722a1422587ceae87aa165aa5',
+        textSelector: 'main > header, main > section',
+        tables: true, codeBlocks: true, inlineCode: true, refUrls: true,
+        placementSelector: 'table, pre, .code-block, figure, .callout',
+        guideInteractions: true,
+    },
     'aws-sap-c02-domain4': {
         source: 'Sap-c02-domain4-migration-modernization-guide.html',
         sourceCommit: '852e6ed370e157d6a25b014f1fee7c2ef015eba6',
