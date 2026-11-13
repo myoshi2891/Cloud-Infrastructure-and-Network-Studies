@@ -99,8 +99,10 @@ describe('DevNet Expert 全量移行', () => {
             r.walkDecls(d => { declarations[d.prop] = d.value; });
             rules.push({ selector: r.selector, media: r.parent?.type === 'atrule' ? r.parent.params : '', declarations });
         });
-        const tokens: Record<string, string> = { paper: 'background', ink: 'foreground', indigo: 'google-blue', gold: 'google-yellow', forest: 'google-green', plum: 'gcp-purple', surface: 'card', line: 'gcp-border', muted: 'muted-foreground', 'indigo-t': 'gcp-card-hover', 'gold-t': 'card', 'forest-t': 'card', 'plum-t': 'card', serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
-        const mapValue = (v: string) => v.replace(/var\(--([\w-]+)\)/g, (all, key: string) => tokens[key] ? `var(--${key === 'serif' || key === 'sans' || key === 'mono' ? '' : 'color-'}${tokens[key]})` : all);
+        const mapValue = (v: string) => v.replace(/var\(--([\w-]+)\)/g, (all, key: string) => {
+            const fonts: Record<string, string> = { serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
+            return key === 'c' || key === 'bg' ? all : `var(--${fonts[key] ?? `color-devnet-expert-${key}`})`;
+        });
         design.rules.filter(r => r.selector !== ':root' && !r.selector.startsWith('.callout.')).forEach(source => {
             const selector = source.selector.split(',').map(s => s === 'body' || s === 'html' ? '.devnet-expert-page' : `.devnet-expert-page ${s === 'pre.hl' ? '.hl.code-block' : s}`).join(',');
             const targets = rules.filter(r => r.selector === selector && r.media === source.media);
