@@ -3,8 +3,12 @@ import design from '../docs/migration-inventory/devnet-expert.design.json';
 
 test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({ page }) => {
     test.setTimeout(180000);
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     await page.goto('/cisco/devnet-expert');
     const root = page.locator('.devnet-expert-page');
+    expect(await root.locator('h1').evaluate(el => getComputedStyle(el).fontFamily)).toContain('Source Serif 4');
     await expect(root.locator('.diagram svg')).toHaveCount(23, { timeout: 120000 });
     await expect(root).not.toContainText('Diagram error');
     const metrics = await root.locator('.diagram svg').evaluateAll(elements => elements.map(svg => {
@@ -27,6 +31,7 @@ test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({
         await expect(root.locator(`#${item.id}`)).toBeFocused();
         await expect(root.locator(`nav a[href="#${item.id}"]`)).toHaveAttribute('aria-current', 'location');
     }
+    expect(errors).toEqual([]);
 });
 
 test('DevNet Expert: モバイル目次・チェック操作・横はみ出し', async ({ page }) => {

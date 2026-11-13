@@ -42,6 +42,10 @@ describe('DevNet Expert 全量移行', () => {
         expect(links.map(a => a.getAttribute('href'))).toEqual(inventory.links.map(a => a.href));
         links.forEach(a => { expect(a).toHaveAttribute('target', '_blank'); expect(a.getAttribute('rel')).toContain('noopener'); });
     });
+    it('全リストの種別・階層・inline要素を保持する', () => {
+        const { container } = draw();
+        expect([...container.querySelectorAll('main ul, main ol')].map(l => ({ tag: l.tagName, html: l.innerHTML.replace(/\s+/g, ' ').trim() }))).toEqual(design.lists);
+    });
     it('全43コードの行・空行・字下げ・全ハイライトトークン', () => {
         const { container } = draw();
         expect(snapshotMigratedCodeBlocks(container)).toEqual(fidelity.codeBlocks);
@@ -109,5 +113,10 @@ describe('DevNet Expert 全量移行', () => {
             });
         });
         expect(readFileSync('app/cisco/devnet-expert/page.css', 'utf8')).not.toMatch(/--[\w-]+\s*:/);
+        design.rules.filter(r => r.selector.startsWith('.callout.')).forEach(source => {
+            const target = rules.find(r => r.selector === `.devnet-expert-page ${source.selector}`);
+            expect(target?.declarations['border-left-color']).toBe(mapValue(source.declarations['--c'] ?? ''));
+            expect(target?.declarations.background).toBe(mapValue(source.declarations['--bg'] ?? ''));
+        });
     });
 });
