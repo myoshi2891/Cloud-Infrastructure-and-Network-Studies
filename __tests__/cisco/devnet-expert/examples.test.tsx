@@ -1,6 +1,7 @@
 import { codeText } from '@/scripts/inventory-extraction.mjs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import Part2 from '@/app/cisco/devnet-expert/sections/Part2';
 import Part4 from '@/app/cisco/devnet-expert/sections/Part4';
 import Part5 from '@/app/cisco/devnet-expert/sections/Part5';
 import Part7 from '@/app/cisco/devnet-expert/sections/Part7';
@@ -263,11 +264,23 @@ it('documents namespace and Secret creation before applying resources, and scope
     expect(authorization.cells[1]!.textContent).toContain('追加の制御（この例では未実装）');
 });
 
+it('distinguishes the lab blueprint versions and directs future candidates to v1.2', () => {
+    const { container } = render(<Part2 />);
+    const overview = container.querySelector('#s-1-3')!;
+    expect(overview.textContent).toContain('v1.1 の最終受験日は2027年3月22日、v1.2 の開始日は2027年3月23日');
+    expect(overview.textContent).toContain('後続の学習例は v1.1 ブループリントに基づきます');
+    expect(overview.textContent).toContain('Python 製 MCP サーバー');
+    expect(overview.textContent).toContain('NSO・AppDynamics・ThousandEyes・Kubernetes の項目は削除');
+    expect(overview.querySelector('a')).toHaveAttribute('href', 'https://learningcontent.cisco.com/documents/marketing/exam-topics/CCIE_Automation_v1.2_Exam_Topics_PDF.pdf');
+});
+
 it('documents trusted SSH keys, Compose secrets, registry publishing and deploy prerequisites', () => {
     const { container } = render(<><Part4 /><Part6 /><Part7 /></>);
     expect(container.querySelector('#s-5-2')!.textContent).toContain('接続前に、管理者から別経路で確認した 192.0.2.10 の信頼済み SSH ホスト鍵を known_hosts ファイルに登録');
     expect(container.querySelector('#s-6-2')!.textContent).toContain('docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成');
     const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
+    const dockerfile = blocks.find(code => code.startsWith('FROM python:3.12-slim'))!;
+    expect(dockerfile).toContain('RUN mkdir -p /app/data && chown appuser:appuser /app/data\nVOLUME ["/app/data"]\n\nUSER appuser');
     const build = blocks.find(code => code.startsWith('docker build -t device-api:1.0'))!;
     const yaml = createRequire(import.meta.url)('js-yaml');
     const deployment = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!)
@@ -280,7 +293,7 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
         `docker push ${image}`,
     ]);
     expect(container.querySelector('#s-6-1')!.textContent).toContain('クラスタからアクセスできるレジストリ');
-    const tokenInstructions = "# 自分だけの ASCII 秘密トークンに置き換えてから実行する\nexport API_TOKEN='replace-with-your-private-ASCII-token'\ndocker run ";
+    const tokenInstructions = '# Bash: 自分だけの ASCII 秘密トークンを非表示で入力する\nread -rsp "API_TOKEN: " API_TOKEN\nprintf \'\\n\'\nexport API_TOKEN\ndocker run ';
     for (const code of blocks.filter(code => code.startsWith('docker build') || code.startsWith('docker network'))) {
         expect(code).toContain(tokenInstructions);
         expect(code).toContain('-e API_TOKEN');
