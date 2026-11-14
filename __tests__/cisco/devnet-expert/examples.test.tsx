@@ -278,11 +278,16 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
     const { container } = render(<><Part4 /><Part6 /><Part7 /></>);
     expect(container.querySelector('#s-5-2')!.textContent).toContain('接続前に、管理者から別経路で確認した 192.0.2.10 の信頼済み SSH ホスト鍵を known_hosts ファイルに登録');
     expect(container.querySelector('#s-6-2')!.textContent).toContain('docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成');
+    expect(container.querySelector('#s-6-2')!.textContent).toContain('Part8 API はメモリ上のデータを使い、PostgreSQL には接続しません');
     const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
     const dockerfile = blocks.find(code => code.startsWith('FROM python:3.12-slim'))!;
     expect(dockerfile).toContain('RUN mkdir -p /app/data && chown appuser:appuser /app/data\nVOLUME ["/app/data"]\n\nUSER appuser');
     const build = blocks.find(code => code.startsWith('docker build -t device-api:1.0'))!;
     const yaml = createRequire(import.meta.url)('js-yaml');
+    const compose = yaml.load(blocks.find(code => code.startsWith('# compose.yaml'))!);
+    expect(compose.services.api.environment).not.toHaveProperty('DB_HOST');
+    expect(compose.services.api).not.toHaveProperty('depends_on');
+    expect(compose.services.db.volumes).toEqual(['dbdata:/var/lib/postgresql/data']);
     const deployment = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!)
         .find((doc: { kind: string }) => doc.kind === 'Deployment');
     const image = deployment.spec.template.spec.containers[0].image;
@@ -308,7 +313,7 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
 
 it('validates route-safe hostnames and rejects non-ASCII bearer credentials with HTTP errors', context => {
     const interpreter = process.env.DEVNET_EXAMPLE_PYTHON ?? 'python3';
-    const available = spawnSync(interpreter, ['-c', 'import fastapi, httpx, pydantic']);
+    const available = spawnSync(interpreter, ['-c', 'import fastapi, httpx, pydantic; assert int(pydantic.__version__.split(".")[0]) >= 2']);
     if (available.error || available.status !== 0) context.skip('Requires FastAPI, Pydantic 2 and HTTPX (DEVNET_EXAMPLE_PYTHON may select a test environment)');
     const { container } = render(<><Part5 /><Part8 /></>);
     const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
