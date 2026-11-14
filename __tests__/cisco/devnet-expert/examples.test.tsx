@@ -23,8 +23,15 @@ it('renders code lines without extra text nodes and saves VLAN-only changes', ()
     const tasks = yaml.load(role.split('# roles/vlans/tasks/main.yml\n')[1]!.split('# roles/vlans/handlers/main.yml')[0]!);
     expect(tasks.find((task: { name: string }) => task.name.startsWith('Configure VLANs')).notify).toBe('save config');
     expect(tasks.find((task: { name: string }) => task.name.startsWith('Render NTP')).notify).toBe('save config');
-    const handlers = yaml.load(role.split('# roles/vlans/handlers/main.yml\n')[1]!);
+    const handlers = yaml.load(role.split('# roles/vlans/handlers/main.yml\n')[1]!.split('# site.yml')[0]!);
     expect(handlers).toEqual([{ name: 'save config', 'cisco.ios.ios_config': { save_when: 'modified' } }]);
+    const playbook = yaml.load(role.split('# site.yml\n')[1]!);
+    expect(playbook).toEqual([{ name: 'Apply switch configuration', hosts: 'switches', gather_facts: false, roles: ['vlans'] }]);
+    expect(container.querySelector('#s-4-7')!.textContent).toContain('ansible-playbook -i inventory/hosts.yml site.yml');
+    const certificates = blocks.map(codeText).find(text => text.startsWith('# 1. 秘密鍵'))!;
+    expect(certificates).toContain('ルート CA 証明書（ca.crt）・中間 CA 証明書（intermediate.crt）');
+    expect(certificates.split('\n').find(line => line.startsWith('openssl verify ')))
+        .toBe('openssl verify -verify_hostname app.example.com -CAfile ca.crt -untrusted intermediate.crt app.crt');
 });
 
 // ast.unparse in the embedded validator requires Python 3.9 or later.
@@ -38,7 +45,7 @@ it('builds RESTCONF lists, escapes XML text, and selects a namespaced interface'
     const payload = blocks.find(b => b.includes('def build_payload('))!;
     const xpath = blocks.find(b => b.includes('filter=("xpath",'))!;
     const result = execFileSync('python3', ['-c', `
-import ast, json, sys, types
+import ast, json, os, sys, types
 import xml.etree.ElementTree as ET
 from unittest.mock import MagicMock, patch
 restconf, payload, xpath = json.load(sys.stdin)
@@ -47,15 +54,19 @@ body = next(n.value for n in tree.body if isinstance(n, ast.Assign) and any(isin
 assert ast.literal_eval(body) == {'ietf-interfaces:interface': [{'name': 'GigabitEthernet1', 'description': 'managed by automation'}]}
 manager = MagicMock()
 sys.modules['ncclient'] = types.SimpleNamespace(manager=manager)
-ns = {'HOST': 'example.test', 'USER': 'user', 'PASS': 'pass'}
-with patch('builtins.print'):
-    exec(payload, ns)
-    exec(xpath, ns)
+for example in (payload, xpath):
+    ns = {}
+    with patch.dict(os.environ, {'DEV_USER': 'test-user', 'DEV_PASS': 'test-pass'}), patch('builtins.print'):
+        exec(example, ns)
+    assert manager.connect.call_args.kwargs == {'host': '192.0.2.10', 'port': 830,
+        'username': 'test-user', 'password': 'test-pass', 'hostkey_verify': True}
+    if example == payload:
+        build_payload = ns['build_payload']
 interface_ns = 'urn:ietf:params:xml:ns:yang:ietf-interfaces'
 for enabled in (True, False):
     name = 'Gi1 & <test>'
     description = 'core & edge <backup> "quoted" café'
-    root = ET.fromstring(ns['build_payload'](name, {'description': description, 'enabled': enabled}))
+    root = ET.fromstring(build_payload(name, {'description': description, 'enabled': enabled}))
     interface = root.find('{%s}interfaces/{%s}interface' % (interface_ns, interface_ns))
     assert interface.find('{%s}name' % interface_ns).text == name
     assert interface.find('{%s}description' % interface_ns).text == description
@@ -99,6 +110,8 @@ class Testcase:
 aetest = types.SimpleNamespace(CommonSetup=object, CommonCleanup=object,
     Testcase=Testcase, test=lambda f: f, subsection=lambda f: f)
 sys.modules['pyats'] = types.SimpleNamespace(aetest=aetest)
+class SchemaEmptyParserError(Exception): pass
+sys.modules['genie.metaparser.util.exceptions'] = types.SimpleNamespace(SchemaEmptyParserError=SchemaEmptyParserError)
 ns = {}
 exec(ospf, ns)
 def device(neighbors):
@@ -108,8 +121,9 @@ def neighbors(router, state='FULL/DR', iface='GigabitEthernet2'):
 def check(devices, should_fail):
     try:
         ns['OspfNeighbors']().all_full(types.SimpleNamespace(devices=devices))
-    except ValidationFailed:
+    except ValidationFailed as exc:
         assert should_fail
+        return str(exc)
     else:
         assert not should_fail
 valid = {'R1': device(neighbors('2.2.2.2')), 'R2': device(neighbors('1.1.1.1'))}
@@ -122,6 +136,14 @@ for invalid in ({}, {'R1': valid['R1']}, {**valid, 'R3': valid['R1']},
     {**valid, 'R1': device(neighbors('3.3.3.3'))},
     {**valid, 'R1': device(neighbors('2.2.2.2', iface='GigabitEthernet3'))}):
     check(invalid, True)
+empty = MagicMock()
+empty.parse.side_effect = SchemaEmptyParserError('Parser Output is empty')
+remaining = MagicMock()
+remaining.parse.return_value = neighbors('1.1.1.1', 'INIT')
+message = check({'R1': empty, 'R2': remaining}, True)
+assert 'R1 GigabitEthernet2 2.2.2.2: 隣接が欠落' in message
+assert 'R2 GigabitEthernet2 1.1.1.1 INIT' in message
+remaining.parse.assert_called_once_with('show ip ospf neighbor')
 ns = {}
 exec(ping, ns)
 with patch('subprocess.run', return_value=types.SimpleNamespace(returncode=0)) as run:
