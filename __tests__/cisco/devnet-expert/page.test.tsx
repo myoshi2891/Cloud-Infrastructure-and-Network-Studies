@@ -64,6 +64,30 @@ describe('DevNet Expert 全量移行', () => {
         expect(line.querySelector('span')).toBeNull();
     });
 
+    it('rejects a changed token class on an unchanged line before restoration', () => {
+        const { container } = render(<Page />);
+        const block = [...container.querySelectorAll('.code-block')].find(b => codeText(b).startsWith('import os\nfrom netmiko'))!;
+        const line = [...block.children].find(line => line.textContent === '    "host": "192.0.2.10",')!;
+        const span = line.querySelector('span[class]')!;
+        const text = line.textContent;
+        span.className = 'mutated-token';
+        expect(() => restoreReviewedCorrections(container)).toThrow();
+        expect(line.textContent).toBe(text);
+        expect(span).toHaveClass('mutated-token');
+    });
+
+    it('detects a retained span with a changed class against design.tokens', () => {
+        const { container } = draw();
+        const tokens = () => [...container.querySelectorAll('.code-line span')]
+            .map(span => ({ className: span.className, text: span.textContent }));
+        expect(tokens()).toEqual(design.tokens);
+        const span = container.querySelector('.code-line span[class]')!;
+        const text = span.textContent;
+        span.className = 'mutated-token';
+        expect(span.textContent).toBe(text);
+        expect(() => expect(tokens()).toEqual(design.tokens)).toThrow();
+    });
+
     it('rejects corrected code collapsed into one multiline child before restoration', () => {
         const { container } = render(<Page />);
         const block = [...container.querySelectorAll('.code-block')].find(b => codeText(b).startsWith('import os\nfrom netmiko'))!;

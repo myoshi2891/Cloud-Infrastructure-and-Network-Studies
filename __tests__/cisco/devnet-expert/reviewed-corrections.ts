@@ -13,6 +13,10 @@ export function restoreReviewedCorrections(container: HTMLElement) {
         code.innerHTML = html;
         return { index, code };
     });
+    const requirements = [...container.querySelectorAll('.code-block')].find(block => codeText(block).startsWith('# requirements.txt'));
+    expect(requirements).toBeDefined();
+    expect(codeText(requirements!)).toBe('# requirements.txt\nfastapi\nuvicorn');
+    requirements!.closest('.code')!.remove();
     const blocks = [...container.querySelectorAll('.code-block')];
     for (const [before, after] of corrections) {
         const index = originals.findIndex(({ code }) => code.textContent?.replace(/^\n|\n$/g, '') === before);
@@ -29,8 +33,9 @@ export function restoreReviewedCorrections(container: HTMLElement) {
             if (originalIndex >= 0) {
                 const archivedLine = document.createElement('div');
                 archivedLine.innerHTML = originalMarkup[originalIndex]!;
-                expect(!!line.querySelector('span[class]'), line.textContent)
-                    .toBe(!!archivedLine.querySelector('span[class]'));
+                const tokens = (element: Element) => [...element.querySelectorAll('span[class]')]
+                    .map(span => ({ className: span.className, text: span.textContent }));
+                expect(tokens(line), line.textContent).toEqual(tokens(archivedLine));
             }
             if (line.textContent?.trim() && !originalLines.includes(line.textContent)) {
                 expect(line.querySelector('span[class]'), line.textContent).not.toBeNull();

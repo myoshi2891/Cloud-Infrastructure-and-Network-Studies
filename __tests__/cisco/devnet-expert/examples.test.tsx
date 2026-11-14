@@ -16,7 +16,7 @@ vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await imp
 it('renders code lines without extra text nodes and saves VLAN-only changes', () => {
     const { container } = render(<><Part4 /><Part5 /><Part6 /><Part7 /><Part8 /><Part9 /></>);
     const blocks = [...container.querySelectorAll('.code-block')];
-    expect(blocks).toHaveLength(43);
+    expect(blocks).toHaveLength(44);
     expect(container.querySelector('#s-4-1')!.textContent).toContain('pip install fastapi uvicorn requests');
     blocks.forEach(block => expect([...block.childNodes]).toEqual([...block.querySelectorAll(':scope > .code-line')]));
     const role = blocks.map(block => [...block.children].map(line => line.textContent).join('\n'))
@@ -280,6 +280,9 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
     expect(container.querySelector('#s-6-2')!.textContent).toContain('docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成');
     expect(container.querySelector('#s-6-2')!.textContent).toContain('Part8 API はメモリ上のデータを使い、PostgreSQL には接続しません');
     const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
+    const requirements = blocks.find(code => code.startsWith('# requirements.txt'))!;
+    expect(requirements).toBe('# requirements.txt\nfastapi\nuvicorn');
+    expect(blocks.indexOf(requirements)).toBeLessThan(blocks.findIndex(code => code.startsWith('docker build')));
     const dockerfile = blocks.find(code => code.startsWith('FROM python:3.12-slim'))!;
     expect(dockerfile).toContain('RUN mkdir -p /app/data && chown appuser:appuser /app/data\nVOLUME ["/app/data"]\n\nUSER appuser');
     const build = blocks.find(code => code.startsWith('docker build -t device-api:1.0'))!;
