@@ -16,7 +16,7 @@ import Part6 from '@/app/cisco/devnet-expert/sections/Part6';
 import Part7 from '@/app/cisco/devnet-expert/sections/Part7';
 import Part8 from '@/app/cisco/devnet-expert/sections/Part8';
 
-vi.mock('@/components/MermaidDiagram', () => ({ MermaidDiagram: () => null }));
+vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
 
 it('regenerates reviewed examples and TLS instructions from the fixed source revision', (context) => {
     const { sourceCommit, source } = FIDELITY_PAGES['devnet-expert']!;

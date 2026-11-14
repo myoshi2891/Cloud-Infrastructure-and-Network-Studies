@@ -23,7 +23,15 @@ export function restoreReviewedCorrections(container: HTMLElement) {
         expect([...block.children].every(child => child.matches('.code-line'))).toBe(true);
         expect([...block.children].map(line => line.textContent)).toEqual(after.split('\n'));
         const originalLines = before.split('\n');
+        const originalMarkup = originals[index]!.code.innerHTML.replace(/^\n|\n$/g, '').split('\n');
         for (const line of block.children) {
+            const originalIndex = originalLines.indexOf(line.textContent ?? '');
+            if (originalIndex >= 0) {
+                const archivedLine = document.createElement('div');
+                archivedLine.innerHTML = originalMarkup[originalIndex]!;
+                expect(!!line.querySelector('span[class]'), line.textContent)
+                    .toBe(!!archivedLine.querySelector('span[class]'));
+            }
             if (line.textContent?.trim() && !originalLines.includes(line.textContent)) {
                 expect(line.querySelector('span[class]'), line.textContent).not.toBeNull();
             }

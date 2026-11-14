@@ -162,6 +162,9 @@ with patch.dict(os.environ, {'IOS_XE_USER': 'test-user', 'IOS_XE_PASS': 'test-pa
         exec(ios, {})
 assert connect.call_args.kwargs['username'] == 'test-user'
 assert connect.call_args.kwargs['password'] == 'test-pass'
+assert connect.call_args.kwargs['ssh_strict'] is True
+assert connect.call_args.kwargs['alt_host_keys'] is True
+assert connect.call_args.kwargs['alt_key_file'] == 'known_hosts'
 conn = connect.return_value.__enter__.return_value
 config = conn.send_config_set.call_args.args[0]
 assert config[config.index('ip route 192.168.100.0 255.255.255.0 10.0.0.2') - 1] == 'exit'
@@ -257,4 +260,29 @@ it('documents namespace and Secret creation before applying resources, and scope
     expect(container.textContent).toContain('スコープに基づく認可チェックや、権限不足で 403 を返す処理は実装していません');
     const authorization = [...container.querySelectorAll('tr')].find(tr => tr.cells[0]?.textContent === '認可')!;
     expect(authorization.cells[1]!.textContent).toContain('追加の制御（この例では未実装）');
+});
+
+it('documents trusted SSH keys, Compose secrets, registry publishing and deploy prerequisites', () => {
+    const { container } = render(<><Part4 /><Part6 /><Part7 /></>);
+    expect(container.querySelector('#s-5-2')!.textContent).toContain('接続前に、管理者から別経路で確認した 192.0.2.10 の信頼済み SSH ホスト鍵を known_hosts ファイルに登録');
+    expect(container.querySelector('#s-6-2')!.textContent).toContain('docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成');
+    const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
+    const build = blocks.find(code => code.startsWith('docker build -t device-api:1.0'))!;
+    const yaml = createRequire(import.meta.url)('js-yaml');
+    const deployment = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!)
+        .find((doc: { kind: string }) => doc.kind === 'Deployment');
+    const image = deployment.spec.template.spec.containers[0].image;
+    expect(image).toBe('registry.example.com/device-api:1.0');
+    expect(build.split('\n').slice(0, 3)).toEqual([
+        'docker build -t device-api:1.0 .',
+        `docker tag device-api:1.0 ${image}`,
+        `docker push ${image}`,
+    ]);
+    expect(container.querySelector('#s-6-1')!.textContent).toContain('クラスタからアクセスできるレジストリ');
+    const pipeline = yaml.load(blocks.find(code => code.includes('deploy-prod:'))!);
+    expect(pipeline['deploy-prod'].script).toEqual([
+        'pip install ansible-core',
+        'ansible-galaxy collection install cisco.ios',
+        'ansible-playbook -i inventory/prod site.yml',
+    ]);
 });

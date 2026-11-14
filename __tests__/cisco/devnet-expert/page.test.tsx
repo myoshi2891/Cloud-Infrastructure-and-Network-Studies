@@ -19,7 +19,7 @@ const draw = () => {
     const view = render(<Page />);
     restoreReviewedCorrections(view.container);
     const replacements: [string, string][] = [
-        ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-playbook -i inventory/prod site.yml'],
+        ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
         ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/'],
     ];
     const blocks = [...view.container.querySelectorAll('.code-block')];
@@ -33,6 +33,7 @@ const draw = () => {
             const text = line.textContent ?? '';
             if ([
                 '    - pip install ansible-core',
+                '    - ansible-galaxy collection install cisco.ios',
                 'secrets/',
             ].includes(text)) {
                 line.remove();
@@ -50,6 +51,16 @@ describe('DevNet Expert 全量移行', () => {
         line.textContent = text;
         expect(() => restoreReviewedCorrections(container)).toThrow();
         expect(line.textContent).toBe(text);
+        expect(line.querySelector('span')).toBeNull();
+    });
+
+    it('rejects lost highlighting on an unchanged line before restoration', () => {
+        const { container } = render(<Page />);
+        const block = [...container.querySelectorAll('.code-block')].find(b => codeText(b).startsWith('import os\nfrom netmiko'))!;
+        const line = [...block.children].find(line => line.textContent === '    \"host\": \"192.0.2.10\",')!;
+        expect(line.querySelector('span[class]')).not.toBeNull();
+        line.textContent = line.textContent;
+        expect(() => restoreReviewedCorrections(container)).toThrow();
         expect(line.querySelector('span')).toBeNull();
     });
 
