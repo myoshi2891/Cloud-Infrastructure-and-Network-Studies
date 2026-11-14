@@ -122,6 +122,22 @@ export function applyReviewedExampleCorrections(element) {
         paragraph.textContent = addedParagraphs[i + 4];
         anchor.before(paragraph);
     });
+    const build = [...element.querySelectorAll('#s-6-1 .code')]
+        .find(block => block.querySelector('code')?.textContent.trimStart().startsWith('docker build'));
+    if (build) {
+        const example = doc.createElement('div');
+        example.className = 'code';
+        const language = doc.createElement('div');
+        language.className = 'code-lang';
+        language.textContent = 'text';
+        const pre = doc.createElement('pre');
+        pre.className = 'hl';
+        const code = doc.createElement('code');
+        code.textContent = '# requirements.txt\nfastapi\nuvicorn';
+        pre.append(code);
+        example.append(language, pre);
+        build.before(example);
+    }
     const overview = element.querySelector('#s-1-3 .table-wrap');
     if (overview) {
         const paragraph = doc.createElement('p');
