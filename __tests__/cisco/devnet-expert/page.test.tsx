@@ -19,7 +19,7 @@ const draw = () => {
     const view = render(<Page />);
     restoreReviewedCorrections(view.container);
     const replacements: [string, string][] = [
-        ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
+        ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core ansible-pylibssh\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
         ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/'],
     ];
     const blocks = [...view.container.querySelectorAll('.code-block')];
@@ -32,7 +32,7 @@ const draw = () => {
         for (const line of block.querySelectorAll('.code-line')) {
             const text = line.textContent ?? '';
             if ([
-                '    - pip install ansible-core',
+                '    - pip install ansible-core ansible-pylibssh',
                 '    - ansible-galaxy collection install cisco.ios',
                 'secrets/',
             ].includes(text)) {

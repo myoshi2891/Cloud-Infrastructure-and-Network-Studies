@@ -16,6 +16,7 @@ it('renders code lines without extra text nodes and saves VLAN-only changes', ()
     const { container } = render(<><Part4 /><Part5 /><Part6 /><Part7 /><Part8 /><Part9 /></>);
     const blocks = [...container.querySelectorAll('.code-block')];
     expect(blocks).toHaveLength(43);
+    expect(container.querySelector('#s-4-1')!.textContent).toContain('pip install fastapi uvicorn requests');
     blocks.forEach(block => expect([...block.childNodes]).toEqual([...block.querySelectorAll(':scope > .code-line')]));
     const role = blocks.map(block => [...block.children].map(line => line.textContent).join('\n'))
         .find(text => text.startsWith('# roles/vlans/defaults/main.yml'))!;
@@ -281,7 +282,7 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
     expect(container.querySelector('#s-6-1')!.textContent).toContain('クラスタからアクセスできるレジストリ');
     const pipeline = yaml.load(blocks.find(code => code.includes('deploy-prod:'))!);
     expect(pipeline['deploy-prod'].script).toEqual([
-        'pip install ansible-core',
+        'pip install ansible-core ansible-pylibssh',
         'ansible-galaxy collection install cisco.ios',
         'ansible-playbook -i inventory/prod site.yml',
     ]);
