@@ -59,6 +59,7 @@ const colors = {};
 sourceCss.nodes.find(rule => rule.selector === ':root').walkDecls(decl => {
     if (!['--serif', '--sans', '--mono'].includes(decl.prop)) colors[decl.prop.slice(2)] = decl.value;
 });
+colors['gold-text'] = '#7A5415';
 const tokens = { ...Object.fromEntries(Object.keys(colors).map(key => [key, `color-devnet-expert-${key}`])), serif: 'font-ccie-sp-serif', sans: 'font-body', mono: 'font-mono' };
 const palette = '    /* DevNet Expert original light palette */\n' + Object.entries(colors).map(([key, value]) => `    --color-devnet-expert-${key}: ${value};`).join('\n') + '\n    /* End DevNet Expert palette */';
 const globals = readFileSync('app/globals.css', 'utf8');
@@ -73,6 +74,7 @@ css.walkRules(rule => {
     rule.walkDecls(decl => {
         if (decl.prop.startsWith('--')) { decl.remove(); return; }
         decl.value = decl.value.replace(/var\(--([\w-]+)\)/g, (all, key) => tokens[key] ? `var(--${tokens[key]})` : all);
+        if (decl.prop === 'color' && ['.eyebrow', '.callout-head'].includes(rule.selector)) decl.value = 'var(--color-devnet-expert-gold-text)';
         if (decl.value.includes('var(--c)')) decl.value = decl.value.replace('var(--c)', 'var(--color-devnet-expert-gold)');
         if (decl.value.includes('var(--bg)')) decl.value = decl.value.replace('var(--bg)', 'var(--color-devnet-expert-surface)');
     });
