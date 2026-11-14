@@ -1941,6 +1941,12 @@ html {
     overflow-x: clip; /* overflow-x:hidden は sticky を壊すため clip を使用 (issue #42) */
 }
 
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 body {
     background: var(--color-background);
     color: var(--color-foreground);

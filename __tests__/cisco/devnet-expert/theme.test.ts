@@ -5,6 +5,20 @@ import design from '@/docs/migration-inventory/devnet-expert.design.json';
 import fidelity from '@/docs/migration-inventory/devnet-expert.fidelity.json';
 
 describe('DevNet Expert 原本ライト配色', () => {
+    it('keeps smooth root scrolling unless reduced motion is requested', () => {
+        const rules: { media: string; value: string }[] = [];
+        postcss.parse(readFileSync('app/globals.css', 'utf8')).walkRules(rule => {
+            if (rule.selector !== 'html') return;
+            rule.walkDecls('scroll-behavior', decl => {
+                rules.push({ media: rule.parent?.type === 'atrule' ? rule.parent.params : '', value: decl.value });
+            });
+        });
+        expect(rules).toEqual([
+            { media: '', value: 'smooth' },
+            { media: '(prefers-reduced-motion: reduce)', value: 'auto' },
+        ]);
+        expect(readFileSync('scripts/devnet-expert-additions.css', 'utf8')).not.toContain('scroll-behavior');
+    });
     it('原本の全13色を変換せずグローバルトークンに保持する', () => {
         const globals: Record<string, string> = {};
         postcss.parse(readFileSync('app/globals.css', 'utf8')).walkDecls(d => { globals[d.prop] = d.value; });

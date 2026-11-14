@@ -14,6 +14,3 @@
   .devnet-expert-page .toc-toggle { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid var(--color-devnet-expert-line); border-radius: 8px; color: var(--color-devnet-expert-indigo); cursor: pointer; }
   .devnet-expert-page .toc nav[hidden] { display: none; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .devnet-expert-page { scroll-behavior: auto; }
-}
