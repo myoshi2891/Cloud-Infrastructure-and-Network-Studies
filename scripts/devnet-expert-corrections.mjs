@@ -20,11 +20,11 @@ export const corrections = [
     ],
     [
         "FROM python:3.12-slim\n\n# 非 root ユーザーで動かす（セキュリティ）\nRUN useradd --create-home appuser\n\nWORKDIR /app\n\n# 依存関係を先にコピーすると、ビルドキャッシュが効く\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\nCOPY . .\n\nENV APP_ENV=production \\\n    PORT=8000\n\nEXPOSE 8000\nVOLUME [\"/app/data\"]\n\nUSER appuser\nENTRYPOINT [\"uvicorn\", \"main:app\"]\nCMD [\"--host\", \"0.0.0.0\", \"--port\", \"8000\"]",
-        "FROM python:3.12-slim\n\n# 非 root ユーザーで動かす（セキュリティ）\nRUN useradd --create-home appuser\n\nWORKDIR /app\n\n# 依存関係を先にコピーすると、ビルドキャッシュが効く\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\nCOPY . .\n\nENV APP_ENV=production \\\n    PORT=8000\n\nEXPOSE 8000\nVOLUME [\"/app/data\"]\n\nUSER appuser\nENTRYPOINT [\"uvicorn\", \"main:app\"]\nCMD [\"--host\", \"0.0.0.0\", \"--port\", \"8000\", \"--ssl-certfile\", \"/run/tls/tls.crt\", \"--ssl-keyfile\", \"/run/tls/tls.key\"]"
+        "FROM python:3.12-slim\n\n# 非 root ユーザーで動かす（セキュリティ）\nRUN useradd --create-home appuser\n\nWORKDIR /app\n\n# 依存関係を先にコピーすると、ビルドキャッシュが効く\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\nCOPY . .\n\nENV APP_ENV=production \\\n    PORT=8000\n\nEXPOSE 8000\nRUN mkdir -p /app/data && chown appuser:appuser /app/data\nVOLUME [\"/app/data\"]\n\nUSER appuser\nENTRYPOINT [\"uvicorn\", \"main:app\"]\nCMD [\"--host\", \"0.0.0.0\", \"--port\", \"8000\", \"--ssl-certfile\", \"/run/tls/tls.crt\", \"--ssl-keyfile\", \"/run/tls/tls.key\"]"
     ],
     [
         "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -v devdata:/app/data device-api:1.0",
-        "docker build -t device-api:1.0 .\ndocker tag device-api:1.0 registry.example.com/device-api:1.0\ndocker push registry.example.com/device-api:1.0\n# 自分だけの ASCII 秘密トークンに置き換えてから実行する\nexport API_TOKEN='replace-with-your-private-ASCII-token'\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -e API_TOKEN -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
+        "docker build -t device-api:1.0 .\ndocker tag device-api:1.0 registry.example.com/device-api:1.0\ndocker push registry.example.com/device-api:1.0\n# Bash: 自分だけの ASCII 秘密トークンを非表示で入力する\nread -rsp \"API_TOKEN: \" API_TOKEN\nprintf '\\n'\nexport API_TOKEN\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -e API_TOKEN -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
     ],
     [
         "# compose.yaml\nservices:\n  api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    environment:\n      DB_HOST: db\n    depends_on:\n      db:\n        condition: service_healthy\n    networks:\n      - backend\n\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD_FILE: /run/secrets/db_password\n    secrets:\n      - db_password\n    volumes:\n      - dbdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      retries: 5\n    networks:\n      - backend\n\nnetworks:\n  backend:\n\nvolumes:\n  dbdata:\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt",
@@ -36,7 +36,7 @@ export const corrections = [
     ],
     [
         "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\ndocker run -d --name api  --network appnet -p 8000:8000 device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認",
-        "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\n# 自分だけの ASCII 秘密トークンに置き換えてから実行する\nexport API_TOKEN='replace-with-your-private-ASCII-token'\ndocker run -d --name api  --network appnet -p 8000:8000 -e API_TOKEN -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認"
+        "docker network create --driver bridge --subnet 172.20.0.0/24 appnet\n# Bash: 自分だけの ASCII 秘密トークンを非表示で入力する\nread -rsp \"API_TOKEN: \" API_TOKEN\nprintf '\\n'\nexport API_TOKEN\ndocker run -d --name api  --network appnet -p 8000:8000 -e API_TOKEN -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0\ndocker run -d --name tool --network appnet alpine sleep 3600\n\ndocker exec tool ping -c 2 api              # 名前解決とコンテナ間通信を確認\ndocker network inspect appnet               # 接続コンテナと IP を確認"
     ],
     [
         "import re\nimport subprocess\n\n# 悪い例：入力をそのままシェルに渡す（インジェクションの危険）\n# subprocess.run(f\"ping -c 1 {host}\", shell=True)\n\nHOST_RE = re.compile(r\"^[A-Za-z0-9.-]{1,253}$\")   # 許可リスト方式の検証\n\ndef safe_ping(host: str) -> int:\n    if not HOST_RE.fullmatch(host):\n        raise ValueError(\"不正なホスト名です\")\n    # 引数はリストで渡し、shell=True を使わない\n    return subprocess.run([\"ping\", \"-c\", \"1\", host], check=False).returncode",
@@ -57,7 +57,8 @@ export const addedParagraphs = [
     "show telemetry ietf subscription 101 detail で購読の状態を、show telemetry ietf subscription 101 receiver で受信先との接続状態を確認します。",
     "接続前に、管理者から別経路で確認した 192.0.2.10 の信頼済み SSH ホスト鍵を known_hosts ファイルに登録してください。ssh_strict と alt_host_keys を有効にし、alt_key_file でこのファイルを指定します。",
     "docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成してください。",
-    "Kubernetes へ展開する前に、以下の docker tag と docker push でビルド済みイメージをクラスタからアクセスできるレジストリに登録します。registry.example.com は利用するレジストリに置き換え、Deployment の image も同じ registry.example.com/device-api:1.0 に揃えてください。"
+    "Kubernetes へ展開する前に、以下の docker tag と docker push でビルド済みイメージをクラスタからアクセスできるレジストリに登録します。registry.example.com は利用するレジストリに置き換え、Deployment の image も同じ registry.example.com/device-api:1.0 に揃えてください。",
+    "ラボ v1.1 の最終受験日は2027年3月22日、v1.2 の開始日は2027年3月23日です。本ガイドのドメイン表・細目番号と後続の学習例は v1.1 ブループリントに基づきます。v1.2 でも5ドメインの配点（20%・30%・25%・10%・15%）は同じですが、AI を利用する自動化設計、Python 製 MCP サーバー、Cisco Network as Code（ACI／SD-WAN）、マルチステージ Dockerfile などが追加され、NSO・AppDynamics・ThousandEyes・Kubernetes の項目は削除されています。2027年3月23日以降に受験する方は、本ガイドだけで出題範囲を判断せず、公式 v1.2 ブループリントを基準に学習計画を作成し、変更された細目と機器・ソフトウェア一覧を確認してください。"
 ];
 
 /** @type {[string, string][]} */
@@ -121,6 +122,19 @@ export function applyReviewedExampleCorrections(element) {
         paragraph.textContent = addedParagraphs[i + 4];
         anchor.before(paragraph);
     });
+    const overview = element.querySelector('#s-1-3 .table-wrap');
+    if (overview) {
+        const paragraph = doc.createElement('p');
+        const [before, after] = addedParagraphs[7].split('公式 v1.2 ブループリント');
+        paragraph.append(before);
+        const link = doc.createElement('a');
+        link.href = 'https://learningcontent.cisco.com/documents/marketing/exam-topics/CCIE_Automation_v1.2_Exam_Topics_PDF.pdf';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = '公式 v1.2 ブループリント';
+        paragraph.append(link, after);
+        overview.before(paragraph);
+    }
     const telemetry = [...element.querySelectorAll('#s-5-5 .code')].at(-1);
     if (telemetry) {
         const paragraph = doc.createElement('p');
