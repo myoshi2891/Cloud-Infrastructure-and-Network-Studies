@@ -19,7 +19,7 @@
 .devnet-expert-page h3{font:500 1.25rem/1.4 var(--font-ccie-sp-serif);color:var(--color-devnet-expert-ink);margin:36px 0 12px}
 .devnet-expert-page h4{font:500 1rem/1.5 var(--font-body);color:var(--color-devnet-expert-forest);margin:24px 0 8px}
 .devnet-expert-page .hero{padding-bottom:24px;border-bottom:1px solid var(--color-devnet-expert-line)}
-.devnet-expert-page .eyebrow{color:var(--color-devnet-expert-gold);font:500 1rem var(--font-body);letter-spacing:.04em;text-transform:uppercase}
+.devnet-expert-page .eyebrow{color:var(--color-devnet-expert-gold-text);font:500 1rem var(--font-body);letter-spacing:.04em;text-transform:uppercase}
 .devnet-expert-page .hero-meta{margin-top:16px;padding:16px 20px;background:var(--color-devnet-expert-surface);border:1px solid var(--color-devnet-expert-line);border-left:4px solid var(--color-devnet-expert-gold);border-radius:12px}
 .devnet-expert-page .hero-meta p{margin:0}
 .devnet-expert-page p{margin:12px 0}
@@ -47,7 +47,7 @@
 .devnet-expert-page .callout.practice{border-left-color:var(--color-devnet-expert-gold);background:var(--color-devnet-expert-gold-t)}
 .devnet-expert-page .callout.source{border-left-color:var(--color-devnet-expert-forest);background:var(--color-devnet-expert-forest-t)}
 .devnet-expert-page .callout.note{border-left-color:var(--color-devnet-expert-plum);background:var(--color-devnet-expert-plum-t)}
-.devnet-expert-page .callout-head{display:flex;gap:8px;align-items:center;margin-bottom:6px;color:var(--color-devnet-expert-gold);font-weight:500}
+.devnet-expert-page .callout-head{display:flex;gap:8px;align-items:center;margin-bottom:6px;color:var(--color-devnet-expert-gold-text);font-weight:500}
 .devnet-expert-page .callout-head i{font-size:1.25rem}
 .devnet-expert-page .callout-body>:first-child{margin-top:0}
 .devnet-expert-page .callout-body>:last-child{margin-bottom:0}
