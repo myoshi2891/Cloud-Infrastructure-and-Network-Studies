@@ -280,10 +280,54 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
         `docker push ${image}`,
     ]);
     expect(container.querySelector('#s-6-1')!.textContent).toContain('クラスタからアクセスできるレジストリ');
+    const tokenInstructions = "# 自分だけの ASCII 秘密トークンに置き換えてから実行する\nexport API_TOKEN='replace-with-your-private-ASCII-token'\ndocker run ";
+    for (const code of blocks.filter(code => code.startsWith('docker build') || code.startsWith('docker network'))) {
+        expect(code).toContain(tokenInstructions);
+        expect(code).toContain('-e API_TOKEN');
+    }
     const pipeline = yaml.load(blocks.find(code => code.includes('deploy-prod:'))!);
     expect(pipeline['deploy-prod'].script).toEqual([
         'pip install ansible-core ansible-pylibssh',
         'ansible-galaxy collection install cisco.ios',
         'ansible-playbook -i inventory/prod site.yml',
     ]);
+});
+
+it('validates route-safe hostnames and rejects non-ASCII bearer credentials with HTTP errors', context => {
+    const interpreter = process.env.DEVNET_EXAMPLE_PYTHON ?? 'python3';
+    const available = spawnSync(interpreter, ['-c', 'import fastapi, httpx, pydantic']);
+    if (available.error || available.status !== 0) context.skip('Requires FastAPI, Pydantic 2 and HTTPX (DEVNET_EXAMPLE_PYTHON may select a test environment)');
+    const { container } = render(<><Part5 /><Part8 /></>);
+    const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
+    const inventory = blocks.find(code => code.includes('class Device(BaseModel)'))!;
+    const bearer = blocks.find(code => code.includes('def require_token('))!;
+    const output = execFileSync(interpreter, ['-c', `
+import json, os, sys
+from fastapi.testclient import TestClient
+inventory, bearer = json.load(sys.stdin)
+ns = {'__name__': 'inventory_example'}
+exec(inventory, ns)
+client = TestClient(ns['app'])
+for name in ('r/1', 'r\\\\1', 'r%2F1', '../r', 'r?x', '', 'x' * 64):
+    assert client.post('/devices', json={'hostname': name, 'mgmt_ip': '192.0.2.10'}).status_code == 422, name
+assert client.get('/devices').json() == []
+for name in ('R1', 'edge-01', 'router.example.com', 'switch_1'):
+    device = {'hostname': name, 'mgmt_ip': '192.0.2.10', 'role': 'access'}
+    assert client.post('/devices', json=device).status_code == 201
+    assert client.get('/devices/' + name).json() == device
+    assert client.delete('/devices/' + name).status_code == 204
+    assert client.get('/devices/' + name).status_code == 404
+os.environ['API_TOKEN'] = 'private-test-token'
+ns = {'__name__': 'bearer_example'}
+exec(bearer, ns)
+client = TestClient(ns['app'])
+assert client.get('/devices', headers={'Authorization': 'Bearer private-test-token'}).status_code == 200
+for token in (b'wrong-token', b'caf\\xe9'):
+    response = client.get('/devices', headers={'Authorization': b'Bearer ' + token})
+    assert response.status_code == 401
+    assert response.json() == {'detail': 'invalid token'}
+    assert response.headers['www-authenticate'] == 'Bearer'
+print('validation passed')
+`], { input: JSON.stringify([inventory, bearer]), encoding: 'utf8' });
+    expect(output.trim()).toBe('validation passed');
 });
