@@ -1,3 +1,4 @@
+import { codeText } from '@/scripts/inventory-extraction.mjs';
 import { restoreReviewedCorrections } from './reviewed-corrections';
 import { readFileSync } from 'node:fs';
 import { render, fireEvent } from '@testing-library/react';
@@ -27,16 +28,13 @@ const draw = () => {
         const corrected = replacements.reduce((text, [from, to]) => text.replace(from, to), original);
         if (corrected === original) return;
         const block = blocks[index]!;
-        expect(block.textContent).toBe(corrected);
+        expect(codeText(block)).toBe(corrected);
         for (const line of block.querySelectorAll('.code-line')) {
             const text = line.textContent ?? '';
             if ([
                 '    - pip install ansible-core',
                 'secrets/',
             ].includes(text)) {
-                // Each generated line is separated by a standalone newline node.
-                if (line.nextSibling?.textContent === '\n') line.nextSibling.remove();
-                else if (line.previousSibling?.textContent === '\n') line.previousSibling.remove();
                 line.remove();
             }
         }
@@ -57,8 +55,8 @@ describe('DevNet Expert 全量移行', () => {
 
     it('rejects corrected code collapsed into one multiline child before restoration', () => {
         const { container } = render(<Page />);
-        const block = [...container.querySelectorAll('.code-block')].find(b => b.textContent?.startsWith('import os\nfrom netmiko'))!;
-        const text = block.textContent;
+        const block = [...container.querySelectorAll('.code-block')].find(b => codeText(b).startsWith('import os\nfrom netmiko'))!;
+        const text = codeText(block);
         const line = document.createElement('div');
         line.className = 'code-line';
         line.textContent = text;

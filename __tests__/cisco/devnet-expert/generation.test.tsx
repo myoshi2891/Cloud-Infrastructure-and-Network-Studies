@@ -37,6 +37,8 @@ it('regenerates reviewed examples and TLS instructions from the fixed source rev
         const snapshot = (container: HTMLElement) => ({
             code: [...container.querySelectorAll('.code-block')].map(block =>
                 [...block.children].map(line => line.textContent)),
+            codeNodes: [...container.querySelectorAll('.code-block')].map(block =>
+                [...block.childNodes].map(node => node.nodeType)),
             paragraphs: [...container.querySelectorAll('p')].map(p => p.textContent),
             cells: [...container.querySelectorAll('td')].map(td => td.textContent),
             tokens: [...container.querySelectorAll('.code-line span')].map(span => [span.className, span.textContent]),

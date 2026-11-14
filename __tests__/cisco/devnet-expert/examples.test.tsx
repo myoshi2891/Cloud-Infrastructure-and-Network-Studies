@@ -1,3 +1,4 @@
+import { codeText } from '@/scripts/inventory-extraction.mjs';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import Part4 from '@/app/cisco/devnet-expert/sections/Part4';
@@ -7,8 +8,24 @@ import { render } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import Part6 from '@/app/cisco/devnet-expert/sections/Part6';
 import Part8 from '@/app/cisco/devnet-expert/sections/Part8';
+import Part9 from '@/app/cisco/devnet-expert/sections/Part9';
 
 vi.mock('@/components/MermaidDiagram', async () => ({ MermaidDiagram: (await import('@/__tests__/helpers/migration-test-utils')).MermaidDiagramMock }));
+
+it('renders code lines without extra text nodes and saves VLAN-only changes', () => {
+    const { container } = render(<><Part4 /><Part5 /><Part6 /><Part7 /><Part8 /><Part9 /></>);
+    const blocks = [...container.querySelectorAll('.code-block')];
+    expect(blocks).toHaveLength(43);
+    blocks.forEach(block => expect([...block.childNodes]).toEqual([...block.querySelectorAll(':scope > .code-line')]));
+    const role = blocks.map(block => [...block.children].map(line => line.textContent).join('\n'))
+        .find(text => text.startsWith('# roles/vlans/defaults/main.yml'))!;
+    const yaml = createRequire(import.meta.url)('js-yaml');
+    const tasks = yaml.load(role.split('# roles/vlans/tasks/main.yml\n')[1]!.split('# roles/vlans/handlers/main.yml')[0]!);
+    expect(tasks.find((task: { name: string }) => task.name.startsWith('Configure VLANs')).notify).toBe('save config');
+    expect(tasks.find((task: { name: string }) => task.name.startsWith('Render NTP')).notify).toBe('save config');
+    const handlers = yaml.load(role.split('# roles/vlans/handlers/main.yml\n')[1]!);
+    expect(handlers).toEqual([{ name: 'save config', 'cisco.ios.ios_config': { save_when: 'modified' } }]);
+});
 
 // ast.unparse in the embedded validator requires Python 3.9 or later.
 const python = spawnSync('python3', ['-c', 'import sys; sys.exit(sys.version_info < (3, 9))']);
@@ -16,7 +33,7 @@ const python = spawnSync('python3', ['-c', 'import sys; sys.exit(sys.version_inf
 it('builds RESTCONF lists, escapes XML text, and selects a namespaced interface', (context) => {
     if (python.error || python.status !== 0) context.skip('Requires python3');
     const { container } = render(<Part5 />);
-    const blocks = [...container.querySelectorAll('.code-block')].map(b => b.textContent ?? '');
+    const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
     const restconf = blocks.find(b => b.includes('# 部分更新（PATCH）'))!;
     const payload = blocks.find(b => b.includes('def build_payload('))!;
     const xpath = blocks.find(b => b.includes('filter=("xpath",'))!;
@@ -62,7 +79,7 @@ it('executes the displayed OSPF and ping validators against missing neighbors an
         context.skip('Requires python3 (Python 3.9 or later) for ast.unparse');
     }
     const { container } = render(<><Part6 /><Part8 /></>);
-    const blocks = [...container.querySelectorAll('.code-block')].map(b => b.textContent ?? '');
+    const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
     const ospf = blocks.find(b => b.startsWith('# test_ospf.py'))!;
     const ping = blocks.find(b => b.includes('def safe_ping('))!;
     const ios = blocks.find(b => b.includes('with ConnectHandler('))!;
@@ -159,7 +176,7 @@ print('validation passed')
 it('retries transport failures with bounded backoff and preserves HTTP handling', (context) => {
     if (python.error || python.status !== 0) context.skip('Requires python3');
     const { container } = render(<Part4 />);
-    const code = [...container.querySelectorAll('.code-block')].find(b => b.textContent?.includes('def get_with_backoff('))!.textContent;
+    const code = [...container.querySelectorAll('.code-block')].map(codeText).find(code => code.includes('def get_with_backoff('))!;
     const result = execFileSync('python3', ['-c', `
 import json, sys, types
 from unittest.mock import MagicMock, patch, call
