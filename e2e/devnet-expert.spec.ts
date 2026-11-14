@@ -48,6 +48,7 @@ test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({
 
 for (const width of [390, 1024]) {
     test(`DevNet Expert: ${width}px 目次・チェック操作・横はみ出し`, async ({ page }) => {
+        test.setTimeout(180000);
         await page.setViewportSize({ width, height: 844 });
         await page.goto('/cisco/devnet-expert');
         const root = page.locator('.devnet-expert-page');
@@ -65,6 +66,7 @@ for (const width of [390, 1024]) {
         await check.check();
         await expect(check).toBeChecked();
         expect(await root.locator('.checklist').evaluate(el => getComputedStyle(el).counterReset)).toBe('chk 0');
+        await expect(root.locator('.diagram svg')).toHaveCount(23, { timeout: 120000 });
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     });
 }

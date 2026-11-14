@@ -174,7 +174,9 @@ describe('DevNet Expert 全量移行', () => {
             Object.entries(source.declarations).forEach(([prop, value]) => {
                 if ((source.selector === '.sidebar' && ['top','width'].includes(prop)) || (source.selector === '.main' && prop === 'margin-left')) return;
                 if (['border-left','background','color'].includes(prop) && value.includes('var(--c)') || value.includes('var(--bg)')) return;
-                expect(declarations[prop], `${source.selector} ${prop}`).toBe(mapValue(value));
+                const expected = prop === 'color' && ['.eyebrow', '.callout-head'].includes(source.selector)
+                    ? 'var(--color-devnet-expert-gold-text)' : mapValue(value);
+                expect(declarations[prop], `${source.selector} ${prop}`).toBe(expected);
             });
         });
         expect(readFileSync('app/cisco/devnet-expert/page.css', 'utf8')).not.toMatch(/--[\w-]+\s*:/);

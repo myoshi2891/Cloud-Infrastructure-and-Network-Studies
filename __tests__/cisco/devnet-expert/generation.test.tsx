@@ -33,6 +33,10 @@ it('regenerates reviewed examples and TLS instructions from the fixed source rev
             cwd: workspace,
             env: { ...process.env, GIT_DIR: resolve('.git') },
         });
+        expect(readFileSync(join(workspace, 'app/cisco/devnet-expert/page.css'), 'utf8'))
+            .toBe(readFileSync('app/cisco/devnet-expert/page.css', 'utf8'));
+        expect(readFileSync(join(workspace, 'app/globals.css'), 'utf8'))
+            .toContain('--color-devnet-expert-gold-text: #7A5415;');
         const require = createRequire(import.meta.url);
         const snapshot = (container: HTMLElement) => ({
             code: [...container.querySelectorAll('.code-block')].map(block =>
