@@ -10,7 +10,7 @@ export const corrections = [
     ["# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と CA 証明書（ca.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -CAfile ca.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -connect app.example.com:443 -servername app.example.com -CAfile ca.crt","# 1. 秘密鍵（RSA 2048bit 以上）\nopenssl genrsa -out app.key 2048\n\n# 2. CSR の作成（SAN にホスト名を必ず入れる）\nopenssl req -new -key app.key -out app.csr \\\n  -subj \"/C=JP/O=Example Corp/CN=app.example.com\" \\\n  -addext \"subjectAltName=DNS:app.example.com\"\n\n# CSR の内容確認\nopenssl req -in app.csr -noout -text -verify\n\n# 3〜4. CSR を CA へ送り、署名済み証明書（app.crt）と ルート CA 証明書（ca.crt）・中間 CA 証明書（intermediate.crt）を受け取る\n\n# 4'. 受け取った証明書の検証\nopenssl verify -verify_hostname app.example.com -CAfile ca.crt -untrusted intermediate.crt app.crt\n\n# 6. 稼働中のサーバの証明書を確認\nopenssl s_client -verify_hostname app.example.com -verify_return_error -connect app.example.com:443 -servername app.example.com -CAfile ca.crt"],
     [
         "from netmiko import ConnectHandler\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config)\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))",
-        "import os\nfrom netmiko import ConnectHandler\n\nUSER = os.environ[\"IOS_XE_USER\"]\nPASS = os.environ[\"IOS_XE_PASS\"]\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"exit\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config, error_pattern=r\"% (?:Invalid input|Incomplete command|Ambiguous command)\")\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))"
+        "import os\nfrom netmiko import ConnectHandler\n\nUSER = os.environ[\"IOS_XE_USER\"]\nPASS = os.environ[\"IOS_XE_PASS\"]\n\ndevice = {\n    \"device_type\": \"cisco_xe\",\n    \"host\": \"192.0.2.10\",\n    \"username\": USER,\n    \"password\": PASS,\n    \"ssh_strict\": True,\n    \"alt_host_keys\": True,\n    \"alt_key_file\": \"known_hosts\",\n}\n\nconfig = [\n    \"interface GigabitEthernet2\",\n    \" description uplink-to-core\",\n    \" ip address 10.0.0.1 255.255.255.252\",\n    \" no shutdown\",\n    \"exit\",\n    \"ip route 192.168.100.0 255.255.255.0 10.0.0.2\",\n    \"ip access-list extended BLOCK-TELNET\",\n    \" deny tcp any any eq 23\",\n    \" permit ip any any\",\n]\n\nwith ConnectHandler(**device) as conn:\n    out = conn.send_config_set(config, error_pattern=r\"% (?:Invalid input|Incomplete command|Ambiguous command)\")\n    print(out)\n    print(conn.send_command(\"show ip interface brief\"))\n    print(conn.send_command(\"show ip bgp summary\"))\n    print(conn.send_command(\"show ip ospf neighbor\"))"
     ],
     [
         "# test_ospf.py\nfrom pyats import aetest\n\nclass CommonSetup(aetest.CommonSetup):\n    @aetest.subsection\n    def connect(self, testbed):\n        for dev in testbed.devices.values():\n            dev.connect(log_stdout=False)\n\nclass OspfNeighbors(aetest.Testcase):\n    @aetest.test\n    def all_full(self, testbed):\n        failed = []\n        for name, dev in testbed.devices.items():\n            out = dev.parse(\"show ip ospf neighbor\")\n            for iface, data in out.get(\"interfaces\", {}).items():\n                for nbr, n in data.get(\"neighbors\", {}).items():\n                    if not n[\"state\"].upper().startswith(\"FULL\"):\n                        failed.append(f\"{name} {iface} {nbr} {n['state']}\")\n        if failed:\n            self.failed(\"FULL でない隣接:\\n\" + \"\\n\".join(failed))\n\nclass CommonCleanup(aetest.CommonCleanup):\n    @aetest.subsection\n    def disconnect(self, testbed):\n        for dev in testbed.devices.values():\n            dev.disconnect()",
@@ -22,7 +22,7 @@ export const corrections = [
     ],
     [
         "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -v devdata:/app/data device-api:1.0",
-        "docker build -t device-api:1.0 .\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -e API_TOKEN -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
+        "docker build -t device-api:1.0 .\ndocker tag device-api:1.0 registry.example.com/device-api:1.0\ndocker push registry.example.com/device-api:1.0\ndocker run --rm -p 8000:8000 -e APP_ENV=staging -e API_TOKEN -v devdata:/app/data -v \"$PWD/secrets/tls:/run/tls:ro\" device-api:1.0"
     ],
     [
         "# compose.yaml\nservices:\n  api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    environment:\n      DB_HOST: db\n    depends_on:\n      db:\n        condition: service_healthy\n    networks:\n      - backend\n\n  db:\n    image: postgres:16\n    environment:\n      POSTGRES_PASSWORD_FILE: /run/secrets/db_password\n    secrets:\n      - db_password\n    volumes:\n      - dbdata:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U postgres\"]\n      interval: 5s\n      retries: 5\n    networks:\n      - backend\n\nnetworks:\n  backend:\n\nvolumes:\n  dbdata:\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt",
@@ -52,14 +52,17 @@ export const addedParagraphs = [
     "Part8 の Bearer 認証 API は TLS 必須です。CA 署名済みの証明書チェーン tls.crt と秘密鍵 tls.key を secrets/tls に用意し、非 root の appuser が読める権限で読み取り専用マウントします。証明書はイメージに含めません。HTTP リスナーは起動せず、クライアントは HTTPS と証明書検証を必須にします。Kubernetes の新規クラスタでは、最初に kubectl create namespace netauto で名前空間を作成し、次に kubectl -n netauto create secret tls api-tls --cert=./secrets/tls/tls.crt --key=./secrets/tls/tls.key で同じ証明書を api-tls Secret として事前作成します。この Ingress は ingress-nginx を使う隔離された旧構成ラボ専用の例で、本番環境には使用しません。本番では保守されているコントローラを選び、以下と同じ TLS とバックエンド証明書検証の要件を満たす設定を用意します。このラボでも HTTPS のバックエンドへ接続します。api-secret の API_TOKEN は ASCII のプレースホルダーを自分だけの秘密トークンに置き換え、実値をコミットしません。api-tls の証明書は SAN に api.example.com を含めます。信頼する発行元 CA の PEM 証明書 ca.crt を secrets/tls/ca.crt に用意し、kubectl -n netauto create secret generic api-backend-ca --from-file=ca.crt=./secrets/tls/ca.crt で事前作成します。両方の Secret の作成後に kubectl apply -f manifest.yaml で残りのリソースを反映します。Ingress はこの CA でバックエンド証明書を検証し、検証名と SNI を api.example.com に揃えます。コントローラの HTTP ポートはロードバランサとファイアウォールで公開を禁止し、HTTP のリダイレクトにも依存しません。",
     "この例は HTTPS 専用です。python main.py、または Part7 の TLS オプション付き Uvicorn で起動し、平文 HTTP のリスナーは公開しません。クライアントは最初のリクエストから https:// を使い、CA とホスト名を検証します。HSTS だけでは初回 HTTP 通信や非ブラウザクライアントを保護できません。",
     "この例の require_token は共有トークンとの一致を検証するだけです。スコープに基づく認可チェックや、権限不足で 403 を返す処理は実装していません。",
-    "show telemetry ietf subscription 101 detail で購読の状態を、show telemetry ietf subscription 101 receiver で受信先との接続状態を確認します。"
+    "show telemetry ietf subscription 101 detail で購読の状態を、show telemetry ietf subscription 101 receiver で受信先との接続状態を確認します。",
+    "接続前に、管理者から別経路で確認した 192.0.2.10 の信頼済み SSH ホスト鍵を known_hosts ファイルに登録してください。ssh_strict と alt_host_keys を有効にし、alt_key_file でこのファイルを指定します。",
+    "docker compose up の実行前に、データベース用のパスワードを保存した secrets/db_password.txt を作成してください。",
+    "Kubernetes へ展開する前に、以下の docker tag と docker push でビルド済みイメージをクラスタからアクセスできるレジストリに登録します。registry.example.com は利用するレジストリに置き換え、Deployment の image も同じ registry.example.com/device-api:1.0 に揃えてください。"
 ];
 
 /** @type {[string, string][]} */
 export const textCorrections = [["トークンの権限（スコープ）に応じて 403 を返す", "追加の制御（この例では未実装）：トークンの権限（スコープ）を検証し、権限不足なら 403 を返す"]];
 
 const additionalCodeCorrections = [
-    ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-playbook -i inventory/prod site.yml'],
+    ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
     ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/'],
 ];
 
@@ -107,6 +110,13 @@ export function applyReviewedExampleCorrections(element) {
         if (!anchor) return;
         const paragraph = doc.createElement('p');
         paragraph.textContent = addedParagraphs[i];
+        anchor.before(paragraph);
+    });
+    ['#s-5-2 .code', '#s-6-2 .code', '#s-6-1 .code'].forEach((selector, i) => {
+        const anchor = element.querySelector(selector);
+        if (!anchor) return;
+        const paragraph = doc.createElement('p');
+        paragraph.textContent = addedParagraphs[i + 4];
         anchor.before(paragraph);
     });
     const telemetry = [...element.querySelectorAll('#s-5-5 .code')].at(-1);
