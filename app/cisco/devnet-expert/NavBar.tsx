@@ -39,7 +39,7 @@ export default function NavBar() {
         window.addEventListener('resize', observe);
         const release = () => { navigationTarget.current = null; };
         const releaseKey = (event: KeyboardEvent) => {
-            if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) release();
+            if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ', 'Tab'].includes(event.key)) release();
         };
         window.addEventListener('scroll', update, { passive: true });
         window.addEventListener('wheel', release, { passive: true });
