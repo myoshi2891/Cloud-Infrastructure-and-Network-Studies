@@ -1,12 +1,12 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-13)
+(最終更新日: 2026-11-14)
 
 ## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
 
 DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
 
-HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。原本/archiveがない環境でもテストはfixtureだけで動作する。
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。
 
 関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
 
@@ -20,7 +20,7 @@ HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を�
 - [x] ブラウザー: 23図の自然寸法、43コードの16px余白・等幅書体・横スクロール、105項目の点・字下げ、参照番号1〜32、全62目次のhash/focus/現在地、390pxの開閉・チェック・横はみ出しなし、console/pageerror 0件を確認。
 - [x] 仕様同期: CLAUDE/GEMINI/README、テスト進捗・再開案内、ダッシュボードを同期。静的対応付け1535ソース・559対応（36%）・644テストファイル。既存の3系統ミラー同一性14件も成功。
 
-全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後の追加回帰も最終関連テストで成功。npm・本番ビルドは依頼に従い未実行、目視確認はユーザー担当。原本HTML/Markdownは比較用に保持。再生成は `bun scripts/migrate-devnet-expert.mjs`、テストは固定fixtureを使い原本/archiveを実行時に読まない。
+全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後の追加回帰も最終関連テストで成功。npm・本番ビルドは依頼に従い未実行、目視確認はユーザー担当。原本HTML/Markdownは比較用に保持。再生成は `bun scripts/migrate-devnet-expert.mjs`、描画テストは固定fixtureを使い原本/archiveを実行時に読まない。再生成テストには固定原本リビジョン `cf3d3063` を含むGit履歴が必要で、不在時はスキップされる。
 
 ## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
 
@@ -2449,7 +2449,7 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 - **前回進捗同期コミット:** `3ee54af7`
 - **HTML残数:** 直下HTML9件すべて未移行。DevNetとISO Part 1〜3の原本はarchive退避済み。
 - **検証状態:** 原本退避後の関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行せず、前回5605成功/既存3不一致。npm・本番ビルドは未実行。
-- **原本とfixture:** `docs/migration-inventory/devnet-expert.archive.json` にHTML/Markdownの保存先・サイズ・SHA-256・Git復元元を記録。archiveはGit管理外。再生成は固定Gitを使用、テストはコミット済みfixtureのみを使用する。
+- **原本とfixture:** `docs/migration-inventory/devnet-expert.archive.json` にHTML/Markdownの保存先・サイズ・SHA-256・Git復元元を記録。archiveはGit管理外。描画テストはコミット済みfixtureのみを使用する。再生成テストは固定原本リビジョン `cf3d3063` をGit履歴に必要とし、不在時はスキップするため、浅いチェックアウトでは再生成を検証せずに成功する場合がある。
 - **次の作業:** 次の具体的な移行対象HTMLはユーザー指定待ち（未移行9件）。DevNetとISO Part 1〜3は再移行しない。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
@@ -3793,7 +3793,7 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 前回進捗同期コミット: `3ee54af7`。
 
-DevNet Expert / CCIE Automationは全量移行・ライト配色復元・原本アーカイブ済み。原本の13色とMermaidの背景/文字/ノード色を保持する。共通ダーク設定を適用し直さない。原本は `archive/Cisco/html|md/devnet-expert/`、復元情報は `docs/migration-inventory/devnet-expert.archive.json` にある。再生成スクリプトは固定Gitを使い、テストは原本/archiveへ依存しない。
+DevNet Expert / CCIE Automationは全量移行・ライト配色復元・原本アーカイブ済み。原本の13色とMermaidの背景/文字/ノード色を保持する。共通ダーク設定を適用し直さない。原本は `archive/Cisco/html|md/devnet-expert/`、復元情報は `docs/migration-inventory/devnet-expert.archive.json` にある。描画テストは原本/archiveへ依存しない。再生成スクリプトと再生成テストは固定原本リビジョン `cf3d3063` をGit履歴に必要とし、不在時は再生成テストがスキップされる。浅いチェックアウトでの成功は再生成の検証を保証しない。
 
 最新検証は関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行していない（前回5605成功/既存3不一致）。npm・本番ビルドは引き続き禁止指定に従い未実行。目視確認はユーザー担当。
 

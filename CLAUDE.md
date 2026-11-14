@@ -1,12 +1,12 @@
 # CLAUDE.md
 
-Updated 2026-11-13
+Updated 2026-11-14
 
 ## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
 
 DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
 
-HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。原本/archiveがない環境でもテストはfixtureだけで動作する。
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。
 
 関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
 
