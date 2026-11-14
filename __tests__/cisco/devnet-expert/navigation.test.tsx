@@ -77,6 +77,25 @@ describe('目次の交差通知とクリック競合', () => {
         expect(toggle).toHaveAttribute('aria-expanded', String(!mobile));
     });
 
+    it.each([false, true])('Tab (shift=%s) releases the navigation lock for reference notifications', shiftKey => {
+        let notify: IntersectionObserverCallback = () => {};
+        vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(10000);
+        vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+        vi.stubGlobal('IntersectionObserver', class {
+            constructor(callback: IntersectionObserverCallback) { notify = callback; }
+            observe = vi.fn();
+            disconnect = vi.fn();
+        });
+        const { container } = render(<><NavBar /><section id="s-11" tabIndex={-1} /><section id="s-12" tabIndex={-1} /></>);
+        const selected = container.querySelector('a[href="#s-11"]')!;
+        fireEvent.click(selected);
+        expect(selected).toHaveAttribute('aria-current', 'location');
+        fireEvent.keyDown(window, { key: 'Tab', shiftKey });
+        act(() => notify([{ target: container.querySelector('#s-12')!, isIntersecting: true } as IntersectionObserverEntry], {} as IntersectionObserver));
+        expect(container.querySelector('a[href="#s-12"]')).toHaveAttribute('aria-current', 'location');
+        expect(selected).not.toHaveAttribute('aria-current');
+    });
+
     it('クリック先は子節の遅延通知で上書きせず、手動スクロールで追跡に戻る', () => {
         let notify: IntersectionObserverCallback = () => {};
         const disconnect = vi.fn();
