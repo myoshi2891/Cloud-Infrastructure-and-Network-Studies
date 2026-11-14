@@ -34,7 +34,7 @@ function jsx(node) {
         return `<div className="hl code-block">${lines.map(line => {
             const fragment = doc.createElement('div'); fragment.innerHTML = line;
             return `<div className="code-line">${[...fragment.childNodes].map(jsx).join('')}</div>`;
-        }).join('{"\\n"}')}</div>`;
+        }).join('')}</div>`;
     }
     const attrs = [...node.attributes].map(a => ` ${attrNames[a.name] ?? a.name}=${quote(a.value)}`).join('');
     const extra = tag === 'th' ? ' scope="col"' : tag === 'section' ? ' tabIndex={-1}' : '';
