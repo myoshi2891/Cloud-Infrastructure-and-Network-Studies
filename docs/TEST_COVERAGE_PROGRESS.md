@@ -1,6 +1,6 @@
 # テストカバレッジ・網羅性進捗レポート
 
-最終更新日: 2026-11-14
+最終更新日: 2026-11-15
 
 ## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
 
@@ -472,7 +472,7 @@ bun run dashboard
 
 DevNet Expertはライト配色へ復元済み。原本HTML/Markdownはarchive退避済みで、再移行は不要。直下HTMLは未移行9件のみ。最新検証は関連49件とChrome E2E2件成功。
 
-2026-11-13: DevNet Expert / CCIE Automationは全量移行済み。再移行しない。関連236件とChrome E2E2件成功。原本を比較用に残しており、直下HTML9件すべて未移行。次に移行する具体的なHTMLはユーザー指定待ち。npm・本番ビルドは未実行。
+2026-11-13: DevNet Expert / CCIE Automationは全量移行済み。再移行しない。関連236件とChrome E2E2件成功。原本HTML/Markdownはarchive退避済み。保存情報は `docs/migration-inventory/devnet-expert.archive.json`、比較・再生成用の固定Gitリビジョンは `cf3d30636c7136f722a1422587ceae87aa165aa5` を参照。直下HTML9件すべて未移行。次に移行する具体的なHTMLはユーザー指定待ち。npm・本番ビルドは未実行。
 
 2026-11-12 Part 2レビュー2件は `4926871d` で修正済み。関連23件・E2E2件・型検査・対象Lint成功。交差通知の順序、scrollとの判定一致、全10問の名前・参照ID・操作を検証する回帰テストを維持する。
 
