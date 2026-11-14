@@ -1,5 +1,61 @@
 # CLAUDE.md
 
+Updated 2026-11-14
+
+## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
+
+DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
+
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。
+
+関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
+
+## 2026-11-13: DevNet Expert / CCIE Automation 全量移行
+
+`/cisco/devnet-expert` に `Devnet-expert-guide.html` を移行。見出し102件（h1:1 / h2:13 / h3:49 / h4:39）、63表（th161 / td812）、リスト105項目、コード43個、Mermaid23図、外部リンク32件、チェック8項目、参照番号1〜32、目次62項目を保持。リストの点・チェック連番・余白・書体を原本CSSと照合し、配色は原本のライト配色へ復元済み（上記の訂正記録を参照）。
+
+- `app/cisco/devnet-expert/page.tsx` はServerルートとmetadata、`DevNetExpertGuide.tsx` と `sections/Part0.tsx`〜`Part13.tsx` はHeroと13章の本文。`page.css` はページ内にスコープした原本装飾。
+- `NavBar.tsx` はモバイル開閉、hash/focus、IntersectionObserverによる現在地追跡。クリック先は遅延した子節通知で上書きせず、手動スクロールで追跡へ戻る。
+- `Diagram.tsx` はmemo化し共通 `MermaidDiagram` を自然倍率で再利用。`constants.ts` は原本DSLと単一の `NAV_ITEMS`。Source Serif 4は自己ホストする。
+- ホームとHeaderは `app/constants.ts` の `EXAMS`（`cisco-devnet-expert`、Cisco / Expert、既存 `card-ccna` 配色）から導出する。
+- 固定Git原本 `cf3d3063` から `bun scripts/migrate-devnet-expert.mjs` で再生成。期待値は `docs/migration-inventory/devnet-expert{,.fidelity,.design}.json`。本文・表結合・コード各行と全色クラス・図DSL・リスト構造・全CSS宣言を照合し、テスト実行時に原本/archiveを読まない。
+- 検証結果: 全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）が失敗。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後に追加した回帰も含む最終関連236件は成功。全体ESLint・Markdown lint・8GB設定の型検査成功。本文・表セル・図・リスト点の4欠落を意図的に作り、各テストがAssertionErrorで失敗することを確認して復元後32件成功。
+- 検証: `bun run test -- __tests__/cisco/devnet-expert`。Chrome E2Eは `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test e2e/devnet-expert.spec.ts --project=chromium --workers=1`。npm・本番ビルドはユーザー指定により未実行、目視確認はユーザー担当。DevNet原本HTML/Markdownはarchiveへ退避済み。
+
+## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
+
+移行済みである ISO/IEC 22123 シリーズ（Part 1 用語ガイド、Part 2 概念ガイド、Part 3 リファレンスアーキテクチャ）の原本HTML 3件（`Iso-iec-22123-1-2023-guide.html` 356738バイト・SHA-256 `12c7ae70…`、`Iso-iec-22123-2-guide.html` 837997バイト・SHA-256 `c76e31b1…`、`Iso-iec-22123-3-2023-guide.html` 1061148バイト・SHA-256 `fc5d254f…`）およびMarkdown 3件（`Iso-iec-22123-1-2023-guide.md` 56414バイト・SHA-256 `361d9c0e…`、`Iso-iec-22123-2-guide.md` 62653バイト・SHA-256 `3a7b7fa5…`、`Iso-iec-22123-3-2023-guide.md` 47533バイト・SHA-256 `9417ee51…`）を、バイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-{1,2,3}-2023/` へ保存・同期し、リポジトリ直下から削除した。直下の未移行HTML残数は13件から10件（Devnet Expert、GCP 4件、GKE 3件、Cloud Run、ADK）となった。各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` に保存先・サイズ・ハッシュ・復元用Gitコミットを記録。直下に原本が存在しない環境でも、各再生成スクリプト（`bun scripts/migrate-iso-iec-22123*.mjs`）および fixture 生成スクリプトは `archive/Standards/` の原本を自動参照して動作する。
+
+## ISO/IEC 22123-1 / 2 / 3 再生成の前提
+
+各ジェネレーター（`bun scripts/migrate-iso-iec-22123.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-2.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-3.mjs assets|...`）は、原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。ローカルに `archive/` が存在する場合は自動参照されるが、存在しない環境では実行前に各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+
+```bash
+mkdir -p archive/Standards/html/iso-iec-22123-1-2023 archive/Standards/html/iso-iec-22123-2-2023 archive/Standards/html/iso-iec-22123-3-2023 \
+         archive/Standards/md/iso-iec-22123-1-2023 archive/Standards/md/iso-iec-22123-2-2023 archive/Standards/md/iso-iec-22123-3-2023
+restore_archive() (
+    archive_file=$2
+    restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
+    trap 'rm -f "$restore_tmp"' EXIT
+    git show "$1" > "$restore_tmp" || exit 1
+    restore_bytes=$(wc -c < "$restore_tmp") || exit 1
+    restore_hash=$(shasum -a 256 "$restore_tmp") || exit 1
+    restore_hash=${restore_hash%% *}
+    [ "$restore_bytes" -eq "$3" ] && [ "$restore_hash" = "$4" ] || exit 1
+    mv "$restore_tmp" "$archive_file"
+)
+restore_archive '0aa236f4:Iso-iec-22123-1-2023-guide.html' archive/Standards/html/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.html 356738 12c7ae70748549d18828568c3755e23b70a329d39e281376f10804bfe7051326 || exit 1
+restore_archive '0b98dab8:Iso-iec-22123-1-2023-guide.md' archive/Standards/md/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.md 56414 361d9c0e57eeba7820f43e880f1b6fd3c9a3e1df50cdd67c58bbd1b6d0965caf || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.html' archive/Standards/html/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.html 837997 c76e31b1a36c8d0ea586d7dc7a5df25c17e76a1c03dc7fcd2b0134a038f3d601 || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.md' archive/Standards/md/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.md 62653 3a7b7fa556e5f06a0be4d858f93e3910f0f21a4104a7ca6a31f7e92aacf0b867 || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.html' archive/Standards/html/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.html 1061148 fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.md' archive/Standards/md/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.md 47533 9417ee51a5456c90ac76524be889d99f1e67469d9170c7749fdeed061123852a || exit 1
+wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+shasum -a 256 archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+```
+
+復元したHTMLファイルのみを対象に、サイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。Markdownファイルはこの再生成ゲートの照合対象に含めない。移行テストはコミット済みfixtureを使うため、この復元は不要。
+
 ## 2026-11-12: ISO/IEC 22123-3:2023 リファレンスアーキテクチャ
 
 `app/standards/iso-iec-22123-3-2023/page.tsx` を追加。全15章・序章・末尾注記、見出し49件（h1:1 / h2:15 / h3:30 / h4:3）、29表（th86 / td448）、リスト58項目（本文13 / 目次45）、外部リンク16出現、描画済みSVG20図を全量移行。Serverの `page.tsx`・`sections/` 17分割・`OriginalSvg.tsx` と、Clientの `IsoGuide.tsx`・`NavBar.tsx`、`constants.ts`・`page.css`・`theme-tokens.json` で構成する。SVGの階層・座標・文字・埋め込みCSS・`!important`、Hero・コールアウト・表・点・番号文字列・字下げ・余白・リンク装飾を保持した。共通280px目次・固定Header下の配置へ対応付け、SVGは自然寸法の横スクロールと読み上げ名を補う。

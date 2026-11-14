@@ -1,6 +1,60 @@
 # 移行作業進捗管理ドキュメント (Migration Progress)
 
-(最終更新日: 2026-11-12)
+(最終更新日: 2026-11-14)
+
+## 2026-11-13: DevNet Expert 原本ライト配色の復元・原本アーカイブ
+
+DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
+
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。
+
+関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
+
+## 2026-11-13: DevNet Expert / CCIE Automation 移行
+
+- [x] Inventory `20dd3d9e`: 原本 `cf3d3063` から本文・構造・図DSL・CSSの固定fixtureを抽出。
+- [x] Red `73bf6741`: 全量照合とChrome E2E。導線Red `8aaf24f6`、書体Red `19aab822`、目次競合Red `47669741`、コード装飾Red `29dff157` も分離。
+- [x] Green `b422216f`: `/cisco/devnet-expert` にHeroと全13章を14分割で実装。見出し102件、63表・973セル、リスト105項目、コード43個、Mermaid23図、外部リンク32件、目次62項目、チェック8項目・参照番号1〜32を保持。
+- [x] Refactor `71388434`: `EXAMS` へCisco / Expertとして登録しホーム・Headerへ統合。Source Serif 4、点・番号・余白、コード各行のハイライト・字下げ・空行を保持。`pre.hl` のCSSは移行後の `.hl.code-block` へ対応付け。親章クリックを遅延した子節通知が上書きする競合を解消。
+- [x] 検証: 最終関連6ファイル236件、復元後のページ/導線/目次32件、Chrome E2E2件、8GB設定の型検査、全体ESLint、Markdown lint成功。本文・表セル・図・リスト点の4欠落を作り、全ケースのAssertionErrorを確認して復元。原本HTML一時退避下でも31件成功。
+- [x] ブラウザー: 23図の自然寸法、43コードの16px余白・等幅書体・横スクロール、105項目の点・字下げ、参照番号1〜32、全62目次のhash/focus/現在地、390pxの開閉・チェック・横はみ出しなし、console/pageerror 0件を確認。
+- [x] 仕様同期: CLAUDE/GEMINI/README、テスト進捗・再開案内、ダッシュボードを同期。静的対応付け1535ソース・559対応（36%）・644テストファイル。既存の3系統ミラー同一性14件も成功。
+
+全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後の追加回帰も最終関連テストで成功。npm・本番ビルドは依頼に従い未実行、目視確認はユーザー担当。原本HTML/Markdownは比較用に保持。再生成は `bun scripts/migrate-devnet-expert.mjs`、描画テストは固定fixtureを使い原本/archiveを実行時に読まない。再生成テストには固定原本リビジョン `cf3d3063` を含むGit履歴が必要で、不在時はスキップされる。
+
+## 2026-11-13: ISO/IEC 22123 原本（HTML/Markdown）アーカイブ退避
+
+移行済みである ISO/IEC 22123 シリーズ（Part 1 用語ガイド、Part 2 概念ガイド、Part 3 リファレンスアーキテクチャ）の原本HTML 3件（`Iso-iec-22123-1-2023-guide.html` 356738バイト・SHA-256 `12c7ae70…`、`Iso-iec-22123-2-guide.html` 837997バイト・SHA-256 `c76e31b1…`、`Iso-iec-22123-3-2023-guide.html` 1061148バイト・SHA-256 `fc5d254f…`）およびMarkdown 3件（`Iso-iec-22123-1-2023-guide.md` 56414バイト・SHA-256 `361d9c0e…`、`Iso-iec-22123-2-guide.md` 62653バイト・SHA-256 `3a7b7fa5…`、`Iso-iec-22123-3-2023-guide.md` 47533バイト・SHA-256 `9417ee51…`）を、バイト一致・SHA-256一致で `archive/Standards/html|md/iso-iec-22123-{1,2,3}-2023/` へ保存・同期し、リポジトリ直下から削除した。直下の未移行HTML残数は13件から10件（Devnet Expert、GCP 4件、GKE 3件、Cloud Run、ADK）となった。各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` に保存先・サイズ・ハッシュ・復元用Gitコミットを記録。直下に原本が存在しない環境でも、各再生成スクリプト（`bun scripts/migrate-iso-iec-22123*.mjs`）および fixture 生成スクリプトは `archive/Standards/` の原本を自動参照して動作する。
+
+## ISO/IEC 22123-1 / 2 / 3 再生成の前提
+
+各ジェネレーター（`bun scripts/migrate-iso-iec-22123.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-2.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-3.mjs assets|...`）は、原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。ローカルに `archive/` が存在する場合は自動参照されるが、存在しない環境では実行前に各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
+
+```bash
+mkdir -p archive/Standards/html/iso-iec-22123-1-2023 archive/Standards/html/iso-iec-22123-2-2023 archive/Standards/html/iso-iec-22123-3-2023 \
+         archive/Standards/md/iso-iec-22123-1-2023 archive/Standards/md/iso-iec-22123-2-2023 archive/Standards/md/iso-iec-22123-3-2023
+restore_archive() (
+    archive_file=$2
+    restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
+    trap 'rm -f "$restore_tmp"' EXIT
+    git show "$1" > "$restore_tmp" || exit 1
+    restore_bytes=$(wc -c < "$restore_tmp") || exit 1
+    restore_hash=$(shasum -a 256 "$restore_tmp") || exit 1
+    restore_hash=${restore_hash%% *}
+    [ "$restore_bytes" -eq "$3" ] && [ "$restore_hash" = "$4" ] || exit 1
+    mv "$restore_tmp" "$archive_file"
+)
+restore_archive '0aa236f4:Iso-iec-22123-1-2023-guide.html' archive/Standards/html/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.html 356738 12c7ae70748549d18828568c3755e23b70a329d39e281376f10804bfe7051326 || exit 1
+restore_archive '0b98dab8:Iso-iec-22123-1-2023-guide.md' archive/Standards/md/iso-iec-22123-1-2023/Iso-iec-22123-1-2023-guide.md 56414 361d9c0e57eeba7820f43e880f1b6fd3c9a3e1df50cdd67c58bbd1b6d0965caf || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.html' archive/Standards/html/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.html 837997 c76e31b1a36c8d0ea586d7dc7a5df25c17e76a1c03dc7fcd2b0134a038f3d601 || exit 1
+restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.md' archive/Standards/md/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.md 62653 3a7b7fa556e5f06a0be4d858f93e3910f0f21a4104a7ca6a31f7e92aacf0b867 || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.html' archive/Standards/html/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.html 1061148 fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f || exit 1
+restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.md' archive/Standards/md/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.md 47533 9417ee51a5456c90ac76524be889d99f1e67469d9170c7749fdeed061123852a || exit 1
+wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+shasum -a 256 archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+```
+
+各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。移行テストはコミット済みfixtureを使うため、この復元は不要。
 
 ## 2026-11-12: ISO Part 2 レビュー2件の修正
 
@@ -2389,14 +2443,14 @@ HTMLファイルから Next.js / React コンポーネントへの移行作業�
 ## 現在地
 
 - **ブランチ:** dev
-- **最新完了タスク:** ISO Part 2レビュー2件（目次判定統一・クイズの読み上げ名識別）を修正。ISO Part 1〜3の全量移行も完了済み。
-- **最終更新日:** 2026-11-12
-- **最新実装 HEAD:** `4926871d`（Part 2の目次判定・クイズ名・再生成処理の修正）
-- **前回進捗同期コミット:** `f72134c5`
-- **HTML残数:** 直下HTML13件のうち未移行10件。ISO/IEC 22123 Part 1〜3の原本3件は比較用に保持。
-- **検証状態:** 最新レビューはPart 2関連23件・Chrome E2E2件・8GB設定の型検査・対象ESLint成功。全体の直近実行はPart 3移行時の5572成功/既存3不一致。原本装飾由来のaxe指摘1件はPart 3の固定記録を参照。npm・本番ビルドは未実行。
-- **アーカイブ:** 各 `docs/migration-inventory/iso-iec-22123-*-2023.archive.json` にコピー先・SHA-256を記録。直下原本は保持、archiveはGit管理外。テストは固定fixtureを使用し、原本/archiveへ実行時に依存しない。
-- **次の作業:** 着手ページは未確定（依存: 未移行10件のうち、次に移行する具体的なHTMLファイル名のユーザー指定待ち）。指定後、この欄と対応する再開欄を同じファイル名・移行先ページに同期する。ISO Part 1〜3やCCNP各ガイド等の移行済み教材は再移行しない。
+- **最新完了タスク:** DevNet Expertの原本ライト配色復元とHTML/Markdownのアーカイブ退避。
+- **最終更新日:** 2026-11-13
+- **最新実装 HEAD:** `b8a6d93d`（ライト配色修正 `8b03b328` 後の原本退避・復元情報記録）
+- **前回進捗同期コミット:** `3ee54af7`
+- **HTML残数:** 直下HTML9件すべて未移行。DevNetとISO Part 1〜3の原本はarchive退避済み。
+- **検証状態:** 原本退避後の関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行せず、前回5605成功/既存3不一致。npm・本番ビルドは未実行。
+- **原本とfixture:** `docs/migration-inventory/devnet-expert.archive.json` にHTML/Markdownの保存先・サイズ・SHA-256・Git復元元を記録。archiveはGit管理外。描画テストはコミット済みfixtureのみを使用する。再生成テストは固定原本リビジョン `cf3d3063` をGit履歴に必要とし、不在時はスキップするため、浅いチェックアウトでは再生成を検証せずに成功する場合がある。
+- **次の作業:** 次の具体的な移行対象HTMLはユーザー指定待ち（未移行9件）。DevNetとISO Part 1〜3は再移行しない。
 
 ## 2026-08-15: AGWA Section 2〜6・教材レビュー指摘対応 (完了)
 
@@ -3735,19 +3789,15 @@ bun run test:e2e e2e/nav.spec.ts  # Chromium 2 件 pass
 
 ## 次回セッションでの再開プロンプト
 
-最新実装 HEAD: `4926871d`（Part 2の目次判定・クイズ名・再生成処理の修正）。
+最新実装 HEAD: `b8a6d93d`（原本ライト配色 `8b03b328` とHTML/Markdown退避）。
 
-前回進捗同期コミット: `f72134c5`。
+前回進捗同期コミット: `3ee54af7`。
 
-Part 2レビュー2件は修正済み。関連23件・E2E2件・型検査・対象Lint成功、再生成後のバイト一致も確認。以下のPart 3全体結果は移行時の検証記録で、レビュー修正後の全体再実行ではない。
+DevNet Expert / CCIE Automationは全量移行・ライト配色復元・原本アーカイブ済み。原本の13色とMermaidの背景/文字/ノード色を保持する。共通ダーク設定を適用し直さない。原本は `archive/Cisco/html|md/devnet-expert/`、復元情報は `docs/migration-inventory/devnet-expert.archive.json` にある。描画テストは原本/archiveへ依存しない。再生成スクリプトと再生成テストは固定原本リビジョン `cf3d3063` をGit履歴に必要とし、不在時は再生成テストがスキップされる。浅いチェックアウトでの成功は再生成の検証を保証しない。
 
-ISO/IEC 22123 Part 1〜3は全量移行・SVG/CSS照合・導線統合・原本コピー済み。再移行は不要。Part 3は29表・20 SVG・45目次と全15章を含み、本文を序章/15章/末尾注記へ17分割した。原本の点・番号文字列・字下げ・余白・リンク装飾を保持する。本文内「第11章」リンクの装飾由来のaxe指摘1件は原本でも再現したため、固定a11y fixtureで増加を防いでいる。図20件の名前不足は解消済み。
+最新検証は関連49件・Chrome E2E2件・型検査・対象ESLint成功。全体は今回再実行していない（前回5605成功/既存3不一致）。npm・本番ビルドは引き続き禁止指定に従い未実行。目視確認はユーザー担当。
 
-検証: Part 3関連225件・Chrome E2E4件・原本/archive不在下39件・8GB設定の型検査・全体/対象ESLint・Markdown lint成功。全体Vitestは619ファイル・5575件中5572成功・既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）。npm・本番ビルドは未実行、目視確認はユーザー担当。
-
-原本HTML/Markdownは比較用に直下へ保持し、コピー先とハッシュは各 `docs/migration-inventory/iso-iec-22123-*-2023.archive.json` に記録。archiveはローカル専用、テストは固定fixtureを使用する。
-
-次の作業: 着手ページは未確定（依存: 未移行10件のうち、次に移行する具体的なHTMLファイル名のユーザー指定待ち）。指定後、この欄と対応する再開欄を同じファイル名・移行先ページに同期する。直下HTMLは13件（未移行10件と、比較用に保持したISO原本3件）。
+直下HTML9件はすべて未移行。次の具体的な移行対象はユーザー指定待ち。DevNetとISO/IEC 22123 Part 1〜3は再移行しない。
 
 ## 2026-05-12: AGWA Section 1 Migration (完了)
 

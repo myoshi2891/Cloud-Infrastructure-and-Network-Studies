@@ -1,0 +1,16 @@
+.devnet-expert-page { min-height: 100vh; color-scheme: light; }
+.devnet-expert-page .main { min-width: 0; }
+.devnet-expert-page .sidebar { z-index: 30; }
+.devnet-expert-page nav ul { list-style: none; margin: 0; padding: 0; }
+.devnet-expert-page nav li { margin: 0; padding: 0; }
+.devnet-expert-page section[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px); }
+.devnet-expert-page .code-line { white-space: pre; min-height: 1.6em; }
+.devnet-expert-page .diagram > [role="img"] { background: transparent; border: 0; padding: 0; margin: 0; }
+.devnet-expert-page .diagram svg { flex-shrink: 0; max-width: none; height: auto; }
+.devnet-expert-page .toc-toggle { display: none; }
+.devnet-expert-page .callout.source .callout-head { color: var(--color-devnet-expert-forest); }
+.devnet-expert-page .callout.note .callout-head { color: var(--color-devnet-expert-plum); }
+@media (max-width:1024px) {
+  .devnet-expert-page .toc-toggle { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border: 1px solid var(--color-devnet-expert-line); border-radius: 8px; color: var(--color-devnet-expert-indigo); cursor: pointer; }
+  .devnet-expert-page .toc nav[hidden] { display: none; }
+}

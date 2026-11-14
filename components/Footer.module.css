@@ -23,7 +23,7 @@
     .tcpip-page, .agentic-guide-page, .agentic-section1-page,
     .agentic-section2-page, .agentic-section3-page, .agentic-section4-page,
     .agentic-section5-page, .ccnp-security-page, .ccie-sp-page, .ccnp-collab-page, .ccnp-enterprise-page,
-    .ccnp-service-provider-page
+    .ccnp-service-provider-page, .devnet-expert-page
 )) ~ .footer {
     color-scheme: light;
     background: var(--color-footer-light-bg);

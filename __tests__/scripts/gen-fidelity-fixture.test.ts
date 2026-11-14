@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { FIDELITY_PAGES } from '../../scripts/archive-fidelity-config.mjs';
@@ -69,4 +69,39 @@ describe('gen-fidelity-fixture / 固定リビジョンからの読み出し', ()
             }).not.toThrow();
         }
     }, 30_000);
+});
+
+
+describe('Part 1 working-tree archive fallback', () => {
+    it.each([false, true])('checks the archive checksum before writing (stale=%s)', stale => {
+        const sandbox = mkdtempSync(join(tmpdir(), 'iso-fixture-'));
+        try {
+            cpSync(resolve(REPOSITORY_ROOT, 'scripts'), join(sandbox, 'scripts'), { recursive: true });
+            symlinkSync(resolve(REPOSITORY_ROOT, 'node_modules'), join(sandbox, 'node_modules'), 'dir');
+            const metadataPath = 'docs/migration-inventory/iso-iec-22123-1-2023.archive.json';
+            const fixturePath = 'docs/migration-inventory/iso-iec-22123-1-2023.fidelity.json';
+            const metadata = JSON.parse(readFileSync(metadataPath, 'utf8'));
+            const html = execFileSync('git', ['show', `${metadata.sourceCommit}:${metadata.html.sourcePath}`], {
+                cwd: REPOSITORY_ROOT, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024,
+            });
+            mkdirSync(dirname(join(sandbox, metadataPath)), { recursive: true });
+            writeFileSync(join(sandbox, metadataPath), JSON.stringify(metadata));
+            mkdirSync(dirname(join(sandbox, metadata.html.archivePath)), { recursive: true });
+            writeFileSync(join(sandbox, metadata.html.archivePath), html + (stale ? '<!-- stale -->' : ''));
+            writeFileSync(join(sandbox, fixturePath), 'unchanged');
+            const run = () => execFileSync(process.execPath, [join(sandbox, 'scripts/gen-iso-iec-22123-fixture.mjs'), '--working-tree'], {
+                cwd: sandbox, encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'pipe'],
+            });
+            if (stale) {
+                expect(run).toThrow(/Refresh the archive/);
+                expect(readFileSync(join(sandbox, fixturePath), 'utf8')).toBe('unchanged');
+            } else {
+                run();
+                expect(readFileSync(join(sandbox, fixturePath), 'utf8')).toBe(readFileSync(fixturePath, 'utf8'));
+            }
+        } finally {
+            rmSync(sandbox, { recursive: true, force: true });
+        }
+    });
 });

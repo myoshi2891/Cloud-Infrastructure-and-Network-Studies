@@ -1,6 +1,10 @@
 # Cloud Infrastructure Studies
 
-最終更新日: 2026-11-12
+最終更新日: 2026-11-13
+
+## DevNet Expert / CCIE Automation 完全ガイド
+
+`/cisco/devnet-expert` を追加しました。 原本のライト配色を保持しています。ホームとHeaderの「Cisco」から開けます。13章・63表・43コード例・23図を収録し、リストの点、チェック8項目の連番、参考文献1〜32、62項目の目次を保持しています。全図は自然寸法で横スクロールできます。本文は固定インベントリで全文照合しています。 元HTMLとMarkdownは `archive/Cisco/html|md/devnet-expert/` へ退避済みです。
 
 ## ISO/IEC 22123-3:2023 リファレンスアーキテクチャガイド
 
