@@ -271,8 +271,12 @@ check([], [], RuntimeError, retries=0)
 check([Timeout(), response(200)], [1], retries=2)
 check([response(429, {'Retry-After': '7'}), response(200)], [7])
 check([response(429), response(200)], [1])
+check([response(503, {'Retry-After': '7'}), response(200)], [7])
+check([response(503, {'Retry-After': '7'}) for _ in range(5)], [7, 7, 7, 7], RuntimeError)
+check([response(504, {'Retry-After': '7'}), response(200)], [1])
 with patch('time.time', return_value=0):
     check([response(429, {'Retry-After': 'Thu, 01 Jan 1970 00:00:10 GMT'}), response(200)], [10])
+    check([response(503, {'Retry-After': 'Thu, 01 Jan 1970 00:00:10 GMT'}), response(200)], [10])
 check([response(404)], [], HTTPError)
 print('validation passed')
 `], { input: JSON.stringify(code), encoding: 'utf8' });
@@ -336,6 +340,9 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
         expect(code).toContain(tokenInstructions);
         expect(code).toContain('-e API_TOKEN');
     }
+    const bridge = blocks.find(code => code.includes('docker network create --driver bridge'))!;
+    expect(bridge.indexOf('docker compose down')).toBeLessThan(bridge.indexOf('docker run -d --name api'));
+    expect(bridge).toContain('-p 8000:8000');
     const pipeline = yaml.load(blocks.find(code => code.includes('deploy-prod:'))!);
     expect(pipeline['deploy-prod'].script).toEqual([
         'pip install ansible-core ansible-pylibssh',
@@ -380,5 +387,99 @@ for token in (b'wrong-token', b'caf\\xe9'):
     assert response.headers['www-authenticate'] == 'Bearer'
 print('validation passed')
 `], { input: JSON.stringify([inventory, bearer]), encoding: 'utf8' });
+    expect(output.trim()).toBe('validation passed');
+});
+
+it('authenticates OAuth clients with form-encoded Basic credentials and explicit expiration policy', context => {
+    if (python.error || python.status !== 0) context.skip('Requires python3');
+    const { container } = render(<Part8 />);
+    const code = [...container.querySelectorAll('.code-block')].map(codeText).find(text => text.includes('def get_token('))!;
+    const output = execFileSync('python3', ['-c', `
+import json, os, sys, types
+from urllib.parse import quote_plus
+from unittest.mock import MagicMock, patch
+code = json.load(sys.stdin)
+requests = types.SimpleNamespace(post=MagicMock(), get=MagicMock())
+sys.modules['requests'] = requests
+credentials = {'CLIENT_ID': 'client: +&é', 'CLIENT_SECRET': 'secret:/ +&ü'}
+for body, policy, expected in (({'access_token': 'test', 'expires_in': 120}, {}, 1090),
+    ({'access_token': 'test'}, {'TOKEN_DEFAULT_EXPIRES_IN': '3600'}, 4570),
+    ({'access_token': 'test', 'expires_in': 120}, {'TOKEN_DEFAULT_EXPIRES_IN': '3600'}, 1090)):
+    requests.post.reset_mock()
+    requests.post.return_value.json.return_value = body
+    with patch.dict(os.environ, {**credentials, **policy}, clear=True), patch('time.time', return_value=1000):
+        ns = {}
+        exec(code, ns)
+    assert ns['token'] == 'test'
+    assert ns['expires_at'] == expected
+    args = requests.post.call_args
+    assert args.args == ('https://auth.example.com/oauth2/token',)
+    assert args.kwargs['auth'] == tuple(quote_plus(credentials[key]) for key in ('CLIENT_ID', 'CLIENT_SECRET'))
+    assert args.kwargs['data'] == {'grant_type': 'client_credentials', 'scope': 'devices.read'}
+    assert args.kwargs['timeout'] == 10
+requests.post.return_value.json.return_value = {'access_token': 'test'}
+with patch.dict(os.environ, credentials, clear=True):
+    try: exec(code, {})
+    except ValueError as exc: assert 'documented lifetime' in str(exc)
+    else: raise AssertionError('A missing server expiration policy must be explicit')
+print('validation passed')
+`], { input: JSON.stringify(code), encoding: 'utf8' });
+    expect(output.trim()).toBe('validation passed');
+});
+
+it('registers the NSO status action, reports sync state, and rebuilds after editing callbacks', context => {
+    if (python.error || python.status !== 0) context.skip('Requires python3');
+    const { container } = render(<><Part4 /><Part5 /><Part6 /></>);
+    const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
+    const yang = blocks.find(text => text.startsWith('module vlan-svc'))!;
+    const callback = blocks.find(text => text.includes('class VlanServiceCallback'))!;
+    expect(yang).toContain('tailf:action check-status');
+    expect(yang).toContain('tailf:actionpoint "vlan-svc-status"');
+    expect(yang).toContain('leaf in-sync { type boolean; }');
+    const nso = container.querySelector('#s-4-9')!;
+    const callbackBlock = [...nso.querySelectorAll('.code-block')].find(block => codeText(block) === callback)!;
+    const instructions = callbackBlock.closest('.code')!.nextElementSibling!.textContent!;
+    expect(instructions).toContain('make -C packages/vlan-svc/src');
+    expect(instructions).toContain('packages reload');
+    expect(instructions).toContain('vlan-svc <サービス名> check-status');
+    expect(container.querySelector('#s-5-2')!.textContent).toContain('BLOCK-TELNET は ACL の定義だけでは適用されず');
+    expect(container.querySelector('#s-5-2')!.textContent).toContain('SSH 管理経路');
+    expect(container.querySelector('#s-5-2')!.textContent).toContain('ip access-group BLOCK-TELNET in');
+    const timing = blocks.find(text => text.includes('%{time_appconnect}'))!;
+    expect(timing).toContain('接続完了（開始から）:%{time_connect}');
+    expect(timing).toContain('TLS完了（開始から）:%{time_appconnect}');
+    const output = execFileSync('python3', ['-c', `
+import json, sys, types
+from unittest.mock import MagicMock
+class Service:
+    create = staticmethod(lambda method: method)
+class Action:
+    action = staticmethod(lambda method: method)
+class Application:
+    def register_service(self, *args): registrations.append(('service', *args))
+    def register_action(self, *args): registrations.append(('action', *args))
+registrations = []
+maagic = types.SimpleNamespace(get_root=MagicMock(), cd=MagicMock())
+sys.modules['ncs'] = types.SimpleNamespace(application=types.SimpleNamespace(Application=Application), maagic=maagic)
+sys.modules['ncs.application'] = types.SimpleNamespace(Service=Service)
+sys.modules['ncs.dp'] = types.SimpleNamespace(Action=Action)
+ns = {}
+exec(json.load(sys.stdin), ns)
+ns['Main']().setup()
+assert registrations == [('service', 'vlan-svc', ns['VlanServiceCallback']), ('action', 'vlan-svc-status', ns['VlanStatusAction'])]
+service = maagic.cd.return_value
+for state in (True, False):
+    service.deep_check_sync.return_value.in_sync = state
+    output = types.SimpleNamespace()
+    transaction, keypath = object(), object()
+    ns['VlanStatusAction']().cb_action(None, 'check-status', keypath, None, output, transaction)
+    maagic.get_root.assert_called_with(transaction)
+    maagic.cd.assert_called_with(maagic.get_root.return_value, keypath)
+    assert output.in_sync is state
+    args = service.deep_check_sync.get_input.return_value
+    assert args.outformat == 'boolean'
+    service.deep_check_sync.assert_called_with(args)
+print('validation passed')
+`], { input: JSON.stringify(callback), encoding: 'utf8' });
     expect(output.trim()).toBe('validation passed');
 });

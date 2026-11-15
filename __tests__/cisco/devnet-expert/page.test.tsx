@@ -212,7 +212,7 @@ describe('DevNet Expert 全量移行', () => {
             const declarations = Object.assign({}, ...targets.map(r => r.declarations)) as Record<string, string>;
             Object.entries(source.declarations).forEach(([prop, value]) => {
                 if ((source.selector === '.sidebar' && ['top','width'].includes(prop)) || (source.selector === '.main' && prop === 'margin-left')) return;
-                if (['border-left','background','color'].includes(prop) && value.includes('var(--c)') || value.includes('var(--bg)')) return;
+                if (['border-left','background','color'].includes(prop) && (value.includes('var(--c)') || value.includes('var(--bg)'))) return;
                 const expected = prop === 'color' && ['.eyebrow', '.callout-head'].includes(source.selector)
                     ? 'var(--color-devnet-expert-gold-text)' : mapValue(value);
                 expect(declarations[prop], `${source.selector} ${prop}`).toBe(expected);
