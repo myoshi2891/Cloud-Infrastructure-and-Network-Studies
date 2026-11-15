@@ -6,7 +6,7 @@ Updated 2026-11-15
 
 DevNet Expertは原本のライトテーマを保持する。前回移行時のダークテーマへの対応付けを撤回し、背景・文字・罫線・13色の配色を `--color-devnet-expert-*` に原本の値で保持した。Mermaidは原本の `mermaid-theme.json` と `theme="light"` / `preserveChartTheme` を使用し、共通初期化から混入するmainBkg・nodeBorder・titleColorも原本の色へ明示的に戻す。フッターもライト表示に追従する。
 
-HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。
+HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を確認して `archive/Cisco/html|md/devnet-expert/` へ退避し、直下から削除済み。保存先・サイズ・完全なハッシュ・復元用Gitコミットは `docs/migration-inventory/devnet-expert.archive.json` を参照。archiveはGit管理外だが、固定Git `cf3d3063` に両原本があり、再生成スクリプトはそのGit原本を直接読む。描画テストはコミット済みfixtureを使い、原本/archiveに依存しない。一方、再生成テストは固定原本リビジョン `cf3d3063` がGit履歴に必要で、不在時はスキップする。浅いチェックアウトでは再生成を検証せずにテストが成功する場合がある。 `archive.test.ts` はアーカイブ実体、または固定原本リビジョン `cf3d3063` を含むGit履歴が必要。実体がなければGitから復元してサイズ・SHA-256を検証し、両方なければスキップせず失敗する。
 
 関連6ファイル49件・Chrome E2E2件・型検査・対象ESLint成功。ブラウザーは本文の背景/文字、図の背景/ノード/文字色を数値比較し、23図の自然寸法・43コードの装飾・目次操作・390pxの挙動も確認。原本退避後の再生成でコード差分0。全体テストは今回再実行していない（前回は5605成功/既存3不一致）。npm・本番ビルドは引き続き未実行。
 
@@ -18,7 +18,7 @@ HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を�
 - `NavBar.tsx` はモバイル開閉、hash/focus、IntersectionObserverによる現在地追跡。クリック先は遅延した子節通知で上書きせず、手動スクロールで追跡へ戻る。
 - `Diagram.tsx` はmemo化し共通 `MermaidDiagram` を自然倍率で再利用。`constants.ts` は原本DSLと単一の `NAV_ITEMS`。Source Serif 4は自己ホストする。
 - ホームとHeaderは `app/constants.ts` の `EXAMS`（`cisco-devnet-expert`、Cisco / Expert、既存 `card-ccna` 配色）から導出する。
-- 固定Git原本 `cf3d3063` から `bun scripts/migrate-devnet-expert.mjs` で再生成。期待値は `docs/migration-inventory/devnet-expert{,.fidelity,.design}.json`。本文・表結合・コード各行と全色クラス・図DSL・リスト構造・全CSS宣言を照合し、テスト実行時に原本/archiveを読まない。
+- 固定Git原本 `cf3d3063` から `bun scripts/migrate-devnet-expert.mjs` で再生成。期待値は `docs/migration-inventory/devnet-expert{,.fidelity,.design}.json`。本文・表結合・コード各行と全色クラス・図DSL・リスト構造・全CSS宣言を照合し、描画テストはコミット済みfixtureを使う。再生成チェックは固定Git原本を直接読み、ローカルの原本/archiveは読まない。 `archive.test.ts` はアーカイブ実体、または固定原本リビジョン `cf3d3063` を含むGit履歴が必要。実体がなければGitから復元してサイズ・SHA-256を検証し、両方なければスキップせず失敗する。
 - 検証結果: 全体Vitest（並列数4）は622ファイル・5608件中5605件成功、既存期待値不一致3件（SAP Domain 1の2件・Footerの1件）が失敗。当該テストとFooter実装は着手前 `cf3d3063` から変更していない。その後に追加した回帰も含む最終関連236件は成功。全体ESLint・Markdown lint・8GB設定の型検査成功。本文・表セル・図・リスト点の4欠落を意図的に作り、各テストがAssertionErrorで失敗することを確認して復元後32件成功。
 - 検証: `bun run test -- __tests__/cisco/devnet-expert`。Chrome E2Eは `PLAYWRIGHT_BROWSER_CHANNEL=chrome bunx --no-install playwright test e2e/devnet-expert.spec.ts --project=chromium --workers=1`。npm・本番ビルドはユーザー指定により未実行、目視確認はユーザー担当。DevNet原本HTML/Markdownはarchiveへ退避済み。
 
