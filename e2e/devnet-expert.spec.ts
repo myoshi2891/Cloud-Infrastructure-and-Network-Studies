@@ -12,7 +12,7 @@ test('DevNet Expert: 全図・リストの点・連番・目次操作', async ({
     expect(palette).toEqual({ background: 'rgb(246, 247, 249)', text: 'rgb(22, 27, 38)', scheme: 'light' });
     expect(await root.locator('h1').evaluate(el => getComputedStyle(el).fontFamily)).toContain('Source Serif 4');
     const codeStyles = await root.locator('.code-block').evaluateAll(elements => elements.map(el => ({ padding: getComputedStyle(el).padding, font: getComputedStyle(el).fontFamily, overflow: getComputedStyle(el).overflowX })));
-    expect(codeStyles).toHaveLength(43);
+    expect(codeStyles).toHaveLength(44);
     codeStyles.forEach(s => { expect(s.padding).toBe('16px'); expect(s.font).toContain('JetBrains Mono'); expect(s.overflow).toBe('auto'); });
     await expect(root.locator('.diagram svg')).toHaveCount(23, { timeout: 120000 });
     const diagramPalette = await root.locator('.diagram').first().evaluate(el => {
