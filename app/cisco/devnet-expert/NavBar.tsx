@@ -30,7 +30,10 @@ export default function NavBar() {
             if (typeof IntersectionObserver === 'undefined') return;
             const height = window.innerHeight;
             observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id));
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) visible.add(entry.target.id);
+                    else visible.delete(entry.target.id);
+                });
                 update();
             }, { rootMargin: `-${height * 0.2}px 0px -${height * 0.7}px 0px` });
             NAV_ITEMS.forEach(item => { const el = document.getElementById(item.id); if (el) observer?.observe(el); });
