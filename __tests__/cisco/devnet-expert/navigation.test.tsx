@@ -1,9 +1,34 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import NavBar from '@/app/cisco/devnet-expert/NavBar';
+import { NAV_ITEMS } from '@/app/cisco/devnet-expert/constants';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 describe('目次の交差通知とクリック競合', () => {
+    it('resets to the first entry when scrolling above all observed sections', () => {
+        let notify: IntersectionObserverCallback = () => {};
+        vi.stubGlobal('scrollY', 1000);
+        vi.stubGlobal('innerHeight', 1000);
+        vi.spyOn(document.documentElement, 'scrollHeight', 'get').mockReturnValue(10000);
+        vi.stubGlobal('matchMedia', () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+        vi.stubGlobal('IntersectionObserver', class {
+            constructor(callback: IntersectionObserverCallback) { notify = callback; }
+            observe = vi.fn();
+            disconnect = vi.fn();
+        });
+        const { container } = render(<><NavBar /><section id="s-12" /></>);
+        const update = (isIntersecting: boolean) => act(() => notify([
+            { target: container.querySelector('#s-12')!, isIntersecting } as IntersectionObserverEntry,
+        ], {} as IntersectionObserver));
+        update(true);
+        expect(container.querySelector('a[aria-current="location"]')).toHaveAttribute('href', '#s-12');
+        vi.stubGlobal('scrollY', 0);
+        update(false);
+        fireEvent.scroll(window);
+        expect(container.querySelector('a[aria-current="location"]')).toHaveAttribute('href', `#${NAV_ITEMS[0].id}`);
+        expect(container.querySelectorAll('a.active')).toHaveLength(1);
+    });
+
     it('uses viewport-height pixel margins and replaces the observer on resize', () => {
         const observers: { notify: IntersectionObserverCallback; options: IntersectionObserverInit; observe: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> }[] = [];
         vi.stubGlobal('innerHeight', 1000);
