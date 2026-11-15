@@ -79,7 +79,7 @@
 .devnet-expert-page nav ul { list-style: none; margin: 0; padding: 0; }
 .devnet-expert-page nav li { margin: 0; padding: 0; }
 .devnet-expert-page section[id] { scroll-margin-top: calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 16px); }
-.devnet-expert-page .code-line { white-space: pre; min-height: 1.6em; }
+.devnet-expert-page .code-line { display: block; white-space: pre; min-height: 1.6em; }
 .devnet-expert-page .diagram > [role="img"] { background: transparent; border: 0; padding: 0; margin: 0; }
 .devnet-expert-page .diagram svg { flex-shrink: 0; max-width: none; height: auto; }
 .devnet-expert-page .toc-toggle { display: none; }
