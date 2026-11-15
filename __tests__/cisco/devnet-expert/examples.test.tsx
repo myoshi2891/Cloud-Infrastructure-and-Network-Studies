@@ -23,7 +23,17 @@ it('renders code lines without extra text nodes and saves VLAN-only changes', ()
         .find(text => text.startsWith('# roles/vlans/defaults/main.yml'))!;
     const yaml = createRequire(import.meta.url)('js-yaml');
     const tasks = yaml.load(role.split('# roles/vlans/tasks/main.yml\n')[1]!.split('# roles/vlans/handlers/main.yml')[0]!);
-    expect(tasks.find((task: { name: string }) => task.name.startsWith('Configure VLANs')).notify).toBe('save config');
+    const vlanBlock = tasks.find((task: { name: string }) => task.name.startsWith('Configure VLANs'));
+    expect(vlanBlock.block).toHaveLength(1);
+    const vlanTask = vlanBlock.block[0];
+    expect(vlanTask.notify).toBe('save config');
+    expect(vlanTask['cisco.ios.ios_vlans'].state).toBe('merged');
+    expect(vlanTask.loop).toBe('{{ vlans }}');
+    expect(vlanTask.when).toBe('item.enabled | bool');
+    expect(vlanBlock.rescue.map((task: Record<string, unknown>) => Object.keys(task).filter(key => key !== 'name')))
+        .toEqual([['cisco.ios.ios_config'], ['ansible.builtin.fail']]);
+    expect(vlanBlock.rescue[0]['cisco.ios.ios_config']).toEqual({ save_when: 'modified' });
+    expect(vlanBlock.rescue[1]['ansible.builtin.fail'].msg).toBe('{{ ansible_failed_result }}');
     expect(tasks.find((task: { name: string }) => task.name.startsWith('Render NTP')).notify).toBe('save config');
     const handlers = yaml.load(role.split('# roles/vlans/handlers/main.yml\n')[1]!.split('# site.yml')[0]!);
     expect(handlers).toEqual([{ name: 'save config', 'cisco.ios.ios_config': { save_when: 'modified' } }]);

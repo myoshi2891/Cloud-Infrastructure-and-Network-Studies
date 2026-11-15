@@ -45,6 +45,20 @@ const draw = () => {
 };
 
 describe('DevNet Expert 全量移行', () => {
+    it.each(['missing class', 'embedded newlines'])('rejects malformed requirements lines: %s', mutation => {
+        const { container } = render(<Page />);
+        const block = [...container.querySelectorAll('.code-block')].find(block => codeText(block).startsWith('# requirements.txt'))!;
+        if (mutation === 'missing class') {
+            block.firstElementChild!.removeAttribute('class');
+        } else {
+            block.replaceChildren(Object.assign(document.createElement('div'), {
+                className: 'code-line', textContent: '# requirements.txt\nfastapi\nuvicorn',
+            }));
+        }
+        expect(() => restoreReviewedCorrections(container)).toThrow();
+        expect(block.isConnected).toBe(true);
+    });
+
     it('rejects lost highlighting on an edited line before restoration', () => {
         const { container } = render(<Page />);
         const line = [...container.querySelectorAll('.code-line')].find(line => line.textContent?.startsWith('openssl verify -verify_hostname'))!;

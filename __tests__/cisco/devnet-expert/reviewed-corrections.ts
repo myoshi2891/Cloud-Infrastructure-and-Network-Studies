@@ -16,6 +16,8 @@ export function restoreReviewedCorrections(container: HTMLElement) {
     const requirements = [...container.querySelectorAll('.code-block')].find(block => codeText(block).startsWith('# requirements.txt'));
     expect(requirements).toBeDefined();
     expect(codeText(requirements!)).toBe('# requirements.txt\nfastapi\nuvicorn');
+    expect([...requirements!.children].every(child => child.matches('.code-line'))).toBe(true);
+    expect([...requirements!.children].map(line => line.textContent)).toEqual(['# requirements.txt', 'fastapi', 'uvicorn']);
     requirements!.closest('.code')!.remove();
     const blocks = [...container.querySelectorAll('.code-block')];
     for (const [before, after] of corrections) {
