@@ -31,8 +31,9 @@ HTML245701バイト・Markdown100276バイトは、SHA-256とバイト一致を�
 各ジェネレーター（`bun scripts/migrate-iso-iec-22123.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-2.mjs assets|...` / `bun scripts/migrate-iso-iec-22123-3.mjs assets|...`）は、原本HTMLを必要とする。直下の原本は削除済みで、`archive/` はGit管理外のため、新規チェックアウトには含まれない。ローカルに `archive/` が存在する場合は自動参照されるが、存在しない環境では実行前に各 `docs/migration-inventory/iso-iec-22123-{1,2,3}-2023.archive.json` の `html.archivePath` へバックアップから復元するか、原本削除前のGit履歴から次のように復元する（該当コミットを含む履歴が必要）。
 
 ```bash
+(
 mkdir -p archive/Standards/html/iso-iec-22123-1-2023 archive/Standards/html/iso-iec-22123-2-2023 archive/Standards/html/iso-iec-22123-3-2023 \
-         archive/Standards/md/iso-iec-22123-1-2023 archive/Standards/md/iso-iec-22123-2-2023 archive/Standards/md/iso-iec-22123-3-2023
+         archive/Standards/md/iso-iec-22123-1-2023 archive/Standards/md/iso-iec-22123-2-2023 archive/Standards/md/iso-iec-22123-3-2023 || exit 1
 restore_archive() (
     archive_file=$2
     restore_tmp=$(mktemp "${archive_file}.tmp.XXXXXX") || exit 1
@@ -50,8 +51,9 @@ restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.html' archive/Standards/html/iso
 restore_archive 'e6dd8d72:Iso-iec-22123-2-guide.md' archive/Standards/md/iso-iec-22123-2-2023/Iso-iec-22123-2-guide.md 62653 3a7b7fa556e5f06a0be4d858f93e3910f0f21a4104a7ca6a31f7e92aacf0b867 || exit 1
 restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.html' archive/Standards/html/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.html 1061148 fc5d254f7a03e54f6854f3ac72606715c6bf5472143436ae70996a05e30b2b8f || exit 1
 restore_archive '99ca00a0:Iso-iec-22123-3-2023-guide.md' archive/Standards/md/iso-iec-22123-3-2023/Iso-iec-22123-3-2023-guide.md 47533 9417ee51a5456c90ac76524be889d99f1e67469d9170c7749fdeed061123852a || exit 1
-wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+wc -c archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md || exit 1
 shasum -a 256 archive/Standards/html/iso-iec-22123-{1,2,3}-2023/*.html archive/Standards/md/iso-iec-22123-{1,2,3}-2023/*.md
+)
 ```
 
 各ファイルのサイズとSHA-256が対応するJSONの `html.bytes` / `html.sha256` と一致した場合のみ、再生成コマンドを実行する。移行テストはコミット済みfixtureを使うため、この復元は不要。
