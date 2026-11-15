@@ -256,7 +256,7 @@ print('validation passed')
 it('documents namespace and Secret creation before applying resources, and scopes as unimplemented', () => {
     const { container } = render(<><Part7 /><Part8 /></>);
     const setup = [...container.querySelectorAll('p')].find(p => p.textContent?.includes('kubectl create namespace netauto'))!.textContent!;
-    const commands = ['kubectl create namespace netauto', 'kubectl -n netauto create secret tls api-tls', 'kubectl -n netauto create secret generic api-backend-ca', 'kubectl apply -f manifest.yaml'];
+    const commands = ['kubectl create namespace netauto', 'kubectl -n netauto create secret tls api-tls', 'kubectl -n netauto create secret generic api-secret --from-file=API_TOKEN=./secrets/api_token.txt', 'kubectl -n netauto create secret generic api-backend-ca', 'kubectl apply -f manifest.yaml'];
     const positions = commands.map(command => setup.indexOf(command));
     expect(positions.every((position, i) => position >= 0 && (i === 0 || position > positions[i - 1]!))).toBe(true);
     expect(container.textContent).toContain('スコープに基づく認可チェックや、権限不足で 403 を返す処理は実装していません');
@@ -291,8 +291,12 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
     expect(compose.services.api.environment).not.toHaveProperty('DB_HOST');
     expect(compose.services.api).not.toHaveProperty('depends_on');
     expect(compose.services.db.volumes).toEqual(['dbdata:/var/lib/postgresql/data']);
-    const deployment = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!)
-        .find((doc: { kind: string }) => doc.kind === 'Deployment');
+    expect(blocks.find(code => code.startsWith('# .dockerignore'))!.split('\n')).toEqual(
+        expect.arrayContaining(['secrets/', 'manifest.yaml']),
+    );
+    const resources = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!);
+    expect(resources.some((doc: { kind: string }) => doc.kind === 'Secret')).toBe(false);
+    const deployment = resources.find((doc: { kind: string }) => doc.kind === 'Deployment');
     const image = deployment.spec.template.spec.containers[0].image;
     expect(image).toBe('registry.example.com/device-api:1.0');
     expect(build.split('\n').slice(0, 3)).toEqual([
