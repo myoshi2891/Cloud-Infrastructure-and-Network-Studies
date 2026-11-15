@@ -3,7 +3,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { createElement } from 'react';
+import { createElement, type ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { render } from '@testing-library/react';
 import { JsxEmit, ModuleKind, transpileModule } from 'typescript';
@@ -51,10 +51,12 @@ it('regenerates reviewed examples and TLS instructions from the fixed source rev
         for (const [part, Current] of [[2, Part2], [4, Part4], [5, Part5], [6, Part6], [7, Part7], [8, Part8]] as const) {
             const source = readFileSync(join(workspace, `app/cisco/devnet-expert/sections/Part${part}.tsx`), 'utf8');
             const { outputText } = transpileModule(source, { compilerOptions: { module: ModuleKind.CommonJS, jsx: JsxEmit.ReactJSX } });
-            const generated = { exports: { default: Current } };
+            const generated: { exports: { default?: ComponentType } } = { exports: {} };
             // Evaluate only the JSX produced by the repository's generator; diagrams are irrelevant here.
             new Function('require', 'exports', outputText)(
                 (id: string) => id === '../Diagram' ? { Diagram: () => null } : require(id), generated.exports);
+            expect(typeof generated.exports.default, `Part${part} must export a component`).toBe('function');
+            if (!generated.exports.default) throw new Error(`Part${part} did not export a component`);
             const container = document.createElement('div');
             container.innerHTML = renderToStaticMarkup(createElement(generated.exports.default));
             const current = render(createElement(Current));

@@ -28,7 +28,7 @@ it('renders code lines without extra text nodes and saves VLAN-only changes', ()
     const handlers = yaml.load(role.split('# roles/vlans/handlers/main.yml\n')[1]!.split('# site.yml')[0]!);
     expect(handlers).toEqual([{ name: 'save config', 'cisco.ios.ios_config': { save_when: 'modified' } }]);
     const playbook = yaml.load(role.split('# site.yml\n')[1]!);
-    expect(playbook).toEqual([{ name: 'Apply switch configuration', hosts: 'switches', gather_facts: false, roles: ['vlans'] }]);
+    expect(playbook).toEqual([{ name: 'Apply switch configuration', hosts: 'switches', gather_facts: false, force_handlers: true, roles: ['vlans'] }]);
     expect(container.querySelector('#s-4-7')!.textContent).toContain('ansible-playbook -i inventory/hosts.yml site.yml');
     const certificates = blocks.map(codeText).find(text => text.startsWith('# 1. 秘密鍵'))!;
     expect(certificates).toContain('ルート CA 証明書（ca.crt）・中間 CA 証明書（intermediate.crt）');
@@ -65,10 +65,15 @@ for example in (payload, xpath):
     if example == payload:
         build_payload = ns['build_payload']
 interface_ns = 'urn:ietf:params:xml:ns:yang:ietf-interfaces'
+netconf_ns = 'urn:ietf:params:xml:ns:netconf:base:1.0'
+sent = manager.connect.return_value.__enter__.return_value.edit_config.call_args
+assert sent.kwargs['target'] == 'running'
+assert ET.fromstring(sent.kwargs['config']).tag == '{%s}config' % netconf_ns
 for enabled in (True, False):
     name = 'Gi1 & <test>'
     description = 'core & edge <backup> "quoted" café'
     root = ET.fromstring(build_payload(name, {'description': description, 'enabled': enabled}))
+    assert root.tag == '{%s}config' % netconf_ns
     interface = root.find('{%s}interfaces/{%s}interface' % (interface_ns, interface_ns))
     assert interface.find('{%s}name' % interface_ns).text == name
     assert interface.find('{%s}description' % interface_ns).text == description
@@ -94,6 +99,7 @@ it('executes the displayed OSPF and ping validators against missing neighbors an
     const { container } = render(<><Part6 /><Part8 /></>);
     const blocks = [...container.querySelectorAll('.code-block')].map(codeText);
     const ospf = blocks.find(b => b.startsWith('# test_ospf.py'))!;
+    const stateCheck = blocks.find(b => b.startsWith('from genie.testbed import load'))!;
     const ping = blocks.find(b => b.includes('def safe_ping('))!;
     const ios = blocks.find(b => b.includes('with ConnectHandler('))!;
     const bearer = blocks.find(b => b.includes('def require_token('))!;
@@ -105,7 +111,7 @@ it('executes the displayed OSPF and ping validators against missing neighbors an
     const result = execFileSync('python3', ['-c', `
 import ast, json, os, re, sys, types
 from unittest.mock import MagicMock, patch
-ospf, ping, ios, bearer, router_names = json.load(sys.stdin)
+ospf, ping, ios, bearer, router_names, state_check = json.load(sys.stdin)
 class ValidationFailed(Exception): pass
 class Testcase:
     def failed(self, message): raise ValidationFailed(message)
@@ -116,6 +122,16 @@ class SchemaEmptyParserError(Exception): pass
 sys.modules['genie.metaparser.util.exceptions'] = types.SimpleNamespace(SchemaEmptyParserError=SchemaEmptyParserError)
 ns = {}
 exec(ospf, ns)
+connections = {name: MagicMock() for name in router_names}
+ns['CommonSetup']().connect(types.SimpleNamespace(devices=connections))
+for dev in connections.values():
+    dev.connect.assert_called_once_with(log_stdout=False, init_config_commands=[])
+load = MagicMock()
+sys.modules['genie.testbed'] = types.SimpleNamespace(load=load)
+with patch('builtins.print'):
+    exec(state_check, {})
+load.return_value.devices.__getitem__.return_value.connect.assert_called_once_with(
+    log_stdout=False, init_config_commands=[])
 def device(neighbors):
     return types.SimpleNamespace(parse=lambda command: neighbors)
 def neighbors(router, state='FULL/DR', iface='GigabitEthernet2'):
@@ -196,7 +212,7 @@ args = {k.arg: ast.unparse(k.value) for k in call.keywords}
 assert args['ssl_certfile'] == "os.environ['TLS_CERT_FILE']"
 assert args['ssl_keyfile'] == "os.environ['TLS_KEY_FILE']"
 print('validation passed')
-`], { input: JSON.stringify([ospf, ping, ios, bearer, Object.keys(testbed.devices)]), encoding: 'utf8' });
+`], { input: JSON.stringify([ospf, ping, ios, bearer, Object.keys(testbed.devices), stateCheck]), encoding: 'utf8' });
     expect(result.trim()).toBe('validation passed');
 });
 
