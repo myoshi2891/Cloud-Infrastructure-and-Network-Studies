@@ -75,7 +75,7 @@ export const textCorrections = [["トークンの権限（スコープ）に応�
 
 const additionalCodeCorrections = [
     ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core ansible-pylibssh\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
-    ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/\nmanifest.yaml'],
+    ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/\nmanifest.yaml\n**/*.key'],
 ];
 
 export const gitlabRunnerNote = 'この Docker-in-Docker 例では、Runner の privileged モードを有効にし、ジョブと docker:27-dind サービスで /certs/client ボリュームを共有マウントする必要があります。';
