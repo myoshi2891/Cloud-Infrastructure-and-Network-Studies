@@ -21,7 +21,7 @@ export default function NavBar() {
             if (navigationTarget.current) return;
             const current = NAV_ITEMS.filter(item => visible.has(item.id)).at(-1);
             if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) setActiveId(NAV_ITEMS.at(-1)!.id);
-            else if (current) setActiveId(current.id);
+            else setActiveId(current?.id ?? NAV_ITEMS[0].id);
         };
         let observer: IntersectionObserver | null = null;
         const observe = () => {
