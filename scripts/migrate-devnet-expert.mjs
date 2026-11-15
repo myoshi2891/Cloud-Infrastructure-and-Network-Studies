@@ -47,7 +47,8 @@ retakeRow.cells[1].textContent = '不合格の翌日から5暦日';
 const sections = [...doc.querySelector('main').children];
 sections.forEach((element, i) => {
     applyReviewedExampleCorrections(element);
-    write(`sections/Part${i}.tsx`, `import { Diagram } from '../Diagram';\n/** Original guide block ${i}; generated without content summarization. */\nexport default function Part${i}() { return (${jsx(element)}); }\n`);
+    const diagramImport = element.querySelector('.mermaid') ? "import { Diagram } from '../Diagram';\n" : '';
+    write(`sections/Part${i}.tsx`, `${diagramImport}/** Original guide block ${i}; generated without content summarization. */\nexport default function Part${i}() { return (${jsx(element)}); }\n`);
 });
 const diagrams = extractDiagramsDefinition(html.replace('window.DIAGRAMS =', 'const DIAGRAMS =')).diagrams;
 const nav = [...doc.querySelectorAll('nav a')].map(a => ({ id: a.hash.slice(1), label: a.textContent, level: a.classList.contains('l3') ? 3 : 2 }));
