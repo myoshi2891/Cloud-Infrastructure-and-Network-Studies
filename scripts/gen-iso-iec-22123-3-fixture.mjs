@@ -1,10 +1,15 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { JSDOM } from 'jsdom';
 import { snapshotGuidePart } from './guide-fidelity-extraction.mjs';
 import { snapshotSvgDiagrams } from './svg-fidelity-extraction.mjs';
 const source = 'Iso-iec-22123-3-2023-guide.html';
-const html = readFileSync(source, 'utf8');
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+const candidates = [resolve(repositoryRoot, source), resolve(repositoryRoot, 'archive/Standards/html/iso-iec-22123-3-2023', source)];
+const sourcePath = candidates.find(p => existsSync(p)) ?? resolve(repositoryRoot, source);
+const html = readFileSync(sourcePath, 'utf8');
 const doc = new JSDOM(html).window.document;
 const main = doc.querySelector('main');
 const parts = Object.fromEntries([...main.children].map((node, index) => [index === 0 ? 'Intro' : node.matches('footer') ? 'Appendix' : 'Section' + index, snapshotGuidePart(node)]));

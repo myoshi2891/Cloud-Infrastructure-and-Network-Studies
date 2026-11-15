@@ -100,7 +100,8 @@ if (phase === 'assets') {
             .replace(/'Noto Sans JP'/g, 'var(--font-body)').replace(/'JetBrains Mono'/g, 'var(--font-mono)');
         if (d.prop === 'word-break' && d.value === 'break-word') { d.prop = 'overflow-wrap'; d.value = 'anywhere'; }
         if (d.prop === 'top' && ['.sidebar', '.nav-toggle'].includes(d.parent.selector)) d.value = `calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + ${d.value === '0' ? '0px' : d.value})`;
-        if (d.prop === 'z-index' && ['.sidebar', '.nav-toggle'].includes(d.parent.selector)) d.value = '40';
+        if (d.prop === 'z-index' && ['.sidebar', '.nav-toggle'].includes(d.parent.selector)) d.value = d.parent.selector === '.nav-toggle' ? '41' : '40';
+        if (d.prop === 'left' && d.parent.selector === '.nav-toggle') d.prop = 'right';
         if (d.prop === 'max-width' && d.parent.selector === '.mermaid-diagram svg') d.value = 'none';
         if (d.prop === 'scroll-margin-top') d.value = 'calc(var(--header-h, 60px) + var(--disclaimer-height, 0px) + 72px)';
     });
