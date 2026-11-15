@@ -73,14 +73,26 @@ describe('gen-fidelity-fixture / 固定リビジョンからの読み出し', ()
 
 
 describe('Part 1 working-tree archive fallback', () => {
-    it.each([false, true])('checks the archive checksum before writing (stale=%s)', stale => {
+    const metadataPath = 'docs/migration-inventory/iso-iec-22123-1-2023.archive.json';
+    const metadata = JSON.parse(readFileSync(metadataPath, 'utf8'));
+    const hasSourceCommit = (() => {
+        try {
+            execFileSync('git', ['cat-file', '-e', `${metadata.sourceCommit}^{commit}`], {
+                cwd: REPOSITORY_ROOT, stdio: 'ignore',
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    })();
+
+    // Historical setup requires a full-history checkout; skip both cases if unavailable.
+    it.skipIf(!hasSourceCommit).each([false, true])('checks the archive checksum before writing (stale=%s)', stale => {
         const sandbox = mkdtempSync(join(tmpdir(), 'iso-fixture-'));
         try {
             cpSync(resolve(REPOSITORY_ROOT, 'scripts'), join(sandbox, 'scripts'), { recursive: true });
             symlinkSync(resolve(REPOSITORY_ROOT, 'node_modules'), join(sandbox, 'node_modules'), 'dir');
-            const metadataPath = 'docs/migration-inventory/iso-iec-22123-1-2023.archive.json';
             const fixturePath = 'docs/migration-inventory/iso-iec-22123-1-2023.fidelity.json';
-            const metadata = JSON.parse(readFileSync(metadataPath, 'utf8'));
             const html = execFileSync('git', ['show', `${metadata.sourceCommit}:${metadata.html.sourcePath}`], {
                 cwd: REPOSITORY_ROOT, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024,
             });
