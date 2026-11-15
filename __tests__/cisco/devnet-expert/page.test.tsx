@@ -20,7 +20,7 @@ const draw = () => {
     restoreReviewedCorrections(view.container);
     const replacements: [string, string][] = [
         ['    - ansible-playbook -i inventory/prod site.yml', '    - pip install ansible-core ansible-pylibssh\n    - ansible-galaxy collection install cisco.ios\n    - ansible-playbook -i inventory/prod site.yml'],
-        ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/\nmanifest.yaml'],
+        ['# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env', '# .dockerignore\n.git\n.venv\n__pycache__/\n*.pyc\n.env\nsecrets/\nmanifest.yaml\n**/*.key'],
     ];
     const blocks = [...view.container.querySelectorAll('.code-block')];
     fidelity.codeBlocks.forEach((lines, index) => {
@@ -36,6 +36,7 @@ const draw = () => {
                 '    - ansible-galaxy collection install cisco.ios',
                 'secrets/',
                 'manifest.yaml',
+                '**/*.key',
             ].includes(text)) {
                 line.remove();
             }

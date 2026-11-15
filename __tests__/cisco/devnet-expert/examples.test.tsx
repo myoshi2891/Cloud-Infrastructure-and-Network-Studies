@@ -322,7 +322,7 @@ it('documents trusted SSH keys, Compose secrets, registry publishing and deploy 
     expect(compose.services.api).not.toHaveProperty('depends_on');
     expect(compose.services.db.volumes).toEqual(['dbdata:/var/lib/postgresql/data']);
     expect(blocks.find(code => code.startsWith('# .dockerignore'))!.split('\n')).toEqual(
-        expect.arrayContaining(['secrets/', 'manifest.yaml']),
+        expect.arrayContaining(['secrets/', 'manifest.yaml', '**/*.key']),
     );
     const resources = yaml.loadAll(blocks.find(code => code.startsWith('apiVersion: v1'))!);
     expect(resources.some((doc: { kind: string }) => doc.kind === 'Secret')).toBe(false);
